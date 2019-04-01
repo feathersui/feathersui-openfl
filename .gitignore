@@ -1,0 +1,4 @@
+*.hxproj
+/.vscode/
+/Export/
+Source/Main.hx
