@@ -90,6 +90,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 
 		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.setSkinForState()`
+		@see `BasicButton.currentState`
 
 		@since 1.0.0
 	**/
@@ -106,10 +107,11 @@ class BasicButton extends FeathersControl implements IStateContext {
 
 		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.getSkinForState()`
+		@see `BasicButton.currentState`
 
 		@since 1.0.0
 	**/
-	public function setSkinForState(state:String, skin:DisplayObject):Void {
+	public function setSkinForState(state:ButtonState, skin:DisplayObject):Void {
 		var oldSkin = this._stateToSkin.get(state);
 		if (oldSkin != null && oldSkin == this._currentBackgroundSkin) {
 			this.removeCurrentBackgroundSkin(oldSkin);

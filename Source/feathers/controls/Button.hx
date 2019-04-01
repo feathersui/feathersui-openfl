@@ -61,6 +61,20 @@ class Button extends BasicButton {
 		return this.fontStyles;
 	}
 
+	/**
+		The minimum space, in pixels, between the button's top edge and the
+		button's content.
+
+		In the following example, the button's top padding is set to 20 pixels:
+
+		```hx
+		button.paddingTop = 20;</listing>
+		```
+
+		@default 0
+
+		@since 1.0.0
+	**/
 	public var paddingTop(default, set):Float = 0;
 
 	private function set_paddingTop(value:Float):Float {
@@ -72,6 +86,21 @@ class Button extends BasicButton {
 		return this.paddingTop;
 	}
 
+	/**
+		The minimum space, in pixels, between the button's right edge and the
+		button's content.
+
+		In the following example, the button's right padding is set to 20
+		pixels:
+
+		```hx
+		button.paddingRight = 20;</listing>
+		```
+
+		@default 0
+
+		@since 1.0.0
+	**/
 	public var paddingRight(default, set):Float = 0;
 
 	private function set_paddingRight(value:Float):Float {
@@ -83,6 +112,21 @@ class Button extends BasicButton {
 		return this.paddingRight;
 	}
 
+	/**
+		The minimum space, in pixels, between the button's bottom edge and the
+		button's content.
+
+		In the following example, the button's bottom padding is set to 20
+		pixels:
+
+		```hx
+		button.paddingBottom = 20;</listing>
+		```
+
+		@default 0
+
+		@since 1.0.0
+	**/
 	public var paddingBottom(default, set):Float = 0;
 
 	private function set_paddingBottom(value:Float):Float {
@@ -94,6 +138,21 @@ class Button extends BasicButton {
 		return this.paddingBottom;
 	}
 
+	/**
+		The minimum space, in pixels, between the button's left edge and the
+		button's content.
+
+		In the following example, the button's left padding is set to 20
+		pixels:
+
+		```hx
+		button.paddingLeft = 20;</listing>
+		```
+
+		@default 0
+
+		@since 1.0.0
+	**/
 	public var paddingLeft(default, set):Float = 0;
 
 	private function set_paddingLeft(value:Float):Float {
@@ -105,6 +164,25 @@ class Button extends BasicButton {
 		return this.paddingLeft;
 	}
 
+	/**
+		How the content is positioned horizontally (along the x-axis) within the
+		button.
+
+		The following example aligns the button's content to the left:
+
+		```hx
+		button.verticalAlign = HorizontalAlign.LEFT;
+		```
+
+		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
+		component.
+
+		@default `feathers.layout.HorizontalAlign.MIDDLE`
+
+		@see `feathers.layout.HorizontalAlign.TOP`
+		@see `feathers.layout.HorizontalAlign.MIDDLE`
+		@see `feathers.layout.HorizontalAlign.BOTTOM`
+	**/
 	public var horizontalAlign(default, set):HorizontalAlign = HorizontalAlign.CENTER;
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
@@ -116,6 +194,25 @@ class Button extends BasicButton {
 		return this.horizontalAlign;
 	}
 
+	/**
+		How the content is positioned vertically (along the y-axis) within the
+		button.
+
+		The following example aligns the button's content to the top:
+
+		```hx
+		button.verticalAlign = VerticalAlign.TOP;
+		```
+
+		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
+		component.
+
+		@default `feathers.layout.VerticalAlign.MIDDLE`
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+	**/
 	public var verticalAlign(default, set):VerticalAlign = VerticalAlign.MIDDLE;
 
 	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
