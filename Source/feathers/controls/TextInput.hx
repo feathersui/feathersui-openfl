@@ -502,6 +502,7 @@ class TextInput extends FeathersControl implements IStateContext {
 		var measuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;
 
+		this.textField.x = this.paddingLeft;
 		this.textField.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
@@ -511,16 +512,16 @@ class TextInput extends FeathersControl implements IStateContext {
 		switch (this.verticalAlign) {
 			case TOP:
 				this.textField.y = this.paddingTop;
-				this.textField.height = measuredHeight;
+				this.textField.height = Math.min(maxHeight, measuredHeight);
 			case BOTTOM:
 				this.textField.y = this.actualHeight - this.paddingBottom - measuredHeight;
-				this.textField.height = measuredHeight;
+				this.textField.height = Math.min(maxHeight, measuredHeight);
 			case JUSTIFY:
 				this.textField.y = this.paddingTop;
 				this.textField.height = maxHeight;
 			default: // center
 				this.textField.y = this.paddingTop + (maxHeight - measuredHeight) / 2;
-				this.textField.height = measuredHeight;
+				this.textField.height = Math.min(maxHeight, measuredHeight);
 		}
 	}
 
