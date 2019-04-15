@@ -78,7 +78,8 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		@see `FeathersEvent.CREATION_COMPLETE`
 		@see `FeathersControl.update()`
 	**/
-	private var created(default, null):Bool = false;
+	public var created(default, null):Bool = false;
+
 	private var _validating:Bool = false;
 
 	/**
@@ -134,7 +135,7 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 	private var scaledActualMaxWidth:Float = 0;
 	private var scaledActualMaxHeight:Float = 0;
 
-	override public function get_width():Float {
+	override private function get_width():Float {
 		return this.scaledActualWidth;
 	}
 
