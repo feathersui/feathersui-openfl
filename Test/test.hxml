@@ -1,0 +1,4 @@
+-js build/html5/bin/TestMain.js
+--no-output
+-cmd haxelib run openfl build html5
+
