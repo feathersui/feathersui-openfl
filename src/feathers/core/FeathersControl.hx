@@ -201,12 +201,80 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		return this.explicitHeight;
 	}
 
-	public var explicitMinWidth(default, null):Null<Float> = null;
+	public var explicitMinWidth(default, set):Null<Float> = null;
+
+	private function set_explicitMinWidth(value:Null<Float>):Null<Float> {
+		if (this.explicitMinWidth == value) {
+			return this.explicitMinWidth;
+		}
+		var oldValue = this.explicitMinWidth;
+		this.explicitMinWidth = value;
+		if (value == null) {
+			this.actualMinWidth = 0;
+			this.scaledActualMinWidth = 0;
+			this.setInvalid(InvalidationFlag.SIZE);
+		} else {
+			// saveMeasurements() might change actualWidth, so keep the old
+			// value for the comparisons below
+			var actualWidth = this.actualWidth;
+			this.saveMeasurements(this.actualWidth, this.actualHeight, value, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
+			if (this.explicitWidth == null && (actualWidth < value || actualWidth == oldValue)) {
+				// only invalidate if this change might affect the width
+				// because everything else was handled in saveMeasurements()
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
+		}
+		return this.explicitMinWidth;
+	}
+
 	public var explicitMinHeight(default, null):Null<Float> = null;
+
+	private function set_explicitMinHeight(value:Null<Float>):Null<Float> {
+		if (this.explicitMinHeight == value) {
+			return this.explicitMinHeight;
+		}
+		var oldValue = this.explicitMinHeight;
+		this.explicitMinHeight = value;
+		if (value == null) {
+			this.actualMinHeight = 0;
+			this.scaledActualMinHeight = 0;
+			this.setInvalid(InvalidationFlag.SIZE);
+		} else {
+			// saveMeasurements() might change actualHeight, so keep the old
+			// value for the comparisons below
+			var actualHeight = this.actualHeight;
+			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, value, this.actualMaxWidth, this.actualMaxHeight);
+			if (this.explicitHeight == null && (actualHeight < value || actualHeight == oldValue)) {
+				// only invalidate if this change might affect the width
+				// because everything else was handled in saveMeasurements()
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
+		}
+		return this.explicitMinHeight;
+	}
+
 	public var explicitMaxWidth(default, null):Null<Float> = null;
 	public var explicitMaxHeight(default, null):Null<Float> = null;
-	public var minWidth(default, default):Float = 0;
-	public var minHeight(default, default):Float = 0;
+	public var minWidth(default, set):Float = 0;
+
+	private function set_minWidth(value:Float):Float {
+		if (this.scaleX != 1) {
+			value /= this.scaleX;
+		}
+		this.explicitMinWidth = value;
+		return this.scaledActualMinWidth;
+	}
+
+	public var minHeight(default, set):Float = 0;
+
+	private function set_minHeight(value:Float):Float {
+		if (this.scaleY != 1) {
+			value /= this.scaleY;
+		}
+		this.explicitMinHeight = value;
+		return this.scaledActualMinHeight;
+	}
+
 	public var maxWidth(default, default):Float = Math.POSITIVE_INFINITY;
 	public var maxHeight(default, default):Float = Math.POSITIVE_INFINITY;
 

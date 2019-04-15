@@ -102,7 +102,7 @@ interface IMeasureDisplayObject {
 
 		@since 1.0.0
 	**/
-	public var minWidth(default, default):Float;
+	public var minWidth(default, set):Float;
 
 	/**
 		The object's minimum height value.
@@ -111,7 +111,7 @@ interface IMeasureDisplayObject {
 
 		@since 1.0.0
 	**/
-	public var minHeight(default, default):Float;
+	public var minHeight(default, set):Float;
 
 	/**
 		The object's maximum width value.
