@@ -107,7 +107,10 @@ class ValidationQueue {
 		}
 	}
 
-	private function update():Void {
+	/**
+		Immediately validates all components in the queue.
+	**/
+	public function validateNow():Void {
 		if (this.validating) {
 			return;
 		}
@@ -144,6 +147,6 @@ class ValidationQueue {
 	}
 
 	private function stage_enterFrameHandler(event:Event):Void {
-		this.update();
+		this.validateNow();
 	}
 }
