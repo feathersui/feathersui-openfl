@@ -5,9 +5,8 @@
 	<app file="TestMain" main="TestMain" path="build" />
 	
 	<source path="src" />
-	<source path="../Source" />
+	<source path="../src" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="munit" />
-	<haxelib name="mlib" />
 </project>

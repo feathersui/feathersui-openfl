@@ -3,5 +3,5 @@ src=src
 bin=build
 report=report
 hxml=test.hxml
-classPaths=../Source
+classPaths=../src
 templates=templates
