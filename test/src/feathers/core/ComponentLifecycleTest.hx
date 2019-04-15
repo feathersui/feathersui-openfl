@@ -4,21 +4,17 @@ import feathers.controls.LayoutGroup;
 import feathers.events.FeathersEvent;
 import massive.munit.Assert;
 
-class ComponentLifecycleTest
-{
+class ComponentLifecycleTest {
 	private var _control:LayoutGroup;
 
 	@Before
-	public function prepare():Void
-	{
+	public function prepare():Void {
 		this._control = new LayoutGroup();
 	}
 
 	@After
-	public function cleanup():Void
-	{
-		if(this._control.parent != null)
-		{
+	public function cleanup():Void {
+		if (this._control.parent != null) {
 			this._control.parent.removeChild(this._control);
 		}
 		this._control = null;
@@ -26,25 +22,21 @@ class ComponentLifecycleTest
 	}
 
 	@Test
-	public function testFlagsAfterConstructor():Void
-	{
+	public function testFlagsAfterConstructor():Void {
 		Assert.isFalse(this._control.initialized, "Feathers component must not be initialized immediately after constructor");
 		Assert.isFalse(this._control.created, "Feathers component must not be created immediately after constructor");
 		Assert.areEqual(-1, this._control.depth, "Feathers component must have depth == -1 when not on stage");
 	}
 
 	@Test
-	public function testEventsAndFlagsAfterAddedToStage():Void
-	{
+	public function testEventsAndFlagsAfterAddedToStage():Void {
 		var initializeEvent = false;
 		var createdEvent = false;
-		this._control.addEventListener(FeathersEvent.INITIALIZE, (event:FeathersEvent) ->
-		{
+		this._control.addEventListener(FeathersEvent.INITIALIZE, (event:FeathersEvent) -> {
 			initializeEvent = true;
 			Assert.isFalse(createdEvent, "FeathersEvent.CREATION_COMPLETE must not dispatched be dispatched before FeathersEvent.INITIALIZE");
 		});
-		this._control.addEventListener(FeathersEvent.CREATION_COMPLETE, (event:FeathersEvent) ->
-		{
+		this._control.addEventListener(FeathersEvent.CREATION_COMPLETE, (event:FeathersEvent) -> {
 			createdEvent = true;
 		});
 		TestMain.openfl_root.addChild(this._control);
@@ -56,25 +48,21 @@ class ComponentLifecycleTest
 	}
 
 	@Test
-	public function testEventsAndFlagsAfterRemovedFromStage():Void
-	{
+	public function testEventsAndFlagsAfterRemovedFromStage():Void {
 		TestMain.openfl_root.addChild(this._control);
 		TestMain.openfl_root.removeChild(this._control);
 		Assert.areEqual(-1, this._control.depth, "Feathers component must have depth == -1 when not on stage");
 	}
 
 	@Test
-	public function testEventsAndFlagsAfterInitializeNowOffStage():Void
-	{
+	public function testEventsAndFlagsAfterInitializeNowOffStage():Void {
 		var initializeEvent = false;
 		var createdEvent = false;
-		this._control.addEventListener(FeathersEvent.INITIALIZE, (event:FeathersEvent) ->
-		{
+		this._control.addEventListener(FeathersEvent.INITIALIZE, (event:FeathersEvent) -> {
 			initializeEvent = true;
 			Assert.isFalse(createdEvent, "FeathersEvent.CREATION_COMPLETE must not dispatched be dispatched before FeathersEvent.INITIALIZE");
 		});
-		this._control.addEventListener(FeathersEvent.CREATION_COMPLETE, (event:FeathersEvent) ->
-		{
+		this._control.addEventListener(FeathersEvent.CREATION_COMPLETE, (event:FeathersEvent) -> {
 			createdEvent = true;
 		});
 		this._control.initializeNow();
@@ -86,17 +74,14 @@ class ComponentLifecycleTest
 	}
 
 	@Test
-	public function testEventsAndFlagsAfterValidateNowOffStage():Void
-	{
+	public function testEventsAndFlagsAfterValidateNowOffStage():Void {
 		var initializeEvent = false;
 		var createdEvent = false;
-		this._control.addEventListener(FeathersEvent.INITIALIZE, (event:FeathersEvent) ->
-		{
+		this._control.addEventListener(FeathersEvent.INITIALIZE, (event:FeathersEvent) -> {
 			initializeEvent = true;
 			Assert.isFalse(createdEvent, "FeathersEvent.CREATION_COMPLETE must not dispatched be dispatched before FeathersEvent.INITIALIZE");
 		});
-		this._control.addEventListener(FeathersEvent.CREATION_COMPLETE, (event:FeathersEvent) ->
-		{
+		this._control.addEventListener(FeathersEvent.CREATION_COMPLETE, (event:FeathersEvent) -> {
 			createdEvent = true;
 		});
 		this._control.validateNow();
