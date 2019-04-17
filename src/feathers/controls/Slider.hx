@@ -490,8 +490,6 @@ class Slider extends FeathersControl {
 			}
 
 			this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
-
-			trace(this.trackSkin.x, this.trackSkin.y, this.trackSkin.width, this.trackSkin.height, this.actualWidth, this.actualHeight);
 		} else // horizontal
 		{
 			this.trackSkin.x = 0;
