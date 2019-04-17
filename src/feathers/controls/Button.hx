@@ -8,7 +8,9 @@
 
 package feathers.controls;
 
+import feathers.core.IMeasureDisplayObject;
 import feathers.core.InvalidationFlag;
+import feathers.core.IValidating;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.VerticalAlign;
 import openfl.text.TextField;
@@ -224,6 +226,9 @@ class Button extends BasicButton {
 		return this.verticalAlign;
 	}
 
+	private var _textMeasuredWidth:Float;
+	private var _textMeasuredHeight:Float;
+
 	override private function initialize():Void {
 		super.initialize();
 		if (this.textField == null) {
@@ -240,12 +245,12 @@ class Button extends BasicButton {
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
 
-		if (dataInvalid) {
-			this.refreshText();
-		}
-
 		if (stylesInvalid || stateInvalid) {
 			this.refreshTextStyles();
+		}
+
+		if (dataInvalid || stylesInvalid || stateInvalid) {
+			this.refreshText();
 		}
 
 		super.update();
@@ -255,24 +260,123 @@ class Button extends BasicButton {
 		}
 	}
 
-	private function refreshText() {
-		this.textField.text = text;
-		this.textField.visible = text != null && text.length > 0;
+	override private function autoSizeIfNeeded():Bool {
+		var needsWidth = this.explicitWidth == null;
+		var needsHeight = this.explicitHeight == null;
+		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinHeight = this.explicitMinHeight == null;
+		var needsMaxWidth = this.explicitMaxWidth == null;
+		var needsMaxHeight = this.explicitMaxHeight == null;
+		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
+			return false;
+		}
+
+		if (this._currentBackgroundSkin != null) {
+			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+		}
+
+		var measureSkin:IMeasureDisplayObject = null;
+		if (Std.is(this._currentBackgroundSkin, IMeasureDisplayObject)) {
+			measureSkin = cast(this._currentBackgroundSkin, IMeasureDisplayObject);
+		}
+
+		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+			cast(this._currentBackgroundSkin, IValidating).validateNow();
+		}
+
+		var newWidth = this.explicitWidth;
+		if (needsWidth) {
+			newWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			if (this._currentBackgroundSkin != null) {
+				newWidth = Math.max(this._currentBackgroundSkin.width, newWidth);
+			}
+		}
+
+		var newHeight = this.explicitHeight;
+		if (needsHeight) {
+			newHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			if (this._currentBackgroundSkin != null) {
+				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
+			}
+		}
+
+		var newMinWidth = this.explicitMinWidth;
+		if (needsMinWidth) {
+			newMinWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			if (measureSkin != null) {
+				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMinWidth = Math.max(this._backgroundSkinMeasurements.minWidth, newMinWidth);
+			}
+		}
+
+		var newMinHeight = this.explicitMinHeight;
+		if (needsMinHeight) {
+			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			if (measureSkin != null) {
+				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMinHeight = Math.max(this._backgroundSkinMeasurements.minHeight, newMinHeight);
+			}
+		}
+		var newMaxWidth = this.explicitMaxWidth;
+		if (needsMaxWidth) {
+			if (measureSkin != null) {
+				newMaxWidth = measureSkin.maxWidth;
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
+			} else {
+				newMaxWidth = Math.POSITIVE_INFINITY;
+			}
+		}
+
+		var newMaxHeight = this.explicitMaxHeight;
+		if (needsMaxHeight) {
+			if (measureSkin != null) {
+				newMaxHeight = measureSkin.maxHeight;
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
+			} else {
+				newMaxHeight = Math.POSITIVE_INFINITY;
+			}
+		}
+
+		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
-	private function refreshTextStyles() {
+	private function refreshTextStyles():Void {
 		this.textField.defaultTextFormat = this.fontStyles;
-		this.textField.setTextFormat(this.fontStyles);
 	}
 
-	private function layoutContent() {
+	private function refreshText():Void {
+		var hasText = this.text != null && this.text.length > 0;
+		if (hasText) {
+			this.textField.text = this.text;
+		} else {
+			this.textField.text = "\u8203"; // zero-width space
+		}
+		this.textField.autoSize = TextFieldAutoSize.LEFT;
+		this._textMeasuredWidth = this.textField.width;
+		this._textMeasuredHeight = this.textField.height;
+		this.textField.autoSize = TextFieldAutoSize.NONE;
+		if (!hasText) {
+			this.textField.text = this.text;
+		}
+		this.textField.visible = hasText;
+	}
+
+	private function layoutContent():Void {
 		var maxWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
-		if (this.textField.width > maxWidth) {
+		if (this._textMeasuredWidth > maxWidth) {
 			this.textField.width = maxWidth;
+		} else {
+			this.textField.width = this._textMeasuredWidth;
 		}
-		if (this.textField.height > maxHeight) {
+		if (this._textMeasuredHeight > maxHeight) {
 			this.textField.height = maxHeight;
+		} else {
+			this.textField.height = this._textMeasuredHeight;
 		}
 		switch (this.horizontalAlign) {
 			case LEFT:

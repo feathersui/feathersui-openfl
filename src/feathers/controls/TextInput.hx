@@ -296,6 +296,9 @@ class TextInput extends FeathersControl implements IStateContext {
 		this.setInvalid(InvalidationFlag.STYLES);
 	}
 
+	private var _textMeasuredWidth:Float;
+	private var _textMeasuredHeight:Float;
+
 	override private function initialize():Void {
 		super.initialize();
 		if (this.textField == null) {
@@ -315,12 +318,12 @@ class TextInput extends FeathersControl implements IStateContext {
 			this.refreshBackgroundSkin();
 		}
 
-		if (dataInvalid) {
-			this.refreshText();
-		}
-
 		if (stylesInvalid || stateInvalid) {
 			this.refreshTextStyles();
+		}
+
+		if (dataInvalid || stylesInvalid || stateInvalid) {
+			this.refreshText();
 		}
 
 		this.autoSizeIfNeeded();
@@ -433,10 +436,9 @@ class TextInput extends FeathersControl implements IStateContext {
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
+			newHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
 			if (this._currentBackgroundSkin != null) {
-				newHeight = this._currentBackgroundSkin.height;
-			} else {
-				newHeight = 0;
+				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
 		}
 
@@ -453,12 +455,11 @@ class TextInput extends FeathersControl implements IStateContext {
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
+			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
-				newMinHeight = measureSkin.minHeight;
+				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
-				newMinHeight = this._backgroundSkinMeasurements.minHeight;
-			} else {
-				newMinHeight = 0;
+				newMinHeight = Math.max(this._backgroundSkinMeasurements.minHeight, newMinHeight);
 			}
 		}
 		var newMaxWidth = this.explicitMaxWidth;
@@ -468,7 +469,7 @@ class TextInput extends FeathersControl implements IStateContext {
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
-				newMaxWidth = 0;
+				newMaxWidth = Math.POSITIVE_INFINITY;
 			}
 		}
 
@@ -479,49 +480,58 @@ class TextInput extends FeathersControl implements IStateContext {
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
-				newMaxHeight = 0;
+				newMaxHeight = Math.POSITIVE_INFINITY;
 			}
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
-	private function refreshText() {
-		this.textField.text = text;
+	private function refreshTextStyles():Void {
+		this.textField.defaultTextFormat = this.fontStyles;
 	}
 
-	private function refreshTextStyles() {
-		this.textField.defaultTextFormat = this.fontStyles;
-		this.textField.setTextFormat(this.fontStyles);
+	private function refreshText():Void {
+		var hasText = this.text != null && this.text.length > 0;
+		if (hasText) {
+			this.textField.text = this.text;
+		} else {
+			this.textField.text = "\u8203"; // zero-width space
+		}
+		this.textField.autoSize = TextFieldAutoSize.LEFT;
+		this._textMeasuredWidth = this.textField.width;
+		this._textMeasuredHeight = this.textField.height;
+		this.textField.autoSize = TextFieldAutoSize.NONE;
+		if (!hasText) {
+			this.textField.text = this.text;
+		}
 	}
 
 	private function layoutContent():Void {
 		this.layoutBackgroundSkin();
 
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
-		var measuredHeight = this.textField.height;
-		this.textField.autoSize = TextFieldAutoSize.NONE;
-
 		this.textField.x = this.paddingLeft;
 		this.textField.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
-		if (this.textField.height > maxHeight) {
+		if (this._textMeasuredHeight > maxHeight) {
 			this.textField.height = maxHeight;
+		} else {
+			this.textField.height = this._textMeasuredHeight;
 		}
 		switch (this.verticalAlign) {
 			case TOP:
 				this.textField.y = this.paddingTop;
-				this.textField.height = Math.min(maxHeight, measuredHeight);
+				this.textField.height = Math.min(maxHeight, this.textField.height);
 			case BOTTOM:
-				this.textField.y = this.actualHeight - this.paddingBottom - measuredHeight;
-				this.textField.height = Math.min(maxHeight, measuredHeight);
+				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
+				this.textField.height = Math.min(maxHeight, this.textField.height);
 			case JUSTIFY:
 				this.textField.y = this.paddingTop;
 				this.textField.height = maxHeight;
 			default: // center
-				this.textField.y = this.paddingTop + (maxHeight - measuredHeight) / 2;
-				this.textField.height = Math.min(maxHeight, measuredHeight);
+				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2;
+				this.textField.height = Math.min(maxHeight, this.textField.height);
 		}
 	}
 
