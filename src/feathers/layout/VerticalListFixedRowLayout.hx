@@ -19,7 +19,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
-class FixedVerticalListLayout extends EventDispatcher implements IScrollLayout {
+class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayout {
 	public var scrollX(default, set):Float = 0.0;
 
 	private function set_scrollX(value:Float):Float {
