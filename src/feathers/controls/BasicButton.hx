@@ -15,8 +15,8 @@ import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.core.IValidating;
-import feathers.core.Measurements;
 import feathers.events.FeathersEvent;
+import feathers.layout.Measurements;
 import feathers.utils.PointerToState;
 
 /**

@@ -76,16 +76,16 @@ class Application extends LayoutGroup {
 
 	private function application_addedToStageHandler(event:Event):Void {
 		this.addEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
-		this.stage.addEventListener(Event.RESIZE, stage_resizeHandler, false, 0, true);
+		this.stage.addEventListener(Event.RESIZE, application_stage_resizeHandler, false, 0, true);
 		this.refreshDimensions();
 	}
 
 	private function application_removedFromStageHandler(event:Event):Void {
 		this.removeEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
-		this.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);
+		this.stage.removeEventListener(Event.RESIZE, application_stage_resizeHandler);
 	}
 
-	private function stage_resizeHandler(event:Event):Void {
+	private function application_stage_resizeHandler(event:Event):Void {
 		this.refreshDimensions();
 	}
 }

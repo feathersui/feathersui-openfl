@@ -6,8 +6,9 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
-package feathers.core;
+package feathers.layout;
 
+import feathers.core.IMeasureDisplayObject;
 import openfl.display.DisplayObject;
 
 /**
