@@ -58,7 +58,6 @@ class Application extends LayoutGroup {
 			scaleFactor = this._scaler.getScale(Capabilities.screenDPI);
 			#end
 		}
-		trace("scale factor:", scaleFactor, this.stage.window.scale, this.stage.contentsScaleFactor, Capabilities.screenDPI);
 		this.scaleX = scaleFactor;
 		this.scaleY = scaleFactor;
 		var needsToBeDivisibleByTwo = Math.floor(scaleFactor) != scaleFactor;
