@@ -227,7 +227,9 @@ class BasicButton extends FeathersControl implements IStateContext {
 			return false;
 		}
 
-		this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+		if (this._currentBackgroundSkin != null) {
+			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+		}
 
 		var measureSkin:IMeasureDisplayObject = null;
 		if (Std.is(this._currentBackgroundSkin, IMeasureDisplayObject)) {
@@ -284,7 +286,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
-				newMaxWidth = 0;
+				newMaxWidth = Math.POSITIVE_INFINITY;
 			}
 		}
 
@@ -295,7 +297,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
-				newMaxHeight = 0;
+				newMaxHeight = Math.POSITIVE_INFINITY;
 			}
 		}
 
