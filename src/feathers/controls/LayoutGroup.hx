@@ -121,7 +121,7 @@ class LayoutGroup extends FeathersControl {
 
 		@default null
 
-		@see `BasicButton.backgroundSkin`
+		@see `LayoutGroup.backgroundSkin`
 
 		@since 1.0.0
 	**/
