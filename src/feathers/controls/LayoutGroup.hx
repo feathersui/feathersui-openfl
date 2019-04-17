@@ -180,6 +180,42 @@ class LayoutGroup extends FeathersControl {
 		return this.autoSizeMode;
 	}
 
+	override public function addChildAt(child:DisplayObject, index:Int):DisplayObject {
+		var oldIndex = this.items.indexOf(child);
+		if (oldIndex == index) {
+			return child;
+		}
+		if (Std.is(child, FeathersControl)) {
+			child.addEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
+		}
+		/*if(child is ILayoutObject)
+			{
+				child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
+		}*/
+		if (oldIndex >= 0) {
+			this.items.remove(child);
+		}
+		var result = super.addChildAt(child, index);
+		this.items.insert(index, child);
+		this.setInvalid(InvalidationFlag.LAYOUT);
+		return result;
+	}
+
+	override public function removeChild(child:DisplayObject):DisplayObject {
+		if (child == null || child.parent != this) {
+			return child;
+		}
+		if (Std.is(child, FeathersControl)) {
+			child.removeEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
+		}
+		/*if(child is ILayoutObject)
+			{
+				child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, clayoutGroup_hild_layoutDataChangeHandler);
+		}*/
+		this.items.remove(child);
+		return child;
+	}
+
 	override private function update():Void {
 		// children are allowed to change during draw() in a subclass up
 		// until it calls super.draw().
@@ -429,5 +465,16 @@ class LayoutGroup extends FeathersControl {
 
 	private function layoutGroup_stage_resizeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.SIZE);
+	}
+
+	private function layoutGroup_child_resizeHandler(event:Event):Void {
+		if (this._ignoreChildChanges) {
+			return;
+		}
+		if (this._ignoreChildChangesButSetFlags) {
+			this.setInvalidationFlag(InvalidationFlag.LAYOUT);
+			return;
+		}
+		this.setInvalid(InvalidationFlag.LAYOUT);
 	}
 }
