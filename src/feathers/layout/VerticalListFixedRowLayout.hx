@@ -9,6 +9,7 @@
 package feathers.layout;
 
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
@@ -26,7 +27,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		if (this.scrollX == value) {
 			return this.scrollX;
 		}
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.scrollX;
 	}
 
@@ -36,7 +37,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		if (this.scrollY == value) {
 			return this.scrollY;
 		}
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.scrollY;
 	}
 
@@ -51,7 +52,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 			return this.rowHeight;
 		}
 		this.rowHeight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.rowHeight;
 	}
 
@@ -66,7 +67,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 			return this.requestedRowCount;
 		}
 		this.requestedRowCount = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.requestedRowCount;
 	}
 

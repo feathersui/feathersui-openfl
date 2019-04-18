@@ -565,6 +565,6 @@ class TextInput extends FeathersControl implements IStateContext {
 		}
 		this.currentState = state;
 		this.setInvalid(InvalidationFlag.STATE);
-		this.dispatchEvent(new FeathersEvent(FeathersEvent.STATE_CHANGE));
+		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 }

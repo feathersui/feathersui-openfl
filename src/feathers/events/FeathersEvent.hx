@@ -8,7 +8,9 @@
 
 package feathers.events;
 
+import lime.utils.ObjectPool;
 import openfl.events.Event;
+import openfl.events.IEventDispatcher;
 
 /**
 	Events dispatched by Feathers components.
@@ -50,6 +52,17 @@ class FeathersEvent extends Event {
 		@since 1.0.0
 	**/
 	public static inline var STATE_CHANGE:String = "stateChange";
+	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false));
+
+	public static function dispatch(dispatcher:IEventDispatcher, type:String, bubbles:Bool = false, cancelable:Bool = false):Bool {
+		var event = _pool.get();
+		event.type = type;
+		event.bubbles = bubbles;
+		event.cancelable = cancelable;
+		var result = dispatcher.dispatchEvent(event);
+		_pool.release(event);
+		return result;
+	}
 
 	public function new(type:String, bubbles:Bool = false, cancelable:Bool = false) {
 		super(type, bubbles, cancelable);

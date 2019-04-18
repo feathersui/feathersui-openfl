@@ -409,7 +409,7 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		this._validating = false;
 		if (!this.created) {
 			this.created = true;
-			this.dispatchEvent(new FeathersEvent(FeathersEvent.CREATION_COMPLETE));
+			FeathersEvent.dispatch(this, FeathersEvent.CREATION_COMPLETE);
 		}
 	}
 
@@ -431,7 +431,7 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		this.setInvalid(); // set everything invalid
 		this._initializing = false;
 		this.initialized = true;
-		this.dispatchEvent(new FeathersEvent(FeathersEvent.INITIALIZE));
+		FeathersEvent.dispatch(this, FeathersEvent.INITIALIZE);
 	}
 
 	/**
@@ -614,7 +614,7 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		this.scaledActualMaxHeight = this.actualMaxHeight * scaleX;
 		if (width != this.scaledActualWidth || height != this.scaledActualHeight) {
 			resized = true;
-			this.dispatchEvent(new Event(Event.RESIZE));
+			FeathersEvent.dispatch(this, Event.RESIZE);
 		}
 		return resized;
 	}

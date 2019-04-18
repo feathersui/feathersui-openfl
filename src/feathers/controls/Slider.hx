@@ -11,6 +11,7 @@ package feathers.controls;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.Direction;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
@@ -73,7 +74,7 @@ class Slider extends FeathersControl {
 		this.value = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		if (this.liveDragging && !this._dragging) {
-			this.dispatchEvent(new Event(Event.CHANGE));
+			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 		return this.value;
 	}
@@ -603,7 +604,7 @@ class Slider extends FeathersControl {
 		this.stage.removeEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler);
 		this._dragging = false;
 		if (!this.liveDragging) {
-			this.dispatchEvent(new Event(Event.CHANGE));
+			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
 
@@ -652,7 +653,7 @@ class Slider extends FeathersControl {
 		this.stage.removeEventListener(MouseEvent.MOUSE_UP, trackSkin_stage_mouseUpHandler);
 		this._dragging = false;
 		if (!this.liveDragging) {
-			this.dispatchEvent(new Event(Event.CHANGE));
+			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
 }

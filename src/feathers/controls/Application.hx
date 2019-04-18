@@ -1,6 +1,5 @@
 package feathers.controls;
 
-import openfl.system.Capabilities;
 import openfl.events.Event;
 import feathers.utils.ScreenDensityScaleCalculator;
 import feathers.utils.MathUtil;
@@ -17,7 +16,7 @@ class Application extends LayoutGroup {
 	public function new() {
 		super();
 
-		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler);
+		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler, false, 100);
 	}
 
 	private var _scaler:ScreenDensityScaleCalculator;

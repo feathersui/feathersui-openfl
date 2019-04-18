@@ -233,7 +233,6 @@ class Button extends BasicButton {
 		super.initialize();
 		if (this.textField == null) {
 			this.textField = new TextField();
-			this.textField.autoSize = TextFieldAutoSize.LEFT;
 			this.textField.selectable = false;
 			this.addChild(this.textField);
 		}
