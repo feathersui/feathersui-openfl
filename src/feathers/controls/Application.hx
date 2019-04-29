@@ -1,5 +1,6 @@
 package feathers.controls;
 
+import openfl.system.Capabilities;
 import openfl.events.Event;
 import feathers.utils.ScreenDensityScaleCalculator;
 import feathers.utils.MathUtil;
