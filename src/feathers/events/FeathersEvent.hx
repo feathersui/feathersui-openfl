@@ -52,6 +52,26 @@ class FeathersEvent extends Event {
 		@since 1.0.0
 	**/
 	public static inline var STATE_CHANGE:String = "stateChange";
+
+	/**
+		The `FeathersEvent.SCROLL_START` event type is dispatched when a
+		scrolling container starts scrolling.
+
+		@see `feathers.utils.Scroller`
+
+		@since 1.0.0
+	**/
+	public static inline var SCROLL_START:String = "scrollStart";
+
+	/**
+		The `FeathersEvent.SCROLL_COMPLETE` event type is dispatched when a
+		scrolling container completes scrolling.
+
+		@see `feathers.utils.Scroller`
+
+		@since 1.0.0
+	**/
+	public static inline var SCROLL_COMPLETE:String = "scrollComplete";
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false));
 
 	public static function dispatch(dispatcher:IEventDispatcher, type:String, bubbles:Bool = false, cancelable:Bool = false):Bool {
