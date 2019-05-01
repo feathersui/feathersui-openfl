@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import openfl.display.DisplayObject;
+import openfl.events.MouseEvent;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureDisplayObject;
 import feathers.core.InvalidationFlag;
@@ -41,6 +42,8 @@ class BasicButton extends FeathersControl implements IStateContext {
 		this.buttonMode = true;
 		// a hand cursor only makes sense for hyperlinks
 		this.useHandCursor = false;
+
+		this.addEventListener(MouseEvent.CLICK, basicButton_clickHandler);
 	}
 
 	/**
@@ -345,5 +348,12 @@ class BasicButton extends FeathersControl implements IStateContext {
 		this.currentState = state;
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
+	private function basicButton_clickHandler(event:MouseEvent):Void {
+		if (!this.enabled) {
+			event.stopImmediatePropagation();
+			return;
+		}
 	}
 }
