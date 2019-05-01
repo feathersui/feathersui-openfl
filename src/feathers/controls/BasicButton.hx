@@ -31,6 +31,12 @@ import feathers.utils.PointerToState;
 class BasicButton extends FeathersControl implements IStateContext {
 	public function new() {
 		super();
+		// MouseEvent.CLICK is dispatched only if the same object is under the
+		// pointer for both MouseEvent.MOUSE_DOWN and MouseEvent.MOUSE_UP. The
+		// button might change skins between ButtonState.UP and
+		// ButtonState.DOWN, and this would prevent MouseEvent.CLICK.
+		// setting mouseChildren to false keeps the button as the target.
+		this.mouseChildren = false;
 	}
 
 	/**
