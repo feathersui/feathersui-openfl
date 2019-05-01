@@ -37,6 +37,10 @@ class BasicButton extends FeathersControl implements IStateContext {
 		// ButtonState.DOWN, and this would prevent MouseEvent.CLICK.
 		// setting mouseChildren to false keeps the button as the target.
 		this.mouseChildren = false;
+		// when focused, keyboard space/enter trigger MouseEvent.CLICK
+		this.buttonMode = true;
+		// a hand cursor only makes sense for hyperlinks
+		this.useHandCursor = false;
 	}
 
 	/**
