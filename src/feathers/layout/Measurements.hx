@@ -105,6 +105,26 @@ class Measurements {
 	}
 
 	/**
+		Restores the saved measurements to the target.
+
+		@since 1.0.0
+	**/
+	public function restore(target:DisplayObject):Void {
+		if (Std.is(target, IMeasureDisplayObject)) {
+			var measureTarget = cast(target, IMeasureDisplayObject);
+			measureTarget.width = this.width;
+			measureTarget.height = this.height;
+			measureTarget.minWidth = this.minWidth;
+			measureTarget.minHeight = this.minHeight;
+			measureTarget.maxWidth = this.maxWidth;
+			measureTarget.maxHeight = this.maxHeight;
+			return;
+		}
+		target.width = this.width;
+		target.height = this.height;
+	}
+
+	/**
 		The object's width value, or `null`, if width is not available.
 
 		@since 1.0.0
