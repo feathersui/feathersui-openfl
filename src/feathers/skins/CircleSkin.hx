@@ -9,6 +9,7 @@
 package feathers.skins;
 
 import feathers.core.IStateObserver;
+import openfl.geom.Matrix;
 
 /**
 	A skin for Feathers components that draws a rectangle. The rectangle's fill
@@ -22,10 +23,22 @@ class CircleSkin extends BaseGraphicsPathSkin implements IStateObserver {
 	}
 
 	override private function drawPath():Void {
+		var radius = this.getRadius();
+		this.graphics.drawCircle(this.actualWidth / 2, this.actualHeight / 2, radius);
+	}
+
+	private inline function getRadius():Float {
 		var radius = this.actualWidth;
 		if (radius > this.actualHeight) {
 			radius = this.actualHeight;
 		}
-		this.graphics.drawCircle(this.actualWidth / 2, this.actualHeight / 2, radius);
+		return radius;
+	}
+
+	override private function getGradientMatrix(radians:Float):Matrix {
+		var radius = this.getRadius();
+		var matrix = new Matrix();
+		matrix.createGradientBox(radius, radius, radians, (this.actualWidth - radius) / 2, (this.actualHeight - radius) / 2);
+		return matrix;
 	}
 }

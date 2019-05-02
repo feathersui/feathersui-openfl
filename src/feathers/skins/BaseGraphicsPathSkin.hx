@@ -9,10 +9,13 @@
 package feathers.skins;
 
 import openfl.display.LineScaleMode;
+import openfl.display.InterpolationMethod;
+import openfl.display.SpreadMethod;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
+import openfl.geom.Matrix;
 import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
 
@@ -201,6 +204,24 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 					}
 					this.graphics.lineStyle(thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit);
 				}
+			case Gradient(thickness, type, colors, alphas, ratios, radians, spreadMethod, interpolationMethod, focalPointRatio):
+				{
+					if (radians == null) {
+						radians = 0.0;
+					}
+					if (spreadMethod == null) {
+						spreadMethod = SpreadMethod.PAD;
+					}
+					if (interpolationMethod == null) {
+						interpolationMethod = InterpolationMethod.RGB;
+					}
+					if (focalPointRatio == null) {
+						focalPointRatio = 0.0;
+					}
+					var matrix = getGradientMatrix(radians);
+					this.graphics.lineStyle(thickness);
+					this.graphics.lineGradientStyle(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
+				}
 		}
 	}
 
@@ -228,6 +249,23 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 					}
 					this.graphics.beginFill(color, alpha);
 				}
+			case Gradient(type, colors, alphas, ratios, radians, spreadMethod, interpolationMethod, focalPointRatio):
+				{
+					if (radians == null) {
+						radians = 0.0;
+					}
+					if (spreadMethod == null) {
+						spreadMethod = SpreadMethod.PAD;
+					}
+					if (interpolationMethod == null) {
+						interpolationMethod = InterpolationMethod.RGB;
+					}
+					if (focalPointRatio == null) {
+						focalPointRatio = 0.0;
+					}
+					var matrix = getGradientMatrix(radians);
+					this.graphics.beginGradientFill(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
+				}
 			case Bitmap(bitmapData, matrix, repeat, smooth):
 				{
 					if (repeat == null) {
@@ -250,5 +288,11 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 			return this.fill;
 		}
 		return result;
+	}
+
+	private function getGradientMatrix(radians:Float):Matrix {
+		var matrix = new Matrix();
+		matrix.createGradientBox(this.actualWidth, this.actualHeight, radians);
+		return matrix;
 	}
 }
