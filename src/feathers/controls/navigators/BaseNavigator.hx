@@ -18,6 +18,7 @@ import feathers.core.InvalidationFlag;
 import feathers.layout.AutoSizeMode;
 import openfl.events.Event;
 import openfl.display.DisplayObjectContainer;
+import openfl.geom.Point;
 import feathers.motion.effects.NoOpEffectContext;
 import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
@@ -218,6 +219,16 @@ class BaseNavigator extends FeathersControl {
 		}
 
 		var needsToMeasureContent = this.autoSizeMode == AutoSizeMode.CONTENT || this.stage == null;
+		var stageWidth:Float = 0.0;
+		var stageHeight:Float = 0.0;
+		if (!needsToMeasureContent) {
+			// TODO: see if this can be done without allocations
+			var topLeft = this.globalToLocal(new Point());
+			var bottomRight = this.globalToLocal(new Point(this.stage.stageWidth, this.stage.stageHeight));
+			stageWidth = bottomRight.x - topLeft.x;
+			stageHeight = bottomRight.y - topLeft.y;
+		}
+
 		var measureView:IMeasureDisplayObject = null;
 		if (Std.is(this.activeItemView, IMeasureDisplayObject)) {
 			measureView = cast(this.activeItemView, IMeasureDisplayObject);
@@ -236,7 +247,7 @@ class BaseNavigator extends FeathersControl {
 					newWidth = 0;
 				}
 			} else {
-				newWidth = this.stage.stageWidth;
+				newWidth = stageWidth;
 			}
 		}
 
@@ -249,7 +260,7 @@ class BaseNavigator extends FeathersControl {
 					newHeight = 0;
 				}
 			} else {
-				newHeight = this.stage.stageHeight;
+				newHeight = stageHeight;
 			}
 		}
 
@@ -264,7 +275,7 @@ class BaseNavigator extends FeathersControl {
 					newMinWidth = 0;
 				}
 			} else {
-				newMinWidth = this.stage.stageWidth;
+				newMinWidth = stageWidth;
 			}
 		}
 
@@ -279,7 +290,7 @@ class BaseNavigator extends FeathersControl {
 					newMinHeight = 0;
 				}
 			} else {
-				newMinHeight = this.stage.stageHeight;
+				newMinHeight = stageHeight;
 			}
 		}
 
@@ -294,7 +305,7 @@ class BaseNavigator extends FeathersControl {
 					newMaxWidth = Math.POSITIVE_INFINITY;
 				}
 			} else {
-				newMaxWidth = this.stage.stageWidth;
+				newMaxWidth = stageWidth;
 			}
 		}
 
@@ -309,7 +320,7 @@ class BaseNavigator extends FeathersControl {
 					newMaxHeight = Math.POSITIVE_INFINITY;
 				}
 			} else {
-				newMaxHeight = this.stage.stageHeight;
+				newMaxHeight = stageHeight;
 			}
 		}
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);

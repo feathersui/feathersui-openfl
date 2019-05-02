@@ -19,6 +19,7 @@ import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
+import openfl.geom.Point;
 
 /**
 	A generic container that supports layouts and automatically sizes itself
@@ -303,14 +304,25 @@ class LayoutGroup extends FeathersControl {
 			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
 		}
 
-		if (needsWidth && this.autoSizeMode == AutoSizeMode.STAGE && this.stage != null) {
-			this._layoutMeasurements.width = this.stage.stageWidth;
+		var needsToMeasureContent = this.autoSizeMode == AutoSizeMode.CONTENT || this.stage == null;
+		var stageWidth:Float = 0.0;
+		var stageHeight:Float = 0.0;
+		if (!needsToMeasureContent) {
+			// TODO: see if this can be done without allocations
+			var topLeft = this.globalToLocal(new Point());
+			var bottomRight = this.globalToLocal(new Point(this.stage.stageWidth, this.stage.stageHeight));
+			stageWidth = bottomRight.x - topLeft.x;
+			stageHeight = bottomRight.y - topLeft.y;
+		}
+
+		if (needsWidth && !needsToMeasureContent) {
+			this._layoutMeasurements.width = stageWidth;
 		} else {
 			this._layoutMeasurements.width = this.explicitWidth;
 		}
 
-		if (needsHeight && this.autoSizeMode == AutoSizeMode.STAGE && this.stage != null) {
-			this._layoutMeasurements.height = this.stage.stageHeight;
+		if (needsHeight && !needsToMeasureContent) {
+			this._layoutMeasurements.height = stageHeight;
 		} else {
 			this._layoutMeasurements.height = this.explicitHeight;
 		}
