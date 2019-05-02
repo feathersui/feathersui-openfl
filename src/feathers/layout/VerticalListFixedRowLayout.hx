@@ -78,6 +78,11 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		if (viewPortWidth == null || this.rowHeight == null) {
 			for (i in 0...items.length) {
 				var item = items[i];
+				if (Std.is(item, ILayoutObject)) {
+					if (!cast(item, ILayoutObject).includeInLayout) {
+						continue;
+					}
+				}
 				if (Std.is(item, IValidating)) {
 					cast(item, IValidating).validateNow();
 				}
@@ -100,6 +105,11 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		var positionY = 0.0;
 		for (i in 0...items.length) {
 			var item = items[i];
+			if (Std.is(item, ILayoutObject)) {
+				if (!cast(item, ILayoutObject).includeInLayout) {
+					continue;
+				}
+			}
 			item.x = 0;
 			item.y = positionY;
 			item.width = itemWidth;
