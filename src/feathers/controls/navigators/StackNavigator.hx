@@ -22,7 +22,7 @@ import feathers.events.FeathersEvent;
 
 	```hx
 	var navigator:StackNavigator = new StackNavigator();
-	navigator.addItem( "mainMenu", new StackNavigatorItem( MainMenuScreen ) );
+	navigator.addItem( "mainMenu", new StackItem( MainMenuScreen ) );
 	this.addChild( navigator );
 
 	navigator.rootItemID = "mainMenu";
@@ -30,12 +30,12 @@ import feathers.events.FeathersEvent;
 
 	@see [How to use the Feathers `StackNavigator` component](../../../help/stack-navigator.html)
 	@see [Transitions for Feathers navigators](../../../help/transitions.html)
-	@see `feathers.controls.navigators.StackNavigatorItem`
+	@see `feathers.controls.navigators.StackItem`
 	@see `feathers.controls.navigators.TabNavigator`
 
 	@since 1.0.0
 **/
-@:access(feathers.controls.navigators.StackNavigatorItem)
+@:access(feathers.controls.navigators.StackItem)
 class StackNavigator extends BaseNavigator {
 	public function new() {
 		super();
@@ -43,7 +43,10 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	/**
+		The default transition to use for push actions, if not overridden in the
+		call to `pushItem()`.
 
+		@see `pushItem()`
 		@see `popTransition`
 
 		@since 1.0.0
@@ -52,8 +55,12 @@ class StackNavigator extends BaseNavigator {
 	public var pushTransition(default, default):DisplayObject->DisplayObject->IEffectContext;
 
 	/**
+		The default transition to use for pop actions, if not overridden in the
+		call to `popItem()`.
 
-		@see `popToRootTransition`
+		@see `popItem()`
+		@see `popToRootItem()`
+		@see `popToRootItemAndReplace()`
 		@see `pushTransition`
 
 		@since 1.0.0
@@ -61,15 +68,10 @@ class StackNavigator extends BaseNavigator {
 	public var popTransition(default, default):DisplayObject->DisplayObject->IEffectContext;
 
 	/**
+		The default transition to use for replace actions, if not overridden in
+		the call to `replaceItem()`.
 
-		@see `popTransition`
-
-		@since 1.0.0
-	**/
-	public var popToRootTransition(default, default):DisplayObject->DisplayObject->IEffectContext;
-
-	/**
-
+		@see `replaceItem()`
 		@see `pushTransition`
 		@see `popTransition`
 
@@ -77,8 +79,8 @@ class StackNavigator extends BaseNavigator {
 	**/
 	public var replaceTransition(default, default):DisplayObject->DisplayObject->IEffectContext;
 
-	private var _stack:Array<StackItem> = [];
-	private var _poppedStackItemInTransition:StackItem;
+	private var _history:Array<HistoryItem> = [];
+	private var _poppedHistoryItemInTransition:HistoryItem;
 	private var _tempRootItemID:String;
 
 	/**
@@ -90,7 +92,7 @@ class StackNavigator extends BaseNavigator {
 	public var stackSize(get, null):Int;
 
 	private function get_stackSize():Int {
-		return this._stack.length;
+		return this._history.length;
 	}
 
 	/**
@@ -115,10 +117,10 @@ class StackNavigator extends BaseNavigator {
 	public var rootItemID(get, set):String;
 
 	private function get_rootItemID():String {
-		if (this._tempRootItemID != null) {
-			return this._tempRootItemID;
+		if (this._history.length > 0) {
+			return this._history[0].id;
 		}
-		return this._stack[0].id;
+		return this._tempRootItemID;
 	}
 
 	private function set_rootItemID(value:String):String {
@@ -132,8 +134,8 @@ class StackNavigator extends BaseNavigator {
 		// displayed, so we need to clear this variable, just in case.
 		this._tempRootItemID = null;
 
-		while (this._stack.length > 0) {
-			this._stack.pop();
+		while (this._history.length > 0) {
+			this._history.pop();
 		}
 
 		if (value == null) {
@@ -143,7 +145,7 @@ class StackNavigator extends BaseNavigator {
 
 		// show without a transition because we're not navigating.
 		// we're forcibly replacing the root item.
-		this._stack.push(new StackItem(value, null));
+		this._history.push(new HistoryItem(value, null));
 		this.showItemInternal(value, null, null);
 		return value;
 	}
@@ -157,7 +159,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function addItem(id:String, item:StackNavigatorItem):Void {
+	public function addItem(id:String, item:StackItem):Void {
 		this.addItemInternal(id, item);
 	}
 
@@ -169,38 +171,38 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function removeItem(id:String):StackNavigatorItem {
-		for (item in this._stack) {
+	public function removeItem(id:String):StackItem {
+		for (item in this._history) {
 			if (item.id == id) {
-				this._stack.remove(item);
+				this._history.remove(item);
 				// don't break here because there might be multiple items with
 				// this ID in the history stack. we need to look at the entire
 				// stack and remove all duplicates
 			}
 		}
 		var item = this.removeItemInternal(id);
-		return cast(item, StackNavigatorItem);
+		return cast(item, StackItem);
 	}
 
 	override public function removeAllItems():Void {
-		while (this._stack.length > 0) {
-			this._stack.pop();
+		while (this._history.length > 0) {
+			this._history.pop();
 		}
 		super.removeAllItems();
 	}
 
 	/**
-		Returns the `StackNavigatorItem` that was registered by passing the
-		specified identifier to `addItem()`.
+		Returns the `StackItem` that was registered by passing the specified
+		identifier to `addItem()`.
 
 		@since 1.0.0
 	**/
-	public function getItem(id:String):StackNavigatorItem {
+	public function getItem(id:String):StackItem {
 		var item = this._addedItems.get(id);
 		if (item == null) {
 			return null;
 		}
-		return cast(item, StackNavigatorItem);
+		return cast(item, StackItem);
 	}
 
 	/**
@@ -232,7 +234,7 @@ class StackNavigator extends BaseNavigator {
 				transition = this.pushTransition;
 			}
 		}
-		this._stack.push(new StackItem(id, properties));
+		this._history.push(new HistoryItem(id, properties));
 		return this.showItemInternal(id, transition, properties);
 	}
 
@@ -259,7 +261,7 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function popItem(?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
-		if (this._stack.length <= 1) {
+		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
 			return this.activeItemView;
@@ -272,9 +274,9 @@ class StackNavigator extends BaseNavigator {
 				transition = this.popTransition;
 			}
 		}
-		this._stack.pop();
-		this._poppedStackItemInTransition = this._stack[this._stack.length - 1];
-		return this.showItemInternal(this._poppedStackItemInTransition.id, transition, this._poppedStackItemInTransition.properties);
+		this._history.pop();
+		this._poppedHistoryItemInTransition = this._history[this._history.length - 1];
+		return this.showItemInternal(this._poppedHistoryItemInTransition.id, transition, this._poppedHistoryItemInTransition.properties);
 	}
 
 	/**
@@ -282,15 +284,13 @@ class StackNavigator extends BaseNavigator {
 		item will become the new active item.
 
 		An optional transition may be specified. If `null`, the value of the
-		`popToRootTransition` (or `popTransition`) property will be used
-		instead.
+		`popTransition` property will be used instead.
 
 		Returns a reference to the new view, unless a transition is already
 		active when `popToRootItem()` is called. In that case, the new item will
 		be queued until the previous transition has completed, and
 		`popToRootItem()` will return `null`.
 
-		@see `popToRootTransition`
 		@see `popTransition`
 		@see `popToRootItemAndReplace()`
 		@see `popAll()`
@@ -299,21 +299,18 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function popToRootItem(?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
-		if (this._stack.length <= 1) {
+		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
 			return this.activeItemView;
 		}
 		if (transition == null) {
-			transition = this.popToRootTransition;
-			if (transition == null) {
-				transition = this.popTransition;
-			}
+			transition = this.popTransition;
 		}
-		while (this._stack.length > 1) {
-			this._stack.pop();
+		while (this._history.length > 1) {
+			this._history.pop();
 		}
-		var item = this._stack[0];
+		var item = this._history[0];
 		return this.showItemInternal(item.id, transition, item.properties);
 	}
 
@@ -330,13 +327,17 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function popAll(?transition:DisplayObject->DisplayObject->IEffectContext):Void {
-		if (this._stack.length == 0) {
+		if (this._history.length == 0) {
 			// the history stack is empty, and there isn't even a root item
 			return;
 		}
 		if (transition == null) {
 			transition = this.popTransition;
 		}
+		while (this._history.length > 0) {
+			this._history.pop();
+		}
+		this.clearActiveItemInternal(transition);
 	}
 
 	/**
@@ -370,15 +371,13 @@ class StackNavigator extends BaseNavigator {
 		with a different item instead.
 
 		An optional transition may be specified. If `null`, the value of the
-		`popToRootTransition` (or `popTransition`) property will be used
-		instead.
+		`popTransition` property will be used instead.
 
 		Returns a reference to the new view, unless a transition is already
 		active when `popToRootItemAndReplace()` is called. In that case, the new
 		item will be queued until the previous transition has completed, and
 		`popToRootItemAndReplace()` will return `null`.
 
-		@see `popToRootTransition`
 		@see `popTransition`
 		@see `popToRootItem()`
 		@see `popAll()`
@@ -386,27 +385,24 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function popToRootItemAndReplace(id:String, ?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+	public function popToRootItemAndReplace(id:String, ?properties:Map<String, Dynamic>,
+			?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
 		if (transition == null) {
-			transition = this.popToRootTransition;
-			if (transition == null) {
-				transition = this.popTransition;
-			}
+			transition = this.popTransition;
 		}
-		while (this._stack.length > 1) {
-			this._stack.pop();
+		while (this._history.length > 0) {
+			this._history.pop();
 		}
-		var item = this._stack[0];
-		return this.showItemInternal(item.id, transition, item.properties);
+		return this.showItemInternal(id, transition, properties);
 	}
 
 	override private function getView(id:String):DisplayObject {
-		var item = cast(this._addedItems.get(id), StackNavigatorItem);
+		var item = cast(this._addedItems.get(id), StackItem);
 		return item.getView(this);
 	}
 
 	override private function disposeView(id:String, view:DisplayObject):Void {
-		var item = cast(this._addedItems.get(id), StackNavigatorItem);
+		var item = cast(this._addedItems.get(id), StackItem);
 		item.returnView(view);
 	}
 
@@ -421,7 +417,7 @@ class StackNavigator extends BaseNavigator {
 	}
 }
 
-private class StackItem {
+private class HistoryItem {
 	public function new(id:String, properties:Map<String, Dynamic>) {
 		this.id = id;
 		this.properties = properties;
