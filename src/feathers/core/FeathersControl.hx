@@ -13,6 +13,8 @@ import openfl.errors.Error;
 import openfl.errors.IllegalOperationError;
 import openfl.display.Sprite;
 import feathers.events.FeathersEvent;
+import feathers.layout.ILayoutData;
+import feathers.layout.ILayoutObject;
 import feathers.utils.DisplayUtil;
 
 /**
@@ -30,7 +32,7 @@ import feathers.utils.DisplayUtil;
 
 	@see `feathers.controls.LayoutGroup`
 **/
-class FeathersControl extends Sprite implements IValidating implements IMeasureDisplayObject {
+class FeathersControl extends Sprite implements IValidating implements IMeasureDisplayObject implements ILayoutObject {
 	private function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
@@ -277,6 +279,33 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 
 	public var maxWidth(default, default):Float = Math.POSITIVE_INFINITY;
 	public var maxHeight(default, default):Float = Math.POSITIVE_INFINITY;
+	public var includeInLayout(default, set):Bool = true;
+
+	private function set_includeInLayout(value:Bool):Bool {
+		if (this.includeInLayout == value) {
+			return this.includeInLayout;
+		}
+		this.includeInLayout = value;
+		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
+		return this.includeInLayout;
+	}
+
+	public var layoutData(default, set):ILayoutData;
+
+	private function set_layoutData(value:ILayoutData):ILayoutData {
+		if (this.layoutData == value) {
+			return this.layoutData;
+		}
+		if (this.layoutData != null) {
+			this.layoutData.removeEventListener(Event.CHANGE, layoutData_changeHandler);
+		}
+		this.layoutData = value;
+		if (this.layoutData != null) {
+			this.layoutData.addEventListener(Event.CHANGE, layoutData_changeHandler, false, 0, true);
+		}
+		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
+		return this.layoutData;
+	}
 
 	/**
 		Indicates whether the control is pending validation or not. By default,
@@ -638,5 +667,9 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
 		this.depth = -1;
 		this._validationQueue = null;
+	}
+
+	private function layoutData_changeHandler(event:Event):Void {
+		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
 	}
 }
