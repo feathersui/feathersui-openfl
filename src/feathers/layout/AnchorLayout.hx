@@ -40,70 +40,58 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
-		var needsWidth = measurements.width == null;
-		var needsHeight = measurements.height == null;
 		var maxX = 0.0;
 		var maxY = 0.0;
-		if (needsWidth || needsHeight) {
-			for (item in items) {
-				var layoutObject:ILayoutObject = null;
-				if (Std.is(item, ILayoutObject)) {
-					layoutObject = cast(item, ILayoutObject);
-					if (!layoutObject.includeInLayout) {
-						continue;
-					}
+		for (item in items) {
+			var layoutObject:ILayoutObject = null;
+			if (Std.is(item, ILayoutObject)) {
+				layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
 				}
-				var layoutData:AnchorLayoutData = null;
-				if (layoutObject != null && Std.is(layoutObject.layoutData, AnchorLayoutData)) {
-					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
-				}
+			}
+			var layoutData:AnchorLayoutData = null;
+			if (layoutObject != null && Std.is(layoutObject.layoutData, AnchorLayoutData)) {
+				layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
+			}
 
-				if (Std.is(item, IValidating)) {
-					cast(item, IValidating).validateNow();
-				}
+			if (Std.is(item, IValidating)) {
+				cast(item, IValidating).validateNow();
+			}
 
-				if (layoutData == null) {
-					if (needsWidth) {
-						var itemMaxX = item.x + item.width;
-						if (maxX < itemMaxX) {
-							maxX = itemMaxX;
-						}
+			if (layoutData == null) {
+				var itemMaxX = item.x + item.width;
+				if (maxX < itemMaxX) {
+					maxX = itemMaxX;
+				}
+				var itemMaxY = item.y + item.height;
+				if (maxY < itemMaxY) {
+					maxY = itemMaxY;
+				}
+			} else // has AnchorLayoutData
+			{
+				if (layoutData.top != null) {
+					item.y = layoutData.top;
+				}
+				if (layoutData.left != null) {
+					item.x = layoutData.left;
+				}
+				if (layoutData.bottom == null && layoutData.verticalCenter == null) {
+					var itemMaxY = item.y + item.height;
+					if (maxY < itemMaxY) {
+						maxY = itemMaxY;
 					}
-					if (needsHeight) {
-						var itemMaxY = item.y + item.height;
-						if (maxY < itemMaxY) {
-							maxY = itemMaxY;
-						}
-					}
-				} else // has AnchorLayoutData
-				{
-					if (layoutData.top != null) {
-						item.y = layoutData.top;
-					}
-					if (layoutData.left != null) {
-						item.x = layoutData.left;
-					}
-					if (layoutData.bottom == null && layoutData.verticalCenter == null) {
-						if (needsHeight) {
-							var itemMaxY = item.y + item.height;
-							if (maxY < itemMaxY) {
-								maxY = itemMaxY;
-							}
-						}
-					}
-					if (layoutData.right == null && layoutData.horizontalCenter == null) {
-						if (needsWidth) {
-							var itemMaxX = item.x + item.width;
-							if (maxX < itemMaxX) {
-								maxX = itemMaxX;
-							}
-						}
+				}
+				if (layoutData.right == null && layoutData.horizontalCenter == null) {
+					var itemMaxX = item.x + item.width;
+					if (maxX < itemMaxX) {
+						maxX = itemMaxX;
 					}
 				}
 			}
 		}
-		var viewPortWidth = needsWidth ? maxX : measurements.width;
-		var viewPortHeight = needsHeight ? maxY : measurements.height;
+		var viewPortWidth = measurements.width != null ? measurements.width : maxX;
+		var viewPortHeight = measurements.width != null ? measurements.height : maxY;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
