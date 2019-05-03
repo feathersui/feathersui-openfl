@@ -8,7 +8,7 @@
 
 package feathers.layout;
 
-import feathers.core.IMeasureDisplayObject;
+import feathers.core.IMeasureObject;
 import openfl.display.DisplayObject;
 
 /**
@@ -27,7 +27,7 @@ class Measurements {
 
 		@since 1.0.0
 	**/
-	public function resetTargetFluidlyForParent(target:DisplayObject, parent:IMeasureDisplayObject):Void {
+	public function resetTargetFluidlyForParent(target:DisplayObject, parent:IMeasureObject):Void {
 		if (target == null) {
 			return;
 		}
@@ -41,8 +41,8 @@ class Measurements {
 		} else {
 			target.height = parent.explicitHeight;
 		}
-		if (Std.is(target, IMeasureDisplayObject)) {
-			var measureTarget = cast(target, IMeasureDisplayObject);
+		if (Std.is(target, IMeasureObject)) {
+			var measureTarget = cast(target, IMeasureObject);
 
 			var minWidth = parent.explicitMinWidth;
 			if (minWidth == null || measureTarget.explicitMinWidth > minWidth) {
@@ -86,8 +86,8 @@ class Measurements {
 			this.maxHeight = null;
 			return;
 		}
-		if (Std.is(target, IMeasureDisplayObject)) {
-			var measureTarget = cast(target, IMeasureDisplayObject);
+		if (Std.is(target, IMeasureObject)) {
+			var measureTarget = cast(target, IMeasureObject);
 			this.width = measureTarget.explicitWidth;
 			this.height = measureTarget.explicitHeight;
 			this.minWidth = measureTarget.explicitMinWidth;
@@ -110,8 +110,8 @@ class Measurements {
 		@since 1.0.0
 	**/
 	public function restore(target:DisplayObject):Void {
-		if (Std.is(target, IMeasureDisplayObject)) {
-			var measureTarget = cast(target, IMeasureDisplayObject);
+		if (Std.is(target, IMeasureObject)) {
+			var measureTarget = cast(target, IMeasureObject);
 			measureTarget.width = this.width;
 			measureTarget.height = this.height;
 			measureTarget.minWidth = this.minWidth;

@@ -9,9 +9,11 @@
 package feathers.controls;
 
 import feathers.core.FeathersControl;
+import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
+import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.AutoSizeMode;
@@ -200,9 +202,7 @@ class LayoutGroup extends FeathersControl {
 		if (oldIndex == index) {
 			return child;
 		}
-		if (Std.is(child, FeathersControl)) {
-			child.addEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
-		}
+		child.addEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
 		if (Std.is(child, ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler, false, 0, true);
 		}
@@ -227,9 +227,7 @@ class LayoutGroup extends FeathersControl {
 		if (child == null || child.parent != this) {
 			return child;
 		}
-		if (Std.is(child, FeathersControl)) {
-			child.removeEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
-		}
+		child.removeEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
 		if (Std.is(child, ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
 		}
@@ -281,8 +279,8 @@ class LayoutGroup extends FeathersControl {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentBackgroundSkin, FeathersControl)) {
-			cast(this._currentBackgroundSkin, FeathersControl).initializeNow();
+		if (Std.is(this._currentBackgroundSkin, IUIControl)) {
+			cast(this._currentBackgroundSkin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(this._currentBackgroundSkin);

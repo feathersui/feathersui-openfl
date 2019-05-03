@@ -1,9 +1,16 @@
-package feathers.themes;
+/*
+	Feathers
+	Copyright 2019 Bowler Hat LLC. All Rights Reserved.
+
+	This program is free software. You can redistribute and/or modify it in
+	accordance with the terms of the accompanying license agreement.
+ */
+
+package feathers.style;
 
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
 import haxe.rtti.Meta;
-import feathers.core.FeathersControl;
 import openfl.events.EventDispatcher;
 
 class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvider {
@@ -17,7 +24,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
-	public function applyStyles(target:FeathersControl):Void {
+	public function applyStyles(target:IStyleObject):Void {
 		this.clearStyles(target);
 
 		if (this.styleTargets == null) {
@@ -32,7 +39,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		callback(target);
 	}
 
-	private function clearStyles(target:FeathersControl):Void {
+	private function clearStyles(target:IStyleObject):Void {
 		var targetType = Type.getClass(target);
 		var meta = Meta.getFields(targetType);
 		for (fieldName in Type.getInstanceFields(targetType)) {

@@ -9,10 +9,11 @@
 package feathers.controls;
 
 import feathers.core.FeathersControl;
-import feathers.core.IMeasureDisplayObject;
+import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
+import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
@@ -406,9 +407,9 @@ class Label extends FeathersControl {
 			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
 		}
 
-		var measureSkin:IMeasureDisplayObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureDisplayObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureDisplayObject);
+		var measureSkin:IMeasureObject = null;
+		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
 		if (Std.is(this._currentBackgroundSkin, IValidating)) {
@@ -515,8 +516,8 @@ class Label extends FeathersControl {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentBackgroundSkin, FeathersControl)) {
-			cast(this._currentBackgroundSkin, FeathersControl).initializeNow();
+		if (Std.is(this._currentBackgroundSkin, IUIControl)) {
+			cast(this._currentBackgroundSkin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(this._currentBackgroundSkin);

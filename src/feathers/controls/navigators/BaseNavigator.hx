@@ -9,7 +9,8 @@
 package feathers.controls.navigators;
 
 import openfl.errors.ArgumentError;
-import feathers.core.IMeasureDisplayObject;
+import feathers.core.IMeasureObject;
+import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import openfl.errors.IllegalOperationError;
@@ -229,9 +230,9 @@ class BaseNavigator extends FeathersControl {
 			stageHeight = bottomRight.y - topLeft.y;
 		}
 
-		var measureView:IMeasureDisplayObject = null;
-		if (Std.is(this.activeItemView, IMeasureDisplayObject)) {
-			measureView = cast(this.activeItemView, IMeasureDisplayObject);
+		var measureView:IMeasureObject = null;
+		if (Std.is(this.activeItemView, IMeasureObject)) {
+			measureView = cast(this.activeItemView, IMeasureObject);
 		}
 
 		if (Std.is(this.activeItemView, IValidating)) {
@@ -427,9 +428,9 @@ class BaseNavigator extends FeathersControl {
 		}
 		var sameInstance = this._previousViewInTransition == this.activeItemView;
 		this._viewsContainer.addChild(this.activeItemView);
-		if (Std.is(this.activeItemView, FeathersControl)) {
+		if (Std.is(this.activeItemView, IUIControl)) {
 			// initialize so that we can save the measurements
-			cast(this.activeItemView, FeathersControl).initializeNow();
+			cast(this.activeItemView, IUIControl).initializeNow();
 		}
 		this._activeViewMeasurements.save(this.activeItemView);
 

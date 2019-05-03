@@ -8,7 +8,7 @@
 
 package feathers.controls;
 
-import feathers.core.IMeasureDisplayObject;
+import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
 import feathers.core.IValidating;
 import feathers.layout.HorizontalAlign;
@@ -302,9 +302,9 @@ class Button extends BasicButton {
 			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
 		}
 
-		var measureSkin:IMeasureDisplayObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureDisplayObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureDisplayObject);
+		var measureSkin:IMeasureObject = null;
+		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
 		if (Std.is(this._currentBackgroundSkin, IValidating)) {

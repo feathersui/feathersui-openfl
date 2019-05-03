@@ -14,7 +14,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
-interface IMeasureDisplayObject {
+interface IMeasureObject {
 	/**
 		The object's explicit width value, or `null` if `width` is not set
 		explicitly.

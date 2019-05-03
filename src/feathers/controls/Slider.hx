@@ -10,6 +10,7 @@ package feathers.controls;
 
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
+import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.Direction;
@@ -426,14 +427,14 @@ class Slider extends FeathersControl {
 	}
 
 	private function refreshEnabled():Void {
-		if (Std.is(this.thumbSkin, FeathersControl)) {
-			cast(this.thumbSkin, FeathersControl).enabled = this.enabled;
+		if (Std.is(this.thumbSkin, IUIControl)) {
+			cast(this.thumbSkin, IUIControl).enabled = this.enabled;
 		}
-		if (Std.is(this.trackSkin, FeathersControl)) {
-			cast(this.trackSkin, FeathersControl).enabled = this.enabled;
+		if (Std.is(this.trackSkin, IUIControl)) {
+			cast(this.trackSkin, IUIControl).enabled = this.enabled;
 		}
-		if (Std.is(this.secondaryTrackSkin, FeathersControl)) {
-			cast(this.secondaryTrackSkin, FeathersControl).enabled = this.enabled;
+		if (Std.is(this.secondaryTrackSkin, IUIControl)) {
+			cast(this.secondaryTrackSkin, IUIControl).enabled = this.enabled;
 		}
 	}
 

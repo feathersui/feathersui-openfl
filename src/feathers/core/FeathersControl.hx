@@ -14,9 +14,8 @@ import openfl.errors.IllegalOperationError;
 import openfl.display.Sprite;
 import feathers.events.FeathersEvent;
 import feathers.layout.ILayoutData;
-import feathers.layout.ILayoutObject;
-import feathers.themes.IStyleProvider;
-import feathers.themes.Theme;
+import feathers.style.IStyleProvider;
+import feathers.style.Theme;
 import feathers.utils.DisplayUtil;
 
 /**
@@ -34,7 +33,7 @@ import feathers.utils.DisplayUtil;
 
 	@see `feathers.controls.LayoutGroup`
 **/
-class FeathersControl extends Sprite implements IValidating implements IMeasureDisplayObject implements ILayoutObject {
+class FeathersControl extends Sprite implements IUIControl {
 	private function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
