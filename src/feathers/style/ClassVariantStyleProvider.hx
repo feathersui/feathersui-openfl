@@ -43,6 +43,10 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		var targetType = Type.getClass(target);
 		var meta = Meta.getFields(targetType);
 		for (fieldName in Type.getInstanceFields(targetType)) {
+			// don't know why, but this seems to be necessary for C++ targets
+			if (!Reflect.hasField(this, fieldName)) {
+				continue;
+			}
 			var field = Reflect.field(meta, fieldName);
 			if (field == null) {
 				continue;
