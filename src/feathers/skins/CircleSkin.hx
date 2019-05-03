@@ -8,16 +8,15 @@
 
 package feathers.skins;
 
-import feathers.core.IStateObserver;
 import openfl.geom.Matrix;
 
 /**
-	A skin for Feathers components that draws a rectangle. The rectangle's fill
-	and border may be styled, and the recatangle may be rounded.
+	A skin for Feathers components that draws a circle. The circle's fill
+	and border may be styled.
 
 	@since 1.0.0
 **/
-class CircleSkin extends BaseGraphicsPathSkin implements IStateObserver {
+class CircleSkin extends BaseGraphicsPathSkin {
 	public function new() {
 		super();
 	}

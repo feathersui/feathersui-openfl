@@ -9,15 +9,14 @@
 package feathers.skins;
 
 import feathers.core.InvalidationFlag;
-import feathers.core.IStateObserver;
 
 /**
 	A skin for Feathers components that draws a rectangle. The rectangle's fill
-	and border may be styled, and the recatangle may be rounded.
+	and border may be styled, and the corners may be rounded.
 
 	@since 1.0.0
 **/
-class RectangleSkin extends BaseGraphicsPathSkin implements IStateObserver {
+class RectangleSkin extends BaseGraphicsPathSkin {
 	public function new() {
 		super();
 	}

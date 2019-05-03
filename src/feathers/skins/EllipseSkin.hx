@@ -8,15 +8,13 @@
 
 package feathers.skins;
 
-import feathers.core.IStateObserver;
-
 /**
-	A skin for Feathers components that draws a rectangle. The rectangle's fill
-	and border may be styled, and the recatangle may be rounded.
+	A skin for Feathers components that draws an ellipse. The ellipse's fill
+	and border may be styled.
 
 	@since 1.0.0
 **/
-class EllipseSkin extends BaseGraphicsPathSkin implements IStateObserver {
+class EllipseSkin extends BaseGraphicsPathSkin {
 	public function new() {
 		super();
 	}
