@@ -214,6 +214,14 @@ class LayoutGroup extends FeathersControl {
 		return result;
 	}
 
+	private function _addChild(child:DisplayObject, index:Int):DisplayObject {
+		return super.addChildAt(child, this.numChildren);
+	}
+
+	private function _addChildAt(child:DisplayObject, index:Int):DisplayObject {
+		return super.addChildAt(child, index);
+	}
+
 	override public function removeChild(child:DisplayObject):DisplayObject {
 		if (child == null || child.parent != this) {
 			return child;
@@ -227,6 +235,10 @@ class LayoutGroup extends FeathersControl {
 		}*/
 		this.items.remove(child);
 		return child;
+	}
+
+	private function _removeChild(child:DisplayObject):DisplayObject {
+		return super.removeChild(child);
 	}
 
 	override private function update():Void {
@@ -280,7 +292,7 @@ class LayoutGroup extends FeathersControl {
 		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
 			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext);
 		}
-		this.addChildAt(this._currentBackgroundSkin, 0);
+		this._addChildAt(this._currentBackgroundSkin, 0);
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
@@ -300,7 +312,7 @@ class LayoutGroup extends FeathersControl {
 		if (skin.parent == this) {
 			// we need to restore these values so that they won't be lost the
 			// next time that this skin is used for measurement
-			this.removeChild(skin);
+			this._removeChild(skin);
 		}
 	}
 
