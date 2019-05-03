@@ -47,8 +47,8 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 	private var _stateToFill:Map<String, FillStyle>;
 
 	/**
-		How the rectangle's fill is styled. For example, it could be a solid
-		color, a gradient, or a tiled bitmap.
+		How the path's fill is styled. For example, it could be a solid color,
+		a gradient, or a tiled bitmap.
 
 		@since 1.0.0
 	**/
@@ -66,7 +66,7 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 	private var _stateToBorder:Map<String, LineStyle>;
 
 	/**
-		How the rectangle's border is styled.
+		How the path's border is styled.
 
 		@since 1.0.0
 	**/
