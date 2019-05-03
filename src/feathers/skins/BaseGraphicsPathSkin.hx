@@ -15,6 +15,7 @@ import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
+import feathers.events.FeathersEvent;
 import openfl.geom.Matrix;
 import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
@@ -39,7 +40,13 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 		if (this.stateContext == value) {
 			return this.stateContext;
 		}
+		if (this.stateContext != null) {
+			this.stateContext.removeEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler);
+		}
 		this.stateContext = value;
+		if (this.stateContext != null) {
+			this.stateContext.addEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler, false, 0, true);
+		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.stateContext;
 	}
@@ -296,5 +303,9 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 			return this.fill;
 		}
 		return result;
+	}
+
+	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {
+		this.setInvalid(InvalidationFlag.STATE);
 	}
 }
