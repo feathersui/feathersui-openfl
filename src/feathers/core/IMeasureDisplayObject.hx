@@ -120,7 +120,7 @@ interface IMeasureDisplayObject {
 
 		@since 1.0.0
 	**/
-	public var maxWidth(default, default):Float;
+	public var maxWidth(default, set):Float;
 
 	/**
 		The object's maximum height value.
@@ -129,5 +129,5 @@ interface IMeasureDisplayObject {
 
 		@since 1.0.0
 	**/
-	public var maxHeight(default, default):Float;
+	public var maxHeight(default, set):Float;
 }

@@ -128,14 +128,14 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 	private var actualHeight:Float = 0;
 	private var actualMinWidth:Float = 0;
 	private var actualMinHeight:Float = 0;
-	private var actualMaxWidth:Float = 0;
-	private var actualMaxHeight:Float = 0;
+	private var actualMaxWidth:Float = Math.POSITIVE_INFINITY;
+	private var actualMaxHeight:Float = Math.POSITIVE_INFINITY;
 	private var scaledActualWidth:Float = 0;
 	private var scaledActualHeight:Float = 0;
 	private var scaledActualMinWidth:Float = 0;
 	private var scaledActualMinHeight:Float = 0;
-	private var scaledActualMaxWidth:Float = 0;
-	private var scaledActualMaxHeight:Float = 0;
+	private var scaledActualMaxWidth:Float = Math.POSITIVE_INFINITY;
+	private var scaledActualMaxHeight:Float = Math.POSITIVE_INFINITY;
 
 	override private function get_width():Float {
 		return this.scaledActualWidth;
@@ -255,8 +255,6 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		return this.explicitMinHeight;
 	}
 
-	public var explicitMaxWidth(default, null):Null<Float> = null;
-	public var explicitMaxHeight(default, null):Null<Float> = null;
 	public var minWidth(default, set):Float = 0;
 
 	private function set_minWidth(value:Float):Float {
@@ -277,8 +275,28 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		return this.scaledActualMinHeight;
 	}
 
-	public var maxWidth(default, default):Float = Math.POSITIVE_INFINITY;
-	public var maxHeight(default, default):Float = Math.POSITIVE_INFINITY;
+	public var explicitMaxWidth(default, null):Null<Float> = null;
+	public var explicitMaxHeight(default, null):Null<Float> = null;
+	public var maxWidth(default, set):Float = Math.POSITIVE_INFINITY;
+
+	private function set_maxWidth(value:Float):Float {
+		if (this.scaleX != 1) {
+			value /= this.scaleX;
+		}
+		this.explicitMaxWidth = value;
+		return this.scaledActualMaxWidth;
+	}
+
+	public var maxHeight(default, set):Float = Math.POSITIVE_INFINITY;
+
+	private function set_maxHeight(value:Float):Float {
+		if (this.scaleY != 1) {
+			value /= this.scaleY;
+		}
+		this.explicitMaxHeight = value;
+		return this.scaledActualMaxHeight;
+	}
+
 	public var includeInLayout(default, set):Bool = true;
 
 	private function set_includeInLayout(value:Bool):Bool {
@@ -539,6 +557,12 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 	**/
 	@:dox(show)
 	private function saveMeasurements(width:Float, height:Float, minWidth:Float = 0, minHeight:Float = 0, ?maxWidth:Float, ?maxHeight:Float):Bool {
+		if (maxWidth == null) {
+			maxWidth = Math.POSITIVE_INFINITY;
+		}
+		if (maxHeight == null) {
+			maxHeight = Math.POSITIVE_INFINITY;
+		}
 		// if any of the dimensions were set explicitly, the explicit values must
 		// take precedence over the measured values
 		if (this.explicitMinWidth != null) {
