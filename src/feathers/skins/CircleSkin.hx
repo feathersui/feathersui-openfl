@@ -28,11 +28,11 @@ class CircleSkin extends BaseGraphicsPathSkin implements IStateObserver {
 	}
 
 	private inline function getRadius():Float {
-		var radius = this.actualWidth;
-		if (radius > this.actualHeight) {
-			radius = this.actualHeight;
+		var shorterSide = this.actualWidth;
+		if (shorterSide > this.actualHeight) {
+			shorterSide = this.actualHeight;
 		}
-		return radius;
+		return shorterSide / 2;
 	}
 
 	override private function getGradientMatrix(radians:Float):Matrix {
