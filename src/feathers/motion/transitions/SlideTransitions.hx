@@ -21,10 +21,10 @@ import feathers.motion.effects.IEffectContext;
 	Creates animated transitions for view navigators that moves two adjacent
 	views in the same direction (replacing one with the other), as if one view
 	is pushing the other out of the way. Looks similar to a classic slide
-	carousel. Animates the <code>x</code> or <code>y</code> property of the
-	views. The views may move up, down, right, or left.
+	carousel. Animates the `x` or `y` property of the views. The views may move
+	up, down, right, or left.
 
-	@see [Transitions for Feathers screen navigators](../../../help/transitions.html)
+	@see [Transitions for Feathers navigators](../../../help/transitions.html)
 
 	@since 1.0.0
 **/
