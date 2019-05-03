@@ -169,8 +169,12 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 
 	override private function update():Void {
 		this.graphics.clear();
-		this.applyBorderStyle();
-		this.applyFillStyle();
+		this.draw();
+	}
+
+	private function draw():Void {
+		this.applyLineStyle(this.getCurrentBorder());
+		this.applyFillStyle(this.getCurrentFill());
 		this.drawPath();
 		if (this.getCurrentFill() != null) {
 			this.graphics.endFill();
@@ -179,12 +183,11 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 
 	private function drawPath():Void {}
 
-	private function applyBorderStyle():Void {
-		var border = this.getCurrentBorder();
-		if (border == null) {
+	private function applyLineStyle(lineStyle:LineStyle):Void {
+		if (lineStyle == null) {
 			return;
 		}
-		switch (border) {
+		switch (lineStyle) {
 			case SolidColor(thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit):
 				{
 					if (color == null) {
@@ -225,23 +228,11 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 		}
 	}
 
-	private function getCurrentBorder():LineStyle {
-		if (this.stateContext == null || this._stateToBorder == null) {
-			return this.border;
-		}
-		var result = this._stateToBorder.get(this.stateContext.currentState);
-		if (result == null) {
-			return this.border;
-		}
-		return result;
-	}
-
-	private function applyFillStyle():Void {
-		var fill = this.getCurrentFill();
-		if (fill == null) {
+	private function applyFillStyle(fillStyle:FillStyle):Void {
+		if (fillStyle == null) {
 			return;
 		}
-		switch (fill) {
+		switch (fillStyle) {
 			case SolidColor(color, alpha):
 				{
 					if (alpha == null) {
@@ -279,6 +270,23 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 		}
 	}
 
+	private function getGradientMatrix(radians:Float):Matrix {
+		var matrix = new Matrix();
+		matrix.createGradientBox(this.actualWidth, this.actualHeight, radians);
+		return matrix;
+	}
+
+	private function getCurrentBorder():LineStyle {
+		if (this.stateContext == null || this._stateToBorder == null) {
+			return this.border;
+		}
+		var result = this._stateToBorder.get(this.stateContext.currentState);
+		if (result == null) {
+			return this.border;
+		}
+		return result;
+	}
+
 	private function getCurrentFill():FillStyle {
 		if (this.stateContext == null || this._stateToFill == null) {
 			return this.fill;
@@ -288,11 +296,5 @@ class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
 			return this.fill;
 		}
 		return result;
-	}
-
-	private function getGradientMatrix(radians:Float):Matrix {
-		var matrix = new Matrix();
-		matrix.createGradientBox(this.actualWidth, this.actualHeight, radians);
-		return matrix;
 	}
 }
