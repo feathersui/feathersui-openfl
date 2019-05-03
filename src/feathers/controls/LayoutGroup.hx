@@ -13,8 +13,10 @@ import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.AutoSizeMode;
 import feathers.layout.ILayout;
+import feathers.layout.ILayoutObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
@@ -201,10 +203,9 @@ class LayoutGroup extends FeathersControl {
 		if (Std.is(child, FeathersControl)) {
 			child.addEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
 		}
-		/*if(child is ILayoutObject)
-			{
-				child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
-		}*/
+		if (Std.is(child, ILayoutObject)) {
+			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler, false, 0, true);
+		}
 		if (oldIndex >= 0) {
 			this.items.remove(child);
 		}
@@ -229,10 +230,9 @@ class LayoutGroup extends FeathersControl {
 		if (Std.is(child, FeathersControl)) {
 			child.removeEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
 		}
-		/*if(child is ILayoutObject)
-			{
-				child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, clayoutGroup_hild_layoutDataChangeHandler);
-		}*/
+		if (Std.is(child, ILayoutObject)) {
+			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
+		}
 		this.items.remove(child);
 		return child;
 	}
@@ -401,10 +401,9 @@ class LayoutGroup extends FeathersControl {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		for (item in this.items) {
-			/*if(Std.is(item, ILayoutObject) && !cast(item, ILayoutObject).includeInLayout)
-				{
-					continue;
-			}*/
+			if (Std.is(item, ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+				continue;
+			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -504,6 +503,17 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function layoutGroup_child_resizeHandler(event:Event):Void {
+		if (this._ignoreChildChanges) {
+			return;
+		}
+		if (this._ignoreChildChangesButSetFlags) {
+			this.setInvalidationFlag(InvalidationFlag.LAYOUT);
+			return;
+		}
+		this.setInvalid(InvalidationFlag.LAYOUT);
+	}
+
+	private function layoutGroup_child_layoutDataChangeHandler(event:Event):Void {
 		if (this._ignoreChildChanges) {
 			return;
 		}
