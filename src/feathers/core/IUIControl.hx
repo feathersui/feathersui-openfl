@@ -8,8 +8,6 @@
 
 package feathers.core;
 
-import feathers.layout.ILayoutObject;
-import feathers.style.IStyleObject;
 import openfl.events.IEventDispatcher;
 
 /**
@@ -17,7 +15,7 @@ import openfl.events.IEventDispatcher;
 
 	@since 1.0.0
 **/
-interface IUIControl extends IStyleObject extends IValidating extends IMeasureObject extends ILayoutObject extends IEventDispatcher {
+interface IUIControl extends IEventDispatcher {
 	public var enabled(default, set):Bool;
 	public function initializeNow():Void;
 }
