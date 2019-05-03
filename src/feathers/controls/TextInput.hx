@@ -18,6 +18,7 @@ import feathers.events.FeathersEvent;
 import feathers.layout.VerticalAlign;
 import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFieldType;
@@ -305,6 +306,7 @@ class TextInput extends FeathersControl implements IStateContext {
 			this.textField = new TextField();
 			this.textField.type = TextFieldType.INPUT;
 			this.textField.selectable = true;
+			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 			this.addChild(this.textField);
 		}
 	}
@@ -566,5 +568,13 @@ class TextInput extends FeathersControl implements IStateContext {
 		this.currentState = state;
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
+	private function textField_changeHandler(event:Event):Void {
+		// don't let this event bubble. Feathers components don't bubble their
+		// events — especially not Event.CHANGE!
+		event.stopPropagation();
+
+		this.text = this.textField.text;
 	}
 }
