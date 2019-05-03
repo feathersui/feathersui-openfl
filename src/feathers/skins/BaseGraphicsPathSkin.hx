@@ -14,7 +14,7 @@ import openfl.display.SpreadMethod;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
-import feathers.core.FeathersControl;
+import feathers.core.MeasureSprite;
 import feathers.events.FeathersEvent;
 import openfl.geom.Matrix;
 import feathers.graphics.FillStyle;
@@ -26,7 +26,7 @@ import feathers.graphics.LineStyle;
 
 	@since 1.0.0
 **/
-class BaseGraphicsPathSkin extends FeathersControl implements IStateObserver {
+class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	private function new() {
 		super();
 		this.mouseChildren = false;
