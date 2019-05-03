@@ -15,6 +15,8 @@ import openfl.display.Sprite;
 import feathers.events.FeathersEvent;
 import feathers.layout.ILayoutData;
 import feathers.layout.ILayoutObject;
+import feathers.themes.IStyleProvider;
+import feathers.themes.Theme;
 import feathers.utils.DisplayUtil;
 
 /**
@@ -124,6 +126,7 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 	private var _delayedInvalidationFlags:Map<String, Bool> = new Map();
 	private var _setInvalidCount:Int = 0;
 	private var _validationQueue:ValidationQueue = null;
+	private var _styleProvider:IStyleProvider = null;
 	private var actualWidth:Float = 0;
 	private var actualHeight:Float = 0;
 	private var actualMinWidth:Float = 0;
@@ -308,9 +311,13 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		return this.includeInLayout;
 	}
 
+	@style
 	public var layoutData(default, set):ILayoutData;
 
 	private function set_layoutData(value:ILayoutData):ILayoutData {
+		if (!this.setStyle("layoutData")) {
+			return this.layoutData;
+		}
 		if (this.layoutData == value) {
 			return this.layoutData;
 		}
@@ -412,6 +419,9 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		this._setInvalidCount = 0;
 		this._validationQueue.addControl(this);
 	}
+
+	private var _applyingStyles:Bool = false;
+	private var _restrictedStyles:Array<String> = [];
 
 	/**
 		Immediately validates the display object, if it is invalid. The
@@ -672,6 +682,44 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		return resized;
 	}
 
+	/**
+		Determines if a style may be changed, and restricts the style from being
+		changed in the future, if necessary.
+	**/
+	@:dox(show)
+	private function setStyle(styleName:String):Bool {
+		var restricted = this._restrictedStyles.indexOf(styleName) != -1;
+		if (this._applyingStyles && restricted) {
+			return false;
+		}
+		if (!this._applyingStyles && !restricted) {
+			this._restrictedStyles.push(styleName);
+		}
+		return true;
+	}
+
+	private function isStyleRestricted(styleName:String):Bool {
+		return this._restrictedStyles.indexOf(styleName) != -1;
+	}
+
+	private function applyStyles():Void {
+		var styleProvider = Theme.getStyleProvider(this);
+		if (this._styleProvider != styleProvider) {
+			if (this._styleProvider != null) {
+				this._styleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+			}
+			this._styleProvider = styleProvider;
+			this._styleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
+		}
+		if (this._styleProvider == null) {
+			return;
+		}
+		var oldApplyingStyles = this._applyingStyles;
+		this._applyingStyles = true;
+		this._styleProvider.applyStyles(this);
+		this._applyingStyles = oldApplyingStyles;
+	}
+
 	private function feathersControl_addedToStageHandler(event:Event):Void {
 		// initialize before setting the validation queue to avoid
 		// getting added to the validation queue before initialization
@@ -681,6 +729,7 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 		}
 		this.depth = DisplayUtil.getDisplayObjectDepthFromStage(this);
 		this._validationQueue = ValidationQueue.forStage(this.stage);
+		this.applyStyles();
 		if (this.isInvalid()) {
 			this._setInvalidCount = 0;
 			// add to validation queue, if required
@@ -691,6 +740,14 @@ class FeathersControl extends Sprite implements IValidating implements IMeasureD
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
 		this.depth = -1;
 		this._validationQueue = null;
+		if (this._styleProvider != null) {
+			this._styleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+			this._styleProvider = null;
+		}
+	}
+
+	private function styleProvider_changeHandler(event:Event):Void {
+		this.applyStyles();
 	}
 
 	private function layoutData_changeHandler(event:Event):Void {

@@ -58,9 +58,13 @@ class LayoutGroup extends FeathersControl {
 
 	private var items:Array<DisplayObject> = [];
 
-	public var layout(default, set):ILayout;
+	@style
+	public var layout(default, set):ILayout = null;
 
 	private function set_layout(value:ILayout):ILayout {
+		if (!this.setStyle("layout")) {
+			return this.layout;
+		}
 		if (this.layout == value) {
 			return this.layout;
 		}
@@ -93,9 +97,13 @@ class LayoutGroup extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@style
 	public var backgroundSkin(default, set):DisplayObject = null;
 
 	private function set_backgroundSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("backgroundSkin")) {
+			return this.backgroundSkin;
+		}
 		if (this.backgroundSkin == value) {
 			return this.backgroundSkin;
 		}
@@ -126,9 +134,13 @@ class LayoutGroup extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@style
 	public var backgroundDisabledSkin(default, set):DisplayObject = null;
 
 	private function set_backgroundDisabledSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("backgroundDisabledSkin")) {
+			return this.backgroundDisabledSkin;
+		}
 		if (this.backgroundDisabledSkin == value) {
 			return this.backgroundDisabledSkin;
 		}

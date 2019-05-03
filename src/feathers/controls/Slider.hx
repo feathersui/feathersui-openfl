@@ -223,9 +223,13 @@ class Slider extends FeathersControl {
 	/**
 		@see `Slider.trackSkin`
 	**/
-	public var thumbSkin(default, set):DisplayObject;
+	@style
+	public var thumbSkin(default, set):DisplayObject = null;
 
 	private function set_thumbSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("thumbSkin")) {
+			return this.thumbSkin;
+		}
 		if (this.thumbSkin == value) {
 			return this.thumbSkin;
 		}
@@ -265,9 +269,13 @@ class Slider extends FeathersControl {
 		@see `Slider.secondaryTrackSkin`
 		@see `Slider.thumbSkin`
 	**/
-	public var trackSkin(default, set):DisplayObject;
+	@style
+	public var trackSkin(default, set):DisplayObject = null;
 
 	private function set_trackSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("trackSkin")) {
+			return this.trackSkin;
+		}
 		if (this.trackSkin == value) {
 			return this.trackSkin;
 		}
@@ -306,9 +314,13 @@ class Slider extends FeathersControl {
 	/**
 		@see `Slider.trackSkin`
 	**/
-	public var secondaryTrackSkin(default, set):DisplayObject;
+	@style
+	public var secondaryTrackSkin(default, set):DisplayObject = null;
 
 	private function set_secondaryTrackSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("secondaryTrackSkin")) {
+			return this.secondaryTrackSkin;
+		}
 		if (this.secondaryTrackSkin == value) {
 			return this.secondaryTrackSkin;
 		}
@@ -347,9 +359,13 @@ class Slider extends FeathersControl {
 	/**
 		@see `Slider.maximumPadding`
 	**/
-	public var minimumPadding(default, set):Float = 0;
+	@style
+	public var minimumPadding(default, set):Null<Float> = null;
 
-	private function set_minimumPadding(value:Float):Float {
+	private function set_minimumPadding(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("minimumPadding")) {
+			return this.minimumPadding;
+		}
 		if (this.minimumPadding == value) {
 			return this.minimumPadding;
 		}
@@ -361,9 +377,13 @@ class Slider extends FeathersControl {
 	/**
 		@see `Slider.minimumPadding`
 	**/
-	public var maximumPadding(default, set):Float = 0;
+	@style
+	public var maximumPadding(default, set):Null<Float> = null;
 
-	private function set_maximumPadding(value:Float):Float {
+	private function set_maximumPadding(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("maximumPadding")) {
+			return this.maximumPadding;
+		}
 		if (this.maximumPadding == value) {
 			return this.minimumPadding;
 		}

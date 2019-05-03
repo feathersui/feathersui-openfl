@@ -78,9 +78,13 @@ class BasicButton extends FeathersControl implements IStateContext {
 
 		@since 1.0.0
 	**/
+	@style
 	public var backgroundSkin(default, set):DisplayObject = null;
 
 	private function set_backgroundSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("backgroundSkin")) {
+			return this.backgroundSkin;
+		}
 		if (this.backgroundSkin == value) {
 			return this.backgroundSkin;
 		}

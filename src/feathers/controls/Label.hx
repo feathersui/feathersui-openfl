@@ -55,9 +55,13 @@ class Label extends FeathersControl {
 		return this.text;
 	}
 
-	public var textFormat(default, set):TextFormat = new TextFormat("_sans");
+	@style
+	public var textFormat(default, set):TextFormat = null;
 
 	private function set_textFormat(value:TextFormat):TextFormat {
+		if (!this.setStyle("textFormat")) {
+			return this.textFormat;
+		}
 		if (this.textFormat == value) {
 			return this.textFormat;
 		}
@@ -80,9 +84,13 @@ class Label extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var paddingTop(default, set):Float = 0;
+	@style
+	public var paddingTop(default, set):Null<Float> = null;
 
-	private function set_paddingTop(value:Float):Float {
+	private function set_paddingTop(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("paddingTop")) {
+			return this.paddingTop;
+		}
 		if (this.paddingTop == value) {
 			return this.paddingTop;
 		}
@@ -106,9 +114,13 @@ class Label extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var paddingRight(default, set):Float = 0;
+	@style
+	public var paddingRight(default, set):Null<Float> = null;
 
-	private function set_paddingRight(value:Float):Float {
+	private function set_paddingRight(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("paddingRight")) {
+			return this.paddingRight;
+		}
 		if (this.paddingRight == value) {
 			return this.paddingRight;
 		}
@@ -132,9 +144,13 @@ class Label extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var paddingBottom(default, set):Float = 0;
+	@style
+	public var paddingBottom(default, set):Null<Float> = null;
 
-	private function set_paddingBottom(value:Float):Float {
+	private function set_paddingBottom(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("paddingBottom")) {
+			return this.paddingBottom;
+		}
 		if (this.paddingBottom == value) {
 			return this.paddingBottom;
 		}
@@ -158,9 +174,13 @@ class Label extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var paddingLeft(default, set):Float = 0;
+	@style
+	public var paddingLeft(default, set):Null<Float> = null;
 
-	private function set_paddingLeft(value:Float):Float {
+	private function set_paddingLeft(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("paddingLeft")) {
+			return this.paddingLeft;
+		}
 		if (this.paddingLeft == value) {
 			return this.paddingLeft;
 		}
@@ -188,9 +208,13 @@ class Label extends FeathersControl {
 		@see `feathers.layout.HorizontalAlign.MIDDLE`
 		@see `feathers.layout.HorizontalAlign.BOTTOM`
 	**/
-	public var horizontalAlign(default, set):HorizontalAlign = HorizontalAlign.CENTER;
+	@style
+	public var horizontalAlign(default, set):HorizontalAlign = null;
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
+		if (!this.setStyle("horizontalAlign")) {
+			return this.horizontalAlign;
+		}
 		if (this.horizontalAlign == value) {
 			return this.horizontalAlign;
 		}
@@ -218,9 +242,13 @@ class Label extends FeathersControl {
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
 	**/
-	public var verticalAlign(default, set):VerticalAlign = VerticalAlign.MIDDLE;
+	@style
+	public var verticalAlign(default, set):VerticalAlign = null;
 
 	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
+		if (!this.setStyle("verticalAlign")) {
+			return this.verticalAlign;
+		}
 		if (this.verticalAlign == value) {
 			return this.verticalAlign;
 		}
@@ -247,9 +275,13 @@ class Label extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@style
 	public var backgroundSkin(default, set):DisplayObject = null;
 
 	private function set_backgroundSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("backgroundSkin")) {
+			return this.backgroundSkin;
+		}
 		if (this.backgroundSkin == value) {
 			return this.backgroundSkin;
 		}
@@ -279,9 +311,13 @@ class Label extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@style
 	public var backgroundDisabledSkin(default, set):DisplayObject = null;
 
 	private function set_backgroundDisabledSkin(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("backgroundDisabledSkin")) {
+			return this.backgroundDisabledSkin;
+		}
 		if (this.backgroundDisabledSkin == value) {
 			return this.backgroundDisabledSkin;
 		}
@@ -379,9 +415,15 @@ class Label extends FeathersControl {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
+		// uninitialized styles need some defaults
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			newWidth = this._textMeasuredWidth + paddingLeft + paddingRight;
 			if (this._currentBackgroundSkin != null) {
 				newWidth = Math.max(this._currentBackgroundSkin.width, newWidth);
 			}
@@ -389,7 +431,7 @@ class Label extends FeathersControl {
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newHeight = this._textMeasuredHeight + paddingTop + paddingBottom;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
@@ -397,7 +439,7 @@ class Label extends FeathersControl {
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			newMinWidth = this._textMeasuredWidth + paddingLeft + paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -407,7 +449,7 @@ class Label extends FeathersControl {
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newMinHeight = this._textMeasuredHeight + paddingTop + paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -440,7 +482,9 @@ class Label extends FeathersControl {
 	}
 
 	private function refreshTextStyles():Void {
-		this.textField.defaultTextFormat = this.textFormat;
+		if (this.textFormat != null) {
+			this.textField.defaultTextFormat = this.textFormat;
+		}
 	}
 
 	private function refreshText():Void {
@@ -509,8 +553,14 @@ class Label extends FeathersControl {
 	private function layoutContent() {
 		this.layoutBackgroundSkin();
 
-		var maxWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
-		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		// uninitialized styles need some defaults
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+
+		var maxWidth = this.actualWidth - paddingLeft - paddingRight;
+		var maxHeight = this.actualHeight - paddingTop - paddingBottom;
 		if (this._textMeasuredWidth > maxWidth) {
 			this.textField.width = maxWidth;
 		} else {
@@ -523,19 +573,19 @@ class Label extends FeathersControl {
 		}
 		switch (this.horizontalAlign) {
 			case LEFT:
-				this.textField.x = this.paddingLeft;
+				this.textField.x = paddingLeft;
 			case RIGHT:
-				this.textField.x = this.actualWidth - this.paddingRight - this.textField.width;
-			default: // center
-				this.textField.x = this.paddingLeft + (maxWidth - this.textField.width) / 2;
+				this.textField.x = this.actualWidth - paddingRight - this.textField.width;
+			default: // center or null
+				this.textField.x = paddingLeft + (maxWidth - this.textField.width) / 2;
 		}
 		switch (this.verticalAlign) {
 			case TOP:
-				this.textField.y = this.paddingTop;
+				this.textField.y = paddingTop;
 			case BOTTOM:
-				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
-			default: // center
-				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2;
+				this.textField.y = this.actualHeight - paddingBottom - this.textField.height;
+			default: // middle or null
+				this.textField.y = paddingTop + (maxHeight - this.textField.height) / 2;
 		}
 	}
 
