@@ -52,15 +52,15 @@ class Button extends BasicButton {
 		return this.text;
 	}
 
-	public var fontStyles(default, set):TextFormat = new TextFormat("_sans");
+	public var textFormat(default, set):TextFormat = new TextFormat("_sans");
 
-	private function set_fontStyles(value:TextFormat):TextFormat {
-		if (this.fontStyles == value) {
-			return this.fontStyles;
+	private function set_textFormat(value:TextFormat):TextFormat {
+		if (this.textFormat == value) {
+			return this.textFormat;
 		}
-		this.fontStyles = value;
+		this.textFormat = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.fontStyles;
+		return this.textFormat;
 	}
 
 	/**
@@ -344,7 +344,7 @@ class Button extends BasicButton {
 	}
 
 	private function refreshTextStyles():Void {
-		this.textField.defaultTextFormat = this.fontStyles;
+		this.textField.defaultTextFormat = this.textFormat;
 	}
 
 	private function refreshText():Void {
