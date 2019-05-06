@@ -41,8 +41,13 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		var styleTarget = StyleTarget.ClassAndVariant(styleContextName, variant);
 		var callback = this.styleTargets.get(styleTarget);
 		if (callback == null) {
+			// try again without the variant
+			styleTarget = StyleTarget.ClassAndVariant(styleContextName, null);
+			callback = this.styleTargets.get(styleTarget);
+		}
+		if (callback == null) {
 			if (uiControl.defaultStyleProvider != null) {
-				// fall back to the default
+				// fall back to the default, if available
 				uiControl.defaultStyleProvider.applyStyles(target);
 			}
 			return;
