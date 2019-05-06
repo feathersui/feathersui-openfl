@@ -124,6 +124,25 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return null;
 	}
 
+	/**
+		Returns the component's default style provider. The
+		`get_defaultStyleProvider` getter should be overridden by subclasses to
+		provide default styles for a component.
+
+		For best performance and lower memory, wait to create the default style
+		provider until the first time that `get_styleProvider` is called on a
+		component of that type. Store that style provider in a static variable
+		so that all future instances of the same component can re-use the same
+		style provider.
+
+		@since 1.0.0
+	**/
+	public var defaultStyleProvider(get, null):IStyleProvider = null;
+
+	private function get_defaultStyleProvider():IStyleProvider {
+		return null;
+	}
+
 	public var includeInLayout(default, set):Bool = true;
 
 	private function set_includeInLayout(value:Bool):Bool {
@@ -263,17 +282,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return true;
 	}
 
-	/**
-		Returns the component's default style provider. To be overridden by
-		subclasses.
-
-		@since 1.0.0
-	**/
-	@:dox(show)
-	private function getDefaultStyleProvider():IStyleProvider {
-		return null;
-	}
-
 	private function isStyleRestricted(styleName:String):Bool {
 		return this._restrictedStyles.indexOf(styleName) != -1;
 	}
@@ -284,7 +292,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		}
 		var styleProvider = Theme.getStyleProvider(this);
 		if (styleProvider == null) {
-			styleProvider = this.getDefaultStyleProvider();
+			styleProvider = this.defaultStyleProvider;
 		}
 		if (this._styleProvider != styleProvider) {
 			if (this._styleProvider != null) {
