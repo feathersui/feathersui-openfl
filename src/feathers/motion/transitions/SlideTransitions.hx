@@ -38,7 +38,7 @@ class SlideTransitions {
 
 		@since 1.0.0
 	**/
-	public static function left(duration:Float, ?ease:IEasing, ?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
+	public static function left(duration:Float = 0.5, ?ease:IEasing, ?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
 		return function(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 			if (oldView == null && newView == null) {
 				throw new ArgumentError(VIEW_REQUIRED_ERROR);
@@ -74,7 +74,8 @@ class SlideTransitions {
 
 		@since 1.0.0
 	**/
-	public static function right(duration:Float, ?ease:IEasing, ?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
+	public static function right(duration:Float = 0.5, ?ease:IEasing,
+			?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
 		return function(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 			if (oldView == null && newView == null) {
 				throw new ArgumentError(VIEW_REQUIRED_ERROR);
@@ -110,7 +111,7 @@ class SlideTransitions {
 
 		@since 1.0.0
 	**/
-	public static function up(duration:Float, ?ease:IEasing, ?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
+	public static function up(duration:Float = 0.5, ?ease:IEasing, ?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
 		return function(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 			if (oldView == null && newView == null) {
 				throw new ArgumentError(VIEW_REQUIRED_ERROR);
@@ -146,7 +147,7 @@ class SlideTransitions {
 
 		@since 1.0.0
 	**/
-	public static function down(duration:Float, ?ease:IEasing, ?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
+	public static function down(duration:Float = 0.5, ?ease:IEasing, ?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
 		return function(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 			if (oldView == null && newView == null) {
 				throw new ArgumentError(VIEW_REQUIRED_ERROR);
