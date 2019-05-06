@@ -287,6 +287,10 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 		this.scrolling = true;
+		if (Std.is(this.target, DisplayObjectContainer)) {
+			var container = cast(this.target, DisplayObjectContainer);
+			container.mouseChildren = false;
+		}
 		FeathersEvent.dispatch(this, FeathersEvent.SCROLL_START);
 	}
 
@@ -425,7 +429,6 @@ class Scroller extends EventDispatcher {
 		if (Std.is(this.target, DisplayObjectContainer)) {
 			var container = cast(this.target, DisplayObjectContainer);
 			this.restoreMouseChildren = container.mouseChildren;
-			container.mouseChildren = false;
 		}
 		this.touchID = 0;
 		this.startTouchX = event.stageX;
