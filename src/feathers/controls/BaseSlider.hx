@@ -13,10 +13,11 @@ import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
-import feathers.layout.Direction;
+import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
+import openfl.errors.TypeError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
@@ -30,9 +31,8 @@ import openfl.geom.Point;
 	@since 1.0.0
 **/
 class BaseSlider extends FeathersControl {
-	private function new(direction:Direction) {
+	private function new() {
 		super();
-		this.direction = direction;
 	}
 
 	/**
@@ -161,29 +161,6 @@ class BaseSlider extends FeathersControl {
 	}
 
 	/**
-		Determines if the slider's thumb can be dragged horizontally or
-		vertically.
-
-		When the direction is changed after the slider initializes, the slider's
-		width and height values may not change automatically, and the skins may
-		no longer be appropriate for the new direction.
-
-		In the following example, the direction is changed to vertical:
-
-		```hx
-		slider.direction = Direction.VERTICAL;
-		```
-
-		*Note:* The `Direction.NONE` value is not supported.
-
-		@default `feathers.layout.Direction.HORIZONTAL`
-
-		@see `feathers.layout.Direction#HORIZONTAL`
-		@see `feathers.layout.Direction#VERTICAL`
-	**/
-	public var direction(default, null):Direction = Direction.HORIZONTAL;
-
-	/**
 		Determines if the slider dispatches the `Event.CHANGE` event every time
 		that the thumb moves while dragging, or only after the user stops
 		dragging.
@@ -199,6 +176,7 @@ class BaseSlider extends FeathersControl {
 	public var liveDragging(default, default):Bool = true;
 
 	private var thumbContainer:Sprite;
+	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
 		@see `Slider.trackSkin`
@@ -226,6 +204,14 @@ class BaseSlider extends FeathersControl {
 		}
 		this.thumbSkin = value;
 		if (this.thumbSkin != null) {
+			if (Std.is(this.thumbSkin, IUIControl)) {
+				cast(this.thumbSkin, IUIControl).initializeNow();
+			}
+			if (this._thumbSkinMeasurements == null) {
+				this._thumbSkinMeasurements = new Measurements(this.thumbSkin);
+			} else {
+				this._thumbSkinMeasurements.save(this.thumbSkin);
+			}
 			if (!Std.is(this.thumbSkin, InteractiveObject)) {
 				// if the skin isn't interactive, we need to add it to something
 				// that is interactive
@@ -244,6 +230,7 @@ class BaseSlider extends FeathersControl {
 	}
 
 	private var trackContainer:Sprite;
+	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
 		@see `Slider.secondaryTrackSkin`
@@ -272,6 +259,14 @@ class BaseSlider extends FeathersControl {
 		}
 		this.trackSkin = value;
 		if (this.trackSkin != null) {
+			if (Std.is(this.trackSkin, IUIControl)) {
+				cast(this.trackSkin, IUIControl).initializeNow();
+			}
+			if (this._trackSkinMeasurements == null) {
+				this._trackSkinMeasurements = new Measurements(this.trackSkin);
+			} else {
+				this._trackSkinMeasurements.save(this.trackSkin);
+			}
 			if (!Std.is(this.trackSkin, InteractiveObject)) {
 				// if the skin isn't interactive, we need to add it to something
 				// that is interactive
@@ -290,6 +285,7 @@ class BaseSlider extends FeathersControl {
 	}
 
 	private var secondaryTrackContainer:Sprite;
+	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
 		@see `Slider.trackSkin`
@@ -317,6 +313,15 @@ class BaseSlider extends FeathersControl {
 		}
 		this.secondaryTrackSkin = value;
 		if (this.secondaryTrackSkin != null) {
+			if (Std.is(this.secondaryTrackSkin, IUIControl)) {
+				cast(this.secondaryTrackSkin, IUIControl).initializeNow();
+			}
+			if (this._secondaryTrackSkinMeasurements == null) {
+				this._secondaryTrackSkinMeasurements = new Measurements(this.secondaryTrackSkin);
+			} else {
+				this._secondaryTrackSkinMeasurements.save(this.secondaryTrackSkin);
+			}
+
 			// on the bottom or above the trackSkin
 			var index = this.trackSkin != null ? 1 : 0;
 
@@ -402,7 +407,7 @@ class BaseSlider extends FeathersControl {
 	}
 
 	private function autoSizeIfNeeded():Bool {
-		return false;
+		throw new TypeError("Missing override for 'autoSizeIfNeeded' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
 	private function refreshEnabled():Void {
@@ -427,156 +432,40 @@ class BaseSlider extends FeathersControl {
 	}
 
 	private function layoutSplitTrack():Void {
-		var location = this.valueToLocation(value);
-		if (this.direction == Direction.VERTICAL) {
-			if (this.thumbSkin != null) {
-				if (Std.is(this.thumbSkin, IValidating)) {
-					cast(this.thumbSkin, IValidating).validateNow();
-				}
-				location += Math.round(this.thumbSkin.height / 2);
-			}
-
-			this.trackSkin.y = 0;
-			this.trackSkin.height = location;
-
-			this.secondaryTrackSkin.y = location;
-			this.secondaryTrackSkin.height = this.actualHeight - location;
-
-			if (Std.is(this.trackSkin, IValidating)) {
-				cast(this.trackSkin, IValidating).validateNow();
-			}
-			if (Std.is(this.secondaryTrackSkin, IValidating)) {
-				cast(this.secondaryTrackSkin, IValidating).validateNow();
-			}
-
-			this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
-			this.secondaryTrackSkin.x = (this.actualWidth - this.secondaryTrackSkin.width) / 2;
-		} else // horizontal
-		{
-			if (this.thumbSkin != null) {
-				if (Std.is(this.thumbSkin, IValidating)) {
-					cast(this.thumbSkin, IValidating).validateNow();
-				}
-				location += Math.round(this.thumbSkin.width / 2);
-			}
-
-			this.trackSkin.x = 0;
-			this.trackSkin.width = location;
-
-			this.secondaryTrackSkin.x = location;
-			this.secondaryTrackSkin.width = this.actualWidth - location;
-
-			if (Std.is(this.trackSkin, IValidating)) {
-				cast(this.trackSkin, IValidating).validateNow();
-			}
-			if (Std.is(this.secondaryTrackSkin, IValidating)) {
-				cast(this.secondaryTrackSkin, IValidating).validateNow();
-			}
-
-			this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2;
-			this.secondaryTrackSkin.y = (this.actualHeight - this.secondaryTrackSkin.height) / 2;
-		}
+		throw new TypeError("Missing override for 'layoutSplitTrack' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
 	private function layoutSingleTrack():Void {
-		if (this.trackSkin == null) {
-			return;
-		}
-		if (this.direction == Direction.VERTICAL) {
-			this.trackSkin.y = 0;
-			this.trackSkin.height = this.actualHeight;
-
-			if (Std.is(this.trackSkin, IValidating)) {
-				cast(this.trackSkin, IValidating).validateNow();
-			}
-
-			this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
-		} else // horizontal
-		{
-			this.trackSkin.x = 0;
-			this.trackSkin.width = this.actualWidth;
-
-			if (Std.is(this.trackSkin, IValidating)) {
-				cast(this.trackSkin, IValidating).validateNow();
-			}
-
-			this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2;
-		}
+		throw new TypeError("Missing override for 'layoutSingleTrack' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
 	private function layoutThumb():Void {
-		if (this.thumbSkin == null) {
-			return;
+		throw new TypeError("Missing override for 'layoutThumb' in type " + Type.getClassName(Type.getClass(this)));
+	}
+
+	private function normalizeValue():Float {
+		var normalized = 1.0;
+		if (this.minimum != this.maximum) {
+			normalized = (this.value - this.minimum) / (this.maximum - this.minimum);
+			if (normalized < 0.0) {
+				normalized = 0.0;
+			} else if (normalized > 1) {
+				normalized = 1.0;
+			}
 		}
-		var thumbLocation = this.valueToLocation(this.value);
-		if (this.direction == Direction.VERTICAL) {
-			this.thumbSkin.x = Math.round((this.actualWidth - this.thumbSkin.width) / 2);
-			this.thumbSkin.y = thumbLocation;
-		} else // horizontal
-		{
-			this.thumbSkin.x = thumbLocation;
-			this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2);
-		}
+		return normalized;
 	}
 
 	private function valueToLocation(value:Float):Float {
-		// this will auto-size the thumb, if needed
-		if (Std.is(this.thumbSkin, IValidating)) {
-			cast(this.thumbSkin, IValidating).validateNow();
-		}
-
-		var percentage = 1.0;
-		if (this.minimum != this.maximum) {
-			percentage = (this.value - this.minimum) / (this.maximum - this.minimum);
-			if (percentage < 0) {
-				percentage = 0;
-			} else if (percentage > 1) {
-				percentage = 1;
-			}
-		}
-
-		if (this.direction == Direction.VERTICAL) {
-			var trackScrollableHeight = this.actualHeight - this.minimumPadding - this.maximumPadding;
-			if (this.thumbSkin != null) {
-				trackScrollableHeight -= this.thumbSkin.height;
-			}
-			// maximum is at the top, so we need to start the y position of
-			// the thumb from the maximum padding
-			return Math.round(this.maximumPadding + trackScrollableHeight * (1 - percentage));
-		}
-
-		// horizontal
-		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
-		if (this.thumbSkin != null) {
-			trackScrollableWidth -= this.thumbSkin.width;
-		}
-		// minimum is at the left, so we need to start the x position of
-		// the thumb from the minimum padding
-		return Math.round(this.minimumPadding + (trackScrollableWidth * percentage));
+		throw new TypeError("Missing override for 'valueToLocation' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
 	private function locationToValue(x:Float, y:Float):Float {
-		var percentage = 0.0;
-		if (this.direction == Direction.VERTICAL) {
-			var trackScrollableHeight = this.actualHeight - this.minimumPadding - this.maximumPadding;
-			if (this.thumbSkin != null) {
-				trackScrollableHeight -= this.thumbSkin.height;
-			}
-			var yOffset = y - this._pointerStartY - this.maximumPadding;
-			var yPosition = Math.min(Math.max(0, this._thumbStartY + yOffset), trackScrollableHeight);
-			percentage = 1 - (yPosition / trackScrollableHeight);
-		} else // horizontal
-		{
-			var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
-			if (this.thumbSkin != null) {
-				trackScrollableWidth -= this.thumbSkin.width;
-			}
-			var xOffset = x - this._pointerStartX - this.minimumPadding;
-			var xPosition = Math.min(Math.max(0, this._thumbStartX + xOffset), trackScrollableWidth);
-			percentage = xPosition / trackScrollableWidth;
-		}
+		throw new TypeError("Missing override for 'locationToValue' in type " + Type.getClassName(Type.getClass(this)));
+	}
 
-		return this.minimum + percentage * (this.maximum - this.minimum);
+	private function saveThumbStart(location:Point):Void {
+		throw new TypeError("Missing override for 'saveThumbStart' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
 	private function thumbSkin_mouseDownHandler(event:MouseEvent):Void {
@@ -615,26 +504,7 @@ class BaseSlider extends FeathersControl {
 		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
 
-		if (this.direction == Direction.VERTICAL) {
-			var trackHeightMinusThumbHeight = this.actualHeight;
-			var locationMinusHalfThumbHeight = location.y;
-			if (this.thumbSkin != null) {
-				trackHeightMinusThumbHeight -= this.thumbSkin.height;
-				locationMinusHalfThumbHeight -= this.thumbSkin.height / 2;
-			}
-			this._thumbStartX = location.x;
-			this._thumbStartY = Math.min(trackHeightMinusThumbHeight - this.maximumPadding, Math.max(this.minimumPadding, locationMinusHalfThumbHeight));
-		} else // horizontal
-		{
-			var trackWidthMinusThumbWidth = this.actualWidth;
-			var locationMinusHalfThumbWidth = location.x;
-			if (this.thumbSkin != null) {
-				trackWidthMinusThumbWidth -= this.thumbSkin.width;
-				locationMinusHalfThumbWidth -= this.thumbSkin.width / 2;
-			}
-			this._thumbStartX = Math.min(trackWidthMinusThumbWidth - this.maximumPadding, Math.max(this.minimumPadding, locationMinusHalfThumbWidth));
-			this._thumbStartY = location.y;
-		}
+		this.saveThumbStart(location);
 		this._pointerStartX = location.x;
 		this._pointerStartY = location.y;
 		this._dragging = true;
