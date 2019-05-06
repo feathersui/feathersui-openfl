@@ -40,6 +40,20 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 class Label extends FeathersControl {
+	/**
+		Larger text for headings.
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_HEADING = "heading";
+
+	/**
+		Smaller text for details.
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_DETAIL = "detail";
+
 	public function new() {
 		super();
 	}
