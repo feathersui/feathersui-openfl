@@ -183,6 +183,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		}
 		this.variant = value;
 		if (this.initialized) {
+			// ignore if we're not initialized yet because it will be handled
+			// later. otherwise, apply the new styles immediately.
 			this.applyStyles();
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
