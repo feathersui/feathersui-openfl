@@ -155,6 +155,18 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return this.layoutData;
 	}
 
+	public var variant(default, set):String = null;
+
+	private function set_variant(value:String):String {
+		if (this.variant == value) {
+			return this.variant;
+		}
+		if (this.initialized) {
+			this.applyStyles();
+		}
+		return this.variant;
+	}
+
 	private var _applyingStyles:Bool = false;
 	private var _restrictedStyles:Array<String> = [];
 
@@ -253,6 +265,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private function applyStyles():Void {
+		if (!this.initialized) {
+			throw new IllegalOperationError("Cannot apply styles until after a Feathers component has initialized.");
+		}
 		var styleProvider = Theme.getStyleProvider(this);
 		if (this._styleProvider != styleProvider) {
 			if (this._styleProvider != null) {
