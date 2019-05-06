@@ -21,7 +21,13 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		if (styleTargets == null) {
 			styleTargets = [];
 		}
-		styleTargets.set(StyleTarget.ClassAndVariant(Type.getClassName(type), variant), callback);
+		var typeName = Type.getClassName(type);
+		var styleTarget = variant == null ? StyleTarget.Class(typeName) : StyleTarget.ClassAndVariant(typeName, variant);
+		if (callback == null) {
+			styleTargets.remove(styleTarget);
+		} else {
+			styleTargets.set(styleTarget, callback);
+		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
@@ -38,11 +44,11 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		var variant = uiControl.variant;
 
 		var styleContextName = Type.getClassName(styleContext);
-		var styleTarget = StyleTarget.ClassAndVariant(styleContextName, variant);
+		var styleTarget = variant == null ? StyleTarget.Class(styleContextName) : StyleTarget.ClassAndVariant(styleContextName, variant);
 		var callback = this.styleTargets.get(styleTarget);
-		if (callback == null) {
+		if (callback == null && variant != null) {
 			// try again without the variant
-			styleTarget = StyleTarget.ClassAndVariant(styleContextName, null);
+			styleTarget = StyleTarget.Class(styleContextName);
 			callback = this.styleTargets.get(styleTarget);
 		}
 		if (callback == null) {
@@ -57,5 +63,6 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 }
 
 private enum StyleTarget {
+	Class(type:String);
 	ClassAndVariant(type:String, variant:String);
 }
