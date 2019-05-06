@@ -247,6 +247,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	/**
 		Determines if a style may be changed, and restricts the style from being
 		changed in the future, if necessary.
+
+		@since 1.0.0
 	**/
 	@:dox(show)
 	private function setStyle(styleName:String):Bool {
@@ -260,6 +262,17 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return true;
 	}
 
+	/**
+		Returns the component's default style provider. To be overridden by
+		subclasses.
+
+		@since 1.0.0
+	**/
+	@:dox(show)
+	private function getDefaultStyleProvider():IStyleProvider {
+		return null;
+	}
+
 	private function isStyleRestricted(styleName:String):Bool {
 		return this._restrictedStyles.indexOf(styleName) != -1;
 	}
@@ -269,6 +282,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 			throw new IllegalOperationError("Cannot apply styles until after a Feathers component has initialized.");
 		}
 		var styleProvider = Theme.getStyleProvider(this);
+		if (styleProvider == null) {
+			styleProvider = this.getDefaultStyleProvider();
+		}
 		if (this._styleProvider != styleProvider) {
 			if (this._styleProvider != null) {
 				this._styleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
