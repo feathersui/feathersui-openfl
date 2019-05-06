@@ -81,17 +81,45 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					if (maxY < itemMaxY) {
 						maxY = itemMaxY;
 					}
+				} else {
+					var itemMaxY = item.height;
+					if (maxY < itemMaxY) {
+						maxY = itemMaxY;
+					}
 				}
 				if (layoutData.right == null && layoutData.horizontalCenter == null) {
 					var itemMaxX = item.x + item.width;
 					if (maxX < itemMaxX) {
 						maxX = itemMaxX;
 					}
+				} else {
+					var itemMaxX = item.width;
+					if (maxX < itemMaxX) {
+						maxX = itemMaxX;
+					}
 				}
 			}
 		}
-		var viewPortWidth = measurements.width != null ? measurements.width : maxX;
-		var viewPortHeight = measurements.width != null ? measurements.height : maxY;
+		var viewPortWidth = maxX;
+		if (measurements.width != null) {
+			viewPortWidth = measurements.width;
+		} else {
+			if (viewPortWidth < measurements.minWidth) {
+				viewPortWidth = measurements.minWidth;
+			} else if (viewPortWidth > measurements.maxWidth) {
+				viewPortWidth = measurements.maxWidth;
+			}
+		}
+		var viewPortHeight = maxY;
+		if (measurements.height != null) {
+			viewPortHeight = measurements.height;
+		} else {
+			if (viewPortHeight < measurements.minHeight) {
+				viewPortHeight = measurements.minHeight;
+			} else if (viewPortHeight > measurements.maxHeight) {
+				viewPortHeight = measurements.maxHeight;
+			}
+		}
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
