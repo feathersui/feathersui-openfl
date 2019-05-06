@@ -24,14 +24,14 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
-	public function applyStyles(target:IStyleObject):Void {
+	public function applyStyles(target:IStyleObject, contextType:Class<IStyleObject>):Void {
 		this.clearStyles(target);
 
 		if (this.styleTargets == null) {
 			return;
 		}
-		var targetTypeName = Type.getClassName(Type.getClass(target));
-		var styleTarget = StyleTarget.ClassAndVariant(targetTypeName, null);
+		var contextTypeName = Type.getClassName(contextType);
+		var styleTarget = StyleTarget.ClassAndVariant(contextTypeName, null);
 		var callback = this.styleTargets.get(styleTarget);
 		if (callback == null) {
 			return;

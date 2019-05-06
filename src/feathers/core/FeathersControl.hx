@@ -107,6 +107,21 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private var _styleProvider:IStyleProvider = null;
+	private var styleType(get, null):Class<IStyleObject>;
+
+	/**
+		The class used as the context for styling the component. If a subclass
+		of a component should have different styles than its superclass, it
+		should override the `get_styleType` getter. However, if a subclass
+		should continue using the same styles as its superclass, it happens
+		automatically.
+
+		@since 1.0.0
+	**/
+	@:dox(show)
+	private function get_styleType():Class<IStyleObject> {
+		return null;
+	}
 
 	public var includeInLayout(default, set):Bool = true;
 
@@ -249,10 +264,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		if (this._styleProvider == null) {
 			return;
 		}
-		var oldApplyingStyles = this._applyingStyles;
-		this._applyingStyles = true;
-		this._styleProvider.applyStyles(this);
-		this._applyingStyles = oldApplyingStyles;
+		if (this.styleType != null) {
+			var oldApplyingStyles = this._applyingStyles;
+			this._applyingStyles = true;
+			this._styleProvider.applyStyles(this, this.styleType);
+			this._applyingStyles = oldApplyingStyles;
+		}
 	}
 
 	private function feathersControl_addedToStageHandler(event:Event):Void {

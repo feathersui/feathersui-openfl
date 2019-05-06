@@ -13,6 +13,7 @@ import feathers.core.InvalidationFlag;
 import feathers.core.IValidating;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.VerticalAlign;
+import feathers.style.IStyleObject;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
@@ -37,6 +38,10 @@ import openfl.text.TextFormat;
 class Button extends BasicButton {
 	public function new() {
 		super();
+	}
+
+	override private function get_styleType():Class<IStyleObject> {
+		return Button;
 	}
 
 	private var textField:TextField;

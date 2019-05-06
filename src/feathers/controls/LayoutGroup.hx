@@ -21,6 +21,7 @@ import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
+import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.geom.Point;
@@ -58,6 +59,10 @@ class LayoutGroup extends FeathersControl {
 	public function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, layoutGroup_addedToStageHandler);
+	}
+
+	override private function get_styleType():Class<IStyleObject> {
+		return LayoutGroup;
 	}
 
 	private var items:Array<DisplayObject> = [];

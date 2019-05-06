@@ -14,6 +14,7 @@ import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.Direction;
+import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
@@ -45,6 +46,10 @@ import openfl.geom.Point;
 class Slider extends FeathersControl {
 	public function new() {
 		super();
+	}
+
+	override private function get_styleType():Class<IStyleObject> {
+		return Slider;
 	}
 
 	/**

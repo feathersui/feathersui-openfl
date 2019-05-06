@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.style.IStyleObject;
 import feathers.utils.Scroller;
 import openfl.events.Event;
 import openfl.geom.Rectangle;
@@ -44,6 +45,10 @@ import openfl.geom.Rectangle;
 class ScrollContainer extends LayoutGroup {
 	public function new() {
 		super();
+	}
+
+	override private function get_styleType():Class<IStyleObject> {
+		return ScrollContainer;
 	}
 
 	private var scroller:Scroller;

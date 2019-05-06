@@ -9,8 +9,9 @@
 package feathers.controls.navigators;
 
 import feathers.motion.effects.IEffectContext;
-import openfl.display.DisplayObject;
 import feathers.events.FeathersEvent;
+import feathers.style.IStyleObject;
+import openfl.display.DisplayObject;
 
 /**
 	A "view stack"-like container that supports navigation between items with
@@ -40,6 +41,10 @@ class StackNavigator extends BaseNavigator {
 	public function new() {
 		super();
 		this.addEventListener(FeathersEvent.INITIALIZE, stackNavigator_initializeHandler);
+	}
+
+	override private function get_styleType():Class<IStyleObject> {
+		return StackNavigator;
 	}
 
 	/**
