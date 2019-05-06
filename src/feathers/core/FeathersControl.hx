@@ -181,9 +181,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		if (this.variant == value) {
 			return this.variant;
 		}
+		this.variant = value;
 		if (this.initialized) {
 			this.applyStyles();
 		}
+		this.setInvalid(InvalidationFlag.STYLES);
 		return this.variant;
 	}
 
