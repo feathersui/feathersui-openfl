@@ -252,7 +252,7 @@ class StackItem {
 		var eventListener = function(event:Event):Void {
 			var current = action;
 			while (current != null) {
-				current = performAction(action, event, navigator);
+				current = performAction(current, event, navigator);
 			}
 		};
 		return eventListener;
