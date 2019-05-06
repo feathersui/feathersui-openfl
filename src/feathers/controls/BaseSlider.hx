@@ -14,7 +14,6 @@ import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.Direction;
-import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
@@ -23,33 +22,17 @@ import openfl.events.MouseEvent;
 import openfl.geom.Point;
 
 /**
-	Select a value between a minimum and a maximum by dragging a thumb over the
-	bounds of a track.
+	Base class for slider components.
 
-	The following example sets the slider's range and listens for when the value
-	changes:
-
-	```hx
-	var slider:Slider = new Slider();
-	slider.minimum = 0;
-	slider.maximum = 100;
-	slider.step = 1;
-	slider.value = 12;
-	slider.addEventListener( Event.CHANGE, slider_changeHandler );
-	this.addChild( slider );</listing>
-	```
-
-	@see [How to use the Feathers Slider component](../../../help/slider.html)
+	@see `feathers.controls.HSlider`
+	@see `feathers.controls.VSlider`
 
 	@since 1.0.0
 **/
-class Slider extends FeathersControl {
-	public function new() {
+class BaseSlider extends FeathersControl {
+	private function new(direction:Direction) {
 		super();
-	}
-
-	override private function get_styleType():Class<IStyleObject> {
-		return Slider;
+		this.direction = direction;
 	}
 
 	/**
@@ -198,16 +181,7 @@ class Slider extends FeathersControl {
 		@see `feathers.layout.Direction#HORIZONTAL`
 		@see `feathers.layout.Direction#VERTICAL`
 	**/
-	public var direction(default, set):Direction = Direction.HORIZONTAL;
-
-	private function set_direction(value:Direction):Direction {
-		if (this.direction == value) {
-			return this.direction;
-		}
-		this.direction = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.direction;
-	}
+	public var direction(default, null):Direction = Direction.HORIZONTAL;
 
 	/**
 		Determines if the slider dispatches the `Event.CHANGE` event every time
