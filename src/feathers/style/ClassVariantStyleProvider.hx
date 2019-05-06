@@ -8,9 +8,10 @@
 
 package feathers.style;
 
-import openfl.events.Event;
 import feathers.events.FeathersEvent;
+import feathers.core.IUIControl;
 import haxe.rtti.Meta;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvider {
@@ -24,39 +25,25 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
-	public function applyStyles(target:IStyleObject, contextType:Class<IStyleObject>):Void {
-		this.clearStyles(target);
-
+	public function applyStyles(target:IStyleObject):Void {
 		if (this.styleTargets == null) {
 			return;
 		}
-		var contextTypeName = Type.getClassName(contextType);
-		var styleTarget = StyleTarget.ClassAndVariant(contextTypeName, null);
+		if (!Std.is(target, IUIControl)) {
+			return;
+		}
+
+		var uiControl = cast(target, IUIControl);
+		var styleContext = uiControl.styleContext;
+		var variant = uiControl.variant;
+
+		var styleContextName = Type.getClassName(styleContext);
+		var styleTarget = StyleTarget.ClassAndVariant(styleContextName, variant);
 		var callback = this.styleTargets.get(styleTarget);
 		if (callback == null) {
 			return;
 		}
 		callback(target);
-	}
-
-	private function clearStyles(target:IStyleObject):Void {
-		var targetType = Type.getClass(target);
-		var meta = Meta.getFields(targetType);
-		for (fieldName in Type.getInstanceFields(targetType)) {
-			// don't know why, but this seems to be necessary for C++ targets
-			if (!Reflect.hasField(this, fieldName)) {
-				continue;
-			}
-			var field = Reflect.field(meta, fieldName);
-			if (field == null) {
-				continue;
-			};
-			if (!Reflect.hasField(field, "style")) {
-				continue;
-			}
-			// if this style is restricted, this call won't change anything
-			Reflect.setProperty(this, fieldName, null);
-		}
 	}
 }
 

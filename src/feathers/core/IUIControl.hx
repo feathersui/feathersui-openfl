@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import feathers.style.IStyleObject;
 import openfl.events.IEventDispatcher;
 
 /**
@@ -17,5 +18,7 @@ import openfl.events.IEventDispatcher;
 **/
 interface IUIControl extends IEventDispatcher {
 	public var enabled(default, set):Bool;
+	public var styleContext(get, null):Class<IStyleObject>;
+	public var variant(default, set):String;
 	public function initializeNow():Void;
 }

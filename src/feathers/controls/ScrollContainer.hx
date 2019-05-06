@@ -47,7 +47,7 @@ class ScrollContainer extends LayoutGroup {
 		super();
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return ScrollContainer;
 	}
 

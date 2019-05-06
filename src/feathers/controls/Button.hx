@@ -40,7 +40,7 @@ class Button extends BasicButton {
 		super();
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return Button;
 	}
 

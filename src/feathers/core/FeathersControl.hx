@@ -16,6 +16,7 @@ import feathers.layout.ILayoutObject;
 import feathers.style.IStyleObject;
 import feathers.style.IStyleProvider;
 import feathers.style.Theme;
+import haxe.rtti.Meta;
 
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed
@@ -107,19 +108,19 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private var _styleProvider:IStyleProvider = null;
-	private var styleType(get, null):Class<IStyleObject>;
 
 	/**
 		The class used as the context for styling the component. If a subclass
 		of a component should have different styles than its superclass, it
-		should override the `get_styleType` getter. However, if a subclass
+		should override the `get_styleContext` getter. However, if a subclass
 		should continue using the same styles as its superclass, it happens
 		automatically.
 
 		@since 1.0.0
 	**/
-	@:dox(show)
-	private function get_styleType():Class<IStyleObject> {
+	public var styleContext(get, null):Class<IStyleObject>;
+
+	private function get_styleContext():Class<IStyleObject> {
 		return null;
 	}
 
@@ -295,11 +296,32 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		if (this._styleProvider == null) {
 			return;
 		}
-		if (this.styleType != null) {
+		if (this.styleContext != null) {
 			var oldApplyingStyles = this._applyingStyles;
 			this._applyingStyles = true;
-			this._styleProvider.applyStyles(this, this.styleType);
+			this.clearStyles();
+			this._styleProvider.applyStyles(this);
 			this._applyingStyles = oldApplyingStyles;
+		}
+	}
+
+	private function clearStyles():Void {
+		var thisType = Type.getClass(this);
+		var meta = Meta.getFields(thisType);
+		for (fieldName in Type.getInstanceFields(thisType)) {
+			// don't know why, but this seems to be necessary for C++ targets
+			if (!Reflect.hasField(this, fieldName)) {
+				continue;
+			}
+			var field = Reflect.field(meta, fieldName);
+			if (field == null) {
+				continue;
+			};
+			if (!Reflect.hasField(field, "style")) {
+				continue;
+			}
+			// if this style is restricted, this call won't change anything
+			Reflect.setProperty(this, fieldName, null);
 		}
 	}
 

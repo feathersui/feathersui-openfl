@@ -56,12 +56,14 @@ import openfl.geom.Point;
 	@since 1.0.0
 **/
 class LayoutGroup extends FeathersControl {
+	public static final VARIANT_TOOL_BAR = "toolBar";
+
 	public function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, layoutGroup_addedToStageHandler);
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return LayoutGroup;
 	}
 

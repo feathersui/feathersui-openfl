@@ -39,7 +39,7 @@ class HSlider extends BaseSlider {
 		super(Direction.HORIZONTAL);
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return HSlider;
 	}
 }

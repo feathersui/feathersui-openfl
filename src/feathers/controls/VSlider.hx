@@ -39,7 +39,7 @@ class VSlider extends BaseSlider {
 		super(Direction.VERTICAL);
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return VSlider;
 	}
 }

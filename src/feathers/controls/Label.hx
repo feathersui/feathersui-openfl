@@ -44,7 +44,7 @@ class Label extends FeathersControl {
 		super();
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return Label;
 	}
 

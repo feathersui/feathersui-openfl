@@ -43,7 +43,7 @@ class StackNavigator extends BaseNavigator {
 		this.addEventListener(FeathersEvent.INITIALIZE, stackNavigator_initializeHandler);
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return StackNavigator;
 	}
 

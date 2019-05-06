@@ -53,7 +53,7 @@ class TextInput extends FeathersControl implements IStateContext {
 		super();
 	}
 
-	override private function get_styleType():Class<IStyleObject> {
+	override private function get_styleContext():Class<IStyleObject> {
 		return TextInput;
 	}
 
