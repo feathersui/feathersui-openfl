@@ -429,6 +429,11 @@ class Scroller extends EventDispatcher {
 		if (Std.is(this.target, DisplayObjectContainer)) {
 			var container = cast(this.target, DisplayObjectContainer);
 			this.restoreMouseChildren = container.mouseChildren;
+			// if we were already scrolling, disable the pointer immediately.
+			// otherwise, wait until dragging starts
+			if (this.draggingX || this.draggingY) {
+				container.mouseChildren = false;
+			}
 		}
 		this.touchID = 0;
 		this.startTouchX = event.stageX;
