@@ -247,8 +247,8 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	override private function update():Void {
-		// children are allowed to change during draw() in a subclass up
-		// until it calls super.draw().
+		// children are allowed to change during update() in a subclass up
+		// until it calls super.update().
 		this._ignoreChildChangesButSetFlags = false;
 
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
