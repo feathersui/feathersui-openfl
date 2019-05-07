@@ -61,6 +61,21 @@ class BasicButton extends FeathersControl implements IStateContext {
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 
+	@style
+	public var keepDownStateOnRollOut(default, set):Bool = false;
+
+	private function set_keepDownStateOnRollOut(value:Bool):Bool {
+		if (!this.setStyle("keepDownStateOnRollOut")) {
+			return this.keepDownStateOnRollOut;
+		}
+		if (this.keepDownStateOnRollOut == value) {
+			return this.keepDownStateOnRollOut;
+		}
+		this.keepDownStateOnRollOut = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.keepDownStateOnRollOut;
+	}
+
 	/**
 		The default background skin for the button, which is used when no other
 		skin is defined for the current state with `setSkinForState()`.
@@ -159,8 +174,16 @@ class BasicButton extends FeathersControl implements IStateContext {
 			this.refreshBackgroundSkin();
 		}
 
+		if (stylesInvalid) {
+			this.refreshInteractivity();
+		}
+
 		this.autoSizeIfNeeded();
 		this.layoutBackgroundSkin();
+	}
+
+	private function refreshInteractivity():Void {
+		this._pointerToState.keepDownStateOnRollOut = this.keepDownStateOnRollOut;
 	}
 
 	private function refreshBackgroundSkin():Void {
