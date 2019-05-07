@@ -1,4 +1,4 @@
-package feathers.controls.scrolling;
+package feathers.controls.supportClasses;
 
 import feathers.core.InvalidationFlag;
 import feathers.layout.AutoSizeMode;

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.supportClasses.BaseSlider;
 import feathers.core.IValidating;
 import feathers.style.IStyleObject;
 import openfl.geom.Point;

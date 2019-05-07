@@ -8,7 +8,7 @@
 
 package feathers.controls;
 
-import feathers.controls.scrolling.LayoutViewPort;
+import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;

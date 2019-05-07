@@ -6,7 +6,7 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
-package feathers.controls;
+package feathers.controls.supportClasses;
 
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
