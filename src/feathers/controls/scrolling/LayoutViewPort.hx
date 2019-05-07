@@ -1,7 +1,9 @@
 package feathers.controls.scrolling;
 
 import feathers.core.InvalidationFlag;
+import feathers.layout.AutoSizeMode;
 import openfl.errors.ArgumentError;
+import openfl.geom.Point;
 
 class LayoutViewPort extends LayoutGroup {
 	private var _actualMinVisibleWidth:Float = 0;
@@ -150,6 +152,75 @@ class LayoutViewPort extends LayoutGroup {
 			this.setInvalid(InvalidationFlag.SIZE);
 		}
 		return this._explicitVisibleWidth;
+	}
+
+	override private function refreshViewPortBounds():Void {
+		var needsWidth = this._explicitVisibleWidth == null;
+		var needsHeight = this._explicitVisibleHeight == null;
+		var needsMinWidth = this._explicitMinVisibleWidth == null;
+		var needsMinHeight = this._explicitMinVisibleHeight == null;
+		var needsMaxWidth = this.maxVisibleWidth == null;
+		var needsMaxHeight = this.maxVisibleHeight == null;
+
+		if (this._currentBackgroundSkin != null) {
+			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+		}
+
+		var needsToMeasureContent = this.autoSizeMode == AutoSizeMode.CONTENT || this.stage == null;
+		var stageWidth:Float = 0.0;
+		var stageHeight:Float = 0.0;
+		if (!needsToMeasureContent) {
+			// TODO: see if this can be done without allocations
+			var topLeft = this.globalToLocal(new Point());
+			var bottomRight = this.globalToLocal(new Point(this.stage.stageWidth, this.stage.stageHeight));
+			stageWidth = bottomRight.x - topLeft.x;
+			stageHeight = bottomRight.y - topLeft.y;
+		}
+
+		if (needsWidth && !needsToMeasureContent) {
+			this._layoutMeasurements.width = stageWidth;
+		} else {
+			this._layoutMeasurements.width = this._explicitVisibleWidth;
+		}
+
+		if (needsHeight && !needsToMeasureContent) {
+			this._layoutMeasurements.height = stageHeight;
+		} else {
+			this._layoutMeasurements.height = this._explicitVisibleHeight;
+		}
+
+		var viewPortMinWidth = this._explicitMinVisibleWidth;
+		if (needsMinWidth) {
+			viewPortMinWidth = 0;
+		}
+		var viewPortMinHeight = this._explicitMinVisibleHeight;
+		if (needsMinHeight) {
+			viewPortMinHeight = 0;
+		}
+		var viewPortMaxWidth = this.maxVisibleWidth;
+		if (needsMaxWidth) {
+			viewPortMaxWidth = Math.POSITIVE_INFINITY;
+		}
+		var viewPortMaxHeight = this.maxVisibleHeight;
+		if (needsMaxHeight) {
+			viewPortMaxHeight = Math.POSITIVE_INFINITY;
+		}
+		if (this._currentBackgroundSkin != null) {
+			// because the layout might need it, we account for the
+			// dimensions of the background skin when determining the minimum
+			// dimensions of the view port.
+			// we can't use the minimum dimensions of the background skin
+			if (this._currentBackgroundSkin.width > viewPortMinWidth) {
+				viewPortMinWidth = this._currentBackgroundSkin.width;
+			}
+			if (this._currentBackgroundSkin.height > viewPortMinHeight) {
+				viewPortMinHeight = this._currentBackgroundSkin.height;
+			}
+		}
+		this._layoutMeasurements.minWidth = viewPortMinWidth;
+		this._layoutMeasurements.minHeight = viewPortMinHeight;
+		this._layoutMeasurements.maxWidth = viewPortMaxWidth;
+		this._layoutMeasurements.maxHeight = viewPortMaxHeight;
 	}
 
 	override private function handleLayoutResult():Void {
