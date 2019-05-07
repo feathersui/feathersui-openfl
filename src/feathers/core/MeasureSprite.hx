@@ -123,7 +123,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitMinWidth;
 	}
 
-	public var explicitMinHeight(default, null):Null<Float> = null;
+	public var explicitMinHeight(default, set):Null<Float> = null;
 
 	private function set_explicitMinHeight(value:Null<Float>):Null<Float> {
 		if (this.explicitMinHeight == value) {
@@ -199,7 +199,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@since 1.0.0
 	**/
 	@:dox(show)
-	private function saveMeasurements(width:Float, height:Float, minWidth:Float = 0, minHeight:Float = 0, ?maxWidth:Float, ?maxHeight:Float):Bool {
+	private function saveMeasurements(width:Float, height:Float, minWidth:Float = 0.0, minHeight:Float = 0.0, ?maxWidth:Float, ?maxHeight:Float):Bool {
 		if (maxWidth == null) {
 			maxWidth = Math.POSITIVE_INFINITY;
 		}
@@ -303,11 +303,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		width = this.scaledActualWidth;
 		height = this.scaledActualHeight;
 		this.scaledActualWidth = this.actualWidth * scaleX;
-		this.scaledActualHeight = this.actualHeight * scaleX;
+		this.scaledActualHeight = this.actualHeight * scaleY;
 		this.scaledActualMinWidth = this.actualMinWidth * scaleX;
-		this.scaledActualMinHeight = this.actualMinHeight * scaleX;
+		this.scaledActualMinHeight = this.actualMinHeight * scaleY;
 		this.scaledActualMaxWidth = this.actualMaxWidth * scaleX;
-		this.scaledActualMaxHeight = this.actualMaxHeight * scaleX;
+		this.scaledActualMaxHeight = this.actualMaxHeight * scaleY;
 		if (width != this.scaledActualWidth || height != this.scaledActualHeight) {
 			resized = true;
 			FeathersEvent.dispatch(this, Event.RESIZE);

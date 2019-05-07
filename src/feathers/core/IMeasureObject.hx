@@ -24,7 +24,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitWidth(default, null):Null<Float>;
+	public var explicitWidth(default, set):Null<Float>;
 
 	/**
 		The object's explicit height value, or `null` if `height` is not set
@@ -35,7 +35,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitHeight(default, null):Null<Float>;
+	public var explicitHeight(default, set):Null<Float>;
 
 	/**
 		The object's explicit minimum width value, or `null` if `minWidth` is
@@ -45,7 +45,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitMinWidth(default, null):Null<Float>;
+	public var explicitMinWidth(default, set):Null<Float>;
 
 	/**
 		The object's explicit minimum height value, or `null` if `minHeight` is
@@ -55,7 +55,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitMinHeight(default, null):Null<Float>;
+	public var explicitMinHeight(default, set):Null<Float>;
 
 	/**
 		The object's explicit maximum width value, or `null` if `maxWidth` is
