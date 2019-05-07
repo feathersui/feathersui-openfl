@@ -327,10 +327,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 			currentType = Type.getSuperClass(currentType);
 		}
 		for (fieldName in Type.getInstanceFields(thisType)) {
-			// don't know why, but this seems to be necessary for C++ targets
-			if (!Reflect.hasField(this, fieldName)) {
-				continue;
-			}
 			var foundField = null;
 			for (meta in metas) {
 				var currentField = Reflect.field(meta, fieldName);
