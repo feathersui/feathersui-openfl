@@ -319,17 +319,30 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 
 	private function clearStyles():Void {
 		var thisType = Type.getClass(this);
-		var meta = Meta.getFields(thisType);
+		var currentType:Class<Dynamic> = thisType;
+		var metas = [];
+		while (currentType != null) {
+			var meta = Meta.getFields(currentType);
+			metas.push(meta);
+			currentType = Type.getSuperClass(currentType);
+		}
 		for (fieldName in Type.getInstanceFields(thisType)) {
 			// don't know why, but this seems to be necessary for C++ targets
 			if (!Reflect.hasField(this, fieldName)) {
 				continue;
 			}
-			var field = Reflect.field(meta, fieldName);
-			if (field == null) {
+			var foundField = null;
+			for (meta in metas) {
+				var currentField = Reflect.field(meta, fieldName);
+				if (currentField != null) {
+					foundField = currentField;
+					break;
+				};
+			}
+			if (foundField == null) {
 				continue;
 			};
-			if (!Reflect.hasField(field, "style")) {
+			if (!Reflect.hasField(foundField, "style")) {
 				continue;
 			}
 			// if this style is restricted, this call won't change anything
