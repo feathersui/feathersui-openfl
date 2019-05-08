@@ -1,0 +1,14 @@
+-cp ../src
+-D doc-gen
+-D display
+-lib lime
+-lib openfl
+-lib actuate
+--remap flash:openfl
+--macro ImportAll.run("feathers")
+--no-output
+--interp
+-xml ../build/xml/feathers.xml
+
+--next
+-cmd haxelib run dox -o ../build/api -i ../build/xml -in feathers --title "API Reference" -D website "https://feathersui.com" -D textColor 0x777777 --toplevel-package feathers
