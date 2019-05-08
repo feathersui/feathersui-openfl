@@ -102,7 +102,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var minWidth(default, set):Float;
+	public var minWidth(get, set):Float;
 
 	/**
 		The object's minimum height value.
@@ -111,7 +111,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var minHeight(default, set):Float;
+	public var minHeight(get, set):Float;
 
 	/**
 		The object's maximum width value.
@@ -120,7 +120,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var maxWidth(default, set):Float;
+	public var maxWidth(get, set):Float;
 
 	/**
 		The object's maximum height value.
@@ -129,5 +129,5 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var maxHeight(default, set):Float;
+	public var maxHeight(get, set):Float;
 }

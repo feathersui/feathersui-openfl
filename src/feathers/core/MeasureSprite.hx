@@ -149,7 +149,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitMinHeight;
 	}
 
-	public var minWidth(default, set):Float = 0;
+	public var minWidth(get, set):Float;
+
+	private function get_minWidth():Float {
+		return this.scaledActualMinWidth;
+	}
 
 	private function set_minWidth(value:Float):Float {
 		if (this.scaleX != 1) {
@@ -159,7 +163,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.scaledActualMinWidth;
 	}
 
-	public var minHeight(default, set):Float = 0;
+	public var minHeight(get, set):Float;
+
+	private function get_minHeight():Float {
+		return this.scaledActualMinHeight;
+	}
 
 	private function set_minHeight(value:Float):Float {
 		if (this.scaleY != 1) {
@@ -171,7 +179,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 
 	public var explicitMaxWidth(default, null):Null<Float> = null;
 	public var explicitMaxHeight(default, null):Null<Float> = null;
-	public var maxWidth(default, set):Float = Math.POSITIVE_INFINITY;
+	public var maxWidth(get, set):Float;
+
+	private function get_maxWidth():Float {
+		return this.scaledActualMaxWidth;
+	}
 
 	private function set_maxWidth(value:Float):Float {
 		if (this.scaleX != 1) {
@@ -181,7 +193,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.scaledActualMaxWidth;
 	}
 
-	public var maxHeight(default, set):Float = Math.POSITIVE_INFINITY;
+	public var maxHeight(get, set):Float;
+
+	private function get_maxHeight():Float {
+		return this.scaledActualMaxHeight;
+	}
 
 	private function set_maxHeight(value:Float):Float {
 		if (this.scaleY != 1) {
