@@ -107,7 +107,47 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return this.enabled;
 	}
 
-	private var _styleProvider:IStyleProvider = null;
+	private var _currentStyleProvider:IStyleProvider = null;
+	private var _customStyleProvider:IStyleProvider = null;
+
+	/**
+		When a component initializes, a style provider may be used to set
+		properties that affect the component's visual appearance.
+
+		You can set or replace an existing style provider at any time before a
+		component initializes without immediately affecting the component's
+		visual appearance. After the component initializes, the style provider
+		may still be changed, and any properties that were set by the previous
+		style provider will be reset to their default values before applying the
+		new style provider.
+
+		@see #variant
+		@see [Introduction to Feathers themes](../../../help/themes.html)
+
+		@since 1.0.0
+	**/
+	public var styleProvider(get, set):IStyleProvider;
+
+	private function get_styleProvider():IStyleProvider {
+		if (this._customStyleProvider != null) {
+			return this._customStyleProvider;
+		}
+		return this._currentStyleProvider;
+	}
+
+	private function set_styleProvider(value:IStyleProvider):IStyleProvider {
+		if (this._customStyleProvider == value) {
+			return this._customStyleProvider;
+		}
+		this._customStyleProvider = value;
+		if (this.initialized) {
+			// ignore if we're not initialized yet because it will be handled
+			// later. otherwise, apply the new styles immediately.
+			this.applyStyles();
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this._customStyleProvider;
+	}
 
 	/**
 		The class used as the context for styling the component. If a subclass
@@ -294,25 +334,28 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		if (!this.initialized) {
 			throw new IllegalOperationError("Cannot apply styles until after a Feathers component has initialized.");
 		}
-		var styleProvider = Theme.getStyleProvider(this);
+		var styleProvider = this._customStyleProvider;
+		if (styleProvider == null) {
+			styleProvider = Theme.getStyleProvider(this);
+		}
 		if (styleProvider == null) {
 			styleProvider = this.defaultStyleProvider;
 		}
-		if (this._styleProvider != styleProvider) {
-			if (this._styleProvider != null) {
-				this._styleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+		if (this._currentStyleProvider != styleProvider) {
+			if (this._currentStyleProvider != null) {
+				this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
 			}
-			this._styleProvider = styleProvider;
-			this._styleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
+			this._currentStyleProvider = styleProvider;
+			this._currentStyleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
 		}
-		if (this._styleProvider == null) {
+		if (this._currentStyleProvider == null) {
 			return;
 		}
 		if (this.styleContext != null) {
 			var oldApplyingStyles = this._applyingStyles;
 			this._applyingStyles = true;
 			this.clearStyles();
-			this._styleProvider.applyStyles(this);
+			this._currentStyleProvider.applyStyles(this);
 			this._applyingStyles = oldApplyingStyles;
 		}
 	}
@@ -357,9 +400,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
-		if (this._styleProvider != null) {
-			this._styleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
-			this._styleProvider = null;
+		if (this._currentStyleProvider != null) {
+			this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+			this._currentStyleProvider = null;
 		}
 	}
 
