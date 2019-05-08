@@ -85,4 +85,11 @@ class FunctionStyleProviderTest {
 		this._styleProvider.callback = function(target:LayoutGroup):Void {};
 		Assert.isTrue(true, "FunctionStyleProvider must dispatch Event.CHANGE after changing callback");
 	}
+
+	@Test
+	public function testNoErrorWithNullFunction():Void {
+		this._styleProvider.callback = null;
+		this._styleProvider.applyStyles(this._control);
+		Assert.isFalse(this._appliedStyles, "Must not apply style provider when callback function is null");
+	}
 }

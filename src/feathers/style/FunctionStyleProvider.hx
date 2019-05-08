@@ -58,6 +58,9 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 	}
 
 	public function applyStyles(target:IStyleObject):Void {
+		if (this.callback == null) {
+			return;
+		}
 		this.callback(target);
 	}
 }
