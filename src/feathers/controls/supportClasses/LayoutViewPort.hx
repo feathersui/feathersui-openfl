@@ -5,7 +5,7 @@ import feathers.layout.AutoSizeMode;
 import openfl.errors.ArgumentError;
 import openfl.geom.Point;
 
-class LayoutViewPort extends LayoutGroup {
+class LayoutViewPort extends LayoutGroup implements IViewPort {
 	private var _actualMinVisibleWidth:Float = 0;
 	private var _explicitMinVisibleWidth:Null<Float> = null;
 
