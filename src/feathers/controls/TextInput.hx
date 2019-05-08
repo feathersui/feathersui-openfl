@@ -21,6 +21,7 @@ import feathers.layout.Measurements;
 import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFieldType;
@@ -341,6 +342,8 @@ class TextInput extends FeathersControl implements IStateContext {
 			this.textField.type = TextFieldType.INPUT;
 			this.textField.selectable = true;
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
+			this.textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
+			this.textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
 			this.addChild(this.textField);
 		}
 	}
@@ -624,5 +627,13 @@ class TextInput extends FeathersControl implements IStateContext {
 		event.stopPropagation();
 
 		this.text = this.textField.text;
+	}
+
+	private function textField_focusInHandler(event:FocusEvent):Void {
+		this.changeState(TextInputState.FOCUSED);
+	}
+
+	private function textField_focusOutHandler(event:FocusEvent):Void {
+		this.changeState(TextInputState.ENABLED);
 	}
 }
