@@ -5,7 +5,7 @@ import feathers.core.InvalidationTest;
 import feathers.core.MinAndMaxDimensionsTest;
 import feathers.core.RestrictedStyleTest;
 import feathers.core.ScaleTest;
-import feathers.style.CallbackStyleProviderTest;
+import feathers.style.FunctionStyleProviderTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -22,6 +22,6 @@ class TestSuite extends massive.munit.TestSuite
 		add(feathers.core.MinAndMaxDimensionsTest);
 		add(feathers.core.RestrictedStyleTest);
 		add(feathers.core.ScaleTest);
-		add(feathers.style.CallbackStyleProviderTest);
+		add(feathers.style.FunctionStyleProviderTest);
 	}
 }

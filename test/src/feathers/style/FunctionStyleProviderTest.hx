@@ -4,15 +4,15 @@ import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 import openfl.events.Event;
 
-class CallbackStyleProviderTest {
+class FunctionStyleProviderTest {
 	private var _control:LayoutGroup;
-	private var _styleProvider:CallbackStyleProvider;
+	private var _styleProvider:FunctionStyleProvider;
 	private var _appliedStyles:Bool;
 
 	@Before
 	public function prepare():Void {
 		this._appliedStyles = false;
-		this._styleProvider = new CallbackStyleProvider(setExtraStyles);
+		this._styleProvider = new FunctionStyleProvider(setExtraStyles);
 		this._control = new LayoutGroup();
 	}
 
@@ -24,7 +24,7 @@ class CallbackStyleProviderTest {
 		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	private function setExtraStyles(target:IStyleObject):Void {
+	private function setExtraStyles(target:LayoutGroup):Void {
 		this._appliedStyles = true;
 	}
 
@@ -73,5 +73,16 @@ class CallbackStyleProviderTest {
 		Assert.isFalse(this._appliedStyles);
 		this._styleProvider.dispatchEvent(new Event(Event.CHANGE));
 		Assert.isFalse(this._appliedStyles, "Must apply style provider immediately when already initialized and style provider dispatches Event.CHANGE");
+	}
+
+	@Test
+	public function testStyleProviderDispatchesChangeEventAfterChangeCallback():Void {
+		var changed = false;
+		this._styleProvider.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._styleProvider.callback = function(target:LayoutGroup):Void {};
+		Assert.isTrue(true, "FunctionStyleProvider must dispatch Event.CHANGE after changing callback");
 	}
 }

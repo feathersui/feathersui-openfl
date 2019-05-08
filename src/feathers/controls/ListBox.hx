@@ -29,11 +29,11 @@ import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 import feathers.style.IStyleProvider;
 import feathers.style.IStyleObject;
-import feathers.style.CallbackStyleProvider;
+import feathers.style.FunctionStyleProvider;
 import feathers.utils.Scroller;
 
 class ListBox extends BaseScrollContainer {
-	private static var ListBox_defaultStyleProvider = null;
+	private static var ListBox_defaultStyleProvider:FunctionStyleProvider = null;
 
 	public function new() {
 		super();
@@ -52,7 +52,7 @@ class ListBox extends BaseScrollContainer {
 
 	override private function get_defaultStyleProvider():IStyleProvider {
 		if (ListBox_defaultStyleProvider == null) {
-			ListBox_defaultStyleProvider = new CallbackStyleProvider(function(target:ListBox):Void {
+			ListBox_defaultStyleProvider = new FunctionStyleProvider(function(target:ListBox):Void {
 				if (target.layout == null) {
 					target.layout = new VerticalListFixedRowLayout();
 				}
