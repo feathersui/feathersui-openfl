@@ -121,6 +121,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 
 		If a skin is not defined for a specific state, returns `null`.
 
+		@see `feathers.controls.ButtonState`
 		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.setSkinForState()`
 		@see `BasicButton.currentState`
@@ -138,6 +139,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 		If a skin is not defined for a specific state, the value of the
 		`backgroundSkin` property will be used instead.
 
+		@see `feathers.controls.ButtonState`
 		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.getSkinForState()`
 		@see `BasicButton.currentState`

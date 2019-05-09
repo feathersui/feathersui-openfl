@@ -269,6 +269,7 @@ class Button extends BasicButton {
 
 		If a text format is not defined for a specific state, returns `null`.
 
+		@see `feathers.controls.ButtonState`
 		@see `Button.textFormat`
 		@see `Button.setTextFormatForState()`
 		@see `Button.currentState`
@@ -286,6 +287,7 @@ class Button extends BasicButton {
 		If a text format is not defined for a specific state, the value of the
 		`textFormat` property will be used instead.
 
+		@see `feathers.controls.ButtonState`
 		@see `Button.textFormat`
 		@see `Button.getTextFormatForState()`
 		@see `Button.currentState`
