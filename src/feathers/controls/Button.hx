@@ -261,6 +261,49 @@ class Button extends BasicButton {
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
+	private var _stateToTextFormat:Map<String, TextFormat> = new Map();
+
+	/**
+		Gets the text format to be used by the button when its `currentState`
+		property matches the specified state value.
+
+		If a text format is not defined for a specific state, returns `null`.
+
+		@see `Button.textFormat`
+		@see `Button.setTextFormatForState()`
+		@see `Button.currentState`
+
+		@since 1.0.0
+	**/
+	public function getTextFormatForState(state:ButtonState):TextFormat {
+		return this._stateToTextFormat.get(state);
+	}
+
+	/**
+		Set the text format to be used by the button when its `currentState`
+		property matches the specified state value.
+
+		If a text format is not defined for a specific state, the value of the
+		`textFormat` property will be used instead.
+
+		@see `Button.textFormat`
+		@see `Button.getTextFormatForState()`
+		@see `Button.currentState`
+
+		@since 1.0.0
+	**/
+	@style
+	public function setTextFormatForState(state:ButtonState, textFormat:TextFormat):Void {
+		if (!this.setStyle("setTextFormatForState", state)) {
+			return;
+		}
+		if (textFormat == null) {
+			this._stateToTextFormat.remove(state);
+		} else {
+			this._stateToTextFormat.set(state, textFormat);
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+	}
 
 	override private function initialize():Void {
 		super.initialize();
