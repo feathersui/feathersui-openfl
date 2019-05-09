@@ -25,7 +25,7 @@ class Theme {
 		var oldStyleProvider = styleProvider;
 		styleProvider = value;
 		if (oldStyleProvider != null) {
-			FeathersEvent.dispatch(oldStyleProvider, Event.CHANGE);
+			FeathersEvent.dispatch(oldStyleProvider, Event.CLEAR);
 		}
 	}
 }

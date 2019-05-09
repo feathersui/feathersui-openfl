@@ -356,6 +356,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		}
 		var styleProvider = this._customStyleProvider;
 		if (styleProvider == null) {
+			styleProvider = this._currentStyleProvider;
+		}
+		if (styleProvider == null) {
 			styleProvider = Theme.getStyleProvider(this);
 		}
 		if (styleProvider == null) {
@@ -364,9 +367,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		if (this._currentStyleProvider != styleProvider) {
 			if (this._currentStyleProvider != null) {
 				this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+				this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 			}
 			this._currentStyleProvider = styleProvider;
 			this._currentStyleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
+			this._currentStyleProvider.addEventListener(Event.CLEAR, styleProvider_clearHandler, false, 0, true);
 		}
 		if (this._currentStyleProvider == null) {
 			return;
@@ -413,11 +418,19 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
 		if (this._currentStyleProvider != null) {
 			this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+			this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 			this._currentStyleProvider = null;
 		}
 	}
 
 	private function styleProvider_changeHandler(event:Event):Void {
+		this.applyStyles();
+	}
+
+	private function styleProvider_clearHandler(event:Event):Void {
+		this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+		this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
+		this._currentStyleProvider = null;
 		this.applyStyles();
 	}
 
