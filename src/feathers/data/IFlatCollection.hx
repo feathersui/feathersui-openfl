@@ -11,7 +11,7 @@ package feathers.data;
 import openfl.events.IEventDispatcher;
 
 interface IFlatCollection<T> extends IEventDispatcher {
-	public var length(dynamic, null):Int;
+	public var length(get, null):Int;
 	public function get(index:Int):T;
 	public function set(item:T, index:Int):Void;
 	public function add(item:T):Void;
