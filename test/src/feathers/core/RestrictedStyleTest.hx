@@ -1,16 +1,17 @@
 package feathers.core;
 
+import feathers.controls.ButtonState;
 import openfl.display.Sprite;
-import feathers.controls.LayoutGroup;
+import feathers.controls.BasicButton;
 import massive.munit.Assert;
 
 @:access(feathers.core.FeathersControl)
 class RestrictedStyleTest {
-	private var _control:LayoutGroup;
+	private var _control:BasicButton;
 
 	@Before
 	public function prepare():Void {
-		this._control = new LayoutGroup();
+		this._control = new BasicButton();
 	}
 
 	@After
@@ -27,7 +28,7 @@ class RestrictedStyleTest {
 	@Test
 	public function testStyleNotRestrictedAfterInitialize():Void {
 		this._control.initializeNow();
-		Assert.isFalse(this._control.isStyleRestricted("backgroundSkin"), "Style property must not be restricted after validate.");
+		Assert.isFalse(this._control.isStyleRestricted("backgroundSkin"), "Style property must not be restricted after initialize.");
 	}
 
 	@Test
@@ -40,5 +41,31 @@ class RestrictedStyleTest {
 	public function testRestrictedStyle():Void {
 		this._control.backgroundSkin = new Sprite();
 		Assert.isTrue(this._control.isStyleRestricted("backgroundSkin"), "Setting style property must restrict it.");
+		Assert.isFalse(this._control.isStyleRestricted("textFormat"), "Setting style property must not restrict a different style.");
+	}
+
+	@Test
+	public function testStyleWithStateNotRestrictedAfterConstructor():Void {
+		Assert.isFalse(this._control.isStyleRestricted("setSkinForState", ButtonState.DOWN), "Style with state must not be restricted after constructor.");
+	}
+
+	@Test
+	public function testStyleWithStateNotRestrictedAfterInitialize():Void {
+		this._control.initializeNow();
+		Assert.isFalse(this._control.isStyleRestricted("setSkinForState", ButtonState.DOWN), "Style with state must not be restricted after initialize.");
+	}
+
+	@Test
+	public function testStyleWithStateNotRestrictedAfterValidate():Void {
+		this._control.validateNow();
+		Assert.isFalse(this._control.isStyleRestricted("setSkinForState", ButtonState.DOWN), "Style with state must not be restricted after validate.");
+	}
+
+	@Test
+	public function testRestrictedStyleWithState():Void {
+		this._control.setSkinForState(ButtonState.DOWN, new Sprite());
+		Assert.isTrue(this._control.isStyleRestricted("setSkinForState", ButtonState.DOWN), "Calling style for state function must restrict it.");
+		Assert.isFalse(this._control.isStyleRestricted("setSkinForState", ButtonState.HOVER),
+			"Calling style for state function must not restrict a different state.");
 	}
 }

@@ -318,7 +318,11 @@ class TextInput extends FeathersControl implements IStateContext {
 
 		@since 1.0.0
 	**/
+	@style
 	public function setSkinForState(state:TextInputState, skin:DisplayObject):Void {
+		if (!this.setStyle("setSkinForState", state)) {
+			return;
+		}
 		var oldSkin = this._stateToSkin.get(state);
 		if (oldSkin != null && oldSkin == this._currentBackgroundSkin) {
 			this.removeCurrentBackgroundSkin(oldSkin);

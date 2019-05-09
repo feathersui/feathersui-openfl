@@ -232,7 +232,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private var _applyingStyles:Bool = false;
-	private var _restrictedStyles:Array<String> = [];
+	private var _clearingStyles:Bool = false;
+	private var _styleProviderStyles:Array<StyleDefinition> = [];
+	private var _restrictedStyles:Array<StyleDefinition> = [];
 
 	override public function validateNow():Void {
 		if (!this.initialized) {
@@ -315,19 +317,37 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		@since 1.0.0
 	**/
 	@:dox(show)
-	private function setStyle(styleName:String):Bool {
-		var restricted = this._restrictedStyles.indexOf(styleName) != -1;
+	private function setStyle(styleName:String, ?state:String):Bool {
+		var styleDef = state == null ? StyleDefinition.Name(styleName) : StyleDefinition.NameAndState(styleName, state);
+		var restricted = containsStyleDef(this._restrictedStyles, styleDef);
 		if (this._applyingStyles && restricted) {
 			return false;
 		}
-		if (!this._applyingStyles && !restricted) {
-			this._restrictedStyles.push(styleName);
+		if (this._applyingStyles) {
+			if (!this._clearingStyles && !containsStyleDef(this._styleProviderStyles, styleDef)) {
+				this._styleProviderStyles.push(styleDef);
+			}
+		} else if (!restricted) {
+			if (!this._clearingStyles && containsStyleDef(this._styleProviderStyles, styleDef)) {
+				this._styleProviderStyles.remove(styleDef);
+			}
+			this._restrictedStyles.push(styleDef);
 		}
 		return true;
 	}
 
-	private function isStyleRestricted(styleName:String):Bool {
-		return this._restrictedStyles.indexOf(styleName) != -1;
+	private function isStyleRestricted(styleName:String, ?state:String):Bool {
+		var styleDef = state == null ? StyleDefinition.Name(styleName) : StyleDefinition.NameAndState(styleName, state);
+		return containsStyleDef(this._restrictedStyles, styleDef);
+	}
+
+	private function containsStyleDef(target:Array<StyleDefinition>, styleDef:StyleDefinition):Bool {
+		for (other in target) {
+			if (styleDef.equals(other)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private function applyStyles():Void {
@@ -361,32 +381,23 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private function clearStyles():Void {
-		var thisType = Type.getClass(this);
-		var currentType:Class<Dynamic> = thisType;
-		var metas = [];
-		while (currentType != null) {
-			var meta = Meta.getFields(currentType);
-			metas.push(meta);
-			currentType = Type.getSuperClass(currentType);
-		}
-		for (fieldName in Type.getInstanceFields(thisType)) {
-			var foundField = null;
-			for (meta in metas) {
-				var currentField = Reflect.field(meta, fieldName);
-				if (currentField != null) {
-					foundField = currentField;
-					break;
-				};
+		var oldClearingStyles = this._clearingStyles;
+		this._clearingStyles = true;
+		for (styleDef in this._styleProviderStyles) {
+			switch (styleDef) {
+				case Name(name):
+					{
+						Reflect.setProperty(this, name, null);
+					}
+				case NameAndState(name, state):
+					{
+						var method = Reflect.field(this, name);
+						Reflect.callMethod(this, method, [state, null]);
+					}
 			}
-			if (foundField == null) {
-				continue;
-			};
-			if (!Reflect.hasField(foundField, "style")) {
-				continue;
-			}
-			// if this style is restricted, this call won't change anything
-			Reflect.setProperty(this, fieldName, null);
 		}
+		this._styleProviderStyles = [];
+		this._clearingStyles = oldClearingStyles;
 	}
 
 	private function feathersControl_addedToStageHandler(event:Event):Void {
@@ -413,4 +424,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	private function layoutData_changeHandler(event:Event):Void {
 		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
 	}
+}
+
+private enum StyleDefinition {
+	Name(name:String);
+	NameAndState(name:String, state:String);
 }
