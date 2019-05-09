@@ -11,6 +11,7 @@ package feathers.skins;
 import openfl.display.LineScaleMode;
 import openfl.display.InterpolationMethod;
 import openfl.display.SpreadMethod;
+import feathers.controls.IToggle;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
@@ -70,6 +71,25 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return this.fill;
 	}
 
+	/**
+		How the path's fill is styled when the state context is selected. To
+		use this skin, the state context must implement the `IToggle` interface.
+
+		@see `feathers.controls.IToggle`
+
+		@since 1.0.0
+	**/
+	public var selectedFill(default, set):FillStyle = null;
+
+	private function set_selectedFill(value:FillStyle):FillStyle {
+		if (this.selectedFill == value) {
+			return this.selectedFill;
+		}
+		this.selectedFill = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.selectedFill;
+	}
+
 	private var _stateToBorder:Map<String, LineStyle>;
 
 	/**
@@ -86,6 +106,25 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		this.border = value;
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.border;
+	}
+
+	/**
+		How the path's border is styled when the state context is selected. To
+		use this skin, the state context must implement the `IToggle` interface.
+
+		@see `feathers.controls.IToggle`
+
+		@since 1.0.0
+	**/
+	public var selectedBorder(default, set):LineStyle;
+
+	private function set_selectedBorder(value:LineStyle):LineStyle {
+		if (this.selectedBorder == value) {
+			return this.selectedBorder;
+		}
+		this.selectedBorder = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.selectedBorder;
 	}
 
 	/**
@@ -288,10 +327,16 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 			return this.border;
 		}
 		var result = this._stateToBorder.get(this.stateContext.currentState);
-		if (result == null) {
-			return this.border;
+		if (result != null) {
+			return result;
 		}
-		return result;
+		if (this.selectedBorder != null && Std.is(this.stateContext, IToggle)) {
+			var toggle = cast(this.stateContext, IToggle);
+			if (toggle.selected) {
+				return this.selectedBorder;
+			}
+		}
+		return this.border;
 	}
 
 	private function getCurrentFill():FillStyle {
@@ -299,10 +344,16 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 			return this.fill;
 		}
 		var result = this._stateToFill.get(this.stateContext.currentState);
-		if (result == null) {
-			return this.fill;
+		if (result != null) {
+			return result;
 		}
-		return result;
+		if (this.selectedFill != null && Std.is(this.stateContext, IToggle)) {
+			var toggle = cast(this.stateContext, IToggle);
+			if (toggle.selected) {
+				return this.selectedFill;
+			}
+		}
+		return this.fill;
 	}
 
 	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {
