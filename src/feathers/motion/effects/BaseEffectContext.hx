@@ -92,7 +92,11 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		this._reversed = false;
 
 		var duration = this.duration * (1.0 - this.position);
-		this._animatePlayback = Actuate.tween(this, duration, {position: 1.0});
+		// using Actuate.update() instead of Actuate.tween() because tween()
+		// fails when using -dce full
+		this._animatePlayback = Actuate.update(function(value:Float):Void {
+			position = value;
+		}, duration, [this.position], [1.0]);
 		this._animatePlayback.ease(this.ease);
 		this._animatePlayback.onComplete(this.animatePlayback_onComplete);
 	}
@@ -116,7 +120,11 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		this._reversed = true;
 
 		var duration = this.duration * this.position;
-		this._animatePlayback = Actuate.tween(this, duration, {position: 0.0});
+		// using Actuate.update() instead of Actuate.tween() because tween()
+		// fails when using -dce full
+		this._animatePlayback = Actuate.update(function(value:Float):Void {
+			position = value;
+		}, duration, [this.position], [0.0]);
 		this._animatePlayback.ease(this.ease);
 		this._animatePlayback.onComplete(this.animatePlayback_onComplete);
 	}
