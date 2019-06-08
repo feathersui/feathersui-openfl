@@ -27,11 +27,14 @@ class CircleSkin extends BaseGraphicsPathSkin {
 	}
 
 	private inline function getRadius():Float {
+		var currentBorder = this.getCurrentBorder();
+		var thicknessOffset = getLineThickness(currentBorder) / 2.0;
+
 		var shorterSide = this.actualWidth;
 		if (shorterSide > this.actualHeight) {
 			shorterSide = this.actualHeight;
 		}
-		return shorterSide / 2;
+		return (shorterSide / 2) - thicknessOffset;
 	}
 
 	override private function getGradientMatrix(radians:Float):Matrix {

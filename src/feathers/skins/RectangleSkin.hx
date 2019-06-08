@@ -39,10 +39,15 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 	}
 
 	override private function drawPath():Void {
+		var currentBorder = this.getCurrentBorder();
+		var thickness = getLineThickness(currentBorder);
+		var thicknessOffset = thickness / 2.0;
+
 		if (this.cornerRadius == 0.0) {
-			this.graphics.drawRect(0.0, 0.0, this.actualWidth, this.actualHeight);
+			this.graphics.drawRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness);
 		} else {
-			this.graphics.drawRoundRect(0.0, 0.0, this.actualWidth, this.actualHeight, this.cornerRadius, this.cornerRadius);
+			this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, this.cornerRadius,
+				this.cornerRadius);
 		}
 	}
 }

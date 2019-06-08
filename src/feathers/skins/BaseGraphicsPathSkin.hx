@@ -8,6 +8,7 @@
 
 package feathers.skins;
 
+import openfl.events.Event;
 import openfl.display.LineScaleMode;
 import openfl.display.InterpolationMethod;
 import openfl.display.SpreadMethod;
@@ -43,10 +44,16 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		}
 		if (this.stateContext != null) {
 			this.stateContext.removeEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler);
+			if (Std.is(this.stateContext, IToggle)) {
+				this.stateContext.removeEventListener(Event.CHANGE, stateContextToggle_changeHandler);
+			}
 		}
 		this.stateContext = value;
 		if (this.stateContext != null) {
 			this.stateContext.addEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler, false, 0, true);
+			if (Std.is(this.stateContext, IToggle)) {
+				this.stateContext.addEventListener(Event.CHANGE, stateContextToggle_changeHandler);
+			}
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.stateContext;
@@ -220,9 +227,10 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 	private function draw():Void {
 		this.applyLineStyle(this.getCurrentBorder());
-		this.applyFillStyle(this.getCurrentFill());
+		var currentFill = this.getCurrentFill();
+		this.applyFillStyle(currentFill);
 		this.drawPath();
-		if (this.getCurrentFill() != null) {
+		if (currentFill != null) {
 			this.graphics.endFill();
 		}
 	}
@@ -316,6 +324,26 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		}
 	}
 
+	private function getLineThickness(lineStyle:LineStyle):Float {
+		if (lineStyle == null) {
+			return 0;
+		}
+		switch (lineStyle) {
+			case SolidColor(thickness):
+				{
+					return thickness;
+				}
+			case Gradient(thickness, colors, alphas, ratios, radians):
+				{
+					return thickness;
+				}
+			default:
+				{
+					return 0;
+				}
+		}
+	}
+
 	private function getGradientMatrix(radians:Float):Matrix {
 		var matrix = new Matrix();
 		matrix.createGradientBox(this.actualWidth, this.actualHeight, radians);
@@ -323,12 +351,14 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	}
 
 	private function getCurrentBorder():LineStyle {
-		if (this.stateContext == null || this._stateToBorder == null) {
+		if (this.stateContext == null) {
 			return this.border;
 		}
-		var result = this._stateToBorder.get(this.stateContext.currentState);
-		if (result != null) {
-			return result;
+		if (this._stateToBorder != null) {
+			var result = this._stateToBorder.get(this.stateContext.currentState);
+			if (result != null) {
+				return result;
+			}
 		}
 		if (this.selectedBorder != null && Std.is(this.stateContext, IToggle)) {
 			var toggle = cast(this.stateContext, IToggle);
@@ -340,12 +370,14 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	}
 
 	private function getCurrentFill():FillStyle {
-		if (this.stateContext == null || this._stateToFill == null) {
+		if (this.stateContext == null) {
 			return this.fill;
 		}
-		var result = this._stateToFill.get(this.stateContext.currentState);
-		if (result != null) {
-			return result;
+		if (this._stateToFill != null) {
+			var result = this._stateToFill.get(this.stateContext.currentState);
+			if (result != null) {
+				return result;
+			}
 		}
 		if (this.selectedFill != null && Std.is(this.stateContext, IToggle)) {
 			var toggle = cast(this.stateContext, IToggle);
@@ -357,6 +389,10 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	}
 
 	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {
+		this.setInvalid(InvalidationFlag.STATE);
+	}
+
+	private function stateContextToggle_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.STATE);
 	}
 }

@@ -20,6 +20,10 @@ class EllipseSkin extends BaseGraphicsPathSkin {
 	}
 
 	override private function drawPath():Void {
-		this.graphics.drawEllipse(0, 0, this.actualWidth, this.actualHeight);
+		var currentBorder = this.getCurrentBorder();
+		var thickness = getLineThickness(currentBorder);
+		var thicknessOffset = thickness / 2.0;
+
+		this.graphics.drawEllipse(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness);
 	}
 }
