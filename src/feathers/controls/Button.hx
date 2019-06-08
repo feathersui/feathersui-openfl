@@ -362,10 +362,10 @@ class Button extends BasicButton {
 		}
 
 		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
@@ -428,8 +428,9 @@ class Button extends BasicButton {
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.textFormat != null) {
-			this.textField.defaultTextFormat = this.textFormat;
+		var textFormat = this.getCurrentTextFormat();
+		if (textFormat != null) {
+			this.textField.defaultTextFormat = textFormat;
 		}
 	}
 
@@ -450,12 +451,20 @@ class Button extends BasicButton {
 		this.textField.visible = hasText;
 	}
 
+	private function getCurrentTextFormat():TextFormat {
+		var result = this._stateToTextFormat.get(this.currentState);
+		if (result != null) {
+			return result;
+		}
+		return this.textFormat;
+	}
+
 	private function layoutContent():Void {
 		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
 
 		var maxWidth = this.actualWidth - paddingLeft - paddingRight;
 		var maxHeight = this.actualHeight - paddingTop - paddingBottom;
