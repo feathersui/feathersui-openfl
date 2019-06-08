@@ -8,6 +8,7 @@
 
 package feathers.skins;
 
+import feathers.core.IUIControl;
 import openfl.events.Event;
 import openfl.display.LineScaleMode;
 import openfl.display.InterpolationMethod;
@@ -79,6 +80,26 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	}
 
 	/**
+		How the path's fill is styled when the state context is disabled. To
+		use this skin, the state context must implement the `IUIControl`
+		interface.
+
+		@see `feathers.core.IUIControl`
+
+		@since 1.0.0
+	**/
+	public var disabledFill(default, set):FillStyle = null;
+
+	private function set_disabledFill(value:FillStyle):FillStyle {
+		if (this.disabledFill == value) {
+			return this.disabledFill;
+		}
+		this.disabledFill = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.disabledFill;
+	}
+
+	/**
 		How the path's fill is styled when the state context is selected. To
 		use this skin, the state context must implement the `IToggle` interface.
 
@@ -113,6 +134,26 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		this.border = value;
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.border;
+	}
+
+	/**
+		How the path's border is styled when the state context is disabled. To
+		use this skin, the state context must implement the `IUIControl`
+		interface.
+
+		@see `feathers.core.IUIControl`
+
+		@since 1.0.0
+	**/
+	public var disabledBorder(default, set):LineStyle;
+
+	private function set_disabledBorder(value:LineStyle):LineStyle {
+		if (this.disabledBorder == value) {
+			return this.disabledBorder;
+		}
+		this.disabledBorder = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.disabledBorder;
 	}
 
 	/**
@@ -360,6 +401,12 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 				return result;
 			}
 		}
+		if (this.disabledBorder != null && Std.is(this.stateContext, IUIControl)) {
+			var control = cast(this.stateContext, IUIControl);
+			if (!control.enabled) {
+				return this.disabledBorder;
+			}
+		}
 		if (this.selectedBorder != null && Std.is(this.stateContext, IToggle)) {
 			var toggle = cast(this.stateContext, IToggle);
 			if (toggle.selected) {
@@ -377,6 +424,12 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 			var result = this._stateToFill.get(this.stateContext.currentState);
 			if (result != null) {
 				return result;
+			}
+		}
+		if (this.disabledFill != null && Std.is(this.stateContext, IUIControl)) {
+			var control = cast(this.stateContext, IUIControl);
+			if (!control.enabled) {
+				return this.disabledFill;
 			}
 		}
 		if (this.selectedFill != null && Std.is(this.stateContext, IToggle)) {
