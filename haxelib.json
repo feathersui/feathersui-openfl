@@ -1,0 +1,22 @@
+{
+	"name": "feathersui",
+	"url": "https://feathersui.com/openfl/",
+	"license": "MIT",
+	"tags": [
+		"openfl",
+		"ui",
+		"gui",
+		"components",
+		"controls",
+		"widgets",
+		"layout"
+	],
+	"description": "Cross-platform user interface components for creative projects built with Haxe and OpenFL",
+	"version": "0.0.1-alpha",
+	"classPath": "src",
+	"contributors": ["bowlerhat"],
+	"dependencies": {
+		"openfl": ""
+	},
+	"releasenote": "Initial release"
+}
