@@ -90,6 +90,29 @@ class ToggleButton extends BasicToggleButton {
 		return this.icon;
 	}
 
+	/**
+
+		@since 1.0.0
+	**/
+	@style
+	public var selectedIcon(default, set):DisplayObject = null;
+
+	private function set_selectedIcon(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("selectedIcon")) {
+			return this.selectedIcon;
+		}
+		if (this.selectedIcon == value) {
+			return this.selectedIcon;
+		}
+		if (this.selectedIcon != null && this.selectedIcon == this._currentIcon) {
+			this.removeCurrentIcon(this.selectedIcon);
+			this._currentIcon = null;
+		}
+		this.selectedIcon = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.selectedIcon;
+	}
+
 	@style
 	public var textFormat(default, set):TextFormat = null;
 
@@ -103,6 +126,21 @@ class ToggleButton extends BasicToggleButton {
 		this.textFormat = value;
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.textFormat;
+	}
+
+	@style
+	public var disabledTextFormat(default, set):TextFormat = null;
+
+	private function set_disabledTextFormat(value:TextFormat):TextFormat {
+		if (!this.setStyle("disabledTextFormat")) {
+			return this.disabledTextFormat;
+		}
+		if (this.disabledTextFormat == value) {
+			return this.disabledTextFormat;
+		}
+		this.disabledTextFormat = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.disabledTextFormat;
 	}
 
 	@style
@@ -623,6 +661,9 @@ class ToggleButton extends BasicToggleButton {
 		if (result != null) {
 			return result;
 		}
+		if (!this.enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
+		}
 		if (this.selected && this.selectedTextFormat != null) {
 			return this.selectedTextFormat;
 		}
@@ -837,6 +878,9 @@ class ToggleButton extends BasicToggleButton {
 		var result = this._stateToIcon.get(this.currentState);
 		if (result != null) {
 			return result;
+		}
+		if (this.selected && this.selectedIcon != null) {
+			return this.selectedIcon;
 		}
 		return this.icon;
 	}

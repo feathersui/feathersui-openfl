@@ -90,6 +90,21 @@ class Label extends FeathersControl {
 		return this.textFormat;
 	}
 
+	@style
+	public var disabledTextFormat(default, set):TextFormat = null;
+
+	private function set_disabledTextFormat(value:TextFormat):TextFormat {
+		if (!this.setStyle("disabledTextFormat")) {
+			return this.disabledTextFormat;
+		}
+		if (this.disabledTextFormat == value) {
+			return this.disabledTextFormat;
+		}
+		this.disabledTextFormat = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.disabledTextFormat;
+	}
+
 	/**
 		The minimum space, in pixels, between the button's top edge and the
 		button's content.
@@ -502,8 +517,9 @@ class Label extends FeathersControl {
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.textFormat != null) {
-			this.textField.defaultTextFormat = this.textFormat;
+		var textFormat = this.getCurrentTextFormat();
+		if (textFormat != null) {
+			this.textField.defaultTextFormat = textFormat;
 		}
 	}
 
@@ -522,6 +538,13 @@ class Label extends FeathersControl {
 			this.textField.text = this.text;
 		}
 		this.textField.visible = hasText;
+	}
+
+	private function getCurrentTextFormat():TextFormat {
+		if (!this.enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
+		}
+		return this.textFormat;
 	}
 
 	private function refreshBackgroundSkin():Void {

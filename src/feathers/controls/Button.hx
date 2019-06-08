@@ -72,6 +72,21 @@ class Button extends BasicButton {
 		return this.textFormat;
 	}
 
+	@style
+	public var disabledTextFormat(default, set):TextFormat = null;
+
+	private function set_disabledTextFormat(value:TextFormat):TextFormat {
+		if (!this.setStyle("disabledTextFormat")) {
+			return this.disabledTextFormat;
+		}
+		if (this.disabledTextFormat == value) {
+			return this.disabledTextFormat;
+		}
+		this.disabledTextFormat = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.disabledTextFormat;
+	}
+
 	/**
 		The minimum space, in pixels, between the button's top edge and the
 		button's content.
@@ -455,6 +470,9 @@ class Button extends BasicButton {
 		var result = this._stateToTextFormat.get(this.currentState);
 		if (result != null) {
 			return result;
+		}
+		if (!this.enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
 		}
 		return this.textFormat;
 	}

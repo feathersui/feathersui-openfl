@@ -137,6 +137,21 @@ class TextInput extends FeathersControl implements IStateContext {
 		return this.textFormat;
 	}
 
+	@style
+	public var disabledTextFormat(default, set):TextFormat = null;
+
+	private function set_disabledTextFormat(value:TextFormat):TextFormat {
+		if (!this.setStyle("disabledTextFormat")) {
+			return this.disabledTextFormat;
+		}
+		if (this.disabledTextFormat == value) {
+			return this.disabledTextFormat;
+		}
+		this.disabledTextFormat = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.disabledTextFormat;
+	}
+
 	/**
 		The minimum space, in pixels, between the text input's top edge and the
 		text input's content.
@@ -537,8 +552,9 @@ class TextInput extends FeathersControl implements IStateContext {
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.textFormat != null) {
-			this.textField.defaultTextFormat = this.textFormat;
+		var textFormat = this.getCurrentTextFormat();
+		if (textFormat != null) {
+			this.textField.defaultTextFormat = textFormat;
 		}
 	}
 
@@ -556,6 +572,13 @@ class TextInput extends FeathersControl implements IStateContext {
 		if (!hasText) {
 			this.textField.text = this.text;
 		}
+	}
+
+	private function getCurrentTextFormat():TextFormat {
+		if (!this.enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
+		}
+		return this.textFormat;
 	}
 
 	private function layoutContent():Void {
