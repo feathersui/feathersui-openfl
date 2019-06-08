@@ -76,41 +76,42 @@ class HSlider extends BaseSlider {
 		if (this.thumbSkin != null) {
 			this._thumbSkinMeasurements.restore(this.thumbSkin);
 			if (Std.is(this.thumbSkin, IValidating)) {
-				cast(this.thumbSkin, IValidating);
+				cast(this.thumbSkin, IValidating).validateNow();
 			}
 		}
 		if (this.trackSkin != null) {
 			this._trackSkinMeasurements.restore(this.trackSkin);
 			if (Std.is(this.trackSkin, IValidating)) {
-				cast(this.trackSkin, IValidating);
+				cast(this.trackSkin, IValidating).validateNow();
 			}
 		}
 		if (this.secondaryTrackSkin != null) {
 			this._secondaryTrackSkinMeasurements.restore(this.secondaryTrackSkin);
 			if (Std.is(this.secondaryTrackSkin, IValidating)) {
-				cast(this.secondaryTrackSkin, IValidating);
+				cast(this.secondaryTrackSkin, IValidating).validateNow();
 			}
 		}
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._trackSkinMeasurements.width;
-			if (this._secondaryTrackSkinMeasurements != null) {
-				newWidth += this._secondaryTrackSkinMeasurements.width;
+			newWidth = this.trackSkin.width;
+			if (this.secondaryTrackSkin != null) {
+				newWidth += this.secondaryTrackSkin.width;
 			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._thumbSkinMeasurements.height;
-			if (newHeight < this._trackSkinMeasurements.height) {
-				newHeight = this._trackSkinMeasurements.height;
+			newHeight = this.thumbSkin.height;
+			if (newHeight < this.trackSkin.height) {
+				newHeight = this.trackSkin.height;
 			}
-			if (this._secondaryTrackSkinMeasurements != null && newHeight < this._secondaryTrackSkinMeasurements.height) {
-				newHeight = this._secondaryTrackSkinMeasurements.height;
+			if (this.secondaryTrackSkin != null && newHeight < this.secondaryTrackSkin.height) {
+				newHeight = this.secondaryTrackSkin.height;
 			}
 		}
 
+		// TODO: calculate min and max
 		var newMinWidth = newWidth;
 		var newMinHeight = newHeight;
 		var newMaxWidth = newWidth;

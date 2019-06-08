@@ -50,9 +50,9 @@ class BaseSlider extends FeathersControl {
 
 		@default 0
 
-		@see `Slider.minimum`
-		@see `Slider.maximum`
-		@see `Slider.step`
+		@see `BaseSlider.minimum`
+		@see `BaseSlider.maximum`
+		@see `BaseSlider.step`
 	**/
 	public var value(default, set):Float = 0.0;
 
@@ -82,8 +82,8 @@ class BaseSlider extends FeathersControl {
 
 		@default 0
 
-		@see `Slider.value`
-		@see `Slider.maximum`
+		@see `BaseSlider.value`
+		@see `BaseSlider.maximum`
 	**/
 	public var minimum(default, set):Float = 0.0;
 
@@ -113,8 +113,8 @@ class BaseSlider extends FeathersControl {
 
 		@default 1
 
-		@see `Slider.value`
-		@see `Slider.minimum`
+		@see `BaseSlider.value`
+		@see `BaseSlider.minimum`
 	**/
 	public var maximum(default, set):Float = 1.0;
 
@@ -145,9 +145,9 @@ class BaseSlider extends FeathersControl {
 
 		@default 0
 
-		@see `Slider.value`
-		@see `Slider.minimum`
-		@see `Slider.maximum`
+		@see `BaseSlider.value`
+		@see `BaseSlider.minimum`
+		@see `BaseSlider.maximum`
 	**/
 	public var step(default, set):Float = 0;
 
@@ -179,7 +179,7 @@ class BaseSlider extends FeathersControl {
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
-		@see `Slider.trackSkin`
+		@see `BaseSlider.trackSkin`
 	**/
 	@style
 	public var thumbSkin(default, set):DisplayObject = null;
@@ -224,6 +224,8 @@ class BaseSlider extends FeathersControl {
 				this.addChild(this.thumbSkin);
 				this.thumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
 			}
+		} else {
+			this._thumbSkinMeasurements = null;
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.thumbSkin;
@@ -233,8 +235,8 @@ class BaseSlider extends FeathersControl {
 	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
-		@see `Slider.secondaryTrackSkin`
-		@see `Slider.thumbSkin`
+		@see `BaseSlider.secondaryTrackSkin`
+		@see `BaseSlider.thumbSkin`
 	**/
 	@style
 	public var trackSkin(default, set):DisplayObject = null;
@@ -279,6 +281,8 @@ class BaseSlider extends FeathersControl {
 				this.addChildAt(this.trackSkin, 0);
 				this.trackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 			}
+		} else {
+			this._trackSkinMeasurements = null;
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.trackSkin;
@@ -288,7 +292,7 @@ class BaseSlider extends FeathersControl {
 	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
-		@see `Slider.trackSkin`
+		@see `BaseSlider.trackSkin`
 	**/
 	@style
 	public var secondaryTrackSkin(default, set):DisplayObject = null;
@@ -336,13 +340,15 @@ class BaseSlider extends FeathersControl {
 				this.addChildAt(this.secondaryTrackSkin, index);
 				this.secondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 			}
+		} else {
+			this._secondaryTrackSkinMeasurements = null;
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.secondaryTrackSkin;
 	}
 
 	/**
-		@see `Slider.maximumPadding`
+		@see `BaseSlider.maximumPadding`
 	**/
 	@style
 	public var minimumPadding(default, set):Null<Float> = null;
@@ -360,7 +366,7 @@ class BaseSlider extends FeathersControl {
 	}
 
 	/**
-		@see `Slider.minimumPadding`
+		@see `BaseSlider.minimumPadding`
 	**/
 	@style
 	public var maximumPadding(default, set):Null<Float> = null;
