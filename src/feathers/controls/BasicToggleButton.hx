@@ -6,7 +6,7 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
-package feathers.controls.supportClasses;
+package feathers.controls;
 
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -23,13 +23,16 @@ import feathers.layout.Measurements;
 import feathers.utils.PointerToState;
 
 /**
-	A base class for toggle buttons.
+	A simple toggle button control with selection, pointer states, but no
+	content, that is useful for purposes like skinning. For a more full-featured
+	toggle button, with a label and icon, see `feathers.controls.ToggleButton`
+	instead.
 
 	@since 1.0.0
 
 	@see `feathers.controls.ToggleButton`
 **/
-class BaseToggleButton extends FeathersControl implements IToggle implements IStateContext {
+class BasicToggleButton extends FeathersControl implements IToggle implements IStateContext {
 	public function new() {
 		super();
 		// MouseEvent.CLICK is dispatched only if the same object is under the
@@ -43,7 +46,7 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 		// a hand cursor only makes sense for hyperlinks
 		this.useHandCursor = false;
 
-		this.addEventListener(MouseEvent.CLICK, basicButton_clickHandler);
+		this.addEventListener(MouseEvent.CLICK, basicToggleButton_clickHandler);
 	}
 
 	/**
@@ -55,6 +58,7 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 		@since 1.0.0
 	**/
 	public var currentState(default, null):String;
+
 	public var selected(default, set):Bool = false;
 
 	private function set_selected(value:Bool):Bool {
@@ -62,8 +66,20 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 			return this.selected;
 		}
 		this.selected = value;
+		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 		return this.selected;
+	}
+
+	public var toggleable(default, set):Bool = true;
+
+	private function set_toggleable(value:Bool):Bool {
+		if (this.toggleable == value) {
+			return this.toggleable;
+		}
+		this.toggleable = value;
+		return this.toggleable;
 	}
 
 	private var _pointerToState:PointerToState = null;
@@ -98,8 +114,8 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 
 		@default null
 
-		@see `BasicButton.getSkinForState()`
-		@see `BasicButton.setSkinForState()`
+		@see `BasicToggleButton.getSkinForState()`
+		@see `BasicToggleButton.setSkinForState()`
 
 		@since 1.0.0
 	**/
@@ -131,9 +147,9 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 		If a skin is not defined for a specific state, returns `null`.
 
 		@see `feathers.controls.ToggleButtonState`
-		@see `BaseToggleButton.backgroundSkin`
-		@see `BaseToggleButton.setSkinForState()`
-		@see `BaseToggleButton.currentState`
+		@see `BasicToggleButton.backgroundSkin`
+		@see `BasicToggleButton.setSkinForState()`
+		@see `BasicToggleButton.currentState`
 
 		@since 1.0.0
 	**/
@@ -149,9 +165,9 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 		`backgroundSkin` property will be used instead.
 
 		@see `feathers.controls.ToggleButtonState`
-		@see `BaseToggleButton.backgroundSkin`
-		@see `BaseToggleButton.getSkinForState()`
-		@see `BaseToggleButton.currentState`
+		@see `BasicToggleButton.backgroundSkin`
+		@see `BasicToggleButton.getSkinForState()`
+		@see `BasicToggleButton.currentState`
 
 		@since 1.0.0
 	**/
@@ -182,10 +198,11 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 	}
 
 	override private function update():Void {
+		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 
-		if (stylesInvalid || stateInvalid) {
+		if (selectionInvalid || stateInvalid || stylesInvalid) {
 			this.refreshBackgroundSkin();
 		}
 
@@ -396,9 +413,12 @@ class BaseToggleButton extends FeathersControl implements IToggle implements ISt
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
-	private function basicButton_clickHandler(event:MouseEvent):Void {
+	private function basicToggleButton_clickHandler(event:MouseEvent):Void {
 		if (!this.enabled) {
 			event.stopImmediatePropagation();
+			return;
+		}
+		if (!this.toggleable) {
 			return;
 		}
 		this.selected = !this.selected;

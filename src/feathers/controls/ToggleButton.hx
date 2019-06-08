@@ -8,7 +8,11 @@
 
 package feathers.controls;
 
-import feathers.controls.supportClasses.BaseToggleButton;
+import feathers.layout.RelativePosition;
+import feathers.core.IUIControl;
+import feathers.core.IStateObserver;
+import openfl.display.DisplayObject;
+import feathers.layout.Measurements;
 import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
 import feathers.core.IValidating;
@@ -36,7 +40,7 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
-class ToggleButton extends BaseToggleButton {
+class ToggleButton extends BasicToggleButton {
 	public function new() {
 		super();
 	}
@@ -58,6 +62,34 @@ class ToggleButton extends BaseToggleButton {
 		return this.text;
 	}
 
+	private var _stateToIcon:Map<String, DisplayObject> = new Map();
+	private var _iconMeasurements:Measurements = null;
+	private var _currentIcon:DisplayObject = null;
+	private var _ignoreIconResizes:Bool = false;
+
+	/**
+
+		@since 1.0.0
+	**/
+	@style
+	public var icon(default, set):DisplayObject = null;
+
+	private function set_icon(value:DisplayObject):DisplayObject {
+		if (!this.setStyle("icon")) {
+			return this.icon;
+		}
+		if (this.icon == value) {
+			return this.icon;
+		}
+		if (this.icon != null && this.icon == this._currentIcon) {
+			this.removeCurrentIcon(this.icon);
+			this._currentIcon = null;
+		}
+		this.icon = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.icon;
+	}
+
 	@style
 	public var textFormat(default, set):TextFormat = null;
 
@@ -71,6 +103,75 @@ class ToggleButton extends BaseToggleButton {
 		this.textFormat = value;
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.textFormat;
+	}
+
+	@style
+	public var selectedTextFormat(default, set):TextFormat = null;
+
+	private function set_selectedTextFormat(value:TextFormat):TextFormat {
+		if (!this.setStyle("selectedTextFormat")) {
+			return this.selectedTextFormat;
+		}
+		if (this.selectedTextFormat == value) {
+			return this.selectedTextFormat;
+		}
+		this.selectedTextFormat = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.selectedTextFormat;
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	@style
+	public var iconPosition(default, set):Null<RelativePosition> = RelativePosition.LEFT;
+
+	private function set_iconPosition(value:Null<RelativePosition>):Null<RelativePosition> {
+		if (!this.setStyle("iconPosition")) {
+			return this.iconPosition;
+		}
+		if (this.iconPosition == value) {
+			return this.iconPosition;
+		}
+		this.iconPosition = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.iconPosition;
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	@style
+	public var gap(default, set):Null<Float> = null;
+
+	private function set_gap(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("gap")) {
+			return this.gap;
+		}
+		if (this.gap == value) {
+			return this.gap;
+		}
+		this.gap = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.gap;
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	@style
+	public var minGap(default, set):Null<Float> = null;
+
+	private function set_minGap(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("minGap")) {
+			return this.minGap;
+		}
+		if (this.minGap == value) {
+			return this.minGap;
+		}
+		this.minGap = value;
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.minGap;
 	}
 
 	/**
@@ -306,6 +407,34 @@ class ToggleButton extends BaseToggleButton {
 		this.setInvalid(InvalidationFlag.STYLES);
 	}
 
+	/**
+		@since 1.0.0
+	**/
+	public function getSkinForIcon(state:ToggleButtonState):DisplayObject {
+		return this._stateToIcon.get(state);
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	@style
+	public function setIconForState(state:ToggleButtonState, icon:DisplayObject):Void {
+		if (!this.setStyle("setIconForState", state)) {
+			return;
+		}
+		var oldIcon = this._stateToIcon.get(state);
+		if (oldIcon != null && oldIcon == this._currentIcon) {
+			this.removeCurrentIcon(oldIcon);
+			this._currentIcon = null;
+		}
+		if (icon == null) {
+			this._stateToIcon.remove(state);
+		} else {
+			this._stateToIcon.set(state, icon);
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 		if (this.textField == null) {
@@ -322,6 +451,7 @@ class ToggleButton extends BaseToggleButton {
 		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
 
 		if (stylesInvalid || stateInvalid) {
+			this.refreshIcon();
 			this.refreshTextStyles();
 		}
 
@@ -347,6 +477,11 @@ class ToggleButton extends BaseToggleButton {
 			return false;
 		}
 
+		var hasText = this.text != null && this.text.length > 0;
+		if (hasText) {
+			this.refreshTextFieldDimensions(true);
+		}
+
 		if (this._currentBackgroundSkin != null) {
 			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
 		}
@@ -360,15 +495,37 @@ class ToggleButton extends BaseToggleButton {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
+		if (Std.is(this._currentIcon, IValidating)) {
+			cast(this._currentIcon, IValidating).validateNow();
+		}
+
 		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
+		var gap = this.gap != null ? this.gap : 0.0;
+		var minGap = this.minGap != null ? this.minGap : 0.0;
+
+		var adjustedGap = gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = minGap;
+		}
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._textMeasuredWidth + paddingLeft + paddingRight;
+			if (hasText) {
+				newWidth = this._textMeasuredWidth;
+			} else {
+				newWidth = 0;
+			}
+			if (this._currentIcon != null && (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT)) {
+				if (hasText) {
+					newWidth += adjustedGap;
+				}
+				newWidth += this._currentIcon.width;
+			}
+			newWidth += paddingLeft + paddingRight;
 			if (this._currentBackgroundSkin != null) {
 				newWidth = Math.max(this._currentBackgroundSkin.width, newWidth);
 			}
@@ -376,7 +533,18 @@ class ToggleButton extends BaseToggleButton {
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._textMeasuredHeight + paddingTop + paddingBottom;
+			if (hasText) {
+				newHeight = this._textMeasuredHeight;
+			} else {
+				newHeight = 0;
+			}
+			if (this._currentIcon != null && (this.iconPosition == RelativePosition.TOP || this.iconPosition == RelativePosition.BOTTOM)) {
+				if (hasText) {
+					newHeight += adjustedGap;
+				}
+				newHeight += this._currentIcon.height;
+			}
+			newHeight += paddingTop + paddingBottom;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
@@ -427,8 +595,9 @@ class ToggleButton extends BaseToggleButton {
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.textFormat != null) {
-			this.textField.defaultTextFormat = this.textFormat;
+		var textFormat = this.getCurrentTextFormat();
+		if (textFormat != null) {
+			this.textField.defaultTextFormat = textFormat;
 		}
 	}
 
@@ -449,40 +618,240 @@ class ToggleButton extends BaseToggleButton {
 		this.textField.visible = hasText;
 	}
 
-	private function layoutContent():Void {
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+	private function getCurrentTextFormat():TextFormat {
+		var result = this._stateToTextFormat.get(this.currentState);
+		if (result != null) {
+			return result;
+		}
+		if (this.selected && this.selectedTextFormat != null) {
+			return this.selectedTextFormat;
+		}
+		return this.textFormat;
+	}
 
-		var maxWidth = this.actualWidth - paddingLeft - paddingRight;
-		var maxHeight = this.actualHeight - paddingTop - paddingBottom;
-		if (this._textMeasuredWidth > maxWidth) {
-			this.textField.width = maxWidth;
-		} else {
-			this.textField.width = this._textMeasuredWidth;
+	private function layoutContent():Void {
+		this.refreshTextFieldDimensions(false);
+
+		var hasText = this.text != null && this.text.length > 0;
+		var iconIsInLayout = this._currentIcon != null && this.iconPosition != RelativePosition.MANUAL;
+		if (hasText && iconIsInLayout) {
+			this.positionSingleChild(this.textField);
+			this.positionTextAndIcon();
+		} else if (hasText) {
+			this.positionSingleChild(this.textField);
+		} else if (iconIsInLayout) {
+			this.positionSingleChild(this._currentIcon);
 		}
-		if (this._textMeasuredHeight > maxHeight) {
-			this.textField.height = maxHeight;
-		} else {
-			this.textField.height = this._textMeasuredHeight;
+	}
+
+	private function refreshTextFieldDimensions(forMeasurement:Bool):Void {
+		var oldIgnoreIconResizes = this._ignoreIconResizes;
+		this._ignoreIconResizes = true;
+		if (Std.is(this._currentIcon, IValidating)) {
+			cast(this._currentIcon, IValidating).validateNow();
 		}
-		switch (this.horizontalAlign) {
-			case LEFT:
-				this.textField.x = paddingLeft;
-			case RIGHT:
-				this.textField.x = actualWidth - paddingRight - this.textField.width;
-			default: // center or null
-				this.textField.x = paddingLeft + (maxWidth - this.textField.width) / 2;
+		this._ignoreIconResizes = oldIgnoreIconResizes;
+		if (this.text == null || this.text.length == 0) {
+			return;
 		}
-		switch (this.verticalAlign) {
-			case TOP:
-				this.textField.y = paddingTop;
-			case BOTTOM:
+
+		// uninitialized styles need some defaults
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
+		var gap = this.gap != null ? this.gap : 0.0;
+		var minGap = this.minGap != null ? this.minGap : 0.0;
+
+		var calculatedWidth = this.actualWidth;
+		var calculatedHeight = this.actualHeight;
+		if (forMeasurement) {
+			calculatedWidth = this.explicitWidth;
+			if (explicitWidth == null) {
+				calculatedWidth = this.explicitMaxWidth;
+			}
+			calculatedHeight = this.explicitHeight;
+			if (calculatedHeight == null) {
+				calculatedHeight = this.explicitMaxHeight;
+			}
+		}
+		calculatedWidth -= (paddingLeft + paddingRight);
+		calculatedHeight -= (paddingTop + paddingBottom);
+		if (this._currentIcon != null) {
+			var adjustedGap = gap;
+			if (adjustedGap == Math.POSITIVE_INFINITY) {
+				adjustedGap = minGap;
+			}
+			if (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT) {
+				calculatedWidth -= (this._currentIcon.width + adjustedGap);
+			}
+			if (this.iconPosition == RelativePosition.TOP || this.iconPosition == RelativePosition.BOTTOM) {
+				calculatedHeight -= (this._currentIcon.height + adjustedGap);
+			}
+		}
+		if (calculatedWidth < 0) {
+			calculatedWidth = 0;
+		}
+		if (calculatedHeight < 0) {
+			calculatedHeight = 0;
+		}
+		if (calculatedWidth > this._textMeasuredWidth) {
+			calculatedWidth = this._textMeasuredWidth;
+		}
+		if (calculatedHeight > this._textMeasuredWidth) {
+			calculatedHeight = this._textMeasuredHeight;
+		}
+		this.textField.width = calculatedWidth;
+		this.textField.height = calculatedHeight;
+	}
+
+	private function positionSingleChild(displayObject:DisplayObject):Void {
+		// uninitialized styles need some defaults
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
+
+		if (this.horizontalAlign == HorizontalAlign.LEFT) {
+			displayObject.x = paddingLeft;
+		} else if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+			displayObject.x = this.actualWidth - paddingRight - displayObject.width;
+		} else // center
+		{
+			displayObject.x = paddingLeft + Math.round((this.actualWidth - paddingLeft - paddingRight - displayObject.width) / 2);
+		}
+		if (this.verticalAlign == VerticalAlign.TOP) {
+			displayObject.y = paddingTop;
+		} else if (this.verticalAlign == VerticalAlign.BOTTOM) {
+			displayObject.y = this.actualHeight - paddingBottom - displayObject.height;
+		} else // middle
+		{
+			displayObject.y = paddingTop + Math.round((this.actualHeight - paddingTop - paddingBottom - displayObject.height) / 2);
+		}
+	}
+
+	private function positionTextAndIcon():Void {
+		// uninitialized styles need some defaults
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
+		var gap = this.gap != null ? this.gap : 0.0;
+
+		if (this.iconPosition == RelativePosition.TOP) {
+			if (gap == Math.POSITIVE_INFINITY) {
+				this._currentIcon.y = paddingTop;
 				this.textField.y = this.actualHeight - paddingBottom - this.textField.height;
-			default: // middle or null
-				this.textField.y = paddingTop + (maxHeight - this.textField.height) / 2;
+			} else {
+				if (this.verticalAlign == VerticalAlign.TOP) {
+					this.textField.y += this._currentIcon.height + gap;
+				} else if (this.verticalAlign == VerticalAlign.MIDDLE) {
+					this.textField.y += Math.round((this._currentIcon.height + gap) / 2);
+				}
+				this._currentIcon.y = this.textField.y - this._currentIcon.height - gap;
+			}
+		} else if (this.iconPosition == RelativePosition.RIGHT) {
+			if (gap == Math.POSITIVE_INFINITY) {
+				this.textField.x = paddingLeft;
+				this._currentIcon.x = this.actualWidth - paddingRight - this._currentIcon.width;
+			} else {
+				if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+					this.textField.x -= this._currentIcon.width + gap;
+				} else if (this.horizontalAlign == HorizontalAlign.CENTER) {
+					this.textField.x -= Math.round((this._currentIcon.width + gap) / 2);
+				}
+				this._currentIcon.x = this.textField.x + this.textField.width + gap;
+			}
+		} else if (this.iconPosition == RelativePosition.BOTTOM) {
+			if (gap == Math.POSITIVE_INFINITY) {
+				this.textField.y = paddingTop;
+				this._currentIcon.y = this.actualHeight - paddingBottom - this._currentIcon.height;
+			} else {
+				if (this.verticalAlign == VerticalAlign.BOTTOM) {
+					this.textField.y -= this._currentIcon.height + gap;
+				} else if (this.verticalAlign == VerticalAlign.MIDDLE) {
+					this.textField.y -= Math.round((this._currentIcon.height + gap) / 2);
+				}
+				this._currentIcon.y = this.textField.y + this.textField.height + gap;
+			}
+		} else if (this.iconPosition == RelativePosition.LEFT) {
+			if (gap == Math.POSITIVE_INFINITY) {
+				this._currentIcon.x = paddingLeft;
+				this.textField.x = this.actualWidth - paddingRight - this.textField.width;
+			} else {
+				if (this.horizontalAlign == HorizontalAlign.LEFT) {
+					this.textField.x += gap + this._currentIcon.width;
+				} else if (this.horizontalAlign == HorizontalAlign.CENTER) {
+					this.textField.x += Math.round((gap + this._currentIcon.width) / 2);
+				}
+				this._currentIcon.x = this.textField.x - gap - this._currentIcon.width;
+			}
+		}
+
+		if (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT) {
+			if (this.verticalAlign == VerticalAlign.TOP) {
+				this._currentIcon.y = paddingTop;
+			} else if (this.verticalAlign == VerticalAlign.BOTTOM) {
+				this._currentIcon.y = this.actualHeight - paddingBottom - this._currentIcon.height;
+			} else {
+				this._currentIcon.y = paddingTop + Math.round((this.actualHeight - paddingTop - paddingBottom - this._currentIcon.height) / 2);
+			}
+		} else // top or bottom
+		{
+			if (this.horizontalAlign == HorizontalAlign.LEFT) {
+				this._currentIcon.x = paddingLeft;
+			} else if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+				this._currentIcon.x = this.actualWidth - paddingRight - this._currentIcon.width;
+			} else {
+				this._currentIcon.x = paddingLeft + Math.round((this.actualWidth - paddingLeft - paddingRight - this._currentIcon.width) / 2);
+			}
+		}
+	}
+
+	private function refreshIcon():Void {
+		var oldIcon = this._currentIcon;
+		this._currentIcon = this.getCurrentIcon();
+		if (this._currentIcon == oldIcon) {
+			return;
+		}
+		this.removeCurrentIcon(oldIcon);
+		if (this._currentIcon == null) {
+			this._iconMeasurements = null;
+			return;
+		}
+		if (Std.is(this._currentIcon, IUIControl)) {
+			cast(this._currentIcon, IUIControl).initializeNow();
+		}
+		if (this._iconMeasurements == null) {
+			this._iconMeasurements = new Measurements(this._currentIcon);
+		} else {
+			this._iconMeasurements.save(this._currentIcon);
+		}
+		if (Std.is(this._currentIcon, IStateObserver)) {
+			cast(this._currentIcon, IStateObserver).stateContext = this;
+		}
+		this.addChild(this._currentIcon);
+	}
+
+	private function getCurrentIcon():DisplayObject {
+		var result = this._stateToIcon.get(this.currentState);
+		if (result != null) {
+			return result;
+		}
+		return this.icon;
+	}
+
+	private function removeCurrentIcon(icon:DisplayObject):Void {
+		if (icon == null) {
+			return;
+		}
+		if (Std.is(icon, IStateObserver)) {
+			cast(icon, IStateObserver).stateContext = null;
+		}
+		if (icon.parent == this) {
+			// we need to restore these values so that they won't be lost the
+			// next time that this icon is used for measurement
+			this.removeChild(icon);
 		}
 	}
 }
