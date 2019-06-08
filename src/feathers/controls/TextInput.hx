@@ -469,10 +469,10 @@ class TextInput extends FeathersControl implements IStateContext {
 		}
 
 		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
@@ -562,10 +562,10 @@ class TextInput extends FeathersControl implements IStateContext {
 		this.layoutBackgroundSkin();
 
 		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0;
+		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
 
 		this.textField.x = paddingLeft;
 		this.textField.width = this.actualWidth - paddingLeft - paddingRight;
