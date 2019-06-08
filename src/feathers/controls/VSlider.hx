@@ -154,21 +154,21 @@ class VSlider extends BaseSlider {
 			location += Math.round(this.thumbSkin.height / 2);
 		}
 
-		this.trackSkin.y = 0;
-		this.trackSkin.height = location;
+		this.secondaryTrackSkin.y = 0;
+		this.secondaryTrackSkin.height = location;
 
-		this.secondaryTrackSkin.y = location;
-		this.secondaryTrackSkin.height = this.actualHeight - location;
+		this.trackSkin.y = location;
+		this.trackSkin.height = this.actualHeight - location;
 
-		if (Std.is(this.trackSkin, IValidating)) {
-			cast(this.trackSkin, IValidating).validateNow();
-		}
 		if (Std.is(this.secondaryTrackSkin, IValidating)) {
 			cast(this.secondaryTrackSkin, IValidating).validateNow();
 		}
+		if (Std.is(this.trackSkin, IValidating)) {
+			cast(this.trackSkin, IValidating).validateNow();
+		}
 
-		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
 		this.secondaryTrackSkin.x = (this.actualWidth - this.secondaryTrackSkin.width) / 2;
+		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
 	}
 
 	override private function layoutSingleTrack():Void {
