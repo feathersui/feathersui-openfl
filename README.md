@@ -4,7 +4,7 @@
 
 ## Kickstarter
 
-Support the development of Feathers UI for OpenFL and Haxe by becoming a backer on Kickstarter. The campaign hasn't launched yet, but you can [sign up here](https://feathersui.com/openfl/#signup) to be notified about the launch.
+Support the development of Feathers UI for OpenFL and Haxe by becoming a backer on Kickstarter. The campaign starts on June 25, 2019. [Sign up here](https://feathersui.com/openfl/#signup) to be notified by email when it launches.
 
 https://feathersui.com/openfl/#signup
 
