@@ -1,21 +1,20 @@
 # Feathers UI for OpenFL and Haxe
 
----
+[Feathers UI](https://feathersui.com/openfl/) is an open source, cross-platform library of user interface components for creative projects. It is especially well-suited for games, interactive visualizations, and other rich, multimedia experiences. With Feathers UI, you can create apps for a wide range of devices and platforms, including phones, tablets, desktop computers, game consoles, and web browsers.
 
-**Warning:** This is a pre-release version of Feathers UI for OpenFL and Haxe. It may contain bugs or unfinished features. It is not recommended for production apps because it is considered potentially *unstable*. Use at your own risk.
+## Kickstarter
 
----
+Support the development of Feathers UI for OpenFL and Haxe by becoming a backer on Kickstarter. The campaign hasn't launched yet, but you can [sign up here](https://feathersui.com/openfl/#signup) to be notified about the launch.
 
-## Quick Links
-
-* [Website](https://feathersui.com/openfl/)
-
-## Social Media
-
-* [Follow on Twitter](https://twitter.com/feathersui)
-* [Like on Facebook](https://facebook.com/feathersui)
+https://feathersui.com/openfl/#signup
 
 ## Minimum Requirements
 
 * Haxe 4.0
 * OpenFL 8.9
+
+---
+
+**Warning:** This is a pre-release version of Feathers UI for OpenFL and Haxe. It may contain bugs or incomplete features. It is not recommended for production use because it is considered unstable. Use at your own risk.
+
+---
