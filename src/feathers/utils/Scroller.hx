@@ -179,6 +179,8 @@ class Scroller extends EventDispatcher {
 					this.targetScrollX = scrollX;
 					var tween = Actuate.tween(this, duration, {scrollX: this.targetScrollX}, true);
 					this.animateScrollX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+					// needed for performance
+					this.animateScrollX.snapping(true);
 					this.animateScrollX.ease(this.ease);
 					this.animateScrollX.onComplete(this.animateScrollX_onComplete);
 					this.refreshAnimateScrollXEndRatio();
@@ -202,6 +204,8 @@ class Scroller extends EventDispatcher {
 					this.targetScrollY = scrollY;
 					var tween = Actuate.tween(this, duration, {scrollY: this.targetScrollY}, true);
 					this.animateScrollY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+					// needed for performance
+					this.animateScrollY.snapping(true);
 					this.animateScrollY.ease(this.ease);
 					this.animateScrollY.onComplete(this.animateScrollY_onComplete);
 					this.refreshAnimateScrollYEndRatio();
@@ -518,6 +522,8 @@ class Scroller extends EventDispatcher {
 			}
 		}
 
+		scrollX = Math.round(scrollX);
+		scrollY = Math.round(scrollY);
 		this.scrollX = scrollX;
 		this.scrollY = scrollY;
 

@@ -53,10 +53,10 @@ class SlideTransitions {
 			}
 			var actuator = ActuateForEffects.update(function(x:Float):Void {
 				if (oldView != null) {
-					oldView.x = x;
+					oldView.x = Math.round(x);
 				}
 				if (newView != null) {
-					newView.x = x + width;
+					newView.x = Math.round(x + width);
 				}
 			}, duration, [0.0], [-width]);
 			if (ease != null) {
@@ -90,10 +90,10 @@ class SlideTransitions {
 			}
 			var actuator = ActuateForEffects.update(function(x:Float):Void {
 				if (oldView != null) {
-					oldView.x = x;
+					oldView.x = Math.round(x);
 				}
 				if (newView != null) {
-					newView.x = x - width;
+					newView.x = Math.round(x - width);
 				}
 			}, duration, [0.0], [width]);
 			if (ease != null) {
@@ -126,10 +126,10 @@ class SlideTransitions {
 			}
 			var actuator = ActuateForEffects.update(function(y:Float):Void {
 				if (oldView != null) {
-					oldView.y = y;
+					oldView.y = Math.round(y);
 				}
 				if (newView != null) {
-					newView.y = y + height;
+					newView.y = Math.round(y + height);
 				}
 			}, duration, [0.0], [-height]);
 			if (ease != null) {
@@ -162,10 +162,10 @@ class SlideTransitions {
 			}
 			var actuator = ActuateForEffects.update(function(y:Float):Void {
 				if (oldView != null) {
-					oldView.y = y;
+					oldView.y = Math.round(y);
 				}
 				if (newView != null) {
-					newView.y = y - height;
+					newView.y = Math.round(y - height);
 				}
 			}, duration, [0.0], [height]);
 			if (ease != null) {
