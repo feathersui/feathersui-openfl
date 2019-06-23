@@ -712,7 +712,7 @@ class ToggleButton extends BasicToggleButton {
 				calculatedWidth = this.explicitMaxWidth;
 			}
 			calculatedHeight = this.explicitHeight;
-			if (calculatedHeight == null) {
+			if (explicitHeight == null) {
 				calculatedHeight = this.explicitMaxHeight;
 			}
 		}
