@@ -4,7 +4,7 @@ This example app demonstrates many of the UI components available in [Feathers U
 
 ## Run this example
 
-This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://www.openfl.org/). This file makes it easy to buid from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
+This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://www.openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
 
 ### Prerequisites
 
