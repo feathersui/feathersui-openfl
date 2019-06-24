@@ -10,11 +10,17 @@ https://feathersui.com/openfl/#signup
 
 ## Minimum Requirements
 
-* Haxe 4.0
-* OpenFL 8.9
+* [Haxe 4.0.0-rc.3](https://haxe.org/download/version/4.0.0-rc.3/)
+* [OpenFL 8.9](https://lib.haxe.org/p/openfl/)
 
 ---
 
-**Warning:** This is a pre-release version of Feathers UI for OpenFL and Haxe. It may contain bugs or incomplete features. It is not recommended for production use because it is considered unstable. Use at your own risk.
+**Warning:** This is a pre-alpha version of Feathers UI for OpenFL and Haxe. It may contain bugs or incomplete features. It is not recommended for production use because it is considered unstable. Use at your own risk.
 
 ---
+
+## Getting Started
+
+See the [*components-explorer*](examples/components-explorer/) example for details.
+
+More detailed instructions are coming soon!
