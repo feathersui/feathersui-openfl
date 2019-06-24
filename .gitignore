@@ -1,4 +1,3 @@
 *.hxproj
-/.vscode/
-/build/
-src/Main.hx
+.vscode/
+build/
