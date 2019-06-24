@@ -2,7 +2,11 @@
 
 This example app demonstrates many of the UI components available in [Feathers UI for Haxe and OpenFL](https://feathersui.com/openfl/).
 
-## Run this example
+## Live demo
+
+You may [run the *components-explorer* example](https://feathersui.com/openfl/demo/) in your web browser, hosted on the Feathers UI website.
+
+## Run locally
 
 This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://www.openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
 
@@ -23,7 +27,7 @@ openfl test html5
 
 In addition to `html5`, other supported targets include `windows`, `mac`, `android`, and `ios`. See [Lime Command Line Tools: Basic Commands](https://lime.software/docs/command-line-tools/basic-commands/) for complete details about the available commands.
 
-### Visual Studio Code
+### [Visual Studio Code](https://code.visualstudio.com/)
 
 > Be sure to install the [Haxe](https://marketplace.visualstudio.com/items?itemName=nadako.vshaxe) and [Lime](https://marketplace.visualstudio.com/items?itemName=openfl.lime-vscode-extension) extensions first.
 
