@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe
 
-[Feathers UI](https://feathersui.com/openfl/) is an open source, cross-platform library of user interface components for creative projects. It is especially well-suited for games, interactive visualizations, and other rich, multimedia experiences. With Feathers UI, you can create apps for a wide range of devices and platforms, including phones, tablets, desktop computers, game consoles, and web browsers.
+[Feathers UI](https://feathersui.com/openfl/) is an open source, cross-platform library of user interface components for creative projects. It is especially well-suited for games, interactive data visualizations, and other rich, multimedia experiences. With Feathers UI, you can create apps for a wide range of devices and platforms, including phones, tablets, desktop computers, game consoles, and web browsers.
 
 ## Kickstarter
 
