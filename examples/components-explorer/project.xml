@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Feathers UI" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
+	<app main="Main" path="build" file="Main" />
+
+	<!-- needed on Android to avoid hiding the back/home buttons -->
+	<window fullscreen="false"/>
+	<window allow-high-dpi="true"/>
+	<window fps="60"/>
+	<window fps="0" if="html5"/>
+	
+	<source path="../../src" />
+	<source path="src" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+
+	<haxdef name="openfl_pool_events"/>	
+</project>
