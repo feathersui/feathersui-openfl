@@ -48,11 +48,17 @@ class Measurements {
 			if (minWidth == null || measureTarget.explicitMinWidth > minWidth) {
 				minWidth = measureTarget.explicitMinWidth;
 			}
+			if (minWidth == null) {
+				minWidth = 0.0;
+			}
 			measureTarget.minWidth = minWidth;
 
 			var minHeight = parent.explicitMinHeight;
 			if (minHeight == null || measureTarget.explicitMinHeight > minHeight) {
 				minHeight = measureTarget.explicitMinHeight;
+			}
+			if (minHeight == null) {
+				minHeight = 0.0;
 			}
 			measureTarget.minHeight = minHeight;
 
@@ -60,11 +66,17 @@ class Measurements {
 			if (maxWidth == null || measureTarget.explicitMaxWidth < maxWidth) {
 				maxWidth = measureTarget.explicitMaxWidth;
 			}
+			if (maxWidth == null) {
+				maxWidth = Math.POSITIVE_INFINITY;
+			}
 			measureTarget.maxWidth = maxWidth;
 
 			var maxHeight = parent.explicitMaxHeight;
 			if (maxHeight == null || measureTarget.explicitMaxHeight < maxHeight) {
 				maxHeight = measureTarget.explicitMaxHeight;
+			}
+			if (maxHeight == null) {
+				maxHeight = Math.POSITIVE_INFINITY;
 			}
 			measureTarget.maxHeight = maxHeight;
 		}
