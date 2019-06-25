@@ -466,7 +466,7 @@ class DefaultTheme implements ITheme {
 		if (listBox.backgroundSkin == null) {
 			var backgroundSkin = new RectangleSkin();
 			backgroundSkin.fill = getContainerFill();
-			backgroundSkin.border = getContainerBorder();
+			// backgroundSkin.border = getContainerBorder();
 			backgroundSkin.width = 160.0;
 			backgroundSkin.height = 160.0;
 			listBox.backgroundSkin = backgroundSkin;
