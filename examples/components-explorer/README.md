@@ -25,7 +25,7 @@ Run the [**openfl**](https://www.openfl.org/learn/haxelib/docs/tools/) tool in y
 openfl test html5
 ```
 
-In addition to `html5`, other supported targets include `windows`, `mac`, `android`, and `ios`. See [Lime Command Line Tools: Basic Commands](https://lime.software/docs/command-line-tools/basic-commands/) for complete details about the available commands.
+In addition to `html5`, other supported targets include `windows`, `mac`, `linux`, `android`, and `ios`. See [Lime Command Line Tools: Basic Commands](https://lime.software/docs/command-line-tools/basic-commands/) for complete details about the available commands.
 
 ### [Visual Studio Code](https://code.visualstudio.com/)
 
