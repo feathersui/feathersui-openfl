@@ -62,9 +62,6 @@ class ToggleGroup extends EventDispatcher {
 	public var selectedIndex(default, set):Int = -1;
 
 	private function set_selectedIndex(value:Int):Int {
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
-		}
 		var itemCount = this._items.length;
 		if (value < -1 || value > itemCount) {
 			throw new RangeError("Index " + value + " is out of range " + itemCount + " for ToggleGroup.");
@@ -136,7 +133,7 @@ class ToggleGroup extends EventDispatcher {
 		In the following example, selection is not required:
 
 		```hx
-		group.isSelectionRequired = false;
+		group.requireSelection = false;
 		```
 
 		@default true
