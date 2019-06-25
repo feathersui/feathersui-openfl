@@ -45,6 +45,13 @@ class Application extends LayoutGroup {
 			#if (desktop || web)
 			this._scaler = null;
 			scaleFactor = this.stage.window.scale;
+			#if (web)
+			if (scaleFactor > 2.0) {
+				scaleFactor *= (this.stage.window.scale / 2.0);
+			}
+			// TODO: remove this once text on non-integers is fast in OpenFL
+			scaleFactor = Math.ceil(scaleFactor);
+			#end
 			#else
 			if (this._scaler == null) {
 				this._scaler = new ScreenDensityScaleCalculator();
