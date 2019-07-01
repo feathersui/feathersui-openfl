@@ -66,7 +66,11 @@ class TextInput extends FeathersControl implements IStateContext {
 
 		@since 1.0.0
 	**/
-	public var currentState(default, null):String;
+	public var currentState(get, null):String;
+
+	private function get_currentState():String {
+		return this.currentState;
+	}
 
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;

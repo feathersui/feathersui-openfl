@@ -21,5 +21,5 @@ interface IToggle extends IUIControl {
 
 		@since 1.0.0
 	**/
-	public var selected(default, set):Bool;
+	public var selected(get, set):Bool;
 }

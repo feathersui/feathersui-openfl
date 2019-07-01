@@ -55,7 +55,11 @@ class BasicButton extends FeathersControl implements IStateContext {
 
 		@since 1.0.0
 	**/
-	public var currentState(default, null):String;
+	public var currentState(get, null):String;
+
+	private function get_currentState():String {
+		return this.currentState;
+	}
 
 	private var _pointerToState:PointerToState = null;
 	private var _backgroundSkinMeasurements:Measurements = null;

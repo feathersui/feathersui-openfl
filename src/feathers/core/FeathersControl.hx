@@ -96,7 +96,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 
 		@since 1.0.0
 	**/
-	public var enabled(default, set):Bool = true;
+	@:isVar
+	public var enabled(get, set):Bool = true;
+
+	private function get_enabled():Bool {
+		return this.enabled;
+	}
 
 	private function set_enabled(value:Bool):Bool {
 		if (this.enabled == value) {
@@ -158,7 +163,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 
 		@since 1.0.0
 	**/
-	public var styleContext(get, null):Class<IStyleObject>;
+	public var styleContext(get, never):Class<IStyleObject>;
 
 	private function get_styleContext():Class<IStyleObject> {
 		return null;

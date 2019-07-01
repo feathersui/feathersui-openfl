@@ -18,9 +18,9 @@ import openfl.events.IEventDispatcher;
 	@since 1.0.0
 **/
 interface IUIControl extends IEventDispatcher {
-	public var enabled(default, set):Bool;
-	public var defaultStyleProvider(get, null):IStyleProvider;
-	public var styleContext(get, null):Class<IStyleObject>;
+	public var enabled(get, set):Bool;
+	public var defaultStyleProvider(get, never):IStyleProvider;
+	public var styleContext(get, never):Class<IStyleObject>;
 	public var variant(default, set):String;
 	public function initializeNow():Void;
 }

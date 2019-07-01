@@ -23,5 +23,5 @@ interface IStateContext extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var currentState(default, null):String;
+	public var currentState(get, never):String;
 }

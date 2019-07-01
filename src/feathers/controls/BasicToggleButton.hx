@@ -57,9 +57,22 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	public var currentState(default, null):String;
+	public var currentState(get, null):String;
 
-	public var selected(default, set):Bool = false;
+	private function get_currentState():String {
+		var result = this.currentState;
+		if (this.selected) {
+			result += "AndSelected";
+		}
+		return result;
+	}
+
+	@:isVar
+	public var selected(get, set):Bool = false;
+
+	private function get_selected():Bool {
+		return this.selected;
+	}
 
 	private function set_selected(value:Bool):Bool {
 		if (this.selected == value) {
@@ -402,9 +415,6 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	private function changeState(state:String):Void {
 		if (!this.enabled) {
 			state = ToggleButtonState.DISABLED;
-		}
-		if (this.selected) {
-			state += "AndSelected";
 		}
 		if (this.currentState == state) {
 			return;

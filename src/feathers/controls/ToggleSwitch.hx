@@ -34,7 +34,12 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		return ToggleSwitch;
 	}
 
-	public var selected(default, set):Bool = false;
+	@:isVar
+	public var selected(get, set):Bool = false;
+
+	private function get_selected():Bool {
+		return this.selected;
+	}
 
 	private function set_selected(value:Bool):Bool {
 		if (this.selected == value) {
