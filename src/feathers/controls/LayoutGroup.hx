@@ -239,6 +239,7 @@ class LayoutGroup extends FeathersControl {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
 		}
 		this.items.remove(child);
+		this.setInvalid(InvalidationFlag.LAYOUT);
 		return super.removeChild(child);
 	}
 
