@@ -48,10 +48,15 @@ class ButtonScreen extends LayoutGroup {
 		this.toggleButton.text = "Toggled Button";
 		this.toggleButton.selected = true;
 		this.toggleButton.layoutData = AnchorLayoutData.center(0, 50);
+		this.toggleButton.addEventListener(Event.CHANGE, toggleButton_changeHandler);
 		this.addChild(this.toggleButton);
 	}
 
 	private function backButton_clickHandler(event:MouseEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
+	}
+
+	private function toggleButton_changeHandler(event:Event):Void {
+		trace("ToggleButton selected change: " + this.toggleButton.selected);
 	}
 }
