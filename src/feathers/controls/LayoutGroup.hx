@@ -239,11 +239,22 @@ class LayoutGroup extends FeathersControl {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
 		}
 		this.items.remove(child);
-		return child;
+		return super.removeChild(child);
+	}
+
+	override public function removeChildAt(index:Int):DisplayObject {
+		if (index >= 0 && index < this.items.length) {
+			return this.removeChild(this.items[index]);
+		}
+		return null;
 	}
 
 	private function _removeChild(child:DisplayObject):DisplayObject {
 		return super.removeChild(child);
+	}
+
+	private function _removeChildAt(index:Int):DisplayObject {
+		return super.removeChildAt(index);
 	}
 
 	override private function update():Void {
