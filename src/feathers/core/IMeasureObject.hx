@@ -77,6 +77,10 @@ interface IMeasureObject {
 	**/
 	public var explicitMaxHeight(default, null):Null<Float>;
 
+	#if flash
+	public var width:Float;
+	#else
+
 	/**
 		The object's width value.
 
@@ -85,6 +89,11 @@ interface IMeasureObject {
 		@since 1.0.0
 	**/
 	public var width(get, set):Float;
+	#end
+
+	#if flash
+	public var height:Float;
+	#else
 
 	/**
 		The object's height value.
@@ -94,6 +103,7 @@ interface IMeasureObject {
 		@since 1.0.0
 	**/
 	public var height(get, set):Float;
+	#end
 
 	/**
 		The object's minimum width value.

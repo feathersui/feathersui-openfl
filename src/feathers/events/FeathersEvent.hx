@@ -119,9 +119,14 @@ class FeathersEvent extends Event {
 		@since 1.0.0
 	**/
 	public static inline var TRANSITION_CANCEL:String = "transitionCancel";
+
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false));
 
 	public static function dispatch(dispatcher:IEventDispatcher, type:String, bubbles:Bool = false, cancelable:Bool = false):Bool {
+		#if flash
+		var event = new FeathersEvent(type, bubbles, cancelable);
+		return dispatcher.dispatchEvent(event);
+		#else
 		var event = _pool.get();
 		event.type = type;
 		event.bubbles = bubbles;
@@ -129,6 +134,7 @@ class FeathersEvent extends Event {
 		var result = dispatcher.dispatchEvent(event);
 		_pool.release(event);
 		return result;
+		#end
 	}
 
 	public function new(type:String, bubbles:Bool = false, cancelable:Bool = false) {

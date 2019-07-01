@@ -318,7 +318,8 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 					}
 					var matrix = getGradientMatrix(radians);
 					this.graphics.lineStyle(thickness);
-					this.graphics.lineGradientStyle(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
+					this.graphics.lineGradientStyle(type, #if flash cast #end colors, alphas, ratios, matrix, spreadMethod, interpolationMethod,
+						focalPointRatio);
 				}
 		}
 	}
@@ -350,7 +351,8 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 						focalPointRatio = 0.0;
 					}
 					var matrix = getGradientMatrix(radians);
-					this.graphics.beginGradientFill(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
+					this.graphics.beginGradientFill(type, #if flash cast #end colors, alphas, ratios, matrix, spreadMethod, interpolationMethod,
+						focalPointRatio);
 				}
 			case Bitmap(bitmapData, matrix, repeat, smooth):
 				{

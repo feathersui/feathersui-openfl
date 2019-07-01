@@ -31,42 +31,60 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	private var scaledActualMaxWidth:Float = Math.POSITIVE_INFINITY;
 	private var scaledActualMaxHeight:Float = Math.POSITIVE_INFINITY;
 
-	override private function get_width():Float {
+	public function new() {
+		super();
+	}
+
+	@:getter(width)
+	#if !flash override #end private function get_width():Float {
 		return this.scaledActualWidth;
 	}
 
-	override private function set_width(value:Float):Float {
+	@:setter(width)
+	#if !flash override #end private function set_width(value:Float):#if !flash Float #else Void #end {
 		if (this.scaleX != 1) {
 			value /= this.scaleX;
 		}
 		this.explicitWidth = value;
+		#if !flash
 		return this.scaledActualWidth;
+		#end
 	}
 
-	override private function get_height():Float {
+	@:getter(height)
+	#if !flash override #end private function get_height():Float {
 		return this.scaledActualHeight;
 	}
 
-	override private function set_height(value:Float):Float {
+	@:setter(height)
+	#if !flash override #end private function set_height(value:Float):#if !flash Float #else Void #end {
 		if (this.scaleY != 1) {
 			value /= this.scaleY;
 		}
 		this.explicitHeight = value;
+		#if !flash
 		return this.scaledActualHeight;
+		#end
 	}
 
-	override private function set_scaleX(value:Float):Float {
+	@:setter(scaleX)
+	#if !flash override #end private function set_scaleX(value:Float):#if !flash Float #else Void #end {
 		super.scaleX = value;
 		this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 		// no need to set invalid because the layout will be the same
+		#if !flash
 		return this.scaleX;
+		#end
 	}
 
-	override private function set_scaleY(value:Float):Float {
+	@:setter(scaleY)
+	#if !flash override #end private function set_scaleY(value:Float):#if !flash Float #else Void #end {
 		super.scaleY = value;
 		this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 		// no need to set invalid because the layout will be the same
+		#if !flash
 		return this.scaleY;
+		#end
 	}
 
 	public var explicitWidth(default, set):Null<Float> = null;

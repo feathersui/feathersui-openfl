@@ -26,7 +26,8 @@ enum LineStyle {
 
 		@since 1.0.0.
 	**/
-	SolidColor(?thickness:Float, ?color:Int, ?alpha:Float, ?pixelHinting:Bool, ?scaleMode:LineScaleMode, ?caps:CapsStyle, ?joints:JointStyle, ?miterLimit:Float);
+	SolidColor(?thickness:Float, ?color:Int, ?alpha:Float, ?pixelHinting:Bool, ?scaleMode:LineScaleMode, ?caps:CapsStyle, ?joints:JointStyle,
+		?miterLimit:Float);
 
 	/**
 		The line is rendered as a gradient of multiple colors.
