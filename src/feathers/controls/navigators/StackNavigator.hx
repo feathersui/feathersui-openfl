@@ -139,9 +139,7 @@ class StackNavigator extends BaseNavigator {
 		// displayed, so we need to clear this variable, just in case.
 		this._tempRootItemID = null;
 
-		while (this._history.length > 0) {
-			this._history.pop();
-		}
+		this._history.resize(0);
 
 		if (value == null) {
 			this.clearActiveItemInternal(null);
@@ -190,9 +188,7 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	override public function removeAllItems():Void {
-		while (this._history.length > 0) {
-			this._history.pop();
-		}
+		this._history.resize(0);
 		super.removeAllItems();
 	}
 
@@ -229,8 +225,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function pushItem(id:String, ?properties:Map<String, Dynamic>,
-			?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+	public function pushItem(id:String, ?properties:Map<String, Dynamic>, ?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
 		if (transition == null) {
 			var item = this.getItem(id);
 			if (item != null && item.pushTransition != null) {
@@ -312,9 +307,7 @@ class StackNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = this.popTransition;
 		}
-		while (this._history.length > 1) {
-			this._history.pop();
-		}
+		this._history.resize(1);
 		var item = this._history[0];
 		return this.showItemInternal(item.id, transition, item.properties);
 	}
@@ -339,9 +332,7 @@ class StackNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = this.popTransition;
 		}
-		while (this._history.length > 0) {
-			this._history.pop();
-		}
+		this._history.resize(0);
 		this.clearActiveItemInternal(transition);
 	}
 
@@ -363,11 +354,11 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function replaceItem(id:String, ?properties:Map<String, Dynamic>,
-			?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+	public function replaceItem(id:String, ?properties:Map<String, Dynamic>, ?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
 		if (transition == null) {
 			transition = this.replaceTransition;
 		}
+		this._history[this._history.length - 1] = new HistoryItem(id, properties);
 		return this.showItemInternal(id, transition, properties);
 	}
 
@@ -395,9 +386,8 @@ class StackNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = this.popTransition;
 		}
-		while (this._history.length > 0) {
-			this._history.pop();
-		}
+		this._history.resize(1);
+		this._history[0] = new HistoryItem(id, properties);
 		return this.showItemInternal(id, transition, properties);
 	}
 

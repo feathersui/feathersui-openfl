@@ -36,8 +36,7 @@ class ScreenDensityScaleCalculator {
 	**/
 	public function addScaleForDensity(density:Float, scale:Float):Void {
 		var i = this._buckets.length;
-		for (i in 0...this._buckets.length) {
-			var bucket = this._buckets[i];
+		for (bucket in this._buckets) {
 			if (bucket.density > density) {
 				break;
 			}
@@ -59,10 +58,9 @@ class ScreenDensityScaleCalculator {
 		@see `ScreenDensityScaleCalculator.addScaleForDensity()`
 	**/
 	public function removeScaleForDensity(density:Float):Void {
-		for (i in 0...this._buckets.length) {
-			var bucket = this._buckets[i];
+		for (bucket in this._buckets) {
 			if (bucket.density == density) {
-				this._buckets.splice(i, 1);
+				this._buckets.remove(bucket);
 				return;
 			}
 		}

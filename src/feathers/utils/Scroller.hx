@@ -527,12 +527,8 @@ class Scroller extends EventDispatcher {
 		this.scrollX = scrollX;
 		this.scrollY = scrollY;
 
-		var length = this.savedScrollMoves.length;
-		if (length > 60) {
-			do {
-				this.savedScrollMoves.shift();
-				length--;
-			} while (length > 30);
+		if (this.savedScrollMoves.length > 60) {
+			this.savedScrollMoves.resize(30);
 		}
 
 		this.lastTouchMoveTime = Lib.getTimer();
