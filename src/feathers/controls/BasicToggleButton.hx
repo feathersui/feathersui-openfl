@@ -67,6 +67,18 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		return result;
 	}
 
+	override private function set_enabled(value:Bool):Bool {
+		super.enabled = value;
+		if (this.enabled) {
+			if (Reflect.field(this, "currentState") == ToggleButtonState.DISABLED) {
+				this.changeState(ToggleButtonState.UP);
+			}
+		} else {
+			this.changeState(ToggleButtonState.DISABLED);
+		}
+		return this.enabled;
+	}
+
 	@:isVar
 	public var selected(get, set):Bool = false;
 

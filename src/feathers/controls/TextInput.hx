@@ -72,6 +72,18 @@ class TextInput extends FeathersControl implements IStateContext {
 		return this.currentState;
 	}
 
+	override private function set_enabled(value:Bool):Bool {
+		super.enabled = value;
+		if (this.enabled) {
+			if (this.currentState == TextInputState.DISABLED) {
+				this.changeState(TextInputState.ENABLED);
+			}
+		} else {
+			this.changeState(TextInputState.DISABLED);
+		}
+		return this.enabled;
+	}
+
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 

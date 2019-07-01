@@ -61,6 +61,18 @@ class BasicButton extends FeathersControl implements IStateContext {
 		return this.currentState;
 	}
 
+	override private function set_enabled(value:Bool):Bool {
+		super.enabled = value;
+		if (this.enabled) {
+			if (this.currentState == ButtonState.DISABLED) {
+				this.changeState(ButtonState.UP);
+			}
+		} else {
+			this.changeState(ButtonState.DISABLED);
+		}
+		return this.enabled;
+	}
+
 	private var _pointerToState:PointerToState = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
