@@ -295,8 +295,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		@since 1.0.0
 	**/
 	public function setSize(width:Float, height:Float):Void {
-		this.width = x;
-		this.height = y;
+		this.width = width;
+		this.height = height;
 	}
 
 	/**
