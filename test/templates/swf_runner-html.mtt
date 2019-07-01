@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+		<title>Massive Unit Test Runner</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="css/printclient.css" />
+		
+		<script type="text/JavaScript" language="JavaScript" src="js/swfobject.js"></script>
+		<script type="text/JavaScript" language="JavaScript" src="js/printclient.js"></script>
+		
+		<script type="text/JavaScript" language="JavaScript" >
+		SWFObject.embedSWF("::runnerName::", "swfContainer", "100%", "100%", "10.1.0", {}, {}, {allowFullScreen:true, bgcolor:0, allowScriptAccess:"always", wmode:"transparent", scale:"noscale"});
+			
+		</script>
+		<style type="text/css">
+			html, body, div { margin:0; padding:0; font-family: monaco, Andale Mono, Courier New, monospace; font-size:12px;}
+			.output
+			{
+				padding:20px;
+			}
+			#swfContainer { width: 100vw; height: 50vh; }
+		</style>
+	</head>
+	<body>
+		<div id="swfContainer" >
+			<p>Please <a href="http://www.adobe.com/go/getflashplayer">activate Adobe Flash Player</a> to start tests.</p>
+		</div>
+		<div id="haxe:trace" ></div>
+		<div id="munit" class="munit" >
+		</div>
+	</body>
+</html>

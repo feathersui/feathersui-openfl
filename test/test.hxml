@@ -1,4 +1,18 @@
--js build/html5/bin/TestMain.js
---no-output
--cmd haxelib run openfl build html5
+-lib openfl
+-lib munit
+-cp ../src
+-cp src
 
+--each
+
+--next
+
+-cmd haxelib run openfl build html5
+-js build/html5/bin/TestMain.js
+
+--next
+
+-cmd haxelib run openfl build flash
+-swf-version 30
+-swf-header 960:640:60:ffffff
+-swf build/flash/bin/TestMain.swf
