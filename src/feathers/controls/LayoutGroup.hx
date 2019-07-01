@@ -222,6 +222,12 @@ class LayoutGroup extends FeathersControl {
 		return result;
 	}
 
+	#if flash
+	override public function addChild(child:DisplayObject):DisplayObject {
+		return this.addChildAt(child, this.numChildren);
+	}
+	#end
+
 	private function _addChild(child:DisplayObject, index:Int):DisplayObject {
 		return super.addChildAt(child, this.numChildren);
 	}
