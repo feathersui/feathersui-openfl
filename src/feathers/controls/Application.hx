@@ -49,8 +49,6 @@ class Application extends LayoutGroup {
 			if (scaleFactor > 2.0) {
 				scaleFactor *= (this.stage.window.scale / 2.0);
 			}
-			// TODO: remove this once text on non-integers is fast in OpenFL
-			scaleFactor = Math.ceil(scaleFactor);
 			#end
 			#else
 			if (this._scaler == null) {
