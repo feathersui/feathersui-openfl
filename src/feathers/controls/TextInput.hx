@@ -176,10 +176,10 @@ class TextInput extends FeathersControl implements IStateContext {
 		pixels:
 
 		```hx
-		input.paddingTop = 20;</listing>
+		input.paddingTop = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -206,10 +206,10 @@ class TextInput extends FeathersControl implements IStateContext {
 		pixels:
 
 		```hx
-		input.paddingRight = 20;</listing>
+		input.paddingRight = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -236,10 +236,10 @@ class TextInput extends FeathersControl implements IStateContext {
 		pixels:
 
 		```hx
-		input.paddingBottom = 20;</listing>
+		input.paddingBottom = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -266,10 +266,10 @@ class TextInput extends FeathersControl implements IStateContext {
 		pixels:
 
 		```hx
-		input.paddingLeft = 20;</listing>
+		input.paddingLeft = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -510,7 +510,7 @@ class TextInput extends FeathersControl implements IStateContext {
 			if (this._currentBackgroundSkin != null) {
 				newWidth = this._currentBackgroundSkin.width;
 			} else {
-				newWidth = 0;
+				newWidth = 0.0;
 			}
 		}
 
@@ -529,7 +529,7 @@ class TextInput extends FeathersControl implements IStateContext {
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMinWidth = this._backgroundSkinMeasurements.minWidth;
 			} else {
-				newMinWidth = 0;
+				newMinWidth = 0.0;
 			}
 		}
 
@@ -635,8 +635,8 @@ class TextInput extends FeathersControl implements IStateContext {
 		if (this._currentBackgroundSkin == null) {
 			return;
 		}
-		this._currentBackgroundSkin.x = 0;
-		this._currentBackgroundSkin.y = 0;
+		this._currentBackgroundSkin.x = 0.0;
+		this._currentBackgroundSkin.y = 0.0;
 
 		// don't set the width or height explicitly unless necessary because if
 		// our explicit dimensions are cleared later, the measurement may not be

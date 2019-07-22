@@ -108,7 +108,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 					continue;
 				}
 			}
-			item.x = 0;
+			item.x = 0.0;
 			item.y = positionY;
 			item.width = itemWidth;
 			item.height = itemHeight;

@@ -34,12 +34,12 @@ class BaseProgressBar extends FeathersControl {
 		The value of the progress bar, which must be between the `minimum` and
 		the `maximum`.
 
-		In the following example, the value is changed to `12`:
+		In the following example, the value is changed to `12.0`:
 
 		```hx
-		progress.minimum = 0;
-		progress.maximum = 100;
-		progress.value = 12;
+		progress.minimum = 0.0;
+		progress.maximum = 100.0;
+		progress.value = 12.0;
 		```
 
 		@default 0
@@ -67,7 +67,7 @@ class BaseProgressBar extends FeathersControl {
 		``` hx
 		progress.minimum = -100;
 		progress.maximum = 100;
-		progress.value = 50;</listing>
+		progress.value = 50;
 		```
 
 		@default 0
@@ -92,15 +92,15 @@ class BaseProgressBar extends FeathersControl {
 	/**
 		The progress bar's value cannot be larger than the maximum.
 
-		In the following example, the maximum is set to `100`:
+		In the following example, the maximum is set to `100.0`:
 
 		```hx
-		progress.minimum = 0;
-		progress.maximum = 100;
-		progress.value = 12;
+		progress.minimum = 0.0;
+		progress.maximum = 100.0;
+		progress.value = 12.0;
 		```
 
-		@default 1
+		@default 1.0
 
 		@see `BaseProgressBar.value`
 		@see `BaseProgressBar.minimum`
@@ -235,10 +235,10 @@ class BaseProgressBar extends FeathersControl {
 		pixels:
 
 		```hx
-		progress.paddingTop = 20;</listing>
+		progress.paddingTop = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -265,10 +265,10 @@ class BaseProgressBar extends FeathersControl {
 		pixels:
 
 		```hx
-		progress.paddingRight = 20;</listing>
+		progress.paddingRight = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -295,10 +295,10 @@ class BaseProgressBar extends FeathersControl {
 		pixels:
 
 		```hx
-		progress.paddingBottom = 20;</listing>
+		progress.paddingBottom = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -325,10 +325,10 @@ class BaseProgressBar extends FeathersControl {
 		pixels:
 
 		```hx
-		progress.paddingLeft = 20;</listing>
+		progress.paddingLeft = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/

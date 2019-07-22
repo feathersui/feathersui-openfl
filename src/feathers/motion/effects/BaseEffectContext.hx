@@ -170,7 +170,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 	**/
 	public function toEnd():Void {
 		this.pause();
-		this.position = 1;
+		this.position = 1.0;
 		this.cleanupEffect();
 		FeathersEvent.dispatch(this, Event.COMPLETE);
 	}

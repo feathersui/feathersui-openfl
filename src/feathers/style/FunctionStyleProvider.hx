@@ -22,12 +22,12 @@ import openfl.events.EventDispatcher;
 	```hx
 	var button = new Button();
 	button.text = "Click Me";
-	button.styleProvider = new FunctionStyleProvider( function( target:Button ):Void
+	button.styleProvider = new FunctionStyleProvider(function(target:Button):Void
 	{
-		target.backgroundSkin = new Bitmap( bitmapData );
+		target.backgroundSkin = new Bitmap(bitmapData);
 		// set other styles...
 	});
-	this.addChild( button );
+	this.addChild(button);
 	```
 
 	@see [Skinning Feathers UI components](../../../help/skinning.html)
@@ -35,7 +35,7 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
-	public function new(callback:Dynamic->Void) {
+	public function new(?callback:Dynamic->Void) {
 		super();
 		this.callback = callback;
 	}

@@ -6,7 +6,7 @@ import openfl.errors.ArgumentError;
 import openfl.geom.Point;
 
 class LayoutViewPort extends LayoutGroup implements IViewPort {
-	private var _actualMinVisibleWidth:Float = 0;
+	private var _actualMinVisibleWidth:Float = 0.0;
 	private var _explicitMinVisibleWidth:Null<Float> = null;
 
 	public var minVisibleWidth(get, set):Null<Float>;
@@ -25,7 +25,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		var oldValue = this._explicitMinVisibleWidth;
 		this._explicitMinVisibleWidth = value;
 		if (value == null) {
-			this._actualMinVisibleWidth = 0;
+			this._actualMinVisibleWidth = 0.0;
 			this.setInvalid(InvalidationFlag.SIZE);
 		} else {
 			this._actualMinVisibleWidth = value;
@@ -55,7 +55,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this.maxVisibleWidth;
 	}
 
-	private var _actualVisibleWidth:Float = 0;
+	private var _actualVisibleWidth:Float = 0.0;
 	private var _explicitVisibleWidth:Null<Float> = null;
 
 	public var visibleWidth(get, set):Null<Float>;
@@ -78,7 +78,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitVisibleWidth;
 	}
 
-	private var _actualMinVisibleHeight:Float = 0;
+	private var _actualMinVisibleHeight:Float = 0.0;
 	private var _explicitMinVisibleHeight:Null<Float>;
 
 	public var minVisibleHeight(get, set):Null<Float>;
@@ -97,7 +97,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		var oldValue = this._explicitMinVisibleHeight;
 		this._explicitMinVisibleHeight = value;
 		if (value == null) {
-			this._actualMinVisibleHeight = 0;
+			this._actualMinVisibleHeight = 0.0;
 			this.setInvalid(InvalidationFlag.SIZE);
 		} else {
 			this._actualMinVisibleHeight = value;
@@ -131,7 +131,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this.maxVisibleHeight;
 	}
 
-	private var _actualVisibleHeight:Float = 0;
+	private var _actualVisibleHeight:Float = 0.0;
 	private var _explicitVisibleHeight:Null<Float> = null;
 
 	public var visibleHeight(get, set):Null<Float>;
@@ -191,11 +191,11 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 
 		var viewPortMinWidth = this._explicitMinVisibleWidth;
 		if (needsMinWidth) {
-			viewPortMinWidth = 0;
+			viewPortMinWidth = 0.0;
 		}
 		var viewPortMinHeight = this._explicitMinVisibleHeight;
 		if (needsMinHeight) {
-			viewPortMinHeight = 0;
+			viewPortMinHeight = 0.0;
 		}
 		var viewPortMaxWidth = this.maxVisibleWidth;
 		if (needsMaxWidth) {

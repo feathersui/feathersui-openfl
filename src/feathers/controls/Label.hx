@@ -32,7 +32,7 @@ import openfl.text.TextFormat;
 	```hx
 	var label:Label = new Label();
 	label.text = "Hello World";
-	this.addChild( label );</listing>
+	this.addChild( label );
 	```
 
 	@see [How to use the Feathers `Label` component](../../../help/label.html)
@@ -112,10 +112,10 @@ class Label extends FeathersControl {
 		In the following example, the button's top padding is set to 20 pixels:
 
 		```hx
-		button.paddingTop = 20;</listing>
+		button.paddingTop = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -142,10 +142,10 @@ class Label extends FeathersControl {
 		pixels:
 
 		```hx
-		button.paddingRight = 20;</listing>
+		button.paddingRight = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -172,10 +172,10 @@ class Label extends FeathersControl {
 		pixels:
 
 		```hx
-		button.paddingBottom = 20;</listing>
+		button.paddingBottom = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -202,10 +202,10 @@ class Label extends FeathersControl {
 		pixels:
 
 		```hx
-		button.paddingLeft = 20;</listing>
+		button.paddingLeft = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -636,8 +636,8 @@ class Label extends FeathersControl {
 		if (this._currentBackgroundSkin == null) {
 			return;
 		}
-		this._currentBackgroundSkin.x = 0;
-		this._currentBackgroundSkin.y = 0;
+		this._currentBackgroundSkin.x = 0.0;
+		this._currentBackgroundSkin.y = 0.0;
 
 		// don't set the width or height explicitly unless necessary because if
 		// our explicit dimensions are cleared later, the measurement may not be

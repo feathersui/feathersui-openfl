@@ -24,6 +24,11 @@ class NoOpEffectContext extends EventDispatcher implements IEffectContext {
 		this.target = target;
 	}
 
+	/**
+		The object targeted by the affect.
+
+		@since 1.0.0
+	**/
 	public var target(default, null):Dynamic;
 
 	/**
@@ -47,24 +52,54 @@ class NoOpEffectContext extends EventDispatcher implements IEffectContext {
 		return this.position;
 	}
 
+	/**
+		Plays the effect.
+
+		@since 1.0.0
+	**/
 	public function play():Void {
 		this.toEnd();
 	}
 
+	/**
+		Pauses the effect.
+
+		@since 1.0.0
+	**/
 	public function pause():Void {}
 
+	/**
+		Plays the effect in reverse.
+
+		@since 1.0.0
+	**/
 	public function playReverse():Void {
 		this.toEnd();
 	}
 
+	/**
+		Stops the effect.
+
+		@since 1.0.0
+	**/
 	public function stop():Void {
 		this.toEnd();
 	}
 
+	/**
+		Immediately advances the effect to the end.
+
+		@since 1.0.0
+	**/
 	public function toEnd():Void {
 		FeathersEvent.dispatch(this, Event.COMPLETE);
 	}
 
+	/**
+		Interrupts the effect, if it is playing.
+
+		@since 1.0.0
+	**/
 	public function interrupt():Void {
 		this.toEnd();
 	}

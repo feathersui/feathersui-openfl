@@ -219,10 +219,10 @@ class ToggleButton extends BasicToggleButton {
 		In the following example, the button's top padding is set to 20 pixels:
 
 		```hx
-		button.paddingTop = 20;</listing>
+		button.paddingTop = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -249,10 +249,10 @@ class ToggleButton extends BasicToggleButton {
 		pixels:
 
 		```hx
-		button.paddingRight = 20;</listing>
+		button.paddingRight = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -279,10 +279,10 @@ class ToggleButton extends BasicToggleButton {
 		pixels:
 
 		```hx
-		button.paddingBottom = 20;</listing>
+		button.paddingBottom = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -309,10 +309,10 @@ class ToggleButton extends BasicToggleButton {
 		pixels:
 
 		```hx
-		button.paddingLeft = 20;</listing>
+		button.paddingLeft = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -555,7 +555,7 @@ class ToggleButton extends BasicToggleButton {
 			if (hasText) {
 				newWidth = this._textMeasuredWidth;
 			} else {
-				newWidth = 0;
+				newWidth = 0.0;
 			}
 			if (this._currentIcon != null && (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT)) {
 				if (hasText) {
@@ -574,7 +574,7 @@ class ToggleButton extends BasicToggleButton {
 			if (hasText) {
 				newHeight = this._textMeasuredHeight;
 			} else {
-				newHeight = 0;
+				newHeight = 0.0;
 			}
 			if (this._currentIcon != null && (this.iconPosition == RelativePosition.TOP || this.iconPosition == RelativePosition.BOTTOM)) {
 				if (hasText) {
@@ -730,11 +730,11 @@ class ToggleButton extends BasicToggleButton {
 				calculatedHeight -= (this._currentIcon.height + adjustedGap);
 			}
 		}
-		if (calculatedWidth < 0) {
-			calculatedWidth = 0;
+		if (calculatedWidth < 0.0) {
+			calculatedWidth = 0.0;
 		}
-		if (calculatedHeight < 0) {
-			calculatedHeight = 0;
+		if (calculatedHeight < 0.0) {
+			calculatedHeight = 0.0;
 		}
 		if (calculatedWidth > this._textMeasuredWidth) {
 			calculatedWidth = this._textMeasuredWidth;

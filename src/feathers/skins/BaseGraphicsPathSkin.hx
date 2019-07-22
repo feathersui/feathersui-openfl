@@ -37,6 +37,12 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		this.tabChildren = false;
 	}
 
+	/**
+		An optional `IStateContext` that is used to change the styles of the
+		skin when its state changes.
+
+		@since 1.0.0
+	**/
 	public var stateContext(default, set):IStateContext;
 
 	private function set_stateContext(value:IStateContext):IStateContext {
@@ -276,6 +282,12 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		}
 	}
 
+	/**
+		Subclasses should override `drawPath()` to draw the skin's graphics.
+
+		@since 1.0.0
+	**/
+	@:dox(show)
 	private function drawPath():Void {}
 
 	private function applyLineStyle(lineStyle:LineStyle):Void {

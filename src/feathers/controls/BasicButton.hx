@@ -308,7 +308,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 			if (this._currentBackgroundSkin != null) {
 				newWidth = this._currentBackgroundSkin.width;
 			} else {
-				newWidth = 0;
+				newWidth = 0.0;
 			}
 		}
 
@@ -317,7 +317,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 			if (this._currentBackgroundSkin != null) {
 				newHeight = this._currentBackgroundSkin.height;
 			} else {
-				newHeight = 0;
+				newHeight = 0.0;
 			}
 		}
 
@@ -328,7 +328,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMinWidth = this._backgroundSkinMeasurements.minWidth;
 			} else {
-				newMinWidth = 0;
+				newMinWidth = 0.0;
 			}
 		}
 
@@ -339,7 +339,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMinHeight = this._backgroundSkinMeasurements.minHeight;
 			} else {
-				newMinHeight = 0;
+				newMinHeight = 0.0;
 			}
 		}
 		var newMaxWidth = this.explicitMaxWidth;
@@ -371,8 +371,8 @@ class BasicButton extends FeathersControl implements IStateContext {
 		if (this._currentBackgroundSkin == null) {
 			return;
 		}
-		this._currentBackgroundSkin.x = 0;
-		this._currentBackgroundSkin.y = 0;
+		this._currentBackgroundSkin.x = 0.0;
+		this._currentBackgroundSkin.y = 0.0;
 
 		// don't set the width or height explicitly unless necessary because if
 		// our explicit dimensions are cleared later, the measurement may not be

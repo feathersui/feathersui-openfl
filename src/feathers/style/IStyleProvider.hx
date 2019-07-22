@@ -11,5 +11,10 @@ package feathers.style;
 import openfl.events.IEventDispatcher;
 
 interface IStyleProvider extends IEventDispatcher {
+	/**
+		Applies styles to a specific Feathers UI component.
+
+		@since 1.0.0
+	**/
 	public function applyStyles<T>(target:IStyleObject):Void;
 }

@@ -109,6 +109,8 @@ class ValidationQueue {
 
 	/**
 		Immediately validates all components in the queue.
+
+		@since 1.0.0
 	**/
 	public function validateNow():Void {
 		if (this.validating) {

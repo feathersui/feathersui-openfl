@@ -179,10 +179,10 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		pixels:
 
 		```hx
-		toggle.paddingRight = 20;</listing>
+		toggle.paddingRight = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -209,10 +209,10 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		pixels:
 
 		```hx
-		toggle.paddingLeft = 20;</listing>
+		toggle.paddingLeft = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -433,7 +433,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	private function layoutSplitTrack():Void {
 		var location = this.thumbSkin.x + this.thumbSkin.width / 2.0;
 
-		this.trackSkin.x = 0;
+		this.trackSkin.x = 0.0;
 		this.trackSkin.width = location;
 
 		this.secondaryTrackSkin.x = location;
@@ -454,7 +454,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		if (this.trackSkin == null) {
 			return;
 		}
-		this.trackSkin.x = 0;
+		this.trackSkin.x = 0.0;
 		this.trackSkin.width = this.actualWidth;
 
 		if (Std.is(this.trackSkin, IValidating)) {

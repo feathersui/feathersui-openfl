@@ -70,9 +70,9 @@ class InvalidationFlag {
 	public static inline var DATA = "data";
 
 	/**
-		* Indicate that the scroll position of the UI control has changed.
+		Indicate that the scroll position of the UI control has changed.
 
-				@since 1.0.0
+		@since 1.0.0
 	**/
 	public static inline var SCROLL = "scroll";
 

@@ -39,16 +39,16 @@ class BaseSlider extends FeathersControl {
 		The value of the slider, which must be between the `minimum` and the
 		`maximum`.
 
-		In the following example, the value is changed to `12`:
+		In the following example, the value is changed to `12.0`:
 
 		```hx
-		slider.minimum = 0;
-		slider.maximum = 100;
-		slider.step = 1;
-		slider.value = 12;
+		slider.minimum = 0.0;
+		slider.maximum = 100.0;
+		slider.step = 1.0;
+		slider.value = 12.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@see `BaseSlider.minimum`
 		@see `BaseSlider.maximum`
@@ -71,16 +71,16 @@ class BaseSlider extends FeathersControl {
 	/**
 		The slider's value cannot be smaller than the minimum.
 
-		In the following example, the minimum is set to `-100`:
+		In the following example, the minimum is set to `-100.0`:
 
 		``` hx
-		slider.minimum = -100;
-		slider.maximum = 100;
-		slider.step = 1;
-		slider.value = 50;</listing>
+		slider.minimum = -100.0;
+		slider.maximum = 100.0;
+		slider.step = 1.0;
+		slider.value = 50.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@see `BaseSlider.value`
 		@see `BaseSlider.maximum`
@@ -102,16 +102,16 @@ class BaseSlider extends FeathersControl {
 	/**
 		The slider's value cannot be larger than the maximum.
 
-		In the following example, the maximum is set to `100`:
+		In the following example, the maximum is set to `100.0`:
 
 		```hx
-		slider.minimum = 0;
-		slider.maximum = 100;
-		slider.step = 1;
-		slider.value = 12;
+		slider.minimum = 0.0;
+		slider.maximum = 100.0;
+		slider.step = 1.0;
+		slider.value = 12.0;
 		```
 
-		@default 1
+		@default 1.0
 
 		@see `BaseSlider.value`
 		@see `BaseSlider.minimum`
@@ -132,24 +132,24 @@ class BaseSlider extends FeathersControl {
 
 	/**
 		As the slider's thumb is dragged, the `value` is snapped to the nearest
-		multiple of `step`. If `step` is `0`, the `value` is not snapped.
+		multiple of `step`. If `step` is `0.0`, the `value` is not snapped.
 
-		In the following example, the step is changed to `1`:
+		In the following example, the step is changed to `1.0`:
 
 		```hx
-		slider.minimum = 0;
-		slider.maximum = 100;
-		slider.step = 1;
-		slider.value = 10;
+		slider.minimum = 0.0;
+		slider.maximum = 100.0;
+		slider.step = 1.0;
+		slider.value = 10.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@see `BaseSlider.value`
 		@see `BaseSlider.minimum`
 		@see `BaseSlider.maximum`
 	**/
-	public var step(default, set):Float = 0;
+	public var step(default, set):Float = 0.0;
 
 	private function set_step(value:Float):Float {
 		if (this.step == value) {
@@ -384,10 +384,10 @@ class BaseSlider extends FeathersControl {
 	}
 
 	private var _dragging:Bool = false;
-	private var _pointerStartX:Float = 0;
-	private var _pointerStartY:Float = 0;
-	private var _thumbStartX:Float = 0;
-	private var _thumbStartY:Float = 0;
+	private var _pointerStartX:Float = 0.0;
+	private var _pointerStartY:Float = 0.0;
+	private var _thumbStartX:Float = 0.0;
+	private var _thumbStartY:Float = 0.0;
 
 	override private function initialize():Void {
 		super.initialize();

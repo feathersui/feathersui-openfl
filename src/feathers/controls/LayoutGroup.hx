@@ -36,8 +36,8 @@ import openfl.geom.Point;
 	```hx
 	var group:LayoutGroup = new LayoutGroup();
 	var layout:HorizontalLayout = new HorizontalLayout();
-	layout.gap = 20;
-	layout.padding = 20;
+	layout.gap = 20.0;
+	layout.padding = 20.0;
 	group.layout = layout;
 	this.addChild( group );
 
@@ -47,7 +47,7 @@ import openfl.geom.Point;
 
 	var noButton:Button = new Button();
 	noButton.label = "No";
-	group.addChild( noButton );</listing>
+	group.addChild( noButton );
 	```
 
 	@see [How to use the Feathers `LayoutGroup` component](../../../help/layout-group.html)
@@ -376,11 +376,11 @@ class LayoutGroup extends FeathersControl {
 
 		var viewPortMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			viewPortMinWidth = 0;
+			viewPortMinWidth = 0.0;
 		}
 		var viewPortMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			viewPortMinHeight = 0;
+			viewPortMinHeight = 0.0;
 		}
 		var viewPortMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
@@ -418,11 +418,11 @@ class LayoutGroup extends FeathersControl {
 	private function handleManualLayout():Void {
 		var maxX = this._layoutMeasurements.width;
 		if (maxX == null) {
-			maxX = 0;
+			maxX = 0.0;
 		}
 		var maxY = this._layoutMeasurements.height;
 		if (maxY == null) {
-			maxY = 0;
+			maxY = 0.0;
 		}
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
@@ -443,8 +443,8 @@ class LayoutGroup extends FeathersControl {
 			}
 		}
 		this._ignoreChildChanges = oldIgnoreChildChanges;
-		this._layoutResult.contentX = 0;
-		this._layoutResult.contentY = 0;
+		this._layoutResult.contentX = 0.0;
+		this._layoutResult.contentY = 0.0;
 		this._layoutResult.contentWidth = maxX;
 		this._layoutResult.contentHeight = maxY;
 		if (this._layoutMeasurements.width != null) {
@@ -479,8 +479,8 @@ class LayoutGroup extends FeathersControl {
 		if (this._currentBackgroundSkin == null) {
 			return;
 		}
-		this._currentBackgroundSkin.x = 0;
-		this._currentBackgroundSkin.y = 0;
+		this._currentBackgroundSkin.x = 0.0;
+		this._currentBackgroundSkin.y = 0.0;
 
 		// don't set the width or height explicitly unless necessary because if
 		// our explicit dimensions are cleared later, the measurement may not be

@@ -117,18 +117,13 @@ class ToggleGroup extends EventDispatcher {
 	}
 
 	/**
-		@since 1.0.0
-	**/
-	public var requireSelection(default, set):Bool = true;
-
-	/**
 		Determines if the user can deselect the currently selected item or not.
 		The selection may always be cleared programmatically by setting the
 		selected index to `-1` or the selected item to `null`.
 
-		If `requireSelection` is set to `true` and the toggle group has items
-		that were added previously, and there is no currently selected item, the
-		item at index `0` will be selected automatically.
+		If `requireSelection` is set to `true`, the toggle group has items that
+		were added previously, and there is no currently selected item, the item
+		at index `0` will be selected automatically.
 
 		In the following example, selection is not required:
 
@@ -137,7 +132,11 @@ class ToggleGroup extends EventDispatcher {
 		```
 
 		@default true
+
+		@since 1.0.0
 	**/
+	public var requireSelection(default, set):Bool = true;
+
 	private function set_requireSelection(value:Bool):Bool {
 		if (this.requireSelection == value) {
 			return this.requireSelection;
@@ -287,6 +286,8 @@ class ToggleGroup extends EventDispatcher {
 		```
 
 		@see `numItems`
+
+		@since 1.0.0
 	**/
 	public function getItemAt(index:Int):IToggle {
 		return this._items[index];
@@ -301,6 +302,8 @@ class ToggleGroup extends EventDispatcher {
 		```hx
 		var index:int = group.getItemIndex( radio );
 		```
+
+		@since 1.0.0
 	**/
 	public function getItemIndex(item:IToggle):Int {
 		return this._items.indexOf(item);
@@ -315,6 +318,8 @@ class ToggleGroup extends EventDispatcher {
 		```hx
 		group.setItemIndex( radio, 2 );
 		```
+
+		@since 1.0.0
 	**/
 	public function setItemIndex(item:IToggle, index:Int):Void {
 		var oldIndex = this._items.indexOf(item);

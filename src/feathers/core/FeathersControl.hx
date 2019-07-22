@@ -26,7 +26,7 @@ import haxe.rtti.Meta;
 	This is a base class for Feathers components that isn't meant to be
 	instantiated directly. It should only be subclassed. For a simple
 	component that will automatically measure itself based on its children
-	(including optional support for layouts, see
+	(including optional support for layouts), see
 	`feathers.controls.LayoutGroup`.
 
 	@since 1.0.0
@@ -84,7 +84,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	public var created(default, null):Bool = false;
 
 	/**
-		Indicates whether the control is interactive or not.
+		Indicates whether the control should respond when a user attempts to
+		interact with it. The appearance of the control may also be affected by
+		whether the control is enabled or disabled.
 
 		In the following example, the control is disabled:
 
@@ -188,6 +190,18 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return null;
 	}
 
+	/**
+		Determines if the `ILayout` of the parent container should measure and
+		position this object or ignore it.
+
+		In the following example, the object is excluded from the layout:
+
+		```hx
+		object.includeInLayout = false;
+		```
+
+		@since 1.0.0
+	**/
 	public var includeInLayout(default, set):Bool = true;
 
 	private function set_includeInLayout(value:Bool):Bool {
@@ -200,6 +214,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	@style
+
+	/**
+		Optional, extra data used by some `ILayout` implementations.
+
+		@since 1.0.0
+	**/
 	public var layoutData(default, set):ILayoutData;
 
 	private function set_layoutData(value:ILayoutData):ILayoutData {
@@ -220,6 +240,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return this.layoutData;
 	}
 
+	/**
+		May be used to provide multiple different variations of the same UI
+		component, each with a different appearance.
+
+		@since 1.0.0
+	**/
 	public var variant(default, set):String = null;
 
 	private function set_variant(value:String):String {
@@ -259,8 +285,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		If the component has not yet initialized, initializes immediately. The
 		`initialize()` method will be called, and the `FeathersEvent.INITIALIZE`
 		event will be dispatched. Then, if the component has a style provider, it
-		will be applied. The component will not validate, though. To initialize
-		and validate immediately, call `validateNow()` instead.
+		will be applied. The component will not validate, though. To both
+		initialize and validate immediately, call `validateNow()` instead.
 
 		@since 1.0.0
 	**/

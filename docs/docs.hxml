@@ -11,4 +11,4 @@
 -xml ../build/xml/feathers.xml
 
 --next
--cmd haxelib run dox -o ../build/api -i ../build/xml -in feathers --title "API Reference" -D website "https://feathersui.com" -D textColor 0x777777 --toplevel-package feathers
+-cmd haxelib run dox -o ../build/api -i ../build/xml -in feathers --title "Feathers UI API Reference" -D website "https://feathersui.com" -D textColor 0x777777 --toplevel-package feathers

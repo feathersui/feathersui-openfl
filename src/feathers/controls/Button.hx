@@ -28,7 +28,7 @@ import openfl.text.TextFormat;
 	var button:Button = new Button();
 	button.text = "Click Me";
 	button.addEventListener( Event.TRIGGERED, button_triggeredHandler );
-	this.addChild( button );</listing>
+	this.addChild( button );
 	```
 
 	@see [How to use the Feathers Button component](../../../help/button.html)
@@ -94,10 +94,10 @@ class Button extends BasicButton {
 		In the following example, the button's top padding is set to 20 pixels:
 
 		```hx
-		button.paddingTop = 20;</listing>
+		button.paddingTop = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -124,10 +124,10 @@ class Button extends BasicButton {
 		pixels:
 
 		```hx
-		button.paddingRight = 20;</listing>
+		button.paddingRight = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -154,10 +154,10 @@ class Button extends BasicButton {
 		pixels:
 
 		```hx
-		button.paddingBottom = 20;</listing>
+		button.paddingBottom = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -184,10 +184,10 @@ class Button extends BasicButton {
 		pixels:
 
 		```hx
-		button.paddingLeft = 20;</listing>
+		button.paddingLeft = 20.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@since 1.0.0
 	**/

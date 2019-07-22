@@ -36,8 +36,8 @@ import openfl.geom.Rectangle;
 	```hx
 	var container:ScrollContainer = new ScrollContainer();
 	var layout:HorizontalLayout = new HorizontalLayout();
-	layout.gap = 20;
-	layout.padding = 20;
+	layout.gap = 20.0;
+	layout.padding = 20.0;
 	container.layout = layout;
 	this.addChild( container );
 

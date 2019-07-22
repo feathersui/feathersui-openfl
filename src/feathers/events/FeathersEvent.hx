@@ -122,6 +122,11 @@ class FeathersEvent extends Event {
 
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false));
 
+	/**
+		Dispatches a pooled event with the specified properties.
+
+		@since 1.0.0
+	**/
 	public static function dispatch(dispatcher:IEventDispatcher, type:String, bubbles:Bool = false, cancelable:Bool = false):Bool {
 		#if flash
 		var event = new FeathersEvent(type, bubbles, cancelable);

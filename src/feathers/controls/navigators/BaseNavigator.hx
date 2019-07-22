@@ -245,7 +245,7 @@ class BaseNavigator extends FeathersControl {
 				if (this.activeItemView != null) {
 					newWidth = this.activeItemView.width;
 				} else {
-					newWidth = 0;
+					newWidth = 0.0;
 				}
 			} else {
 				newWidth = stageWidth;
@@ -258,7 +258,7 @@ class BaseNavigator extends FeathersControl {
 				if (this.activeItemView != null) {
 					newHeight = this.activeItemView.height;
 				} else {
-					newHeight = 0;
+					newHeight = 0.0;
 				}
 			} else {
 				newHeight = stageHeight;
@@ -273,7 +273,7 @@ class BaseNavigator extends FeathersControl {
 				} else if (this.activeItemView != null) {
 					newMinWidth = this.activeItemView.width;
 				} else {
-					newMinWidth = 0;
+					newMinWidth = 0.0;
 				}
 			} else {
 				newMinWidth = stageWidth;
@@ -288,7 +288,7 @@ class BaseNavigator extends FeathersControl {
 				} else if (this.activeItemView != null) {
 					newMinHeight = this.activeItemView.height;
 				} else {
-					newMinHeight = 0;
+					newMinHeight = 0.0;
 				}
 			} else {
 				newMinHeight = stageHeight;

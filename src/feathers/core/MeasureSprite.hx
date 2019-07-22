@@ -18,16 +18,16 @@ import feathers.events.FeathersEvent;
 	@since 1.0.0
 **/
 class MeasureSprite extends ValidatingSprite implements IMeasureObject {
-	private var actualWidth:Float = 0;
-	private var actualHeight:Float = 0;
-	private var actualMinWidth:Float = 0;
-	private var actualMinHeight:Float = 0;
+	private var actualWidth:Float = 0.0;
+	private var actualHeight:Float = 0.0;
+	private var actualMinWidth:Float = 0.0;
+	private var actualMinHeight:Float = 0.0;
 	private var actualMaxWidth:Float = Math.POSITIVE_INFINITY;
 	private var actualMaxHeight:Float = Math.POSITIVE_INFINITY;
-	private var scaledActualWidth:Float = 0;
-	private var scaledActualHeight:Float = 0;
-	private var scaledActualMinWidth:Float = 0;
-	private var scaledActualMinHeight:Float = 0;
+	private var scaledActualWidth:Float = 0.0;
+	private var scaledActualHeight:Float = 0.0;
+	private var scaledActualMinWidth:Float = 0.0;
+	private var scaledActualMinHeight:Float = 0.0;
 	private var scaledActualMaxWidth:Float = Math.POSITIVE_INFINITY;
 	private var scaledActualMaxHeight:Float = Math.POSITIVE_INFINITY;
 
@@ -42,7 +42,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 
 	@:setter(width)
 	#if !flash override #end private function set_width(value:Float):#if !flash Float #else Void #end {
-		if (this.scaleX != 1) {
+		if (this.scaleX != 1.0) {
 			value /= this.scaleX;
 		}
 		this.explicitWidth = value;
@@ -58,7 +58,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 
 	@:setter(height)
 	#if !flash override #end private function set_height(value:Float):#if !flash Float #else Void #end {
-		if (this.scaleY != 1) {
+		if (this.scaleY != 1.0) {
 			value /= this.scaleY;
 		}
 		this.explicitHeight = value;
@@ -124,8 +124,8 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		var oldValue = this.explicitMinWidth;
 		this.explicitMinWidth = value;
 		if (value == null) {
-			this.actualMinWidth = 0;
-			this.scaledActualMinWidth = 0;
+			this.actualMinWidth = 0.0;
+			this.scaledActualMinWidth = 0.0;
 			this.setInvalid(InvalidationFlag.SIZE);
 		} else {
 			// saveMeasurements() might change actualWidth, so keep the old
@@ -150,8 +150,8 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		var oldValue = this.explicitMinHeight;
 		this.explicitMinHeight = value;
 		if (value == null) {
-			this.actualMinHeight = 0;
-			this.scaledActualMinHeight = 0;
+			this.actualMinHeight = 0.0;
+			this.scaledActualMinHeight = 0.0;
 			this.setInvalid(InvalidationFlag.SIZE);
 		} else {
 			// saveMeasurements() might change actualHeight, so keep the old
@@ -300,11 +300,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		}
 
 		var scaleX = this.scaleX;
-		if (scaleX < 0) {
+		if (scaleX < 0.0) {
 			scaleX = -scaleX;
 		}
 		var scaleY = this.scaleY;
-		if (scaleY < 0) {
+		if (scaleY < 0.0) {
 			scaleY = -scaleY;
 		}
 

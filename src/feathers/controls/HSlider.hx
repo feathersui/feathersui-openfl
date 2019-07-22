@@ -23,12 +23,12 @@ import openfl.geom.Point;
 
 	```hx
 	var slider:HSlider = new HSlider();
-	slider.minimum = 0;
-	slider.maximum = 100;
-	slider.step = 1;
-	slider.value = 12;
+	slider.minimum = 0.0;
+	slider.maximum = 100.0;
+	slider.step = 1.0;
+	slider.value = 12.0;
 	slider.addEventListener( Event.CHANGE, slider_changeHandler );
-	this.addChild( slider );</listing>
+	this.addChild( slider );
 	```
 
 	@see `feathers.controls.VSlider`
@@ -152,7 +152,7 @@ class HSlider extends BaseSlider {
 			location += Math.round(this.thumbSkin.width / 2);
 		}
 
-		this.trackSkin.x = 0;
+		this.trackSkin.x = 0.0;
 		this.trackSkin.width = location;
 
 		this.secondaryTrackSkin.x = location;
@@ -173,7 +173,7 @@ class HSlider extends BaseSlider {
 		if (this.trackSkin == null) {
 			return;
 		}
-		this.trackSkin.x = 0;
+		this.trackSkin.x = 0.0;
 		this.trackSkin.width = this.actualWidth;
 
 		if (Std.is(this.trackSkin, IValidating)) {
