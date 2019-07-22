@@ -11,7 +11,7 @@ To run all tests, use the following command:
 haxelib run munit test
 ```
 
-**Warning:** Tests for Adobe Flash Player may be skipped when running all tests because the plugin requires user activation.
+**Warning:** Tests for Adobe Flash Player may be skipped when running all tests because the plugin requires user activation in some web browsers.
 
 ## Run JS tests only
 
@@ -40,4 +40,13 @@ haxelib run munit test -swf
 
 ```sh
 haxelib run munit test -swf -browser chrome
+```
+
+## Run Neko tests
+
+Neko tests must be run manually at this time. Use the following command to build and run the tests.
+
+```sh
+haxelib run openfl build neko
+./build/neko/bin/TestMain
 ```
