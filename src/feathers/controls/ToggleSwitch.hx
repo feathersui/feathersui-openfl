@@ -31,6 +31,7 @@ import feathers.core.FeathersControl;
 class ToggleSwitch extends FeathersControl implements IToggle {
 	public function new() {
 		super();
+		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
 	}
 
@@ -56,7 +57,6 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		return this.selected;
 	}
 
-	private var thumbContainer:Sprite;
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
@@ -72,16 +72,8 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		if (this.thumbSkin == value) {
 			return this.thumbSkin;
 		}
-		if (this.thumbSkin != null) {
-			if (this.thumbContainer != null) {
-				this.thumbContainer.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-				this.thumbContainer.removeChild(this.thumbSkin);
-				this.removeChild(this.thumbContainer);
-				this.thumbContainer = null;
-			} else {
-				this.thumbSkin.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-				this.removeChild(this.thumbSkin);
-			}
+		if (this.thumbSkin != null && this.thumbSkin.parent == this) {
+			this.removeChild(this.thumbSkin);
 		}
 		this.thumbSkin = value;
 		if (this.thumbSkin != null) {
@@ -93,18 +85,8 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 			} else {
 				this._thumbSkinMeasurements.save(this.thumbSkin);
 			}
-			if (!Std.is(this.thumbSkin, InteractiveObject)) {
-				// if the skin isn't interactive, we need to add it to something
-				// that is interactive
-				this.thumbContainer = new Sprite();
-				this.thumbContainer.addChild(this.thumbSkin);
-				this.addChild(this.thumbContainer);
-				this.thumbContainer.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-			} else {
-				// add it above the trackSkin and secondaryTrackSkin
-				this.addChild(this.thumbSkin);
-				this.thumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-			}
+			// add it above the trackSkin and secondaryTrackSkin
+			this.addChild(this.thumbSkin);
 		} else {
 			this._thumbSkinMeasurements = null;
 		}
@@ -286,6 +268,9 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		this.toggleEase = value;
 		return this.toggleEase;
 	}
+
+	private var _dragStartX:Float;
+	private var _ignoreClick:Bool = false;
 
 	private var _animateSelectionChange:Bool = false;
 
@@ -479,10 +464,50 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2;
 	}
 
-	private function thumbSkin_mouseDownHandler(event:MouseEvent):Void {}
+	private function toggleSwitch_mouseDownHandler(event:MouseEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+		this._dragStartX = this.mouseX;
+		this._ignoreClick = false;
+		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, toggleSwitch_stage_mouseMoveHandler, false, 0, true);
+		this.stage.addEventListener(MouseEvent.MOUSE_UP, toggleSwitch_stage_mouseUpHandler, false, 0, true);
+	}
 
 	private function toggleSwitch_clickHandler(event:MouseEvent):Void {
+		if (!this.enabled || this._ignoreClick) {
+			return;
+		}
 		this.setSelectionWithAnimation(!this.selected);
+	}
+
+	private function toggleSwitch_stage_mouseMoveHandler(event:MouseEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+
+		// uninitialized styles need some defaults
+		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
+		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
+
+		var halfDistance = (this.actualWidth - paddingLeft - paddingRight) / 2.0;
+		var dragOffset = this.mouseX - this._dragStartX;
+		var selected = this.selected;
+		if (dragOffset >= halfDistance) {
+			selected = true;
+		} else if (dragOffset <= -halfDistance) {
+			selected = false;
+		}
+		if (this.selected != selected) {
+			this._ignoreClick = true;
+			this._dragStartX = this.mouseX;
+			this.setSelectionWithAnimation(selected);
+		}
+	}
+
+	private function toggleSwitch_stage_mouseUpHandler(event:MouseEvent):Void {
+		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, toggleSwitch_stage_mouseMoveHandler);
+		this.stage.removeEventListener(MouseEvent.MOUSE_UP, toggleSwitch_stage_mouseUpHandler);
 	}
 
 	private function toggleTween_onUpdate():Void {
