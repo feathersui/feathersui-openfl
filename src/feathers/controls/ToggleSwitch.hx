@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import motion.easing.IEasing;
+import motion.easing.Quart;
+import motion.actuators.SimpleActuator;
+import motion.Actuate;
 import feathers.style.IStyleObject;
 import feathers.core.IValidating;
 import openfl.display.DisplayObject;
@@ -42,6 +46,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	}
 
 	private function set_selected(value:Bool):Bool {
+		this._animateSelectionChange = false;
 		if (this.selected == value) {
 			return this.selected;
 		}
@@ -244,6 +249,55 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		return this.paddingLeft;
 	}
 
+	private var _toggleTween:SimpleActuator<Dynamic, Dynamic> = null;
+
+	/**
+
+		@since 1.0.0
+	**/
+	@style
+	public var toggleDuration(default, set):Null<Float> = null;
+
+	private function set_toggleDuration(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("toggleDuration")) {
+			return this.toggleDuration;
+		}
+		if (this.toggleDuration == value) {
+			return this.toggleDuration;
+		}
+		this.toggleDuration = value;
+		return this.toggleDuration;
+	}
+
+	/**
+
+		@since 1.0.0
+	**/
+	@style
+	public var toggleEase(default, set):IEasing = null;
+
+	private function set_toggleEase(value:IEasing):IEasing {
+		if (!this.setStyle("toggleEase")) {
+			return this.toggleEase;
+		}
+		if (this.toggleEase == value) {
+			return this.toggleEase;
+		}
+		this.toggleEase = value;
+		return this.toggleEase;
+	}
+
+	private var _animateSelectionChange:Bool = false;
+
+	public function setSelectionWithAnimation(selected:Bool):Bool {
+		if (this.selected == selected) {
+			return this.selected;
+		}
+		this.selected = selected;
+		this._animateSelectionChange = true;
+		return this.selected;
+	}
+
 	override private function update():Void {
 		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
@@ -331,6 +385,12 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		if (Std.is(this.secondaryTrackSkin, IToggle)) {
 			cast(this.secondaryTrackSkin, IToggle).selected = this.selected;
 		}
+
+		// stop the tween, no matter what
+		if (this._toggleTween != null) {
+			Actuate.stop(this._toggleTween, null, false, false);
+			this._toggleTween = null;
+		}
 	}
 
 	private function refreshEnabled():Void {
@@ -356,19 +416,33 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 	private function layoutThumb():Void {
 		if (Std.is(this.thumbSkin, IValidating)) {
-			cast(this.thumbSkin, IValidating);
+			cast(this.thumbSkin, IValidating).validateNow();
 		}
 
 		// uninitialized styles need some defaults
 		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
 		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
 
+		var xPosition = paddingLeft;
 		if (this.selected) {
-			this.thumbSkin.x = this.actualWidth - this.thumbSkin.width - paddingRight;
-		} else {
-			this.thumbSkin.x = paddingLeft;
+			xPosition = this.actualWidth - this.thumbSkin.width - paddingRight;
+		}
+
+		if (this._animateSelectionChange) {
+			var toggleDuration = this.toggleDuration != null ? this.toggleDuration : 0.15;
+			var toggleEase = this.toggleEase != null ? this.toggleEase : Quart.easeOut;
+
+			var tween = Actuate.tween(this.thumbSkin, toggleDuration, {x: xPosition});
+			this._toggleTween = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+			this._toggleTween.ease(toggleEase);
+			this._toggleTween.onUpdate(this.toggleTween_onUpdate);
+			this._toggleTween.onComplete(this.toggleTween_onComplete);
+		} else if (this._toggleTween == null) {
+			this.thumbSkin.x = xPosition;
 		}
 		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2);
+
+		this._animateSelectionChange = false;
 	}
 
 	private function layoutSplitTrack():Void {
@@ -408,6 +482,14 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	private function thumbSkin_mouseDownHandler(event:MouseEvent):Void {}
 
 	private function toggleSwitch_clickHandler(event:MouseEvent):Void {
-		this.selected = !this.selected;
+		this.setSelectionWithAnimation(!this.selected);
+	}
+
+	private function toggleTween_onUpdate():Void {
+		this.layoutContent();
+	}
+
+	private function toggleTween_onComplete():Void {
+		this._toggleTween = null;
 	}
 }
