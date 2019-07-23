@@ -44,6 +44,7 @@ class PointerToState {
 		if (this.target != null) {
 			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 			this.target.removeEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
+			this.target.removeEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
 		}
 		this.target = value;
@@ -51,6 +52,7 @@ class PointerToState {
 			this.currentState = this.upState;
 			this.target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 			this.target.addEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
+			this.target.addEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
 			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
 		}
 		return this.target;
@@ -167,7 +169,6 @@ class PointerToState {
 			return;
 		}
 		this._hoverBeforeDown = true;
-		this.target.addEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
 		if (this._down) {
 			this.changeState(this.downState);
 		} else {
@@ -180,8 +181,8 @@ class PointerToState {
 			return;
 		}
 		this._hoverBeforeDown = false;
-		this.target.removeEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
-		if (this.keepDownStateOnRollOut && this.currentState == this.downState) {
+		if (this.keepDownStateOnRollOut && this._down) {
+			this.changeState(this.downState);
 			return;
 		}
 		this.changeState(this.upState);
