@@ -24,3 +24,7 @@ https://www.kickstarter.com/projects/feathersui/feathers-ui-cross-platform-compo
 See the [*components-explorer*](examples/components-explorer) example for details.
 
 More detailed instructions coming soon!
+
+## Help & Support
+
+* [Feathers UI Community](https://community.feathersui.com/)
