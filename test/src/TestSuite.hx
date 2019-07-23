@@ -1,5 +1,7 @@
 import massive.munit.TestSuite;
 
+import feathers.controls.BasicButtonTest;
+import feathers.controls.ToggleSwitchTest;
 import feathers.core.ComponentLifecycleTest;
 import feathers.core.InvalidationTest;
 import feathers.core.MinAndMaxDimensionsTest;
@@ -19,6 +21,8 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
+		add(feathers.controls.BasicButtonTest);
+		add(feathers.controls.ToggleSwitchTest);
 		add(feathers.core.ComponentLifecycleTest);
 		add(feathers.core.InvalidationTest);
 		add(feathers.core.MinAndMaxDimensionsTest);

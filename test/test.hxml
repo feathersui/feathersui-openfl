@@ -1,4 +1,5 @@
 -lib openfl
+-lib actuate
 -lib munit
 -cp ../src
 -cp src

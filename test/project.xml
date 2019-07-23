@@ -8,5 +8,6 @@
 	<source path="../src" />
 	
 	<haxelib name="openfl" />
+	<haxelib name="actuate" />
 	<haxelib name="munit" />
 </project>
