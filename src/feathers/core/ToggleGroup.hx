@@ -172,7 +172,9 @@ class ToggleGroup extends EventDispatcher {
 			throw new IllegalOperationError("Cannot add an item to a ToggleGroup more than once.");
 		}
 		this._items.push(item);
-		if (this.selectedIndex < 0 && this.requireSelection) {
+		if (item.selected) {
+			this.selectedItem = item;
+		} else if (this.selectedIndex < 0 && this.requireSelection) {
 			this.selectedItem = item;
 		} else {
 			item.selected = false;
