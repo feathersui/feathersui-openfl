@@ -124,14 +124,38 @@ class Measurements {
 	public function restore(target:DisplayObject):Void {
 		if (Std.is(target, IMeasureObject)) {
 			var measureTarget = cast(target, IMeasureObject);
-			measureTarget.explicitWidth = this.width;
-			measureTarget.explicitHeight = this.height;
-			measureTarget.explicitMinWidth = this.minWidth;
-			measureTarget.explicitMinHeight = this.minHeight;
+			if (this.width == null) {
+				measureTarget.resetWidth();
+			} else {
+				measureTarget.width = this.width;
+			}
+			if (this.height == null) {
+				measureTarget.resetHeight();
+			} else {
+				measureTarget.height = this.height;
+			}
+			if (this.minWidth == null) {
+				measureTarget.resetMinWidth();
+			} else {
+				measureTarget.minWidth = this.minWidth;
+			}
+			if (this.minHeight == null) {
+				measureTarget.resetMinHeight();
+			} else {
+				measureTarget.minHeight = this.minHeight;
+			}
 
 			// TODO: re-enable this code
-			// measureTarget.maxWidth = this.maxWidth;
-			// measureTarget.maxHeight = this.maxHeight;
+			/*if (this.maxWidth == null) {
+					measureTarget.resetMaxWidth();
+				} else {
+					measureTarget.maxWidth = this.maxWidth;
+				}
+				if (this.maxHeight == null) {
+					measureTarget.resetMaxHeight();
+				} else {
+					measureTarget.maxHeight = this.maxHeight;
+			}*/
 			return;
 		}
 		target.width = this.width;

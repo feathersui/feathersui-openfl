@@ -87,7 +87,12 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		#end
 	}
 
-	public var explicitWidth(default, set):Null<Float> = null;
+	@:isVar
+	public var explicitWidth(get, set):Null<Float> = null;
+
+	private function get_explicitWidth():Null<Float> {
+		return this.explicitWidth;
+	}
 
 	private function set_explicitWidth(value:Null<Float>):Null<Float> {
 		if (this.explicitWidth == value) {
@@ -101,7 +106,12 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitWidth;
 	}
 
-	public var explicitHeight(default, set):Null<Float> = null;
+	@:isVar
+	public var explicitHeight(get, set):Null<Float> = null;
+
+	private function get_explicitHeight():Null<Float> {
+		return this.explicitHeight;
+	}
 
 	private function set_explicitHeight(value:Null<Float>):Null<Float> {
 		if (this.explicitHeight == value) {
@@ -115,7 +125,12 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitHeight;
 	}
 
-	public var explicitMinWidth(default, set):Null<Float> = null;
+	@:isVar
+	public var explicitMinWidth(get, set):Null<Float> = null;
+
+	private function get_explicitMinWidth():Null<Float> {
+		return this.explicitMinWidth;
+	}
 
 	private function set_explicitMinWidth(value:Null<Float>):Null<Float> {
 		if (this.explicitMinWidth == value) {
@@ -141,7 +156,12 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitMinWidth;
 	}
 
-	public var explicitMinHeight(default, set):Null<Float> = null;
+	@:isVar
+	public var explicitMinHeight(get, set):Null<Float> = null;
+
+	private function get_explicitMinHeight():Null<Float> {
+		return this.explicitMinHeight;
+	}
 
 	private function set_explicitMinHeight(value:Null<Float>):Null<Float> {
 		if (this.explicitMinHeight == value) {
@@ -195,8 +215,20 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.scaledActualMinHeight;
 	}
 
-	public var explicitMaxWidth(default, null):Null<Float> = null;
-	public var explicitMaxHeight(default, null):Null<Float> = null;
+	@:isVar
+	public var explicitMaxWidth(get, null):Null<Float> = null;
+
+	private function get_explicitMaxWidth():Null<Float> {
+		return this.explicitMaxWidth;
+	}
+
+	@:isVar
+	public var explicitMaxHeight(get, null):Null<Float> = null;
+
+	private function get_explicitMaxHeight():Null<Float> {
+		return this.explicitMaxHeight;
+	}
+
 	public var maxWidth(get, set):Float;
 
 	private function get_maxWidth():Float {
@@ -223,6 +255,66 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		}
 		this.explicitMaxHeight = value;
 		return this.scaledActualMaxHeight;
+	}
+
+	/**
+		Resets the width so that it will be calculated automatically by
+		the component.
+
+		@since 1.0.0
+	**/
+	public function resetWidth():Void {
+		this.explicitMinWidth = null;
+	}
+
+	/**
+		Resets the height so that it will be calculated automatically by
+		the component.
+
+		@since 1.0.0
+	**/
+	public function resetHeight():Void {
+		this.explicitMinHeight = null;
+	}
+
+	/**
+		Resets the minimum width so that it will be calculated automatically by
+		the component.
+
+		@since 1.0.0
+	**/
+	public function resetMinWidth():Void {
+		this.explicitMinWidth = null;
+	}
+
+	/**
+		Resets the minimum height so that it will be calculated automatically by
+		the component.
+
+		@since 1.0.0
+	**/
+	public function resetMinHeight():Void {
+		this.explicitMinHeight = null;
+	}
+
+	/**
+		Resets the maximum width so that it will be calculated automatically by
+		the component.
+
+		@since 1.0.0
+	**/
+	public function resetMaxWidth():Void {
+		this.explicitMaxWidth = null;
+	}
+
+	/**
+		Resets the maximum height so that it will be calculated automatically by
+		the component.
+
+		@since 1.0.0
+	**/
+	public function resetMaxHeight():Void {
+		this.explicitMaxHeight = null;
 	}
 
 	/**

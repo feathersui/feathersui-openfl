@@ -24,7 +24,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitWidth(default, set):Null<Float>;
+	public var explicitWidth(get, never):Null<Float>;
 
 	/**
 		The object's explicit height value, or `null` if `height` is not set
@@ -35,7 +35,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitHeight(default, set):Null<Float>;
+	public var explicitHeight(get, never):Null<Float>;
 
 	/**
 		The object's explicit minimum width value, or `null` if `minWidth` is
@@ -45,7 +45,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitMinWidth(default, set):Null<Float>;
+	public var explicitMinWidth(get, never):Null<Float>;
 
 	/**
 		The object's explicit minimum height value, or `null` if `minHeight` is
@@ -55,7 +55,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitMinHeight(default, set):Null<Float>;
+	public var explicitMinHeight(get, never):Null<Float>;
 
 	/**
 		The object's explicit maximum width value, or `null` if `maxWidth` is
@@ -65,7 +65,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitMaxWidth(default, null):Null<Float>;
+	public var explicitMaxWidth(get, never):Null<Float>;
 
 	/**
 		The object's explicit maximum height value, or `null` if `maxHeight` is
@@ -75,7 +75,7 @@ interface IMeasureObject {
 
 		@since 1.0.0
 	**/
-	public var explicitMaxHeight(default, null):Null<Float>;
+	public var explicitMaxHeight(get, never):Null<Float>;
 
 	#if flash
 	public var width:Float;
@@ -84,6 +84,7 @@ interface IMeasureObject {
 	/**
 		The object's width value.
 
+		@see `resetWidth`
 		@see `height`
 
 		@since 1.0.0
@@ -98,6 +99,7 @@ interface IMeasureObject {
 	/**
 		The object's height value.
 
+		@see `resetHeight`
 		@see `width`
 
 		@since 1.0.0
@@ -108,6 +110,7 @@ interface IMeasureObject {
 	/**
 		The object's minimum width value.
 
+		@see `resetMinWidth`
 		@see `minHeight`
 
 		@since 1.0.0
@@ -117,6 +120,7 @@ interface IMeasureObject {
 	/**
 		The object's minimum height value.
 
+		@see `resetMinHeight`
 		@see `minWidth`
 
 		@since 1.0.0
@@ -126,6 +130,7 @@ interface IMeasureObject {
 	/**
 		The object's maximum width value.
 
+		@see `resetMaxWidth`
 		@see `maxHeight`
 
 		@since 1.0.0
@@ -135,9 +140,76 @@ interface IMeasureObject {
 	/**
 		The object's maximum height value.
 
+		@see `resetMaxHeight`
 		@see `maxWidth`
 
 		@since 1.0.0
 	**/
 	public var maxHeight(get, set):Float;
+
+	/**
+		Resets the width so that it will be calculated automatically by
+		the component.
+
+		@see `width`
+		@see `explicitWidth`
+
+		@since 1.0.0
+	**/
+	public function resetWidth():Void;
+
+	/**
+		Resets the height so that it will be calculated automatically by
+		the component.
+
+		@see `height`
+		@see `explicitHeight`
+
+		@since 1.0.0
+	**/
+	public function resetHeight():Void;
+
+	/**
+		Resets the minimum width so that it will be calculated automatically by
+		the component.
+
+		@see `minWidth`
+		@see `explicitMinWidth`
+
+		@since 1.0.0
+	**/
+	public function resetMinWidth():Void;
+
+	/**
+		Resets the minimum height so that it will be calculated automatically by
+		the component.
+
+		@see `minHeight`
+		@see `explicitMinHeight`
+
+		@since 1.0.0
+	**/
+	public function resetMinHeight():Void;
+
+	/**
+		Resets the minimum width so that it will be calculated automatically by
+		the component.
+
+		@see `maxWidth`
+		@see `explicitMaxWidth`
+
+		@since 1.0.0
+	**/
+	public function resetMaxWidth():Void;
+
+	/**
+		Resets the maximum height so that it will be calculated automatically by
+		the component.
+
+		@see `maxHeight`
+		@see `explicitMaxHeight`
+
+		@since 1.0.0
+	**/
+	public function resetMaxHeight():Void;
 }
