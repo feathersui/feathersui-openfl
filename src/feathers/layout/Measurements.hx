@@ -144,18 +144,16 @@ class Measurements {
 			} else {
 				measureTarget.minHeight = this.minHeight;
 			}
-
-			// TODO: re-enable this code
-			/*if (this.maxWidth == null) {
-					measureTarget.resetMaxWidth();
-				} else {
-					measureTarget.maxWidth = this.maxWidth;
-				}
-				if (this.maxHeight == null) {
-					measureTarget.resetMaxHeight();
-				} else {
-					measureTarget.maxHeight = this.maxHeight;
-			}*/
+			if (this.maxWidth == null) {
+				measureTarget.resetMaxWidth();
+			} else {
+				measureTarget.maxWidth = this.maxWidth;
+			}
+			if (this.maxHeight == null) {
+				measureTarget.resetMaxHeight();
+			} else {
+				measureTarget.maxHeight = this.maxHeight;
+			}
 			return;
 		}
 		target.width = this.width;
