@@ -2,18 +2,7 @@
 
 Automated tests created with [munit](https://github.com/massiveinteractive/MassiveUnit).
 
-## Run all tests
-
-To run all tests, use the following command:
-
-
-```sh
-haxelib run munit test
-```
-
-**Warning:** Tests for Adobe Flash Player may be skipped when running all tests because the plugin requires user activation in some web browsers.
-
-## Run JS tests only
+## Run JS tests
 
 To run JS tests, use the following command:
 
@@ -28,7 +17,7 @@ To choose a specific web browser, add the `-browser` option:
 haxelib run munit test -js -browser chrome
 ```
 
-## Run SWF tests only
+## Run SWF tests
 
 To run tests in Adobe Flash Player, use the following command:
 
@@ -42,11 +31,18 @@ haxelib run munit test -swf
 haxelib run munit test -swf -browser chrome
 ```
 
-## Run Neko tests
+## Run Windows/macOS tests
 
-Neko tests must be run manually at this time. Use the following command to build and run the tests.
+To run tests in Neko, use the following command:
 
 ```sh
-haxelib run openfl build neko
-./build/neko/bin/TestMain
+haxelib run openfl test cpp
+```
+
+## Run Neko tests
+
+To run tests in Neko, use the following command:
+
+```sh
+haxelib run openfl test neko
 ```
