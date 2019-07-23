@@ -21,7 +21,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var length(get, null):Int;
+	public var length(get, never):Int;
 
 	/**
 		Returns the item at the specified index in the collection.

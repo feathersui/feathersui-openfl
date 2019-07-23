@@ -22,14 +22,14 @@ interface IEffectContext extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	var target(default, null):Dynamic;
+	var target(default, never):Dynamic;
 
 	/**
 		The total running time of the effect, in seconds.
 
 		@since 1.0.0
 	**/
-	var duration(default, null):Float;
+	var duration(default, never):Float;
 
 	/**
 		The current position of the effect, in the range of `0.0` to `1.0`.

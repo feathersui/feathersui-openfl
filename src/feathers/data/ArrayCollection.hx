@@ -51,7 +51,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 
 		@since 1.0.0
 	**/
-	public var length(get, null):Int;
+	public var length(get, never):Int;
 
 	private function get_length():Int {
 		return this.array.length;
