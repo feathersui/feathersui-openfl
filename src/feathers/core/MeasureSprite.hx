@@ -216,16 +216,64 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	}
 
 	@:isVar
-	public var explicitMaxWidth(get, null):Null<Float> = null;
+	public var explicitMaxWidth(get, set):Null<Float> = null;
 
 	private function get_explicitMaxWidth():Null<Float> {
 		return this.explicitMaxWidth;
 	}
 
+	private function set_explicitMaxWidth(value:Null<Float>):Null<Float> {
+		if (this.explicitMaxWidth == value) {
+			return this.explicitMaxWidth;
+		}
+		var oldValue = this.explicitMaxWidth;
+		this.explicitMaxWidth = value;
+		if (value == null) {
+			this.actualMaxWidth = Math.POSITIVE_INFINITY;
+			this.scaledActualMaxWidth = Math.POSITIVE_INFINITY;
+			this.setInvalid(InvalidationFlag.SIZE);
+		} else {
+			// saveMeasurements() might change actualWidth, so keep the old
+			// value for the comparisons below
+			var actualWidth = this.actualWidth;
+			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, value, this.actualMaxHeight);
+			if (this.explicitWidth == null && (actualWidth > value || actualWidth == oldValue)) {
+				// only invalidate if this change might affect the width
+				// because everything else was handled in saveMeasurements()
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
+		}
+		return this.explicitMaxWidth;
+	}
+
 	@:isVar
-	public var explicitMaxHeight(get, null):Null<Float> = null;
+	public var explicitMaxHeight(get, set):Null<Float> = null;
 
 	private function get_explicitMaxHeight():Null<Float> {
+		return this.explicitMaxHeight;
+	}
+
+	private function set_explicitMaxHeight(value:Null<Float>):Null<Float> {
+		if (this.explicitMaxHeight == value) {
+			return this.explicitMaxHeight;
+		}
+		var oldValue = this.explicitMaxHeight;
+		this.explicitMaxHeight = value;
+		if (value == null) {
+			this.actualMaxHeight = Math.POSITIVE_INFINITY;
+			this.scaledActualMaxHeight = Math.POSITIVE_INFINITY;
+			this.setInvalid(InvalidationFlag.SIZE);
+		} else {
+			// saveMeasurements() might change actualWidth, so keep the old
+			// value for the comparisons below
+			var actualHeight = this.actualHeight;
+			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, value);
+			if (this.explicitHeight == null && (actualHeight > value || actualHeight == oldValue)) {
+				// only invalidate if this change might affect the width
+				// because everything else was handled in saveMeasurements()
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
+		}
 		return this.explicitMaxHeight;
 	}
 
