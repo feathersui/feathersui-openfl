@@ -27,4 +27,5 @@ More detailed instructions coming soon!
 
 ## Help & Support
 
-* [Feathers UI Community](https://community.feathersui.com/)
+* [Community Forum](https://community.feathersui.com/)
+* [Discord Chat](https://discord.feathersui.com/)
