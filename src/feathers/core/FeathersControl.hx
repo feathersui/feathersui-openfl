@@ -254,6 +254,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 				throw new IllegalOperationError("A component cannot validate until after it has finished initializing.");
 			}
 			this.initializeNow();
+			this.applyStyles();
 		}
 		super.validateNow();
 		if (!this.created) {
