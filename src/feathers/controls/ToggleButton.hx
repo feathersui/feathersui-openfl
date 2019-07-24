@@ -651,7 +651,7 @@ class ToggleButton extends BasicToggleButton {
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;
 		if (!hasText) {
-			this.textField.text = this.text;
+			this.textField.text = "";
 		}
 		this.textField.visible = hasText;
 	}
