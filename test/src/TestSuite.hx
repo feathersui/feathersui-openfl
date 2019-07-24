@@ -11,7 +11,9 @@ import feathers.core.ScaleTest;
 import feathers.layout.MeasurementsTest;
 import feathers.style.ClassVariantStyleProviderTest;
 import feathers.style.FunctionStyleProviderTest;
+import feathers.style.StyleProviderRestrictedStyleTest;
 import feathers.style.ThemeTest;
+import feathers.themes.DefaultThemeTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -34,6 +36,8 @@ class TestSuite extends massive.munit.TestSuite
 		add(feathers.layout.MeasurementsTest);
 		add(feathers.style.ClassVariantStyleProviderTest);
 		add(feathers.style.FunctionStyleProviderTest);
+		add(feathers.style.StyleProviderRestrictedStyleTest);
 		add(feathers.style.ThemeTest);
+		add(feathers.themes.DefaultThemeTest);
 	}
 }
