@@ -39,7 +39,8 @@ class MinAndMaxDimensionsTest {
 		this._control.minWidth = MIN_SIZE;
 		this._control.width = EXPLICIT_SIZE_SMALLER_THAN_MIN_SIZE;
 		this._control.validateNow();
-		Assert.areEqual(EXPLICIT_SIZE_SMALLER_THAN_MIN_SIZE, this._control.width, "The minWidth of a component must be ignored if the width is set explicitly");
+		Assert.areEqual(EXPLICIT_SIZE_SMALLER_THAN_MIN_SIZE, this._control.width,
+			"The minWidth of a component must be ignored if the width is set explicitly");
 	}
 
 	@Test
@@ -54,8 +55,8 @@ class MinAndMaxDimensionsTest {
 		this._control.minHeight = MIN_SIZE;
 		this._control.height = EXPLICIT_SIZE_SMALLER_THAN_MIN_SIZE;
 		this._control.validateNow();
-		Assert.areEqual(EXPLICIT_SIZE_SMALLER_THAN_MIN_SIZE, this._control
-			.height, "The minHeight of a component must be ignored if the height is set explicitly");
+		Assert.areEqual(EXPLICIT_SIZE_SMALLER_THAN_MIN_SIZE, this._control.height,
+			"The minHeight of a component must be ignored if the height is set explicitly");
 	}
 
 	@Test
@@ -97,8 +98,8 @@ class MinAndMaxDimensionsTest {
 		this._control.maxHeight = MAX_SIZE;
 		this._control.height = EXPLICIT_SIZE_LARGER_THAN_MAX_SIZE;
 		this._control.validateNow();
-		Assert.areEqual(EXPLICIT_SIZE_LARGER_THAN_MAX_SIZE, this._control
-			.height, "The maxHeight of a component must be ignored if the height is set explicitly");
+		Assert.areEqual(EXPLICIT_SIZE_LARGER_THAN_MAX_SIZE, this._control.height,
+			"The maxHeight of a component must be ignored if the height is set explicitly");
 	}
 
 	@Test
@@ -126,7 +127,8 @@ class MinAndMaxDimensionsTest {
 		this._control.addChild(child);
 		this._control.validateNow();
 		this._control.minWidth = MIN_SIZE;
-		Assert.isFalse(this._control.isInvalid(), "The component incorrectly invalidated when setting minWidth, but component actualWidth is currently larger");
+		Assert.isFalse(this._control.isInvalid(),
+			"The component incorrectly invalidated when setting minWidth, but component actualWidth is currently larger");
 	}
 
 	@Test
@@ -191,8 +193,8 @@ class MinAndMaxDimensionsTest {
 		this._control.addChild(child);
 		this._control.validateNow();
 		this._control.maxWidth = MAX_SIZE;
-		Assert.isFalse(this._control
-			.isInvalid(), "The component incorrectly invalidated when setting maxWidth, but component actualWidth is currently smaller");
+		Assert.isFalse(this._control.isInvalid(),
+			"The component incorrectly invalidated when setting maxWidth, but component actualWidth is currently smaller");
 	}
 
 	@Test
@@ -254,5 +256,29 @@ class MinAndMaxDimensionsTest {
 		this._control.validateNow();
 		this._control.minHeight = 183;
 		Assert.isTrue(this._control.isInvalid(), "The component failed to set invalidate flag after setting minHeight larger than actualHeight");
+	}
+
+	@Test
+	public function testInvalidAfterSettingMaxWidthSmallerThanActualWidth():Void {
+		var child = new Shape();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0, 0, 40, 50);
+		child.graphics.endFill();
+		this._control.addChild(child);
+		this._control.validateNow();
+		this._control.maxWidth = 30;
+		Assert.isTrue(this._control.isInvalid(), "The component failed to set invalidate flag after setting maxWidth smaller than actualWidth");
+	}
+
+	@Test
+	public function testInvalidAfterSettingMaxHeightSmallerThanActualHeight():Void {
+		var child = new Shape();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0, 0, 40, 50);
+		child.graphics.endFill();
+		this._control.addChild(child);
+		this._control.validateNow();
+		this._control.maxHeight = 45;
+		Assert.isTrue(this._control.isInvalid(), "The component failed to set invalidate flag after setting maxHeight smaller than actualHeight");
 	}
 }
