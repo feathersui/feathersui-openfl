@@ -28,13 +28,6 @@ interface IUIControl extends IEventDispatcher {
 	public var enabled(get, set):Bool;
 
 	/**
-		Returns the component's default style provider.
-
-		@since 1.0.0
-	**/
-	public var defaultStyleProvider(get, never):IStyleProvider;
-
-	/**
 		The class used as the context for styling the component. For instance,
 		a subclass of a component may have different styles than its superclass,
 		or it may inherit styles from its superclass.

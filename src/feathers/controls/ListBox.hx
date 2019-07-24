@@ -33,8 +33,6 @@ import feathers.style.FunctionStyleProvider;
 import feathers.utils.Scroller;
 
 class ListBox extends BaseScrollContainer {
-	private static var ListBox_defaultStyleProvider:FunctionStyleProvider = null;
-
 	public function new() {
 		super();
 		if (this.viewPort == null) {
@@ -48,17 +46,6 @@ class ListBox extends BaseScrollContainer {
 
 	override private function get_styleContext():Class<IStyleObject> {
 		return ListBox;
-	}
-
-	override private function get_defaultStyleProvider():IStyleProvider {
-		if (ListBox_defaultStyleProvider == null) {
-			ListBox_defaultStyleProvider = new FunctionStyleProvider(function(target:ListBox):Void {
-				if (target.layout == null) {
-					target.layout = new VerticalListFixedRowLayout();
-				}
-			});
-		}
-		return ListBox_defaultStyleProvider;
 	}
 
 	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;

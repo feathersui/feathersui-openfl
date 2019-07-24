@@ -1,3 +1,5 @@
+package feathers.themes;
+
 import feathers.controls.ToggleSwitch;
 import openfl.display.Sprite;
 import openfl.display.Shape;
@@ -36,15 +38,19 @@ import feathers.graphics.FillStyle;
 import feathers.style.ITheme;
 import feathers.controls.Check;
 import feathers.controls.Radio;
+import feathers.controls.Application;
 
+/**
+	@since 1.0.0
+**/
 class DefaultTheme implements ITheme {
-	public function new(stage:Stage, ?themeColor:Int, ?darkThemeColor:Int) {
-		this.stage = stage;
+	public function new(?themeColor:Int, ?darkThemeColor:Int) {
 		this.customThemeColor = themeColor;
 		this.customDarkThemeColor = darkThemeColor;
 		this.refreshColors();
 		this.refreshFonts();
 		this.styleProvider = new ClassVariantStyleProvider();
+		this.styleProvider.setStyleFunction(Application, null, this.setApplicationStyles);
 		this.styleProvider.setStyleFunction(Button, null, this.setButtonStyles);
 		this.styleProvider.setStyleFunction(Check, null, this.setCheckStyles);
 		this.styleProvider.setStyleFunction(Label, null, this.setLabelStyles);
@@ -62,7 +68,6 @@ class DefaultTheme implements ITheme {
 		this.styleProvider.setStyleFunction(ToggleSwitch, null, this.setToggleSwitchStyles);
 	}
 
-	private var stage:Stage;
 	private var styleProvider:ClassVariantStyleProvider;
 
 	public var darkMode(default, set):Bool = false;
@@ -81,7 +86,7 @@ class DefaultTheme implements ITheme {
 	private var customDarkThemeColor:Null<Int>;
 	private var themeColor:Int;
 	private var offsetThemeColor:Int;
-	private var stageColor:Int;
+	private var rootFillColor:Int;
 	private var controlFillColor1:Int;
 	private var controlFillColor2:Int;
 	private var controlDisabledFillColor:Int;
@@ -120,7 +125,7 @@ class DefaultTheme implements ITheme {
 				this.themeColor = 0x3f6fff;
 			}
 			this.offsetThemeColor = this.darken(this.themeColor, 0x282828);
-			this.stageColor = 0x383838;
+			this.rootFillColor = 0x383838;
 			this.controlFillColor1 = 0x5f5f5f;
 			this.controlFillColor2 = 0x4c4c4c;
 			this.controlDisabledFillColor = 0x101010;
@@ -143,7 +148,7 @@ class DefaultTheme implements ITheme {
 				this.themeColor = 0x3f6fff;
 			}
 			this.offsetThemeColor = this.lighten(this.themeColor, 0x1f1f1f);
-			this.stageColor = 0xf8f8f8;
+			this.rootFillColor = 0xf8f8f8;
 			this.controlFillColor1 = 0xffffff;
 			this.controlFillColor2 = 0xe8e8e8;
 			this.controlDisabledFillColor = 0xefefef;
@@ -158,9 +163,6 @@ class DefaultTheme implements ITheme {
 			this.textColor = 0x1f1f1f;
 			this.activeTextColor = 0xefefef;
 			this.disabledTextColor = 0x9f9f9f;
-		}
-		if (this.stage != null) {
-			this.stage.color = this.stageColor;
 		}
 	}
 
@@ -241,6 +243,10 @@ class DefaultTheme implements ITheme {
 			colors.reverse();
 		}
 		return FillStyle.Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
+	}
+
+	private function getRootFill():FillStyle {
+		return FillStyle.SolidColor(this.rootFillColor);
 	}
 
 	private function getContainerFill():FillStyle {
@@ -325,6 +331,14 @@ class DefaultTheme implements ITheme {
 			b1 = 0;
 		}
 		return (r1 << 16) + (g1 << 8) + b1;
+	}
+
+	private function setApplicationStyles(app:Application):Void {
+		if (app.backgroundSkin == null) {
+			var skin = new RectangleSkin();
+			skin.fill = getRootFill();
+			app.backgroundSkin = skin;
+		}
 	}
 
 	private function setButtonStyles(button:Button):Void {
@@ -463,6 +477,10 @@ class DefaultTheme implements ITheme {
 	}
 
 	private function setListBoxStyles(listBox:ListBox):Void {
+		if (listBox.layout == null) {
+			listBox.layout = new VerticalListFixedRowLayout();
+		}
+
 		if (listBox.backgroundSkin == null) {
 			var backgroundSkin = new RectangleSkin();
 			backgroundSkin.fill = getContainerFill();
@@ -470,9 +488,6 @@ class DefaultTheme implements ITheme {
 			backgroundSkin.width = 160.0;
 			backgroundSkin.height = 160.0;
 			listBox.backgroundSkin = backgroundSkin;
-		}
-		if (listBox.layout == null) {
-			listBox.layout = new VerticalListFixedRowLayout();
 		}
 	}
 

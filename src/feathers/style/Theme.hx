@@ -10,6 +10,7 @@ package feathers.style;
 
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
+import feathers.themes.DefaultTheme;
 
 /**
 	Register themes globally in a Feathers application. May apply to the entire
@@ -18,6 +19,25 @@ import openfl.display.DisplayObjectContainer;
 	@since 1.0.0
 **/
 class Theme {
+	private static var _fallbackTheme:ITheme = null;
+
+	public static var fallbackTheme(get, set):ITheme;
+
+	private static function get_fallbackTheme():ITheme {
+		if (_fallbackTheme == null) {
+			_fallbackTheme = new DefaultTheme();
+		}
+		return _fallbackTheme;
+	}
+
+	private static function set_fallbackTheme(value:ITheme):ITheme {
+		if (_fallbackTheme != null) {
+			_fallbackTheme.dispose();
+		}
+		_fallbackTheme = value;
+		return _fallbackTheme;
+	}
+
 	private static var primaryTheme:ITheme;
 	private static var roots:Array<DisplayObjectContainer> = null;
 	private static var rootToTheme:Map<DisplayObjectContainer, ITheme>;

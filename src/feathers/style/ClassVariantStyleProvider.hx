@@ -98,13 +98,13 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 
 		var styleContext:Class<IStyleObject> = null;
 		var variant:String = null;
-		var defaultStyleProvider:IStyleProvider = null;
 		if (Std.is(target, IUIControl)) {
 			var uiControl = cast(target, IUIControl);
 			styleContext = uiControl.styleContext;
 			variant = uiControl.variant;
-			defaultStyleProvider = uiControl.defaultStyleProvider;
-		} else {
+		}
+
+		if (styleContext == null) {
 			styleContext = Type.getClass(target);
 		}
 
@@ -117,10 +117,6 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 			callback = this.styleTargets.get(styleTarget);
 		}
 		if (callback == null) {
-			if (defaultStyleProvider != null) {
-				// fall back to the default, if available
-				defaultStyleProvider.applyStyles(target);
-			}
 			return;
 		}
 		callback(target);

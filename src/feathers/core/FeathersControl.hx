@@ -16,7 +16,6 @@ import feathers.layout.ILayoutObject;
 import feathers.style.IStyleObject;
 import feathers.style.IStyleProvider;
 import feathers.style.Theme;
-import haxe.rtti.Meta;
 
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed
@@ -115,6 +114,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private var _currentStyleProvider:IStyleProvider = null;
+	private var _fallbackStyleProvider:IStyleProvider = null;
 	private var _customStyleProvider:IStyleProvider = null;
 
 	/**
@@ -168,25 +168,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	public var styleContext(get, never):Class<IStyleObject>;
 
 	private function get_styleContext():Class<IStyleObject> {
-		return null;
-	}
-
-	/**
-		Returns the component's default style provider. The
-		`get_defaultStyleProvider` getter should be overridden by subclasses to
-		provide default styles for a component.
-
-		For best performance and lower memory, wait to create the default style
-		provider until the first time that `get_styleProvider` is called on a
-		component of that type. Store that style provider in a static variable
-		so that all future instances of the same component can re-use the same
-		style provider.
-
-		@since 1.0.0
-	**/
-	public var defaultStyleProvider(get, null):IStyleProvider = null;
-
-	private function get_defaultStyleProvider():IStyleProvider {
 		return null;
 	}
 
@@ -395,28 +376,52 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 				styleProvider = theme.getStyleProvider(this);
 			}
 		}
-		if (styleProvider == null) {
-			styleProvider = this.defaultStyleProvider;
-		}
 		if (this._currentStyleProvider != styleProvider) {
 			if (this._currentStyleProvider != null) {
 				this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
 				this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 			}
 			this._currentStyleProvider = styleProvider;
-			this._currentStyleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
-			this._currentStyleProvider.addEventListener(Event.CLEAR, styleProvider_clearHandler, false, 0, true);
+			if (this._currentStyleProvider != null) {
+				this._currentStyleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
+				this._currentStyleProvider.addEventListener(Event.CLEAR, styleProvider_clearHandler, false, 0, true);
+			}
 		}
-		if (this._currentStyleProvider == null) {
-			return;
-		}
-		if (this.styleContext != null) {
-			var oldApplyingStyles = this._applyingStyles;
-			this._applyingStyles = true;
-			this.clearStyles();
+
+		var oldApplyingStyles = this._applyingStyles;
+		// this flag ensures that the styles do not get restricted when the
+		// theme sets them
+		this._applyingStyles = true;
+
+		// if there was a different style provider previously, clear old styles
+		this.clearStyles();
+
+		// then, set the styles from the main style provider
+		if (this._currentStyleProvider != null) {
 			this._currentStyleProvider.applyStyles(this);
-			this._applyingStyles = oldApplyingStyles;
 		}
+
+		// finally, set the styles from the fallback style provider
+		styleProvider = null;
+		if (Theme.fallbackTheme != null) {
+			styleProvider = Theme.fallbackTheme.getStyleProvider(this);
+		}
+		if (this._fallbackStyleProvider != styleProvider) {
+			if (this._fallbackStyleProvider != null) {
+				this._fallbackStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+				this._fallbackStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
+			}
+			this._fallbackStyleProvider = styleProvider;
+			if (this._fallbackStyleProvider != null) {
+				this._fallbackStyleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
+				this._fallbackStyleProvider.addEventListener(Event.CLEAR, styleProvider_clearHandler, false, 0, true);
+			}
+		}
+		if (this._fallbackStyleProvider != null) {
+			this._fallbackStyleProvider.applyStyles(this);
+		}
+
+		this._applyingStyles = oldApplyingStyles;
 	}
 
 	private function clearStyles():Void {

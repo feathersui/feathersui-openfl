@@ -9,6 +9,7 @@ import feathers.controls.navigators.StackItem;
 import feathers.controls.navigators.StackNavigator;
 import feathers.motion.transitions.SlideTransitions;
 import feathers.controls.Application;
+import feathers.themes.DefaultTheme;
 import com.feathersui.components.ScreenID;
 import com.feathersui.components.screens.MainMenu;
 import com.feathersui.components.screens.ButtonScreen;
@@ -23,29 +24,19 @@ import com.feathersui.components.screens.ToggleSwitchScreen;
 
 class Main extends Application {
 	public function new() {
-		this.theme = new DefaultTheme(this.stage /*, 0xc0daed*/);
-		Theme.setTheme(this.theme);
-
 		super();
 	}
 
-	private var theme:DefaultTheme;
-
 	override private function initialize():Void {
-		// this.customScale = 4;
 		var navigator = new StackNavigator();
 		navigator.pushTransition = SlideTransitions.left();
 		navigator.popTransition = SlideTransitions.right();
 		this.addChild(navigator);
-		var mainMenu = StackItem.withFunction(function():DisplayObject {
-			var screen = new MainMenu();
-			screen.theme = theme;
-			return screen;
-		}, [Event.CHANGE => StackAction.NewAction(createPushAction)]);
+
+		var mainMenu = StackItem.withClass(MainMenu, [Event.CHANGE => StackAction.NewAction(createPushAction)]);
 		navigator.addItem(ScreenID.MAIN_MENU, mainMenu);
 
 		var button = StackItem.withClass(ButtonScreen, [Event.COMPLETE => StackAction.Pop()]);
-
 		navigator.addItem(ScreenID.BUTTON, button);
 
 		var check = StackItem.withClass(CheckScreen, [Event.COMPLETE => StackAction.Pop()]);

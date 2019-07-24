@@ -1,8 +1,9 @@
 package com.feathersui.components.screens;
 
+import feathers.style.Theme;
+import feathers.themes.DefaultTheme;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
-import feathers.layout.VerticalListFixedRowLayout;
 import com.feathersui.components.ScreenID;
 import feathers.data.ArrayCollection;
 import feathers.layout.AnchorLayout;
@@ -13,8 +14,6 @@ import feathers.controls.LayoutGroup;
 import feathers.layout.AnchorLayoutData;
 
 class MainMenu extends LayoutGroup {
-	public var theme:DefaultTheme;
-
 	private var header:LayoutGroup;
 	private var headerTitle:Label;
 	private var themeButton:Button;
@@ -40,7 +39,10 @@ class MainMenu extends LayoutGroup {
 		this.themeButton = new Button();
 		this.themeButton.text = "Theme";
 		this.themeButton.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):Void {
-			theme.darkMode = !theme.darkMode;
+			var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+			if (theme != null) {
+				theme.darkMode = !theme.darkMode;
+			}
 		});
 		this.themeButton.layoutData = new AnchorLayoutData(null, 10, null, null, null, 0);
 		this.header.addChild(this.themeButton);
