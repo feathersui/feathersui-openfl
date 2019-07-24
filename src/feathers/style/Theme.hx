@@ -71,12 +71,13 @@ class Theme {
 	}
 
 	/**
-		Returns the theme that applies to a specific object. Generally, this
-		function is only used internally by Feathers.
+		Returns the theme that applies to a specific object, or the primary
+		theme, if no object is specified. Generally, this function is only used
+		internally by Feathers.
 
 		@since 1.0.0
 	**/
-	public static function getTheme(object:IStyleObject):ITheme {
+	public static function getTheme(?object:IStyleObject):ITheme {
 		if (roots != null && Std.is(object, DisplayObject)) {
 			var displayObject = cast(object, DisplayObject);
 			for (root in roots) {
