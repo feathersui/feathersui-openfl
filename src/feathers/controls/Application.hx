@@ -12,8 +12,6 @@ import feathers.utils.MathUtil;
 	@since 1.0.0
 **/
 class Application extends LayoutGroup {
-	private static inline final IOS_TABLET_DENSITY_SCALE_FACTOR = 1.23484848484848;
-
 	public function new() {
 		super();
 
@@ -66,12 +64,12 @@ class Application extends LayoutGroup {
 		this.scaleX = scaleFactor;
 		this.scaleY = scaleFactor;
 		var needsToBeDivisibleByTwo = Math.floor(scaleFactor) != scaleFactor;
-		var appWidth:Float = Math.floor(this.stage.stageWidth / scaleFactor);
+		var appWidth:Float = Math.floor(this.stage.stageWidth);
 		if (needsToBeDivisibleByTwo) {
 			appWidth = MathUtil.roundDownToNearest(appWidth, 2);
 		}
 		this.width = appWidth;
-		var appHeight:Float = Math.floor(this.stage.stageHeight / scaleFactor);
+		var appHeight:Float = Math.floor(this.stage.stageHeight);
 		if (needsToBeDivisibleByTwo) {
 			appHeight = MathUtil.roundDownToNearest(appHeight, 2);
 		}
