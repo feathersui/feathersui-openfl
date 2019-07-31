@@ -16,7 +16,8 @@
 	"classPath": "src",
 	"contributors": ["bowlerhat"],
 	"dependencies": {
-		"openfl": ""
+		"openfl": "",
+		"actuate": ""
 	},
 	"releasenote": "Initial release"
 }
