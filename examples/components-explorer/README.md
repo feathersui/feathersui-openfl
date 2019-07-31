@@ -1,38 +1,34 @@
 # Feathers UI Components Explorer
 
-This example app demonstrates many of the UI components available in [Feathers UI for Haxe and OpenFL](https://feathersui.com/openfl/).
+This example app demonstrates many of the user interface components available in [Feathers UI](https://feathersui.com/).
 
 ## Live demo
 
-You may [run the *components-explorer* example](https://feathersui.com/openfl/demo/) in your web browser, hosted on the Feathers UI website.
+A build of the [*components-explorer* example](https://feathersui.com/openfl/demo/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
 
 ## Run locally
 
-This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://www.openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
+This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
 
 ### Prerequisites
 
-The following software must be installed before you can run this example:
-
-* [Haxe 4.0.0-rc.3](https://haxe.org/download/version/4.0.0-rc.3/)
-* [OpenFL 8.9](https://lib.haxe.org/p/openfl/)
+* [Install Haxe 4.0.0-rc.3 or newer](https://haxe.org/download/list/).
+* [Install Feathers UI from Haxelib](https://feathersui.com/learn/haxe-openfl/installation/)
 
 ### Command Line
 
 Run the [**openfl**](https://www.openfl.org/learn/haxelib/docs/tools/) tool in your terminal:
 
 ```sh
-openfl test html5
+haxelib run openfl test html5
 ```
 
 In addition to `html5`, other supported targets include `windows`, `mac`, `linux`, `android`, and `ios`. See [Lime Command Line Tools: Basic Commands](https://lime.software/docs/command-line-tools/basic-commands/) for complete details about the available commands.
 
-### [Visual Studio Code](https://code.visualstudio.com/)
+### Editors and IDEs
 
-> Be sure to install the [Haxe](https://marketplace.visualstudio.com/items?itemName=nadako.vshaxe) and [Lime](https://marketplace.visualstudio.com/items?itemName=openfl.lime-vscode-extension) extensions first.
+Check out the following tutorials for creating Feathers UI projects in popular development environments:
 
-1. From the **File** menu, choose **Open Folder…**
-1. Find the *components-explorer* folder that contains this *README* file and open it.
-1. From the **Debug** menu, choose **Add Configuration…**
-1. Choose **Lime** from the list of available debug environments.
-1. From the **Debug** menu, choose **Start Debugging**.
+- [HaxeDevelop](https://feathersui.com/learn/haxe-openfl/haxedevelop/)
+
+- [Visual Studio Code](https://feathersui.com/learn/haxe-openfl/visual-studio-code/)
