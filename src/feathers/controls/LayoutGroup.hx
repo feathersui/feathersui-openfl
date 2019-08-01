@@ -50,7 +50,7 @@ import openfl.geom.Point;
 	group.addChild( noButton );
 	```
 
-	@see [How to use the Feathers `LayoutGroup` component](../../../help/layout-group.html)
+	@see [Tutorial: How to use the LayoutGroup component](https://feathersui.com/learn/haxe-openfl/layout-group/)
 	@see `feathers.controls.ScrollContainer` is a layout container that supports scrolling
 
 	@since 1.0.0

@@ -18,7 +18,7 @@ import openfl.events.EventDispatcher;
 /**
 	An abstract base class for `IEffectContext` implementations.
 
-	@see [Effects and animation for Feathers components](../../../help/effects.html)
+	@see [Effects and animation for Feathers UI components](https://feathersui.com/learn/haxe-openfl/effects-and-animation/)
 
 	@since 1.0.0
 **/

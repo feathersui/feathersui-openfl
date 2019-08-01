@@ -22,7 +22,7 @@ import feathers.motion.effects.IEffectContext;
 	one or both views in transition. Animates the `alpha` property of a display
 	object to make it fade in or out.
 
-	@see [Transitions for Feathers navigators](../../../help/transitions.html)
+	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 
 	@since 1.0.0
 **/

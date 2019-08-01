@@ -50,7 +50,7 @@ import openfl.geom.Rectangle;
 	container.addChild( noButton );
 	```
 
-	@see [How to use the Feathers ScrollContainer component](../../../help/scroll-container.html)
+	@see [Tutorial: How to use the ScrollContainer component](https://feathersui.com/learn/haxe-openfl/scroll-container/)
 	@see `feathers.controls.LayoutGroup`
 
 	@since 1.0.0

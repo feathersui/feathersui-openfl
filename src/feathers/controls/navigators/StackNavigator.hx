@@ -29,8 +29,8 @@ import openfl.display.DisplayObject;
 	navigator.rootItemID = "mainMenu";
 	```
 
-	@see [How to use the Feathers `StackNavigator` component](../../../help/stack-navigator.html)
-	@see [Transitions for Feathers navigators](../../../help/transitions.html)
+	@see [Tutorial: How to use the StackNavigator component](https://feathersui.com/learn/haxe-openfl/stack-navigator/)
+	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 	@see `feathers.controls.navigators.StackItem`
 	@see `feathers.controls.navigators.TabNavigator`
 

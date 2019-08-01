@@ -32,7 +32,7 @@ import openfl.geom.Point;
 	```
 
 	@see `feathers.controls.VSlider`
-	@see [How to use the Feathers `HSlider` and `VSlider` components](../../../help/slider.html)
+	@see [Tutorial: How to use the HSlider and VSlider components](https://feathersui.com/learn/haxe-openfl/slider/)
 
 	@since 1.0.0
 **/

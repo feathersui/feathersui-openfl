@@ -35,7 +35,7 @@ import openfl.text.TextFormat;
 	this.addChild( label );
 	```
 
-	@see [How to use the Feathers `Label` component](../../../help/label.html)
+	@see [Tutorial: How to use the Label component](https://feathersui.com/learn/haxe-openfl/help/label/)
 
 	@since 1.0.0
 **/

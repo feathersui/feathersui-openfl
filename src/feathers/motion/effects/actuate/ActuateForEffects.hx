@@ -28,7 +28,7 @@ import motion.Actuate;
 	@see `feathers.motion.effects.actuate.ActuateEffectContext`
 	@see [Actuate on Haxelib](https://lib.haxe.org/p/actuate/)
 	@see [@jgranick/actuate on Github](https://github.com/jgranick/actuate)
-	@see [Effects and animation for Feathers components](../../../help/effects.html)
+	@see [Effects and animation for Feathers UI components](https://feathersui.com/learn/haxe-openfl/effects-and-animation/)
 
 	@since 1.0.0
 **/

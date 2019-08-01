@@ -24,7 +24,7 @@ import feathers.motion.effects.IEffectContext;
 	carousel. Animates the `x` or `y` property of the views. The views may move
 	up, down, right, or left.
 
-	@see [Transitions for Feathers navigators](../../../help/transitions.html)
+	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 
 	@since 1.0.0
 **/

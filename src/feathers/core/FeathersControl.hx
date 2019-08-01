@@ -20,7 +20,7 @@ import feathers.style.Theme;
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed
 	properties and sets up some basic template functions for component
-	lifecycle, like [`initialize()`](#initialize) and [`update()`](#upetad).
+	lifecycle, like [`initialize()`](#initialize) and [`update()`](#update).
 
 	This is a base class for Feathers components that isn't meant to be
 	instantiated directly. It should only be subclassed. For a simple
@@ -129,7 +129,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		new style provider.
 
 		@see #variant
-		@see [Introduction to Feathers themes](../../../help/themes.html)
+		@see [Introduction to Feathers UI themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/

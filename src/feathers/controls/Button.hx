@@ -31,7 +31,7 @@ import openfl.text.TextFormat;
 	this.addChild( button );
 	```
 
-	@see [How to use the Feathers Button component](../../../help/button.html)
+	@see [Tutorial: How to use the Button component](https://feathersui.com/learn/haxe-openfl/button/)
 
 	@since 1.0.0
 **/

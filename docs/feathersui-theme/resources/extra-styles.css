@@ -1,0 +1,10 @@
+body .navbar .brand {
+	background: url(./feathers-ui-icon-color.png) center left no-repeat;
+	background-size: 32px 32px;
+	padding-left: 40px;
+	margin: 0.5em 0;
+}
+
+.copyright {
+	text-align: left;
+}

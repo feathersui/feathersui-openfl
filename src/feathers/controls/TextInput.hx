@@ -42,8 +42,7 @@ import openfl.text.TextFormat;
 	this.addChild( input );
 	```
 
-	@see [How to use the Feathers TextInput component](../../../help/text-input.html)
-	@see [Introduction to Feathers text editors](../../../help/text-editors.html)
+	@see [Tutorial: How to use the TextInput component](https://feathersui.com/learn/haxe-openfl/text-input/)
 	@see `feathers.controls.AutoComplete`
 	@see `feathers.controls.TextArea`
 

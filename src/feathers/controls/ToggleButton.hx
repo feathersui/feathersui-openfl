@@ -36,7 +36,7 @@ import openfl.text.TextFormat;
 	this.addChild( button );
 	```
 
-	@see [How to use the Feathers `ToggleButton` component](../../../help/toggle-button.html)
+	@see [Tutorial: How to use the ToggleButton component](https://feathersui.com/learn/haxe-openfl/toggle-button/)
 
 	@since 1.0.0
 **/

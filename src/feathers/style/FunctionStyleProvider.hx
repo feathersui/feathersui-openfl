@@ -30,7 +30,7 @@ import openfl.events.EventDispatcher;
 	this.addChild(button);
 	```
 
-	@see [Skinning Feathers UI components](../../../help/skinning.html)
+	@see [Styling and skinning Feathers UI components](https://feathersui.com/learn/haxe-openfl/styling-and-skinning/)
 
 	@since 1.0.0
 **/
