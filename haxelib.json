@@ -16,7 +16,6 @@
 	"classPath": "src",
 	"contributors": ["bowlerhat"],
 	"dependencies": {
-		"lime": "",
 		"openfl": "",
 		"actuate": ""
 	},
