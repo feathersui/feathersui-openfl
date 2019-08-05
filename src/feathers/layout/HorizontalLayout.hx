@@ -143,16 +143,19 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			item.x = xPosition;
 			xPosition += item.width + this.gap;
 		}
-		xPosition += this.paddingRight - this.gap;
+		xPosition += this.paddingRight;
+		if (items.length > 0) {
+			xPosition -= this.gap;
+		}
 		var yPosition = maxHeight + this.paddingTop + this.paddingBottom;
 
 		var viewPortWidth = xPosition;
 		if (measurements.width != null) {
 			viewPortWidth = measurements.width;
 		} else {
-			if (viewPortWidth < measurements.minWidth) {
+			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
 				viewPortWidth = measurements.minWidth;
-			} else if (viewPortWidth > measurements.maxWidth) {
+			} else if (measurements.maxWidth != null && viewPortWidth > measurements.maxWidth) {
 				viewPortWidth = measurements.maxWidth;
 			}
 		}
@@ -160,9 +163,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		if (measurements.height != null) {
 			viewPortHeight = measurements.height;
 		} else {
-			if (viewPortHeight < measurements.minHeight) {
+			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
 				viewPortHeight = measurements.minHeight;
-			} else if (viewPortHeight > measurements.maxHeight) {
+			} else if (measurements.maxHeight != null && viewPortHeight > measurements.maxHeight) {
 				viewPortHeight = measurements.maxHeight;
 			}
 		}

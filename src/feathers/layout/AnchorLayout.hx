@@ -104,9 +104,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 		if (measurements.width != null) {
 			viewPortWidth = measurements.width;
 		} else {
-			if (viewPortWidth < measurements.minWidth) {
+			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
 				viewPortWidth = measurements.minWidth;
-			} else if (viewPortWidth > measurements.maxWidth) {
+			} else if (measurements.maxWidth != null && viewPortWidth > measurements.maxWidth) {
 				viewPortWidth = measurements.maxWidth;
 			}
 		}
@@ -114,9 +114,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 		if (measurements.height != null) {
 			viewPortHeight = measurements.height;
 		} else {
-			if (viewPortHeight < measurements.minHeight) {
+			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
 				viewPortHeight = measurements.minHeight;
-			} else if (viewPortHeight > measurements.maxHeight) {
+			} else if (measurements.maxHeight != null && viewPortHeight > measurements.maxHeight) {
 				viewPortHeight = measurements.maxHeight;
 			}
 		}
