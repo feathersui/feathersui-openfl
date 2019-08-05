@@ -1,0 +1,6 @@
+-cp src
+-lib lime
+-lib openfl
+-lib actuate
+--interp
+--no-output
