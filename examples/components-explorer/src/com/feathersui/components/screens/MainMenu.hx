@@ -15,8 +15,6 @@ import feathers.controls.Panel;
 import feathers.layout.AnchorLayoutData;
 
 class MainMenu extends Panel {
-	private var headerTitle:Label;
-	private var themeButton:Button;
 	private var listBox:ListBox;
 
 	override private function initialize():Void {
@@ -29,22 +27,22 @@ class MainMenu extends Panel {
 			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
 			header.layout = new AnchorLayout();
 
-			this.headerTitle = new Label();
-			this.headerTitle.variant = Label.VARIANT_HEADING;
-			this.headerTitle.text = "Feathers UI";
-			this.headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(this.headerTitle);
+			var headerTitle = new Label();
+			headerTitle.variant = Label.VARIANT_HEADING;
+			headerTitle.text = "Feathers UI";
+			headerTitle.layoutData = AnchorLayoutData.center();
+			header.addChild(headerTitle);
 
-			this.themeButton = new Button();
-			this.themeButton.text = "Theme";
-			this.themeButton.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):Void {
+			var themeButton = new Button();
+			themeButton.text = "Theme";
+			themeButton.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):Void {
 				var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
 				if (theme != null) {
 					theme.darkMode = !theme.darkMode;
 				}
 			});
-			this.themeButton.layoutData = new AnchorLayoutData(null, 10, null, null, null, 0);
-			header.addChild(this.themeButton);
+			themeButton.layoutData = new AnchorLayoutData(null, 10, null, null, null, 0);
+			header.addChild(themeButton);
 
 			return header;
 		};

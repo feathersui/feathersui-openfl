@@ -17,8 +17,6 @@ class RadioScreen extends Panel {
 	private var radio:Radio;
 	private var selectedRadio:Radio;
 	private var disabledRadio:Radio;
-	private var headerTitle:Label;
-	private var backButton:Button;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -34,17 +32,17 @@ class RadioScreen extends Panel {
 			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
 			header.layout = new AnchorLayout();
 
-			this.headerTitle = new Label();
-			this.headerTitle.variant = Label.VARIANT_HEADING;
-			this.headerTitle.text = "Radio";
-			this.headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(this.headerTitle);
+			var headerTitle = new Label();
+			headerTitle.variant = Label.VARIANT_HEADING;
+			headerTitle.text = "Radio";
+			headerTitle.layoutData = AnchorLayoutData.center();
+			header.addChild(headerTitle);
 
-			this.backButton = new Button();
-			this.backButton.text = "Back";
-			this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
-			header.addChild(this.backButton);
+			var backButton = new Button();
+			backButton.text = "Back";
+			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
+			backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			header.addChild(backButton);
 
 			return header;
 		};

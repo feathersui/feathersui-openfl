@@ -13,8 +13,6 @@ import feathers.controls.Panel;
 
 class ListBoxScreen extends Panel {
 	private var listBox:ListBox;
-	private var headerTitle:Label;
-	private var backButton:Button;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -26,17 +24,17 @@ class ListBoxScreen extends Panel {
 			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
 			header.layout = new AnchorLayout();
 
-			this.headerTitle = new Label();
-			this.headerTitle.variant = Label.VARIANT_HEADING;
-			this.headerTitle.text = "List Box";
-			this.headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(this.headerTitle);
+			var headerTitle = new Label();
+			headerTitle.variant = Label.VARIANT_HEADING;
+			headerTitle.text = "List Box";
+			headerTitle.layoutData = AnchorLayoutData.center();
+			header.addChild(headerTitle);
 
-			this.backButton = new Button();
-			this.backButton.text = "Back";
-			this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
-			header.addChild(this.backButton);
+			var backButton = new Button();
+			backButton.text = "Back";
+			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
+			backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			header.addChild(backButton);
 
 			return header;
 		};
