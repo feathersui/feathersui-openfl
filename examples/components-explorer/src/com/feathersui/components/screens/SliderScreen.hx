@@ -9,11 +9,11 @@ import feathers.controls.Button;
 import feathers.controls.HSlider;
 import feathers.controls.VSlider;
 import feathers.controls.LayoutGroup;
+import feathers.controls.Panel;
 
-class SliderScreen extends LayoutGroup {
+class SliderScreen extends Panel {
 	private var horizontalSlider:HSlider;
 	private var verticalSlider:VSlider;
-	private var header:LayoutGroup;
 	private var headerTitle:Label;
 	private var backButton:Button;
 
@@ -22,23 +22,25 @@ class SliderScreen extends LayoutGroup {
 
 		this.layout = new AnchorLayout();
 
-		this.header = new LayoutGroup();
-		this.header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		this.header.layout = new AnchorLayout();
-		this.header.layoutData = new AnchorLayoutData(0, 0, null, 0);
-		this.addChild(this.header);
+		this.headerFactory = function():LayoutGroup {
+			var header = new LayoutGroup();
+			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+			header.layout = new AnchorLayout();
 
-		this.headerTitle = new Label();
-		this.headerTitle.variant = Label.VARIANT_HEADING;
-		this.headerTitle.text = "Slider";
-		this.headerTitle.layoutData = AnchorLayoutData.center();
-		this.header.addChild(this.headerTitle);
+			this.headerTitle = new Label();
+			this.headerTitle.variant = Label.VARIANT_HEADING;
+			this.headerTitle.text = "Slider";
+			this.headerTitle.layoutData = AnchorLayoutData.center();
+			header.addChild(this.headerTitle);
 
-		this.backButton = new Button();
-		this.backButton.text = "Back";
-		this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-		this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
-		this.header.addChild(this.backButton);
+			this.backButton = new Button();
+			this.backButton.text = "Back";
+			this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
+			this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			header.addChild(this.backButton);
+
+			return header;
+		};
 
 		this.horizontalSlider = new HSlider();
 		this.horizontalSlider.minimum = 0.0;

@@ -11,44 +11,46 @@ import feathers.controls.ListBox;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
+import feathers.controls.Panel;
 import feathers.layout.AnchorLayoutData;
 
-class MainMenu extends LayoutGroup {
-	private var header:LayoutGroup;
+class MainMenu extends Panel {
 	private var headerTitle:Label;
 	private var themeButton:Button;
-	private var list:ListBox;
+	private var listBox:ListBox;
 
 	override private function initialize():Void {
 		super.initialize();
 
 		this.layout = new AnchorLayout();
 
-		this.header = new LayoutGroup();
-		this.header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		this.header.layout = new AnchorLayout();
-		this.header.layoutData = new AnchorLayoutData(0, 0, null, 0);
-		this.addChild(this.header);
+		this.headerFactory = function():LayoutGroup {
+			var header = new LayoutGroup();
+			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+			header.layout = new AnchorLayout();
 
-		this.headerTitle = new Label();
-		this.headerTitle.variant = Label.VARIANT_HEADING;
-		this.headerTitle.text = "Feathers UI";
-		this.headerTitle.layoutData = AnchorLayoutData.center();
-		this.header.addChild(this.headerTitle);
+			this.headerTitle = new Label();
+			this.headerTitle.variant = Label.VARIANT_HEADING;
+			this.headerTitle.text = "Feathers UI";
+			this.headerTitle.layoutData = AnchorLayoutData.center();
+			header.addChild(this.headerTitle);
 
-		this.themeButton = new Button();
-		this.themeButton.text = "Theme";
-		this.themeButton.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):Void {
-			var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-			if (theme != null) {
-				theme.darkMode = !theme.darkMode;
-			}
-		});
-		this.themeButton.layoutData = new AnchorLayoutData(null, 10, null, null, null, 0);
-		this.header.addChild(this.themeButton);
+			this.themeButton = new Button();
+			this.themeButton.text = "Theme";
+			this.themeButton.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):Void {
+				var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+				if (theme != null) {
+					theme.darkMode = !theme.darkMode;
+				}
+			});
+			this.themeButton.layoutData = new AnchorLayoutData(null, 10, null, null, null, 0);
+			header.addChild(this.themeButton);
 
-		this.list = new ListBox();
-		this.list.dataProvider = new ArrayCollection([
+			return header;
+		};
+
+		this.listBox = new ListBox();
+		this.listBox.dataProvider = new ArrayCollection([
 			{text: "Button", screenID: ScreenID.BUTTON},
 			{text: "Check", screenID: ScreenID.CHECK},
 			{text: "Label", screenID: ScreenID.LABEL},
@@ -59,9 +61,9 @@ class MainMenu extends LayoutGroup {
 			{text: "Text Input", screenID: ScreenID.TEXT_INPUT},
 			{text: "Toggle Switch", screenID: ScreenID.TOGGLE_SWITCH},
 		]);
-		this.list.layoutData = new AnchorLayoutData(44, 0, 0, 0);
-		this.list.addEventListener(Event.CHANGE, list_changeHandler);
-		this.addChild(this.list);
+		this.listBox.layoutData = AnchorLayoutData.fill();
+		this.listBox.addEventListener(Event.CHANGE, list_changeHandler);
+		this.addChild(this.listBox);
 	}
 
 	public var selectedScreenID(default, set):String = null;
@@ -76,7 +78,7 @@ class MainMenu extends LayoutGroup {
 	}
 
 	private function list_changeHandler(event:Event):Void {
-		var selectedItem = this.list.selectedItem;
+		var selectedItem = this.listBox.selectedItem;
 		this.selectedScreenID = selectedItem.screenID;
 	}
 }

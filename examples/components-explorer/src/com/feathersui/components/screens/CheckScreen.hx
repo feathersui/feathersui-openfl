@@ -1,5 +1,8 @@
 package com.feathersui.components.screens;
 
+import feathers.layout.VerticalAlign;
+import feathers.layout.HorizontalAlign;
+import feathers.layout.VerticalLayout;
 import feathers.controls.Check;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
@@ -8,38 +11,44 @@ import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
+import feathers.controls.Panel;
 
-class CheckScreen extends LayoutGroup {
+class CheckScreen extends Panel {
 	private var check:Check;
 	private var selectedCheck:Check;
 	private var disabledCheck:Check;
 	private var selectedDisabledCheck:Check;
-	private var header:LayoutGroup;
 	private var headerTitle:Label;
 	private var backButton:Button;
 
 	override private function initialize():Void {
 		super.initialize();
 
-		this.layout = new AnchorLayout();
+		var layout = new VerticalLayout();
+		layout.horizontalAlign = HorizontalAlign.CENTER;
+		layout.verticalAlign = VerticalAlign.MIDDLE;
+		layout.gap = 20;
+		this.layout = layout;
 
-		this.header = new LayoutGroup();
-		this.header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		this.header.layout = new AnchorLayout();
-		this.header.layoutData = new AnchorLayoutData(0, 0, null, 0);
-		this.addChild(this.header);
+		this.headerFactory = function():LayoutGroup {
+			var header = new LayoutGroup();
+			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+			header.layout = new AnchorLayout();
 
-		this.headerTitle = new Label();
-		this.headerTitle.variant = Label.VARIANT_HEADING;
-		this.headerTitle.text = "Check";
-		this.headerTitle.layoutData = AnchorLayoutData.center();
-		this.header.addChild(this.headerTitle);
+			this.headerTitle = new Label();
+			this.headerTitle.variant = Label.VARIANT_HEADING;
+			this.headerTitle.text = "Check";
+			this.headerTitle.layoutData = AnchorLayoutData.center();
+			header.addChild(this.headerTitle);
 
-		this.backButton = new Button();
-		this.backButton.text = "Back";
-		this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-		this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
-		this.header.addChild(this.backButton);
+			this.backButton = new Button();
+			this.backButton.text = "Back";
+			this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
+			this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			header.addChild(this.backButton);
+
+			return header;
+		};
 
 		this.check = new Check();
 		this.check.text = "Check";

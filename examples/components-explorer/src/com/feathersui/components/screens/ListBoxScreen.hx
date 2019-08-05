@@ -9,10 +9,10 @@ import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
+import feathers.controls.Panel;
 
-class ListBoxScreen extends LayoutGroup {
+class ListBoxScreen extends Panel {
 	private var listBox:ListBox;
-	private var header:LayoutGroup;
 	private var headerTitle:Label;
 	private var backButton:Button;
 
@@ -21,23 +21,25 @@ class ListBoxScreen extends LayoutGroup {
 
 		this.layout = new AnchorLayout();
 
-		this.header = new LayoutGroup();
-		this.header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		this.header.layout = new AnchorLayout();
-		this.header.layoutData = new AnchorLayoutData(0, 0, null, 0);
-		this.addChild(this.header);
+		this.headerFactory = function():LayoutGroup {
+			var header = new LayoutGroup();
+			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+			header.layout = new AnchorLayout();
 
-		this.headerTitle = new Label();
-		this.headerTitle.variant = Label.VARIANT_HEADING;
-		this.headerTitle.text = "List Box";
-		this.headerTitle.layoutData = AnchorLayoutData.center();
-		this.header.addChild(this.headerTitle);
+			this.headerTitle = new Label();
+			this.headerTitle.variant = Label.VARIANT_HEADING;
+			this.headerTitle.text = "List Box";
+			this.headerTitle.layoutData = AnchorLayoutData.center();
+			header.addChild(this.headerTitle);
 
-		this.backButton = new Button();
-		this.backButton.text = "Back";
-		this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-		this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
-		this.header.addChild(this.backButton);
+			this.backButton = new Button();
+			this.backButton.text = "Back";
+			this.backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
+			this.backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			header.addChild(this.backButton);
+
+			return header;
+		};
 
 		var items = [];
 		for (i in 0...30) {
@@ -46,7 +48,7 @@ class ListBoxScreen extends LayoutGroup {
 
 		this.listBox = new ListBox();
 		this.listBox.dataProvider = new ArrayCollection(items);
-		this.listBox.layoutData = new AnchorLayoutData(44, 0, 0, 0);
+		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.addChild(this.listBox);
 	}
 
