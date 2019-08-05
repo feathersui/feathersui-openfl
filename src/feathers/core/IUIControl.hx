@@ -9,15 +9,13 @@
 package feathers.core;
 
 import feathers.style.IStyleObject;
-import feathers.style.IStyleProvider;
-import openfl.events.IEventDispatcher;
 
 /**
 	A user interface control.
 
 	@since 1.0.0
 **/
-interface IUIControl extends IEventDispatcher {
+interface IUIControl extends IDisplayObject {
 	/**
 		Indicates whether the control should respond when a user attempts to
 		interact with it. The appearance of the control may also be affected by

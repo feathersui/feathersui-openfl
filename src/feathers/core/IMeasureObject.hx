@@ -14,7 +14,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
-interface IMeasureObject {
+interface IMeasureObject extends IDisplayObject {
 	/**
 		The object's explicit width value, or `null` if `width` is not set
 		explicitly.
@@ -76,36 +76,6 @@ interface IMeasureObject {
 		@since 1.0.0
 	**/
 	public var explicitMaxHeight(get, never):Null<Float>;
-
-	#if flash
-	public var width:Float;
-	#else
-
-	/**
-		The object's width value.
-
-		@see `resetWidth`
-		@see `height`
-
-		@since 1.0.0
-	**/
-	public var width(get, set):Float;
-	#end
-
-	#if flash
-	public var height:Float;
-	#else
-
-	/**
-		The object's height value.
-
-		@see `resetHeight`
-		@see `width`
-
-		@since 1.0.0
-	**/
-	public var height(get, set):Float;
-	#end
 
 	/**
 		The object's minimum width value.
