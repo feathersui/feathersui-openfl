@@ -1,12 +1,12 @@
 language: haxe
 
 haxe:
-- "development"
+- "4.0.0-rc.3"
 
 install:
-- haxelib git lime https://github.com/openfl/lime.git
+- haxelib install lime
 - haxelib run lime setup
-- haxelib git openfl https://github.com/openfl/openfl.git
+- haxelib install openfl
 - haxelib run openfl setup
 - haxelib install actuate
 - haxelib install dox
