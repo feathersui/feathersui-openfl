@@ -1,0 +1,11 @@
+language: haxe
+
+haxe:
+- "4.0.0.rc.3"
+
+install:
+- haxelib dev feathersui .
+
+script:
+- cd docs
+- haxe docs.hxml
