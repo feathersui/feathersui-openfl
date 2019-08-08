@@ -21,4 +21,4 @@ script:
 - cd docs
 - haxe docs.hxml
 - cd ../test
-- haxelib run munit test -js -browser chrome -kill-browser -result-exit-code
+- haxelib run munit test -js -browser google-chrome-stable -kill-browser -result-exit-code
