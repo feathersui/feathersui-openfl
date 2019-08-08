@@ -3,11 +3,11 @@ language: haxe
 haxe:
 - "4.0.0-rc.3"
 
-addons:
-  chrome: stable
-
 services:
   - xvfb
+
+addons:
+  firefox: "latest"
 
 install:
 - haxelib install lime --quiet
@@ -21,4 +21,4 @@ script:
 - cd docs
 - haxe docs.hxml
 - cd ../test
-- haxelib run munit test -js -browser google-chrome-stable -kill-browser -result-exit-code
+- haxelib run munit test -js -browser firefox -result-exit-code
