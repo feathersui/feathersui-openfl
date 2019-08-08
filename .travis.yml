@@ -4,13 +4,13 @@ haxe:
 - "4.0.0-rc.3"
 
 install:
-- haxelib install lime
-- haxelib run lime setup
-- haxelib install openfl
-- haxelib run openfl setup
-- haxelib install actuate
-- haxelib install dox
-- haxelib dev feathersui .
+- haxelib install lime --quiet
+- haxelib run lime setup --quiet
+- haxelib install openfl --quiet
+- haxelib run openfl setup --quiet
+- haxelib install actuate --quiet
+- haxelib install dox --quiet
+- haxelib dev feathersui . --quiet
 
 script:
 - cd docs
