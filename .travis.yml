@@ -3,24 +3,24 @@ language: haxe
 haxe:
 - "4.0.0-rc.3"
 
-env:
-- MOZ_HEADLESS=1
+#env:
+#- MOZ_HEADLESS=1
 
-addons:
-  firefox: "latest"
-  chrome: stable
+#addons:
+#  firefox: "latest"
+#  chrome: stable
 
 install:
 - haxelib install lime --quiet
 - haxelib install openfl --quiet
 - haxelib install actuate --quiet
 - haxelib install dox --quiet
-- haxelib install munit --quiet
+#- haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
 
 script:
 - cd docs
 - haxe docs.hxml
-- cd ../test
+#- cd ../test
 #- haxelib run munit test -js -browser firefox -result-exit-code
-- haxelib run munit test -js -result-exit-code -timeout 60 -browser "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
+#- haxelib run munit test -js -result-exit-code "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
