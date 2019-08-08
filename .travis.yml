@@ -8,6 +8,7 @@ install:
 - haxelib install openfl --quiet
 - haxelib install actuate --quiet
 - haxelib install dox --quiet
+- haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
 
 script:
