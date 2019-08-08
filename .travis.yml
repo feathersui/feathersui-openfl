@@ -4,6 +4,9 @@ haxe:
 - "development"
 
 install:
+- haxelib install lime
+- haxelib install openfl
+- haxelib install actuate
 - haxelib dev feathersui .
 
 script:
