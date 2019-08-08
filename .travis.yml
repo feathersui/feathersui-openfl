@@ -13,3 +13,5 @@ install:
 script:
 - cd docs
 - haxe docs.hxml
+- cd ../test
+- haxelib run munit test -js -result-exit-code
