@@ -21,7 +21,6 @@ install:
 script:
 - cd docs
 - haxe docs.hxml
-#- cd ../test
-#- haxelib run munit test -js -browser firefox -result-exit-code
 - cd ../test
-- haxelib run munit test -js -browser "google-chrome-stable --headless --disable-gpu" -kill-browser -result-exit-code
+#- haxelib run munit test -js -browser firefox -result-exit-code
+- haxelib run munit test -js -kill-browser -result-exit-code -browser "google-chrome-stable --headless --disable-gpu --no-sandbox"
