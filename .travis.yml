@@ -23,4 +23,4 @@ script:
 - haxe docs.hxml
 - cd ../test
 #- haxelib run munit test -js -browser firefox -result-exit-code
-- haxelib run munit test -js -kill-browser -result-exit-code -browser "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
+- haxelib run munit test -js -kill-browser -result-exit-code -timeout 300 -browser "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
