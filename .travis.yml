@@ -9,6 +9,7 @@ install:
 - haxelib install openfl
 - haxelib run openfl setup
 - haxelib install actuate
+- haxelib install dox
 - haxelib dev feathersui .
 
 script:
