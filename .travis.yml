@@ -4,9 +4,6 @@ haxe:
 - "4.0.0-rc.3"
 
 install:
-- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-    export DISPLAY=:99.0;
-  fi
 - haxelib install lime --quiet
 - haxelib install openfl --quiet
 - haxelib install actuate --quiet
