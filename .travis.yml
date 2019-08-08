@@ -5,9 +5,9 @@ haxe:
 
 install:
 - haxelib install lime --quiet
-- haxelib run lime setup --quiet
+- haxelib run lime setup --quiet --always
 - haxelib install openfl --quiet
-- haxelib run openfl setup --quiet
+- haxelib run openfl setup --quiet --always
 - haxelib install actuate --quiet
 - haxelib install dox --quiet
 - haxelib dev feathersui . --quiet
