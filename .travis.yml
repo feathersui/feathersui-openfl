@@ -1,7 +1,7 @@
 language: haxe
 
 haxe:
-- "4.0.0.rc.3"
+- "development"
 
 install:
 - haxelib dev feathersui .
