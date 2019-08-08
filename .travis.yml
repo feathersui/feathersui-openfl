@@ -14,11 +14,11 @@ install:
 - haxelib install openfl --quiet
 - haxelib install actuate --quiet
 - haxelib install dox --quiet
-- haxelib install munit --quiet
+#- haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
 
 script:
 - cd docs
 - haxe docs.hxml
-- cd ../test
-- haxelib run munit test -js -browser firefox -result-exit-code
+#- cd ../test
+#- haxelib run munit test -js -browser firefox -result-exit-code
