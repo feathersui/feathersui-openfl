@@ -8,6 +8,7 @@ env:
 
 addons:
   firefox: "latest"
+  chrome: stable
 
 install:
 - haxelib install lime --quiet
@@ -22,3 +23,5 @@ script:
 - haxe docs.hxml
 #- cd ../test
 #- haxelib run munit test -js -browser firefox -result-exit-code
+- cd ../test
+- haxelib run munit test -js -browser "google-chrome-stable --headless --disable-gpu" -kill-browser -result-exit-code
