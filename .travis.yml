@@ -3,6 +3,9 @@ language: haxe
 haxe:
 - "4.0.0-rc.3"
 
+addons:
+  chrome: stable
+
 services:
   - xvfb
 
@@ -18,4 +21,4 @@ script:
 - cd docs
 - haxe docs.hxml
 - cd ../test
-- haxelib run munit test -js -browser firefox -result-exit-code
+- haxelib run munit test -js -browser chrome -kill-browser -result-exit-code
