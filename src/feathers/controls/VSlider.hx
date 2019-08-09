@@ -53,23 +53,31 @@ class VSlider extends BaseSlider {
 
 		var normalized = this.normalizeValue();
 
-		var trackScrollableHeight = this.actualHeight - this.minimumPadding - this.maximumPadding;
+		// uninitialized styles need some defaults
+		var minimumPadding = this.minimumPadding != null ? this.minimumPadding : 0.0;
+		var maximumPadding = this.maximumPadding != null ? this.maximumPadding : 0.0;
+
+		var trackScrollableHeight = this.actualHeight - minimumPadding - maximumPadding;
 		if (this.thumbSkin != null) {
 			trackScrollableHeight -= this.thumbSkin.height;
 		}
 		// maximum is at the top, so we need to start the y position of
 		// the thumb from the maximum padding
-		return Math.round(this.maximumPadding + trackScrollableHeight * (1.0 - normalized));
+		return Math.round(maximumPadding + trackScrollableHeight * (1.0 - normalized));
 	}
 
 	override private function locationToValue(x:Float, y:Float):Float {
+		// uninitialized styles need some defaults
+		var minimumPadding = this.minimumPadding != null ? this.minimumPadding : 0.0;
+		var maximumPadding = this.maximumPadding != null ? this.maximumPadding : 0.0;
+
 		var percentage = 0.0;
 
-		var trackScrollableHeight = this.actualHeight - this.minimumPadding - this.maximumPadding;
+		var trackScrollableHeight = this.actualHeight - minimumPadding - maximumPadding;
 		if (this.thumbSkin != null) {
 			trackScrollableHeight -= this.thumbSkin.height;
 		}
-		var yOffset = y - this._pointerStartY - this.maximumPadding;
+		var yOffset = y - this._pointerStartY - maximumPadding;
 		var yPosition = Math.min(Math.max(0, this._thumbStartY + yOffset), trackScrollableHeight);
 		percentage = 1 - (yPosition / trackScrollableHeight);
 
@@ -135,6 +143,10 @@ class VSlider extends BaseSlider {
 	}
 
 	override private function saveThumbStart(location:Point):Void {
+		// uninitialized styles need some defaults
+		var minimumPadding = this.minimumPadding != null ? this.minimumPadding : 0.0;
+		var maximumPadding = this.maximumPadding != null ? this.maximumPadding : 0.0;
+
 		var trackHeightMinusThumbHeight = this.actualHeight;
 		var locationMinusHalfThumbHeight = location.y;
 		if (this.thumbSkin != null) {
@@ -142,7 +154,7 @@ class VSlider extends BaseSlider {
 			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2;
 		}
 		this._thumbStartX = location.x;
-		this._thumbStartY = Math.min(trackHeightMinusThumbHeight - this.maximumPadding, Math.max(this.minimumPadding, locationMinusHalfThumbHeight));
+		this._thumbStartY = Math.min(trackHeightMinusThumbHeight - maximumPadding, Math.max(minimumPadding, locationMinusHalfThumbHeight));
 	}
 
 	override private function layoutSplitTrack():Void {

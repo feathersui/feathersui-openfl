@@ -57,7 +57,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):String;
+	public var currentState(get, null):String = ToggleButtonState.UP;
 
 	private function get_currentState():String {
 		var result = this.currentState;

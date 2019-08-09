@@ -65,7 +65,7 @@ class TextInput extends FeathersControl implements IStateContext {
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):String;
+	public var currentState(get, null):String = TextInputState.ENABLED;
 
 	private function get_currentState():String {
 		return this.currentState;

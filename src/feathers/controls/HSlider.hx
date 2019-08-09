@@ -53,13 +53,17 @@ class HSlider extends BaseSlider {
 
 		var normalized = this.normalizeValue();
 
-		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
+		// uninitialized styles need some defaults
+		var minimumPadding = this.minimumPadding != null ? this.minimumPadding : 0.0;
+		var maximumPadding = this.maximumPadding != null ? this.maximumPadding : 0.0;
+
+		var trackScrollableWidth = this.actualWidth - minimumPadding - maximumPadding;
 		if (this.thumbSkin != null) {
 			trackScrollableWidth -= this.thumbSkin.width;
 		}
 		// minimum is at the left, so we need to start the x position of
 		// the thumb from the minimum padding
-		return Math.round(this.minimumPadding + (trackScrollableWidth * normalized));
+		return Math.round(minimumPadding + (trackScrollableWidth * normalized));
 	}
 
 	override private function autoSizeIfNeeded():Bool {
@@ -121,25 +125,33 @@ class HSlider extends BaseSlider {
 	}
 
 	override private function locationToValue(x:Float, y:Float):Float {
+		// uninitialized styles need some defaults
+		var minimumPadding = this.minimumPadding != null ? this.minimumPadding : 0.0;
+		var maximumPadding = this.maximumPadding != null ? this.maximumPadding : 0.0;
+
 		var percentage = 0.0;
-		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
+		var trackScrollableWidth = this.actualWidth - minimumPadding - maximumPadding;
 		if (this.thumbSkin != null) {
 			trackScrollableWidth -= this.thumbSkin.width;
 		}
-		var xOffset = x - this._pointerStartX - this.minimumPadding;
+		var xOffset = x - this._pointerStartX - minimumPadding;
 		var xPosition = Math.min(Math.max(0, this._thumbStartX + xOffset), trackScrollableWidth);
 		percentage = xPosition / trackScrollableWidth;
 		return this.minimum + percentage * (this.maximum - this.minimum);
 	}
 
 	override private function saveThumbStart(location:Point):Void {
+		// uninitialized styles need some defaults
+		var minimumPadding = this.minimumPadding != null ? this.minimumPadding : 0.0;
+		var maximumPadding = this.maximumPadding != null ? this.maximumPadding : 0.0;
+
 		var trackWidthMinusThumbWidth = this.actualWidth;
 		var locationMinusHalfThumbWidth = location.x;
 		if (this.thumbSkin != null) {
 			trackWidthMinusThumbWidth -= this.thumbSkin.width;
 			locationMinusHalfThumbWidth -= this.thumbSkin.width / 2;
 		}
-		this._thumbStartX = Math.min(trackWidthMinusThumbWidth - this.maximumPadding, Math.max(this.minimumPadding, locationMinusHalfThumbWidth));
+		this._thumbStartX = Math.min(trackWidthMinusThumbWidth - maximumPadding, Math.max(minimumPadding, locationMinusHalfThumbWidth));
 		this._thumbStartY = location.y;
 	}
 
