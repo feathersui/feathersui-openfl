@@ -80,22 +80,22 @@ class Scroller extends EventDispatcher {
 	// this value is precalculated. See the `decelerationRate` setter for the dynamic calculation.
 	private var _logDecelerationRate:Float = -0.0020020026706730793;
 	private var _fixedThrowDuration:Float = 2.996998998998728;
-	private var restoreMouseChildren:Bool;
+	private var restoreMouseChildren:Bool = false;
 	private var touchID:Int = -1;
-	private var startTouchX:Float;
-	private var startTouchY:Float;
-	private var startScrollX:Float;
-	private var startScrollY:Float;
+	private var startTouchX:Float = 0.0;
+	private var startTouchY:Float = 0.0;
+	private var startScrollX:Float = 0.0;
+	private var startScrollY:Float = 0.0;
 	private var savedScrollMoves:Array<Float> = [];
-	private var lastTouchMoveTime:Float;
+	private var lastTouchMoveTime:Float = 0.0;
 	private var animateScrollX:SimpleActuator<Dynamic, Dynamic> = null;
 	private var animateScrollY:SimpleActuator<Dynamic, Dynamic> = null;
 	private var animateScrollXEndRatio:Float = 1.0;
 	private var animateScrollYEndRatio:Float = 1.0;
-	private var targetScrollX:Float;
-	private var targetScrollY:Float;
-	private var snappingToEdge:Bool;
-	private var stage:Stage;
+	private var targetScrollX:Float = 0.0;
+	private var targetScrollY:Float = 0.0;
+	private var snappingToEdge:Bool = false;
+	private var stage:Stage = null;
 
 	public var target(default, set):InteractiveObject;
 
@@ -115,18 +115,10 @@ class Scroller extends EventDispatcher {
 	}
 
 	public function setDimensions(?visibleWidth:Null<Float>, ?visibleHeight:Null<Float>, ?contentWidth:Null<Float>, ?contentHeight:Null<Float>):Void {
-		if (visibleWidth != null) {
-			this.visibleWidth = visibleWidth;
-		}
-		if (visibleHeight != null) {
-			this.visibleHeight = visibleHeight;
-		}
-		if (contentWidth != null) {
-			this.contentWidth = contentWidth;
-		}
-		if (contentHeight != null) {
-			this.contentHeight = contentHeight;
-		}
+		this.visibleWidth = visibleWidth != null ? visibleWidth : 0.0;
+		this.visibleHeight = visibleHeight != null ? visibleHeight : 0.0;
+		this.contentWidth = contentWidth != null ? contentWidth : 0.0;
+		this.contentHeight = contentHeight != null ? contentHeight : 0.0;
 		this.calculateMinAndMax();
 	}
 
