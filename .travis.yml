@@ -19,10 +19,10 @@ install:
 - haxelib dev feathersui . --quiet
 
 script:
-- cd docs
+- cd $TRAVIS_BUILD_DIR/docs
 - haxe docs.hxml
-- cd examples/components-explorer
+- cd $TRAVIS_BUILD_DIR/examples/components-explorer
 - haxelib run openfl build html5
-#- cd ../test
+#- cd $TRAVIS_BUILD_DIR/test
 #- haxelib run munit test -js -browser firefox -result-exit-code
 #- haxelib run munit test -js -result-exit-code "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
