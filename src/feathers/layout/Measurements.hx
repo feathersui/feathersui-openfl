@@ -31,21 +31,31 @@ class Measurements {
 		if (target == null) {
 			return;
 		}
-		if (parent.explicitWidth == null) {
-			target.width = this.width;
-		} else {
-			target.width = parent.explicitWidth;
-		}
-		if (parent.explicitHeight == null) {
-			target.height = this.height;
-		} else {
-			target.height = parent.explicitHeight;
-		}
 		if (Std.is(target, IMeasureObject)) {
 			var measureTarget = cast(target, IMeasureObject);
 
+			var width = parent.explicitWidth;
+			if (width == null) {
+				width = this.width;
+			}
+			if (width == null) {
+				measureTarget.resetWidth();
+			} else {
+				measureTarget.width = width;
+			}
+
+			var height = parent.explicitHeight;
+			if (height == null) {
+				height = this.height;
+			}
+			if (height == null) {
+				measureTarget.resetHeight();
+			} else {
+				measureTarget.height = height;
+			}
+
 			var minWidth = parent.explicitMinWidth;
-			if (minWidth == null || measureTarget.explicitMinWidth > minWidth) {
+			if (minWidth == null || (measureTarget.explicitMinWidth != null && measureTarget.explicitMinWidth > minWidth)) {
 				minWidth = measureTarget.explicitMinWidth;
 			}
 			if (minWidth == null) {
@@ -54,7 +64,7 @@ class Measurements {
 			measureTarget.minWidth = minWidth;
 
 			var minHeight = parent.explicitMinHeight;
-			if (minHeight == null || measureTarget.explicitMinHeight > minHeight) {
+			if (minHeight == null || (measureTarget.explicitMinHeight != null && measureTarget.explicitMinHeight > minHeight)) {
 				minHeight = measureTarget.explicitMinHeight;
 			}
 			if (minHeight == null) {
@@ -63,7 +73,7 @@ class Measurements {
 			measureTarget.minHeight = minHeight;
 
 			var maxWidth = parent.explicitMaxWidth;
-			if (maxWidth == null || measureTarget.explicitMaxWidth < maxWidth) {
+			if (maxWidth == null || (measureTarget.explicitMaxWidth != null && measureTarget.explicitMaxWidth < maxWidth)) {
 				maxWidth = measureTarget.explicitMaxWidth;
 			}
 			if (maxWidth == null) {
@@ -72,13 +82,24 @@ class Measurements {
 			measureTarget.maxWidth = maxWidth;
 
 			var maxHeight = parent.explicitMaxHeight;
-			if (maxHeight == null || measureTarget.explicitMaxHeight < maxHeight) {
+			if (maxHeight == null || (measureTarget.explicitMaxHeight != null && measureTarget.explicitMaxHeight < maxHeight)) {
 				maxHeight = measureTarget.explicitMaxHeight;
 			}
 			if (maxHeight == null) {
 				maxHeight = Math.POSITIVE_INFINITY;
 			}
 			measureTarget.maxHeight = maxHeight;
+			return;
+		}
+		if (parent.explicitWidth != null) {
+			target.width = parent.explicitWidth;
+		} else if (this.width != null) {
+			target.width = this.width;
+		}
+		if (parent.explicitHeight != null) {
+			target.height = parent.explicitHeight;
+		} else if (this.height != null) {
+			target.height = this.height;
 		}
 	}
 
@@ -156,8 +177,12 @@ class Measurements {
 			}
 			return;
 		}
-		target.width = this.width;
-		target.height = this.height;
+		if (this.width != null) {
+			target.width = this.width;
+		}
+		if (this.height != null) {
+			target.height = this.height;
+		}
 	}
 
 	/**
