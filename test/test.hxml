@@ -17,3 +17,8 @@
 -swf-version 30
 -swf-header 960:640:60:ffffff
 -swf build/flash/bin/TestMain.swf
+
+--next
+
+-cmd haxelib run openfl build neko -nocffi
+-neko build/neko/obj/ApplicationMain.n
