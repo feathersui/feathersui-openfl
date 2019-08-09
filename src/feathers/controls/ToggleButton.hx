@@ -707,13 +707,21 @@ class ToggleButton extends BasicToggleButton {
 		var calculatedWidth = this.actualWidth;
 		var calculatedHeight = this.actualHeight;
 		if (forMeasurement) {
-			calculatedWidth = this.explicitWidth;
-			if (explicitWidth == null) {
-				calculatedWidth = this.explicitMaxWidth;
+			calculatedWidth = 0.0;
+			var explicitCalculatedWidth = this.explicitWidth;
+			if (explicitCalculatedWidth == null) {
+				explicitCalculatedWidth = this.explicitMaxWidth;
 			}
-			calculatedHeight = this.explicitHeight;
-			if (explicitHeight == null) {
-				calculatedHeight = this.explicitMaxHeight;
+			if (explicitCalculatedWidth != null) {
+				calculatedWidth = explicitCalculatedWidth;
+			}
+			calculatedHeight = 0.0;
+			var explicitCalculatedHeight = this.explicitHeight;
+			if (explicitCalculatedHeight == null) {
+				explicitCalculatedHeight = this.explicitMaxHeight;
+			}
+			if (explicitCalculatedHeight != null) {
+				calculatedHeight = explicitCalculatedHeight;
 			}
 		}
 		calculatedWidth -= (paddingLeft + paddingRight);
