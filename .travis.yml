@@ -23,6 +23,7 @@ script:
 - haxe docs.hxml
 - cd $TRAVIS_BUILD_DIR/examples/components-explorer
 - haxelib run openfl build html5
+- haxelib run openfl build flash
 #- cd $TRAVIS_BUILD_DIR/test
 #- haxelib run munit test -js -browser firefox -result-exit-code
 #- haxelib run munit test -js -result-exit-code "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
