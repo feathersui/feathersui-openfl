@@ -3,13 +3,11 @@ language: haxe
 haxe:
 - "4.0.0-rc.3"
 
+services:
+- xvfb
+
 env:
 - NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin
-#- MOZ_HEADLESS=1
-
-#addons:
-#  firefox: "latest"
-#  chrome: stable
 
 install:
 - haxelib install lime --quiet
@@ -33,5 +31,3 @@ script:
 # run tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
-#- haxelib run munit test -js -browser firefox -result-exit-code
-#- haxelib run munit test -js -result-exit-code "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
