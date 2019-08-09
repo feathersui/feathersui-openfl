@@ -20,5 +20,5 @@
 
 --next
 
--cmd haxelib run openfl build neko -nocffi
+-cmd haxelib run openfl build neko
 -neko build/neko/obj/ApplicationMain.n
