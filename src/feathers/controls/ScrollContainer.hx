@@ -90,7 +90,8 @@ class ScrollContainer extends BaseScrollContainer {
 		return this.layout;
 	}
 
-	override private function get_numChildren():Int {
+	@:getter(numChildren)
+	#if !flash override #end private function get_numChildren():Int {
 		if (!this._displayListBypassEnabled) {
 			return super.numChildren;
 		}
