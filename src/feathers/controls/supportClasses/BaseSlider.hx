@@ -62,7 +62,7 @@ class BaseSlider extends FeathersControl {
 		}
 		this.value = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		if (this.liveDragging && !this._dragging) {
+		if (this.liveDragging || !this._dragging) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 		return this.value;
