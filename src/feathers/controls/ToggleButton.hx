@@ -448,7 +448,7 @@ class ToggleButton extends BasicToggleButton {
 	/**
 		@since 1.0.0
 	**/
-	public function getSkinForIcon(state:ToggleButtonState):DisplayObject {
+	public function getIconForState(state:ToggleButtonState):DisplayObject {
 		return this._stateToIcon.get(state);
 	}
 
@@ -499,9 +499,7 @@ class ToggleButton extends BasicToggleButton {
 
 		super.update();
 
-		if (stylesInvalid || stateInvalid || dataInvalid || sizeInvalid) {
-			this.layoutContent();
-		}
+		this.layoutContent();
 	}
 
 	override private function autoSizeIfNeeded():Bool {
@@ -590,7 +588,18 @@ class ToggleButton extends BasicToggleButton {
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = this._textMeasuredWidth + paddingLeft + paddingRight;
+			if (hasText) {
+				newMinWidth = this._textMeasuredWidth;
+			} else {
+				newMinWidth = 0.0;
+			}
+			if (this._currentIcon != null && (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT)) {
+				if (hasText) {
+					newMinWidth += adjustedGap;
+				}
+				newMinWidth += this._currentIcon.width;
+			}
+			newMinWidth += paddingLeft + paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -600,7 +609,18 @@ class ToggleButton extends BasicToggleButton {
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this._textMeasuredHeight + paddingTop + paddingBottom;
+			if (hasText) {
+				newMinHeight = this._textMeasuredHeight;
+			} else {
+				newMinHeight = 0.0;
+			}
+			if (this._currentIcon != null && (this.iconPosition == RelativePosition.TOP || this.iconPosition == RelativePosition.BOTTOM)) {
+				if (hasText) {
+					newMinHeight += adjustedGap;
+				}
+				newMinHeight += this._currentIcon.height;
+			}
+			newMinHeight += paddingTop + paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -747,7 +767,7 @@ class ToggleButton extends BasicToggleButton {
 		if (calculatedWidth > this._textMeasuredWidth) {
 			calculatedWidth = this._textMeasuredWidth;
 		}
-		if (calculatedHeight > this._textMeasuredWidth) {
+		if (calculatedHeight > this._textMeasuredHeight) {
 			calculatedHeight = this._textMeasuredHeight;
 		}
 		this.textField.width = calculatedWidth;
@@ -760,22 +780,24 @@ class ToggleButton extends BasicToggleButton {
 		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
 		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
 		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
+		var horizontalAlign = this.horizontalAlign != null ? this.horizontalAlign : HorizontalAlign.CENTER;
+		var verticalAlign = this.verticalAlign != null ? this.verticalAlign : VerticalAlign.MIDDLE;
 
-		if (this.horizontalAlign == HorizontalAlign.LEFT) {
+		if (horizontalAlign == HorizontalAlign.LEFT) {
 			displayObject.x = paddingLeft;
-		} else if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+		} else if (horizontalAlign == HorizontalAlign.RIGHT) {
 			displayObject.x = this.actualWidth - paddingRight - displayObject.width;
 		} else // center
 		{
-			displayObject.x = paddingLeft + Math.round((this.actualWidth - paddingLeft - paddingRight - displayObject.width) / 2);
+			displayObject.x = paddingLeft + (this.actualWidth - paddingLeft - paddingRight - displayObject.width) / 2.0;
 		}
-		if (this.verticalAlign == VerticalAlign.TOP) {
+		if (verticalAlign == VerticalAlign.TOP) {
 			displayObject.y = paddingTop;
-		} else if (this.verticalAlign == VerticalAlign.BOTTOM) {
+		} else if (verticalAlign == VerticalAlign.BOTTOM) {
 			displayObject.y = this.actualHeight - paddingBottom - displayObject.height;
 		} else // middle
 		{
-			displayObject.y = paddingTop + Math.round((this.actualHeight - paddingTop - paddingBottom - displayObject.height) / 2);
+			displayObject.y = paddingTop + (this.actualHeight - paddingTop - paddingBottom - displayObject.height) / 2.0;
 		}
 	}
 
@@ -786,16 +808,18 @@ class ToggleButton extends BasicToggleButton {
 		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
 		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
 		var gap = this.gap != null ? this.gap : 0.0;
+		var horizontalAlign = this.horizontalAlign != null ? this.horizontalAlign : HorizontalAlign.CENTER;
+		var verticalAlign = this.verticalAlign != null ? this.verticalAlign : VerticalAlign.MIDDLE;
 
 		if (this.iconPosition == RelativePosition.TOP) {
 			if (gap == Math.POSITIVE_INFINITY) {
 				this._currentIcon.y = paddingTop;
 				this.textField.y = this.actualHeight - paddingBottom - this.textField.height;
 			} else {
-				if (this.verticalAlign == VerticalAlign.TOP) {
+				if (verticalAlign == VerticalAlign.TOP) {
 					this.textField.y += this._currentIcon.height + gap;
-				} else if (this.verticalAlign == VerticalAlign.MIDDLE) {
-					this.textField.y += Math.round((this._currentIcon.height + gap) / 2);
+				} else if (verticalAlign == VerticalAlign.MIDDLE) {
+					this.textField.y += (this._currentIcon.height + gap) / 2.0;
 				}
 				this._currentIcon.y = this.textField.y - this._currentIcon.height - gap;
 			}
@@ -804,10 +828,10 @@ class ToggleButton extends BasicToggleButton {
 				this.textField.x = paddingLeft;
 				this._currentIcon.x = this.actualWidth - paddingRight - this._currentIcon.width;
 			} else {
-				if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+				if (horizontalAlign == HorizontalAlign.RIGHT) {
 					this.textField.x -= this._currentIcon.width + gap;
-				} else if (this.horizontalAlign == HorizontalAlign.CENTER) {
-					this.textField.x -= Math.round((this._currentIcon.width + gap) / 2);
+				} else if (horizontalAlign == HorizontalAlign.CENTER) {
+					this.textField.x -= (this._currentIcon.width + gap) / 2.0;
 				}
 				this._currentIcon.x = this.textField.x + this.textField.width + gap;
 			}
@@ -816,10 +840,10 @@ class ToggleButton extends BasicToggleButton {
 				this.textField.y = paddingTop;
 				this._currentIcon.y = this.actualHeight - paddingBottom - this._currentIcon.height;
 			} else {
-				if (this.verticalAlign == VerticalAlign.BOTTOM) {
+				if (verticalAlign == VerticalAlign.BOTTOM) {
 					this.textField.y -= this._currentIcon.height + gap;
-				} else if (this.verticalAlign == VerticalAlign.MIDDLE) {
-					this.textField.y -= Math.round((this._currentIcon.height + gap) / 2);
+				} else if (verticalAlign == VerticalAlign.MIDDLE) {
+					this.textField.y -= (this._currentIcon.height + gap) / 2.0;
 				}
 				this._currentIcon.y = this.textField.y + this.textField.height + gap;
 			}
@@ -828,31 +852,31 @@ class ToggleButton extends BasicToggleButton {
 				this._currentIcon.x = paddingLeft;
 				this.textField.x = this.actualWidth - paddingRight - this.textField.width;
 			} else {
-				if (this.horizontalAlign == HorizontalAlign.LEFT) {
+				if (horizontalAlign == HorizontalAlign.LEFT) {
 					this.textField.x += gap + this._currentIcon.width;
-				} else if (this.horizontalAlign == HorizontalAlign.CENTER) {
-					this.textField.x += Math.round((gap + this._currentIcon.width) / 2);
+				} else if (horizontalAlign == HorizontalAlign.CENTER) {
+					this.textField.x += (gap + this._currentIcon.width) / 2.0;
 				}
 				this._currentIcon.x = this.textField.x - gap - this._currentIcon.width;
 			}
 		}
 
 		if (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT) {
-			if (this.verticalAlign == VerticalAlign.TOP) {
+			if (verticalAlign == VerticalAlign.TOP) {
 				this._currentIcon.y = paddingTop;
-			} else if (this.verticalAlign == VerticalAlign.BOTTOM) {
+			} else if (verticalAlign == VerticalAlign.BOTTOM) {
 				this._currentIcon.y = this.actualHeight - paddingBottom - this._currentIcon.height;
 			} else {
-				this._currentIcon.y = paddingTop + Math.round((this.actualHeight - paddingTop - paddingBottom - this._currentIcon.height) / 2);
+				this._currentIcon.y = paddingTop + (this.actualHeight - paddingTop - paddingBottom - this._currentIcon.height) / 2.0;
 			}
 		} else // top or bottom
 		{
-			if (this.horizontalAlign == HorizontalAlign.LEFT) {
+			if (horizontalAlign == HorizontalAlign.LEFT) {
 				this._currentIcon.x = paddingLeft;
-			} else if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+			} else if (horizontalAlign == HorizontalAlign.RIGHT) {
 				this._currentIcon.x = this.actualWidth - paddingRight - this._currentIcon.width;
 			} else {
-				this._currentIcon.x = paddingLeft + Math.round((this.actualWidth - paddingLeft - paddingRight - this._currentIcon.width) / 2);
+				this._currentIcon.x = paddingLeft + (this.actualWidth - paddingLeft - paddingRight - this._currentIcon.width) / 2.0;
 			}
 		}
 	}
