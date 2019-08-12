@@ -12,6 +12,7 @@ import feathers.controls.Application;
 import feathers.themes.DefaultTheme;
 import com.feathersui.components.ScreenID;
 import com.feathersui.components.screens.MainMenu;
+import com.feathersui.components.screens.AssetLoaderScreen;
 import com.feathersui.components.screens.ButtonScreen;
 import com.feathersui.components.screens.CheckScreen;
 import com.feathersui.components.screens.LabelScreen;
@@ -35,6 +36,9 @@ class Main extends Application {
 
 		var mainMenu = StackItem.withClass(MainMenu, [Event.CHANGE => StackAction.NewAction(createPushAction)]);
 		navigator.addItem(ScreenID.MAIN_MENU, mainMenu);
+
+		var assetLoader = StackItem.withClass(AssetLoaderScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.ASSET_LOADER, assetLoader);
 
 		var button = StackItem.withClass(ButtonScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.BUTTON, button);
