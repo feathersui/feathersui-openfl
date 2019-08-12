@@ -1,5 +1,7 @@
 package com.feathersui.components.screens;
 
+import openfl.Assets;
+import openfl.display.Bitmap;
 import feathers.layout.VerticalAlign;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.VerticalLayout;
@@ -15,6 +17,7 @@ import feathers.controls.ToggleButton;
 
 class ButtonScreen extends Panel {
 	private var button:Button;
+	private var iconButton:Button;
 	private var toggleButton:ToggleButton;
 
 	override private function initialize():Void {
@@ -48,6 +51,11 @@ class ButtonScreen extends Panel {
 
 		this.button = new Button();
 		this.button.text = "Push Button";
+		this.addChild(this.button);
+
+		this.button = new Button();
+		this.button.text = "Button with Icon";
+		this.button.icon = new Bitmap(Assets.getBitmapData("favicon"));
 		this.addChild(this.button);
 
 		this.toggleButton = new ToggleButton();
