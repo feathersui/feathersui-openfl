@@ -170,34 +170,34 @@ class AssetLoader extends FeathersControl {
 	}
 
 	private function layoutChildren():Void {
-		if (this.loader == null) {
+		if (this.content == null) {
 			return;
 		}
 
 		switch (this.scaleMode) {
 			case StageScaleMode.EXACT_FIT:
-				this.loader.x = 0.0;
-				this.loader.y = 0.0;
-				this.loader.width = this.actualWidth;
-				this.loader.height = this.actualHeight;
+				this.content.x = 0.0;
+				this.content.y = 0.0;
+				this.content.width = this.actualWidth;
+				this.content.height = this.actualHeight;
 			case StageScaleMode.NO_SCALE:
-				this.loader.x = 0.0;
-				this.loader.y = 0.0;
-				this._contentMeasurements.restore(this.loader);
+				this.content.x = 0.0;
+				this.content.y = 0.0;
+				this._contentMeasurements.restore(this.content);
 			case StageScaleMode.NO_BORDER:
 				var into = new Rectangle(0.0, 0.0, this.actualWidth, this.actualHeight);
 				ScaleUtil.fillRectangle(this._contentMeasurements.width, this._contentMeasurements.height, into, into);
-				this.loader.x = into.x;
-				this.loader.y = into.y;
-				this.loader.width = into.width;
-				this.loader.height = into.height;
+				this.content.x = into.x;
+				this.content.y = into.y;
+				this.content.width = into.width;
+				this.content.height = into.height;
 			default: // showAll
 				var into = new Rectangle(0.0, 0.0, this.actualWidth, this.actualHeight);
 				ScaleUtil.fitRectangle(this._contentMeasurements.width, this._contentMeasurements.height, into, into);
-				this.loader.x = into.x;
-				this.loader.y = into.y;
-				this.loader.width = into.width;
-				this.loader.height = into.height;
+				this.content.x = into.x;
+				this.content.y = into.y;
+				this.content.width = into.width;
+				this.content.height = into.height;
 		}
 	}
 
@@ -220,7 +220,7 @@ class AssetLoader extends FeathersControl {
 	}
 
 	private function loader_contentLoaderInfo_completeHandler(event:Event):Void {
-		this.content = this.loader.content;
+		this.content = this.loader;
 		this._contentMeasurements.save(this.content);
 		this.setInvalid(InvalidationFlag.LAYOUT);
 	}
