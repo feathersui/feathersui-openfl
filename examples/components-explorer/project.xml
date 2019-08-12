@@ -12,6 +12,8 @@
 	
 	<source path="../../src" />
 	<source path="src" />
+
+	<assets id="favicon" path="assets/img/favicon.png"/>
 	
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
