@@ -368,6 +368,7 @@ class DefaultTheme implements ITheme {
 		button.paddingRight = 10.0;
 		button.paddingBottom = 4.0;
 		button.paddingLeft = 10.0;
+		button.gap = 6.0;
 	}
 
 	private function setCheckStyles(check:Check):Void {
@@ -735,6 +736,7 @@ class DefaultTheme implements ITheme {
 		button.paddingRight = 10.0;
 		button.paddingBottom = 4.0;
 		button.paddingLeft = 10.0;
+		button.gap = 6.0;
 	}
 
 	private function setToggleSwitchStyles(toggle:ToggleSwitch):Void {
