@@ -711,6 +711,7 @@ class DefaultTheme implements ITheme {
 			skin.selectedFill = getThemeFill();
 			skin.setFillForState(ToggleButtonState.DOWN, getReversedActiveThemeFill());
 			skin.setFillForState(ToggleButtonState.DISABLED, getButtonDisabledFill());
+			skin.setFillForState(ToggleButtonState.DOWN_AND_SELECTED, getReversedActiveThemeFill());
 			skin.border = getButtonBorder();
 			skin.selectedBorder = getActiveFillBorder();
 			skin.setBorderForState(ButtonState.DOWN, getActiveFillBorder());
