@@ -52,6 +52,7 @@ class AssetLoaderScreen extends Panel {
 		this.addChild(this.assetLoader);
 
 		this.urlLoader = new AssetLoader();
+		// may also load an image from a URL
 		this.urlLoader.source = "https://feathersui.com/examples/components-explorer/images/feathersui-icon.png";
 		this.addChild(this.urlLoader);
 	}
