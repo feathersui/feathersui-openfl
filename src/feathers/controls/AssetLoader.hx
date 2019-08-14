@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.utils.AssetType;
 import openfl.display.Bitmap;
 import openfl.Assets;
 import openfl.net.URLRequest;
@@ -24,10 +25,6 @@ import feathers.layout.Measurements;
 import feathers.utils.ScaleUtil;
 
 class AssetLoader extends FeathersControl {
-	private static final PROTOCOL_HTTP:String = "http://";
-	private static final PROTOCOL_HTTPS:String = "https://";
-	private static final PROTOCOL_FILE:String = "file:/";
-
 	public function new() {
 		super();
 	}
@@ -53,7 +50,20 @@ class AssetLoader extends FeathersControl {
 		if (this.source == null) {
 			this.cleanupLoader();
 		} else {
-			if (isURL(this.source)) {
+			if (Assets.exists(this.source, AssetType.IMAGE)) {
+				this.cleanupLoader();
+				var bitmapData = Assets.getBitmapData(this.source);
+				var bitmap = new Bitmap(bitmapData);
+				this._contentMeasurements.save(bitmap);
+				this.addChild(bitmap);
+				this.content = bitmap;
+			} else if (Assets.exists(this.source, AssetType.MOVIE_CLIP)) {
+				this.cleanupLoader();
+				var movieClip = Assets.getMovieClip(this.source);
+				this._contentMeasurements.save(movieClip);
+				this.addChild(movieClip);
+				this.content = movieClip;
+			} else {
 				if (this.loader == null) {
 					this.loader = new Loader();
 					this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_contentLoaderInfo_completeHandler);
@@ -62,25 +72,10 @@ class AssetLoader extends FeathersControl {
 					this.addChild(this.loader);
 				}
 				this.loader.load(new URLRequest(this.source));
-			} else // no URL
-			{
-				this.cleanupLoader();
-				var bitmapData = Assets.getBitmapData(this.source);
-				var bitmap = new Bitmap(bitmapData);
-				this._contentMeasurements.save(bitmap);
-				this.addChild(bitmap);
-				this.content = bitmap;
 			}
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.source;
-	}
-
-	private function isURL(source:String):Bool {
-		if (source == null) {
-			return false;
-		}
-		return source.indexOf(PROTOCOL_HTTP) == 0 || source.indexOf(PROTOCOL_HTTPS) == 0 || source.indexOf(PROTOCOL_FILE) == 0;
 	}
 
 	public var scaleMode(default, set):StageScaleMode = StageScaleMode.SHOW_ALL;
