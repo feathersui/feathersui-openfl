@@ -218,5 +218,6 @@ class AssetLoader extends FeathersControl {
 		this.content = this.loader;
 		this._contentMeasurements.save(this.content);
 		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.dispatchEvent(event);
 	}
 }
