@@ -57,8 +57,8 @@ class AssetLoaderTest {
 			Assert.isTrue(complete);
 			Assert.isFalse(ioError);
 			Assert.isFalse(securityError);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	@AsyncTest
@@ -81,8 +81,8 @@ class AssetLoaderTest {
 			Assert.isFalse(complete);
 			Assert.isTrue(ioError);
 			Assert.isFalse(securityError);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	@AsyncTest
@@ -100,8 +100,8 @@ class AssetLoaderTest {
 			Assert.areEqual(50, this._loader.height);
 			Assert.areEqual(100, this._loader.minWidth);
 			Assert.areEqual(50, this._loader.minHeight);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	@AsyncTest
@@ -126,8 +126,8 @@ class AssetLoaderTest {
 			Assert.areEqual(300, this._loader.height);
 			Assert.areEqual(200, this._loader.minWidth);
 			Assert.areEqual(300, this._loader.minHeight);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	@AsyncTest
@@ -140,8 +140,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(100, this._loader.width);
 			Assert.areEqual(100, this._loader.minWidth);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	@AsyncTest
@@ -154,8 +154,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(50, this._loader.height);
 			Assert.areEqual(50, this._loader.minHeight);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	@AsyncTest
@@ -168,8 +168,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(400, this._loader.width);
 			Assert.areEqual(400, this._loader.minWidth);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	@AsyncTest
@@ -182,8 +182,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(100, this._loader.height);
 			Assert.areEqual(100, this._loader.minHeight);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 
 	// BowlerHatLLC/feathersui-starling#1541
@@ -201,7 +201,7 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(maxWidth, this._loader.width);
 			Assert.areEqual(maxHeight, this._loader.height);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 1200);
+		Timer.delay(handler, 1000);
 	}
 }
