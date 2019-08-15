@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import haxe.io.Path;
 import openfl.display.StageScaleMode;
 import openfl.events.SecurityErrorEvent;
 import openfl.events.IOErrorEvent;
@@ -37,6 +38,7 @@ class AssetLoaderTest {
 		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	#if (js || flash)
 	@AsyncTest
 	public function testCompleteEvent(factory:AsyncFactory):Void {
 		var complete = false;
@@ -57,8 +59,8 @@ class AssetLoaderTest {
 			Assert.isTrue(complete);
 			Assert.isFalse(ioError);
 			Assert.isFalse(securityError);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	@AsyncTest
@@ -81,8 +83,8 @@ class AssetLoaderTest {
 			Assert.isFalse(complete);
 			Assert.isTrue(ioError);
 			Assert.isFalse(securityError);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	@AsyncTest
@@ -100,8 +102,8 @@ class AssetLoaderTest {
 			Assert.areEqual(50, this._loader.height);
 			Assert.areEqual(100, this._loader.minWidth);
 			Assert.areEqual(50, this._loader.minHeight);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	@AsyncTest
@@ -126,8 +128,8 @@ class AssetLoaderTest {
 			Assert.areEqual(300, this._loader.height);
 			Assert.areEqual(200, this._loader.minWidth);
 			Assert.areEqual(300, this._loader.minHeight);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	@AsyncTest
@@ -140,8 +142,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(100, this._loader.width);
 			Assert.areEqual(100, this._loader.minWidth);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	@AsyncTest
@@ -154,8 +156,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(50, this._loader.height);
 			Assert.areEqual(50, this._loader.minHeight);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	@AsyncTest
@@ -168,8 +170,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(400, this._loader.width);
 			Assert.areEqual(400, this._loader.minWidth);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	@AsyncTest
@@ -182,8 +184,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(100, this._loader.height);
 			Assert.areEqual(100, this._loader.minHeight);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
 
 	// BowlerHatLLC/feathersui-starling#1541
@@ -201,7 +203,8 @@ class AssetLoaderTest {
 			this._loader.validateNow();
 			Assert.areEqual(maxWidth, this._loader.width);
 			Assert.areEqual(maxHeight, this._loader.height);
-		}, 1200);
-		Timer.delay(handler, 1000);
+		}, 600);
+		Timer.delay(handler, 500);
 	}
+	#end
 }
