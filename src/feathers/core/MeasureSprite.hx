@@ -384,9 +384,19 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		// take precedence over the measured values
 		if (this.explicitMinWidth != null) {
 			minWidth = this.explicitMinWidth;
+		} else if (this.explicitMaxWidth != null && minWidth < this.explicitMaxWidth) {
+			// if the minimum is not set explicitly, but the maximum is, use the
+			// maximum for the minimum
+			// BowlerHatLLC/feathersui-starling#1541
+			minWidth = this.explicitMaxWidth;
 		}
 		if (this.explicitMinHeight != null) {
 			minHeight = this.explicitMinHeight;
+		} else if (this.explicitMaxHeight != null && minHeight < this.explicitMaxHeight) {
+			// if the minimum is not set explicitly, but the maximum is, use the
+			// maximum for the minimum
+			// BowlerHatLLC/feathersui-starling#1541
+			minHeight = this.explicitMaxHeight;
 		}
 		if (this.explicitMaxWidth != null) {
 			maxWidth = this.explicitMaxWidth;
