@@ -108,10 +108,31 @@ class AssetLoader extends FeathersControl {
 			return false;
 		}
 
+		var contentWidth = this._contentMeasurements.width;
+		var contentHeight = this._contentMeasurements.height;
+		var widthScale = 1.0;
+		var heightScale = 1.0;
+		if (this.content != null && this.scaleMode != StageScaleMode.NO_SCALE) {
+			if (!needsWidth) {
+				widthScale = this.explicitWidth / contentWidth;
+			} else if (this.explicitMaxWidth != null && this.explicitMaxWidth < contentWidth) {
+				widthScale = this.explicitMaxWidth / contentWidth;
+			} else if (this.explicitMinWidth != null && this.explicitMinWidth > contentWidth) {
+				widthScale = this.explicitMinWidth / contentWidth;
+			}
+			if (!needsHeight) {
+				heightScale = this.explicitHeight / contentHeight;
+			} else if (this.explicitMaxHeight != null && this.explicitMaxHeight < contentHeight) {
+				heightScale = this.explicitMaxHeight / contentHeight;
+			} else if (this.explicitMinHeight != null && this.explicitMinHeight > contentHeight) {
+				heightScale = this.explicitMinHeight / contentHeight;
+			}
+		}
+
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			if (this.content != null) {
-				newWidth = this._contentMeasurements.width;
+				newWidth = contentWidth * heightScale;
 			} else {
 				newWidth = 0.0;
 			}
@@ -120,16 +141,29 @@ class AssetLoader extends FeathersControl {
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			if (this.content != null) {
-				newHeight = this._contentMeasurements.height;
+				newHeight = contentHeight * widthScale;
 			} else {
 				newHeight = 0.0;
 			}
 		}
 
+		// this ensures that an AssetLoader can recover from width or height
+		// being set to 0 by percentWidth or percentHeight
+		if (needsWidth && needsMinWidth) {
+			// if no width values are set, use the original content height
+			// for the minHeight
+			widthScale = 1;
+		}
+		if (needsHeight && needsMinHeight) {
+			// if no height values are set, use the original content width
+			// for the minWidth
+			heightScale = 1;
+		}
+
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
 			if (this.content != null) {
-				newMinWidth = this._contentMeasurements.minWidth;
+				newMinWidth = contentWidth * heightScale;
 			} else {
 				newMinWidth = 0.0;
 			}
@@ -138,7 +172,7 @@ class AssetLoader extends FeathersControl {
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
 			if (this.content != null) {
-				newMinHeight = this._contentMeasurements.minHeight;
+				newMinHeight = contentHeight * widthScale;
 			} else {
 				newMinHeight = 0.0;
 			}
@@ -146,7 +180,7 @@ class AssetLoader extends FeathersControl {
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
 			if (this.content != null) {
-				newMaxWidth = this._contentMeasurements.maxWidth;
+				newMaxWidth = contentWidth * heightScale;
 			} else {
 				newMaxWidth = Math.POSITIVE_INFINITY;
 			}
@@ -155,7 +189,7 @@ class AssetLoader extends FeathersControl {
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
 			if (this.content != null) {
-				newMaxHeight = this._contentMeasurements.maxHeight;
+				newMaxHeight = contentHeight * widthScale;
 			} else {
 				newMaxHeight = Math.POSITIVE_INFINITY;
 			}
