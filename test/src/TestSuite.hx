@@ -1,5 +1,6 @@
 import massive.munit.TestSuite;
 
+import feathers.controls.AssetLoaderTest;
 import feathers.controls.BasicButtonMeasurementTest;
 import feathers.controls.BasicButtonTest;
 import feathers.controls.ToggleSwitchTest;
@@ -28,6 +29,7 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
+		add(feathers.controls.AssetLoaderTest);
 		add(feathers.controls.BasicButtonMeasurementTest);
 		add(feathers.controls.BasicButtonTest);
 		add(feathers.controls.ToggleSwitchTest);
