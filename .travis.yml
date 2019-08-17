@@ -10,8 +10,7 @@ addons:
 - firefox: latest
 
 env:
-- NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin
-- MOZ_HEADLESS=1
+- NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin MOZ_HEADLESS=1
 
 install:
 - haxelib install lime --quiet
