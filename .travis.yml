@@ -6,6 +6,9 @@ haxe:
 services:
 - xvfb
 
+addons:
+- chrome: stable
+
 env:
 - NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin
 
@@ -31,3 +34,4 @@ script:
 # run tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
+- haxelib run munit test -js -browser "google-chrome-stable --headless --disable-gpu" -result-exit-code
