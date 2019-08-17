@@ -7,10 +7,12 @@ services:
 - xvfb
 
 addons:
-- firefox: latest
+#- firefox: latest
 
 env:
-- NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin MOZ_HEADLESS=1
+  global:
+    - NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin
+    #- MOZ_HEADLESS=1
 
 install:
 - haxelib install lime --quiet
@@ -34,4 +36,4 @@ script:
 # run tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
-- haxelib run munit test -browser firefox -js -result-exit-code
+#- haxelib run munit test -browser firefox -js -result-exit-code
