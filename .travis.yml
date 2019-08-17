@@ -34,4 +34,4 @@ script:
 # run tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
-- haxelib run munit test -js -browser google-chrome-stable -result-exit-code
+- haxelib run munit test -js -result-exit-code -browser "google-chrome-stable --headless --disable-gpu --disable-features=NetworkService --no-sandbox"
