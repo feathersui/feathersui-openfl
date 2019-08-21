@@ -24,7 +24,7 @@ import openfl.events.MouseEvent;
 	@since 1.0.0
 **/
 class PointerToState {
-	public function new(target:InteractiveObject = null, callback:String->Void = null) {
+	public function new(target:InteractiveObject = null, callback:(String) -> Void = null) {
 		this.target = target;
 		this.callback = callback;
 	}
@@ -69,9 +69,9 @@ class PointerToState {
 
 		@since 1.0.0
 	**/
-	public var callback(default, set):String->Void = null;
+	public var callback(default, set):(String) -> Void = null;
 
-	private function set_callback(value:String->Void):String->Void {
+	private function set_callback(value:(String) -> Void):(String) -> Void {
 		if (this.callback == value) {
 			return this.callback;
 		}

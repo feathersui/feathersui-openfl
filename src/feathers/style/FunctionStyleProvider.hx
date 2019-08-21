@@ -35,7 +35,7 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
-	public function new(?callback:Dynamic->Void) {
+	public function new(?callback:(Dynamic) -> Void) {
 		super();
 		this.callback = callback;
 	}
@@ -46,9 +46,9 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 
 		@since 1.0.0
 	**/
-	public var callback(default, set):Dynamic->Void;
+	public var callback(default, set):(Dynamic) -> Void;
 
-	private function set_callback(value:Dynamic->Void):Dynamic->Void {
+	private function set_callback(value:(Dynamic) -> Void):(Dynamic) -> Void {
 		if (this.callback == value) {
 			return this.callback;
 		}

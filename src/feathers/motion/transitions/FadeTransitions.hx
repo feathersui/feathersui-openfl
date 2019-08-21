@@ -38,7 +38,7 @@ class FadeTransitions {
 		@since 1.0.0
 	**/
 	public static function crossFade(duration:Float = 0.5, ?ease:IEasing,
-			?interruptBehavior:EffectInterruptBehavior):DisplayObject->DisplayObject->IEffectContext {
+			?interruptBehavior:EffectInterruptBehavior):(DisplayObject, DisplayObject) -> IEffectContext {
 		return function(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 			if (oldView == null && newView == null) {
 				throw new ArgumentError(VIEW_REQUIRED_ERROR);

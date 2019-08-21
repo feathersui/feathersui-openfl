@@ -58,7 +58,7 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvider {
-	private var styleTargets:Map<StyleTarget, Dynamic->Void>;
+	private var styleTargets:Map<StyleTarget, (Dynamic) -> Void>;
 
 	/**
 		The target Feathers UI component is passed to this function when
@@ -68,11 +68,11 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		 The function is expected to have the following signature:
 
 		 ```hx
-		 UIControl -> Void
+		 (IStyleObject) -> Void
 		 ```
 		@since 1.0.0
 	**/
-	public function setStyleFunction<T>(type:Class<T>, variant:String, callback:T->Void):Void {
+	public function setStyleFunction<T>(type:Class<T>, variant:String, callback:(T) -> Void):Void {
 		if (styleTargets == null) {
 			styleTargets = [];
 		}

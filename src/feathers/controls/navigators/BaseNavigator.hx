@@ -74,11 +74,11 @@ class BaseNavigator extends FeathersControl {
 	private var _previousViewInTransition:DisplayObject;
 	private var _previousViewInTransitionID:String;
 	private var _nextItemID:String;
-	private var _nextItemTransition:DisplayObject->DisplayObject->IEffectContext;
+	private var _nextItemTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 	private var _clearAfterTransition:Bool = false;
-	private var _delayedTransition:DisplayObject->DisplayObject->IEffectContext;
+	private var _delayedTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 	private var _waitingForDelayedTransition:Bool = false;
-	private var _waitingTransition:DisplayObject->DisplayObject->IEffectContext;
+	private var _waitingTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 	private var _waitingForTransitionFrameCount:Int = 0;
 
 	/**
@@ -390,7 +390,7 @@ class BaseNavigator extends FeathersControl {
 		return item;
 	}
 
-	private function showItemInternal(id:String, transition:DisplayObject->DisplayObject->IEffectContext, ?properties:Map<String, Dynamic>):DisplayObject {
+	private function showItemInternal(id:String, transition:(DisplayObject, DisplayObject) -> IEffectContext, ?properties:Map<String, Dynamic>):DisplayObject {
 		if (!this.hasItem(id)) {
 			throw new ArgumentError('Item with id \'$id\' cannot be displayed because this id has not been added.');
 		}
@@ -459,7 +459,7 @@ class BaseNavigator extends FeathersControl {
 		return this.activeItemView;
 	}
 
-	private function clearActiveItemInternal(?transition:DisplayObject->DisplayObject->IEffectContext):Void {
+	private function clearActiveItemInternal(?transition:(DisplayObject, DisplayObject) -> IEffectContext):Void {
 		if (this.activeItemView == null) {
 			// nothing to clear
 			return;
@@ -484,7 +484,7 @@ class BaseNavigator extends FeathersControl {
 		this.startTransition(transition);
 	}
 
-	private function startTransition(transition:DisplayObject->DisplayObject->IEffectContext):Void {
+	private function startTransition(transition:(DisplayObject, DisplayObject) -> IEffectContext):Void {
 		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_START);
 		if (transition != null && transition != defaultTransition) {
 			if (this.activeItemView != null) {

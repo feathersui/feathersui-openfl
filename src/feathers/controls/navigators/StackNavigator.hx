@@ -57,7 +57,7 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 
 	**/
-	public var pushTransition(default, default):DisplayObject->DisplayObject->IEffectContext;
+	public var pushTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		The default transition to use for pop actions, if not overridden in the
@@ -70,7 +70,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var popTransition(default, default):DisplayObject->DisplayObject->IEffectContext;
+	public var popTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		The default transition to use for replace actions, if not overridden in
@@ -82,7 +82,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var replaceTransition(default, default):DisplayObject->DisplayObject->IEffectContext;
+	public var replaceTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
 
 	private var _history:Array<HistoryItem> = [];
 	private var _poppedHistoryItemInTransition:HistoryItem;
@@ -225,7 +225,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function pushItem(id:String, ?properties:Map<String, Dynamic>, ?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+	public function pushItem(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			var item = this.getItem(id);
 			if (item != null && item.pushTransition != null) {
@@ -260,7 +260,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function popItem(?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+	public function popItem(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
@@ -298,7 +298,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function popToRootItem(?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+	public function popToRootItem(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
@@ -324,7 +324,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function popAll(?transition:DisplayObject->DisplayObject->IEffectContext):Void {
+	public function popAll(?transition:(DisplayObject, DisplayObject) -> IEffectContext):Void {
 		if (this._history.length == 0) {
 			// the history stack is empty, and there isn't even a root item
 			return;
@@ -354,7 +354,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function replaceItem(id:String, ?properties:Map<String, Dynamic>, ?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+	public function replaceItem(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			transition = this.replaceTransition;
 		}
@@ -382,7 +382,7 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function popToRootItemAndReplace(id:String, ?properties:Map<String, Dynamic>,
-			?transition:DisplayObject->DisplayObject->IEffectContext):DisplayObject {
+			?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			transition = this.popTransition;
 		}

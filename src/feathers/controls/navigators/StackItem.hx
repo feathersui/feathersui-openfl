@@ -57,7 +57,7 @@ class StackItem {
 		Creates a `StackItem` that calls a function that returns a
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
-	public static function withFunction(viewFunction:Void->DisplayObject, ?actions:Map<String, StackAction>):StackItem {
+	public static function withFunction(viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>):StackItem {
 		var item:StackItem = new StackItem();
 		item.viewFunction = viewFunction;
 		item.actions = actions;
@@ -78,7 +78,7 @@ class StackItem {
 	private function new() {}
 
 	private var viewClass:Class<DisplayObject>;
-	private var viewFunction:Void->DisplayObject;
+	private var viewFunction:() -> DisplayObject;
 	private var viewInstance:DisplayObject;
 	private var actions:Map<String, StackAction>;
 
@@ -101,7 +101,7 @@ class StackItem {
 		A custom transition function should have the following signature:
 
 		```hx
-		DisplayObject->DisplayObject->IEffectContext</pre>
+		(DisplayObject, DisplayObject) -> IEffectContext</pre>
 		```
 
 		Either of the arguments typed as `DisplayObject` may be `null`, but
@@ -118,7 +118,7 @@ class StackItem {
 		@since 1.0.0
 
 	**/
-	public var pushTransition:DisplayObject->DisplayObject->IEffectContext;
+	public var pushTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		A custom "pop" transition for this item only. If `null`, the default
@@ -139,7 +139,7 @@ class StackItem {
 		A custom transition function should have the following signature:
 
 		```hx
-		DisplayObject->DisplayObject->IEffectContext</pre>
+		(DisplayObject, DisplayObject) -> IEffectContext</pre>
 		```
 
 		Either of the arguments typed as `DisplayObject` may be `null`, but
@@ -156,7 +156,7 @@ class StackItem {
 		@since 1.0.0
 
 	**/
-	public var popTransition:DisplayObject->DisplayObject->IEffectContext;
+	public var popTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	private var _viewToEvents:Map<DisplayObject, Array<ViewListener>> = [];
 
@@ -248,7 +248,7 @@ class StackItem {
 		return null;
 	}
 
-	private function createActionEventListener(action:StackAction, navigator:StackNavigator):Event->Void {
+	private function createActionEventListener(action:StackAction, navigator:StackNavigator):(Event) -> Void {
 		var eventListener = function(event:Event):Void {
 			var current = action;
 			while (current != null) {
@@ -266,11 +266,11 @@ class StackItem {
 }
 
 private class ViewListener {
-	public function new(eventType:String, listener:Event->Void) {
+	public function new(eventType:String, listener:(Event) -> Void) {
 		this.eventType = eventType;
 		this.listener = listener;
 	}
 
 	public var eventType:String;
-	public var listener:Event->Void;
+	public var listener:(Event) -> Void;
 }
