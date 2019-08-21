@@ -12,6 +12,7 @@ import openfl.display.DisplayObject;
 import feathers.core.IUIControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
+import feathers.style.IStyleObject;
 
 class Panel extends ScrollContainer {
 	private static final INVALIDATION_FLAG_HEADER_FACTORY:String = "headerFactory";
@@ -19,6 +20,10 @@ class Panel extends ScrollContainer {
 
 	public function new() {
 		super();
+	}
+
+	override private function get_styleContext():Class<IStyleObject> {
+		return Panel;
 	}
 
 	private var header:IUIControl;
