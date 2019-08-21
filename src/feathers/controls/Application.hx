@@ -56,11 +56,11 @@ class Application extends LayoutGroup {
 
 	private var _popUpContainer:DisplayObjectContainer;
 
-	private function refreshDimensions():Void {
-		if (this.stage == null) {
-			return;
-		}
+	private function getScaleFactor():Float {
 		var scaleFactor = 1.0;
+		if (this.stage == null) {
+			return scaleFactor;
+		}
 		if (this.customScale != null) {
 			scaleFactor = this.customScale;
 		} else {
@@ -85,8 +85,14 @@ class Application extends LayoutGroup {
 			scaleFactor = this._scaler.getScale(Capabilities.screenDPI);
 			#end
 		}
+		return scaleFactor;
+	}
+
+	private function refreshDimensions():Void {
+		var scaleFactor = this.getScaleFactor();
 		this.scaleX = scaleFactor;
 		this.scaleY = scaleFactor;
+
 		var needsToBeDivisibleByTwo = Math.floor(scaleFactor) != scaleFactor;
 		var appWidth:Float = Math.floor(this.stage.stageWidth);
 		if (needsToBeDivisibleByTwo) {
