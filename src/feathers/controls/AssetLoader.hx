@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.display.MovieClip;
+import openfl.display.BitmapData;
 import openfl.utils.AssetType;
 import openfl.display.Bitmap;
 import openfl.Assets;
@@ -52,17 +54,44 @@ class AssetLoader extends FeathersControl {
 		} else {
 			if (Assets.exists(this.source, AssetType.IMAGE)) {
 				this.cleanupLoader();
-				var bitmapData = Assets.getBitmapData(this.source);
-				var bitmap = new Bitmap(bitmapData);
-				this._contentMeasurements.save(bitmap);
-				this.addChild(bitmap);
-				this.content = bitmap;
+				if (Assets.isLocal(this.source, AssetType.IMAGE)) {
+					var bitmapData = Assets.getBitmapData(this.source);
+					var bitmap = new Bitmap(bitmapData);
+					this._contentMeasurements.save(bitmap);
+					this.addChild(bitmap);
+					this.content = bitmap;
+				} else // async
+				{
+					var future = Assets.loadBitmapData(this.source).onComplete((bitmapData:BitmapData) -> {
+						var bitmap = new Bitmap(bitmapData);
+						this._contentMeasurements.save(bitmap);
+						this.addChild(bitmap);
+						this.content = bitmap;
+						this.setInvalid(InvalidationFlag.DATA);
+						this.dispatchEvent(new Event(Event.COMPLETE));
+					}).onError((event:Dynamic) -> {
+							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+						});
+				}
 			} else if (Assets.exists(this.source, AssetType.MOVIE_CLIP)) {
 				this.cleanupLoader();
-				var movieClip = Assets.getMovieClip(this.source);
-				this._contentMeasurements.save(movieClip);
-				this.addChild(movieClip);
-				this.content = movieClip;
+				if (Assets.isLocal(this.source, AssetType.MOVIE_CLIP)) {
+					var movieClip = Assets.getMovieClip(this.source);
+					this._contentMeasurements.save(movieClip);
+					this.addChild(movieClip);
+					this.content = movieClip;
+				} else // async
+				{
+					var future = Assets.loadMovieClip(this.source).onComplete((movieClip:MovieClip) -> {
+						this._contentMeasurements.save(movieClip);
+						this.addChild(movieClip);
+						this.content = movieClip;
+						this.setInvalid(InvalidationFlag.DATA);
+						this.dispatchEvent(new Event(Event.COMPLETE));
+					}).onError((event:Dynamic) -> {
+							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+						});
+				}
 			} else {
 				if (this.loader == null) {
 					this.loader = new Loader();
