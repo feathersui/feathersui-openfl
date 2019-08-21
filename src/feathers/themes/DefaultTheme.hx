@@ -1,26 +1,32 @@
+/*
+	Feathers UI
+	Copyright 2019 Bowler Hat LLC. All Rights Reserved.
+
+	This program is free software. You can redistribute and/or modify it in
+	accordance with the terms of the accompanying license agreement.
+ */
+
 package feathers.themes;
 
+import feathers.controls.BasicToggleButton;
+import feathers.controls.TextInputState;
+import feathers.controls.Panel;
 import feathers.layout.VerticalAlign;
 import feathers.layout.HorizontalLayout;
 import feathers.controls.ToggleSwitch;
-import openfl.display.Sprite;
 import openfl.display.Shape;
 import feathers.controls.HProgressBar;
 import feathers.events.FeathersEvent;
 import feathers.style.IStyleObject;
 import feathers.style.IStyleProvider;
 import feathers.controls.ToggleButtonState;
-import feathers.controls.TextInputState;
-import openfl.display.Stage;
 import feathers.controls.LayoutGroup;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.VerticalListFixedRowLayout;
 import feathers.controls.dataRenderers.ListBoxItemRenderer;
 import feathers.controls.ListBox;
 import feathers.style.ClassVariantStyleProvider;
-import feathers.style.Theme;
 import feathers.controls.BasicButton;
-import feathers.controls.BasicToggleButton;
 import feathers.skins.CircleSkin;
 import feathers.controls.HSlider;
 import feathers.controls.VSlider;
@@ -28,7 +34,6 @@ import feathers.controls.TextInput;
 import feathers.controls.Label;
 import feathers.controls.ButtonState;
 import feathers.skins.RectangleSkin;
-import feathers.skins.OverAndUnderlineSkin;
 import feathers.skins.UnderlineSkin;
 import feathers.controls.Button;
 import feathers.controls.ToggleButton;
@@ -62,6 +67,7 @@ class DefaultTheme implements ITheme {
 		this.styleProvider.setStyleFunction(ListBox, null, this.setListBoxStyles);
 		this.styleProvider.setStyleFunction(ListBoxItemRenderer, null, this.setListBoxItemRendererStyles);
 		this.styleProvider.setStyleFunction(HProgressBar, null, this.setHProgressBarStyles);
+		this.styleProvider.setStyleFunction(Panel, null, this.setPanelStyles);
 		this.styleProvider.setStyleFunction(Radio, null, this.setRadioStyles);
 		this.styleProvider.setStyleFunction(HSlider, null, this.setHSliderStyles);
 		this.styleProvider.setStyleFunction(VSlider, null, this.setVSliderStyles);
@@ -556,6 +562,14 @@ class DefaultTheme implements ITheme {
 			backgroundSkin.width = 200.0;
 			backgroundSkin.height = 8.0;
 			progress.backgroundSkin = backgroundSkin;
+		}
+	}
+
+	private function setPanelStyles(panel:Panel):Void {
+		if (panel.backgroundSkin == null) {
+			var backgroundSkin = new RectangleSkin();
+			backgroundSkin.fill = getContainerFill();
+			panel.backgroundSkin = backgroundSkin;
 		}
 	}
 
