@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.geom.Point;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.display.Sprite;
@@ -215,8 +216,12 @@ class DefaultPopUpManager implements IPopUpManager {
 		if (Std.is(popUp, IValidating)) {
 			cast(popUp, IValidating).validateNow();
 		}
-		popUp.x = (stage.stageWidth - popUp.width) / 2.0;
-		popUp.y = (stage.stageHeight - popUp.height) / 2.0;
+		var topLeft = new Point(0, 0);
+		topLeft = this.root.globalToLocal(topLeft);
+		var bottomRight = new Point(stage.stageWidth, stage.stageHeight);
+		bottomRight = this.root.globalToLocal(bottomRight);
+		popUp.x = topLeft.x + (bottomRight.x - topLeft.x - popUp.width) / 2.0;
+		popUp.y = topLeft.y + (bottomRight.y - topLeft.y - popUp.height) / 2.0;
 	}
 
 	private function popUp_removedFromStageHandler(event:Event):Void {
