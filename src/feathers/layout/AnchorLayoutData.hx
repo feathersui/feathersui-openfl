@@ -32,10 +32,15 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	/**
 		Creates `AnchorLayoutData` that fills the parent container.
 
+		@see `top`
+		@see `right`
+		@see `bottom`
+		@see `left`
+
 		@since 1.0.0
 	**/
-	public static function fill():AnchorLayoutData {
-		return new AnchorLayoutData(0, 0, 0, 0);
+	public static function fill(padding:Null<Float> = 0):AnchorLayoutData {
+		return new AnchorLayoutData(padding, padding, padding, padding);
 	}
 
 	public function new(?top:Null<Float>, ?right:Null<Float>, ?bottom:Null<Float>, ?left:Null<Float>, ?horizontalCenter:Null<Float>,
