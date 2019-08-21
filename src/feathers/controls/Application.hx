@@ -1,7 +1,18 @@
+/*
+	Feathers UI
+	Copyright 2019 Bowler Hat LLC. All Rights Reserved.
+
+	This program is free software. You can redistribute and/or modify it in
+	accordance with the terms of the accompanying license agreement.
+ */
+
 package feathers.controls;
 
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Sprite;
 import openfl.system.Capabilities;
 import openfl.events.Event;
+import feathers.core.PopUpManager;
 import feathers.style.IStyleObject;
 import feathers.utils.ScreenDensityScaleCalculator;
 import feathers.utils.MathUtil;
@@ -13,6 +24,10 @@ import feathers.utils.MathUtil;
 	@since 1.0.0
 **/
 class Application extends LayoutGroup {
+	private static function defaultPopUpContainerFactory():DisplayObjectContainer {
+		return new Sprite();
+	}
+
 	public function new() {
 		super();
 
@@ -36,6 +51,10 @@ class Application extends LayoutGroup {
 		this.refreshDimensions();
 		return this.customScale;
 	}
+
+	public var popUpContainerFactory:() -> DisplayObjectContainer;
+
+	private var _popUpContainer:DisplayObjectContainer;
 
 	private function refreshDimensions():Void {
 		if (this.stage == null) {
@@ -79,17 +98,44 @@ class Application extends LayoutGroup {
 			appHeight = MathUtil.roundDownToNearest(appHeight, 2);
 		}
 		this.height = appHeight;
+
+		this._popUpContainer.scaleX = scaleFactor;
+		this._popUpContainer.scaleY = scaleFactor;
+	}
+
+	private function preparePopUpContainer():Void {
+		if (this._popUpContainer == null) {
+			var factory = this.popUpContainerFactory;
+			if (factory == null) {
+				factory = defaultPopUpContainerFactory;
+			}
+			this._popUpContainer = factory();
+		}
+		this.stage.addChild(this._popUpContainer);
+		var popUpManager = PopUpManager.forStage(this.stage);
+		popUpManager.root = this._popUpContainer;
+	}
+
+	private function cleanupPopUpContainer():Void {
+		var popUpManager = PopUpManager.forStage(this.stage);
+		if (popUpManager.root == this._popUpContainer) {
+			popUpManager.root = this.stage;
+		}
+		this.stage.removeChild(this._popUpContainer);
+		this._popUpContainer = null;
 	}
 
 	private function application_addedToStageHandler(event:Event):Void {
 		this.addEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
 		this.stage.addEventListener(Event.RESIZE, application_stage_resizeHandler, false, 0, true);
+		this.preparePopUpContainer();
 		this.refreshDimensions();
 	}
 
 	private function application_removedFromStageHandler(event:Event):Void {
 		this.removeEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
 		this.stage.removeEventListener(Event.RESIZE, application_stage_resizeHandler);
+		this.cleanupPopUpContainer();
 	}
 
 	private function application_stage_resizeHandler(event:Event):Void {
