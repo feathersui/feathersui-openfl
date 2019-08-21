@@ -1,5 +1,7 @@
 package feathers.themes;
 
+import feathers.layout.VerticalAlign;
+import feathers.layout.HorizontalLayout;
 import feathers.controls.ToggleSwitch;
 import openfl.display.Sprite;
 import openfl.display.Shape;
@@ -474,6 +476,17 @@ class DefaultTheme implements ITheme {
 			backgroundSkin.height = 44.0;
 			backgroundSkin.minHeight = 44.0;
 			group.backgroundSkin = backgroundSkin;
+		}
+		if (group.layout == null) {
+			var layout = new HorizontalLayout();
+			layout.horizontalAlign = HorizontalAlign.LEFT;
+			layout.verticalAlign = VerticalAlign.MIDDLE;
+			layout.paddingTop = 4.0;
+			layout.paddingRight = 10.0;
+			layout.paddingBottom = 4.0;
+			layout.paddingLeft = 10.0;
+			layout.gap = 4.0;
+			group.layout = layout;
 		}
 	}
 
