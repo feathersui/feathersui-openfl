@@ -11,6 +11,7 @@ package feathers.controls;
 import openfl.display.DisplayObject;
 import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
+import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.layout.HorizontalAlign;
@@ -40,7 +41,7 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
-class Button extends BasicButton {
+class Button extends BasicButton implements ITextControl {
 	public function new() {
 		super();
 	}
@@ -51,7 +52,12 @@ class Button extends BasicButton {
 
 	private var textField:TextField;
 
-	public var text(default, set):String;
+	@:isVar
+	public var text(get, set):String;
+
+	private function get_text():String {
+		return this.text;
+	}
 
 	private function set_text(value:String):String {
 		if (this.text == value) {

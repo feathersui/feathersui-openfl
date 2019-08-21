@@ -13,6 +13,7 @@ import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
+import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.layout.HorizontalAlign;
@@ -39,7 +40,7 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
-class Label extends FeathersControl {
+class Label extends FeathersControl implements ITextControl {
 	/**
 		Larger text for headings.
 
@@ -64,7 +65,12 @@ class Label extends FeathersControl {
 
 	private var textField:TextField;
 
-	public var text(default, set):String;
+	@:isVar
+	public var text(get, set):String;
+
+	private function get_text():String {
+		return this.text;
+	}
 
 	private function set_text(value:String):String {
 		if (this.text == value) {

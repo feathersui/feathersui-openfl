@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.ITextControl;
 import feathers.layout.RelativePosition;
 import feathers.core.IUIControl;
 import feathers.core.IStateObserver;
@@ -40,7 +41,7 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
-class ToggleButton extends BasicToggleButton {
+class ToggleButton extends BasicToggleButton implements ITextControl {
 	public function new() {
 		super();
 	}
@@ -51,7 +52,12 @@ class ToggleButton extends BasicToggleButton {
 
 	private var textField:TextField;
 
-	public var text(default, set):String;
+	@:isVar
+	public var text(get, set):String;
+
+	private function get_text():String {
+		return this.text;
+	}
 
 	private function set_text(value:String):String {
 		if (this.text == value) {

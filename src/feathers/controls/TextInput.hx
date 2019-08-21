@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.ITextControl;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
@@ -48,7 +49,7 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
-class TextInput extends FeathersControl implements IStateContext {
+class TextInput extends FeathersControl implements IStateContext implements ITextControl {
 	public function new() {
 		super();
 	}
@@ -126,7 +127,12 @@ class TextInput extends FeathersControl implements IStateContext {
 	private var _stateToSkin:Map<String, DisplayObject> = new Map();
 	private var textField:TextField;
 
-	public var text(default, set):String;
+	@:isVar
+	public var text(get, set):String;
+
+	private function get_text():String {
+		return this.text;
+	}
 
 	private function set_text(value:String):String {
 		if (this.text == value) {
