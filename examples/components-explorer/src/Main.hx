@@ -1,15 +1,12 @@
 package;
 
 import openfl.display.FPS;
-import feathers.style.Theme;
-import openfl.display.DisplayObject;
 import openfl.events.Event;
 import feathers.controls.navigators.StackAction;
 import feathers.controls.navigators.StackItem;
 import feathers.controls.navigators.StackNavigator;
 import feathers.motion.transitions.SlideTransitions;
 import feathers.controls.Application;
-import feathers.themes.DefaultTheme;
 import com.feathersui.components.ScreenID;
 import com.feathersui.components.screens.MainMenu;
 import com.feathersui.components.screens.AssetLoaderScreen;
@@ -17,6 +14,8 @@ import com.feathersui.components.screens.ButtonScreen;
 import com.feathersui.components.screens.CheckScreen;
 import com.feathersui.components.screens.LabelScreen;
 import com.feathersui.components.screens.ListBoxScreen;
+import com.feathersui.components.screens.PanelScreen;
+import com.feathersui.components.screens.PopUpManagerScreen;
 import com.feathersui.components.screens.ProgressBarScreen;
 import com.feathersui.components.screens.RadioScreen;
 import com.feathersui.components.screens.SliderScreen;
@@ -51,6 +50,12 @@ class Main extends Application {
 
 		var listBox = StackItem.withClass(ListBoxScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.LIST_BOX, listBox);
+
+		var panel = StackItem.withClass(PanelScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.PANEL, panel);
+
+		var popUps = StackItem.withClass(PopUpManagerScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.POP_UP_MANAGER, popUps);
 
 		var progressBar = StackItem.withClass(ProgressBarScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.PROGRESS_BAR, progressBar);
