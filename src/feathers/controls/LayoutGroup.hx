@@ -65,20 +65,8 @@ class LayoutGroup extends FeathersControl {
 
 	private var items:Array<DisplayObject> = [];
 
-	@style
-	public var layout(default, set):ILayout = null;
-
-	private function set_layout(value:ILayout):ILayout {
-		if (!this.setStyle("layout")) {
-			return this.layout;
-		}
-		if (this.layout == value) {
-			return this.layout;
-		}
-		this.layout = value;
-		this.setInvalid(InvalidationFlag.LAYOUT);
-		return this.layout;
-	}
+	@:style
+	public var layout:ILayout = null;
 
 	private var _layoutResult:LayoutBoundsResult = new LayoutBoundsResult();
 	private var _layoutMeasurements:Measurements = new Measurements();

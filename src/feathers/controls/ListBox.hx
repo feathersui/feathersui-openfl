@@ -65,32 +65,21 @@ class ListBox extends BaseScrollContainer {
 		return this.dataProvider.get(this.selectedIndex);
 	}
 
-	@style
-	public var layout(default, set):ILayout = null;
-
-	private function set_layout(value:ILayout):ILayout {
-		if (!this.setStyle("layout")) {
-			return this.layout;
-		}
-		if (this.layout == value) {
-			return this.layout;
-		}
-		this.layout = value;
-		this.setInvalid(InvalidationFlag.LAYOUT);
-		return this.layout;
-	}
+	@:style
+	public var layout:ILayout = null;
 
 	private var activeItemRenderers:Array<IListBoxItemRenderer> = [];
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
+		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
 		if (dataInvalid) {
 			this.refreshItemRenderers();
 		}
 
-		if (layoutInvalid) {
+		if (layoutInvalid || stylesInvalid) {
 			this.listViewPort.layout = this.layout;
 		}
 

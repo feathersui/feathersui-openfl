@@ -66,12 +66,6 @@ class HProgressBar extends BaseProgressBar {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			newWidth = this._backgroundSkinMeasurements.width;
@@ -115,12 +109,6 @@ class HProgressBar extends BaseProgressBar {
 	}
 
 	override private function layoutFill():Void {
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-
 		var percentage = 1.0;
 		if (this.minimum != this.maximum) {
 			percentage = (this.value - this.minimum) / (this.maximum - this.minimum);
@@ -130,7 +118,7 @@ class HProgressBar extends BaseProgressBar {
 				percentage = 1.0;
 			}
 		}
-		var calculatedWidth:Float = Math.round(percentage * (this.actualWidth - paddingLeft - paddingRight));
+		var calculatedWidth:Float = Math.round(percentage * (this.actualWidth - this.paddingLeft - this.paddingRight));
 		if (this._fillSkinMeasurements.width != null && calculatedWidth < this._fillSkinMeasurements.width) {
 			calculatedWidth = this._fillSkinMeasurements.width;
 			// if the size is too small, and the value is equal to the
@@ -141,10 +129,10 @@ class HProgressBar extends BaseProgressBar {
 			this._currentFillSkin.visible = true;
 		}
 
-		this._currentFillSkin.x = paddingLeft;
-		this._currentFillSkin.y = paddingTop;
+		this._currentFillSkin.x = this.paddingLeft;
+		this._currentFillSkin.y = this.paddingTop;
 		this._currentFillSkin.width = calculatedWidth;
-		this._currentFillSkin.height = this.actualHeight - paddingTop - paddingBottom;
+		this._currentFillSkin.height = this.actualHeight - this.paddingTop - this.paddingBottom;
 
 		if (Std.is(this._currentFillSkin, IValidating)) {
 			cast(this._currentFillSkin, IValidating).validateNow();

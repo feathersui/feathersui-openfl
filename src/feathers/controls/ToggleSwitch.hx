@@ -182,20 +182,8 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingRight(default, set):Null<Float> = null;
-
-	private function set_paddingRight(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingRight")) {
-			return this.paddingRight;
-		}
-		if (this.paddingRight == value) {
-			return this.paddingRight;
-		}
-		this.paddingRight = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingRight;
-	}
+	@:style
+	public var paddingRight:Null<Float> = 0.0;
 
 	/**
 		The minimum space, in pixels, between the toggle switch's left edge and
@@ -212,20 +200,8 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingLeft(default, set):Null<Float> = null;
-
-	private function set_paddingLeft(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingLeft")) {
-			return this.paddingLeft;
-		}
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
-		}
-		this.paddingLeft = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingLeft;
-	}
+	@:style
+	public var paddingLeft:Null<Float> = 0.0;
 
 	private var _toggleTween:SimpleActuator<Dynamic, Dynamic> = null;
 
@@ -233,37 +209,15 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 		@since 1.0.0
 	**/
-	@style
-	public var toggleDuration(default, set):Null<Float> = null;
-
-	private function set_toggleDuration(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("toggleDuration")) {
-			return this.toggleDuration;
-		}
-		if (this.toggleDuration == value) {
-			return this.toggleDuration;
-		}
-		this.toggleDuration = value;
-		return this.toggleDuration;
-	}
+	@:style
+	public var toggleDuration:Null<Float> = 0.15;
 
 	/**
 
 		@since 1.0.0
 	**/
-	@style
-	public var toggleEase(default, set):IEasing = null;
-
-	private function set_toggleEase(value:IEasing):IEasing {
-		if (!this.setStyle("toggleEase")) {
-			return this.toggleEase;
-		}
-		if (this.toggleEase == value) {
-			return this.toggleEase;
-		}
-		this.toggleEase = value;
-		return this.toggleEase;
-	}
+	@:style
+	public var toggleEase:IEasing = Quart.easeOut;
 
 	private var _dragStartX:Float;
 	private var _ignoreClick:Bool = false;
@@ -400,22 +354,15 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
 
-		// uninitialized styles need some defaults
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-
-		var xPosition = paddingLeft;
+		var xPosition = this.paddingLeft;
 		if (this.selected) {
-			xPosition = this.actualWidth - this.thumbSkin.width - paddingRight;
+			xPosition = this.actualWidth - this.thumbSkin.width - this.paddingRight;
 		}
 
 		if (this._animateSelectionChange) {
-			var toggleDuration = this.toggleDuration != null ? this.toggleDuration : 0.15;
-			var toggleEase = this.toggleEase != null ? this.toggleEase : Quart.easeOut;
-
-			var tween = Actuate.tween(this.thumbSkin, toggleDuration, {x: xPosition});
+			var tween = Actuate.tween(this.thumbSkin, this.toggleDuration, {x: xPosition});
 			this._toggleTween = cast(tween, SimpleActuator<Dynamic, Dynamic>);
-			this._toggleTween.ease(toggleEase);
+			this._toggleTween.ease(this.toggleEase);
 			this._toggleTween.onUpdate(this.toggleTween_onUpdate);
 			this._toggleTween.onComplete(this.toggleTween_onComplete);
 		} else if (this._toggleTween == null) {
@@ -482,11 +429,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 			return;
 		}
 
-		// uninitialized styles need some defaults
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-
-		var halfDistance = (this.actualWidth - paddingLeft - paddingRight) / 2.0;
+		var halfDistance = (this.actualWidth - this.paddingLeft - this.paddingRight) / 2.0;
 		var dragOffset = this.mouseX - this._dragStartX;
 		var selected = this.selected;
 		if (dragOffset >= halfDistance) {

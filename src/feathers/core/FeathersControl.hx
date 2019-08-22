@@ -33,6 +33,7 @@ import feathers.style.Theme;
 	@see `feathers.controls.LayoutGroup`
 **/
 @:autoBuild(feathers.macros.StyleContextMacro.build())
+@:autoBuild(feathers.macros.StyleMacro.build())
 class FeathersControl extends MeasureSprite implements IUIControl implements IStyleObject implements ILayoutObject {
 	private function new() {
 		super();
@@ -195,18 +196,20 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return this.includeInLayout;
 	}
 
-	@style
-
 	/**
 		Optional, extra data used by some `ILayout` implementations.
 
 		@since 1.0.0
 	**/
-	public var layoutData(default, set):ILayoutData;
+	@style
+	public var layoutData(default, set):ILayoutData = null;
 
 	private function set_layoutData(value:ILayoutData):ILayoutData {
 		if (!this.setStyle("layoutData")) {
 			return this.layoutData;
+		}
+		if (this._clearingStyles) {
+			value = null;
 		}
 		if (this.layoutData == value) {
 			return this.layoutData;

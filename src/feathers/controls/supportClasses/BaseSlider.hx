@@ -350,38 +350,14 @@ class BaseSlider extends FeathersControl {
 	/**
 		@see `BaseSlider.maximumPadding`
 	**/
-	@style
-	public var minimumPadding(default, set):Null<Float> = null;
-
-	private function set_minimumPadding(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("minimumPadding")) {
-			return this.minimumPadding;
-		}
-		if (this.minimumPadding == value) {
-			return this.minimumPadding;
-		}
-		this.minimumPadding = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.minimumPadding;
-	}
+	@:style
+	public var minimumPadding:Null<Float> = 0.0;
 
 	/**
 		@see `BaseSlider.minimumPadding`
 	**/
-	@style
-	public var maximumPadding(default, set):Null<Float> = null;
-
-	private function set_maximumPadding(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("maximumPadding")) {
-			return this.maximumPadding;
-		}
-		if (this.maximumPadding == value) {
-			return this.minimumPadding;
-		}
-		this.maximumPadding = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.maximumPadding;
-	}
+	@:style
+	public var maximumPadding:Null<Float> = 0.0;
 
 	private var _dragging:Bool = false;
 	private var _pointerStartX:Float = 0.0;

@@ -139,35 +139,11 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 		return this.text;
 	}
 
-	@style
-	public var textFormat(default, set):TextFormat = null;
+	@:style
+	public var textFormat:TextFormat = null;
 
-	private function set_textFormat(value:TextFormat):TextFormat {
-		if (!this.setStyle("textFormat")) {
-			return this.textFormat;
-		}
-		if (this.textFormat == value) {
-			return this.textFormat;
-		}
-		this.textFormat = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.textFormat;
-	}
-
-	@style
-	public var disabledTextFormat(default, set):TextFormat = null;
-
-	private function set_disabledTextFormat(value:TextFormat):TextFormat {
-		if (!this.setStyle("disabledTextFormat")) {
-			return this.disabledTextFormat;
-		}
-		if (this.disabledTextFormat == value) {
-			return this.disabledTextFormat;
-		}
-		this.disabledTextFormat = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.disabledTextFormat;
-	}
+	@:style
+	public var disabledTextFormat:TextFormat = null;
 
 	/**
 		The minimum space, in pixels, between the text input's top edge and the
@@ -184,20 +160,8 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingTop(default, set):Null<Float> = null;
-
-	private function set_paddingTop(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingTop")) {
-			return this.paddingTop;
-		}
-		if (this.paddingTop == value) {
-			return this.paddingTop;
-		}
-		this.paddingTop = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingTop;
-	}
+	@:style
+	public var paddingTop:Null<Float> = 0.0;
 
 	/**
 		The minimum space, in pixels, between the text input's right edge and
@@ -214,20 +178,8 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingRight(default, set):Null<Float> = null;
-
-	private function set_paddingRight(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingRight")) {
-			return this.paddingRight;
-		}
-		if (this.paddingRight == value) {
-			return this.paddingRight;
-		}
-		this.paddingRight = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingRight;
-	}
+	@:style
+	public var paddingRight:Null<Float> = 0.0;
 
 	/**
 		The minimum space, in pixels, between the text input's bottom edge and
@@ -244,20 +196,8 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingBottom(default, set):Null<Float> = null;
-
-	private function set_paddingBottom(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingBottom")) {
-			return this.paddingBottom;
-		}
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
-		}
-		this.paddingBottom = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingBottom;
-	}
+	@:style
+	public var paddingBottom:Null<Float> = 0.0;
 
 	/**
 		The minimum space, in pixels, between the text input's left edge and the
@@ -274,20 +214,8 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingLeft(default, set):Null<Float> = null;
-
-	private function set_paddingLeft(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingLeft")) {
-			return this.paddingLeft;
-		}
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
-		}
-		this.paddingLeft = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingLeft;
-	}
+	@:style
+	public var paddingLeft:Null<Float> = 0.0;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
@@ -306,20 +234,8 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 		@see `feathers.layout.VerticalAlign.BOTTOM`
 		@see `feathers.layout.VerticalAlign.JUSTIFY`
 	**/
-	@style
-	public var verticalAlign(default, set):VerticalAlign = null;
-
-	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
-		if (!this.setStyle("verticalAlign")) {
-			return this.verticalAlign;
-		}
-		if (this.verticalAlign == value) {
-			return this.verticalAlign;
-		}
-		this.verticalAlign = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.verticalAlign;
-	}
+	@:style
+	public var verticalAlign:VerticalAlign = VerticalAlign.MIDDLE;
 
 	/**
 		Gets the skin to be used by the text input when its `currentState`
@@ -500,12 +416,6 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			if (this._currentBackgroundSkin != null) {
@@ -517,7 +427,7 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._textMeasuredHeight + paddingTop + paddingBottom;
+			newHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
@@ -536,7 +446,7 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this._textMeasuredHeight + paddingTop + paddingBottom;
+			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -601,16 +511,10 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 	private function layoutContent():Void {
 		this.layoutBackgroundSkin();
 
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
+		this.textField.x = this.paddingLeft;
+		this.textField.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 
-		this.textField.x = paddingLeft;
-		this.textField.width = this.actualWidth - paddingLeft - paddingRight;
-
-		var maxHeight = this.actualHeight - paddingTop - paddingBottom;
+		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 		if (this._textMeasuredHeight > maxHeight) {
 			this.textField.height = maxHeight;
 		} else {
@@ -618,16 +522,16 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 		}
 		switch (this.verticalAlign) {
 			case TOP:
-				this.textField.y = paddingTop;
+				this.textField.y = this.paddingTop;
 				this.textField.height = Math.min(maxHeight, this.textField.height);
 			case BOTTOM:
-				this.textField.y = this.actualHeight - paddingBottom - this.textField.height;
+				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
 				this.textField.height = Math.min(maxHeight, this.textField.height);
 			case JUSTIFY:
-				this.textField.y = paddingTop;
+				this.textField.y = this.paddingTop;
 				this.textField.height = maxHeight;
 			default: // middle or null
-				this.textField.y = paddingTop + (maxHeight - this.textField.height) / 2;
+				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2;
 				this.textField.height = Math.min(maxHeight, this.textField.height);
 		}
 	}

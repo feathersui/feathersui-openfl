@@ -64,35 +64,11 @@ class Button extends BasicButton implements ITextControl {
 		return this.text;
 	}
 
-	@style
-	public var textFormat(default, set):TextFormat = null;
+	@:style
+	public var textFormat:TextFormat = null;
 
-	private function set_textFormat(value:TextFormat):TextFormat {
-		if (!this.setStyle("textFormat")) {
-			return this.textFormat;
-		}
-		if (this.textFormat == value) {
-			return this.textFormat;
-		}
-		this.textFormat = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.textFormat;
-	}
-
-	@style
-	public var disabledTextFormat(default, set):TextFormat = null;
-
-	private function set_disabledTextFormat(value:TextFormat):TextFormat {
-		if (!this.setStyle("disabledTextFormat")) {
-			return this.disabledTextFormat;
-		}
-		if (this.disabledTextFormat == value) {
-			return this.disabledTextFormat;
-		}
-		this.disabledTextFormat = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.disabledTextFormat;
-	}
+	@:style
+	public var disabledTextFormat:TextFormat = null;
 
 	private var _stateToIcon:Map<String, DisplayObject> = new Map();
 	private var _iconMeasurements:Measurements = null;
@@ -136,20 +112,8 @@ class Button extends BasicButton implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingTop(default, set):Null<Float> = null;
-
-	private function set_paddingTop(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingTop")) {
-			return this.paddingTop;
-		}
-		if (this.paddingTop == value) {
-			return this.paddingTop;
-		}
-		this.paddingTop = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingTop;
-	}
+	@:style
+	public var paddingTop:Null<Float> = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's right edge and the
@@ -166,20 +130,8 @@ class Button extends BasicButton implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingRight(default, set):Null<Float> = null;
-
-	private function set_paddingRight(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingRight")) {
-			return this.paddingRight;
-		}
-		if (this.paddingRight == value) {
-			return this.paddingRight;
-		}
-		this.paddingRight = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingRight;
-	}
+	@:style
+	public var paddingRight:Null<Float> = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's bottom edge and the
@@ -196,20 +148,8 @@ class Button extends BasicButton implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingBottom(default, set):Null<Float> = null;
-
-	private function set_paddingBottom(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingBottom")) {
-			return this.paddingBottom;
-		}
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
-		}
-		this.paddingBottom = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingBottom;
-	}
+	@:style
+	public var paddingBottom:Null<Float> = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's left edge and the
@@ -226,20 +166,8 @@ class Button extends BasicButton implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var paddingLeft(default, set):Null<Float> = null;
-
-	private function set_paddingLeft(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("paddingLeft")) {
-			return this.paddingLeft;
-		}
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
-		}
-		this.paddingLeft = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingLeft;
-	}
+	@:style
+	public var paddingLeft:Null<Float> = 0.0;
 
 	/**
 		How the content is positioned horizontally (along the x-axis) within the
@@ -254,26 +182,14 @@ class Button extends BasicButton implements ITextControl {
 		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
 		component.
 
-		@default `feathers.layout.HorizontalAlign.MIDDLE`
+		@default `feathers.layout.HorizontalAlign.CENTER`
 
-		@see `feathers.layout.HorizontalAlign.TOP`
-		@see `feathers.layout.HorizontalAlign.MIDDLE`
-		@see `feathers.layout.HorizontalAlign.BOTTOM`
+		@see `feathers.layout.HorizontalAlign.LEFT`
+		@see `feathers.layout.HorizontalAlign.CENTER`
+		@see `feathers.layout.HorizontalAlign.RIGHT`
 	**/
-	@style
-	public var horizontalAlign(default, set):HorizontalAlign = null;
-
-	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
-		if (!this.setStyle("horizontalAlign")) {
-			return this.horizontalAlign;
-		}
-		if (this.horizontalAlign == value) {
-			return this.horizontalAlign;
-		}
-		this.horizontalAlign = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.horizontalAlign;
-	}
+	@:style
+	public var horizontalAlign:HorizontalAlign = HorizontalAlign.CENTER;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
@@ -294,74 +210,26 @@ class Button extends BasicButton implements ITextControl {
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
 	**/
-	@style
-	public var verticalAlign(default, set):VerticalAlign = null;
-
-	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
-		if (!this.setStyle("verticalAlign")) {
-			return this.verticalAlign;
-		}
-		if (this.verticalAlign == value) {
-			return this.verticalAlign;
-		}
-		this.verticalAlign = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.verticalAlign;
-	}
+	@:style
+	public var verticalAlign:VerticalAlign = VerticalAlign.MIDDLE;
 
 	/**
 		@since 1.0.0
 	**/
-	@style
-	public var iconPosition(default, set):Null<RelativePosition> = RelativePosition.LEFT;
-
-	private function set_iconPosition(value:Null<RelativePosition>):Null<RelativePosition> {
-		if (!this.setStyle("iconPosition")) {
-			return this.iconPosition;
-		}
-		if (this.iconPosition == value) {
-			return this.iconPosition;
-		}
-		this.iconPosition = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.iconPosition;
-	}
+	@:style
+	public var iconPosition:RelativePosition = RelativePosition.LEFT;
 
 	/**
 		@since 1.0.0
 	**/
-	@style
-	public var gap(default, set):Null<Float> = null;
-
-	private function set_gap(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("gap")) {
-			return this.gap;
-		}
-		if (this.gap == value) {
-			return this.gap;
-		}
-		this.gap = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.gap;
-	}
+	@:style
+	public var gap:Null<Float> = 0.0;
 
 	/**
 		@since 1.0.0
 	**/
-	@style
-	public var minGap(default, set):Null<Float> = null;
-
-	private function set_minGap(value:Null<Float>):Null<Float> {
-		if (!this.setStyle("minGap")) {
-			return this.minGap;
-		}
-		if (this.minGap == value) {
-			return this.minGap;
-		}
-		this.minGap = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.minGap;
-	}
+	@:style
+	public var minGap:Null<Float> = 0.0;
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
@@ -501,17 +369,9 @@ class Button extends BasicButton implements ITextControl {
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-		var gap = this.gap != null ? this.gap : 0.0;
-		var minGap = this.minGap != null ? this.minGap : 0.0;
-
-		var adjustedGap = gap;
+		var adjustedGap = this.gap;
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
-			adjustedGap = minGap;
+			adjustedGap = this.minGap;
 		}
 
 		var newWidth = this.explicitWidth;
@@ -527,7 +387,7 @@ class Button extends BasicButton implements ITextControl {
 				}
 				newWidth += this._currentIcon.width;
 			}
-			newWidth += paddingLeft + paddingRight;
+			newWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentBackgroundSkin != null) {
 				newWidth = Math.max(this._currentBackgroundSkin.width, newWidth);
 			}
@@ -546,7 +406,7 @@ class Button extends BasicButton implements ITextControl {
 				}
 				newHeight += this._currentIcon.height;
 			}
-			newHeight += paddingTop + paddingBottom;
+			newHeight += this.paddingTop + this.paddingBottom;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
@@ -565,7 +425,7 @@ class Button extends BasicButton implements ITextControl {
 				}
 				newMinWidth += this._currentIcon.width;
 			}
-			newMinWidth += paddingLeft + paddingRight;
+			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -586,7 +446,7 @@ class Button extends BasicButton implements ITextControl {
 				}
 				newMinHeight += this._currentIcon.height;
 			}
-			newMinHeight += paddingTop + paddingBottom;
+			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -679,14 +539,6 @@ class Button extends BasicButton implements ITextControl {
 			return;
 		}
 
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-		var gap = this.gap != null ? this.gap : 0.0;
-		var minGap = this.minGap != null ? this.minGap : 0.0;
-
 		var calculatedWidth = this.actualWidth;
 		var calculatedHeight = this.actualHeight;
 		if (forMeasurement) {
@@ -707,12 +559,12 @@ class Button extends BasicButton implements ITextControl {
 				calculatedHeight = explicitCalculatedHeight;
 			}
 		}
-		calculatedWidth -= (paddingLeft + paddingRight);
-		calculatedHeight -= (paddingTop + paddingBottom);
+		calculatedWidth -= (this.paddingLeft + this.paddingRight);
+		calculatedHeight -= (this.paddingTop + this.paddingBottom);
 		if (this._currentIcon != null) {
-			var adjustedGap = gap;
+			var adjustedGap = this.gap;
 			if (adjustedGap == Math.POSITIVE_INFINITY) {
-				adjustedGap = minGap;
+				adjustedGap = this.minGap;
 			}
 			if (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT) {
 				calculatedWidth -= (this._currentIcon.width + adjustedGap);
@@ -738,108 +590,91 @@ class Button extends BasicButton implements ITextControl {
 	}
 
 	private function positionSingleChild(displayObject:DisplayObject):Void {
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-		var horizontalAlign = this.horizontalAlign != null ? this.horizontalAlign : HorizontalAlign.CENTER;
-		var verticalAlign = this.verticalAlign != null ? this.verticalAlign : VerticalAlign.MIDDLE;
-
-		if (horizontalAlign == HorizontalAlign.LEFT) {
-			displayObject.x = paddingLeft;
-		} else if (horizontalAlign == HorizontalAlign.RIGHT) {
-			displayObject.x = this.actualWidth - paddingRight - displayObject.width;
+		if (this.horizontalAlign == HorizontalAlign.LEFT) {
+			displayObject.x = this.paddingLeft;
+		} else if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+			displayObject.x = this.actualWidth - this.paddingRight - displayObject.width;
 		} else // center
 		{
-			displayObject.x = paddingLeft + (this.actualWidth - paddingLeft - paddingRight - displayObject.width) / 2.0;
+			displayObject.x = this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - displayObject.width) / 2.0;
 		}
-		if (verticalAlign == VerticalAlign.TOP) {
-			displayObject.y = paddingTop;
-		} else if (verticalAlign == VerticalAlign.BOTTOM) {
-			displayObject.y = this.actualHeight - paddingBottom - displayObject.height;
+		if (this.verticalAlign == VerticalAlign.TOP) {
+			displayObject.y = this.paddingTop;
+		} else if (this.verticalAlign == VerticalAlign.BOTTOM) {
+			displayObject.y = this.actualHeight - this.paddingBottom - displayObject.height;
 		} else // middle
 		{
-			displayObject.y = paddingTop + (this.actualHeight - paddingTop - paddingBottom - displayObject.height) / 2.0;
+			displayObject.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - displayObject.height) / 2.0;
 		}
 	}
 
 	private function positionTextAndIcon():Void {
-		// uninitialized styles need some defaults
-		var paddingTop = this.paddingTop != null ? this.paddingTop : 0.0;
-		var paddingRight = this.paddingRight != null ? this.paddingRight : 0.0;
-		var paddingBottom = this.paddingBottom != null ? this.paddingBottom : 0.0;
-		var paddingLeft = this.paddingLeft != null ? this.paddingLeft : 0.0;
-		var gap = this.gap != null ? this.gap : 0.0;
-		var horizontalAlign = this.horizontalAlign != null ? this.horizontalAlign : HorizontalAlign.CENTER;
-		var verticalAlign = this.verticalAlign != null ? this.verticalAlign : VerticalAlign.MIDDLE;
-
 		if (this.iconPosition == RelativePosition.TOP) {
-			if (gap == Math.POSITIVE_INFINITY) {
-				this._currentIcon.y = paddingTop;
-				this.textField.y = this.actualHeight - paddingBottom - this.textField.height;
+			if (this.gap == Math.POSITIVE_INFINITY) {
+				this._currentIcon.y = this.paddingTop;
+				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
 			} else {
-				if (verticalAlign == VerticalAlign.TOP) {
-					this.textField.y += this._currentIcon.height + gap;
-				} else if (verticalAlign == VerticalAlign.MIDDLE) {
-					this.textField.y += (this._currentIcon.height + gap) / 2.0;
+				if (this.verticalAlign == VerticalAlign.TOP) {
+					this.textField.y += this._currentIcon.height + this.gap;
+				} else if (this.verticalAlign == VerticalAlign.MIDDLE) {
+					this.textField.y += (this._currentIcon.height + this.gap) / 2.0;
 				}
-				this._currentIcon.y = this.textField.y - this._currentIcon.height - gap;
+				this._currentIcon.y = this.textField.y - this._currentIcon.height - this.gap;
 			}
 		} else if (this.iconPosition == RelativePosition.RIGHT) {
-			if (gap == Math.POSITIVE_INFINITY) {
-				this.textField.x = paddingLeft;
-				this._currentIcon.x = this.actualWidth - paddingRight - this._currentIcon.width;
+			if (this.gap == Math.POSITIVE_INFINITY) {
+				this.textField.x = this.paddingLeft;
+				this._currentIcon.x = this.actualWidth - this.paddingRight - this._currentIcon.width;
 			} else {
-				if (horizontalAlign == HorizontalAlign.RIGHT) {
-					this.textField.x -= this._currentIcon.width + gap;
-				} else if (horizontalAlign == HorizontalAlign.CENTER) {
-					this.textField.x -= (this._currentIcon.width + gap) / 2.0;
+				if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+					this.textField.x -= this._currentIcon.width + this.gap;
+				} else if (this.horizontalAlign == HorizontalAlign.CENTER) {
+					this.textField.x -= (this._currentIcon.width + this.gap) / 2.0;
 				}
-				this._currentIcon.x = this.textField.x + this.textField.width + gap;
+				this._currentIcon.x = this.textField.x + this.textField.width + this.gap;
 			}
 		} else if (this.iconPosition == RelativePosition.BOTTOM) {
-			if (gap == Math.POSITIVE_INFINITY) {
-				this.textField.y = paddingTop;
-				this._currentIcon.y = this.actualHeight - paddingBottom - this._currentIcon.height;
+			if (this.gap == Math.POSITIVE_INFINITY) {
+				this.textField.y = this.paddingTop;
+				this._currentIcon.y = this.actualHeight - this.paddingBottom - this._currentIcon.height;
 			} else {
-				if (verticalAlign == VerticalAlign.BOTTOM) {
-					this.textField.y -= this._currentIcon.height + gap;
-				} else if (verticalAlign == VerticalAlign.MIDDLE) {
-					this.textField.y -= (this._currentIcon.height + gap) / 2.0;
+				if (this.verticalAlign == VerticalAlign.BOTTOM) {
+					this.textField.y -= this._currentIcon.height + this.gap;
+				} else if (this.verticalAlign == VerticalAlign.MIDDLE) {
+					this.textField.y -= (this._currentIcon.height + this.gap) / 2.0;
 				}
-				this._currentIcon.y = this.textField.y + this.textField.height + gap;
+				this._currentIcon.y = this.textField.y + this.textField.height + this.gap;
 			}
 		} else if (this.iconPosition == RelativePosition.LEFT) {
-			if (gap == Math.POSITIVE_INFINITY) {
-				this._currentIcon.x = paddingLeft;
-				this.textField.x = this.actualWidth - paddingRight - this.textField.width;
+			if (this.gap == Math.POSITIVE_INFINITY) {
+				this._currentIcon.x = this.paddingLeft;
+				this.textField.x = this.actualWidth - this.paddingRight - this.textField.width;
 			} else {
-				if (horizontalAlign == HorizontalAlign.LEFT) {
-					this.textField.x += gap + this._currentIcon.width;
-				} else if (horizontalAlign == HorizontalAlign.CENTER) {
-					this.textField.x += (gap + this._currentIcon.width) / 2.0;
+				if (this.horizontalAlign == HorizontalAlign.LEFT) {
+					this.textField.x += this.gap + this._currentIcon.width;
+				} else if (this.horizontalAlign == HorizontalAlign.CENTER) {
+					this.textField.x += (this.gap + this._currentIcon.width) / 2.0;
 				}
-				this._currentIcon.x = this.textField.x - gap - this._currentIcon.width;
+				this._currentIcon.x = this.textField.x - this.gap - this._currentIcon.width;
 			}
 		}
 
 		if (this.iconPosition == RelativePosition.LEFT || this.iconPosition == RelativePosition.RIGHT) {
-			if (verticalAlign == VerticalAlign.TOP) {
-				this._currentIcon.y = paddingTop;
-			} else if (verticalAlign == VerticalAlign.BOTTOM) {
-				this._currentIcon.y = this.actualHeight - paddingBottom - this._currentIcon.height;
+			if (this.verticalAlign == VerticalAlign.TOP) {
+				this._currentIcon.y = this.paddingTop;
+			} else if (this.verticalAlign == VerticalAlign.BOTTOM) {
+				this._currentIcon.y = this.actualHeight - this.paddingBottom - this._currentIcon.height;
 			} else {
-				this._currentIcon.y = paddingTop + (this.actualHeight - paddingTop - paddingBottom - this._currentIcon.height) / 2.0;
+				this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
 			}
 		} else // top or bottom
 		{
-			if (horizontalAlign == HorizontalAlign.LEFT) {
-				this._currentIcon.x = paddingLeft;
-			} else if (horizontalAlign == HorizontalAlign.RIGHT) {
-				this._currentIcon.x = this.actualWidth - paddingRight - this._currentIcon.width;
+			if (this.horizontalAlign == HorizontalAlign.LEFT) {
+				this._currentIcon.x = this.paddingLeft;
+			} else if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+				this._currentIcon.x = this.actualWidth - this.paddingRight - this._currentIcon.width;
 			} else {
-				this._currentIcon.x = paddingLeft + (this.actualWidth - paddingLeft - paddingRight - this._currentIcon.width) / 2.0;
+				this._currentIcon.x = this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - this._currentIcon.width) / 2.0;
 			}
 		}
 	}

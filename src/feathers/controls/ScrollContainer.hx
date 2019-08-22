@@ -71,20 +71,8 @@ class ScrollContainer extends BaseScrollContainer {
 	private var _displayListBypassEnabled = true;
 	private var items:Array<DisplayObject> = [];
 
-	@style
-	public var layout(default, set):ILayout = null;
-
-	private function set_layout(value:ILayout):ILayout {
-		if (!this.setStyle("layout")) {
-			return this.layout;
-		}
-		if (this.layout == value) {
-			return this.layout;
-		}
-		this.layout = value;
-		this.setInvalid(InvalidationFlag.LAYOUT);
-		return this.layout;
-	}
+	@:style
+	public var layout:ILayout = null;
 
 	@:getter(numChildren)
 	#if !flash override #end private function get_numChildren():Int {
@@ -221,10 +209,10 @@ class ScrollContainer extends BaseScrollContainer {
 		// until it calls super.update().
 		this._ignoreChildChangesButSetFlags = false;
 
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
+		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
-		if (layoutInvalid) {
+		if (layoutInvalid || stylesInvalid) {
 			this.layoutViewPort.layout = this.layout;
 		}
 
