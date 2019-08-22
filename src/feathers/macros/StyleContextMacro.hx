@@ -6,9 +6,9 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
-#if macro
 package feathers.macros;
 
+#if macro
 import haxe.macro.Expr.Function;
 import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
