@@ -68,12 +68,20 @@ class HProgressBar extends BaseProgressBar {
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._backgroundSkinMeasurements.width;
+			if (this._currentBackgroundSkin != null) {
+				newWidth = this._backgroundSkinMeasurements.width;
+			} else {
+				newWidth = 0.0;
+			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._backgroundSkinMeasurements.height;
+			if (this._currentBackgroundSkin != null) {
+				newHeight = this._backgroundSkinMeasurements.height;
+			} else {
+				newHeight = 0.0;
+			}
 		}
 
 		var newMinWidth = this.explicitMinWidth;
@@ -91,11 +99,14 @@ class HProgressBar extends BaseProgressBar {
 	}
 
 	override private function layoutBackground():Void {
+		if (this._currentBackgroundSkin == null) {
+			return;
+		}
 		this._currentBackgroundSkin.x = 0.0;
 		this._currentBackgroundSkin.y = 0.0;
 
-		// don't set the width or height explicitly unless necessary because if
-		// our explicit dimensions are cleared later, the measurement may not be
+		// don' t set the width or height explicitly unless necessary because if // our explicit dimensions are cleared later, the measurement may not be
+
 		// accurate anymore
 		if (this._currentBackgroundSkin.width != this.actualWidth) {
 			this._currentBackgroundSkin.width = this.actualWidth;
@@ -109,6 +120,9 @@ class HProgressBar extends BaseProgressBar {
 	}
 
 	override private function layoutFill():Void {
+		if (this._currentFillSkin == null) {
+			return;
+		}
 		var percentage = 1.0;
 		if (this.minimum != this.maximum) {
 			percentage = (this.value - this.minimum) / (this.maximum - this.minimum);

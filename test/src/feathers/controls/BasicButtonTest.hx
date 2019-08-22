@@ -8,12 +8,14 @@
 
 package feathers.controls;
 
+import openfl.display.Shape;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
 import feathers.controls.BasicButton;
 import feathers.events.FeathersEvent;
 import massive.munit.Assert;
 
+@:access(feathers.controls.BasicButton)
 class BasicButtonTest {
 	private var _button:BasicButton;
 
@@ -162,5 +164,67 @@ class BasicButtonTest {
 		Assert.areEqual(ButtonState.DOWN, this._button.currentState,
 			"currentState must be ButtonState.DOWN on MouseEvent.MOUSE_DOWN, MouseEvent.ROLL_OUT, and MouseEvent.ROLL_OVER");
 		Assert.isTrue(stateChanged, "FeathersEvent.STATE_CHANGE must be dispatched when state is changed to ButtonState.UP");
+	}
+
+	@Test
+	public function testRemoveSkinAfterSetToNewValue():Void {
+		var skin1 = new Shape();
+		var skin2 = new Shape();
+		Assert.isNull(skin1.parent);
+		Assert.isNull(skin2.parent);
+		this._button.backgroundSkin = skin1;
+		this._button.validateNow();
+		Assert.areEqual(this._button, skin1.parent);
+		Assert.isNull(skin2.parent);
+		this._button.backgroundSkin = skin2;
+		this._button.validateNow();
+		Assert.isNull(skin1.parent);
+		Assert.areEqual(this._button, skin2.parent);
+	}
+
+	@Test
+	public function testRemoveSkinAfterSetToNull():Void {
+		var skin = new Shape();
+		Assert.isNull(skin.parent);
+		this._button.backgroundSkin = skin;
+		this._button.validateNow();
+		Assert.areEqual(this._button, skin.parent);
+		this._button.backgroundSkin = null;
+		this._button.validateNow();
+		Assert.isNull(skin.parent);
+	}
+
+	@Test
+	public function testRemoveSkinAfterDisable():Void {
+		var skin1 = new Shape();
+		var skin2 = new Shape();
+		Assert.isNull(skin1.parent);
+		Assert.isNull(skin2.parent);
+		this._button.backgroundSkin = skin1;
+		this._button.setSkinForState(ButtonState.DISABLED, skin2);
+		this._button.validateNow();
+		Assert.areEqual(this._button, skin1.parent);
+		Assert.isNull(skin2.parent);
+		this._button.enabled = false;
+		this._button.validateNow();
+		Assert.isNull(skin1.parent);
+		Assert.areEqual(this._button, skin2.parent);
+	}
+
+	@Test
+	public function testRemoveSkinAfterChangeState():Void {
+		var skin1 = new Shape();
+		var skin2 = new Shape();
+		Assert.isNull(skin1.parent);
+		Assert.isNull(skin2.parent);
+		this._button.backgroundSkin = skin1;
+		this._button.setSkinForState(ButtonState.DOWN, skin2);
+		this._button.validateNow();
+		Assert.areEqual(this._button, skin1.parent);
+		Assert.isNull(skin2.parent);
+		this._button.changeState(ButtonState.DOWN);
+		this._button.validateNow();
+		Assert.isNull(skin1.parent);
+		Assert.areEqual(this._button, skin2.parent);
 	}
 }

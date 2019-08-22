@@ -73,47 +73,15 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var icon(default, set):DisplayObject = null;
-
-	private function set_icon(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("icon")) {
-			return this.icon;
-		}
-		if (this.icon == value) {
-			return this.icon;
-		}
-		if (this.icon != null && this.icon == this._currentIcon) {
-			this.removeCurrentIcon(this.icon);
-			this._currentIcon = null;
-		}
-		this.icon = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.icon;
-	}
+	@:style
+	public var icon:DisplayObject = null;
 
 	/**
 
 		@since 1.0.0
 	**/
-	@style
-	public var selectedIcon(default, set):DisplayObject = null;
-
-	private function set_selectedIcon(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("selectedIcon")) {
-			return this.selectedIcon;
-		}
-		if (this.selectedIcon == value) {
-			return this.selectedIcon;
-		}
-		if (this.selectedIcon != null && this.selectedIcon == this._currentIcon) {
-			this.removeCurrentIcon(this.selectedIcon);
-			this._currentIcon = null;
-		}
-		this.selectedIcon = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.selectedIcon;
-	}
+	@:style
+	public var selectedIcon:DisplayObject = null;
 
 	@:style
 	public var textFormat:TextFormat = null;

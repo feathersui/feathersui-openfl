@@ -133,24 +133,11 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	@style
-	public var backgroundSkin(default, set):DisplayObject = null;
+	@:style
+	public var backgroundSkin:DisplayObject = null;
 
-	private function set_backgroundSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("backgroundSkin")) {
-			return this.backgroundSkin;
-		}
-		if (this.backgroundSkin == value) {
-			return this.backgroundSkin;
-		}
-		if (this.backgroundSkin != null && this.backgroundSkin == this._currentBackgroundSkin) {
-			this.removeCurrentBackgroundSkin(this.backgroundSkin);
-			this._currentBackgroundSkin = null;
-		}
-		this.backgroundSkin = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.backgroundSkin;
-	}
+	@:style
+	public var backgroundSelectedSkin:DisplayObject = null;
 
 	private var _stateToSkin:Map<String, DisplayObject> = new Map();
 
@@ -261,6 +248,9 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		var result = this._stateToSkin.get(this.currentState);
 		if (result != null) {
 			return result;
+		}
+		if (this.selected && this.backgroundSelectedSkin != null) {
+			return this.backgroundSelectedSkin;
 		}
 		return this.backgroundSkin;
 	}

@@ -79,24 +79,8 @@ class Button extends BasicButton implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var icon(default, set):DisplayObject = null;
-
-	private function set_icon(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("icon")) {
-			return this.icon;
-		}
-		if (this.icon == value) {
-			return this.icon;
-		}
-		if (this.icon != null && this.icon == this._currentIcon) {
-			this.removeCurrentIcon(this.icon);
-			this._currentIcon = null;
-		}
-		this.icon = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.icon;
-	}
+	@:style
+	public var icon:DisplayObject = null;
 
 	/**
 		The minimum space, in pixels, between the button's top edge and the

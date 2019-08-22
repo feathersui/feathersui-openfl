@@ -216,24 +216,8 @@ class Label extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var backgroundSkin(default, set):DisplayObject = null;
-
-	private function set_backgroundSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("backgroundSkin")) {
-			return this.backgroundSkin;
-		}
-		if (this.backgroundSkin == value) {
-			return this.backgroundSkin;
-		}
-		if (this.backgroundSkin != null && this.backgroundSkin == this._currentBackgroundSkin) {
-			this.removeCurrentBackgroundSkin(this.backgroundSkin);
-			this._currentBackgroundSkin = null;
-		}
-		this.backgroundSkin = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.backgroundSkin;
-	}
+	@:style
+	public var backgroundSkin:DisplayObject = null;
 
 	/**
 		A background skin to display behind the label's text when the label is
@@ -252,24 +236,8 @@ class Label extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@style
-	public var backgroundDisabledSkin(default, set):DisplayObject = null;
-
-	private function set_backgroundDisabledSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("backgroundDisabledSkin")) {
-			return this.backgroundDisabledSkin;
-		}
-		if (this.backgroundDisabledSkin == value) {
-			return this.backgroundDisabledSkin;
-		}
-		if (this.backgroundDisabledSkin != null && this.backgroundDisabledSkin == this._currentBackgroundSkin) {
-			this.removeCurrentBackgroundSkin(this.backgroundDisabledSkin);
-			this._currentBackgroundSkin = null;
-		}
-		this.backgroundDisabledSkin = value;
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.backgroundDisabledSkin;
-	}
+	@:style
+	public var backgroundDisabledSkin:DisplayObject = null;
 
 	override private function initialize():Void {
 		super.initialize();
