@@ -24,7 +24,6 @@ class StyleContextMacro {
 		}
 		var localClassName = localClass.name;
 		var styleObject = "Class<feathers.style.IStyleObject>";
-		var abc = null;
 		var func:Function = {
 			expr: macro return $i{localClassName},
 			ret: (macro:Class<feathers.style.IStyleObject>),
