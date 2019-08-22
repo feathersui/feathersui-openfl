@@ -9,13 +9,9 @@
 package feathers.controls.dataRenderers;
 
 import feathers.core.InvalidationFlag;
-import feathers.style.IStyleObject;
 
+@:styleContext
 class ListBoxItemRenderer extends Button implements IListBoxItemRenderer {
-	override private function get_styleContext():Class<IStyleObject> {
-		return ListBoxItemRenderer;
-	}
-
 	public var data(default, set):Dynamic;
 
 	private function set_data(value:Dynamic):Dynamic {

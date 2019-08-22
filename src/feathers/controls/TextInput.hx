@@ -19,7 +19,6 @@ import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.VerticalAlign;
 import feathers.layout.Measurements;
-import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
@@ -49,13 +48,10 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
+@:styleContext
 class TextInput extends FeathersControl implements IStateContext implements ITextControl {
 	public function new() {
 		super();
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return TextInput;
 	}
 
 	/**

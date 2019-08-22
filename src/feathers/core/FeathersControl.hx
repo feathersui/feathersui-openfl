@@ -32,6 +32,7 @@ import feathers.style.Theme;
 
 	@see `feathers.controls.LayoutGroup`
 **/
+@:autoBuild(feathers.macros.StyleContextMacro.build())
 class FeathersControl extends MeasureSprite implements IUIControl implements IStyleObject implements ILayoutObject {
 	private function new() {
 		super();

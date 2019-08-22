@@ -8,17 +8,12 @@
 
 package feathers.controls;
 
-import feathers.style.IStyleObject;
-
 /**
 	@since 1.0.0
 **/
+@:styleContext
 class Check extends ToggleButton {
 	public function new() {
 		super();
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return Check;
 	}
 }

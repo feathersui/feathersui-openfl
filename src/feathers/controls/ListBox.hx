@@ -11,27 +11,17 @@ package feathers.controls;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
-import openfl.geom.Rectangle;
-import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
-import feathers.core.IValidating;
-import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
-import feathers.core.IUIControl;
 import feathers.controls.dataRenderers.IListBoxItemRenderer;
 import feathers.controls.dataRenderers.ListBoxItemRenderer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.layout.ILayout;
-import feathers.layout.Measurements;
 import feathers.layout.VerticalListFixedRowLayout;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
-import feathers.style.IStyleProvider;
-import feathers.style.IStyleObject;
-import feathers.style.FunctionStyleProvider;
-import feathers.utils.Scroller;
 
+@:styleContext
 class ListBox extends BaseScrollContainer {
 	public function new() {
 		super();
@@ -43,10 +33,6 @@ class ListBox extends BaseScrollContainer {
 	}
 
 	private var listViewPort:LayoutViewPort;
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return ListBox;
-	}
 
 	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
 

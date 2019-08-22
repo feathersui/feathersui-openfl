@@ -10,7 +10,6 @@ package feathers.controls.navigators;
 
 import feathers.motion.effects.IEffectContext;
 import feathers.events.FeathersEvent;
-import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 
 /**
@@ -37,14 +36,11 @@ import openfl.display.DisplayObject;
 	@since 1.0.0
 **/
 @:access(feathers.controls.navigators.StackItem)
+@:styleContext
 class StackNavigator extends BaseNavigator {
 	public function new() {
 		super();
 		this.addEventListener(FeathersEvent.INITIALIZE, stackNavigator_initializeHandler);
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return StackNavigator;
 	}
 
 	/**

@@ -12,7 +12,6 @@ import motion.easing.IEasing;
 import motion.easing.Quart;
 import motion.actuators.SimpleActuator;
 import motion.Actuate;
-import feathers.style.IStyleObject;
 import feathers.core.IValidating;
 import openfl.display.DisplayObject;
 import feathers.core.InvalidationFlag;
@@ -28,15 +27,12 @@ import feathers.core.FeathersControl;
 /**
 	@since 1.0.0
 **/
+@:styleContext
 class ToggleSwitch extends FeathersControl implements IToggle {
 	public function new() {
 		super();
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return ToggleSwitch;
 	}
 
 	@:isVar

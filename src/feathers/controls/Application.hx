@@ -13,7 +13,6 @@ import openfl.display.Sprite;
 import openfl.system.Capabilities;
 import openfl.events.Event;
 import feathers.core.PopUpManager;
-import feathers.style.IStyleObject;
 import feathers.utils.ScreenDensityScaleCalculator;
 import feathers.utils.MathUtil;
 
@@ -23,6 +22,7 @@ import feathers.utils.MathUtil;
 
 	@since 1.0.0
 **/
+@:styleContext
 class Application extends LayoutGroup {
 	private static function defaultPopUpContainerFactory():DisplayObjectContainer {
 		return new Sprite();
@@ -32,10 +32,6 @@ class Application extends LayoutGroup {
 		super();
 
 		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler, false, 100);
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return Application;
 	}
 
 	private var _scaler:ScreenDensityScaleCalculator;

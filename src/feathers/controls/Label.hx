@@ -19,7 +19,6 @@ import feathers.core.IValidating;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
-import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
@@ -40,6 +39,7 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
+@:styleContext
 class Label extends FeathersControl implements ITextControl {
 	/**
 		Larger text for headings.
@@ -57,10 +57,6 @@ class Label extends FeathersControl implements ITextControl {
 
 	public function new() {
 		super();
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return Label;
 	}
 
 	private var textField:TextField;

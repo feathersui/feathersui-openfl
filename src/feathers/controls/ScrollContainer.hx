@@ -20,7 +20,6 @@ import feathers.events.FeathersEvent;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
 import feathers.layout.Measurements;
-import feathers.style.IStyleObject;
 import feathers.utils.Scroller;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -55,6 +54,7 @@ import openfl.geom.Rectangle;
 
 	@since 1.0.0
 **/
+@:styleContext
 class ScrollContainer extends BaseScrollContainer {
 	public function new() {
 		super();
@@ -63,10 +63,6 @@ class ScrollContainer extends BaseScrollContainer {
 			this.addRawChild(this.layoutViewPort);
 			this.viewPort = this.layoutViewPort;
 		}
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return ScrollContainer;
 	}
 
 	private var layoutViewPort:LayoutViewPort;

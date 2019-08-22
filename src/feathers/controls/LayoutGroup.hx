@@ -21,7 +21,6 @@ import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
-import feathers.style.IStyleObject;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.geom.Point;
@@ -55,16 +54,13 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
+@:styleContext
 class LayoutGroup extends FeathersControl {
 	public static final VARIANT_TOOL_BAR = "toolBar";
 
 	public function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, layoutGroup_addedToStageHandler);
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return LayoutGroup;
 	}
 
 	private var items:Array<DisplayObject> = [];

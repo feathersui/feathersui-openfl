@@ -10,12 +10,12 @@ package feathers.controls;
 
 import openfl.events.Event;
 import openfl.errors.IllegalOperationError;
-import feathers.style.IStyleObject;
 import feathers.core.ToggleGroup;
 
 /**
 	@since 1.0.0
 **/
+@:styleContext
 class Radio extends ToggleButton implements IGroupedToggle {
 	public static final defaultRadioGroup:ToggleGroup = new ToggleGroup();
 
@@ -23,10 +23,6 @@ class Radio extends ToggleButton implements IGroupedToggle {
 		super();
 		super.toggleable = true;
 		this.addEventListener(Event.ADDED_TO_STAGE, radio_addedToStageHandler);
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return Radio;
 	}
 
 	override private function set_toggleable(value:Bool):Bool {

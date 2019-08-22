@@ -19,7 +19,6 @@ import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
 import feathers.core.IStateObserver;
-import feathers.style.IStyleObject;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
@@ -41,13 +40,10 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
+@:styleContext
 class Button extends BasicButton implements ITextControl {
 	public function new() {
 		super();
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return Button;
 	}
 
 	private var textField:TextField;

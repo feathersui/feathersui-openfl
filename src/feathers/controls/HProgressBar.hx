@@ -8,18 +8,14 @@
 
 package feathers.controls;
 
-import feathers.style.IStyleObject;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseProgressBar;
 
+@:styleContext
 class HProgressBar extends BaseProgressBar {
 	public function new() {
 		super();
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return HProgressBar;
 	}
 
 	/**

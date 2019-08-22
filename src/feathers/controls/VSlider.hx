@@ -10,7 +10,6 @@ package feathers.controls;
 
 import feathers.controls.supportClasses.BaseSlider;
 import feathers.core.IValidating;
-import feathers.style.IStyleObject;
 import openfl.geom.Point;
 
 /**
@@ -36,13 +35,10 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
+@:styleContext
 class VSlider extends BaseSlider {
 	public function new() {
 		super();
-	}
-
-	override private function get_styleContext():Class<IStyleObject> {
-		return VSlider;
 	}
 
 	override private function valueToLocation(value:Float):Float {
