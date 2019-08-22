@@ -15,6 +15,7 @@
 
 	<!-- sync/embedded -->
 	<assets id="haxe" path="assets/img/haxe.png"/>
+	<assets id="favicon" path="assets/img/favicon.png"/>
 
 	<!-- async/external -->
 	<assets id="openfl" path="assets/img/openfl.png" embed="false"/>
