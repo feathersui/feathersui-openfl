@@ -131,4 +131,14 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	public function removeAll():Void {
 		this.array.resize(0);
 	}
+
+	/**
+		Returns the index of the specified item, or `-1` if the item is not in
+		the collection.
+
+		@since 1.0.0
+	**/
+	public function indexOf(item:T):Int {
+		return this.array.indexOf(item);
+	}
 }

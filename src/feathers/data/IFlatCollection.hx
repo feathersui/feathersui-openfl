@@ -76,4 +76,12 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		@since 1.0.0
 	**/
 	public function removeAll():Void;
+
+	/**
+		Returns the index of the specified item, or `-1` if the item is not in
+		the collection.
+
+		@since 1.0.0
+	**/
+	public function indexOf(item:T):Int;
 }
