@@ -15,8 +15,8 @@ import feathers.core.IValidating;
 
 @:styleContext
 class Panel extends ScrollContainer {
-	private static final INVALIDATION_FLAG_HEADER_FACTORY:String = "headerFactory";
-	private static final INVALIDATION_FLAG_FOOTER_FACTORY:String = "footerFactory";
+	private static final INVALIDATION_FLAG_HEADER_FACTORY = "headerFactory";
+	private static final INVALIDATION_FLAG_FOOTER_FACTORY = "footerFactory";
 
 	public function new() {
 		super();
