@@ -534,20 +534,6 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 
-		var endIndex = this.savedScrollMoves.length - 1;
-		var startIndex = endIndex;
-
-		// find scroll position measured 100ms ago, if possible
-		var i = endIndex;
-		while (endIndex > 0 && this.savedScrollMoves[i] > (this.lastTouchMoveTime - 100)) {
-			startIndex = i;
-			i -= 3;
-		}
-
-		if (startIndex == endIndex) {
-			return;
-		}
-
 		var finishingX = !this.canDragX();
 		var finishingY = !this.canDragY();
 		if (this.scrollX < this.minScrollX || this.scrollX > this.maxScrollX) {
@@ -560,6 +546,22 @@ class Scroller extends EventDispatcher {
 		}
 
 		if (finishingX && finishingY) {
+			return;
+		}
+
+		// find scroll position measured 100ms ago, if possible
+		var endIndex = this.savedScrollMoves.length - 1;
+		var startIndex = endIndex;
+		var i = endIndex;
+		while (endIndex > 0 && this.savedScrollMoves[i] > (this.lastTouchMoveTime - 100)) {
+			startIndex = i;
+			i -= 3;
+		}
+
+		// the scroll position hasn't changed, so don't scroll
+		if (startIndex == endIndex) {
+			this.draggingX = false;
+			this.draggingY = false;
 			return;
 		}
 
