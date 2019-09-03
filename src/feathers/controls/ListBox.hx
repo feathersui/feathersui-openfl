@@ -56,13 +56,23 @@ class ListBox extends BaseScrollContainer {
 		return this.selectedIndex;
 	}
 
-	public var selectedItem(get, null):Dynamic = null;
+	@:isVar
+	public var selectedItem(get, set):Dynamic = null;
 
 	private function get_selectedItem():Dynamic {
 		if (this.selectedIndex == -1) {
 			return null;
 		}
 		return this.dataProvider.get(this.selectedIndex);
+	}
+
+	private function set_selectedItem(value:Dynamic):Dynamic {
+		if (this.dataProvider == null) {
+			this.selectedIndex = -1;
+			return this.selectedItem;
+		}
+		this.selectedIndex = this.dataProvider.indexOf(value);
+		return this.selectedItem;
 	}
 
 	@:style
