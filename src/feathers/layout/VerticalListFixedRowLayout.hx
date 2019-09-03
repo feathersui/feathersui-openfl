@@ -60,9 +60,9 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		The number of rows to render, if the height of the container has not
 		been set explicitly. If `null`, shows all rows.
 	**/
-	public var requestedRowCount(default, set):Null<Int> = 5;
+	public var requestedRowCount(default, set):Null<Float> = 5.0;
 
-	private function set_requestedRowCount(value:Null<Int>):Null<Int> {
+	private function set_requestedRowCount(value:Null<Float>):Null<Float> {
 		if (this.requestedRowCount == value) {
 			return this.requestedRowCount;
 		}
