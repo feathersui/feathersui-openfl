@@ -168,7 +168,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this.viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset;
+			newWidth = this.viewPort.visibleWidth + this.leftViewPortOffset + this.rightViewPortOffset;
 			if (this._currentBackgroundSkin != null) {
 				newWidth = Math.max(newWidth, this._currentBackgroundSkin.width);
 			}
@@ -176,7 +176,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this.viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset;
+			newHeight = this.viewPort.visibleHeight + this.topViewPortOffset + this.bottomViewPortOffset;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(newHeight, this._currentBackgroundSkin.height);
 			}
@@ -184,7 +184,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = this.viewPort.minWidth + this.leftViewPortOffset + this.rightViewPortOffset;
+			newMinWidth = this.viewPort.minVisibleWidth + this.leftViewPortOffset + this.rightViewPortOffset;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(newMinWidth, measureSkin.minWidth);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -194,7 +194,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this.viewPort.minHeight + this.topViewPortOffset + this.bottomViewPortOffset;
+			newMinHeight = this.viewPort.minVisibleHeight + this.topViewPortOffset + this.bottomViewPortOffset;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(newMinHeight, measureSkin.minHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -203,7 +203,7 @@ class BaseScrollContainer extends FeathersControl {
 		}
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
-			newMaxWidth = this.viewPort.maxWidth + this.leftViewPortOffset + this.rightViewPortOffset;
+			newMaxWidth = this.viewPort.maxVisibleWidth + this.leftViewPortOffset + this.rightViewPortOffset;
 			if (measureSkin != null) {
 				newMaxWidth = Math.min(newMaxWidth, measureSkin.maxWidth);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -213,7 +213,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
-			newMaxHeight = this.viewPort.maxHeight + this.topViewPortOffset + this.bottomViewPortOffset;
+			newMaxHeight = this.viewPort.maxVisibleHeight + this.topViewPortOffset + this.bottomViewPortOffset;
 			if (measureSkin != null) {
 				newMaxHeight = Math.min(newMaxHeight, measureSkin.maxHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
