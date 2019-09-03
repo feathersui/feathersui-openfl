@@ -8,6 +8,8 @@
 
 package feathers.themes;
 
+import openfl.display.CapsStyle;
+import openfl.display.LineScaleMode;
 import feathers.controls.BasicToggleButton;
 import feathers.controls.TextInputState;
 import feathers.controls.Panel;
@@ -46,6 +48,8 @@ import feathers.style.ITheme;
 import feathers.controls.Check;
 import feathers.controls.Radio;
 import feathers.controls.Application;
+import feathers.controls.PopUpList;
+import feathers.layout.RelativePosition;
 
 /**
 	@since 1.0.0
@@ -59,6 +63,7 @@ class DefaultTheme implements ITheme {
 		this.styleProvider = new ClassVariantStyleProvider();
 		this.styleProvider.setStyleFunction(Application, null, this.setApplicationStyles);
 		this.styleProvider.setStyleFunction(Button, null, this.setButtonStyles);
+		this.styleProvider.setStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON, this.setPopUpListButtonStyles);
 		this.styleProvider.setStyleFunction(Check, null, this.setCheckStyles);
 		this.styleProvider.setStyleFunction(Label, null, this.setLabelStyles);
 		this.styleProvider.setStyleFunction(Label, Label.VARIANT_HEADING, this.setHeadingLabelStyles);
@@ -571,6 +576,29 @@ class DefaultTheme implements ITheme {
 			backgroundSkin.fill = getContainerFill();
 			panel.backgroundSkin = backgroundSkin;
 		}
+	}
+
+	private function setPopUpListButtonStyles(button:Button):Void {
+		this.setButtonStyles(button);
+
+		button.horizontalAlign = HorizontalAlign.LEFT;
+		button.gap = Math.POSITIVE_INFINITY;
+
+		var icon:Shape = new Shape();
+		icon.graphics.beginFill(this.textColor);
+		icon.graphics.moveTo(0.0, 0.0);
+		icon.graphics.lineTo(4.0, 4.0);
+		icon.graphics.lineTo(8.0, 0.0);
+		button.icon = icon;
+
+		var downIcon:Shape = new Shape();
+		downIcon.graphics.beginFill(this.activeTextColor);
+		downIcon.graphics.moveTo(0.0, 0.0);
+		downIcon.graphics.lineTo(4.0, 4.0);
+		downIcon.graphics.lineTo(8.0, 0.0);
+		button.setIconForState(ButtonState.DOWN, downIcon);
+
+		button.iconPosition = RelativePosition.RIGHT;
 	}
 
 	private function setRadioStyles(radio:Radio):Void {

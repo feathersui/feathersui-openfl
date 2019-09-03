@@ -15,6 +15,7 @@ import com.feathersui.components.screens.CheckScreen;
 import com.feathersui.components.screens.LabelScreen;
 import com.feathersui.components.screens.ListBoxScreen;
 import com.feathersui.components.screens.PanelScreen;
+import com.feathersui.components.screens.PopUpListScreen;
 import com.feathersui.components.screens.PopUpManagerScreen;
 import com.feathersui.components.screens.ProgressBarScreen;
 import com.feathersui.components.screens.RadioScreen;
@@ -54,8 +55,11 @@ class Main extends Application {
 		var panel = StackItem.withClass(PanelScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.PANEL, panel);
 
-		var popUps = StackItem.withClass(PopUpManagerScreen, [Event.COMPLETE => StackAction.Pop()]);
-		navigator.addItem(ScreenID.POP_UP_MANAGER, popUps);
+		var popUpList = StackItem.withClass(PopUpListScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.POP_UP_LIST, popUpList);
+
+		var popUpManager = StackItem.withClass(PopUpManagerScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.POP_UP_MANAGER, popUpManager);
 
 		var progressBar = StackItem.withClass(ProgressBarScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.PROGRESS_BAR, progressBar);

@@ -8,6 +8,7 @@ class ScreenID {
 	public static final LABEL = "label";
 	public static final LIST_BOX = "listBox";
 	public static final PANEL = "panel";
+	public static final POP_UP_LIST = "popUpList";
 	public static final POP_UP_MANAGER = "popUpManager";
 	public static final PROGRESS_BAR = "progressBar";
 	public static final RADIO = "radio";

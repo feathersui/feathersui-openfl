@@ -51,9 +51,9 @@ class MainMenu extends Panel {
 		this.listBox.dataProvider = new ArrayCollection([
 			{text: "Asset Loader", screenID: ScreenID.ASSET_LOADER}, {text: "Button", screenID: ScreenID.BUTTON}, {text: "Check", screenID: ScreenID.CHECK},
 			{text: "Label", screenID: ScreenID.LABEL}, {text: "List Box", screenID: ScreenID.LIST_BOX}, {text: "Panel", screenID: ScreenID.PANEL},
-			{text: "Pop Up Manager", screenID: ScreenID.POP_UP_MANAGER}, {text: "Progress Bar", screenID: ScreenID.PROGRESS_BAR},
-			{text: "Radio", screenID: ScreenID.RADIO}, {text: "Slider", screenID: ScreenID.SLIDER}, {text: "Text Input", screenID: ScreenID.TEXT_INPUT},
-			{text: "Toggle Switch", screenID: ScreenID.TOGGLE_SWITCH},
+			{text: "Pop Up List", screenID: ScreenID.POP_UP_LIST}, {text: "Pop Up Manager", screenID: ScreenID.POP_UP_MANAGER},
+			{text: "Progress Bar", screenID: ScreenID.PROGRESS_BAR}, {text: "Radio", screenID: ScreenID.RADIO}, {text: "Slider", screenID: ScreenID.SLIDER},
+			{text: "Text Input", screenID: ScreenID.TEXT_INPUT}, {text: "Toggle Switch", screenID: ScreenID.TOGGLE_SWITCH},
 		]);
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.listBox.addEventListener(Event.CHANGE, list_changeHandler);
