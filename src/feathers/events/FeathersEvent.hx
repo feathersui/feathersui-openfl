@@ -120,6 +120,17 @@ class FeathersEvent extends Event {
 	**/
 	public static inline var TRANSITION_CANCEL:String = "transitionCancel";
 
+	/**
+		The `FeathersEvent.TRIGGERED` event type is dispatched when a UI
+		component is triggered. Typically, this is when a button is clicked
+		with a mouse or tapped with a touchscreen.
+
+		@see `feathers.controls.Button`
+
+		@since 1.0.0
+	**/
+	public static inline var TRIGGERED:String = "triggered";
+
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false));
 
 	/**

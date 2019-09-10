@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
 import lime.ui.KeyCode;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
@@ -112,6 +113,7 @@ class PopUpList extends FeathersControl {
 		}
 		this.listBox.addEventListener(Event.REMOVED_FROM_STAGE, popUpList_listBox_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpList_stage_mouseDownHandler, false, 0, true);
+		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpList_stage_touchBeginHandler, false, 0, true);
 		this.stage.addEventListener(KeyboardEvent.KEY_UP, popUpList_stage_keyUpHandler, false, 0, true);
 	}
 
@@ -158,22 +160,24 @@ class PopUpList extends FeathersControl {
 
 	private function createButton():Void {
 		if (this.button != null) {
-			this.button.removeEventListener(MouseEvent.CLICK, button_clickHandler);
+			this.button.removeEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
 			this.button = null;
 		}
 		this.button = new Button();
 		this.button.variant = PopUpList.CHILD_VARIANT_BUTTON;
-		this.button.addEventListener(MouseEvent.CLICK, button_clickHandler);
+		this.button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
 	}
 
 	private function createListBox():Void {
 		if (this.listBox != null) {
+			this.listBox.removeEventListener(FeathersEvent.TRIGGERED, listBox_triggeredHandler);
 			this.listBox.removeEventListener(Event.CHANGE, listBox_changeHandler);
 			this.listBox = null;
 		}
 		this.listBox = new ListBox();
+		this.listBox.addEventListener(FeathersEvent.TRIGGERED, listBox_triggeredHandler);
 		this.listBox.addEventListener(Event.CHANGE, listBox_changeHandler);
 	}
 
@@ -240,7 +244,7 @@ class PopUpList extends FeathersControl {
 		this.button.validateNow();
 	}
 
-	private function button_clickHandler(event:MouseEvent):Void {
+	private function button_triggeredHandler(event:FeathersEvent):Void {
 		if (this.open) {
 			this.closeList();
 		} else {
@@ -248,16 +252,20 @@ class PopUpList extends FeathersControl {
 		}
 	}
 
-	private function listBox_changeHandler(event:Event):Void {
+	private function listBox_triggeredHandler(event:Event):Void {
 		if (this.popUpAdapter == null) {
 			this.closeList();
 		}
+	}
+
+	private function listBox_changeHandler(event:Event):Void {
 		this.selectedIndex = this.listBox.selectedIndex;
 	}
 
 	private function popUpList_listBox_removedFromStageHandler(event:Event):Void {
 		this.listBox.removeEventListener(Event.REMOVED_FROM_STAGE, popUpList_listBox_removedFromStageHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpList_stage_mouseDownHandler);
+		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpList_stage_touchBeginHandler);
 		this.stage.removeEventListener(KeyboardEvent.KEY_UP, popUpList_stage_keyUpHandler);
 	}
 
@@ -273,6 +281,17 @@ class PopUpList extends FeathersControl {
 	}
 
 	private function popUpList_stage_mouseDownHandler(event:MouseEvent):Void {
+		if (this.listBox.hitTestPoint(event.stageX, event.stageY)) {
+			return;
+		}
+		this.closeList();
+	}
+
+	private function popUpList_stage_touchBeginHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
 		if (this.listBox.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}

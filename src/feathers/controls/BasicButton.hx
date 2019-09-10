@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.MouseEvent;
 import feathers.core.FeathersControl;
@@ -74,6 +75,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 	}
 
 	private var _pointerToState:PointerToState = null;
+	private var _pointerTrigger:PointerTrigger = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 
@@ -157,6 +159,10 @@ class BasicButton extends FeathersControl implements IStateContext {
 
 		if (this._pointerToState == null) {
 			this._pointerToState = new PointerToState(this, this.changeState);
+		}
+
+		if (this._pointerTrigger == null) {
+			this._pointerTrigger = new PointerTrigger(this);
 		}
 	}
 

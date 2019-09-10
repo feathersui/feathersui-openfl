@@ -10,14 +10,12 @@ package feathers.controls;
 
 import openfl.display.DisplayObject;
 import openfl.events.Event;
-import openfl.events.MouseEvent;
 import feathers.core.InvalidationFlag;
 import feathers.controls.dataRenderers.IListBoxItemRenderer;
 import feathers.controls.dataRenderers.ListBoxItemRenderer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.layout.ILayout;
-import feathers.layout.VerticalListFixedRowLayout;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 
@@ -123,18 +121,20 @@ class ListBox extends BaseScrollContainer {
 		var itemRenderer:ListBoxItemRenderer = new ListBoxItemRenderer();
 		itemRenderer.index = index;
 		itemRenderer.data = item;
-		itemRenderer.addEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
+		itemRenderer.addEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
 		return itemRenderer;
 	}
 
 	private function destroyItemRenderer(itemRenderer:IListBoxItemRenderer):Void {
-		itemRenderer.removeEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
+		itemRenderer.removeEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
 		itemRenderer.data = null;
 		itemRenderer.index = -1;
 	}
 
-	private function itemRenderer_clickHandler(event:MouseEvent):Void {
+	private function itemRenderer_triggeredHandler(event:FeathersEvent):Void {
 		var itemRenderer:IListBoxItemRenderer = cast(event.currentTarget, IListBoxItemRenderer);
+		// trigger before change
+		FeathersEvent.dispatch(this, FeathersEvent.TRIGGERED);
 		this.selectedIndex = itemRenderer.index;
 	}
 }
