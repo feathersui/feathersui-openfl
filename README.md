@@ -16,7 +16,7 @@ For more detailed instructions, see [Learn: Install Feathers UI for Haxe and Ope
 
 ### Prerequisites
 
-Requires Haxe **4.0.0-rc.3** or newer. Find it on the [Haxe Downloads List](https://haxe.org/download/list/).
+Requires Haxe **4.0.0-rc.4** or newer. Find it on the [Haxe Downloads List](https://haxe.org/download/list/).
 
 ### Installation
 
