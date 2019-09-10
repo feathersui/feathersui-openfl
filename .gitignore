@@ -4,3 +4,7 @@
 *.code-workspace
 
 build/
+
+lib/_gen/
+lib-esm/_gen/
+node_modules/
