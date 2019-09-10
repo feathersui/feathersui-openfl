@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Feathers UI" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
+	<app main="feathers.controls.Application" path="build" file="feathersui-openfl" />
+	
+	<source path="src" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+
+	<template path="templates" if="flash"/>
+</project>
