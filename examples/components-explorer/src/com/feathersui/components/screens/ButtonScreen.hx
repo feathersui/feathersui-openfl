@@ -1,5 +1,6 @@
 package com.feathersui.components.screens;
 
+import feathers.events.FeathersEvent;
 import openfl.Assets;
 import openfl.display.Bitmap;
 import feathers.layout.VerticalAlign;
@@ -7,7 +8,6 @@ import feathers.layout.HorizontalAlign;
 import feathers.layout.VerticalLayout;
 import feathers.controls.Label;
 import openfl.events.Event;
-import openfl.events.MouseEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
@@ -43,7 +43,7 @@ class ButtonScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -65,7 +65,7 @@ class ButtonScreen extends Panel {
 		this.addChild(this.toggleButton);
 	}
 
-	private function backButton_clickHandler(event:MouseEvent):Void {
+	private function backButton_triggeredHandler(event:FeathersEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 

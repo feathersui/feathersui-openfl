@@ -1,8 +1,8 @@
 package com.feathersui.components.screens;
 
+import feathers.events.FeathersEvent;
 import feathers.style.Theme;
 import feathers.themes.DefaultTheme;
-import openfl.events.MouseEvent;
 import openfl.events.Event;
 import com.feathersui.components.ScreenID;
 import feathers.data.ArrayCollection;
@@ -35,7 +35,7 @@ class MainMenu extends Panel {
 
 			var themeButton = new Button();
 			themeButton.text = "Theme";
-			themeButton.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):Void {
+			themeButton.addEventListener(FeathersEvent.TRIGGERED, function(event:FeathersEvent):Void {
 				var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
 				if (theme != null) {
 					theme.darkMode = !theme.darkMode;

@@ -1,13 +1,12 @@
 package com.feathersui.components.screens;
 
+import feathers.events.FeathersEvent;
 import feathers.core.PopUpManager;
 import feathers.controls.Label;
 import openfl.events.Event;
-import openfl.events.MouseEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
-import feathers.controls.TextInput;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 
@@ -33,7 +32,7 @@ class PopUpManagerScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -42,15 +41,15 @@ class PopUpManagerScreen extends Panel {
 		this.button = new Button();
 		this.button.text = "Add Pop Up";
 		this.button.layoutData = AnchorLayoutData.center();
-		this.button.addEventListener(MouseEvent.CLICK, addPopUpButton_clickHandler);
+		this.button.addEventListener(FeathersEvent.TRIGGERED, addPopUpButton_triggeredHandler);
 		this.addChild(this.button);
 	}
 
-	private function backButton_clickHandler(event:MouseEvent):Void {
+	private function backButton_triggeredHandler(event:FeathersEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 
-	private function addPopUpButton_clickHandler(event:MouseEvent):Void {
+	private function addPopUpButton_triggeredHandler(event:FeathersEvent):Void {
 		var popUp = new Panel();
 		popUp.layout = new AnchorLayout();
 		var message = new Label();
@@ -62,7 +61,7 @@ class PopUpManagerScreen extends Panel {
 			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
 			var closeButton = new Button();
 			closeButton.text = "Close";
-			closeButton.addEventListener(MouseEvent.CLICK, (event:MouseEvent) -> {
+			closeButton.addEventListener(FeathersEvent.TRIGGERED, (event:FeathersEvent) -> {
 				PopUpManager.removePopUp(popUp);
 			});
 			footer.addChild(closeButton);

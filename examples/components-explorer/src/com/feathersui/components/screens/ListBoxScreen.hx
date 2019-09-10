@@ -1,9 +1,9 @@
 package com.feathersui.components.screens;
 
+import feathers.events.FeathersEvent;
 import feathers.controls.ListBox;
 import feathers.controls.Label;
 import openfl.events.Event;
-import openfl.events.MouseEvent;
 import feathers.data.ArrayCollection;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
@@ -33,7 +33,7 @@ class ListBoxScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(MouseEvent.CLICK, backButton_clickHandler);
+			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -50,7 +50,7 @@ class ListBoxScreen extends Panel {
 		this.addChild(this.listBox);
 	}
 
-	private function backButton_clickHandler(event:MouseEvent):Void {
+	private function backButton_triggeredHandler(event:FeathersEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }
