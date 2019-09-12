@@ -1,0 +1,21 @@
+-js ../lib/_gen/_.js
+--macro ImportAll.run("feathers")
+-cp ../src
+-D lime=7.6.2
+-cp ../node_modules/lime/src
+-cp ../node_modules/openfl/src
+-cp ../node_modules/actuate/src
+-cp ../node_modules/hxgenjs/src
+--macro genjs.Generator.use()
+-D openfl-dynamic
+-D openfljs
+-D lime-bytes-length-getter
+-D html5
+-D lime-canvas
+-D lime-dom
+-D lime-howlerjs
+-D lime-webgl
+-D tools
+-D commonjs
+-D howlerjs
+--no-inline
