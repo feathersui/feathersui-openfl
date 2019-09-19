@@ -32,7 +32,7 @@ import feathers.utils.PointerToState;
 
 	@see `feathers.controls.ToggleButton`
 **/
-class BasicToggleButton extends FeathersControl implements IToggle implements IStateContext {
+class BasicToggleButton extends FeathersControl implements IToggle implements IStateContext<ToggleButtonState> {
 	public function new() {
 		super();
 		// MouseEvent.CLICK is dispatched only if the same object is under the
@@ -57,24 +57,23 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):String = ToggleButtonState.UP;
+	public var currentState(get, null):ToggleButtonState = ToggleButtonState.UP();
 
-	private function get_currentState():String {
-		var result = this.currentState;
-		if (this.selected) {
-			result += "AndSelected";
-		}
-		return result;
+	private function get_currentState():ToggleButtonState {
+		return this.currentState;
 	}
 
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
 		if (this.enabled) {
-			if (@:bypassAccessor this.currentState == ToggleButtonState.DISABLED) {
-				this.changeState(ToggleButtonState.UP);
+			var toggleState = cast(@:bypassAccessor this.currentState, ToggleButtonState);
+			switch (toggleState) {
+				case ToggleButtonState.DISABLED(selected):
+					this.changeState(ToggleButtonState.UP(selected));
+				default: // do nothing
 			}
 		} else {
-			this.changeState(ToggleButtonState.DISABLED);
+			this.changeState(ToggleButtonState.DISABLED(this.selected));
 		}
 		return this.enabled;
 	}
@@ -108,7 +107,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		return this.toggleable;
 	}
 
-	private var _pointerToState:PointerToState = null;
+	private var _pointerToState:PointerToState<ToggleButtonState> = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 
@@ -139,7 +138,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	@:style
 	public var backgroundSelectedSkin:DisplayObject = null;
 
-	private var _stateToSkin:Map<String, DisplayObject> = new Map();
+	private var _stateToSkin:Map<ToggleButtonState, DisplayObject> = new Map();
 
 	/**
 		Gets the skin to be used by the toggle button when its `currentState`
@@ -194,7 +193,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		super.initialize();
 
 		if (this._pointerToState == null) {
-			this._pointerToState = new PointerToState(this, this.changeState);
+			this._pointerToState = new PointerToState(this, this.changeState, ToggleButtonState.UP(), ToggleButtonState.DOWN(), ToggleButtonState.HOVER());
 		}
 	}
 
@@ -402,14 +401,34 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		}
 	}
 
-	private function changeState(state:String):Void {
+	private function changeState(state:ToggleButtonState):Void {
+		var toggleState = cast(state, ToggleButtonState);
 		if (!this.enabled) {
-			state = ToggleButtonState.DISABLED;
+			toggleState = ToggleButtonState.DISABLED(this.selected);
 		}
-		if (this.currentState == state) {
+		switch (toggleState) {
+			case ToggleButtonState.UP(selected):
+				if (this.selected != selected) {
+					toggleState = ToggleButtonState.UP(this.selected);
+				}
+			case ToggleButtonState.DOWN(_):
+				if (this.selected != selected) {
+					toggleState = ToggleButtonState.DOWN(this.selected);
+				}
+			case ToggleButtonState.HOVER(_):
+				if (this.selected != selected) {
+					toggleState = ToggleButtonState.HOVER(this.selected);
+				}
+			case ToggleButtonState.DISABLED(_):
+				if (this.selected != selected) {
+					toggleState = ToggleButtonState.DISABLED(this.selected);
+				}
+			default: // do nothing
+		}
+		if (this.currentState == toggleState) {
 			return;
 		}
-		this.currentState = state;
+		this.currentState = toggleState;
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}

@@ -70,7 +70,7 @@ class Button extends BasicButton implements ITextControl {
 	@:style
 	public var disabledTextFormat:TextFormat = null;
 
-	private var _stateToIcon:Map<String, DisplayObject> = new Map();
+	private var _stateToIcon:Map<ButtonState, DisplayObject> = new Map();
 	private var _iconMeasurements:Measurements = null;
 	private var _currentIcon:DisplayObject = null;
 	private var _ignoreIconResizes:Bool = false;
@@ -217,7 +217,7 @@ class Button extends BasicButton implements ITextControl {
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-	private var _stateToTextFormat:Map<String, TextFormat> = new Map();
+	private var _stateToTextFormat:Map<ButtonState, TextFormat> = new Map();
 
 	/**
 		Gets the text format to be used by the button when its `currentState`

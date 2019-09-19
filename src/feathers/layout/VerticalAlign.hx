@@ -17,15 +17,14 @@ package feathers.layout;
 
 	@since 1.0.0
 **/
-@:enum
-abstract VerticalAlign(String) {
+enum VerticalAlign {
 	/**
 		The items in the layout will be vertically aligned to the top of the
 		bounds.
 
 		@since 1.0.0
 	**/
-	var TOP = "top";
+	TOP;
 
 	/**
 		The items in the layout will be vertically aligned to the middle of the
@@ -33,7 +32,7 @@ abstract VerticalAlign(String) {
 
 		@since 1.0.0
 	**/
-	var MIDDLE = "middle";
+	MIDDLE;
 
 	/**
 		The items in the layout will be vertically aligned to the bottom of the
@@ -41,12 +40,12 @@ abstract VerticalAlign(String) {
 
 		@since 1.0.0
 	**/
-	var BOTTOM = "bottom";
+	BOTTOM;
 
 	/**
 		The items in the layout will fill the height of the bounds.
 
 		@since 1.0.0
 	**/
-	var JUSTIFY = "justify";
+	JUSTIFY;
 }

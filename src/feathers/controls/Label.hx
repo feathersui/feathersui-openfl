@@ -435,7 +435,7 @@ class Label extends FeathersControl implements ITextControl {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
 		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext);
+			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}

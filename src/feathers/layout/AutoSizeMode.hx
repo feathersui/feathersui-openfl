@@ -14,15 +14,14 @@ package feathers.layout;
 
 	@since 1.0.0
 **/
-@:enum
-abstract AutoSizeMode(String) {
+enum AutoSizeMode {
 	/**
 		The component will automatically calculate its dimensions to fill the
 		entire stage.
 
 		@since 1.0.0
 	**/
-	var STAGE = "stage";
+	STAGE;
 
 	/**
 		The component will automatically calculate its dimensions to fit its
@@ -30,5 +29,5 @@ abstract AutoSizeMode(String) {
 
 		@since 1.0.0
 	**/
-	var CONTENT = "content";
+	CONTENT;
 }

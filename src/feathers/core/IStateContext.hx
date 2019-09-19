@@ -17,11 +17,11 @@ import openfl.events.IEventDispatcher;
 
 	@since 1.0.0
 **/
-interface IStateContext extends IEventDispatcher {
+interface IStateContext<T> extends IEventDispatcher {
 	/**
 		The object's current state.
 
 		@since 1.0.0
 	**/
-	public var currentState(get, never):String;
+	public var currentState(get, never):T;
 }

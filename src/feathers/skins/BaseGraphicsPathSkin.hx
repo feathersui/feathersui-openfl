@@ -43,9 +43,9 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public var stateContext(default, set):IStateContext;
+	public var stateContext(default, set):IStateContext<Dynamic>;
 
-	private function set_stateContext(value:IStateContext):IStateContext {
+	private function set_stateContext(value:IStateContext<Dynamic>):IStateContext<Dynamic> {
 		if (this.stateContext == value) {
 			return this.stateContext;
 		}
@@ -66,7 +66,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return this.stateContext;
 	}
 
-	private var _stateToFill:Map<String, FillStyle>;
+	private var _stateToFill:Map<EnumValue, FillStyle>;
 
 	/**
 		How the path's fill is styled. For example, it could be a solid color,
@@ -124,7 +124,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return this.selectedFill;
 	}
 
-	private var _stateToBorder:Map<String, LineStyle>;
+	private var _stateToBorder:Map<EnumValue, LineStyle>;
 
 	/**
 		How the path's border is styled.
@@ -192,7 +192,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public function getFillForState(state:String):FillStyle {
+	public function getFillForState(state:EnumValue):FillStyle {
 		if (this._stateToFill == null) {
 			return null;
 		}
@@ -213,7 +213,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public function setFillForState(state:String, fill:FillStyle):Void {
+	public function setFillForState(state:EnumValue, fill:FillStyle):Void {
 		if (this._stateToFill == null) {
 			this._stateToFill = [];
 		}
@@ -235,7 +235,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public function getBorderForState(state:String):LineStyle {
+	public function getBorderForState(state:EnumValue):LineStyle {
 		if (this._stateToBorder == null) {
 			return null;
 		}
@@ -256,7 +256,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public function setBorderForState(state:String, border:LineStyle):Void {
+	public function setBorderForState(state:EnumValue, border:LineStyle):Void {
 		if (this._stateToBorder == null) {
 			this._stateToBorder = [];
 		}

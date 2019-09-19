@@ -16,19 +16,18 @@ package feathers.motion.effects;
 
 	@since 1.0.0
 **/
-@:enum
-abstract EffectInterruptBehavior(String) {
+enum EffectInterruptBehavior {
 	/**
 		When the effect is interrupted, it immediately advances to the end.
 
 		@since 1.0.0
 	**/
-	var END = "end";
+	END;
 
 	/**
 		When the effect is interrupted, it stops at its current position.
 
 		@since 1.0.0
 	**/
-	var STOP = "stop";
+	STOP;
 }

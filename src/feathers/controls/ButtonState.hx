@@ -13,14 +13,13 @@ package feathers.controls;
 
 	@since 1.0.0
 **/
-@:enum
-abstract ButtonState(String) {
+enum ButtonState {
 	/**
 		The up state, when there is no interaction.
 
 		@since 1.0.0
 	**/
-	var UP = "up";
+	UP;
 
 	/**
 		The hover state, when the mouse is over the component. This state is not
@@ -28,24 +27,19 @@ abstract ButtonState(String) {
 
 		@since 1.0.0
 	**/
-	var HOVER = "hover";
+	HOVER;
 
 	/**
 		The down state, on mouse down or touch begin.
 
 		@since 1.0.0
 	**/
-	var DOWN = "down";
+	DOWN;
 
 	/**
 		The disabled state, when the component's `enabled` property is `false`.
 
 		@since 1.0.0
 	**/
-	var DISABLED = "disabled";
-
-	@:to
-	public function toString() {
-		return this;
-	}
+	DISABLED;
 }

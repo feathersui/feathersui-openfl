@@ -49,7 +49,7 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 @:styleContext
-class TextInput extends FeathersControl implements IStateContext implements ITextControl {
+class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl {
 	public function new() {
 		super();
 	}
@@ -62,9 +62,9 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):String = TextInputState.ENABLED;
+	public var currentState(get, null):TextInputState = TextInputState.ENABLED;
 
-	private function get_currentState():String {
+	private function get_currentState():TextInputState {
 		return this.currentState;
 	}
 
@@ -104,7 +104,7 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
-	private var _stateToSkin:Map<String, DisplayObject> = new Map();
+	private var _stateToSkin:Map<TextInputState, DisplayObject> = new Map();
 	private var textField:TextField;
 
 	@:isVar
@@ -541,7 +541,7 @@ class TextInput extends FeathersControl implements IStateContext implements ITex
 		}
 	}
 
-	private function changeState(state:String):Void {
+	private function changeState(state:TextInputState):Void {
 		if (!this.enabled) {
 			state = TextInputState.DISABLED;
 		}

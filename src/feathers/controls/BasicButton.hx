@@ -31,7 +31,7 @@ import feathers.utils.PointerToState;
 
 	@see `feathers.controls.Button`
 **/
-class BasicButton extends FeathersControl implements IStateContext {
+class BasicButton extends FeathersControl implements IStateContext<ButtonState> {
 	public function new() {
 		super();
 		// MouseEvent.CLICK is dispatched only if the same object is under the
@@ -56,9 +56,9 @@ class BasicButton extends FeathersControl implements IStateContext {
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):String = ButtonState.UP;
+	public var currentState(get, null):ButtonState = ButtonState.UP;
 
-	private function get_currentState():String {
+	private function get_currentState():ButtonState {
 		return this.currentState;
 	}
 
@@ -74,7 +74,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 		return this.enabled;
 	}
 
-	private var _pointerToState:PointerToState = null;
+	private var _pointerToState:PointerToState<ButtonState> = null;
 	private var _pointerTrigger:PointerTrigger = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
@@ -103,7 +103,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
-	private var _stateToSkin:Map<String, DisplayObject> = new Map();
+	private var _stateToSkin:Map<ButtonState, DisplayObject> = new Map();
 
 	/**
 		Gets the skin to be used by the button when its `currentState` property
@@ -158,7 +158,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 		super.initialize();
 
 		if (this._pointerToState == null) {
-			this._pointerToState = new PointerToState(this, this.changeState);
+			this._pointerToState = new PointerToState<ButtonState>(this, this.changeState, ButtonState.UP, ButtonState.DOWN, ButtonState.HOVER);
 		}
 
 		if (this._pointerTrigger == null) {
@@ -366,7 +366,7 @@ class BasicButton extends FeathersControl implements IStateContext {
 		}
 	}
 
-	private function changeState(state:String):Void {
+	private function changeState(state:ButtonState):Void {
 		if (!this.enabled) {
 			state = ButtonState.DISABLED;
 		}

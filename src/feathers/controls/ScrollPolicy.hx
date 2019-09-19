@@ -14,8 +14,7 @@ package feathers.controls;
 
 	@since 1.0.0
 **/
-@:enum
-abstract ScrollPolicy(String) {
+enum ScrollPolicy {
 	/**
 		The container will always scroll. If the interaction mode is touch,
 		elastic edges will always be active, even when the maximum scroll
@@ -24,7 +23,7 @@ abstract ScrollPolicy(String) {
 
 		@since 1.0.0
 	**/
-	var ON = "on";
+	ON;
 
 	/**
 		The scroller does not scroll at all, even if the content is larger than
@@ -32,7 +31,7 @@ abstract ScrollPolicy(String) {
 
 		@since 1.0.0
 	**/
-	var OFF = "off";
+	OFF;
 
 	/**
 		The scroller may scroll if the content is larger than the view port's
@@ -44,5 +43,5 @@ abstract ScrollPolicy(String) {
 
 		@since 1.0.0
 	**/
-	var AUTO = "auto";
+	AUTO;
 }

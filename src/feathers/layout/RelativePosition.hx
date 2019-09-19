@@ -16,35 +16,34 @@ package feathers.layout;
 
 	@since 1.0.0
 **/
-@:enum
-abstract RelativePosition(String) {
+enum RelativePosition {
 	/**
 		The item will be positioned above another item.
 
 		@since 1.0.0
 	**/
-	var TOP = "top";
+	TOP;
 
 	/**
 		The item will be positioned to the right of another item.
 
 		@since 1.0.0
 	**/
-	var RIGHT = "right";
+	RIGHT;
 
 	/**
 		The item will be positioned below another item.
 
 		@since 1.0.0
 	**/
-	var BOTTOM = "bottom";
+	BOTTOM;
 
 	/**
 		The item will be positioned to the left of another item.
 
 		@since 1.0.0
 	**/
-	var LEFT = "left";
+	LEFT;
 
 	/**
 		The item will be positioned manually with no relation to the position of
@@ -53,5 +52,5 @@ abstract RelativePosition(String) {
 
 		@since 1.0.0
 	**/
-	var MANUAL = "manual";
+	MANUAL;
 }

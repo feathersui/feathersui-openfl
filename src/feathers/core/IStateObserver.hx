@@ -21,5 +21,5 @@ interface IStateObserver {
 
 		@since 1.0.0
 	**/
-	public var stateContext(default, set):IStateContext;
+	public var stateContext(default, set):IStateContext<Dynamic>;
 }

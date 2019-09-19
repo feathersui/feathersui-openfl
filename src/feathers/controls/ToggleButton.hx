@@ -64,7 +64,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		return this.text;
 	}
 
-	private var _stateToIcon:Map<String, DisplayObject> = new Map();
+	private var _stateToIcon:Map<ToggleButtonState, DisplayObject> = new Map();
 	private var _iconMeasurements:Measurements = null;
 	private var _currentIcon:DisplayObject = null;
 	private var _ignoreIconResizes:Bool = false;
@@ -227,7 +227,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-	private var _stateToTextFormat:Map<String, TextFormat> = new Map();
+	private var _stateToTextFormat:Map<ToggleButtonState, TextFormat> = new Map();
 
 	/**
 		Gets the text format to be used by the button when its `currentState`

@@ -334,7 +334,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		@since 1.0.0
 	**/
 	@:dox(show)
-	private function setStyle(styleName:String, ?state:String):Bool {
+	private function setStyle(styleName:String, ?state:EnumValue):Bool {
 		var styleDef = state == null ? StyleDefinition.Name(styleName) : StyleDefinition.NameAndState(styleName, state);
 		var restricted = containsStyleDef(this._restrictedStyles, styleDef);
 		if (this._applyingStyles && restricted) {
@@ -353,7 +353,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		return true;
 	}
 
-	private function isStyleRestricted(styleName:String, ?state:String):Bool {
+	private function isStyleRestricted(styleName:String, ?state:EnumValue):Bool {
 		var styleDef = state == null ? StyleDefinition.Name(styleName) : StyleDefinition.NameAndState(styleName, state);
 		return containsStyleDef(this._restrictedStyles, styleDef);
 	}
@@ -485,5 +485,5 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 
 private enum StyleDefinition {
 	Name(name:String);
-	NameAndState(name:String, state:String);
+	NameAndState(name:String, state:EnumValue);
 }

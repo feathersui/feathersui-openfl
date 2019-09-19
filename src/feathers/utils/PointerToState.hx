@@ -8,7 +8,6 @@
 
 package feathers.utils;
 
-import feathers.controls.ButtonState;
 import feathers.core.IStateContext;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
@@ -23,9 +22,19 @@ import openfl.events.MouseEvent;
 
 	@since 1.0.0
 **/
-class PointerToState {
-	public function new(target:InteractiveObject = null, callback:(String) -> Void = null) {
+class PointerToState<T> {
+	public function new(target:InteractiveObject = null, callback:(T) -> Void = null, upState:T, downState:T, hoverState:T) {
 		this.target = target;
+		if (upState != null) {
+			this.upState = upState;
+		}
+		if (downState != null) {
+			this.downState = downState;
+		}
+		if (hoverState != null) {
+			this.hoverState = hoverState;
+		}
+		this.currentState = this.upState;
 		this.callback = callback;
 	}
 
@@ -69,9 +78,9 @@ class PointerToState {
 
 		@since 1.0.0
 	**/
-	public var callback(default, set):(String) -> Void = null;
+	public var callback(default, set):(T) -> Void = null;
 
-	private function set_callback(value:(String) -> Void):(String) -> Void {
+	private function set_callback(value:(T) -> Void):(T) -> Void {
 		if (this.callback == value) {
 			return this.callback;
 		}
@@ -90,21 +99,21 @@ class PointerToState {
 
 		@since 1.0.0
 	**/
-	public var currentState(default, null):String = ButtonState.UP;
+	public var currentState(default, null):T;
 
 	/**
 		The value for the "up" state.
 
-		@default feathers.controls.ButtonState.UP
+		@since 1.0.0
 	**/
-	public var upState(default, default):String = ButtonState.UP;
+	public var upState(default, default):T = null;
 
 	/**
 		The value for the "down" state.
 
 		@since 1.0.0
 	**/
-	public var downState(default, default):String = ButtonState.DOWN;
+	public var downState(default, default):T = null;
 
 	/**
 		The value for the "hover" state.
@@ -113,7 +122,7 @@ class PointerToState {
 
 		@since 1.0.0
 	**/
-	public var hoverState(default, default):String = ButtonState.HOVER;
+	public var hoverState(default, default):T = null;
 
 	/**
 		May be set to `false` to disable the state changes temporarily until set
@@ -140,10 +149,10 @@ class PointerToState {
 	private var _hoverBeforeDown:Bool = false;
 	private var _down:Bool = false;
 
-	private function changeState(value:String):Void {
+	private function changeState(value:T):Void {
 		var oldState = this.currentState;
 		if (Std.is(this.target, IStateContext)) {
-			oldState = cast(this.target, IStateContext).currentState;
+			oldState = cast(this.target, IStateContext<Dynamic>).currentState;
 		}
 		this.currentState = value;
 		if (oldState == value) {

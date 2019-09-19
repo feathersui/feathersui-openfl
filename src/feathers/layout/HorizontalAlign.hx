@@ -17,15 +17,14 @@ package feathers.layout;
 
 	@since 1.0.0
 **/
-@:enum
-abstract HorizontalAlign(String) {
+enum HorizontalAlign {
 	/**
 		The items in the layout will be horizontally aligned to the left of the
 		bounds.
 
 		@since 1.0.0
 	**/
-	var LEFT = "left";
+	LEFT;
 
 	/**
 		The items in the layout will be horizontally aligned to the center of
@@ -33,7 +32,7 @@ abstract HorizontalAlign(String) {
 
 		@since 1.0.0
 	**/
-	var CENTER = "center";
+	CENTER;
 
 	/**
 		The items in the layout will be horizontally aligned to the right of the
@@ -41,12 +40,12 @@ abstract HorizontalAlign(String) {
 
 		@since 1.0.0
 	**/
-	var RIGHT = "right";
+	RIGHT;
 
 	/**
 		The items in the layout will fill the width of the bounds.
 
 		@since 1.0.0
 	**/
-	var JUSTIFY = "justify";
+	JUSTIFY;
 }
