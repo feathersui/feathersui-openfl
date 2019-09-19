@@ -65,7 +65,7 @@ class ToggleButtonTest {
 		Assert.isNull(icon1.parent);
 		Assert.isNull(icon2.parent);
 		this._button.icon = icon1;
-		this._button.setIconForState(ToggleButtonState.DISABLED, icon2);
+		this._button.setIconForState(ToggleButtonState.DISABLED(false), icon2);
 		this._button.validateNow();
 		Assert.areEqual(this._button, icon1.parent);
 		Assert.isNull(icon2.parent);
@@ -99,11 +99,11 @@ class ToggleButtonTest {
 		Assert.isNull(icon1.parent);
 		Assert.isNull(icon2.parent);
 		this._button.icon = icon1;
-		this._button.setIconForState(ToggleButtonState.DOWN, icon2);
+		this._button.setIconForState(ToggleButtonState.DOWN(false), icon2);
 		this._button.validateNow();
 		Assert.areEqual(this._button, icon1.parent);
 		Assert.isNull(icon2.parent);
-		this._button.changeState(ButtonState.DOWN);
+		this._button.changeState(ToggleButtonState.DOWN(false));
 		this._button.validateNow();
 		Assert.isNull(icon1.parent);
 		Assert.areEqual(this._button, icon2.parent);

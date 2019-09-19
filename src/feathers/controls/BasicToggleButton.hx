@@ -57,7 +57,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):ToggleButtonState = ToggleButtonState.UP();
+	public var currentState(get, null):ToggleButtonState = ToggleButtonState.UP(false);
 
 	private function get_currentState():ToggleButtonState {
 		return this.currentState;
@@ -193,7 +193,8 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		super.initialize();
 
 		if (this._pointerToState == null) {
-			this._pointerToState = new PointerToState(this, this.changeState, ToggleButtonState.UP(), ToggleButtonState.DOWN(), ToggleButtonState.HOVER());
+			this._pointerToState = new PointerToState(this, this.changeState, ToggleButtonState.UP(false), ToggleButtonState.DOWN(false),
+				ToggleButtonState.HOVER(false));
 		}
 	}
 

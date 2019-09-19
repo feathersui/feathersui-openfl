@@ -65,7 +65,7 @@ class BasicToggleButtonTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._button.backgroundSkin = skin1;
-		this._button.setSkinForState(ToggleButtonState.DISABLED, skin2);
+		this._button.setSkinForState(ToggleButtonState.DISABLED(false), skin2);
 		this._button.validateNow();
 		Assert.areEqual(this._button, skin1.parent);
 		Assert.isNull(skin2.parent);
@@ -99,11 +99,11 @@ class BasicToggleButtonTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._button.backgroundSkin = skin1;
-		this._button.setSkinForState(ToggleButtonState.DOWN, skin2);
+		this._button.setSkinForState(ToggleButtonState.DOWN(false), skin2);
 		this._button.validateNow();
 		Assert.areEqual(this._button, skin1.parent);
 		Assert.isNull(skin2.parent);
-		this._button.changeState(ButtonState.DOWN);
+		this._button.changeState(ToggleButtonState.DOWN(false));
 		this._button.validateNow();
 		Assert.isNull(skin1.parent);
 		Assert.areEqual(this._button, skin2.parent);

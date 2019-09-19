@@ -20,7 +20,7 @@ enum ToggleButtonState {
 
 		@since 1.0.0
 	**/
-	UP(?selected:Bool);
+	UP(selected:Bool);
 
 	/**
 		The hover state, when the mouse is over the component. This state is not
@@ -28,19 +28,19 @@ enum ToggleButtonState {
 
 		@since 1.0.0
 	**/
-	HOVER(?selected:Bool);
+	HOVER(selected:Bool);
 
 	/**
 		The down state, on mouse down or touch begin.
 
 		@since 1.0.0
 	**/
-	DOWN(?selected:Bool);
+	DOWN(selected:Bool);
 
 	/**
 		The disabled state, when the component's `enabled` property is `false`.
 
 		@since 1.0.0
 	**/
-	DISABLED(?selected:Bool);
+	DISABLED(selected:Bool);
 }

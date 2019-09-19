@@ -398,7 +398,7 @@ class DefaultTheme implements ITheme {
 		icon.minWidth = 24.0;
 		icon.minHeight = 24.0;
 		icon.border = getInsetBorder(2.0);
-		icon.setBorderForState(ToggleButtonState.DOWN(), this.getThemeBorder(2.0));
+		icon.setBorderForState(ToggleButtonState.DOWN(false), this.getThemeBorder(2.0));
 		icon.fill = getInsetFill();
 		icon.disabledFill = this.getDisabledInsetFill();
 		check.icon = icon;
@@ -409,7 +409,7 @@ class DefaultTheme implements ITheme {
 		selectedIcon.minWidth = 24.0;
 		selectedIcon.minHeight = 24.0;
 		selectedIcon.border = getInsetBorder(2.0);
-		selectedIcon.setBorderForState(ToggleButtonState.DOWN(), this.getThemeBorder(2.0));
+		selectedIcon.setBorderForState(ToggleButtonState.DOWN(false), this.getThemeBorder(2.0));
 		selectedIcon.fill = getInsetFill();
 		selectedIcon.disabledFill = this.getDisabledInsetFill();
 
@@ -615,7 +615,7 @@ class DefaultTheme implements ITheme {
 		icon.minWidth = 24.0;
 		icon.minHeight = 24.0;
 		icon.border = getInsetBorder(2.0);
-		icon.setBorderForState(ToggleButtonState.DOWN(), this.getThemeBorder(2.0));
+		icon.setBorderForState(ToggleButtonState.DOWN(false), this.getThemeBorder(2.0));
 		icon.fill = getInsetFill();
 		icon.disabledFill = this.getDisabledInsetFill();
 		radio.icon = icon;
@@ -764,9 +764,9 @@ class DefaultTheme implements ITheme {
 			var skin = new RectangleSkin();
 			skin.fill = getButtonFill();
 			skin.selectedFill = getThemeFill();
-			skin.setFillForState(ToggleButtonState.DOWN(), getReversedActiveThemeFill());
-			skin.setFillForState(ToggleButtonState.DISABLED(), getButtonDisabledFill());
-			skin.setFillForState(ToggleButtonState.DOWN(), getReversedActiveThemeFill());
+			skin.setFillForState(ToggleButtonState.DOWN(false), getReversedActiveThemeFill());
+			skin.setFillForState(ToggleButtonState.DISABLED(false), getButtonDisabledFill());
+			skin.setFillForState(ToggleButtonState.DOWN(false), getReversedActiveThemeFill());
 			skin.border = getButtonBorder();
 			skin.selectedBorder = getActiveFillBorder();
 			skin.setBorderForState(ButtonState.DOWN, getActiveFillBorder());
@@ -784,8 +784,8 @@ class DefaultTheme implements ITheme {
 			button.selectedTextFormat = getActiveTextFormat();
 		}
 
-		if (button.getTextFormatForState(ToggleButtonState.DOWN()) == null) {
-			button.setTextFormatForState(ToggleButtonState.DOWN(), getActiveTextFormat());
+		if (button.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
+			button.setTextFormatForState(ToggleButtonState.DOWN(false), getActiveTextFormat());
 		}
 
 		button.paddingTop = 4.0;
