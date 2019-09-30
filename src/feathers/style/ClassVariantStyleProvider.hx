@@ -87,6 +87,20 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	}
 
 	/**
+		Gets a style function registered with `setStyleFunction)`.
+
+		@since 1.0.0
+	**/
+	public function getStyleFunction<T>(type:Class<T>, variant:String):(T) -> Void {
+		if (styleTargets == null) {
+			return null;
+		}
+		var typeName = Type.getClassName(type);
+		var styleTarget = variant == null ? StyleTarget.Class(typeName) : StyleTarget.ClassAndVariant(typeName, variant);
+		return this.styleTargets.get(styleTarget);
+	}
+
+	/**
 		Applies styles to a specific Feathers UI component.
 
 		@since 1.0.0
