@@ -8,9 +8,14 @@
 
 package feathers.controls.navigators;
 
+import openfl.events.Event;
 import feathers.motion.effects.IEffectContext;
 import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
+#if html5
+import js.html.Window;
+import js.Lib;
+#end
 
 /**
 	A "view stack"-like container that supports navigation between items with
@@ -41,6 +46,8 @@ class StackNavigator extends BaseNavigator {
 	public function new() {
 		super();
 		this.addEventListener(FeathersEvent.INITIALIZE, stackNavigator_initializeHandler);
+		this.addEventListener(Event.ADDED_TO_STAGE, stackNavigator_addedToStageHandler);
+		this.addEventListener(Event.REMOVED_FROM_STAGE, stackNavigator_removedFromStageHandler);
 	}
 
 	/**
@@ -79,6 +86,10 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public var replaceTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+
+	#if html5
+	private var htmlWindow:Window;
+	#end
 
 	private var _history:Array<HistoryItem> = [];
 	private var _poppedHistoryItemInTransition:HistoryItem;
@@ -144,7 +155,11 @@ class StackNavigator extends BaseNavigator {
 
 		// show without a transition because we're not navigating.
 		// we're forcibly replacing the root item.
-		this._history.push(new HistoryItem(value, null));
+		var historyItem = new HistoryItem(value, null, 0);
+		this._history.push(historyItem);
+		#if html5
+		this.htmlWindow.history.replaceState(historyItem, null);
+		#end
 		this.showItemInternal(value, null, null);
 		return value;
 	}
@@ -222,6 +237,11 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function pushItem(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+		return this.pushItemInternal(true, id, properties, transition);
+	}
+
+	private function pushItemInternal(useNativeHistory:Bool, id:String, ?properties:Map<String, Dynamic>,
+			?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			var item = this.getItem(id);
 			if (item != null && item.pushTransition != null) {
@@ -230,7 +250,13 @@ class StackNavigator extends BaseNavigator {
 				transition = this.pushTransition;
 			}
 		}
-		this._history.push(new HistoryItem(id, properties));
+		var historyItem = new HistoryItem(id, properties, this._history.length);
+		this._history.push(historyItem);
+		#if html5
+		if (useNativeHistory) {
+			this.htmlWindow.history.pushState(historyItem, null);
+		}
+		#end
 		return this.showItemInternal(id, transition, properties);
 	}
 
@@ -257,6 +283,10 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function popItem(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+		return this.popItemInternal(true, transition);
+	}
+
+	private function popItemInternal(useNativeHistory:Bool, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
@@ -271,6 +301,11 @@ class StackNavigator extends BaseNavigator {
 			}
 		}
 		this._history.pop();
+		#if html5
+		if (useNativeHistory) {
+			this.htmlWindow.history.back();
+		}
+		#end
 		this._poppedHistoryItemInTransition = this._history[this._history.length - 1];
 		return this.showItemInternal(this._poppedHistoryItemInTransition.id, transition, this._poppedHistoryItemInTransition.properties);
 	}
@@ -351,10 +386,21 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function replaceItem(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+		return this.replaceItemInternal(true, id, properties, transition);
+	}
+
+	private function replaceItemInternal(useNativeHistory:Bool, id:String, ?properties:Map<String, Dynamic>,
+			?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			transition = this.replaceTransition;
 		}
-		this._history[this._history.length - 1] = new HistoryItem(id, properties);
+		var historyItem = new HistoryItem(id, properties, this._history.length - 1);
+		this._history[this._history.length - 1] = historyItem;
+		#if html5
+		if (useNativeHistory) {
+			this.htmlWindow.history.replaceState(historyItem, null);
+		}
+		#end
 		return this.showItemInternal(id, transition, properties);
 	}
 
@@ -383,7 +429,7 @@ class StackNavigator extends BaseNavigator {
 			transition = this.popTransition;
 		}
 		this._history.resize(1);
-		this._history[0] = new HistoryItem(id, properties);
+		this._history[0] = new HistoryItem(id, properties, 0);
 		return this.showItemInternal(id, transition, properties);
 	}
 
@@ -406,14 +452,43 @@ class StackNavigator extends BaseNavigator {
 			this.showItemInternal(id, null);
 		}
 	}
+
+	private function stackNavigator_addedToStageHandler(event:Event):Void {
+		#if html5
+		this.htmlWindow = cast(Lib.global, js.html.Window);
+		this.htmlWindow.addEventListener("popstate", htmlWindow_popstateHandler);
+		#end
+	}
+
+	private function stackNavigator_removedFromStageHandler(event:Event):Void {
+		#if html5
+		this.htmlWindow.removeEventListener("popstate", htmlWindow_popstateHandler);
+		this.htmlWindow = null;
+		#end
+	}
+
+	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
+		event.preventDefault();
+		var state = event.state;
+		if (Reflect.hasField(state, "id") && Reflect.hasField(state, "properties") && Reflect.hasField(state, "index")) {
+			var currentIndex = this._history.length - 1;
+			if (state.index < currentIndex) {
+				this.popItemInternal(false);
+			} else if (state.index > currentIndex) {
+				this.pushItemInternal(false, state.id, state.properties, state.transition);
+			}
+		}
+	}
 }
 
 private class HistoryItem {
-	public function new(id:String, properties:Map<String, Dynamic>) {
+	public function new(id:String, properties:Map<String, Dynamic>, index:Int) {
 		this.id = id;
 		this.properties = properties;
+		this.index = index;
 	}
 
 	public var id(default, null):String;
 	public var properties(default, null):Map<String, Dynamic>;
+	public var index(default, null):Int;
 }
