@@ -9,6 +9,7 @@
 package feathers.events;
 
 import lime.utils.ObjectPool;
+import openfl.events.EventType;
 import openfl.events.Event;
 import openfl.events.IEventDispatcher;
 
@@ -27,7 +28,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var INITIALIZE:String = "initialize";
+	public static inline var INITIALIZE:EventType<FeathersEvent> = "initialize";
 
 	/**
 		The `FeathersEvent.CREATION_COMPLETE` event type is dispatched when a
@@ -39,7 +40,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var CREATION_COMPLETE:String = "creationComplete";
+	public static inline var CREATION_COMPLETE:EventType<FeathersEvent> = "creationComplete";
 
 	/**
 		The `FeathersEvent.LAYOUT_DATA_CHANGE` event type is dispatched when a
@@ -52,7 +53,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var LAYOUT_DATA_CHANGE:String = "layoutDataChange";
+	public static inline var LAYOUT_DATA_CHANGE:EventType<FeathersEvent> = "layoutDataChange";
 
 	/**
 		The `FeathersEvent.STATE_CHANGE` event type is dispatched by classes
@@ -64,7 +65,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var STATE_CHANGE:String = "stateChange";
+	public static inline var STATE_CHANGE:EventType<FeathersEvent> = "stateChange";
 
 	/**
 		The `FeathersEvent.SCROLL_START` event type is dispatched when a
@@ -74,7 +75,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var SCROLL_START:String = "scrollStart";
+	public static inline var SCROLL_START:EventType<FeathersEvent> = "scrollStart";
 
 	/**
 		The `FeathersEvent.SCROLL_COMPLETE` event type is dispatched when a
@@ -84,7 +85,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var SCROLL_COMPLETE:String = "scrollComplete";
+	public static inline var SCROLL_COMPLETE:EventType<FeathersEvent> = "scrollComplete";
 
 	/**
 		The `FeathersEvent.TRANSITION_START` event type is dispatched when a
@@ -95,7 +96,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var TRANSITION_START:String = "transitionStart";
+	public static inline var TRANSITION_START:EventType<FeathersEvent> = "transitionStart";
 
 	/**
 		The `FeathersEvent.TRANSITION_COMPLETE` event type is dispatched when a
@@ -106,7 +107,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var TRANSITION_COMPLETE:String = "transitionComplete";
+	public static inline var TRANSITION_COMPLETE:EventType<FeathersEvent> = "transitionComplete";
 
 	/**
 		The `FeathersEvent.TRANSITION_CANCEL` event type is dispatched when a
@@ -118,7 +119,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var TRANSITION_CANCEL:String = "transitionCancel";
+	public static inline var TRANSITION_CANCEL:EventType<FeathersEvent> = "transitionCancel";
 
 	/**
 		The `FeathersEvent.TRIGGERED` event type is dispatched when a UI
@@ -129,7 +130,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var TRIGGERED:String = "triggered";
+	public static inline var TRIGGERED:EventType<FeathersEvent> = "triggered";
 
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false));
 
