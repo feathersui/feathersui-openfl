@@ -467,6 +467,7 @@ class StackNavigator extends BaseNavigator {
 		#end
 	}
 
+	#if html5
 	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
 		event.preventDefault();
 		var state = event.state;
@@ -479,6 +480,7 @@ class StackNavigator extends BaseNavigator {
 			}
 		}
 	}
+	#end
 }
 
 private class HistoryItem {
