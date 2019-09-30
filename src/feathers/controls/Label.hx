@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.style.Theme;
+import feathers.themes.DefaultTheme;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
@@ -39,6 +41,7 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
+@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class Label extends FeathersControl implements ITextControl {
 	/**
@@ -56,6 +59,16 @@ class Label extends FeathersControl implements ITextControl {
 	public static final VARIANT_DETAIL = "detail";
 
 	public function new() {
+		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (theme != null && theme.styleProvider.getStyleFunction(Label, null) == null) {
+			theme.styleProvider.setStyleFunction(Label, null, setLabelStyles);
+		}
+		if (theme != null && theme.styleProvider.getStyleFunction(Label, VARIANT_HEADING) == null) {
+			theme.styleProvider.setStyleFunction(Label, VARIANT_HEADING, setHeadingLabelStyles);
+		}
+		if (theme != null && theme.styleProvider.getStyleFunction(Label, VARIANT_DETAIL) == null) {
+			theme.styleProvider.setStyleFunction(Label, VARIANT_DETAIL, setDetailLabelStyles);
+		}
 		super();
 	}
 
@@ -512,6 +525,48 @@ class Label extends FeathersControl implements ITextControl {
 		}
 		if (Std.is(this._currentBackgroundSkin, IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
+		}
+	}
+
+	private static function setLabelStyles(label:Label):Void {
+		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (defaultTheme == null) {
+			return;
+		}
+
+		if (label.textFormat == null) {
+			label.textFormat = defaultTheme.getTextFormat();
+		}
+		if (label.disabledTextFormat == null) {
+			label.disabledTextFormat = defaultTheme.getDisabledTextFormat();
+		}
+	}
+
+	private static function setHeadingLabelStyles(label:Label):Void {
+		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (defaultTheme == null) {
+			return;
+		}
+
+		if (label.textFormat == null) {
+			label.textFormat = defaultTheme.getHeaderTextFormat();
+		}
+		if (label.disabledTextFormat == null) {
+			label.disabledTextFormat = defaultTheme.getDisabledHeaderTextFormat();
+		}
+	}
+
+	private static function setDetailLabelStyles(label:Label):Void {
+		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (defaultTheme == null) {
+			return;
+		}
+
+		if (label.textFormat == null) {
+			label.textFormat = defaultTheme.getDetailTextFormat();
+		}
+		if (label.disabledTextFormat == null) {
+			label.disabledTextFormat = defaultTheme.getDisabledDetailTextFormat();
 		}
 	}
 }

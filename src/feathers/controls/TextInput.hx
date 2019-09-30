@@ -8,6 +8,9 @@
 
 package feathers.controls;
 
+import feathers.skins.RectangleSkin;
+import feathers.style.Theme;
+import feathers.themes.DefaultTheme;
 import feathers.core.ITextControl;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
@@ -48,9 +51,14 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
+@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl {
 	public function new() {
+		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (theme != null && theme.styleProvider.getStyleFunction(TextInput, null) == null) {
+			theme.styleProvider.setStyleFunction(TextInput, null, setTextInputStyles);
+		}
 		super();
 	}
 
@@ -567,5 +575,34 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private function textField_focusOutHandler(event:FocusEvent):Void {
 		this.changeState(TextInputState.ENABLED);
+	}
+
+	private static function setTextInputStyles(input:TextInput):Void {
+		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (defaultTheme == null) {
+			return;
+		}
+
+		if (input.backgroundSkin == null) {
+			var inputSkin = new RectangleSkin();
+			inputSkin.cornerRadius = 6.0;
+			inputSkin.width = 160.0;
+			inputSkin.fill = defaultTheme.getInsetFill();
+			inputSkin.border = defaultTheme.getInsetBorder();
+			inputSkin.setBorderForState(TextInputState.FOCUSED, defaultTheme.getThemeBorder());
+			input.backgroundSkin = inputSkin;
+		}
+
+		if (input.textFormat == null) {
+			input.textFormat = defaultTheme.getTextFormat();
+		}
+		if (input.disabledTextFormat == null) {
+			input.disabledTextFormat = defaultTheme.getDisabledTextFormat();
+		}
+
+		input.paddingTop = 6.0;
+		input.paddingRight = 10.0;
+		input.paddingBottom = 6.0;
+		input.paddingLeft = 10.0;
 	}
 }

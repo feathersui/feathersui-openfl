@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import feathers.skins.RectangleSkin;
+import feathers.layout.VerticalListFixedRowLayout;
+import feathers.style.Theme;
+import feathers.themes.DefaultTheme;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
@@ -19,9 +23,14 @@ import feathers.layout.ILayout;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 
+@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class ListBox extends BaseScrollContainer {
 	public function new() {
+		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (theme != null && theme.styleProvider.getStyleFunction(ListBox, null) == null) {
+			theme.styleProvider.setStyleFunction(ListBox, null, setListBoxStyles);
+		}
 		super();
 		if (this.viewPort == null) {
 			this.listViewPort = new LayoutViewPort();
@@ -136,5 +145,25 @@ class ListBox extends BaseScrollContainer {
 		// trigger before change
 		FeathersEvent.dispatch(this, FeathersEvent.TRIGGERED);
 		this.selectedIndex = itemRenderer.index;
+	}
+
+	private static function setListBoxStyles(listBox:ListBox):Void {
+		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (defaultTheme == null) {
+			return;
+		}
+
+		if (listBox.layout == null) {
+			listBox.layout = new VerticalListFixedRowLayout();
+		}
+
+		if (listBox.backgroundSkin == null) {
+			var backgroundSkin = new RectangleSkin();
+			backgroundSkin.fill = defaultTheme.getContainerFill();
+			// backgroundSkin.border = defaultTheme.getContainerBorder();
+			backgroundSkin.width = 160.0;
+			backgroundSkin.height = 160.0;
+			listBox.backgroundSkin = backgroundSkin;
+		}
 	}
 }

@@ -8,6 +8,12 @@
 
 package feathers.controls;
 
+import feathers.layout.VerticalAlign;
+import feathers.layout.HorizontalAlign;
+import feathers.layout.HorizontalLayout;
+import feathers.skins.RectangleSkin;
+import feathers.themes.DefaultTheme;
+import feathers.style.Theme;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
@@ -54,11 +60,16 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
+@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class LayoutGroup extends FeathersControl {
 	public static final VARIANT_TOOL_BAR = "toolBar";
 
 	public function new() {
+		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (theme != null && theme.styleProvider.getStyleFunction(LayoutGroup, VARIANT_TOOL_BAR) == null) {
+			theme.styleProvider.setStyleFunction(LayoutGroup, VARIANT_TOOL_BAR, setToolBarLayoutGroupStyles);
+		}
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, layoutGroup_addedToStageHandler);
 	}
@@ -500,5 +511,32 @@ class LayoutGroup extends FeathersControl {
 			return;
 		}
 		this.setInvalid(InvalidationFlag.LAYOUT);
+	}
+
+	private static function setToolBarLayoutGroupStyles(group:LayoutGroup):Void {
+		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
+		if (defaultTheme == null) {
+			return;
+		}
+
+		if (group.backgroundSkin == null) {
+			var backgroundSkin = new RectangleSkin();
+			backgroundSkin.fill = defaultTheme.getHeaderFill();
+			backgroundSkin.width = 44.0;
+			backgroundSkin.height = 44.0;
+			backgroundSkin.minHeight = 44.0;
+			group.backgroundSkin = backgroundSkin;
+		}
+		if (group.layout == null) {
+			var layout = new HorizontalLayout();
+			layout.horizontalAlign = HorizontalAlign.LEFT;
+			layout.verticalAlign = VerticalAlign.MIDDLE;
+			layout.paddingTop = 4.0;
+			layout.paddingRight = 10.0;
+			layout.paddingBottom = 4.0;
+			layout.paddingLeft = 10.0;
+			layout.gap = 4.0;
+			group.layout = layout;
+		}
 	}
 }
