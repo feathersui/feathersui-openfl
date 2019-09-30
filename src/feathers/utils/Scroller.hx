@@ -87,7 +87,6 @@ class Scroller extends EventDispatcher {
 	private var startScrollX:Float = 0.0;
 	private var startScrollY:Float = 0.0;
 	private var savedScrollMoves:Array<Float> = [];
-	private var lastTouchMoveTime:Float = 0.0;
 	private var animateScrollX:SimpleActuator<Dynamic, Dynamic> = null;
 	private var animateScrollY:SimpleActuator<Dynamic, Dynamic> = null;
 	private var animateScrollXEndRatio:Float = 1.0;
@@ -517,10 +516,9 @@ class Scroller extends EventDispatcher {
 			this.savedScrollMoves.resize(30);
 		}
 
-		this.lastTouchMoveTime = Lib.getTimer();
 		this.savedScrollMoves.push(scrollX);
 		this.savedScrollMoves.push(scrollY);
-		this.savedScrollMoves.push(this.lastTouchMoveTime);
+		this.savedScrollMoves.push(Lib.getTimer());
 	}
 
 	private function target_stage_mouseUpHandler(event:MouseEvent):Void {
@@ -550,10 +548,11 @@ class Scroller extends EventDispatcher {
 		}
 
 		// find scroll position measured 100ms ago, if possible
+		var targetTime = Lib.getTimer() - 100;
 		var endIndex = this.savedScrollMoves.length - 1;
 		var startIndex = endIndex;
 		var i = endIndex;
-		while (endIndex > 0 && this.savedScrollMoves[i] > (this.lastTouchMoveTime - 100)) {
+		while (endIndex > 0 && this.savedScrollMoves[i] > targetTime) {
 			startIndex = i;
 			i -= 3;
 		}
