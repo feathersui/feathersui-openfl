@@ -1,6 +1,5 @@
 package;
 
-import openfl.display.FPS;
 import openfl.events.Event;
 import feathers.controls.navigators.StackAction;
 import feathers.controls.navigators.StackItem;
@@ -77,10 +76,6 @@ class Main extends Application {
 		navigator.addItem(ScreenID.TOGGLE_SWITCH, toggleSwitch);
 
 		navigator.rootItemID = ScreenID.MAIN_MENU;
-
-		/*var fps = new FPS();
-			fps.x = 100;
-			this.addChild(fps); */
 	}
 
 	private function createPushAction(event:Event):StackAction {

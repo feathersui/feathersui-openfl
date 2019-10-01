@@ -10,30 +10,35 @@ package feathers.themes.steel.components;
 
 import feathers.controls.Label;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.BaseSteelTheme;
 
 /**
 	Initialize "steel" styles for the `Label` component.
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.steel.SteelTheme)
+@:access(feathers.themes.steel.BaseSteelTheme)
 class SteelLabelStyles {
-	public static function initialize():Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Label, null) == null) {
+	public static function initialize(?theme:BaseSteelTheme):Void {
+		if (theme == null) {
+			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
+		}
+		if (theme == null) {
+			return;
+		}
+		if (theme.styleProvider.getStyleFunction(Label, null) == null) {
 			theme.styleProvider.setStyleFunction(Label, null, setStyles);
 		}
-		if (theme != null && theme.styleProvider.getStyleFunction(Label, Label.VARIANT_HEADING) == null) {
+		if (theme.styleProvider.getStyleFunction(Label, Label.VARIANT_HEADING) == null) {
 			theme.styleProvider.setStyleFunction(Label, Label.VARIANT_HEADING, setHeadingStyles);
 		}
-		if (theme != null && theme.styleProvider.getStyleFunction(Label, Label.VARIANT_DETAIL) == null) {
+		if (theme.styleProvider.getStyleFunction(Label, Label.VARIANT_DETAIL) == null) {
 			theme.styleProvider.setStyleFunction(Label, Label.VARIANT_DETAIL, setDetailStyles);
 		}
 	}
 
 	private static function setStyles(label:Label):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
+		var theme = Std.downcast(Theme.getTheme(label), BaseSteelTheme);
 		if (theme == null) {
 			return;
 		}
@@ -47,7 +52,7 @@ class SteelLabelStyles {
 	}
 
 	private static function setHeadingStyles(label:Label):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
+		var theme = Std.downcast(Theme.getTheme(label), BaseSteelTheme);
 		if (theme == null) {
 			return;
 		}
@@ -61,7 +66,7 @@ class SteelLabelStyles {
 	}
 
 	private static function setDetailStyles(label:Label):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
+		var theme = Std.downcast(Theme.getTheme(label), BaseSteelTheme);
 		if (theme == null) {
 			return;
 		}

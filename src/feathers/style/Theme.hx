@@ -10,7 +10,7 @@ package feathers.style;
 
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.DefaultSteelTheme;
 
 /**
 	Register themes globally in a Feathers application. May apply to the entire
@@ -19,23 +19,13 @@ import feathers.themes.steel.SteelTheme;
 	@since 1.0.0
 **/
 class Theme {
-	private static var _fallbackTheme:ITheme = null;
-
-	public static var fallbackTheme(get, set):ITheme;
+	public static var fallbackTheme(get, null):ITheme;
 
 	private static function get_fallbackTheme():ITheme {
-		if (_fallbackTheme == null) {
-			_fallbackTheme = new SteelTheme();
+		if (fallbackTheme == null) {
+			fallbackTheme = new DefaultSteelTheme();
 		}
-		return _fallbackTheme;
-	}
-
-	private static function set_fallbackTheme(value:ITheme):ITheme {
-		if (_fallbackTheme != null) {
-			_fallbackTheme.dispose();
-		}
-		_fallbackTheme = value;
-		return _fallbackTheme;
+		return fallbackTheme;
 	}
 
 	private static var primaryTheme:ITheme;
@@ -86,6 +76,9 @@ class Theme {
 				}
 			}
 		}
-		return primaryTheme;
+		if (primaryTheme != null) {
+			return primaryTheme;
+		}
+		return fallbackTheme;
 	}
 }

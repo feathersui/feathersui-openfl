@@ -13,24 +13,29 @@ import feathers.controls.BasicToggleButton;
 import feathers.controls.ToggleSwitch;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.BaseSteelTheme;
 
 /**
 	Initialize "steel" styles for the `ToggleSwitch` component.
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.steel.SteelTheme)
+@:access(feathers.themes.steel.BaseSteelTheme)
 class SteelToggleSwitchStyles {
-	public static function initialize():Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(ToggleSwitch, null) == null) {
+	public static function initialize(?theme:BaseSteelTheme):Void {
+		if (theme == null) {
+			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
+		}
+		if (theme == null) {
+			return;
+		}
+		if (theme.styleProvider.getStyleFunction(ToggleSwitch, null) == null) {
 			theme.styleProvider.setStyleFunction(ToggleSwitch, null, setStyles);
 		}
 	}
 
 	private static function setStyles(toggle:ToggleSwitch):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
+		var theme = Std.downcast(Theme.getTheme(toggle), BaseSteelTheme);
 		if (theme == null) {
 			return;
 		}

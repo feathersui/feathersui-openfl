@@ -13,24 +13,29 @@ import feathers.controls.ToggleButtonState;
 import feathers.skins.RectangleSkin;
 import feathers.controls.Check;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.BaseSteelTheme;
 
 /**
 	Initialize "steel" styles for the `Check` component.
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.steel.SteelTheme)
+@:access(feathers.themes.steel.BaseSteelTheme)
 class SteelCheckStyles {
-	public static function initialize():Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Check, null) == null) {
+	public static function initialize(?theme:BaseSteelTheme):Void {
+		if (theme == null) {
+			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
+		}
+		if (theme == null) {
+			return;
+		}
+		if (theme.styleProvider.getStyleFunction(Check, null) == null) {
 			theme.styleProvider.setStyleFunction(Check, null, setStyles);
 		}
 	}
 
 	private static function setStyles(check:Check):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
+		var theme = Std.downcast(Theme.getTheme(check), BaseSteelTheme);
 		if (theme == null) {
 			return;
 		}

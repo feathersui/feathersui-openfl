@@ -13,24 +13,29 @@ import feathers.skins.CircleSkin;
 import feathers.controls.ToggleButtonState;
 import feathers.controls.Radio;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.BaseSteelTheme;
 
 /**
 	Initialize "steel" styles for the `Radio` component.
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.steel.SteelTheme)
+@:access(feathers.themes.steel.BaseSteelTheme)
 class SteelRadioStyles {
-	public static function initialize():Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Radio, null) == null) {
+	public static function initialize(?theme:BaseSteelTheme):Void {
+		if (theme == null) {
+			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
+		}
+		if (theme == null) {
+			return;
+		}
+		if (theme.styleProvider.getStyleFunction(Radio, null) == null) {
 			theme.styleProvider.setStyleFunction(Radio, null, setStyles);
 		}
 	}
 
 	private static function setStyles(radio:Radio):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
+		var theme = Std.downcast(Theme.getTheme(radio), BaseSteelTheme);
 		if (theme == null) {
 			return;
 		}

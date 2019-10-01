@@ -13,33 +13,38 @@ import feathers.controls.ButtonState;
 import feathers.skins.UnderlineSkin;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.BaseSteelTheme;
 
 /**
 	Initialize "steel" styles for the `ItemRenderer` component.
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.steel.SteelTheme)
+@:access(feathers.themes.steel.BaseSteelTheme)
 class SteelItemRendererStyles {
-	public static function initialize():Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(ItemRenderer, null) == null) {
+	public static function initialize(?theme:BaseSteelTheme):Void {
+		if (theme == null) {
+			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
+		}
+		if (theme == null) {
+			return;
+		}
+		if (theme.styleProvider.getStyleFunction(ItemRenderer, null) == null) {
 			theme.styleProvider.setStyleFunction(ItemRenderer, null, setStyles);
 		}
 	}
 
 	private static function setStyles(itemRenderer:ItemRenderer):Void {
-		var defaultTheme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (defaultTheme == null) {
+		var theme = Std.downcast(Theme.getTheme(itemRenderer), BaseSteelTheme);
+		if (theme == null) {
 			return;
 		}
 
 		if (itemRenderer.backgroundSkin == null) {
 			var skin = new UnderlineSkin();
-			skin.fill = defaultTheme.getContainerFill();
-			skin.border = defaultTheme.getDividerBorder();
-			skin.setFillForState(ButtonState.DOWN, defaultTheme.getActiveThemeFill());
+			skin.fill = theme.getContainerFill();
+			skin.border = theme.getDividerBorder();
+			skin.setFillForState(ButtonState.DOWN, theme.getActiveThemeFill());
 			skin.width = 44.0;
 			skin.height = 44.0;
 			skin.minWidth = 44.0;
@@ -48,13 +53,13 @@ class SteelItemRendererStyles {
 		}
 
 		if (itemRenderer.textFormat == null) {
-			itemRenderer.textFormat = defaultTheme.getTextFormat();
+			itemRenderer.textFormat = theme.getTextFormat();
 		}
 		if (itemRenderer.disabledTextFormat == null) {
-			itemRenderer.disabledTextFormat = defaultTheme.getDisabledTextFormat();
+			itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 		}
 		if (itemRenderer.getTextFormatForState(ButtonState.DOWN) == null) {
-			itemRenderer.setTextFormatForState(ButtonState.DOWN, defaultTheme.getActiveTextFormat());
+			itemRenderer.setTextFormatForState(ButtonState.DOWN, theme.getActiveTextFormat());
 		}
 
 		itemRenderer.paddingTop = 4.0;

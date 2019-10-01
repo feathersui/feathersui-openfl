@@ -116,7 +116,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private var _currentStyleProvider:IStyleProvider = null;
-	private var _fallbackStyleProvider:IStyleProvider = null;
 	private var _customStyleProvider:IStyleProvider = null;
 
 	/**
@@ -404,26 +403,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		// then, set the styles from the main style provider
 		if (this._currentStyleProvider != null) {
 			this._currentStyleProvider.applyStyles(this);
-		}
-
-		// finally, set the styles from the fallback style provider
-		styleProvider = null;
-		if (Theme.fallbackTheme != null) {
-			styleProvider = Theme.fallbackTheme.getStyleProvider(this);
-		}
-		if (this._fallbackStyleProvider != styleProvider) {
-			if (this._fallbackStyleProvider != null) {
-				this._fallbackStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
-				this._fallbackStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
-			}
-			this._fallbackStyleProvider = styleProvider;
-			if (this._fallbackStyleProvider != null) {
-				this._fallbackStyleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
-				this._fallbackStyleProvider.addEventListener(Event.CLEAR, styleProvider_clearHandler, false, 0, true);
-			}
-		}
-		if (this._fallbackStyleProvider != null) {
-			this._fallbackStyleProvider.applyStyles(this);
 		}
 
 		this._applyingStyles = oldApplyingStyles;

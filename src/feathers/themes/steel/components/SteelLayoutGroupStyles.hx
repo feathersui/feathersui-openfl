@@ -14,24 +14,29 @@ import feathers.layout.HorizontalLayout;
 import feathers.controls.LayoutGroup;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.BaseSteelTheme;
 
 /**
 	Initialize "steel" styles for the `LayoutGroup` component.
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.steel.SteelTheme)
+@:access(feathers.themes.steel.BaseSteelTheme)
 class SteelLayoutGroupStyles {
-	public static function initialize():Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR) == null) {
+	public static function initialize(?theme:BaseSteelTheme):Void {
+		if (theme == null) {
+			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
+		}
+		if (theme == null) {
+			return;
+		}
+		if (theme.styleProvider.getStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR) == null) {
 			theme.styleProvider.setStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR, setToolBarStyles);
 		}
 	}
 
 	private static function setToolBarStyles(group:LayoutGroup):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
+		var theme = Std.downcast(Theme.getTheme(group), BaseSteelTheme);
 		if (theme == null) {
 			return;
 		}

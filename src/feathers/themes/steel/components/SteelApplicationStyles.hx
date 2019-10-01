@@ -11,32 +11,34 @@ package feathers.themes.steel.components;
 import feathers.controls.Application;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.BaseSteelTheme;
 
 /**
 	Initialize "steel" styles for the `Application` component.
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.steel.SteelTheme)
+@:access(feathers.themes.steel.BaseSteelTheme)
 class SteelApplicationStyles {
-	public static function initialize():Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Application, null) == null) {
-			theme.styleProvider.setStyleFunction(Application, null, setStyles);
+	public static function initialize(?theme:BaseSteelTheme):Void {
+		if (theme == null) {
+			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
 		}
-	}
-
-	private static function setStyles(app:Application):Void {
-		var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
 		if (theme == null) {
 			return;
 		}
 
-		if (app.backgroundSkin == null) {
-			var skin = new RectangleSkin();
-			skin.fill = theme.getRootFill();
-			app.backgroundSkin = skin;
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(Application, null) != null) {
+			return;
 		}
+
+		styleProvider.setStyleFunction(Application, null, function(app:Application):Void {
+			if (app.backgroundSkin == null) {
+				var skin = new RectangleSkin();
+				skin.fill = theme.getRootFill();
+				app.backgroundSkin = skin;
+			}
+		});
 	}
 }

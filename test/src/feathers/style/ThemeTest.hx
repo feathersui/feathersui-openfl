@@ -39,17 +39,17 @@ class ThemeTest {
 		this._otherChild = null;
 		Theme.setTheme(null);
 		Theme.setTheme(null, this._container);
-		Assert.isNull(Theme.getTheme(), "Test cleanup failed to remove primary theme.");
-		Assert.isNull(Theme.getTheme(this._container), "Test cleanup failed to remove container theme");
+		Assert.areEqual(Theme.fallbackTheme, Theme.getTheme(), "Test cleanup failed to remove primary theme.");
+		Assert.areEqual(Theme.fallbackTheme, Theme.getTheme(this._container), "Test cleanup failed to remove container theme");
 		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	@Test
 	public function testGetThemeWithNoThemes():Void {
-		Assert.isNull(Theme.getTheme(), "Must not have default primary theme");
-		Assert.isNull(Theme.getTheme(this._container), "Must not have default theme for container");
-		Assert.isNull(Theme.getTheme(this._containerChild), "Must not have default theme for child of container");
-		Assert.isNull(Theme.getTheme(this._otherChild), "Must not have default theme for child of container");
+		Assert.areEqual(Theme.fallbackTheme, Theme.getTheme(), "Must not have primary theme");
+		Assert.areEqual(Theme.fallbackTheme, Theme.getTheme(this._container), "Must not have primary theme for container");
+		Assert.areEqual(Theme.fallbackTheme, Theme.getTheme(this._containerChild), "Must not have primary theme for child of container");
+		Assert.areEqual(Theme.fallbackTheme, Theme.getTheme(this._otherChild), "Must not have primary theme for child of container");
 	}
 
 	@Test

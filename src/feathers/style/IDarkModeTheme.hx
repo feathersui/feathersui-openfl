@@ -9,11 +9,10 @@
 package feathers.style;
 
 /**
-	An interface for Feathers themes.
+	An interface for Feathers themes that support dark mode.
 
 	@since 1.0.0
 **/
-interface ITheme {
-	public function getStyleProvider(target:IStyleObject):IStyleProvider;
-	public function dispose():Void;
+interface IDarkModeTheme extends ITheme {
+	public var darkMode(get, set):Bool;
 }

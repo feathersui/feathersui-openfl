@@ -1,8 +1,8 @@
 package com.feathersui.components.screens;
 
+import feathers.style.IDarkModeTheme;
 import feathers.events.FeathersEvent;
 import feathers.style.Theme;
-import feathers.themes.steel.SteelTheme;
 import openfl.events.Event;
 import com.feathersui.components.ScreenID;
 import feathers.data.ArrayCollection;
@@ -36,10 +36,12 @@ class MainMenu extends Panel {
 			var themeButton = new Button();
 			themeButton.text = "Theme";
 			themeButton.addEventListener(FeathersEvent.TRIGGERED, function(event:FeathersEvent):Void {
-				var theme = Std.downcast(Theme.fallbackTheme, SteelTheme);
-				if (theme != null) {
-					theme.darkMode = !theme.darkMode;
+				var theme = Theme.getTheme();
+				if (!Std.is(theme, IDarkModeTheme)) {
+					return;
 				}
+				var darkModeTheme = cast(theme, IDarkModeTheme);
+				darkModeTheme.darkMode = !darkModeTheme.darkMode;
 			});
 			themeButton.layoutData = new AnchorLayoutData(null, 10, null, null, null, 0);
 			header.addChild(themeButton);
@@ -86,6 +88,7 @@ private class MenuItem {
 	public var title:String;
 	public var screenID:String;
 
+	@:keep
 	public function toString() {
 		return this.title;
 	}
