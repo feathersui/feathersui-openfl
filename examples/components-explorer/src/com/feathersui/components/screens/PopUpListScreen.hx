@@ -1,5 +1,6 @@
 package com.feathersui.components.screens;
 
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.events.FeathersEvent;
 import feathers.data.ArrayCollection;
 import feathers.controls.PopUpList;
@@ -48,6 +49,9 @@ class PopUpListScreen extends Panel {
 
 		this.popUpList = new PopUpList();
 		this.popUpList.dataProvider = new ArrayCollection(arrayItems);
+		this.popUpList.updateItemRenderer = (itemRenderer:ItemRenderer, data:Dynamic, index:Int) -> {
+			itemRenderer.text = data.text;
+		};
 		this.popUpList.layoutData = AnchorLayoutData.center();
 		this.popUpList.addEventListener(Event.CHANGE, popUpList_changeHandler);
 		this.addChild(this.popUpList);
