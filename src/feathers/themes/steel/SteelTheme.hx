@@ -6,7 +6,7 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
-package feathers.themes;
+package feathers.themes.steel;
 
 import feathers.style.IStyleProvider;
 import feathers.style.IStyleObject;
@@ -22,7 +22,7 @@ import feathers.style.ITheme;
 /**
 	@since 1.0.0
 **/
-class DefaultTheme implements ITheme {
+class SteelTheme implements ITheme {
 	public function new(?themeColor:Int, ?darkThemeColor:Int) {
 		this.customThemeColor = themeColor;
 		this.customDarkThemeColor = darkThemeColor;

@@ -13,10 +13,7 @@ import feathers.controls.dataRenderers.IDataRenderer;
 import haxe.ds.ObjectMap;
 import openfl.errors.IllegalOperationError;
 import lime.utils.ObjectPool;
-import feathers.skins.RectangleSkin;
-import feathers.layout.VerticalListFixedRowLayout;
-import feathers.style.Theme;
-import feathers.themes.DefaultTheme;
+import feathers.themes.steel.components.SteelListBoxStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
@@ -32,16 +29,13 @@ import feathers.events.FeathersEvent;
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class ListBox extends BaseScrollContainer {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
 
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(ListBox, null) == null) {
-			theme.styleProvider.setStyleFunction(ListBox, null, setListBoxStyles);
-		}
+		initializeListBoxTheme();
+
 		super();
 		if (this.viewPort == null) {
 			this.listViewPort = new LayoutViewPort();
@@ -196,6 +190,10 @@ class ListBox extends BaseScrollContainer {
 
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
+	}
+
+	private function initializeListBoxTheme():Void {
+		SteelListBoxStyles.initialize();
 	}
 
 	override private function update():Void {
@@ -361,25 +359,5 @@ class ListBox extends BaseScrollContainer {
 
 	private function dataProvider_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.DATA);
-	}
-
-	private static function setListBoxStyles(listBox:ListBox):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (listBox.layout == null) {
-			listBox.layout = new VerticalListFixedRowLayout();
-		}
-
-		if (listBox.backgroundSkin == null) {
-			var backgroundSkin = new RectangleSkin();
-			backgroundSkin.fill = defaultTheme.getContainerFill();
-			// backgroundSkin.border = defaultTheme.getContainerBorder();
-			backgroundSkin.width = 160.0;
-			backgroundSkin.height = 160.0;
-			listBox.backgroundSkin = backgroundSkin;
-		}
 	}
 }

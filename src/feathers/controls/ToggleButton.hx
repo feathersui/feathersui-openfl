@@ -8,9 +8,7 @@
 
 package feathers.controls;
 
-import feathers.skins.RectangleSkin;
-import feathers.style.Theme;
-import feathers.themes.DefaultTheme;
+import feathers.themes.steel.components.SteelToggleButtonStyles;
 import feathers.core.ITextControl;
 import feathers.layout.RelativePosition;
 import feathers.core.IUIControl;
@@ -43,14 +41,11 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class ToggleButton extends BasicToggleButton implements ITextControl {
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(ToggleButton, null) == null) {
-			theme.styleProvider.setStyleFunction(ToggleButton, null, setToggleButtonStyles);
-		}
+		initializeToggleButtonTheme();
+
 		super();
 	}
 
@@ -305,6 +300,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 			this._stateToIcon.set(state, icon);
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
+	}
+
+	private function initializeToggleButtonTheme():Void {
+		SteelToggleButtonStyles.initialize();
 	}
 
 	override private function initialize():Void {
@@ -730,46 +729,5 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 			// next time that this icon is used for measurement
 			this.removeChild(icon);
 		}
-	}
-
-	private static function setToggleButtonStyles(button:ToggleButton):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (button.backgroundSkin == null) {
-			var skin = new RectangleSkin();
-			skin.fill = defaultTheme.getButtonFill();
-			skin.selectedFill = defaultTheme.getThemeFill();
-			skin.setFillForState(ToggleButtonState.DOWN(false), defaultTheme.getReversedActiveThemeFill());
-			skin.setFillForState(ToggleButtonState.DISABLED(false), defaultTheme.getButtonDisabledFill());
-			skin.setFillForState(ToggleButtonState.DOWN(false), defaultTheme.getReversedActiveThemeFill());
-			skin.border = defaultTheme.getButtonBorder();
-			skin.selectedBorder = defaultTheme.getActiveFillBorder();
-			skin.setBorderForState(ButtonState.DOWN, defaultTheme.getActiveFillBorder());
-			skin.cornerRadius = 6.0;
-			button.backgroundSkin = skin;
-		}
-
-		if (button.textFormat == null) {
-			button.textFormat = defaultTheme.getTextFormat();
-		}
-		if (button.disabledTextFormat == null) {
-			button.disabledTextFormat = defaultTheme.getDisabledTextFormat();
-		}
-		if (button.selectedTextFormat == null) {
-			button.selectedTextFormat = defaultTheme.getActiveTextFormat();
-		}
-
-		if (button.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
-			button.setTextFormatForState(ToggleButtonState.DOWN(false), defaultTheme.getActiveTextFormat());
-		}
-
-		button.paddingTop = 4.0;
-		button.paddingRight = 10.0;
-		button.paddingBottom = 4.0;
-		button.paddingLeft = 10.0;
-		button.gap = 6.0;
 	}
 }

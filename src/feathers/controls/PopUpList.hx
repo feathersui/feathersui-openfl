@@ -8,11 +8,7 @@
 
 package feathers.controls;
 
-import openfl.display.Shape;
-import feathers.themes.DefaultTheme;
-import feathers.style.Theme;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.RelativePosition;
+import feathers.themes.steel.components.SteelPopUpListStyles;
 import openfl.events.TouchEvent;
 import lime.ui.KeyCode;
 import openfl.ui.Keyboard;
@@ -32,7 +28,6 @@ import feathers.core.FeathersControl;
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class PopUpList extends FeathersControl {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
@@ -41,10 +36,8 @@ class PopUpList extends FeathersControl {
 	public static final CHILD_VARIANT_BUTTON = "popUpButton";
 
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Button, CHILD_VARIANT_BUTTON) == null) {
-			theme.styleProvider.setStyleFunction(Button, CHILD_VARIANT_BUTTON, setPopUpListButtonStyles);
-		}
+		initializePopUpListTheme();
+
 		super();
 	}
 
@@ -141,6 +134,10 @@ class PopUpList extends FeathersControl {
 		} else {
 			this.listBox.parent.removeChild(this.listBox);
 		}
+	}
+
+	private function initializePopUpListTheme():Void {
+		SteelPopUpListStyles.initialize();
 	}
 
 	override private function update():Void {
@@ -311,33 +308,5 @@ class PopUpList extends FeathersControl {
 			return;
 		}
 		this.closeList();
-	}
-
-	private static function setPopUpListButtonStyles(button:Button):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		defaultTheme.styleProvider.getStyleFunction(Button, null)(button);
-
-		button.horizontalAlign = HorizontalAlign.LEFT;
-		button.gap = Math.POSITIVE_INFINITY;
-
-		var icon = new Shape();
-		icon.graphics.beginFill(defaultTheme.textColor);
-		icon.graphics.moveTo(0.0, 0.0);
-		icon.graphics.lineTo(4.0, 4.0);
-		icon.graphics.lineTo(8.0, 0.0);
-		button.icon = icon;
-
-		var downIcon = new Shape();
-		downIcon.graphics.beginFill(defaultTheme.activeTextColor);
-		downIcon.graphics.moveTo(0.0, 0.0);
-		downIcon.graphics.lineTo(4.0, 4.0);
-		downIcon.graphics.lineTo(8.0, 0.0);
-		button.setIconForState(ButtonState.DOWN, downIcon);
-
-		button.iconPosition = RelativePosition.RIGHT;
 	}
 }

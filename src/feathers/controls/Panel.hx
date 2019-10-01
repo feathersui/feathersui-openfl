@@ -8,25 +8,19 @@
 
 package feathers.controls;
 
-import feathers.skins.RectangleSkin;
-import feathers.themes.DefaultTheme;
-import feathers.style.Theme;
+import feathers.themes.steel.components.SteelPanelStyles;
 import openfl.display.DisplayObject;
 import feathers.core.IUIControl;
-import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class Panel extends ScrollContainer {
 	private static final INVALIDATION_FLAG_HEADER_FACTORY = "headerFactory";
 	private static final INVALIDATION_FLAG_FOOTER_FACTORY = "footerFactory";
 
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Panel, null) == null) {
-			theme.styleProvider.setStyleFunction(Panel, null, setPanelStyles);
-		}
+		initializePanelTheme();
+
 		super();
 	}
 
@@ -53,6 +47,10 @@ class Panel extends ScrollContainer {
 		this.footerFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_FOOTER_FACTORY);
 		return this.footerFactory;
+	}
+
+	private function initializePanelTheme():Void {
+		SteelPanelStyles.initialize();
 	}
 
 	override private function update():Void {
@@ -131,18 +129,5 @@ class Panel extends ScrollContainer {
 			cast(this.footer, IValidating).validateNow();
 		}
 		this.footer.y = this.actualHeight - this.footer.height;
-	}
-
-	private static function setPanelStyles(panel:Panel):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (panel.backgroundSkin == null) {
-			var backgroundSkin = new RectangleSkin();
-			backgroundSkin.fill = defaultTheme.getContainerFill();
-			panel.backgroundSkin = backgroundSkin;
-		}
 	}
 }

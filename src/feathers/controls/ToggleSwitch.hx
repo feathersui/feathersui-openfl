@@ -8,10 +8,7 @@
 
 package feathers.controls;
 
-import feathers.skins.CircleSkin;
-import feathers.skins.RectangleSkin;
-import feathers.style.Theme;
-import feathers.themes.DefaultTheme;
+import feathers.themes.steel.components.SteelToggleSwitchStyles;
 import motion.easing.IEasing;
 import motion.easing.Quart;
 import motion.actuators.SimpleActuator;
@@ -21,8 +18,6 @@ import openfl.display.DisplayObject;
 import feathers.core.InvalidationFlag;
 import feathers.layout.Measurements;
 import feathers.core.IUIControl;
-import openfl.display.InteractiveObject;
-import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
@@ -31,14 +26,11 @@ import feathers.core.FeathersControl;
 /**
 	@since 1.0.0
 **/
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class ToggleSwitch extends FeathersControl implements IToggle {
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(ToggleSwitch, null) == null) {
-			theme.styleProvider.setStyleFunction(ToggleSwitch, null, setToggleSwitchStyles);
-		}
+		initializeToggleSwitchTheme();
+
 		super();
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
@@ -240,6 +232,10 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		this.selected = selected;
 		this._animateSelectionChange = true;
 		return this.selected;
+	}
+
+	private function initializeToggleSwitchTheme():Void {
+		SteelToggleSwitchStyles.initialize();
 	}
 
 	override private function update():Void {
@@ -464,47 +460,5 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 	private function toggleTween_onComplete():Void {
 		this._toggleTween = null;
-	}
-
-	private static function setToggleSwitchStyles(toggle:ToggleSwitch):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (toggle.trackSkin == null) {
-			var trackSkin = new RectangleSkin();
-			trackSkin.width = 64.0;
-			trackSkin.height = 32.0;
-			trackSkin.minWidth = 64.0;
-			trackSkin.minHeight = 32.0;
-			trackSkin.cornerRadius = 32.0;
-			trackSkin.fill = defaultTheme.getInsetFill();
-			trackSkin.border = defaultTheme.getInsetBorder();
-			trackSkin.selectedFill = defaultTheme.getReversedActiveThemeFill();
-			trackSkin.selectedBorder = defaultTheme.getActiveFillBorder();
-
-			var track:BasicToggleButton = new BasicToggleButton();
-			track.toggleable = false;
-			track.keepDownStateOnRollOut = true;
-			track.backgroundSkin = trackSkin;
-			toggle.trackSkin = track;
-		}
-		if (toggle.thumbSkin == null) {
-			var thumbSkin = new CircleSkin();
-			thumbSkin.width = 32.0;
-			thumbSkin.height = 32.0;
-			thumbSkin.minWidth = 32.0;
-			thumbSkin.minHeight = 32.0;
-			thumbSkin.fill = defaultTheme.getButtonFill();
-			thumbSkin.border = defaultTheme.getBorder();
-			thumbSkin.selectedBorder = defaultTheme.getActiveFillBorder();
-
-			var thumb:BasicToggleButton = new BasicToggleButton();
-			thumb.toggleable = false;
-			thumb.keepDownStateOnRollOut = true;
-			thumb.backgroundSkin = thumbSkin;
-			toggle.thumbSkin = thumb;
-		}
 	}
 }

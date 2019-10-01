@@ -8,9 +8,7 @@
 
 package feathers.controls;
 
-import feathers.themes.DefaultTheme;
-import feathers.style.Theme;
-import feathers.skins.RectangleSkin;
+import feathers.themes.steel.components.SteelButtonStyles;
 import openfl.display.DisplayObject;
 import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
@@ -43,14 +41,11 @@ import openfl.text.TextFormat;
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class Button extends BasicButton implements ITextControl {
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Button, null) == null) {
-			theme.styleProvider.setStyleFunction(Button, null, setButtonStyles);
-		}
+		initializeButtonTheme();
+
 		super();
 	}
 
@@ -297,6 +292,10 @@ class Button extends BasicButton implements ITextControl {
 			this._stateToIcon.set(state, icon);
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
+	}
+
+	private function initializeButtonTheme():Void {
+		SteelButtonStyles.initialize();
 	}
 
 	override private function initialize():Void {
@@ -716,40 +715,5 @@ class Button extends BasicButton implements ITextControl {
 			// next time that this icon is used for measurement
 			this.removeChild(icon);
 		}
-	}
-
-	private static function setButtonStyles(button:Button):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (button.backgroundSkin == null) {
-			var skin = new RectangleSkin();
-			skin.fill = defaultTheme.getButtonFill();
-			skin.setFillForState(ButtonState.DOWN, defaultTheme.getReversedActiveThemeFill());
-			skin.setFillForState(ButtonState.DISABLED, defaultTheme.getButtonDisabledFill());
-			skin.border = defaultTheme.getButtonBorder();
-			skin.setBorderForState(ButtonState.DOWN, defaultTheme.getActiveFillBorder());
-			skin.cornerRadius = 6.0;
-			button.backgroundSkin = skin;
-		}
-
-		if (button.textFormat == null) {
-			button.textFormat = defaultTheme.getTextFormat();
-		}
-		if (button.disabledTextFormat == null) {
-			button.disabledTextFormat = defaultTheme.getDisabledTextFormat();
-		}
-
-		if (button.getTextFormatForState(ButtonState.DOWN) == null) {
-			button.setTextFormatForState(ButtonState.DOWN, defaultTheme.getActiveTextFormat());
-		}
-
-		button.paddingTop = 4.0;
-		button.paddingRight = 10.0;
-		button.paddingBottom = 4.0;
-		button.paddingLeft = 10.0;
-		button.gap = 6.0;
 	}
 }

@@ -8,10 +8,7 @@
 
 package feathers.controls;
 
-import feathers.skins.RectangleSkin;
-import feathers.skins.CircleSkin;
-import feathers.style.Theme;
-import feathers.themes.DefaultTheme;
+import feathers.themes.steel.components.SteelHSliderStyles;
 import feathers.controls.supportClasses.BaseSlider;
 import feathers.core.IValidating;
 import openfl.geom.Point;
@@ -39,15 +36,16 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class HSlider extends BaseSlider {
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(HSlider, null) == null) {
-			theme.styleProvider.setStyleFunction(HSlider, null, setHSliderStyles);
-		}
+		initializeHSliderTheme();
+
 		super();
+	}
+
+	private function initializeHSliderTheme():Void {
+		SteelHSliderStyles.initialize();
 	}
 
 	override private function valueToLocation(value:Float):Float {
@@ -195,48 +193,5 @@ class HSlider extends BaseSlider {
 		var thumbLocation = this.valueToLocation(this.value);
 		this.thumbSkin.x = thumbLocation;
 		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2);
-	}
-
-	private static function setHSliderStyles(slider:HSlider):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (slider.thumbSkin == null) {
-			var thumbSkin = new CircleSkin();
-			thumbSkin.fill = defaultTheme.getButtonFill();
-			thumbSkin.border = defaultTheme.getButtonBorder();
-			thumbSkin.setFillForState(ButtonState.DOWN, defaultTheme.getButtonDownFill());
-			thumbSkin.setFillForState(ButtonState.DISABLED, defaultTheme.getButtonDisabledFill());
-			thumbSkin.width = 24.0;
-			thumbSkin.height = 24.0;
-			var thumb:BasicButton = new BasicButton();
-			thumb.keepDownStateOnRollOut = true;
-			thumb.backgroundSkin = thumbSkin;
-			slider.thumbSkin = thumb;
-		}
-
-		if (slider.trackSkin == null) {
-			var trackSkin = new RectangleSkin();
-			trackSkin.fill = defaultTheme.getActiveThemeFill();
-			trackSkin.border = defaultTheme.getActiveFillBorder();
-			trackSkin.cornerRadius = 6.0;
-			trackSkin.width = 100.0;
-			trackSkin.height = 8.0;
-			slider.trackSkin = trackSkin;
-
-			// if the track skin is already styled, don't style the secondary
-			// track skin with its default either
-			if (slider.secondaryTrackSkin == null) {
-				var secondaryTrackSkin = new RectangleSkin();
-				secondaryTrackSkin.fill = defaultTheme.getInsetFill();
-				secondaryTrackSkin.border = defaultTheme.getInsetBorder();
-				secondaryTrackSkin.cornerRadius = 6.0;
-				secondaryTrackSkin.width = 100.0;
-				secondaryTrackSkin.height = 8.0;
-				slider.secondaryTrackSkin = secondaryTrackSkin;
-			}
-		}
 	}
 }

@@ -8,22 +8,21 @@
 
 package feathers.controls;
 
-import feathers.skins.RectangleSkin;
-import feathers.style.Theme;
-import feathers.themes.DefaultTheme;
+import feathers.themes.steel.components.SteelHProgressBarStyles;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseProgressBar;
 
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class HProgressBar extends BaseProgressBar {
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(HProgressBar, null) == null) {
-			theme.styleProvider.setStyleFunction(HProgressBar, null, setHProgressBarStyles);
-		}
+		initializeHProgressBarTheme();
+
 		super();
+	}
+
+	private function initializeHProgressBarTheme():Void {
+		SteelHProgressBarStyles.initialize();
 	}
 
 	/**
@@ -158,34 +157,6 @@ class HProgressBar extends BaseProgressBar {
 
 		if (Std.is(this._currentFillSkin, IValidating)) {
 			cast(this._currentFillSkin, IValidating).validateNow();
-		}
-	}
-
-	private static function setHProgressBarStyles(progress:HProgressBar):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (progress.fillSkin == null) {
-			var fillSkin = new RectangleSkin();
-			fillSkin.fill = defaultTheme.getActiveThemeFill();
-			// fillSkin.disabledFill = defaultTheme.getButtonDisabledFill();
-			fillSkin.border = defaultTheme.getActiveFillBorder();
-			fillSkin.cornerRadius = 6.0;
-			fillSkin.width = 8.0;
-			fillSkin.height = 8.0;
-			progress.fillSkin = fillSkin;
-		}
-
-		if (progress.backgroundSkin == null) {
-			var backgroundSkin = new RectangleSkin();
-			backgroundSkin.fill = defaultTheme.getInsetFill();
-			backgroundSkin.border = defaultTheme.getInsetBorder();
-			backgroundSkin.cornerRadius = 6.0;
-			backgroundSkin.width = 200.0;
-			backgroundSkin.height = 8.0;
-			progress.backgroundSkin = backgroundSkin;
 		}
 	}
 }

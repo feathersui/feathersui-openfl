@@ -8,14 +8,12 @@
 
 package feathers.controls;
 
-import feathers.style.Theme;
-import feathers.themes.DefaultTheme;
-import feathers.skins.RectangleSkin;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.system.Capabilities;
 import openfl.events.Event;
 import feathers.core.PopUpManager;
+import feathers.themes.steel.components.SteelApplicationStyles;
 import feathers.utils.ScreenDensityScaleCalculator;
 import feathers.utils.MathUtil;
 
@@ -25,7 +23,6 @@ import feathers.utils.MathUtil;
 
 	@since 1.0.0
 **/
-@:access(feathers.themes.DefaultTheme)
 @:styleContext
 class Application extends LayoutGroup {
 	private static function defaultPopUpContainerFactory():DisplayObjectContainer {
@@ -33,10 +30,7 @@ class Application extends LayoutGroup {
 	}
 
 	public function new() {
-		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(Application, null) == null) {
-			theme.styleProvider.setStyleFunction(Application, null, setApplicationStyles);
-		}
+		initializeApplicationTheme();
 
 		super();
 
@@ -60,6 +54,10 @@ class Application extends LayoutGroup {
 	public var popUpContainerFactory:() -> DisplayObjectContainer;
 
 	private var _popUpContainer:DisplayObjectContainer;
+
+	private function initializeApplicationTheme():Void {
+		SteelApplicationStyles.initialize();
+	}
 
 	private function getScaleFactor():Float {
 		var scaleFactor = 1.0;
@@ -151,18 +149,5 @@ class Application extends LayoutGroup {
 
 	private function application_stage_resizeHandler(event:Event):Void {
 		this.refreshDimensions();
-	}
-
-	private static function setApplicationStyles(app:Application):Void {
-		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (defaultTheme == null) {
-			return;
-		}
-
-		if (app.backgroundSkin == null) {
-			var skin = new RectangleSkin();
-			skin.fill = defaultTheme.getRootFill();
-			app.backgroundSkin = skin;
-		}
 	}
 }
