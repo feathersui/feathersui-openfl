@@ -28,28 +28,25 @@ class SteelListBoxStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(ListBox, null) == null) {
-			theme.styleProvider.setStyleFunction(ListBox, null, setStyles);
-		}
-	}
 
-	private static function setStyles(listBox:ListBox):Void {
-		var theme = Std.downcast(Theme.getTheme(listBox), BaseSteelTheme);
-		if (theme == null) {
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(ListBox, null) != null) {
 			return;
 		}
 
-		if (listBox.layout == null) {
-			listBox.layout = new VerticalListFixedRowLayout();
-		}
+		styleProvider.setStyleFunction(ListBox, null, function(listBox:ListBox):Void {
+			if (listBox.layout == null) {
+				listBox.layout = new VerticalListFixedRowLayout();
+			}
 
-		if (listBox.backgroundSkin == null) {
-			var backgroundSkin = new RectangleSkin();
-			backgroundSkin.fill = theme.getContainerFill();
-			// backgroundSkin.border = theme.getContainerBorder();
-			backgroundSkin.width = 160.0;
-			backgroundSkin.height = 160.0;
-			listBox.backgroundSkin = backgroundSkin;
-		}
+			if (listBox.backgroundSkin == null) {
+				var backgroundSkin = new RectangleSkin();
+				backgroundSkin.fill = theme.getContainerFill();
+				// backgroundSkin.border = theme.getContainerBorder();
+				backgroundSkin.width = 160.0;
+				backgroundSkin.height = 160.0;
+				listBox.backgroundSkin = backgroundSkin;
+			}
+		});
 	}
 }

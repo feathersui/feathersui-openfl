@@ -26,56 +26,37 @@ class SteelLabelStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(Label, null) == null) {
-			theme.styleProvider.setStyleFunction(Label, null, setStyles);
-		}
-		if (theme.styleProvider.getStyleFunction(Label, Label.VARIANT_HEADING) == null) {
-			theme.styleProvider.setStyleFunction(Label, Label.VARIANT_HEADING, setHeadingStyles);
-		}
-		if (theme.styleProvider.getStyleFunction(Label, Label.VARIANT_DETAIL) == null) {
-			theme.styleProvider.setStyleFunction(Label, Label.VARIANT_DETAIL, setDetailStyles);
-		}
-	}
 
-	private static function setStyles(label:Label):Void {
-		var theme = Std.downcast(Theme.getTheme(label), BaseSteelTheme);
-		if (theme == null) {
-			return;
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(Label, null) == null) {
+			styleProvider.setStyleFunction(Label, null, function(label:Label):Void {
+				if (label.textFormat == null) {
+					label.textFormat = theme.getTextFormat();
+				}
+				if (label.disabledTextFormat == null) {
+					label.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+			});
 		}
-
-		if (label.textFormat == null) {
-			label.textFormat = theme.getTextFormat();
+		if (styleProvider.getStyleFunction(Label, Label.VARIANT_HEADING) == null) {
+			styleProvider.setStyleFunction(Label, Label.VARIANT_HEADING, function(label:Label):Void {
+				if (label.textFormat == null) {
+					label.textFormat = theme.getHeaderTextFormat();
+				}
+				if (label.disabledTextFormat == null) {
+					label.disabledTextFormat = theme.getDisabledHeaderTextFormat();
+				}
+			});
 		}
-		if (label.disabledTextFormat == null) {
-			label.disabledTextFormat = theme.getDisabledTextFormat();
-		}
-	}
-
-	private static function setHeadingStyles(label:Label):Void {
-		var theme = Std.downcast(Theme.getTheme(label), BaseSteelTheme);
-		if (theme == null) {
-			return;
-		}
-
-		if (label.textFormat == null) {
-			label.textFormat = theme.getHeaderTextFormat();
-		}
-		if (label.disabledTextFormat == null) {
-			label.disabledTextFormat = theme.getDisabledHeaderTextFormat();
-		}
-	}
-
-	private static function setDetailStyles(label:Label):Void {
-		var theme = Std.downcast(Theme.getTheme(label), BaseSteelTheme);
-		if (theme == null) {
-			return;
-		}
-
-		if (label.textFormat == null) {
-			label.textFormat = theme.getDetailTextFormat();
-		}
-		if (label.disabledTextFormat == null) {
-			label.disabledTextFormat = theme.getDisabledDetailTextFormat();
+		if (styleProvider.getStyleFunction(Label, Label.VARIANT_DETAIL) == null) {
+			styleProvider.setStyleFunction(Label, Label.VARIANT_DETAIL, function(label:Label):Void {
+				if (label.textFormat == null) {
+					label.textFormat = theme.getDetailTextFormat();
+				}
+				if (label.disabledTextFormat == null) {
+					label.disabledTextFormat = theme.getDisabledDetailTextFormat();
+				}
+			});
 		}
 	}
 }

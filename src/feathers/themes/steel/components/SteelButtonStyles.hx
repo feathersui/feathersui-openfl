@@ -35,11 +35,6 @@ class SteelButtonStyles {
 		}
 
 		styleProvider.setStyleFunction(Button, null, function(button:Button):Void {
-			var theme = Std.downcast(Theme.getTheme(button), BaseSteelTheme);
-			if (theme == null) {
-				return;
-			}
-
 			if (button.backgroundSkin == null) {
 				var skin = new RectangleSkin();
 				skin.fill = theme.getButtonFill();

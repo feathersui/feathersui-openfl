@@ -27,21 +27,18 @@ class SteelPanelStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(Panel, null) == null) {
-			theme.styleProvider.setStyleFunction(Panel, null, setStyles);
-		}
-	}
 
-	private static function setStyles(panel:Panel):Void {
-		var theme = Std.downcast(Theme.getTheme(panel), BaseSteelTheme);
-		if (theme == null) {
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(Panel, null) != null) {
 			return;
 		}
 
-		if (panel.backgroundSkin == null) {
-			var backgroundSkin = new RectangleSkin();
-			backgroundSkin.fill = theme.getContainerFill();
-			panel.backgroundSkin = backgroundSkin;
-		}
+		styleProvider.setStyleFunction(Panel, null, function(panel:Panel):Void {
+			if (panel.backgroundSkin == null) {
+				var backgroundSkin = new RectangleSkin();
+				backgroundSkin.fill = theme.getContainerFill();
+				panel.backgroundSkin = backgroundSkin;
+			}
+		});
 	}
 }

@@ -29,81 +29,78 @@ class SteelCheckStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(Check, null) == null) {
-			theme.styleProvider.setStyleFunction(Check, null, setStyles);
-		}
-	}
 
-	private static function setStyles(check:Check):Void {
-		var theme = Std.downcast(Theme.getTheme(check), BaseSteelTheme);
-		if (theme == null) {
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(Check, null) != null) {
 			return;
 		}
 
-		if (check.textFormat == null) {
-			check.textFormat = theme.getTextFormat();
-		}
-		if (check.disabledTextFormat == null) {
-			check.disabledTextFormat = theme.getDisabledTextFormat();
-		}
+		styleProvider.setStyleFunction(Check, null, function(check:Check):Void {
+			if (check.textFormat == null) {
+				check.textFormat = theme.getTextFormat();
+			}
+			if (check.disabledTextFormat == null) {
+				check.disabledTextFormat = theme.getDisabledTextFormat();
+			}
 
-		var icon = new RectangleSkin();
-		icon.width = 24.0;
-		icon.height = 24.0;
-		icon.minWidth = 24.0;
-		icon.minHeight = 24.0;
-		icon.border = theme.getInsetBorder(2.0);
-		icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getThemeBorder(2.0));
-		icon.fill = theme.getInsetFill();
-		icon.disabledFill = theme.getDisabledInsetFill();
-		check.icon = icon;
+			var icon = new RectangleSkin();
+			icon.width = 24.0;
+			icon.height = 24.0;
+			icon.minWidth = 24.0;
+			icon.minHeight = 24.0;
+			icon.border = theme.getInsetBorder(2.0);
+			icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getThemeBorder(2.0));
+			icon.fill = theme.getInsetFill();
+			icon.disabledFill = theme.getDisabledInsetFill();
+			check.icon = icon;
 
-		var selectedIcon = new RectangleSkin();
-		selectedIcon.width = 24.0;
-		selectedIcon.height = 24.0;
-		selectedIcon.minWidth = 24.0;
-		selectedIcon.minHeight = 24.0;
-		selectedIcon.border = theme.getInsetBorder(2.0);
-		selectedIcon.setBorderForState(ToggleButtonState.DOWN(false), theme.getThemeBorder(2.0));
-		selectedIcon.fill = theme.getInsetFill();
-		selectedIcon.disabledFill = theme.getDisabledInsetFill();
+			var selectedIcon = new RectangleSkin();
+			selectedIcon.width = 24.0;
+			selectedIcon.height = 24.0;
+			selectedIcon.minWidth = 24.0;
+			selectedIcon.minHeight = 24.0;
+			selectedIcon.border = theme.getInsetBorder(2.0);
+			selectedIcon.setBorderForState(ToggleButtonState.DOWN(false), theme.getThemeBorder(2.0));
+			selectedIcon.fill = theme.getInsetFill();
+			selectedIcon.disabledFill = theme.getDisabledInsetFill();
 
-		var checkMark = new Shape();
-		checkMark.graphics.beginFill(theme.themeColor);
-		checkMark.graphics.drawRect(-0.0, -10.0, 4.0, 18.0);
-		checkMark.graphics.drawRect(-6.0, 4.0, 6.0, 4.0);
-		checkMark.graphics.endFill();
-		checkMark.rotation = 45.0;
-		checkMark.x = 12.0;
-		checkMark.y = 12.0;
-		selectedIcon.addChild(checkMark);
+			var checkMark = new Shape();
+			checkMark.graphics.beginFill(theme.themeColor);
+			checkMark.graphics.drawRect(-0.0, -10.0, 4.0, 18.0);
+			checkMark.graphics.drawRect(-6.0, 4.0, 6.0, 4.0);
+			checkMark.graphics.endFill();
+			checkMark.rotation = 45.0;
+			checkMark.x = 12.0;
+			checkMark.y = 12.0;
+			selectedIcon.addChild(checkMark);
 
-		check.selectedIcon = selectedIcon;
+			check.selectedIcon = selectedIcon;
 
-		var disabledAndSelectedIcon = new RectangleSkin();
-		disabledAndSelectedIcon.width = 24.0;
-		disabledAndSelectedIcon.height = 24.0;
-		disabledAndSelectedIcon.minWidth = 24.0;
-		disabledAndSelectedIcon.minHeight = 24.0;
-		disabledAndSelectedIcon.border = theme.getInsetBorder(2.0);
-		disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
+			var disabledAndSelectedIcon = new RectangleSkin();
+			disabledAndSelectedIcon.width = 24.0;
+			disabledAndSelectedIcon.height = 24.0;
+			disabledAndSelectedIcon.minWidth = 24.0;
+			disabledAndSelectedIcon.minHeight = 24.0;
+			disabledAndSelectedIcon.border = theme.getInsetBorder(2.0);
+			disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
 
-		var disabledCheckMark = new Shape();
-		disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
-		disabledCheckMark.graphics.drawRect(-0.0, -10.0, 4.0, 18.0);
-		disabledCheckMark.graphics.endFill();
-		disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
-		disabledCheckMark.graphics.drawRect(-6.0, 4.0, 6.0, 4.0);
-		disabledCheckMark.graphics.endFill();
-		disabledCheckMark.rotation = 45.0;
-		disabledCheckMark.x = 12.0;
-		disabledCheckMark.y = 12.0;
-		disabledAndSelectedIcon.addChild(disabledCheckMark);
+			var disabledCheckMark = new Shape();
+			disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
+			disabledCheckMark.graphics.drawRect(-0.0, -10.0, 4.0, 18.0);
+			disabledCheckMark.graphics.endFill();
+			disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
+			disabledCheckMark.graphics.drawRect(-6.0, 4.0, 6.0, 4.0);
+			disabledCheckMark.graphics.endFill();
+			disabledCheckMark.rotation = 45.0;
+			disabledCheckMark.x = 12.0;
+			disabledCheckMark.y = 12.0;
+			disabledAndSelectedIcon.addChild(disabledCheckMark);
 
-		check.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
+			check.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
 
-		if (check.gap == null) {
-			check.gap = 6.0;
-		}
+			if (check.gap == null) {
+				check.gap = 6.0;
+			}
+		});
 	}
 }

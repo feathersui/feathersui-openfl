@@ -28,49 +28,46 @@ class SteelToggleButtonStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(ToggleButton, null) == null) {
-			theme.styleProvider.setStyleFunction(ToggleButton, null, setStyles);
-		}
-	}
 
-	private static function setStyles(button:ToggleButton):Void {
-		var theme = Std.downcast(Theme.getTheme(button), BaseSteelTheme);
-		if (theme == null) {
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(ToggleButton, null) != null) {
 			return;
 		}
 
-		if (button.backgroundSkin == null) {
-			var skin = new RectangleSkin();
-			skin.fill = theme.getButtonFill();
-			skin.selectedFill = theme.getThemeFill();
-			skin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
-			skin.setFillForState(ToggleButtonState.DISABLED(false), theme.getButtonDisabledFill());
-			skin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
-			skin.border = theme.getButtonBorder();
-			skin.selectedBorder = theme.getActiveFillBorder();
-			skin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
-			skin.cornerRadius = 6.0;
-			button.backgroundSkin = skin;
-		}
+		styleProvider.setStyleFunction(ToggleButton, null, function(button:ToggleButton):Void {
+			if (button.backgroundSkin == null) {
+				var skin = new RectangleSkin();
+				skin.fill = theme.getButtonFill();
+				skin.selectedFill = theme.getThemeFill();
+				skin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
+				skin.setFillForState(ToggleButtonState.DISABLED(false), theme.getButtonDisabledFill());
+				skin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
+				skin.border = theme.getButtonBorder();
+				skin.selectedBorder = theme.getActiveFillBorder();
+				skin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
+				skin.cornerRadius = 6.0;
+				button.backgroundSkin = skin;
+			}
 
-		if (button.textFormat == null) {
-			button.textFormat = theme.getTextFormat();
-		}
-		if (button.disabledTextFormat == null) {
-			button.disabledTextFormat = theme.getDisabledTextFormat();
-		}
-		if (button.selectedTextFormat == null) {
-			button.selectedTextFormat = theme.getActiveTextFormat();
-		}
+			if (button.textFormat == null) {
+				button.textFormat = theme.getTextFormat();
+			}
+			if (button.disabledTextFormat == null) {
+				button.disabledTextFormat = theme.getDisabledTextFormat();
+			}
+			if (button.selectedTextFormat == null) {
+				button.selectedTextFormat = theme.getActiveTextFormat();
+			}
 
-		if (button.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
-			button.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
-		}
+			if (button.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
+				button.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
+			}
 
-		button.paddingTop = 4.0;
-		button.paddingRight = 10.0;
-		button.paddingBottom = 4.0;
-		button.paddingLeft = 10.0;
-		button.gap = 6.0;
+			button.paddingTop = 4.0;
+			button.paddingRight = 10.0;
+			button.paddingBottom = 4.0;
+			button.paddingLeft = 10.0;
+			button.gap = 6.0;
+		});
 	}
 }

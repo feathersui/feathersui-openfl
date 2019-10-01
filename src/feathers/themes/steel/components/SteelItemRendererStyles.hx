@@ -29,44 +29,41 @@ class SteelItemRendererStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(ItemRenderer, null) == null) {
-			theme.styleProvider.setStyleFunction(ItemRenderer, null, setStyles);
-		}
-	}
 
-	private static function setStyles(itemRenderer:ItemRenderer):Void {
-		var theme = Std.downcast(Theme.getTheme(itemRenderer), BaseSteelTheme);
-		if (theme == null) {
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(ItemRenderer, null) != null) {
 			return;
 		}
 
-		if (itemRenderer.backgroundSkin == null) {
-			var skin = new UnderlineSkin();
-			skin.fill = theme.getContainerFill();
-			skin.border = theme.getDividerBorder();
-			skin.setFillForState(ButtonState.DOWN, theme.getActiveThemeFill());
-			skin.width = 44.0;
-			skin.height = 44.0;
-			skin.minWidth = 44.0;
-			skin.minHeight = 44.0;
-			itemRenderer.backgroundSkin = skin;
-		}
+		styleProvider.setStyleFunction(ItemRenderer, null, function(itemRenderer:ItemRenderer):Void {
+			if (itemRenderer.backgroundSkin == null) {
+				var skin = new UnderlineSkin();
+				skin.fill = theme.getContainerFill();
+				skin.border = theme.getDividerBorder();
+				skin.setFillForState(ButtonState.DOWN, theme.getActiveThemeFill());
+				skin.width = 44.0;
+				skin.height = 44.0;
+				skin.minWidth = 44.0;
+				skin.minHeight = 44.0;
+				itemRenderer.backgroundSkin = skin;
+			}
 
-		if (itemRenderer.textFormat == null) {
-			itemRenderer.textFormat = theme.getTextFormat();
-		}
-		if (itemRenderer.disabledTextFormat == null) {
-			itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
-		}
-		if (itemRenderer.getTextFormatForState(ButtonState.DOWN) == null) {
-			itemRenderer.setTextFormatForState(ButtonState.DOWN, theme.getActiveTextFormat());
-		}
+			if (itemRenderer.textFormat == null) {
+				itemRenderer.textFormat = theme.getTextFormat();
+			}
+			if (itemRenderer.disabledTextFormat == null) {
+				itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
+			}
+			if (itemRenderer.getTextFormatForState(ButtonState.DOWN) == null) {
+				itemRenderer.setTextFormatForState(ButtonState.DOWN, theme.getActiveTextFormat());
+			}
 
-		itemRenderer.paddingTop = 4.0;
-		itemRenderer.paddingRight = 10.0;
-		itemRenderer.paddingBottom = 4.0;
-		itemRenderer.paddingLeft = 10.0;
+			itemRenderer.paddingTop = 4.0;
+			itemRenderer.paddingRight = 10.0;
+			itemRenderer.paddingBottom = 4.0;
+			itemRenderer.paddingLeft = 10.0;
 
-		itemRenderer.horizontalAlign = HorizontalAlign.LEFT;
+			itemRenderer.horizontalAlign = HorizontalAlign.LEFT;
+		});
 	}
 }

@@ -31,36 +31,31 @@ class SteelPopUpListStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON) == null) {
-			theme.styleProvider.setStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON, setButtonStyles);
+
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON) == null) {
+			styleProvider.setStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON, function(button:Button):Void {
+				theme.styleProvider.getStyleFunction(Button, null)(button);
+
+				button.horizontalAlign = HorizontalAlign.LEFT;
+				button.gap = Math.POSITIVE_INFINITY;
+
+				var icon = new Shape();
+				icon.graphics.beginFill(theme.textColor);
+				icon.graphics.moveTo(0.0, 0.0);
+				icon.graphics.lineTo(4.0, 4.0);
+				icon.graphics.lineTo(8.0, 0.0);
+				button.icon = icon;
+
+				var downIcon = new Shape();
+				downIcon.graphics.beginFill(theme.activeTextColor);
+				downIcon.graphics.moveTo(0.0, 0.0);
+				downIcon.graphics.lineTo(4.0, 4.0);
+				downIcon.graphics.lineTo(8.0, 0.0);
+				button.setIconForState(ButtonState.DOWN, downIcon);
+
+				button.iconPosition = RelativePosition.RIGHT;
+			});
 		}
-	}
-
-	private static function setButtonStyles(button:Button):Void {
-		var theme = Std.downcast(Theme.getTheme(button), BaseSteelTheme);
-		if (theme == null) {
-			return;
-		}
-
-		theme.styleProvider.getStyleFunction(Button, null)(button);
-
-		button.horizontalAlign = HorizontalAlign.LEFT;
-		button.gap = Math.POSITIVE_INFINITY;
-
-		var icon = new Shape();
-		icon.graphics.beginFill(theme.textColor);
-		icon.graphics.moveTo(0.0, 0.0);
-		icon.graphics.lineTo(4.0, 4.0);
-		icon.graphics.lineTo(8.0, 0.0);
-		button.icon = icon;
-
-		var downIcon = new Shape();
-		downIcon.graphics.beginFill(theme.activeTextColor);
-		downIcon.graphics.moveTo(0.0, 0.0);
-		downIcon.graphics.lineTo(4.0, 4.0);
-		downIcon.graphics.lineTo(8.0, 0.0);
-		button.setIconForState(ButtonState.DOWN, downIcon);
-
-		button.iconPosition = RelativePosition.RIGHT;
 	}
 }

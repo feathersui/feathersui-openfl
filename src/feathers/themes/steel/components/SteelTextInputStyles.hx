@@ -28,37 +28,34 @@ class SteelTextInputStyles {
 		if (theme == null) {
 			return;
 		}
-		if (theme.styleProvider.getStyleFunction(TextInput, null) == null) {
-			theme.styleProvider.setStyleFunction(TextInput, null, setStyles);
-		}
-	}
 
-	private static function setStyles(input:TextInput):Void {
-		var theme = Std.downcast(Theme.getTheme(input), BaseSteelTheme);
-		if (theme == null) {
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(TextInput, null) != null) {
 			return;
 		}
 
-		if (input.backgroundSkin == null) {
-			var inputSkin = new RectangleSkin();
-			inputSkin.cornerRadius = 6.0;
-			inputSkin.width = 160.0;
-			inputSkin.fill = theme.getInsetFill();
-			inputSkin.border = theme.getInsetBorder();
-			inputSkin.setBorderForState(TextInputState.FOCUSED, theme.getThemeBorder());
-			input.backgroundSkin = inputSkin;
-		}
+		styleProvider.setStyleFunction(TextInput, null, function(input:TextInput):Void {
+			if (input.backgroundSkin == null) {
+				var inputSkin = new RectangleSkin();
+				inputSkin.cornerRadius = 6.0;
+				inputSkin.width = 160.0;
+				inputSkin.fill = theme.getInsetFill();
+				inputSkin.border = theme.getInsetBorder();
+				inputSkin.setBorderForState(TextInputState.FOCUSED, theme.getThemeBorder());
+				input.backgroundSkin = inputSkin;
+			}
 
-		if (input.textFormat == null) {
-			input.textFormat = theme.getTextFormat();
-		}
-		if (input.disabledTextFormat == null) {
-			input.disabledTextFormat = theme.getDisabledTextFormat();
-		}
+			if (input.textFormat == null) {
+				input.textFormat = theme.getTextFormat();
+			}
+			if (input.disabledTextFormat == null) {
+				input.disabledTextFormat = theme.getDisabledTextFormat();
+			}
 
-		input.paddingTop = 6.0;
-		input.paddingRight = 10.0;
-		input.paddingBottom = 6.0;
-		input.paddingLeft = 10.0;
+			input.paddingTop = 6.0;
+			input.paddingRight = 10.0;
+			input.paddingBottom = 6.0;
+			input.paddingLeft = 10.0;
+		});
 	}
 }
