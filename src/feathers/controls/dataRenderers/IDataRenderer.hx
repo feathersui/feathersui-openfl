@@ -8,17 +8,17 @@
 
 package feathers.controls.dataRenderers;
 
-/**
-	A data renderer for the `ListBox` component.
+import feathers.core.IUIControl;
 
-	@see feathers.controls.ListBox
-	@see feathers.data.IFlatCollection
+/**
+	A type of UI component that displays arbitrary data from a component such as
+	`ListBox`.
 
 	@since 1.0.0
 **/
-interface IListBoxItemRenderer extends IDataRenderer {
+interface IDataRenderer extends IUIControl {
 	/**
-		The index of the data in a flat collection.
+		The data to render.
 	**/
-	public var index(default, set):Int;
+	public var data(get, set):Dynamic;
 }

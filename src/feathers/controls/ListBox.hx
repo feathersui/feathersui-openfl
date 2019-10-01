@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.core.ITextControl;
+import feathers.controls.dataRenderers.IDataRenderer;
 import haxe.ds.ObjectMap;
 import openfl.errors.IllegalOperationError;
 import lime.utils.ObjectPool;
@@ -19,7 +21,7 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
 import feathers.controls.dataRenderers.IListBoxItemRenderer;
-import feathers.controls.dataRenderers.ListBoxItemRenderer;
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.layout.ILayout;
@@ -116,19 +118,19 @@ class ListBox extends BaseScrollContainer {
 	@:style
 	public var layout:ILayout = null;
 
-	private var _pool:ObjectPool<IListBoxItemRenderer> = new ObjectPool(defaultItemRendererFactory);
+	private var _pool:ObjectPool<DisplayObject> = new ObjectPool(defaultItemRendererFactory);
 
 	/**
 
 		@since 1.0.0
 	**/
-	public var itemRendererFactory(get, set):() -> IListBoxItemRenderer;
+	public var itemRendererFactory(get, set):() -> DisplayObject;
 
-	private function get_itemRendererFactory():() -> IListBoxItemRenderer {
+	private function get_itemRendererFactory():() -> DisplayObject {
 		return this._pool.create;
 	}
 
-	private function set_itemRendererFactory(value:() -> IListBoxItemRenderer):() -> IListBoxItemRenderer {
+	private function set_itemRendererFactory(value:() -> DisplayObject):() -> DisplayObject {
 		if (this._pool.create == value) {
 			return this._pool.create;
 		}
@@ -146,26 +148,33 @@ class ListBox extends BaseScrollContainer {
 
 		@since 1.0.0
 	**/
-	public var prepareItemRenderer(default, set):(IListBoxItemRenderer, Dynamic) -> Void = null;
+	public var updateItemRenderer(default, set):(itemRenderer:Dynamic, data:Dynamic, index:Int) -> Void;
 
-	private function set_prepareItemRenderer(value:(IListBoxItemRenderer, Dynamic) -> Void):(IListBoxItemRenderer, Dynamic) -> Void {
-		if (this.prepareItemRenderer == value) {
-			return this.prepareItemRenderer;
+	private function set_updateItemRenderer(value:(Dynamic, Dynamic, Int) -> Void):(DisplayObject, Dynamic, Int) -> Void {
+		if (this.updateItemRenderer == value) {
+			return this.updateItemRenderer;
 		}
-		this.prepareItemRenderer = value;
+		this.updateItemRenderer = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.prepareItemRenderer;
+		return this.updateItemRenderer;
+	}
+
+	private function defaultUpdateItemRenderer(itemRenderer:Dynamic, data:Dynamic, index:Int):Void {
+		if (Std.is(itemRenderer, ITextControl)) {
+			var textControl = cast(itemRenderer, ITextControl);
+			textControl.text = itemToText(data);
+		}
 	}
 
 	/**
 		An optional function to clean up an item renderer before it is returned
-		to the pool and possibly re-used for new data.
+		to the pool and made available for reuse with new data.
 
 		@since 1.0.0
 	**/
-	public var cleanupItemRenderer(default, set):(IListBoxItemRenderer) -> Void;
+	public var cleanupItemRenderer(default, set):(itemRenderer:Dynamic, data:Dynamic) -> Void;
 
-	private function set_cleanupItemRenderer(value:(IListBoxItemRenderer) -> Void):(IListBoxItemRenderer) -> Void {
+	private function set_cleanupItemRenderer(value:(Dynamic, Dynamic) -> Void):(Dynamic, Dynamic) -> Void {
 		if (this.cleanupItemRenderer == value) {
 			return this.cleanupItemRenderer;
 		}
@@ -175,14 +184,19 @@ class ListBox extends BaseScrollContainer {
 		return this.cleanupItemRenderer;
 	}
 
-	private static function defaultItemRendererFactory():IListBoxItemRenderer {
-		return new ListBoxItemRenderer();
+	private static function defaultItemRendererFactory():DisplayObject {
+		return new ItemRenderer();
 	}
 
-	private var inactiveItemRenderers:Array<IListBoxItemRenderer> = [];
-	private var activeItemRenderers:Array<IListBoxItemRenderer> = [];
-	private var itemRendererMap = new ObjectMap<Dynamic, IListBoxItemRenderer>();
+	private var inactiveItemRenderers:Array<DisplayObject> = [];
+	private var activeItemRenderers:Array<DisplayObject> = [];
+	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
+	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
+
+	public dynamic function itemToText(data:Dynamic):String {
+		return Std.string(data);
+	}
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
@@ -232,15 +246,26 @@ class ListBox extends BaseScrollContainer {
 
 	private function recoverInactiveItemRenderers():Void {
 		for (itemRenderer in this.inactiveItemRenderers) {
-			if (itemRenderer == null || itemRenderer.index != -1) {
+			if (itemRenderer == null) {
 				continue;
 			}
-			this.itemRendererMap.remove(itemRenderer.data);
-			if (this.cleanupItemRenderer != null) {
-				this.cleanupItemRenderer(itemRenderer);
+			var item = this.itemRendererToData.get(itemRenderer);
+			if (item == null) {
+				return;
 			}
-			itemRenderer.data = null;
-			itemRenderer.index = -1;
+			this.itemRendererToData.remove(itemRenderer);
+			this.dataToItemRenderer.remove(item);
+			if (this.cleanupItemRenderer != null) {
+				this.cleanupItemRenderer(itemRenderer, item);
+			}
+			if (Std.is(itemRenderer, IDataRenderer)) {
+				var dataRenderer = cast(itemRenderer, IDataRenderer);
+				dataRenderer.data = null;
+			}
+			if (Std.is(itemRenderer, IListBoxItemRenderer)) {
+				var listItemRenderer = cast(itemRenderer, IListBoxItemRenderer);
+				listItemRenderer.index = -1;
+			}
 		}
 	}
 
@@ -257,11 +282,14 @@ class ListBox extends BaseScrollContainer {
 	private function findUnrenderedData():Void {
 		for (i in 0...this.dataProvider.length) {
 			var item = this.dataProvider.get(i);
-			var itemRenderer:IListBoxItemRenderer = this.itemRendererMap.get(item);
+			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
-				// the index may have changed if items were added, removed, or
-				// re-ordered in the data provider
-				itemRenderer.index = i;
+				if (Std.is(itemRenderer, IListBoxItemRenderer)) {
+					// the index may have changed if items were added, removed, or
+					// re-ordered in the data provider
+					var listItemRenderer = cast(itemRenderer, IListBoxItemRenderer);
+					listItemRenderer.index = i;
+				}
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
@@ -290,24 +318,33 @@ class ListBox extends BaseScrollContainer {
 		this._unrenderedData.resize(0);
 	}
 
-	private function createItemRenderer(item:Dynamic, index:Int):IListBoxItemRenderer {
-		var itemRenderer:IListBoxItemRenderer = null;
+	private function createItemRenderer(item:Dynamic, index:Int):DisplayObject {
+		var itemRenderer:DisplayObject = null;
 		if (this.inactiveItemRenderers.length == 0) {
 			itemRenderer = this._pool.create();
 		} else {
 			itemRenderer = this.inactiveItemRenderers.shift();
 		}
-		itemRenderer.index = index;
-		itemRenderer.data = item;
-		if (this.prepareItemRenderer != null) {
-			this.prepareItemRenderer(itemRenderer, item);
+		if (Std.is(itemRenderer, IListBoxItemRenderer)) {
+			var listItemRenderer = cast(itemRenderer, IListBoxItemRenderer);
+			listItemRenderer.index = index;
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			dataRenderer.data = item;
+		}
+		if (this.updateItemRenderer != null) {
+			this.updateItemRenderer(itemRenderer, item, index);
+		} else if (this.defaultUpdateItemRenderer != null) {
+			this.defaultUpdateItemRenderer(itemRenderer, item, index);
 		}
 		itemRenderer.addEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
-		this.itemRendererMap.set(item, itemRenderer);
+		this.itemRendererToData.set(itemRenderer, item);
+		this.dataToItemRenderer.set(item, itemRenderer);
 		return itemRenderer;
 	}
 
-	private function destroyItemRenderer(itemRenderer:IListBoxItemRenderer):Void {
+	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
 		itemRenderer.removeEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
 		var displayObject = cast(itemRenderer, DisplayObject);
 		this.listViewPort.removeChild(displayObject);
@@ -315,10 +352,11 @@ class ListBox extends BaseScrollContainer {
 	}
 
 	private function itemRenderer_triggeredHandler(event:FeathersEvent):Void {
-		var itemRenderer:IListBoxItemRenderer = cast(event.currentTarget, IListBoxItemRenderer);
+		var itemRenderer:DisplayObject = cast(event.currentTarget, DisplayObject);
+		var item = this.itemRendererToData.get(itemRenderer);
 		// trigger before change
 		FeathersEvent.dispatch(this, FeathersEvent.TRIGGERED);
-		this.selectedIndex = itemRenderer.index;
+		this.selectedItem = item;
 	}
 
 	private function dataProvider_changeHandler(event:Event):Void {

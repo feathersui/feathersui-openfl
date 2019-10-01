@@ -16,16 +16,21 @@ import feathers.core.InvalidationFlag;
 
 @:access(feathers.themes.DefaultTheme)
 @:styleContext
-class ListBoxItemRenderer extends Button implements IListBoxItemRenderer {
+class ItemRenderer extends Button implements IDataRenderer {
 	public function new() {
 		var theme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
-		if (theme != null && theme.styleProvider.getStyleFunction(ListBoxItemRenderer, null) == null) {
-			theme.styleProvider.setStyleFunction(ListBoxItemRenderer, null, setListBoxItemRendererStyles);
+		if (theme != null && theme.styleProvider.getStyleFunction(ItemRenderer, null) == null) {
+			theme.styleProvider.setStyleFunction(ItemRenderer, null, setItemRendererStyles);
 		}
 		super();
 	}
 
-	public var data(default, set):Dynamic;
+	@:isVar
+	public var data(get, set):Dynamic;
+
+	private function get_data():Dynamic {
+		return this.data;
+	}
 
 	private function set_data(value:Dynamic):Dynamic {
 		if (this.data == value) {
@@ -36,32 +41,7 @@ class ListBoxItemRenderer extends Button implements IListBoxItemRenderer {
 		return this.data;
 	}
 
-	public var index(default, set):Int;
-
-	private function set_index(value:Int):Int {
-		if (this.index == value) {
-			return this.index;
-		}
-		this.index = value;
-		this.setInvalid(InvalidationFlag.DATA);
-		return this.index;
-	}
-
-	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-
-		if (dataInvalid) {
-			if (this.data == null) {
-				this.text = null;
-			} else {
-				this.text = this.data.text;
-			}
-		}
-
-		super.update();
-	}
-
-	private static function setListBoxItemRendererStyles(itemRenderer:ListBoxItemRenderer):Void {
+	private static function setItemRendererStyles(itemRenderer:ItemRenderer):Void {
 		var defaultTheme:DefaultTheme = Std.downcast(Theme.fallbackTheme, DefaultTheme);
 		if (defaultTheme == null) {
 			return;

@@ -1,5 +1,6 @@
 package com.feathersui.components.screens;
 
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.events.FeathersEvent;
 import feathers.controls.ListBox;
 import feathers.controls.Label;
@@ -46,6 +47,9 @@ class ListBoxScreen extends Panel {
 
 		this.listBox = new ListBox();
 		this.listBox.dataProvider = new ArrayCollection(items);
+		this.listBox.updateItemRenderer = (itemRenderer:ItemRenderer, data:Dynamic, index:Int) -> {
+			itemRenderer.text = data.text;
+		};
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.addChild(this.listBox);
 	}

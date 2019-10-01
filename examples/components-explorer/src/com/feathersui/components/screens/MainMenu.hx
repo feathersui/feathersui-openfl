@@ -49,11 +49,11 @@ class MainMenu extends Panel {
 
 		this.listBox = new ListBox();
 		this.listBox.dataProvider = new ArrayCollection([
-			{text: "Asset Loader", screenID: ScreenID.ASSET_LOADER}, {text: "Button", screenID: ScreenID.BUTTON}, {text: "Check", screenID: ScreenID.CHECK},
-			{text: "Label", screenID: ScreenID.LABEL}, {text: "List Box", screenID: ScreenID.LIST_BOX}, {text: "Panel", screenID: ScreenID.PANEL},
-			{text: "Pop Up List", screenID: ScreenID.POP_UP_LIST}, {text: "Pop Up Manager", screenID: ScreenID.POP_UP_MANAGER},
-			{text: "Progress Bar", screenID: ScreenID.PROGRESS_BAR}, {text: "Radio", screenID: ScreenID.RADIO}, {text: "Slider", screenID: ScreenID.SLIDER},
-			{text: "Text Input", screenID: ScreenID.TEXT_INPUT}, {text: "Toggle Switch", screenID: ScreenID.TOGGLE_SWITCH},
+			new MenuItem("Asset Loader", ScreenID.ASSET_LOADER), new MenuItem("Button", ScreenID.BUTTON), new MenuItem("Check", ScreenID.CHECK),
+			new MenuItem("Label", ScreenID.LABEL), new MenuItem("List Box", ScreenID.LIST_BOX), new MenuItem("Panel", ScreenID.PANEL),
+			new MenuItem("Pop Up List", ScreenID.POP_UP_LIST), new MenuItem("Pop Up Manager", ScreenID.POP_UP_MANAGER),
+			new MenuItem("Progress Bar", ScreenID.PROGRESS_BAR), new MenuItem("Radio", ScreenID.RADIO), new MenuItem("Slider", ScreenID.SLIDER),
+			new MenuItem("Text Input", ScreenID.TEXT_INPUT), new MenuItem("Toggle Switch", ScreenID.TOGGLE_SWITCH),
 		]);
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.listBox.addEventListener(Event.CHANGE, list_changeHandler);
@@ -74,5 +74,19 @@ class MainMenu extends Panel {
 	private function list_changeHandler(event:Event):Void {
 		var selectedItem = this.listBox.selectedItem;
 		this.selectedScreenID = selectedItem.screenID;
+	}
+}
+
+private class MenuItem {
+	public function new(title:String, screenID:String) {
+		this.title = title;
+		this.screenID = screenID;
+	}
+
+	public var title:String;
+	public var screenID:String;
+
+	public function toString() {
+		return this.title;
 	}
 }
