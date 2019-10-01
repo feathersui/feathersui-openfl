@@ -8,48 +8,16 @@
 
 package feathers.themes;
 
-import openfl.display.CapsStyle;
-import openfl.display.LineScaleMode;
-import feathers.controls.BasicToggleButton;
-import feathers.controls.TextInputState;
-import feathers.controls.Panel;
-import feathers.layout.VerticalAlign;
-import feathers.layout.HorizontalLayout;
-import feathers.controls.ToggleSwitch;
-import openfl.display.Shape;
-import feathers.controls.HProgressBar;
-import feathers.events.FeathersEvent;
-import feathers.style.IStyleObject;
 import feathers.style.IStyleProvider;
-import feathers.controls.ToggleButtonState;
-import feathers.controls.LayoutGroup;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.VerticalListFixedRowLayout;
-import feathers.controls.dataRenderers.ListBoxItemRenderer;
-import feathers.controls.ListBox;
-import feathers.style.ClassVariantStyleProvider;
-import feathers.controls.BasicButton;
-import feathers.skins.CircleSkin;
-import feathers.controls.HSlider;
-import feathers.controls.VSlider;
-import feathers.controls.TextInput;
-import feathers.controls.Label;
-import feathers.controls.ButtonState;
-import feathers.skins.RectangleSkin;
-import feathers.skins.UnderlineSkin;
-import feathers.controls.Button;
-import feathers.controls.ToggleButton;
-import openfl.events.Event;
-import openfl.text.TextFormat;
+import feathers.style.IStyleObject;
 import openfl.display.GradientType;
+import feathers.events.FeathersEvent;
+import openfl.events.Event;
+import feathers.style.ClassVariantStyleProvider;
+import openfl.text.TextFormat;
 import feathers.graphics.LineStyle;
 import feathers.graphics.FillStyle;
 import feathers.style.ITheme;
-import feathers.controls.Check;
-import feathers.controls.Radio;
-import feathers.controls.Application;
-import feathers.controls.PopUpList;
-import feathers.layout.RelativePosition;
 
 /**
 	@since 1.0.0
