@@ -533,6 +533,7 @@ class BaseScrollContainer extends FeathersControl {
 			Actuate.stop(this._hideScrollBarX);
 		}
 		this.scrollBarX.alpha = 1.0;
+		this.scrollBarX.visible = true;
 	}
 
 	private function revealScrollBarY():Void {
@@ -543,21 +544,23 @@ class BaseScrollContainer extends FeathersControl {
 			Actuate.stop(this._hideScrollBarY);
 		}
 		this.scrollBarY.alpha = 1.0;
+		this.scrollBarY.visible = true;
 	}
 
 	private function hideScrollBarX():Void {
 		if (this.scrollBarX == null || this._hideScrollBarX != null) {
 			return;
 		}
-		if (this.scrollBarX.alpha == 0.01) {
+		if (!this.scrollBarX.visible) {
 			// already hidden
 			return;
 		}
 		if (this.hideScrollBarDuration == 0.0) {
-			this.scrollBarX.alpha = 0.01;
+			this.scrollBarX.alpha = 0.0;
+			this.scrollBarX.visible = false;
 			return;
 		}
-		var tween = Actuate.tween(this.scrollBarX, this.hideScrollBarDuration, {alpha: 0.01});
+		var tween = Actuate.tween(this.scrollBarX, this.hideScrollBarDuration, {alpha: 0.0});
 		this._hideScrollBarX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarX.ease(this.hideScrollBarEase);
 		this._hideScrollBarX.onComplete(this.hideScrollBarX_onComplete);
@@ -567,15 +570,16 @@ class BaseScrollContainer extends FeathersControl {
 		if (this.scrollBarY == null || this._hideScrollBarY != null) {
 			return;
 		}
-		if (this.scrollBarY.alpha == 0.01) {
+		if (this.scrollBarY.alpha == 0.0) {
 			// already hidden
 			return;
 		}
 		if (this.hideScrollBarDuration == 0.0) {
-			this.scrollBarY.alpha = 0.01;
+			this.scrollBarY.alpha = 0.0;
+			this.scrollBarY.visible = false;
 			return;
 		}
-		var tween = Actuate.tween(this.scrollBarY, this.hideScrollBarDuration, {alpha: 0.01});
+		var tween = Actuate.tween(this.scrollBarY, this.hideScrollBarDuration, {alpha: 0.0});
 		this._hideScrollBarY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarY.ease(this.hideScrollBarEase);
 		this._hideScrollBarY.onComplete(this.hideScrollBarY_onComplete);
