@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.layout.RelativePosition;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.core.IStateObserver;
@@ -27,6 +28,8 @@ import openfl.geom.Rectangle;
 	@since 1.0.0
 **/
 class BaseScrollContainer extends FeathersControl {
+	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = "scrollBarFactory";
+
 	private function new() {
 		super();
 	}
@@ -87,6 +90,116 @@ class BaseScrollContainer extends FeathersControl {
 	@:style
 	public var backgroundDisabledSkin:DisplayObject = null;
 
+	private var horizontalScrollBar:IScrollBar;
+	private var verticalScrollBar:IScrollBar;
+
+	public var horizontalScrollBarFactory(default, set):() -> IScrollBar = null;
+
+	private function set_horizontalScrollBarFactory(value:() -> IScrollBar):() -> IScrollBar {
+		if (this.horizontalScrollBarFactory == value) {
+			return this.horizontalScrollBarFactory;
+		}
+		this.horizontalScrollBarFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
+		return this.horizontalScrollBarFactory;
+	}
+
+	public var verticalScrollBarFactory(default, set):() -> IScrollBar = null;
+
+	private function set_verticalScrollBarFactory(value:() -> IScrollBar):() -> IScrollBar {
+		if (this.verticalScrollBarFactory == value) {
+			return this.verticalScrollBarFactory;
+		}
+		this.verticalScrollBarFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
+		return this.verticalScrollBarFactory;
+	}
+
+	public var scrollX(get, never):Float;
+
+	private function get_scrollX():Float {
+		if (this.scroller == null) {
+			return 0.0;
+		}
+		return this.scroller.scrollX;
+	}
+
+	public var scrollY(get, never):Float;
+
+	private function get_scrollY():Float {
+		if (this.scroller == null) {
+			return 0.0;
+		}
+		return this.scroller.scrollY;
+	}
+
+	public var minScrollX(get, never):Float;
+
+	private function get_minScrollX():Float {
+		if (this.scroller == null) {
+			return 0.0;
+		}
+		return this.scroller.minScrollX;
+	}
+
+	public var minScrollY(get, never):Float;
+
+	private function get_minScrollY():Float {
+		if (this.scroller == null) {
+			return 0.0;
+		}
+		return this.scroller.minScrollY;
+	}
+
+	public var maxScrollX(get, never):Float;
+
+	private function get_maxScrollX():Float {
+		if (this.scroller == null) {
+			return 0.0;
+		}
+		return this.scroller.maxScrollX;
+	}
+
+	public var maxScrollY(get, never):Float;
+
+	private function get_maxScrollY():Float {
+		if (this.scroller == null) {
+			return 0.0;
+		}
+		return this.scroller.maxScrollY;
+	}
+
+	public var scrollPolicyX(default, set):ScrollPolicy = ScrollPolicy.AUTO;
+
+	private function set_scrollPolicyX(value:ScrollPolicy):ScrollPolicy {
+		if (this.scrollPolicyX == value) {
+			return this.scrollPolicyX;
+		}
+		this.scrollPolicyX = value;
+		this.setInvalid(InvalidationFlag.SCROLL);
+		return this.scrollPolicyX;
+	}
+
+	public var scrollPolicyY(default, set):ScrollPolicy = ScrollPolicy.AUTO;
+
+	private function set_scrollPolicyY(value:ScrollPolicy):ScrollPolicy {
+		if (this.scrollPolicyY == value) {
+			return this.scrollPolicyY;
+		}
+		this.scrollPolicyY = value;
+		this.setInvalid(InvalidationFlag.SCROLL);
+		return this.scrollPolicyY;
+	}
+
+	@:style
+	public var elasticEdges:Bool = true;
+
+	@:style
+	public var horizontalScrollBarPosition:RelativePosition = RelativePosition.BOTTOM;
+
+	@:style
+	public var verticalScrollBarPosition:RelativePosition = RelativePosition.RIGHT;
+
 	private var _currentScrollRect:Rectangle;
 	private var _scrollRect1:Rectangle = new Rectangle();
 	private var _scrollRect2:Rectangle = new Rectangle();
@@ -96,16 +209,22 @@ class BaseScrollContainer extends FeathersControl {
 			this.scroller = new Scroller();
 		}
 		this.scroller.target = this;
-		this.scroller.addEventListener(Event.SCROLL, listBox_scroller_scrollHandler);
+		this.scroller.addEventListener(Event.SCROLL, scroller_scrollHandler);
 	}
 
 	override private function update():Void {
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var scrollInvalid = this.isInvalid(InvalidationFlag.SCROLL);
+		var scrollBarFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
+		}
+
+		if (scrollBarFactoryInvalid) {
+			this.createScrollBars();
 		}
 
 		this.refreshOffsets();
@@ -114,7 +233,31 @@ class BaseScrollContainer extends FeathersControl {
 		this.refreshViewPortLayout();
 		this.refreshScrollRect();
 		this.refreshScroller();
-		this.refreshBackgroundLayout();
+		this.refreshScrollBarValues();
+		this.layoutChildren();
+	}
+
+	private function createScrollBars():Void {
+		if (this.horizontalScrollBar != null) {
+			this.horizontalScrollBar.removeEventListener(Event.CHANGE, horizontalScrollBar_changeHandler);
+			this.removeChild(cast(this.horizontalScrollBar, DisplayObject));
+			this.horizontalScrollBar = null;
+		}
+		if (this.verticalScrollBar != null) {
+			this.verticalScrollBar.removeEventListener(Event.CHANGE, verticalScrollBar_changeHandler);
+			this.removeChild(cast(this.verticalScrollBar, DisplayObject));
+			this.verticalScrollBar = null;
+		}
+		if (this.horizontalScrollBarFactory != null) {
+			this.horizontalScrollBar = this.horizontalScrollBarFactory();
+			this.horizontalScrollBar.addEventListener(Event.CHANGE, horizontalScrollBar_changeHandler);
+			this.addChild(cast(this.horizontalScrollBar, DisplayObject));
+		}
+		if (this.verticalScrollBarFactory != null) {
+			this.verticalScrollBar = this.verticalScrollBarFactory();
+			this.verticalScrollBar.addEventListener(Event.CHANGE, verticalScrollBar_changeHandler);
+			this.addChild(cast(this.verticalScrollBar, DisplayObject));
+		}
 	}
 
 	private function refreshOffsets():Void {
@@ -137,7 +280,27 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function refreshScroller():Void {
+		this.scroller.scrollPolicyX = this.scrollPolicyX;
+		this.scroller.scrollPolicyY = this.scrollPolicyY;
+		this.scroller.elasticEdges = this.elasticEdges;
 		this.scroller.setDimensions(this.viewPort.visibleWidth, this.viewPort.visibleHeight, this.viewPort.width, this.viewPort.height);
+	}
+
+	private function refreshScrollBarValues():Void {
+		if (this.horizontalScrollBar != null) {
+			this.horizontalScrollBar.minimum = this.scroller.minScrollX;
+			this.horizontalScrollBar.maximum = this.scroller.maxScrollX;
+			this.horizontalScrollBar.value = this.scroller.scrollX;
+			this.horizontalScrollBar.page = (this.scroller.maxScrollX - this.scroller.minScrollX) * this.viewPort.visibleWidth / this.viewPort.width;
+			this.horizontalScrollBar.step = 0.0;
+		}
+		if (this.verticalScrollBar != null) {
+			this.verticalScrollBar.minimum = this.scroller.minScrollY;
+			this.verticalScrollBar.maximum = this.scroller.maxScrollY;
+			this.verticalScrollBar.value = this.scroller.scrollY;
+			this.verticalScrollBar.page = (this.scroller.maxScrollY - this.scroller.minScrollY) * this.viewPort.visibleHeight / this.viewPort.height;
+			this.verticalScrollBar.step = 0.0;
+		}
 	}
 
 	private function autoSizeIfNeeded():Bool {
@@ -270,7 +433,12 @@ class BaseScrollContainer extends FeathersControl {
 		}
 	}
 
-	private function refreshBackgroundLayout():Void {
+	private function layoutChildren():Void {
+		this.layoutBackgroundSkin();
+		this.layoutScrollBars();
+	}
+
+	private function layoutBackgroundSkin():Void {
 		if (this._currentBackgroundSkin == null) {
 			return;
 		}
@@ -291,6 +459,41 @@ class BaseScrollContainer extends FeathersControl {
 		}
 	}
 
+	private function layoutScrollBars():Void {
+		var visibleWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset;
+		var visibleHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset;
+
+		if (this.horizontalScrollBar != null && Std.is(this.horizontalScrollBar, IValidating)) {
+			cast(this.horizontalScrollBar, IValidating).validateNow();
+		}
+		if (this.verticalScrollBar != null && Std.is(this.verticalScrollBar, IValidating)) {
+			cast(this.verticalScrollBar, IValidating).validateNow();
+		}
+
+		if (this.horizontalScrollBar != null) {
+			switch (this.horizontalScrollBarPosition) {
+				case RelativePosition.TOP:
+					this.horizontalScrollBar.y = 0;
+				default:
+					this.horizontalScrollBar.y = this.topViewPortOffset + visibleHeight;
+			}
+			this.horizontalScrollBar.y -= this.horizontalScrollBar.height;
+			this.horizontalScrollBar.x = this.leftViewPortOffset;
+			this.horizontalScrollBar.width = visibleWidth;
+		}
+		if (this.verticalScrollBar != null) {
+			switch (this.verticalScrollBarPosition) {
+				case RelativePosition.LEFT:
+					this.verticalScrollBar.x = 0;
+				default:
+					this.verticalScrollBar.x = this.leftViewPortOffset + visibleWidth;
+			}
+			this.verticalScrollBar.x -= this.verticalScrollBar.width;
+			this.verticalScrollBar.y = this.topViewPortOffset;
+			this.verticalScrollBar.height = visibleHeight;
+		}
+	}
+
 	private function refreshScrollRect():Void {
 		// instead of creating a new Rectangle every time, we're going to swap
 		// between two of them to avoid excessive garbage collection
@@ -304,7 +507,16 @@ class BaseScrollContainer extends FeathersControl {
 		displayViewPort.scrollRect = scrollRect;
 	}
 
-	private function listBox_scroller_scrollHandler(event:Event):Void {
+	private function scroller_scrollHandler(event:Event):Void {
 		this.refreshScrollRect();
+		this.refreshScrollBarValues();
+	}
+
+	private function horizontalScrollBar_changeHandler(event:Event):Void {
+		this.scroller.scrollX = this.horizontalScrollBar.value;
+	}
+
+	private function verticalScrollBar_changeHandler(event:Event):Void {
+		this.scroller.scrollY = this.verticalScrollBar.value;
 	}
 }
