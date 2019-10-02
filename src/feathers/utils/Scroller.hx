@@ -495,6 +495,12 @@ class Scroller extends EventDispatcher {
 				} else if (scrollX > this.maxScrollX) {
 					scrollX = scrollX - (scrollX - this.maxScrollX) * (1.0 - this.elasticity);
 				}
+			} else {
+				if (scrollX < this.minScrollX) {
+					scrollX = this.minScrollX;
+				} else if (scrollX > this.maxScrollX) {
+					scrollX = this.maxScrollX;
+				}
 			}
 		}
 		var scrollY = this.startScrollY;
@@ -505,6 +511,12 @@ class Scroller extends EventDispatcher {
 					scrollY = scrollY - (scrollY - this.minScrollY) * (1.0 - this.elasticity);
 				} else if (scrollY > this.maxScrollY) {
 					scrollY = scrollY - (scrollY - this.maxScrollY) * (1.0 - this.elasticity);
+				}
+			} else {
+				if (scrollY < this.minScrollY) {
+					scrollY = this.minScrollY;
+				} else if (scrollY > this.maxScrollY) {
+					scrollY = this.maxScrollY;
 				}
 			}
 		}
