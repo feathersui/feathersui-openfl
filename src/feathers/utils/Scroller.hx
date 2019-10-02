@@ -571,8 +571,12 @@ class Scroller extends EventDispatcher {
 
 		// the scroll position hasn't changed, so don't scroll
 		if (startIndex == endIndex) {
-			this.draggingX = false;
-			this.draggingY = false;
+			if (!finishingX && this.draggingX) {
+				this.finishScrollX();
+			}
+			if (!finishingY && this.draggingY) {
+				this.finishScrollY();
+			}
 			return;
 		}
 
@@ -590,6 +594,13 @@ class Scroller extends EventDispatcher {
 
 		if (velocityX != null || velocityY != null) {
 			this.throwWithVelocity(velocityX, velocityY);
+		}
+		if (velocityX == null && this.draggingX) {
+			this.finishScrollX();
+		}
+		if (velocityY == null && this.draggingY) {
+			this.draggingY = false;
+			this.finishScrollY();
 		}
 	}
 }
