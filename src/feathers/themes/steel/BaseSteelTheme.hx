@@ -67,6 +67,7 @@ class BaseSteelTheme implements IDarkModeTheme {
 	private var activeFillBorderColor:Int;
 	private var containerFillColor:Int;
 	private var headerFillColor:Int;
+	private var overlayFillColor:Int;
 	private var borderColor:Int;
 	private var dividerColor:Int;
 	private var textColor:Int;
@@ -106,6 +107,7 @@ class BaseSteelTheme implements IDarkModeTheme {
 			this.activeFillBorderColor = 0x080808;
 			this.containerFillColor = 0x383838;
 			this.headerFillColor = 0x3f3f3f;
+			this.overlayFillColor = 0x6f6f6f;
 			this.borderColor = 0x080808;
 			this.dividerColor = 0x282828;
 			this.textColor = 0xe8e8e8;
@@ -129,6 +131,7 @@ class BaseSteelTheme implements IDarkModeTheme {
 			this.activeFillBorderColor = this.darken(this.themeColor, 0x2f2f2f);
 			this.containerFillColor = 0xf8f8f8;
 			this.headerFillColor = 0xececec;
+			this.overlayFillColor = 0x8f8f8f;
 			this.borderColor = 0xacacac;
 			this.dividerColor = 0xdfdfdf;
 			this.textColor = 0x1f1f1f;
@@ -214,6 +217,10 @@ class BaseSteelTheme implements IDarkModeTheme {
 			colors.reverse();
 		}
 		return FillStyle.Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
+	}
+
+	private function getOverlayFill():FillStyle {
+		return FillStyle.SolidColor(this.overlayFillColor, 0.8);
 	}
 
 	private function getRootFill():FillStyle {

@@ -35,24 +35,26 @@ class SteelVScrollThumbStyles {
 			return;
 		}
 
-		styleProvider.setStyleFunction(VScrollThumb, null, function(slider:VScrollThumb):Void {
-			if (slider.thumbSkin == null) {
+		styleProvider.setStyleFunction(VScrollThumb, null, function(scrollBar:VScrollThumb):Void {
+			if (scrollBar.thumbSkin == null) {
 				var thumbSkin = new RectangleSkin();
-				thumbSkin.fill = theme.getButtonFill();
-				thumbSkin.border = theme.getButtonBorder();
-				thumbSkin.setFillForState(ButtonState.DOWN, theme.getButtonDownFill());
-				thumbSkin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
-				thumbSkin.width = 12.0;
-				thumbSkin.height = 12.0;
-				thumbSkin.minWidth = 12.0;
-				thumbSkin.minHeight = 12.0;
-				thumbSkin.cornerRadius = 12.0;
+				thumbSkin.fill = theme.getOverlayFill();
+				thumbSkin.width = 4.0;
+				thumbSkin.height = 4.0;
+				thumbSkin.minWidth = 4.0;
+				thumbSkin.minHeight = 4.0;
+				thumbSkin.cornerRadius = 4.0;
 
 				var thumb:BasicButton = new BasicButton();
 				thumb.keepDownStateOnRollOut = true;
 				thumb.backgroundSkin = thumbSkin;
-				slider.thumbSkin = thumb;
+				scrollBar.thumbSkin = thumb;
 			}
+
+			scrollBar.paddingTop = 2.0;
+			scrollBar.paddingRight = 2.0;
+			scrollBar.paddingBottom = 2.0;
+			scrollBar.paddingLeft = 2.0;
 		});
 	}
 }

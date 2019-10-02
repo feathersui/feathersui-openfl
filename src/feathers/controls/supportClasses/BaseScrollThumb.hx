@@ -295,6 +295,18 @@ class BaseScrollThumb extends FeathersControl implements IScrollBar {
 	@:style
 	public var fixedThumbSize:Bool = false;
 
+	@:style
+	public var paddingTop:Float = 0.0;
+
+	@:style
+	public var paddingRight:Float = 0.0;
+
+	@:style
+	public var paddingBottom:Float = 0.0;
+
+	@:style
+	public var paddingLeft:Float = 0.0;
+
 	private var _dragging:Bool = false;
 	private var _pointerStartX:Float = 0.0;
 	private var _pointerStartY:Float = 0.0;

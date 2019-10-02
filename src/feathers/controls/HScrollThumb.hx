@@ -33,13 +33,13 @@ class HScrollThumb extends BaseScrollThumb {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
 		var normalized = this.normalizeValue();
-		var trackScrollableWidth = this.actualWidth - this.thumbSkin.width;
-		return Math.round(trackScrollableWidth * normalized);
+		var trackScrollableWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.thumbSkin.width;
+		return this.paddingLeft + (trackScrollableWidth * normalized);
 	}
 
 	override private function locationToValue(x:Float, y:Float):Float {
 		var percentage = 0.0;
-		var trackScrollableWidth = this.actualWidth - this.thumbSkin.width;
+		var trackScrollableWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.thumbSkin.width;
 		var xOffset = x - this._pointerStartX;
 		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
 		percentage = xPosition / trackScrollableWidth;
@@ -64,21 +64,20 @@ class HScrollThumb extends BaseScrollThumb {
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this.thumbSkin.width;
+			newWidth = this.thumbSkin.width + this.paddingLeft + this.paddingRight;
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this.thumbSkin.height;
+			newHeight = this.thumbSkin.height + this.paddingTop + this.paddingBottom;
 		}
 
 		// TODO: calculate min and max
 		var newMinWidth = newWidth;
 		var newMinHeight = newHeight;
-		var newMaxWidth = newWidth;
 		var newMaxHeight = newHeight;
 
-		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, Math.POSITIVE_INFINITY, newMaxHeight);
 	}
 
 	override private function layoutThumb():Void {
@@ -87,10 +86,10 @@ class HScrollThumb extends BaseScrollThumb {
 		}
 
 		var range = this.maximum - this.minimum;
-		/*this.thumbSkin.visible = range > 0.0;
-			if (!this.thumbSkin.visible) {
-				return;
-		}*/
+		this.thumbSkin.visible = range > 0.0;
+		if (!this.thumbSkin.visible) {
+			return;
+		}
 
 		if (Std.is(this.thumbSkin, IValidating)) {
 			cast(this.thumbSkin, IValidating).validateNow();
@@ -103,23 +102,25 @@ class HScrollThumb extends BaseScrollThumb {
 			valueOffset = this.maximum - this.value;
 		}
 
+		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		var contentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+
 		if (this.fixedThumbSize) {
 			this.thumbSkin.width = this._thumbSkinMeasurements.width;
 		} else {
-			var thumbWidth = this.actualWidth * this.getAdjustedPage() / range;
-			var widthOffset = this.actualWidth - thumbWidth;
+			var thumbWidth = contentWidth * this.getAdjustedPage() / range;
+			var widthOffset = contentWidth - thumbWidth;
 			if (widthOffset > thumbWidth) {
 				widthOffset = thumbWidth;
 			}
-			widthOffset *= valueOffset / (range * thumbWidth / this.actualWidth);
+			widthOffset *= valueOffset / (range * thumbWidth / contentWidth);
 			thumbWidth -= widthOffset;
 			if (thumbWidth < this._thumbSkinMeasurements.minWidth) {
 				thumbWidth = this._thumbSkinMeasurements.minWidth;
 			}
 			this.thumbSkin.width = thumbWidth;
 		}
-		var thumbLocation = this.valueToLocation(this.value);
-		this.thumbSkin.x = thumbLocation;
-		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2);
+		this.thumbSkin.x = this.valueToLocation(this.value);
+		this.thumbSkin.y = this.paddingTop + (contentHeight - this.thumbSkin.height) / 2;
 	}
 }
