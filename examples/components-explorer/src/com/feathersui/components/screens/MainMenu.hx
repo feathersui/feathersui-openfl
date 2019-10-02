@@ -1,5 +1,6 @@
 package com.feathersui.components.screens;
 
+import feathers.controls.ScrollPolicy;
 import feathers.style.IDarkModeTheme;
 import feathers.events.FeathersEvent;
 import feathers.style.Theme;
@@ -57,6 +58,7 @@ class MainMenu extends Panel {
 			new MenuItem("Progress Bar", ScreenID.PROGRESS_BAR), new MenuItem("Radio", ScreenID.RADIO), new MenuItem("Slider", ScreenID.SLIDER),
 			new MenuItem("Text Input", ScreenID.TEXT_INPUT), new MenuItem("Toggle Switch", ScreenID.TOGGLE_SWITCH),
 		]);
+		this.listBox.scrollPolicyY = ScrollPolicy.ON;
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.listBox.addEventListener(Event.CHANGE, list_changeHandler);
 		this.addChild(this.listBox);
