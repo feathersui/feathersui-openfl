@@ -24,6 +24,8 @@ import feathers.themes.steel.components.SteelItemRendererStyles;
 import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.themes.steel.components.SteelButtonStyles;
 import feathers.themes.steel.components.SteelApplicationStyles;
+import feathers.themes.steel.components.SteelHScrollThumbStyles;
+import feathers.themes.steel.components.SteelVScrollThumbStyles;
 
 /**
 	@since 1.0.0
@@ -36,6 +38,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelButtonStyles.initialize(this);
 		SteelCheckStyles.initialize(this);
 		SteelHProgressBarStyles.initialize(this);
+		SteelHScrollThumbStyles.initialize(this);
 		SteelHSliderStyles.initialize(this);
 		SteelItemRendererStyles.initialize(this);
 		SteelLabelStyles.initialize(this);
@@ -47,6 +50,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelTextInputStyles.initialize(this);
 		SteelToggleButtonStyles.initialize(this);
 		SteelToggleSwitchStyles.initialize(this);
+		SteelVScrollThumbStyles.initialize(this);
 		SteelVSliderStyles.initialize(this);
 	}
 }
