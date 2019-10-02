@@ -11,7 +11,7 @@ package feathers.controls.supportClasses;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
-import feathers.core.IValidating;
+import feathers.controls.IRange;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
@@ -30,7 +30,7 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
-class BaseSlider extends FeathersControl {
+class BaseSlider extends FeathersControl implements IRange {
 	private function new() {
 		super();
 	}
@@ -54,7 +54,12 @@ class BaseSlider extends FeathersControl {
 		@see `BaseSlider.maximum`
 		@see `BaseSlider.step`
 	**/
-	public var value(default, set):Float = 0.0;
+	@:isVar
+	public var value(get, set):Float = 0.0;
+
+	private function get_value():Float {
+		return this.value;
+	}
 
 	private function set_value(value:Float):Float {
 		if (this.value == value) {
@@ -85,7 +90,12 @@ class BaseSlider extends FeathersControl {
 		@see `BaseSlider.value`
 		@see `BaseSlider.maximum`
 	**/
-	public var minimum(default, set):Float = 0.0;
+	@:isVar
+	public var minimum(get, set):Float = 0.0;
+
+	private function get_minimum():Float {
+		return this.minimum;
+	}
 
 	private function set_minimum(value:Float):Float {
 		if (this.minimum == value) {
@@ -116,7 +126,12 @@ class BaseSlider extends FeathersControl {
 		@see `BaseSlider.value`
 		@see `BaseSlider.minimum`
 	**/
-	public var maximum(default, set):Float = 1.0;
+	@:isVar
+	public var maximum(get, set):Float = 1.0;
+
+	private function get_maximum():Float {
+		return this.maximum;
+	}
 
 	private function set_maximum(value:Float):Float {
 		if (this.maximum == value) {
@@ -454,7 +469,7 @@ class BaseSlider extends FeathersControl {
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler, false, 0, true);
 
-		var location:Point = new Point(event.stageX, event.stageY);
+		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
 
 		this._thumbStartX = this.thumbSkin.x;
@@ -465,7 +480,7 @@ class BaseSlider extends FeathersControl {
 	}
 
 	private function thumbSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
-		var location:Point = new Point(event.stageX, event.stageY);
+		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
 		this.value = this.locationToValue(location.x, location.y);
 	}
@@ -494,7 +509,7 @@ class BaseSlider extends FeathersControl {
 	}
 
 	private function trackSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
-		var location:Point = new Point(event.stageX, event.stageY);
+		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
 
 		this.value = this.locationToValue(location.x, location.y);

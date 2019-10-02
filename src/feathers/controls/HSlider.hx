@@ -65,6 +65,18 @@ class HSlider extends BaseSlider {
 		return Math.round(this.minimumPadding + (trackScrollableWidth * normalized));
 	}
 
+	override private function locationToValue(x:Float, y:Float):Float {
+		var percentage = 0.0;
+		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
+		if (this.thumbSkin != null) {
+			trackScrollableWidth -= this.thumbSkin.width;
+		}
+		var xOffset = x - this._pointerStartX - this.minimumPadding;
+		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
+		percentage = xPosition / trackScrollableWidth;
+		return this.minimum + percentage * (this.maximum - this.minimum);
+	}
+
 	override private function autoSizeIfNeeded():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
@@ -121,18 +133,6 @@ class HSlider extends BaseSlider {
 		var newMaxHeight = newHeight;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
-	}
-
-	override private function locationToValue(x:Float, y:Float):Float {
-		var percentage = 0.0;
-		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
-		if (this.thumbSkin != null) {
-			trackScrollableWidth -= this.thumbSkin.width;
-		}
-		var xOffset = x - this._pointerStartX - this.minimumPadding;
-		var xPosition = Math.min(Math.max(0, this._thumbStartX + xOffset), trackScrollableWidth);
-		percentage = xPosition / trackScrollableWidth;
-		return this.minimum + percentage * (this.maximum - this.minimum);
 	}
 
 	override private function saveThumbStart(location:Point):Void {

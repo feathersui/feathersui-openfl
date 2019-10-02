@@ -73,8 +73,8 @@ class VSlider extends BaseSlider {
 			trackScrollableHeight -= this.thumbSkin.height;
 		}
 		var yOffset = y - this._pointerStartY - this.maximumPadding;
-		var yPosition = Math.min(Math.max(0, this._thumbStartY + yOffset), trackScrollableHeight);
-		percentage = 1 - (yPosition / trackScrollableHeight);
+		var yPosition = Math.min(Math.max(0.0, this._thumbStartY + yOffset), trackScrollableHeight);
+		percentage = 1.0 - (yPosition / trackScrollableHeight);
 
 		return this.minimum + percentage * (this.maximum - this.minimum);
 	}
