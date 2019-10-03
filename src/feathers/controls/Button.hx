@@ -320,6 +320,9 @@ class Button extends BasicButton implements ITextControl {
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshIcon();
+		}
+
+		if (stylesInvalid || stateInvalid) {
 			this.refreshTextStyles();
 		}
 

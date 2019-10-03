@@ -328,6 +328,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshIcon();
+		}
+
+		if (stylesInvalid || stateInvalid) {
 			this.refreshTextStyles();
 		}
 
