@@ -22,14 +22,14 @@ import feathers.core.InvalidationFlag;
 import feathers.core.FeathersControl;
 
 /**
-	Base class for scroll thumb components.
+	Base class for scroll bar components.
 
-	@see `feathers.controls.HScrollThumb`
-	@see `feathers.controls.VScrollThumb`
+	@see `feathers.controls.HScrollBar`
+	@see `feathers.controls.VScrollBar`
 
 	@since 1.0.0
 **/
-class BaseScrollThumb extends FeathersControl implements IScrollBar {
+class BaseScrollBar extends FeathersControl implements IScrollBar {
 	public function new() {
 		super();
 	}

@@ -9,19 +9,18 @@
 package feathers.themes.steel.components;
 
 import feathers.controls.BasicButton;
-import feathers.controls.ButtonState;
-import feathers.controls.HScrollThumb;
+import feathers.controls.HScrollBar;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 
 /**
-	Initialize "steel" styles for the `HScrollThumb` component.
+	Initialize "steel" styles for the `HScrollBar` component.
 
 	@since 1.0.0
 **/
 @:access(feathers.themes.steel.BaseSteelTheme)
-class SteelHScrollThumbStyles {
+class SteelHScrollBarStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {
 		if (theme == null) {
 			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
@@ -31,11 +30,11 @@ class SteelHScrollThumbStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(HScrollThumb, null) != null) {
+		if (styleProvider.getStyleFunction(HScrollBar, null) != null) {
 			return;
 		}
 
-		styleProvider.setStyleFunction(HScrollThumb, null, function(scrollBar:HScrollThumb):Void {
+		styleProvider.setStyleFunction(HScrollBar, null, function(scrollBar:HScrollBar):Void {
 			if (scrollBar.thumbSkin == null) {
 				var thumbSkin = new RectangleSkin();
 				thumbSkin.fill = theme.getOverlayFill();

@@ -9,19 +9,18 @@
 package feathers.themes.steel.components;
 
 import feathers.controls.BasicButton;
-import feathers.controls.ButtonState;
-import feathers.controls.VScrollThumb;
+import feathers.controls.VScrollBar;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 
 /**
-	Initialize "steel" styles for the `VScrollThumb` component.
+	Initialize "steel" styles for the `VScrollBar` component.
 
 	@since 1.0.0
 **/
 @:access(feathers.themes.steel.BaseSteelTheme)
-class SteelVScrollThumbStyles {
+class SteelVScrollBarStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {
 		if (theme == null) {
 			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
@@ -31,11 +30,11 @@ class SteelVScrollThumbStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(VScrollThumb, null) != null) {
+		if (styleProvider.getStyleFunction(VScrollBar, null) != null) {
 			return;
 		}
 
-		styleProvider.setStyleFunction(VScrollThumb, null, function(scrollBar:VScrollThumb):Void {
+		styleProvider.setStyleFunction(VScrollBar, null, function(scrollBar:VScrollBar):Void {
 			if (scrollBar.thumbSkin == null) {
 				var thumbSkin = new RectangleSkin();
 				thumbSkin.fill = theme.getOverlayFill();

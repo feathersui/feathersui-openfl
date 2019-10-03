@@ -9,22 +9,22 @@
 package feathers.controls;
 
 import feathers.core.IValidating;
-import feathers.controls.supportClasses.BaseScrollThumb;
-import feathers.themes.steel.components.SteelVScrollThumbStyles;
+import feathers.controls.supportClasses.BaseScrollBar;
+import feathers.themes.steel.components.SteelHScrollBarStyles;
 
 /**
 	@since 1.0.0
 **/
 @:styleContext
-class VScrollThumb extends BaseScrollThumb {
+class HScrollBar extends BaseScrollBar {
 	public function new() {
-		this.initializeVScrollThumbTheme();
+		this.initializeHScrollBarTheme();
 
 		super();
 	}
 
-	private function initializeVScrollThumbTheme():Void {
-		SteelVScrollThumbStyles.initialize();
+	private function initializeHScrollBarTheme():Void {
+		SteelHScrollBarStyles.initialize();
 	}
 
 	override private function valueToLocation(value:Float):Float {
@@ -33,20 +33,20 @@ class VScrollThumb extends BaseScrollThumb {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
 		var normalized = this.normalizeValue();
-		var trackScrollableHeight = this.actualHeight - this.paddingTop - this.paddingBottom - this.thumbSkin.height;
-		return this.paddingTop + (trackScrollableHeight * normalized);
+		var trackScrollableWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.thumbSkin.width;
+		return this.paddingLeft + (trackScrollableWidth * normalized);
 	}
 
 	override private function locationToValue(x:Float, y:Float):Float {
 		var percentage = 0.0;
-		var trackScrollableHeight = this.actualHeight - this.paddingTop - this.paddingBottom - this.thumbSkin.height;
-		var yOffset = y - this._pointerStartY;
-		var yPosition = Math.min(Math.max(0.0, this._thumbStartY + yOffset), trackScrollableHeight);
-		percentage = yPosition / trackScrollableHeight;
+		var trackScrollableWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.thumbSkin.width;
+		var xOffset = x - this._pointerStartX;
+		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
+		percentage = xPosition / trackScrollableWidth;
 		return this.minimum + percentage * (this.maximum - this.minimum);
 	}
 
-	override private function autoSizeIfNeeded():Bool {
+	override function autoSizeIfNeeded():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;
@@ -75,9 +75,9 @@ class VScrollThumb extends BaseScrollThumb {
 		// TODO: calculate min and max
 		var newMinWidth = newWidth;
 		var newMinHeight = newHeight;
-		var newMaxWidth = newWidth;
+		var newMaxHeight = newHeight;
 
-		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, Math.POSITIVE_INFINITY);
+		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, Math.POSITIVE_INFINITY, newMaxHeight);
 	}
 
 	override private function layoutThumb():Void {
@@ -99,28 +99,28 @@ class VScrollThumb extends BaseScrollThumb {
 		if (this.value < this.minimum) {
 			valueOffset = this.minimum - this.value;
 		} else if (this.value > this.maximum) {
-			valueOffset = this.value - this.maximum;
+			valueOffset = this.maximum - this.value;
 		}
 
 		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var contentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 
 		if (this.fixedThumbSize) {
-			this.thumbSkin.height = this._thumbSkinMeasurements.height;
+			this.thumbSkin.width = this._thumbSkinMeasurements.width;
 		} else {
-			var thumbHeight = contentHeight * this.getAdjustedPage() / range;
-			var heightOffset = contentHeight - thumbHeight;
-			if (heightOffset > thumbHeight) {
-				heightOffset = thumbHeight;
+			var thumbWidth = contentWidth * this.getAdjustedPage() / range;
+			var widthOffset = contentWidth - thumbWidth;
+			if (widthOffset > thumbWidth) {
+				widthOffset = thumbWidth;
 			}
-			heightOffset *= valueOffset / (range * thumbHeight / contentHeight);
-			thumbHeight -= heightOffset;
-			if (thumbHeight < this._thumbSkinMeasurements.minHeight) {
-				thumbHeight = this._thumbSkinMeasurements.minHeight;
+			widthOffset *= valueOffset / (range * thumbWidth / contentWidth);
+			thumbWidth -= widthOffset;
+			if (thumbWidth < this._thumbSkinMeasurements.minWidth) {
+				thumbWidth = this._thumbSkinMeasurements.minWidth;
 			}
-			this.thumbSkin.height = thumbHeight;
+			this.thumbSkin.width = thumbWidth;
 		}
-		this.thumbSkin.x = this.paddingLeft + (contentWidth - this.thumbSkin.width) / 2;
-		this.thumbSkin.y = this.valueToLocation(this.value);
+		this.thumbSkin.x = this.valueToLocation(this.value);
+		this.thumbSkin.y = this.paddingTop + (contentHeight - this.thumbSkin.height) / 2;
 	}
 }

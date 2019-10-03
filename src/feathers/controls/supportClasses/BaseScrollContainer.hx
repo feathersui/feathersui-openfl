@@ -35,6 +35,14 @@ import openfl.geom.Rectangle;
 class BaseScrollContainer extends FeathersControl {
 	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = "scrollBarFactory";
 
+	private static function defaultScrollBarXFactory():IScrollBar {
+		return new HScrollBar();
+	}
+
+	private static function defaultScrollBarYFactory():IScrollBar {
+		return new VScrollBar();
+	}
+
 	private function new() {
 		super();
 	}
@@ -98,7 +106,7 @@ class BaseScrollContainer extends FeathersControl {
 	private var scrollBarX:IScrollBar;
 	private var scrollBarY:IScrollBar;
 
-	public var scrollBarXFactory(default, set):() -> IScrollBar = null;
+	public var scrollBarXFactory(default, set):() -> IScrollBar = defaultScrollBarXFactory;
 
 	private function set_scrollBarXFactory(value:() -> IScrollBar):() -> IScrollBar {
 		if (this.scrollBarXFactory == value) {
@@ -109,7 +117,7 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scrollBarXFactory;
 	}
 
-	public var scrollBarYFactory(default, set):() -> IScrollBar = null;
+	public var scrollBarYFactory(default, set):() -> IScrollBar = defaultScrollBarYFactory;
 
 	private function set_scrollBarYFactory(value:() -> IScrollBar):() -> IScrollBar {
 		if (this.scrollBarYFactory == value) {
@@ -265,13 +273,21 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarY = null;
 		}
 		if (this.scrollBarXFactory != null) {
-			this.scrollBarX = this.scrollBarXFactory();
+			var factory = this.scrollBarXFactory;
+			if (factory == null) {
+				factory = defaultScrollBarXFactory;
+			}
+			this.scrollBarX = factory();
 			this.scrollBarX.alpha = 0.0;
 			this.scrollBarX.addEventListener(Event.CHANGE, scrollBarX_changeHandler);
 			this.addChild(cast(this.scrollBarX, DisplayObject));
 		}
 		if (this.scrollBarYFactory != null) {
-			this.scrollBarY = this.scrollBarYFactory();
+			var factory = this.scrollBarYFactory;
+			if (factory == null) {
+				factory = defaultScrollBarYFactory;
+			}
+			this.scrollBarY = factory();
 			this.scrollBarY.alpha = 0.0;
 			this.scrollBarY.addEventListener(Event.CHANGE, scrollBarY_changeHandler);
 			this.addChild(cast(this.scrollBarY, DisplayObject));
