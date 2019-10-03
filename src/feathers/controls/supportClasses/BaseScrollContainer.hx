@@ -558,7 +558,7 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function revealScrollBarX():Void {
-		if (this.scrollBarX == null) {
+		if (this.scrollBarX == null || this.scroller.minScrollX == this.scroller.maxScrollX) {
 			return;
 		}
 		if (this._hideScrollBarX != null) {
@@ -569,7 +569,7 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function revealScrollBarY():Void {
-		if (this.scrollBarY == null) {
+		if (this.scrollBarY == null || this.scroller.minScrollY == this.scroller.maxScrollY) {
 			return;
 		}
 		if (this._hideScrollBarY != null) {
