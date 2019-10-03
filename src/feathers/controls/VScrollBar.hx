@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.geom.Point;
 import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.themes.steel.components.SteelVScrollBarStyles;
@@ -46,6 +47,17 @@ class VScrollBar extends BaseScrollBar {
 		return this.minimum + percentage * (this.maximum - this.minimum);
 	}
 
+	override private function saveThumbStart(location:Point):Void {
+		var trackHeightMinusThumbHeight = this.actualHeight;
+		var locationMinusHalfThumbHeight = location.y;
+		if (this.thumbSkin != null) {
+			trackHeightMinusThumbHeight -= this.thumbSkin.height;
+			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2;
+		}
+		this._thumbStartX = location.x;
+		this._thumbStartY = Math.min(trackHeightMinusThumbHeight, locationMinusHalfThumbHeight);
+	}
+
 	override private function autoSizeIfNeeded():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
@@ -61,15 +73,45 @@ class VScrollBar extends BaseScrollBar {
 		if (Std.is(this.thumbSkin, IValidating)) {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
+		if (this.trackSkin != null) {
+			this._trackSkinMeasurements.restore(this.trackSkin);
+			if (Std.is(this.trackSkin, IValidating)) {
+				cast(this.trackSkin, IValidating).validateNow();
+			}
+		}
+		if (this.secondaryTrackSkin != null) {
+			this._secondaryTrackSkinMeasurements.restore(this.secondaryTrackSkin);
+			if (Std.is(this.secondaryTrackSkin, IValidating)) {
+				cast(this.secondaryTrackSkin, IValidating).validateNow();
+			}
+		}
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			newWidth = this.thumbSkin.width + this.paddingLeft + this.paddingRight;
+			if (this.trackSkin != null) {
+				if (newWidth < this.trackSkin.width) {
+					newWidth = this.trackSkin.width;
+				}
+				if (this.secondaryTrackSkin != null && newWidth < this.secondaryTrackSkin.width) {
+					newWidth = this.secondaryTrackSkin.width;
+				}
+			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this.thumbSkin.height + this.paddingTop + this.paddingBottom;
+			newHeight = 0.0;
+			if (this.trackSkin != null) {
+				newHeight += this.trackSkin.height;
+				if (this.secondaryTrackSkin != null) {
+					newHeight += this.secondaryTrackSkin.height;
+				}
+			}
+			var thumbHeight = this.thumbSkin.height + this.paddingTop + this.paddingBottom;
+			if (newHeight < thumbHeight) {
+				newHeight = thumbHeight;
+			}
 		}
 
 		// TODO: calculate min and max
@@ -78,6 +120,47 @@ class VScrollBar extends BaseScrollBar {
 		var newMaxWidth = newWidth;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, Math.POSITIVE_INFINITY);
+	}
+
+	override private function layoutSplitTrack():Void {
+		var location = this.valueToLocation(value);
+		if (this.thumbSkin != null) {
+			if (Std.is(this.thumbSkin, IValidating)) {
+				cast(this.thumbSkin, IValidating).validateNow();
+			}
+			location += Math.round(this.thumbSkin.height / 2);
+		}
+
+		this.secondaryTrackSkin.y = 0.0;
+		this.secondaryTrackSkin.height = location;
+
+		this.trackSkin.y = location;
+		this.trackSkin.height = this.actualHeight - location;
+
+		if (Std.is(this.secondaryTrackSkin, IValidating)) {
+			cast(this.secondaryTrackSkin, IValidating).validateNow();
+		}
+		if (Std.is(this.trackSkin, IValidating)) {
+			cast(this.trackSkin, IValidating).validateNow();
+		}
+
+		this.secondaryTrackSkin.x = (this.actualWidth - this.secondaryTrackSkin.width) / 2;
+		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
+	}
+
+	override private function layoutSingleTrack():Void {
+		if (this.trackSkin == null) {
+			return;
+		}
+
+		this.trackSkin.y = 0.0;
+		this.trackSkin.height = this.actualHeight;
+
+		if (Std.is(this.trackSkin, IValidating)) {
+			cast(this.trackSkin, IValidating).validateNow();
+		}
+
+		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
 	}
 
 	override private function layoutThumb():Void {

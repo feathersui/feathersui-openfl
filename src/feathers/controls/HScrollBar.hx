@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.geom.Point;
 import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.themes.steel.components.SteelHScrollBarStyles;
@@ -46,6 +47,17 @@ class HScrollBar extends BaseScrollBar {
 		return this.minimum + percentage * (this.maximum - this.minimum);
 	}
 
+	override private function saveThumbStart(location:Point):Void {
+		var trackWidthMinusThumbWidth = this.actualWidth;
+		var locationMinusHalfThumbWidth = location.x;
+		if (this.thumbSkin != null) {
+			trackWidthMinusThumbWidth -= this.thumbSkin.width;
+			locationMinusHalfThumbWidth -= this.thumbSkin.width / 2;
+		}
+		this._thumbStartX = Math.min(trackWidthMinusThumbWidth, locationMinusHalfThumbWidth);
+		this._thumbStartY = location.y;
+	}
+
 	override function autoSizeIfNeeded():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
@@ -61,15 +73,45 @@ class HScrollBar extends BaseScrollBar {
 		if (Std.is(this.thumbSkin, IValidating)) {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
+		if (this.trackSkin != null) {
+			this._trackSkinMeasurements.restore(this.trackSkin);
+			if (Std.is(this.trackSkin, IValidating)) {
+				cast(this.trackSkin, IValidating).validateNow();
+			}
+		}
+		if (this.secondaryTrackSkin != null) {
+			this._secondaryTrackSkinMeasurements.restore(this.secondaryTrackSkin);
+			if (Std.is(this.secondaryTrackSkin, IValidating)) {
+				cast(this.secondaryTrackSkin, IValidating).validateNow();
+			}
+		}
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this.thumbSkin.width + this.paddingLeft + this.paddingRight;
+			newWidth = 0.0;
+			if (this.trackSkin != null) {
+				newWidth += this.trackSkin.width;
+				if (this.secondaryTrackSkin != null) {
+					newWidth += this.secondaryTrackSkin.width;
+				}
+			}
+			var thumbWidth = this.thumbSkin.width + this.paddingLeft + this.paddingRight;
+			if (newWidth < thumbWidth) {
+				newWidth = thumbWidth;
+			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			newHeight = this.thumbSkin.height + this.paddingTop + this.paddingBottom;
+			if (this.trackSkin != null) {
+				if (newHeight < this.trackSkin.height) {
+					newHeight = this.trackSkin.height;
+				}
+				if (this.secondaryTrackSkin != null && newHeight < this.secondaryTrackSkin.height) {
+					newHeight = this.secondaryTrackSkin.height;
+				}
+			}
 		}
 
 		// TODO: calculate min and max
@@ -78,6 +120,46 @@ class HScrollBar extends BaseScrollBar {
 		var newMaxHeight = newHeight;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, Math.POSITIVE_INFINITY, newMaxHeight);
+	}
+
+	override private function layoutSplitTrack():Void {
+		var location = this.valueToLocation(value);
+		if (this.thumbSkin != null) {
+			if (Std.is(this.thumbSkin, IValidating)) {
+				cast(this.thumbSkin, IValidating).validateNow();
+			}
+			location += Math.round(this.thumbSkin.width / 2);
+		}
+
+		this.trackSkin.x = 0.0;
+		this.trackSkin.width = location;
+
+		this.secondaryTrackSkin.x = location;
+		this.secondaryTrackSkin.width = this.actualWidth - location;
+
+		if (Std.is(this.trackSkin, IValidating)) {
+			cast(this.trackSkin, IValidating).validateNow();
+		}
+		if (Std.is(this.secondaryTrackSkin, IValidating)) {
+			cast(this.secondaryTrackSkin, IValidating).validateNow();
+		}
+
+		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2;
+		this.secondaryTrackSkin.y = (this.actualHeight - this.secondaryTrackSkin.height) / 2;
+	}
+
+	override private function layoutSingleTrack():Void {
+		if (this.trackSkin == null) {
+			return;
+		}
+		this.trackSkin.x = 0.0;
+		this.trackSkin.width = this.actualWidth;
+
+		if (Std.is(this.trackSkin, IValidating)) {
+			cast(this.trackSkin, IValidating).validateNow();
+		}
+
+		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2;
 	}
 
 	override private function layoutThumb():Void {
@@ -99,7 +181,7 @@ class HScrollBar extends BaseScrollBar {
 		if (this.value < this.minimum) {
 			valueOffset = this.minimum - this.value;
 		} else if (this.value > this.maximum) {
-			valueOffset = this.maximum - this.value;
+			valueOffset = this.value - this.maximum;
 		}
 
 		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
