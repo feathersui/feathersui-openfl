@@ -129,6 +129,21 @@ class Scroller extends EventDispatcher {
 		this.calculateMinAndMax();
 	}
 
+	public function stop():Void {
+		if (this.animateScrollX != null && this.scrollPolicyX != ScrollPolicy.OFF) {
+			Actuate.stop(this.animateScrollX, null, false, false);
+			this.animateScrollX = null;
+		}
+		if (this.animateScrollY != null && this.scrollPolicyY != ScrollPolicy.OFF) {
+			Actuate.stop(this.animateScrollY, null, false, false);
+			this.animateScrollY = null;
+		}
+		this.cleanupAfterDrag();
+		this.draggingX = false;
+		this.draggingY = false;
+		this.completeScroll();
+	}
+
 	private function throwWithVelocity(velocityX:Null<Float>, velocityY:Null<Float>):Void {
 		var targetX:Null<Float> = null;
 		var targetY:Null<Float> = null;
@@ -399,15 +414,24 @@ class Scroller extends EventDispatcher {
 		this.finishScrollY();
 	}
 
-	private function cleanupPointerListeners():Void {
+	private function cleanupAfterDrag():Void {
+		if (this.touchID == -1) {
+			return;
+		}
 		this.touchID = -1;
 		this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-		this.target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
-		this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
+		if (this.target.stage != null) {
+			this.target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
+			this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
+		}
+		if (Std.is(this.target, DisplayObjectContainer)) {
+			var container = cast(this.target, DisplayObjectContainer);
+			container.mouseChildren = this.restoreMouseChildren;
+		}
 	}
 
 	private function target_removedFromStageHandler(event:Event):Void {
-		this.cleanupPointerListeners();
+		this.cleanupAfterDrag();
 	}
 
 	private function target_mouseDownHandler(event:MouseEvent):Void {
@@ -544,11 +568,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function target_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.cleanupPointerListeners();
-		if (Std.is(this.target, DisplayObjectContainer)) {
-			var container = cast(this.target, DisplayObjectContainer);
-			container.mouseChildren = this.restoreMouseChildren;
-		}
+		this.cleanupAfterDrag();
 
 		if (!this.draggingX && !this.draggingY) {
 			return;
