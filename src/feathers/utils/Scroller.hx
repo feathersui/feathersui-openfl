@@ -336,8 +336,10 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function animateScrollX_endRatio_onUpdate():Void {
-		var currentTime = (Lib.getTimer() / 1000.0) - this.animateScrollX.startTime;
+		var time = (Lib.getTimer() / 1000.0);
+		var currentTime = time - this.animateScrollX.startTime;
 		var ratio = currentTime / this.animateScrollX.duration;
+		ratio = this.ease.calculate(ratio);
 		if (ratio >= this.animateScrollXEndRatio && currentTime < this.animateScrollX.duration) {
 			// check that the currentTime is less than totalTime because if
 			// the tween is complete, we don't want it set to null before
