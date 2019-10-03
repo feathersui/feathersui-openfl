@@ -703,7 +703,6 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function scrollBarY_rollOutHandler(event:MouseEvent):Void {
-		trace(this._scrollBarYHover, this._scrollerDraggingY);
 		if (!this._scrollBarYHover) {
 			return;
 		}
