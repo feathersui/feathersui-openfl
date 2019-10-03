@@ -550,6 +550,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this._pointerStartX = location.x;
 		this._pointerStartY = location.y;
 		this._dragging = true;
+		FeathersEvent.dispatch(this, FeathersEvent.SCROLL_START);
 	}
 
 	private function thumbSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
@@ -562,6 +563,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler);
 		this._dragging = false;
+		FeathersEvent.dispatch(this, FeathersEvent.SCROLL_COMPLETE);
 		if (!this.liveDragging) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
@@ -578,6 +580,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this._pointerStartX = location.x;
 		this._pointerStartY = location.y;
 		this._dragging = true;
+		FeathersEvent.dispatch(this, FeathersEvent.SCROLL_START);
+
 		this.value = this.locationToValue(location.x, location.y);
 	}
 
@@ -592,6 +596,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, trackSkin_stage_mouseMoveHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_UP, trackSkin_stage_mouseUpHandler);
 		this._dragging = false;
+		FeathersEvent.dispatch(this, FeathersEvent.SCROLL_COMPLETE);
 		if (!this.liveDragging) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}

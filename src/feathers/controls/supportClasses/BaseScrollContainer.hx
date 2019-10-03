@@ -286,6 +286,8 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarX.removeEventListener(Event.CHANGE, scrollBarX_changeHandler);
 			this.scrollBarX.removeEventListener(MouseEvent.ROLL_OVER, scrollBarX_rollOverHandler);
 			this.scrollBarX.removeEventListener(MouseEvent.ROLL_OUT, scrollBarX_rollOutHandler);
+			this.scrollBarX.removeEventListener(FeathersEvent.SCROLL_START, scrollBarX_scrollStartHandler);
+			this.scrollBarX.removeEventListener(FeathersEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
 			this.removeChild(cast(this.scrollBarX, DisplayObject));
 			this.scrollBarX = null;
 		}
@@ -293,6 +295,8 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarY.removeEventListener(Event.CHANGE, scrollBarY_changeHandler);
 			this.scrollBarY.removeEventListener(MouseEvent.ROLL_OVER, scrollBarY_rollOverHandler);
 			this.scrollBarY.removeEventListener(MouseEvent.ROLL_OUT, scrollBarY_rollOutHandler);
+			this.scrollBarY.removeEventListener(FeathersEvent.SCROLL_START, scrollBarY_scrollStartHandler);
+			this.scrollBarY.removeEventListener(FeathersEvent.SCROLL_COMPLETE, scrollBarY_scrollCompleteHandler);
 			this.removeChild(cast(this.scrollBarY, DisplayObject));
 			this.scrollBarY = null;
 		}
@@ -305,6 +309,8 @@ class BaseScrollContainer extends FeathersControl {
 		this.scrollBarX.addEventListener(Event.CHANGE, scrollBarX_changeHandler);
 		this.scrollBarX.addEventListener(MouseEvent.ROLL_OVER, scrollBarX_rollOverHandler);
 		this.scrollBarX.addEventListener(MouseEvent.ROLL_OUT, scrollBarX_rollOutHandler);
+		this.scrollBarX.addEventListener(FeathersEvent.SCROLL_START, scrollBarX_scrollStartHandler);
+		this.scrollBarX.addEventListener(FeathersEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
 		this.addChild(cast(this.scrollBarX, DisplayObject));
 
 		var scrollBarYFactory = this.scrollBarYFactory;
@@ -316,6 +322,8 @@ class BaseScrollContainer extends FeathersControl {
 		this.scrollBarY.addEventListener(Event.CHANGE, scrollBarY_changeHandler);
 		this.scrollBarY.addEventListener(MouseEvent.ROLL_OVER, scrollBarY_rollOverHandler);
 		this.scrollBarY.addEventListener(MouseEvent.ROLL_OUT, scrollBarY_rollOutHandler);
+		this.scrollBarY.addEventListener(FeathersEvent.SCROLL_START, scrollBarY_scrollStartHandler);
+		this.scrollBarY.addEventListener(FeathersEvent.SCROLL_COMPLETE, scrollBarY_scrollCompleteHandler);
 		this.addChild(cast(this.scrollBarY, DisplayObject));
 	}
 
@@ -699,11 +707,36 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function scrollBarY_rollOutHandler(event:MouseEvent):Void {
+		trace(this._scrollBarYHover, this._scrollerDraggingY);
 		if (!this._scrollBarYHover) {
 			return;
 		}
 		this._scrollBarYHover = false;
 		if (!this._scrollerDraggingY) {
+			this.hideScrollBarY();
+		}
+	}
+
+	private function scrollBarX_scrollStartHandler(event:FeathersEvent):Void {
+		this.scroller.stop();
+		this._scrollerDraggingX = true;
+	}
+
+	private function scrollBarX_scrollCompleteHandler(event:FeathersEvent):Void {
+		this._scrollerDraggingX = false;
+		if (!this._scrollBarXHover) {
+			this.hideScrollBarX();
+		}
+	}
+
+	private function scrollBarY_scrollStartHandler(event:FeathersEvent):Void {
+		this.scroller.stop();
+		this._scrollerDraggingY = true;
+	}
+
+	private function scrollBarY_scrollCompleteHandler(event:FeathersEvent):Void {
+		this._scrollerDraggingY = false;
+		if (!this._scrollBarYHover) {
 			this.hideScrollBarY();
 		}
 	}
