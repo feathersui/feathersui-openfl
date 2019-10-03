@@ -8,6 +8,8 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.display.DisplayObjectContainer;
+import openfl.events.MouseEvent;
 import openfl.display.InteractiveObject;
 import feathers.events.FeathersEvent;
 import motion.easing.Quart;
@@ -69,6 +71,8 @@ class BaseScrollContainer extends FeathersControl {
 
 	private var _scrollerDraggingX = false;
 	private var _scrollerDraggingY = false;
+	private var _scrollBarXHover = false;
+	private var _scrollBarYHover = false;
 
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
@@ -280,34 +284,39 @@ class BaseScrollContainer extends FeathersControl {
 	private function createScrollBars():Void {
 		if (this.scrollBarX != null) {
 			this.scrollBarX.removeEventListener(Event.CHANGE, scrollBarX_changeHandler);
+			this.scrollBarX.removeEventListener(MouseEvent.ROLL_OVER, scrollBarX_rollOverHandler);
+			this.scrollBarX.removeEventListener(MouseEvent.ROLL_OUT, scrollBarX_rollOutHandler);
 			this.removeChild(cast(this.scrollBarX, DisplayObject));
 			this.scrollBarX = null;
 		}
 		if (this.scrollBarY != null) {
 			this.scrollBarY.removeEventListener(Event.CHANGE, scrollBarY_changeHandler);
+			this.scrollBarY.removeEventListener(MouseEvent.ROLL_OVER, scrollBarY_rollOverHandler);
+			this.scrollBarY.removeEventListener(MouseEvent.ROLL_OUT, scrollBarY_rollOutHandler);
 			this.removeChild(cast(this.scrollBarY, DisplayObject));
 			this.scrollBarY = null;
 		}
-		if (this.scrollBarXFactory != null) {
-			var factory = this.scrollBarXFactory;
-			if (factory == null) {
-				factory = defaultScrollBarXFactory;
-			}
-			this.scrollBarX = factory();
-			this.scrollBarX.alpha = 0.0;
-			this.scrollBarX.addEventListener(Event.CHANGE, scrollBarX_changeHandler);
-			this.addChild(cast(this.scrollBarX, DisplayObject));
+		var scrollBarXFactory = this.scrollBarXFactory;
+		if (scrollBarXFactory == null) {
+			scrollBarXFactory = defaultScrollBarXFactory;
 		}
-		if (this.scrollBarYFactory != null) {
-			var factory = this.scrollBarYFactory;
-			if (factory == null) {
-				factory = defaultScrollBarYFactory;
-			}
-			this.scrollBarY = factory();
-			this.scrollBarY.alpha = 0.0;
-			this.scrollBarY.addEventListener(Event.CHANGE, scrollBarY_changeHandler);
-			this.addChild(cast(this.scrollBarY, DisplayObject));
+		this.scrollBarX = scrollBarXFactory();
+		this.scrollBarX.alpha = 0.0;
+		this.scrollBarX.addEventListener(Event.CHANGE, scrollBarX_changeHandler);
+		this.scrollBarX.addEventListener(MouseEvent.ROLL_OVER, scrollBarX_rollOverHandler);
+		this.scrollBarX.addEventListener(MouseEvent.ROLL_OUT, scrollBarX_rollOutHandler);
+		this.addChild(cast(this.scrollBarX, DisplayObject));
+
+		var scrollBarYFactory = this.scrollBarYFactory;
+		if (scrollBarYFactory == null) {
+			scrollBarYFactory = defaultScrollBarYFactory;
 		}
+		this.scrollBarY = scrollBarYFactory();
+		this.scrollBarY.alpha = 0.0;
+		this.scrollBarY.addEventListener(Event.CHANGE, scrollBarY_changeHandler);
+		this.scrollBarY.addEventListener(MouseEvent.ROLL_OVER, scrollBarY_rollOverHandler);
+		this.scrollBarY.addEventListener(MouseEvent.ROLL_OUT, scrollBarY_rollOutHandler);
+		this.addChild(cast(this.scrollBarY, DisplayObject));
 	}
 
 	private function refreshOffsets():Void {
@@ -343,6 +352,10 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarX.value = this.scroller.scrollX;
 			this.scrollBarX.page = (this.scroller.maxScrollX - this.scroller.minScrollX) * this.viewPort.visibleWidth / this.viewPort.width;
 			this.scrollBarX.step = 0.0;
+			var displayScrollBarX = cast(this.scrollBarX, DisplayObjectContainer);
+			var isInteractive = this.scroller.minScrollX != this.scroller.maxScrollX;
+			displayScrollBarX.mouseEnabled = isInteractive;
+			displayScrollBarX.mouseChildren = isInteractive;
 		}
 		if (this.scrollBarY != null) {
 			this.scrollBarY.minimum = this.scroller.minScrollY;
@@ -350,6 +363,10 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarY.value = this.scroller.scrollY;
 			this.scrollBarY.page = (this.scroller.maxScrollY - this.scroller.minScrollY) * this.viewPort.visibleHeight / this.viewPort.height;
 			this.scrollBarY.step = 0.0;
+			var displayScrollBarY = cast(this.scrollBarY, DisplayObjectContainer);
+			var isInteractive = this.scroller.minScrollY != this.scroller.maxScrollY;
+			displayScrollBarY.mouseEnabled = isInteractive;
+			displayScrollBarY.mouseChildren = isInteractive;
 		}
 	}
 
@@ -595,6 +612,7 @@ class BaseScrollContainer extends FeathersControl {
 		var tween = Actuate.tween(this.scrollBarX, this.hideScrollBarDuration, {alpha: 0.0});
 		this._hideScrollBarX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarX.ease(this.hideScrollBarEase);
+		this._hideScrollBarX.autoVisible(false);
 		this._hideScrollBarX.onComplete(this.hideScrollBarX_onComplete);
 	}
 
@@ -614,6 +632,7 @@ class BaseScrollContainer extends FeathersControl {
 		var tween = Actuate.tween(this.scrollBarY, this.hideScrollBarDuration, {alpha: 0.0});
 		this._hideScrollBarY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarY.ease(this.hideScrollBarEase);
+		this._hideScrollBarY.autoVisible(false);
 		this._hideScrollBarY.onComplete(this.hideScrollBarY_onComplete);
 	}
 
@@ -643,8 +662,12 @@ class BaseScrollContainer extends FeathersControl {
 	private function scroller_scrollCompleteHandler(event:Event):Void {
 		this._scrollerDraggingX = false;
 		this._scrollerDraggingY = false;
-		this.hideScrollBarX();
-		this.hideScrollBarY();
+		if (!this._scrollBarXHover) {
+			this.hideScrollBarX();
+		}
+		if (!this._scrollBarYHover) {
+			this.hideScrollBarY();
+		}
 	}
 
 	private function scrollBarX_changeHandler(event:Event):Void {
@@ -653,6 +676,36 @@ class BaseScrollContainer extends FeathersControl {
 
 	private function scrollBarY_changeHandler(event:Event):Void {
 		this.scroller.scrollY = this.scrollBarY.value;
+	}
+
+	private function scrollBarX_rollOverHandler(event:MouseEvent):Void {
+		this._scrollBarXHover = true;
+		this.revealScrollBarX();
+	}
+
+	private function scrollBarX_rollOutHandler(event:MouseEvent):Void {
+		if (!this._scrollBarXHover) {
+			return;
+		}
+		this._scrollBarXHover = false;
+		if (!this._scrollerDraggingX) {
+			this.hideScrollBarX();
+		}
+	}
+
+	private function scrollBarY_rollOverHandler(event:MouseEvent):Void {
+		this._scrollBarYHover = true;
+		this.revealScrollBarY();
+	}
+
+	private function scrollBarY_rollOutHandler(event:MouseEvent):Void {
+		if (!this._scrollBarYHover) {
+			return;
+		}
+		this._scrollBarYHover = false;
+		if (!this._scrollerDraggingY) {
+			this.hideScrollBarY();
+		}
 	}
 
 	private function hideScrollBarX_onComplete():Void {
