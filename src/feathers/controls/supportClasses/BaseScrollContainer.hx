@@ -54,6 +54,10 @@ class BaseScrollContainer extends FeathersControl {
 	private var viewPort:IViewPort;
 
 	private var scroller:Scroller;
+
+	private var _scrollerDraggingX = false;
+	private var _scrollerDraggingY = false;
+
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 
@@ -601,21 +605,32 @@ class BaseScrollContainer extends FeathersControl {
 		this._hideScrollBarY.onComplete(this.hideScrollBarY_onComplete);
 	}
 
-	private function scroller_scrollStartHandler(event:Event):Void {
-		if (this.scroller.draggingX) {
+	private function checkForRevealScrollBars():Void {
+		if (!this._scrollerDraggingX && this.scroller.draggingX) {
+			this._scrollerDraggingX = true;
 			this.revealScrollBarX();
 		}
-		if (this.scroller.draggingY) {
+		if (!this._scrollerDraggingY && this.scroller.draggingY) {
+			this._scrollerDraggingY = true;
 			this.revealScrollBarY();
 		}
 	}
 
+	private function scroller_scrollStartHandler(event:Event):Void {
+		this._scrollerDraggingX = false;
+		this._scrollerDraggingY = false;
+		this.checkForRevealScrollBars();
+	}
+
 	private function scroller_scrollHandler(event:Event):Void {
+		this.checkForRevealScrollBars();
 		this.refreshScrollRect();
 		this.refreshScrollBarValues();
 	}
 
 	private function scroller_scrollCompleteHandler(event:Event):Void {
+		this._scrollerDraggingX = false;
+		this._scrollerDraggingY = false;
 		this.hideScrollBarX();
 		this.hideScrollBarY();
 	}
