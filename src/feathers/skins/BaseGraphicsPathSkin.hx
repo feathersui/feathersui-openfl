@@ -37,6 +37,9 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		this.tabChildren = false;
 	}
 
+	private var _previousBorder:LineStyle = null;
+	private var _previousFill:FillStyle = null;
+
 	/**
 		An optional `IStateContext` that is used to change the styles of the
 		skin when its state changes.
@@ -268,6 +271,8 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	}
 
 	override private function update():Void {
+		this._previousBorder = this.getCurrentBorder();
+		this._previousFill = this.getCurrentFill();
 		this.graphics.clear();
 		this.draw();
 	}
@@ -405,7 +410,15 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return matrix;
 	}
 
+	@:dox(show)
 	private function getCurrentBorder():LineStyle {
+		if (this._previousBorder != null) {
+			return this._previousBorder;
+		}
+		return getCurrentBorderWithoutCache();
+	}
+
+	private function getCurrentBorderWithoutCache():LineStyle {
 		if (this.stateContext == null) {
 			return this.border;
 		}
@@ -430,7 +443,15 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return this.border;
 	}
 
+	@:dox(show)
 	private function getCurrentFill():FillStyle {
+		if (this._previousFill != null) {
+			return this._previousFill;
+		}
+		return getCurrentFillWithoutCache();
+	}
+
+	private function getCurrentFillWithoutCache() {
 		if (this.stateContext == null) {
 			return this.fill;
 		}
@@ -455,11 +476,39 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return this.fill;
 	}
 
-	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {
+	/**
+		Checks if a the current state requires the skin to be redrawn.
+
+		Subclasses may need to override this method if they add any additional
+		state-dependent properties similar to getCurrentBorder() and
+		getCurrentFill()
+	**/
+	@:dox(show)
+	private function needsStateUpdate():Bool {
+		var updated = false;
+		if (this._previousBorder != getCurrentBorderWithoutCache()) {
+			this._previousBorder = null;
+			updated = true;
+		}
+		if (this._previousFill != getCurrentFillWithoutCache()) {
+			this._previousFill = null;
+			updated = true;
+		}
+		return updated;
+	}
+
+	private function checkForStateChange():Void {
+		if (!this.needsStateUpdate()) {
+			return;
+		}
 		this.setInvalid(InvalidationFlag.STATE);
 	}
 
+	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {
+		this.checkForStateChange();
+	}
+
 	private function stateContextToggle_changeHandler(event:Event):Void {
-		this.setInvalid(InvalidationFlag.STATE);
+		this.checkForStateChange();
 	}
 }
