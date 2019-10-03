@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.display.InteractiveObject;
 import feathers.events.FeathersEvent;
 import motion.easing.Quart;
 import motion.easing.IEasing;
@@ -51,7 +52,18 @@ class BaseScrollContainer extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:dox(show)
-	private var viewPort:IViewPort;
+	private var viewPort(default, set):IViewPort;
+
+	private function set_viewPort(value:IViewPort):IViewPort {
+		if (this.viewPort == value) {
+			return this.viewPort;
+		}
+		this.viewPort = value;
+		if (this.scroller != null) {
+			this.scroller.target = cast(this.viewPort, InteractiveObject);
+		}
+		return this.viewPort;
+	}
 
 	private var scroller:Scroller;
 
@@ -234,7 +246,7 @@ class BaseScrollContainer extends FeathersControl {
 		if (this.scroller == null) {
 			this.scroller = new Scroller();
 		}
-		this.scroller.target = this;
+		this.scroller.target = cast(this.viewPort, InteractiveObject);
 		this.scroller.addEventListener(Event.SCROLL, scroller_scrollHandler);
 		this.scroller.addEventListener(FeathersEvent.SCROLL_START, scroller_scrollStartHandler);
 		this.scroller.addEventListener(FeathersEvent.SCROLL_COMPLETE, scroller_scrollCompleteHandler);
