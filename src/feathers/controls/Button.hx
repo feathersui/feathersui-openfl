@@ -51,6 +51,10 @@ class Button extends BasicButton implements ITextControl {
 
 	private var textField:TextField;
 
+	private var _previousText:String = null;
+	private var _previousTextFormat:TextFormat = null;
+	private var _updatedTextFormat = false;
+
 	@:isVar
 	public var text(get, set):String;
 
@@ -309,9 +313,10 @@ class Button extends BasicButton implements ITextControl {
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
+		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+
+		this._updatedTextFormat = false;
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshIcon();
@@ -471,12 +476,22 @@ class Button extends BasicButton implements ITextControl {
 
 	private function refreshTextStyles():Void {
 		var textFormat = this.getCurrentTextFormat();
+		if (textFormat == this._previousTextFormat) {
+			// nothing to refresh
+			return;
+		}
 		if (textFormat != null) {
 			this.textField.defaultTextFormat = textFormat;
+			this._updatedTextFormat = true;
+			this._previousTextFormat = textFormat;
 		}
 	}
 
 	private function refreshText():Void {
+		if (this.text == this._previousText && !this._updatedTextFormat) {
+			// nothing to refresh
+			return;
+		}
 		var hasText = this.text != null && this.text.length > 0;
 		if (hasText) {
 			this.textField.text = this.text;
@@ -491,6 +506,7 @@ class Button extends BasicButton implements ITextControl {
 			this.textField.text = "";
 		}
 		this.textField.visible = hasText;
+		this._previousText = this.text;
 	}
 
 	private function getCurrentTextFormat():TextFormat {
