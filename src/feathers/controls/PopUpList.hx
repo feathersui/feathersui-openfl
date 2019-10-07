@@ -183,6 +183,8 @@ class PopUpList extends FeathersControl {
 			this.popUpAdapter.close();
 		} else {
 			this.listBox.parent.removeChild(this.listBox);
+			// TODO: fix this when focus manager is implemented
+			this.stage.focus = this;
 		}
 	}
 
