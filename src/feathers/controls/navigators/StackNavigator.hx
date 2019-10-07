@@ -476,20 +476,21 @@ class StackNavigator extends BaseNavigator {
 		if (!this.enabled) {
 			return;
 		}
-		if (event.keyCode == KeyCode.APP_CONTROL_BACK) {
-			if (event.isDefaultPrevented()) {
-				return;
-			}
-			if (this._history.length <= 1) {
-				// can't go back
-				return;
-			}
-			event.preventDefault();
-			#if html5
-			this.htmlWindow.history.back();
-			#else
-			this.popItem();
-			#end
+		switch (event.keyCode) {
+			case KeyCode.APP_CONTROL_BACK:
+				if (event.isDefaultPrevented()) {
+					return;
+				}
+				if (this._history.length <= 1) {
+					// can't go back
+					return;
+				}
+				event.preventDefault();
+				#if html5
+				this.htmlWindow.history.back();
+				#else
+				this.popItem();
+				#end
 		}
 	}
 
