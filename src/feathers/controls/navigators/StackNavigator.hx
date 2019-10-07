@@ -461,7 +461,7 @@ class StackNavigator extends BaseNavigator {
 		this.htmlWindow.addEventListener("popstate", htmlWindow_popstateHandler);
 		#end
 
-		this.stage.addEventListener(KeyboardEvent.KEY_UP, stackNavigator_stage_keyUpHandler);
+		this.stage.addEventListener(KeyboardEvent.KEY_UP, stackNavigator_stage_keyUpHandler, false, 0, true);
 	}
 
 	private function stackNavigator_removedFromStageHandler(event:Event):Void {
@@ -473,6 +473,9 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	private function stackNavigator_stage_keyUpHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
 		if (event.keyCode == KeyCode.APP_CONTROL_BACK) {
 			if (event.isDefaultPrevented()) {
 				return;
