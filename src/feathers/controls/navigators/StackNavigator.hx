@@ -8,6 +8,8 @@
 
 package feathers.controls.navigators;
 
+import lime.ui.KeyCode;
+import openfl.events.KeyboardEvent;
 import openfl.events.Event;
 import feathers.motion.effects.IEffectContext;
 import feathers.events.FeathersEvent;
@@ -458,6 +460,8 @@ class StackNavigator extends BaseNavigator {
 		this.htmlWindow = cast(Lib.global, js.html.Window);
 		this.htmlWindow.addEventListener("popstate", htmlWindow_popstateHandler);
 		#end
+
+		this.stage.addEventListener(KeyboardEvent.KEY_UP, stackNavigator_stage_keyUpHandler);
 	}
 
 	private function stackNavigator_removedFromStageHandler(event:Event):Void {
@@ -465,6 +469,25 @@ class StackNavigator extends BaseNavigator {
 		this.htmlWindow.removeEventListener("popstate", htmlWindow_popstateHandler);
 		this.htmlWindow = null;
 		#end
+		this.stage.removeEventListener(KeyboardEvent.KEY_UP, stackNavigator_stage_keyUpHandler);
+	}
+
+	private function stackNavigator_stage_keyUpHandler(event:KeyboardEvent):Void {
+		if (event.keyCode == KeyCode.APP_CONTROL_BACK) {
+			if (event.isDefaultPrevented()) {
+				return;
+			}
+			if (this._history.length <= 1) {
+				// can't go back
+				return;
+			}
+			event.preventDefault();
+			#if html5
+			this.htmlWindow.history.back();
+			#else
+			this.popItem();
+			#end
+		}
 	}
 
 	#if html5
