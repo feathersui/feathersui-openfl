@@ -40,6 +40,7 @@ class PopUpList extends FeathersControl {
 		initializePopUpListTheme();
 
 		super();
+		this.addEventListener(KeyboardEvent.KEY_UP, popUpList_keyUpHandler);
 	}
 
 	private var button:Button;
@@ -172,7 +173,6 @@ class PopUpList extends FeathersControl {
 		this.listBox.addEventListener(Event.REMOVED_FROM_STAGE, popUpList_listBox_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpList_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpList_stage_touchBeginHandler, false, 0, true);
-		this.stage.addEventListener(KeyboardEvent.KEY_UP, popUpList_stage_keyUpHandler, false, 0, true);
 	}
 
 	public function closeList():Void {
@@ -331,15 +331,29 @@ class PopUpList extends FeathersControl {
 		this.listBox.removeEventListener(Event.REMOVED_FROM_STAGE, popUpList_listBox_removedFromStageHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpList_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpList_stage_touchBeginHandler);
-		this.stage.removeEventListener(KeyboardEvent.KEY_UP, popUpList_stage_keyUpHandler);
 	}
 
-	private function popUpList_stage_keyUpHandler(event:KeyboardEvent):Void {
+	private function popUpList_keyUpHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
 		switch (event.keyCode) {
 			case Keyboard.ESCAPE:
+				if (event.isDefaultPrevented()) {
+					return;
+				}
+				if (!this.open) {
+					return;
+				}
 				event.preventDefault();
 				this.closeList();
 			case KeyCode.APP_CONTROL_BACK:
+				if (event.isDefaultPrevented()) {
+					return;
+				}
+				if (!this.open) {
+					return;
+				}
 				event.preventDefault();
 				this.closeList();
 		}
