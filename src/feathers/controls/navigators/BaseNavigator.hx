@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
 import feathers.core.IMeasureObject;
 import feathers.core.IUIControl;
@@ -596,6 +597,12 @@ class BaseNavigator extends FeathersControl {
 			this.disposeView(previousItemID, previousView);
 		}
 
+		if (this.stage.focus == null || this.stage.focus.stage == null) {
+			if (Std.is(activeItemView, InteractiveObject)) {
+				this.stage.focus = cast(activeItemView, InteractiveObject);
+			}
+		}
+
 		this.transitionActive = false;
 		var nextTransition = this._nextItemTransition;
 		this._nextItemTransition = null;
@@ -627,6 +634,12 @@ class BaseNavigator extends FeathersControl {
 		this._activeViewMeasurements.save(this.activeItemView);
 		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_CANCEL);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+
+		if (this.stage.focus == null || this.stage.focus.stage == null) {
+			if (Std.is(this.activeItemView, InteractiveObject)) {
+				this.stage.focus = cast(this.activeItemView, InteractiveObject);
+			}
+		}
 
 		this.transitionActive = false;
 		var nextTransition = this._nextItemTransition;
