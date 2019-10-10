@@ -17,6 +17,9 @@ import js.Lib;
 	@since 1.0.0
 **/
 class DeviceUtil {
+	private static final MEDIA_QUERY_DESKTOP = "screen and (hover: hover) and (pointer: fine)";
+	private static final MEDIA_QUERY_MOBILE = "screen and (hover: none) and (pointer: coarse)";
+
 	/**
 		@since 1.0.0
 	**/
@@ -25,9 +28,20 @@ class DeviceUtil {
 		return true;
 		#elseif html5
 		var htmlWindow = cast(Lib.global, Window);
-		if (htmlWindow.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-			return true;
-		}
+		return htmlWindow.matchMedia(MEDIA_QUERY_DESKTOP).matches;
+		#end
+		return false;
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public static function isMobile():Bool {
+		#if mobile
+		return true;
+		#elseif html5
+		var htmlWindow = cast(Lib.global, Window);
+		return htmlWindow.matchMedia(MEDIA_QUERY_MOBILE).matches;
 		#end
 		return false;
 	}
