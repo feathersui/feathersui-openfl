@@ -88,9 +88,7 @@ class SteelRadioStyles {
 
 			radio.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
 
-			if (radio.gap == null) {
-				radio.gap = 6.0;
-			}
+			radio.gap = 6.0;
 		});
 	}
 }

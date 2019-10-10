@@ -98,9 +98,7 @@ class SteelCheckStyles {
 
 			check.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
 
-			if (check.gap == null) {
-				check.gap = 6.0;
-			}
+			check.gap = 6.0;
 		});
 	}
 }
