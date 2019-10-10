@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.layout.VerticalListFixedRowLayout;
 import feathers.controls.ListBox;
 import feathers.skins.RectangleSkin;
@@ -35,6 +36,11 @@ class SteelListBoxStyles {
 		}
 
 		styleProvider.setStyleFunction(ListBox, null, function(listBox:ListBox):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+
+			listBox.autoHideScrollBars = !isDesktop;
+			listBox.fixedScrollBars = isDesktop;
+
 			if (listBox.layout == null) {
 				listBox.layout = new VerticalListFixedRowLayout();
 			}
