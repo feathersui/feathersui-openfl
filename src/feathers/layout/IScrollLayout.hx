@@ -11,4 +11,12 @@ package feathers.layout;
 interface IScrollLayout extends ILayout {
 	var scrollX(default, set):Float;
 	var scrollY(default, set):Float;
+
+	/**
+		The primary direction that this layout is expected to scroll. Not all
+		layouts will necessarily have a primary direction.
+
+		@since 1.0.0
+	**/
+	var primaryDirection(get, never):Direction;
 }

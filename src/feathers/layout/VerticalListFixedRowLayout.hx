@@ -41,6 +41,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		return this.scrollY;
 	}
 
+	public var primaryDirection(get, never):Direction;
+
+	private function get_primaryDirection():Direction {
+		return Direction.VERTICAL;
+	}
+
 	/**
 		The height to set on each item, or `null`, if the row height should be
 		calculated automatically.
