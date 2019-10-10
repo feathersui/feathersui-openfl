@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import feathers.layout.Direction;
 import motion.easing.IEasing;
 import motion.easing.Quart;
 import motion.actuators.SimpleActuator;
@@ -68,6 +69,7 @@ class Scroller extends EventDispatcher {
 	public var friction(default, default):Float = 0.95;
 	public var scrollPolicyX(default, default):ScrollPolicy = ScrollPolicy.AUTO;
 	public var scrollPolicyY(default, default):ScrollPolicy = ScrollPolicy.AUTO;
+	public var primaryDirection(default, default):Direction = Direction.NONE;
 	public var elasticEdges(default, default):Bool = true;
 	public var elasticity(default, default):Float = 0.33;
 	public var throwElasticity(default, default):Float = 0.05;
@@ -469,17 +471,21 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function canDragX():Bool {
-		if (this.scrollPolicyX == ScrollPolicy.OFF) {
+		if (this.scrollPolicyX == OFF) {
 			return false;
 		}
-		return this.scrollPolicyX == ScrollPolicy.ON || this.maxScrollX > this.minScrollX;
+		return this.scrollPolicyX == ON
+			|| (this.scrollPolicyX == AUTO && this.primaryDirection == HORIZONTAL)
+			|| this.maxScrollX > this.minScrollX;
 	}
 
 	private function canDragY():Bool {
-		if (this.scrollPolicyY == ScrollPolicy.OFF) {
+		if (this.scrollPolicyY == OFF) {
 			return false;
 		}
-		return this.scrollPolicyY == ScrollPolicy.ON || this.maxScrollY > this.minScrollY;
+		return this.scrollPolicyY == ON
+			|| (this.scrollPolicyY == AUTO && this.primaryDirection == VERTICAL)
+			|| this.maxScrollY > this.minScrollY;
 	}
 
 	private function target_stage_mouseMoveHandler(event:MouseEvent):Void {

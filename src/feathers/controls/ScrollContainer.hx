@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.layout.IScrollLayout;
+import feathers.layout.Direction;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.core.FeathersControl;
@@ -66,6 +68,13 @@ class ScrollContainer extends BaseScrollContainer {
 	}
 
 	private var layoutViewPort:LayoutViewPort;
+
+	override private function get_primaryDirection():Direction {
+		if (Std.is(this.layout, IScrollLayout)) {
+			return cast(this.layout, IScrollLayout).primaryDirection;
+		}
+		return Direction.NONE;
+	}
 
 	private var _ignoreChildChanges:Bool = false;
 	private var _ignoreChildChangesButSetFlags:Bool = false;

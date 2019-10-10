@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.layout.Direction;
+import feathers.layout.IScrollLayout;
 import feathers.core.ITextControl;
 import feathers.controls.dataRenderers.IDataRenderer;
 import haxe.ds.ObjectMap;
@@ -45,6 +47,13 @@ class ListBox extends BaseScrollContainer {
 	}
 
 	private var listViewPort:LayoutViewPort;
+
+	override private function get_primaryDirection():Direction {
+		if (Std.is(this.layout, IScrollLayout)) {
+			return cast(this.layout, IScrollLayout).primaryDirection;
+		}
+		return Direction.NONE;
+	}
 
 	/**
 

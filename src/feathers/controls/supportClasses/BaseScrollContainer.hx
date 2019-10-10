@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.layout.Direction;
 import openfl.errors.IllegalOperationError;
 import openfl.display.DisplayObjectContainer;
 import openfl.events.MouseEvent;
@@ -271,6 +272,12 @@ class BaseScrollContainer extends FeathersControl {
 
 	private function get_measureViewPort():Bool {
 		return true;
+	}
+
+	private var primaryDirection(get, never):Direction;
+
+	private function get_primaryDirection():Direction {
+		return Direction.NONE;
 	}
 
 	override private function initialize():Void {
@@ -560,6 +567,7 @@ class BaseScrollContainer extends FeathersControl {
 		this.scroller.scrollPolicyX = this.scrollPolicyX;
 		this.scroller.scrollPolicyY = this.scrollPolicyY;
 		this.scroller.elasticEdges = this.elasticEdges;
+		this.scroller.primaryDirection = this.primaryDirection;
 	}
 
 	private function refreshScrollBarValues():Void {
