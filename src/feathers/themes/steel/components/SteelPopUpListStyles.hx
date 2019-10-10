@@ -39,6 +39,7 @@ class SteelPopUpListStyles {
 
 				button.horizontalAlign = HorizontalAlign.LEFT;
 				button.gap = Math.POSITIVE_INFINITY;
+				button.minGap = 6.0;
 
 				var icon = new Shape();
 				icon.graphics.beginFill(theme.textColor);
