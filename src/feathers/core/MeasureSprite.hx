@@ -312,7 +312,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@since 1.0.0
 	**/
 	public function resetWidth():Void {
-		this.explicitMinWidth = null;
+		this.explicitWidth = null;
 	}
 
 	/**
@@ -322,7 +322,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@since 1.0.0
 	**/
 	public function resetHeight():Void {
-		this.explicitMinHeight = null;
+		this.explicitHeight = null;
 	}
 
 	/**
