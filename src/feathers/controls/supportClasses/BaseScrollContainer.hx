@@ -523,12 +523,36 @@ class BaseScrollContainer extends FeathersControl {
 
 		this.viewPort.x = this.leftViewPortOffset;
 		this.viewPort.y = this.topViewPortOffset;
-		this.viewPort.visibleWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset;
-		this.viewPort.visibleHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset;
-		this.viewPort.minVisibleWidth = this.actualMinWidth - this.leftViewPortOffset - this.rightViewPortOffset;
-		this.viewPort.minVisibleHeight = this.actualMinHeight - this.topViewPortOffset - this.bottomViewPortOffset;
-		this.viewPort.maxVisibleWidth = this.actualMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset;
-		this.viewPort.maxVisibleHeight = this.actualMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset;
+		if (this.explicitWidth == null) {
+			this.viewPort.visibleWidth = null;
+		} else {
+			this.viewPort.visibleWidth = this.explicitWidth - this.leftViewPortOffset - this.rightViewPortOffset;
+		}
+		if (this.explicitHeight == null) {
+			this.viewPort.visibleHeight = null;
+		} else {
+			this.viewPort.visibleHeight = this.explicitHeight - this.topViewPortOffset - this.bottomViewPortOffset;
+		}
+		if (this.explicitMinWidth == null) {
+			this.viewPort.minVisibleWidth = null;
+		} else {
+			this.viewPort.minVisibleWidth = this.explicitMinWidth - this.leftViewPortOffset - this.rightViewPortOffset;
+		}
+		if (this.explicitMinHeight == null) {
+			this.viewPort.minVisibleHeight = null;
+		} else {
+			this.viewPort.minVisibleHeight = this.explicitMinHeight - this.topViewPortOffset - this.bottomViewPortOffset;
+		}
+		if (this.explicitMaxWidth == null) {
+			this.viewPort.maxVisibleWidth = Math.POSITIVE_INFINITY;
+		} else {
+			this.viewPort.maxVisibleWidth = this.explicitMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset;
+		}
+		if (this.explicitMaxHeight == null) {
+			this.viewPort.maxVisibleHeight = Math.POSITIVE_INFINITY;
+		} else {
+			this.viewPort.maxVisibleHeight = this.explicitMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset;
+		}
 		this.viewPort.validateNow();
 
 		// we don't want to listen for a resize event from the view port
