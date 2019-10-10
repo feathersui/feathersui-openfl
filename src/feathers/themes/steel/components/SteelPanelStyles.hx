@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.Panel;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
@@ -34,6 +35,11 @@ class SteelPanelStyles {
 		}
 
 		styleProvider.setStyleFunction(Panel, null, function(panel:Panel):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+
+			panel.autoHideScrollBars = !isDesktop;
+			panel.fixedScrollBars = isDesktop;
+
 			if (panel.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
