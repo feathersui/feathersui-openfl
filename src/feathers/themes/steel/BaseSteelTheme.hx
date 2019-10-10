@@ -134,8 +134,8 @@ class BaseSteelTheme implements IDarkModeTheme {
 			this.overlayFillColor = 0x6f6f6f;
 			this.borderColor = 0x080808;
 			this.dividerColor = 0x282828;
-			this.textColor = 0xe8e8e8;
-			this.activeTextColor = 0xe8e8e8;
+			this.textColor = 0xf1f1f1;
+			this.activeTextColor = 0xf1f1f1;
 			this.disabledTextColor = 0x8f8f8f;
 		} else // light
 		{
