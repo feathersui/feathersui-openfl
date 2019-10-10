@@ -115,10 +115,12 @@ class Scroller extends EventDispatcher {
 		if (this.target != null) {
 			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+			this.target.removeEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler);
 		}
 		this.target = value;
 		if (this.target != null) {
 			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler, false, 0, true);
+			this.target.addEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler, false, 0, true);
 		}
 		return this.target;
 	}
@@ -638,5 +640,18 @@ class Scroller extends EventDispatcher {
 			this.draggingY = false;
 			this.finishScrollY();
 		}
+	}
+
+	private function target_mouseWheelHandler(event:MouseEvent):Void {
+		// can't use preventDefault(), so don't let it bubble
+		event.stopImmediatePropagation();
+		this.stop();
+		var newScrollY = this.scrollY - (event.delta * 0.1);
+		if (newScrollY < this.minScrollY) {
+			newScrollY = this.minScrollY;
+		} else if (newScrollY > this.maxScrollY) {
+			newScrollY = this.maxScrollY;
+		}
+		this.scrollY = newScrollY;
 	}
 }
