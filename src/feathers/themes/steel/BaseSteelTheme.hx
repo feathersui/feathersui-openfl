@@ -155,6 +155,10 @@ class BaseSteelTheme implements IDarkModeTheme {
 		return FillStyle.SolidColor(this.themeColor);
 	}
 
+	private function getControlFill():FillStyle {
+		return FillStyle.SolidColor(this.controlFillColor2);
+	}
+
 	private function getButtonFill():FillStyle {
 		return FillStyle.Gradient(GradientType.LINEAR, [this.controlFillColor1, this.controlFillColor2], [1.0, 1.0], [0, 0xff], Math.PI / 2);
 	}

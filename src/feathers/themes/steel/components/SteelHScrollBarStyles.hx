@@ -13,6 +13,7 @@ import feathers.controls.HScrollBar;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `HScrollBar` component.
@@ -35,19 +36,32 @@ class SteelHScrollBarStyles {
 		}
 
 		styleProvider.setStyleFunction(HScrollBar, null, function(scrollBar:HScrollBar):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+
 			if (scrollBar.thumbSkin == null) {
 				var thumbSkin = new RectangleSkin();
 				thumbSkin.fill = theme.getOverlayFill();
-				thumbSkin.width = 4.0;
-				thumbSkin.height = 4.0;
-				thumbSkin.minWidth = 4.0;
-				thumbSkin.minHeight = 4.0;
-				thumbSkin.cornerRadius = 4.0;
+				var size = isDesktop ? 6.0 : 4.0;
+				thumbSkin.width = size;
+				thumbSkin.height = size;
+				thumbSkin.minWidth = size;
+				thumbSkin.minHeight = size;
+				thumbSkin.cornerRadius = size;
 
 				var thumb:BasicButton = new BasicButton();
 				thumb.keepDownStateOnRollOut = true;
 				thumb.backgroundSkin = thumbSkin;
 				scrollBar.thumbSkin = thumb;
+			}
+
+			if (isDesktop && scrollBar.trackSkin == null) {
+				var trackSkin = new RectangleSkin();
+				trackSkin.fill = theme.getControlFill();
+				trackSkin.width = 12.0;
+				trackSkin.height = 12.0;
+				trackSkin.minWidth = 12.0;
+				trackSkin.minHeight = 12.0;
+				scrollBar.trackSkin = trackSkin;
 			}
 
 			scrollBar.paddingTop = 2.0;
