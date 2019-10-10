@@ -66,9 +66,11 @@ class ScrollContainer extends BaseScrollContainer {
 	}
 
 	private var layoutViewPort:LayoutViewPort;
+
 	private var _ignoreChildChanges:Bool = false;
 	private var _ignoreChildChangesButSetFlags:Bool = false;
 	private var _displayListBypassEnabled = true;
+
 	private var items:Array<DisplayObject> = [];
 
 	@:style

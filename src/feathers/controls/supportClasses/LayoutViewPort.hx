@@ -1,5 +1,6 @@
 package feathers.controls.supportClasses;
 
+import feathers.layout.IScrollLayout;
 import feathers.core.InvalidationFlag;
 import feathers.layout.AutoSizeMode;
 import openfl.errors.ArgumentError;
@@ -152,6 +153,40 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			this.setInvalid(InvalidationFlag.SIZE);
 		}
 		return this._explicitVisibleWidth;
+	}
+
+	public var requiresMeasurementOnScroll(get, never):Bool;
+
+	private function get_requiresMeasurementOnScroll():Bool {
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			return scrollLayout.requiresLayoutOnScroll;
+		}
+		return false;
+	}
+
+	@:isVar
+	public var scrollX(get, set):Float = 0.0;
+
+	private function get_scrollX():Float {
+		return this.scrollX;
+	}
+
+	private function set_scrollX(value:Float):Float {
+		this.scrollX = value;
+		return this.scrollX;
+	}
+
+	@:isVar
+	public var scrollY(get, set):Float = 0.0;
+
+	private function get_scrollY():Float {
+		return this.scrollY;
+	}
+
+	private function set_scrollY(value:Float):Float {
+		this.scrollY = value;
+		return this.scrollY;
 	}
 
 	override private function refreshViewPortBounds():Void {

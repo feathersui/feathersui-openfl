@@ -26,4 +26,9 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 	public var minVisibleHeight(get, set):Null<Float>;
 	public var maxVisibleWidth(default, set):Null<Float>;
 	public var maxVisibleHeight(default, set):Null<Float>;
+
+	public var scrollX(get, set):Float;
+	public var scrollY(get, set):Float;
+
+	public var requiresMeasurementOnScroll(get, never):Bool;
 }
