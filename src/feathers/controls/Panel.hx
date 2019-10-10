@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IMeasureObject;
 import feathers.themes.steel.components.SteelPanelStyles;
 import openfl.display.DisplayObject;
 import feathers.core.IUIControl;
@@ -65,6 +66,126 @@ class Panel extends ScrollContainer {
 		super.update();
 		this.layoutHeader();
 		this.layoutFooter();
+	}
+
+	override private function autoSizeIfNeeded():Bool {
+		var needsWidth = this.explicitWidth == null;
+		var needsHeight = this.explicitHeight == null;
+		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinHeight = this.explicitMinHeight == null;
+		var needsMaxWidth = this.explicitMaxWidth == null;
+		var needsMaxHeight = this.explicitMaxHeight == null;
+		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
+			return false;
+		}
+
+		if (this._currentBackgroundSkin != null) {
+			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+		}
+
+		var measureSkin:IMeasureObject = null;
+		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+		}
+
+		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+			cast(this._currentBackgroundSkin, IValidating).validateNow();
+		}
+
+		this.viewPort.validateNow();
+
+		var newWidth = this.explicitWidth;
+		if (needsWidth) {
+			if (this.measureViewPort) {
+				newWidth = this.viewPort.visibleWidth;
+			} else {
+				newWidth = 0.0;
+			}
+			newWidth += this.leftViewPortOffset + this.rightViewPortOffset;
+			if (this.header != null) {
+				newWidth = Math.max(newWidth, this.header.width);
+			}
+			if (this.footer != null) {
+				newWidth = Math.max(newWidth, this.footer.width);
+			}
+			if (this._currentBackgroundSkin != null) {
+				newWidth = Math.max(newWidth, this._currentBackgroundSkin.width);
+			}
+		}
+
+		var newHeight = this.explicitHeight;
+		if (needsHeight) {
+			if (this.measureViewPort) {
+				newHeight = this.viewPort.visibleHeight;
+			} else {
+				newHeight = 0.0;
+			}
+			newHeight += this.topViewPortOffset + this.bottomViewPortOffset;
+			if (this._currentBackgroundSkin != null) {
+				newHeight = Math.max(newHeight, this._currentBackgroundSkin.height);
+			}
+		}
+
+		var newMinWidth = this.explicitMinWidth;
+		if (needsMinWidth) {
+			if (this.measureViewPort) {
+				newMinWidth = this.viewPort.minVisibleWidth;
+			} else {
+				newMinWidth = 0.0;
+			}
+			newMinWidth += this.leftViewPortOffset + this.rightViewPortOffset;
+			if (measureSkin != null) {
+				newMinWidth = Math.max(newMinWidth, measureSkin.minWidth);
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMinWidth = Math.max(newMinWidth, this._backgroundSkinMeasurements.minWidth);
+			}
+		}
+
+		var newMinHeight = this.explicitMinHeight;
+		if (needsMinHeight) {
+			if (this.measureViewPort) {
+				newMinHeight = this.viewPort.minVisibleHeight;
+			} else {
+				newMinHeight = 0.0;
+			}
+			newMinHeight += this.topViewPortOffset + this.bottomViewPortOffset;
+			if (measureSkin != null) {
+				newMinHeight = Math.max(newMinHeight, measureSkin.minHeight);
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMinHeight = Math.max(newMinHeight, this._backgroundSkinMeasurements.minHeight);
+			}
+		}
+		var newMaxWidth = this.explicitMaxWidth;
+		if (needsMaxWidth) {
+			if (this.measureViewPort) {
+				newMaxWidth = this.viewPort.maxVisibleWidth;
+			} else {
+				newMaxWidth = Math.POSITIVE_INFINITY;
+			}
+			newMaxWidth += this.leftViewPortOffset + this.rightViewPortOffset;
+			if (measureSkin != null) {
+				newMaxWidth = Math.min(newMaxWidth, measureSkin.maxWidth);
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMaxWidth = Math.min(newMaxWidth, this._backgroundSkinMeasurements.maxWidth);
+			}
+		}
+
+		var newMaxHeight = this.explicitMaxHeight;
+		if (needsMaxHeight) {
+			if (this.measureViewPort) {
+				newMaxHeight = this.viewPort.maxVisibleHeight;
+			} else {
+				newMaxHeight = Math.POSITIVE_INFINITY;
+			}
+			newMaxHeight += this.topViewPortOffset + this.bottomViewPortOffset;
+			if (measureSkin != null) {
+				newMaxHeight = Math.min(newMaxHeight, measureSkin.maxHeight);
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMaxHeight = Math.min(newMaxHeight, this._backgroundSkinMeasurements.maxHeight);
+			}
+		}
+
+		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
