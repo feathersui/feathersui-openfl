@@ -8,16 +8,12 @@
 
 package feathers.controls;
 
+import feathers.themes.steel.components.SteelScrollContainerStyles;
 import feathers.layout.IScrollLayout;
 import feathers.layout.Direction;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.LayoutViewPort;
-import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
-import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
-import feathers.core.IUIControl;
-import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
@@ -59,7 +55,10 @@ import openfl.geom.Rectangle;
 @:styleContext
 class ScrollContainer extends BaseScrollContainer {
 	public function new() {
+		initializeScrollContainerTheme();
+
 		super();
+
 		if (this.viewPort == null) {
 			this.layoutViewPort = new LayoutViewPort();
 			this.addRawChild(this.layoutViewPort);
@@ -213,6 +212,10 @@ class ScrollContainer extends BaseScrollContainer {
 		this._displayListBypassEnabled = false;
 		this.setChildIndex(child, index);
 		this._displayListBypassEnabled = oldBypass;
+	}
+
+	private function initializeScrollContainerTheme():Void {
+		SteelScrollContainerStyles.initialize();
 	}
 
 	override private function update():Void {
