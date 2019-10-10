@@ -18,6 +18,12 @@ import openfl.text.TextFormat;
 import feathers.graphics.LineStyle;
 import feathers.graphics.FillStyle;
 import feathers.style.IDarkModeTheme;
+#if html5
+import js.Lib;
+import js.html.Window;
+import js.html.MediaQueryListEvent;
+import js.html.MediaQueryList;
+#end
 
 /**
 	@since 1.0.0
@@ -32,7 +38,19 @@ class BaseSteelTheme implements IDarkModeTheme {
 		// there are no calls to setStyleFunction() in the theme by default.
 		// instead, component classes must call setStyleFunction() to keep
 		// unused components from being included in the final compiled output.
+
+		#if html5
+		var htmlWindow = cast(Lib.global, Window);
+		// watch for switching between desktop and mobile
+		// which could happen when simulating mobile on desktop
+		this.mediaQueryList = htmlWindow.matchMedia("(hover: hover) and (pointer: fine)");
+		this.mediaQueryList.addEventListener("change", mediaQueryList_changeHandler);
+		#end
 	}
+
+	#if html5
+	var mediaQueryList:MediaQueryList;
+	#end
 
 	private var styleProvider:ClassVariantStyleProvider;
 
@@ -84,6 +102,12 @@ class BaseSteelTheme implements IDarkModeTheme {
 	}
 
 	public function dispose():Void {
+		#if html5
+		if (this.mediaQueryList != null) {
+			this.mediaQueryList.removeEventListener("change", mediaQueryList_changeHandler);
+			this.mediaQueryList = null;
+		}
+		#end
 		FeathersEvent.dispatch(this.styleProvider, Event.CLEAR);
 	}
 
@@ -314,4 +338,10 @@ class BaseSteelTheme implements IDarkModeTheme {
 		}
 		return (r1 << 16) + (g1 << 8) + b1;
 	}
+
+	#if html5
+	private function mediaQueryList_changeHandler(event:MediaQueryListEvent):Void {
+		this.styleProvider.dispatchEvent(new Event(Event.CHANGE));
+	}
+	#end
 }
