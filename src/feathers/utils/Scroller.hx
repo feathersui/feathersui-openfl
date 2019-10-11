@@ -13,7 +13,6 @@ import motion.easing.IEasing;
 import motion.easing.Quart;
 import motion.actuators.SimpleActuator;
 import motion.Actuate;
-import feathers.controls.ScrollPolicy;
 import feathers.events.FeathersEvent;
 import openfl.display.Stage;
 import openfl.Lib;
@@ -31,6 +30,9 @@ class Scroller extends EventDispatcher {
 		super();
 		this.target = target;
 	}
+
+	public var enabledX(default, default) = true;
+	public var enabledY(default, default) = true;
 
 	public var scrollX(default, set):Float = 0.0;
 
@@ -67,8 +69,6 @@ class Scroller extends EventDispatcher {
 	public var draggingY(default, null):Bool = false;
 	public var minDragDistance(default, default):Float = 6.0;
 	public var friction(default, default):Float = 0.95;
-	public var scrollPolicyX(default, default):ScrollPolicy = ScrollPolicy.AUTO;
-	public var scrollPolicyY(default, default):ScrollPolicy = ScrollPolicy.AUTO;
 	public var primaryDirection(default, default):Direction = Direction.NONE;
 	public var elasticEdges(default, default):Bool = true;
 	public var elasticity(default, default):Float = 0.33;
@@ -134,11 +134,11 @@ class Scroller extends EventDispatcher {
 	}
 
 	public function stop():Void {
-		if (this.animateScrollX != null && this.scrollPolicyX != ScrollPolicy.OFF) {
+		if (this.animateScrollX != null) {
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
 		}
-		if (this.animateScrollY != null && this.scrollPolicyY != ScrollPolicy.OFF) {
+		if (this.animateScrollY != null) {
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
 		}
@@ -443,11 +443,11 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 		// if we're animating already, stop it
-		if (this.animateScrollX != null && this.scrollPolicyX != ScrollPolicy.OFF) {
+		if (this.animateScrollX != null) {
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
 		}
-		if (this.animateScrollY != null && this.scrollPolicyY != ScrollPolicy.OFF) {
+		if (this.animateScrollY != null) {
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
 		}
@@ -473,21 +473,11 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function canDragX():Bool {
-		if (this.scrollPolicyX == OFF) {
-			return false;
-		}
-		return this.scrollPolicyX == ON
-			|| (this.scrollPolicyX == AUTO && this.primaryDirection == HORIZONTAL)
-			|| this.maxScrollX > this.minScrollX;
+		return this.enabledX && (this.maxScrollX > this.minScrollX || this.primaryDirection == Direction.HORIZONTAL);
 	}
 
 	private function canDragY():Bool {
-		if (this.scrollPolicyY == OFF) {
-			return false;
-		}
-		return this.scrollPolicyY == ON
-			|| (this.scrollPolicyY == AUTO && this.primaryDirection == VERTICAL)
-			|| this.maxScrollY > this.minScrollY;
+		return this.enabledY && (this.maxScrollY > this.minScrollY || this.primaryDirection == Direction.VERTICAL);
 	}
 
 	private function target_stage_mouseMoveHandler(event:MouseEvent):Void {
