@@ -391,18 +391,6 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	**/
 	@:dox(show)
 	private function saveMeasurements(width:Float, height:Float, minWidth:Float = 0.0, minHeight:Float = 0.0, ?maxWidth:Float, ?maxHeight:Float):Bool {
-		if (width == null) {
-			throw new ArgumentError("width must not be null");
-		}
-		if (height == null) {
-			throw new ArgumentError("height must not be null");
-		}
-		if (minWidth == null) {
-			throw new ArgumentError("minWidth must not be null");
-		}
-		if (minHeight == null) {
-			throw new ArgumentError("minHeight must not be null");
-		}
 		if (maxWidth == null) {
 			maxWidth = Math.POSITIVE_INFINITY;
 		}
