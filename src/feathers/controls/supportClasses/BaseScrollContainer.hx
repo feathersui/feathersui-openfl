@@ -591,7 +591,10 @@ class BaseScrollContainer extends FeathersControl {
 		this.scroller.enabledX = this.scrollPolicyX != ScrollPolicy.OFF;
 		this.scroller.enabledY = this.scrollPolicyY != ScrollPolicy.OFF;
 		this.scroller.elasticEdges = this.elasticEdges;
-		this.scroller.primaryDirection = this.primaryDirection;
+		this.scroller.forceElasticLeft = this.primaryDirection == Direction.HORIZONTAL;
+		this.scroller.forceElasticRight = this.primaryDirection == Direction.HORIZONTAL;
+		this.scroller.forceElasticTop = this.primaryDirection == Direction.VERTICAL;
+		this.scroller.forceElasticBottom = this.primaryDirection == Direction.VERTICAL;
 	}
 
 	private function refreshScrollBarValues():Void {

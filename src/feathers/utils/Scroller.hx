@@ -8,7 +8,6 @@
 
 package feathers.utils;
 
-import feathers.layout.Direction;
 import motion.easing.IEasing;
 import motion.easing.Quart;
 import motion.actuators.SimpleActuator;
@@ -69,8 +68,11 @@ class Scroller extends EventDispatcher {
 	public var draggingY(default, null):Bool = false;
 	public var minDragDistance(default, default):Float = 6.0;
 	public var friction(default, default):Float = 0.95;
-	public var primaryDirection(default, default):Direction = Direction.NONE;
 	public var elasticEdges(default, default):Bool = true;
+	public var forceElasticTop(default, default):Bool = false;
+	public var forceElasticRight(default, default):Bool = false;
+	public var forceElasticBottom(default, default):Bool = false;
+	public var forceElasticLeft(default, default):Bool = false;
 	public var elasticity(default, default):Float = 0.33;
 	public var throwElasticity(default, default):Float = 0.05;
 	public var elasticSnapDuration(default, default):Float = 0.5;
@@ -473,11 +475,11 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function canDragX():Bool {
-		return this.enabledX && (this.maxScrollX > this.minScrollX || this.primaryDirection == Direction.HORIZONTAL);
+		return this.enabledX && (this.maxScrollX > this.minScrollX || this.forceElasticLeft || this.forceElasticRight);
 	}
 
 	private function canDragY():Bool {
-		return this.enabledY && (this.maxScrollY > this.minScrollY || this.primaryDirection == Direction.VERTICAL);
+		return this.enabledY && (this.maxScrollY > this.minScrollY || this.forceElasticTop || this.forceElasticBottom);
 	}
 
 	private function target_stage_mouseMoveHandler(event:MouseEvent):Void {
@@ -523,9 +525,17 @@ class Scroller extends EventDispatcher {
 			scrollX -= touchOffsetX;
 			if (this.elasticEdges) {
 				if (scrollX < this.minScrollX) {
-					scrollX = scrollX - (scrollX - this.minScrollX) * (1.0 - this.elasticity);
+					if (this.maxScrollX > this.minScrollX || this.forceElasticLeft) {
+						scrollX = scrollX - (scrollX - this.minScrollX) * (1.0 - this.elasticity);
+					} else {
+						scrollX = this.minScrollX;
+					}
 				} else if (scrollX > this.maxScrollX) {
-					scrollX = scrollX - (scrollX - this.maxScrollX) * (1.0 - this.elasticity);
+					if (this.maxScrollX > this.minScrollX || this.forceElasticRight) {
+						scrollX = scrollX - (scrollX - this.maxScrollX) * (1.0 - this.elasticity);
+					} else {
+						scrollX = this.maxScrollX;
+					}
 				}
 			} else {
 				if (scrollX < this.minScrollX) {
@@ -540,9 +550,17 @@ class Scroller extends EventDispatcher {
 			scrollY -= touchOffsetY;
 			if (this.elasticEdges) {
 				if (scrollY < this.minScrollY) {
-					scrollY = scrollY - (scrollY - this.minScrollY) * (1.0 - this.elasticity);
+					if (this.maxScrollY > this.minScrollY || this.forceElasticTop) {
+						scrollY = scrollY - (scrollY - this.minScrollY) * (1.0 - this.elasticity);
+					} else {
+						scrollY = this.minScrollY;
+					}
 				} else if (scrollY > this.maxScrollY) {
-					scrollY = scrollY - (scrollY - this.maxScrollY) * (1.0 - this.elasticity);
+					if (this.maxScrollY > this.minScrollY || this.forceElasticBottom) {
+						scrollY = scrollY - (scrollY - this.maxScrollY) * (1.0 - this.elasticity);
+					} else {
+						scrollY = this.maxScrollY;
+					}
 				}
 			} else {
 				if (scrollY < this.minScrollY) {
