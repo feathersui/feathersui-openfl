@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
 
@@ -99,9 +100,17 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			return this.explicitWidth;
 		}
 		this.explicitWidth = value;
-		var result = this.saveMeasurements(value, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
-		if (result) {
-			this.setInvalid(InvalidationFlag.SIZE);
+		if (value == null) {
+			if (this.actualWidth != 0.0) {
+				this.actualWidth = 0.0;
+				this.scaledActualWidth = 0.0;
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
+		} else {
+			var result = this.saveMeasurements(value, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
+			if (result) {
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
 		}
 		return this.explicitWidth;
 	}
@@ -118,9 +127,17 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			return this.explicitHeight;
 		}
 		this.explicitHeight = value;
-		var result = this.saveMeasurements(this.actualWidth, value, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
-		if (result) {
-			this.setInvalid(InvalidationFlag.SIZE);
+		if (value == null) {
+			if (this.actualHeight != 0.0) {
+				this.actualHeight = 0.0;
+				this.scaledActualHeight = 0.0;
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
+		} else {
+			var result = this.saveMeasurements(this.actualWidth, value, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
+			if (result) {
+				this.setInvalid(InvalidationFlag.SIZE);
+			}
 		}
 		return this.explicitHeight;
 	}
@@ -374,6 +391,18 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	**/
 	@:dox(show)
 	private function saveMeasurements(width:Float, height:Float, minWidth:Float = 0.0, minHeight:Float = 0.0, ?maxWidth:Float, ?maxHeight:Float):Bool {
+		if (width == null) {
+			throw new ArgumentError("width must not be null");
+		}
+		if (height == null) {
+			throw new ArgumentError("height must not be null");
+		}
+		if (minWidth == null) {
+			throw new ArgumentError("minWidth must not be null");
+		}
+		if (minHeight == null) {
+			throw new ArgumentError("minHeight must not be null");
+		}
 		if (maxWidth == null) {
 			maxWidth = Math.POSITIVE_INFINITY;
 		}
