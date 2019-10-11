@@ -54,10 +54,10 @@ class ButtonScreen extends Panel {
 		this.button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
 		this.addChild(this.button);
 
-		this.button = new Button();
-		this.button.text = "Button with Icon";
-		this.button.icon = new Bitmap(Assets.getBitmapData("favicon"));
-		this.addChild(this.button);
+		this.iconButton = new Button();
+		this.iconButton.text = "Button with Icon";
+		this.iconButton.icon = new Bitmap(Assets.getBitmapData("favicon"));
+		this.addChild(this.iconButton);
 
 		this.toggleButton = new ToggleButton();
 		this.toggleButton.text = "Toggled Button";
