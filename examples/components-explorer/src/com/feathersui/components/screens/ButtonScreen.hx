@@ -51,6 +51,7 @@ class ButtonScreen extends Panel {
 
 		this.button = new Button();
 		this.button.text = "Push Button";
+		this.button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
 		this.addChild(this.button);
 
 		this.button = new Button();
@@ -67,6 +68,10 @@ class ButtonScreen extends Panel {
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
+	}
+
+	private function button_triggeredHandler(event:FeathersEvent):Void {
+		trace("Button triggered");
 	}
 
 	private function toggleButton_changeHandler(event:Event):Void {
