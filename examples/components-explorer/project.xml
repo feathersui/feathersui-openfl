@@ -12,6 +12,11 @@
 	
 	<source path="../../src" />
 	<source path="src" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+
+	<haxdef name="openfl_pool_events"/>	
 
 	<!-- sync/embedded -->
 	<assets id="haxe" path="assets/img/haxe.png"/>
@@ -19,9 +24,6 @@
 
 	<!-- async/external -->
 	<assets id="openfl" path="assets/img/openfl.png" embed="false"/>
-	
-	<haxelib name="openfl" />
-	<haxelib name="actuate" />
 
-	<haxdef name="openfl_pool_events"/>	
+	<icon path="assets/icons/feathersui-icon.svg"/>
 </project>

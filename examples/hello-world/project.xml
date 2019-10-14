@@ -13,4 +13,6 @@
 	
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
+
+	<icon path="assets/icons/feathersui-icon.svg"/>
 </project>
