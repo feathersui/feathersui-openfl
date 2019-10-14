@@ -500,6 +500,7 @@ class Scroller extends EventDispatcher {
 		var canDragY = this.canDragY();
 		if (!this.draggingX && canDragX && Math.abs(touchOffsetX) > this.minDragDistance) {
 			this.startTouchX = event.stageX;
+			touchOffsetX = 0.0;
 			this.draggingX = true;
 			// don't start dragging until we've moved a minimum distance
 			// we'll also reset the start position at this point, so that there
@@ -510,6 +511,7 @@ class Scroller extends EventDispatcher {
 		}
 		if (!this.draggingY && canDragY && Math.abs(touchOffsetY) > this.minDragDistance) {
 			this.startTouchY = event.stageY;
+			touchOffsetY = 0.0;
 			this.draggingY = true;
 			if (!draggingX) {
 				this.startScroll();
