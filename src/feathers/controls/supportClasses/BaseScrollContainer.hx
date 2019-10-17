@@ -242,6 +242,9 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	@:style
+	public var simulateTouch:Bool = false;
+
+	@:style
 	public var elasticEdges:Bool = true;
 
 	@:style
@@ -595,6 +598,7 @@ class BaseScrollContainer extends FeathersControl {
 		this.scroller.forceElasticRight = this.primaryDirection == Direction.HORIZONTAL;
 		this.scroller.forceElasticTop = this.primaryDirection == Direction.VERTICAL;
 		this.scroller.forceElasticBottom = this.primaryDirection == Direction.VERTICAL;
+		this.scroller.simulateTouch = this.simulateTouch;
 	}
 
 	private function refreshScrollBarValues():Void {
