@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import openfl.events.TouchEvent;
 import motion.easing.IEasing;
 import motion.easing.Quart;
 import motion.actuators.SimpleActuator;
@@ -23,7 +24,8 @@ import openfl.display.InteractiveObject;
 
 @:access(motion.actuators.SimpleActuator)
 class Scroller extends EventDispatcher {
-	private static final MINIMUM_VELOCITY:Float = 0.02;
+	private static final MINIMUM_VELOCITY = 0.02;
+	private static final TOUCH_ID_MOUSE = -1000;
 
 	public function new(?target:InteractiveObject) {
 		super();
@@ -79,6 +81,8 @@ class Scroller extends EventDispatcher {
 	public var decelerationRate(default, set):Float = 0.998;
 	public var ease:IEasing = Quart.easeOut;
 
+	public var simulateTouch:Bool = false;
+
 	private function set_decelerationRate(value:Float):Float {
 		if (this.decelerationRate == value) {
 			return this.decelerationRate;
@@ -93,7 +97,7 @@ class Scroller extends EventDispatcher {
 	private var _logDecelerationRate:Float = -0.0020020026706730793;
 	private var _fixedThrowDuration:Float = 2.996998998998728;
 	private var restoreMouseChildren:Bool = false;
-	private var touchID:Int = -1;
+	private var touchPointID:Int = -1;
 	private var startTouchX:Float = 0.0;
 	private var startTouchY:Float = 0.0;
 	private var startScrollX:Float = 0.0;
@@ -118,11 +122,13 @@ class Scroller extends EventDispatcher {
 			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler);
+			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
 		}
 		this.target = value;
 		if (this.target != null) {
 			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler, false, 0, true);
 			this.target.addEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler, false, 0, true);
+			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler, false, 0, true);
 		}
 		return this.target;
 	}
@@ -421,14 +427,16 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function cleanupAfterDrag():Void {
-		if (this.touchID == -1) {
+		if (this.touchPointID == -1) {
 			return;
 		}
-		this.touchID = -1;
+		this.touchPointID = -1;
 		this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 		if (this.target.stage != null) {
 			this.target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
 			this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
+			this.target.stage.removeEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler);
+			this.target.stage.removeEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler);
 		}
 		if (Std.is(this.target, DisplayObjectContainer)) {
 			var container = cast(this.target, DisplayObjectContainer);
@@ -440,8 +448,12 @@ class Scroller extends EventDispatcher {
 		this.cleanupAfterDrag();
 	}
 
-	private function target_mouseDownHandler(event:MouseEvent):Void {
-		if (this.touchID != -1) {
+	private function touchBegin(touchPointID:Int, stageX:Float, stageY:Float, ?simulatedTouch:Bool):Void {
+		if (simulatedTouch && !this.simulateTouch) {
+			return;
+		}
+		if (this.touchPointID != -1) {
+			// we already have an active touch, and we can only accept one
 			return;
 		}
 		// if we're animating already, stop it
@@ -457,6 +469,8 @@ class Scroller extends EventDispatcher {
 		this.target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler, false, 0, true);
 		this.target.stage.addEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler, false, 0, true);
 		this.target.stage.addEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler, false, 0, true);
+		this.target.stage.addEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler, false, 0, true);
+		this.target.stage.addEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler, false, 0, true);
 		if (Std.is(this.target, DisplayObjectContainer)) {
 			var container = cast(this.target, DisplayObjectContainer);
 			this.restoreMouseChildren = container.mouseChildren;
@@ -466,25 +480,21 @@ class Scroller extends EventDispatcher {
 				container.mouseChildren = false;
 			}
 		}
-		this.touchID = 0;
-		this.startTouchX = event.stageX;
-		this.startTouchY = event.stageY;
+		this.touchPointID = touchPointID;
+		this.startTouchX = stageX;
+		this.startTouchY = stageY;
 		this.startScrollX = this.scrollX;
 		this.startScrollY = this.scrollY;
 		this.savedScrollMoves = [];
 	}
 
-	private function canDragX():Bool {
-		return this.enabledX && (this.maxScrollX > this.minScrollX || this.forceElasticLeft || this.forceElasticRight);
-	}
+	private function touchMove(touchPointID:Int, stageX:Float, stageY:Float):Void {
+		if (this.touchPointID != touchPointID) {
+			return;
+		}
 
-	private function canDragY():Bool {
-		return this.enabledY && (this.maxScrollY > this.minScrollY || this.forceElasticTop || this.forceElasticBottom);
-	}
-
-	private function target_stage_mouseMoveHandler(event:MouseEvent):Void {
-		var touchOffsetX = event.stageX - this.startTouchX;
-		var touchOffsetY = event.stageY - this.startTouchY;
+		var touchOffsetX = stageX - this.startTouchX;
+		var touchOffsetY = stageY - this.startTouchY;
 		var scaleX = 1.0;
 		var scaleY = 1.0;
 		var current = this.target;
@@ -499,7 +509,7 @@ class Scroller extends EventDispatcher {
 		var canDragX = this.canDragX();
 		var canDragY = this.canDragY();
 		if (!this.draggingX && canDragX && Math.abs(touchOffsetX) > this.minDragDistance) {
-			this.startTouchX = event.stageX;
+			this.startTouchX = stageX;
 			touchOffsetX = 0.0;
 			this.draggingX = true;
 			// don't start dragging until we've moved a minimum distance
@@ -510,7 +520,7 @@ class Scroller extends EventDispatcher {
 			}
 		}
 		if (!this.draggingY && canDragY && Math.abs(touchOffsetY) > this.minDragDistance) {
-			this.startTouchY = event.stageY;
+			this.startTouchY = stageY;
 			touchOffsetY = 0.0;
 			this.draggingY = true;
 			if (!draggingX) {
@@ -585,7 +595,11 @@ class Scroller extends EventDispatcher {
 		this.savedScrollMoves.push(Lib.getTimer());
 	}
 
-	private function target_stage_mouseUpHandler(event:MouseEvent):Void {
+	private function touchEnd(touchPointID:Int):Void {
+		if (this.touchPointID != touchPointID) {
+			return;
+		}
+
 		this.cleanupAfterDrag();
 
 		if (!this.draggingX && !this.draggingY) {
@@ -650,6 +664,38 @@ class Scroller extends EventDispatcher {
 			this.draggingY = false;
 			this.finishScrollY();
 		}
+	}
+
+	private function canDragX():Bool {
+		return this.enabledX && (this.maxScrollX > this.minScrollX || this.forceElasticLeft || this.forceElasticRight);
+	}
+
+	private function canDragY():Bool {
+		return this.enabledY && (this.maxScrollY > this.minScrollY || this.forceElasticTop || this.forceElasticBottom);
+	}
+
+	private function target_touchBeginHandler(event:TouchEvent):Void {
+		this.touchBegin(event.touchPointID, event.stageX, event.stageY);
+	}
+
+	private function target_mouseDownHandler(event:MouseEvent):Void {
+		this.touchBegin(TOUCH_ID_MOUSE, event.stageX, event.stageY, true);
+	}
+
+	private function target_stage_touchMoveHandler(event:TouchEvent):Void {
+		this.touchMove(event.touchPointID, event.stageX, event.stageY);
+	}
+
+	private function target_stage_mouseMoveHandler(event:MouseEvent):Void {
+		this.touchMove(TOUCH_ID_MOUSE, event.stageX, event.stageY);
+	}
+
+	private function target_stage_touchEndHandler(event:TouchEvent):Void {
+		this.touchEnd(event.touchPointID);
+	}
+
+	private function target_stage_mouseUpHandler(event:MouseEvent):Void {
+		this.touchEnd(TOUCH_ID_MOUSE);
 	}
 
 	private function target_mouseWheelHandler(event:MouseEvent):Void {
