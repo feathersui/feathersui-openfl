@@ -11,6 +11,7 @@ import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.data.ListBoxItemState;
 
 class PopUpListScreen extends Panel {
 	private var popUpList:PopUpList;
@@ -49,8 +50,9 @@ class PopUpListScreen extends Panel {
 
 		this.popUpList = new PopUpList();
 		this.popUpList.dataProvider = new ArrayCollection(arrayItems);
-		this.popUpList.updateItemRenderer = (itemRenderer:ItemRenderer, data:Dynamic, index:Int) -> {
-			itemRenderer.text = data.text;
+		this.popUpList.updateItemRenderer = (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
+			itemRenderer.text = state.data.text;
+			itemRenderer.selected = state.selected;
 		};
 		this.popUpList.layoutData = AnchorLayoutData.center();
 		this.popUpList.addEventListener(Event.CHANGE, popUpList_changeHandler);

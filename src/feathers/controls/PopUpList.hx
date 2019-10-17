@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.ListBoxItemState;
 import openfl.display.DisplayObject;
 import feathers.themes.steel.components.SteelPopUpListStyles;
 import openfl.events.TouchEvent;
@@ -113,7 +114,7 @@ class PopUpList extends FeathersControl {
 		if (this.itemRendererFactory == value) {
 			return this.itemRendererFactory;
 		}
-		this.itemRendererFactory;
+		this.itemRendererFactory = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.itemRendererFactory;
 	}
@@ -124,9 +125,9 @@ class PopUpList extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var updateItemRenderer(default, set):(itemRenderer:Dynamic, data:Dynamic, index:Int) -> Void;
+	public var updateItemRenderer(default, set):(itemRenderer:Dynamic, state:ListBoxItemState) -> Void;
 
-	private function set_updateItemRenderer(value:(Dynamic, Dynamic, Int) -> Void):(DisplayObject, Dynamic, Int) -> Void {
+	private function set_updateItemRenderer(value:(Dynamic, ListBoxItemState) -> Void):(DisplayObject, ListBoxItemState) -> Void {
 		if (this.updateItemRenderer == value) {
 			return this.updateItemRenderer;
 		}

@@ -11,6 +11,7 @@ import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.data.ListBoxItemState;
 
 class ListBoxScreen extends Panel {
 	private var listBox:ListBox;
@@ -47,8 +48,9 @@ class ListBoxScreen extends Panel {
 
 		this.listBox = new ListBox();
 		this.listBox.dataProvider = new ArrayCollection(items);
-		this.listBox.updateItemRenderer = (itemRenderer:ItemRenderer, data:Dynamic, index:Int) -> {
-			itemRenderer.text = data.text;
+		this.listBox.updateItemRenderer = (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
+			itemRenderer.text = state.data.text;
+			itemRenderer.selected = state.selected;
 		};
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.addChild(this.listBox);

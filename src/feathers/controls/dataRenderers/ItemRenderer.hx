@@ -8,35 +8,29 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.layout.HorizontalAlign;
+import openfl.events.Event;
 import feathers.themes.steel.components.SteelItemRendererStyles;
-import feathers.core.InvalidationFlag;
 
 @:styleContext
-class ItemRenderer extends Button implements IDataRenderer {
+class ItemRenderer extends ToggleButton {
 	public function new() {
 		initializeItemRendererTheme();
 
 		super();
 	}
 
-	@:isVar
-	public var data(get, set):Dynamic;
-
-	private function get_data():Dynamic {
-		return this.data;
-	}
-
-	private function set_data(value:Dynamic):Dynamic {
-		if (this.data == value) {
-			return this.data;
-		}
-		this.data = value;
-		this.setInvalid(InvalidationFlag.DATA);
-		return this.data;
-	}
-
 	private function initializeItemRendererTheme():Void {
 		SteelItemRendererStyles.initialize();
+	}
+
+	override private function basicToggleButton_triggeredHandler(event:Event):Void {
+		if (!this.enabled) {
+			event.stopImmediatePropagation();
+			return;
+		}
+		if (!this.toggleable || this.selected) {
+			return;
+		}
+		this.selected = !this.selected;
 	}
 }

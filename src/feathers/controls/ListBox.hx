@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.ListBoxItemState;
 import feathers.layout.Direction;
 import feathers.layout.IScrollLayout;
 import feathers.core.ITextControl;
@@ -19,7 +20,6 @@ import feathers.themes.steel.components.SteelListBoxStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
-import feathers.controls.dataRenderers.IListBoxItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
@@ -31,6 +31,7 @@ import feathers.events.FeathersEvent;
 
 	@since 1.0.0
 **/
+@:access(feathers.data.ListBoxItemState)
 @:styleContext
 class ListBox extends BaseScrollContainer {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
@@ -83,10 +84,14 @@ class ListBox extends BaseScrollContainer {
 	public var selectedIndex(default, set):Int = -1;
 
 	private function set_selectedIndex(value:Int):Int {
+		if (!this.selectable) {
+			value = -1;
+		}
 		if (this.selectedIndex == value) {
 			return this.selectedIndex;
 		}
 		this.selectedIndex = value;
+		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.selectedIndex;
 	}
@@ -151,9 +156,9 @@ class ListBox extends BaseScrollContainer {
 
 		@since 1.0.0
 	**/
-	public var updateItemRenderer(default, set):(itemRenderer:Dynamic, data:Dynamic, index:Int) -> Void;
+	public var updateItemRenderer(default, set):(itemRenderer:Dynamic, state:ListBoxItemState) -> Void;
 
-	private function set_updateItemRenderer(value:(Dynamic, Dynamic, Int) -> Void):(DisplayObject, Dynamic, Int) -> Void {
+	private function set_updateItemRenderer(value:(Dynamic, ListBoxItemState) -> Void):(DisplayObject, ListBoxItemState) -> Void {
 		if (this.updateItemRenderer == value) {
 			return this.updateItemRenderer;
 		}
@@ -162,10 +167,18 @@ class ListBox extends BaseScrollContainer {
 		return this.updateItemRenderer;
 	}
 
-	private function defaultUpdateItemRenderer(itemRenderer:Dynamic, data:Dynamic, index:Int):Void {
+	private function defaultUpdateItemRenderer(itemRenderer:Dynamic, state:ListBoxItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
-			textControl.text = itemToText(data);
+			textControl.text = itemToText(state.data);
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			dataRenderer.data = state.data;
+		}
+		if (Std.is(itemRenderer, IToggle)) {
+			var toggle = cast(itemRenderer, IToggle);
+			toggle.selected = state.data == this.selectedItem;
 		}
 	}
 
@@ -175,9 +188,9 @@ class ListBox extends BaseScrollContainer {
 
 		@since 1.0.0
 	**/
-	public var cleanupItemRenderer(default, set):(itemRenderer:Dynamic, data:Dynamic) -> Void;
+	public var cleanupItemRenderer(default, set):(itemRenderer:Dynamic, state:ListBoxItemState) -> Void;
 
-	private function set_cleanupItemRenderer(value:(Dynamic, Dynamic) -> Void):(Dynamic, Dynamic) -> Void {
+	private function set_cleanupItemRenderer(value:(Dynamic, ListBoxItemState) -> Void):(Dynamic, ListBoxItemState) -> Void {
 		if (this.cleanupItemRenderer == value) {
 			return this.cleanupItemRenderer;
 		}
@@ -185,6 +198,21 @@ class ListBox extends BaseScrollContainer {
 		// not necessary to set invalid because this affects only item renderers
 		// when other things change
 		return this.cleanupItemRenderer;
+	}
+
+	private function defaultCleanupItemRenderer(itemRenderer:Dynamic, state:ListBoxItemState):Void {
+		if (Std.is(itemRenderer, ITextControl)) {
+			var textControl = cast(itemRenderer, ITextControl);
+			textControl.text = null;
+		}
+		if (Std.is(itemRenderer, IToggle)) {
+			var toggle = cast(itemRenderer, IToggle);
+			toggle.selected = false;
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			dataRenderer.data = null;
+		}
 	}
 
 	private static function defaultItemRendererFactory():DisplayObject {
@@ -197,6 +225,21 @@ class ListBox extends BaseScrollContainer {
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
 
+	public var selectable(default, set):Bool = true;
+
+	private function set_selectable(value:Bool):Bool {
+		if (this.selectable == value) {
+			return this.selectable;
+		}
+		this.selectable = value;
+		if (!this.selectable) {
+			this.selectedIndex = -1;
+		}
+		return this.selectable;
+	}
+
+	private var _ignoreSelectionChange = false;
+
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
 	}
@@ -208,10 +251,12 @@ class ListBox extends BaseScrollContainer {
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
+		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
+		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 
-		if (itemRendererInvalid || dataInvalid) {
+		if (itemRendererInvalid || selectionInvalid || stateInvalid || dataInvalid) {
 			this.refreshItemRenderers();
 		}
 
@@ -262,17 +307,19 @@ class ListBox extends BaseScrollContainer {
 			}
 			this.itemRendererToData.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
+			itemRenderer.removeEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
+			itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
+			this._currentItemState.data = item;
+			this._currentItemState.index = -1;
+			this._currentItemState.selected = false;
+			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+			this._ignoreSelectionChange = true;
 			if (this.cleanupItemRenderer != null) {
 				this.cleanupItemRenderer(itemRenderer, item);
+			} else if (this.defaultCleanupItemRenderer != null) {
+				this.defaultCleanupItemRenderer(itemRenderer, this._currentItemState);
 			}
-			if (Std.is(itemRenderer, IDataRenderer)) {
-				var dataRenderer = cast(itemRenderer, IDataRenderer);
-				dataRenderer.data = null;
-			}
-			if (Std.is(itemRenderer, IListBoxItemRenderer)) {
-				var listItemRenderer = cast(itemRenderer, IListBoxItemRenderer);
-				listItemRenderer.index = -1;
-			}
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
 
@@ -286,17 +333,24 @@ class ListBox extends BaseScrollContainer {
 		this.inactiveItemRenderers.resize(0);
 	}
 
+	private var _currentItemState = new ListBoxItemState();
+
 	private function findUnrenderedData():Void {
 		for (i in 0...this.dataProvider.length) {
 			var item = this.dataProvider.get(i);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
-				if (Std.is(itemRenderer, IListBoxItemRenderer)) {
-					// the index may have changed if items were added, removed, or
-					// re-ordered in the data provider
-					var listItemRenderer = cast(itemRenderer, IListBoxItemRenderer);
-					listItemRenderer.index = i;
+				this._currentItemState.data = item;
+				this._currentItemState.index = i;
+				this._currentItemState.selected = item == this.selectedItem;
+				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+				this._ignoreSelectionChange = true;
+				if (this.updateItemRenderer != null) {
+					this.updateItemRenderer(itemRenderer, this._currentItemState);
+				} else if (this.defaultUpdateItemRenderer != null) {
+					this.defaultUpdateItemRenderer(itemRenderer, this._currentItemState);
 				}
+				this._ignoreSelectionChange = oldIgnoreSelectionChange;
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
@@ -332,27 +386,24 @@ class ListBox extends BaseScrollContainer {
 		} else {
 			itemRenderer = this.inactiveItemRenderers.shift();
 		}
-		if (Std.is(itemRenderer, IListBoxItemRenderer)) {
-			var listItemRenderer = cast(itemRenderer, IListBoxItemRenderer);
-			listItemRenderer.index = index;
-		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			dataRenderer.data = item;
-		}
+		this._currentItemState.data = item;
+		this._currentItemState.index = index;
+		this._currentItemState.selected = item == this.selectedItem;
 		if (this.updateItemRenderer != null) {
-			this.updateItemRenderer(itemRenderer, item, index);
+			this.updateItemRenderer(itemRenderer, this._currentItemState);
 		} else if (this.defaultUpdateItemRenderer != null) {
-			this.defaultUpdateItemRenderer(itemRenderer, item, index);
+			this.defaultUpdateItemRenderer(itemRenderer, this._currentItemState);
 		}
 		itemRenderer.addEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
+		if (Std.is(itemRenderer, IToggle)) {
+			itemRenderer.addEventListener(Event.CHANGE, itemRenderer_changeHandler);
+		}
 		this.itemRendererToData.set(itemRenderer, item);
 		this.dataToItemRenderer.set(item, itemRenderer);
 		return itemRenderer;
 	}
 
 	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
-		itemRenderer.removeEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
 		var displayObject = cast(itemRenderer, DisplayObject);
 		this.listViewPort.removeChild(displayObject);
 		this._pool.clean(itemRenderer);
@@ -363,6 +414,19 @@ class ListBox extends BaseScrollContainer {
 		var item = this.itemRendererToData.get(itemRenderer);
 		// trigger before change
 		FeathersEvent.dispatch(this, FeathersEvent.TRIGGERED);
+	}
+
+	private function itemRenderer_changeHandler(event:Event):Void {
+		if (this._ignoreSelectionChange) {
+			return;
+		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (!this.selectable) {
+			var toggle = cast(itemRenderer, IToggle);
+			toggle.selected = false;
+			return;
+		}
+		var item = this.itemRendererToData.get(itemRenderer);
 		this.selectedItem = item;
 	}
 

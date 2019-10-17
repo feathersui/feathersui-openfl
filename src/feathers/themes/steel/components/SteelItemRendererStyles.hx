@@ -9,7 +9,7 @@
 package feathers.themes.steel.components;
 
 import feathers.layout.HorizontalAlign;
-import feathers.controls.ButtonState;
+import feathers.controls.ToggleButtonState;
 import feathers.skins.UnderlineSkin;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.style.Theme;
@@ -40,7 +40,8 @@ class SteelItemRendererStyles {
 				var skin = new UnderlineSkin();
 				skin.fill = theme.getContainerFill();
 				skin.border = theme.getDividerBorder();
-				skin.setFillForState(ButtonState.DOWN, theme.getActiveThemeFill());
+				skin.selectedFill = theme.getActiveThemeFill();
+				skin.setFillForState(ToggleButtonState.DOWN(false), theme.getActiveThemeFill());
 				skin.width = 44.0;
 				skin.height = 44.0;
 				skin.minWidth = 44.0;
@@ -54,8 +55,11 @@ class SteelItemRendererStyles {
 			if (itemRenderer.disabledTextFormat == null) {
 				itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 			}
-			if (itemRenderer.getTextFormatForState(ButtonState.DOWN) == null) {
-				itemRenderer.setTextFormatForState(ButtonState.DOWN, theme.getActiveTextFormat());
+			if (itemRenderer.selectedTextFormat == null) {
+				itemRenderer.selectedTextFormat = theme.getActiveTextFormat();
+			}
+			if (itemRenderer.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
+				itemRenderer.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
 			}
 
 			itemRenderer.paddingTop = 4.0;
