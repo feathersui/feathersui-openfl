@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
@@ -46,7 +47,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		// a hand cursor only makes sense for hyperlinks
 		this.useHandCursor = false;
 
-		this.addEventListener(MouseEvent.CLICK, basicToggleButton_clickHandler);
+		this.addEventListener(FeathersEvent.TRIGGERED, basicToggleButton_triggeredHandler);
 	}
 
 	/**
@@ -108,6 +109,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	}
 
 	private var _pointerToState:PointerToState<ToggleButtonState> = null;
+	private var _pointerTrigger:PointerTrigger = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 
@@ -195,6 +197,10 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		if (this._pointerToState == null) {
 			this._pointerToState = new PointerToState(this, this.changeState, ToggleButtonState.UP(false), ToggleButtonState.DOWN(false),
 				ToggleButtonState.HOVER(false));
+		}
+
+		if (this._pointerTrigger == null) {
+			this._pointerTrigger = new PointerTrigger(this);
 		}
 	}
 
@@ -434,7 +440,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
-	private function basicToggleButton_clickHandler(event:MouseEvent):Void {
+	private function basicToggleButton_triggeredHandler(event:Event):Void {
 		if (!this.enabled) {
 			event.stopImmediatePropagation();
 			return;
