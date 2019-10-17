@@ -60,7 +60,7 @@ class PopUpListScreen extends Panel {
 	}
 
 	private function popUpList_changeHandler(event:Event):Void {
-		trace("PopUpList selection change: " + this.popUpList.selectedIndex);
+		trace("PopUpList selectedIndex change: " + this.popUpList.selectedIndex);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

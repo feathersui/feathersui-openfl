@@ -51,6 +51,7 @@ class CheckScreen extends Panel {
 		this.check = new Check();
 		this.check.text = "Check";
 		this.check.layoutData = AnchorLayoutData.center(0, -75);
+		this.check.addEventListener(Event.CHANGE, check_changeHandler);
 		this.addChild(this.check);
 
 		this.selectedCheck = new Check();
@@ -71,6 +72,10 @@ class CheckScreen extends Panel {
 		this.selectedDisabledCheck.enabled = false;
 		this.selectedDisabledCheck.layoutData = AnchorLayoutData.center(0, 75);
 		this.addChild(this.selectedDisabledCheck);
+	}
+
+	private function check_changeHandler(event:Event):Void {
+		trace("Check selected change: " + this.check.selected);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

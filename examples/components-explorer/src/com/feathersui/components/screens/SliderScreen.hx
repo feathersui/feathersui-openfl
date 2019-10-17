@@ -45,6 +45,7 @@ class SliderScreen extends Panel {
 		this.horizontalSlider.maximum = 1.0;
 		this.horizontalSlider.value = 0.4;
 		this.horizontalSlider.layoutData = AnchorLayoutData.center(-40);
+		this.horizontalSlider.addEventListener(Event.CHANGE, horizontalSlider_changeHandler);
 		this.addChild(this.horizontalSlider);
 
 		this.verticalSlider = new VSlider();
@@ -53,6 +54,10 @@ class SliderScreen extends Panel {
 		this.verticalSlider.value = 0.5;
 		this.verticalSlider.layoutData = AnchorLayoutData.center(120);
 		this.addChild(this.verticalSlider);
+	}
+
+	private function horizontalSlider_changeHandler(event:Event):Void {
+		trace("HSlider value change: " + this.horizontalSlider.value);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

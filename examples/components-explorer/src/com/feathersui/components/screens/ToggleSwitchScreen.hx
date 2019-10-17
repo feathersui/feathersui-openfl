@@ -47,13 +47,13 @@ class ToggleSwitchScreen extends Panel {
 		};
 
 		this.toggle = new ToggleSwitch();
-		this.toggle.layoutData = AnchorLayoutData.center(-50);
+		this.toggle.layoutData = AnchorLayoutData.center();
+		this.toggle.addEventListener(Event.CHANGE, toggleSwitch_changeHandler);
 		this.addChild(this.toggle);
+	}
 
-		this.selectedToggle = new ToggleSwitch();
-		this.selectedToggle.selected = true;
-		this.selectedToggle.layoutData = AnchorLayoutData.center(50);
-		this.addChild(this.selectedToggle);
+	private function toggleSwitch_changeHandler(event:Event):Void {
+		trace("ToggleSwitch selected change: " + this.toggle.selected);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

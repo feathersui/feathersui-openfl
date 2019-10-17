@@ -66,15 +66,15 @@ class ButtonScreen extends Panel {
 		this.addChild(this.toggleButton);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
-		this.dispatchEvent(new Event(Event.COMPLETE));
-	}
-
 	private function button_triggeredHandler(event:FeathersEvent):Void {
 		trace("Button triggered");
 	}
 
 	private function toggleButton_changeHandler(event:Event):Void {
 		trace("ToggleButton selected change: " + this.toggleButton.selected);
+	}
+
+	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

@@ -53,7 +53,12 @@ class ListBoxScreen extends Panel {
 			itemRenderer.selected = state.selected;
 		};
 		this.listBox.layoutData = AnchorLayoutData.fill();
+		this.listBox.addEventListener(Event.CHANGE, listBox_changeHandler);
 		this.addChild(this.listBox);
+	}
+
+	private function listBox_changeHandler(event:Event):Void {
+		trace("ListBox selectedIndex change: " + this.listBox.selectedIndex);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {
