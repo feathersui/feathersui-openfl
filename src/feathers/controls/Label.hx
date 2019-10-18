@@ -165,23 +165,23 @@ class Label extends FeathersControl implements ITextControl {
 		How the content is positioned horizontally (along the x-axis) within the
 		button.
 
-		The following example aligns the button's content to the left:
+		The following example aligns the button's content to the right:
 
 		```hx
-		button.verticalAlign = HorizontalAlign.LEFT;
+		button.horizontalAlign = HorizontalAlign.RIGHT;
 		```
 
 		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
 		component.
 
-		@default `feathers.layout.HorizontalAlign.CENTER`
+		@default `feathers.layout.HorizontalAlign.LEFT`
 
 		@see `feathers.layout.HorizontalAlign.LEFT`
 		@see `feathers.layout.HorizontalAlign.CENTER`
 		@see `feathers.layout.HorizontalAlign.RIGHT`
 	**/
 	@:style
-	public var horizontalAlign:HorizontalAlign = HorizontalAlign.CENTER;
+	public var horizontalAlign:HorizontalAlign = HorizontalAlign.LEFT;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
