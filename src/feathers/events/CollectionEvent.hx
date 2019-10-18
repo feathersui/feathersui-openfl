@@ -52,7 +52,7 @@ class CollectionEvent extends Event {
 	**/
 	public static function dispatch(dispatcher:IEventDispatcher, type:String, location:Dynamic, bubbles:Bool = false, cancelable:Bool = false):Bool {
 		#if flash
-		var event = new CollectionEvent(type, location bubbles, cancelable);
+		var event = new CollectionEvent(type, location, bubbles, cancelable);
 		return dispatcher.dispatchEvent(event);
 		#else
 		var event = _pool.get();
