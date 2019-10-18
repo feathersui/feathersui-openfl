@@ -9,6 +9,7 @@
 package feathers.data;
 
 import openfl.events.Event;
+import feathers.events.CollectionEvent;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
@@ -75,6 +76,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	public function set(item:T, index:Int):Void {
 		this.array[index] = item;
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		CollectionEvent.dispatch(this, CollectionEvent.REPLACE_ITEM, index);
 	}
 
 	/**
@@ -84,8 +86,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@since 1.0.0
 	**/
 	public function add(item:T):Void {
-		this.array.insert(this.array.length, item);
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		inline this.addAt(item, this.array.length);
 	}
 
 	/**
@@ -97,6 +98,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	public function addAt(item:T, index:Int):Void {
 		this.array.insert(index, item);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		CollectionEvent.dispatch(this, CollectionEvent.ADD_ITEM, index);
 	}
 
 	/**
@@ -106,8 +108,10 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@since 1.0.0
 	**/
 	public function remove(item:T):Void {
+		var index = this.array.indexOf(item);
 		this.array.remove(item);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		CollectionEvent.dispatch(this, CollectionEvent.REMOVE_ITEM, index);
 	}
 
 	/**
@@ -120,6 +124,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		var item = this.array[index];
 		this.array.remove(item);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		CollectionEvent.dispatch(this, CollectionEvent.REMOVE_ITEM, index);
 		return item;
 	}
 

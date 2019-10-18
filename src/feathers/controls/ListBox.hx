@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.CollectionEvent;
 import feathers.data.ListBoxItemState;
 import feathers.layout.Direction;
 import feathers.layout.IScrollLayout;
@@ -68,10 +69,16 @@ class ListBox extends BaseScrollContainer {
 		}
 		if (this.dataProvider != null) {
 			this.dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
+			this.dataProvider.removeEventListener(CollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
+			this.dataProvider.removeEventListener(CollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
+			this.dataProvider.removeEventListener(CollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
 			this.dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
+			this.dataProvider.addEventListener(CollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
+			this.dataProvider.addEventListener(CollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
+			this.dataProvider.addEventListener(CollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
@@ -432,5 +439,35 @@ class ListBox extends BaseScrollContainer {
 
 	private function dataProvider_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.DATA);
+	}
+
+	private function dataProvider_addItemHandler(event:CollectionEvent):Void {
+		if (this.selectedIndex == -1) {
+			return;
+		}
+		var newIndex = cast(event.location, Int);
+		if (this.selectedIndex <= newIndex) {
+			FeathersEvent.dispatch(this, Event.CHANGE);
+		}
+	}
+
+	private function dataProvider_removeItemHandler(event:CollectionEvent):Void {
+		if (this.selectedIndex == -1) {
+			return;
+		}
+		var newIndex = cast(event.location, Int);
+		if (this.selectedIndex == newIndex) {
+			FeathersEvent.dispatch(this, Event.CHANGE);
+		}
+	}
+
+	private function dataProvider_replaceItemHandler(event:CollectionEvent):Void {
+		if (this.selectedIndex == -1) {
+			return;
+		}
+		var newIndex = cast(event.location, Int);
+		if (this.selectedIndex == newIndex) {
+			FeathersEvent.dispatch(this, Event.CHANGE);
+		}
 	}
 }
