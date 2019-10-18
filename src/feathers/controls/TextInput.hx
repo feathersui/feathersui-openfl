@@ -131,6 +131,17 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this.text;
 	}
 
+	public var restrict(default, set):String;
+
+	private function set_restrict(value:String):String {
+		if (this.restrict == value) {
+			return this.restrict;
+		}
+		this.restrict = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this.restrict;
+	}
+
 	@:style
 	public var textFormat:TextFormat = null;
 
@@ -490,6 +501,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshText():Void {
+		this.textField.restrict = restrict;
 		if (this.text == this._previousText && !this._updatedTextFormat) {
 			// nothing to refresh
 			return;
