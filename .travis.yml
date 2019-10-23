@@ -1,19 +1,12 @@
 language: haxe
-
 haxe:
-- "4.0.0-rc.5"
-
+- 4.0.0-rc.5
 services:
 - xvfb
-
-addons:
-#- firefox: latest
-
+addons: 
 env:
   global:
-    - NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin
-    #- MOZ_HEADLESS=1
-
+  - NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin
 install:
 - haxelib install lime --quiet
 - haxelib install openfl --quiet
@@ -21,19 +14,15 @@ install:
 - haxelib install dox --quiet
 - haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
-
 script:
-# build docs
 - cd $TRAVIS_BUILD_DIR/docs
 - haxe docs.hxml
-
-# build components-explorer example
 - cd $TRAVIS_BUILD_DIR/examples/components-explorer
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
-
-# run tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
-#- haxelib run munit test -browser firefox -js -result-exit-code
+before_install:
+- openssl aes-256-cbc -K $encrypted_d47dee94bf56_key -iv $encrypted_d47dee94bf56_iv
+  -in travis_feathers_rsa.enc -out ~/.ssh/travis_feathers_rsa -d
