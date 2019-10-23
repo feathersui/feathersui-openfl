@@ -27,5 +27,6 @@ script:
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
 after_success:
+- ssh-keyscan -H feathersui.com >> ~/.ssh/known_hosts
 - echo "${SFTP_KEY}" | base64 --decode >/tmp/sftp_rsa
 - scp -i /tmp/sftp_rsa -r build/api dh_feathers@feathersui.com:~/api.feathersui.com/unstable
