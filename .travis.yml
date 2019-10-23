@@ -7,6 +7,9 @@ addons:
 env:
   global:
   - NEKOPATH=/usr/local/lib/neko:$TRAVIS_BUILD_DIR/test/build/neko/bin
+stages:
+- name: after_success
+  if: branch = master AND env(TRAVIS_SECURE_ENV_VARS) = true
 install:
 - haxelib install lime --quiet
 - haxelib install openfl --quiet
@@ -23,3 +26,6 @@ script:
 - haxelib run openfl build flash
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
+after_success:
+- echo "${SFTP_KEY}" | base64 --decode >/tmp/sftp_rsa
+- scp -i /tmp/sftp_rsa -r build/api dh_feathers@feathersui.com:~/api.feathersui.com/unstable
