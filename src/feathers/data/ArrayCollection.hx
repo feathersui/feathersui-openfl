@@ -65,7 +65,6 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 
 		@since 1.0.0
 	**/
-	@:op([])
 	public function get(index:Int):T {
 		return this.array[index];
 	}
@@ -76,7 +75,6 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 
 		@since 1.0.0
 	**/
-	@:op([])
 	public function set(index:Int, item:T):Void {
 		if (index < 0 || index > this.array.length) {
 			throw new RangeError('Failed to set item at index ${index}. Expected a value between 0 and ${this.array.length}.');

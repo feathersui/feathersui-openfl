@@ -28,7 +28,6 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:op([])
 	public function get(index:Int):T;
 
 	/**
@@ -37,7 +36,6 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:op([])
 	public function set(index:Int, item:T):Void;
 
 	/**
