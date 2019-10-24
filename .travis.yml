@@ -18,13 +18,19 @@ install:
 - haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
 script:
+# build js library
+- npm run build
+# build swc library
 - haxelib run openfl build flash
+# build documentation
 - cd $TRAVIS_BUILD_DIR/docs
 - haxe docs.hxml
+# build components-explorer example
 - cd $TRAVIS_BUILD_DIR/examples/components-explorer
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
+# run automated tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
 after_success:
