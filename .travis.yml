@@ -18,6 +18,7 @@ install:
 - haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
 script:
+- haxelib run openfl build flash
 - cd $TRAVIS_BUILD_DIR/docs
 - haxe docs.hxml
 - cd $TRAVIS_BUILD_DIR/examples/components-explorer
