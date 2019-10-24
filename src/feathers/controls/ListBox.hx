@@ -445,8 +445,7 @@ class ListBox extends BaseScrollContainer {
 		if (this.selectedIndex == -1) {
 			return;
 		}
-		var newIndex = cast(event.location, Int);
-		if (this.selectedIndex <= newIndex) {
+		if (this.selectedIndex <= event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -455,8 +454,7 @@ class ListBox extends BaseScrollContainer {
 		if (this.selectedIndex == -1) {
 			return;
 		}
-		var newIndex = cast(event.location, Int);
-		if (this.selectedIndex == newIndex) {
+		if (this.selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -465,8 +463,7 @@ class ListBox extends BaseScrollContainer {
 		if (this.selectedIndex == -1) {
 			return;
 		}
-		var newIndex = cast(event.location, Int);
-		if (this.selectedIndex == newIndex) {
+		if (this.selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}

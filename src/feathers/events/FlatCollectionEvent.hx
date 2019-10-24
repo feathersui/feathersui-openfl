@@ -85,14 +85,14 @@ class FlatCollectionEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static function dispatch(dispatcher:IEventDispatcher, type:String, location:Int, bubbles:Bool = false, cancelable:Bool = false):Bool {
+	public static function dispatch(dispatcher:IEventDispatcher, type:String, index:Int, bubbles:Bool = false, cancelable:Bool = false):Bool {
 		#if flash
-		var event = new FlatCollectionEvent(type, location, bubbles, cancelable);
+		var event = new FlatCollectionEvent(type, index, bubbles, cancelable);
 		return dispatcher.dispatchEvent(event);
 		#else
 		var event = _pool.get();
 		event.type = type;
-		event.location = location;
+		event.index = index;
 		event.bubbles = bubbles;
 		event.cancelable = cancelable;
 		var result = dispatcher.dispatchEvent(event);
@@ -101,10 +101,10 @@ class FlatCollectionEvent extends Event {
 		#end
 	}
 
-	public function new(type:String, location:Int, bubbles:Bool = false, cancelable:Bool = false) {
+	public function new(type:String, index:Int, bubbles:Bool = false, cancelable:Bool = false) {
 		super(type, bubbles, cancelable);
-		this.location = location;
+		this.index = index;
 	}
 
-	public var location:Int;
+	public var index:Int;
 }
