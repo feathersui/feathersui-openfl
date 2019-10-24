@@ -17,7 +17,7 @@ install:
 - haxelib install dox --quiet
 - haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
-- npm install
+- npm ci
 script:
 # build js library
 - npm run build
