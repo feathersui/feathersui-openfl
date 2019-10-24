@@ -63,6 +63,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 
 		@since 1.0.0
 	**/
+	@:op([])
 	public function get(index:Int):T {
 		return this.array[index];
 	}
@@ -73,7 +74,8 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 
 		@since 1.0.0
 	**/
-	public function set(item:T, index:Int):Void {
+	@:op([])
+	public function set(index:Int, item:T):Void {
 		this.array[index] = item;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index);
