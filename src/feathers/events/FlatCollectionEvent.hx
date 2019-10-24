@@ -45,6 +45,30 @@ class FlatCollectionEvent extends Event {
 	**/
 	public static inline var REPLACE_ITEM:EventType<FlatCollectionEvent> = "replaceItem";
 
+	/**
+		The `FlatCollectionEvent.UPDATE_ITEM` event type is dispatched when the
+		`updateAt()` method is called on the collection.
+
+		@since 1.0.0
+	**/
+	public static inline var UPDATE_ITEM:EventType<FlatCollectionEvent> = "updateItem";
+
+	/**
+		The `FlatCollectionEvent.UPDATE_ALL` event type is dispatched when the
+		`updateAll()` method is called on the collection.
+
+		@since 1.0.0
+	**/
+	public static inline var UPDATE_ALL:EventType<FlatCollectionEvent> = "updateAll";
+
+	/**
+		The `FlatCollectionEvent.RESET` event type is dispatched when the entire
+		underlying data structure is replaced.
+
+		@since 1.0.0
+	**/
+	public static inline var RESET:EventType<FlatCollectionEvent> = "reset";
+
 	private static var _pool = new ObjectPool<FlatCollectionEvent>(() -> return new FlatCollectionEvent(null, -1, false, false));
 
 	/**

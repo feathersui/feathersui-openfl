@@ -43,6 +43,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			value = [];
 		}
 		this.array = value;
+		FeathersEvent.dispatch(this, FlatCollectionEvent.RESET);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.array;
 	}
@@ -104,6 +105,37 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	}
 
 	/**
+		@since 1.0.0
+	**/
+	public function addAll(collection:IFlatCollection<T>):Void {
+		for (item in collection) {
+			this.add(item);
+		}
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public function addAllAt(collection:IFlatCollection<T>, index:Int):Void {
+		for (item in collection) {
+			this.addAt(item, index);
+			index++;
+		}
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public function reset(collection:IFlatCollection<T>):Void {
+		this.array.resize(0);
+		for (item in collection) {
+			this.array.push(item);
+		}
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.RESET, -1);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+	}
+
+	/**
 		Removes a specific item from the collection, decreasing the `length` by
 		one, if the item is in the collection.
 
@@ -147,5 +179,33 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	**/
 	public function indexOf(item:T):Int {
 		return this.array.indexOf(item);
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public function contains(item:T):Bool {
+		return this.array.indexOf(item) != -1;
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public function iterator():Iterator<T> {
+		return this.array.iterator();
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public function updateAt(index:Int):Void {
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.UPDATE_ITEM, index);
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public function updateAll():Void {
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.UPDATE_ALL, -1);
 	}
 }

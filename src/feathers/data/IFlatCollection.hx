@@ -57,6 +57,21 @@ interface IFlatCollection<T> extends IEventDispatcher {
 	public function addAt(item:T, index:Int):Void;
 
 	/**
+		@since 1.0.0
+	**/
+	public function addAll(collection:IFlatCollection<T>):Void;
+
+	/**
+		@since 1.0.0
+	**/
+	public function addAllAt(collection:IFlatCollection<T>, index:Int):Void;
+
+	/**
+		@since 1.0.0
+	**/
+	public function reset(collection:IFlatCollection<T>):Void;
+
+	/**
 		Removes a specific item from the collection, decreasing the `length` by
 		one, if the item is in the collection.
 
@@ -86,4 +101,38 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		@since 1.0.0
 	**/
 	public function indexOf(item:T):Int;
+
+	/**
+		Determines if the collection contains the specified item.
+
+		@since 1.0.0
+	**/
+	public function contains(item:T):Bool;
+
+	/**
+		Notifies components using the collection that an item at the specified
+		index has changed.
+
+		@see `updateAll`
+		@see `feathers.data.FlatCollectionEvent.UPDATE_ITEM`
+
+		@since 1.0.0
+	**/
+	public function updateAt(index:Int):Void;
+
+	/**
+		Notifies components using the collection that all items should be
+		considered changed.
+
+		@see `updateAt`
+		@see `feathers.data.FlatCollectionEvent.UPDATE_ALL`
+
+		@since 1.0.0
+	**/
+	public function updateAll():Void;
+
+	/**
+		@since 1.0.0
+	**/
+	public function iterator():Iterator<T>;
 }
