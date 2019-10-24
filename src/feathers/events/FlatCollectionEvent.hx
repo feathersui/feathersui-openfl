@@ -69,6 +69,15 @@ class FlatCollectionEvent extends Event {
 	**/
 	public static inline var RESET:EventType<FlatCollectionEvent> = "reset";
 
+	/**
+		The `FlatCollectionEvent.REMOVE_ALL` event type is dispatched when all
+		items are removed from the collection simulatanously by calling
+		`removeAll()` on the collection.
+
+		@since 1.0.0
+	**/
+	public static inline var REMOVE_ALL:EventType<FlatCollectionEvent> = "removeAll";
+
 	private static var _pool = new ObjectPool<FlatCollectionEvent>(() -> return new FlatCollectionEvent(null, -1, false, false));
 
 	/**

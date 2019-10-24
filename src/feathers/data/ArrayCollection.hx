@@ -8,6 +8,7 @@
 
 package feathers.data;
 
+import openfl.errors.RangeError;
 import openfl.events.Event;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.FeathersEvent;
@@ -77,9 +78,12 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	**/
 	@:op([])
 	public function set(index:Int, item:T):Void {
+		if (index < 0 || index > this.array.length) {
+			throw new RangeError('Failed to set item at index ${index}. Expected a value between 0 and ${this.array.length}.');
+		}
 		this.array[index] = item;
-		FeathersEvent.dispatch(this, Event.CHANGE);
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	/**
@@ -99,9 +103,12 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@since 1.0.0
 	**/
 	public function addAt(item:T, index:Int):Void {
+		if (index < 0 || index > this.array.length) {
+			throw new RangeError('Failed to add item at index ${index}. Expected a value between 0 and ${this.array.length}.');
+		}
 		this.array.insert(index, item);
-		FeathersEvent.dispatch(this, Event.CHANGE);
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.ADD_ITEM, index);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	/**
@@ -117,6 +124,9 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@since 1.0.0
 	**/
 	public function addAllAt(collection:IFlatCollection<T>, index:Int):Void {
+		if (index < 0 || index > this.array.length) {
+			throw new RangeError('Failed to add collection at index ${index}. Expected a value between 0 and ${this.array.length}.');
+		}
 		for (item in collection) {
 			this.addAt(item, index);
 			index++;
@@ -143,9 +153,13 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	**/
 	public function remove(item:T):Void {
 		var index = this.array.indexOf(item);
+		if (index == -1) {
+			// the item is not in the collection
+			return;
+		}
 		this.array.remove(item);
-		FeathersEvent.dispatch(this, Event.CHANGE);
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	/**
@@ -155,10 +169,13 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@since 1.0.0
 	**/
 	public function removeAt(index:Int):T {
+		if (index < 0 || index >= this.array.length) {
+			throw new RangeError('Failed to remove item at index ${index}. Expected a value between 0 and ${this.array.length - 1}.');
+		}
 		var item = this.array[index];
 		this.array.remove(item);
-		FeathersEvent.dispatch(this, Event.CHANGE);
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return item;
 	}
 
@@ -169,6 +186,8 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	**/
 	public function removeAll():Void {
 		this.array.resize(0);
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ALL, -1);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	/**
@@ -199,6 +218,9 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@since 1.0.0
 	**/
 	public function updateAt(index:Int):Void {
+		if (index < 0 || index >= this.array.length) {
+			throw new RangeError('Failed to update item at index ${index}. Expected a value between 0 and ${this.array.length - 1}.');
+		}
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.UPDATE_ITEM, index);
 	}
 
