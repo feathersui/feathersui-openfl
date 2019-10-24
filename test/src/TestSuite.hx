@@ -19,6 +19,7 @@ import feathers.core.MinAndMaxDimensionsTest;
 import feathers.core.PopUpManagerTest;
 import feathers.core.RestrictedStyleTest;
 import feathers.core.ScaleTest;
+import feathers.data.ArrayCollectionTest;
 import feathers.layout.AnchorLayoutTest;
 import feathers.layout.HorizontalLayoutTest;
 import feathers.layout.MeasurementsTest;
@@ -58,6 +59,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(feathers.core.PopUpManagerTest);
 		add(feathers.core.RestrictedStyleTest);
 		add(feathers.core.ScaleTest);
+		add(feathers.data.ArrayCollectionTest);
 		add(feathers.layout.AnchorLayoutTest);
 		add(feathers.layout.HorizontalLayoutTest);
 		add(feathers.layout.MeasurementsTest);
