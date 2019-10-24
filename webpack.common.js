@@ -12,17 +12,17 @@ module.exports = {
     filename: "feathersui-openfl.js"
   },
   externals: {
-    howler: {
-      commonjs: "howler",
-      commonjs2: "howler",
-      amd: "howler",
-      root: "window"
+    openfl: {
+      commonjs: "openfl",
+      commonjs2: "openfl",
+      amd: "openfl",
+      root: "openfl"
     },
-    pako: {
-      commonjs: "pako",
-      commonjs2: "pako",
-      amd: "pako",
-      root: "pako"
+    motion: {
+      commonjs: "motion",
+      commonjs2: "motion",
+      amd: "motion",
+      root: "motion"
     }
   }
 };
