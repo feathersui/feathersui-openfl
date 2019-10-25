@@ -38,5 +38,5 @@ after_success:
 - ssh-keyscan -H feathersui.com >> ~/.ssh/known_hosts
 - echo "${SFTP_KEY}" | base64 --decode >/tmp/sftp_rsa
 - chmod 600 /tmp/sftp_rsa
-- cd $TRAVIS_BUILD_DIR
-- scp -i /tmp/sftp_rsa -r build/api dh_feathers@feathersui.com:~/api.feathersui.com/unstable
+- mv $TRAVIS_BUILD_DIR/build/api $TRAVIS_BUILD_DIR/build/unstable
+- scp -i /tmp/sftp_rsa -r $TRAVIS_BUILD_DIR/build/unstable dh_feathers@feathersui.com:~/api.feathersui.com
