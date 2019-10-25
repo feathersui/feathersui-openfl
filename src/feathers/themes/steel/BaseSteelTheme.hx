@@ -44,7 +44,7 @@ class BaseSteelTheme implements IDarkModeTheme {
 		// watch for switching between desktop and mobile
 		// which could happen when simulating mobile on desktop
 		this.mediaQueryList = htmlWindow.matchMedia("(hover: hover) and (pointer: fine)");
-		this.mediaQueryList.addEventListener("change", mediaQueryList_changeHandler);
+		this.mediaQueryList.addListener(mediaQueryList_changeHandler);
 		#end
 	}
 
@@ -104,7 +104,7 @@ class BaseSteelTheme implements IDarkModeTheme {
 	public function dispose():Void {
 		#if html5
 		if (this.mediaQueryList != null) {
-			this.mediaQueryList.removeEventListener("change", mediaQueryList_changeHandler);
+			this.mediaQueryList.removeListener(mediaQueryList_changeHandler);
 			this.mediaQueryList = null;
 		}
 		#end
