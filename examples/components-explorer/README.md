@@ -12,7 +12,7 @@ This project includes an [*project.xml*](https://lime.software/docs/project-file
 
 ### Prerequisites
 
-* [Install Haxe 4.0.0 or newer](https://haxe.org/download/list/).
+* [Install Haxe 4.0.0 or newer](https://haxe.org/download/).
 * [Install Feathers UI from Haxelib](https://feathersui.com/learn/haxe-openfl/installation/)
 
 ### Command Line
