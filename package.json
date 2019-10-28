@@ -32,7 +32,7 @@
     "webpack-merge": "^4.2.2"
   },
   "haxeDependencies": {
-    "haxe": "4.0.0-rc.5"
+    "haxe": "4.0.0"
   },
   "scripts": {
     "build": "npm run build-lib && npm run gen-lib && npm run build-dist",
