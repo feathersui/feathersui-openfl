@@ -24,7 +24,7 @@ String -> Bool // bad
 
 All code must be formatted before each commit — use [Haxe Formatter](https://github.com/HaxeCheckstyle/haxe-formatter) with default settings.
 
-**Tip:** If you are using [Visual Studio Code](https://github.com/vshaxe/vshaxe), you set the `editor.formatOnSave` setting to `true` for the Haxe languages, and your changes will be formatted automatically:
+**Tip:** If you are using [Visual Studio Code](https://github.com/vshaxe/vshaxe), you set the `editor.formatOnSave` setting to `true` for the Haxe language, and your changes will be formatted automatically:
 
 ```json
 "[haxe]": {
