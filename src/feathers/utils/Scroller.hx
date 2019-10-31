@@ -80,6 +80,7 @@ class Scroller extends EventDispatcher {
 	public var elasticSnapDuration(default, default):Float = 0.5;
 	public var decelerationRate(default, set):Float = 0.998;
 	public var ease:IEasing = Quart.easeOut;
+	public var mouseWheelDelta:Float = 10.0;
 
 	public var simulateTouch:Bool = false;
 
@@ -702,7 +703,7 @@ class Scroller extends EventDispatcher {
 		// can't use preventDefault(), so don't let it bubble
 		event.stopImmediatePropagation();
 		this.stop();
-		var newScrollY = this.scrollY - (event.delta * 0.1);
+		var newScrollY = this.scrollY - (event.delta * this.mouseWheelDelta);
 		if (newScrollY < this.minScrollY) {
 			newScrollY = this.minScrollY;
 		} else if (newScrollY > this.maxScrollY) {
