@@ -12,6 +12,9 @@ package feathers.utils;
 import js.html.Window;
 import js.Lib;
 #end
+#if flash
+import flash.ui.Mouse;
+#end
 
 /**
 	@since 1.0.0
@@ -26,6 +29,8 @@ class DeviceUtil {
 	public static function isDesktop():Bool {
 		#if desktop
 		return true;
+		#elseif flash
+		return Mouse.supportsCursor;
 		#elseif html5
 		var htmlWindow = cast(Lib.global, Window);
 		return htmlWindow.matchMedia(MEDIA_QUERY_DESKTOP).matches;
