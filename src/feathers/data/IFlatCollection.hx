@@ -24,6 +24,29 @@ interface IFlatCollection<T> extends IEventDispatcher {
 	public var length(get, never):Int;
 
 	/**
+		A function to determine if each item in the collection should be
+		included or excluded from visibility through APIs like `length` and
+		`get()`.
+
+		@since 1.0.0
+	**/
+	public var filterFunction(get, set):(T) -> Bool;
+
+	/**
+		A function to compare each item in the collection to determine the order
+		when sorted.
+
+		The return value should be `-1` if the first item should appear before
+		the second item when the collection is sorted. The return value should
+		be `1` if the first item should appear after the second item when the
+		collection is sorted. Finally, the return value should be `0` if both
+		items have the same sort order.
+
+		@since 1.0.0
+	**/
+	public var sortCompareFunction(get, set):(T, T) -> Int;
+
+	/**
 		Returns the item at the specified index in the collection.
 
 		@since 1.0.0
@@ -67,7 +90,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 	/**
 		@since 1.0.0
 	**/
-	public function reset(collection:IFlatCollection<T>):Void;
+	public function reset(collection:IFlatCollection<T> = null):Void;
 
 	/**
 		Removes a specific item from the collection, decreasing the `length` by
@@ -133,4 +156,14 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		@since 1.0.0
 	**/
 	public function iterator():Iterator<T>;
+
+	/**
+		Refreshes the collection using the `filterFunction` or
+		`sortCompareFunction` without passing in a new values for these
+		properties. Useful when either of these functions relies on external
+		variables that have changed.
+
+		@since 1.0.0
+	**/
+	public function refresh():Void;
 }

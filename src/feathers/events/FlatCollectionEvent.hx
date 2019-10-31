@@ -78,6 +78,22 @@ class FlatCollectionEvent extends Event {
 	**/
 	public static inline var REMOVE_ALL:EventType<FlatCollectionEvent> = "removeAll";
 
+	/**
+		The `FlatCollectionEvent.FILTER_CHANGE` event type is dispatched when a
+		filter function has been applied to or removed from a collection.
+
+		@since 1.0.0
+	**/
+	public static inline var FILTER_CHANGE:EventType<FlatCollectionEvent> = "filterChange";
+
+	/**
+		The `FlatCollectionEvent.SORT_CHANGE` event type is dispatched when a
+		sort compare function has been applied to or removed from a collection.
+
+		@since 1.0.0
+	**/
+	public static inline var SORT_CHANGE:EventType<FlatCollectionEvent> = "sortChange";
+
 	private static var _pool = new ObjectPool<FlatCollectionEvent>(() -> return new FlatCollectionEvent(null, -1, false, false));
 
 	/**
