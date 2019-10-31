@@ -191,13 +191,15 @@ class HScrollBar extends BaseScrollBar {
 			this.thumbSkin.width = this._thumbSkinMeasurements.width;
 		} else {
 			var thumbWidth = contentWidth * this.getAdjustedPage() / range;
-			var widthOffset = contentWidth - thumbWidth;
-			if (widthOffset > thumbWidth) {
-				widthOffset = thumbWidth;
+			if (thumbWidth > 0.0) {
+				var widthOffset = contentWidth - thumbWidth;
+				if (widthOffset > thumbWidth) {
+					widthOffset = thumbWidth;
+				}
+				widthOffset *= valueOffset / (range * thumbWidth / contentWidth);
+				thumbWidth -= widthOffset;
 			}
-			widthOffset *= valueOffset / (range * thumbWidth / contentWidth);
-			thumbWidth -= widthOffset;
-			if (thumbWidth < this._thumbSkinMeasurements.minWidth) {
+			if (this._thumbSkinMeasurements.minWidth != null && thumbWidth < this._thumbSkinMeasurements.minWidth) {
 				thumbWidth = this._thumbSkinMeasurements.minWidth;
 			}
 			this.thumbSkin.width = thumbWidth;
