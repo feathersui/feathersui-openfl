@@ -1,5 +1,6 @@
 package com.feathersui.components.screens;
 
+import feathers.utils.DisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.events.FeathersEvent;
 import feathers.data.ArrayCollection;
@@ -50,10 +51,10 @@ class PopUpListScreen extends Panel {
 
 		this.popUpList = new PopUpList();
 		this.popUpList.dataProvider = new ArrayCollection(arrayItems);
-		this.popUpList.updateItemRenderer = (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
+		this.popUpList.itemRendererRecycler = new DisplayObjectRecycler(ItemRenderer, (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
 			itemRenderer.text = state.data.text;
 			itemRenderer.selected = state.selected;
-		};
+		});
 		this.popUpList.layoutData = AnchorLayoutData.center();
 		this.popUpList.addEventListener(Event.CHANGE, popUpList_changeHandler);
 		this.addChild(this.popUpList);

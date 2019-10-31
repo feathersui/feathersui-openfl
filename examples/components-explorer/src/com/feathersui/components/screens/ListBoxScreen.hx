@@ -1,5 +1,6 @@
 package com.feathersui.components.screens;
 
+import feathers.utils.DisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.events.FeathersEvent;
 import feathers.controls.ListBox;
@@ -48,10 +49,10 @@ class ListBoxScreen extends Panel {
 
 		this.listBox = new ListBox();
 		this.listBox.dataProvider = new ArrayCollection(items);
-		this.listBox.updateItemRenderer = (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
+		this.listBox.itemRendererRecycler = new DisplayObjectRecycler(ItemRenderer, (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
 			itemRenderer.text = state.data.text;
 			itemRenderer.selected = state.selected;
-		};
+		});
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.listBox.addEventListener(Event.CHANGE, listBox_changeHandler);
 		this.addChild(this.listBox);

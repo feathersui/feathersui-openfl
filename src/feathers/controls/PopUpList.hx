@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.utils.DisplayObjectRecycler;
 import feathers.data.ListBoxItemState;
 import openfl.display.DisplayObject;
 import feathers.themes.steel.components.SteelPopUpListStyles;
@@ -108,49 +110,15 @@ class PopUpList extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var itemRendererFactory(default, set):() -> DisplayObject;
+	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListBoxItemState>;
 
-	private function set_itemRendererFactory(value:() -> DisplayObject):() -> DisplayObject {
-		if (this.itemRendererFactory == value) {
-			return this.itemRendererFactory;
+	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListBoxItemState>):DisplayObjectRecycler<Dynamic, ListBoxItemState> {
+		if (this.itemRendererRecycler == value) {
+			return this.itemRendererRecycler;
 		}
-		this.itemRendererFactory = value;
+		this.itemRendererRecycler = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.itemRendererFactory;
-	}
-
-	/**
-		An optional function that allows an item renderer to be customized
-		based on its data.
-
-		@since 1.0.0
-	**/
-	public var updateItemRenderer(default, set):(itemRenderer:Dynamic, state:ListBoxItemState) -> Void;
-
-	private function set_updateItemRenderer(value:(Dynamic, ListBoxItemState) -> Void):(DisplayObject, ListBoxItemState) -> Void {
-		if (this.updateItemRenderer == value) {
-			return this.updateItemRenderer;
-		}
-		this.updateItemRenderer = value;
-		this.setInvalid(InvalidationFlag.DATA);
-		return this.updateItemRenderer;
-	}
-
-	/**
-		An optional function to clean up an item renderer before it is returned
-		to the pool and made available for reuse with new data.
-
-		@since 1.0.0
-	**/
-	public var cleanupItemRenderer(default, set):(itemRenderer:Dynamic, data:Dynamic) -> Void;
-
-	private function set_cleanupItemRenderer(value:(Dynamic, Dynamic) -> Void):(Dynamic, Dynamic) -> Void {
-		if (this.cleanupItemRenderer == value) {
-			return this.cleanupItemRenderer;
-		}
-		this.cleanupItemRenderer = value;
-		this.setInvalid(InvalidationFlag.DATA);
-		return this.cleanupItemRenderer;
+		return this.itemRendererRecycler;
 	}
 
 	@:style
@@ -191,6 +159,14 @@ class PopUpList extends FeathersControl {
 
 	private function initializePopUpListTheme():Void {
 		SteelPopUpListStyles.initialize();
+	}
+
+	override private function initialize():Void {
+		super.initialize();
+
+		if (this.itemRendererRecycler == null) {
+			this.itemRendererRecycler = new DisplayObjectRecycler<ItemRenderer, ListBoxItemState>(ItemRenderer);
+		}
 	}
 
 	override private function update():Void {
@@ -248,9 +224,7 @@ class PopUpList extends FeathersControl {
 
 	private function refreshData():Void {
 		this.listBox.dataProvider = this.dataProvider;
-		this.listBox.itemRendererFactory = this.itemRendererFactory;
-		this.listBox.updateItemRenderer = this.updateItemRenderer;
-		this.listBox.cleanupItemRenderer = this.cleanupItemRenderer;
+		this.listBox.itemRendererRecycler = this.itemRendererRecycler;
 	}
 
 	private function refreshSelection():Void {
