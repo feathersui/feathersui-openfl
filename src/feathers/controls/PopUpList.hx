@@ -110,7 +110,8 @@ class PopUpList extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListBoxItemState>;
+	public var itemRendererRecycler(default,
+		set):DisplayObjectRecycler<Dynamic, ListBoxItemState> = new DisplayObjectRecycler<ItemRenderer, ListBoxItemState>(ItemRenderer);
 
 	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListBoxItemState>):DisplayObjectRecycler<Dynamic, ListBoxItemState> {
 		if (this.itemRendererRecycler == value) {

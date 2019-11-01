@@ -38,6 +38,36 @@ import feathers.events.FeathersEvent;
 class ListBox extends BaseScrollContainer {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
 
+	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
+		if (Std.is(itemRenderer, ITextControl)) {
+			var textControl = cast(itemRenderer, ITextControl);
+			textControl.text = state.text;
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			dataRenderer.data = state.data;
+		}
+		if (Std.is(itemRenderer, IToggle)) {
+			var toggle = cast(itemRenderer, IToggle);
+			toggle.selected = state.selected;
+		}
+	}
+
+	private static function defaultCleanItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
+		if (Std.is(itemRenderer, ITextControl)) {
+			var textControl = cast(itemRenderer, ITextControl);
+			textControl.text = null;
+		}
+		if (Std.is(itemRenderer, IToggle)) {
+			var toggle = cast(itemRenderer, IToggle);
+			toggle.selected = false;
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			dataRenderer.data = null;
+		}
+	}
+
 	public function new() {
 		initializeListBoxTheme();
 
@@ -137,41 +167,7 @@ class ListBox extends BaseScrollContainer {
 	/**
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListBoxItemState>;
-
-	private function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
-		if (Std.is(itemRenderer, ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
-			textControl.text = itemToText(state.data);
-		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			dataRenderer.data = state.data;
-		}
-		if (Std.is(itemRenderer, IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
-			toggle.selected = state.data == this.selectedItem;
-		}
-	}
-
-	private function defaultCleanItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
-		if (Std.is(itemRenderer, ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
-			textControl.text = null;
-		}
-		if (Std.is(itemRenderer, IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
-			toggle.selected = false;
-		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			dataRenderer.data = null;
-		}
-	}
-
-	private static function defaultItemRendererFactory():DisplayObject {
-		return new ItemRenderer();
-	}
+	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListBoxItemState> = new DisplayObjectRecycler<ItemRenderer, ListBoxItemState>(ItemRenderer);
 
 	private var inactiveItemRenderers:Array<DisplayObject> = [];
 	private var activeItemRenderers:Array<DisplayObject> = [];
@@ -202,15 +198,6 @@ class ListBox extends BaseScrollContainer {
 		SteelListBoxStyles.initialize();
 	}
 
-	override private function initialize():Void {
-		super.initialize();
-
-		if (this.itemRendererRecycler == null) {
-			this.itemRendererRecycler = new DisplayObjectRecycler<ItemRenderer, ListBoxItemState>(ItemRenderer, defaultUpdateItemRenderer,
-				defaultCleanItemRenderer);
-		}
-	}
-
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
@@ -231,6 +218,13 @@ class ListBox extends BaseScrollContainer {
 	}
 
 	private function refreshItemRenderers():Void {
+		if (this.itemRendererRecycler.update == null) {
+			this.itemRendererRecycler.update = defaultUpdateItemRenderer;
+			if (this.itemRendererRecycler.clean == null) {
+				this.itemRendererRecycler.clean = defaultCleanItemRenderer;
+			}
+		}
+
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(itemRendererInvalid);
 		if (this.dataProvider == null) {
@@ -275,12 +269,11 @@ class ListBox extends BaseScrollContainer {
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
+			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			if (this.itemRendererRecycler != null && this.itemRendererRecycler.clean != null) {
+			if (this.itemRendererRecycler.clean != null) {
 				this.itemRendererRecycler.clean(itemRenderer, this._currentItemState);
-			} else if (this.defaultCleanItemRenderer != null) {
-				this.defaultCleanItemRenderer(itemRenderer, this._currentItemState);
 			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
@@ -306,12 +299,11 @@ class ListBox extends BaseScrollContainer {
 				this._currentItemState.data = item;
 				this._currentItemState.index = i;
 				this._currentItemState.selected = item == this.selectedItem;
+				this._currentItemState.text = itemToText(item);
 				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 				this._ignoreSelectionChange = true;
-				if (this.itemRendererRecycler != null && this.itemRendererRecycler.update != null) {
+				if (this.itemRendererRecycler.update != null) {
 					this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
-				} else if (this.defaultUpdateItemRenderer != null) {
-					this.defaultUpdateItemRenderer(itemRenderer, this._currentItemState);
 				}
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;
 				// if this item renderer used to be the typical layout item, but
@@ -352,10 +344,9 @@ class ListBox extends BaseScrollContainer {
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = item == this.selectedItem;
-		if (this.itemRendererRecycler != null && this.itemRendererRecycler.update != null) {
+		this._currentItemState.text = itemToText(item);
+		if (this.itemRendererRecycler.update != null) {
 			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
-		} else if (this.defaultUpdateItemRenderer != null) {
-			this.defaultUpdateItemRenderer(itemRenderer, this._currentItemState);
 		}
 		itemRenderer.addEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
 		if (Std.is(itemRenderer, IToggle)) {
@@ -369,7 +360,9 @@ class ListBox extends BaseScrollContainer {
 	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
 		var displayObject = cast(itemRenderer, DisplayObject);
 		this.listViewPort.removeChild(displayObject);
-		this.itemRendererRecycler.destroy(itemRenderer);
+		if (this.itemRendererRecycler.destroy != null) {
+			this.itemRendererRecycler.destroy(itemRenderer);
+		}
 	}
 
 	private function itemRenderer_triggeredHandler(event:FeathersEvent):Void {
