@@ -19,6 +19,7 @@ import com.feathersui.components.screens.PopUpManagerScreen;
 import com.feathersui.components.screens.ProgressBarScreen;
 import com.feathersui.components.screens.RadioScreen;
 import com.feathersui.components.screens.SliderScreen;
+import com.feathersui.components.screens.TabBarScreen;
 import com.feathersui.components.screens.TextInputScreen;
 import com.feathersui.components.screens.ToggleSwitchScreen;
 
@@ -68,6 +69,9 @@ class Main extends Application {
 
 		var slider = StackItem.withClass(SliderScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.SLIDER, slider);
+
+		var tabBar = StackItem.withClass(TabBarScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.TAB_BAR, tabBar);
 
 		var textInput = StackItem.withClass(TextInputScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.TEXT_INPUT, textInput);

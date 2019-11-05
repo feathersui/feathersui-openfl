@@ -56,7 +56,7 @@ class MainMenu extends Panel {
 			new MenuItem("Label", ScreenID.LABEL), new MenuItem("List Box", ScreenID.LIST_BOX), new MenuItem("Panel", ScreenID.PANEL),
 			new MenuItem("Pop Up List", ScreenID.POP_UP_LIST), new MenuItem("Pop Up Manager", ScreenID.POP_UP_MANAGER),
 			new MenuItem("Progress Bar", ScreenID.PROGRESS_BAR), new MenuItem("Radio", ScreenID.RADIO), new MenuItem("Slider", ScreenID.SLIDER),
-			new MenuItem("Text Input", ScreenID.TEXT_INPUT), new MenuItem("Toggle Switch", ScreenID.TOGGLE_SWITCH),
+			new MenuItem("Tab Bar", ScreenID.TAB_BAR), new MenuItem("Text Input", ScreenID.TEXT_INPUT), new MenuItem("Toggle Switch", ScreenID.TOGGLE_SWITCH),
 		]);
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.listBox.addEventListener(Event.CHANGE, list_changeHandler);

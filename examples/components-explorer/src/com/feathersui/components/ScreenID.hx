@@ -13,6 +13,7 @@ class ScreenID {
 	public static final PROGRESS_BAR = "progressBar";
 	public static final RADIO = "radio";
 	public static final SLIDER = "slider";
+	public static final TAB_BAR = "tabBar";
 	public static final TEXT_INPUT = "textInput";
 	public static final TOGGLE_SWITCH = "toggleSwitch";
 }
