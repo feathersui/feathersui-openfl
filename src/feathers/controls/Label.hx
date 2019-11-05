@@ -67,6 +67,8 @@ class Label extends FeathersControl implements ITextControl {
 	private var _previousText:String = null;
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextFormat = false;
+	private var _textMeasuredWidth:Float;
+	private var _textMeasuredHeight:Float;
 
 	@:isVar
 	public var text(get, set):String;
@@ -258,9 +260,6 @@ class Label extends FeathersControl implements ITextControl {
 			this.addChild(this.textField);
 		}
 	}
-
-	private var _textMeasuredWidth:Float;
-	private var _textMeasuredHeight:Float;
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
