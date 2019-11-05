@@ -49,8 +49,12 @@ class ListBoxScreen extends Panel {
 
 		this.listBox = new ListBox();
 		this.listBox.dataProvider = new ArrayCollection(items);
+		this.listBox.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
 		this.listBox.itemRendererRecycler = new DisplayObjectRecycler(ItemRenderer, (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
-			itemRenderer.text = state.data.text;
+			itemRenderer.text = state.text;
 			itemRenderer.selected = state.selected;
 		});
 		this.listBox.layoutData = AnchorLayoutData.fill();

@@ -51,8 +51,12 @@ class PopUpListScreen extends Panel {
 
 		this.popUpList = new PopUpList();
 		this.popUpList.dataProvider = new ArrayCollection(arrayItems);
+		this.popUpList.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
 		this.popUpList.itemRendererRecycler = new DisplayObjectRecycler(ItemRenderer, (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
-			itemRenderer.text = state.data.text;
+			itemRenderer.text = state.text;
 			itemRenderer.selected = state.selected;
 		});
 		this.popUpList.layoutData = AnchorLayoutData.center();

@@ -110,16 +110,20 @@ class PopUpList extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, ListBoxItemState> = new DisplayObjectRecycler<ItemRenderer, ListBoxItemState>(ItemRenderer);
+	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
 
-	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListBoxItemState>):DisplayObjectRecycler<Dynamic, ListBoxItemState> {
+	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		ListBoxItemState, DisplayObject> {
 		if (this.itemRendererRecycler == value) {
 			return this.itemRendererRecycler;
 		}
 		this.itemRendererRecycler = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.itemRendererRecycler;
+	}
+
+	public dynamic function itemToText(data:Dynamic):String {
+		return Std.string(data);
 	}
 
 	@:style
@@ -160,14 +164,6 @@ class PopUpList extends FeathersControl {
 
 	private function initializePopUpListTheme():Void {
 		SteelPopUpListStyles.initialize();
-	}
-
-	override private function initialize():Void {
-		super.initialize();
-
-		if (this.itemRendererRecycler == null) {
-			this.itemRendererRecycler = new DisplayObjectRecycler<ItemRenderer, ListBoxItemState>(ItemRenderer);
-		}
 	}
 
 	override private function update():Void {
@@ -226,6 +222,7 @@ class PopUpList extends FeathersControl {
 	private function refreshData():Void {
 		this.listBox.dataProvider = this.dataProvider;
 		this.listBox.itemRendererRecycler = this.itemRendererRecycler;
+		this.listBox.itemToText = this.itemToText;
 	}
 
 	private function refreshSelection():Void {

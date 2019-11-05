@@ -167,7 +167,17 @@ class ListBox extends BaseScrollContainer {
 	/**
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListBoxItemState> = new DisplayObjectRecycler<ItemRenderer, ListBoxItemState>(ItemRenderer);
+	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
+
+	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		ListBoxItemState, DisplayObject> {
+		if (this.itemRendererRecycler == value) {
+			return this.itemRendererRecycler;
+		}
+		this.itemRendererRecycler = value;
+		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		return this.itemRendererRecycler;
+	}
 
 	private var inactiveItemRenderers:Array<DisplayObject> = [];
 	private var activeItemRenderers:Array<DisplayObject> = [];
@@ -236,7 +246,7 @@ class ListBox extends BaseScrollContainer {
 		this.renderUnrenderedData();
 		this.freeInactiveItemRenderers();
 		if (this.inactiveItemRenderers.length > 0) {
-			throw new IllegalOperationError("ListBox: inactive item renderers should be empty after updating.");
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
 		}
 	}
 
@@ -245,7 +255,7 @@ class ListBox extends BaseScrollContainer {
 		this.inactiveItemRenderers = this.activeItemRenderers;
 		this.activeItemRenderers = temp;
 		if (this.activeItemRenderers.length > 0) {
-			throw new IllegalOperationError("ListBox: active item renderers should be empty before updating.");
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
 		}
 		if (factoryInvalid) {
 			this.recoverInactiveItemRenderers();
@@ -312,7 +322,8 @@ class ListBox extends BaseScrollContainer {
 				this.listViewPort.addChildAt(itemRenderer, i);
 				var removed = inactiveItemRenderers.remove(itemRenderer);
 				if (!removed) {
-					throw new IllegalOperationError("ListBox: item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
+						+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
 				}
 				activeItemRenderers.push(itemRenderer);
 			} else {
