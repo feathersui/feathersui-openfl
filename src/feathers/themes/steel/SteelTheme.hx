@@ -28,6 +28,7 @@ import feathers.themes.steel.components.SteelApplicationStyles;
 import feathers.themes.steel.components.SteelHScrollBarStyles;
 import feathers.themes.steel.components.SteelVScrollBarStyles;
 import feathers.themes.steel.components.SteelScrollContainerStyles;
+import feathers.themes.steel.components.SteelTextCalloutStyles;
 
 /**
 	@since 1.0.0
@@ -50,6 +51,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelPopUpListStyles.initialize(this);
 		SteelRadioStyles.initialize(this);
 		SteelScrollContainerStyles.initialize(this);
+		SteelTextCalloutStyles.initialize(this);
 		SteelTextInputStyles.initialize(this);
 		SteelToggleButtonStyles.initialize(this);
 		SteelToggleSwitchStyles.initialize(this);
