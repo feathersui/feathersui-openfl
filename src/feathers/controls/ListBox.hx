@@ -309,8 +309,7 @@ class ListBox extends BaseScrollContainer {
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
-				var displayObject = cast(itemRenderer, DisplayObject);
-				this.listViewPort.addChildAt(displayObject, i);
+				this.listViewPort.addChildAt(itemRenderer, i);
 				var removed = inactiveItemRenderers.remove(itemRenderer);
 				if (!removed) {
 					throw new IllegalOperationError("ListBox: item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
@@ -328,8 +327,7 @@ class ListBox extends BaseScrollContainer {
 			var itemRenderer = this.createItemRenderer(item, index);
 			itemRenderer.visible = true;
 			this.activeItemRenderers.push(itemRenderer);
-			var displayObject = cast(itemRenderer, DisplayObject);
-			this.listViewPort.addChildAt(displayObject, index);
+			this.listViewPort.addChildAt(itemRenderer, index);
 		}
 		this._unrenderedData.resize(0);
 	}
@@ -358,8 +356,7 @@ class ListBox extends BaseScrollContainer {
 	}
 
 	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
-		var displayObject = cast(itemRenderer, DisplayObject);
-		this.listViewPort.removeChild(displayObject);
+		this.listViewPort.removeChild(itemRenderer);
 		if (this.itemRendererRecycler.destroy != null) {
 			this.itemRendererRecycler.destroy(itemRenderer);
 		}
