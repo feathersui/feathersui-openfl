@@ -36,9 +36,16 @@ import feathers.core.FeathersControl;
 class Callout extends FeathersControl {
 	private static final INVALIDATION_FLAG_ORIGIN:String = "origin";
 
-	public static function show(content:DisplayObject, origin:DisplayObject, modal:Bool = true, ?customOverlayFactory:() -> DisplayObject):Callout {
+	public static function show(content:DisplayObject, origin:DisplayObject, ?supportedPositions:RelativePositions, modal:Bool = true,
+			?customOverlayFactory:() -> DisplayObject):Callout {
 		var callout = new Callout();
 		callout.content = content;
+		return showCallout(callout, origin, supportedPositions, modal, customOverlayFactory);
+	}
+
+	private static function showCallout(callout:Callout, origin:DisplayObject, ?supportedPositions:RelativePositions, modal:Bool = true,
+			?customOverlayFactory:() -> DisplayObject):Callout {
+		callout.supportedPositions = supportedPositions;
 		callout.origin = origin;
 		var overlayFactory = customOverlayFactory;
 		if (overlayFactory == null) {
@@ -281,6 +288,8 @@ class Callout extends FeathersControl {
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
+	public var supportedPositions:Array<RelativePosition>;
+
 	private var _lastPopUpOriginBounds:Rectangle;
 	private var _ignoreContentResize:Bool = false;
 
@@ -448,12 +457,15 @@ class Callout extends FeathersControl {
 		var downSpace = Math.NEGATIVE_INFINITY;
 		var rightSpace = Math.NEGATIVE_INFINITY;
 		var leftSpace = Math.NEGATIVE_INFINITY;
-		var positions = [
-			RelativePosition.BOTTOM,
-			RelativePosition.TOP,
-			RelativePosition.RIGHT,
-			RelativePosition.LEFT
-		];
+		var positions = this.supportedPositions;
+		if (positions == null) {
+			positions = [
+				RelativePosition.BOTTOM,
+				RelativePosition.TOP,
+				RelativePosition.RIGHT,
+				RelativePosition.LEFT,
+			];
+		}
 		for (position in positions) {
 			switch (position) {
 				case RelativePosition.TOP:
@@ -556,5 +568,16 @@ class Callout extends FeathersControl {
 			return;
 		}
 		this.close();
+	}
+}
+
+abstract RelativePositions(Array<RelativePosition>) from Array<RelativePosition> to Array<RelativePosition> {
+	inline function new(positions:Array<RelativePosition>) {
+		this = positions;
+	}
+
+	@:from
+	public static function fromRelativePosition(position:RelativePosition) {
+		return new RelativePositions([position]);
 	}
 }
