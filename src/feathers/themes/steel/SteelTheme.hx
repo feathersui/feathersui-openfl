@@ -18,6 +18,7 @@ import feathers.themes.steel.components.SteelRadioStyles;
 import feathers.themes.steel.components.SteelListBoxStyles;
 import feathers.themes.steel.components.SteelCheckStyles;
 import feathers.themes.steel.components.SteelHProgressBarStyles;
+import feathers.themes.steel.components.SteelVProgressBarStyles;
 import feathers.themes.steel.components.SteelHSliderStyles;
 import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.themes.steel.components.SteelItemRendererStyles;
@@ -52,6 +53,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelTextInputStyles.initialize(this);
 		SteelToggleButtonStyles.initialize(this);
 		SteelToggleSwitchStyles.initialize(this);
+		SteelVProgressBarStyles.initialize(this);
 		SteelVScrollBarStyles.initialize(this);
 		SteelVSliderStyles.initialize(this);
 	}

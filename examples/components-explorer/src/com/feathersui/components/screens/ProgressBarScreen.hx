@@ -7,11 +7,13 @@ import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.HProgressBar;
+import feathers.controls.VProgressBar;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 
 class ProgressBarScreen extends Panel {
 	private var horizontalProgress:HProgressBar;
+	private var verticalProgress:VProgressBar;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -45,9 +47,12 @@ class ProgressBarScreen extends Panel {
 		this.horizontalProgress.layoutData = AnchorLayoutData.center(-40);
 		this.addChild(this.horizontalProgress);
 
-		/*this.verticalProgress = new VProgressBar();
-			this.verticalProgress.layoutData = AnchorLayoutData.center(120);
-			this.addChild(this.verticalProgress); */
+		this.verticalProgress = new VProgressBar();
+		this.verticalProgress.minimum = 0.0;
+		this.verticalProgress.maximum = 100.0;
+		this.verticalProgress.value = 45.0;
+		this.verticalProgress.layoutData = AnchorLayoutData.center(120);
+		this.addChild(this.verticalProgress);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {
