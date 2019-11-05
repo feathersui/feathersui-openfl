@@ -17,7 +17,6 @@ import feathers.core.ITextControl;
 import feathers.controls.dataRenderers.IDataRenderer;
 import haxe.ds.ObjectMap;
 import openfl.errors.IllegalOperationError;
-import lime.utils.ObjectPool;
 import feathers.themes.steel.components.SteelListBoxStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -43,28 +42,12 @@ class ListBox extends BaseScrollContainer {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = state.text;
 		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			dataRenderer.data = state.data;
-		}
-		if (Std.is(itemRenderer, IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
-			toggle.selected = state.selected;
-		}
 	}
 
 	private static function defaultCleanItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = null;
-		}
-		if (Std.is(itemRenderer, IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
-			toggle.selected = false;
-		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			dataRenderer.data = null;
 		}
 	}
 
@@ -285,6 +268,14 @@ class ListBox extends BaseScrollContainer {
 			if (this.itemRendererRecycler.clean != null) {
 				this.itemRendererRecycler.clean(itemRenderer, this._currentItemState);
 			}
+			if (Std.is(itemRenderer, IToggle)) {
+				var toggle = cast(itemRenderer, IToggle);
+				toggle.selected = false;
+			}
+			if (Std.is(itemRenderer, IDataRenderer)) {
+				var dataRenderer = cast(itemRenderer, IDataRenderer);
+				dataRenderer.data = null;
+			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -314,6 +305,16 @@ class ListBox extends BaseScrollContainer {
 				this._ignoreSelectionChange = true;
 				if (this.itemRendererRecycler.update != null) {
 					this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+				}
+				if (Std.is(itemRenderer, IDataRenderer)) {
+					var dataRenderer = cast(itemRenderer, IDataRenderer);
+					// if the renderer is an IDataRenderer, this cannot be overridden
+					dataRenderer.data = this._currentItemState.data;
+				}
+				if (Std.is(itemRenderer, IToggle)) {
+					var toggle = cast(itemRenderer, IToggle);
+					// if the renderer is an IToggle, this cannot be overridden
+					toggle.selected = this._currentItemState.selected;
 				}
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;
 				// if this item renderer used to be the typical layout item, but
@@ -356,6 +357,16 @@ class ListBox extends BaseScrollContainer {
 		this._currentItemState.text = itemToText(item);
 		if (this.itemRendererRecycler.update != null) {
 			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			// if the renderer is an IDataRenderer, this cannot be overridden
+			dataRenderer.data = this._currentItemState.data;
+		}
+		if (Std.is(itemRenderer, IToggle)) {
+			var toggle = cast(itemRenderer, IToggle);
+			// if the renderer is an IToggle, this cannot be overridden
+			toggle.selected = this._currentItemState.selected;
 		}
 		itemRenderer.addEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
 		if (Std.is(itemRenderer, IToggle)) {

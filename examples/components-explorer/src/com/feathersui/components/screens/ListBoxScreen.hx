@@ -53,10 +53,6 @@ class ListBoxScreen extends Panel {
 		{
 			return item.text;
 		};
-		this.listBox.itemRendererRecycler = new DisplayObjectRecycler(ItemRenderer, (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
-			itemRenderer.text = state.text;
-			itemRenderer.selected = state.selected;
-		});
 		this.listBox.layoutData = AnchorLayoutData.fill();
 		this.listBox.addEventListener(Event.CHANGE, listBox_changeHandler);
 		this.addChild(this.listBox);

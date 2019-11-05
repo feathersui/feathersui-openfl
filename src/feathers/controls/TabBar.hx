@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.layout.ILayout;
@@ -242,6 +243,10 @@ class TabBar extends FeathersControl {
 			if (this.buttonRecycler.clean != null) {
 				this.buttonRecycler.clean(button, this._currentItemState);
 			}
+			if (Std.is(button, IDataRenderer)) {
+				var dataRenderer = cast(button, IDataRenderer);
+				dataRenderer.data = null;
+			}
 			button.selected = this._currentItemState.selected;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
@@ -272,6 +277,11 @@ class TabBar extends FeathersControl {
 				this._ignoreSelectionChange = true;
 				if (this.buttonRecycler.update != null) {
 					this.buttonRecycler.update(button, this._currentItemState);
+				}
+				if (Std.is(button, IDataRenderer)) {
+					var dataRenderer = cast(button, IDataRenderer);
+					// if the button is an IDataRenderer, this cannot be overridden
+					dataRenderer.data = this._currentItemState.data;
 				}
 				button.selected = this._currentItemState.selected;
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;

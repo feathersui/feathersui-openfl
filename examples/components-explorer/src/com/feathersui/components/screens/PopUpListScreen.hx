@@ -55,10 +55,6 @@ class PopUpListScreen extends Panel {
 		{
 			return item.text;
 		};
-		this.popUpList.itemRendererRecycler = new DisplayObjectRecycler(ItemRenderer, (itemRenderer:ItemRenderer, state:ListBoxItemState) -> {
-			itemRenderer.text = state.text;
-			itemRenderer.selected = state.selected;
-		});
 		this.popUpList.layoutData = AnchorLayoutData.center();
 		this.popUpList.addEventListener(Event.CHANGE, popUpList_changeHandler);
 		this.addChild(this.popUpList);

@@ -49,9 +49,6 @@ class TabBarScreen extends Panel {
 
 		this.tabBar = new TabBar();
 		this.tabBar.dataProvider = new ArrayCollection(items);
-		this.tabBar.buttonRecycler = new DisplayObjectRecycler(ToggleButton, (button:ToggleButton, state:TabBarItemState) -> {
-			button.text = state.text;
-		});
 		this.tabBar.itemToText = (data:Dynamic) ->
 		{
 			return data.text;
