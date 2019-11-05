@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.RectangleSkin;
 import feathers.controls.TextCallout;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -29,13 +30,23 @@ class SteelTextCalloutStyles {
 
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(TextCallout, null) == null) {
-			styleProvider.setStyleFunction(TextCallout, null, function(label:TextCallout):Void {
-				if (label.textFormat == null) {
-					label.textFormat = theme.getTextFormat();
+			styleProvider.setStyleFunction(TextCallout, null, function(callout:TextCallout):Void {
+				if (callout.textFormat == null) {
+					callout.textFormat = theme.getTextFormat();
 				}
-				if (label.disabledTextFormat == null) {
-					label.disabledTextFormat = theme.getDisabledTextFormat();
+				if (callout.disabledTextFormat == null) {
+					callout.disabledTextFormat = theme.getDisabledTextFormat();
 				}
+				if (callout.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = theme.getContainerFill();
+					backgroundSkin.border = theme.getContainerBorder();
+					callout.backgroundSkin = backgroundSkin;
+				}
+				callout.paddingTop = 1.0;
+				callout.paddingRight = 1.0;
+				callout.paddingBottom = 1.0;
+				callout.paddingLeft = 1.0;
 			});
 		}
 	}
