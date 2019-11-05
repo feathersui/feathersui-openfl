@@ -4,6 +4,7 @@ class ScreenID {
 	public static final MAIN_MENU = "mainMenu";
 	public static final ASSET_LOADER = "assetLoader";
 	public static final BUTTON = "button";
+	public static final CALLOUT = "callout";
 	public static final CHECK = "check";
 	public static final LABEL = "label";
 	public static final LIST_BOX = "listBox";

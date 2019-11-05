@@ -10,6 +10,7 @@ import com.feathersui.components.ScreenID;
 import com.feathersui.components.screens.MainMenu;
 import com.feathersui.components.screens.AssetLoaderScreen;
 import com.feathersui.components.screens.ButtonScreen;
+import com.feathersui.components.screens.CalloutScreen;
 import com.feathersui.components.screens.CheckScreen;
 import com.feathersui.components.screens.LabelScreen;
 import com.feathersui.components.screens.ListBoxScreen;
@@ -42,6 +43,9 @@ class Main extends Application {
 
 		var button = StackItem.withClass(ButtonScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.BUTTON, button);
+
+		var callout = StackItem.withClass(CalloutScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.CALLOUT, callout);
 
 		var check = StackItem.withClass(CheckScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.CHECK, check);
