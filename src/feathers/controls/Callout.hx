@@ -8,7 +8,9 @@
 
 package feathers.controls;
 
-import feathers.core.IPopUpManager;
+import feathers.core.IStateObserver;
+import feathers.core.IStateContext;
+import feathers.themes.steel.components.SteelCalloutStyles;
 import openfl.display.Sprite;
 import openfl.events.TouchEvent;
 import openfl.events.MouseEvent;
@@ -202,6 +204,7 @@ class Callout extends FeathersControl {
 	}
 
 	public function new() {
+		initializeCalloutTheme();
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, callout_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, callout_removedFromStageHandler);
@@ -285,6 +288,9 @@ class Callout extends FeathersControl {
 	@:style
 	public var arrowPosition = RelativePosition.TOP;
 
+	private var _currentBackgroundSkin:DisplayObject;
+	private var _backgroundSkinMeasurements:Measurements;
+
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
@@ -305,6 +311,10 @@ class Callout extends FeathersControl {
 		}
 	}
 
+	private function initializeCalloutTheme():Void {
+		SteelCalloutStyles.initialize();
+	}
+
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var originInvalid = this.isInvalid(INVALIDATION_FLAG_ORIGIN);
@@ -315,6 +325,10 @@ class Callout extends FeathersControl {
 		if (sizeInvalid) {
 			this._lastPopUpOriginBounds = null;
 			originInvalid = true;
+		}
+
+		if (stylesInvalid || stateInvalid) {
+			this.refreshBackgroundSkin();
 		}
 
 		if (originInvalid) {
@@ -346,7 +360,7 @@ class Callout extends FeathersControl {
 		}
 
 		if (this.backgroundSkin != null) {
-			// this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this.backgroundSkin, this);
+			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this.backgroundSkin, this);
 		}
 
 		var measureSkin:IMeasureObject = null;
@@ -402,6 +416,49 @@ class Callout extends FeathersControl {
 		var newMaxHeight = Math.POSITIVE_INFINITY;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+	}
+
+	private function getCurrentBackgroundSkin():DisplayObject {
+		return this.backgroundSkin;
+	}
+
+	private function refreshBackgroundSkin():Void {
+		var oldSkin = this._currentBackgroundSkin;
+		this._currentBackgroundSkin = this.getCurrentBackgroundSkin();
+		if (this._currentBackgroundSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentBackgroundSkin(oldSkin);
+		if (this._currentBackgroundSkin == null) {
+			this._backgroundSkinMeasurements = null;
+			return;
+		}
+		if (Std.is(this._currentBackgroundSkin, IUIControl)) {
+			cast(this._currentBackgroundSkin, IUIControl).initializeNow();
+		}
+		if (this._backgroundSkinMeasurements == null) {
+			this._backgroundSkinMeasurements = new Measurements(this._currentBackgroundSkin);
+		} else {
+			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
+		}
+		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
+			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
+		}
+		this.addChildAt(this._currentBackgroundSkin, 0);
+	}
+
+	private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if (Std.is(skin, IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = null;
+		}
+		if (skin.parent == this) {
+			// we need to restore these values so that they won't be lost the
+			// next time that this skin is used for measurement
+			this.removeChild(skin);
+		}
 	}
 
 	private function refreshEnabled():Void {
