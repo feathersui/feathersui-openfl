@@ -23,6 +23,11 @@ interface IPopUpAdapter extends IEventDispatcher {
 	/**
 		@since 1.0.0
 	**/
+	var persistent(get, never):Bool;
+
+	/**
+		@since 1.0.0
+	**/
 	function open(content:DisplayObject, source:DisplayObject):Void;
 
 	/**

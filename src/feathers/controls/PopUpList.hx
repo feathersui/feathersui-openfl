@@ -296,7 +296,7 @@ class PopUpList extends FeathersControl {
 	}
 
 	private function listBox_triggeredHandler(event:Event):Void {
-		if (this.popUpAdapter == null) {
+		if (this.popUpAdapter == null || !this.popUpAdapter.persistent) {
 			this.closeList();
 		}
 	}
