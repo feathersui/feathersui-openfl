@@ -116,13 +116,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var _updatedTextFormat = false;
 
 	@:isVar
-	public var text(get, set):String;
+	public var text(get, set):String = "";
 
 	private function get_text():String {
 		return this.text;
 	}
 
 	private function set_text(value:String):String {
+		if (value == null) {
+			// null gets converted to an empty string
+			if (this.text.length == 0) {
+				// already an empty string
+				return this.text;
+			}
+			value = "";
+		}
 		if (this.text == value) {
 			return this.text;
 		}
