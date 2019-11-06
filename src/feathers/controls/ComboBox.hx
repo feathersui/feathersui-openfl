@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.FocusEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.data.ListBoxItemState;
@@ -26,6 +27,7 @@ import feathers.core.PopUpManager;
 import openfl.events.MouseEvent;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
+import feathers.controls.popups.DropDownPopUpAdapter;
 
 /**
 
@@ -137,7 +139,7 @@ class ComboBox extends FeathersControl {
 	private var _ignoreTextInputChange = false;
 
 	@:style
-	public var popUpAdapter:IPopUpAdapter = null;
+	public var popUpAdapter:IPopUpAdapter = new DropDownPopUpAdapter();
 
 	public var open(get, never):Bool;
 
@@ -149,11 +151,7 @@ class ComboBox extends FeathersControl {
 		if (this.open || this.stage == null) {
 			return;
 		}
-		if (this.popUpAdapter != null) {
-			this.popUpAdapter.open(this.listBox, this.button);
-		} else {
-			PopUpManager.addPopUp(this.listBox, this.button);
-		}
+		this.popUpAdapter.open(this.listBox, this);
 		this.listBox.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_listBox_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler, false, 0, true);
@@ -163,13 +161,7 @@ class ComboBox extends FeathersControl {
 		if (!this.open) {
 			return;
 		}
-		if (this.popUpAdapter != null) {
-			this.popUpAdapter.close();
-		} else {
-			this.listBox.parent.removeChild(this.listBox);
-			// TODO: fix this when focus manager is implemented
-			this.stage.focus = this;
-		}
+		this.popUpAdapter.close();
 	}
 
 	private function initializeComboBoxTheme():Void {
@@ -226,11 +218,13 @@ class ComboBox extends FeathersControl {
 	private function createTextInput():Void {
 		if (this.textInput != null) {
 			this.textInput.removeEventListener(Event.CHANGE, textInput_changeHandler);
+			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 			this.textInput = null;
 		}
 		this.textInput = new TextInput();
 		this.textInput.variant = ComboBox.CHILD_VARIANT_TEXT_INPUT;
 		this.textInput.addEventListener(Event.CHANGE, textInput_changeHandler);
+		this.textInput.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 		this.button.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
 		this.addChild(this.textInput);
@@ -338,6 +332,12 @@ class ComboBox extends FeathersControl {
 		}
 	}
 
+	private function textInput_focusInHandler(event:FocusEvent):Void {
+		if (!this.open) {
+			this.openList();
+		}
+	}
+
 	private function button_triggeredHandler(event:FeathersEvent):Void {
 		if (this.open) {
 			this.closeList();
@@ -347,7 +347,7 @@ class ComboBox extends FeathersControl {
 	}
 
 	private function listBox_triggeredHandler(event:Event):Void {
-		if (this.popUpAdapter == null) {
+		if (!this.popUpAdapter.persistent) {
 			this.closeList();
 		}
 	}
@@ -389,7 +389,7 @@ class ComboBox extends FeathersControl {
 	}
 
 	private function comboBox_stage_mouseDownHandler(event:MouseEvent):Void {
-		if (this.listBox.hitTestPoint(event.stageX, event.stageY)) {
+		if (this.hitTestPoint(event.stageX, event.stageY) || this.listBox.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
 		this.closeList();
@@ -400,7 +400,7 @@ class ComboBox extends FeathersControl {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
-		if (this.listBox.hitTestPoint(event.stageX, event.stageY)) {
+		if (this.hitTestPoint(event.stageX, event.stageY) || this.listBox.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
 		this.closeList();
