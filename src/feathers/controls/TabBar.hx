@@ -97,10 +97,12 @@ class TabBar extends FeathersControl {
 			return this.selectedIndex;
 		}
 		this.selectedIndex = value;
+		// using @:bypassAccessor because if we were to call the selectedItem
+		// setter, this change wouldn't be saved properly
 		if (this.selectedIndex == -1) {
-			this.selectedItem = null;
+			@:bypassAccessor this.selectedItem = null;
 		} else {
-			this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
