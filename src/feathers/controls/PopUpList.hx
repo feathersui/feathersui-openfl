@@ -78,24 +78,27 @@ class PopUpList extends FeathersControl {
 	public var selectedIndex(default, set):Int = -1;
 
 	private function set_selectedIndex(value:Int):Int {
+		if (this.dataProvider == null) {
+			value = -1;
+		}
 		if (this.selectedIndex == value) {
 			return this.selectedIndex;
 		}
 		this.selectedIndex = value;
+		// using @:bypassAccessor because if we were to call the selectedItem
+		// setter, this change wouldn't be saved properly
+		if (this.selectedIndex == -1) {
+			@:bypassAccessor this.selectedItem = null;
+		} else {
+			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.selectedIndex;
 	}
 
 	@:isVar
-	public var selectedItem(get, null):Dynamic = null;
-
-	private function get_selectedItem():Dynamic {
-		if (this.selectedIndex == -1) {
-			return null;
-		}
-		return this.dataProvider.get(this.selectedIndex);
-	}
+	public var selectedItem(default, null):Dynamic = null;
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
