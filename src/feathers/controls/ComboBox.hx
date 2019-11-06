@@ -78,9 +78,15 @@ class ComboBox extends FeathersControl {
 			this.setInvalid(InvalidationFlag.SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
+		if (this.dataProvider != null) {
+			this.dataProvider.filterFunction = this.comboBoxFilterFunction;
+		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
 	}
+
+	private var pendingSelectedIndex = -1;
+	private var pendingSelectedItem:Dynamic = null;
 
 	public var selectedIndex(default, set):Int = -1;
 
@@ -105,7 +111,7 @@ class ComboBox extends FeathersControl {
 	}
 
 	@:isVar
-	public var selectedItem(default, null):Dynamic = null;
+	public var selectedItem(default, set):Dynamic = null;
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
@@ -137,6 +143,7 @@ class ComboBox extends FeathersControl {
 	}
 
 	private var _ignoreTextInputChange = false;
+	private var _ignoreListBoxChange = false;
 
 	@:style
 	public var popUpAdapter:IPopUpAdapter = new DropDownPopUpAdapter();
@@ -147,10 +154,18 @@ class ComboBox extends FeathersControl {
 		return this.listBox.parent != null;
 	}
 
+	private var _filterText:String = "";
+
 	public function openList():Void {
 		if (this.open || this.stage == null) {
 			return;
 		}
+		this._filterText = "";
+		if (this.dataProvider != null) {
+			this.dataProvider.refresh();
+		}
+		this.pendingSelectedItem = this.selectedItem;
+		this.popUpAdapter.addEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
 		this.popUpAdapter.open(this.listBox, this);
 		this.listBox.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_listBox_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler, false, 0, true);
@@ -249,11 +264,18 @@ class ComboBox extends FeathersControl {
 	}
 
 	private function refreshSelection():Void {
+		var oldIgnoreListBoxChage = this._ignoreListBoxChange;
+		this._ignoreListBoxChange = true;
 		this.listBox.selectedIndex = this.selectedIndex;
+		this._ignoreListBoxChange = oldIgnoreListBoxChage;
 
 		var oldIgnoreTextInputChange = this._ignoreTextInputChange;
 		this._ignoreTextInputChange = true;
-		this.textInput.text = this.dataProvider.get(this.selectedIndex).text;
+		if (this.selectedItem != null) {
+			this.textInput.text = this.itemToText(this.selectedItem);
+		} else {
+			this.textInput.text = "";
+		}
 		this._ignoreTextInputChange = oldIgnoreTextInputChange;
 	}
 
@@ -261,6 +283,14 @@ class ComboBox extends FeathersControl {
 		this.button.enabled = this.enabled;
 		this.textInput.enabled = this.enabled;
 		this.listBox.enabled = this.enabled;
+	}
+
+	private function comboBoxFilterFunction(item:Dynamic):Bool {
+		if (this._filterText.length == 0) {
+			return true;
+		}
+		var itemText = this.itemToText(item).toLowerCase();
+		return itemText.indexOf(this._filterText.toLowerCase()) != -1;
 	}
 
 	private function autoSizeIfNeeded():Bool {
@@ -330,6 +360,10 @@ class ComboBox extends FeathersControl {
 		if (!this.open) {
 			this.openList();
 		}
+		if (this.dataProvider != null) {
+			this._filterText = this.textInput.text;
+			this.dataProvider.refresh();
+		}
 	}
 
 	private function textInput_focusInHandler(event:FocusEvent):Void {
@@ -353,7 +387,17 @@ class ComboBox extends FeathersControl {
 	}
 
 	private function listBox_changeHandler(event:Event):Void {
-		this.selectedIndex = this.listBox.selectedIndex;
+		if (this._ignoreListBoxChange) {
+			return;
+		}
+		if (this.open) {
+			// if the list is open, save the selected index for later
+			this.pendingSelectedIndex = this.listBox.selectedIndex;
+		} else {
+			// if closed, update immediately
+			this.pendingSelectedIndex = -1;
+			this.selectedIndex = this.listBox.selectedIndex;
+		}
 	}
 
 	private function comboBox_listBox_removedFromStageHandler(event:Event):Void {
@@ -404,5 +448,37 @@ class ComboBox extends FeathersControl {
 			return;
 		}
 		this.closeList();
+	}
+
+	private function comboBox_popUpAdapter_closeHandler(event:Event):Void {
+		this.popUpAdapter.removeEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
+
+		var newSelectedItem = this.pendingSelectedItem;
+		if (this.pendingSelectedIndex != -1) {
+			newSelectedItem = this.dataProvider.get(this.pendingSelectedIndex);
+		} else {
+			var filterText = this._filterText.toLowerCase();
+			if (this.dataProvider.length > 0) {
+				for (item in this.dataProvider) {
+					var itemText = this.itemToText(item).toLowerCase();
+					if (itemText == filterText) {
+						// if the filtered data contains a match, use it
+						// otherwise, fall back to the previous item
+						newSelectedItem = item;
+						break;
+					}
+				}
+			}
+		}
+		this._filterText = "";
+		this.pendingSelectedIndex = -1;
+		this.pendingSelectedItem = null;
+		if (this.dataProvider != null) {
+			this.dataProvider.refresh();
+		}
+		this.selectedItem = newSelectedItem;
+		// even if the selected item has not changed, invalidate because the
+		// displayed text may need to be updated
+		this.setInvalid(InvalidationFlag.SELECTION);
 	}
 }
