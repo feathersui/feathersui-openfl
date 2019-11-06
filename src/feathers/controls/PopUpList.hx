@@ -98,7 +98,7 @@ class PopUpList extends FeathersControl {
 	}
 
 	@:isVar
-	public var selectedItem(default, null):Dynamic = null;
+	public var selectedItem(default, set):Dynamic = null;
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
