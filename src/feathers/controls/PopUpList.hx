@@ -75,6 +75,8 @@ class PopUpList extends FeathersControl {
 		return this.dataProvider;
 	}
 
+	private var _ignoreListBoxChange = false;
+
 	public var selectedIndex(default, set):Int = -1;
 
 	private function set_selectedIndex(value:Int):Int {
@@ -229,7 +231,10 @@ class PopUpList extends FeathersControl {
 	}
 
 	private function refreshSelection():Void {
+		var oldIgnoreListBoxChange = this._ignoreListBoxChange;
+		this._ignoreListBoxChange = true;
 		this.listBox.selectedIndex = this.selectedIndex;
+		this._ignoreListBoxChange = oldIgnoreListBoxChange;
 
 		this.button.text = this.dataProvider.get(this.selectedIndex).text;
 	}
@@ -302,6 +307,9 @@ class PopUpList extends FeathersControl {
 	}
 
 	private function listBox_changeHandler(event:Event):Void {
+		if (this._ignoreListBoxChange) {
+			return;
+		}
 		this.selectedIndex = this.listBox.selectedIndex;
 	}
 
