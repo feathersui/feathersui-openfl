@@ -12,6 +12,7 @@ import com.feathersui.components.screens.AssetLoaderScreen;
 import com.feathersui.components.screens.ButtonScreen;
 import com.feathersui.components.screens.CalloutScreen;
 import com.feathersui.components.screens.CheckScreen;
+import com.feathersui.components.screens.ComboBoxScreen;
 import com.feathersui.components.screens.LabelScreen;
 import com.feathersui.components.screens.ListBoxScreen;
 import com.feathersui.components.screens.PanelScreen;
@@ -49,6 +50,9 @@ class Main extends Application {
 
 		var check = StackItem.withClass(CheckScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.CHECK, check);
+
+		var comboBox = StackItem.withClass(ComboBoxScreen, [Event.COMPLETE => StackAction.Pop()]);
+		navigator.addItem(ScreenID.COMBO_BOX, comboBox);
 
 		var label = StackItem.withClass(LabelScreen, [Event.COMPLETE => StackAction.Pop()]);
 		navigator.addItem(ScreenID.LABEL, label);
