@@ -324,7 +324,7 @@ class ListBox extends BaseScrollContainer {
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
-				this.listViewPort.addChildAt(itemRenderer, i);
+				this.listViewPort.setChildIndex(itemRenderer, i);
 				var removed = inactiveItemRenderers.remove(itemRenderer);
 				if (!removed) {
 					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
