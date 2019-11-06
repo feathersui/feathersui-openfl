@@ -338,7 +338,7 @@ class PopUpList extends FeathersControl {
 	}
 
 	private function popUpList_stage_mouseDownHandler(event:MouseEvent):Void {
-		if (this.listBox.hitTestPoint(event.stageX, event.stageY)) {
+		if (this.button.hitTestPoint(event.stageX, event.stageY) || this.listBox.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
 		this.closeList();
@@ -349,7 +349,7 @@ class PopUpList extends FeathersControl {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
-		if (this.listBox.hitTestPoint(event.stageX, event.stageY)) {
+		if (this.button.hitTestPoint(event.stageX, event.stageY) || this.listBox.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
 		this.closeList();
