@@ -86,6 +86,8 @@ class ListBox extends BaseScrollContainer {
 			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
@@ -93,6 +95,8 @@ class ListBox extends BaseScrollContainer {
 			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
@@ -105,13 +109,18 @@ class ListBox extends BaseScrollContainer {
 	public var selectedIndex(default, set):Int = -1;
 
 	private function set_selectedIndex(value:Int):Int {
-		if (!this.selectable) {
+		if (!this.selectable || this.dataProvider == null) {
 			value = -1;
 		}
 		if (this.selectedIndex == value) {
 			return this.selectedIndex;
 		}
 		this.selectedIndex = value;
+		if (this.selectedIndex == -1) {
+			this.selectedItem = null;
+		} else {
+			this.selectedItem = this.dataProvider.get(this.selectedIndex);
+		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.selectedIndex;
@@ -122,17 +131,10 @@ class ListBox extends BaseScrollContainer {
 		@since 1.0.0
 	**/
 	@:isVar
-	public var selectedItem(get, set):Dynamic = null;
-
-	private function get_selectedItem():Dynamic {
-		if (this.selectedIndex == -1) {
-			return null;
-		}
-		return this.dataProvider.get(this.selectedIndex);
-	}
+	public var selectedItem(default, set):Dynamic = null;
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (this.dataProvider == null) {
+		if (!this.selectable || this.dataProvider == null) {
 			this.selectedIndex = -1;
 			return this.selectedItem;
 		}
@@ -384,6 +386,15 @@ class ListBox extends BaseScrollContainer {
 		}
 	}
 
+	private function refreshSelectedIndicesAfterFilterOrSort():Void {
+		if (this.selectedIndex == -1) {
+			return;
+		}
+		// the index may have changed, possibily even to -1, if the item was
+		// filtered out
+		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
+	}
+
 	private function itemRenderer_triggeredHandler(event:FeathersEvent):Void {
 		var itemRenderer:DisplayObject = cast(event.currentTarget, DisplayObject);
 		var item = this.itemRendererToData.get(itemRenderer);
@@ -434,5 +445,13 @@ class ListBox extends BaseScrollContainer {
 		if (this.selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
+	}
+
+	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
+		this.refreshSelectedIndicesAfterFilterOrSort();
+	}
+
+	private function dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
+		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 }
