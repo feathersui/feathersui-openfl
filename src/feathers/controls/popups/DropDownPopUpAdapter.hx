@@ -54,6 +54,23 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 		this.layout();
 
+		FeathersEvent.dispatch(this, Event.OPEN);
+	}
+
+	/**
+		@since 1.0.0
+	**/
+	public function close():Void {
+		if (!this.active) {
+			return;
+		}
+		var content = this.content;
+		this.origin = null;
+		this.content = null;
+
+		if (content.parent != null) {
+			content.parent.removeChild(content);
+		}
 		FeathersEvent.dispatch(this, Event.CLOSE);
 	}
 
@@ -74,22 +91,5 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 		this.content.x = originTopLeft.x;
 		this.content.y = originBottomRight.y;
-	}
-
-	/**
-		@since 1.0.0
-	**/
-	public function close():Void {
-		if (!this.active) {
-			return;
-		}
-		var content = this.content;
-		this.origin = null;
-		this.content = null;
-
-		if (content.parent != null) {
-			content.parent.removeChild(content);
-		}
-		FeathersEvent.dispatch(this, Event.CLOSE);
 	}
 }
