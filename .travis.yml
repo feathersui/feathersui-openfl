@@ -27,7 +27,7 @@ script:
 - cd $TRAVIS_BUILD_DIR/docs
 - haxe docs.hxml
 # build hello-world example
-- cd $TRAVIS_BUILD_DIR/examples/hello-example
+- cd $TRAVIS_BUILD_DIR/examples/hello-world
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
