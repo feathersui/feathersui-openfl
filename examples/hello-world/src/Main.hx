@@ -1,22 +1,39 @@
+import feathers.layout.AnchorLayoutData;
+import feathers.layout.AnchorLayout;
+import feathers.controls.Application;
+import feathers.controls.TextCallout;
 import feathers.controls.Button;
 import feathers.events.FeathersEvent;
-import openfl.display.Sprite;
 
-class Main extends Sprite
-{
+// the Application component automatically scales the project to an appropriate
+// size for any type of device, from mobile to desktop.
+// using this component is optional. Feathers UI components may be added as
+// children of any OpenFL display object.
+class Main extends Application {
 	public function new() {
 		super();
 
-		var button = new Button();
-		button.x = 10.0;
-		button.y = 10.0;
-		button.text = "Click Me";
-		button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
-		this.addChild(button);
+		// a layout that allows easy positioning of children near the edges or
+		// the center of a container
+		this.layout = new AnchorLayout();
+
+		this.button = new Button();
+		// center the button both horizontally and vertically
+		this.button.layoutData = AnchorLayoutData.center();
+		// the text to display on the button
+		this.button.text = "Click Me";
+		// when the button is clicked or tapped, call a function
+		this.button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+
+		// add the button as a child of the app
+		this.addChild(this.button);
 	}
 
-	private function button_triggeredHandler(event:FeathersEvent):Void
-	{
-		trace("Hello World!");
+	// store the button so that we can refer to it in other functions
+	private var button:Button;
+
+	private function button_triggeredHandler(event:FeathersEvent):Void {
+		// display a pop-up message when the button is clicked or tapped
+		TextCallout.show("Hello World", this.button);
 	}
 }
