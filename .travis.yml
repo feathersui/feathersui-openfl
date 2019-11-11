@@ -26,8 +26,18 @@ script:
 # build documentation
 - cd $TRAVIS_BUILD_DIR/docs
 - haxe docs.hxml
+# build hello-world example
+- cd $TRAVIS_BUILD_DIR/examples/hello-example
+- haxelib run openfl build neko
+- haxelib run openfl build html5
+- haxelib run openfl build flash
 # build components-explorer example
 - cd $TRAVIS_BUILD_DIR/examples/components-explorer
+- haxelib run openfl build neko
+- haxelib run openfl build html5
+- haxelib run openfl build flash
+# build horizontal-layout-percentage-sizing example
+- cd $TRAVIS_BUILD_DIR/examples/horizontal-layout-percentage-sizing
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
