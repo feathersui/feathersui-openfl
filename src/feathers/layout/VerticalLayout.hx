@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.core.IMeasureObject;
 import openfl.events.Event;
 import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
@@ -124,6 +125,9 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	}
 
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
+		this.validateItems(items);
+		this.applyPercentHeight(items, measurements.height, measurements.minHeight, measurements.maxHeight);
+
 		var maxWidth = 0.0;
 		var yPosition = this.paddingTop;
 		for (item in items) {
@@ -170,6 +174,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
+		this.applyPercentWidth(items, viewPortWidth);
 		this.applyHorizontalAlign(items, viewPortWidth);
 		this.applyVerticalAlign(items, yPosition, viewPortHeight);
 
@@ -181,6 +186,14 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		result.viewPortWidth = viewPortWidth;
 		result.viewPortHeight = viewPortHeight;
 		return result;
+	}
+
+	private inline function validateItems(items:Array<DisplayObject>) {
+		for (item in items) {
+			if (Std.is(item, IValidating)) {
+				cast(item, IValidating).validateNow();
+			}
+		}
 	}
 
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, viewPortWidth:Float):Void {
@@ -229,6 +242,121 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 				}
 			}
 			item.y += verticalOffset;
+		}
+	}
+
+	private function applyPercentWidth(items:Array<DisplayObject>, viewPortWidth:Float):Void {
+		for (item in items) {
+			if (Std.is(item, ILayoutObject)) {
+				var layoutItem = cast(item, ILayoutObject);
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+				var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
+				if (layoutData != null) {
+					var percentWidth = layoutData.percentWidth;
+					if (percentWidth != null) {
+						item.width = (viewPortWidth - this.paddingLeft - this.paddingRight) * percentWidth / 100.0;
+					}
+				}
+			}
+		}
+	}
+
+	private function applyPercentHeight(items:Array<DisplayObject>, explicitHeight:Null<Float>, explicitMinHeight:Null<Float>,
+			explicitMaxHeight:Null<Float>):Void {
+		var pendingItems:Array<ILayoutObject> = [];
+		var totalMeasuredHeight = 0.0;
+		var totalMinHeight = 0.0;
+		var totalPercentHeight = 0.0;
+		for (item in items) {
+			if (Std.is(item, ILayoutObject)) {
+				var layoutItem = cast(item, ILayoutObject);
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+				var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
+				if (layoutData != null) {
+					var percentHeight = layoutData.percentHeight;
+					if (percentHeight != null) {
+						if (percentHeight < 0.0) {
+							percentHeight = 0.0;
+						}
+						if (Std.is(layoutItem, IMeasureObject)) {
+							var measureItem = cast(layoutItem, IMeasureObject);
+							totalMinHeight += measureItem.minHeight;
+						}
+						totalPercentHeight += percentHeight;
+						totalMeasuredHeight += this.gap;
+						pendingItems.push(layoutItem);
+						continue;
+					}
+				}
+			}
+			totalMeasuredHeight += item.height + this.gap;
+		}
+		totalMeasuredHeight -= this.gap;
+		/*if (this.firstGap != null && itemCount > 1) {
+				totalMeasuredHeight += (this.firstGap - this.gap);
+			} else if (this.lastGap != null && itemCount > 2) {
+				totalMeasuredHeight += (this.lastGap - this.gap);
+		}*/
+		totalMeasuredHeight += this.paddingTop + this.paddingBottom;
+		if (totalPercentHeight < 100.0) {
+			totalPercentHeight = 100.0;
+		}
+		var remainingHeight = explicitHeight;
+		if (remainingHeight == null) {
+			remainingHeight = totalMeasuredHeight + totalMinHeight;
+			if (explicitMinHeight != null && remainingHeight < explicitMinHeight) {
+				remainingHeight = explicitMinHeight;
+			} else if (explicitMaxHeight != null && remainingHeight > explicitMaxHeight) {
+				remainingHeight = explicitMaxHeight;
+			}
+		}
+		remainingHeight -= totalMeasuredHeight;
+		if (remainingHeight < 0) {
+			remainingHeight = 0;
+		}
+		var needsAnotherPass = true;
+		while (needsAnotherPass) {
+			needsAnotherPass = false;
+			var percentToPixels = remainingHeight / totalPercentHeight;
+			for (layoutItem in pendingItems) {
+				var layoutData = cast(layoutItem.layoutData, VerticalLayoutData);
+				var percentHeight = layoutData.percentHeight;
+				if (percentHeight < 0.0) {
+					percentHeight = 0.0;
+				}
+				var itemHeight = percentToPixels * percentHeight;
+				if (Std.is(layoutItem, IMeasureObject)) {
+					var measureItem = cast(layoutItem, IMeasureObject);
+					var itemMinHeight = measureItem.explicitMinHeight;
+					if (explicitMinHeight != null && itemMinHeight > remainingHeight) {
+						// we try to respect the item's minimum height, but
+						// if it's larger than the remaining space, we need
+						// to force it to fit
+						itemMinHeight = remainingHeight;
+					}
+					if (itemHeight < itemMinHeight) {
+						itemHeight = itemMinHeight;
+						remainingHeight -= itemHeight;
+						totalPercentHeight -= percentHeight;
+						pendingItems.remove(layoutItem);
+						needsAnotherPass = true;
+					}
+					// we don't check maxHeight here because it is used in
+					// validateItems() for performance optimization, so it
+					// isn't a real maximum
+				}
+				cast(layoutItem, DisplayObject).height = itemHeight;
+				if (Std.is(layoutItem, IValidating)) {
+					// changing the height of the item may cause its width
+					// to change, so we need to validate. the width is needed
+					// for measurement.
+					cast(layoutItem, IValidating).validateNow();
+				}
+			}
 		}
 	}
 }
