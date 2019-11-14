@@ -8,10 +8,10 @@
 
 package feathers.layout;
 
+import feathers.controls.LayoutGroup;
 import openfl.events.Event;
 import openfl.display.Shape;
 import feathers.layout.Measurements;
-import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 
 class VerticalLayoutTest {
@@ -33,6 +33,8 @@ class VerticalLayoutTest {
 	private var _layout:VerticalLayout;
 	private var _child1:Shape;
 	private var _child2:Shape;
+	private var _control1:LayoutGroup;
+	private var _control2:LayoutGroup;
 
 	@Before
 	public function prepare():Void {
@@ -48,6 +50,10 @@ class VerticalLayoutTest {
 		this._child2.graphics.beginFill();
 		this._child2.graphics.drawRect(0, 0, CHILD2_WIDTH, CHILD2_HEIGHT);
 		this._child2.graphics.endFill();
+
+		this._control1 = new LayoutGroup();
+
+		this._control2 = new LayoutGroup();
 	}
 
 	@After
@@ -56,6 +62,8 @@ class VerticalLayoutTest {
 		this._layout = null;
 		this._child1 = null;
 		this._child1 = null;
+		this._control1 = null;
+		this._control2 = null;
 	}
 
 	@Test
@@ -295,5 +303,100 @@ class VerticalLayoutTest {
 		Assert.areEqual(PADDING_TOP + PADDING_BOTTOM + CHILD1_HEIGHT + CHILD2_HEIGHT + GAP, result.contentHeight);
 		Assert.areEqual(0.0, result.contentX);
 		Assert.areEqual(0.0, result.contentY);
+	}
+
+	@Test
+	public function testPercentWidth():Void {
+		this._measurements.width = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(50.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.width / 2.0, this._control1.width);
+	}
+
+	@Test
+	public function testPercentWidthGreaterThan100():Void {
+		this._measurements.width = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(150.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.width, this._control1.width);
+	}
+
+	@Test
+	public function testPercentWidthLessThan0():Void {
+		this._measurements.width = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(-50.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(0.0, this._control1.width);
+	}
+
+	@Test
+	public function testPercentWidthWithExplicitMinWidth():Void {
+		this._measurements.width = 640.0;
+		this._control1.minWidth = 400.0;
+		this._control1.layoutData = new VerticalLayoutData(50.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(400.0, this._control1.width);
+	}
+
+	@Test
+	public function testPercentWidthWithExplicitMaxWidth():Void {
+		this._measurements.width = 640.0;
+		this._control1.maxWidth = 250.0;
+		this._control1.layoutData = new VerticalLayoutData(50.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(250.0, this._control1.width);
+	}
+
+	@Test
+	public function testPercentHeightWithOneItem():Void {
+		this._measurements.height = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(null, 50.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.height / 2.0, this._control1.height);
+	}
+
+	@Test
+	public function testPercentHeightGreaterThan100WithOneItem():Void {
+		this._measurements.height = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(null, 150.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.height, this._control1.height);
+	}
+
+	@Test
+	public function testPercentHeightLessThan0WithOneItem():Void {
+		this._measurements.height = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(null, -50.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(0.0, this._control1.height);
+	}
+
+	@Test
+	public function testPercentHeightWithTwoItems():Void {
+		this._measurements.height = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(null, 50.0);
+		this._control2.layoutData = new VerticalLayoutData(null, 25.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.areEqual(this._measurements.height / 2.0, this._control1.height);
+		Assert.areEqual(this._measurements.height / 4.0, this._control2.height);
+	}
+
+	@Test
+	public function testPercentHeightGreaterThan100WithTwoItems():Void {
+		this._measurements.height = 640.0;
+		this._control1.layoutData = new VerticalLayoutData(null, 100.0);
+		this._control2.layoutData = new VerticalLayoutData(null, 150.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.areEqual(this._measurements.height / (250.0 / 100.0), this._control1.height);
+		Assert.areEqual(this._measurements.height / (250.0 / 150.0), this._control2.height);
+	}
+
+	@Test
+	public function testPercentHeightWithExplicitMinHeight():Void {
+		this._measurements.height = 640.0;
+		this._control1.minHeight = 400.0;
+		this._control1.layoutData = new VerticalLayoutData(null, 50.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(400.0, this._control1.height);
 	}
 }
