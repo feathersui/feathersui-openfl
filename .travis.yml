@@ -42,6 +42,11 @@ script:
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
+# build list-box-data-provider-collection-sorting example
+- cd $TRAVIS_BUILD_DIR/examples/list-box-data-provider-collection-sorting
+- haxelib run openfl build neko
+- haxelib run openfl build html5
+- haxelib run openfl build flash
 # run automated tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code
