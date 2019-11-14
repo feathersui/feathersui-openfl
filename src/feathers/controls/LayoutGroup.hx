@@ -314,6 +314,9 @@ class LayoutGroup extends FeathersControl {
 
 		if (this._currentBackgroundSkin != null) {
 			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			if (Std.is(this._currentBackgroundSkin, IValidating)) {
+				cast(this._currentBackgroundSkin, IValidating).validateNow();
+			}
 		}
 
 		var needsToMeasureContent = this.autoSizeMode == AutoSizeMode.CONTENT || this.stage == null;
