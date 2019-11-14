@@ -2,6 +2,10 @@
 
 This example app demonstrates how to use percentage sizing with `HorizontalLayout` in a [Feathers UI](https://feathersui.com/) application.
 
+## Live demo
+
+A build of the [*horizontal-layout-percentage-sizing* example](https://feathersui.com/examples/horizontal-layout-percentage-sizing/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
+
 ## Run locally
 
 This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
