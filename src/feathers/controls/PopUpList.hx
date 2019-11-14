@@ -236,7 +236,11 @@ class PopUpList extends FeathersControl {
 		this.listBox.selectedIndex = this.selectedIndex;
 		this._ignoreListBoxChange = oldIgnoreListBoxChange;
 
-		this.button.text = this.dataProvider.get(this.selectedIndex).text;
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			this.button.text = "";
+		} else {
+			this.button.text = this.dataProvider.get(this.selectedIndex).text;
+		}
 	}
 
 	private function refreshEnabled():Void {
