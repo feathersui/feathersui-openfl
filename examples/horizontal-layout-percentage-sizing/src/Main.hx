@@ -9,6 +9,7 @@ import feathers.controls.Button;
 import feathers.layout.HorizontalLayout;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Application;
+import com.feathersui.controls.PoweredByFeathersUI;
 
 class Main extends Application {
 	public function new() {
@@ -40,7 +41,7 @@ class Main extends Application {
 		// this group will have several items with different percentWidth values
 		this.createMixedPercentGroup();
 
-		this.createCredits();
+		this.addChild(new PoweredByFeathersUI());
 	}
 
 	private function create33PercentGroup():LayoutGroup {
@@ -133,31 +134,5 @@ class Main extends Application {
 		group.addChild(child20);
 
 		return group;
-	}
-
-	private function createCredits():Void {
-		var creditsLayout = new HorizontalLayout();
-		creditsLayout.verticalAlign = MIDDLE;
-
-		var credits = new LayoutGroup();
-		credits.layout = creditsLayout;
-		credits.buttonMode = true;
-		credits.useHandCursor = true;
-		credits.mouseChildren = false;
-		credits.addEventListener(MouseEvent.CLICK, credits_clickHandler);
-		this.addChild(credits);
-
-		var label = new Label();
-		label.text = "Created with ";
-		credits.addChild(label);
-
-		var icon = new AssetLoader();
-		icon.source = "feathersui-logo";
-		icon.height = 16.0;
-		credits.addChild(icon);
-	}
-
-	private function credits_clickHandler(event:MouseEvent):Void {
-		Lib.navigateToURL(new URLRequest("https://feathersui.com/"), "_blank");
 	}
 }
