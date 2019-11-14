@@ -310,6 +310,8 @@ class HorizontalLayoutTest {
 		this._measurements.height = 640.0;
 		this._control1.layoutData = new HorizontalLayoutData(null, 50.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.height, result.viewPortHeight);
+		Assert.areEqual(this._measurements.height, result.contentHeight);
 		Assert.areEqual(this._measurements.height / 2.0, this._control1.height);
 	}
 
@@ -318,6 +320,8 @@ class HorizontalLayoutTest {
 		this._measurements.height = 640.0;
 		this._control1.layoutData = new HorizontalLayoutData(null, 150.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.height, result.viewPortHeight);
+		Assert.areEqual(this._measurements.height, result.contentHeight);
 		Assert.areEqual(this._measurements.height, this._control1.height);
 	}
 
@@ -326,6 +330,8 @@ class HorizontalLayoutTest {
 		this._measurements.height = 640.0;
 		this._control1.layoutData = new HorizontalLayoutData(null, -50.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.height, result.viewPortHeight);
+		Assert.areEqual(this._measurements.height, result.contentHeight);
 		Assert.areEqual(0.0, this._control1.height);
 	}
 
@@ -335,6 +341,8 @@ class HorizontalLayoutTest {
 		this._control1.minHeight = 400.0;
 		this._control1.layoutData = new HorizontalLayoutData(null, 50.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.height, result.viewPortHeight);
+		Assert.areEqual(this._measurements.height, result.contentHeight);
 		Assert.areEqual(400.0, this._control1.height);
 	}
 
@@ -344,7 +352,32 @@ class HorizontalLayoutTest {
 		this._control1.maxHeight = 250.0;
 		this._control1.layoutData = new HorizontalLayoutData(null, 50.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.height, result.viewPortHeight);
+		Assert.areEqual(this._measurements.height, result.contentHeight);
 		Assert.areEqual(250.0, this._control1.height);
+	}
+
+	@Test
+	public function testPercentHeightWithCalculatedMinHeightAndNoExplicitHeight():Void {
+		var child = new Shape();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0, 0, 150.0, 200.0);
+		this._control1.addChild(child);
+		this._control1.layoutData = new HorizontalLayoutData(100.0, 100.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(200.0, result.viewPortHeight);
+		Assert.areEqual(200.0, result.contentHeight);
+	}
+
+	@Test
+	public function testPercentHeightWithExplicitMinHeightAndSmallerViewPortMaxHeight():Void {
+		this._measurements.maxHeight = 50.0;
+		this._control1.minHeight = 150.0;
+		this._control1.layoutData = new HorizontalLayoutData(null, 100.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.maxHeight, result.viewPortHeight);
+		// Assert.areEqual(this._measurements.maxHeight, result.contentHeight);
+		Assert.areEqual(this._measurements.maxHeight, this._control1.height);
 	}
 
 	@Test
@@ -352,6 +385,8 @@ class HorizontalLayoutTest {
 		this._measurements.width = 640.0;
 		this._control1.layoutData = new HorizontalLayoutData(50.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.width, result.viewPortWidth);
+		Assert.areEqual(this._measurements.width, result.contentWidth);
 		Assert.areEqual(this._measurements.width / 2.0, this._control1.width);
 	}
 
@@ -360,6 +395,8 @@ class HorizontalLayoutTest {
 		this._measurements.width = 640.0;
 		this._control1.layoutData = new HorizontalLayoutData(150.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.width, result.viewPortWidth);
+		Assert.areEqual(this._measurements.width, result.contentWidth);
 		Assert.areEqual(this._measurements.width, this._control1.width);
 	}
 
@@ -368,6 +405,8 @@ class HorizontalLayoutTest {
 		this._measurements.width = 640.0;
 		this._control1.layoutData = new HorizontalLayoutData(-50.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.width, result.viewPortWidth);
+		Assert.areEqual(this._measurements.width, result.contentWidth);
 		Assert.areEqual(0.0, this._control1.width);
 	}
 
@@ -377,6 +416,8 @@ class HorizontalLayoutTest {
 		this._control1.layoutData = new HorizontalLayoutData(50.0);
 		this._control2.layoutData = new HorizontalLayoutData(25.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.areEqual(this._measurements.width, result.viewPortWidth);
+		Assert.areEqual(this._measurements.width, result.contentWidth);
 		Assert.areEqual(this._measurements.width / 2.0, this._control1.width);
 		Assert.areEqual(this._measurements.width / 4.0, this._control2.width);
 	}
@@ -387,6 +428,8 @@ class HorizontalLayoutTest {
 		this._control1.layoutData = new HorizontalLayoutData(100.0);
 		this._control2.layoutData = new HorizontalLayoutData(150.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.areEqual(this._measurements.width, result.viewPortWidth);
+		Assert.areEqual(this._measurements.width, result.contentWidth);
 		Assert.areEqual(this._measurements.width / (250.0 / 100.0), this._control1.width);
 		Assert.areEqual(this._measurements.width / (250.0 / 150.0), this._control2.width);
 	}
@@ -397,6 +440,41 @@ class HorizontalLayoutTest {
 		this._control1.minWidth = 400.0;
 		this._control1.layoutData = new HorizontalLayoutData(50.0);
 		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.width, result.viewPortWidth);
+		Assert.areEqual(this._measurements.width, result.contentWidth);
 		Assert.areEqual(400.0, this._control1.width);
+	}
+
+	@Test
+	public function testPercentWidthWithCalculatedMinWidthAndNoExplicitWidth():Void {
+		var child = new Shape();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0, 0, 150.0, 200.0);
+		this._control1.addChild(child);
+		this._control1.layoutData = new HorizontalLayoutData(100.0, 100.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(150.0, result.viewPortWidth);
+		Assert.areEqual(150.0, result.contentWidth);
+	}
+
+	@Test
+	public function testPercentWidthWithViewPortMinWidth():Void {
+		this._measurements.minWidth = 50.0;
+		this._control1.layoutData = new HorizontalLayoutData(100.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.minWidth, result.viewPortWidth);
+		Assert.areEqual(this._measurements.minWidth, result.contentWidth);
+		Assert.areEqual(this._measurements.minWidth, this._control1.width);
+	}
+
+	@Test
+	public function testPercentWidthWithExplicitMinWidthAndSmallerViewPortMaxWidth():Void {
+		this._measurements.maxWidth = 50.0;
+		this._control1.minWidth = 150.0;
+		this._control1.layoutData = new HorizontalLayoutData(100.0);
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._measurements.maxWidth, result.viewPortWidth);
+		Assert.areEqual(this._measurements.maxWidth, result.contentWidth);
+		Assert.areEqual(this._measurements.maxWidth, this._control1.width);
 	}
 }
