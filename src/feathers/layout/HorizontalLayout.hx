@@ -343,20 +343,48 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	private function applyPercentHeight(items:Array<DisplayObject>, viewPortHeight:Float):Void {
+		var availableHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
 		for (item in items) {
-			if (Std.is(item, ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
-				if (!layoutItem.includeInLayout) {
-					continue;
-				}
-				var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
-				if (layoutData != null) {
-					var percentHeight = layoutData.percentHeight;
-					if (percentHeight != null) {
-						item.height = (viewPortHeight - this.paddingTop - this.paddingBottom) * percentHeight / 100.0;
+			if (!Std.is(item, ILayoutObject)) {
+				continue;
+			}
+			var layoutItem = cast(item, ILayoutObject);
+			if (!layoutItem.includeInLayout) {
+				continue;
+			}
+			var layoutData = Std.downcast(layoutItem.layoutData, HorizontalLayoutData);
+			if (layoutData == null) {
+				continue;
+			}
+			var percentHeight = layoutData.percentHeight;
+			if (percentHeight == null) {
+				continue;
+			}
+			if (percentHeight < 0.0) {
+				percentHeight = 0.0;
+			} else if (percentHeight > 100.0) {
+				percentHeight = 100.0;
+			}
+			var itemHeight = availableHeight * percentHeight / 100.0;
+			if (Std.is(item, IMeasureObject)) {
+				var measureItem = cast(item, IMeasureObject);
+				var itemMinHeight = measureItem.explicitMinHeight;
+				if (itemMinHeight != null) {
+					// we try to respect the minHeight, but not
+					// when it's larger than 100%
+					if (itemMinHeight > availableHeight) {
+						itemMinHeight = availableHeight;
+					}
+					if (itemHeight < itemMinHeight) {
+						itemHeight = itemMinHeight;
 					}
 				}
+				var itemMaxHeight = measureItem.explicitMaxHeight;
+				if (itemMaxHeight != null && itemHeight > itemMaxHeight) {
+					itemHeight = itemMaxHeight;
+				}
 			}
+			item.height = itemHeight;
 		}
 	}
 }

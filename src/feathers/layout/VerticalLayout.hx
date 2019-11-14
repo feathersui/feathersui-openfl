@@ -246,20 +246,48 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	}
 
 	private function applyPercentWidth(items:Array<DisplayObject>, viewPortWidth:Float):Void {
+		var availableWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
 		for (item in items) {
-			if (Std.is(item, ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
-				if (!layoutItem.includeInLayout) {
-					continue;
-				}
-				var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
-				if (layoutData != null) {
-					var percentWidth = layoutData.percentWidth;
-					if (percentWidth != null) {
-						item.width = (viewPortWidth - this.paddingLeft - this.paddingRight) * percentWidth / 100.0;
+			if (!Std.is(item, ILayoutObject)) {
+				continue;
+			}
+			var layoutItem = cast(item, ILayoutObject);
+			if (!layoutItem.includeInLayout) {
+				continue;
+			}
+			var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
+			if (layoutData == null) {
+				continue;
+			}
+			var percentWidth = layoutData.percentWidth;
+			if (percentWidth == null) {
+				continue;
+			}
+			if (percentWidth < 0.0) {
+				percentWidth = 0.0;
+			} else if (percentWidth > 100.0) {
+				percentWidth = 100.0;
+			}
+			var itemWidth = availableWidth * percentWidth / 100.0;
+			if (Std.is(item, IMeasureObject)) {
+				var measureItem = cast(item, IMeasureObject);
+				var itemMinWidth = measureItem.explicitMinWidth;
+				if (itemMinWidth != null) {
+					// we try to respect the minWidth, but not
+					// when it's larger than 100%
+					if (itemMinWidth > availableWidth) {
+						itemMinWidth = availableWidth;
+					}
+					if (itemWidth < itemMinWidth) {
+						itemWidth = itemMinWidth;
 					}
 				}
+				var itemMaxWidth = measureItem.explicitMaxWidth;
+				if (itemMaxWidth != null && itemWidth > itemMaxWidth) {
+					itemWidth = itemMaxWidth;
+				}
 			}
+			item.width = itemWidth;
 		}
 	}
 
