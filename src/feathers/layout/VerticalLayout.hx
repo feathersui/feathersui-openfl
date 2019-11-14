@@ -367,7 +367,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 				if (Std.is(layoutItem, IMeasureObject)) {
 					var measureItem = cast(layoutItem, IMeasureObject);
 					var itemMinHeight = measureItem.explicitMinHeight;
-					if (explicitMinHeight != null && itemMinHeight > remainingHeight) {
+					if (itemMinHeight != null && itemMinHeight > remainingHeight) {
 						// we try to respect the item's minimum height, but
 						// if it's larger than the remaining space, we need
 						// to force it to fit
