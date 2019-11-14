@@ -62,11 +62,27 @@ class DisplayObjectRecycler<T:B & DisplayObject & Constructible<() -> Void>, S, 
 	public dynamic function destroy(target:T):Void {}
 }
 
+/**
+
+
+	@since 1.0.0
+**/
 abstract DisplayObjectClassOrFunction<T>(() -> T) from() -> T to() -> T {
 	inline function new(factory:() -> T) {
 		this = factory;
 	}
 
+	/**
+		Accepts a `Class` that extends `DisplayObject` and creates a function
+		that instantiates an instance of that class. The function has the
+		following signature:
+
+		```hx
+		() -> DisplayObject
+		```
+
+		@since 1.0.0
+	**/
 	@:from
 	public static function fromClass<T>(type:Class<T>) {
 		return new DisplayObjectClassOrFunction(() -> {
