@@ -128,8 +128,8 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		this.validateItems(items);
 		this.applyPercentWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);
 
-		var maxHeight = 0.0;
-		var xPosition = this.paddingLeft;
+		var contentWidth = this.paddingLeft;
+		var contentHeight = 0.0;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
@@ -141,19 +141,19 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
-			if (maxHeight < item.height) {
-				maxHeight = item.height;
+			if (contentHeight < item.height) {
+				contentHeight = item.height;
 			}
-			item.x = xPosition;
-			xPosition += item.width + this.gap;
+			item.x = contentWidth;
+			contentWidth += item.width + this.gap;
 		}
-		xPosition += this.paddingRight;
+		contentWidth += this.paddingRight;
 		if (items.length > 0) {
-			xPosition -= this.gap;
+			contentWidth -= this.gap;
 		}
-		var yPosition = maxHeight + this.paddingTop + this.paddingBottom;
+		contentHeight += this.paddingTop + this.paddingBottom;
 
-		var viewPortWidth = xPosition;
+		var viewPortWidth = contentWidth;
 		if (measurements.width != null) {
 			viewPortWidth = measurements.width;
 		} else {
@@ -163,7 +163,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				viewPortWidth = measurements.maxWidth;
 			}
 		}
-		var viewPortHeight = yPosition;
+		var viewPortHeight = contentHeight;
 		if (measurements.height != null) {
 			viewPortHeight = measurements.height;
 		} else {
@@ -174,15 +174,22 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
+		if (contentWidth < viewPortWidth) {
+			contentWidth = viewPortWidth;
+		}
+		if (contentHeight < viewPortHeight) {
+			contentHeight = viewPortHeight;
+		}
+
 		this.applyPercentHeight(items, viewPortHeight);
 		this.applyVerticalAlign(items, viewPortHeight);
-		this.applyHorizontalAlign(items, xPosition, viewPortWidth);
+		this.applyHorizontalAlign(items, contentWidth, viewPortWidth);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
-		result.contentWidth = xPosition;
-		result.contentHeight = yPosition;
+		result.contentWidth = contentWidth;
+		result.contentHeight = contentHeight;
 		result.viewPortWidth = viewPortWidth;
 		result.viewPortHeight = viewPortHeight;
 		return result;
