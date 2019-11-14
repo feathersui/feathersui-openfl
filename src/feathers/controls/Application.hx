@@ -67,10 +67,10 @@ class Application extends LayoutGroup {
 		if (this.customScale != null) {
 			scaleFactor = this.customScale;
 		} else {
-			#if ((desktop || web) && !flash)
+			#if (desktop || web)
 			this._scaler = null;
 			scaleFactor = this.stage.window.scale;
-			#if (web)
+			#if (web && html5)
 			if (scaleFactor > 2.0) {
 				scaleFactor *= (this.stage.window.scale / 2.0);
 			}
