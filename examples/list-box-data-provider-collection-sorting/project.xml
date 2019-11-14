@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="Collection Sorting" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
+	<meta title="Sort a ListBox data provider with sortCompareFunction (ArrayCollection) — Feathers UI Examples" if="html5"/>
+	<app main="Main" path="build" file="Main" />
+
+	<window allow-high-dpi="true"/>
+	<window fps="60"/>
+	<window fps="0" if="html5"/>
+	
+	<source path="../../src" />
+	<source path="src" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+
+	<assets id="feathersui-logo" path="assets/img/feathersui-logo.png" embed="false"/>
+	<icon path="assets/icons/feathersui-icon.svg"/>
+</project>
