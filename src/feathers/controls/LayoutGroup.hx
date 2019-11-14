@@ -218,6 +218,13 @@ class LayoutGroup extends FeathersControl {
 		return super.removeChildAt(index);
 	}
 
+	override public function setChildIndex(child:DisplayObject, index:Int):Void {
+		super.setChildIndex(child, index);
+		this.items.remove(child);
+		this.items.insert(index, child);
+		this.setInvalid(InvalidationFlag.LAYOUT);
+	}
+
 	private function initializeLayoutGroupTheme():Void {
 		SteelLayoutGroupStyles.initialize();
 	}
