@@ -1,0 +1,30 @@
+name: Haxe CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Haxe
+      run: |
+        sudo add-apt-repository ppa:haxe/releases -y
+        sudo apt-get update
+        sudo apt-get install haxe -y
+        mkdir $GITHUB_WORKSPACE/.haxelib
+        haxelib setup $GITHUB_WORKSPACE/.haxelib
+    - name: Set up Dependencies
+      run: |
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
+        haxelib install actuate --quiet
+        haxelib install dox --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE --quiet
+    - name: Build .swc file
+      run: haxelib run openfl build flash
+    - name: Build API documentation
+      working-directory: docs
+      run: haxe docs.hxml
