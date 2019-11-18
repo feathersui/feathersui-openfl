@@ -29,7 +29,7 @@ import js.html.MediaQueryList;
 	@since 1.0.0
 **/
 class BaseSteelTheme implements IDarkModeTheme {
-	public function new(?themeColor:Int, ?darkThemeColor:Int) {
+	private function new(?themeColor:Int, ?darkThemeColor:Int) {
 		this.customThemeColor = themeColor;
 		this.customDarkThemeColor = darkThemeColor;
 		this.refreshColors();

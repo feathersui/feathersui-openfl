@@ -42,10 +42,12 @@ class BaseProgressBar extends FeathersControl {
 		progress.value = 12.0;
 		```
 
-		@default 0
+		@default 0.0
 
 		@see `BaseProgressBar.minimum`
 		@see `BaseProgressBar.maximum`
+
+		@since 1.0.0
 	**/
 	public var value(default, set):Float = 0.0;
 
@@ -64,16 +66,18 @@ class BaseProgressBar extends FeathersControl {
 
 		In the following example, the minimum is set to `-100`:
 
-		``` hx
+		```hx
 		progress.minimum = -100;
 		progress.maximum = 100;
 		progress.value = 50;
 		```
 
-		@default 0
+		@default 0.0
 
 		@see `BaseProgressBar.value`
 		@see `BaseProgressBar.maximum`
+
+		@since 1.0.0
 	**/
 	public var minimum(default, set):Float = 0.0;
 
@@ -104,6 +108,8 @@ class BaseProgressBar extends FeathersControl {
 
 		@see `BaseProgressBar.value`
 		@see `BaseProgressBar.minimum`
+
+		@since 1.0.0
 	**/
 	public var maximum(default, set):Float = 1.0;
 
@@ -132,7 +138,7 @@ class BaseProgressBar extends FeathersControl {
 		`width` and `height` properties are not set explicitly. The fill skin
 		and padding values will also be used.
 
-		If the background skin is a Feathers component, the `minWidth` or
+		If the background skin is a measurable component, the `minWidth` or
 		`minHeight` properties will be one of the values used to calculate the
 		width or height of the progress bar. If the background skin is a regular
 		OpenFL display object, the original width and height of the display
@@ -141,25 +147,76 @@ class BaseProgressBar extends FeathersControl {
 		In the following example, the progress bar is given a background skin:
 
 		```hx
-		progress.backgroundSkin = new Bitmap(bitmapData);
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		progress.backgroundSkin = skin;
 		```
 
-		@default null
+		@see `backgroundDisabledSkin`
 
 		@since 1.0.0
 	**/
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
+	/**
+		The background skin to display when the progress bar is disabled.
+
+		In the following example, the progress bar is given a disabled
+		background skin:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xdddddd);
+		progress.backgroundDisabledSkin = skin;
+
+		progress.enabled = false;
+		```
+
+		@see `backgroundSkin`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var backgroundDisabledSkin:DisplayObject = null;
 
 	private var _fillSkinMeasurements:Measurements = null;
 	private var _currentFillSkin:DisplayObject = null;
 
+	/**
+		The primary fill to display in the progress bar. The fill skin is
+		rendered above the background skin, with padding around the edges of the
+		the fill skin to reveal the background skin behind.
+
+		In the following example, the progress bar is given a fill skin:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xaaaaaa);
+		progress.fillSkin = skin;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var fillSkin:DisplayObject = null;
 
+	/**
+		The fill skin to display when the progress bar is disabled.
+
+		In the following example, the progress bar is given a disabled
+		fill skin:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		progress.fillDisabledSkin = skin;
+
+		progress.enabled = false;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var fillDisabledSkin:DisplayObject = null;
 
@@ -174,7 +231,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingTop = 20.0;
 		```
 
-		@default 0.0
+		@see `paddingBottom`
+		@see `paddingRight`
+		@see `paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -192,7 +251,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingRight = 20.0;
 		```
 
-		@default 0.0
+		@see `paddingTop`
+		@see `paddingBottom`
+		@see `paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -210,7 +271,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingBottom = 20.0;
 		```
 
-		@default 0.0
+		@see `paddingTop`
+		@see `paddingRight`
+		@see `paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -228,7 +291,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingLeft = 20.0;
 		```
 
-		@default 0.0
+		@see `paddingTop`
+		@see `paddingBottom`
+		@see `paddingRight`
 
 		@since 1.0.0
 	**/

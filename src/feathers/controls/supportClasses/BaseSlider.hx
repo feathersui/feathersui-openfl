@@ -53,6 +53,8 @@ class BaseSlider extends FeathersControl implements IRange {
 		@see `BaseSlider.minimum`
 		@see `BaseSlider.maximum`
 		@see `BaseSlider.step`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var value(get, set):Float = 0.0;
@@ -78,7 +80,7 @@ class BaseSlider extends FeathersControl implements IRange {
 
 		In the following example, the minimum is set to `-100.0`:
 
-		``` hx
+		```hx
 		slider.minimum = -100.0;
 		slider.maximum = 100.0;
 		slider.step = 1.0;
@@ -89,6 +91,8 @@ class BaseSlider extends FeathersControl implements IRange {
 
 		@see `BaseSlider.value`
 		@see `BaseSlider.maximum`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var minimum(get, set):Float = 0.0;
@@ -125,6 +129,8 @@ class BaseSlider extends FeathersControl implements IRange {
 
 		@see `BaseSlider.value`
 		@see `BaseSlider.minimum`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var maximum(get, set):Float = 1.0;
@@ -163,6 +169,8 @@ class BaseSlider extends FeathersControl implements IRange {
 		@see `BaseSlider.value`
 		@see `BaseSlider.minimum`
 		@see `BaseSlider.maximum`
+
+		@since 1.0.0
 	**/
 	public var step(default, set):Float = 0.0;
 
@@ -187,6 +195,8 @@ class BaseSlider extends FeathersControl implements IRange {
 		```
 
 		@default true
+
+		@since 1.0.0
 	**/
 	public var liveDragging(default, default):Bool = true;
 
@@ -194,7 +204,19 @@ class BaseSlider extends FeathersControl implements IRange {
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the slider's thumb.
+
+		In the following example, a thumb skin is passed to the slider:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		slider.thumbSkin = skin;
+		```
+
 		@see `BaseSlider.trackSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var thumbSkin(default, set):DisplayObject = null;
@@ -250,8 +272,20 @@ class BaseSlider extends FeathersControl implements IRange {
 	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the slider's track.
+
+		In the following example, a track skin is passed to the slider:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		slider.trackSkin = skin;
+		```
+
 		@see `BaseSlider.secondaryTrackSkin`
 		@see `BaseSlider.thumbSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var trackSkin(default, set):DisplayObject = null;
@@ -307,7 +341,29 @@ class BaseSlider extends FeathersControl implements IRange {
 	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the slider's optional secondary track. If a slider
+		has one track, it will fill the entire length of the slider. If a slider
+		has a track and a secondary track, the track will stretch between the
+		minimum edge of the slider and the location of the slider's thumb, while
+		the secondary track will stretch from the location of the slider's thumb
+		to the maximum edge of the slider.
+
+		In the following example, a track skin and a secondary track skin are
+		passed to the slider:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xaaaaaa);
+		slider.trackSkin = skin;
+
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		slider.secondaryTrackSkin = skin;
+		```
+
 		@see `BaseSlider.trackSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var secondaryTrackSkin(default, set):DisplayObject = null;
@@ -363,13 +419,37 @@ class BaseSlider extends FeathersControl implements IRange {
 	}
 
 	/**
+		The space, in pixels, between the minimum position of the thumb and the
+		the minimum edge of the track. May be negative to optionally extend the
+		draggable range of the thumb beyond the track's bounds.
+
+		In the following example, minimum padding is set to 20 pixels:
+
+		```hx
+		slider.minimumPadding = 20.0;
+		```
+
 		@see `BaseSlider.maximumPadding`
+
+		@since 1.0.0
 	**/
 	@:style
 	public var minimumPadding:Null<Float> = 0.0;
 
 	/**
+		The space, in pixels, between the maximum position of the thumb and the
+		the maximum edge of the track. May be negative to optionally extend the
+		draggable range of the thumb beyond the track's bounds.
+
+		In the following example, maximum padding is set to 20 pixels:
+
+		```hx
+		slider.maximumPadding = 20.0;
+		```
+
 		@see `BaseSlider.minimumPadding`
+
+		@since 1.0.0
 	**/
 	@:style
 	public var maximumPadding:Null<Float> = 0.0;

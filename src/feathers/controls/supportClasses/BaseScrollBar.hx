@@ -30,7 +30,7 @@ import feathers.core.FeathersControl;
 	@since 1.0.0
 **/
 class BaseScrollBar extends FeathersControl implements IScrollBar {
-	public function new() {
+	private function new() {
 		super();
 	}
 
@@ -49,9 +49,11 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@default 0.0
 
-		@see `IScrollBar.minimum`
-		@see `IScrollBar.maximum`
-		@see `IScrollBar.step`
+		@see `BaseScrollBar.minimum`
+		@see `BaseScrollBar.maximum`
+		@see `BaseScrollBar.step`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var value(get, set):Float = 0.0;
@@ -77,7 +79,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the minimum is set to `-100.0`:
 
-		``` hx
+		```hx
 		scrollBar.minimum = -100.0;
 		scrollBar.maximum = 100.0;
 		scrollBar.step = 1.0;
@@ -86,8 +88,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@default 0.0
 
-		@see `IScrollBar.value`
-		@see `IScrollBar.maximum`
+		@see `BaseScrollBar.value`
+		@see `BaseScrollBar.maximum`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var minimum(get, set):Float = 0.0;
@@ -122,8 +126,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@default 1.0
 
-		@see `IScrollBar.value`
-		@see `IScrollBar.minimum`
+		@see `BaseScrollBar.value`
+		@see `BaseScrollBar.minimum`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var maximum(get, set):Float = 1.0;
@@ -160,10 +166,12 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@default 0.0
 
-		@see `IScrollBar.value`
-		@see `IScrollBar.minimum`
-		@see `IScrollBar.maximum`
-		@see `IScrollBar.page`
+		@see `BaseScrollBar.value`
+		@see `BaseScrollBar.minimum`
+		@see `BaseScrollBar.maximum`
+		@see `BaseScrollBar.page`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var step(get, set):Float = 0.0;
@@ -200,10 +208,12 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@default 0.0
 
-		@see `IScrollBar.value`
-		@see `IScrollBar.minimum`
-		@see `IScrollBar.maximum`
-		@see `IScrollBar.step`
+		@see `BaseScrollBar.value`
+		@see `BaseScrollBar.minimum`
+		@see `BaseScrollBar.maximum`
+		@see `BaseScrollBar.step`
+
+		@since 1.0.0
 	**/
 	@:isVar
 	public var page(get, set):Float = 0.0;
@@ -233,6 +243,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		```
 
 		@default true
+
+		@since 1.0.0
 	**/
 	public var liveDragging(default, default):Bool = true;
 
@@ -240,7 +252,19 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the scroll bar's thumb.
+
+		In the following example, a thumb skin is passed to the scroll bar:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		scrollBar.thumbSkin = skin;
+		```
+
 		@see `BaseScrollBar.trackSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var thumbSkin(default, set):DisplayObject = null;
@@ -296,8 +320,20 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the scroll bar's track.
+
+		In the following example, a track skin is passed to the scroll bar:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		scrollBar.trackSkin = skin;
+		```
+
 		@see `BaseScrollBar.secondaryTrackSkin`
 		@see `BaseScrollBar.thumbSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var trackSkin(default, set):DisplayObject = null;
@@ -353,7 +389,30 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the scroll bar's optional secondary track. If a
+		scroll bar has one track, it will fill the entire length of the scroll
+		bar. If a scroll bar has a track and a secondary track, the track will
+		stretch between the minimum edge of the scroll bar and the location of
+		the scroll bar's thumb, while the secondary track will stretch from the
+		location of the scroll bar's thumb to the maximum edge of the scroll
+		bar.
+
+		In the following example, a track skin and a secondary track skin are
+		passed to the scroll bar:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xaaaaaa);
+		scrollBar.trackSkin = skin;
+
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		scrollBar.secondaryTrackSkin = skin;
+		```
+
 		@see `BaseScrollBar.trackSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var secondaryTrackSkin(default, set):DisplayObject = null;
@@ -408,18 +467,100 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		return this.secondaryTrackSkin;
 	}
 
+	/**
+		Determines if the scroll bar's thumb will be resized based on the
+		scrollable range between the `minimum` and `maximum`, or if it will
+		always be rendered at its preferred size, even if the `minimum` and
+		`maximum` values change.
+
+		In the following example, the thumb size is fixed:
+
+		```hx
+		scrollBar.fixedThumbSize = true;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var fixedThumbSize:Bool = false;
 
+	/**
+		The minimum space, in pixels, between the scroll bar's top edge and the
+		scroll bar's thumb.
+
+		In the following example, the scroll bar's top padding is set to 20
+		pixels:
+
+		```hx
+		scrollBar.paddingTop = 20.0;
+		```
+
+		@see `paddingBottom`
+		@see `paddingRight`
+		@see `paddingLeft`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingTop:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the scroll bar's right edge and
+		the scroll bar's thumb.
+
+		In the following example, the scroll bar's right padding is set to 20
+		pixels:
+
+		```hx
+		scrollBar.paddingRight = 20.0;
+		```
+
+		@see `paddingTop`
+		@see `paddingBottom`
+		@see `paddingLeft`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingRight:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the scroll bar's bottom edge and
+		the scroll bar's thumb.
+
+		In the following example, the scroll bar's bottom padding is set to 20
+		pixels:
+
+		```hx
+		scrollBar.paddingBottom = 20.0;
+		```
+
+		@see `paddingTop`
+		@see `paddingRight`
+		@see `paddingLeft`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingBottom:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the scroll bar's left edge and the
+		scroll bar's thumb.
+
+		In the following example, the scroll bar's left padding is set to 20
+		pixels:
+
+		```hx
+		scrollBar.paddingLeft = 20.0;
+		```
+
+		@see `paddingTop`
+		@see `paddingBottom`
+		@see `paddingRight`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingLeft:Float = 0.0;
 
