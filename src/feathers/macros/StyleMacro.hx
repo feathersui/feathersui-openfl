@@ -72,7 +72,9 @@ class StyleMacro {
 						name: field.name,
 						access: field.access,
 						kind: FieldType.FProp("default", "set", type, e),
-						pos: field.pos
+						pos: field.pos,
+						doc: field.doc,
+						meta: field.meta
 					};
 					return propField;
 				default:
