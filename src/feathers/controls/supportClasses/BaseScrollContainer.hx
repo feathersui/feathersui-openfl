@@ -53,6 +53,9 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	/**
+		The display object rendered and scrolled within the container, provided
+		by a subclass of `BaseScrollContainer`.
+
 		@since 1.0.0
 	**/
 	@:dox(show)
@@ -101,9 +104,7 @@ class BaseScrollContainer extends FeathersControl {
 		group.backgroundSkin = new Bitmap(bitmapData);
 		```
 
-		@default null
-
-		@see `LayoutGroup.backgroundDisabledSkin`
+		@see `BaseScrollContainer.backgroundDisabledSkin`
 
 		@since 1.0.0
 	**/
@@ -122,9 +123,7 @@ class BaseScrollContainer extends FeathersControl {
 		group.enabled = false;
 		```
 
-		@default null
-
-		@see `LayoutGroup.backgroundSkin`
+		@see `BaseScrollContainer.backgroundSkin`
 
 		@since 1.0.0
 	**/
@@ -134,15 +133,60 @@ class BaseScrollContainer extends FeathersControl {
 	private var scrollBarX:IScrollBar;
 	private var scrollBarY:IScrollBar;
 
+	/**
+		Determines if the scroll bars are fixed to the edges of the container,
+		without overlapping the container's content, or if the scroll bars are
+		floating above the container's content.
+
+		In the following example, the scroll bars are fixed:
+
+		```hx
+		container.fixedScrollBars = true;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var fixedScrollBars:Null<Bool> = false;
 
+	/**
+		Determines if the scroll bars should be automatically hidden after
+		scrolling has ended, whether it was through user interaction or
+		animation.
+
+		In the following example, scroll bar auto-hiding is disabled:
+
+		```hx
+		container.autoHideScrollBars = false;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var autoHideScrollBars:Null<Bool> = true;
 
 	private var showScrollBarX = false;
 	private var showScrollBarY = false;
 
+	/**
+		Creates the horizontal scroll bar. The horizontal scroll bar may be any
+		implementation of `IScrollBar`, but typically, the
+		`feathers.controls.HScrollBar` component is used.
+
+		In the following example, a custom horizontal scroll bar factory is
+		passed to the container:
+
+		```hx
+		scroller.scrollBarXFactory = () ->
+		{
+			return new HScrollBar();
+		};
+		```
+
+		@see `feathers.controls.HScrollBar`
+
+		@since 1.0.0
+	**/
 	public var scrollBarXFactory(default, set):() -> IScrollBar = defaultScrollBarXFactory;
 
 	private function set_scrollBarXFactory(value:() -> IScrollBar):() -> IScrollBar {
@@ -154,6 +198,25 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scrollBarXFactory;
 	}
 
+	/**
+		Creates the vertical scroll bar. The vertical scroll bar may be any
+		implementation of `IScrollBar`, but typically, the
+		`feathers.controls.VScrollBar` component is used.
+
+		In the following example, a custom vertical scroll bar factory is
+		passed to the container:
+
+		```hx
+		scroller.scrollBarYFactory = () ->
+		{
+			return new VScrollBar();
+		};
+		```
+
+		@see `feathers.controls.VScrollBar`
+
+		@since 1.0.0
+	**/
 	public var scrollBarYFactory(default, set):() -> IScrollBar = defaultScrollBarYFactory;
 
 	private function set_scrollBarYFactory(value:() -> IScrollBar):() -> IScrollBar {
@@ -165,6 +228,22 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scrollBarYFactory;
 	}
 
+	/**
+		The number of pixels the container has been scrolled horizontally (on
+		the x-axis).
+
+		In the following example, the horizontal scroll position is modified
+		immediately, without being animated:
+
+		```hx
+		container.scrollX = 100.0;
+		```
+
+		@see `BaseScrollContainer.minScrollX`
+		@see `BaseScrollContainer.maxScrollX`
+
+		@since 1.0.0
+	**/
 	public var scrollX(get, never):Float;
 
 	private function get_scrollX():Float {
@@ -174,6 +253,22 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scroller.scrollX;
 	}
 
+	/**
+		The number of pixels the container has been scrolled vertically (on the
+		y-axis).
+
+		In the following example, the vertical scroll position is modified
+		immediately, without being animated:
+
+		```hx
+		container.scrollY = 100.0;
+		```
+
+		@see `BaseScrollContainer.minScrollY`
+		@see `BaseScrollContainer.maxScrollY`
+
+		@since 1.0.0
+	**/
 	public var scrollY(get, never):Float;
 
 	private function get_scrollY():Float {
@@ -183,6 +278,21 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scroller.scrollY;
 	}
 
+	/**
+		The number of pixels the container may be scrolled horizontally in the
+		leftward direction. This value is automatically calculated based on the
+		bounds of the container's viewport.
+
+		The `scrollX` property may have a lower value than the minimum if the
+		`elasticEdges` property is enabled. However, once the user stops
+		interacting with the container, it will automatically animate back to
+		the minimum position.
+
+		@see `BaseScrollContainer.scrollX`
+		@see `BaseScrollContainer.maxScrollX`
+
+		@since 1.0.0
+	**/
 	public var minScrollX(get, never):Float;
 
 	private function get_minScrollX():Float {
@@ -192,6 +302,21 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scroller.minScrollX;
 	}
 
+	/**
+		The number of pixels the container may be scrolled vertically in the
+		upward direction. This value is automatically calculated based on the
+		bounds of the container's viewport.
+
+		The `scrollY` property may have a lower value than the minimum if the
+		`elasticEdges` property is enabled. However, once the user stops
+		interacting with the container, it will automatically animate back to
+		the minimum position.
+
+		@see `BaseScrollContainer.scrollY`
+		@see `BaseScrollContainer.maxScrollY`
+
+		@since 1.0.0
+	**/
 	public var minScrollY(get, never):Float;
 
 	private function get_minScrollY():Float {
@@ -201,6 +326,21 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scroller.minScrollY;
 	}
 
+	/**
+		The number of pixels the container may be scrolled horizontally in the
+		rightward direction. This value is automatically calculated based on the
+		bounds of the container's viewport.
+
+		The `scrollX` property may have a higher value than the maximum if the
+		`elasticEdges` property is enabled. However, once the user stops
+		interacting with the container, it will automatically animate back to
+		the maximum position.
+
+		@see `BaseScrollContainer.scrollX`
+		@see `BaseScrollContainer.maxScrollX`
+
+		@since 1.0.0
+	**/
 	public var maxScrollX(get, never):Float;
 
 	private function get_maxScrollX():Float {
@@ -210,6 +350,21 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scroller.maxScrollX;
 	}
 
+	/**
+		The number of pixels the container may be scrolled vertically in the
+		downward direction. This value is automatically calculated based on the
+		bounds of the container's viewport.
+
+		The `scrollY` property may have a higher value than the maximum if the
+		`elasticEdges` property is enabled. However, once the user stops
+		interacting with the container, it will automatically animate back to
+		the maximum position.
+
+		@see `BaseScrollContainer.scrollY`
+		@see `BaseScrollContainer.minScrollY`
+
+		@since 1.0.0
+	**/
 	public var maxScrollY(get, never):Float;
 
 	private function get_maxScrollY():Float {
@@ -219,6 +374,20 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scroller.maxScrollY;
 	}
 
+	/**
+		Determines whether the container may scroll horizontally (on the x-axis)
+		or not.
+
+		In the following example, horizontal scrolling is disabled:
+
+		```hx
+		container.scrollPolicyX = OFF;
+		```
+
+		@see `BaseScrollContainer.scrollPolicyY`
+
+		@since 1.0.0
+	**/
 	public var scrollPolicyX(default, set):ScrollPolicy = ScrollPolicy.AUTO;
 
 	private function set_scrollPolicyX(value:ScrollPolicy):ScrollPolicy {
@@ -230,6 +399,20 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scrollPolicyX;
 	}
 
+	/**
+		Determines whether the container may scroll vertically (on the y-axis)
+		or not.
+
+		In the following example, vertical scrolling is disabled:
+
+		```hx
+		container.scrollPolicyY = OFF;
+		```
+
+		@see `BaseScrollContainer.scrollPolicyX`
+
+		@since 1.0.0
+	**/
 	public var scrollPolicyY(default, set):ScrollPolicy = ScrollPolicy.AUTO;
 
 	private function set_scrollPolicyY(value:ScrollPolicy):ScrollPolicy {
@@ -241,24 +424,106 @@ class BaseScrollContainer extends FeathersControl {
 		return this.scrollPolicyY;
 	}
 
+	/**
+		When simulating touch, mouse events are treated as if they were mouse
+		events instead, allowing the user to click and drag the container with
+		momentum scrolling using the mouse instead of touch.
+
+		Generally, this is intended for testing during development and should
+		not be used in production.
+
+		```hx
+		container.simulateTouch = true;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var simulateTouch:Bool = false;
 
+	/**
+		Determines if the scrolling can go beyond the edges of the viewport when
+		dragging with a touch.
+
+		In the following example, elastic edges are disabled:
+
+		```hx
+		container.elasticEdges = false;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var elasticEdges:Bool = true;
 
-	@:style
-	public var scrollBarXPosition:RelativePosition = RelativePosition.BOTTOM;
+	/**
+		Determines the edge of the container where the horizontal scroll bar
+		will be positioned (either on the top or the bottom).
 
+		In the following example, the horizontal scroll bar is positioned on the
+		top edge of the container:
+
+		```hx
+		container.scrollBarXPosition = TOP;
+		```
+
+		@see `feathers.layout.RelativePosition.BOTTOM`
+		@see `feathers.layout.RelativePosition.TOP`
+
+		@since 1.0.0
+	**/
 	@:style
-	public var scrollBarYPosition:RelativePosition = RelativePosition.RIGHT;
+	public var scrollBarXPosition:RelativePosition = BOTTOM;
+
+	/**
+		Determines the edge of the container where the vertical scroll bar
+		will be positioned (either on the left or the right).
+
+		In the following example, the vertical scroll bar is positioned on the
+		left edge of the container:
+
+		```hx
+		container.scrollBarYPosition = LEFT;
+		```
+
+		@see `feathers.layout.RelativePosition.RIGHT`
+		@see `feathers.layout.RelativePosition.LEFT`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var scrollBarYPosition:RelativePosition = RIGHT;
 
 	private var _hideScrollBarX:SimpleActuator<Dynamic, Dynamic> = null;
 	private var _hideScrollBarY:SimpleActuator<Dynamic, Dynamic> = null;
 
+	/**
+		The duration, in seconds, of the animation when a scroll bar fades out.
+
+		In the following example, the duration of the animation that hides the
+		scroll bars is set to 500 milliseconds:
+
+		```hx
+		container.hideScrollBarDuration = 0.5;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var hideScrollBarDuration:Float = 0.2;
 
+	/**
+		The easing function used for hiding the scroll bars, if applicable.
+
+		In the following example, the ease of the animation that hides the
+		scroll bars is customized:
+
+		```hx
+		container.hideScrollBarEase = Elastic.easeOut;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var hideScrollBarEase:IEasing = Quart.easeOut;
 
@@ -594,10 +859,10 @@ class BaseScrollContainer extends FeathersControl {
 		this.scroller.enabledX = this.scrollPolicyX != ScrollPolicy.OFF;
 		this.scroller.enabledY = this.scrollPolicyY != ScrollPolicy.OFF;
 		this.scroller.elasticEdges = this.elasticEdges;
-		this.scroller.forceElasticLeft = this.primaryDirection == Direction.HORIZONTAL;
-		this.scroller.forceElasticRight = this.primaryDirection == Direction.HORIZONTAL;
-		this.scroller.forceElasticTop = this.primaryDirection == Direction.VERTICAL;
-		this.scroller.forceElasticBottom = this.primaryDirection == Direction.VERTICAL;
+		this.scroller.forceElasticLeft = this.primaryDirection == HORIZONTAL;
+		this.scroller.forceElasticRight = this.primaryDirection == HORIZONTAL;
+		this.scroller.forceElasticTop = this.primaryDirection == VERTICAL;
+		this.scroller.forceElasticBottom = this.primaryDirection == VERTICAL;
 		this.scroller.simulateTouch = this.simulateTouch;
 	}
 
