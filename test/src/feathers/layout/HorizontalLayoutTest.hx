@@ -128,7 +128,7 @@ class HorizontalLayoutTest {
 			changed = true;
 		});
 		Assert.isFalse(changed);
-		this._layout.horizontalAlign = HorizontalAlign.RIGHT;
+		this._layout.horizontalAlign = RIGHT;
 		Assert.isTrue(changed);
 	}
 
@@ -139,7 +139,7 @@ class HorizontalLayoutTest {
 			changed = true;
 		});
 		Assert.isFalse(changed);
-		this._layout.verticalAlign = VerticalAlign.BOTTOM;
+		this._layout.verticalAlign = BOTTOM;
 		Assert.isTrue(changed);
 	}
 

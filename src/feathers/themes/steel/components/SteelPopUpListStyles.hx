@@ -37,7 +37,7 @@ class SteelPopUpListStyles {
 			styleProvider.setStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON, function(button:Button):Void {
 				theme.styleProvider.getStyleFunction(Button, null)(button);
 
-				button.horizontalAlign = HorizontalAlign.LEFT;
+				button.horizontalAlign = LEFT;
 				button.gap = Math.POSITIVE_INFINITY;
 				button.minGap = 6.0;
 
@@ -55,7 +55,7 @@ class SteelPopUpListStyles {
 				downIcon.graphics.lineTo(8.0, 0.0);
 				button.setIconForState(ButtonState.DOWN, downIcon);
 
-				button.iconPosition = RelativePosition.RIGHT;
+				button.iconPosition = RIGHT;
 			});
 		}
 	}

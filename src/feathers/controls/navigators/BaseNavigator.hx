@@ -90,7 +90,7 @@ class BaseNavigator extends FeathersControl {
 		content:
 
 		```hx
-		navigator.autoSizeMode = AutoSizeMode.CONTENT;
+		navigator.autoSizeMode = CONTENT;
 		```
 
 		@default `feathers.controls.AutoSizeMode.STAGE`
@@ -100,7 +100,7 @@ class BaseNavigator extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var autoSizeMode(default, set):AutoSizeMode = AutoSizeMode.STAGE;
+	public var autoSizeMode(default, set):AutoSizeMode = STAGE;
 
 	private function set_autoSizeMode(value:AutoSizeMode):AutoSizeMode {
 		if (this.autoSizeMode == value) {
@@ -109,7 +109,7 @@ class BaseNavigator extends FeathersControl {
 		this.autoSizeMode = value;
 		this.setInvalid(InvalidationFlag.SIZE);
 		if (this.activeItemView != null) {
-			if (this.autoSizeMode == AutoSizeMode.STAGE) {
+			if (this.autoSizeMode == STAGE) {
 				this.activeItemView.removeEventListener(Event.RESIZE, activeItemView_resizeHandler);
 			} else // content
 			{
@@ -117,7 +117,7 @@ class BaseNavigator extends FeathersControl {
 			}
 		}
 		if (this.stage != null) {
-			if (this.autoSizeMode == AutoSizeMode.STAGE) {
+			if (this.autoSizeMode == STAGE) {
 				this.stage.addEventListener(Event.RESIZE, baseNavigator_stage_resizeHandler);
 				this.addEventListener(Event.REMOVED_FROM_STAGE, baseNavigator_removedFromStageHandler);
 			} else // content
@@ -220,7 +220,7 @@ class BaseNavigator extends FeathersControl {
 			this._activeViewMeasurements.resetTargetFluidlyForParent(this.activeItemView, this);
 		}
 
-		var needsToMeasureContent = this.autoSizeMode == AutoSizeMode.CONTENT || this.stage == null;
+		var needsToMeasureContent = this.autoSizeMode == CONTENT || this.stage == null;
 		var stageWidth:Float = 0.0;
 		var stageHeight:Float = 0.0;
 		if (!needsToMeasureContent) {
@@ -424,7 +424,7 @@ class BaseNavigator extends FeathersControl {
 			navigatorView.navigatorItemID = id;
 			navigatorView.navigatorOwner = this;
 		}
-		if (this.autoSizeMode == AutoSizeMode.CONTENT || this.stage == null) {
+		if (this.autoSizeMode == CONTENT || this.stage == null) {
 			this.activeItemView.addEventListener(Event.RESIZE, activeItemView_resizeHandler);
 		}
 		var sameInstance = this._previousViewInTransition == this.activeItemView;
@@ -526,7 +526,7 @@ class BaseNavigator extends FeathersControl {
 	}
 
 	private function baseNavigator_addedToStageHandler(event:Event):Void {
-		if (this.autoSizeMode == AutoSizeMode.STAGE) {
+		if (this.autoSizeMode == STAGE) {
 			// if we validated before being added to the stage, or if we've
 			// been removed from stage and added again, we need to be sure
 			// that the new stage dimensions are accounted for.
@@ -559,7 +559,7 @@ class BaseNavigator extends FeathersControl {
 	}
 
 	private function activeItemView_resizeHandler(event:Event):Void {
-		if (this._validating || this.autoSizeMode != AutoSizeMode.CONTENT) {
+		if (this._validating || this.autoSizeMode != CONTENT) {
 			return;
 		}
 		this.setInvalid(InvalidationFlag.SIZE);

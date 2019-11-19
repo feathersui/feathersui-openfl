@@ -126,7 +126,7 @@ class LayoutGroup extends FeathersControl {
 		stage:
 
 		```hx
-		group.autoSizeMode = AutoSizeMode.STAGE;
+		group.autoSizeMode = STAGE;
 		```
 
 		Usually defaults to `AutoSizeMode.CONTENT`. However, if this component
@@ -138,7 +138,7 @@ class LayoutGroup extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var autoSizeMode(default, set):AutoSizeMode = AutoSizeMode.CONTENT;
+	public var autoSizeMode(default, set):AutoSizeMode = CONTENT;
 
 	private function set_autoSizeMode(value:AutoSizeMode):AutoSizeMode {
 		if (this.autoSizeMode == value) {
@@ -147,7 +147,7 @@ class LayoutGroup extends FeathersControl {
 		this.autoSizeMode = value;
 		this.setInvalid(InvalidationFlag.SIZE);
 		if (this.stage != null) {
-			if (this.autoSizeMode == AutoSizeMode.STAGE) {
+			if (this.autoSizeMode == STAGE) {
 				this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler);
 				this.addEventListener(Event.REMOVED_FROM_STAGE, layoutGroup_removedFromStageHandler);
 			} else {
@@ -319,7 +319,7 @@ class LayoutGroup extends FeathersControl {
 			}
 		}
 
-		var needsToMeasureContent = this.autoSizeMode == AutoSizeMode.CONTENT || this.stage == null;
+		var needsToMeasureContent = this.autoSizeMode == CONTENT || this.stage == null;
 		var stageWidth:Float = 0.0;
 		var stageHeight:Float = 0.0;
 		if (!needsToMeasureContent) {
@@ -476,7 +476,7 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function layoutGroup_addedToStageHandler(event:Event):Void {
-		if (this.autoSizeMode == AutoSizeMode.STAGE) {
+		if (this.autoSizeMode == STAGE) {
 			// if we validated before being added to the stage, or if we've
 			// been removed from stage and added again, we need to be sure
 			// that the new stage dimensions are accounted for.

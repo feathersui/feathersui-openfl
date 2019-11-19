@@ -24,8 +24,8 @@ class ButtonScreen extends Panel {
 		super.initialize();
 
 		var layout = new VerticalLayout();
-		layout.horizontalAlign = HorizontalAlign.CENTER;
-		layout.verticalAlign = VerticalAlign.MIDDLE;
+		layout.horizontalAlign = CENTER;
+		layout.verticalAlign = MIDDLE;
 		layout.gap = 20;
 		this.layout = layout;
 

@@ -99,7 +99,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	/**
 		@since 1.0.0
 	**/
-	public var horizontalAlign(default, set):HorizontalAlign = HorizontalAlign.LEFT;
+	public var horizontalAlign(default, set):HorizontalAlign = LEFT;
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
 		if (this.horizontalAlign == value) {
@@ -113,7 +113,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	/**
 		@since 1.0.0
 	**/
-	public var verticalAlign(default, set):VerticalAlign = VerticalAlign.TOP;
+	public var verticalAlign(default, set):VerticalAlign = TOP;
 
 	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
 		if (this.verticalAlign == value) {
@@ -213,11 +213,11 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 				}
 			}
 			switch (this.horizontalAlign) {
-				case HorizontalAlign.RIGHT:
+				case RIGHT:
 					item.x = this.paddingLeft + (viewPortWidth - this.paddingLeft - this.paddingRight) - item.width;
-				case HorizontalAlign.CENTER:
+				case CENTER:
 					item.x = this.paddingLeft + (viewPortWidth - this.paddingLeft - this.paddingRight - item.width) / 2.0;
-				case HorizontalAlign.JUSTIFY:
+				case JUSTIFY:
 					item.x = this.paddingLeft;
 					item.width = viewPortWidth - this.paddingLeft - this.paddingRight;
 				default:
@@ -227,7 +227,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, contentHeight:Float, viewPortHeight:Float):Void {
-		if (this.verticalAlign != VerticalAlign.BOTTOM && this.verticalAlign != VerticalAlign.MIDDLE) {
+		if (this.verticalAlign != BOTTOM && this.verticalAlign != MIDDLE) {
 			return;
 		}
 		var maxAlignmentHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
@@ -235,9 +235,9 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			return;
 		}
 		var verticalOffset = 0.0;
-		if (this.verticalAlign == VerticalAlign.BOTTOM) {
+		if (this.verticalAlign == BOTTOM) {
 			verticalOffset = maxAlignmentHeight - contentHeight;
-		} else if (this.verticalAlign == VerticalAlign.MIDDLE) {
+		} else if (this.verticalAlign == MIDDLE) {
 			verticalOffset = (maxAlignmentHeight - contentHeight) / 2.0;
 		}
 		for (item in items) {

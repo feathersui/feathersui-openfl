@@ -176,59 +176,59 @@ class BaseSteelTheme implements IDarkModeTheme {
 	}
 
 	private function getThemeFill():FillStyle {
-		return FillStyle.SolidColor(this.themeColor);
+		return SolidColor(this.themeColor);
 	}
 
 	private function getControlFill():FillStyle {
-		return FillStyle.SolidColor(this.controlFillColor2);
+		return SolidColor(this.controlFillColor2);
 	}
 
 	private function getButtonFill():FillStyle {
-		return FillStyle.Gradient(GradientType.LINEAR, [this.controlFillColor1, this.controlFillColor2], [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, [this.controlFillColor1, this.controlFillColor2], [1.0, 1.0], [0, 0xff], Math.PI / 2);
 	}
 
 	private function getButtonDownFill():FillStyle {
-		return FillStyle.Gradient(GradientType.LINEAR, [this.controlFillColor2, this.controlFillColor1], [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, [this.controlFillColor2, this.controlFillColor1], [1.0, 1.0], [0, 0xff], Math.PI / 2);
 	}
 
 	private function getButtonDisabledFill():FillStyle {
-		return FillStyle.SolidColor(this.controlDisabledFillColor, 0.7);
+		return SolidColor(this.controlDisabledFillColor, 0.7);
 	}
 
 	private function getBorder(thickness:Float = 1.0):LineStyle {
-		return LineStyle.SolidColor(thickness, this.borderColor);
+		return SolidColor(thickness, this.borderColor);
 	}
 
 	private function getButtonBorder(thickness:Float = 1.0):LineStyle {
-		return LineStyle.SolidColor(thickness, this.borderColor);
+		return SolidColor(thickness, this.borderColor);
 	}
 
 	private function getInsetBorder(thickness:Float = 1.0):LineStyle {
-		return LineStyle.SolidColor(thickness, this.insetBorderColor);
+		return SolidColor(thickness, this.insetBorderColor);
 	}
 
 	private function getThemeBorder(thickness:Float = 1.0):LineStyle {
-		return LineStyle.SolidColor(thickness, this.themeColor);
+		return SolidColor(thickness, this.themeColor);
 	}
 
 	private function getActiveFillBorder(thickness:Float = 1.0):LineStyle {
-		return LineStyle.SolidColor(thickness, this.activeFillBorderColor);
+		return SolidColor(thickness, this.activeFillBorderColor);
 	}
 
 	private function getContainerBorder(thickness:Float = 1.0):LineStyle {
-		return LineStyle.SolidColor(thickness, this.borderColor);
+		return SolidColor(thickness, this.borderColor);
 	}
 
 	private function getDividerBorder(thickness:Float = 1.0):LineStyle {
-		return LineStyle.SolidColor(thickness, this.dividerColor);
+		return SolidColor(thickness, this.dividerColor);
 	}
 
 	private function getInsetFill():FillStyle {
-		return FillStyle.SolidColor(this.insetFillColor);
+		return SolidColor(this.insetFillColor);
 	}
 
 	private function getDisabledInsetFill():FillStyle {
-		return FillStyle.SolidColor(this.disabledInsetFillColor);
+		return SolidColor(this.disabledInsetFillColor);
 	}
 
 	private function getActiveThemeFill():FillStyle {
@@ -236,7 +236,7 @@ class BaseSteelTheme implements IDarkModeTheme {
 		if (!this.darkMode) {
 			colors.reverse();
 		}
-		return FillStyle.Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
 	}
 
 	private function getReversedActiveThemeFill():FillStyle {
@@ -244,19 +244,19 @@ class BaseSteelTheme implements IDarkModeTheme {
 		if (this.darkMode) {
 			colors.reverse();
 		}
-		return FillStyle.Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
 	}
 
 	private function getOverlayFill():FillStyle {
-		return FillStyle.SolidColor(this.overlayFillColor, 0.8);
+		return SolidColor(this.overlayFillColor, 0.8);
 	}
 
 	private function getRootFill():FillStyle {
-		return FillStyle.SolidColor(this.rootFillColor);
+		return SolidColor(this.rootFillColor);
 	}
 
 	private function getContainerFill():FillStyle {
-		return FillStyle.SolidColor(this.containerFillColor);
+		return SolidColor(this.containerFillColor);
 	}
 
 	private function getTextFormat():TextFormat {
@@ -288,7 +288,7 @@ class BaseSteelTheme implements IDarkModeTheme {
 	}
 
 	private function getHeaderFill():FillStyle {
-		return FillStyle.SolidColor(this.headerFillColor);
+		return SolidColor(this.headerFillColor);
 	}
 
 	private function lighten(color:Int, offset:Int):Int {

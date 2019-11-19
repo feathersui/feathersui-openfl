@@ -388,7 +388,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var scrollPolicyX(default, set):ScrollPolicy = ScrollPolicy.AUTO;
+	public var scrollPolicyX(default, set):ScrollPolicy = AUTO;
 
 	private function set_scrollPolicyX(value:ScrollPolicy):ScrollPolicy {
 		if (this.scrollPolicyX == value) {
@@ -413,7 +413,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var scrollPolicyY(default, set):ScrollPolicy = ScrollPolicy.AUTO;
+	public var scrollPolicyY(default, set):ScrollPolicy = AUTO;
 
 	private function set_scrollPolicyY(value:ScrollPolicy):ScrollPolicy {
 		if (this.scrollPolicyY == value) {
@@ -733,12 +733,12 @@ class BaseScrollContainer extends FeathersControl {
 			}
 			var totalWidth = this.viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset;
 			if (forceScrollBars
-				|| this.scrollPolicyX == ScrollPolicy.ON
+				|| this.scrollPolicyX == ON
 				|| ((totalWidth > scrollerWidth || (this.explicitMaxWidth != null && totalWidth > this.explicitMaxWidth))
-					&& this.scrollPolicyX != ScrollPolicy.OFF)) {
+					&& this.scrollPolicyX != OFF)) {
 				this.showScrollBarX = true;
 				if (this.fixedScrollBars) {
-					if (this.scrollBarXPosition == RelativePosition.TOP) {
+					if (this.scrollBarXPosition == TOP) {
 						this.topViewPortOffset += this.scrollBarX.height;
 					} else {
 						this.bottomViewPortOffset += this.scrollBarX.height;
@@ -762,12 +762,12 @@ class BaseScrollContainer extends FeathersControl {
 			}
 			var totalHeight = this.viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset;
 			if (forceScrollBars
-				|| this.scrollPolicyY == ScrollPolicy.ON
+				|| this.scrollPolicyY == ON
 				|| ((totalHeight > scrollerHeight || (this.explicitMaxHeight != null && totalHeight > this.explicitMaxHeight))
-					&& this.scrollPolicyY != ScrollPolicy.OFF)) {
+					&& this.scrollPolicyY != OFF)) {
 				this.showScrollBarY = true;
 				if (this.fixedScrollBars) {
-					if (this.scrollBarYPosition == RelativePosition.LEFT) {
+					if (this.scrollBarYPosition == LEFT) {
 						this.leftViewPortOffset += this.scrollBarY.width;
 					} else {
 						this.rightViewPortOffset += this.scrollBarY.width;
@@ -856,8 +856,8 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function refreshScrollerValues():Void {
-		this.scroller.enabledX = this.scrollPolicyX != ScrollPolicy.OFF;
-		this.scroller.enabledY = this.scrollPolicyY != ScrollPolicy.OFF;
+		this.scroller.enabledX = this.scrollPolicyX != OFF;
+		this.scroller.enabledY = this.scrollPolicyY != OFF;
 		this.scroller.elasticEdges = this.elasticEdges;
 		this.scroller.forceElasticLeft = this.primaryDirection == HORIZONTAL;
 		this.scroller.forceElasticRight = this.primaryDirection == HORIZONTAL;
@@ -1086,7 +1086,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		if (this.scrollBarX != null) {
 			switch (this.scrollBarXPosition) {
-				case RelativePosition.TOP:
+				case TOP:
 					this.scrollBarX.y = 0;
 				default:
 					this.scrollBarX.y = this.topViewPortOffset + visibleHeight;
@@ -1105,7 +1105,7 @@ class BaseScrollContainer extends FeathersControl {
 		}
 		if (this.scrollBarY != null) {
 			switch (this.scrollBarYPosition) {
-				case RelativePosition.LEFT:
+				case LEFT:
 					this.scrollBarY.x = 0;
 				default:
 					this.scrollBarY.x = this.leftViewPortOffset + visibleWidth;

@@ -99,7 +99,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	/**
 		@since 1.0.0
 	**/
-	public var horizontalAlign(default, set):HorizontalAlign = HorizontalAlign.LEFT;
+	public var horizontalAlign(default, set):HorizontalAlign = LEFT;
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
 		if (this.horizontalAlign == value) {
@@ -113,7 +113,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	/**
 		@since 1.0.0
 	**/
-	public var verticalAlign(default, set):VerticalAlign = VerticalAlign.TOP;
+	public var verticalAlign(default, set):VerticalAlign = TOP;
 
 	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
 		if (this.verticalAlign == value) {
@@ -213,11 +213,11 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				}
 			}
 			switch (this.verticalAlign) {
-				case VerticalAlign.BOTTOM:
+				case BOTTOM:
 					item.y = this.paddingTop + (viewPortHeight - this.paddingTop - this.paddingBottom) - item.height;
-				case VerticalAlign.MIDDLE:
+				case MIDDLE:
 					item.y = this.paddingTop + (viewPortHeight - this.paddingTop - this.paddingBottom - item.height) / 2.0;
-				case VerticalAlign.JUSTIFY:
+				case JUSTIFY:
 					item.y = this.paddingTop;
 					item.height = viewPortHeight - this.paddingTop - this.paddingBottom;
 				default:
@@ -227,7 +227,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, contentWidth:Float, viewPortWidth:Float):Void {
-		if (this.horizontalAlign != HorizontalAlign.RIGHT && this.horizontalAlign != HorizontalAlign.CENTER) {
+		if (this.horizontalAlign != RIGHT && this.horizontalAlign != CENTER) {
 			return;
 		}
 		var maxAlignmentWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
@@ -235,9 +235,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			return;
 		}
 		var horizontalOffset = 0.0;
-		if (this.horizontalAlign == HorizontalAlign.RIGHT) {
+		if (this.horizontalAlign == RIGHT) {
 			horizontalOffset = maxAlignmentWidth - contentWidth;
-		} else if (this.horizontalAlign == HorizontalAlign.CENTER) {
+		} else if (this.horizontalAlign == CENTER) {
 			horizontalOffset = (maxAlignmentWidth - contentWidth) / 2.0;
 		}
 		for (item in items) {

@@ -77,7 +77,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public var fill(default, set):FillStyle = FillStyle.SolidColor(0xcccccc);
+	public var fill(default, set):FillStyle = SolidColor(0xcccccc);
 
 	private function set_fill(value:FillStyle):FillStyle {
 		if (this.fill == value) {

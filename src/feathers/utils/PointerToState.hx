@@ -95,8 +95,6 @@ class PointerToState<T> {
 		The current state of the utility. May be different than the state of the
 		target.
 
-		@default feathers.controls.ButtonState.UP
-
 		@since 1.0.0
 	**/
 	public var currentState(default, null):T;
@@ -117,8 +115,6 @@ class PointerToState<T> {
 
 	/**
 		The value for the "hover" state.
-
-		@default feathers.controls.ButtonState.HOVER
 
 		@since 1.0.0
 	**/

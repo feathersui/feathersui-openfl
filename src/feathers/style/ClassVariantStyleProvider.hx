@@ -77,7 +77,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 			styleTargets = [];
 		}
 		var typeName = Type.getClassName(type);
-		var styleTarget = variant == null ? StyleTarget.Class(typeName) : StyleTarget.ClassAndVariant(typeName, variant);
+		var styleTarget = variant == null ? Class(typeName) : ClassAndVariant(typeName, variant);
 		if (callback == null) {
 			styleTargets.remove(styleTarget);
 		} else {
@@ -96,7 +96,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 			return null;
 		}
 		var typeName = Type.getClassName(type);
-		var styleTarget = variant == null ? StyleTarget.Class(typeName) : StyleTarget.ClassAndVariant(typeName, variant);
+		var styleTarget = variant == null ? Class(typeName) : ClassAndVariant(typeName, variant);
 		return this.styleTargets.get(styleTarget);
 	}
 
@@ -123,11 +123,11 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		}
 
 		var styleContextName = Type.getClassName(styleContext);
-		var styleTarget = variant == null ? StyleTarget.Class(styleContextName) : StyleTarget.ClassAndVariant(styleContextName, variant);
+		var styleTarget = variant == null ? Class(styleContextName) : ClassAndVariant(styleContextName, variant);
 		var callback = this.styleTargets.get(styleTarget);
 		if (callback == null && variant != null) {
 			// try again without the variant
-			styleTarget = StyleTarget.Class(styleContextName);
+			styleTarget = Class(styleContextName);
 			callback = this.styleTargets.get(styleTarget);
 		}
 		if (callback == null) {

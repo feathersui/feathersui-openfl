@@ -47,8 +47,8 @@ class SteelLayoutGroupStyles {
 			}
 			if (group.layout == null) {
 				var layout = new HorizontalLayout();
-				layout.horizontalAlign = HorizontalAlign.LEFT;
-				layout.verticalAlign = VerticalAlign.MIDDLE;
+				layout.horizontalAlign = LEFT;
+				layout.verticalAlign = MIDDLE;
 				layout.paddingTop = 4.0;
 				layout.paddingRight = 10.0;
 				layout.paddingBottom = 4.0;

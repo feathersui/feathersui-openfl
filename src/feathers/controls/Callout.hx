@@ -64,7 +64,7 @@ class Callout extends FeathersControl {
 	}
 
 	private static function positionBelowOrigin(callout:Callout, originBounds:Rectangle):Void {
-		callout.measureWithArrowPosition(RelativePosition.TOP);
+		callout.measureWithArrowPosition(TOP);
 
 		var popUpRoot = PopUpManager.forStage(callout.stage).root;
 
@@ -99,7 +99,7 @@ class Callout extends FeathersControl {
 	}
 
 	private static function positionAboveOrigin(callout:Callout, originBounds:Rectangle):Void {
-		callout.measureWithArrowPosition(RelativePosition.BOTTOM);
+		callout.measureWithArrowPosition(BOTTOM);
 
 		var popUpRoot = PopUpManager.forStage(callout.stage).root;
 
@@ -134,7 +134,7 @@ class Callout extends FeathersControl {
 	}
 
 	private static function positionLeftOfOrigin(callout:Callout, originBounds:Rectangle):Void {
-		callout.measureWithArrowPosition(RelativePosition.RIGHT);
+		callout.measureWithArrowPosition(RIGHT);
 
 		var popUpRoot = PopUpManager.forStage(callout.stage).root;
 
@@ -169,7 +169,7 @@ class Callout extends FeathersControl {
 	}
 
 	private static function positionRightOfOrigin(callout:Callout, originBounds:Rectangle):Void {
-		callout.measureWithArrowPosition(RelativePosition.RIGHT);
+		callout.measureWithArrowPosition(RIGHT);
 
 		var popUpRoot = PopUpManager.forStage(callout.stage).root;
 
@@ -280,13 +280,13 @@ class Callout extends FeathersControl {
 	public var paddingLeft:Float = 0.0;
 
 	@:style
-	public var horizontalAlign = HorizontalAlign.CENTER;
+	public var horizontalAlign:HorizontalAlign = CENTER;
 
 	@:style
-	public var verticalAlign = VerticalAlign.MIDDLE;
+	public var verticalAlign:VerticalAlign = MIDDLE;
 
 	@:style
-	public var arrowPosition = RelativePosition.TOP;
+	public var arrowPosition:RelativePosition = TOP;
 
 	private var _currentBackgroundSkin:DisplayObject;
 	private var _backgroundSkinMeasurements:Measurements;
@@ -516,19 +516,14 @@ class Callout extends FeathersControl {
 		var leftSpace = Math.NEGATIVE_INFINITY;
 		var positions = this.supportedPositions;
 		if (positions == null) {
-			positions = [
-				RelativePosition.BOTTOM,
-				RelativePosition.TOP,
-				RelativePosition.RIGHT,
-				RelativePosition.LEFT,
-			];
+			positions = [BOTTOM, TOP, RIGHT, LEFT,];
 		}
 		for (position in positions) {
 			switch (position) {
-				case RelativePosition.TOP:
+				case TOP:
 					{
 						// arrow is opposite, on bottom side
-						this.measureWithArrowPosition(RelativePosition.BOTTOM);
+						this.measureWithArrowPosition(BOTTOM);
 						upSpace = this._lastPopUpOriginBounds.y - this.actualHeight;
 						if (upSpace >= this.marginTop) {
 							positionAboveOrigin(this, this._lastPopUpOriginBounds);
@@ -538,10 +533,10 @@ class Callout extends FeathersControl {
 							upSpace = 0.0;
 						}
 					}
-				case RelativePosition.RIGHT:
+				case RIGHT:
 					{
 						// arrow is opposite, on left side
-						this.measureWithArrowPosition(RelativePosition.LEFT);
+						this.measureWithArrowPosition(LEFT);
 						rightSpace = (stageBottomRight.x - this.actualWidth) - (this._lastPopUpOriginBounds.x + this._lastPopUpOriginBounds.width);
 						if (rightSpace >= this.marginRight) {
 							positionRightOfOrigin(this, this._lastPopUpOriginBounds);
@@ -551,10 +546,10 @@ class Callout extends FeathersControl {
 							rightSpace = 0.0;
 						}
 					}
-				case RelativePosition.LEFT:
+				case LEFT:
 					{
 						// arrow is opposite, on right side
-						this.measureWithArrowPosition(RelativePosition.RIGHT);
+						this.measureWithArrowPosition(RIGHT);
 						leftSpace = this._lastPopUpOriginBounds.x - this.actualWidth;
 						if (leftSpace >= this.marginLeft) {
 							positionLeftOfOrigin(this, this._lastPopUpOriginBounds);
@@ -567,7 +562,7 @@ class Callout extends FeathersControl {
 				default: // bottom
 					{
 						// arrow is opposite, on top side
-						this.measureWithArrowPosition(RelativePosition.TOP);
+						this.measureWithArrowPosition(TOP);
 						downSpace = (stageBottomRight.y - this.actualHeight) - (this._lastPopUpOriginBounds.y + this._lastPopUpOriginBounds.height);
 						if (downSpace >= this.marginBottom) {
 							positionBelowOrigin(this, this._lastPopUpOriginBounds);

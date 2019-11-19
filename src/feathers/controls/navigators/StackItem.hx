@@ -216,31 +216,31 @@ class StackItem {
 
 	private function performAction(action:StackAction, event:Event, navigator:StackNavigator):StackAction {
 		switch (action) {
-			case StackAction.Push(id, properties, transition):
+			case Push(id, properties, transition):
 				{
 					navigator.pushItem(id, properties, transition);
 				}
-			case StackAction.Replace(id, properties, transition):
+			case Replace(id, properties, transition):
 				{
 					navigator.replaceItem(id, properties, transition);
 				}
-			case StackAction.Pop(transition):
+			case Pop(transition):
 				{
 					navigator.popItem(transition);
 				}
-			case StackAction.PopToRoot(transition):
+			case PopToRoot(transition):
 				{
 					navigator.popToRootItem(transition);
 				}
-			case StackAction.PopToRootAndReplace(id, properties, transition):
+			case PopToRootAndReplace(id, properties, transition):
 				{
 					navigator.popToRootItemAndReplace(id, properties, transition);
 				}
-			case StackAction.Listener(fn):
+			case Listener(fn):
 				{
 					fn(event);
 				}
-			case StackAction.NewAction(fn):
+			case NewAction(fn):
 				{
 					return fn(event);
 				}

@@ -129,7 +129,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		style provider will be reset to their default values before applying the
 		new style provider.
 
-		@see #variant
+		@see `variant`
 		@see [Introduction to Feathers UI themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -334,7 +334,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	**/
 	@:dox(show)
 	private function setStyle(styleName:String, ?state:EnumValue):Bool {
-		var styleDef = state == null ? StyleDefinition.Name(styleName) : StyleDefinition.NameAndState(styleName, state);
+		var styleDef = state == null ? Name(styleName) : NameAndState(styleName, state);
 		var restricted = containsStyleDef(this._restrictedStyles, styleDef);
 		if (this._applyingStyles && restricted) {
 			return false;
@@ -353,7 +353,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	private function isStyleRestricted(styleName:String, ?state:EnumValue):Bool {
-		var styleDef = state == null ? StyleDefinition.Name(styleName) : StyleDefinition.NameAndState(styleName, state);
+		var styleDef = state == null ? Name(styleName) : NameAndState(styleName, state);
 		return containsStyleDef(this._restrictedStyles, styleDef);
 	}
 

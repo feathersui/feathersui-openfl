@@ -58,7 +58,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):ToggleButtonState = ToggleButtonState.UP(false);
+	public var currentState(get, null):ToggleButtonState = UP(false);
 
 	private function get_currentState():ToggleButtonState {
 		return this.currentState;
@@ -69,12 +69,12 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		if (this.enabled) {
 			var toggleState = cast(@:bypassAccessor this.currentState, ToggleButtonState);
 			switch (toggleState) {
-				case ToggleButtonState.DISABLED(selected):
-					this.changeState(ToggleButtonState.UP(selected));
+				case DISABLED(selected):
+					this.changeState(UP(selected));
 				default: // do nothing
 			}
 		} else {
-			this.changeState(ToggleButtonState.DISABLED(this.selected));
+			this.changeState(DISABLED(this.selected));
 		}
 		return this.enabled;
 	}
@@ -195,8 +195,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		super.initialize();
 
 		if (this._pointerToState == null) {
-			this._pointerToState = new PointerToState(this, this.changeState, ToggleButtonState.UP(false), ToggleButtonState.DOWN(false),
-				ToggleButtonState.HOVER(false));
+			this._pointerToState = new PointerToState(this, this.changeState, UP(false), DOWN(false), HOVER(false));
 		}
 
 		if (this._pointerTrigger == null) {
@@ -411,24 +410,24 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	private function changeState(state:ToggleButtonState):Void {
 		var toggleState = cast(state, ToggleButtonState);
 		if (!this.enabled) {
-			toggleState = ToggleButtonState.DISABLED(this.selected);
+			toggleState = DISABLED(this.selected);
 		}
 		switch (toggleState) {
-			case ToggleButtonState.UP(selected):
+			case UP(selected):
 				if (this.selected != selected) {
-					toggleState = ToggleButtonState.UP(this.selected);
+					toggleState = UP(this.selected);
 				}
-			case ToggleButtonState.DOWN(_):
+			case DOWN(_):
 				if (this.selected != selected) {
-					toggleState = ToggleButtonState.DOWN(this.selected);
+					toggleState = DOWN(this.selected);
 				}
-			case ToggleButtonState.HOVER(_):
+			case HOVER(_):
 				if (this.selected != selected) {
-					toggleState = ToggleButtonState.HOVER(this.selected);
+					toggleState = HOVER(this.selected);
 				}
-			case ToggleButtonState.DISABLED(_):
+			case DISABLED(_):
 				if (this.selected != selected) {
-					toggleState = ToggleButtonState.DISABLED(this.selected);
+					toggleState = DISABLED(this.selected);
 				}
 			default: // do nothing
 		}

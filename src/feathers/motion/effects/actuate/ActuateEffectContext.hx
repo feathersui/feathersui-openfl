@@ -39,7 +39,7 @@ import motion.easing.Linear;
 	@since 1.0.0
 **/
 class ActuateEffectContext extends BaseEffectContext {
-	public function new(target:Dynamic, actuator:IReadableGenericActuator, interruptBehavior:EffectInterruptBehavior = EffectInterruptBehavior.END) {
+	public function new(target:Dynamic, actuator:IReadableGenericActuator, interruptBehavior:EffectInterruptBehavior = END) {
 		this.actuator = actuator;
 		this.interruptBehavior = interruptBehavior;
 
@@ -88,7 +88,7 @@ class ActuateEffectContext extends BaseEffectContext {
 	private var _onCompleteParams:Array<Dynamic>;
 
 	override public function interrupt():Void {
-		if (this.interruptBehavior == EffectInterruptBehavior.STOP) {
+		if (this.interruptBehavior == STOP) {
 			this.stop();
 			return;
 		}

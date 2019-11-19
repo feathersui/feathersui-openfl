@@ -86,7 +86,7 @@ class TextInputTest {
 		this._input.validateNow();
 		Assert.areEqual(this._input, skin1.parent);
 		Assert.isNull(skin2.parent);
-		this._input.changeState(TextInputState.ERROR);
+		this._input.changeState(ERROR);
 		this._input.validateNow();
 		Assert.isNull(skin1.parent);
 		Assert.areEqual(this._input, skin2.parent);

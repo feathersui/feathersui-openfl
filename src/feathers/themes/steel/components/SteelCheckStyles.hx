@@ -49,7 +49,7 @@ class SteelCheckStyles {
 			icon.minWidth = 24.0;
 			icon.minHeight = 24.0;
 			icon.border = theme.getInsetBorder(2.0);
-			icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getThemeBorder(2.0));
+			icon.setBorderForState(DOWN(false), theme.getThemeBorder(2.0));
 			icon.fill = theme.getInsetFill();
 			icon.disabledFill = theme.getDisabledInsetFill();
 			check.icon = icon;
@@ -60,7 +60,7 @@ class SteelCheckStyles {
 			selectedIcon.minWidth = 24.0;
 			selectedIcon.minHeight = 24.0;
 			selectedIcon.border = theme.getInsetBorder(2.0);
-			selectedIcon.setBorderForState(ToggleButtonState.DOWN(false), theme.getThemeBorder(2.0));
+			selectedIcon.setBorderForState(DOWN(false), theme.getThemeBorder(2.0));
 			selectedIcon.fill = theme.getInsetFill();
 			selectedIcon.disabledFill = theme.getDisabledInsetFill();
 

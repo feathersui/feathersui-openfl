@@ -65,7 +65,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):TextInputState = TextInputState.ENABLED;
+	public var currentState(get, null):TextInputState = ENABLED;
 
 	private function get_currentState():TextInputState {
 		return this.currentState;
@@ -74,11 +74,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
 		if (this.enabled) {
-			if (this.currentState == TextInputState.DISABLED) {
-				this.changeState(TextInputState.ENABLED);
+			if (this.currentState == DISABLED) {
+				this.changeState(ENABLED);
 			}
 		} else {
-			this.changeState(TextInputState.DISABLED);
+			this.changeState(DISABLED);
 		}
 		return this.enabled;
 	}
@@ -236,10 +236,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		The following example aligns the text input's content to the top:
 
 		```hx
-		input.verticalAlign = VerticalAlign.TOP;
+		input.verticalAlign = TOP;
 		```
-
-		@default `feathers.layout.VerticalAlign.MIDDLE`
 
 		@see `feathers.layout.VerticalAlign.TOP`
 		@see `feathers.layout.VerticalAlign.MIDDLE`
@@ -247,7 +245,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@see `feathers.layout.VerticalAlign.JUSTIFY`
 	**/
 	@:style
-	public var verticalAlign:VerticalAlign = VerticalAlign.MIDDLE;
+	public var verticalAlign:VerticalAlign = MIDDLE;
 
 	/**
 		Gets the skin to be used by the text input when its `currentState`
@@ -589,7 +587,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private function changeState(state:TextInputState):Void {
 		if (!this.enabled) {
-			state = TextInputState.DISABLED;
+			state = DISABLED;
 		}
 		if (this.currentState == state) {
 			return;
@@ -608,10 +606,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function textField_focusInHandler(event:FocusEvent):Void {
-		this.changeState(TextInputState.FOCUSED);
+		this.changeState(FOCUSED);
 	}
 
 	private function textField_focusOutHandler(event:FocusEvent):Void {
-		this.changeState(TextInputState.ENABLED);
+		this.changeState(ENABLED);
 	}
 }

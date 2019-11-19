@@ -56,7 +56,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):ButtonState = ButtonState.UP;
+	public var currentState(get, null):ButtonState = UP;
 
 	private function get_currentState():ButtonState {
 		return this.currentState;
@@ -65,11 +65,11 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
 		if (this.enabled) {
-			if (this.currentState == ButtonState.DISABLED) {
-				this.changeState(ButtonState.UP);
+			if (this.currentState == DISABLED) {
+				this.changeState(UP);
 			}
 		} else {
-			this.changeState(ButtonState.DISABLED);
+			this.changeState(DISABLED);
 		}
 		return this.enabled;
 	}
@@ -158,7 +158,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		super.initialize();
 
 		if (this._pointerToState == null) {
-			this._pointerToState = new PointerToState<ButtonState>(this, this.changeState, ButtonState.UP, ButtonState.DOWN, ButtonState.HOVER);
+			this._pointerToState = new PointerToState<ButtonState>(this, this.changeState, UP, DOWN, HOVER);
 		}
 
 		if (this._pointerTrigger == null) {
@@ -368,7 +368,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 
 	private function changeState(state:ButtonState):Void {
 		if (!this.enabled) {
-			state = ButtonState.DISABLED;
+			state = DISABLED;
 		}
 		if (this.currentState == state) {
 			return;

@@ -178,20 +178,18 @@ class Label extends FeathersControl implements ITextControl {
 		The following example aligns the button's content to the right:
 
 		```hx
-		button.horizontalAlign = HorizontalAlign.RIGHT;
+		button.horizontalAlign = RIGHT;
 		```
 
 		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
 		component.
-
-		@default `feathers.layout.HorizontalAlign.LEFT`
 
 		@see `feathers.layout.HorizontalAlign.LEFT`
 		@see `feathers.layout.HorizontalAlign.CENTER`
 		@see `feathers.layout.HorizontalAlign.RIGHT`
 	**/
 	@:style
-	public var horizontalAlign:HorizontalAlign = HorizontalAlign.LEFT;
+	public var horizontalAlign:HorizontalAlign = LEFT;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
@@ -200,20 +198,18 @@ class Label extends FeathersControl implements ITextControl {
 		The following example aligns the button's content to the top:
 
 		```hx
-		button.verticalAlign = VerticalAlign.TOP;
+		button.verticalAlign = TOP;
 		```
 
 		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
 		component.
-
-		@default `feathers.layout.VerticalAlign.MIDDLE`
 
 		@see `feathers.layout.VerticalAlign.TOP`
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
 	**/
 	@:style
-	public var verticalAlign:VerticalAlign = VerticalAlign.MIDDLE;
+	public var verticalAlign:VerticalAlign = MIDDLE;
 
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
