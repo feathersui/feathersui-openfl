@@ -17,7 +17,6 @@ import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
 import openfl.display.DisplayObject;
@@ -170,26 +169,6 @@ class Label extends FeathersControl implements ITextControl {
 	**/
 	@:style
 	public var paddingLeft:Null<Float> = 0.0;
-
-	/**
-		How the content is positioned horizontally (along the x-axis) within the
-		button.
-
-		The following example aligns the button's content to the right:
-
-		```hx
-		button.horizontalAlign = RIGHT;
-		```
-
-		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
-		component.
-
-		@see `feathers.layout.HorizontalAlign.LEFT`
-		@see `feathers.layout.HorizontalAlign.CENTER`
-		@see `feathers.layout.HorizontalAlign.RIGHT`
-	**/
-	@:style
-	public var horizontalAlign:HorizontalAlign = LEFT;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
@@ -491,25 +470,14 @@ class Label extends FeathersControl implements ITextControl {
 	private function layoutContent() {
 		this.layoutBackgroundSkin();
 
-		var maxWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		this.textField.x = this.paddingLeft;
+		this.textField.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
-		if (this._textMeasuredWidth > maxWidth) {
-			this.textField.width = maxWidth;
-		} else {
-			this.textField.width = this._textMeasuredWidth;
-		}
 		if (this._textMeasuredHeight > maxHeight) {
 			this.textField.height = maxHeight;
 		} else {
 			this.textField.height = this._textMeasuredHeight;
-		}
-		switch (this.horizontalAlign) {
-			case LEFT:
-				this.textField.x = this.paddingLeft;
-			case RIGHT:
-				this.textField.x = this.actualWidth - this.paddingRight - this.textField.width;
-			default: // center or null
-				this.textField.x = this.paddingLeft + (maxWidth - this.textField.width) / 2;
 		}
 		switch (this.verticalAlign) {
 			case TOP:
