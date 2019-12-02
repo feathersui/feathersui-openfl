@@ -28,8 +28,32 @@ jobs:
     - name: Build API documentation
       working-directory: docs
       run: haxe docs.hxml
-    - name: Build example | hello-world
+    - name: Build examples/hello-world
       working-directory: examples/hello-world
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+    - name: Build examples/calculator
+      working-directory: examples/calculator
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+    - name: Build examples/components-explorer
+      working-directory: examples/components-explorer
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+    - name: Build examples/horizontal-layout-percentage-sizing
+      working-directory: examples/horizontal-layout-percentage-sizing
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+    - name: Build examples/list-box-data-provider-collection-sorting
+      working-directory: examples/list-box-data-provider-collection-sorting
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
