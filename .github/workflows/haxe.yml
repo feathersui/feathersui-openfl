@@ -28,3 +28,9 @@ jobs:
     - name: Build API documentation
       working-directory: docs
       run: haxe docs.hxml
+    - name: Build example | hello-world
+      working-directory: examples/hello-world
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
