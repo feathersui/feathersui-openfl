@@ -32,6 +32,11 @@ script:
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
+# build calculator example
+- cd $TRAVIS_BUILD_DIR/examples/calculator
+- haxelib run openfl build neko
+- haxelib run openfl build html5
+- haxelib run openfl build flash
 # build components-explorer example
 - cd $TRAVIS_BUILD_DIR/examples/components-explorer
 - haxelib run openfl build neko
