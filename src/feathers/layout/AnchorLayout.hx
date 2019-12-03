@@ -31,6 +31,10 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
+	/**
+		@inheritDoc
+	**/
+	@:dox(hide)
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;

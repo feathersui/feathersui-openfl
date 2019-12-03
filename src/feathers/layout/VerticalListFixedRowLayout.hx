@@ -21,6 +21,19 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayout {
+	/**
+		Creates a new `VerticalListFixedRowLayout` object.
+
+		@since 1.0.0
+	**/
+	public function new() {
+		super();
+	}
+
+	/**
+		@inheritDoc
+	**/
+	@:dox(hide)
 	public var scrollX(default, set):Float = 0.0;
 
 	private function set_scrollX(value:Float):Float {
@@ -31,6 +44,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		return this.scrollX;
 	}
 
+	/**
+		@inheritDoc
+	**/
+	@:dox(hide)
 	public var scrollY(default, set):Float = 0.0;
 
 	private function set_scrollY(value:Float):Float {
@@ -41,12 +58,20 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		return this.scrollY;
 	}
 
+	/**
+		@inheritDoc
+	**/
+	@:dox(hide)
 	public var primaryDirection(get, never):Direction;
 
 	private function get_primaryDirection():Direction {
 		return Direction.VERTICAL;
 	}
 
+	/**
+		@inheritDoc
+	**/
+	@:dox(hide)
 	public var requiresLayoutOnScroll(get, never):Bool;
 
 	private function get_requiresLayoutOnScroll():Bool {
@@ -56,6 +81,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	/**
 		The height to set on each item, or `null`, if the row height should be
 		calculated automatically.
+
+		@since 1.0.0
 	**/
 	public var rowHeight(default, set):Null<Float> = null;
 
@@ -71,6 +98,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	/**
 		The number of rows to render, if the height of the container has not
 		been set explicitly. If `null`, shows all rows.
+
+		@since 1.0.0
 	**/
 	public var requestedRowCount(default, set):Null<Float> = 5.0;
 
@@ -83,6 +112,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		return this.requestedRowCount;
 	}
 
+	/**
+		@inheritDoc
+	**/
+	@:dox(hide)
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortWidth = measurements.width;
 		var maxWidth:Float = 0.0;

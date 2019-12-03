@@ -32,6 +32,11 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		The space, in pixels, between the parent container's top edge and its
+		content.
+
+		@default 0.0
+
 		@since 1.0.0
 	**/
 	public var paddingTop(default, set):Float = 0.0;
@@ -46,6 +51,11 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		The space, in pixels, between the parent container's right edge and its
+		content.
+
+		@default 0.0
+
 		@since 1.0.0
 	**/
 	public var paddingRight(default, set):Float = 0.0;
@@ -60,6 +70,11 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		The space, in pixels, between the parent container's bottom edge and its
+		content.
+
+		@default 0.0
+
 		@since 1.0.0
 	**/
 	public var paddingBottom(default, set):Float = 0.0;
@@ -74,6 +89,11 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		The space, in pixels, between the parent container's left edge and its
+		content.
+
+		@default 0.0
+
 		@since 1.0.0
 	**/
 	public var paddingLeft(default, set):Float = 0.0;
@@ -88,6 +108,10 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		The space, in pixels, between each two adjacent items in the layout.
+
+		@default 0.0
+
 		@since 1.0.0
 	**/
 	public var gap(default, set):Float = 0.0;
@@ -102,6 +126,18 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		How the content is positioned horizontally (along the x-axis) within the
+		container.
+
+		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
+		layout.
+
+		@default feathers.layout.HorizontalAlign.LEFT
+
+		@see `feathers.layout.HorizontalAlign.LEFT`
+		@see `feathers.layout.HorizontalAlign.CENTER`
+		@see `feathers.layout.HorizontalAlign.RIGHT`
+
 		@since 1.0.0
 	**/
 	public var horizontalAlign(default, set):HorizontalAlign = LEFT;
@@ -116,6 +152,16 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		How the content is positioned vertically (along the y-axis) within the
+		container.
+
+		@default feathers.layout.VerticalAlign.TOP
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+		@see `feathers.layout.VerticalAlign.JUSTIFY`
+
 		@since 1.0.0
 	**/
 	public var verticalAlign(default, set):VerticalAlign = TOP;
@@ -129,6 +175,10 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		return this.verticalAlign;
 	}
 
+	/**
+		@inheritDoc
+	**/
+	@:dox(hide)
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.validateItems(items);
 		this.applyPercentWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);

@@ -8,8 +8,24 @@
 
 package feathers.layout;
 
+/**
+	A layout that is affected by changes to scroll position.
+
+	@since 1.0.0
+**/
 interface IScrollLayout extends ILayout {
+	/**
+		The horizontal scroll position of the container using this layout.
+
+		@since 1.0.0
+	**/
 	var scrollX(default, set):Float;
+
+	/**
+		The vertical scroll position of the container using this layout.
+
+		@since 1.0.0
+	**/
 	var scrollY(default, set):Float;
 
 	/**
