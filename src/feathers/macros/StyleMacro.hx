@@ -14,7 +14,26 @@ import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
 import haxe.macro.Context;
 
+/**
+	Add `@:style` metadata to a public variable to convert it into a "style"
+	property.
+
+	```hx
+	@:style
+	public var backgroundSkin:DisplayObject = null;
+	```
+
+	The following requirements must be met when using `@:style` metadata:
+
+	- The variable must be `public`
+	- The variable must not have a getter or setter.
+	- The variable must be initialized with a default value.
+	- The variable's type must be nullable. For instance, use `Null<Float>` or `Null<Int>` for numeric types.
+
+	@since 1.0.0
+**/
 class StyleMacro {
+	@:dox(hide)
 	public static function build():Array<Field> {
 		var fields = Context.getBuildFields();
 		var extraFields:Array<Field> = [];

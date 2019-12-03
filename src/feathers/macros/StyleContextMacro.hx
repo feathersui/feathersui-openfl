@@ -14,7 +14,21 @@ import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
 import haxe.macro.Context;
 
+/**
+	Add `@:styleContext` metadata to a Feathers UI component to make it
+	available for use in themes without inheriting styles from its superclass.
+
+	```hx
+	@:styleContext
+	class MyComponent extends FeathersControl {
+
+	}
+	```
+
+	@since 1.0.0
+**/
 class StyleContextMacro {
+	@:dox(hide)
 	public static function build():Array<Field> {
 		var fields = Context.getBuildFields();
 		var localClass = Context.getLocalClass().get();
