@@ -28,7 +28,7 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 
 	/**
 		The rectangle may optionally have rounded corners, and this sets their
-		radius.
+		radius, measured in pixels.
 
 		@since 1.0.0
 	**/

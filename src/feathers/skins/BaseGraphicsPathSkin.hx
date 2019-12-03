@@ -93,7 +93,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		use this skin, the state context must implement the `IUIControl`
 		interface.
 
-		@see `feathers.core.IUIControl`
+		@see `feathers.core.IUIControl.enabled`
 
 		@since 1.0.0
 	**/
@@ -112,7 +112,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		How the path's fill is styled when the state context is selected. To
 		use this skin, the state context must implement the `IToggle` interface.
 
-		@see `feathers.controls.IToggle`
+		@see `feathers.controls.IToggle.selected`
 
 		@since 1.0.0
 	**/
@@ -150,7 +150,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		use this skin, the state context must implement the `IUIControl`
 		interface.
 
-		@see `feathers.core.IUIControl`
+		@see `feathers.core.IUIControl.enabled`
 
 		@since 1.0.0
 	**/
@@ -169,7 +169,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		How the path's border is styled when the state context is selected. To
 		use this skin, the state context must implement the `IToggle` interface.
 
-		@see `feathers.controls.IToggle`
+		@see `feathers.controls.IToggle.selected`
 
 		@since 1.0.0
 	**/
@@ -190,8 +190,9 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		If a fill is not defined for a specific state, returns `null`.
 
-		@see `fill`
-		@see `setFillForState()`
+		@see `BaseGraphicsPathSkin.stateContext`
+		@see `BaseGraphicsPathSkin.fill`
+		@see `BaseGraphicsPathSkin.setFillForState`
 
 		@since 1.0.0
 	**/
@@ -211,8 +212,9 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		To clear a state's fill, pass in `null`.
 
-		@see `fill`
-		@see `getFillForState()`
+		@see `BaseGraphicsPathSkin.stateContext`
+		@see `BaseGraphicsPathSkin.fill`
+		@see `BaseGraphicsPathSkin.getFillForState`
 
 		@since 1.0.0
 	**/
@@ -233,8 +235,9 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		If a border is not defined for a specific state, returns `null`.
 
-		@see `border`
-		@see `setBorderForState()`
+		@see `BaseGraphicsPathSkin.stateContext`
+		@see `BaseGraphicsPathSkin.border`
+		@see `BaseGraphicsPathSkin.setBorderForState`
 
 		@since 1.0.0
 	**/
@@ -254,8 +257,9 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		To clear a state's border, pass in `null`.
 
-		@see `border`
-		@see `getBorderForState()`
+		@see `BaseGraphicsPathSkin.stateContext`
+		@see `BaseGraphicsPathSkin.border`
+		@see `BaseGraphicsPathSkin.getBorderForState`
 
 		@since 1.0.0
 	**/
@@ -410,6 +414,16 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return matrix;
 	}
 
+	/**
+		Returns the current border based on the state context.
+
+		@see `BaseGraphicsPathSkin.border`
+		@see `BaseGraphicsPathSkin.getBorderForState`
+		@see `BaseGraphicsPathSkin.setBorderForState`
+		@see `BaseGraphicsPathSkin.stateContext`
+
+		@since 1.0.0
+	**/
 	@:dox(show)
 	private function getCurrentBorder():LineStyle {
 		if (this._previousBorder != null) {
@@ -443,6 +457,16 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		return this.border;
 	}
 
+	/**
+		Returns the current fill based on the state context.
+
+		@see `BaseGraphicsPathSkin.fill`
+		@see `BaseGraphicsPathSkin.getFillForState`
+		@see `BaseGraphicsPathSkin.setFillForState`
+		@see `BaseGraphicsPathSkin.stateContext`
+
+		@since 1.0.0
+	**/
 	@:dox(show)
 	private function getCurrentFill():FillStyle {
 		if (this._previousFill != null) {
@@ -480,8 +504,10 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 		Checks if a the current state requires the skin to be redrawn.
 
 		Subclasses may need to override this method if they add any additional
-		state-dependent properties similar to getCurrentBorder() and
-		getCurrentFill()
+		state-dependent properties similar to `getCurrentBorder` and
+		`getCurrentFill`.
+
+		@since 1.0.0
 	**/
 	@:dox(show)
 	private function needsStateUpdate():Bool {
