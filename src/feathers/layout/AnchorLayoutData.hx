@@ -13,15 +13,22 @@ import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
 /**
+	Extra, optional data used by an `AnchorLayout` instance to position and size
+	a display object.
+
+	@see `feathers.layout.AnchorLayout`
+	@see `feathers.layout.ILayoutObject.layoutData`
+
 	@since 1.0.0
 **/
 class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	/**
 		Creates `AnchorLayoutData` that centers the object both horizontally and
-		vertically.
+		vertically, with the ability to optionally specify offsets in either
+		direction.
 
-		@see `horizontalCenter`
-		@see `verticalCenter`
+		@see `AnchorLayoutData.horizontalCenter`
+		@see `AnchorLayoutData.verticalCenter`
 
 		@since 1.0.0
 	**/
@@ -30,12 +37,14 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		Creates `AnchorLayoutData` that fills the parent container.
+		Creates `AnchorLayoutData` that fills the parent container, with the
+		ability to optionally specify a padding value to pass to `top`, `right`,
+		`bottom`, and `left`.
 
-		@see `top`
-		@see `right`
-		@see `bottom`
-		@see `left`
+		@see `AnchorLayoutData.top`
+		@see `AnchorLayoutData.right`
+		@see `AnchorLayoutData.bottom`
+		@see `AnchorLayoutData.left`
 
 		@since 1.0.0
 	**/
@@ -43,6 +52,11 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		return new AnchorLayoutData(padding, padding, padding, padding);
 	}
 
+	/**
+		Creates a new `AnchorLayoutData` object from the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(?top:Null<Float>, ?right:Null<Float>, ?bottom:Null<Float>, ?left:Null<Float>, ?horizontalCenter:Null<Float>,
 			?verticalCenter:Null<Float>) {
 		super();
@@ -111,8 +125,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		return this.bottom;
 	}
 
-	public var left(default, set):Null<Float> = null;
-
 	/**
 		The position, in pixels, of the object's left edge relative to the left
 		anchor, or, if there is no left anchor, then the position is relative to
@@ -121,6 +133,8 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	public var left(default, set):Null<Float> = null;
+
 	private function set_left(value:Null<Float>):Null<Float> {
 		if (this.left == value) {
 			return this.left;
