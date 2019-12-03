@@ -18,6 +18,11 @@ import feathers.themes.steel.components.SteelHScrollBarStyles;
 **/
 @:styleContext
 class HScrollBar extends BaseScrollBar {
+	/**
+		Creates a new `HScrollBar` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		this.initializeHScrollBarTheme();
 

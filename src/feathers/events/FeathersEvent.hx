@@ -154,6 +154,13 @@ class FeathersEvent extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `FeathersEvent` object with the given arguments.
+
+		@see `FeathersEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String, bubbles:Bool = false, cancelable:Bool = false) {
 		super(type, bubbles, cancelable);
 	}

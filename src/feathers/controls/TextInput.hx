@@ -51,6 +51,11 @@ import openfl.text.TextFormat;
 **/
 @:styleContext
 class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl {
+	/**
+		Creates a new `TextInput` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeTextInputTheme();
 

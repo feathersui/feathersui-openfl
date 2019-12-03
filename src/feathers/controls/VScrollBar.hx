@@ -18,6 +18,11 @@ import feathers.themes.steel.components.SteelVScrollBarStyles;
 **/
 @:styleContext
 class VScrollBar extends BaseScrollBar {
+	/**
+		Creates a new `VScrollBar` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		this.initializeVScrollBarTheme();
 

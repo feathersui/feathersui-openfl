@@ -19,6 +19,11 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class NoOpEffectContext extends EventDispatcher implements IEffectContext {
+	/**
+		Creates a new `NoOpEffectContext` object from the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(target:Dynamic) {
 		super();
 		this.target = target;

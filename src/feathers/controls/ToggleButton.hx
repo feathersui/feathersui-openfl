@@ -43,6 +43,11 @@ import openfl.text.TextFormat;
 **/
 @:styleContext
 class ToggleButton extends BasicToggleButton implements ITextControl {
+	/**
+		Creates a new `ToggleButton` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeToggleButtonTheme();
 

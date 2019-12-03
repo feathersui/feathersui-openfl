@@ -29,6 +29,11 @@ class Application extends LayoutGroup {
 		return new Sprite();
 	}
 
+	/**
+		Creates a new `Application` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeApplicationTheme();
 

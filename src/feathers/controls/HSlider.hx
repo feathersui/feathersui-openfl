@@ -38,6 +38,11 @@ import openfl.geom.Point;
 **/
 @:styleContext
 class HSlider extends BaseSlider {
+	/**
+		Creates a new `HSlider` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeHSliderTheme();
 

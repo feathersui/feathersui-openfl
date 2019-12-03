@@ -36,6 +36,11 @@ import feathers.themes.steel.components.SteelComboBoxStyles;
 	@since 1.0.0
 **/
 class SteelTheme extends BaseSteelTheme {
+	/**
+		Creates a new `SteelTheme` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(?themeColor:Int, ?darkThemeColor:Int) {
 		super(themeColor, darkThemeColor);
 

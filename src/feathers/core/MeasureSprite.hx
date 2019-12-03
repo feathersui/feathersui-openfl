@@ -32,6 +32,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	private var scaledActualMaxWidth:Float = Math.POSITIVE_INFINITY;
 	private var scaledActualMaxHeight:Float = Math.POSITIVE_INFINITY;
 
+	/**
+		Creates a new `MeasureSprite` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

@@ -23,6 +23,11 @@ import openfl.events.MouseEvent;
 	@since 1.0.0
 **/
 class PointerTrigger {
+	/**
+		Creates a new `PointerTrigger` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(target:InteractiveObject = null, ?eventFactory:() -> Event) {
 		this.target = target;
 		this.eventFactory = eventFactory;

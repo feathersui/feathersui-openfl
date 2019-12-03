@@ -27,6 +27,11 @@ class DefaultPopUpManager implements IPopUpManager {
 		return overlay;
 	}
 
+	/**
+		Creates a new `DefaultPopUpManager` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(root:DisplayObjectContainer) {
 		this.root = root;
 	}

@@ -38,6 +38,11 @@ import openfl.geom.Point;
 **/
 @:styleContext
 class VSlider extends BaseSlider {
+	/**
+		Creates a new `VSlider` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeVSliderTheme();
 

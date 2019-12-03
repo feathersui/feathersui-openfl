@@ -20,6 +20,11 @@ import openfl.errors.ArgumentError;
 	@since 1.0.0
 **/
 class ScreenDensityScaleCalculator {
+	/**
+		Creates a new `ScreenDensityScaleCalculator` object.
+
+		@since 1.0.0
+	**/
 	public function new() {}
 
 	private var _buckets:Array<ScreenDensityBucket> = [];

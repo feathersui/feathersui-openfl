@@ -39,6 +39,11 @@ import motion.easing.Linear;
 	@since 1.0.0
 **/
 class ActuateEffectContext extends BaseEffectContext {
+	/**
+		Creates a new `ActuateEffectContext` object from the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(target:Dynamic, actuator:IReadableGenericActuator, interruptBehavior:EffectInterruptBehavior = END) {
 		this.actuator = actuator;
 		this.interruptBehavior = interruptBehavior;

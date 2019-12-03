@@ -22,6 +22,11 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class AnchorLayout extends EventDispatcher implements ILayout {
+	/**
+		Creates a new `AnchorLayout` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

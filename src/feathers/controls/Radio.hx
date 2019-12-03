@@ -20,6 +20,11 @@ import feathers.core.ToggleGroup;
 class Radio extends ToggleButton implements IGroupedToggle {
 	public static final defaultRadioGroup:ToggleGroup = new ToggleGroup();
 
+	/**
+		Creates a new `Radio` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeRadioTheme();
 

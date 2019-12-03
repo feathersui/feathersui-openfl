@@ -35,6 +35,11 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
+	/**
+		Creates a new `FunctionStyleProvider` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(?callback:(Dynamic) -> Void) {
 		super();
 		this.callback = callback;

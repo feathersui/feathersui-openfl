@@ -19,6 +19,11 @@ class Panel extends ScrollContainer {
 	private static final INVALIDATION_FLAG_HEADER_FACTORY = "headerFactory";
 	private static final INVALIDATION_FLAG_FOOTER_FACTORY = "footerFactory";
 
+	/**
+		Creates a new `Panel` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializePanelTheme();
 

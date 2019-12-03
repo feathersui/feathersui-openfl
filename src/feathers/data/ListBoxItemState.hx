@@ -16,6 +16,11 @@ package feathers.data;
 	@since 1.0.0
 **/
 class ListBoxItemState {
+	/**
+		Creates a new `ListBoxItemState` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(data:Dynamic = null, index:Int = -1, selected:Bool = false, text:String = null) {
 		this.data = data;
 		this.index = index;

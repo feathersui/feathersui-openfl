@@ -41,6 +41,11 @@ class TabBar extends FeathersControl {
 		button.text = null;
 	}
 
+	/**
+		Creates a new `TabBar` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeTabBarTheme();
 

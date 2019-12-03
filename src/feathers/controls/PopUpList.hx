@@ -39,6 +39,11 @@ class PopUpList extends FeathersControl {
 
 	public static final CHILD_VARIANT_BUTTON = "popUpButton";
 
+	/**
+		Creates a new `PopUpList` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializePopUpListTheme();
 

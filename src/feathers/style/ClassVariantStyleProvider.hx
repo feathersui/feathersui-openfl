@@ -58,6 +58,15 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvider {
+	/**
+		Creates a new `ClassVariantStyleProvider` object.
+
+		@since 1.0.0
+	**/
+	public function new() {
+		super();
+	}
+
 	private var styleTargets:Map<StyleTarget, (Dynamic) -> Void>;
 
 	/**

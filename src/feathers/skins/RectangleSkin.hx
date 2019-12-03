@@ -11,12 +11,17 @@ package feathers.skins;
 import feathers.core.InvalidationFlag;
 
 /**
-	A skin for Feathers components that draws a rectangle. The rectangle's fill
-	and border may be styled, and the corners may be rounded.
+	A skin for Feathers UI components that draws a rectangle. The rectangle's
+	fill and border may be styled, and the corners may be rounded.
 
 	@since 1.0.0
 **/
 class RectangleSkin extends BaseGraphicsPathSkin {
+	/**
+		Creates a new `RectangleSkin` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

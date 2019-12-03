@@ -58,6 +58,11 @@ import openfl.geom.Point;
 class LayoutGroup extends FeathersControl {
 	public static final VARIANT_TOOL_BAR = "toolBar";
 
+	/**
+		Creates a new `LayoutGroup` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeLayoutGroupTheme();
 

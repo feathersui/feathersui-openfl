@@ -27,6 +27,11 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class ToggleGroup extends EventDispatcher {
+	/**
+		Creates a new `ToggleGroup` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

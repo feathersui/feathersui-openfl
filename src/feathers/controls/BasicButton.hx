@@ -32,6 +32,11 @@ import feathers.utils.PointerToState;
 	@see `feathers.controls.Button`
 **/
 class BasicButton extends FeathersControl implements IStateContext<ButtonState> {
+	/**
+		Creates a new `BasicButton` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 		// MouseEvent.CLICK is dispatched only if the same object is under the

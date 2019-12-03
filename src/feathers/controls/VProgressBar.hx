@@ -15,6 +15,11 @@ import feathers.controls.supportClasses.BaseProgressBar;
 
 @:styleContext
 class VProgressBar extends BaseProgressBar {
+	/**
+		Creates a new `VProgressBar` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeVProgressBarTheme();
 

@@ -44,6 +44,11 @@ class ComboBox extends FeathersControl {
 	public static final CHILD_VARIANT_TEXT_INPUT = "comboBoxButton";
 	public static final CHILD_VARIANT_LIST_BOX = "comboBoxListBox";
 
+	/**
+		Creates a new `ComboBox` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeComboBoxTheme();
 

@@ -23,6 +23,11 @@ import openfl.events.MouseEvent;
 	@since 1.0.0
 **/
 class PointerToState<T> {
+	/**
+		Creates a new `PointerToState` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(target:InteractiveObject = null, callback:(T) -> Void = null, upState:T, downState:T, hoverState:T) {
 		this.target = target;
 		if (upState != null) {

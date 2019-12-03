@@ -51,6 +51,11 @@ class ListBox extends BaseScrollContainer {
 		}
 	}
 
+	/**
+		Creates a new `ListBox` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeListBoxTheme();
 

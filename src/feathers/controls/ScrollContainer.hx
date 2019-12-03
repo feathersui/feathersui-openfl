@@ -54,6 +54,11 @@ import openfl.geom.Rectangle;
 **/
 @:styleContext
 class ScrollContainer extends BaseScrollContainer {
+	/**
+		Creates a new `ScrollContainer` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeScrollContainerTheme();
 

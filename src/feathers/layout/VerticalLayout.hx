@@ -22,6 +22,11 @@ import feathers.core.IValidating;
 	@since 1.0.0
 **/
 class VerticalLayout extends EventDispatcher implements ILayout {
+	/**
+		Creates a new `VerticalLayout` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

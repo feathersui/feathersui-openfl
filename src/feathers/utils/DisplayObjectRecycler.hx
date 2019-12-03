@@ -18,6 +18,11 @@ import openfl.display.DisplayObject;
 	@since 1.0.0
 **/
 class DisplayObjectRecycler<T:B & DisplayObject & Constructible<() -> Void>, S, B> {
+	/**
+		Creates a new `DisplayObjectRecycler` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(create:DisplayObjectClassOrFunction<T>, ?update:(target:T, state:S) -> Void, ?clean:(target:T, state:S) -> Void,
 			?destroy:(T) -> Void) {
 		this.create = create;

@@ -117,6 +117,13 @@ class FlatCollectionEvent extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `FlatCollectionEvent` object with the given arguments.
+
+		@see `FlatCollectionEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String, index:Int, bubbles:Bool = false, cancelable:Bool = false) {
 		super(type, bubbles, cancelable);
 		this.index = index;

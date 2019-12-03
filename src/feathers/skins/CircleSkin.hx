@@ -11,12 +11,17 @@ package feathers.skins;
 import openfl.geom.Matrix;
 
 /**
-	A skin for Feathers components that draws a circle. The circle's fill
+	A skin for Feathers UI components that draws a circle. The circle's fill
 	and border may be styled.
 
 	@since 1.0.0
 **/
 class CircleSkin extends BaseGraphicsPathSkin {
+	/**
+		Creates a new `CircleSkin` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

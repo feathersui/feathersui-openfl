@@ -19,6 +19,11 @@ import motion.actuators.SimpleActuator;
 	@since 1.0.0
 **/
 class SimpleEffectActuator<T, U> extends SimpleActuator<T, U> implements IReadableGenericActuator {
+	/**
+		Creates a new `SimpleEffectActuator` object from the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(target:T, duration:Float, properties:Dynamic) {
 		super(target, duration, properties);
 	}

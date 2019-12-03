@@ -43,6 +43,11 @@ import openfl.text.TextFormat;
 **/
 @:styleContext
 class Button extends BasicButton implements ITextControl {
+	/**
+		Creates a new `Button` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeButtonTheme();
 

@@ -55,6 +55,11 @@ class Label extends FeathersControl implements ITextControl {
 	**/
 	public static final VARIANT_DETAIL = "detail";
 
+	/**
+		Creates a new `Label` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeLabelTheme();
 

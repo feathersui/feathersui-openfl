@@ -12,6 +12,11 @@ package feathers.themes.steel;
 	@since 1.0.0
 **/
 class DefaultSteelTheme extends BaseSteelTheme {
+	/**
+		Creates a new `DefaultSteelTheme` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(?themeColor:Int, ?darkThemeColor:Int) {
 		super(themeColor, darkThemeColor);
 		// the default steel theme doesn't automatically add all style providers

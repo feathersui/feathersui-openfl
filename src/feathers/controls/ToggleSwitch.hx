@@ -28,6 +28,11 @@ import feathers.core.FeathersControl;
 **/
 @:styleContext
 class ToggleSwitch extends FeathersControl implements IToggle {
+	/**
+		Creates a new `ToggleSwitch` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeToggleSwitchTheme();
 

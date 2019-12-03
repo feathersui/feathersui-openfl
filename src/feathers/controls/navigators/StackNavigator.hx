@@ -45,6 +45,11 @@ import js.Lib;
 @:access(feathers.controls.navigators.StackItem)
 @:styleContext
 class StackNavigator extends BaseNavigator {
+	/**
+		Creates a new `StackNavigator` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 		this.addEventListener(FeathersEvent.INITIALIZE, stackNavigator_initializeHandler);

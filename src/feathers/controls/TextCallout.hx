@@ -28,6 +28,13 @@ class TextCallout extends Callout implements ITextControl {
 		return cast(Callout.showCallout(callout, origin, supportedPositions, modal), TextCallout);
 	}
 
+	/**
+		Creates a new `TextCallout` object.
+
+		@see `TextCallout.show`
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeTextCalloutTheme();
 		super();

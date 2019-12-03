@@ -9,12 +9,17 @@
 package feathers.skins;
 
 /**
-	A skin for Feathers components that draws an ellipse. The ellipse's fill
+	A skin for Feathers UI components that draws an ellipse. The ellipse's fill
 	and border may be styled.
 
 	@since 1.0.0
 **/
 class EllipseSkin extends BaseGraphicsPathSkin {
+	/**
+		Creates a new `CircleSkin` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

@@ -34,6 +34,11 @@ import feathers.utils.PointerToState;
 	@see `feathers.controls.ToggleButton`
 **/
 class BasicToggleButton extends FeathersControl implements IToggle implements IStateContext<ToggleButtonState> {
+	/**
+		Creates a new `BasicToggleButton` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 		// MouseEvent.CLICK is dispatched only if the same object is under the

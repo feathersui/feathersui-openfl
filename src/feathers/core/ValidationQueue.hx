@@ -37,6 +37,11 @@ class ValidationQueue {
 		return STAGE_TO_VALIDATION_QUEUE[stage];
 	}
 
+	/**
+		Creates a new `ValidationQueue` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(stage:Stage) {
 		this._stage = stage;
 		this._stage.addEventListener(Event.ENTER_FRAME, stage_enterFrameHandler, false, -1000, true);

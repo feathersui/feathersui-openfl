@@ -13,6 +13,11 @@ import feathers.themes.steel.components.SteelItemRendererStyles;
 
 @:styleContext
 class ItemRenderer extends ToggleButton {
+	/**
+		Creates a new `ItemRenderer` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeItemRendererTheme();
 

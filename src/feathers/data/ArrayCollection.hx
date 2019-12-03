@@ -21,6 +21,11 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
+	/**
+		Creates a new `ArrayCollection` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(?array:Array<T>) {
 		super();
 		if (array == null) {

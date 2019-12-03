@@ -203,6 +203,13 @@ class Callout extends FeathersControl {
 		callout.y = yPosition;
 	}
 
+	/**
+		Creates a new `Callout` object.
+
+		@see `Callout.show`
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeCalloutTheme();
 		super();

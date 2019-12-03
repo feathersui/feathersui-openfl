@@ -27,6 +27,11 @@ import feathers.layout.Measurements;
 import feathers.utils.ScaleUtil;
 
 class AssetLoader extends FeathersControl {
+	/**
+		Creates a new `AssetLoader` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 	}

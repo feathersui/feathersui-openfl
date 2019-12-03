@@ -14,6 +14,11 @@ package feathers.layout;
 	@since 1.0.0
 **/
 class LayoutBoundsResult {
+	/**
+		Creates a new `LayoutBoundsResult` object.
+
+		@since 1.0.0
+	**/
 	public function new() {}
 
 	/**

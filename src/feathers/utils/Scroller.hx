@@ -27,6 +27,11 @@ class Scroller extends EventDispatcher {
 	private static final MINIMUM_VELOCITY = 0.02;
 	private static final TOUCH_ID_MOUSE = -1000;
 
+	/**
+		Creates a new `Scroller` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(?target:InteractiveObject) {
 		super();
 		this.target = target;

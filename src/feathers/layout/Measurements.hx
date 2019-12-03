@@ -17,6 +17,11 @@ import openfl.display.DisplayObject;
 	@since 1.0.0
 **/
 class Measurements {
+	/**
+		Creates a new `Measurements` object from the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(target:DisplayObject = null) {
 		this.save(target);
 	}

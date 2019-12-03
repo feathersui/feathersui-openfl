@@ -15,6 +15,11 @@ import feathers.themes.steel.components.SteelCheckStyles;
 **/
 @:styleContext
 class Check extends ToggleButton {
+	/**
+		Creates a new `Check` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeCheckTheme();
 
