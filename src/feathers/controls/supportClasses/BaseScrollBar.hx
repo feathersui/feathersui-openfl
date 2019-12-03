@@ -495,9 +495,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		scrollBar.paddingTop = 20.0;
 		```
 
-		@see `paddingBottom`
-		@see `paddingRight`
-		@see `paddingLeft`
+		@see `BaseScrollBar.paddingBottom`
+		@see `BaseScrollBar.paddingRight`
+		@see `BaseScrollBar.paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -515,9 +515,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		scrollBar.paddingRight = 20.0;
 		```
 
-		@see `paddingTop`
-		@see `paddingBottom`
-		@see `paddingLeft`
+		@see `BaseScrollBar.paddingTop`
+		@see `BaseScrollBar.paddingBottom`
+		@see `BaseScrollBar.paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -535,9 +535,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		scrollBar.paddingBottom = 20.0;
 		```
 
-		@see `paddingTop`
-		@see `paddingRight`
-		@see `paddingLeft`
+		@see `BaseScrollBar.paddingTop`
+		@see `BaseScrollBar.paddingRight`
+		@see `BaseScrollBar.paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -555,9 +555,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		scrollBar.paddingLeft = 20.0;
 		```
 
-		@see `paddingTop`
-		@see `paddingBottom`
-		@see `paddingRight`
+		@see `BaseScrollBar.paddingTop`
+		@see `BaseScrollBar.paddingBottom`
+		@see `BaseScrollBar.paddingRight`
 
 		@since 1.0.0
 	**/

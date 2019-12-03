@@ -20,11 +20,16 @@ import openfl.display.DisplayObject;
 **/
 class PopUpManager {
 	/**
+		Creates an `IPopUpManager` for the specified container.
+
 		@since 1.0.0
 	**/
 	public static var popUpManagerFactory:(stage:Stage) -> IPopUpManager;
 
 	/**
+		The container where pop-ups are added. If not set manually, defaults to
+		the stage.
+
 		@since 1.0.0
 	**/
 	public static var root(never, set):DisplayObjectContainer;
@@ -61,7 +66,7 @@ class PopUpManager {
 		yet, one will be created automatically using
 		`PopUpManager.popUpManagerFactory`.
 
-		@see `popUpManagerFactory`
+		@see `PopUpManager.popUpManagerFactory`
 
 		@since 1.0.0
 	**/

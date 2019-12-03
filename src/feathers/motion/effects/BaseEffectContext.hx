@@ -48,7 +48,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 	/**
 		The current position of the effect, in the range of `0.0` to `1.0`.
 
-		@see `duration`
+		@see `BaseEffectContext.duration`
 
 		@since 1.0.0
 	**/
@@ -150,7 +150,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		Stops the effect at its current position and forces `Event.COMPLETE` to
 		be dispatched.
 
-		@see `toEnd()`
+		@see `BaseEffectContext.toEnd`
 
 		@since 1.0.0
 	**/
@@ -164,7 +164,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		Advances the effect immediately to the end and forces `Event.COMPLETE`
 		to be dispatched.
 
-		@see `stop()`
+		@see `BaseEffectContext.stop`
 
 		@since 1.0.0
 	**/
@@ -180,8 +180,8 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		its own whether this call behaves like `stop()` or if it behaves like
 		`toEnd()` instead.
 
-		@see `stop()`
-		@see `toEnd()`
+		@see `BaseEffectContext.stop`
+		@see `BaseEffectContext.toEnd`
 
 		@since 1.0.0
 	**/

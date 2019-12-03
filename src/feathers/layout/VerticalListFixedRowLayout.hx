@@ -31,9 +31,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	}
 
 	/**
-		@inheritDoc
+		@see `feathers.layout.IScrollLayout.scrollX`
 	**/
-	@:dox(hide)
 	public var scrollX(default, set):Float = 0.0;
 
 	private function set_scrollX(value:Float):Float {
@@ -45,9 +44,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	}
 
 	/**
-		@inheritDoc
+		@see `feathers.layout.IScrollLayout.scrollY`
 	**/
-	@:dox(hide)
 	public var scrollY(default, set):Float = 0.0;
 
 	private function set_scrollY(value:Float):Float {
@@ -59,9 +57,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	}
 
 	/**
-		@inheritDoc
+		@see `feathers.layout.IScrollLayout.primaryDirection`
 	**/
-	@:dox(hide)
 	public var primaryDirection(get, never):Direction;
 
 	private function get_primaryDirection():Direction {
@@ -69,9 +66,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	}
 
 	/**
-		@inheritDoc
+		@see `feathers.layout.IScrollLayout.requiresLayoutOnScroll`
 	**/
-	@:dox(hide)
 	public var requiresLayoutOnScroll(get, never):Bool;
 
 	private function get_requiresLayoutOnScroll():Bool {
@@ -129,9 +125,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	}
 
 	/**
-		@inheritDoc
+		@see `feathers.layout.ILayout.layout`
 	**/
-	@:dox(hide)
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortWidth = measurements.width;
 		var maxWidth:Float = 0.0;

@@ -16,6 +16,10 @@ import openfl.display.DisplayObjectContainer;
 import openfl.display.DisplayObject;
 
 /**
+	The default implementation of the `IPopUpManager` interface.
+
+	@see `feathers.core.PopUpManager`
+
 	@since 1.0.0
 **/
 class DefaultPopUpManager implements IPopUpManager {
@@ -39,7 +43,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	private var _ignoreRemoval = false;
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.root`
 	**/
 	@:isVar
 	public var root(get, set):DisplayObjectContainer;
@@ -82,6 +86,9 @@ class DefaultPopUpManager implements IPopUpManager {
 
 	private var _popUpToOverlay:Map<DisplayObject, DisplayObject> = [];
 
+	/**
+		@see `feathers.core.IPopUpManager.overlayFactory`
+	**/
 	@:isVar
 	public var overlayFactory(get, set):() -> DisplayObject;
 
@@ -98,7 +105,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.popUpCount`
 	**/
 	public var popUpCount(get, never):Int;
 
@@ -107,14 +114,14 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.isPopUp`
 	**/
 	public function isPopUp(target:DisplayObject):Bool {
 		return this.popUps.indexOf(target) != -1;
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.isTopLevelPopUp`
 	**/
 	public function isTopLevelPopUp(target:DisplayObject):Bool {
 		var i = this.popUps.length - 1;
@@ -136,7 +143,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.isModal`
 	**/
 	public function isModal(target:DisplayObject):Bool {
 		if (target == null) {
@@ -146,7 +153,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.addPopUp`
 	**/
 	public function addPopUp(popUp:DisplayObject, isModal:Bool = true, isCentered:Bool = true, ?customOverlayFactory:() -> DisplayObject):DisplayObject {
 		if (isModal) {
@@ -185,7 +192,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.removePopUp`
 	**/
 	public function removePopUp(popUp:DisplayObject):DisplayObject {
 		var index = this.popUps.indexOf(popUp);
@@ -196,7 +203,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.removePopUp`
 	**/
 	public function removeAllPopUps():Void {
 		// removing pop-ups may call event listeners that add new pop-ups,
@@ -214,7 +221,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.core.IPopUpManager.centerPopUp`
 	**/
 	public function centerPopUp(popUp:DisplayObject):Void {
 		var stage = this.root.stage;

@@ -93,6 +93,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		#end
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.explicitWidth`
+	**/
 	@:isVar
 	public var explicitWidth(get, set):Null<Float> = null;
 
@@ -120,6 +123,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitWidth;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.explicitHeight`
+	**/
 	@:isVar
 	public var explicitHeight(get, set):Null<Float> = null;
 
@@ -147,6 +153,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitHeight;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.explicitMinWidth`
+	**/
 	@:isVar
 	public var explicitMinWidth(get, set):Null<Float> = null;
 
@@ -178,6 +187,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitMinWidth;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.explicitMinHeight`
+	**/
 	@:isVar
 	public var explicitMinHeight(get, set):Null<Float> = null;
 
@@ -209,6 +221,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitMinHeight;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.minWidth`
+	**/
 	public var minWidth(get, set):Float;
 
 	private function get_minWidth():Float {
@@ -223,6 +238,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.scaledActualMinWidth;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.minHeight`
+	**/
 	public var minHeight(get, set):Float;
 
 	private function get_minHeight():Float {
@@ -237,6 +255,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.scaledActualMinHeight;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.explicitMaxWidth`
+	**/
 	@:isVar
 	public var explicitMaxWidth(get, set):Null<Float> = null;
 
@@ -268,6 +289,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitMaxWidth;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.explicitMaxHeight`
+	**/
 	@:isVar
 	public var explicitMaxHeight(get, set):Null<Float> = null;
 
@@ -299,6 +323,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.explicitMaxHeight;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.maxWidth`
+	**/
 	public var maxWidth(get, set):Float;
 
 	private function get_maxWidth():Float {
@@ -313,6 +340,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		return this.scaledActualMaxWidth;
 	}
 
+	/**
+		@see `feathers.core.IMeasureObject.maxHeight`
+	**/
 	public var maxHeight(get, set):Float;
 
 	private function get_maxHeight():Float {
@@ -328,60 +358,42 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	}
 
 	/**
-		Resets the width so that it will be calculated automatically by
-		the component.
-
-		@since 1.0.0
+		@see `feathers.core.IMeasureObject.resetWidth`
 	**/
 	public function resetWidth():Void {
 		this.explicitWidth = null;
 	}
 
 	/**
-		Resets the height so that it will be calculated automatically by
-		the component.
-
-		@since 1.0.0
+		@see `feathers.core.IMeasureObject.resetHeight`
 	**/
 	public function resetHeight():Void {
 		this.explicitHeight = null;
 	}
 
 	/**
-		Resets the minimum width so that it will be calculated automatically by
-		the component.
-
-		@since 1.0.0
+		@see `feathers.core.IMeasureObject.resetMinWidth`
 	**/
 	public function resetMinWidth():Void {
 		this.explicitMinWidth = null;
 	}
 
 	/**
-		Resets the minimum height so that it will be calculated automatically by
-		the component.
-
-		@since 1.0.0
+		@see `feathers.core.IMeasureObject.resetMinHeight`
 	**/
 	public function resetMinHeight():Void {
 		this.explicitMinHeight = null;
 	}
 
 	/**
-		Resets the maximum width so that it will be calculated automatically by
-		the component.
-
-		@since 1.0.0
+		@see `feathers.core.IMeasureObject.resetMaxWidth`
 	**/
 	public function resetMaxWidth():Void {
 		this.explicitMaxWidth = null;
 	}
 
 	/**
-		Resets the maximum height so that it will be calculated automatically by
-		the component.
-
-		@since 1.0.0
+		@see `feathers.core.IMeasureObject.resetMaxHeight`
 	**/
 	public function resetMaxHeight():Void {
 		this.explicitMaxHeight = null;

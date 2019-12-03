@@ -152,7 +152,7 @@ class BaseProgressBar extends FeathersControl {
 		progress.backgroundSkin = skin;
 		```
 
-		@see `backgroundDisabledSkin`
+		@see `BaseProgressBar.backgroundDisabledSkin`
 
 		@since 1.0.0
 	**/
@@ -173,7 +173,7 @@ class BaseProgressBar extends FeathersControl {
 		progress.enabled = false;
 		```
 
-		@see `backgroundSkin`
+		@see `BaseProgressBar.backgroundSkin`
 
 		@since 1.0.0
 	**/
@@ -231,9 +231,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingTop = 20.0;
 		```
 
-		@see `paddingBottom`
-		@see `paddingRight`
-		@see `paddingLeft`
+		@see `BaseProgressBar.paddingBottom`
+		@see `BaseProgressBar.paddingRight`
+		@see `BaseProgressBar.paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -251,9 +251,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingRight = 20.0;
 		```
 
-		@see `paddingTop`
-		@see `paddingBottom`
-		@see `paddingLeft`
+		@see `BaseProgressBar.paddingTop`
+		@see `BaseProgressBar.paddingBottom`
+		@see `BaseProgressBar.paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -271,9 +271,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingBottom = 20.0;
 		```
 
-		@see `paddingTop`
-		@see `paddingRight`
-		@see `paddingLeft`
+		@see `BaseProgressBar.paddingTop`
+		@see `BaseProgressBar.paddingRight`
+		@see `BaseProgressBar.paddingLeft`
 
 		@since 1.0.0
 	**/
@@ -291,9 +291,9 @@ class BaseProgressBar extends FeathersControl {
 		progress.paddingLeft = 20.0;
 		```
 
-		@see `paddingTop`
-		@see `paddingBottom`
-		@see `paddingRight`
+		@see `BaseProgressBar.paddingTop`
+		@see `BaseProgressBar.paddingBottom`
+		@see `BaseProgressBar.paddingRight`
 
 		@since 1.0.0
 	**/

@@ -11,8 +11,6 @@ package feathers.core;
 import openfl.display.Stage;
 import openfl.events.Event;
 
-@:dox(hide)
-
 /**
 	A queue for components that are invalid.
 

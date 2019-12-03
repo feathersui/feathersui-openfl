@@ -163,7 +163,7 @@ class ToggleGroup extends EventDispatcher {
 		group.addItem( radio );
 		```
 
-		@see `removeItem()`
+		@see `ToggleGroup.removeItem`
 
 		@since 1.0.0
 	**/
@@ -202,8 +202,8 @@ class ToggleGroup extends EventDispatcher {
 		group.removeItem( radio );
 		```
 
-		@see `addItem()`
-		@see `removeAllItems()`
+		@see `ToggleGroup.addItem`
+		@see `ToggleGroup.removeAllItems`
 
 		@since 1.0.0
 	**/
@@ -292,7 +292,7 @@ class ToggleGroup extends EventDispatcher {
 		var item:IToggle = group.getItemAt( 2 );
 		```
 
-		@see `numItems`
+		@see `ToggleGroup.numItems`
 
 		@since 1.0.0
 	**/

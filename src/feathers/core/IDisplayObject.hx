@@ -10,6 +10,15 @@ package feathers.core;
 
 import openfl.events.IEventDispatcher;
 
+/**
+	Conveniently provides a number of display object properties that may be
+	useful on other interfaces. Should not be used for runtime type checking
+	to see if something is a display object because not all display objects
+	will implement this interface.
+
+	@since 1.0.0
+**/
+@:dox(hide)
 interface IDisplayObject extends IEventDispatcher {
 	#if flash
 	public var x:Float;

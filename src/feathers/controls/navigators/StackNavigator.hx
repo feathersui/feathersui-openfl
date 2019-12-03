@@ -61,8 +61,8 @@ class StackNavigator extends BaseNavigator {
 		The default transition to use for push actions, if not overridden in the
 		call to `pushItem()`.
 
-		@see `pushItem()`
-		@see `popTransition`
+		@see `StackNavigator.pushItem`
+		@see `StackNavigator.popTransition`
 
 		@since 1.0.0
 
@@ -73,10 +73,10 @@ class StackNavigator extends BaseNavigator {
 		The default transition to use for pop actions, if not overridden in the
 		call to `popItem()`.
 
-		@see `popItem()`
-		@see `popToRootItem()`
-		@see `popToRootItemAndReplace()`
-		@see `pushTransition`
+		@see `StackNavigator.popItem`
+		@see `StackNavigator.popToRootItem`
+		@see `StackNavigator.popToRootItemAndReplace`
+		@see `StackNavigator.pushTransition`
 
 		@since 1.0.0
 	**/
@@ -86,9 +86,9 @@ class StackNavigator extends BaseNavigator {
 		The default transition to use for replace actions, if not overridden in
 		the call to `replaceItem()`.
 
-		@see `replaceItem()`
-		@see `pushTransition`
-		@see `popTransition`
+		@see `StackNavigator.replaceItem`
+		@see `StackNavigator.pushTransition`
+		@see `StackNavigator.popTransition`
 
 		@since 1.0.0
 	**/
@@ -129,7 +129,7 @@ class StackNavigator extends BaseNavigator {
 		navigator.rootItemID = "my-item-id";
 		```
 
-		@see `popToRootItem()`
+		@see `StackNavigator.popToRootItem`
 
 		@since 1.0.0
 	**/
@@ -176,7 +176,7 @@ class StackNavigator extends BaseNavigator {
 		reference the same item in other calls, like `removeItem()` or
 		`pushItem()`.
 
-		@see `removeItem()`
+		@see `StackNavigator.removeItem`
 
 		@since 1.0.0
 	**/
@@ -188,7 +188,7 @@ class StackNavigator extends BaseNavigator {
 		Removes an existing item using the identifier assigned to it in the call
 		to `addItem()`.
 
-		@see `addItem()`
+		@see `StackNavigator.addItem`
 
 		@since 1.0.0
 	**/
@@ -239,7 +239,8 @@ class StackNavigator extends BaseNavigator {
 		queued until the previous transition has completed, and `pushItem()`
 		will return `null`.
 
-		@see `pushTransition`
+		@see `StackNavigator.pushTransition`
+		@see `StackNavigator.popItem`
 
 		@since 1.0.0
 	**/
@@ -282,10 +283,10 @@ class StackNavigator extends BaseNavigator {
 		queued until the previous transition has completed, and `popItem()`
 		will return `null`.
 
-		@see `popTransition`
-		@see `popToRootItem()`
-		@see `popAll()`
-		@see `popToRootItemAndReplace()`
+		@see `StackNavigator.popTransition`
+		@see `StackNavigator.popToRootItem`
+		@see `StackNavigator.popAll`
+		@see `StackNavigator.popToRootItemAndReplace`
 
 		@since 1.0.0
 	**/
@@ -329,10 +330,10 @@ class StackNavigator extends BaseNavigator {
 		be queued until the previous transition has completed, and
 		`popToRootItem()` will return `null`.
 
-		@see `popTransition`
-		@see `popToRootItemAndReplace()`
-		@see `popAll()`
-		@see `popItem()`
+		@see `StackNavigator.popTransition`
+		@see `StackNavigator.popToRootItemAndReplace`
+		@see `StackNavigator.popAll`
+		@see `StackNavigator.popItem`
 
 		@since 1.0.0
 	**/
@@ -357,8 +358,8 @@ class StackNavigator extends BaseNavigator {
 		An optional transition may be specified. If `null`, the value of the
 		`popTransition` property will be used instead.
 
-		@see `popTransition`
-		@see `popToRootItem()`
+		@see `StackNavigator.popTransition`
+		@see `StackNavigator.popToRootItem`
 
 		@since 1.0.0
 	**/
@@ -388,7 +389,7 @@ class StackNavigator extends BaseNavigator {
 		be queued until the previous transition has completed, and
 		`replaceItem()` will return `null`.
 
-		@see `replaceTransition`
+		@see `StackNavigator.replaceTransition`
 
 		@since 1.0.0
 	**/
@@ -423,10 +424,10 @@ class StackNavigator extends BaseNavigator {
 		item will be queued until the previous transition has completed, and
 		`popToRootItemAndReplace()` will return `null`.
 
-		@see `popTransition`
-		@see `popToRootItem()`
-		@see `popAll()`
-		@see `popItem()`
+		@see `StackNavigator.popTransition`
+		@see `StackNavigator.popToRootItem`
+		@see `StackNavigator.popAll`
+		@see `StackNavigator.popItem`
 
 		@since 1.0.0
 	**/

@@ -261,7 +261,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		collection.updateAt(0);
 		```
 
-		@see `updateAll`
+		@see `IFlatCollection.updateAll`
 		@see `feathers.data.FlatCollectionEvent.UPDATE_ITEM`
 
 		@since 1.0.0
@@ -278,7 +278,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		collection.updateAll();
 		```
 
-		@see `updateAt`
+		@see `IFlatCollection.updateAt`
 		@see `feathers.data.FlatCollectionEvent.UPDATE_ALL`
 
 		@since 1.0.0

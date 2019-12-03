@@ -85,19 +85,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	public var created(default, null):Bool = false;
 
 	/**
-		Indicates whether the control should respond when a user attempts to
-		interact with it. The appearance of the control may also be affected by
-		whether the control is enabled or disabled.
-
-		In the following example, the control is disabled:
-
-		```hx
-		component.enabled = false;
-		```
-
-		@default true
-
-		@since 1.0.0
+		@see `feathers.core.IUIControl.enabled`
 	**/
 	@:isVar
 	public var enabled(get, set):Bool = true;
@@ -129,7 +117,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		style provider will be reset to their default values before applying the
 		new style provider.
 
-		@see `variant`
+		@see `FeathersControl.variant`
 		@see [Introduction to Feathers UI themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -173,16 +161,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	/**
-		Determines if the `ILayout` of the parent container should measure and
-		position this object or ignore it.
-
-		In the following example, the object is excluded from the layout:
-
-		```hx
-		object.includeInLayout = false;
-		```
-
-		@since 1.0.0
+		@see `feathers.layout.ILayoutObject.includeInLayout`
 	**/
 	public var includeInLayout(default, set):Bool = true;
 
@@ -196,9 +175,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	/**
-		Optional, extra data used by some `ILayout` implementations.
-
-		@since 1.0.0
+		@see `feathers.layout.ILayoutObject.layoutData`
 	**/
 	@style
 	public var layoutData(default, set):ILayoutData = null;
@@ -267,13 +244,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 	}
 
 	/**
-		If the component has not yet initialized, initializes immediately. The
-		`initialize()` method will be called, and the `FeathersEvent.INITIALIZE`
-		event will be dispatched. Then, if the component has a style provider, it
-		will be applied. The component will not validate, though. To both
-		initialize and validate immediately, call `validateNow()` instead.
-
-		@since 1.0.0
+		@see `feathers.core.IUIControl.initializeNow`
 	**/
 	public function initializeNow():Void {
 		if (this.initialized || this._initializing) {
@@ -320,6 +291,15 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 		you should override this function to customize the initialization
 		process. Do things like create children and set up event listeners.
 		After this function is called, `Event.INIT` is dispatched.
+
+		The following example overrides initialization:
+
+		```hx
+		override private function initialize():Void {
+			super.initialize();
+
+		}
+		```
 
 		@since 1.0.0
 	**/

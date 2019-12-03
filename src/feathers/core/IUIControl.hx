@@ -21,6 +21,12 @@ interface IUIControl extends IDisplayObject {
 		interact with it. The appearance of the control may also be affected by
 		whether the control is enabled or disabled.
 
+		The following example disables a component:
+
+		```hx
+		component.enabled = false;
+		```
+
 		@since 1.0.0
 	**/
 	public var enabled(get, set):Bool;
@@ -37,6 +43,13 @@ interface IUIControl extends IDisplayObject {
 	/**
 		May be used to provide multiple different variations of the same UI
 		component, each with a different appearance.
+
+		The following example sets the variant of a `Label` component:
+
+		```hx
+		var label = new Label();
+		label.variant = Label.VARIANT_HEADING;
+		```
 
 		@since 1.0.0
 	**/

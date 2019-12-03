@@ -219,9 +219,8 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
-		@inheritDoc
+		@see `feathers.layout.ILayout.layout`
 	**/
-	@:dox(hide)
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.validateItems(items);
 		this.applyPercentWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);

@@ -83,7 +83,7 @@ class ActuateEffectContext extends BaseEffectContext {
 
 		@see `feathers.motion.EffectInterruptBehavior.END`
 		@see `feathers.motion.EffectInterruptBehavior.STOP`
-		@see `interrupt()`
+		@see `ActuateEffectContext.interrupt`
 
 		@since 1.0.0
 	**/
