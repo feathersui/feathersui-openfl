@@ -137,6 +137,10 @@ class FeathersEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
+		```hx
+		FeathersEvent.dispatch(component, Event.CHANGE);
+		```
+
 		@since 1.0.0
 	**/
 	public static function dispatch(dispatcher:IEventDispatcher, type:String, bubbles:Bool = false, cancelable:Bool = false):Bool {

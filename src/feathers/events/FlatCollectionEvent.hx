@@ -99,6 +99,10 @@ class FlatCollectionEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
+		```hx
+		FlatCollectionEvent.dispatch(component, Event.ADD_ITEM, 0, item);
+		```
+
 		@since 1.0.0
 	**/
 	public static function dispatch(dispatcher:IEventDispatcher, type:String, index:Int, bubbles:Bool = false, cancelable:Bool = false):Bool {
