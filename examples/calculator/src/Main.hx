@@ -218,6 +218,10 @@ class Main extends Application {
 	}
 
 	private function equalsButton_triggeredHandler(event:FeathersEvent):Void {
+		if (this.pendingNewInput) {
+			this.pendingOperation = null;
+			return;
+		}
 		this.equals();
 	}
 }
