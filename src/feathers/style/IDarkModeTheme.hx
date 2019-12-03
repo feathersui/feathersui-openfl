@@ -9,7 +9,7 @@
 package feathers.style;
 
 /**
-	An interface for Feathers themes that support dark mode.
+	An interface for Feathers UI themes that support dark mode.
 
 	@since 1.0.0
 **/

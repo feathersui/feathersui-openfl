@@ -9,7 +9,7 @@
 package feathers.style;
 
 /**
-	An interface for Feathers themes.
+	An interface for Feathers UI themes.
 
 	@since 1.0.0
 **/

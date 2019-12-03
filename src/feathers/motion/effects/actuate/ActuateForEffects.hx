@@ -12,7 +12,7 @@ import motion.Actuate;
 
 /**
 	A wrapper around [Actuate](https://lib.haxe.org/p/actuate/) that is used to
-	create special actuators for custom Feathers effects.
+	create special actuators for custom Feathers UI effects.
 
 	In the following example, a custom effect is created with
 	`ActuateForEffects` and `ActuateEffectContext`:

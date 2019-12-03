@@ -18,7 +18,7 @@ import feathers.utils.ScreenDensityScaleCalculator;
 import feathers.utils.MathUtil;
 
 /**
-	An optional root class for Feathers applications that will automatically
+	An optional root class for Feathers UI applications that will automatically
 	scale the application based on the screen density of the device.
 
 	@since 1.0.0

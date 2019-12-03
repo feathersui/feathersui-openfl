@@ -12,7 +12,7 @@ import feathers.graphics.LineStyle;
 import feathers.graphics.FillStyle;
 
 /**
-	A skin for Feathers components that draws a border at the bottom only.
+	A skin for Feathers UI components that draws a border at the bottom only.
 
 	@since 1.0.0
 **/

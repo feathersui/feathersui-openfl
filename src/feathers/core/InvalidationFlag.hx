@@ -23,9 +23,9 @@ package feathers.core;
 class InvalidationFlag {
 	/**
 		Indicate that the state has changed. Used when the `enabled` property of
-		a Feathers component changes, but may be used for other component states
-		too. For instance, a component that implements `IStateContext` may have
-		multiple states.
+		a Feathers UI component changes, but may be used for other component
+		states too. For instance, a component that implements `IStateContext`
+		may have multiple states.
 
 		@see `FeathersControl.enabled`
 		@see `feathers.core.IStateContext`

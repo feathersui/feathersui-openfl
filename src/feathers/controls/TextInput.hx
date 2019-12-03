@@ -603,7 +603,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function textField_changeHandler(event:Event):Void {
-		// don't let this event bubble. Feathers components don't bubble their
+		// don't let this event bubble. Feathers UI components don't bubble their
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
 

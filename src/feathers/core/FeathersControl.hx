@@ -22,7 +22,7 @@ import feathers.style.Theme;
 	properties and sets up some basic template functions for component
 	lifecycle, like [`initialize()`](#initialize) and [`update()`](#update).
 
-	This is a base class for Feathers components that isn't meant to be
+	This is a base class for Feathers UI components, and it isn't meant to be
 	instantiated directly. It should only be subclassed. For a simple
 	component that will automatically measure itself based on its children
 	(including optional support for layouts), see
@@ -368,7 +368,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 
 	private function applyStyles():Void {
 		if (!this.initialized) {
-			throw new IllegalOperationError("Cannot apply styles until after a Feathers component has initialized.");
+			throw new IllegalOperationError("Cannot apply styles until after a Feathers UI component has initialized.");
 		}
 		var styleProvider = this._customStyleProvider;
 		if (styleProvider == null) {

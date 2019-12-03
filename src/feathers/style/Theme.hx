@@ -13,8 +13,8 @@ import openfl.display.DisplayObjectContainer;
 import feathers.themes.steel.DefaultSteelTheme;
 
 /**
-	Register themes globally in a Feathers application. May apply to the entire
-	application, or to the contents of a specific container.
+	Register themes globally in a Feathers UI application. May apply to the
+	entire application, or to the contents of a specific container.
 
 	@since 1.0.0
 **/

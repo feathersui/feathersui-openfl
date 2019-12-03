@@ -14,7 +14,7 @@ import openfl.events.Event;
 import openfl.events.IEventDispatcher;
 
 /**
-	Events dispatched by Feathers components.
+	Events dispatched by Feathers UI components.
 
 	@since 1.0.0
 **/
@@ -32,7 +32,7 @@ class FeathersEvent extends Event {
 
 	/**
 		The `FeathersEvent.CREATION_COMPLETE` event type is dispatched when a
-		Feathers component has finished validating for the first time. A
+		Feathers UI component has finished validating for the first time. A
 		well-designed component will have created all of its children and it
 		will be completely ready for user interaction.
 
@@ -44,7 +44,7 @@ class FeathersEvent extends Event {
 
 	/**
 		The `FeathersEvent.LAYOUT_DATA_CHANGE` event type is dispatched when a
-		change to a Feathers component affects the layout of its parent
+		change to a Feathers UI component affects the layout of its parent
 		container. For example, this event is dispatchedn when the
 		`includeInLayout` or `layoutData` properties change.
 

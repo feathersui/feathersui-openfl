@@ -11,7 +11,7 @@ package feathers.motion.effects.actuate;
 import motion.easing.Linear;
 
 /**
-	A Feathers effect context that uses the
+	A Feathers UI effect context that uses the
 	[Actuate](https://lib.haxe.org/p/actuate/) library.
 
 	To create actuators for use with `ActuateEffectContext`, use the static

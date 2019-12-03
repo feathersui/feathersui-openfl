@@ -24,7 +24,7 @@ import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
 
 /**
-	A base class for Feathers skins that draw a path with a fill and border
+	A base class for Feathers UI skins that draw a path with a fill and border
 	using `openfl.display.Graphics`.
 
 	@since 1.0.0
