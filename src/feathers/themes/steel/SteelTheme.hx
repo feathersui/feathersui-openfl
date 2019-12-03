@@ -33,8 +33,12 @@ import feathers.themes.steel.components.SteelTextCalloutStyles;
 import feathers.themes.steel.components.SteelComboBoxStyles;
 
 /**
+	"Steel" theme. Unlike the default version, this version references all
+	Feathers UI components, even if some are not used in the app.
+
 	@since 1.0.0
 **/
+@:dox(hide)
 class SteelTheme extends BaseSteelTheme {
 	/**
 		Creates a new `SteelTheme` object with the given arguments.

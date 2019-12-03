@@ -10,9 +10,14 @@ package feathers.style;
 
 import openfl.events.IEventDispatcher;
 
+/**
+	Sets styles on a target object. Used by themes.
+
+	@see `feathers.style.ITheme`
+**/
 interface IStyleProvider extends IEventDispatcher {
 	/**
-		Applies styles to a specific Feathers UI component.
+		Applies styles to the target object.
 
 		@since 1.0.0
 	**/

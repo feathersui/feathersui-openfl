@@ -19,6 +19,13 @@ import feathers.themes.steel.DefaultSteelTheme;
 	@since 1.0.0
 **/
 class Theme {
+	/**
+		The fallback theme used when the primary theme does not provide styles
+		for a target object. Generally, this function is only used internally
+		by Feathers UI.
+
+		@since 1.0.0
+	**/
 	public static var fallbackTheme(get, null):ITheme;
 
 	private static function get_fallbackTheme():ITheme {
@@ -63,7 +70,7 @@ class Theme {
 	/**
 		Returns the theme that applies to a specific object, or the primary
 		theme, if no object is specified. Generally, this function is only used
-		internally by Feathers.
+		internally by Feathers UI.
 
 		@since 1.0.0
 	**/

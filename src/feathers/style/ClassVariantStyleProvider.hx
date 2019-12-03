@@ -74,11 +74,6 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		`applyStyles()` is called and the component's `variant` property
 		contains the specified value.
 
-		 The function is expected to have the following signature:
-
-		 ```hx
-		 (IStyleObject) -> Void
-		 ```
 		@since 1.0.0
 	**/
 	public function setStyleFunction<T>(type:Class<T>, variant:String, callback:(T) -> Void):Void {
@@ -96,7 +91,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	}
 
 	/**
-		Gets a style function registered with `setStyleFunction)`.
+		Gets a style function registered with `setStyleFunction`.
 
 		@since 1.0.0
 	**/
@@ -110,7 +105,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	}
 
 	/**
-		Applies styles to a specific Feathers UI component.
+		Applies styles to the target object.
 
 		@since 1.0.0
 	**/

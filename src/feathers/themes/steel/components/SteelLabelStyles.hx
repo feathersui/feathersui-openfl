@@ -17,6 +17,7 @@ import feathers.themes.steel.BaseSteelTheme;
 
 	@since 1.0.0
 **/
+@:dox(hide)
 @:access(feathers.themes.steel.BaseSteelTheme)
 class SteelLabelStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {

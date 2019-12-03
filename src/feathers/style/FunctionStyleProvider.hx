@@ -62,6 +62,11 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 		return this.callback;
 	}
 
+	/**
+		Applies styles to the target object.
+
+		@since 1.0.0
+	**/
 	public function applyStyles(target:IStyleObject):Void {
 		if (this.callback == null) {
 			return;

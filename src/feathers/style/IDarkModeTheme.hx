@@ -14,5 +14,10 @@ package feathers.style;
 	@since 1.0.0
 **/
 interface IDarkModeTheme extends ITheme {
+	/**
+		Indicates if dark mode is enabled or not.
+
+		@since 1.0.0
+	**/
 	public var darkMode(get, set):Bool;
 }

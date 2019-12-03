@@ -20,6 +20,7 @@ import feathers.utils.DeviceUtil;
 
 	@since 1.0.0
 **/
+@:dox(hide)
 @:access(feathers.themes.steel.BaseSteelTheme)
 class SteelHScrollBarStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {

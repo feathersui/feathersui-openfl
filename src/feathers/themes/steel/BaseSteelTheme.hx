@@ -26,8 +26,11 @@ import js.html.MediaQueryList;
 #end
 
 /**
+	Base class for the "Steel" theme.
+
 	@since 1.0.0
 **/
+@:dox(hide)
 class BaseSteelTheme implements IDarkModeTheme {
 	private function new(?themeColor:Int, ?darkThemeColor:Int) {
 		this.customThemeColor = themeColor;
@@ -96,11 +99,13 @@ class BaseSteelTheme implements IDarkModeTheme {
 	private var headerFontSize:Int;
 	private var detailFontSize:Int;
 
+	@:dox(hide)
 	public function getStyleProvider(target:IStyleObject):IStyleProvider {
 		// use the same style provider for all objects
 		return this.styleProvider;
 	}
 
+	@:dox(hide)
 	public function dispose():Void {
 		#if html5
 		if (this.mediaQueryList != null) {

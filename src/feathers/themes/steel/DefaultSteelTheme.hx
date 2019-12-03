@@ -9,8 +9,14 @@
 package feathers.themes.steel;
 
 /**
+	The default theme used by Feathers UI. Initializes default styles for only
+	the components that are used in the project. If another theme provides
+	styles for a component, they take precendence. If the other theme doesn't
+	provide styles, then this one is used as a fallback.
+
 	@since 1.0.0
 **/
+@:dox(hide)
 class DefaultSteelTheme extends BaseSteelTheme {
 	/**
 		Creates a new `DefaultSteelTheme` object with the given arguments.
