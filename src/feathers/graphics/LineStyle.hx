@@ -24,7 +24,9 @@ enum LineStyle {
 	/**
 		The line is drawn as a solid color at the specified thickness.
 
-		@since 1.0.0.
+		@see `openfl.display.Graphics.lineStyle`
+
+		@since 1.0.0
 	**/
 	SolidColor(?thickness:Float, ?color:Int, ?alpha:Float, ?pixelHinting:Bool, ?scaleMode:LineScaleMode, ?caps:CapsStyle, ?joints:JointStyle,
 		?miterLimit:Float);
@@ -32,7 +34,9 @@ enum LineStyle {
 	/**
 		The line is rendered as a gradient of multiple colors.
 
-		@since 1.0.0.
+		@see `openfl.display.Graphics.lineGradientStyle`
+
+		@since 1.0.0
 	**/
 	Gradient(thickness:Float, type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?radians:Float, ?spreadMethod:SpreadMethod,
 		?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);

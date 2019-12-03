@@ -23,21 +23,27 @@ enum FillStyle {
 	/**
 		The fill is rendered as a solid color with the specified alpha.
 
-		@since 1.0.0.
+		@see `openfl.display.Graphics.beginFill`
+
+		@since 1.0.0
 	**/
 	SolidColor(color:Int, ?alpha:Float);
 
 	/**
 		The fill is rendered as a bitmap.
 
-		@since 1.0.0.
+		@see `openfl.display.Graphics.beginBitmapFill`
+
+		@since 1.0.0
 	**/
 	Bitmap(bitmapData:BitmapData, ?matrix:Matrix, ?repeat:Bool, ?smoothing:Bool);
 
 	/**
 		The fill is rendered as a gradient of multiple colors.
 
-		@since 1.0.0.
+		@see `openfl.display.Graphics.beginGradientFill`
+
+		@since 1.0.0
 	**/
 	Gradient(type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?radians:Float, ?spreadMethod:SpreadMethod,
 		?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);
