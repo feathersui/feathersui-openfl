@@ -248,15 +248,17 @@ class AssetLoader extends FeathersControl {
 				this.content.y = 0.0;
 				this._contentMeasurements.restore(this.content);
 			case StageScaleMode.NO_BORDER:
+				var original = new Rectangle(0.0, 0.0, this._contentMeasurements.width, this._contentMeasurements.height);
 				var into = new Rectangle(0.0, 0.0, this.actualWidth, this.actualHeight);
-				ScaleUtil.fillRectangle(this._contentMeasurements.width, this._contentMeasurements.height, into, into);
+				ScaleUtil.fillRectangle(original, into, into);
 				this.content.x = into.x;
 				this.content.y = into.y;
 				this.content.width = into.width;
 				this.content.height = into.height;
 			default: // showAll
+				var original = new Rectangle(0.0, 0.0, this._contentMeasurements.width, this._contentMeasurements.height);
 				var into = new Rectangle(0.0, 0.0, this.actualWidth, this.actualHeight);
-				ScaleUtil.fitRectangle(this._contentMeasurements.width, this._contentMeasurements.height, into, into);
+				ScaleUtil.fitRectangle(original, into, into);
 				this.content.x = into.x;
 				this.content.y = into.y;
 				this.content.width = into.width;
