@@ -22,6 +22,12 @@ import openfl.display.DisplayObjectContainer;
 import openfl.events.MouseEvent;
 import openfl.display.InteractiveObject;
 
+/**
+	Utility that provides touch and mouse wheel scrolling capabilities for any
+	interactive display object.
+
+	@since 1.0.0
+**/
 @:access(motion.actuators.SimpleActuator)
 class Scroller extends EventDispatcher {
 	private static final MINIMUM_VELOCITY = 0.02;
@@ -37,9 +43,25 @@ class Scroller extends EventDispatcher {
 		this.target = target;
 	}
 
+	/**
+		Determines if the target can be scrolled horizontally (on the x-axis).
+
+		@since 1.0.0
+	**/
 	public var enabledX(default, default) = true;
+
+	/**
+		Determines if the target can be scrolled vertically (on the y-axis).
+
+		@since 1.0.0
+	**/
 	public var enabledY(default, default) = true;
 
+	/**
+		The current horizontal scroll position.
+
+		@since 1.0.0
+	**/
 	public var scrollX(default, set):Float = 0.0;
 
 	private function set_scrollX(value:Float):Float {
@@ -51,6 +73,11 @@ class Scroller extends EventDispatcher {
 		return this.scrollX;
 	}
 
+	/**
+		The current vertical scroll position.
+
+		@since 1.0.0
+	**/
 	public var scrollY(default, set):Float = 0.0;
 
 	private function set_scrollY(value:Float):Float {
@@ -62,32 +89,257 @@ class Scroller extends EventDispatcher {
 		return this.scrollY;
 	}
 
+	/**
+		The minimum horizontal scroll position.
+
+		@since 1.0.0
+	**/
 	public var minScrollX(default, null):Float = 0.0;
+
+	/**
+		The minimum vertical scroll position.
+
+		@since 1.0.0
+	**/
 	public var minScrollY(default, null):Float = 0.0;
+
+	/**
+		The maximum horizontal scroll position.
+
+		@since 1.0.0
+	**/
 	public var maxScrollX(default, null):Float = 0.0;
+
+	/**
+		The maximum vertical scroll position.
+
+		@since 1.0.0
+	**/
 	public var maxScrollY(default, null):Float = 0.0;
+
+	/**
+		The width of the target's scrollable region.
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
 	public var visibleWidth(default, null):Float = 0.0;
+
+	/**
+		The height of the target's scrollable region.
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
 	public var visibleHeight(default, null):Float = 0.0;
+
+	/**
+		The width of the target's content. Will not scroll unless the width
+		of the content is larger than the width of the target.
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
 	public var contentWidth(default, null):Float = 0.0;
+
+	/**
+		The height of the target's content. Will not scroll unless the height
+		of the content is larger than the height of the target.
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
 	public var contentHeight(default, null):Float = 0.0;
+
+	/**
+		Determines if scrolling is currently active.
+
+		@since 1.0.0
+	**/
 	public var scrolling(default, null):Bool = false;
+
+	/**
+		Determines if a touch is dragging the target horizontally (on the x-axis).
+
+		@since 1.0.0
+	**/
 	public var draggingX(default, null):Bool = false;
+
+	/**
+		Determines if a touch is dragging the target vertically (on the y-axis).
+
+		@since 1.0.0
+	**/
 	public var draggingY(default, null):Bool = false;
+
+	/**
+		The minimum distance, in pixels, that the target must be dragged to
+		begin scrolling.
+
+		@default 6.0
+
+		@since 1.0.0
+	**/
 	public var minDragDistance(default, default):Float = 6.0;
-	public var friction(default, default):Float = 0.95;
+
+	/**
+		Determines if the scrolling can go beyond the edges of the viewport and
+		snap back to the minimum or maximum when released.
+
+		@default true
+
+		@see `Scroller.elasticity`
+
+		@since 1.0.0
+	**/
 	public var elasticEdges(default, default):Bool = true;
+
+	/**
+		Forces elasticity on the top edge, even if the height of the target's
+		content is not larger than the width height the target.
+
+		If `elasticEdges` is `false`, this property is ignored.
+
+		@default false
+
+		@see `Scroller.elasticEdges`
+
+		@since 1.0.0
+	**/
 	public var forceElasticTop(default, default):Bool = false;
+
+	/**
+		Forces elasticity on the right edge, even if the width of the target's
+		content is not larger than the width of the target.
+
+		If `elasticEdges` is `false`, this property is ignored.
+
+		@default false
+
+		@see `Scroller.elasticEdges`
+
+		@since 1.0.0
+	**/
 	public var forceElasticRight(default, default):Bool = false;
+
+	/**
+		Forces elasticity on the bottom edge, even if the height of the target's
+		content is not larger than the width height the target.
+
+		If `elasticEdges` is `false`, this property is ignored.
+
+		@default false
+
+		@see `Scroller.elasticEdges`
+
+		@since 1.0.0
+	**/
 	public var forceElasticBottom(default, default):Bool = false;
+
+	/**
+		Forces elasticity on the left edge, even if the width of the target's
+		content is not larger than the width of the target.
+
+		If `elasticEdges` is `false`, this property is ignored.
+
+		@default false
+
+		@see `Scroller.elasticEdges`
+
+		@since 1.0.0
+	**/
 	public var forceElasticLeft(default, default):Bool = false;
+
+	/**
+		 If the scroll position goes outside the minimum or maximum bounds when
+		the scroller's content is being actively dragged, the scrolling will be
+		constrained using this multiplier. A value of `0.0` means that the
+		scroller will not go beyond its minimum or maximum bounds. A value of
+		`1.0` means that going beyond the minimum or maximum bounds is
+		completely unrestrained.
+
+		If `elasticEdges` is `false`, this property is ignored.
+
+		@see Scroller.elasticEdges
+
+		@default 0.33
+
+		@since 1.0.0
+	**/
 	public var elasticity(default, default):Float = 0.33;
+
+	/**
+		If the scroll position goes outside the minimum or maximum bounds when
+		when the scroller's content is "thrown", the scrolling will be
+		constrained using this multiplier. A value of `0.0` means that the
+		scroller will not go beyond its minimum or maximum bounds. A value of
+		`1.0` means that going beyond the minimum or maximum bounds is
+		completely unrestrained.
+
+		If `elasticEdges` is `false`, this property is ignored.
+
+		@see Scroller.elasticEdges
+		@see Scroller.elasticity
+
+		@default 0.05
+
+		@since 1.0.0
+	**/
 	public var throwElasticity(default, default):Float = 0.05;
+
+	/**
+		The duration, in seconds, of the animation when a the scroller snaps
+		back to the minimum or maximum position after going out of bounds.
+
+		If `elasticEdges` is `false`, this property is ignored.
+
+		@default 0.5
+
+		@since 1.0.0
+	**/
 	public var elasticSnapDuration(default, default):Float = 0.5;
-	public var decelerationRate(default, set):Float = 0.998;
+
+	/**
+		The easing function to use when animating the scroll position.
+
+		@default motion.easing.Quart.easeOut
+
+		@since 1.0.0
+	**/
 	public var ease:IEasing = Quart.easeOut;
+
+	/**
+		The distance to scroll when the mouse wheel is scrolled.
+
+		@default 10.0
+
+		@since 1.0.0
+	**/
 	public var mouseWheelDelta:Float = 10.0;
 
+	/**
+		Determines if mouse events should be treated like touch events.
+
+		@default false
+
+		@since 1.0.0
+	**/
 	public var simulateTouch:Bool = false;
+
+	/**
+		This value is used to decelerate the scroller when "thrown". The
+		velocity of a throw is multiplied by this value once per millisecond to
+		decelerate. A value greater than `0.0` and less than `1.0` is expected.
+
+		@default 0.998
+
+		@since 1.0.0
+	**/
+	public var decelerationRate(default, set):Float = 0.998;
 
 	private function set_decelerationRate(value:Float):Float {
 		if (this.decelerationRate == value) {
@@ -118,6 +370,11 @@ class Scroller extends EventDispatcher {
 	private var snappingToEdge:Bool = false;
 	private var stage:Stage = null;
 
+	/**
+		The container used for scrolling.
+
+		@since 1.0.0
+	**/
 	public var target(default, set):InteractiveObject;
 
 	private function set_target(value:InteractiveObject):InteractiveObject {
@@ -139,6 +396,11 @@ class Scroller extends EventDispatcher {
 		return this.target;
 	}
 
+	/**
+		Updates the dimensions of both the target and its content.
+
+		@since 1.0.0
+	**/
 	public function setDimensions(?visibleWidth:Null<Float>, ?visibleHeight:Null<Float>, ?contentWidth:Null<Float>, ?contentHeight:Null<Float>):Void {
 		this.visibleWidth = visibleWidth != null ? visibleWidth : 0.0;
 		this.visibleHeight = visibleHeight != null ? visibleHeight : 0.0;
@@ -147,6 +409,11 @@ class Scroller extends EventDispatcher {
 		this.calculateMinAndMax();
 	}
 
+	/**
+		Immediately stops any animation that affects the scrolling.
+
+		@since 1.0.0
+	**/
 	public function stop():Void {
 		if (this.animateScrollX != null) {
 			Actuate.stop(this.animateScrollX, null, false, false);

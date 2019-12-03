@@ -2,6 +2,8 @@ package feathers.utils;
 
 /**
 	Utility functions for mathematical calculations.
+
+	@since 1.0.0
 **/
 class MathUtil {
 	/**
