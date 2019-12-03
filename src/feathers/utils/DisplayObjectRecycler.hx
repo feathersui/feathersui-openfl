@@ -23,19 +23,19 @@ class DisplayObjectRecycler<T:B & DisplayObject & Constructible<() -> Void>, S, 
 
 		@since 1.0.0
 	**/
-	public function new(create:DisplayObjectClassOrFunction<T>, ?update:(target:T, state:S) -> Void, ?clean:(target:T, state:S) -> Void,
-			?destroy:(T) -> Void) {
+	public function new(create:ObjectFactory<T>, ?update:(target:T, state:S) -> Void, ?reset:(target:T, state:S) -> Void, ?destroy:(T) -> Void) {
 		this.create = create;
 		// these are all allowed to be null
 		this.update = update;
-		this.clean = clean;
+		this.reset = reset;
 		this.destroy = destroy;
 	}
 
 	/**
 		Updates the properties an existing display object. It may be a display
 		object that was used previously, but it will have been passed to
-		`clean()` to ensure that it has been restored to its original state.
+		`reset()` first, to ensure that it has been restored to its original
+		state when it was returned from `create()`.
 
 		@since 1.0.0
 	**/
@@ -48,7 +48,7 @@ class DisplayObjectRecycler<T:B & DisplayObject & Constructible<() -> Void>, S, 
 
 		@since 1.0.0
 	**/
-	public dynamic function clean(target:T, state:S):Void {}
+	public dynamic function reset(target:T, state:S):Void {}
 
 	/**
 		Creates a new display object.
@@ -65,33 +65,4 @@ class DisplayObjectRecycler<T:B & DisplayObject & Constructible<() -> Void>, S, 
 		@since 1.0.0
 	**/
 	public dynamic function destroy(target:T):Void {}
-}
-
-/**
-
-
-	@since 1.0.0
-**/
-abstract DisplayObjectClassOrFunction<T>(() -> T) from() -> T to() -> T {
-	inline function new(factory:() -> T) {
-		this = factory;
-	}
-
-	/**
-		Accepts a `Class` that extends `DisplayObject` and creates a function
-		that instantiates an instance of that class. The function has the
-		following signature:
-
-		```hx
-		() -> DisplayObject
-		```
-
-		@since 1.0.0
-	**/
-	@:from
-	public static function fromClass<T>(type:Class<T>) {
-		return new DisplayObjectClassOrFunction(() -> {
-			return Type.createInstance(type, []);
-		});
-	}
 }

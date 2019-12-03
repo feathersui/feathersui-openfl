@@ -37,7 +37,7 @@ class TabBar extends FeathersControl {
 		button.text = state.text;
 	}
 
-	private static function defaultCleanButton(button:ToggleButton, state:TabBarItemState):Void {
+	private static function defaultResetButton(button:ToggleButton, state:TabBarItemState):Void {
 		button.text = null;
 	}
 
@@ -200,8 +200,8 @@ class TabBar extends FeathersControl {
 	private function refreshButtons():Void {
 		if (this.buttonRecycler.update == null) {
 			this.buttonRecycler.update = defaultUpdateButton;
-			if (this.buttonRecycler.clean == null) {
-				this.buttonRecycler.clean = defaultCleanButton;
+			if (this.buttonRecycler.reset == null) {
+				this.buttonRecycler.reset = defaultResetButton;
 			}
 		}
 
@@ -252,8 +252,8 @@ class TabBar extends FeathersControl {
 			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			if (this.buttonRecycler.clean != null) {
-				this.buttonRecycler.clean(button, this._currentItemState);
+			if (this.buttonRecycler.reset != null) {
+				this.buttonRecycler.reset(button, this._currentItemState);
 			}
 			if (Std.is(button, IDataRenderer)) {
 				var dataRenderer = cast(button, IDataRenderer);

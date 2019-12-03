@@ -44,7 +44,7 @@ class ListBox extends BaseScrollContainer {
 		}
 	}
 
-	private static function defaultCleanItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
+	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = null;
@@ -222,8 +222,8 @@ class ListBox extends BaseScrollContainer {
 	private function refreshItemRenderers():Void {
 		if (this.itemRendererRecycler.update == null) {
 			this.itemRendererRecycler.update = defaultUpdateItemRenderer;
-			if (this.itemRendererRecycler.clean == null) {
-				this.itemRendererRecycler.clean = defaultCleanItemRenderer;
+			if (this.itemRendererRecycler.reset == null) {
+				this.itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
 
@@ -274,8 +274,8 @@ class ListBox extends BaseScrollContainer {
 			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			if (this.itemRendererRecycler.clean != null) {
-				this.itemRendererRecycler.clean(itemRenderer, this._currentItemState);
+			if (this.itemRendererRecycler.reset != null) {
+				this.itemRendererRecycler.reset(itemRenderer, this._currentItemState);
 			}
 			if (Std.is(itemRenderer, IToggle)) {
 				var toggle = cast(itemRenderer, IToggle);
