@@ -21,6 +21,15 @@ import openfl.display.DisplayObject;
 	@since 1.0.0
 **/
 class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
+	/**
+		Creates a new `DropDownPopUpAdapter` object.
+
+		@since 1.0.0
+	**/
+	public function new() {
+		super();
+	}
+
 	private var content:DisplayObject = null;
 	private var origin:DisplayObject = null;
 
