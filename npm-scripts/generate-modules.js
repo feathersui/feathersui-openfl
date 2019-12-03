@@ -513,7 +513,7 @@ function skipHxPath(path) {
   let symbolName = _path.basename(path);
   symbolName = symbolName.substr(0, symbolName.length - 3);
   let content = _fs.readFileSync(path, 'utf8');
-  return content.indexOf(`abstract ${symbolName}(`) !== -1;
+  return content.indexOf(`abstract ${symbolName}(`) !== -1 || content.indexOf(`abstract ${symbolName}<`) !== -1;
 }
 
 function startCreateLibCjs() {
