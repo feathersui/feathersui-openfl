@@ -9,10 +9,10 @@
 package feathers.data;
 
 /**
-	Represents the current state of a `TabBar` button renderer.
+	Represents the current state of a `TabBar` tab renderer.
 
 	@see `feathers.controls.TabBar`
-	@see `feathers.controls.TabBar.buttonRecycler`
+	@see `feathers.controls.TabBar.tabRecycler`
 
 	@since 1.0.0
 **/

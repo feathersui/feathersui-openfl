@@ -31,14 +31,14 @@ import feathers.data.TabBarItemState;
 @:access(feathers.data.TabBarItemState)
 @:styleContext
 class TabBar extends FeathersControl {
-	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
+	private static final INVALIDATION_FLAG_TAB_FACTORY = "tabFactory";
 
-	private static function defaultUpdateButton(button:ToggleButton, state:TabBarItemState):Void {
-		button.text = state.text;
+	private static function defaultUpdateTab(tab:ToggleButton, state:TabBarItemState):Void {
+		tab.text = state.text;
 	}
 
-	private static function defaultResetButton(button:ToggleButton, state:TabBarItemState):Void {
-		button.text = null;
+	private static function defaultResetTab(tab:ToggleButton, state:TabBarItemState):Void {
+		tab.text = null;
 	}
 
 	/**
@@ -133,12 +133,12 @@ class TabBar extends FeathersControl {
 	/**
 		@since 1.0.0
 	**/
-	public var buttonRecycler:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> = new DisplayObjectRecycler(ToggleButton);
+	public var tabRecycler:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> = new DisplayObjectRecycler(ToggleButton);
 
-	private var inactiveButtons:Array<ToggleButton> = [];
-	private var activeButtons:Array<ToggleButton> = [];
-	private var dataToButton = new ObjectMap<Dynamic, ToggleButton>();
-	private var buttonToData = new ObjectMap<ToggleButton, Dynamic>();
+	private var inactiveTabs:Array<ToggleButton> = [];
+	private var activeTabs:Array<ToggleButton> = [];
+	private var dataToTab = new ObjectMap<Dynamic, ToggleButton>();
+	private var tabToData = new ObjectMap<ToggleButton, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
 
 	private var _ignoreSelectionChange = false;
@@ -160,10 +160,10 @@ class TabBar extends FeathersControl {
 		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
-		var buttonsInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+		var tabsInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_FACTORY);
 
-		if (buttonsInvalid || selectionInvalid || stateInvalid || dataInvalid) {
-			this.refreshButtons();
+		if (tabsInvalid || selectionInvalid || stateInvalid || dataInvalid) {
+			this.refreshTabs();
 		}
 
 		this.refreshViewPortBounds();
@@ -181,7 +181,7 @@ class TabBar extends FeathersControl {
 	private function handleLayout():Void {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
-		this._layout.layout(cast this.activeButtons, this._layoutMeasurements, this._layoutResult);
+		this._layout.layout(cast this.activeTabs, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}
 
@@ -192,86 +192,86 @@ class TabBar extends FeathersControl {
 	}
 
 	private function validateChildren():Void {
-		for (button in this.activeButtons) {
-			button.validateNow();
+		for (tab in this.activeTabs) {
+			tab.validateNow();
 		}
 	}
 
-	private function refreshButtons():Void {
-		if (this.buttonRecycler.update == null) {
-			this.buttonRecycler.update = defaultUpdateButton;
-			if (this.buttonRecycler.reset == null) {
-				this.buttonRecycler.reset = defaultResetButton;
+	private function refreshTabs():Void {
+		if (this.tabRecycler.update == null) {
+			this.tabRecycler.update = defaultUpdateTab;
+			if (this.tabRecycler.reset == null) {
+				this.tabRecycler.reset = defaultResetTab;
 			}
 		}
 
-		var buttonsInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
-		this.refreshInactiveButtons(buttonsInvalid);
+		var tabsInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_FACTORY);
+		this.refreshInactiveTabs(tabsInvalid);
 		if (this.dataProvider == null) {
 			return;
 		}
 
 		this.findUnrenderedData();
-		this.recoverInactiveButtons();
+		this.recoverInactiveTabs();
 		this.renderUnrenderedData();
-		this.freeInactiveButtons();
-		if (this.inactiveButtons.length > 0) {
+		this.freeInactiveTabs();
+		if (this.inactiveTabs.length > 0) {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
 		}
 	}
 
-	private function refreshInactiveButtons(factoryInvalid:Bool):Void {
-		var temp = this.inactiveButtons;
-		this.inactiveButtons = this.activeButtons;
-		this.activeButtons = temp;
-		if (this.activeButtons.length > 0) {
+	private function refreshInactiveTabs(factoryInvalid:Bool):Void {
+		var temp = this.inactiveTabs;
+		this.inactiveTabs = this.activeTabs;
+		this.activeTabs = temp;
+		if (this.activeTabs.length > 0) {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
 		}
 		if (factoryInvalid) {
-			this.recoverInactiveButtons();
-			this.freeInactiveButtons();
+			this.recoverInactiveTabs();
+			this.freeInactiveTabs();
 		}
 	}
 
-	private function recoverInactiveButtons():Void {
-		for (button in this.inactiveButtons) {
-			if (button == null) {
+	private function recoverInactiveTabs():Void {
+		for (tab in this.inactiveTabs) {
+			if (tab == null) {
 				continue;
 			}
-			var item = this.buttonToData.get(button);
+			var item = this.tabToData.get(tab);
 			if (item == null) {
 				return;
 			}
-			this.buttonToData.remove(button);
-			this.dataToButton.remove(item);
-			button.removeEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
-			button.removeEventListener(Event.CHANGE, button_changeHandler);
+			this.tabToData.remove(tab);
+			this.dataToTab.remove(item);
+			tab.removeEventListener(FeathersEvent.TRIGGERED, tab_triggeredHandler);
+			tab.removeEventListener(Event.CHANGE, tab_changeHandler);
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
 			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			if (this.buttonRecycler.reset != null) {
-				this.buttonRecycler.reset(button, this._currentItemState);
+			if (this.tabRecycler.reset != null) {
+				this.tabRecycler.reset(tab, this._currentItemState);
 			}
-			if (Std.is(button, IDataRenderer)) {
-				var dataRenderer = cast(button, IDataRenderer);
+			if (Std.is(tab, IDataRenderer)) {
+				var dataRenderer = cast(tab, IDataRenderer);
 				dataRenderer.data = null;
 			}
-			button.selected = this._currentItemState.selected;
+			tab.selected = this._currentItemState.selected;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
 
-	private function freeInactiveButtons():Void {
-		for (button in this.inactiveButtons) {
-			if (button == null) {
+	private function freeInactiveTabs():Void {
+		for (tab in this.inactiveTabs) {
+			if (tab == null) {
 				continue;
 			}
-			this.destroyButton(button);
+			this.destroyTab(tab);
 		}
-		this.inactiveButtons.resize(0);
+		this.inactiveTabs.resize(0);
 	}
 
 	private var _currentItemState = new TabBarItemState();
@@ -279,34 +279,34 @@ class TabBar extends FeathersControl {
 	private function findUnrenderedData():Void {
 		for (i in 0...this.dataProvider.length) {
 			var item = this.dataProvider.get(i);
-			var button = this.dataToButton.get(item);
-			if (button != null) {
+			var tab = this.dataToTab.get(item);
+			if (tab != null) {
 				this._currentItemState.data = item;
 				this._currentItemState.index = i;
 				this._currentItemState.selected = item == this.selectedItem;
 				this._currentItemState.text = itemToText(item);
 				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 				this._ignoreSelectionChange = true;
-				if (this.buttonRecycler.update != null) {
-					this.buttonRecycler.update(button, this._currentItemState);
+				if (this.tabRecycler.update != null) {
+					this.tabRecycler.update(tab, this._currentItemState);
 				}
-				if (Std.is(button, IDataRenderer)) {
-					var dataRenderer = cast(button, IDataRenderer);
-					// if the button is an IDataRenderer, this cannot be overridden
+				if (Std.is(tab, IDataRenderer)) {
+					var dataRenderer = cast(tab, IDataRenderer);
+					// if the tab is an IDataRenderer, this cannot be overridden
 					dataRenderer.data = this._currentItemState.data;
 				}
-				button.selected = this._currentItemState.selected;
+				tab.selected = this._currentItemState.selected;
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
-				button.visible = true;
-				this.addChildAt(button, i);
-				var removed = this.inactiveButtons.remove(button);
+				tab.visible = true;
+				this.addChildAt(tab, i);
+				var removed = this.inactiveTabs.remove(tab);
 				if (!removed) {
 					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
 						+ ": data renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
 				}
-				this.activeButtons.push(button);
+				this.activeTabs.push(tab);
 			} else {
 				this._unrenderedData.push(item);
 			}
@@ -316,40 +316,40 @@ class TabBar extends FeathersControl {
 	private function renderUnrenderedData():Void {
 		for (item in this._unrenderedData) {
 			var index = this.dataProvider.indexOf(item);
-			var button = this.createButton(item, index);
-			button.visible = true;
-			this.activeButtons.push(button);
-			this.addChildAt(button, index);
+			var tab = this.createTab(item, index);
+			tab.visible = true;
+			this.activeTabs.push(tab);
+			this.addChildAt(tab, index);
 		}
 		this._unrenderedData.resize(0);
 	}
 
-	private function createButton(item:Dynamic, index:Int):ToggleButton {
-		var button:ToggleButton = null;
-		if (this.inactiveButtons.length == 0) {
-			button = this.buttonRecycler.create();
+	private function createTab(item:Dynamic, index:Int):ToggleButton {
+		var tab:ToggleButton = null;
+		if (this.inactiveTabs.length == 0) {
+			tab = this.tabRecycler.create();
 		} else {
-			button = this.inactiveButtons.shift();
+			tab = this.inactiveTabs.shift();
 		}
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = item == this.selectedItem;
 		this._currentItemState.text = itemToText(item);
-		if (this.buttonRecycler.update != null) {
-			this.buttonRecycler.update(button, this._currentItemState);
+		if (this.tabRecycler.update != null) {
+			this.tabRecycler.update(tab, this._currentItemState);
 		}
-		button.selected = this._currentItemState.selected;
-		button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
-		button.addEventListener(Event.CHANGE, button_changeHandler);
-		this.buttonToData.set(button, item);
-		this.dataToButton.set(item, button);
-		return button;
+		tab.selected = this._currentItemState.selected;
+		tab.addEventListener(FeathersEvent.TRIGGERED, tab_triggeredHandler);
+		tab.addEventListener(Event.CHANGE, tab_changeHandler);
+		this.tabToData.set(tab, item);
+		this.dataToTab.set(item, tab);
+		return tab;
 	}
 
-	private function destroyButton(button:ToggleButton):Void {
-		this.removeChild(button);
-		if (this.buttonRecycler.destroy != null) {
-			this.buttonRecycler.destroy(button);
+	private function destroyTab(tab:ToggleButton):Void {
+		this.removeChild(tab);
+		if (this.tabRecycler.destroy != null) {
+			this.tabRecycler.destroy(tab);
 		}
 	}
 
@@ -362,24 +362,24 @@ class TabBar extends FeathersControl {
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
-	private function button_triggeredHandler(event:FeathersEvent):Void {
-		var button = cast(event.currentTarget, ToggleButton);
-		var item = this.buttonToData.get(button);
+	private function tab_triggeredHandler(event:FeathersEvent):Void {
+		var tab = cast(event.currentTarget, ToggleButton);
+		var item = this.tabToData.get(tab);
 		// trigger before change
 		FeathersEvent.dispatch(this, FeathersEvent.TRIGGERED);
 	}
 
-	private function button_changeHandler(event:Event):Void {
+	private function tab_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
-		var button = cast(event.currentTarget, ToggleButton);
-		if (!button.selected) {
+		var tab = cast(event.currentTarget, ToggleButton);
+		if (!tab.selected) {
 			// no toggle off!
-			button.selected = true;
+			tab.selected = true;
 			return;
 		}
-		var item = this.buttonToData.get(button);
+		var item = this.tabToData.get(tab);
 		this.selectedItem = item;
 	}
 
