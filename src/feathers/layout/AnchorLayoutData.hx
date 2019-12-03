@@ -27,6 +27,18 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		vertically, with the ability to optionally specify offsets in either
 		direction.
 
+		In the following example, one of the container's children is centered
+		both horizontally and vertically within the container's bounds:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.center();
+		container.addChild(child);
+		```
+
 		@see `AnchorLayoutData.horizontalCenter`
 		@see `AnchorLayoutData.verticalCenter`
 
@@ -40,6 +52,18 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		Creates `AnchorLayoutData` that fills the parent container, with the
 		ability to optionally specify a padding value to pass to `top`, `right`,
 		`bottom`, and `left`.
+
+		In the following example, one of the container's children fills the
+		container's bounds:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.fill();
+		container.addChild(child);
+		```
 
 		@see `AnchorLayoutData.top`
 		@see `AnchorLayoutData.right`
@@ -74,6 +98,21 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		to the top edge of the parent container. If this value is `null`, the
 		object's top edge will not be anchored.
 
+		In the following example, one of the container's children is anchored 10
+		pixels from the top edge of the container:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var anchors = new AnchorLayoutData();
+		anchors.top = 10.0;
+
+		var child = new Label();
+		child.layoutData = anchors;
+		container.addChild(child);
+		```
+
 		@since 1.0.0
 	**/
 	public var top(default, set):Null<Float> = null;
@@ -92,6 +131,21 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		right anchor, or, if there is no right anchor, then the position is
 		relative to the right edge of the parent container. If this value is
 		`null`, the object's right edge will not be anchored.
+
+		In the following example, one of the container's children is anchored 10
+		pixels from the right edge of the container:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var anchors = new AnchorLayoutData();
+		anchors.right = 10.0;
+
+		var child = new Label();
+		child.layoutData = anchors;
+		container.addChild(child);
+		```
 
 		@since 1.0.0
 	**/
@@ -112,6 +166,21 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		relative to the bottom edge of the parent container. If this value is
 		`null`, the object's bottom edge will not be anchored.
 
+		In the following example, one of the container's children is anchored 10
+		pixels from the bottom edge of the container:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var anchors = new AnchorLayoutData();
+		anchors.bottom = 10.0;
+
+		var child = new Label();
+		child.layoutData = anchors;
+		container.addChild(child);
+		```
+
 		@since 1.0.0
 	**/
 	public var bottom(default, set):Null<Float> = null;
@@ -130,6 +199,21 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		anchor, or, if there is no left anchor, then the position is relative to
 		the left edge of the parent container. If this value is `null`, the
 		object's left edge will not be anchored.
+
+		In the following example, one of the container's children is anchored 10
+		pixels from the left edge of the container:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var anchors = new AnchorLayoutData();
+		anchors.left = 10.0;
+
+		var child = new Label();
+		child.layoutData = anchors;
+		container.addChild(child);
+		```
 
 		@since 1.0.0
 	**/
@@ -151,6 +235,21 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		parent container. If this value is `null`, the object's horizontal
 		center will not be anchored.
 
+		In the following example, one of the container's children is centered
+		horizontally within the container's bounds:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var anchors = new AnchorLayoutData();
+		anchors.horizontalCenter = 0.0;
+
+		var child = new Label();
+		child.layoutData = anchors;
+		container.addChild(child);
+		```
+
 		@since 1.0.0
 	**/
 	public var horizontalCenter(default, set):Null<Float> = null;
@@ -170,6 +269,21 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		anchor, then the position is relative to the vertical center of the
 		parent container. If this value is `null`, the object's vertical
 		center will not be anchored.
+
+		In the following example, one of the container's children is centered
+		vertically within the container's bounds:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var anchors = new AnchorLayoutData();
+		anchors.verticalCenter = 0.0;
+
+		var child = new Label();
+		child.layoutData = anchors;
+		container.addChild(child);
+		```
 
 		@since 1.0.0
 	**/

@@ -42,6 +42,21 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 		A percentage may be specified in the range from `0.0` to `100.0`. If the
 		value is set to `null`, this property is ignored.
 
+		In the following example, the width of a container's child is set to
+		50% of the container's width:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new HorizontalLayout();
+
+		var percentages = new HorizontalLayoutData();
+		percentages.percentWidth = 50.0;
+
+		var child = new Label();
+		child.layoutData = percentages;
+		container.addChild(child);
+		```
+
 		@default null
 
 		@since 1.0.0
@@ -63,6 +78,21 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		A percentage may be specified in the range from `0.0` to `100.0`. If the
 		value is set to `null`, this property is ignored.
+
+		In the following example, the height of a container's child is set to
+		50% of the container's height:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new HorizontalLayout();
+
+		var percentages = new HorizontalLayoutData();
+		percentages.percentHeight = 50.0;
+
+		var child = new Label();
+		child.layoutData = percentages;
+		container.addChild(child);
+		```
 
 		@default null
 

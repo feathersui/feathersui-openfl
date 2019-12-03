@@ -18,6 +18,7 @@ import feathers.core.IValidating;
 	Positions items from top to bottom in a single column.
 
 	@see [Tutorial: How to use HorizontalLayout with layout containers](https://feathersui.com/learn/haxe-openfl/horizontal-layout/)
+	@see `feathers.layout.HorizontalLayoutData`
 
 	@since 1.0.0
 **/
@@ -34,6 +35,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	/**
 		The space, in pixels, between the parent container's top edge and its
 		content.
+
+		In the following example, the layout's top padding is set to 20 pixels:
+
+		```hx
+		layout.paddingTop = 20.0;
+		```
 
 		@default 0.0
 
@@ -54,6 +61,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		The space, in pixels, between the parent container's right edge and its
 		content.
 
+		In the following example, the layout's right padding is set to 20 pixels:
+
+		```hx
+		layout.paddingRight = 20.0;
+		```
+
 		@default 0.0
 
 		@since 1.0.0
@@ -72,6 +85,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	/**
 		The space, in pixels, between the parent container's bottom edge and its
 		content.
+
+		In the following example, the layout's bottom padding is set to 20 pixels:
+
+		```hx
+		layout.paddingBottom = 20.0;
+		```
 
 		@default 0.0
 
@@ -92,6 +111,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		The space, in pixels, between the parent container's left edge and its
 		content.
 
+		In the following example, the layout's left padding is set to 20 pixels:
+
+		```hx
+		layout.paddingLeft = 20.0;
+		```
+
 		@default 0.0
 
 		@since 1.0.0
@@ -109,6 +134,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
+
+		In the following example, the layout's gap is set to 20 pixels:
+
+		```hx
+		layout.gap = 20.0;
+		```
 
 		@default 0.0
 
@@ -132,6 +163,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
 		layout.
 
+		The following example aligns the container's content to the right:
+
+		```hx
+		layout.horizontalAlign = RIGHT;
+		```
+
 		@default feathers.layout.HorizontalAlign.LEFT
 
 		@see `feathers.layout.HorizontalAlign.LEFT`
@@ -154,6 +191,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	/**
 		How the content is positioned vertically (along the y-axis) within the
 		container.
+
+		The following example aligns the container's content to the bottom:
+
+		```hx
+		layout.verticalAlign = BOTTOM;
+		```
 
 		@default feathers.layout.VerticalAlign.TOP
 

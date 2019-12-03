@@ -82,6 +82,14 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		The height to set on each item, or `null`, if the row height should be
 		calculated automatically.
 
+		In the following example, the layout's row height is set to 20 pixels:
+
+		```hx
+		layout.rowHeight = 20.0;
+		```
+
+		@default null
+
 		@since 1.0.0
 	**/
 	public var rowHeight(default, set):Null<Float> = null;
@@ -98,6 +106,14 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	/**
 		The number of rows to render, if the height of the container has not
 		been set explicitly. If `null`, shows all rows.
+
+		In the following example, the layout's requested row count is set to 2 items:
+
+		```hx
+		layout.requestedRowCount = 2.0;
+		```
+
+		@default 5.0
 
 		@since 1.0.0
 	**/
