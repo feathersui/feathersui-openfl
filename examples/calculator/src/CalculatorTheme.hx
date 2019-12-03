@@ -1,97 +1,122 @@
+import feathers.controls.Application;
+import feathers.style.IDarkModeTheme;
+import feathers.style.IStyleProvider;
+import feathers.style.IStyleObject;
+import feathers.style.ITheme;
+import feathers.style.ClassVariantStyleProvider;
+import feathers.style.Theme;
 import openfl.text.TextFormatAlign;
 import feathers.controls.Label;
 import openfl.text.TextFormat;
 import feathers.controls.ButtonState;
 import feathers.controls.Button;
 import feathers.skins.RectangleSkin;
-import feathers.themes.steel.SteelTheme;
 
-class CalculatorTheme extends SteelTheme {
+class CalculatorTheme implements ITheme {
 	public static final VARIANT_INPUT_DISPLAY_LABEL = "calculator-theme-input-display-label";
 	public static final VARIANT_OPERATION_BUTTON = "calculator-theme-operation-button";
 
 	public function new() {
-		super();
-		this.darkMode = true;
+		// this is a dark theme, set set the default theme to dark mode
+		cast(Theme.fallbackTheme, IDarkModeTheme).darkMode = true;
 
+		this.styleProvider = new ClassVariantStyleProvider();
+		this.styleProvider.setStyleFunction(Application, null, setApplicationStyles);
 		this.styleProvider.setStyleFunction(Button, null, setButtonStyles);
 		this.styleProvider.setStyleFunction(Button, VARIANT_OPERATION_BUTTON, setOperationButtonStyles);
 		this.styleProvider.setStyleFunction(Label, VARIANT_INPUT_DISPLAY_LABEL, setInputDisplayLabelStyles);
 	}
 
-	override private function refreshFontSizes():Void {
-		super.refreshFontSizes();
-		this.fontSize = 60;
+	private var fontName = "_sans";
+	private var fontSize = 50;
+	private var textColor = 0xf1f1f1;
+	private var backgroundColor = 0x383838;
+	private var activeColor = 0x000000;
+	private var controlColor = 0x5f5f5f;
+	private var operationColor = 0xff9500;
+	private var padding = 6.0;
+
+	private var styleProvider:ClassVariantStyleProvider;
+
+	public function getStyleProvider(target:IStyleObject):IStyleProvider {
+		return styleProvider;
 	}
 
-	private function setInputDisplayLabelStyles(label:Label):Void {
-		if (label.textFormat == null) {
-			label.textFormat = new TextFormat(this.fontName, this.fontSize, this.textColor, null, null, null, null, null, TextFormatAlign.RIGHT);
-		}
+	public function dispose():Void {}
 
-		label.paddingTop = 4.0;
-		label.paddingRight = 4.0;
-		label.paddingBottom = 4.0;
-		label.paddingLeft = 4.0;
+	private function getInputDisplayLabelTextFormat():TextFormat {
+		var result = this.getTextFormat();
+		result.align = TextFormatAlign.RIGHT;
+		return result;
+	}
+
+	private function getTextFormat():TextFormat {
+		return new TextFormat(this.fontName, this.fontSize, this.textColor);
+	}
+
+	private function setApplicationStyles(app:Application):Void {
+		if (app.backgroundSkin == null) {
+			var skin = new RectangleSkin();
+			skin.fill = SolidColor(this.backgroundColor);
+			app.backgroundSkin = skin;
+		}
+		app.stage.color = this.backgroundColor;
 	}
 
 	private function setButtonStyles(button:Button):Void {
 		if (button.backgroundSkin == null) {
 			var skin = new RectangleSkin();
-			skin.fill = SolidColor(0x5f5f5f);
+			skin.fill = SolidColor(this.controlColor);
 			button.backgroundSkin = skin;
 		}
 		if (button.getSkinForState(ButtonState.DOWN) == null) {
 			var skin = new RectangleSkin();
-			skin.fill = SolidColor(0x000000);
+			skin.fill = SolidColor(this.activeColor);
 			button.setSkinForState(ButtonState.DOWN, skin);
 		}
 
 		if (button.textFormat == null) {
 			button.textFormat = this.getTextFormat();
 		}
-		if (button.disabledTextFormat == null) {
-			button.disabledTextFormat = this.getDisabledTextFormat();
-		}
 
-		if (button.getTextFormatForState(ButtonState.DOWN) == null) {
-			button.setTextFormatForState(ButtonState.DOWN, this.getActiveTextFormat());
-		}
-
-		button.paddingTop = 4.0;
-		button.paddingRight = 10.0;
-		button.paddingBottom = 4.0;
-		button.paddingLeft = 10.0;
-		button.gap = 6.0;
+		button.paddingTop = this.padding;
+		button.paddingRight = this.padding;
+		button.paddingBottom = this.padding;
+		button.paddingLeft = this.padding;
+		button.gap = this.padding;
 	}
 
 	private function setOperationButtonStyles(button:Button):Void {
 		if (button.backgroundSkin == null) {
 			var skin = new RectangleSkin();
-			skin.fill = SolidColor(0xff9500);
+			skin.fill = SolidColor(this.operationColor);
 			button.backgroundSkin = skin;
 		}
 		if (button.getSkinForState(ButtonState.DOWN) == null) {
 			var skin = new RectangleSkin();
-			skin.fill = SolidColor(0x000000);
+			skin.fill = SolidColor(this.activeColor);
 			button.setSkinForState(ButtonState.DOWN, skin);
 		}
 
 		if (button.textFormat == null) {
 			button.textFormat = this.getTextFormat();
 		}
-		if (button.disabledTextFormat == null) {
-			button.disabledTextFormat = this.getDisabledTextFormat();
+
+		button.paddingTop = this.padding;
+		button.paddingRight = this.padding;
+		button.paddingBottom = this.padding;
+		button.paddingLeft = this.padding;
+		button.gap = this.padding;
+	}
+
+	private function setInputDisplayLabelStyles(label:Label):Void {
+		if (label.textFormat == null) {
+			label.textFormat = this.getInputDisplayLabelTextFormat();
 		}
 
-		if (button.getTextFormatForState(ButtonState.DOWN) == null) {
-			button.setTextFormatForState(ButtonState.DOWN, this.getActiveTextFormat());
-		}
-
-		button.paddingTop = 4.0;
-		button.paddingRight = 10.0;
-		button.paddingBottom = 4.0;
-		button.paddingLeft = 10.0;
-		button.gap = 6.0;
+		label.paddingTop = this.padding;
+		label.paddingRight = this.padding;
+		label.paddingBottom = this.padding;
+		label.paddingLeft = this.padding;
 	}
 }
