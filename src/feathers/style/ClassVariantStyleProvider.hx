@@ -96,12 +96,19 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		@since 1.0.0
 	**/
 	public function getStyleFunction<T>(type:Class<T>, variant:String):(T) -> Void {
-		if (styleTargets == null) {
-			return null;
-		}
-		var typeName = Type.getClassName(type);
-		var styleTarget = variant == null ? Class(typeName) : ClassAndVariant(typeName, variant);
-		return this.styleTargets.get(styleTarget);
+		return this.getStyleFunctionInternal(type, variant, true);
+	}
+
+	/**
+		Indicates if a style function is available for the specified target when
+		calling `applyStyles`.
+
+		@since 1.0.0
+	**/
+	public function canApplyStyles(target:IStyleObject):Bool {
+		var styleContext:Class<IStyleObject> = this.getStyleContext(target);
+		var variant:String = this.getVariant(target);
+		return this.getStyleFunctionInternal(styleContext, variant, false) != null;
 	}
 
 	/**
@@ -113,7 +120,16 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		if (this.styleTargets == null) {
 			return;
 		}
+		var styleContext:Class<IStyleObject> = this.getStyleContext(target);
+		var variant:String = this.getVariant(target);
+		var callback = this.getStyleFunctionInternal(styleContext, variant, false);
+		if (callback == null) {
+			return;
+		}
+		callback(target);
+	}
 
+	private function getStyleContext(target:IStyleObject):Class<IStyleObject> {
 		var styleContext:Class<IStyleObject> = null;
 		var variant:String = null;
 		if (Std.is(target, IUIControl)) {
@@ -121,23 +137,33 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 			styleContext = uiControl.styleContext;
 			variant = uiControl.variant;
 		}
-
 		if (styleContext == null) {
 			styleContext = Type.getClass(target);
 		}
+		return styleContext;
+	}
 
-		var styleContextName = Type.getClassName(styleContext);
-		var styleTarget = variant == null ? Class(styleContextName) : ClassAndVariant(styleContextName, variant);
-		var callback = this.styleTargets.get(styleTarget);
-		if (callback == null && variant != null) {
-			// try again without the variant
-			styleTarget = Class(styleContextName);
-			callback = this.styleTargets.get(styleTarget);
+	private function getVariant(target:IStyleObject):String {
+		var variant:String = null;
+		if (Std.is(target, IUIControl)) {
+			var uiControl = cast(target, IUIControl);
+			variant = uiControl.variant;
 		}
-		if (callback == null) {
-			return;
+		return variant;
+	}
+
+	private function getStyleFunctionInternal<T>(type:Class<T>, variant:String, strict:Bool):(T) -> Void {
+		if (styleTargets == null) {
+			return null;
 		}
-		callback(target);
+		var typeName = Type.getClassName(type);
+		var styleTarget = variant == null ? Class(typeName) : ClassAndVariant(typeName, variant);
+		var result = this.styleTargets.get(styleTarget);
+		if (result != null || strict) {
+			return result;
+		}
+		// if not strict, try again without the variant
+		return this.styleTargets.get(Class(typeName));
 	}
 }
 
