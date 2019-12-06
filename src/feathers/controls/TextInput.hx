@@ -607,7 +607,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
 
-		this.text = this.textField.text;
+		// no need to invalidate here. just store the new text.
+		@:bypassAccessor this.text = this.textField.text;
 	}
 
 	private function textField_focusInHandler(event:FocusEvent):Void {
