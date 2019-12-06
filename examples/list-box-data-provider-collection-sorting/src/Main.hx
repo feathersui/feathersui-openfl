@@ -38,8 +38,42 @@ class Main extends Application {
 		this.view.addChild(this.listBox);
 	}
 
-	private var view:Panel;
 	private var listBox:ListBox;
+	private var view:Panel;
+
+	/**
+		Sorts items in the ArrayCollection in alphabetical order (A to Z)
+	**/
+	private function sortAlphabetical(a:Dynamic, b:Dynamic):Int {
+		var aText = this.listBox.itemToText(a);
+		var bText = this.listBox.itemToText(b);
+		if (aText < bText) {
+			return -1;
+		}
+		if (aText > bText) {
+			return 1;
+		}
+		return 0;
+	}
+
+	/**
+		Sorts items in the ArrayCollection in reverse alphabetical order (Z to A)
+	**/
+	private function sortReversed(a:Dynamic, b:Dynamic):Int {
+		return -this.sortAlphabetical(a, b);
+	}
+
+	/**
+		When the PopUpList's selection changes, we'll chage the
+		sortCompareFunction on the ListBox's dataProvider.
+	**/
+	private function sortPicker_changeHandler(event:Event):Void {
+		var sortPicker = cast(event.currentTarget, PopUpList);
+		var sortItem = cast(sortPicker.selectedItem, SortItem);
+
+		var dataProvider = this.listBox.dataProvider;
+		dataProvider.sortCompareFunction = sortItem.sortCompareFunction;
+	}
 
 	private function initializeView():Void {
 		this.layout = new AnchorLayout();
@@ -78,40 +112,6 @@ class Main extends Application {
 		};
 		this.view.layout = new AnchorLayout();
 		this.addChild(this.view);
-	}
-
-	/**
-		Sorts items in the ArrayCollection in alphabetical order (A to Z)
-	**/
-	private function sortAlphabetical(a:Dynamic, b:Dynamic):Int {
-		var aText = this.listBox.itemToText(a);
-		var bText = this.listBox.itemToText(b);
-		if (aText < bText) {
-			return -1;
-		}
-		if (aText > bText) {
-			return 1;
-		}
-		return 0;
-	}
-
-	/**
-		Sorts items in the ArrayCollection in reverse alphabetical order (Z to A)
-	**/
-	private function sortReversed(a:Dynamic, b:Dynamic):Int {
-		return -this.sortAlphabetical(a, b);
-	}
-
-	/**
-		When the PopUpList's selection changes, we'll chage the
-		sortCompareFunction on the ListBox's dataProvider.
-	**/
-	private function sortPicker_changeHandler(event:Event):Void {
-		var sortPicker = cast(event.currentTarget, PopUpList);
-		var sortItem = cast(sortPicker.selectedItem, SortItem);
-
-		var dataProvider = this.listBox.dataProvider;
-		dataProvider.sortCompareFunction = sortItem.sortCompareFunction;
 	}
 }
 
