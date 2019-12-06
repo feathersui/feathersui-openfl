@@ -2,7 +2,7 @@
 <project>
 	<meta title="Percentage Sizing" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
 	<meta title="Percentage sizing with horizontal layout — Feathers UI Examples" if="html5"/>
-	<app main="Main" path="build" file="Main" />
+	<app main="Main" path="build" file="Percents" />
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>
