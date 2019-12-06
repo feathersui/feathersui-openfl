@@ -253,6 +253,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
 	/**
+		@since 1.0.0
+	**/
+	public var scrollX(default, set):Float = 0.0;
+
+	private function set_scrollX(value:Float):Float {
+		if (this.scrollX == value) {
+			return this.scrollX;
+		}
+		this.scrollX = value;
+		this.setInvalid(InvalidationFlag.SCROLL);
+		FeathersEvent.dispatch(this, Event.SCROLL);
+		return this.scrollX;
+	}
+
+	/**
 		Gets the skin to be used by the text input when its `currentState`
 		property matches the specified state value.
 
@@ -313,6 +328,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.textField.type = TextFieldType.INPUT;
 			this.textField.selectable = true;
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
+			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
 			this.textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
 			this.textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
 			this.addChild(this.textField);
@@ -321,6 +337,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
+		var scrollInvalid = this.isInvalid(InvalidationFlag.SCROLL);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
@@ -336,6 +353,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		if (dataInvalid || stylesInvalid || stateInvalid) {
 			this.refreshText();
+		}
+
+		if (scrollInvalid) {
+			this.refreshScrollPosition();
 		}
 
 		this.autoSizeIfNeeded();
@@ -534,6 +555,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._previousText = this.text;
 	}
 
+	private function refreshScrollPosition():Void {
+		this.textField.scrollH = Math.round(this.scrollX);
+	}
+
 	private function getCurrentTextFormat():TextFormat {
 		if (!this.enabled && this.disabledTextFormat != null) {
 			return this.disabledTextFormat;
@@ -609,6 +634,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		// no need to invalidate here. just store the new text.
 		@:bypassAccessor this.text = this.textField.text;
+	}
+
+	private function textField_scrollHandler(event:Event):Void {
+		// no need to invalidate here. just store the new scroll position.
+		@:bypassAccessor this.scrollX = this.textField.scrollH;
+		// but the event still needs to be dispatched
+		FeathersEvent.dispatch(this, Event.SCROLL);
 	}
 
 	private function textField_focusInHandler(event:FocusEvent):Void {
