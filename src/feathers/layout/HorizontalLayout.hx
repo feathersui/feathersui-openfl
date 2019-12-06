@@ -271,16 +271,16 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
+		this.applyPercentHeight(items, viewPortHeight);
+		this.applyVerticalAlign(items, viewPortHeight);
+		this.applyHorizontalAlign(items, contentWidth, viewPortWidth);
+
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;
 		}
 		if (contentHeight < viewPortHeight) {
 			contentHeight = viewPortHeight;
 		}
-
-		this.applyPercentHeight(items, viewPortHeight);
-		this.applyVerticalAlign(items, viewPortHeight);
-		this.applyHorizontalAlign(items, contentWidth, viewPortWidth);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();
