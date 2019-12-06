@@ -634,6 +634,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		// no need to invalidate here. just store the new text.
 		@:bypassAccessor this.text = this.textField.text;
+		// but the event still needs to be dispatched
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	private function textField_scrollHandler(event:Event):Void {
