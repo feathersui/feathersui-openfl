@@ -46,6 +46,12 @@ jobs:
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+    - name: Build examples/custom-theme
+      working-directory: examples/custom-theme
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
     - name: Build examples/horizontal-layout-percentage-sizing
       working-directory: examples/horizontal-layout-percentage-sizing
       run: |

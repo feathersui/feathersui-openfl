@@ -42,6 +42,11 @@ script:
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
+# build custom-theme example
+- cd $TRAVIS_BUILD_DIR/examples/custom-theme
+- haxelib run openfl build neko
+- haxelib run openfl build html5
+- haxelib run openfl build flash
 # build horizontal-layout-percentage-sizing example
 - cd $TRAVIS_BUILD_DIR/examples/horizontal-layout-percentage-sizing
 - haxelib run openfl build neko
