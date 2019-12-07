@@ -31,8 +31,10 @@ import js.html.MediaQueryList;
 	@since 1.0.0
 **/
 @:dox(hide)
-class BaseSteelTheme implements IDarkModeTheme {
+class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private function new(?themeColor:Int, ?darkThemeColor:Int) {
+		super();
+
 		this.customThemeColor = themeColor;
 		this.customDarkThemeColor = darkThemeColor;
 		this.refreshColors();
@@ -54,8 +56,6 @@ class BaseSteelTheme implements IDarkModeTheme {
 	#if html5
 	var mediaQueryList:MediaQueryList;
 	#end
-
-	private var styleProvider:ClassVariantStyleProvider;
 
 	@:isVar
 	public var darkMode(get, set):Bool = false;
@@ -99,22 +99,16 @@ class BaseSteelTheme implements IDarkModeTheme {
 	private var headerFontSize:Int;
 	private var detailFontSize:Int;
 
+	#if html5
 	@:dox(hide)
-	public function getStyleProvider(target:IStyleObject):IStyleProvider {
-		// use the same style provider for all objects
-		return this.styleProvider;
-	}
-
-	@:dox(hide)
-	public function dispose():Void {
-		#if html5
+	override public function dispose():Void {
 		if (this.mediaQueryList != null) {
 			this.mediaQueryList.removeListener(mediaQueryList_changeHandler);
 			this.mediaQueryList = null;
 		}
-		#end
-		FeathersEvent.dispatch(this.styleProvider, Event.CLEAR);
+		super.dispose();
 	}
+	#end
 
 	private function refreshColors():Void {
 		if (this.darkMode) {
