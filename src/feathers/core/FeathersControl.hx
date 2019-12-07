@@ -360,6 +360,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements ISt
 				styleProvider = theme.getStyleProvider(this);
 			}
 		}
+		if (styleProvider == null) {
+			var theme = Theme.fallbackTheme;
+			if (theme != null) {
+				styleProvider = theme.getStyleProvider(this);
+			}
+		}
 		if (this._currentStyleProvider != styleProvider) {
 			if (this._currentStyleProvider != null) {
 				this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
