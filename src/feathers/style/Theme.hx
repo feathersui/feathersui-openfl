@@ -18,7 +18,7 @@ import feathers.themes.steel.DefaultSteelTheme;
 
 	@since 1.0.0
 **/
-class Theme {
+final class Theme {
 	/**
 		The fallback theme used when the primary theme does not provide styles
 		for a target object. Generally, this function is only used internally
