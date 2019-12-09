@@ -32,30 +32,6 @@ interface IUIControl extends IDisplayObject {
 	public var enabled(get, set):Bool;
 
 	/**
-		The class used as the context for styling the component. For instance,
-		a subclass of a component may have different styles than its superclass,
-		or it may inherit styles from its superclass.
-
-		@since 1.0.0
-	**/
-	public var styleContext(get, never):Class<IStyleObject>;
-
-	/**
-		May be used to provide multiple different variations of the same UI
-		component, each with a different appearance.
-
-		The following example sets the variant of a `Label` component:
-
-		```hx
-		var label = new Label();
-		label.variant = Label.VARIANT_HEADING;
-		```
-
-		@since 1.0.0
-	**/
-	public var variant(default, set):String;
-
-	/**
 		If the component has not yet initialized, initializes immediately. The
 		`FeathersEvent.INITIALIZE` event will be dispatched. To both initialize
 		and validate immediately, call `validateNow()` instead.

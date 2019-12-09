@@ -8,12 +8,13 @@
 
 package feathers.core;
 
+import feathers.style.IStyleObject;
 import openfl.events.Event;
 import openfl.errors.IllegalOperationError;
 import feathers.events.FeathersEvent;
 import feathers.layout.ILayoutData;
 import feathers.layout.ILayoutObject;
-import feathers.style.IStyleObject;
+import feathers.style.IVariantStyleObject;
 import feathers.style.IStyleProvider;
 import feathers.style.Theme;
 
@@ -34,7 +35,7 @@ import feathers.style.Theme;
 **/
 @:autoBuild(feathers.macros.StyleContextMacro.build())
 @:autoBuild(feathers.macros.StyleMacro.build())
-class FeathersControl extends MeasureSprite implements IUIControl implements IStyleObject implements ILayoutObject {
+class FeathersControl extends MeasureSprite implements IUIControl implements IVariantStyleObject implements ILayoutObject {
 	private function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
