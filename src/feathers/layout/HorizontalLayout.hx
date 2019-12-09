@@ -311,9 +311,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			}
 			switch (this.verticalAlign) {
 				case BOTTOM:
-					item.y = this.paddingTop + (viewPortHeight - this.paddingTop - this.paddingBottom) - item.height;
+					item.y = Math.max(this.paddingTop, this.paddingTop + (viewPortHeight - this.paddingTop - this.paddingBottom) - item.height);
 				case MIDDLE:
-					item.y = this.paddingTop + (viewPortHeight - this.paddingTop - this.paddingBottom - item.height) / 2.0;
+					item.y = Math.max(this.paddingTop, this.paddingTop + (viewPortHeight - this.paddingTop - this.paddingBottom - item.height) / 2.0);
 				case JUSTIFY:
 					item.y = this.paddingTop;
 					item.height = viewPortHeight - this.paddingTop - this.paddingBottom;
@@ -345,7 +345,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 			}
-			item.x += horizontalOffset;
+			item.x = Math.max(this.paddingLeft, item.x + horizontalOffset);
 		}
 	}
 

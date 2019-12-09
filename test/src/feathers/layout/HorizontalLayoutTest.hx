@@ -477,4 +477,58 @@ class HorizontalLayoutTest {
 		Assert.areEqual(this._measurements.maxWidth, result.contentWidth);
 		Assert.areEqual(this._measurements.maxWidth, this._control1.width);
 	}
+
+	@Test
+	public function testHorizontalAlignLeftAndItemWidthLargerThanViewPortWidth():Void {
+		this._layout.horizontalAlign = LEFT;
+		this._measurements.width = 50.0;
+		this._control1.width = 150.0;
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._control1.x, 0.0);
+	}
+
+	@Test
+	public function testHorizontalAlignRightAndItemWidthLargerThanViewPortWidth():Void {
+		this._layout.horizontalAlign = RIGHT;
+		this._measurements.width = 50.0;
+		this._control1.width = 150.0;
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._control1.x, 0.0);
+	}
+
+	@Test
+	public function testHorizontalAlignCenterAndItemWidthLargerThanViewPortWidth():Void {
+		this._layout.horizontalAlign = CENTER;
+		this._measurements.width = 50.0;
+		this._control1.width = 150.0;
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._control1.x, 0.0);
+	}
+
+	@Test
+	public function testVerticalAlignTopAndItemHeightLargerThanViewPortHeight():Void {
+		this._layout.verticalAlign = TOP;
+		this._measurements.height = 50.0;
+		this._control1.height = 150.0;
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._control1.y, 0.0);
+	}
+
+	@Test
+	public function testVerticalAlignBottomAndItemHeightLargerThanViewPortHeight():Void {
+		this._layout.verticalAlign = BOTTOM;
+		this._measurements.height = 50.0;
+		this._control1.height = 150.0;
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._control1.y, 0.0);
+	}
+
+	@Test
+	public function testVerticalAlignMiddleAndItemHeightLargerThanViewPortHeight():Void {
+		this._layout.verticalAlign = MIDDLE;
+		this._measurements.height = 50.0;
+		this._control1.height = 150.0;
+		var result = this._layout.layout([this._control1], this._measurements);
+		Assert.areEqual(this._control1.y, 0.0);
+	}
 }
