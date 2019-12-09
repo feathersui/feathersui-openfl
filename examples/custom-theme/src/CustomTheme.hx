@@ -19,22 +19,27 @@ class CustomTheme extends ClassVariantTheme {
 
 	private function setButtonStyles(button:Button):Void {
 		var backgroundSkin = new RectangleSkin();
-		backgroundSkin.border = SolidColor(1.0, 0x000000);
-		backgroundSkin.fill = SolidColor(0xcccccc);
+		backgroundSkin.border = SolidColor(1.0, 0xff0000);
+		backgroundSkin.fill = SolidColor(0xffffff);
+		backgroundSkin.cornerRadius = 10.0;
 		button.backgroundSkin = backgroundSkin;
 
 		var downSkin = new RectangleSkin();
-		downSkin.border = SolidColor(1.0, 0x000000);
-		downSkin.fill = SolidColor(0xeeeeee);
+		downSkin.border = SolidColor(1.0, 0xcc0000);
+		downSkin.fill = SolidColor(0xffeeee);
+		downSkin.cornerRadius = 10.0;
 		button.setSkinForState(DOWN, downSkin);
 
-		var format = new TextFormat("_sans", 16, 0x232323);
+		var format = new TextFormat("_sans", 16, 0xff0000);
 		button.textFormat = format;
 
-		button.paddingTop = 6.0;
-		button.paddingBottom = 6.0;
-		button.paddingLeft = 6.0;
-		button.paddingRight = 6.0;
+		var downFormat = new TextFormat("_sans", 16, 0xcc0000);
+		button.setTextFormatForState(DOWN, downFormat);
+
+		button.paddingTop = 10.0;
+		button.paddingBottom = 10.0;
+		button.paddingLeft = 20.0;
+		button.paddingRight = 20.0;
 	}
 
 	private function setFancyButtonStyles(button:Button):Void {
