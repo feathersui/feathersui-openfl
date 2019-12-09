@@ -9,8 +9,6 @@
 package feathers.style;
 
 import feathers.events.FeathersEvent;
-import feathers.core.IUIControl;
-import haxe.rtti.Meta;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
@@ -100,18 +98,6 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	}
 
 	/**
-		Indicates if a style function is available for the specified target when
-		calling `applyStyles`.
-
-		@since 1.0.0
-	**/
-	public function canApplyStyles(target:IStyleObject):Bool {
-		var styleContext:Class<IStyleObject> = this.getStyleContext(target);
-		var variant:String = this.getVariant(target);
-		return this.getStyleFunctionInternal(styleContext, variant, false) != null;
-	}
-
-	/**
 		Applies styles to the target object.
 
 		@since 1.0.0
@@ -132,10 +118,9 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	private function getStyleContext(target:IStyleObject):Class<IStyleObject> {
 		var styleContext:Class<IStyleObject> = null;
 		var variant:String = null;
-		if (Std.is(target, IUIControl)) {
-			var uiControl = cast(target, IUIControl);
-			styleContext = uiControl.styleContext;
-			variant = uiControl.variant;
+		if (Std.is(target, IVariantStyleObject)) {
+			var variantObject = cast(target, IVariantStyleObject);
+			styleContext = variantObject.styleContext;
 		}
 		if (styleContext == null) {
 			styleContext = Type.getClass(target);
@@ -145,9 +130,9 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 
 	private function getVariant(target:IStyleObject):String {
 		var variant:String = null;
-		if (Std.is(target, IUIControl)) {
-			var uiControl = cast(target, IUIControl);
-			variant = uiControl.variant;
+		if (Std.is(target, IVariantStyleObject)) {
+			var variantObject = cast(target, IVariantStyleObject);
+			variant = variantObject.variant;
 		}
 		return variant;
 	}

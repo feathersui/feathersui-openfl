@@ -8,6 +8,8 @@
 
 package feathers.themes;
 
+import feathers.style.IVariantStyleObject;
+import feathers.style.Theme;
 import feathers.events.FeathersEvent;
 import openfl.events.Event;
 import feathers.style.IStyleObject;
@@ -32,12 +34,50 @@ class ClassVariantTheme implements ITheme {
 
 	@:dox(hide)
 	public function getStyleProvider(target:IStyleObject):IStyleProvider {
-		if (!this.styleProvider.canApplyStyles(target)) {
-			// if there's no style function, fall back to the default theme
+		var styleContext:Class<IStyleObject> = null;
+		var variant:String = null;
+		if (Std.is(target, IVariantStyleObject)) {
+			var variantObject = cast(target, IVariantStyleObject);
+			styleContext = variantObject.styleContext;
+			variant = variantObject.variant;
+		}
+		if (styleContext == null) {
+			styleContext = Type.getClass(target);
+		}
+		// if this theme has an exact match for the variant, use it
+		var styleFunction = this.styleProvider.getStyleFunction(styleContext, variant);
+		if (styleFunction != null) {
+			return this.styleProvider;
+		}
+		if (variant == null) {
+			// we already tried with a null variant, and didn't find a match,
+			// so there's nothing else to try.
 			return null;
 		}
-		// use the same style provider for all objects
-		return this.styleProvider;
+		// next, check if the fallback theme has an exact match for the variant
+		// in that case, we'll defer to the fallback theme
+		var fallbackTheme = Theme.fallbackTheme;
+		if (fallbackTheme != null && fallbackTheme != this && Std.is(fallbackTheme, ClassVariantTheme)) {
+			// but only do that if the fallback theme is a ClassVariantTheme
+			// if someone replaces the fallback theme with another type, there's
+			// no way for us to know if it should be allowed to take precedence
+			// or not.
+			var fallbackStyleProvider = Std.downcast(fallbackTheme.getStyleProvider(target), ClassVariantStyleProvider);
+			if (fallbackStyleProvider != null) {
+				var styleFunction = fallbackStyleProvider.getStyleFunction(styleContext, variant);
+				if (styleFunction != null) {
+					return null;
+				}
+			}
+		}
+		// finally, if neither theme has an exact match for the variant, see
+		// if this theme has a match for the context without a variant
+		styleFunction = this.styleProvider.getStyleFunction(styleContext, null);
+		if (styleFunction != null) {
+			return this.styleProvider;
+		}
+		// no match, so defer to the fallback theme
+		return null;
 	}
 
 	@:dox(hide)
