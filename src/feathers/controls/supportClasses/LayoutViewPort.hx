@@ -8,13 +8,25 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.display.Sprite;
 import feathers.layout.IScrollLayout;
 import feathers.core.InvalidationFlag;
-import feathers.layout.AutoSizeMode;
 import openfl.errors.ArgumentError;
 import openfl.geom.Point;
 
 class LayoutViewPort extends LayoutGroup implements IViewPort {
+	public function new() {
+		super();
+
+		// an invisible background that makes the entire width and height of the
+		// viewport interactive for touch scrolling
+		var backgroundSkin = new Sprite();
+		backgroundSkin.graphics.beginFill(0xff00ff, 0.0);
+		backgroundSkin.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
+		backgroundSkin.graphics.endFill();
+		this.backgroundSkin = backgroundSkin;
+	}
+
 	private var _actualMinVisibleWidth:Float = 0.0;
 	private var _explicitMinVisibleWidth:Null<Float> = null;
 
