@@ -45,6 +45,20 @@ class Application extends LayoutGroup {
 	private var _scaler:ScreenDensityScaleCalculator;
 	private var _calculatedScaleFactor:Float;
 
+	/**
+		Instead of calculating the scale factor automatically, an application
+		may be given a custom scale factor. Using this scale factor, the
+		application will calculate the best width and height to fill the stage
+		at that scale.
+
+		The following example sets a custom scale factor:
+
+		```hx
+		application.customScale = 3.0;
+		```
+
+		@since 1.0.0
+	**/
 	public var customScale(default, set):Null<Float> = null;
 
 	private function set_customScale(value:Null<Float>):Null<Float> {
@@ -56,6 +70,14 @@ class Application extends LayoutGroup {
 		return this.customScale;
 	}
 
+	/**
+		A factory may be provided to return a custom container where the
+		application's pop-ups may be added when using `PopUpManager`.
+
+		@see `feathers.core.PopUpManager`
+
+		@since 1.0.0
+	**/
 	public var popUpContainerFactory:() -> DisplayObjectContainer;
 
 	private var _popUpContainer:DisplayObjectContainer;

@@ -26,6 +26,19 @@ import feathers.core.InvalidationFlag;
 import feathers.layout.Measurements;
 import feathers.utils.ScaleUtil;
 
+/**
+	Loads and displays an asset using either OpenFL's asset management system or
+	from a URL.
+
+	Supports assets of the following types:
+
+	- [`AssetType.IMAGE`](https://api.openfl.org/openfl/utils/AssetType.html#IMAGE)
+	- [`AssetType.MOVIE_CLIP`](https://api.openfl.org/openfl/utils/AssetType.html#MOVIE_CLIP)
+
+	@see [`openfl.utils.Assets`](https://api.openfl.org/openfl/utils/Assets.html)
+
+	@since 1.0.0
+**/
 class AssetLoader extends FeathersControl {
 	/**
 		Creates a new `AssetLoader` object.
@@ -40,6 +53,24 @@ class AssetLoader extends FeathersControl {
 	private var loader:Loader;
 	private var _contentMeasurements:Measurements = new Measurements();
 
+	/**
+		Sets the loader's source, which may be either the name of an asset or a
+		URL to load the asset from the web instead.
+
+		The following example sets the source to an asset name:
+
+		```hx
+		loader.source = "my-asset-name";
+		```
+
+		The following example sets the source to a URL:
+
+		```hx
+		loader.source = "https://example.com/my-asset.png";
+		```
+
+		@since 1.0.0
+	**/
 	public var source(default, set):String;
 
 	private function set_source(value:String):String {
@@ -112,6 +143,24 @@ class AssetLoader extends FeathersControl {
 		return this.source;
 	}
 
+	/**
+
+		Determines how the asset will be scaled within the width and height of
+		the `AssetLoader` instance. Uses the same constants from
+		[`StageScaleMode`](https://api.openfl.org/openfl/display/StageScaleMode.html)
+		that are used to scale the OpenFL stage.
+
+		The following example maintains the aspect ratio of the asset, but
+		displays no border, and may crop it to fit:
+
+		```hx
+		loader.scaleMode = StageScaleMode.NO_BORDER
+		```
+
+		@see [`openfl.display.StageScaleMode`](https://api.openfl.org/openfl/display/StageScaleMode.html)
+
+		@since 1.0.0
+	**/
 	public var scaleMode(default, set):StageScaleMode = StageScaleMode.SHOW_ALL;
 
 	private function set_scaleMode(value:StageScaleMode):StageScaleMode {

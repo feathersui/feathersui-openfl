@@ -14,7 +14,17 @@ import feathers.core.InvalidationFlag;
 import openfl.errors.ArgumentError;
 import openfl.geom.Point;
 
+/**
+	An implementation of `IViewPort` that provides support for layouts.
+
+	@since 1.0.0
+**/
 class LayoutViewPort extends LayoutGroup implements IViewPort {
+	/**
+		Creates a new `LayoutViewPort` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 
@@ -30,6 +40,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	private var _actualMinVisibleWidth:Float = 0.0;
 	private var _explicitMinVisibleWidth:Null<Float> = null;
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.minVisibleWidth`
+	**/
 	public var minVisibleWidth(get, set):Null<Float>;
 
 	private function get_minVisibleWidth():Null<Float> {
@@ -58,6 +71,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitMinVisibleWidth;
 	}
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
+	**/
 	public var maxVisibleWidth(default, set):Null<Float> = Math.POSITIVE_INFINITY;
 
 	private function set_maxVisibleWidth(value:Null<Float>):Null<Float> {
@@ -79,6 +95,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	private var _actualVisibleWidth:Float = 0.0;
 	private var _explicitVisibleWidth:Null<Float> = null;
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.visibleWidth`
+	**/
 	public var visibleWidth(get, set):Null<Float>;
 
 	private function get_visibleWidth():Null<Float> {
@@ -102,6 +121,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	private var _actualMinVisibleHeight:Float = 0.0;
 	private var _explicitMinVisibleHeight:Null<Float>;
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.minVisibleHeight`
+	**/
 	public var minVisibleHeight(get, set):Null<Float>;
 
 	private function get_minVisibleHeight():Null<Float> {
@@ -130,6 +152,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitMinVisibleHeight;
 	}
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
+	**/
 	public var maxVisibleHeight(default, set):Null<Float> = Math.POSITIVE_INFINITY;
 
 	private function get_maxVisibleHeight():Null<Float> {
@@ -155,6 +180,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	private var _actualVisibleHeight:Float = 0.0;
 	private var _explicitVisibleHeight:Null<Float> = null;
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.visibleHeight`
+	**/
 	public var visibleHeight(get, set):Null<Float>;
 
 	private function get_visibleHeight():Null<Float> {
@@ -175,6 +203,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitVisibleWidth;
 	}
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.requiresMeasurementOnScroll`
+	**/
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
@@ -185,6 +216,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return false;
 	}
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.scrollX`
+	**/
 	@:isVar
 	public var scrollX(get, set):Float = 0.0;
 
@@ -197,6 +231,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this.scrollX;
 	}
 
+	/**
+		@see `feathers.controls.supportClasses.IViewPort.scrollY`
+	**/
 	@:isVar
 	public var scrollY(get, set):Float = 0.0;
 

@@ -18,6 +18,8 @@ import openfl.errors.IllegalOperationError;
 import openfl.display.DisplayObject;
 
 /**
+	Displays a pop-up like a drop-down, either below or above the source.
+
 	@since 1.0.0
 **/
 class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
@@ -34,7 +36,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	private var origin:DisplayObject = null;
 
 	/**
-		@since 1.0.0
+		@see `feathers.controls.popups.IPopUpAdapter.active`
 	**/
 	public var active(get, never):Bool;
 
@@ -44,6 +46,9 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 	public var modal:Bool = false;
 
+	/**
+		@see `feathers.controls.popups.IPopUpAdapter.persistent`
+	**/
 	public var persistent(get, never):Bool;
 
 	private function get_persistent():Bool {
@@ -51,7 +56,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.controls.popups.IPopUpAdapter.open`
 	**/
 	public function open(content:DisplayObject, origin:DisplayObject):Void {
 		if (this.active) {
@@ -67,7 +72,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	}
 
 	/**
-		@since 1.0.0
+		@see `feathers.controls.popups.IPopUpAdapter.close`
 	**/
 	public function close():Void {
 		if (!this.active) {

@@ -57,7 +57,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		The current state of the button.
 
 		@see `feathers.controls.ButtonState`
-		@see `FeathersEvent.STATE_CHANGE`
+		@see `feathers.events.FeathersEvent.STATE_CHANGE`
 
 		@since 1.0.0
 	**/
@@ -84,6 +84,21 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 
+	/**
+		Determines if a pressed button should remain in the down state if the
+		pointer moves outside of the button's bounds. Useful for controls like
+		`HSlider`, `VSlider`, or `ToggleSwitch` to keep a thumb in the down
+		state while it is being dragged around by the pointer.
+
+		The following example ensures that the button's down state remains
+		active on roll out.
+
+		```hx
+		button.keepDownStateOnRollOut = true;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var keepDownStateOnRollOut:Null<Bool> = false;
 

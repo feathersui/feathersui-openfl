@@ -59,7 +59,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		The current state of the toggle button.
 
 		@see `feathers.controls.ToggleButtonState`
-		@see `FeathersEvent.STATE_CHANGE`
+		@see `feathers.events.FeathersEvent.STATE_CHANGE`
 
 		@since 1.0.0
 	**/
@@ -84,6 +84,30 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		return this.enabled;
 	}
 
+	/**
+		Indicates if the button is selected or not. The button may be selected
+		programmatically, even if `toggleable` is `false`, but generally,
+		`toggleable` should be set to `true` to allow the user to select and
+		deselect it by triggering the button with a click or tap. If focus
+		management is enabled, and the button has focus, a button may also be
+		triggered with the spacebar.
+
+		The following example selects the button:
+
+		```hx
+		button.selected = true;
+		```
+
+		**Warning:** Do not listen for `FeathersEvent.TRIGGERED` to be notified
+		when the `selected` property changes. You must listen for
+		`Event.CHANGE`, which is dispatched after `FeathersEvent.TRIGGERED`.
+
+		@default false
+
+		@see `BasicToggleButton.toggleable`
+
+		@since 1.0.0
+	**/
 	@:isVar
 	public var selected(get, set):Bool = false;
 
@@ -103,6 +127,24 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		return this.selected;
 	}
 
+	/**
+		Determines if the button may be selected or deselected as a result of
+		user interaction. If `true`, the value of the `selected` property will
+		be toggled when the button is triggered.
+
+		The following example disables the ability to toggle on click or tap:
+
+		```hx
+		button.toggleable = false;
+		```
+
+		@default true
+
+		@see `BasicToggleButton.selected`
+		@see `feathers.events.FeathersEvent.TRIGGERED`
+
+		@since 1.0.0
+	**/
 	public var toggleable(default, set):Bool = true;
 
 	private function set_toggleable(value:Bool):Bool {
@@ -118,6 +160,21 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 
+	/**
+		Determines if a pressed button should remain in the down state if the
+		pointer moves outside of the button's bounds. Useful for controls like
+		`HSlider`, `VSlider`, or `ToggleSwitch` to keep a thumb in the down
+		state while it is being dragged around by the pointer.
+
+		The following example ensures that the button's down state remains
+		active on roll out.
+
+		```hx
+		button.keepDownStateOnRollOut = true;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var keepDownStateOnRollOut:Null<Bool> = false;
 
@@ -142,6 +199,26 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
+	/**
+		The default background skin for the toggle button when the `selected`
+		property is `true`. Takes precendence over `backgroundSkin`, but will
+		defer to another skin that is defined for the current state with
+		`setSkinForState()`.
+
+		The following example gives the toggle button a default selected skin:
+
+		```hx
+		button.backgroundSelectedSkin = new Bitmap(bitmapData);
+		```
+
+		@default null
+
+		@see `BasicToggleButton.backgroundSkin`
+		@see `BasicToggleButton.getSkinForState()`
+		@see `BasicToggleButton.setSkinForState()`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var backgroundSelectedSkin:DisplayObject = null;
 
