@@ -208,7 +208,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		The following example gives the toggle button a default selected skin:
 
 		```hx
-		button.backgroundSelectedSkin = new Bitmap(bitmapData);
+		button.selectedBackgroundSkin = new Bitmap(bitmapData);
 		```
 
 		@default null
@@ -220,7 +220,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		@since 1.0.0
 	**/
 	@:style
-	public var backgroundSelectedSkin:DisplayObject = null;
+	public var selectedBackgroundSkin:DisplayObject = null;
 
 	private var _stateToSkin:Map<ToggleButtonState, DisplayObject> = new Map();
 
@@ -336,8 +336,8 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		if (result != null) {
 			return result;
 		}
-		if (this.selected && this.backgroundSelectedSkin != null) {
-			return this.backgroundSelectedSkin;
+		if (this.selected && this.selectedBackgroundSkin != null) {
+			return this.selectedBackgroundSkin;
 		}
 		return this.backgroundSkin;
 	}

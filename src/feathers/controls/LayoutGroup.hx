@@ -95,7 +95,7 @@ class LayoutGroup extends FeathersControl {
 
 		@default null
 
-		@see `LayoutGroup.backgroundDisabledSkin`
+		@see `LayoutGroup.disabledBackgroundSkin`
 
 		@since 1.0.0
 	**/
@@ -110,7 +110,7 @@ class LayoutGroup extends FeathersControl {
 		The following example gives the group a disabled background skin:
 
 		```hx
-		group.backgroundDisabledSkin = new Bitmap(bitmapData);
+		group.disabledBackgroundSkin = new Bitmap(bitmapData);
 		group.enabled = false;
 		```
 
@@ -121,7 +121,7 @@ class LayoutGroup extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var backgroundDisabledSkin:DisplayObject = null;
+	public var disabledBackgroundSkin:DisplayObject = null;
 
 	/**
 		Determines how the layout group will set its own size when its
@@ -289,8 +289,8 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.backgroundDisabledSkin != null) {
-			return this.backgroundDisabledSkin;
+		if (!this.enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
 	}

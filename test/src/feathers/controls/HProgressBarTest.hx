@@ -64,7 +64,7 @@ class HProgressBarTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._progress.backgroundSkin = skin1;
-		this._progress.backgroundDisabledSkin = skin2;
+		this._progress.disabledBackgroundSkin = skin2;
 		this._progress.validateNow();
 		Assert.areEqual(this._progress, skin1.parent);
 		Assert.isNull(skin2.parent);
@@ -109,7 +109,7 @@ class HProgressBarTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._progress.fillSkin = skin1;
-		this._progress.fillDisabledSkin = skin2;
+		this._progress.disabledFillSkin = skin2;
 		this._progress.validateNow();
 		Assert.areEqual(this._progress, skin1.parent);
 		Assert.isNull(skin2.parent);

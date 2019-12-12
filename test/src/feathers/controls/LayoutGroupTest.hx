@@ -64,7 +64,7 @@ class LayoutGroupTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._group.backgroundSkin = skin1;
-		this._group.backgroundDisabledSkin = skin2;
+		this._group.disabledBackgroundSkin = skin2;
 		this._group.validateNow();
 		Assert.areEqual(this._group, skin1.parent);
 		Assert.isNull(skin2.parent);

@@ -82,7 +82,7 @@ class BasicToggleButtonTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._button.backgroundSkin = skin1;
-		this._button.backgroundSelectedSkin = skin2;
+		this._button.selectedBackgroundSkin = skin2;
 		this._button.validateNow();
 		Assert.areEqual(this._button, skin1.parent);
 		Assert.isNull(skin2.parent);

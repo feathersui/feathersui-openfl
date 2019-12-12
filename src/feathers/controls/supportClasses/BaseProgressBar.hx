@@ -152,7 +152,7 @@ class BaseProgressBar extends FeathersControl {
 		progress.backgroundSkin = skin;
 		```
 
-		@see `BaseProgressBar.backgroundDisabledSkin`
+		@see `BaseProgressBar.disabledBackgroundSkin`
 
 		@since 1.0.0
 	**/
@@ -168,7 +168,7 @@ class BaseProgressBar extends FeathersControl {
 		```hx
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xdddddd);
-		progress.backgroundDisabledSkin = skin;
+		progress.disabledBackgroundSkin = skin;
 
 		progress.enabled = false;
 		```
@@ -178,7 +178,7 @@ class BaseProgressBar extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var backgroundDisabledSkin:DisplayObject = null;
+	public var disabledBackgroundSkin:DisplayObject = null;
 
 	private var _fillSkinMeasurements:Measurements = null;
 	private var _currentFillSkin:DisplayObject = null;
@@ -210,7 +210,7 @@ class BaseProgressBar extends FeathersControl {
 		```hx
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
-		progress.fillDisabledSkin = skin;
+		progress.disabledFillSkin = skin;
 
 		progress.enabled = false;
 		```
@@ -218,7 +218,7 @@ class BaseProgressBar extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var fillDisabledSkin:DisplayObject = null;
+	public var disabledFillSkin:DisplayObject = null;
 
 	/**
 		The minimum space, in pixels, between the progress bar's top edge and the
@@ -340,8 +340,8 @@ class BaseProgressBar extends FeathersControl {
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.backgroundDisabledSkin != null) {
-			return this.backgroundDisabledSkin;
+		if (!this.enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
 	}
@@ -380,8 +380,8 @@ class BaseProgressBar extends FeathersControl {
 	}
 
 	private function getCurrentFillSkin():DisplayObject {
-		if (!this.enabled && this.fillDisabledSkin != null) {
-			return this.fillDisabledSkin;
+		if (!this.enabled && this.disabledFillSkin != null) {
+			return this.disabledFillSkin;
 		}
 		return this.fillSkin;
 	}

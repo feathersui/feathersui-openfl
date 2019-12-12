@@ -104,7 +104,7 @@ class BaseScrollContainer extends FeathersControl {
 		group.backgroundSkin = new Bitmap(bitmapData);
 		```
 
-		@see `BaseScrollContainer.backgroundDisabledSkin`
+		@see `BaseScrollContainer.disabledBackgroundSkin`
 
 		@since 1.0.0
 	**/
@@ -119,7 +119,7 @@ class BaseScrollContainer extends FeathersControl {
 		The following example gives the group a disabled background skin:
 
 		```hx
-		group.backgroundDisabledSkin = new Bitmap(bitmapData);
+		group.disabledBackgroundSkin = new Bitmap(bitmapData);
 		group.enabled = false;
 		```
 
@@ -128,7 +128,7 @@ class BaseScrollContainer extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var backgroundDisabledSkin:DisplayObject = null;
+	public var disabledBackgroundSkin:DisplayObject = null;
 
 	private var scrollBarX:IScrollBar;
 	private var scrollBarY:IScrollBar;
@@ -1027,8 +1027,8 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.backgroundDisabledSkin != null) {
-			return this.backgroundDisabledSkin;
+		if (!this.enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
 	}

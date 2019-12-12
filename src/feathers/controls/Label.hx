@@ -209,7 +209,7 @@ class Label extends FeathersControl implements ITextControl {
 
 		@default null
 
-		@see `Label.backgroundDisabledSkin`
+		@see `Label.disabledBackgroundSkin`
 
 		@since 1.0.0
 	**/
@@ -223,7 +223,7 @@ class Label extends FeathersControl implements ITextControl {
 		The following example gives the label a disabled background skin:
 
 		```hx
-		label.backgroundDisabledSkin = new Bitmap(bitmapData);
+		label.disabledBackgroundSkin = new Bitmap(bitmapData);
 		label.enabled = false;
 		```
 
@@ -234,7 +234,7 @@ class Label extends FeathersControl implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var backgroundDisabledSkin:DisplayObject = null;
+	public var disabledBackgroundSkin:DisplayObject = null;
 
 	private function initializeLabelTheme():Void {
 		SteelLabelStyles.initialize();
@@ -452,8 +452,8 @@ class Label extends FeathersControl implements ITextControl {
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.backgroundDisabledSkin != null) {
-			return this.backgroundDisabledSkin;
+		if (!this.enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
 	}

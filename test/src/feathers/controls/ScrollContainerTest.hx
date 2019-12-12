@@ -64,7 +64,7 @@ class ScrollContainerTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._container.backgroundSkin = skin1;
-		this._container.backgroundDisabledSkin = skin2;
+		this._container.disabledBackgroundSkin = skin2;
 		this._container.validateNow();
 		Assert.areEqual(this._container, skin1.parent);
 		Assert.isNull(skin2.parent);

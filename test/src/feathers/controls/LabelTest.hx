@@ -64,7 +64,7 @@ class LabelTest {
 		Assert.isNull(skin1.parent);
 		Assert.isNull(skin2.parent);
 		this._label.backgroundSkin = skin1;
-		this._label.backgroundDisabledSkin = skin2;
+		this._label.disabledBackgroundSkin = skin2;
 		this._label.validateNow();
 		Assert.areEqual(this._label, skin1.parent);
 		Assert.isNull(skin2.parent);
