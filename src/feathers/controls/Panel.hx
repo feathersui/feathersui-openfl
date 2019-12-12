@@ -14,6 +14,12 @@ import openfl.display.DisplayObject;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 
+/**
+
+	@see [Tutorial: How to use the Panel component](https://feathersui.com/learn/haxe-openfl/panel/)
+
+	@since 1.0.0
+**/
 @:styleContext
 class Panel extends ScrollContainer {
 	private static final INVALIDATION_FLAG_HEADER_FACTORY = "headerFactory";

@@ -31,8 +31,8 @@ import openfl.geom.Point;
 	this.addChild(slider);
 	```
 
-	@see `feathers.controls.VSlider`
 	@see [Tutorial: How to use the HSlider and VSlider components](https://feathersui.com/learn/haxe-openfl/slider/)
+	@see `feathers.controls.HSlider`
 
 	@since 1.0.0
 **/

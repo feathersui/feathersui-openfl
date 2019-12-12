@@ -30,6 +30,8 @@ import feathers.core.FeathersControl;
 /**
 
 
+	@see [Tutorial: How to use the PopUpList component](https://feathersui.com/learn/haxe-openfl/pop-up-list/)
+
 	@since 1.0.0
 **/
 @:styleContext

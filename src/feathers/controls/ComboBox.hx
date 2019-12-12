@@ -32,6 +32,8 @@ import feathers.controls.popups.DropDownPopUpAdapter;
 /**
 
 
+	@see [Tutorial: How to use the ComboBox component](https://feathersui.com/learn/haxe-openfl/combo-box/)
+
 	@since 1.0.0
 **/
 @:styleContext

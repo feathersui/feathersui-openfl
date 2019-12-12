@@ -24,6 +24,10 @@ import feathers.events.FeathersEvent;
 import feathers.core.FeathersControl;
 
 /**
+
+	@see [Tutorial: How to use the ToggleSwitch component](https://feathersui.com/learn/haxe-openfl/toggle-switch/)
+	@see `feathers.controls.Check`
+
 	@since 1.0.0
 **/
 @:styleContext

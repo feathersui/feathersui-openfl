@@ -21,6 +21,8 @@ import feathers.utils.MathUtil;
 	An optional root class for Feathers UI applications that will automatically
 	scale the application based on the screen density of the device.
 
+	@see [Tutorial: How to use the Application component](https://feathersui.com/learn/haxe-openfl/application/)
+
 	@since 1.0.0
 **/
 @:styleContext

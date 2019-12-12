@@ -60,6 +60,21 @@ class Button extends BasicButton implements ITextControl {
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextFormat = false;
 
+	/**
+		The text displayed by the button.
+
+		The following example sets the button's text:
+
+		```hx
+		button.text = "Click Me";
+		```
+
+		@default null
+
+		@see `Button.textFormat`
+
+		@since 1.0.0
+	**/
 	@:isVar
 	public var text(get, set):String;
 
@@ -76,6 +91,19 @@ class Button extends BasicButton implements ITextControl {
 		return this.text;
 	}
 
+	/**
+		The font styles used to display the button's text.
+
+		In the following example, the text format is customized:
+
+		```hx
+		button.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		```
+
+		@see `Button.text`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var textFormat:TextFormat = null;
 
@@ -85,6 +113,30 @@ class Button extends BasicButton implements ITextControl {
 	private var _ignoreIconResizes:Bool = false;
 
 	/**
+		The display object to use as the button's icon.
+
+		To render a different icon depending on the button's current state,
+		pass additional icons to `setIconForState()`.
+
+		The following example gives the button an icon:
+
+		```hx
+		button.icon = new Bitmap(bitmapData);
+		```
+
+		To change the position of the icon relative to the button's text, see
+		`iconPosition` and `gap`.
+
+		```hx
+		button.icon = new Bitmap(bitmapData);
+		button.iconPosition = RIGHT;
+		button.gap = 20.0;
+		```
+
+		@see `Button.getIconForState()`
+		@see `Button.setIconForState()`
+		@see `Button.iconPosition`
+		@see `Button.gap`
 
 		@since 1.0.0
 	**/
@@ -203,18 +255,64 @@ class Button extends BasicButton implements ITextControl {
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
 	/**
+		The location of the button's icon, relative to its text.
+
+		The following example positions the icon to the right of the text:
+
+		```hx
+		button.label = "Click Me";
+		button.icon = new Bitmap(texture);
+		button.iconPosition = RIGHT;</listing>
+		```
+
+		@see `Button.icon`
+
 		@since 1.0.0
 	**/
 	@:style
 	public var iconPosition:RelativePosition = LEFT;
 
 	/**
+		The space, measured in pixels, between the button's icon and its text.
+		Applies to either horizontal or vertical spacing, depending on the value
+		of `iconPosition`.
+
+		If the `gap` is set to `Math.POSITIVE_INFINITY`, the icon and the text
+		will be positioned as far apart as possible. In other words, they will
+		be positioned at the edges of the button (adjusted for padding).
+
+		The following example creates a gap of 20.0 pixels between the icon and
+		the text:
+
+		```hx
+		button.text = "Click Me";
+		button.icon = new Bitmap(bitmapData);
+		button.gap = 20.0;
+		```
+
+		@see `Button.minGap`
+
 		@since 1.0.0
 	**/
 	@:style
 	public var gap:Null<Float> = 0.0;
 
 	/**
+		If the value of the `gap` property is `Math.POSITIVE_INFINITY`, meaning
+		that the gap will fill as much space as possible and position the icon
+		and text on the edges of the button, the final calculated value of the
+		gap will not be smaller than the value of the `minGap` property.
+
+		The following example ensures that the gap is never smaller than 20
+		pixels:
+
+		```hx
+		button.gap = Math.POSITIVE_INFINITY;
+		button.minGap = 20.0;
+		```
+
+		@see `Button.gap`
+
 		@since 1.0.0
 	**/
 	@:style
@@ -230,10 +328,10 @@ class Button extends BasicButton implements ITextControl {
 
 		If a text format is not defined for a specific state, returns `null`.
 
-		@see `feathers.controls.ButtonState`
-		@see `Button.textFormat`
 		@see `Button.setTextFormatForState()`
+		@see `Button.textFormat`
 		@see `Button.currentState`
+		@see `feathers.controls.ButtonState`
 
 		@since 1.0.0
 	**/
@@ -248,10 +346,10 @@ class Button extends BasicButton implements ITextControl {
 		If a text format is not defined for a specific state, the value of the
 		`textFormat` property will be used instead.
 
-		@see `feathers.controls.ButtonState`
-		@see `Button.textFormat`
 		@see `Button.getTextFormatForState()`
+		@see `Button.textFormat`
 		@see `Button.currentState`
+		@see `feathers.controls.ButtonState`
 
 		@since 1.0.0
 	**/
@@ -269,6 +367,16 @@ class Button extends BasicButton implements ITextControl {
 	}
 
 	/**
+		Gets the icon to be used by the button when its `currentState` property
+		matches the specified state value.
+
+		If an icon is not defined for a specific state, returns `null`.
+
+		@see `Button.setIconForState()`
+		@see `Button.icon`
+		@see `Button.currentState`
+		@see `feathers.controls.ButtonState`
+
 		@since 1.0.0
 	**/
 	public function getIconForState(state:ButtonState):DisplayObject {
@@ -276,6 +384,17 @@ class Button extends BasicButton implements ITextControl {
 	}
 
 	/**
+		Set the icon to be used by the button when its `currentState` property
+		matches the specified state value.
+
+		If an icon is not defined for a specific state, the value of the
+		`textFormat` property will be used instead.
+
+		@see `Button.getIconForState()`
+		@see `Button.icon`
+		@see `Button.currentState`
+		@see `feathers.controls.ButtonState`
+
 		@since 1.0.0
 	**/
 	@style

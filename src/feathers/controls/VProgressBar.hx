@@ -13,6 +13,13 @@ import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseProgressBar;
 
+/**
+
+	@see [Tutorial: How to use the HProgressBar and VProgressBar components](https://feathersui.com/learn/haxe-openfl/progress-bar/)
+	@see `feathers.controls.HProgressBar`
+
+	@since 1.0.0
+**/
 @:styleContext
 class VProgressBar extends BaseProgressBar {
 	/**

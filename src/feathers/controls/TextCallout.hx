@@ -18,6 +18,10 @@ import feathers.core.ITextControl;
 import openfl.display.DisplayObject;
 
 /**
+
+	@see [Tutorial: How to use the TextCallout component](https://feathersui.com/learn/haxe-openfl/text-callout/)
+	@see `feathers.controls.Callout`
+
 	@since 1.0.0
 **/
 @:styleContext

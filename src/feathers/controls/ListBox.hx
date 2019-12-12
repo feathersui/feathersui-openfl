@@ -30,6 +30,8 @@ import feathers.events.FeathersEvent;
 
 /**
 
+	@see [Tutorial: How to use the ListBox component](https://feathersui.com/learn/haxe-openfl/list-box/)
+
 	@since 1.0.0
 **/
 @:access(feathers.data.ListBoxItemState)

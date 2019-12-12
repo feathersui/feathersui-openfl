@@ -35,6 +35,8 @@ import feathers.utils.ScaleUtil;
 	- [`AssetType.IMAGE`](https://api.openfl.org/openfl/utils/AssetType.html#IMAGE)
 	- [`AssetType.MOVIE_CLIP`](https://api.openfl.org/openfl/utils/AssetType.html#MOVIE_CLIP)
 
+
+	@see [Tutorial: How to use the AssetLoader component](https://feathersui.com/learn/haxe-openfl/asset-loader/)
 	@see [`openfl.utils.Assets`](https://api.openfl.org/openfl/utils/Assets.html)
 
 	@since 1.0.0

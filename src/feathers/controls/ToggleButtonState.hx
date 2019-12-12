@@ -10,7 +10,11 @@ package feathers.controls;
 
 /**
 	States for toggle button components, including controls like `ToggleButton`,
-	`CheckBox`, `Radio`, and data renderers.
+	`Check`, `Radio`, and data renderers.
+
+	@see `feathers.controls.ToggleButton`
+	@see `feathers.controls.Check`
+	@see `feathers.controls.Radio`
 
 	@since 1.0.0
 **/

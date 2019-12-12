@@ -26,6 +26,8 @@ import feathers.data.TabBarItemState;
 
 /**
 
+	@see [Tutorial: How to use the TabBar component](https://feathersui.com/learn/haxe-openfl/tab-bar/)
+
 	@since 1.0.0
 **/
 @:access(feathers.data.TabBarItemState)

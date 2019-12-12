@@ -103,8 +103,10 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	public var keepDownStateOnRollOut:Null<Bool> = false;
 
 	/**
-		The default background skin for the button, which is used when no other
-		skin is defined for the current state with `setSkinForState()`.
+		The display object to use as the background skin for the button.
+
+		To render a different background skin, depending on the button's current
+		state, pass additional skins to `setSkinForState()`.
 
 		The following example gives the button a default skin to use for all
 		states when no specific skin is available:
@@ -131,10 +133,10 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 
 		If a skin is not defined for a specific state, returns `null`.
 
-		@see `feathers.controls.ButtonState`
-		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.setSkinForState()`
+		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.currentState`
+		@see `feathers.controls.ButtonState`
 
 		@since 1.0.0
 	**/
@@ -149,10 +151,10 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		If a skin is not defined for a specific state, the value of the
 		`backgroundSkin` property will be used instead.
 
-		@see `feathers.controls.ButtonState`
-		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.getSkinForState()`
+		@see `BasicButton.backgroundSkin`
 		@see `BasicButton.currentState`
+		@see `feathers.controls.ButtonState`
 
 		@since 1.0.0
 	**/

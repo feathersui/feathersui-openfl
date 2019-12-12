@@ -9,7 +9,7 @@
 package feathers.controls;
 
 /**
-	States for text input components.
+	States for `TextInput` components.
 
 	@see `feathers.controls.TextInput`
 

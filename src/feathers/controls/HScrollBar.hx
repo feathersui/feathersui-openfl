@@ -14,6 +14,10 @@ import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.themes.steel.components.SteelHScrollBarStyles;
 
 /**
+
+	@see [Tutorial: How to use the HScrollBar and VScrollBar components](https://feathersui.com/learn/haxe-openfl/scroll-bar/)
+	@see `feathers.controls.VScrollBar`
+
 	@since 1.0.0
 **/
 @:styleContext

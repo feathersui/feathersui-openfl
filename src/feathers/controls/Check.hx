@@ -11,6 +11,10 @@ package feathers.controls;
 import feathers.themes.steel.components.SteelCheckStyles;
 
 /**
+
+	@see [Tutorial: How to use the Check component](https://feathersui.com/learn/haxe-openfl/check/)
+	@see `feathers.controls.ToggleSwitch`
+
 	@since 1.0.0
 **/
 @:styleContext

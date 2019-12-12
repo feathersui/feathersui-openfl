@@ -9,7 +9,9 @@
 package feathers.controls;
 
 /**
-	States for button components.
+	States for `Button` components.
+
+	@see `feathers.controls.Button`
 
 	@since 1.0.0
 **/

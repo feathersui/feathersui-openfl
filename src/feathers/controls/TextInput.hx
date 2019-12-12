@@ -44,7 +44,6 @@ import openfl.text.TextFormat;
 	```
 
 	@see [Tutorial: How to use the TextInput component](https://feathersui.com/learn/haxe-openfl/text-input/)
-	@see `feathers.controls.AutoComplete`
 	@see `feathers.controls.TextArea`
 
 	@since 1.0.0

@@ -32,6 +32,33 @@ import openfl.display.DisplayObject;
 import feathers.core.FeathersControl;
 
 /**
+	A pop-up container that points at (or calls out) a specific region of the
+	application (typically a specific control that triggered it).
+
+	In general, a `Callout` isn't instantiated directly. Instead, you will
+	typically call the static function `Callout.show()` to create a `Callout`.
+	This is not strictly required, and the constructor may be used too, but
+	calling `Callout.show()` often results in less and no need to manually
+	manage calls to the `PopUpManager`.
+
+	In the following example, a callout displaying a `Label` is shown when a
+	`Button` is triggered:
+
+	```hx
+	button.addEventListener(Event.TRIGGERED, button_triggeredHandler);
+
+	function button_triggeredHandler(event:Event):Void
+	{
+		var label = new Label();
+		label.text = "Hello World!";
+		var button = cast(event.currentTarget, Button);
+		Callout.show(label, button);
+	}
+	```
+
+	@see [Tutorial: How to use the Callout component](https://feathersui.com/learn/haxe-openfl/callout/)
+	@see `feathers.controls.TextCallout`
+
 	@since 1.0.0
 **/
 @:styleContext
