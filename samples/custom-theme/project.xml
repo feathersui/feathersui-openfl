@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="Hello World" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
-	<meta title="Hello World — Feathers UI Examples" if="html5"/>
-	<app main="Main" path="build" file="HelloWorld" />
+	<meta title="Custom Theme" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
+	<meta title="Custom Theme — Feathers UI Samples" if="html5"/>
+	<app main="Main" path="build" file="CustomTheme" />
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>
@@ -15,5 +15,6 @@
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
 
+	<assets id="feathersui-logo" path="assets/img/feathersui-logo.png" embed="false"/>
 	<icon path="assets/icons/feathersui-icon.svg"/>
 </project>

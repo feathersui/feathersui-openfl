@@ -61,7 +61,7 @@ class AssetLoaderScreen extends Panel {
 
 		this.urlLoader = new AssetLoader();
 		// uses openfl.display.Loader to load an image from the web
-		this.urlLoader.source = "https://feathersui.com/examples/components-explorer/images/feathersui-icon.png";
+		this.urlLoader.source = "https://feathersui.com/samples/haxe-openfl/components-explorer/images/feathersui-icon.png";
 		this.addChild(this.urlLoader);
 	}
 

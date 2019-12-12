@@ -28,38 +28,38 @@ jobs:
     - name: Build API documentation
       working-directory: docs
       run: haxe docs.hxml
-    - name: Build examples/hello-world
-      working-directory: examples/hello-world
+    - name: Build samples/hello-world
+      working-directory: samples/hello-world
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-    - name: Build examples/calculator
-      working-directory: examples/calculator
+    - name: Build samples/calculator
+      working-directory: samples/calculator
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-    - name: Build examples/components-explorer
-      working-directory: examples/components-explorer
+    - name: Build samples/components-explorer
+      working-directory: samples/components-explorer
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-    - name: Build examples/custom-theme
-      working-directory: examples/custom-theme
+    - name: Build samples/custom-theme
+      working-directory: samples/custom-theme
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-    - name: Build examples/horizontal-layout-percentage-sizing
-      working-directory: examples/horizontal-layout-percentage-sizing
+    - name: Build samples/horizontal-layout-percentage-sizing
+      working-directory: samples/horizontal-layout-percentage-sizing
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-    - name: Build examples/list-box-data-provider-collection-sorting
-      working-directory: examples/list-box-data-provider-collection-sorting
+    - name: Build samples/list-box-data-provider-collection-sorting
+      working-directory: samples/list-box-data-provider-collection-sorting
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5

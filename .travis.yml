@@ -27,33 +27,33 @@ script:
 # build documentation
 - cd $TRAVIS_BUILD_DIR/docs
 - haxe docs.hxml
-# build hello-world example
-- cd $TRAVIS_BUILD_DIR/examples/hello-world
+# build hello-world sample
+- cd $TRAVIS_BUILD_DIR/samples/hello-world
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
-# build calculator example
-- cd $TRAVIS_BUILD_DIR/examples/calculator
+# build calculator sample
+- cd $TRAVIS_BUILD_DIR/samples/calculator
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
-# build components-explorer example
-- cd $TRAVIS_BUILD_DIR/examples/components-explorer
+# build components-explorer sample
+- cd $TRAVIS_BUILD_DIR/samples/components-explorer
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
-# build custom-theme example
-- cd $TRAVIS_BUILD_DIR/examples/custom-theme
+# build custom-theme sample
+- cd $TRAVIS_BUILD_DIR/samples/custom-theme
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
-# build horizontal-layout-percentage-sizing example
-- cd $TRAVIS_BUILD_DIR/examples/horizontal-layout-percentage-sizing
+# build horizontal-layout-percentage-sizing sample
+- cd $TRAVIS_BUILD_DIR/samples/horizontal-layout-percentage-sizing
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
-# build list-box-data-provider-collection-sorting example
-- cd $TRAVIS_BUILD_DIR/examples/list-box-data-provider-collection-sorting
+# build list-box-data-provider-collection-sorting sample
+- cd $TRAVIS_BUILD_DIR/samples/list-box-data-provider-collection-sorting
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
