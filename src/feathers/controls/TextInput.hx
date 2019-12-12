@@ -159,8 +159,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	@:style
 	public var textFormat:TextFormat = null;
 
-	@:style
-	public var disabledTextFormat:TextFormat = null;
+	private var _stateToTextFormat:Map<TextInputState, TextFormat> = new Map();
 
 	/**
 		The minimum space, in pixels, between the text input's top edge and the
@@ -267,6 +266,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this.scrollX;
 	}
 
+	private var _textMeasuredWidth:Float;
+	private var _textMeasuredHeight:Float;
+
 	/**
 		Gets the skin to be used by the text input when its `currentState`
 		property matches the specified state value.
@@ -314,8 +316,49 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.setInvalid(InvalidationFlag.STYLES);
 	}
 
-	private var _textMeasuredWidth:Float;
-	private var _textMeasuredHeight:Float;
+	/**
+		Gets the text format to be used by the text input when its `currentState`
+		property matches the specified state value.
+
+		If a text format is not defined for a specific state, returns `null`.
+
+		@see `feathers.controls.TextInputState`
+		@see `TextInput.textFormat`
+		@see `TextInput.setTextFormatForState()`
+		@see `TextInput.currentState`
+
+		@since 1.0.0
+	**/
+	public function getTextFormatForState(state:TextInputState):TextFormat {
+		return this._stateToTextFormat.get(state);
+	}
+
+	/**
+		Set the text format to be used by the text input when its `currentState`
+		property matches the specified state value.
+
+		If a text format is not defined for a specific state, the value of the
+		`textFormat` property will be used instead.
+
+		@see `feathers.controls.TextInputState`
+		@see `TextInput.textFormat`
+		@see `TextInput.getTextFormatForState()`
+		@see `TextInput.currentState`
+
+		@since 1.0.0
+	**/
+	@style
+	public function setTextFormatForState(state:TextInputState, textFormat:TextFormat):Void {
+		if (!this.setStyle("setTextFormatForState", state)) {
+			return;
+		}
+		if (textFormat == null) {
+			this._stateToTextFormat.remove(state);
+		} else {
+			this._stateToTextFormat.set(state, textFormat);
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+	}
 
 	private function initializeTextInputTheme():Void {
 		SteelTextInputStyles.initialize();
@@ -560,8 +603,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function getCurrentTextFormat():TextFormat {
-		if (!this.enabled && this.disabledTextFormat != null) {
-			return this.disabledTextFormat;
+		var result = this._stateToTextFormat.get(this.currentState);
+		if (result != null) {
+			return result;
 		}
 		return this.textFormat;
 	}

@@ -42,15 +42,15 @@ class SteelTextInputStyles {
 				inputSkin.width = 160.0;
 				inputSkin.fill = theme.getInsetFill();
 				inputSkin.border = theme.getInsetBorder();
-				inputSkin.setBorderForState(TextInputState.FOCUSED, theme.getThemeBorder());
+				inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
 				input.backgroundSkin = inputSkin;
 			}
 
 			if (input.textFormat == null) {
 				input.textFormat = theme.getTextFormat();
 			}
-			if (input.disabledTextFormat == null) {
-				input.disabledTextFormat = theme.getDisabledTextFormat();
+			if (input.getTextFormatForState(DISABLED) == null) {
+				input.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
 			}
 
 			input.paddingTop = 6.0;
