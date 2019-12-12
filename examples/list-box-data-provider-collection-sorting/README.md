@@ -4,16 +4,16 @@ This example app demonstrates how to dynamically sort the `ArrayCollection` used
 
 ## Live demo
 
-A build of the [*list-box-data-provider-collection-sorting/* example](https://feathersui.com/examples/list-box-data-provider-collection-sorting/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
+A build of the [_list-box-data-provider-collection-sorting_ sample](https://feathersui.com/samples/haxe-openfl/list-box-data-provider-collection-sorting/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
 
 ## Run locally
 
-This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
+This project includes an [_project.xml_](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
 
 ### Prerequisites
 
-* [Install Haxe 4.0.0 or newer](https://haxe.org/download/).
-* [Install Feathers UI from Haxelib](https://feathersui.com/learn/haxe-openfl/installation/)
+- [Install Haxe 4.0.0 or newer](https://haxe.org/download/).
+- [Install Feathers UI from Haxelib](https://feathersui.com/learn/haxe-openfl/installation/)
 
 ### Command Line
 

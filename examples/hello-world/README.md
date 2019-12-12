@@ -2,14 +2,18 @@
 
 This example app demonstrates how to create a button in an [OpenFL](https://openfl.org/) project using [Feathers UI](https://feathersui.com/).
 
+## Live demo
+
+A build of the [_hello-world_ sample](https://feathersui.com/samples/haxe-openfl/hello-world/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
+
 ## Run locally
 
-This project includes an [*project.xml*](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
+This project includes an [_project.xml_](https://lime.software/docs/project-files/xml-format/) file that configures all options for [OpenFL](https://openfl.org/). This file makes it easy to build from the command line, and many IDEs can parse this file to configure a Haxe project to use OpenFL.
 
 ### Prerequisites
 
-* [Install Haxe 4.0.0 or newer](https://haxe.org/download/).
-* [Install Feathers UI from Haxelib](https://feathersui.com/learn/haxe-openfl/installation/)
+- [Install Haxe 4.0.0 or newer](https://haxe.org/download/).
+- [Install Feathers UI from Haxelib](https://feathersui.com/learn/haxe-openfl/installation/)
 
 ### Command Line
 
