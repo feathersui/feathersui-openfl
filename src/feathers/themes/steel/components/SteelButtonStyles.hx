@@ -39,10 +39,10 @@ class SteelButtonStyles {
 			if (button.backgroundSkin == null) {
 				var skin = new RectangleSkin();
 				skin.fill = theme.getButtonFill();
-				skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
-				skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
+				skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
+				skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
 				skin.border = theme.getButtonBorder();
-				skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
+				skin.setBorderForState(DOWN, theme.getActiveFillBorder());
 				skin.cornerRadius = 6.0;
 				button.backgroundSkin = skin;
 			}
@@ -50,12 +50,11 @@ class SteelButtonStyles {
 			if (button.textFormat == null) {
 				button.textFormat = theme.getTextFormat();
 			}
-			if (button.disabledTextFormat == null) {
-				button.disabledTextFormat = theme.getDisabledTextFormat();
+			if (button.getTextFormatForState(DOWN) == null) {
+				button.setTextFormatForState(DOWN, theme.getActiveTextFormat());
 			}
-
-			if (button.getTextFormatForState(ButtonState.DOWN) == null) {
-				button.setTextFormatForState(ButtonState.DOWN, theme.getActiveTextFormat());
+			if (button.getTextFormatForState(DISABLED) == null) {
+				button.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
 			}
 
 			button.paddingTop = 4.0;

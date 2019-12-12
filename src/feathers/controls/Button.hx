@@ -79,9 +79,6 @@ class Button extends BasicButton implements ITextControl {
 	@:style
 	public var textFormat:TextFormat = null;
 
-	@:style
-	public var disabledTextFormat:TextFormat = null;
-
 	private var _stateToIcon:Map<ButtonState, DisplayObject> = new Map();
 	private var _iconMeasurements:Measurements = null;
 	private var _currentIcon:DisplayObject = null;
@@ -517,9 +514,6 @@ class Button extends BasicButton implements ITextControl {
 		var result = this._stateToTextFormat.get(this.currentState);
 		if (result != null) {
 			return result;
-		}
-		if (!this.enabled && this.disabledTextFormat != null) {
-			return this.disabledTextFormat;
 		}
 		return this.textFormat;
 	}
