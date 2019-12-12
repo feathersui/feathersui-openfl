@@ -108,8 +108,8 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		To render a different background skin, depending on the button's current
 		state, pass additional skins to `setSkinForState()`.
 
-		The following example gives the button a default skin to use for all
-		states when no specific skin is available:
+		The following example passes a bitmap for the button to use as a
+		background skin:
 
 		```hx
 		button.backgroundSkin = new Bitmap(bitmapData);

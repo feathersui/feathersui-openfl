@@ -94,8 +94,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		The default background skin for the text input, which is used when no
 		other skin is defined for the current state with `setSkinForState()`.
 
-		The following example gives the text input a default skin to use for all
-		states when no specific skin is available:
+		The following example passes a bitmap for the text input to use as a
+		background skin:
 
 		```hx
 		input.backgroundSkin = new Bitmap(bitmapData);

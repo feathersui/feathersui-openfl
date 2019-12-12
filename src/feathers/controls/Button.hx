@@ -153,8 +153,6 @@ class Button extends BasicButton implements ITextControl {
 		button.paddingTop = 20.0;
 		```
 
-		@default 0.0
-
 		@since 1.0.0
 	**/
 	@:style
@@ -170,8 +168,6 @@ class Button extends BasicButton implements ITextControl {
 		```hx
 		button.paddingRight = 20.0;
 		```
-
-		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -189,8 +185,6 @@ class Button extends BasicButton implements ITextControl {
 		button.paddingBottom = 20.0;
 		```
 
-		@default 0.0
-
 		@since 1.0.0
 	**/
 	@:style
@@ -206,8 +200,6 @@ class Button extends BasicButton implements ITextControl {
 		```hx
 		button.paddingLeft = 20.0;
 		```
-
-		@default 0.0
 
 		@since 1.0.0
 	**/
@@ -281,7 +273,7 @@ class Button extends BasicButton implements ITextControl {
 		will be positioned as far apart as possible. In other words, they will
 		be positioned at the edges of the button (adjusted for padding).
 
-		The following example creates a gap of 20.0 pixels between the icon and
+		The following example creates a gap of 20 pixels between the icon and
 		the text:
 
 		```hx

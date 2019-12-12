@@ -87,7 +87,8 @@ class LayoutGroup extends FeathersControl {
 		group. The background skin is resized to fill the complete width and
 		height of the group.
 
-		The following example gives the group a background skin:
+		The following example passes a bitmap for the layout group to use as a
+		background skin:
 
 		```hx
 		group.backgroundSkin = new Bitmap(bitmapData);

@@ -35,29 +35,22 @@ import feathers.core.FeathersControl;
 	A pop-up container that points at (or calls out) a specific region of the
 	application (typically a specific control that triggered it).
 
-	In general, a `Callout` isn't instantiated directly. Instead, you will
-	typically call the static function `Callout.show()` to create a `Callout`.
-	This is not strictly required, and the constructor may be used too, but
-	calling `Callout.show()` often results in less and no need to manually
-	manage calls to the `PopUpManager`.
-
 	In the following example, a callout displaying a `Label` is shown when a
 	`Button` is triggered:
 
 	```hx
-	button.addEventListener(Event.TRIGGERED, button_triggeredHandler);
-
-	function button_triggeredHandler(event:Event):Void
-	{
+	function button_triggeredHandler(event:Event):Void {
 		var label = new Label();
 		label.text = "Hello World!";
 		var button = cast(event.currentTarget, Button);
 		Callout.show(label, button);
 	}
+	button.addEventListener(Event.TRIGGERED, button_triggeredHandler);
 	```
 
 	@see [Tutorial: How to use the Callout component](https://feathersui.com/learn/haxe-openfl/callout/)
 	@see `feathers.controls.TextCallout`
+	@see `Callout.show()`
 
 	@since 1.0.0
 **/
@@ -65,6 +58,25 @@ import feathers.core.FeathersControl;
 class Callout extends FeathersControl {
 	private static final INVALIDATION_FLAG_ORIGIN:String = "origin";
 
+	/**
+		Creates a callout, and then positions and sizes it automatically based
+		based on an origin component and an optional set of positions.
+
+		In the following example, a callout displaying a `Label` is shown when
+		a `Button` is triggered:
+
+		```hx
+		function button_triggeredHandler(event:Event):Void {
+			var label = new Label();
+			label.text = "Hello World!";
+			var button = cast(event.currentTarget, Button);
+			Callout.show(label, button);
+		}
+		button.addEventListener(Event.TRIGGERED, button_triggeredHandler);
+		```
+
+		@since 1.0.0
+	**/
 	public static function show(content:DisplayObject, origin:DisplayObject, ?supportedPositions:RelativePositions, modal:Bool = true,
 			?customOverlayFactory:() -> DisplayObject):Callout {
 		var callout = new Callout();
@@ -233,7 +245,11 @@ class Callout extends FeathersControl {
 	/**
 		Creates a new `Callout` object.
 
-		@see `Callout.show`
+		In general, a `Callout` shouldn't be instantiated directly with the
+		constructor. Instead, use the static function `Callout.show()` to create
+		a `Callout`, as this often requires less pop-up management code.
+
+		@see `Callout.show()`
 
 		@since 1.0.0
 	**/
@@ -246,6 +262,24 @@ class Callout extends FeathersControl {
 
 	private var _contentMeasurements:Measurements;
 
+	/**
+		The display object that will be displayed by the callout.
+
+		This object may be resized to fit the callout's bounds. If the content
+		needs to be scrolled when placed into a smaller region than its ideal
+		size, it should be added to a `ScrollContainer`, and the
+		`ScrollContainer` should be passed in as the content.
+
+		In the following example, the callout's content is a bitmap:
+
+		```hx
+		callout.content = new Bitmap(bitmapData);
+		```
+
+		@see `Callout.show()`
+
+		@since 1.0.0
+	**/
 	public var content(default, set):DisplayObject;
 
 	private function set_content(value:DisplayObject):DisplayObject {
@@ -274,6 +308,15 @@ class Callout extends FeathersControl {
 		return this.content;
 	}
 
+	/**
+		A callout may be positioned relative to another display object, known as
+		the origin. Even if the position of the origin changes, the callout will
+		be re-positioned automatically to always point at the origin.
+
+		@see `Callout.show()`
+
+		@since 1.0.0
+	**/
 	public var origin(default, set):DisplayObject;
 
 	private function set_origin(value:DisplayObject):DisplayObject {
@@ -289,45 +332,213 @@ class Callout extends FeathersControl {
 		return this.origin;
 	}
 
+	/**
+		The minimum space, in pixels, between the callout and the stage's top edge.
+
+		In the following example, the callout's top margin is set to 20 pixels:
+
+		```hx
+		callout.marginTop = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var marginTop:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the callout and the stage's right edge.
+
+		In the following example, the callout's right margin is set to 20 pixels:
+
+		```hx
+		callout.marginRight = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var marginRight:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the callout and the stage's bottom edge.
+
+		In the following example, the callout's bottom margin is set to 20 pixels:
+
+		```hx
+		callout.marginBottom = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var marginBottom:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the callout and the stage's left edge.
+
+		In the following example, the callout's left margin is set to 20 pixels:
+
+		```hx
+		callout.marginLeft = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var marginLeft:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the callout's top edge and the
+		callout's content.
+
+		In the following example, the callout's top padding is set to 20 pixels:
+
+		```hx
+		callout.paddingTop = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingTop:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the callout's right edge and the
+		button's content.
+
+		In the following example, the callout's right padding is set to 20
+		pixels:
+
+		```hx
+		callout.paddingRight = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingRight:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the callout's bottom edge and the
+		callout's content.
+
+		In the following example, the callout's bottom padding is set to 20
+		pixels:
+
+		```hx
+		callout.paddingBottom = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingBottom:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the callout's left edge and the
+		callout's content.
+
+		In the following example, the callout's left padding is set to 20
+		pixels:
+
+		```hx
+		callout.paddingLeft = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingLeft:Float = 0.0;
 
+	/**
+		The horizontal alignment of the callout, relative to the origin, if the
+		callout is positioned on the top or bottom side of the origin.
+
+		The following example aligns the callout to the right:
+
+		```hx
+		callout.horizontalAlign = RIGHT;
+		```
+
+		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
+		component.
+
+		@see `feathers.layout.HorizontalAlign.LEFT`
+		@see `feathers.layout.HorizontalAlign.CENTER`
+		@see `feathers.layout.HorizontalAlign.RIGHT`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var horizontalAlign:HorizontalAlign = CENTER;
 
+	/**
+		The vertical alignment of the callout, relative to the origin, if the
+		callout is positioned on the left or right side of the origin.
+
+		The following example aligns the callout to the top:
+
+		```hx
+		callout.verticalAlign = TOP;
+		```
+
+		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
+		component.
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
+	/**
+		The edge of the callout where the arrow is positioned.
+
+		When calling `Callout.show()`, the `arrowPosition` property will be
+		managed automatically and should not be modified.
+
+		@since 1.0.0
+	**/
 	@:style
 	public var arrowPosition:RelativePosition = TOP;
 
 	private var _currentBackgroundSkin:DisplayObject;
 	private var _backgroundSkinMeasurements:Measurements;
 
+	/**
+		The primary background to display behind the callout's content.
+
+		In the following example, the callout's background is set to a bitmap:
+
+		```hx
+		callout.backgroundSkin = new Bitmap(bitmapData);
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
+	/**
+		The set of positions that the callout may appear at, relative to its
+		origin. Positioning of the callout is attempted in order, and if the
+		callout does not fit between the origin and the edge of the stage, the
+		next position is attempted. If the callout is too large for all
+		positions, the position with the most space will be used.
+
+		@see `Callout.show()`
+
+		@see `feathers.layout.RelativePosition.TOP`
+		@see `feathers.layout.RelativePosition.RIGHT`
+		@see `feathers.layout.RelativePosition.BOTTOM`
+		@see `feathers.layout.RelativePosition.LEFT`
+
+		@since 1.0.0
+	**/
 	public var supportedPositions:Array<RelativePosition>;
 
 	private var _lastPopUpOriginBounds:Rectangle;

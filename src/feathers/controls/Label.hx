@@ -201,7 +201,8 @@ class Label extends FeathersControl implements ITextControl {
 	/**
 		The default background skin to display behind the label's text.
 
-		The following example gives the label a background skin:
+		The following example passes a bitmap for the label to use as a
+		background skin:
 
 		```hx
 		label.backgroundSkin = new Bitmap(bitmapData);

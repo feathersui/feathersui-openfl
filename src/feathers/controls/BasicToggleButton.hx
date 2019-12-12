@@ -182,8 +182,8 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		The default background skin for the toggle button, which is used when no
 		other skin is defined for the current state with `setSkinForState()`.
 
-		The following example gives the toggle button a default skin to use for
-		all states when no specific skin is available:
+		The following example passes a bitmap for the button to use as a
+		background skin:
 
 		```hx
 		button.backgroundSkin = new Bitmap(bitmapData);
