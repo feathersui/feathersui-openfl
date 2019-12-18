@@ -33,20 +33,20 @@ import openfl.geom.Point;
 	adds two buttons to it:
 
 	```hx
-	var group:LayoutGroup = new LayoutGroup();
-	var layout:HorizontalLayout = new HorizontalLayout();
+	var group = new LayoutGroup();
+	var layout = new HorizontalLayout();
 	layout.gap = 20.0;
 	layout.padding = 20.0;
 	group.layout = layout;
-	this.addChild( group );
+	this.addChild(group);
 
-	var yesButton:Button = new Button();
+	var yesButton = new Button();
 	yesButton.label = "Yes";
-	group.addChild( yesButton );
+	group.addChild(yesButton);
 
-	var noButton:Button = new Button();
+	var noButton = new Button();
 	noButton.label = "No";
-	group.addChild( noButton );
+	group.addChild(noButton);
 	```
 
 	@see [Tutorial: How to use the LayoutGroup component](https://feathersui.com/learn/haxe-openfl/layout-group/)

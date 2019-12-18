@@ -31,10 +31,10 @@ import openfl.text.TextFormat;
 	selection changes:
 
 	```hx
-	var button:ToggleButton = new ToggleButton();
+	var button = new ToggleButton();
 	button.text = "Click Me";
-	button.addEventListener( Event.CHANGE, button_changeHandler );
-	this.addChild( button );
+	button.addEventListener(Event.CHANGE, button_changeHandler);
+	this.addChild(button);
 	```
 
 	@see [Tutorial: How to use the ToggleButton component](https://feathersui.com/learn/haxe-openfl/toggle-button/)

@@ -28,12 +28,11 @@ import openfl.display.DisplayObject;
 	view.
 
 	```hx
-	var item = StackItem.withClass(SettingsScreen,
-		[
-			SettingsScreen.SHOW_ADVANCED_SETTINGS => StackActions.Push("advancedSettings"),
-			Event.COMPLETE => StackActions.Pop()
-		]);
-	navigator.addItem( "settings", item );
+	var item = StackItem.withClass(SettingsScreen, [
+		SettingsScreen.SHOW_ADVANCED_SETTINGS => StackActions.Push("advancedSettings"),
+		Event.COMPLETE => StackActions.Pop()
+	]);
+	navigator.addItem("settings", item);
 	```
 
 	@see [Tutorial: How to use the StackNavigator component](https://feathersui.com/learn/haxe-openfl/stack-navigator/)
@@ -47,7 +46,7 @@ class StackItem {
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
 	public static function withClass(viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>):StackItem {
-		var item:StackItem = new StackItem();
+		var item = new StackItem();
 		item.viewClass = viewClass;
 		item.actions = actions;
 		return item;
@@ -58,7 +57,7 @@ class StackItem {
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
 	public static function withFunction(viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>):StackItem {
-		var item:StackItem = new StackItem();
+		var item = new StackItem();
 		item.viewFunction = viewFunction;
 		item.actions = actions;
 		return item;
@@ -69,7 +68,7 @@ class StackItem {
 		instance when the `StackNavigator` requests the item's view.
 	**/
 	public static function withDisplayObject(viewInstance:DisplayObject, ?actions:Map<String, StackAction>):StackItem {
-		var item:StackItem = new StackItem();
+		var item = new StackItem();
 		item.viewInstance = viewInstance;
 		item.actions = actions;
 		return item;

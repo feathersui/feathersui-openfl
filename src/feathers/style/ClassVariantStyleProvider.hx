@@ -29,22 +29,22 @@ import openfl.events.EventDispatcher;
 	a default style function and an alternate style function:
 
 	```hx
-	var styleProvider:ClassVariantStyleProvider = new ClassVariantStyleProvider();
-	styleProvider.setFunctionForStyleName(Button, null, function(target:Button):Void {
+	var styleProvider = new ClassVariantStyleProvider();
+	styleProvider.setFunctionForStyleName(Button, null, (target:Button) -> {
 		target.backgroundSkin = new Bitmap(bitmapData);
 		// set other styles...
 	});
-	styleProvider.setFunctionForStyleName(Button, "alternate-button", function(target:Button):Void {
+	styleProvider.setFunctionForStyleName(Button, "alternate-button", (target:Button) -> {
 		target.backgroundSkin = new Bitmap(alternateBitmapData);
 		// set other styles...
 	});
 
-	var button:Button = new Button();
+	var button = new Button();
 	button.label = "Click Me";
 	button.styleProvider = styleProvider;
 	this.addChild(button);
 
-	var alternateButton:Button = new Button()
+	var alternateButton = new Button()
 	button.label = "No, click me!";
 	alternateButton.styleProvider = styleProvider;
 	alternateButton.variant = "alternate-button";

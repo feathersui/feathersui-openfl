@@ -49,7 +49,7 @@ class SteelHScrollBarStyles {
 				thumbSkin.minHeight = size;
 				thumbSkin.cornerRadius = size;
 
-				var thumb:BasicButton = new BasicButton();
+				var thumb = new BasicButton();
 				thumb.keepDownStateOnRollOut = true;
 				thumb.backgroundSkin = thumbSkin;
 				scrollBar.thumbSkin = thumb;

@@ -24,7 +24,7 @@ import openfl.display.DisplayObject;
 **/
 class DefaultPopUpManager implements IPopUpManager {
 	private static function defaultOverlayFactory():DisplayObject {
-		var overlay:Sprite = new Sprite();
+		var overlay = new Sprite();
 		overlay.graphics.beginFill(0x808080, 0.75);
 		overlay.graphics.drawRect(0, 0, 1, 1);
 		overlay.graphics.endFill();

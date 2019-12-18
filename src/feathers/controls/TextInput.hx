@@ -36,11 +36,11 @@ import openfl.text.TextFormat;
 	and listens for when the text value changes:
 
 	```hx
-	var input:TextInput = new TextInput();
+	var input = new TextInput();
 	input.text = "Hello World";
-	input.selectRange( 0, input.text.length );
-	input.addEventListener( Event.CHANGE, input_changeHandler );
-	this.addChild( input );
+	input.selectRange(0, input.text.length);
+	input.addEventListener(Event.CHANGE, input_changeHandler);
+	this.addChild(input);
 	```
 
 	@see [Tutorial: How to use the TextInput component](https://feathersui.com/learn/haxe-openfl/text-input/)

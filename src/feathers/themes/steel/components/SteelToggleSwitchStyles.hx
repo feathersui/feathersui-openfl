@@ -49,7 +49,7 @@ class SteelToggleSwitchStyles {
 				trackSkin.selectedFill = theme.getReversedActiveThemeFill();
 				trackSkin.selectedBorder = theme.getActiveFillBorder();
 
-				var track:BasicToggleButton = new BasicToggleButton();
+				var track = new BasicToggleButton();
 				track.toggleable = false;
 				track.keepDownStateOnRollOut = true;
 				track.backgroundSkin = trackSkin;
@@ -65,7 +65,7 @@ class SteelToggleSwitchStyles {
 				thumbSkin.border = theme.getBorder();
 				thumbSkin.selectedBorder = theme.getActiveFillBorder();
 
-				var thumb:BasicToggleButton = new BasicToggleButton();
+				var thumb = new BasicToggleButton();
 				thumb.toggleable = false;
 				thumb.keepDownStateOnRollOut = true;
 				thumb.backgroundSkin = thumbSkin;

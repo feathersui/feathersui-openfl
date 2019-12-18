@@ -22,7 +22,7 @@ import openfl.geom.Point;
 	changes:
 
 	```hx
-	var slider:VSlider = new VSlider();
+	var slider = new VSlider();
 	slider.minimum = 0.0;
 	slider.maximum = 100.0;
 	slider.step = 1.0;

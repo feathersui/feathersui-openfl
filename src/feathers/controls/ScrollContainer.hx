@@ -31,20 +31,20 @@ import openfl.geom.Rectangle;
 	and adds two buttons to it:
 
 	```hx
-	var container:ScrollContainer = new ScrollContainer();
-	var layout:HorizontalLayout = new HorizontalLayout();
+	var container = new ScrollContainer();
+	var layout = new HorizontalLayout();
 	layout.gap = 20.0;
 	layout.padding = 20.0;
 	container.layout = layout;
-	this.addChild( container );
+	this.addChild(container);
 
-	var yesButton:Button = new Button();
+	var yesButton = new Button();
 	yesButton.label = "Yes";
-	container.addChild( yesButton );
+	container.addChild(yesButton);
 
-	var noButton:Button = new Button();
+	var noButton = new Button();
 	noButton.label = "No";
-	container.addChild( noButton );
+	container.addChild(noButton);
 	```
 
 	@see [Tutorial: How to use the ScrollContainer component](https://feathersui.com/learn/haxe-openfl/scroll-container/)

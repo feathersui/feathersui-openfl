@@ -53,7 +53,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		or not, and we listen for an event if it isn't initialized:
 
 		```hx
-		if( !control.isInitialized )
+		if(!control.initialized)
 		{
 			control.addEventListener(FeathersEvent.INITIALIZE, initializeHandler);
 		}
@@ -74,9 +74,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		and we listen for an event if it isn't:
 
 		```hx
-		if( !control.isCreated )
+		if(!control.created)
 		{
-			control.addEventListener( FeathersEventType.CREATION_COMPLETE, creationCompleteHandler );
+			control.addEventListener(FeathersEventType.CREATION_COMPLETE, creationCompleteHandler);
 		}
 		```
 

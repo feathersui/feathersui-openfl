@@ -46,7 +46,7 @@ class SteelHSliderStyles {
 				thumbSkin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 				thumbSkin.width = 24.0;
 				thumbSkin.height = 24.0;
-				var thumb:BasicButton = new BasicButton();
+				var thumb = new BasicButton();
 				thumb.keepDownStateOnRollOut = true;
 				thumb.backgroundSkin = thumbSkin;
 				slider.thumbSkin = thumb;

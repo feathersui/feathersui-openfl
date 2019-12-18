@@ -33,10 +33,10 @@ class ScreenDensityScaleCalculator {
 		Adds a new scale for the specified screen density.
 
 		```hx
-		calculator.addScaleForDensity( 160, 1 );
-		calculator.addScaleForDensity( 240, 1.5 );
-		calculator.addScaleForDensity( 320, 2 );
-		calculator.addScaleForDensity( 480, 3 );
+		calculator.addScaleForDensity(160, 1);
+		calculator.addScaleForDensity(240, 1.5);
+		calculator.addScaleForDensity(320, 2);
+		calculator.addScaleForDensity(480, 3);
 		```
 	**/
 	public function addScaleForDensity(density:Float, scale:Float):Void {
@@ -56,8 +56,8 @@ class ScreenDensityScaleCalculator {
 		Removes an application scale that was added with `addScaleForDensity()`.
 
 		```hx
-		selector.addScaleForDensity( 320, 2 );
-		selector.removeScaleForDensity( 320 );
+		selector.addScaleForDensity(320, 2);
+		selector.removeScaleForDensity(320);
 		```
 
 		@see `ScreenDensityScaleCalculator.addScaleForDensity()`

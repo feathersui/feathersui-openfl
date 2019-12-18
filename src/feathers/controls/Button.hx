@@ -31,10 +31,13 @@ import openfl.text.TextFormat;
 	for when the button is triggered:
 
 	```hx
-	var button:Button = new Button();
+	var button = new Button();
 	button.text = "Click Me";
-	button.addEventListener( Event.TRIGGERED, button_triggeredHandler );
-	this.addChild( button );
+	button.addEventListener(Event.TRIGGERED, (event) ->
+	{
+		trace("button triggered!");
+	});
+	this.addChild(button);
 	```
 
 	@see [Tutorial: How to use the Button component](https://feathersui.com/learn/haxe-openfl/button/)

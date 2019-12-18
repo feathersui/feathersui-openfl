@@ -28,9 +28,9 @@ import js.Lib;
 	it as the root of the history:
 
 	```hx
-	var navigator:StackNavigator = new StackNavigator();
-	navigator.addItem( "mainMenu", new StackItem( MainMenuScreen ) );
-	this.addChild( navigator );
+	var navigator = new StackNavigator();
+	navigator.addItem("mainMenu", new StackItem(MainMenuScreen));
+	this.addChild(navigator);
 
 	navigator.rootItemID = "mainMenu";
 	```

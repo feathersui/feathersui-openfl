@@ -30,9 +30,9 @@ import openfl.text.TextFormat;
 	The following example creates a label and gives it text:
 
 	```hx
-	var label:Label = new Label();
+	var label = new Label();
 	label.text = "Hello World";
-	this.addChild( label );
+	this.addChild(label);
 	```
 
 	@see [Tutorial: How to use the Label component](https://feathersui.com/learn/haxe-openfl/help/label/)

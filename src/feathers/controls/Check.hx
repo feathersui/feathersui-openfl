@@ -11,6 +11,19 @@ package feathers.controls;
 import feathers.themes.steel.components.SteelCheckStyles;
 
 /**
+	A toggle control that contains a label and a box that may be checked (or
+	unchecked) to indicate selection.
+
+	In the following example, a check is created and selected, and a listener
+	for `Event.CHANGE` is added:
+
+	```hx
+	var check = new Check();
+	check.label = "Pick Me!";
+	check.selected = true;
+	check.addEventListener(Event.CHANGE, check_changeHandler);
+	this.addChild(check);
+	```
 
 	@see [Tutorial: How to use the Check component](https://feathersui.com/learn/haxe-openfl/check/)
 	@see `feathers.controls.ToggleSwitch`

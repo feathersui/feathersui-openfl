@@ -22,13 +22,13 @@ import openfl.geom.Point;
 	changes:
 
 	```hx
-	var slider:HSlider = new HSlider();
+	var slider = new HSlider();
 	slider.minimum = 0.0;
 	slider.maximum = 100.0;
 	slider.step = 1.0;
 	slider.value = 12.0;
-	slider.addEventListener( Event.CHANGE, slider_changeHandler );
-	this.addChild( slider );
+	slider.addEventListener(Event.CHANGE, slider_changeHandler);
+	this.addChild(slider);
 	```
 
 	@see [Tutorial: How to use the HSlider and VSlider components](https://feathersui.com/learn/haxe-openfl/slider/)

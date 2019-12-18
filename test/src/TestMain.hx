@@ -27,7 +27,7 @@ class TestMain extends Sprite {
 		var httpClient = new HTTPClient(new SummaryReportClient());
 		#end
 
-		var runner:TestRunner = new TestRunner(client);
+		var runner = new TestRunner(client);
 		runner.addResultClient(httpClient);
 		// runner.addResultClient(new HTTPClient(new JUnitReportClient()));
 
