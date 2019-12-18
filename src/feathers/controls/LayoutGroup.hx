@@ -179,6 +179,17 @@ class LayoutGroup extends FeathersControl {
 		return this.autoSizeMode;
 	}
 
+	@:getter(numChildren)
+	#if !flash override #end private function get_numChildren():Int {
+		return this.items.length;
+	}
+
+	private var _numChildren(get, never):Int;
+
+	private function get__numChildren():Int {
+		return super.numChildren;
+	}
+
 	override public function addChildAt(child:DisplayObject, index:Int):DisplayObject {
 		var oldIndex = this.items.indexOf(child);
 		if (oldIndex == index) {
@@ -191,7 +202,8 @@ class LayoutGroup extends FeathersControl {
 		if (oldIndex >= 0) {
 			this.items.remove(child);
 		}
-		var result = super.addChildAt(child, index);
+		index = this.getPrivateIndexForPublicIndex(index);
+		var result = this._addChildAt(child, index);
 		this.items.insert(index, child);
 		this.setInvalid(InvalidationFlag.LAYOUT);
 		return result;
@@ -203,8 +215,8 @@ class LayoutGroup extends FeathersControl {
 	}
 	#end
 
-	private function _addChild(child:DisplayObject, index:Int):DisplayObject {
-		return super.addChildAt(child, this.numChildren);
+	private function _addChild(child:DisplayObject):DisplayObject {
+		return super.addChildAt(child, this._numChildren);
 	}
 
 	private function _addChildAt(child:DisplayObject, index:Int):DisplayObject {
@@ -221,6 +233,10 @@ class LayoutGroup extends FeathersControl {
 		}
 		this.items.remove(child);
 		this.setInvalid(InvalidationFlag.LAYOUT);
+		return this._removeChild(child);
+	}
+
+	private function _removeChild(child:DisplayObject):DisplayObject {
 		return super.removeChild(child);
 	}
 
@@ -231,23 +247,38 @@ class LayoutGroup extends FeathersControl {
 		return null;
 	}
 
-	private function _removeChild(child:DisplayObject):DisplayObject {
-		return super.removeChild(child);
-	}
-
 	private function _removeChildAt(index:Int):DisplayObject {
 		return super.removeChildAt(index);
 	}
 
+	override public function getChildIndex(child:DisplayObject):Int {
+		return this.items.indexOf(child);
+	}
+
+	private function _getChildIndex(child:DisplayObject):Int {
+		return super.getChildIndex(child);
+	}
+
 	override public function setChildIndex(child:DisplayObject, index:Int):Void {
-		super.setChildIndex(child, index);
+		this._setChildIndex(child, this.getPrivateIndexForPublicIndex(index));
 		this.items.remove(child);
 		this.items.insert(index, child);
 		this.setInvalid(InvalidationFlag.LAYOUT);
 	}
 
+	private function _setChildIndex(child:DisplayObject, index:Int):Void {
+		super.setChildIndex(child, index);
+	}
+
 	private function initializeLayoutGroupTheme():Void {
 		SteelLayoutGroupStyles.initialize();
+	}
+
+	private function getPrivateIndexForPublicIndex(publicIndex:Int):Int {
+		if (this.items.length > 0) {
+			return publicIndex + this._getChildIndex(this.items[0]);
+		}
+		return publicIndex;
 	}
 
 	override private function update():Void {
