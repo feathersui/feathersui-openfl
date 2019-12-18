@@ -26,16 +26,48 @@ import feathers.core.PopUpManager;
 import openfl.events.MouseEvent;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
+import feathers.core.IDataSelector;
 
 /**
+	Displays a button that may be triggered to display list box as a pop-up. The
+	list may be customized to display in different ways, such as a drop-down,
+	inside a `Callout`, or as a modal overlay.
 
+	The following example creates a pop-up list, gives it a data provider, tells
+	the item renderer how to interpret the data, and listens for when the
+	selection changes:
+
+	```hx
+	var list = new PopUpList();
+
+	list.dataProvider = new ArrayCollection(
+	[
+		{ text: "Milk" },
+		{ text: "Eggs" },
+		{ text: "Bread" },
+		{ text: "Steak" },
+	]);
+
+	list.itemToText = (item:Dynamic) ->
+	{
+		return item.text;
+	};
+
+	list.addEventListener(Event.CHANGE, (event:Event) ->
+	{
+		trace("PopUpList changed: " + list.selectedIndex + " " + list.selectedItem.text);
+	});
+
+	this.addChild(list);
+	```
 
 	@see [Tutorial: How to use the PopUpList component](https://feathersui.com/learn/haxe-openfl/pop-up-list/)
+	@see `feathers.controls.ComboBox`
 
 	@since 1.0.0
 **/
 @:styleContext
-class PopUpList extends FeathersControl {
+class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
 	private static final INVALIDATION_FLAG_LIST_BOX_FACTORY = "listBoxFactory";
 
@@ -84,7 +116,15 @@ class PopUpList extends FeathersControl {
 
 	private var _ignoreListBoxChange = false;
 
-	public var selectedIndex(default, set):Int = -1;
+	/**
+		@see `feathers.core.IDataSelector.selectedIndex`
+	**/
+	@:isVar
+	public var selectedIndex(get, set):Int = -1;
+
+	private function get_selectedIndex():Int {
+		return this.selectedIndex;
+	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (this.dataProvider == null) {
@@ -106,8 +146,15 @@ class PopUpList extends FeathersControl {
 		return this.selectedIndex;
 	}
 
+	/**
+		@see `feathers.core.IDataSelector.selectedItem`
+	**/
 	@:isVar
-	public var selectedItem(default, set):Dynamic = null;
+	public var selectedItem(get, set):Dynamic = null;
+
+	private function get_selectedItem():Int {
+		return this.selectedItem;
+	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
@@ -119,6 +166,14 @@ class PopUpList extends FeathersControl {
 	}
 
 	/**
+		Manages item renderers used by the pop-up list box.
+
+		In the following example, the pop-up list box uses a custom item
+		renderer:
+
+		```hx
+		list.itemRendererRecycler = new DisplayObjectRecycler(CustomItemRenderer);
+		```
 
 		@since 1.0.0
 	**/
@@ -134,6 +189,30 @@ class PopUpList extends FeathersControl {
 		return this.itemRendererRecycler;
 	}
 
+	/**
+		Converts an item to text to display within the pop-up `ListBox`, or
+		within the `Button`, if the item is selected. By default, the
+		`toString()` method is called to convert an item to text. This method
+		may be replaced to provide custom text.
+
+		For example, consider the following item:
+
+		```hx
+		{ text: "Example Item" }
+		```
+
+		If the `ListBox` should display the text "Example Item", a custom
+		implementation of `itemToText()` might look like this:
+
+		```hx
+		list.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@since 1.0.0
+	**/
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
 	}

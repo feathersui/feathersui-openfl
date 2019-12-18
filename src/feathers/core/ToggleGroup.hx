@@ -26,7 +26,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
-class ToggleGroup extends EventDispatcher {
+class ToggleGroup extends EventDispatcher implements IDataSelector<IToggle> {
 	/**
 		Creates a new `ToggleGroup` object.
 
@@ -64,7 +64,12 @@ class ToggleGroup extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var selectedIndex(default, set):Int = -1;
+	@:isVar
+	public var selectedIndex(get, set):Int = -1;
+
+	private function get_selectedIndex():Int {
+		return this.selectedIndex;
+	}
 
 	private function set_selectedIndex(value:Int):Int {
 		var itemCount = this._items.length;
@@ -160,7 +165,7 @@ class ToggleGroup extends EventDispatcher {
 		In the following example, an item is added to the toggle group:
 
 		```hx
-		group.addItem( radio );
+		group.addItem(radio);
 		```
 
 		@see `ToggleGroup.removeItem`
@@ -199,7 +204,7 @@ class ToggleGroup extends EventDispatcher {
 		In the following example, an item is removed from the toggle group:
 
 		```hx
-		group.removeItem( radio );
+		group.removeItem(radio);
 		```
 
 		@see `ToggleGroup.addItem`
@@ -270,7 +275,7 @@ class ToggleGroup extends EventDispatcher {
 		In the following example, we check if an item is in the toggle group:
 
 		```hx
-		if( group.hasItem( radio ) )
+		if(group.hasItem(radio))
 		{
 			// do something
 		}
@@ -289,7 +294,7 @@ class ToggleGroup extends EventDispatcher {
 		In the following example, an item's at a specific index is returned:
 
 		```hx
-		var item:IToggle = group.getItemAt( 2 );
+		var item:IToggle = group.getItemAt(2);
 		```
 
 		@see `ToggleGroup.numItems`
@@ -307,7 +312,7 @@ class ToggleGroup extends EventDispatcher {
 		In the following example, an item's index is calculated:
 
 		```hx
-		var index:int = group.getItemIndex( radio );
+		var index:Int = group.getItemIndex(radio);
 		```
 
 		@since 1.0.0
@@ -323,7 +328,7 @@ class ToggleGroup extends EventDispatcher {
 		In the following example, an item's index is changed:
 
 		```hx
-		group.setItemIndex( radio, 2 );
+		group.setItemIndex(radio, 2);
 		```
 
 		@since 1.0.0

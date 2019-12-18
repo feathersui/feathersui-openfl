@@ -18,26 +18,58 @@ import openfl.events.TouchEvent;
 import lime.ui.KeyCode;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
 import feathers.events.FeathersEvent;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.layout.Measurements;
-import feathers.core.PopUpManager;
-import openfl.events.MouseEvent;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
+import feathers.core.IDataSelector;
 import feathers.controls.popups.DropDownPopUpAdapter;
 
 /**
+	Displays a control consisting of a `TextInput` and `Button` that allows an
+	item from a collection to be selected. When the button is triggered, a list
+	box of items is displayed as a pop-up. The text input allows filtering, or
+	(optionally) choosing custom items.
 
+	The following example creates a `ComboBox`, gives it a data provider, tells
+	the item renderer how to interpret the data, and listens for when the
+	selection changes:
+
+	```hx
+	var comboBox = new ComboBox();
+
+	comboBox.dataProvider = new ArrayCollection(
+	[
+		{ text: "Milk" },
+		{ text: "Eggs" },
+		{ text: "Bread" },
+		{ text: "Steak" },
+	]);
+
+	comboBox.itemToText = (item:Dynamic) ->
+	{
+		return item.text;
+	};
+
+	comboBox.addEventListener(Event.CHANGE, (event:Event) ->
+	{
+		trace("ComboBox changed: " + comboBox.selectedIndex + " " + comboBox.selectedItem.text);
+	});
+
+	this.addChild(comboBox);
+	```
 
 	@see [Tutorial: How to use the ComboBox component](https://feathersui.com/learn/haxe-openfl/combo-box/)
+	@see `feathers.controls.PopUpList`
 
 	@since 1.0.0
 **/
 @:styleContext
-class ComboBox extends FeathersControl {
+class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
 	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = "textInputFactory";
 	private static final INVALIDATION_FLAG_LIST_BOX_FACTORY = "listBoxFactory";
@@ -65,6 +97,11 @@ class ComboBox extends FeathersControl {
 	private var buttonMeasurements = new Measurements();
 	private var textInputMeasurements = new Measurements();
 
+	/**
+
+
+		@since 1.0.0
+	**/
 	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
 
 	private function set_dataProvider(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
@@ -95,7 +132,15 @@ class ComboBox extends FeathersControl {
 	private var pendingSelectedIndex = -1;
 	private var pendingSelectedItem:Dynamic = null;
 
-	public var selectedIndex(default, set):Int = -1;
+	/**
+		@see `feathers.core.IDataSelector.selectedIndex`
+	**/
+	@:isVar
+	public var selectedIndex(get, set):Int = -1;
+
+	private function get_selectedIndex():Int {
+		return this.selectedIndex;
+	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (this.dataProvider == null) {
@@ -117,8 +162,15 @@ class ComboBox extends FeathersControl {
 		return this.selectedIndex;
 	}
 
+	/**
+		@see `feathers.core.IDataSelector.selectedItem`
+	**/
 	@:isVar
-	public var selectedItem(default, set):Dynamic = null;
+	public var selectedItem(get, set):Dynamic = null;
+
+	private function get_selectedItem():Int {
+		return this.selectedItem;
+	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
@@ -130,6 +182,14 @@ class ComboBox extends FeathersControl {
 	}
 
 	/**
+		Manages item renderers used by the list box.
+
+		In the following example, the pop-up list box uses a custom item
+		renderer:
+
+		```hx
+		comboBox.itemRendererRecycler = new DisplayObjectRecycler(CustomItemRenderer);
+		```
 
 		@since 1.0.0
 	**/
@@ -145,6 +205,30 @@ class ComboBox extends FeathersControl {
 		return this.itemRendererRecycler;
 	}
 
+	/**
+		Converts an item to text to display within the pop-up `ListBox`, or
+		within the `Button`, if the item is selected. By default, the
+		`toString()` method is called to convert an item to text. This method
+		may be replaced to provide custom text.
+
+		For example, consider the following item:
+
+		```hx
+		{ text: "Example Item" }
+		```
+
+		If the `ListBox` should display the text "Example Item", a custom
+		implementation of `itemToText()` might look like this:
+
+		```hx
+		comboBox.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@since 1.0.0
+	**/
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
 	}
@@ -152,9 +236,19 @@ class ComboBox extends FeathersControl {
 	private var _ignoreTextInputChange = false;
 	private var _ignoreListBoxChange = false;
 
+	/**
+
+
+		@since 1.0.0
+	**/
 	@:style
 	public var popUpAdapter:IPopUpAdapter = new DropDownPopUpAdapter();
 
+	/**
+
+
+		@since 1.0.0
+	**/
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {
@@ -163,6 +257,11 @@ class ComboBox extends FeathersControl {
 
 	private var _filterText:String = "";
 
+	/**
+
+
+		@since 1.0.0
+	**/
 	public function openList():Void {
 		if (this.open || this.stage == null) {
 			return;
@@ -179,6 +278,11 @@ class ComboBox extends FeathersControl {
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler, false, 0, true);
 	}
 
+	/**
+
+
+		@since 1.0.0
+	**/
 	public function closeList():Void {
 		if (!this.open) {
 			return;

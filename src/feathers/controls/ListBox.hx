@@ -27,6 +27,7 @@ import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.layout.ILayout;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
+import feathers.core.IDataSelector;
 
 /**
 
@@ -36,7 +37,7 @@ import feathers.events.FeathersEvent;
 **/
 @:access(feathers.data.ListBoxItemState)
 @:styleContext
-class ListBox extends BaseScrollContainer {
+class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
@@ -110,10 +111,14 @@ class ListBox extends BaseScrollContainer {
 	}
 
 	/**
-
-		@since 1.0.0
+		@see `feathers.core.IDataSelector.selectedIndex`
 	**/
-	public var selectedIndex(default, set):Int = -1;
+	@:isVar
+	public var selectedIndex(get, set):Int = -1;
+
+	private function get_selectedIndex():Int {
+		return this.selectedIndex;
+	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (!this.selectable || this.dataProvider == null) {
@@ -136,11 +141,14 @@ class ListBox extends BaseScrollContainer {
 	}
 
 	/**
-
-		@since 1.0.0
+		@see `feathers.core.IDataSelector.selectedItem`
 	**/
 	@:isVar
-	public var selectedItem(default, set):Dynamic = null;
+	public var selectedItem(get, set):Dynamic = null;
+
+	private function get_selectedItem():Int {
+		return this.selectedItem;
+	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (!this.selectable || this.dataProvider == null) {
@@ -159,6 +167,14 @@ class ListBox extends BaseScrollContainer {
 	public var layout:ILayout = null;
 
 	/**
+		Manages item renderers used by the list box.
+
+		In the following example, the list box uses a custom item renderer:
+
+		```hx
+		list.itemRendererRecycler = new DisplayObjectRecycler(CustomItemRenderer);
+		```
+
 		@since 1.0.0
 	**/
 	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
@@ -194,6 +210,30 @@ class ListBox extends BaseScrollContainer {
 
 	private var _ignoreSelectionChange = false;
 
+	/**
+		Converts an item to text to display within the pop-up `ListBox`, or
+		within the `Button`, if the item is selected. By default, the
+		`toString()` method is called to convert an item to text. This method
+		may be replaced to provide custom text.
+
+		For example, consider the following item:
+
+		```hx
+		{ text: "Example Item" }
+		```
+
+		If the `ListBox` should display the text "Example Item", a custom
+		implementation of `itemToText()` might look like this:
+
+		```hx
+		list.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@since 1.0.0
+	**/
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
 	}

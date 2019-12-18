@@ -23,6 +23,7 @@ import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 import feathers.data.TabBarItemState;
+import feathers.core.IDataSelector;
 
 /**
 
@@ -32,7 +33,7 @@ import feathers.data.TabBarItemState;
 **/
 @:access(feathers.data.TabBarItemState)
 @:styleContext
-class TabBar extends FeathersControl {
+class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_TAB_FACTORY = "tabFactory";
 
 	private static function defaultUpdateTab(tab:ToggleButton, state:TabBarItemState):Void {
@@ -91,10 +92,14 @@ class TabBar extends FeathersControl {
 	}
 
 	/**
-
-		@since 1.0.0
+		@see `feathers.core.IDataSelector.selectedIndex`
 	**/
-	public var selectedIndex(default, set):Int = -1;
+	@:isVar
+	public var selectedIndex(get, set):Int = -1;
+
+	private function get_selectedIndex():Int {
+		return this.selectedIndex;
+	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (this.dataProvider == null) {
@@ -117,11 +122,14 @@ class TabBar extends FeathersControl {
 	}
 
 	/**
-
-		@since 1.0.0
+		@see `feathers.core.IDataSelector.selectedItem`
 	**/
 	@:isVar
-	public var selectedItem(default, set):Dynamic = null;
+	public var selectedItem(get, set):Dynamic = null;
+
+	private function get_selectedItem():Int {
+		return this.selectedItem;
+	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
