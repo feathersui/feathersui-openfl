@@ -95,9 +95,9 @@ class Button extends BasicButton implements ITextControl {
 	}
 
 	/**
-		The font styles used to display the button's text.
+		The font styles used to render the button's text.
 
-		In the following example, the text format is customized:
+		In the following example, the button's text formatting is customized:
 
 		```hx
 		button.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);

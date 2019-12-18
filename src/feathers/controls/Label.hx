@@ -42,14 +42,34 @@ import openfl.text.TextFormat;
 @:styleContext
 class Label extends FeathersControl implements ITextControl {
 	/**
-		Larger text for headings.
+		A variant used to style the label using a Larger text format for
+		headings. Used to style the `Label` in a theme.
+
+		The following example uses this variant:
+
+		```hx
+		var label = new Label();
+		label.variant = Label.VARIANT_HEADING;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
 	public static final VARIANT_HEADING = "heading";
 
 	/**
-		Smaller text for details.
+		A variant used to style the label using a smaller text format for
+		details. Used to style the `Label` in a theme.
+
+		The following example uses this variant:
+
+		```hx
+		var label = new Label();
+		label.variant = Label.VARIANT_DETAIL;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -74,6 +94,21 @@ class Label extends FeathersControl implements ITextControl {
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 
+	/**
+		The text displayed by the label.
+
+		The following example sets the label's text:
+
+		```hx
+		label.text = "Good afternoon!";
+		```
+
+		@default ""
+
+		@see `Label.textFormat`
+
+		@since 1.0.0
+	**/
 	@:isVar
 	public var text(get, set):String = "";
 
@@ -98,9 +133,39 @@ class Label extends FeathersControl implements ITextControl {
 		return this.text;
 	}
 
+	/**
+		The font styles used to render the label's text.
+
+		In the following example, the label's text formatting is customized:
+
+		```hx
+		label.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		```
+
+		@see `Label.text`
+		@see `Label.disabledTextFormat`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var textFormat:TextFormat = null;
 
+	/**
+		The font styles used to render the label's text when the label is
+		disabled.
+
+		In the following example, the label's disabled text formatting is
+		customized:
+
+		```hx
+		label.enabled = false;
+		label.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		```
+
+		@see `Label.textFormat`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var disabledTextFormat:TextFormat = null;
 
@@ -277,30 +342,6 @@ class Label extends FeathersControl implements ITextControl {
 		}
 	}
 
-	/**
-		If the component's dimensions have not been set explicitly, it will
-		measure its content and determine an ideal size for itself. For
-		instance, if the `explicitWidth` property is set, that value will be
-		used without additional measurement. If `explicitWidth` is set, but
-		`explicitHeight` is not (or the other way around), the dimension with
-		the explicit value will not be measured, but the other non-explicit
-		dimension will still require measurement.
-
-		Calls `saveMeasurements()` to set up the `actualWidth` and
-		`actualHeight` member variables used for layout.
-
-		Meant for internal use, and subclasses may override this function with a
-		custom implementation.
-
-		@see `FeathersControl.saveMeasurements()`
-		@see `FeathersControl.explicitWidth`
-		@see `FeathersControl.explicitHeight`
-		@see `FeathersControl.actualWidth`
-		@see `FeathersControl.actualHeight`
-
-		@since 1.0.0
-	**/
-	@:dox(show)
 	private function autoSizeIfNeeded():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;

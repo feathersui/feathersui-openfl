@@ -19,6 +19,13 @@ interface IRange extends IUIControl {
 	/**
 		The current numeric value of the range.
 
+		The following example sets the range of acceptable values:
+
+		```hx
+		range.minimum = 0.0;
+		range.maximum = 100.0;
+		```
+
 		@since 1.0.0
 	**/
 	public var value(get, set):Float;
@@ -26,12 +33,28 @@ interface IRange extends IUIControl {
 	/**
 		The minimum numeric value of the range.
 
+		The following example sets the range of acceptable values:
+
+		```hx
+		range.minimum = 0.0;
+		range.maximum = 100.0;
+		```
+
 		@since 1.0.0
 	**/
 	public var minimum(get, set):Float;
 
 	/**
 		The maximum numeric value of the range.
+
+		The following example sets the range of acceptable values and updates
+		the current value:
+
+		```hx
+		range.minimum = 0.0;
+		range.maximum = 100.0;
+		range.value = 50.0;
+		```
 
 		@since 1.0.0
 	**/

@@ -19,6 +19,8 @@ import feathers.core.ToggleGroup;
 **/
 interface IGroupedToggle extends IToggle {
 	/**
+		The `ToggleGroup` that this toggle has been added to, or `null` if the
+		toggle has not been added to a group.
 
 		@since 1.0.0
 	**/
