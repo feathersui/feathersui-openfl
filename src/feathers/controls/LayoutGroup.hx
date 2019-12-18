@@ -72,6 +72,21 @@ class LayoutGroup extends FeathersControl {
 
 	private var items:Array<DisplayObject> = [];
 
+	/**
+		The layout algorithm used to position and size the group's items.
+
+		The following example tells the group to use a vertical layout:
+
+		```hx
+		var layout = new VerticalLayout();
+		layout.gap = 20.0;
+		layout.padding = 20.0;
+		layout.horizontalAlign = CENTER;
+		group.layout = layout;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var layout:ILayout = null;
 

@@ -25,7 +25,6 @@ import openfl.geom.Rectangle;
 
 /**
 	A generic container that supports layout, scrolling, and a background skin.
-	For a lighter weight container without scrolling, see `LayoutGroup`.
 
 	The following example creates a scroll container with a horizontal layout
 	and adds two buttons to it:
@@ -48,7 +47,7 @@ import openfl.geom.Rectangle;
 	```
 
 	@see [Tutorial: How to use the ScrollContainer component](https://feathersui.com/learn/haxe-openfl/scroll-container/)
-	@see `feathers.controls.LayoutGroup`
+	@see `feathers.controls.LayoutGroup` is a lighter weight layout container without scrolling
 
 	@since 1.0.0
 **/
@@ -86,6 +85,21 @@ class ScrollContainer extends BaseScrollContainer {
 
 	private var items:Array<DisplayObject> = [];
 
+	/**
+		The layout algorithm used to position and size the group's items.
+
+		The following example tells the group to use a vertical layout:
+
+		```hx
+		var layout = new VerticalLayout();
+		layout.gap = 20.0;
+		layout.padding = 20.0;
+		layout.horizontalAlign = CENTER;
+		container.layout = layout;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var layout:ILayout = null;
 

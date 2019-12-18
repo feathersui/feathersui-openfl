@@ -80,6 +80,29 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		The collection of data displayed by the list.
+
+		The following example passes in a data provider and tells the item
+		renderer how to interpret the data:
+
+		```hx
+		list.dataProvider = new ArrayCollection(
+		[
+			{ text: "Milk" },
+			{ text: "Eggs" },
+			{ text: "Bread" },
+			{ text: "Chicken" },
+		]);
+
+		list.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@default null
+
+		@see `feathers.data.ArrayCollection`
 
 		@since 1.0.0
 	**/
@@ -160,6 +183,20 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		The layout algorithm used to position and size the list box's items.
+
+		By default, if no layout is provided by the time that the list
+		initializes, a default layout that displays items vertically will be
+		created.
+
+		The following example tells the list to use a horizontal layout:
+
+		```hx
+		var layout = new HorizontalLayout();
+		layout.gap = 20.0;
+		layout.padding = 20.0;
+		list.layout = layout;
+		```
 
 		@since 1.0.0
 	**/
@@ -195,6 +232,23 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
 
+	/**
+		Determines if items in the list box may be selected. By default only a
+		single item may be selected at any given time. In other words, if item
+		_A_ is already selected, and the user selects item _B_, item _A_ will be
+		deselected automatically.
+
+		The following example disables selection of items in the list box:
+
+		```hx
+		list.selectable = false;
+		```
+
+		@default true
+
+		@see `ListBox.selectedItem`
+		@see `ListBox.selectedIndex`
+	**/
 	public var selectable(default, set):Bool = true;
 
 	private function set_selectable(value:Bool):Bool {

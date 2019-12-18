@@ -23,23 +23,25 @@ interface IDataSelector<T> {
 
 		```hx
 		control.selectedIndex = 2;
+		```
 
 		The following example clears the currently selected index:
 
 		```hx
 		control.selectedIndex = -1;
+		```
 
-		The following example listens for when selection changes and requests
-		the new selected index:
+		The following example listens for when the selection of a `ListBox`
+		component changes, and it requests the new selected index:
 
 		```hx
+		var listBox = new ListBox();
 		function changeHandler(event:Event):void
 		{
-			var control = IDataSelector(event.currentTarget);
-			trace("selection change: " + control.selectedIndex);
-
+			var listBox = cast(event.currentTarget, ListBox);
+			trace("selection change: " + listBox.selectedIndex);
 		}
-		control.addEventListener(Event.CHANGE, changeHandler);</listing>
+		listBox.addEventListener(Event.CHANGE, changeHandler);
 		```
 
 		@default -1
@@ -68,16 +70,18 @@ interface IDataSelector<T> {
 		control.selectedItem = null;
 		```
 
-		The following example listens for when selection changes and requests
-		the new selected item:
+		The following example listens for when the selection of a `ListBox`
+		component changes, and it requests the new selected index:
 
 		```hx
+		var listBox = new ListBox();
 		function changeHandler(event:Event):void
 		{
-			var list = IDataSelector(event.currentTarget);
-			trace("selection change: " + control.selectedItem);
+			var listBox = cast(event.currentTarget, ListBox);
+			var text = listBox.itemToText(listBox.selectedItem);
+			trace("selection change: " + text);
 		}
-		list.addEventListener(Event.CHANGE, changeHandler);
+		listBox.addEventListener(Event.CHANGE, changeHandler);
 		```
 
 		@default null

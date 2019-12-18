@@ -90,6 +90,33 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 
 	private var buttonMeasurements:Measurements = new Measurements();
 
+	/**
+		The collection of data displayed by the list.
+
+		The following example passes in a data provider and tells the item
+		renderer how to interpret the data:
+
+		```hx
+		list.dataProvider = new ArrayCollection(
+		[
+			{ text: "Milk" },
+			{ text: "Eggs" },
+			{ text: "Bread" },
+			{ text: "Chicken" },
+		]);
+
+		list.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@default null
+
+		@see `feathers.data.ArrayCollection`
+
+		@since 1.0.0
+	**/
 	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
 
 	private function set_dataProvider(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
@@ -217,15 +244,51 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		return Std.string(data);
 	}
 
+	/**
+		Manages how the pop-up list is displayed when it is opened and closed.
+
+		In the following example, a custom pop-up adapter is provided:
+
+		```hx
+		comboBox.popUpAdapter = new DropDownPopUpAdapter();
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var popUpAdapter:IPopUpAdapter = null;
 
+	/**
+		Indicates if the pop-up list is open or closed.
+
+		@see `PopUpList.openList()`
+		@see `PopUpList.closeList()`
+
+		@since 1.0.0
+	**/
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {
 		return this.listBox.parent != null;
 	}
 
+	/**
+		Opens the pop-up list, if it is not already open.
+
+		The following example opens the pop-up list:
+
+		```hx
+		if(!list.open)
+		{
+			list.openList();
+		}
+		```
+
+		@see `PopUpList.open`
+		@see `PopUpList.closeList()`
+
+		@since 1.0.0
+	**/
 	public function openList():Void {
 		if (this.open || this.stage == null) {
 			return;
@@ -240,6 +303,23 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpList_stage_touchBeginHandler, false, 0, true);
 	}
 
+	/**
+		Closes the pop-up list, if it is open.
+
+		The following example closes the pop-up list:
+
+		```hx
+		if(list.open)
+		{
+			list.closeList();
+		}
+		```
+
+		@see `PopUpList.open`
+		@see `PopUpList.openList()`
+
+		@since 1.0.0
+	**/
 	public function closeList():Void {
 		if (!this.open) {
 			return;

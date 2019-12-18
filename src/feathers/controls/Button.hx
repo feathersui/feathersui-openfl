@@ -257,7 +257,7 @@ class Button extends BasicButton implements ITextControl {
 		```hx
 		button.label = "Click Me";
 		button.icon = new Bitmap(texture);
-		button.iconPosition = RIGHT;</listing>
+		button.iconPosition = RIGHT;
 		```
 
 		@see `Button.icon`

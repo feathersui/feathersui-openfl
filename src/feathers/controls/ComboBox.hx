@@ -74,8 +74,25 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = "textInputFactory";
 	private static final INVALIDATION_FLAG_LIST_BOX_FACTORY = "listBoxFactory";
 
+	/**
+		The variant used to style the `Button` child component in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+	**/
 	public static final CHILD_VARIANT_BUTTON = "comboBoxButton";
+
+	/**
+		The variant used to style the `TextInput` child component in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+	**/
 	public static final CHILD_VARIANT_TEXT_INPUT = "comboBoxButton";
+
+	/**
+		The variant used to style the `ListBox` child component in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+	**/
 	public static final CHILD_VARIANT_LIST_BOX = "comboBoxListBox";
 
 	/**
@@ -98,7 +115,29 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	private var textInputMeasurements = new Measurements();
 
 	/**
+		The collection of data displayed by the list.
 
+		The following example passes in a data provider and tells the item
+		renderer how to interpret the data:
+
+		```hx
+		comboBox.dataProvider = new ArrayCollection(
+		[
+			{ text: "Milk" },
+			{ text: "Eggs" },
+			{ text: "Bread" },
+			{ text: "Chicken" },
+		]);
+
+		comboBox.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@default null
+
+		@see `feathers.data.ArrayCollection`
 
 		@since 1.0.0
 	**/
@@ -237,7 +276,13 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	private var _ignoreListBoxChange = false;
 
 	/**
+		Manages how the pop-up list is displayed when it is opened and closed.
 
+		In the following example, a custom pop-up adapter is provided:
+
+		```hx
+		comboBox.popUpAdapter = new DropDownPopUpAdapter();
+		```
 
 		@since 1.0.0
 	**/
@@ -245,7 +290,10 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	public var popUpAdapter:IPopUpAdapter = new DropDownPopUpAdapter();
 
 	/**
+		Indicates if the pop-up list is open or closed.
 
+		@see `ComboBox.openList()`
+		@see `ComboBox.closeList()`
 
 		@since 1.0.0
 	**/
@@ -258,7 +306,19 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	private var _filterText:String = "";
 
 	/**
+		Opens the pop-up list, if it is not already open.
 
+		The following example opens the pop-up list:
+
+		```hx
+		if(!comboBox.open)
+		{
+			comboBox.openList();
+		}
+		```
+
+		@see `ComboBox.open`
+		@see `ComboBox.closeList()`
 
 		@since 1.0.0
 	**/
@@ -279,7 +339,19 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		Closes the pop-up list, if it is open.
 
+		The following example closes the pop-up list:
+
+		```hx
+		if(comboBox.open)
+		{
+			comboBox.closeList();
+		}
+		```
+
+		@see `ComboBox.open`
+		@see `ComboBox.openList()`
 
 		@since 1.0.0
 	**/
