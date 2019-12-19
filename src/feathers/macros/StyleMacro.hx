@@ -9,9 +9,10 @@
 package feathers.macros;
 
 #if macro
-import haxe.macro.Expr.Function;
 import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
+import haxe.macro.Expr.Function;
+import haxe.macro.Expr.MetadataEntry;
 import haxe.macro.Context;
 
 /**
@@ -38,17 +39,17 @@ class StyleMacro {
 		var fields = Context.getBuildFields();
 		var extraFields:Array<Field> = [];
 		fields = fields.map((field) -> {
-			var hasStyleMeta = false;
+			var styleMeta:MetadataEntry = null;
 			var meta = field.meta;
 			if (meta != null) {
 				for (entry in meta) {
 					if (entry.name == ":style") {
-						hasStyleMeta = true;
+						styleMeta = entry;
 						break;
 					}
 				}
 			}
-			if (!hasStyleMeta) {
+			if (styleMeta == null) {
 				return field;
 			}
 			switch (field.kind) {
