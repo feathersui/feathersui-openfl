@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import haxe.io.Path;
 import openfl.display.StageScaleMode;
 import openfl.events.SecurityErrorEvent;
 import openfl.events.IOErrorEvent;
@@ -83,8 +82,9 @@ class AssetLoaderTest {
 			Assert.isFalse(complete);
 			Assert.isTrue(ioError);
 			Assert.isFalse(securityError);
-		}, 600);
-		Timer.delay(handler, 500);
+		}, 3200);
+		// chrome needs a really long delay, for some reason!
+		Timer.delay(handler, 3000);
 	}
 
 	@AsyncTest
