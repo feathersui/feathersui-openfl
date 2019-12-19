@@ -189,7 +189,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingRight:Null<Float> = 0.0;
+	public var paddingRight:Float = 0.0;
 
 	/**
 		The minimum space, measured in pixels, between the toggle switch's left
@@ -207,7 +207,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingLeft:Null<Float> = 0.0;
+	public var paddingLeft:Float = 0.0;
 
 	private var _toggleTween:SimpleActuator<Dynamic, Dynamic> = null;
 
@@ -225,7 +225,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		@since 1.0.0
 	**/
 	@:style
-	public var toggleDuration:Null<Float> = 0.15;
+	public var toggleDuration:Float = 0.15;
 
 	/**
 		The easing function used for the animation when the toggle switch is

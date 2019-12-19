@@ -221,7 +221,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingTop:Null<Float> = 0.0;
+	public var paddingTop:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the text input's right edge and
@@ -239,7 +239,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingRight:Null<Float> = 0.0;
+	public var paddingRight:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the text input's bottom edge and
@@ -257,7 +257,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingBottom:Null<Float> = 0.0;
+	public var paddingBottom:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the text input's left edge and the
@@ -275,7 +275,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingLeft:Null<Float> = 0.0;
+	public var paddingLeft:Float = 0.0;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the

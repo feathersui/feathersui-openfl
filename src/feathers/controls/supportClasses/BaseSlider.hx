@@ -293,7 +293,7 @@ class BaseSlider extends FeathersControl implements IRange {
 		@since 1.0.0
 	**/
 	@:style
-	public var minimumPadding:Null<Float> = 0.0;
+	public var minimumPadding:Float = 0.0;
 
 	/**
 		The space, measured in pixels, between the maximum position of the thumb
@@ -311,7 +311,7 @@ class BaseSlider extends FeathersControl implements IRange {
 		@since 1.0.0
 	**/
 	@:style
-	public var maximumPadding:Null<Float> = 0.0;
+	public var maximumPadding:Float = 0.0;
 
 	private var _dragging:Bool = false;
 	private var _pointerStartX:Float = 0.0;

@@ -100,7 +100,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		@since 1.0.0
 	**/
 	@:style
-	public var keepDownStateOnRollOut:Null<Bool> = false;
+	public var keepDownStateOnRollOut:Bool = false;
 
 	/**
 		The display object to use as the background skin for the button.

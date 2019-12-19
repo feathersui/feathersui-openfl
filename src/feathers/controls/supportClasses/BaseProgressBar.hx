@@ -238,7 +238,7 @@ class BaseProgressBar extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingTop:Null<Float> = 0.0;
+	public var paddingTop:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the progress bar's right edge and
@@ -258,7 +258,7 @@ class BaseProgressBar extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingRight:Null<Float> = 0.0;
+	public var paddingRight:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the progress bar's bottom edge and
@@ -278,7 +278,7 @@ class BaseProgressBar extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingBottom:Null<Float> = 0.0;
+	public var paddingBottom:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the progress bar's left edge and the
@@ -298,7 +298,7 @@ class BaseProgressBar extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingLeft:Null<Float> = 0.0;
+	public var paddingLeft:Float = 0.0;
 
 	private function autoSizeIfNeeded():Bool {
 		throw new TypeError("Missing override for 'autoSizeIfNeeded' in type " + Type.getClassName(Type.getClass(this)));

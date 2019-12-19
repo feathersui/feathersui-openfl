@@ -186,7 +186,7 @@ class Label extends FeathersControl implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingTop:Null<Float> = 0.0;
+	public var paddingTop:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's right edge and the
@@ -204,7 +204,7 @@ class Label extends FeathersControl implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingRight:Null<Float> = 0.0;
+	public var paddingRight:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's bottom edge and the
@@ -222,7 +222,7 @@ class Label extends FeathersControl implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingBottom:Null<Float> = 0.0;
+	public var paddingBottom:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's left edge and the
@@ -240,7 +240,7 @@ class Label extends FeathersControl implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingLeft:Null<Float> = 0.0;
+	public var paddingLeft:Float = 0.0;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the

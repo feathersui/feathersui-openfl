@@ -148,7 +148,7 @@ class BaseScrollContainer extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var fixedScrollBars:Null<Bool> = false;
+	public var fixedScrollBars:Bool = false;
 
 	/**
 		Determines if the scroll bars should be automatically hidden after
@@ -164,7 +164,7 @@ class BaseScrollContainer extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var autoHideScrollBars:Null<Bool> = true;
+	public var autoHideScrollBars:Bool = true;
 
 	private var showScrollBarX = false;
 	private var showScrollBarY = false;

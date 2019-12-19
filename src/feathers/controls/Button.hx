@@ -159,7 +159,7 @@ class Button extends BasicButton implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingTop:Null<Float> = 0.0;
+	public var paddingTop:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's right edge and the
@@ -175,7 +175,7 @@ class Button extends BasicButton implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingRight:Null<Float> = 0.0;
+	public var paddingRight:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's bottom edge and the
@@ -191,7 +191,7 @@ class Button extends BasicButton implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingBottom:Null<Float> = 0.0;
+	public var paddingBottom:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the button's left edge and the
@@ -207,7 +207,7 @@ class Button extends BasicButton implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var paddingLeft:Null<Float> = 0.0;
+	public var paddingLeft:Float = 0.0;
 
 	/**
 		How the content is positioned horizontally (along the x-axis) within the
@@ -290,7 +290,7 @@ class Button extends BasicButton implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var gap:Null<Float> = 0.0;
+	public var gap:Float = 0.0;
 
 	/**
 		If the value of the `gap` property is `Math.POSITIVE_INFINITY`, meaning
@@ -311,7 +311,7 @@ class Button extends BasicButton implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var minGap:Null<Float> = 0.0;
+	public var minGap:Float = 0.0;
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;

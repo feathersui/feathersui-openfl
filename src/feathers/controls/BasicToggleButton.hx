@@ -176,7 +176,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		@since 1.0.0
 	**/
 	@:style
-	public var keepDownStateOnRollOut:Null<Bool> = false;
+	public var keepDownStateOnRollOut:Bool = false;
 
 	/**
 		The default background skin for the toggle button, which is used when no
