@@ -100,7 +100,7 @@ class StackItem {
 		A custom transition function should have the following signature:
 
 		```hx
-		(DisplayObject, DisplayObject) -> IEffectContext</pre>
+		(DisplayObject, DisplayObject) -> IEffectContext
 		```
 
 		Either of the arguments typed as `DisplayObject` may be `null`, but
@@ -138,7 +138,7 @@ class StackItem {
 		A custom transition function should have the following signature:
 
 		```hx
-		(DisplayObject, DisplayObject) -> IEffectContext</pre>
+		(DisplayObject, DisplayObject) -> IEffectContext
 		```
 
 		Either of the arguments typed as `DisplayObject` may be `null`, but

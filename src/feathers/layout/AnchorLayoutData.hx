@@ -93,10 +93,10 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		The position, in pixels, of the object's top edge relative to the top
-		anchor, or, if there is no top anchor, then the position is relative to
-		to the top edge of the parent container. If this value is `null`, the
-		object's top edge will not be anchored.
+		The position, measured in pixels, of the object's top edge relative to
+		the top anchor, or, if there is no top anchor, then the position is
+		relative to to the top edge of the parent container. If this value is
+		`null`, the object's top edge will not be anchored.
 
 		In the following example, one of the container's children is anchored 10
 		pixels from the top edge of the container:
@@ -127,8 +127,8 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		The position, in pixels, of the object's right edge relative to the
-		right anchor, or, if there is no right anchor, then the position is
+		The position, measured in pixels, of the object's right edge relative to
+		the right anchor, or, if there is no right anchor, then the position is
 		relative to the right edge of the parent container. If this value is
 		`null`, the object's right edge will not be anchored.
 
@@ -161,10 +161,10 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		The position, in pixels, of the object's bottom edge relative to the
-		bottom anchor, or, if there is no bottom anchor, then the position is
-		relative to the bottom edge of the parent container. If this value is
-		`null`, the object's bottom edge will not be anchored.
+		The position, measured in pixels, of the object's bottom edge relative
+		to the bottom anchor, or, if there is no bottom anchor, then the
+		position is relative to the bottom edge of the parent container. If this
+		value is `null`, the object's bottom edge will not be anchored.
 
 		In the following example, one of the container's children is anchored 10
 		pixels from the bottom edge of the container:
@@ -195,10 +195,10 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		The position, in pixels, of the object's left edge relative to the left
-		anchor, or, if there is no left anchor, then the position is relative to
-		the left edge of the parent container. If this value is `null`, the
-		object's left edge will not be anchored.
+		The position, measured in pixels, of the object's left edge relative to
+		the left anchor, or, if there is no left anchor, then the position is
+		relative to the left edge of the parent container. If this value is
+		`null`, the object's left edge will not be anchored.
 
 		In the following example, one of the container's children is anchored 10
 		pixels from the left edge of the container:
@@ -229,10 +229,10 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		The position, in pixels, of the object's horizontal center relative to
-		the horizontal center anchor, or, if there is no horizontal center
-		anchor, then the position is relative to the horizontal center of the
-		parent container. If this value is `null`, the object's horizontal
+		The position, measured in pixels, of the object's horizontal center
+		relative to the horizontal center anchor, or, if there is no horizontal
+		center anchor, then the position is relative to the horizontal center of
+		the parent container. If this value is `null`, the object's horizontal
 		center will not be anchored.
 
 		In the following example, one of the container's children is centered
@@ -264,10 +264,10 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		The position, in pixels, of the object's vertical center relative to
-		the vertical center anchor, or, if there is no vertical center
-		anchor, then the position is relative to the vertical center of the
-		parent container. If this value is `null`, the object's vertical
+		The position, measured in pixels, of the object's vertical center
+		relative to the vertical center anchor, or, if there is no vertical
+		center anchor, then the position is relative to the vertical center of
+		the parent container. If this value is `null`, the object's vertical
 		center will not be anchored.
 
 		In the following example, one of the container's children is centered

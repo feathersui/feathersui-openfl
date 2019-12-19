@@ -19,7 +19,7 @@ import feathers.themes.steel.components.SteelCheckStyles;
 
 	```hx
 	var check = new Check();
-	check.label = "Pick Me!";
+	check.text = "Pick Me!";
 	check.selected = true;
 	check.addEventListener(Event.CHANGE, check_changeHandler);
 	this.addChild(check);

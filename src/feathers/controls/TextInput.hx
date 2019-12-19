@@ -44,7 +44,6 @@ import openfl.text.TextFormat;
 	```
 
 	@see [Tutorial: How to use the TextInput component](https://feathersui.com/learn/haxe-openfl/text-input/)
-	@see `feathers.controls.TextArea`
 
 	@since 1.0.0
 **/
@@ -119,6 +118,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextFormat = false;
 
+	/**
+		The text displayed by the text input.
+
+		The following example sets the text input's text:
+
+		```hx
+		input.text = "Good afternoon!";
+		```
+
+		@default ""
+
+		@see `input.textFormat`
+
+		@since 1.0.0
+	**/
 	@:isVar
 	public var text(get, set):String = "";
 
@@ -144,6 +158,22 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this.text;
 	}
 
+	/**
+		Limits the set of characters that may be typed into the `TextInput`.
+
+		In the following example, the text input's allowed characters are
+		restricted:
+
+		```hx
+		input.restrict = "0-9";
+		```
+
+		@default null
+
+		@see [`TextField.restrict`](https://api.openfl.org/openfl/text/TextField.html#restrict)
+
+		@since 1.0.0
+	**/
 	public var restrict(default, set):String;
 
 	private function set_restrict(value:String):String {
@@ -155,6 +185,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this.restrict;
 	}
 
+	/**
+		The font styles used to render the text input's text.
+
+		In the following example, the text input's formatting is customized:
+
+		```hx
+		input.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		```
+
+		@see `TextInput.text`
+		@see `TextInput.getTextFormatForState()`
+		@see `TextInput.setTextFormatForState()`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var textFormat:TextFormat = null;
 
@@ -251,6 +296,15 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
 	/**
+		The horizontal scroll position (on the x-axis) of the text, measured in
+		pixels.
+
+		The following example changes the text input's scroll position:
+
+		```hx
+		input.scrollX = 20.0;
+		```
+
 		@since 1.0.0
 	**/
 	public var scrollX(default, set):Float = 0.0;
@@ -274,9 +328,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		If a skin is not defined for a specific state, returns `null`.
 
-		@see `TextInput.backgroundSkin`
 		@see `TextInput.setSkinForState()`
+		@see `TextInput.backgroundSkin`
 		@see `TextInput.currentState`
+		@see `feathers.controls.TextInputState`
 
 		@since 1.0.0
 	**/
@@ -291,9 +346,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		If a skin is not defined for a specific state, the value of the
 		`backgroundSkin` property will be used instead.
 
-		@see `TextInput.backgroundSkin`
 		@see `TextInput.getSkinForState()`
+		@see `TextInput.backgroundSkin`
 		@see `TextInput.currentState`
+		@see `feathers.controls.TextInputState`
 
 		@since 1.0.0
 	**/
@@ -321,10 +377,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		If a text format is not defined for a specific state, returns `null`.
 
-		@see `feathers.controls.TextInputState`
-		@see `TextInput.textFormat`
 		@see `TextInput.setTextFormatForState()`
+		@see `TextInput.textFormat`
 		@see `TextInput.currentState`
+		@see `feathers.controls.TextInputState`
 
 		@since 1.0.0
 	**/
@@ -339,10 +395,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		If a text format is not defined for a specific state, the value of the
 		`textFormat` property will be used instead.
 
-		@see `feathers.controls.TextInputState`
-		@see `TextInput.textFormat`
 		@see `TextInput.getTextFormatForState()`
+		@see `TextInput.textFormat`
 		@see `TextInput.currentState`
+		@see `feathers.controls.TextInputState`
 
 		@since 1.0.0
 	**/

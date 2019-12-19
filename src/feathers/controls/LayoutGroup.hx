@@ -41,11 +41,11 @@ import openfl.geom.Point;
 	this.addChild(group);
 
 	var yesButton = new Button();
-	yesButton.label = "Yes";
+	yesButton.text = "Yes";
 	group.addChild(yesButton);
 
 	var noButton = new Button();
-	noButton.label = "No";
+	noButton.text = "No";
 	group.addChild(noButton);
 	```
 

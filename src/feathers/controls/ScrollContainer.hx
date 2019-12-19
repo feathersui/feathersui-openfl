@@ -38,11 +38,11 @@ import openfl.geom.Rectangle;
 	this.addChild(container);
 
 	var yesButton = new Button();
-	yesButton.label = "Yes";
+	yesButton.text = "Yes";
 	container.addChild(yesButton);
 
 	var noButton = new Button();
-	noButton.label = "No";
+	noButton.text = "No";
 	container.addChild(noButton);
 	```
 

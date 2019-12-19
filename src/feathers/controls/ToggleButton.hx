@@ -27,13 +27,18 @@ import openfl.text.TextFormat;
 /**
 	A button that may be selected and deselected when clicked.
 
-	The following example creates a toggle button, and listens for when its
-	selection changes:
+	The following example creates a toggle button, programmatically selects it,
+	and listens for when the selection changes:
 
 	```hx
 	var button = new ToggleButton();
 	button.text = "Click Me";
-	button.addEventListener(Event.CHANGE, button_changeHandler);
+	button.selected = true;
+	button.addEventListener(Event.CHANGE, (event) ->
+	{
+		var button = cast(event.currentTarget, ToggleButton);
+		trace("toggle button changed: " + button.selected);
+	});
 	this.addChild(button);
 	```
 
@@ -60,6 +65,21 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextFormat = false;
 
+	/**
+		The text displayed by the button.
+
+		The following example sets the button's text:
+
+		```hx
+		button.text = "Click Me";
+		```
+
+		@default null
+
+		@see `ToggleButton.textFormat`
+
+		@since 1.0.0
+	**/
 	@:isVar
 	public var text(get, set):String;
 
@@ -82,6 +102,30 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 	private var _ignoreIconResizes:Bool = false;
 
 	/**
+		The display object to use as the button's icon.
+
+		To render a different icon depending on the button's current state,
+		pass additional icons to `setIconForState()`.
+
+		The following example gives the button an icon:
+
+		```hx
+		button.icon = new Bitmap(bitmapData);
+		```
+
+		To change the position of the icon relative to the button's text, see
+		`iconPosition` and `gap`.
+
+		```hx
+		button.icon = new Bitmap(bitmapData);
+		button.iconPosition = RIGHT;
+		button.gap = 20.0;
+		```
+
+		@see `ToggleButton.getIconForState()`
+		@see `ToggleButton.setIconForState()`
+		@see `ToggleButton.iconPosition`
+		@see `ToggleButton.gap`
 
 		@since 1.0.0
 	**/
@@ -89,34 +133,208 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 	public var icon:DisplayObject = null;
 
 	/**
+		The icon to display when the button is disabled, and no higher
+		priority icon was passed to `setIconForState()` for the button's current
+		state.
+
+		In the following example, the button's disabled icon is changed:
+
+		```hx
+		button.enabled = false;
+		button.disabledIcon = new Bitmap(bitmapData);
+		```
+
+		The next example sets a disabled icon, but also provides an icon for
+		the `ToggleButtonState.DISABLED(true)` state that will be used instead
+		of the disabled icon:
+
+		```hx
+		button.disabledIcon = new Bitmap(bitmapData);
+		button.setIconForState(ToggleButtonState.DISABLED(true), new Bitmap(bitmapData2));
+		```
+
+		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
+		both the `disabledIcon` and `selectedIcon` are set, the `disabledIcon`
+		takes precedence over the `selectedIcon`.
+
+		@see `ToggleButton.icon`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var disabledIcon:DisplayObject = null;
+
+	/**
+		The icon to display when the button is selected, and no higher
+		priority icon was passed to `setIconForState()` for the button's current
+		state.
+
+		In the following example, the button's selected icon is changed:
+
+		```hx
+		button.selected = true;
+		button.selectedIcon = new Bitmap(bitmapData);
+		```
+
+		The next example sets a selected icon, but also provides an icon for
+		the `ToggleButtonState.DOWN(true)` state that will be used instead of
+		the selected icon:
+
+		```hx
+		button.selectedIcon = new Bitmap(bitmapData);
+		button.setIconForState(ToggleButtonState.DOWN(true), new Bitmap(bitmapData2));
+		```
+
+		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
+		both the `disabledIcon` and `selectedIcon` are set, the `disabledIcon`
+		takes precedence over the `selectedIcon`.
+
+		@see `ToggleButton.icon`
 
 		@since 1.0.0
 	**/
 	@:style
 	public var selectedIcon:DisplayObject = null;
 
+	/**
+		The font styles used to render the button's text.
+
+		In the following example, the button's text formatting is customized:
+
+		```hx
+		button.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		```
+
+		@see `ToggleButton.text`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var textFormat:TextFormat = null;
 
+	/**
+		The font styles used to render the button's text when the button is
+		disabled.
+
+		In the following example, the button's disabled text formatting is
+		customized:
+
+		```hx
+		button.enabled = false;
+		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		```
+
+		The next example sets a disabled text format, but also provides a text
+		format for the `ToggleButtonState.DISABLED(true)` state that will be
+		used instead of the disabled text format:
+
+		```hx
+		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		button.setTextFormatForState(ToggleButtonState.DISABLED(true), new TextFormat("Helvetica", 20, 0xff0000));
+		```
+
+		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
+		both the `disabledTextFormat` and `selectedTextFormat` are set, the
+		`disabledTextFormat` takes precedence over the `selectedTextFormat`.
+
+		@see `ToggleButton.textFormat`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var disabledTextFormat:TextFormat = null;
 
+	/**
+		The font styles used to render the button's text when the button is
+		selected.
+
+		In the following example, the button's selected text formatting is
+		customized:
+
+		```hx
+		button.selected = true;
+		button.selectedTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
+		```
+
+		The next example sets a selected text format, but also provides a text
+		format for the `ToggleButtonState.DOWN(true)` state that will be used
+		instead of the selected text format:
+
+		```hx
+		button.selectedTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
+		button.setTextFormatForState(ToggleButtonState.DOWN(true), new TextFormat("Helvetica", 20, 0xcc0000));
+		```
+
+		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
+		both the `disabledTextFormat` and `selectedTextFormat` are set, the
+		`disabledTextFormat` takes precedence over the `selectedTextFormat`.
+
+		@see `ToggleButton.textFormat`
+
+		@since 1.0.0
+	**/
 	@:style
 	public var selectedTextFormat:TextFormat = null;
 
 	/**
+		The location of the button's icon, relative to its text.
+
+		The following example positions the icon to the right of the text:
+
+		```hx
+		button.text = "Click Me";
+		button.icon = new Bitmap(texture);
+		button.iconPosition = RIGHT;
+		```
+
+		@see `ToggleButton.icon`
+
 		@since 1.0.0
 	**/
 	@:style
 	public var iconPosition:RelativePosition = LEFT;
 
 	/**
+		The space, measured in pixels, between the button's icon and its text.
+		Applies to either horizontal or vertical spacing, depending on the value
+		of `iconPosition`.
+
+		If the `gap` is set to `Math.POSITIVE_INFINITY`, the icon and the text
+		will be positioned as far apart as possible. In other words, they will
+		be positioned at the edges of the button (adjusted for padding).
+
+		The following example creates a gap of 20 pixels between the icon and
+		the text:
+
+		```hx
+		button.text = "Click Me";
+		button.icon = new Bitmap(bitmapData);
+		button.gap = 20.0;
+		```
+
+		@see `ToggleButton.minGap`
+
 		@since 1.0.0
 	**/
 	@:style
 	public var gap:Null<Float> = 0.0;
 
 	/**
+		If the value of the `gap` property is `Math.POSITIVE_INFINITY`, meaning
+		that the gap will fill as much space as possible and position the icon
+		and text on the edges of the button, the final calculated value of the
+		gap will not be smaller than the value of the `minGap` property.
+
+		The following example ensures that the gap is never smaller than 20
+		pixels:
+
+		```hx
+		button.gap = Math.POSITIVE_INFINITY;
+		button.minGap = 20.0;
+		```
+
+		@see `ToggleButton.gap`
+
 		@since 1.0.0
 	**/
 	@:style
@@ -243,9 +461,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 
 		If a text format is not defined for a specific state, returns `null`.
 
-		@see `Button.textFormat`
-		@see `Button.setTextFormatForState()`
-		@see `Button.currentState`
+		@see `ToggleButton.setTextFormatForState()`
+		@see `ToggleButton.textFormat`
+		@see `ToggleButton.currentState`
+		@see `feathers.controls.ToggleButtonState`
 
 		@since 1.0.0
 	**/
@@ -260,9 +479,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		If a text format is not defined for a specific state, the value of the
 		`textFormat` property will be used instead.
 
-		@see `Button.textFormat`
-		@see `Button.getTextFormatForState()`
-		@see `Button.currentState`
+		@see `ToggleButton.getTextFormatForState()`
+		@see `ToggleButton.textFormat`
+		@see `ToggleButton.currentState`
+		@see `feathers.controls.ToggleButtonState`
 
 		@since 1.0.0
 	**/
@@ -280,6 +500,16 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 	}
 
 	/**
+		Gets the icon to be used by the button when its `currentState` property
+		matches the specified state value.
+
+		If an icon is not defined for a specific state, returns `null`.
+
+		@see `ToggleButton.setIconForState()`
+		@see `ToggleButton.icon`
+		@see `ToggleButton.currentState`
+		@see `feathers.controls.ToggleButtonState`
+
 		@since 1.0.0
 	**/
 	public function getIconForState(state:ToggleButtonState):DisplayObject {
@@ -287,6 +517,17 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 	}
 
 	/**
+		Set the icon to be used by the button when its `currentState` property
+		matches the specified state value.
+
+		If an icon is not defined for a specific state, the value of the
+		`textFormat` property will be used instead.
+
+		@see `ToggleButton.getIconForState()`
+		@see `ToggleButton.icon`
+		@see `ToggleButton.currentState`
+		@see `feathers.controls.ToggleButtonState`
+
 		@since 1.0.0
 	**/
 	@style
@@ -730,6 +971,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		var result = this._stateToIcon.get(this.currentState);
 		if (result != null) {
 			return result;
+		}
+		if (!this.enabled && this.disabledIcon != null) {
+			return this.disabledIcon;
 		}
 		if (this.selected && this.selectedIcon != null) {
 			return this.selectedIcon;

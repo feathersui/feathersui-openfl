@@ -33,7 +33,7 @@ import openfl.text.TextFormat;
 	```hx
 	var button = new Button();
 	button.text = "Click Me";
-	button.addEventListener(Event.TRIGGERED, (event) ->
+	button.addEventListener(FeathersEvent.TRIGGERED, (event) ->
 	{
 		trace("button triggered!");
 	});
@@ -255,7 +255,7 @@ class Button extends BasicButton implements ITextControl {
 		The following example positions the icon to the right of the text:
 
 		```hx
-		button.label = "Click Me";
+		button.text = "Click Me";
 		button.icon = new Bitmap(texture);
 		button.iconPosition = RIGHT;
 		```

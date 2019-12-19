@@ -230,10 +230,10 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		If a skin is not defined for a specific state, returns `null`.
 
-		@see `feathers.controls.ToggleButtonState`
-		@see `BasicToggleButton.backgroundSkin`
 		@see `BasicToggleButton.setSkinForState()`
+		@see `BasicToggleButton.backgroundSkin`
 		@see `BasicToggleButton.currentState`
+		@see `feathers.controls.ToggleButtonState`
 
 		@since 1.0.0
 	**/
@@ -248,10 +248,10 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		If a skin is not defined for a specific state, the value of the
 		`backgroundSkin` property will be used instead.
 
-		@see `feathers.controls.ToggleButtonState`
-		@see `BasicToggleButton.backgroundSkin`
 		@see `BasicToggleButton.getSkinForState()`
+		@see `BasicToggleButton.backgroundSkin`
 		@see `BasicToggleButton.currentState`
+		@see `feathers.controls.ToggleButtonState`
 
 		@since 1.0.0
 	**/

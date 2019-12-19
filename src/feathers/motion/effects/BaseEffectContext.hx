@@ -39,7 +39,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 	public var target(default, null):Dynamic;
 
 	/**
-		The total running time of the effect, in seconds.
+		The total running time of the effect, measured in seconds.
 
 		@since 1.0.0
 	**/

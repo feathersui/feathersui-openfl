@@ -391,11 +391,11 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	/**
 		The skin to use for the scroll bar's optional secondary track. If a
 		scroll bar has one track, it will fill the entire length of the scroll
-		bar. If a scroll bar has a track and a secondary track, the track will
-		stretch between the minimum edge of the scroll bar and the location of
-		the scroll bar's thumb, while the secondary track will stretch from the
-		location of the scroll bar's thumb to the maximum edge of the scroll
-		bar.
+		bar. If a scroll bar has a track and a secondary track, the primary
+		track will stretch between the minimum edge of the scroll bar and the
+		location of the scroll bar's thumb, while the secondary track will
+		stretch from the location of the scroll bar's thumb to the maximum edge
+		of the scroll bar.
 
 		In the following example, a track skin and a secondary track skin are
 		passed to the scroll bar:

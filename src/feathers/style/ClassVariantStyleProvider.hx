@@ -40,12 +40,12 @@ import openfl.events.EventDispatcher;
 	});
 
 	var button = new Button();
-	button.label = "Click Me";
+	button.text = "Click Me";
 	button.styleProvider = styleProvider;
 	this.addChild(button);
 
 	var alternateButton = new Button()
-	button.label = "No, click me!";
+	button.text = "No, click me!";
 	alternateButton.styleProvider = styleProvider;
 	alternateButton.variant = "alternate-button";
 	this.addChild(alternateButton);

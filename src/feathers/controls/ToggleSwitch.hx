@@ -24,6 +24,22 @@ import feathers.events.FeathersEvent;
 import feathers.core.FeathersControl;
 
 /**
+	Similar to a light switch, with on and off states that may be toggled.
+	An alternative to a `Check`, especially on mobile.
+
+	The following example creates a toggle switch, programmatically selects it,
+	and listens for when the selection changes:
+
+	```hx
+	var toggleSwitch = new ToggleSwitch();
+	toggleSwitch.selected = true;
+	toggleSwitch.addEventListener(Event.CHANGE, (event) ->
+	{
+		var toggleSwitch = cast(event.currentTarget, ToggleSwitch);
+		trace("toggle switch changed: " + toggleSwitch.selected);
+	});
+	this.addChild(toggleSwitch);
+	```
 
 	@see [Tutorial: How to use the ToggleSwitch component](https://feathersui.com/learn/haxe-openfl/toggle-switch/)
 	@see `feathers.controls.Check`
@@ -45,6 +61,25 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
 	}
 
+	/**
+		Indicates if the toggle switch is selected or not.
+
+		The following example selects the toggle switch:
+
+		```hx
+		toggleSwitch.selected = true;
+		```
+
+		Note: When changing the `selected` property programatically, the
+		position of the thumb is not animated. To change the selection with
+		animation, call the `setSelectionWithAnimation()` method.
+
+		@default false
+
+		@see `ToggleSwitch.setSelectionWithAnimation()`
+
+		@since 1.0.0
+	**/
 	@:isVar
 	public var selected(get, set):Bool = false;
 
@@ -66,7 +101,19 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the toggle switch's thumb.
+
+		In the following example, a thumb skin is passed to the toggle switch:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		toggleSwitch.thumbSkin = skin;
+		```
+
 		@see `ToggleSwitch.trackSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var thumbSkin(default, set):DisplayObject = null;
@@ -103,8 +150,20 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the toggle switch's track.
+
+		In the following example, a track skin is passed to the toggle switch:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		toggleSwitch.trackSkin = skin;
+		```
+
 		@see `ToggleSwitch.secondaryTrackSkin`
 		@see `ToggleSwitch.thumbSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var trackSkin(default, set):DisplayObject = null;
@@ -141,7 +200,30 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
+		The skin to use for the toggle switch's optional secondary track. If a
+		toggle switch has one track, it will fill the entire length of the
+		toggle switch. If a toggle switch has a track and a secondary track, the
+		primary track will stretch between the left edge of the toggle switch
+		and the location of the slider's thumb, while the secondary track will
+		stretch from the location of the toggle switch's thumb to the right edge
+		of the toggle switch.
+
+		In the following example, a track skin and a secondary track skin are
+		passed to the toggle switch:
+
+		```hx
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xaaaaaa);
+		toggleSwitch.trackSkin = skin;
+
+		var skin = new RectangleSkin();
+		skin.fill = SolidColor(0xcccccc);
+		toggleSwitch.secondaryTrackSkin = skin;
+		```
+
 		@see `ToggleSwitch.trackSkin`
+
+		@since 1.0.0
 	**/
 	@style
 	public var secondaryTrackSkin(default, set):DisplayObject = null;
@@ -178,14 +260,14 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	}
 
 	/**
-		The minimum space, in pixels, between the toggle switch's right edge and
-		the right edge of the thumb.
+		The minimum space, measured in pixels, between the toggle switch's right
+		edge and the right edge of the thumb.
 
 		In the following example, the toggle switch's right padding is set to 20
 		pixels:
 
 		```hx
-		toggle.paddingRight = 20.0;
+		toggleSwitch.paddingRight = 20.0;
 		```
 
 		@default 0.0
@@ -196,14 +278,14 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	public var paddingRight:Null<Float> = 0.0;
 
 	/**
-		The minimum space, in pixels, between the toggle switch's left edge and
-		the left edge of the thumb.
+		The minimum space, measured in pixels, between the toggle switch's left
+		edge and the left edge of the thumb.
 
 		In the following example, the toggle switch's left padding is set to 20
 		pixels:
 
 		```hx
-		toggle.paddingLeft = 20.0;
+		toggleSwitch.paddingLeft = 20.0;
 		```
 
 		@default 0.0
@@ -216,6 +298,15 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	private var _toggleTween:SimpleActuator<Dynamic, Dynamic> = null;
 
 	/**
+		The duration, measured in seconds, of the animation when the toggle
+		switch is clicked or tap and the thumb slides to the other side.
+
+		In the following example, the duration of the animation that toggles the
+		thumb is set to 500 milliseconds:
+
+		```hx
+		toggleSwitch.toggleDuration = 0.5;
+		```
 
 		@since 1.0.0
 	**/
@@ -223,6 +314,15 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 	public var toggleDuration:Null<Float> = 0.15;
 
 	/**
+		The easing function used for the animation when the toggle switch is
+		clicked or tap and the thumb slides to the other side.
+
+		In the following example, the ease of the animation that toggles the
+		thumb is customized:
+
+		```hx
+		toggleSwitch.toggleEase = Elastic.easeOut;
+		```
 
 		@since 1.0.0
 	**/
@@ -234,6 +334,11 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 	private var _animateSelectionChange:Bool = false;
 
+	/**
+		Changes the `selected` property and animates the position of the thumb.
+
+		@see `ToggleSwitch.selected`
+	**/
 	public function setSelectionWithAnimation(selected:Bool):Bool {
 		if (this.selected == selected) {
 			return this.selected;

@@ -177,8 +177,8 @@ class Scroller extends EventDispatcher {
 	public var draggingY(default, null):Bool = false;
 
 	/**
-		The minimum distance, in pixels, that the target must be dragged to
-		begin scrolling.
+		The minimum distance, measured in pixels, that the target must be
+		dragged to begin scrolling.
 
 		@default 6.0
 
@@ -292,8 +292,8 @@ class Scroller extends EventDispatcher {
 	public var throwElasticity(default, default):Float = 0.05;
 
 	/**
-		The duration, in seconds, of the animation when a the scroller snaps
-		back to the minimum or maximum position after going out of bounds.
+		The duration, measured in seconds, of the animation when a the scroller
+		snaps back to the minimum or maximum position after going out of bounds.
 
 		If `elasticEdges` is `false`, this property is ignored.
 

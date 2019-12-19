@@ -499,7 +499,8 @@ class BaseScrollContainer extends FeathersControl {
 	private var _hideScrollBarY:SimpleActuator<Dynamic, Dynamic> = null;
 
 	/**
-		The duration, in seconds, of the animation when a scroll bar fades out.
+		The duration, measured in seconds, of the animation when a scroll bar
+		fades out.
 
 		In the following example, the duration of the animation that hides the
 		scroll bars is set to 500 milliseconds:

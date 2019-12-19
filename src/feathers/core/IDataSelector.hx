@@ -36,7 +36,7 @@ interface IDataSelector<T> {
 
 		```hx
 		var listView = new ListView();
-		function changeHandler(event:Event):void
+		function changeHandler(event:Event):Void
 		{
 			var listView = cast(event.currentTarget, ListView);
 			trace("selection change: " + listView.selectedIndex);
@@ -75,7 +75,7 @@ interface IDataSelector<T> {
 
 		```hx
 		var listView = new ListView();
-		function changeHandler(event:Event):void
+		function changeHandler(event:Event):Void
 		{
 			var listView = cast(event.currentTarget, ListView);
 			var text = listView.itemToText(listView.selectedItem);
