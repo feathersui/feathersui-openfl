@@ -10,14 +10,14 @@ package feathers.controls;
 
 import feathers.utils.DisplayObjectRecycler;
 import feathers.events.FlatCollectionEvent;
-import feathers.data.ListBoxItemState;
+import feathers.data.ListViewItemState;
 import feathers.layout.Direction;
 import feathers.layout.IScrollLayout;
 import feathers.core.ITextControl;
 import feathers.controls.dataRenderers.IDataRenderer;
 import haxe.ds.ObjectMap;
 import openfl.errors.IllegalOperationError;
-import feathers.themes.steel.components.SteelListBoxStyles;
+import feathers.themes.steel.components.SteelListViewStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
@@ -31,23 +31,23 @@ import feathers.core.IDataSelector;
 
 /**
 
-	@see [Tutorial: How to use the ListBox component](https://feathersui.com/learn/haxe-openfl/list-box/)
+	@see [Tutorial: How to use the ListView component](https://feathersui.com/learn/haxe-openfl/list-view/)
 
 	@since 1.0.0
 **/
-@:access(feathers.data.ListBoxItemState)
+@:access(feathers.data.ListViewItemState)
 @:styleContext
-class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
+class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
 
-	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
+	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = state.text;
 		}
 	}
 
-	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:ListBoxItemState):Void {
+	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = null;
@@ -55,12 +55,12 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
-		Creates a new `ListBox` object.
+		Creates a new `ListView` object.
 
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeListBoxTheme();
+		initializeListViewTheme();
 
 		super();
 		if (this.viewPort == null) {
@@ -183,7 +183,7 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
-		The layout algorithm used to position and size the list box's items.
+		The layout algorithm used to position and size the list view's items.
 
 		By default, if no layout is provided by the time that the list
 		initializes, a default layout that displays items vertically will be
@@ -204,9 +204,9 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	public var layout:ILayout = null;
 
 	/**
-		Manages item renderers used by the list box.
+		Manages item renderers used by the list view.
 
-		In the following example, the list box uses a custom item renderer:
+		In the following example, the list view uses a custom item renderer:
 
 		```hx
 		list.itemRendererRecycler = new DisplayObjectRecycler(CustomItemRenderer);
@@ -214,10 +214,10 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
+	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
 
-	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		ListBoxItemState, DisplayObject> {
+	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		ListViewItemState, DisplayObject> {
 		if (this.itemRendererRecycler == value) {
 			return this.itemRendererRecycler;
 		}
@@ -233,12 +233,12 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var _unrenderedData:Array<Dynamic> = [];
 
 	/**
-		Determines if items in the list box may be selected. By default only a
+		Determines if items in the list view may be selected. By default only a
 		single item may be selected at any given time. In other words, if item
 		_A_ is already selected, and the user selects item _B_, item _A_ will be
 		deselected automatically.
 
-		The following example disables selection of items in the list box:
+		The following example disables selection of items in the list view:
 
 		```hx
 		list.selectable = false;
@@ -246,8 +246,8 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		@default true
 
-		@see `ListBox.selectedItem`
-		@see `ListBox.selectedIndex`
+		@see `ListView.selectedItem`
+		@see `ListView.selectedIndex`
 	**/
 	public var selectable(default, set):Bool = true;
 
@@ -265,8 +265,7 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var _ignoreSelectionChange = false;
 
 	/**
-		Converts an item to text to display within the pop-up `ListBox`, or
-		within the `Button`, if the item is selected. By default, the
+		Converts an item to text to display within list view. By default, the
 		`toString()` method is called to convert an item to text. This method
 		may be replaced to provide custom text.
 
@@ -276,7 +275,7 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		{ text: "Example Item" }
 		```
 
-		If the `ListBox` should display the text "Example Item", a custom
+		If the `ListView` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
 		```hx
@@ -292,8 +291,8 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return Std.string(data);
 	}
 
-	private function initializeListBoxTheme():Void {
-		SteelListBoxStyles.initialize();
+	private function initializeListViewTheme():Void {
+		SteelListViewStyles.initialize();
 	}
 
 	override private function update():Void {
@@ -395,7 +394,7 @@ class ListBox extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.inactiveItemRenderers.resize(0);
 	}
 
-	private var _currentItemState = new ListBoxItemState();
+	private var _currentItemState = new ListViewItemState();
 
 	private function findUnrenderedData():Void {
 		for (i in 0...this.dataProvider.length) {

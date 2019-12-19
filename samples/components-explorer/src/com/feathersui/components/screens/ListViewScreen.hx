@@ -3,7 +3,7 @@ package com.feathersui.components.screens;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.events.FeathersEvent;
-import feathers.controls.ListBox;
+import feathers.controls.ListView;
 import feathers.controls.Label;
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
@@ -12,10 +12,10 @@ import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
-import feathers.data.ListBoxItemState;
+import feathers.data.ListViewItemState;
 
-class ListBoxScreen extends Panel {
-	private var listBox:ListBox;
+class ListViewScreen extends Panel {
+	private var listView:ListView;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -29,7 +29,7 @@ class ListBoxScreen extends Panel {
 
 			var headerTitle = new Label();
 			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "List Box";
+			headerTitle.text = "List View";
 			headerTitle.layoutData = AnchorLayoutData.center();
 			header.addChild(headerTitle);
 
@@ -47,19 +47,18 @@ class ListBoxScreen extends Panel {
 			items[i] = {text: "List Item " + (i + 1)};
 		}
 
-		this.listBox = new ListBox();
-		this.listBox.dataProvider = new ArrayCollection(items);
-		this.listBox.itemToText = (item:Dynamic) ->
-		{
+		this.listView = new ListView();
+		this.listView.dataProvider = new ArrayCollection(items);
+		this.listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
-		this.listBox.layoutData = AnchorLayoutData.fill();
-		this.listBox.addEventListener(Event.CHANGE, listBox_changeHandler);
-		this.addChild(this.listBox);
+		this.listView.layoutData = AnchorLayoutData.fill();
+		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
+		this.addChild(this.listView);
 	}
 
-	private function listBox_changeHandler(event:Event):Void {
-		trace("ListBox selectedIndex change: " + this.listBox.selectedIndex);
+	private function listView_changeHandler(event:Event):Void {
+		trace("ListView selectedIndex change: " + this.listView.selectedIndex);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

@@ -9,16 +9,16 @@
 package feathers.data;
 
 /**
-	Represents the current state of a `ListBox` item renderer.
+	Represents the current state of a `ListView` item renderer.
 
-	@see `feathers.controls.ListBox`
-	@see `feathers.controls.ListBox.itemRendererRecycler`
+	@see `feathers.controls.ListView`
+	@see `feathers.controls.ListView.itemRendererRecycler`
 
 	@since 1.0.0
 **/
-class ListBoxItemState {
+class ListViewItemState {
 	/**
-		Creates a new `ListBoxItemState` object with the given arguments.
+		Creates a new `ListViewItemState` object with the given arguments.
 
 		@since 1.0.0
 	**/
@@ -30,14 +30,14 @@ class ListBoxItemState {
 	}
 
 	/**
-		An item from the collection used as the `ListBox` data provider.
+		An item from the collection used as the `ListView` data provider.
 
 		@since 1.0.0
 	**/
 	public var data(default, null):Dynamic;
 
 	/**
-		The position of the data within the collection used as the `ListBox`
+		The position of the data within the collection used as the `ListView`
 		data provider.
 
 		@since 1.0.0
@@ -47,8 +47,8 @@ class ListBoxItemState {
 	/**
 		Returns whether the item is selected or not.
 
-		@see `feathers.controls.ListBox.selectedIndex`
-		@see `feathers.controls.ListBox.selectedItem`
+		@see `feathers.controls.ListView.selectedIndex`
+		@see `feathers.controls.ListView.selectedItem`
 
 		@since 1.0.0
 	**/
@@ -56,9 +56,9 @@ class ListBoxItemState {
 
 	/**
 		Returns the text to display for the item, as returned by the function
-		`ListBox.itemToText`.
+		`ListView.itemToText`.
 
-		@see `feathers.controls.ListBox.itemToText`
+		@see `feathers.controls.ListView.itemToText`
 
 		@since 1.0.0
 	**/

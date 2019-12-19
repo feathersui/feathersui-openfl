@@ -12,7 +12,7 @@ import feathers.core.IUIControl;
 
 /**
 	A type of UI component that displays arbitrary data from a component such as
-	`ListBox`.
+	`ListView`.
 
 	@since 1.0.0
 **/

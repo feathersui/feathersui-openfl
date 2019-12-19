@@ -1,7 +1,7 @@
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
 import feathers.controls.PopUpList;
-import feathers.controls.ListBox;
+import feathers.controls.ListView;
 import feathers.layout.AnchorLayoutData;
 import feathers.layout.AnchorLayout;
 import feathers.controls.Panel;
@@ -24,29 +24,29 @@ class Main extends Application {
 			{text: "Starling"}, {text: "Toucan"}, {text: "Vulture"}, {text: "Aardvark"},
 		];
 
-		// we will display these items in a ListBox
-		this.listBox = new ListBox();
-		// ListBox expects an IFlatCollection, so we need to wrap the array in
+		// we will display these items in a ListView
+		this.listView = new ListView();
+		// ListView expects an IFlatCollection, so we need to wrap the array in
 		// an ArrayCollection
-		this.listBox.dataProvider = new ArrayCollection(arrayItems);
-		// the ListBox will use this function to pass text to the item renderers
+		this.listView.dataProvider = new ArrayCollection(arrayItems);
+		// the ListView will use this function to pass text to item renderers
 		// we'll also use it in our sort comparison functions
-		this.listBox.itemToText = (item:Dynamic) -> {
+		this.listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
-		this.listBox.layoutData = AnchorLayoutData.fill();
-		this.view.addChild(this.listBox);
+		this.listView.layoutData = AnchorLayoutData.fill();
+		this.view.addChild(this.listView);
 	}
 
-	private var listBox:ListBox;
+	private var listView:ListView;
 	private var view:Panel;
 
 	/**
 		Sorts items in the ArrayCollection in alphabetical order (A to Z)
 	**/
 	private function sortAlphabetical(a:Dynamic, b:Dynamic):Int {
-		var aText = this.listBox.itemToText(a);
-		var bText = this.listBox.itemToText(b);
+		var aText = this.listView.itemToText(a);
+		var bText = this.listView.itemToText(b);
 		if (aText < bText) {
 			return -1;
 		}
@@ -65,13 +65,13 @@ class Main extends Application {
 
 	/**
 		When the PopUpList's selection changes, we'll chage the
-		sortCompareFunction on the ListBox's dataProvider.
+		sortCompareFunction on the ListView dataProvider.
 	**/
 	private function sortPicker_changeHandler(event:Event):Void {
 		var sortPicker = cast(event.currentTarget, PopUpList);
 		var sortItem = cast(sortPicker.selectedItem, SortItem);
 
-		var dataProvider = this.listBox.dataProvider;
+		var dataProvider = this.listView.dataProvider;
 		dataProvider.sortCompareFunction = sortItem.sortCompareFunction;
 	}
 
@@ -117,7 +117,7 @@ class Main extends Application {
 
 /**
 	A custom class to hold data for the PopUpList where the user chooses how
-	the ListBox's data provider should be sorted.
+	the ListView data provider should be sorted.
 **/
 class SortItem {
 	public function new(text:String, sortCompareFunction:(Dynamic, Dynamic) -> Int) {

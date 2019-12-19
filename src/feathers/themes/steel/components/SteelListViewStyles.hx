@@ -10,19 +10,19 @@ package feathers.themes.steel.components;
 
 import feathers.utils.DeviceUtil;
 import feathers.layout.VerticalListFixedRowLayout;
-import feathers.controls.ListBox;
+import feathers.controls.ListView;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 
 /**
-	Initialize "steel" styles for the `ListBox` component.
+	Initialize "steel" styles for the `ListView` component.
 
 	@since 1.0.0
 **/
 @:dox(hide)
 @:access(feathers.themes.steel.BaseSteelTheme)
-class SteelListBoxStyles {
+class SteelListViewStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {
 		if (theme == null) {
 			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
@@ -32,27 +32,27 @@ class SteelListBoxStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(ListBox, null) != null) {
+		if (styleProvider.getStyleFunction(ListView, null) != null) {
 			return;
 		}
 
-		styleProvider.setStyleFunction(ListBox, null, function(listBox:ListBox):Void {
+		styleProvider.setStyleFunction(ListView, null, function(listView:ListView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
-			listBox.autoHideScrollBars = !isDesktop;
-			listBox.fixedScrollBars = isDesktop;
+			listView.autoHideScrollBars = !isDesktop;
+			listView.fixedScrollBars = isDesktop;
 
-			if (listBox.layout == null) {
-				listBox.layout = new VerticalListFixedRowLayout();
+			if (listView.layout == null) {
+				listView.layout = new VerticalListFixedRowLayout();
 			}
 
-			if (listBox.backgroundSkin == null) {
+			if (listView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
 				// backgroundSkin.border = theme.getContainerBorder();
 				backgroundSkin.width = 160.0;
 				backgroundSkin.height = 160.0;
-				listBox.backgroundSkin = backgroundSkin;
+				listView.backgroundSkin = backgroundSkin;
 			}
 		});
 	}

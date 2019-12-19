@@ -16,7 +16,7 @@ import openfl.events.EventDispatcher;
 
 /**
 	Wraps an `Array` in the common `IFlatCollection` API used for data
-	collections by many Feathers UI controls, including `ListBox` and `TabBar`
+	collections by many Feathers UI controls, including `ListView` and `TabBar`
 
 	@since 1.0.0
 **/

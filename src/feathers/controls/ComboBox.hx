@@ -11,7 +11,7 @@ package feathers.controls;
 import openfl.events.FocusEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DisplayObjectRecycler;
-import feathers.data.ListBoxItemState;
+import feathers.data.ListViewItemState;
 import openfl.display.DisplayObject;
 import feathers.themes.steel.components.SteelComboBoxStyles;
 import openfl.events.TouchEvent;
@@ -72,7 +72,7 @@ import feathers.controls.popups.DropDownPopUpAdapter;
 class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
 	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = "textInputFactory";
-	private static final INVALIDATION_FLAG_LIST_BOX_FACTORY = "listBoxFactory";
+	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = "listViewFactory";
 
 	/**
 		The variant used to style the `Button` child component in a theme.
@@ -89,11 +89,11 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	public static final CHILD_VARIANT_TEXT_INPUT = "comboBoxButton";
 
 	/**
-		The variant used to style the `ListBox` child component in a theme.
+		The variant used to style the `ListView` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 	**/
-	public static final CHILD_VARIANT_LIST_BOX = "comboBoxListBox";
+	public static final CHILD_VARIANT_LIST_VIEW = "comboBoxListView";
 
 	/**
 		Creates a new `ComboBox` object.
@@ -109,7 +109,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 
 	private var button:Button;
 	private var textInput:TextInput;
-	private var listBox:ListBox;
+	private var listView:ListView;
 
 	private var buttonMeasurements = new Measurements();
 	private var textInputMeasurements = new Measurements();
@@ -221,9 +221,9 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	/**
-		Manages item renderers used by the list box.
+		Manages item renderers used by the list view.
 
-		In the following example, the pop-up list box uses a custom item
+		In the following example, the pop-up list view uses a custom item
 		renderer:
 
 		```hx
@@ -232,10 +232,10 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
+	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
 
-	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListBoxItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		ListBoxItemState, DisplayObject> {
+	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		ListViewItemState, DisplayObject> {
 		if (this.itemRendererRecycler == value) {
 			return this.itemRendererRecycler;
 		}
@@ -245,7 +245,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	/**
-		Converts an item to text to display within the pop-up `ListBox`, or
+		Converts an item to text to display within the pop-up `ListView`, or
 		within the `Button`, if the item is selected. By default, the
 		`toString()` method is called to convert an item to text. This method
 		may be replaced to provide custom text.
@@ -256,7 +256,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		{ text: "Example Item" }
 		```
 
-		If the `ListBox` should display the text "Example Item", a custom
+		If the `ListView` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
 		```hx
@@ -273,7 +273,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	private var _ignoreTextInputChange = false;
-	private var _ignoreListBoxChange = false;
+	private var _ignoreListViewChange = false;
 
 	/**
 		Manages how the pop-up list is displayed when it is opened and closed.
@@ -300,7 +300,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {
-		return this.listBox.parent != null;
+		return this.listView.parent != null;
 	}
 
 	private var _filterText:String = "";
@@ -332,8 +332,8 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 		this.pendingSelectedItem = this.selectedItem;
 		this.popUpAdapter.addEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
-		this.popUpAdapter.open(this.listBox, this);
-		this.listBox.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_listBox_removedFromStageHandler);
+		this.popUpAdapter.open(this.listView, this);
+		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_listView_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler, false, 0, true);
 	}
@@ -369,7 +369,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	override private function update():Void {
 		var buttonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
 		var textInputFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_TEXT_INPUT_FACTORY);
-		var listBoxFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_BOX_FACTORY);
+		var listViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
@@ -380,19 +380,19 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		if (textInputFactoryInvalid) {
 			this.createTextInput();
 		}
-		if (listBoxFactoryInvalid) {
-			this.createListBox();
+		if (listViewFactoryInvalid) {
+			this.createListView();
 		}
 
-		if (dataInvalid || listBoxFactoryInvalid) {
+		if (dataInvalid || listViewFactoryInvalid) {
 			this.refreshData();
 		}
 
-		if (selectionInvalid || listBoxFactoryInvalid || buttonFactoryInvalid) {
+		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
 			this.refreshSelection();
 		}
 
-		if (stateInvalid || listBoxFactoryInvalid || buttonFactoryInvalid) {
+		if (stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
 			this.refreshEnabled();
 		}
 
@@ -428,29 +428,29 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		this.addChild(this.textInput);
 	}
 
-	private function createListBox():Void {
-		if (this.listBox != null) {
-			this.listBox.removeEventListener(FeathersEvent.TRIGGERED, listBox_triggeredHandler);
-			this.listBox.removeEventListener(Event.CHANGE, listBox_changeHandler);
-			this.listBox = null;
+	private function createListView():Void {
+		if (this.listView != null) {
+			this.listView.removeEventListener(FeathersEvent.TRIGGERED, listView_triggeredHandler);
+			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
+			this.listView = null;
 		}
-		this.listBox = new ListBox();
-		this.listBox.variant = ComboBox.CHILD_VARIANT_LIST_BOX;
-		this.listBox.addEventListener(FeathersEvent.TRIGGERED, listBox_triggeredHandler);
-		this.listBox.addEventListener(Event.CHANGE, listBox_changeHandler);
+		this.listView = new ListView();
+		this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
+		this.listView.addEventListener(FeathersEvent.TRIGGERED, listView_triggeredHandler);
+		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
 	}
 
 	private function refreshData():Void {
-		this.listBox.dataProvider = this.dataProvider;
-		this.listBox.itemRendererRecycler = this.itemRendererRecycler;
-		this.listBox.itemToText = this.itemToText;
+		this.listView.dataProvider = this.dataProvider;
+		this.listView.itemRendererRecycler = this.itemRendererRecycler;
+		this.listView.itemToText = this.itemToText;
 	}
 
 	private function refreshSelection():Void {
-		var oldIgnoreListBoxChage = this._ignoreListBoxChange;
-		this._ignoreListBoxChange = true;
-		this.listBox.selectedIndex = this.selectedIndex;
-		this._ignoreListBoxChange = oldIgnoreListBoxChage;
+		var oldIgnoreListViewChange = this._ignoreListViewChange;
+		this._ignoreListViewChange = true;
+		this.listView.selectedIndex = this.selectedIndex;
+		this._ignoreListViewChange = oldIgnoreListViewChange;
 
 		var oldIgnoreTextInputChange = this._ignoreTextInputChange;
 		this._ignoreTextInputChange = true;
@@ -465,7 +465,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	private function refreshEnabled():Void {
 		this.button.enabled = this.enabled;
 		this.textInput.enabled = this.enabled;
-		this.listBox.enabled = this.enabled;
+		this.listView.enabled = this.enabled;
 	}
 
 	private function comboBoxFilterFunction(item:Dynamic):Bool {
@@ -563,28 +563,28 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function listBox_triggeredHandler(event:Event):Void {
+	private function listView_triggeredHandler(event:Event):Void {
 		if (!this.popUpAdapter.persistent) {
 			this.closeList();
 		}
 	}
 
-	private function listBox_changeHandler(event:Event):Void {
-		if (this._ignoreListBoxChange) {
+	private function listView_changeHandler(event:Event):Void {
+		if (this._ignoreListViewChange) {
 			return;
 		}
 		if (this.open) {
 			// if the list is open, save the selected index for later
-			this.pendingSelectedIndex = this.listBox.selectedIndex;
+			this.pendingSelectedIndex = this.listView.selectedIndex;
 		} else {
 			// if closed, update immediately
 			this.pendingSelectedIndex = -1;
-			this.selectedIndex = this.listBox.selectedIndex;
+			this.selectedIndex = this.listView.selectedIndex;
 		}
 	}
 
-	private function comboBox_listBox_removedFromStageHandler(event:Event):Void {
-		this.listBox.removeEventListener(Event.REMOVED_FROM_STAGE, comboBox_listBox_removedFromStageHandler);
+	private function comboBox_listView_removedFromStageHandler(event:Event):Void {
+		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, comboBox_listView_removedFromStageHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler);
 	}
@@ -616,7 +616,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	private function comboBox_stage_mouseDownHandler(event:MouseEvent):Void {
-		if (this.hitTestPoint(event.stageX, event.stageY) || this.listBox.hitTestPoint(event.stageX, event.stageY)) {
+		if (this.hitTestPoint(event.stageX, event.stageY) || this.listView.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
 		this.closeList();
@@ -627,7 +627,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
-		if (this.hitTestPoint(event.stageX, event.stageY) || this.listBox.hitTestPoint(event.stageX, event.stageY)) {
+		if (this.hitTestPoint(event.stageX, event.stageY) || this.listView.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
 		this.closeList();

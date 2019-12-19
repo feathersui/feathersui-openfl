@@ -12,7 +12,7 @@ import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
-import feathers.data.ListBoxItemState;
+import feathers.data.ListViewItemState;
 
 class PopUpListScreen extends Panel {
 	private var popUpList:PopUpList;
@@ -51,8 +51,7 @@ class PopUpListScreen extends Panel {
 
 		this.popUpList = new PopUpList();
 		this.popUpList.dataProvider = new ArrayCollection(arrayItems);
-		this.popUpList.itemToText = (item:Dynamic) ->
-		{
+		this.popUpList.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		this.popUpList.layoutData = AnchorLayoutData.center();

@@ -52,8 +52,8 @@ script:
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
-# build list-box-data-provider-collection-sorting sample
-- cd $TRAVIS_BUILD_DIR/samples/list-box-data-provider-collection-sorting
+# build list-view-data-provider-collection-sorting sample
+- cd $TRAVIS_BUILD_DIR/samples/list-view-data-provider-collection-sorting
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash

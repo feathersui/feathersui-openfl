@@ -14,7 +14,7 @@ import com.feathersui.components.screens.CalloutScreen;
 import com.feathersui.components.screens.CheckScreen;
 import com.feathersui.components.screens.ComboBoxScreen;
 import com.feathersui.components.screens.LabelScreen;
-import com.feathersui.components.screens.ListBoxScreen;
+import com.feathersui.components.screens.ListViewScreen;
 import com.feathersui.components.screens.PanelScreen;
 import com.feathersui.components.screens.PopUpListScreen;
 import com.feathersui.components.screens.PopUpManagerScreen;
@@ -57,8 +57,8 @@ class Main extends Application {
 		var label = StackItem.withClass(LabelScreen, [Event.COMPLETE => Pop()]);
 		navigator.addItem(ScreenID.LABEL, label);
 
-		var listBox = StackItem.withClass(ListBoxScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.LIST_BOX, listBox);
+		var listView = StackItem.withClass(ListViewScreen, [Event.COMPLETE => Pop()]);
+		navigator.addItem(ScreenID.LIST_VIEW, listView);
 
 		var panel = StackItem.withClass(PanelScreen, [Event.COMPLETE => Pop()]);
 		navigator.addItem(ScreenID.PANEL, panel);

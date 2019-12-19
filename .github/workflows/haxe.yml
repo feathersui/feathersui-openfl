@@ -58,8 +58,8 @@ jobs:
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-    - name: Build samples/list-box-data-provider-collection-sorting
-      working-directory: samples/list-box-data-provider-collection-sorting
+    - name: Build samples/list-view-data-provider-collection-sorting
+      working-directory: samples/list-view-data-provider-collection-sorting
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5

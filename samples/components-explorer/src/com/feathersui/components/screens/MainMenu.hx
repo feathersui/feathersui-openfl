@@ -8,7 +8,7 @@ import openfl.events.Event;
 import com.feathersui.components.ScreenID;
 import feathers.data.ArrayCollection;
 import feathers.layout.AnchorLayout;
-import feathers.controls.ListBox;
+import feathers.controls.ListView;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
@@ -16,7 +16,7 @@ import feathers.controls.Panel;
 import feathers.layout.AnchorLayoutData;
 
 class MainMenu extends Panel {
-	private var listBox:ListBox;
+	private var listView:ListView;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -50,18 +50,18 @@ class MainMenu extends Panel {
 			return header;
 		};
 
-		this.listBox = new ListBox();
-		this.listBox.dataProvider = new ArrayCollection([
+		this.listView = new ListView();
+		this.listView.dataProvider = new ArrayCollection([
 			new MenuItem("Asset Loader", ScreenID.ASSET_LOADER), new MenuItem("Button", ScreenID.BUTTON), new MenuItem("Callout", ScreenID.CALLOUT),
 			new MenuItem("Check", ScreenID.CHECK), new MenuItem("Combo Box", ScreenID.COMBO_BOX), new MenuItem("Label", ScreenID.LABEL),
-			new MenuItem("List Box", ScreenID.LIST_BOX), new MenuItem("Panel", ScreenID.PANEL), new MenuItem("Pop Up List", ScreenID.POP_UP_LIST),
+			new MenuItem("List View", ScreenID.LIST_VIEW), new MenuItem("Panel", ScreenID.PANEL), new MenuItem("Pop Up List", ScreenID.POP_UP_LIST),
 			new MenuItem("Pop Up Manager", ScreenID.POP_UP_MANAGER), new MenuItem("Progress Bar", ScreenID.PROGRESS_BAR),
 			new MenuItem("Radio", ScreenID.RADIO), new MenuItem("Slider", ScreenID.SLIDER), new MenuItem("Tab Bar", ScreenID.TAB_BAR),
 			new MenuItem("Text Input", ScreenID.TEXT_INPUT), new MenuItem("Toggle Switch", ScreenID.TOGGLE_SWITCH),
 		]);
-		this.listBox.layoutData = AnchorLayoutData.fill();
-		this.listBox.addEventListener(Event.CHANGE, list_changeHandler);
-		this.addChild(this.listBox);
+		this.listView.layoutData = AnchorLayoutData.fill();
+		this.listView.addEventListener(Event.CHANGE, list_changeHandler);
+		this.addChild(this.listView);
 	}
 
 	public var selectedScreenID(default, set):String = null;
@@ -76,7 +76,7 @@ class MainMenu extends Panel {
 	}
 
 	private function list_changeHandler(event:Event):Void {
-		var selectedItem = this.listBox.selectedItem;
+		var selectedItem = this.listView.selectedItem;
 		this.selectedScreenID = selectedItem.screenID;
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<meta title="Collection Sorting" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
-	<meta title="Sort a ListBox data provider with sortCompareFunction (ArrayCollection) — Feathers UI Samples" if="html5"/>
+	<meta title="Sort a ListView data provider with sortCompareFunction (ArrayCollection) — Feathers UI Samples" if="html5"/>
 	<app main="Main" path="build" file="ListSorting" />
 
 	<window allow-high-dpi="true"/>

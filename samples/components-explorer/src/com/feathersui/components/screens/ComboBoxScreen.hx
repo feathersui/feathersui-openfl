@@ -12,7 +12,7 @@ import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
-import feathers.data.ListBoxItemState;
+import feathers.data.ListViewItemState;
 
 class ComboBoxScreen extends Panel {
 	private var comboBox:ComboBox;

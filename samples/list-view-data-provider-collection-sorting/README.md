@@ -1,10 +1,10 @@
 # Feathers UI Collection Sorting
 
-This example app demonstrates how to dynamically sort the `ArrayCollection` used as the data provider for a `ListBox` component in a [Feathers UI](https://feathersui.com/) application.
+This example app demonstrates how to dynamically sort the `ArrayCollection` used as the data provider for a [`ListView`](https://feathersui.com/learn/haxe-openfl/list-view/) component in a [Feathers UI](https://feathersui.com/) application.
 
 ## Live demo
 
-A build of the [_list-box-data-provider-collection-sorting_ sample](https://feathersui.com/samples/haxe-openfl/list-box-data-provider-collection-sorting/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
+A build of the [_list-view-data-provider-collection-sorting_ sample](https://feathersui.com/samples/haxe-openfl/list-view-data-provider-collection-sorting/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
 
 ## Run locally
 

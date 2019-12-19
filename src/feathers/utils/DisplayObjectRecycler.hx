@@ -13,7 +13,7 @@ import openfl.display.DisplayObject;
 
 /**
 	Manages display objects that may be used to render data, in a component like
-	`ListBox` or `TabBar`.
+	`ListView` or `TabBar`.
 
 	@since 1.0.0
 **/
