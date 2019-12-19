@@ -867,14 +867,3 @@ class Callout extends FeathersControl {
 		this.close();
 	}
 }
-
-abstract RelativePositions(Array<RelativePosition>) from Array<RelativePosition> to Array<RelativePosition> {
-	inline function new(positions:Array<RelativePosition>) {
-		this = positions;
-	}
-
-	@:from
-	public static function fromRelativePosition(position:RelativePosition) {
-		return new RelativePositions([position]);
-	}
-}

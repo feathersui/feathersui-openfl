@@ -29,9 +29,9 @@ import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
 
 /**
-	Displays a button that may be triggered to display list view as a pop-up.
-	The list view may be customized to display in different ways, such as a
-	drop-down, inside a `Callout`, or as a modal overlay.
+	Displays a `Button` that may be triggered to display a `ListView` as a
+	pop-up. The list view may be customized to display in different ways, such
+	as a drop-down, inside a `Callout`, or as a modal overlay.
 
 	The following example creates a pop-up list, gives it a data provider, tells
 	the item renderer how to interpret the data, and listens for when the
@@ -55,6 +55,7 @@ import feathers.core.IDataSelector;
 
 	list.addEventListener(Event.CHANGE, (event:Event) ->
 	{
+		var list = cast(event.currentTarget, PopUpList);
 		trace("PopUpList changed: " + list.selectedIndex + " " + list.selectedItem.text);
 	});
 
@@ -71,7 +72,12 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
 	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = "listViewFactory";
 
-	public static final CHILD_VARIANT_BUTTON = "popUpButton";
+	/**
+		The variant used to style the `Button` child component in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+	**/
+	public static final CHILD_VARIANT_BUTTON = "popUpList_button";
 
 	/**
 		Creates a new `PopUpList` object.

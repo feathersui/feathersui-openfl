@@ -43,7 +43,8 @@ import openfl.text.TextFormat;
 class Label extends FeathersControl implements ITextControl {
 	/**
 		A variant used to style the label using a Larger text format for
-		headings. Used to style the `Label` in a theme.
+		headings. Variants allow themes to provide an assortment of different
+		appearances for the same type of UI component.
 
 		The following example uses this variant:
 
@@ -60,7 +61,8 @@ class Label extends FeathersControl implements ITextControl {
 
 	/**
 		A variant used to style the label using a smaller text format for
-		details. Used to style the `Label` in a theme.
+		details. Variants allow themes to provide an assortment of different
+		appearances for the same type of UI component.
 
 		The following example uses this variant:
 

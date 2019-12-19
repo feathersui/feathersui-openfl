@@ -30,8 +30,46 @@ import feathers.events.FeathersEvent;
 import feathers.core.IDataSelector;
 
 /**
+	Displays a one-dimensional list of items. Supports scrolling, custom item
+	renderers, and custom layouts.
+
+	Layouts may be, and are highly encouraged to be, _virtual_, meaning that the
+	list view is capable of creating a limited number of item renderers to
+	display a subset of the data provider that is currently visible, instead of
+	creating a renderer for every single item. This allows for optimized
+	performance with very large data providers.
+
+	The following example creates a list view, gives it a data provider, tells
+	the item renderer how to interpret the data, and listens for when the
+	selection changes:
+
+	```hx
+	var listView = new ListView();
+
+	listView.dataProvider = new ArrayCollection(
+	[
+		{ text: "Milk" },
+		{ text: "Eggs" },
+		{ text: "Bread" },
+		{ text: "Chicken" },
+	]);
+
+	listView.itemToText = (item:Dynamic) ->
+	{
+		return item.text;
+	};
+
+	listView.addEventListener(Event.CHANGE, (event:Event) ->
+	{
+		var listView = cast(event.currentTarget, ListView);
+		trace("ListView changed: " + listView.selectedIndex + " " + listView.selectedItem.text);
+	});
+
+	this.addChild(listView);
+	```
 
 	@see [Tutorial: How to use the ListView component](https://feathersui.com/learn/haxe-openfl/list-view/)
+	@see `feathers.controls.PopUpList`
 
 	@since 1.0.0
 **/

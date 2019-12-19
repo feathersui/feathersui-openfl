@@ -26,6 +26,32 @@ import feathers.data.TabBarItemState;
 import feathers.core.IDataSelector;
 
 /**
+	A line of tabs, where one may be selected at a time.
+
+	The following example sets the data provider, tells the tabs how to
+	interpret the data, selects the second tab, and listens for when the
+	selection changes:
+
+	```hx
+	var tabs = new TabBar();
+	tabs.dataProvider = new ArrayCollection(
+	[
+		{ text: "Latest Posts" },
+		{ text: "Profile" },
+		{ text: "Settings" }
+	]);
+
+	tabBar.itemToText = (item:Dynamic) ->
+	{
+		return item.text;
+	};
+
+	tabs.selectedIndex = 1;
+
+	tabs.addEventListener(Event.CHANGE, tabs_changeHandler);
+
+	this.addChild(tabs);
+	```
 
 	@see [Tutorial: How to use the TabBar component](https://feathersui.com/learn/haxe-openfl/tab-bar/)
 
@@ -56,6 +82,28 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		The collection of data displayed by the tab bar.
+
+		The following example passes in a data provider and tells the tabs how
+		to interpret the data:
+
+		```hx
+		tabBar.dataProvider = new ArrayCollection(
+		[
+			{ text: "Latest Posts" },
+			{ text: "Profile" },
+			{ text: "Settings" }
+		]);
+
+		tabBar.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@default null
+
+		@see `feathers.data.ArrayCollection`
 
 		@since 1.0.0
 	**/
@@ -141,6 +189,14 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		Manages tabs used by the tab bar.
+
+		In the following example, the tab bar uses a custom tab renderer:
+
+		```hx
+		tabBar.itemRendererRecycler = new DisplayObjectRecycler(ToggleButton);
+		```
+
 		@since 1.0.0
 	**/
 	public var tabRecycler:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> = new DisplayObjectRecycler(ToggleButton);
@@ -153,6 +209,29 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 
 	private var _ignoreSelectionChange = false;
 
+	/**
+		Converts an item to text to display within tab bar. By default, the
+		`toString()` method is called to convert an item to text. This method
+		may be replaced to provide custom text.
+
+		For example, consider the following item:
+
+		```hx
+		{ text: "Example Item" }
+		```
+
+		If the `TabBar` should display the text "Example Item", a custom
+		implementation of `itemToText()` might look like this:
+
+		```hx
+		tabBar.itemToText = (item:Dynamic) ->
+		{
+			return item.text;
+		};
+		```
+
+		@since 1.0.0
+	**/
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
 	}

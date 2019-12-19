@@ -57,6 +57,7 @@ import feathers.controls.popups.DropDownPopUpAdapter;
 
 	comboBox.addEventListener(Event.CHANGE, (event:Event) ->
 	{
+		var comboBox = cast(event.currentTarget, ComboBox);
 		trace("ComboBox changed: " + comboBox.selectedIndex + " " + comboBox.selectedItem.text);
 	});
 
@@ -79,21 +80,21 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 	**/
-	public static final CHILD_VARIANT_BUTTON = "comboBoxButton";
+	public static final CHILD_VARIANT_BUTTON = "comboBox_button";
 
 	/**
 		The variant used to style the `TextInput` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 	**/
-	public static final CHILD_VARIANT_TEXT_INPUT = "comboBoxButton";
+	public static final CHILD_VARIANT_TEXT_INPUT = "comboBox_textInput";
 
 	/**
 		The variant used to style the `ListView` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 	**/
-	public static final CHILD_VARIANT_LIST_VIEW = "comboBoxListView";
+	public static final CHILD_VARIANT_LIST_VIEW = "comboBox_listView";
 
 	/**
 		Creates a new `ComboBox` object.

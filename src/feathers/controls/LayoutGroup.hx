@@ -56,6 +56,22 @@ import openfl.geom.Point;
 **/
 @:styleContext
 class LayoutGroup extends FeathersControl {
+	/**
+		A variant used to style the group as a tool bar. Variants allow themes
+		to provide an assortment of different appearances for the same type of
+		UI component.
+
+		The following example uses this variant:
+
+		```hx
+		var group = new LayoutGroup();
+		group.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
 	public static final VARIANT_TOOL_BAR = "toolBar";
 
 	/**

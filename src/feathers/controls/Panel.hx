@@ -15,6 +15,9 @@ import feathers.core.IUIControl;
 import feathers.core.IValidating;
 
 /**
+	A container with a header on top and a footer on the bottom, with a region
+	in the center for content that supports layout and scrolling. Both the
+	header and the footer are optional.
 
 	@see [Tutorial: How to use the Panel component](https://feathersui.com/learn/haxe-openfl/panel/)
 
@@ -39,6 +42,10 @@ class Panel extends ScrollContainer {
 	private var header:IUIControl;
 	private var footer:IUIControl;
 
+	/**
+
+		@since 1.0.0
+	**/
 	public var headerFactory(default, set):() -> IUIControl = null;
 
 	private function set_headerFactory(value:() -> IUIControl):() -> IUIControl {
@@ -50,6 +57,10 @@ class Panel extends ScrollContainer {
 		return this.headerFactory;
 	}
 
+	/**
+
+		@since 1.0.0
+	**/
 	public var footerFactory(default, set):() -> IUIControl = null;
 
 	private function set_footerFactory(value:() -> IUIControl):() -> IUIControl {

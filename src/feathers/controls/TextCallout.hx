@@ -26,7 +26,7 @@ import openfl.display.DisplayObject;
 **/
 @:styleContext
 class TextCallout extends Callout implements ITextControl {
-	public static function show(text:String, origin:DisplayObject, ?supportedPositions:Callout.RelativePositions, modal:Bool = true):TextCallout {
+	public static function show(text:String, origin:DisplayObject, ?supportedPositions:RelativePositions, modal:Bool = true):TextCallout {
 		var callout = new TextCallout();
 		callout.text = text;
 		return cast(Callout.showCallout(callout, origin, supportedPositions, modal), TextCallout);
