@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.errors.ArgumentError;
 import feathers.style.IStyleObject;
 import openfl.events.Event;
 import openfl.errors.IllegalOperationError;
@@ -185,16 +186,21 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (!this.setStyle("layoutData")) {
 			return this.layoutData;
 		}
-		if (this._clearingStyles) {
-			value = null;
-		}
+		return this.setLayoutDataInternal(value);
+	}
+
+	private function clearStyle_layoutData():ILayoutData {
+		return this.setLayoutDataInternal(null);
+	}
+
+	private function setLayoutDataInternal(value:ILayoutData):ILayoutData {
 		if (this.layoutData == value) {
 			return this.layoutData;
 		}
 		if (this.layoutData != null) {
 			this.layoutData.removeEventListener(Event.CHANGE, layoutData_changeHandler);
 		}
-		this.layoutData = value;
+		@:bypassAccessor this.layoutData = value;
 		if (this.layoutData != null) {
 			this.layoutData.addEventListener(Event.CHANGE, layoutData_changeHandler, false, 0, true);
 		}
@@ -402,7 +408,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			switch (styleDef) {
 				case Name(name):
 					{
-						Reflect.setProperty(this, name, null);
+						var clearMethodName = "clearStyle_" + name;
+						var clearMethod = Reflect.field(this, clearMethodName);
+						if (clearMethod == null) {
+							throw new ArgumentError("Missing @style method: '" + clearMethodName + "'");
+						}
+						Reflect.callMethod(this, clearMethod, []);
 					}
 				case NameAndState(name, state):
 					{

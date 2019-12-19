@@ -10,6 +10,7 @@ package feathers.macros;
 
 #if macro
 import haxe.macro.Expr.Access;
+import haxe.macro.Expr.Error;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.Function;
 import haxe.macro.Expr.MetadataEntry;
@@ -55,7 +56,7 @@ class StyleMacro {
 			switch (field.kind) {
 				case FVar(type, e):
 					if (e == null) {
-						Context.error("Variable '"
+						throw new Error("Variable '"
 							+ field.name
 							+ "' is not initialized. Variables with @:style metadata must be initialized with a default value.",
 							Context.currentPos());
@@ -66,9 +67,6 @@ class StyleMacro {
 						expr: macro {
 							if (!this.setStyle($v{field.name})) {
 								return $i{field.name};
-							}
-							if (this._clearingStyles) {
-								value = ${e};
 							}
 							if ($i{field.name} == value) {
 								return $i{field.name};
@@ -87,6 +85,27 @@ class StyleMacro {
 						pos: Context.currentPos()
 					});
 
+					var clearFunction:Function = {
+						expr: macro {
+							$i{field.name} = ${e};
+							return $i{field.name};
+						},
+						ret: type,
+						args: []
+					};
+					extraFields.push({
+						name: "clearStyle_" + field.name,
+						access: [Access.APublic],
+						kind: FieldType.FFun(clearFunction),
+						pos: Context.currentPos(),
+						meta: [
+							{
+								name: ":noCompletion",
+								pos: Context.currentPos()
+							}
+						]
+					});
+
 					// change from a variable to a property
 					var propField:Field = {
 						name: field.name,
@@ -98,7 +117,7 @@ class StyleMacro {
 					};
 					return propField;
 				default:
-					Context.error("@:style metadata not allowed on '" + field.name + "'. Field must be a variable, and no getter or setter may be defined.",
+					throw new Error("@:style metadata not allowed on '" + field.name + "'. Field must be a variable, and no getter or setter may be defined.",
 						Context.currentPos());
 			}
 		});
