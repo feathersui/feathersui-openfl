@@ -98,6 +98,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		return this.selected;
 	}
 
+	private var _currentThumbSkin:DisplayObject = null;
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
@@ -115,38 +116,10 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 		@since 1.0.0
 	**/
-	@style
-	public var thumbSkin(default, set):DisplayObject = null;
+	@:style
+	public var thumbSkin:DisplayObject = null;
 
-	private function set_thumbSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("thumbSkin")) {
-			return this.thumbSkin;
-		}
-		if (this.thumbSkin == value) {
-			return this.thumbSkin;
-		}
-		if (this.thumbSkin != null && this.thumbSkin.parent == this) {
-			this.removeChild(this.thumbSkin);
-		}
-		this.thumbSkin = value;
-		if (this.thumbSkin != null) {
-			if (Std.is(this.thumbSkin, IUIControl)) {
-				cast(this.thumbSkin, IUIControl).initializeNow();
-			}
-			if (this._thumbSkinMeasurements == null) {
-				this._thumbSkinMeasurements = new Measurements(this.thumbSkin);
-			} else {
-				this._thumbSkinMeasurements.save(this.thumbSkin);
-			}
-			// add it above the trackSkin and secondaryTrackSkin
-			this.addChild(this.thumbSkin);
-		} else {
-			this._thumbSkinMeasurements = null;
-		}
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.thumbSkin;
-	}
-
+	private var _currentTrackSkin:DisplayObject = null;
 	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
@@ -165,38 +138,10 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 		@since 1.0.0
 	**/
-	@style
-	public var trackSkin(default, set):DisplayObject = null;
+	@:style
+	public var trackSkin:DisplayObject = null;
 
-	private function set_trackSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("trackSkin")) {
-			return this.trackSkin;
-		}
-		if (this.trackSkin == value) {
-			return this.trackSkin;
-		}
-		if (this.trackSkin != null && this.trackSkin.parent == this) {
-			this.removeChild(this.trackSkin);
-		}
-		this.trackSkin = value;
-		if (this.trackSkin != null) {
-			if (Std.is(this.trackSkin, IUIControl)) {
-				cast(this.trackSkin, IUIControl).initializeNow();
-			}
-			if (this._trackSkinMeasurements == null) {
-				this._trackSkinMeasurements = new Measurements(this.trackSkin);
-			} else {
-				this._trackSkinMeasurements.save(this.trackSkin);
-			}
-			// always on the bottom
-			this.addChildAt(this.trackSkin, 0);
-		} else {
-			this._trackSkinMeasurements = null;
-		}
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.trackSkin;
-	}
-
+	private var _currentSecondaryTrackSkin:DisplayObject = null;
 	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
@@ -225,39 +170,8 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 
 		@since 1.0.0
 	**/
-	@style
-	public var secondaryTrackSkin(default, set):DisplayObject = null;
-
-	private function set_secondaryTrackSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("secondaryTrackSkin")) {
-			return this.secondaryTrackSkin;
-		}
-		if (this.secondaryTrackSkin == value) {
-			return this.secondaryTrackSkin;
-		}
-		if (this.secondaryTrackSkin != null && this.secondaryTrackSkin.parent == this) {
-			this.removeChild(this.secondaryTrackSkin);
-		}
-		this.secondaryTrackSkin = value;
-		if (this.secondaryTrackSkin != null) {
-			if (Std.is(this.secondaryTrackSkin, IUIControl)) {
-				cast(this.secondaryTrackSkin, IUIControl).initializeNow();
-			}
-			if (this._secondaryTrackSkinMeasurements == null) {
-				this._secondaryTrackSkinMeasurements = new Measurements(this.secondaryTrackSkin);
-			} else {
-				this._secondaryTrackSkinMeasurements.save(this.secondaryTrackSkin);
-			}
-
-			// on the bottom or above the trackSkin
-			var index = this.trackSkin != null ? 1 : 0;
-			this.addChildAt(this.secondaryTrackSkin, index);
-		} else {
-			this._secondaryTrackSkinMeasurements = null;
-		}
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.secondaryTrackSkin;
-	}
+	@:style
+	public var secondaryTrackSkin:DisplayObject = null;
 
 	/**
 		The minimum space, measured in pixels, between the toggle switch's right
@@ -358,6 +272,12 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
+		if (stylesInvalid) {
+			this.refreshThumb();
+			this.refreshTrack();
+			this.refreshSecondaryTrack();
+		}
+
 		if (selectionInvalid) {
 			this.refreshSelection();
 		}
@@ -427,6 +347,83 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		var newMaxHeight = newHeight;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+	}
+
+	private function refreshThumb():Void {
+		var oldSkin = this._currentThumbSkin;
+		this._currentThumbSkin = this.thumbSkin;
+		if (this._currentThumbSkin == oldSkin) {
+			return;
+		}
+		if (oldSkin != null && oldSkin.parent == this) {
+			this.removeChild(oldSkin);
+		}
+		if (this._currentThumbSkin != null) {
+			if (Std.is(this._currentThumbSkin, IUIControl)) {
+				cast(this._currentThumbSkin, IUIControl).initializeNow();
+			}
+			if (this._thumbSkinMeasurements == null) {
+				this._thumbSkinMeasurements = new Measurements(this._currentThumbSkin);
+			} else {
+				this._thumbSkinMeasurements.save(this._currentThumbSkin);
+			}
+			// add it above the trackSkin and secondaryTrackSkin
+			this.addChild(this._currentThumbSkin);
+		} else {
+			this._thumbSkinMeasurements = null;
+		}
+	}
+
+	private function refreshTrack():Void {
+		var oldSkin = this._currentTrackSkin;
+		this._currentTrackSkin = this.trackSkin;
+		if (this._currentTrackSkin == oldSkin) {
+			return;
+		}
+		if (oldSkin != null && oldSkin.parent == this) {
+			this.removeChild(oldSkin);
+		}
+		if (this._currentTrackSkin != null) {
+			if (Std.is(this._currentTrackSkin, IUIControl)) {
+				cast(this._currentTrackSkin, IUIControl).initializeNow();
+			}
+			if (this._trackSkinMeasurements == null) {
+				this._trackSkinMeasurements = new Measurements(this._currentTrackSkin);
+			} else {
+				this._trackSkinMeasurements.save(this._currentTrackSkin);
+			}
+			// always on the bottom
+			this.addChildAt(this._currentTrackSkin, 0);
+		} else {
+			this._trackSkinMeasurements = null;
+		}
+	}
+
+	private function refreshSecondaryTrack():Void {
+		var oldSkin = this._currentSecondaryTrackSkin;
+		this._currentSecondaryTrackSkin = this.secondaryTrackSkin;
+		if (this._currentSecondaryTrackSkin == oldSkin) {
+			return;
+		}
+		if (oldSkin != null && oldSkin.parent == this) {
+			this.removeChild(oldSkin);
+		}
+		if (this._currentSecondaryTrackSkin != null) {
+			if (Std.is(this._currentSecondaryTrackSkin, IUIControl)) {
+				cast(this._currentSecondaryTrackSkin, IUIControl).initializeNow();
+			}
+			if (this._secondaryTrackSkinMeasurements == null) {
+				this._secondaryTrackSkinMeasurements = new Measurements(this._currentSecondaryTrackSkin);
+			} else {
+				this._secondaryTrackSkinMeasurements.save(this._currentSecondaryTrackSkin);
+			}
+
+			// on the bottom or above the trackSkin
+			var index = this._currentTrackSkin != null ? 1 : 0;
+			this.addChildAt(this._currentSecondaryTrackSkin, index);
+		} else {
+			this._secondaryTrackSkinMeasurements = null;
+		}
 	}
 
 	private function refreshSelection():Void {

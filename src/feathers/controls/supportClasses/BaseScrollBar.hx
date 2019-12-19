@@ -249,6 +249,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	public var liveDragging(default, default):Bool = true;
 
 	private var thumbContainer:Sprite;
+	private var _currentThumbSkin:DisplayObject = null;
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
@@ -266,57 +267,11 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@style
-	public var thumbSkin(default, set):DisplayObject = null;
-
-	private function set_thumbSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("thumbSkin")) {
-			return this.thumbSkin;
-		}
-		if (this.thumbSkin == value) {
-			return this.thumbSkin;
-		}
-		if (this.thumbSkin != null) {
-			if (this.thumbContainer != null) {
-				this.thumbContainer.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-				this.thumbContainer.removeChild(this.thumbSkin);
-				this.removeChild(this.thumbContainer);
-				this.thumbContainer = null;
-			} else {
-				this.thumbSkin.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-				this.removeChild(this.thumbSkin);
-			}
-		}
-		this.thumbSkin = value;
-		if (this.thumbSkin != null) {
-			if (Std.is(this.thumbSkin, IUIControl)) {
-				cast(this.thumbSkin, IUIControl).initializeNow();
-			}
-			if (this._thumbSkinMeasurements == null) {
-				this._thumbSkinMeasurements = new Measurements(this.thumbSkin);
-			} else {
-				this._thumbSkinMeasurements.save(this.thumbSkin);
-			}
-			if (!Std.is(this.thumbSkin, InteractiveObject)) {
-				// if the skin isn't interactive, we need to add it to something
-				// that is interactive
-				this.thumbContainer = new Sprite();
-				this.thumbContainer.addChild(this.thumbSkin);
-				this.addChild(this.thumbContainer);
-				this.thumbContainer.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-			} else {
-				// add it above the trackSkin and secondaryTrackSkin
-				this.addChild(this.thumbSkin);
-				this.thumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-			}
-		} else {
-			this._thumbSkinMeasurements = null;
-		}
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.thumbSkin;
-	}
+	@:style
+	public var thumbSkin:DisplayObject = null;
 
 	private var trackContainer:Sprite;
+	private var _currentTrackSkin:DisplayObject = null;
 	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
@@ -335,57 +290,11 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@style
-	public var trackSkin(default, set):DisplayObject = null;
-
-	private function set_trackSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("trackSkin")) {
-			return this.trackSkin;
-		}
-		if (this.trackSkin == value) {
-			return this.trackSkin;
-		}
-		if (this.trackSkin != null) {
-			if (this.trackContainer != null) {
-				this.trackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-				this.trackContainer.removeChild(this.trackSkin);
-				this.removeChild(this.trackContainer);
-				this.trackContainer = null;
-			} else {
-				this.removeChild(this.trackSkin);
-				this.trackSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
-		}
-		this.trackSkin = value;
-		if (this.trackSkin != null) {
-			if (Std.is(this.trackSkin, IUIControl)) {
-				cast(this.trackSkin, IUIControl).initializeNow();
-			}
-			if (this._trackSkinMeasurements == null) {
-				this._trackSkinMeasurements = new Measurements(this.trackSkin);
-			} else {
-				this._trackSkinMeasurements.save(this.trackSkin);
-			}
-			if (!Std.is(this.trackSkin, InteractiveObject)) {
-				// if the skin isn't interactive, we need to add it to something
-				// that is interactive
-				this.trackContainer = new Sprite();
-				this.trackContainer.addChild(this.trackSkin);
-				this.addChildAt(this.trackContainer, 0);
-				this.trackContainer.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			} else {
-				// always on the bottom
-				this.addChildAt(this.trackSkin, 0);
-				this.trackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
-		} else {
-			this._trackSkinMeasurements = null;
-		}
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.trackSkin;
-	}
+	@:style
+	public var trackSkin:DisplayObject = null;
 
 	private var secondaryTrackContainer:Sprite;
+	private var _currentSecondaryTrackSkin:DisplayObject = null;
 	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
@@ -414,58 +323,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@style
-	public var secondaryTrackSkin(default, set):DisplayObject = null;
-
-	private function set_secondaryTrackSkin(value:DisplayObject):DisplayObject {
-		if (!this.setStyle("secondaryTrackSkin")) {
-			return this.secondaryTrackSkin;
-		}
-		if (this.secondaryTrackSkin == value) {
-			return this.secondaryTrackSkin;
-		}
-		if (this.secondaryTrackSkin != null) {
-			if (this.secondaryTrackContainer != null) {
-				this.secondaryTrackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-				this.secondaryTrackContainer.removeChild(this.secondaryTrackSkin);
-				this.removeChild(this.secondaryTrackContainer);
-				this.secondaryTrackContainer = null;
-			} else {
-				this.removeChild(this.secondaryTrackSkin);
-				this.secondaryTrackSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
-		}
-		this.secondaryTrackSkin = value;
-		if (this.secondaryTrackSkin != null) {
-			if (Std.is(this.secondaryTrackSkin, IUIControl)) {
-				cast(this.secondaryTrackSkin, IUIControl).initializeNow();
-			}
-			if (this._secondaryTrackSkinMeasurements == null) {
-				this._secondaryTrackSkinMeasurements = new Measurements(this.secondaryTrackSkin);
-			} else {
-				this._secondaryTrackSkinMeasurements.save(this.secondaryTrackSkin);
-			}
-
-			// on the bottom or above the trackSkin
-			var index = this.trackSkin != null ? 1 : 0;
-
-			if (!Std.is(this.secondaryTrackSkin, InteractiveObject)) {
-				// if the skin isn't interactive, we need to add it to something
-				// that is interactive
-				this.secondaryTrackContainer = new Sprite();
-				this.secondaryTrackContainer.addChild(this.secondaryTrackSkin);
-				this.addChildAt(this.secondaryTrackContainer, index);
-				this.secondaryTrackContainer.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			} else {
-				this.addChildAt(this.secondaryTrackSkin, index);
-				this.secondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
-		} else {
-			this._secondaryTrackSkinMeasurements = null;
-		}
-		this.setInvalid(InvalidationFlag.STYLES);
-		return this.secondaryTrackSkin;
-	}
+	@:style
+	public var secondaryTrackSkin:DisplayObject = null;
 
 	/**
 		Determines if the scroll bar's thumb will be resized based on the
@@ -585,6 +444,13 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	override private function update():Void {
 		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+
+		if (stylesInvalid) {
+			this.refreshThumb();
+			this.refreshTrack();
+			this.refreshSecondaryTrack();
+		}
 
 		if (stateInvalid) {
 			this.refreshEnabled();
@@ -597,6 +463,138 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 	private function autoSizeIfNeeded():Bool {
 		throw new TypeError("Missing override for 'autoSizeIfNeeded' in type " + Type.getClassName(Type.getClass(this)));
+	}
+
+	private function refreshThumb():Void {
+		var oldSkin = this._currentThumbSkin;
+		this._currentThumbSkin = this.thumbSkin;
+		if (this._currentThumbSkin == oldSkin) {
+			return;
+		}
+		if (oldSkin != null) {
+			if (this.thumbContainer != null) {
+				this.thumbContainer.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
+				this.thumbContainer.removeChild(oldSkin);
+				this.removeChild(this.thumbContainer);
+				this.thumbContainer = null;
+			} else {
+				oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
+				this.removeChild(oldSkin);
+			}
+		}
+		if (this._currentThumbSkin != null) {
+			if (Std.is(this._currentThumbSkin, IUIControl)) {
+				cast(this._currentThumbSkin, IUIControl).initializeNow();
+			}
+			if (this._thumbSkinMeasurements == null) {
+				this._thumbSkinMeasurements = new Measurements(this._currentThumbSkin);
+			} else {
+				this._thumbSkinMeasurements.save(this._currentThumbSkin);
+			}
+			if (!Std.is(this._currentThumbSkin, InteractiveObject)) {
+				// if the skin isn't interactive, we need to add it to something
+				// that is interactive
+				this.thumbContainer = new Sprite();
+				this.thumbContainer.addChild(this._currentThumbSkin);
+				this.addChild(this.thumbContainer);
+				this.thumbContainer.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
+			} else {
+				// add it above the trackSkin and secondaryTrackSkin
+				this.addChild(this._currentThumbSkin);
+				this._currentThumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
+			}
+		} else {
+			this._thumbSkinMeasurements = null;
+		}
+	}
+
+	private function refreshTrack():Void {
+		var oldSkin = this._currentTrackSkin;
+		this._currentTrackSkin = this.trackSkin;
+		if (this._currentTrackSkin == oldSkin) {
+			return;
+		}
+		if (oldSkin != null) {
+			if (this.trackContainer != null) {
+				this.trackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+				this.trackContainer.removeChild(oldSkin);
+				this.removeChild(this.trackContainer);
+				this.trackContainer = null;
+			} else {
+				this.removeChild(oldSkin);
+				oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+			}
+		}
+		if (this._currentTrackSkin != null) {
+			if (Std.is(this._currentTrackSkin, IUIControl)) {
+				cast(this._currentTrackSkin, IUIControl).initializeNow();
+			}
+			if (this._trackSkinMeasurements == null) {
+				this._trackSkinMeasurements = new Measurements(this._currentTrackSkin);
+			} else {
+				this._trackSkinMeasurements.save(this._currentTrackSkin);
+			}
+			if (!Std.is(this._currentTrackSkin, InteractiveObject)) {
+				// if the skin isn't interactive, we need to add it to something
+				// that is interactive
+				this.trackContainer = new Sprite();
+				this.trackContainer.addChild(this._currentTrackSkin);
+				this.addChildAt(this.trackContainer, 0);
+				this.trackContainer.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+			} else {
+				// always on the bottom
+				this.addChildAt(this._currentTrackSkin, 0);
+				this._currentTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+			}
+		} else {
+			this._trackSkinMeasurements = null;
+		}
+	}
+
+	private function refreshSecondaryTrack():Void {
+		var oldSkin = this._currentSecondaryTrackSkin;
+		this._currentSecondaryTrackSkin = this.secondaryTrackSkin;
+		if (this._currentSecondaryTrackSkin == oldSkin) {
+			return;
+		}
+		if (oldSkin != null) {
+			if (this.secondaryTrackContainer != null) {
+				this.secondaryTrackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+				this.secondaryTrackContainer.removeChild(oldSkin);
+				this.removeChild(this.secondaryTrackContainer);
+				this.secondaryTrackContainer = null;
+			} else {
+				this.removeChild(oldSkin);
+				oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+			}
+		}
+		if (this._currentSecondaryTrackSkin != null) {
+			if (Std.is(this._currentSecondaryTrackSkin, IUIControl)) {
+				cast(this._currentSecondaryTrackSkin, IUIControl).initializeNow();
+			}
+			if (this._secondaryTrackSkinMeasurements == null) {
+				this._secondaryTrackSkinMeasurements = new Measurements(this._currentSecondaryTrackSkin);
+			} else {
+				this._secondaryTrackSkinMeasurements.save(this._currentSecondaryTrackSkin);
+			}
+
+			// on the bottom or above the trackSkin
+			var index = this._currentTrackSkin != null ? 1 : 0;
+
+			if (!Std.is(this._currentSecondaryTrackSkin, InteractiveObject)) {
+				// if the skin isn't interactive, we need to add it to something
+				// that is interactive
+				this.secondaryTrackContainer = new Sprite();
+				this.secondaryTrackContainer.addChild(this._currentSecondaryTrackSkin);
+				this.addChildAt(this.secondaryTrackContainer, index);
+				this.secondaryTrackContainer.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+			} else {
+				this.addChildAt(this._currentSecondaryTrackSkin, index);
+				this._currentSecondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+			}
+		} else {
+			this._secondaryTrackSkinMeasurements = null;
+		}
 	}
 
 	private function refreshEnabled():Void {
