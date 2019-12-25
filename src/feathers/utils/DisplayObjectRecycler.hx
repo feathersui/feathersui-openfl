@@ -15,21 +15,47 @@ import openfl.display.DisplayObject;
 	Manages display objects that may be used to render data, in a component like
 	`ListView` or `TabBar`.
 
+	@see `DisplayObjectRecycler.withClass()`
+	@see `DisplayObjectRecycler.withFunction()`
+
 	@since 1.0.0
 **/
-class DisplayObjectRecycler<T:B & DisplayObject & Constructible<() -> Void>, S, B> {
+class DisplayObjectRecycler<T:B, S, B:DisplayObject> {
 	/**
-		Creates a new `DisplayObjectRecycler` object with the given arguments.
+		Creates a `DisplayObjectRecycler` that instantiates a display object by
+		instantiating the specified class. The class must have a constructor
+		with zero required arguments.
 
-		@since 1.0.0
+		To instantiate an object with one or more required constructor
+		arguments, use `DisplayObjectRecycler.withFunction()` instead.
 	**/
-	public function new(create:ObjectFactory<T>, ?update:(target:T, state:S) -> Void, ?reset:(target:T, state:S) -> Void, ?destroy:(T) -> Void) {
-		this.create = create;
-		// these are all allowed to be null
-		this.update = update;
-		this.reset = reset;
-		this.destroy = destroy;
+	public static function withClass<T:B & Constructible<() -> Void>, S, B:DisplayObject>(displayObjectType:Class<T>, ?update:(target:T, state:S) -> Void,
+			?reset:(target:T, state:S) -> Void, ?destroy:(T) -> Void):DisplayObjectRecycler<T, S, B> {
+		var item = new DisplayObjectRecycler<T, S, B>();
+		item.create = () -> {
+			Type.createInstance(displayObjectType, []);
+		};
+		item.update = update;
+		item.reset = reset;
+		item.destroy = destroy;
+		return item;
 	}
+
+	/**
+		Creates a `DisplayObjectRecycler` that instantiates a display object by
+		calling the specified function.
+	**/
+	public static function withFunction<T:B, S, B:DisplayObject>(create:() -> T, ?update:(target:T, state:S) -> Void, ?reset:(target:T, state:S) -> Void,
+			?destroy:(T) -> Void):DisplayObjectRecycler<T, S, B> {
+		var item = new DisplayObjectRecycler<T, S, B>();
+		item.create = create;
+		item.update = update;
+		item.reset = reset;
+		item.destroy = destroy;
+		return item;
+	}
+
+	private function new() {}
 
 	/**
 		Updates the properties an existing display object. It may be a display

@@ -191,15 +191,15 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	/**
 		Manages tabs used by the tab bar.
 
-		In the following example, the tab bar uses a custom tab renderer:
+		In the following example, the tab bar uses a custom tab renderer class:
 
 		```hx
-		tabBar.itemRendererRecycler = new DisplayObjectRecycler(ToggleButton);
+		tabBar.itemRendererRecycler = DisplayObjectRecycler.withClass(ToggleButton);
 		```
 
 		@since 1.0.0
 	**/
-	public var tabRecycler:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> = new DisplayObjectRecycler(ToggleButton);
+	public var tabRecycler:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> = DisplayObjectRecycler.withClass(ToggleButton);
 
 	private var inactiveTabs:Array<ToggleButton> = [];
 	private var activeTabs:Array<ToggleButton> = [];

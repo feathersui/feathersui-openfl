@@ -225,15 +225,16 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		Manages item renderers used by the list view.
 
 		In the following example, the pop-up list view uses a custom item
-		renderer:
+		renderer class:
 
 		```hx
-		comboBox.itemRendererRecycler = new DisplayObjectRecycler(CustomItemRenderer);
+		comboBox.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = new DisplayObjectRecycler(ItemRenderer);
+	public var itemRendererRecycler(default,
+		set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
 
 	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		ListViewItemState, DisplayObject> {
