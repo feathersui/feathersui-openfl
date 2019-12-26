@@ -208,7 +208,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	@:isVar
 	public var selectedItem(get, set):Dynamic = null;
 
-	private function get_selectedItem():Int {
+	private function get_selectedItem():Dynamic {
 		return this.selectedItem;
 	}
 
