@@ -15,7 +15,7 @@ import openfl.errors.ArgumentError;
 	Selects a scale value for the application based on the screen density
 	(sometimes density is called DPI or PPI).
 
-	@see `openfl.system.Capabilities.screenDPI`
+	@see [`openfl.system.Capabilities.screenDPI`](https://api.openfl.org/openfl/system/Capabilities.html#screenDPI)
 
 	@since 1.0.0
 **/

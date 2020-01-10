@@ -13,8 +13,9 @@ import openfl.events.Event;
 import feathers.events.FeathersEvent;
 
 /**
-	A `openfl.display.Sprite` with extra minimum and maximum dimensions that may
-	be used in Feathers UI layouts.
+	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)
+	with extra minimum and maximum dimensions that may be used in Feathers UI
+	layouts.
 
 	@since 1.0.0
 **/

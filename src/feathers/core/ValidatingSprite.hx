@@ -14,9 +14,10 @@ import openfl.events.Event;
 import feathers.utils.DisplayUtil;
 
 /**
-	A `openfl.display.Sprite` with a validation system where multiple property
-	changes may be queued up to be processed all at once. A performance
-	optimization for frequently changing user interfaces.
+	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)
+	with a validation system where multiple property changes may be queued up to
+	be processed all at once. A performance optimization for frequently changing
+	user interfaces.
 
 	@since 1.0.0
 **/

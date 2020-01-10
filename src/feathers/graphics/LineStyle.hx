@@ -24,7 +24,7 @@ enum LineStyle {
 	/**
 		The line is drawn as a solid color at the specified thickness.
 
-		@see `openfl.display.Graphics.lineStyle`
+		@see [`openfl.display.Graphics.lineStyle()`](https://api.openfl.org/openfl/display/Graphics.html#lineStyle)
 
 		@since 1.0.0
 	**/
@@ -34,7 +34,7 @@ enum LineStyle {
 	/**
 		The line is rendered as a gradient of multiple colors.
 
-		@see `openfl.display.Graphics.lineGradientStyle`
+		@see [`openfl.display.Graphics.lineGradientStyle()`](https://api.openfl.org/openfl/display/Graphics.html#lineGradientStyle)
 
 		@since 1.0.0
 	**/

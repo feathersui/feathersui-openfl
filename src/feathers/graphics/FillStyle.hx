@@ -23,7 +23,7 @@ enum FillStyle {
 	/**
 		The fill is rendered as a solid color with the specified alpha.
 
-		@see `openfl.display.Graphics.beginFill`
+		@see [`openfl.display.Graphics.beginFill()`](https://api.openfl.org/openfl/display/Graphics.html#beginFill)
 
 		@since 1.0.0
 	**/
@@ -32,7 +32,7 @@ enum FillStyle {
 	/**
 		The fill is rendered as a bitmap.
 
-		@see `openfl.display.Graphics.beginBitmapFill`
+		@see [`openfl.display.Graphics.beginBitmapFill()`](https://api.openfl.org/openfl/display/Graphics.html#beginBitmapFill)
 
 		@since 1.0.0
 	**/
@@ -41,7 +41,7 @@ enum FillStyle {
 	/**
 		The fill is rendered as a gradient of multiple colors.
 
-		@see `openfl.display.Graphics.beginGradientFill`
+		@see [`openfl.display.Graphics.beginGradientFill()`](https://api.openfl.org/openfl/display/Graphics.html#beginGradientFill)
 
 		@since 1.0.0
 	**/
