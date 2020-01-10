@@ -102,6 +102,16 @@ class StyleMacro {
 							{
 								name: ":noCompletion",
 								pos: Context.currentPos()
+							},
+							{
+								name: ":dox",
+								params: [
+									{
+										expr: EConst(CIdent("hide")),
+										pos: Context.currentPos()
+									}
+								],
+								pos: Context.currentPos()
 							}
 						]
 					});
