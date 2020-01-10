@@ -190,6 +190,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		takes precedence over the `selectedIcon`.
 
 		@see `ToggleButton.icon`
+		@see `BasicToggleButton.selected`
 
 		@since 1.0.0
 	**/
@@ -270,6 +271,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		`disabledTextFormat` takes precedence over the `selectedTextFormat`.
 
 		@see `ToggleButton.textFormat`
+		@see `BasicToggleButton.selected`
 
 		@since 1.0.0
 	**/

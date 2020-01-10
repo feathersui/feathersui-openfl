@@ -216,6 +216,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		@see `BasicToggleButton.backgroundSkin`
 		@see `BasicToggleButton.getSkinForState()`
 		@see `BasicToggleButton.setSkinForState()`
+		@see `BasicToggleButton.selected`
 
 		@since 1.0.0
 	**/
