@@ -13,8 +13,8 @@ import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
 /**
-	Extra, optional data used by a `HorizontalLayout` instance to position and
-	size a display object.
+	Provides optional percentage sizing for children of containers that use
+	`HorizontalLayout`.
 
 	@see `feathers.layout.HorizontalLayout`
 	@see `feathers.layout.ILayoutObject.layoutData`

@@ -13,8 +13,7 @@ import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
 /**
-	Extra, optional data used by an `AnchorLayout` instance to position and size
-	a display object.
+	Sets anchors on children of containers that use `AnchorLayout`.
 
 	@see `feathers.layout.AnchorLayout`
 	@see `feathers.layout.ILayoutObject.layoutData`
