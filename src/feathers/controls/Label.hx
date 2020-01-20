@@ -92,7 +92,7 @@ class Label extends FeathersControl implements ITextControl {
 
 	private var _previousText:String = null;
 	private var _previousTextFormat:TextFormat = null;
-	private var _updatedTextFormat = false;
+	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 
@@ -262,6 +262,23 @@ class Label extends FeathersControl implements ITextControl {
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
+	/**
+		Determines if the text is displayed on a single line, or if it wraps.
+
+		In the following example, the label's text wraps at 150 pixels:
+
+		```hx
+		label.width = 150.0;
+		label.wordWrap = true;
+		```
+
+		@default false
+
+		@since 1.0.0
+	**/
+	@:style
+	public var wordWrap:Bool = false;
+
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 
@@ -323,7 +340,7 @@ class Label extends FeathersControl implements ITextControl {
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
-		this._updatedTextFormat = false;
+		this._updatedTextStyles = false;
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
@@ -429,6 +446,10 @@ class Label extends FeathersControl implements ITextControl {
 	}
 
 	private function refreshTextStyles():Void {
+		if (this.textField.wordWrap != this.wordWrap) {
+			this.textField.wordWrap = this.wordWrap;
+			this._updatedTextStyles = true;
+		}
 		var textFormat = this.getCurrentTextFormat();
 		if (textFormat == this._previousTextFormat) {
 			// nothing to refresh
@@ -436,13 +457,13 @@ class Label extends FeathersControl implements ITextControl {
 		}
 		if (textFormat != null) {
 			this.textField.defaultTextFormat = textFormat;
-			this._updatedTextFormat = true;
+			this._updatedTextStyles = true;
 			this._previousTextFormat = textFormat;
 		}
 	}
 
 	private function refreshText():Void {
-		if (this.text == this._previousText && !this._updatedTextFormat) {
+		if (this.text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
 		}
@@ -453,6 +474,15 @@ class Label extends FeathersControl implements ITextControl {
 			this.textField.text = "\u8203"; // zero-width space
 		}
 		this.textField.autoSize = TextFieldAutoSize.LEFT;
+		var textFieldWidth:Null<Float> = null;
+		if (this.explicitWidth != null) {
+			textFieldWidth = this.explicitWidth;
+		} else if (this.explicitMaxWidth != null) {
+			textFieldWidth = this.explicitMaxWidth;
+		}
+		if (textFieldWidth != null) {
+			this.textField.width = textFieldWidth;
+		}
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;
