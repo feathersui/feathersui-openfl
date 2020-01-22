@@ -392,7 +392,7 @@ class BaseNavigator extends FeathersControl {
 		if (properties != null) {
 			for (propertyName in properties.keys()) {
 				var propertyValue = properties.get(propertyName);
-				Reflect.setField(this.activeItemView, propertyName, propertyValue);
+				Reflect.setProperty(this.activeItemView, propertyName, propertyValue);
 			}
 		}
 		if (Std.is(this.activeItemView, INavigatorView)) {
