@@ -63,6 +63,7 @@ class StyleMacro {
 					}
 
 					// generate a setter
+					var clearStyleName = "clearStyle_" + field.name;
 					var setter:Function = {
 						expr: macro {
 							if (!this.setStyle($v{field.name})) {
@@ -71,6 +72,10 @@ class StyleMacro {
 							if ($i{field.name} == value) {
 								return $i{field.name};
 							}
+							// in a -final build, this forces the clearStyle
+							// function to be kept if the property is kept
+							// otherwise, it would be removed by dce/closure
+							this._previousClearStyle = $i{clearStyleName};
 							$i{field.name} = value;
 							this.setInvalid(feathers.core.InvalidationFlag.STYLES);
 							return $i{field.name};
@@ -94,7 +99,7 @@ class StyleMacro {
 						args: []
 					};
 					extraFields.push({
-						name: "clearStyle_" + field.name,
+						name: clearStyleName,
 						access: [Access.APublic],
 						kind: FieldType.FFun(clearFunction),
 						pos: Context.currentPos(),

@@ -401,6 +401,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this._applyingStyles = oldApplyingStyles;
 	}
 
+	private var _previousClearStyle:Dynamic;
+
 	private function clearStyles():Void {
 		var oldClearingStyles = this._clearingStyles;
 		this._clearingStyles = true;
