@@ -67,7 +67,7 @@ class VScrollBar extends BaseScrollBar {
 		this._thumbStartY = Math.min(trackHeightMinusThumbHeight, locationMinusHalfThumbHeight);
 	}
 
-	override private function autoSizeIfNeeded():Bool {
+	override private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

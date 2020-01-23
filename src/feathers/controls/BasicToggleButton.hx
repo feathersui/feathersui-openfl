@@ -299,7 +299,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 			this.refreshInteractivity();
 		}
 
-		this.autoSizeIfNeeded();
+		this.measure();
 		this.layoutBackgroundSkin();
 	}
 
@@ -357,7 +357,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		}
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

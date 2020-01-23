@@ -177,11 +177,11 @@ class BaseNavigator extends FeathersControl {
 
 	override private function update():Void {
 		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
-		sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
+		sizeInvalid = this.measure() || sizeInvalid;
 		this.layoutContent();
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

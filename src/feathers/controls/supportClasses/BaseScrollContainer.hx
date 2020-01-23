@@ -681,9 +681,9 @@ class BaseScrollContainer extends FeathersControl {
 			}
 			this.calculateViewPortOffsets(false, false);
 
-			this.autoSizeIfNeeded();
+			this.measure();
 
-			// just in case autoSizeIfNeeded() is overridden, we need to call
+			// just in case measure() is overridden, we need to call
 			// this again and use actualWidth/Height instead of
 			// explicitWidth/Height.
 			this.calculateViewPortOffsets(false, true);
@@ -889,7 +889,7 @@ class BaseScrollContainer extends FeathersControl {
 		}
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

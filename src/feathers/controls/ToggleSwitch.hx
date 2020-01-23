@@ -286,12 +286,12 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 			this.refreshEnabled();
 		}
 
-		sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
+		sizeInvalid = this.measure() || sizeInvalid;
 
 		this.layoutContent();
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

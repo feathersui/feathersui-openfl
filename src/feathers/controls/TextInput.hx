@@ -457,7 +457,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.refreshScrollPosition();
 		}
 
-		this.autoSizeIfNeeded();
+		this.measure();
 		this.layoutContent();
 	}
 
@@ -508,7 +508,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

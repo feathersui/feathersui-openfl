@@ -398,7 +398,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			this.refreshEnabled();
 		}
 
-		this.autoSizeIfNeeded();
+		this.measure();
 		this.layoutChildren();
 	}
 
@@ -478,7 +478,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		return itemText.indexOf(this._filterText.toLowerCase()) != -1;
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

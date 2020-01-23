@@ -300,10 +300,6 @@ class BaseProgressBar extends FeathersControl {
 	@:style
 	public var paddingLeft:Float = 0.0;
 
-	private function autoSizeIfNeeded():Bool {
-		throw new TypeError("Missing override for 'autoSizeIfNeeded' in type " + Type.getClassName(Type.getClass(this)));
-	}
-
 	override private function update():Void {
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
@@ -313,8 +309,12 @@ class BaseProgressBar extends FeathersControl {
 			this.refreshFillSkin();
 		}
 
-		this.autoSizeIfNeeded();
+		this.measure();
 		this.layoutContent();
+	}
+
+	private function measure():Bool {
+		throw new TypeError("Missing override for 'measure' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
 	private function refreshBackgroundSkin():Void {

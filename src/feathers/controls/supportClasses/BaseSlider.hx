@@ -343,13 +343,13 @@ class BaseSlider extends FeathersControl implements IRange {
 			this.refreshEnabled();
 		}
 
-		sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
+		sizeInvalid = this.measure() || sizeInvalid;
 
 		this.layoutContent();
 	}
 
-	private function autoSizeIfNeeded():Bool {
-		throw new TypeError("Missing override for 'autoSizeIfNeeded' in type " + Type.getClassName(Type.getClass(this)));
+	private function measure():Bool {
+		throw new TypeError("Missing override for 'measure' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
 	private function refreshThumb():Void {

@@ -178,11 +178,11 @@ class AssetLoader extends FeathersControl {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
 
-		this.autoSizeIfNeeded();
+		this.measure();
 		this.layoutChildren();
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

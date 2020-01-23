@@ -90,7 +90,7 @@ class Panel extends ScrollContainer {
 		this.layoutFooter();
 	}
 
-	override private function autoSizeIfNeeded():Bool {
+	override private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

@@ -200,7 +200,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 			this.refreshInteractivity();
 		}
 
-		this.autoSizeIfNeeded();
+		this.measure();
 		this.layoutBackgroundSkin();
 	}
 
@@ -255,7 +255,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		}
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

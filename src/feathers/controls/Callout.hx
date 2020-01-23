@@ -588,12 +588,12 @@ class Callout extends FeathersControl {
 			this.refreshEnabled();
 		}
 
-		sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
+		sizeInvalid = this.measure() || sizeInvalid;
 
 		this.layoutChildren();
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		return this.measureWithArrowPosition(this.arrowPosition);
 	}
 

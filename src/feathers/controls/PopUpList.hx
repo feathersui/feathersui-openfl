@@ -370,7 +370,7 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 			this.refreshEnabled();
 		}
 
-		this.autoSizeIfNeeded();
+		this.measure();
 		this.layoutChildren();
 	}
 
@@ -421,7 +421,7 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		this.listView.enabled = this.enabled;
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

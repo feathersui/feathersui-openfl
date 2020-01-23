@@ -354,14 +354,14 @@ class Label extends FeathersControl implements ITextControl {
 			this.refreshText();
 		}
 
-		this.autoSizeIfNeeded();
+		this.measure();
 
 		if (stylesInvalid || stateInvalid || dataInvalid || sizeInvalid) {
 			this.layoutContent();
 		}
 	}
 
-	private function autoSizeIfNeeded():Bool {
+	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

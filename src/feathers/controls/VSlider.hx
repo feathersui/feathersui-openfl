@@ -84,7 +84,7 @@ class VSlider extends BaseSlider {
 		return this.minimum + percentage * (this.maximum - this.minimum);
 	}
 
-	override private function autoSizeIfNeeded():Bool {
+	override private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;

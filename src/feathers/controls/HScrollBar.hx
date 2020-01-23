@@ -67,7 +67,7 @@ class HScrollBar extends BaseScrollBar {
 		this._thumbStartY = location.y;
 	}
 
-	override function autoSizeIfNeeded():Bool {
+	override function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
 		var needsMinWidth = this.explicitMinWidth == null;
