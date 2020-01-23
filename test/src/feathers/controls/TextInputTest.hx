@@ -11,6 +11,7 @@ package feathers.controls;
 import openfl.display.Shape;
 import massive.munit.Assert;
 
+@:keep
 @:access(feathers.controls.TextInput)
 class TextInputTest {
 	private var _input:TextInput;

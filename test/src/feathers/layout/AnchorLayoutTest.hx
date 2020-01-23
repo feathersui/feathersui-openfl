@@ -12,6 +12,7 @@ import openfl.display.Shape;
 import feathers.layout.Measurements;
 import massive.munit.Assert;
 
+@:keep
 class AnchorLayoutTest {
 	private static final PADDING_TOP = 6.0;
 	private static final PADDING_RIGHT = 8.0;

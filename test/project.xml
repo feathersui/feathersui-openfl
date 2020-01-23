@@ -10,4 +10,6 @@
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
 	<haxelib name="munit" />
+	<!-- this gets removed by dce for some reason -->
+	<haxeflag name="--macro" value="keep('TestSuite')" />
 </project>

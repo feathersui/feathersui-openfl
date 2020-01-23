@@ -12,6 +12,7 @@ import openfl.errors.Error;
 import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 
+@:keep
 class InvalidationTest {
 	private var _control:LayoutGroup;
 	private var _control2:InvalidationControl;

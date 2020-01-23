@@ -11,6 +11,7 @@ package feathers.controls;
 import openfl.display.Shape;
 import massive.munit.Assert;
 
+@:keep
 @:access(feathers.controls.Button)
 class ButtonTest {
 	private var _button:Button;

@@ -12,6 +12,7 @@ import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 import openfl.events.Event;
 
+@:keep
 class FunctionStyleProviderTest {
 	private var _control:LayoutGroup;
 	private var _styleProvider:FunctionStyleProvider;

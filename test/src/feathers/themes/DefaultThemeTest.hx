@@ -11,6 +11,7 @@ package feathers.themes;
 import massive.munit.Assert;
 import feathers.controls.Button;
 
+@:keep
 class DefaultThemeTest {
 	private var _control:Button;
 

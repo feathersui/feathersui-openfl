@@ -16,6 +16,7 @@ import feathers.controls.BasicButton;
 import feathers.events.FeathersEvent;
 import massive.munit.Assert;
 
+@:keep
 class BasicButtonMeasurementTest {
 	private static final SHAPE_WIDTH = 10.0;
 	private static final SHAPE_HEIGHT = 12.0;

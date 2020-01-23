@@ -14,6 +14,7 @@ import massive.munit.Assert;
 import feathers.events.FlatCollectionEvent;
 import openfl.events.Event;
 
+@:keep
 class ArrayCollectionTest {
 	private var _collection:ArrayCollection<MockItem>;
 	private var _a:MockItem;

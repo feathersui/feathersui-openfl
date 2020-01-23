@@ -13,6 +13,7 @@ import openfl.display.Sprite;
 import feathers.controls.BasicButton;
 import massive.munit.Assert;
 
+@:keep
 @:access(feathers.core.FeathersControl)
 class RestrictedStyleTest {
 	private var _control:BasicButton;

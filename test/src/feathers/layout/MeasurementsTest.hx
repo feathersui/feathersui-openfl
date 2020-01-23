@@ -12,6 +12,7 @@ import feathers.layout.Measurements;
 import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 
+@:keep
 class MeasurementsTest {
 	private var _measurements:Measurements;
 	private var _control:LayoutGroup;

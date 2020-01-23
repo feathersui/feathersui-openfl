@@ -11,6 +11,7 @@ package feathers.style;
 import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 
+@:keep
 class ClassVariantStyleProviderTest {
 	private static final VARIANT_ONE = "one";
 	private static final VARIANT_TWO = "two";

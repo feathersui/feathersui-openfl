@@ -11,6 +11,7 @@ package feathers.style;
 import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 
+@:keep
 class ThemeTest {
 	private var _container:LayoutGroup;
 	private var _containerChild:LayoutGroup;

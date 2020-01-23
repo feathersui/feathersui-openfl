@@ -12,6 +12,7 @@ import openfl.display.Shape;
 import feathers.controls.LayoutGroup;
 import massive.munit.Assert;
 
+@:keep
 class MinAndMaxDimensionsTest {
 	private static final MIN_SIZE = 100.0;
 	private static final EXPLICIT_SIZE_SMALLER_THAN_MIN_SIZE = 50.0;

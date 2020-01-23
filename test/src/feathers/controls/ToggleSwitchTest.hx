@@ -13,6 +13,7 @@ import openfl.events.Event;
 import feathers.controls.ToggleSwitch;
 import massive.munit.Assert;
 
+@:keep
 class ToggleSwitchTest {
 	private var _toggle:ToggleSwitch;
 

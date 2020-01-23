@@ -39,7 +39,7 @@ haxelib run munit test -swf -browser chrome
 To run CPP tests on Windows or macOS desktop, use the following command:
 
 ```sh
-haxelib run openfl test cpp
+haxelib run openfl test cpp -final
 ```
 
 ## Run Neko tests
@@ -47,5 +47,5 @@ haxelib run openfl test cpp
 To run tests in Neko, use the following command:
 
 ```sh
-haxelib run openfl test neko
+haxelib run openfl test neko -final
 ```

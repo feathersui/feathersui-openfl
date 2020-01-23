@@ -16,6 +16,7 @@ import massive.munit.async.AsyncFactory;
 import openfl.events.Event;
 import massive.munit.Assert;
 
+@:keep
 class AssetLoaderTest {
 	private static final BLUE100x50 = "blue100x50.png";
 	private static final RED200x300 = "red200x300.png";

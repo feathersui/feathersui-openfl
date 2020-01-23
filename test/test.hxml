@@ -8,17 +8,17 @@
 
 --next
 
--cmd haxelib run openfl build html5
+-cmd haxelib run openfl build html5 -final
 -js build/html5/bin/TestMain.js
 
 --next
 
--cmd haxelib run openfl build flash
+-cmd haxelib run openfl build flash -final
 -swf-version 30
 -swf-header 960:640:60:ffffff
 -swf build/flash/bin/TestMain.swf
 
 --next
 
--cmd haxelib run openfl build neko
+-cmd haxelib run openfl build neko -final
 -neko build/neko/obj/ApplicationMain.n

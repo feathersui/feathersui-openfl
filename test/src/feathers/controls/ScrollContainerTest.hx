@@ -11,6 +11,7 @@ package feathers.controls;
 import massive.munit.Assert;
 import openfl.display.Shape;
 
+@:keep
 class ScrollContainerTest {
 	private var _container:ScrollContainer;
 

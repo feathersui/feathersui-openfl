@@ -15,6 +15,7 @@ import feathers.controls.BasicButton;
 import feathers.events.FeathersEvent;
 import massive.munit.Assert;
 
+@:keep
 @:access(feathers.controls.BasicButton)
 class BasicButtonTest {
 	private var _button:BasicButton;

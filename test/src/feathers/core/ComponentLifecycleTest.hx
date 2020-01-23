@@ -12,6 +12,7 @@ import feathers.controls.LayoutGroup;
 import feathers.events.FeathersEvent;
 import massive.munit.Assert;
 
+@:keep
 class ComponentLifecycleTest {
 	private var _control:LayoutGroup;
 

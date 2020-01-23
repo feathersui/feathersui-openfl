@@ -14,6 +14,7 @@ import openfl.display.Shape;
 import feathers.core.PopUpManager;
 import massive.munit.Assert;
 
+@:keep
 class DefaultPopUpManagerTest {
 	private static final POPUP1_WIDTH = 10.0;
 	private static final POPUP1_HEIGHT = 20.0;

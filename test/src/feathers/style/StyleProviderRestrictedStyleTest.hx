@@ -12,6 +12,7 @@ import massive.munit.Assert;
 import openfl.display.Shape;
 import feathers.controls.Button;
 
+@:keep
 class StyleProviderRestrictedStyleTest {
 	private var _styleProvider:FunctionStyleProvider;
 	private var _control:Button;

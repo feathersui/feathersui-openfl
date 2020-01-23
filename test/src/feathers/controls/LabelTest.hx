@@ -11,6 +11,7 @@ package feathers.controls;
 import massive.munit.Assert;
 import openfl.display.Shape;
 
+@:keep
 class LabelTest {
 	private var _label:Label;
 
