@@ -21,6 +21,9 @@ import openfl.display.DisplayObject;
 	history. New items are pushed to the top of a stack, and popping the active
 	item will navigate to the previous item.
 
+	This component is designed for use in native apps. For web browser apps,
+	consider using `RouterNavigator` instead.
+
 	The following example creates a stack navigator, adds an item, and displays
 	it as the root of the history:
 
@@ -35,7 +38,7 @@ import openfl.display.DisplayObject;
 	@see [Tutorial: How to use the StackNavigator component](https://feathersui.com/learn/haxe-openfl/stack-navigator/)
 	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 	@see `feathers.controls.navigators.StackItem`
-	@see `feathers.controls.navigators.TabNavigator`
+	@see `feathers.controls.navigators.StackAction`
 
 	@since 1.0.0
 **/

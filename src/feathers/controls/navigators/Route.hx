@@ -13,6 +13,9 @@ import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
 
 /**
+	An individual item that will be displayed by a `RouterNavigator` component.
+	Provides the URL path, the view, and an optional list of events to map to
+	actions (like navigate) on the `RouterNavigator`.
 
 	@see [Tutorial: How to use the RouterNavigator component](https://feathersui.com/learn/haxe-openfl/router-navigator/)
 	@see `feathers.controls.RouterNavigator`
@@ -58,6 +61,11 @@ class Route {
 
 	private function new() {}
 
+	/**
+		The URL path associated with this route.
+
+		@since 1.0.0
+	**/
 	public var path:String;
 
 	private var viewClass:Class<DisplayObject>;

@@ -12,7 +12,6 @@ package feathers.controls.navigators;
 	A view displayed in a navigator.
 
 	@see `feathers.controls.navigators.StackNavigator`
-	@see `feathers.controls.navigators.TabNavigator`
 
 	@since 1.0.0
 **/

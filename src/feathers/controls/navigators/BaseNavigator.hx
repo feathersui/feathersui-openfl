@@ -29,9 +29,6 @@ import feathers.core.FeathersControl;
 /**
 	Base class for navigator components.
 
-	@see `feathers.controls.navigators.StackNavigator`
-	@see `feathers.controls.navigators.TabNavigator`
-
 	@since 1.0.0
 **/
 class BaseNavigator extends FeathersControl {

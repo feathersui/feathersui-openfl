@@ -92,7 +92,6 @@ class FeathersEvent extends Event {
 		navigator start transitioning between items.
 
 		@see `feathers.controls.navigators.StackNavigator`
-		@see `feathers.controls.navigators.TabNavigator`
 
 		@since 1.0.0
 	**/
@@ -103,7 +102,6 @@ class FeathersEvent extends Event {
 		navigator completes transitioning between items.
 
 		@see `feathers.controls.navigators.StackNavigator`
-		@see `feathers.controls.navigators.TabNavigator`
 
 		@since 1.0.0
 	**/
@@ -115,7 +113,6 @@ class FeathersEvent extends Event {
 		previous item.
 
 		@see `feathers.controls.navigators.StackNavigator`
-		@see `feathers.controls.navigators.TabNavigator`
 
 		@since 1.0.0
 	**/

@@ -21,6 +21,18 @@ import js.html.Window;
 #end
 
 /**
+	Integrates with the HTML5 history API to allow navigation between views,
+	including support for the browser's native back and forward buttons.
+
+	This component is designed for use in web browsers, but provides a decent
+	implementation for native apps. Ideally, native apps should use
+	`StackNavigator` instead, as it provides more advanced navigation
+	capabilities that are impossible to integrate with the HTML5 history API.
+
+	@see [Tutorial: How to use the RouterNavigator component](https://feathersui.com/learn/haxe-openfl/router-navigator/)
+	@see `feathers.controls.navigators.Route`
+	@see `feathers.controls.navigators.RouterAction`
+	@see `feathers.controls.navigators.RouterNavigator`
 
 	@since 1.0.0
 **/
@@ -45,20 +57,38 @@ class RouterNavigator extends BaseNavigator {
 	#end
 
 	/**
+		Adds a route to the navigator.
+
+		The following example adds a new route for the "/settings" URL path:
+
+		```hx
+		var route = Route.withClass("/settings", SettingsView);
+		navigator.addRoute(route);
+		```
 
 		@since 1.0.0
 	**/
-	public function addItem(item:Route):Void {
-		this.addItemInternal(item.path, item);
+	public function addRoute(route:Route):Void {
+		this.addItemInternal(route.path, route);
 		if (this.stage != null) {
 			var matched = this.matchRoute();
-			if (matched == item) {
+			if (matched == route) {
 				this.navigateInternal(false, matched.path);
 			}
 		}
 	}
 
 	/**
+		Navigates to the specified URL path. The route to display will be
+		determined automatically.
+
+		The following example navigates to the "/settings" URL path:
+
+		```hx
+		navigator.navigate("/settings");
+		```
+
+		@see `feathers.controls.navigators.Route.path`
 
 		@since 1.0.0
 	**/
@@ -77,6 +107,9 @@ class RouterNavigator extends BaseNavigator {
 		#end
 		for (path => route in this._addedItems) {
 			if (pathname == path) {
+				return cast(route, Route);
+			}
+			if (path == "*") {
 				return cast(route, Route);
 			}
 		}
