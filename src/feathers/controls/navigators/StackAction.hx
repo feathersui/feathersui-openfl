@@ -27,14 +27,14 @@ enum StackAction {
 
 		@since 1.0.0
 	**/
-	Push(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	Push(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Replace the navigator's active view with a different view.
 
 		@since 1.0.0
 	**/
-	Replace(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	Replace(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Pop the active view and navigate to the previous item in the history
@@ -57,7 +57,7 @@ enum StackAction {
 
 		@since 1.0.0
 	**/
-	PopToRootAndReplace(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	PopToRootAndReplace(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Call an event listener. Does not navigate to a different view.

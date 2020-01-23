@@ -14,9 +14,9 @@ import openfl.display.DisplayObject;
 
 /**
 	An individual item that will be displayed by a `StackNavigator` component.
-	Provides the view, an optional list of properties to set, and an optional
-	list of events to map to actions (like push, pop, and replace) on the
-	`StackNavigator`.
+	Provides the view, an optional function to set properties before the view is
+	displayed, and an optional list of events to map to actions (like push, pop,
+	and replace) on the `StackNavigator`.
 
 	The following example creates a new `StackItem` using the `SettingsView`
 	class to instantiate the view instance. This item is given am id of
@@ -215,13 +215,13 @@ class StackItem {
 
 	private function performAction(action:StackAction, event:Event, navigator:StackNavigator):StackAction {
 		switch (action) {
-			case Push(id, properties, transition):
+			case Push(id, inject, transition):
 				{
-					navigator.pushItem(id, properties, transition);
+					navigator.pushItem(id, inject, transition);
 				}
-			case Replace(id, properties, transition):
+			case Replace(id, inject, transition):
 				{
-					navigator.replaceItem(id, properties, transition);
+					navigator.replaceItem(id, inject, transition);
 				}
 			case Pop(transition):
 				{
@@ -231,9 +231,9 @@ class StackItem {
 				{
 					navigator.popToRootItem(transition);
 				}
-			case PopToRootAndReplace(id, properties, transition):
+			case PopToRootAndReplace(id, inject, transition):
 				{
-					navigator.popToRootItemAndReplace(id, properties, transition);
+					navigator.popToRootItemAndReplace(id, inject, transition);
 				}
 			case Listener(fn):
 				{

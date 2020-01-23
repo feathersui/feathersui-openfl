@@ -367,7 +367,7 @@ class BaseNavigator extends FeathersControl {
 		return item;
 	}
 
-	private function showItemInternal(id:String, transition:(DisplayObject, DisplayObject) -> IEffectContext, ?properties:Map<String, Dynamic>):DisplayObject {
+	private function showItemInternal(id:String, transition:(DisplayObject, DisplayObject) -> IEffectContext, ?inject:(Dynamic) -> Void):DisplayObject {
 		if (!this.hasItem(id)) {
 			throw new ArgumentError('Item with id \'$id\' cannot be displayed because this id has not been added.');
 		}
@@ -389,11 +389,8 @@ class BaseNavigator extends FeathersControl {
 		if (this.activeItemView == null) {
 			throw new IllegalOperationError('Failed to display navigator item with id \'$id\'. Call to getView() incorrectly returned null.');
 		}
-		if (properties != null) {
-			for (propertyName in properties.keys()) {
-				var propertyValue = properties.get(propertyName);
-				Reflect.setProperty(this.activeItemView, propertyName, propertyValue);
-			}
+		if (inject != null) {
+			inject(this.activeItemView);
 		}
 		if (Std.is(this.activeItemView, INavigatorView)) {
 			var navigatorView = cast(this.activeItemView, INavigatorView);

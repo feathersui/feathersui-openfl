@@ -14,10 +14,6 @@ import openfl.events.Event;
 import feathers.motion.effects.IEffectContext;
 import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
-#if html5
-import js.html.Window;
-import js.Lib;
-#end
 
 /**
 	A "view stack"-like container that supports navigation between items with
@@ -94,10 +90,6 @@ class StackNavigator extends BaseNavigator {
 	**/
 	public var replaceTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
 
-	#if html5
-	private var htmlWindow:Window;
-	#end
-
 	private var _history:Array<HistoryItem> = [];
 	private var _poppedHistoryItemInTransition:HistoryItem;
 	private var _tempRootItemID:String;
@@ -162,11 +154,8 @@ class StackNavigator extends BaseNavigator {
 
 		// show without a transition because we're not navigating.
 		// we're forcibly replacing the root item.
-		var historyItem = new HistoryItem(value, null, 0);
+		var historyItem = new HistoryItem(value, null, null);
 		this._history.push(historyItem);
-		#if html5
-		this.htmlWindow.history.replaceState(historyItem, null);
-		#end
 		this.showItemInternal(value, null, null);
 		return value;
 	}
@@ -244,12 +233,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function pushItem(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
-		return this.pushItemInternal(true, id, properties, transition);
-	}
-
-	private function pushItemInternal(useNativeHistory:Bool, id:String, ?properties:Map<String, Dynamic>,
-			?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+	public function pushItem(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			var item = this.getItem(id);
 			if (item != null && item.pushTransition != null) {
@@ -258,14 +242,9 @@ class StackNavigator extends BaseNavigator {
 				transition = this.pushTransition;
 			}
 		}
-		var historyItem = new HistoryItem(id, properties, this._history.length);
+		var historyItem = new HistoryItem(id, inject, transition);
 		this._history.push(historyItem);
-		#if html5
-		if (useNativeHistory) {
-			this.htmlWindow.history.pushState(historyItem, null);
-		}
-		#end
-		return this.showItemInternal(id, transition, properties);
+		return this.showItemInternal(id, transition, inject);
 	}
 
 	/**
@@ -291,10 +270,6 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function popItem(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
-		return this.popItemInternal(true, transition);
-	}
-
-	private function popItemInternal(useNativeHistory:Bool, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
@@ -309,13 +284,8 @@ class StackNavigator extends BaseNavigator {
 			}
 		}
 		this._history.pop();
-		#if html5
-		if (useNativeHistory) {
-			this.htmlWindow.history.back();
-		}
-		#end
 		this._poppedHistoryItemInTransition = this._history[this._history.length - 1];
-		return this.showItemInternal(this._poppedHistoryItemInTransition.id, transition, this._poppedHistoryItemInTransition.properties);
+		return this.showItemInternal(this._poppedHistoryItemInTransition.id, transition, this._poppedHistoryItemInTransition.inject);
 	}
 
 	/**
@@ -348,7 +318,7 @@ class StackNavigator extends BaseNavigator {
 		}
 		this._history.resize(1);
 		var item = this._history[0];
-		return this.showItemInternal(item.id, transition, item.properties);
+		return this.showItemInternal(item.id, transition, item.inject);
 	}
 
 	/**
@@ -393,23 +363,13 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function replaceItem(id:String, ?properties:Map<String, Dynamic>, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
-		return this.replaceItemInternal(true, id, properties, transition);
-	}
-
-	private function replaceItemInternal(useNativeHistory:Bool, id:String, ?properties:Map<String, Dynamic>,
-			?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+	public function replaceItem(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			transition = this.replaceTransition;
 		}
-		var historyItem = new HistoryItem(id, properties, this._history.length - 1);
+		var historyItem = new HistoryItem(id, inject, transition);
 		this._history[this._history.length - 1] = historyItem;
-		#if html5
-		if (useNativeHistory) {
-			this.htmlWindow.history.replaceState(historyItem, null);
-		}
-		#end
-		return this.showItemInternal(id, transition, properties);
+		return this.showItemInternal(id, transition, inject);
 	}
 
 	/**
@@ -431,14 +391,13 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function popToRootItemAndReplace(id:String, ?properties:Map<String, Dynamic>,
-			?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+	public function popToRootItemAndReplace(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (transition == null) {
 			transition = this.popTransition;
 		}
 		this._history.resize(1);
-		this._history[0] = new HistoryItem(id, properties, 0);
-		return this.showItemInternal(id, transition, properties);
+		this._history[0] = new HistoryItem(id, inject, transition);
+		return this.showItemInternal(id, transition, inject);
 	}
 
 	override private function getView(id:String):DisplayObject {
@@ -462,19 +421,10 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	private function stackNavigator_addedToStageHandler(event:Event):Void {
-		#if html5
-		this.htmlWindow = cast(Lib.global, js.html.Window);
-		this.htmlWindow.addEventListener("popstate", htmlWindow_popstateHandler);
-		#end
-
 		this.stage.addEventListener(KeyboardEvent.KEY_UP, stackNavigator_stage_keyUpHandler, false, 0, true);
 	}
 
 	private function stackNavigator_removedFromStageHandler(event:Event):Void {
-		#if html5
-		this.htmlWindow.removeEventListener("popstate", htmlWindow_popstateHandler);
-		this.htmlWindow = null;
-		#end
 		this.stage.removeEventListener(KeyboardEvent.KEY_UP, stackNavigator_stage_keyUpHandler);
 	}
 
@@ -492,38 +442,19 @@ class StackNavigator extends BaseNavigator {
 					return;
 				}
 				event.preventDefault();
-				#if html5
-				this.htmlWindow.history.back();
-				#else
 				this.popItem();
-				#end
 		}
 	}
-
-	#if html5
-	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
-		event.preventDefault();
-		var state = event.state;
-		if (Reflect.hasField(state, "id") && Reflect.hasField(state, "properties") && Reflect.hasField(state, "index")) {
-			var currentIndex = this._history.length - 1;
-			if (state.index < currentIndex) {
-				this.popItemInternal(false);
-			} else if (state.index > currentIndex) {
-				this.pushItemInternal(false, state.id, state.properties, state.transition);
-			}
-		}
-	}
-	#end
 }
 
 private class HistoryItem {
-	public function new(id:String, properties:Map<String, Dynamic>, index:Int) {
+	public function new(id:String, inject:(Dynamic) -> Void, transition:(DisplayObject, DisplayObject) -> IEffectContext) {
 		this.id = id;
-		this.properties = properties;
-		this.index = index;
+		this.inject = inject;
+		this.transition = transition;
 	}
 
 	public var id(default, null):String;
-	public var properties(default, null):Map<String, Dynamic>;
-	public var index(default, null):Int;
+	public var inject(default, null):(Dynamic) -> Void;
+	public var transition(default, null):(DisplayObject, DisplayObject) -> IEffectContext;
 }

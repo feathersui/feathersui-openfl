@@ -8,6 +8,7 @@ import feathers.controls.ButtonTest;
 import feathers.controls.HProgressBarTest;
 import feathers.controls.LabelTest;
 import feathers.controls.LayoutGroupTest;
+import feathers.controls.navigators.StackNavigatorTest;
 import feathers.controls.ScrollContainerTest;
 import feathers.controls.TextInputTest;
 import feathers.controls.ToggleButtonTest;
@@ -48,6 +49,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(feathers.controls.HProgressBarTest);
 		add(feathers.controls.LabelTest);
 		add(feathers.controls.LayoutGroupTest);
+		add(feathers.controls.navigators.StackNavigatorTest);
 		add(feathers.controls.ScrollContainerTest);
 		add(feathers.controls.TextInputTest);
 		add(feathers.controls.ToggleButtonTest);
