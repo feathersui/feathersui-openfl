@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import openfl.ui.Keyboard;
 import lime.ui.KeyCode;
 import openfl.events.KeyboardEvent;
 import openfl.events.Event;
@@ -428,21 +429,29 @@ class StackNavigator extends BaseNavigator {
 		this.stage.removeEventListener(KeyboardEvent.KEY_UP, stackNavigator_stage_keyUpHandler);
 	}
 
+	private function stackNavigator_stage_backKeyUpHandler(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
+		if (this._history.length <= 1) {
+			// can't go back
+			return;
+		}
+		event.preventDefault();
+		this.popItem();
+	}
+
 	private function stackNavigator_stage_keyUpHandler(event:KeyboardEvent):Void {
 		if (!this.enabled) {
 			return;
 		}
 		switch (event.keyCode) {
+			#if flash
+			case Keyboard.BACK:
+				this.stackNavigator_stage_backKeyUpHandler(event);
+			#end
 			case KeyCode.APP_CONTROL_BACK:
-				if (event.isDefaultPrevented()) {
-					return;
-				}
-				if (this._history.length <= 1) {
-					// can't go back
-					return;
-				}
-				event.preventDefault();
-				this.popItem();
+				this.stackNavigator_stage_backKeyUpHandler(event);
 		}
 	}
 }
