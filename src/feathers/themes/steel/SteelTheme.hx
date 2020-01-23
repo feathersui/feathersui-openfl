@@ -8,29 +8,30 @@
 
 package feathers.themes.steel;
 
-import feathers.themes.steel.components.SteelTextInputStyles;
-import feathers.themes.steel.components.SteelToggleButtonStyles;
-import feathers.themes.steel.components.SteelToggleSwitchStyles;
-import feathers.themes.steel.components.SteelVSliderStyles;
+import feathers.themes.steel.components.SteelApplicationStyles;
+import feathers.themes.steel.components.SteelButtonStyles;
+import feathers.themes.steel.components.SteelCalloutStyles;
+import feathers.themes.steel.components.SteelCheckStyles;
+import feathers.themes.steel.components.SteelComboBoxStyles;
+import feathers.themes.steel.components.SteelHProgressBarStyles;
+import feathers.themes.steel.components.SteelHScrollBarStyles;
+import feathers.themes.steel.components.SteelHSliderStyles;
+import feathers.themes.steel.components.SteelItemRendererStyles;
+import feathers.themes.steel.components.SteelLabelStyles;
+import feathers.themes.steel.components.SteelLayoutGroupStyles;
+import feathers.themes.steel.components.SteelListViewStyles;
 import feathers.themes.steel.components.SteelPanelStyles;
 import feathers.themes.steel.components.SteelPopUpListStyles;
 import feathers.themes.steel.components.SteelRadioStyles;
-import feathers.themes.steel.components.SteelListViewStyles;
-import feathers.themes.steel.components.SteelCheckStyles;
-import feathers.themes.steel.components.SteelHProgressBarStyles;
-import feathers.themes.steel.components.SteelVProgressBarStyles;
-import feathers.themes.steel.components.SteelHSliderStyles;
-import feathers.themes.steel.components.SteelLabelStyles;
-import feathers.themes.steel.components.SteelItemRendererStyles;
-import feathers.themes.steel.components.SteelLayoutGroupStyles;
-import feathers.themes.steel.components.SteelButtonStyles;
-import feathers.themes.steel.components.SteelApplicationStyles;
-import feathers.themes.steel.components.SteelHScrollBarStyles;
-import feathers.themes.steel.components.SteelVScrollBarStyles;
 import feathers.themes.steel.components.SteelScrollContainerStyles;
-import feathers.themes.steel.components.SteelCalloutStyles;
+import feathers.themes.steel.components.SteelTabBarStyles;
 import feathers.themes.steel.components.SteelTextCalloutStyles;
-import feathers.themes.steel.components.SteelComboBoxStyles;
+import feathers.themes.steel.components.SteelTextInputStyles;
+import feathers.themes.steel.components.SteelToggleButtonStyles;
+import feathers.themes.steel.components.SteelToggleSwitchStyles;
+import feathers.themes.steel.components.SteelVProgressBarStyles;
+import feathers.themes.steel.components.SteelVScrollBarStyles;
+import feathers.themes.steel.components.SteelVSliderStyles;
 
 /**
 	"Steel" theme. Unlike the default version, this version references all
@@ -64,6 +65,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelPopUpListStyles.initialize(this);
 		SteelRadioStyles.initialize(this);
 		SteelScrollContainerStyles.initialize(this);
+		SteelTabBarStyles.initialize(this);
 		SteelTextCalloutStyles.initialize(this);
 		SteelTextInputStyles.initialize(this);
 		SteelToggleButtonStyles.initialize(this);

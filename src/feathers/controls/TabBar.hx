@@ -9,21 +9,22 @@
 package feathers.controls;
 
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.core.FeathersControl;
+import feathers.core.IDataSelector;
+import feathers.core.InvalidationFlag;
+import feathers.data.IFlatCollection;
+import feathers.data.TabBarItemState;
+import feathers.events.FeathersEvent;
+import feathers.events.FlatCollectionEvent;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.ILayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
-import feathers.layout.ILayout;
-import feathers.layout.HorizontalLayout;
-import feathers.core.FeathersControl;
+import feathers.themes.steel.components.SteelTabBarStyles;
 import feathers.utils.DisplayObjectRecycler;
-import feathers.events.FlatCollectionEvent;
 import haxe.ds.ObjectMap;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
-import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
-import feathers.events.FeathersEvent;
-import feathers.data.TabBarItemState;
-import feathers.core.IDataSelector;
 
 /**
 	A line of tabs, where one may be selected at a time.
@@ -61,6 +62,13 @@ import feathers.core.IDataSelector;
 @:styleContext
 class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_TAB_FACTORY = "tabFactory";
+
+	/**
+		The variant used to style the tab child components in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+	**/
+	public static final CHILD_VARIANT_TAB = "tabBar_tab";
 
 	private static function defaultUpdateTab(tab:ToggleButton, state:TabBarItemState):Void {
 		tab.text = state.text;
@@ -241,7 +249,9 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
 
-	private function initializeTabBarTheme():Void {}
+	private function initializeTabBarTheme():Void {
+		SteelTabBarStyles.initialize();
+	}
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
@@ -419,6 +429,9 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 			tab = this.tabRecycler.create();
 		} else {
 			tab = this.inactiveTabs.shift();
+		}
+		if (tab.variant == null) {
+			tab.variant = TabBar.CHILD_VARIANT_TAB;
 		}
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
