@@ -6,9 +6,7 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
-package feathers.controls;
-
-import feathers.layout.RelativePosition;
+package feathers.layout;
 
 /**
 	An abstract that accepts a `RelativePosition` or an
