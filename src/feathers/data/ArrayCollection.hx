@@ -57,7 +57,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			value = [];
 		}
 		this.array = value;
-		FeathersEvent.dispatch(this, FlatCollectionEvent.RESET);
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.RESET, -1);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.array;
 	}
