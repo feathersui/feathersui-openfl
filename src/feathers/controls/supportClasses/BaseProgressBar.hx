@@ -350,6 +350,7 @@ class BaseProgressBar extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
+		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {
 			// we need to restore these values so that they won't be lost the
 			// next time that this skin is used for measurement

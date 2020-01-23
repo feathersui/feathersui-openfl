@@ -990,6 +990,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		if (Std.is(icon, IStateObserver)) {
 			cast(icon, IStateObserver).stateContext = null;
 		}
+		this._iconMeasurements.restore(icon);
 		if (icon.parent == this) {
 			// we need to restore these values so that they won't be lost the
 			// next time that this icon is used for measurement
