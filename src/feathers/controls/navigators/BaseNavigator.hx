@@ -389,11 +389,6 @@ class BaseNavigator extends FeathersControl {
 		if (inject != null) {
 			inject(this.activeItemView);
 		}
-		if (Std.is(this.activeItemView, INavigatorView)) {
-			var navigatorView = cast(this.activeItemView, INavigatorView);
-			navigatorView.navigatorItemID = id;
-			navigatorView.navigatorOwner = this;
-		}
 		if (this.autoSizeMode == CONTENT || this.stage == null) {
 			this.activeItemView.addEventListener(Event.RESIZE, activeItemView_resizeHandler);
 		}
@@ -557,11 +552,6 @@ class BaseNavigator extends FeathersControl {
 		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_COMPLETE);
 
 		if (previousView != null) {
-			if (Std.is(previousView, INavigatorView)) {
-				var navigatorView = cast(previousView, INavigatorView);
-				navigatorView.navigatorItemID = null;
-				navigatorView.navigatorOwner = null;
-			}
 			previousView.removeEventListener(Event.RESIZE, activeItemView_resizeHandler);
 			this._viewsContainer.removeChild(previousView);
 			this.disposeView(previousItemID, previousView);
