@@ -57,7 +57,41 @@ class RouterNavigator extends BaseNavigator {
 	private var _forwardHistory:Array<String> = [];
 	#end
 
+	/**
+		The base URL path where the project will be deployed.
+
+		For example, if your project will be deployed to
+		`https://www.example.com/my-project/`, the base path will be
+		`/my-project`.
+
+		@since 1.0.0
+	**/
 	public var basePath:String = null;
+
+	/**
+		The default transition to use for forward navigation actions.
+
+		@see `StackNavigator.backTransition`
+
+		@since 1.0.0
+	**/
+	public var forwardTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+
+	/**
+		The default transition to use for back navigation actions.
+
+		@see `StackNavigator.forwardTransition`
+
+		@since 1.0.0
+	**/
+	public var backTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+
+	/**
+		The default transition to use for replace navigation actions.
+
+		@since 1.0.0
+	**/
+	public var replaceTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		Adds a route to the navigator.
@@ -106,7 +140,7 @@ class RouterNavigator extends BaseNavigator {
 		this._history.push(path);
 		this._forwardHistory.resize(0);
 		#end
-		return this.matchRouteAndShow();
+		return this.matchRouteAndShow(this.forwardTransition);
 	}
 
 	/**
@@ -135,7 +169,7 @@ class RouterNavigator extends BaseNavigator {
 		this._history[this._history.length - 1] = path;
 		this._forwardHistory.resize(0);
 		#end
-		return this.matchRouteAndShow();
+		return this.matchRouteAndShow(this.replaceTransition);
 	}
 
 	/**
@@ -168,7 +202,8 @@ class RouterNavigator extends BaseNavigator {
 			}
 		}
 		#end
-		return this.matchRouteAndShow();
+		var transition = (n < 0) ? this.backTransition : this.forwardTransition;
+		return this.matchRouteAndShow(transition);
 	}
 
 	/**
@@ -208,7 +243,7 @@ class RouterNavigator extends BaseNavigator {
 		#else
 		this.stage.addEventListener(KeyboardEvent.KEY_UP, routerNavigator_stage_keyUpHandler, false, 0, true);
 		#end
-		this.matchRouteAndShow();
+		this.matchRouteAndShow(null);
 	}
 
 	private function matchRoute():Route {
@@ -236,10 +271,10 @@ class RouterNavigator extends BaseNavigator {
 		return null;
 	}
 
-	private function matchRouteAndShow():DisplayObject {
+	private function matchRouteAndShow(transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		var matched = this.matchRoute();
 		if (matched != null) {
-			return this.showItemInternal(matched.path, null);
+			return this.showItemInternal(matched.path, transition);
 		}
 		this.clearActiveItemInternal(null);
 		return null;
@@ -269,7 +304,7 @@ class RouterNavigator extends BaseNavigator {
 	#if html5
 	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
 		event.preventDefault();
-		this.matchRouteAndShow();
+		this.matchRouteAndShow(null);
 	}
 	#else
 	private function routerNavigator_stage_keyUpHandler(event:KeyboardEvent):Void {
@@ -301,7 +336,7 @@ class RouterNavigator extends BaseNavigator {
 		event.preventDefault();
 		var item = this._history.pop();
 		this._forwardHistory.unshift(item);
-		this.matchRouteAndShow();
+		this.matchRouteAndShow(this.backTransition);
 	}
 	#end
 }
