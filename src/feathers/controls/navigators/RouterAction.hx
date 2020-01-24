@@ -25,7 +25,35 @@ enum RouterAction {
 
 		@since 1.0.0
 	**/
-	Link(url:String);
+	Push(url:String, ?state:Dynamic);
+
+	/**
+		Navigate to a new item that replaces the current item in the history stack.
+
+		@since 1.0.0
+	**/
+	Replace(url:String, ?state:Dynamic);
+
+	/**
+		Navigate to the previous item on the history stack.
+
+		@since 1.0.0
+	**/
+	GoBack();
+
+	/**
+		Navigate to the next item on the history stack.
+
+		@since 1.0.0
+	**/
+	GoForward();
+
+	/**
+		Navigate to back or forward by _n_ entries in the history stack.
+
+		@since 1.0.0
+	**/
+	Go(n:Int);
 
 	/**
 		Call an event listener. Does not navigate to a different view.
