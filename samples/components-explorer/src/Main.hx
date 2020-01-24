@@ -107,7 +107,7 @@ class Main extends Application {
 		#else
 		// on other platforms, back goes back.
 		// this may return to a different path than the parameter specifies
-		return GoBack;
+		return GoBack();
 		#end
 	}
 }
