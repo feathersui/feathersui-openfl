@@ -57,6 +57,8 @@ class RouterNavigator extends BaseNavigator {
 	private var _forwardHistory:Array<String> = [];
 	#end
 
+	public var basePath:String = null;
+
 	/**
 		Adds a route to the navigator.
 
@@ -95,6 +97,10 @@ class RouterNavigator extends BaseNavigator {
 	**/
 	public function push(path:String, ?state:Dynamic):DisplayObject {
 		#if html5
+		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
+			var needsSlash = !StringTools.startsWith(path, "/");
+			path = this.basePath + (needsSlash ? "/" : "") + path;
+		}
 		this.htmlWindow.history.pushState(state, null, path);
 		#else
 		this._history.push(path);
@@ -120,6 +126,10 @@ class RouterNavigator extends BaseNavigator {
 	**/
 	public function replace(path:String, ?state:Dynamic):DisplayObject {
 		#if html5
+		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
+			var needsSlash = !StringTools.startsWith(path, "/");
+			path = this.basePath + (needsSlash ? "/" : "") + path;
+		}
 		this.htmlWindow.history.replaceState(state, null, path);
 		#else
 		this._history[this._history.length - 1] = path;
@@ -204,13 +214,18 @@ class RouterNavigator extends BaseNavigator {
 	private function matchRoute():Route {
 		#if html5
 		var pathname = this.htmlWindow.location.pathname;
+		if (this.basePath != null && StringTools.startsWith(pathname, this.basePath + "/")) {
+			pathname = pathname.substr(this.basePath.length);
+		}
 		#else
 		var pathname = "/";
 		if (this._history.length > 0) {
 			pathname = this._history[this._history.length - 1];
 		}
 		#end
+		pathname = pathname.toLowerCase();
 		for (path => route in this._addedItems) {
+			path = path.toLowerCase();
 			if (pathname == path) {
 				return cast(route, Route);
 			}
