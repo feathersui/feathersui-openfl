@@ -28,70 +28,70 @@ class Main extends Application {
 		super();
 	}
 
+	private var _navigator:RouterNavigator;
+
 	override private function initialize():Void {
-		var navigator = new RouterNavigator();
+		this._navigator = new RouterNavigator();
 		#if feathersui.com
 		// to build for the feathersui.com website, run the following command:
 		// haxelib run openfl build html5 -final --haxedef=feathersui.com
-		navigator.basePath = "/samples/haxe-openfl/components-explorer";
+		this._navigator.basePath = "/samples/haxe-openfl/components-explorer";
 		#end
-		this.addChild(navigator);
+		this.addChild(this._navigator);
 
-		#if !html5
-		navigator.backTransition = SlideTransitions.right();
-		navigator.forwardTransition = SlideTransitions.left();
-		#end
+		this._navigator.backTransition = SlideTransitions.right();
+		this._navigator.forwardTransition = SlideTransitions.left();
 
 		var mainMenu = Route.withClass(ViewPaths.MAIN_MENU, MainMenu, [Event.CHANGE => NewAction(createPushPathAction)]);
-		navigator.addRoute(mainMenu);
+		this._navigator.addRoute(mainMenu);
 
 		var assetLoader = Route.withClass(ViewPaths.ASSET_LOADER, AssetLoaderScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(assetLoader);
+		this._navigator.addRoute(assetLoader);
 
 		var button = Route.withClass(ViewPaths.BUTTON, ButtonScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(button);
+		this._navigator.addRoute(button);
 
 		var callout = Route.withClass(ViewPaths.CALLOUT, CalloutScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(callout);
+		this._navigator.addRoute(callout);
 
 		var check = Route.withClass(ViewPaths.CHECK, CheckScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(check);
+		this._navigator.addRoute(check);
 
 		var comboBox = Route.withClass(ViewPaths.COMBO_BOX, ComboBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(comboBox);
+		this._navigator.addRoute(comboBox);
 
 		var label = Route.withClass(ViewPaths.LABEL, LabelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(label);
+		this._navigator.addRoute(label);
 
 		var listView = Route.withClass(ViewPaths.LIST_VIEW, ListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(listView);
+		this._navigator.addRoute(listView);
 
 		var panel = Route.withClass(ViewPaths.PANEL, PanelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(panel);
+		this._navigator.addRoute(panel);
 
 		var popUpList = Route.withClass(ViewPaths.POP_UP_LIST, PopUpListScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(popUpList);
+		this._navigator.addRoute(popUpList);
 
 		var popUpManager = Route.withClass(ViewPaths.POP_UP_MANAGER, PopUpManagerScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(popUpManager);
+		this._navigator.addRoute(popUpManager);
 
 		var progressBar = Route.withClass(ViewPaths.PROGRESS_BAR, ProgressBarScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(progressBar);
+		this._navigator.addRoute(progressBar);
 
 		var radio = Route.withClass(ViewPaths.RADIO, RadioScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(radio);
+		this._navigator.addRoute(radio);
 
 		var slider = Route.withClass(ViewPaths.SLIDER, SliderScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(slider);
+		this._navigator.addRoute(slider);
 
 		var tabBar = Route.withClass(ViewPaths.TAB_BAR, TabBarScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(tabBar);
+		this._navigator.addRoute(tabBar);
 
 		var textInput = Route.withClass(ViewPaths.TEXT_INPUT, TextInputScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(textInput);
+		this._navigator.addRoute(textInput);
 
 		var toggleSwitch = Route.withClass(ViewPaths.TOGGLE_SWITCH, ToggleSwitchScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		navigator.addRoute(toggleSwitch);
+		this._navigator.addRoute(toggleSwitch);
 	}
 
 	private function createPushPathAction(event:Event):RouterAction {
@@ -103,7 +103,7 @@ class Main extends Application {
 		#if html5
 		// on the web, links generally always go forward in history, even if
 		// that doesn't match the direction of the navigation hierarchy
-		return Push(path);
+		return Push(path, null, this._navigator.backTransition);
 		#else
 		// on other platforms, back goes back.
 		// this may return to a different path than the parameter specifies
