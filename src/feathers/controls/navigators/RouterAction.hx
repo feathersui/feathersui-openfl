@@ -8,6 +8,8 @@
 
 package feathers.controls.navigators;
 
+import feathers.motion.effects.IEffectContext;
+import openfl.display.DisplayObject;
 import openfl.events.Event;
 
 /**
@@ -25,35 +27,35 @@ enum RouterAction {
 
 		@since 1.0.0
 	**/
-	Push(url:String, ?state:Dynamic);
+	Push(url:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Navigate to a new item that replaces the current item in the history stack.
 
 		@since 1.0.0
 	**/
-	Replace(url:String, ?state:Dynamic);
+	Replace(url:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Navigate to the previous item on the history stack.
 
 		@since 1.0.0
 	**/
-	GoBack();
+	GoBack(?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Navigate to the next item on the history stack.
 
 		@since 1.0.0
 	**/
-	GoForward();
+	GoForward(?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Navigate to back or forward by _n_ entries in the history stack.
 
 		@since 1.0.0
 	**/
-	Go(n:Int);
+	Go(n:Int, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Call an event listener. Does not navigate to a different view.

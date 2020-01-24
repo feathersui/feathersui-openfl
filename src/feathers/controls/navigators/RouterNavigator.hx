@@ -129,7 +129,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function push(path:String, ?state:Dynamic):DisplayObject {
+	public function push(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		#if html5
 		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
 			var needsSlash = !StringTools.startsWith(path, "/");
@@ -140,7 +140,10 @@ class RouterNavigator extends BaseNavigator {
 		this._history.push(path);
 		this._forwardHistory.resize(0);
 		#end
-		return this.matchRouteAndShow(this.forwardTransition);
+		if (transition == null) {
+			transition = this.forwardTransition;
+		}
+		return this.matchRouteAndShow(transition);
 	}
 
 	/**
@@ -158,7 +161,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function replace(path:String, ?state:Dynamic):DisplayObject {
+	public function replace(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		#if html5
 		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
 			var needsSlash = !StringTools.startsWith(path, "/");
@@ -169,7 +172,10 @@ class RouterNavigator extends BaseNavigator {
 		this._history[this._history.length - 1] = path;
 		this._forwardHistory.resize(0);
 		#end
-		return this.matchRouteAndShow(this.replaceTransition);
+		if (transition == null) {
+			transition = this.replaceTransition;
+		}
+		return this.matchRouteAndShow(transition);
 	}
 
 	/**
@@ -183,7 +189,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function go(n:Int):DisplayObject {
+	public function go(n:Int, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (n == 0) {
 			return this.activeItemView;
 		}
@@ -202,7 +208,9 @@ class RouterNavigator extends BaseNavigator {
 			}
 		}
 		#end
-		var transition = (n < 0) ? this.backTransition : this.forwardTransition;
+		if (transition == null) {
+			transition = (n < 0) ? this.backTransition : this.forwardTransition;
+		}
 		return this.matchRouteAndShow(transition);
 	}
 
@@ -217,8 +225,8 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function goBack():DisplayObject {
-		return this.go(-1);
+	public function goBack(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+		return this.go(-1, transition);
 	}
 
 	/**
@@ -232,8 +240,8 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function goForward():DisplayObject {
-		return this.go(1);
+	public function goForward(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+		return this.go(1, transition);
 	}
 
 	private function routerNavigator_addedToStageHandler(event:Event):Void {

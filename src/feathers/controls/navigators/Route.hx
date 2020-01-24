@@ -131,25 +131,25 @@ class Route {
 
 	private function performAction(action:RouterAction, event:Event, navigator:RouterNavigator):RouterAction {
 		switch (action) {
-			case Push(url, state):
+			case Push(url, state, transition):
 				{
-					navigator.push(url, state);
+					navigator.push(url, state, transition);
 				}
-			case Replace(url, state):
+			case Replace(url, state, transition):
 				{
-					navigator.replace(url, state);
+					navigator.replace(url, state, transition);
 				}
-			case Go(n):
+			case Go(n, transition):
 				{
 					navigator.go(n);
 				}
-			case GoBack:
+			case GoBack(transition):
 				{
-					navigator.goBack();
+					navigator.goBack(transition);
 				}
-			case GoForward:
+			case GoForward(transition):
 				{
-					navigator.goForward();
+					navigator.goForward(transition);
 				}
 			case Listener(fn):
 				{
