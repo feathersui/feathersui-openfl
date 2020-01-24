@@ -423,7 +423,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		super.initialize();
 		if (this.textField == null) {
 			this.textField = new TextField();
-			this.textField.type = TextFieldType.INPUT;
 			this.textField.selectable = true;
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
@@ -596,6 +595,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshTextStyles():Void {
+		if (this.enabled && this.textField.type != TextFieldType.INPUT) {
+			this.textField.type = TextFieldType.INPUT;
+		} else if (!this.enabled && this.textField.type == TextFieldType.INPUT) {
+			this.textField.type = TextFieldType.DYNAMIC;
+		}
 		var textFormat = this.getCurrentTextFormat();
 		if (textFormat == this._previousTextFormat) {
 			// nothing to refresh
