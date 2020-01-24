@@ -312,6 +312,8 @@ class RouterNavigator extends BaseNavigator {
 	#if html5
 	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
 		event.preventDefault();
+		// there's no good way to determine if we went forward or back
+		// so it may be better not to use a transition in this case
 		this.matchRouteAndShow(null);
 	}
 	#else
