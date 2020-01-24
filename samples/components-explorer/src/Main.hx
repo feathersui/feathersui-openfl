@@ -1,29 +1,30 @@
-package;
-
-import openfl.events.Event;
+import com.feathersui.components.ViewPaths;
+import com.feathersui.components.views.AssetLoaderScreen;
+import com.feathersui.components.views.ButtonScreen;
+import com.feathersui.components.views.CalloutScreen;
+import com.feathersui.components.views.CheckScreen;
+import com.feathersui.components.views.ComboBoxScreen;
+import com.feathersui.components.views.LabelScreen;
+import com.feathersui.components.views.ListViewScreen;
+import com.feathersui.components.views.MainMenu;
+import com.feathersui.components.views.PanelScreen;
+import com.feathersui.components.views.PopUpListScreen;
+import com.feathersui.components.views.PopUpManagerScreen;
+import com.feathersui.components.views.ProgressBarScreen;
+import com.feathersui.components.views.RadioScreen;
+import com.feathersui.components.views.SliderScreen;
+import com.feathersui.components.views.TabBarScreen;
+import com.feathersui.components.views.TextInputScreen;
+import com.feathersui.components.views.ToggleSwitchScreen;
+import feathers.controls.Application;
+import feathers.controls.navigators.Route;
+import feathers.controls.navigators.RouterAction;
+import feathers.controls.navigators.RouterNavigator;
 import feathers.controls.navigators.StackAction;
 import feathers.controls.navigators.StackItem;
 import feathers.controls.navigators.StackNavigator;
 import feathers.motion.transitions.SlideTransitions;
-import feathers.controls.Application;
-import com.feathersui.components.ScreenID;
-import com.feathersui.components.screens.MainMenu;
-import com.feathersui.components.screens.AssetLoaderScreen;
-import com.feathersui.components.screens.ButtonScreen;
-import com.feathersui.components.screens.CalloutScreen;
-import com.feathersui.components.screens.CheckScreen;
-import com.feathersui.components.screens.ComboBoxScreen;
-import com.feathersui.components.screens.LabelScreen;
-import com.feathersui.components.screens.ListViewScreen;
-import com.feathersui.components.screens.PanelScreen;
-import com.feathersui.components.screens.PopUpListScreen;
-import com.feathersui.components.screens.PopUpManagerScreen;
-import com.feathersui.components.screens.ProgressBarScreen;
-import com.feathersui.components.screens.RadioScreen;
-import com.feathersui.components.screens.SliderScreen;
-import com.feathersui.components.screens.TabBarScreen;
-import com.feathersui.components.screens.TextInputScreen;
-import com.feathersui.components.screens.ToggleSwitchScreen;
+import openfl.events.Event;
 
 class Main extends Application {
 	public function new() {
@@ -31,67 +32,81 @@ class Main extends Application {
 	}
 
 	override private function initialize():Void {
-		var navigator = new StackNavigator();
-		navigator.pushTransition = SlideTransitions.left();
-		navigator.popTransition = SlideTransitions.right();
+		// #if html5
+		var navigator = new RouterNavigator();
 		this.addChild(navigator);
 
-		var mainMenu = StackItem.withClass(MainMenu, [Event.CHANGE => NewAction(createPushAction)]);
-		navigator.addItem(ScreenID.MAIN_MENU, mainMenu);
+		var mainMenu = Route.withClass(ViewPaths.MAIN_MENU, MainMenu, [Event.CHANGE => NewAction(createPushPathAction)]);
+		navigator.addRoute(mainMenu);
 
-		var assetLoader = StackItem.withClass(AssetLoaderScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.ASSET_LOADER, assetLoader);
+		var assetLoader = Route.withClass(ViewPaths.ASSET_LOADER, AssetLoaderScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(assetLoader);
 
-		var button = StackItem.withClass(ButtonScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.BUTTON, button);
+		var button = Route.withClass(ViewPaths.BUTTON, ButtonScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(button);
 
-		var callout = StackItem.withClass(CalloutScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.CALLOUT, callout);
+		var callout = Route.withClass(ViewPaths.CALLOUT, CalloutScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(callout);
 
-		var check = StackItem.withClass(CheckScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.CHECK, check);
+		var check = Route.withClass(ViewPaths.CHECK, CheckScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(check);
 
-		var comboBox = StackItem.withClass(ComboBoxScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.COMBO_BOX, comboBox);
+		var comboBox = Route.withClass(ViewPaths.COMBO_BOX, ComboBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(comboBox);
 
-		var label = StackItem.withClass(LabelScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.LABEL, label);
+		var label = Route.withClass(ViewPaths.LABEL, LabelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(label);
 
-		var listView = StackItem.withClass(ListViewScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.LIST_VIEW, listView);
+		var listView = Route.withClass(ViewPaths.LIST_VIEW, ListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(listView);
 
-		var panel = StackItem.withClass(PanelScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.PANEL, panel);
+		var panel = Route.withClass(ViewPaths.PANEL, PanelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(panel);
 
-		var popUpList = StackItem.withClass(PopUpListScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.POP_UP_LIST, popUpList);
+		var popUpList = Route.withClass(ViewPaths.POP_UP_LIST, PopUpListScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(popUpList);
 
-		var popUpManager = StackItem.withClass(PopUpManagerScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.POP_UP_MANAGER, popUpManager);
+		var popUpManager = Route.withClass(ViewPaths.POP_UP_MANAGER, PopUpManagerScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(popUpManager);
 
-		var progressBar = StackItem.withClass(ProgressBarScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.PROGRESS_BAR, progressBar);
+		var progressBar = Route.withClass(ViewPaths.PROGRESS_BAR, ProgressBarScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(progressBar);
 
-		var radio = StackItem.withClass(RadioScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.RADIO, radio);
+		var radio = Route.withClass(ViewPaths.RADIO, RadioScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(radio);
 
-		var slider = StackItem.withClass(SliderScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.SLIDER, slider);
+		var slider = Route.withClass(ViewPaths.SLIDER, SliderScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(slider);
 
-		var tabBar = StackItem.withClass(TabBarScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.TAB_BAR, tabBar);
+		var tabBar = Route.withClass(ViewPaths.TAB_BAR, TabBarScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(tabBar);
 
-		var textInput = StackItem.withClass(TextInputScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.TEXT_INPUT, textInput);
+		var textInput = Route.withClass(ViewPaths.TEXT_INPUT, TextInputScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(textInput);
 
-		var toggleSwitch = StackItem.withClass(ToggleSwitchScreen, [Event.COMPLETE => Pop()]);
-		navigator.addItem(ScreenID.TOGGLE_SWITCH, toggleSwitch);
+		var toggleSwitch = Route.withClass(ViewPaths.TOGGLE_SWITCH, ToggleSwitchScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		navigator.addRoute(toggleSwitch);
+	}
 
-		navigator.rootItemID = ScreenID.MAIN_MENU;
+	private function createPushPathAction(event:Event):RouterAction {
+		var screen = cast(event.currentTarget, MainMenu);
+		return Push(screen.selectedViewPaths);
+	}
+
+	private function createBackAction(path:String):RouterAction {
+		#if html5
+		// on the web, links generally always go forward in history, even if
+		// that doesn't match the direction of the navigation hierarchy
+		return Push(path);
+		#else
+		// on other platforms, back goes back.
+		// this may return to a different path than the parameter specifies
+		return GoBack;
+		#end
 	}
 
 	private function createPushAction(event:Event):StackAction {
 		var screen = cast(event.currentTarget, MainMenu);
-		return Push(screen.selectedScreenID);
+		return Push(screen.selectedViewPaths);
 	}
 }

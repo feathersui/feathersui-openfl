@@ -1,4 +1,4 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.controls.ToggleButton;
 import feathers.utils.DisplayObjectRecycler;
@@ -49,8 +49,7 @@ class TabBarScreen extends Panel {
 
 		this.tabBar = new TabBar();
 		this.tabBar.dataProvider = new ArrayCollection(items);
-		this.tabBar.itemToText = (data:Dynamic) ->
-		{
+		this.tabBar.itemToText = (data:Dynamic) -> {
 			return data.text;
 		};
 		this.tabBar.layoutData = AnchorLayoutData.center();

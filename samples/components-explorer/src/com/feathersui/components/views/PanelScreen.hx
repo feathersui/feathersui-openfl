@@ -1,7 +1,6 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.events.FeathersEvent;
-import feathers.core.PopUpManager;
 import feathers.controls.Label;
 import openfl.events.Event;
 import feathers.layout.AnchorLayout;
@@ -10,8 +9,8 @@ import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 
-class PopUpManagerScreen extends Panel {
-	private var button:Button;
+class PanelScreen extends Panel {
+	private var panel:Panel;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -25,7 +24,7 @@ class PopUpManagerScreen extends Panel {
 
 			var headerTitle = new Label();
 			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Pop Up Manager";
+			headerTitle.text = "Panel";
 			headerTitle.layoutData = AnchorLayoutData.center();
 			header.addChild(headerTitle);
 
@@ -38,35 +37,33 @@ class PopUpManagerScreen extends Panel {
 			return header;
 		};
 
-		this.button = new Button();
-		this.button.text = "Add Pop Up";
-		this.button.layoutData = AnchorLayoutData.center();
-		this.button.addEventListener(FeathersEvent.TRIGGERED, addPopUpButton_triggeredHandler);
-		this.addChild(this.button);
+		this.panel = new Panel();
+		this.panel.layoutData = AnchorLayoutData.center();
+		this.panel.headerFactory = () -> {
+			var header = new LayoutGroup();
+			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+			var title = new Label();
+			title.text = "Header";
+			header.addChild(title);
+			return header;
+		};
+		this.panel.footerFactory = () -> {
+			var footer = new LayoutGroup();
+			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
+			var title = new Label();
+			title.text = "Footer";
+			footer.addChild(title);
+			return footer;
+		};
+		this.panel.layout = new AnchorLayout();
+		var message = new Label();
+		message.text = "I'm a Panel container";
+		message.layoutData = AnchorLayoutData.fill(10.0);
+		this.panel.addChild(message);
+		this.addChild(this.panel);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
-	}
-
-	private function addPopUpButton_triggeredHandler(event:FeathersEvent):Void {
-		var popUp = new Panel();
-		popUp.layout = new AnchorLayout();
-		var message = new Label();
-		message.text = "I'm a pop-up!";
-		message.layoutData = AnchorLayoutData.center();
-		popUp.addChild(message);
-		popUp.footerFactory = () -> {
-			var footer = new LayoutGroup();
-			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			var closeButton = new Button();
-			closeButton.text = "Close";
-			closeButton.addEventListener(FeathersEvent.TRIGGERED, (event:FeathersEvent) -> {
-				PopUpManager.removePopUp(popUp);
-			});
-			footer.addChild(closeButton);
-			return footer;
-		}
-		PopUpManager.addPopUp(popUp, this);
 	}
 }

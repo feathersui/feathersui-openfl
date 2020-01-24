@@ -1,27 +1,26 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.events.FeathersEvent;
 import feathers.layout.VerticalAlign;
 import feathers.layout.HorizontalAlign;
-import feathers.layout.VerticalLayout;
-import feathers.controls.Radio;
+import feathers.layout.HorizontalLayout;
+import feathers.controls.Label;
 import openfl.events.Event;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
-import feathers.controls.Label;
+import feathers.controls.ToggleSwitch;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 
-class RadioScreen extends Panel {
-	private var radio:Radio;
-	private var selectedRadio:Radio;
-	private var disabledRadio:Radio;
+class ToggleSwitchScreen extends Panel {
+	private var toggle:ToggleSwitch;
+	private var selectedToggle:ToggleSwitch;
 
 	override private function initialize():Void {
 		super.initialize();
 
-		var layout = new VerticalLayout();
+		var layout = new HorizontalLayout();
 		layout.horizontalAlign = CENTER;
 		layout.verticalAlign = MIDDLE;
 		layout.gap = 20;
@@ -34,7 +33,7 @@ class RadioScreen extends Panel {
 
 			var headerTitle = new Label();
 			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Radio";
+			headerTitle.text = "Toggle Switch";
 			headerTitle.layoutData = AnchorLayoutData.center();
 			header.addChild(headerTitle);
 
@@ -47,22 +46,14 @@ class RadioScreen extends Panel {
 			return header;
 		};
 
-		this.radio = new Radio();
-		this.radio.text = "Radio";
-		this.radio.layoutData = AnchorLayoutData.center(0, -50);
-		this.addChild(this.radio);
+		this.toggle = new ToggleSwitch();
+		this.toggle.layoutData = AnchorLayoutData.center();
+		this.toggle.addEventListener(Event.CHANGE, toggleSwitch_changeHandler);
+		this.addChild(this.toggle);
+	}
 
-		this.selectedRadio = new Radio();
-		this.selectedRadio.text = "Selected Radio";
-		this.selectedRadio.selected = true;
-		this.selectedRadio.layoutData = AnchorLayoutData.center();
-		this.addChild(this.selectedRadio);
-
-		this.disabledRadio = new Radio();
-		this.disabledRadio.text = "Disabled Radio";
-		this.disabledRadio.enabled = false;
-		this.disabledRadio.layoutData = AnchorLayoutData.center(0, 50);
-		this.addChild(this.disabledRadio);
+	private function toggleSwitch_changeHandler(event:Event):Void {
+		trace("ToggleSwitch selected change: " + this.toggle.selected);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

@@ -1,19 +1,17 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.events.FeathersEvent;
+import feathers.core.PopUpManager;
 import feathers.controls.Label;
 import openfl.events.Event;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
-import feathers.controls.HProgressBar;
-import feathers.controls.VProgressBar;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 
-class ProgressBarScreen extends Panel {
-	private var horizontalProgress:HProgressBar;
-	private var verticalProgress:VProgressBar;
+class PopUpManagerScreen extends Panel {
+	private var button:Button;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -27,7 +25,7 @@ class ProgressBarScreen extends Panel {
 
 			var headerTitle = new Label();
 			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Progress Bar";
+			headerTitle.text = "Pop Up Manager";
 			headerTitle.layoutData = AnchorLayoutData.center();
 			header.addChild(headerTitle);
 
@@ -40,22 +38,35 @@ class ProgressBarScreen extends Panel {
 			return header;
 		};
 
-		this.horizontalProgress = new HProgressBar();
-		this.horizontalProgress.minimum = 0.0;
-		this.horizontalProgress.maximum = 100.0;
-		this.horizontalProgress.value = 45.0;
-		this.horizontalProgress.layoutData = AnchorLayoutData.center(-40);
-		this.addChild(this.horizontalProgress);
-
-		this.verticalProgress = new VProgressBar();
-		this.verticalProgress.minimum = 0.0;
-		this.verticalProgress.maximum = 100.0;
-		this.verticalProgress.value = 45.0;
-		this.verticalProgress.layoutData = AnchorLayoutData.center(120);
-		this.addChild(this.verticalProgress);
+		this.button = new Button();
+		this.button.text = "Add Pop Up";
+		this.button.layoutData = AnchorLayoutData.center();
+		this.button.addEventListener(FeathersEvent.TRIGGERED, addPopUpButton_triggeredHandler);
+		this.addChild(this.button);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
+	}
+
+	private function addPopUpButton_triggeredHandler(event:FeathersEvent):Void {
+		var popUp = new Panel();
+		popUp.layout = new AnchorLayout();
+		var message = new Label();
+		message.text = "I'm a pop-up!";
+		message.layoutData = AnchorLayoutData.center();
+		popUp.addChild(message);
+		popUp.footerFactory = () -> {
+			var footer = new LayoutGroup();
+			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
+			var closeButton = new Button();
+			closeButton.text = "Close";
+			closeButton.addEventListener(FeathersEvent.TRIGGERED, (event:FeathersEvent) -> {
+				PopUpManager.removePopUp(popUp);
+			});
+			footer.addChild(closeButton);
+			return footer;
+		}
+		PopUpManager.addPopUp(popUp, this);
 	}
 }

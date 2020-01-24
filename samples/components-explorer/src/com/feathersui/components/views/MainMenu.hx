@@ -1,11 +1,11 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.controls.ScrollPolicy;
 import feathers.style.IDarkModeTheme;
 import feathers.events.FeathersEvent;
 import feathers.style.Theme;
 import openfl.events.Event;
-import com.feathersui.components.ScreenID;
+import com.feathersui.components.ViewPaths;
 import feathers.data.ArrayCollection;
 import feathers.layout.AnchorLayout;
 import feathers.controls.ListView;
@@ -52,32 +52,32 @@ class MainMenu extends Panel {
 
 		this.listView = new ListView();
 		this.listView.dataProvider = new ArrayCollection([
-			new MenuItem("Asset Loader", ScreenID.ASSET_LOADER), new MenuItem("Button", ScreenID.BUTTON), new MenuItem("Callout", ScreenID.CALLOUT),
-			new MenuItem("Check", ScreenID.CHECK), new MenuItem("Combo Box", ScreenID.COMBO_BOX), new MenuItem("Label", ScreenID.LABEL),
-			new MenuItem("List View", ScreenID.LIST_VIEW), new MenuItem("Panel", ScreenID.PANEL), new MenuItem("Pop Up List", ScreenID.POP_UP_LIST),
-			new MenuItem("Pop Up Manager", ScreenID.POP_UP_MANAGER), new MenuItem("Progress Bar", ScreenID.PROGRESS_BAR),
-			new MenuItem("Radio", ScreenID.RADIO), new MenuItem("Slider", ScreenID.SLIDER), new MenuItem("Tab Bar", ScreenID.TAB_BAR),
-			new MenuItem("Text Input", ScreenID.TEXT_INPUT), new MenuItem("Toggle Switch", ScreenID.TOGGLE_SWITCH),
+			new MenuItem("Asset Loader", ViewPaths.ASSET_LOADER), new MenuItem("Button", ViewPaths.BUTTON), new MenuItem("Callout", ViewPaths.CALLOUT),
+			new MenuItem("Check", ViewPaths.CHECK), new MenuItem("Combo Box", ViewPaths.COMBO_BOX), new MenuItem("Label", ViewPaths.LABEL),
+			new MenuItem("List View", ViewPaths.LIST_VIEW), new MenuItem("Panel", ViewPaths.PANEL), new MenuItem("Pop Up List", ViewPaths.POP_UP_LIST),
+			new MenuItem("Pop Up Manager", ViewPaths.POP_UP_MANAGER), new MenuItem("Progress Bar", ViewPaths.PROGRESS_BAR),
+			new MenuItem("Radio", ViewPaths.RADIO), new MenuItem("Slider", ViewPaths.SLIDER), new MenuItem("Tab Bar", ViewPaths.TAB_BAR),
+			new MenuItem("Text Input", ViewPaths.TEXT_INPUT), new MenuItem("Toggle Switch", ViewPaths.TOGGLE_SWITCH),
 		]);
 		this.listView.layoutData = AnchorLayoutData.fill();
 		this.listView.addEventListener(Event.CHANGE, list_changeHandler);
 		this.addChild(this.listView);
 	}
 
-	public var selectedScreenID(default, set):String = null;
+	public var selectedViewPaths(default, set):String = null;
 
-	private function set_selectedScreenID(value:String):String {
-		if (this.selectedScreenID == value) {
-			return this.selectedScreenID;
+	private function set_selectedViewPaths(value:String):String {
+		if (this.selectedViewPaths == value) {
+			return this.selectedViewPaths;
 		}
-		this.selectedScreenID = value;
+		this.selectedViewPaths = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.selectedScreenID;
+		return this.selectedViewPaths;
 	}
 
 	private function list_changeHandler(event:Event):Void {
 		var selectedItem = this.listView.selectedItem;
-		this.selectedScreenID = selectedItem.screenID;
+		this.selectedViewPaths = selectedItem.screenID;
 	}
 }
 

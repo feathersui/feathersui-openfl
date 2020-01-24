@@ -1,4 +1,4 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.events.FeathersEvent;
 import feathers.controls.Label;

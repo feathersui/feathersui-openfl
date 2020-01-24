@@ -1,30 +1,24 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.events.FeathersEvent;
-import feathers.layout.VerticalAlign;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.HorizontalLayout;
 import feathers.controls.Label;
 import openfl.events.Event;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
-import feathers.controls.ToggleSwitch;
+import feathers.controls.HSlider;
+import feathers.controls.VSlider;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 
-class ToggleSwitchScreen extends Panel {
-	private var toggle:ToggleSwitch;
-	private var selectedToggle:ToggleSwitch;
+class SliderScreen extends Panel {
+	private var horizontalSlider:HSlider;
+	private var verticalSlider:VSlider;
 
 	override private function initialize():Void {
 		super.initialize();
 
-		var layout = new HorizontalLayout();
-		layout.horizontalAlign = CENTER;
-		layout.verticalAlign = MIDDLE;
-		layout.gap = 20;
-		this.layout = layout;
+		this.layout = new AnchorLayout();
 
 		this.headerFactory = function():LayoutGroup {
 			var header = new LayoutGroup();
@@ -33,7 +27,7 @@ class ToggleSwitchScreen extends Panel {
 
 			var headerTitle = new Label();
 			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Toggle Switch";
+			headerTitle.text = "Slider";
 			headerTitle.layoutData = AnchorLayoutData.center();
 			header.addChild(headerTitle);
 
@@ -46,14 +40,24 @@ class ToggleSwitchScreen extends Panel {
 			return header;
 		};
 
-		this.toggle = new ToggleSwitch();
-		this.toggle.layoutData = AnchorLayoutData.center();
-		this.toggle.addEventListener(Event.CHANGE, toggleSwitch_changeHandler);
-		this.addChild(this.toggle);
+		this.horizontalSlider = new HSlider();
+		this.horizontalSlider.minimum = 0.0;
+		this.horizontalSlider.maximum = 1.0;
+		this.horizontalSlider.value = 0.4;
+		this.horizontalSlider.layoutData = AnchorLayoutData.center(-40);
+		this.horizontalSlider.addEventListener(Event.CHANGE, horizontalSlider_changeHandler);
+		this.addChild(this.horizontalSlider);
+
+		this.verticalSlider = new VSlider();
+		this.verticalSlider.minimum = 0.0;
+		this.verticalSlider.maximum = 1.0;
+		this.verticalSlider.value = 0.5;
+		this.verticalSlider.layoutData = AnchorLayoutData.center(120);
+		this.addChild(this.verticalSlider);
 	}
 
-	private function toggleSwitch_changeHandler(event:Event):Void {
-		trace("ToggleSwitch selected change: " + this.toggle.selected);
+	private function horizontalSlider_changeHandler(event:Event):Void {
+		trace("HSlider value change: " + this.horizontalSlider.value);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

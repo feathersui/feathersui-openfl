@@ -1,12 +1,12 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.utils.DisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.events.FeathersEvent;
-import feathers.data.ArrayCollection;
-import feathers.controls.PopUpList;
+import feathers.controls.ListView;
 import feathers.controls.Label;
 import openfl.events.Event;
+import feathers.data.ArrayCollection;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
@@ -14,8 +14,8 @@ import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 import feathers.data.ListViewItemState;
 
-class PopUpListScreen extends Panel {
-	private var popUpList:PopUpList;
+class ListViewScreen extends Panel {
+	private var listView:ListView;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -29,7 +29,7 @@ class PopUpListScreen extends Panel {
 
 			var headerTitle = new Label();
 			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Pop Up List";
+			headerTitle.text = "List View";
 			headerTitle.layoutData = AnchorLayoutData.center();
 			header.addChild(headerTitle);
 
@@ -42,25 +42,23 @@ class PopUpListScreen extends Panel {
 			return header;
 		};
 
-		var arrayItems = [
-			{text: "Aardvark"}, {text: "Badger"}, {text: "Cheetah"}, {text: "Dolphin"}, {text: "Elephant"}, {text: "Flamingo"}, {text: "Gecko"},
-			{text: "Hedgehog"}, {text: "Iguana"}, {text: "Jaguar"}, {text: "Kangaroo"}, {text: "Lobster"}, {text: "Moose"}, {text: "Newt"}, {text: "Octopus"},
-			{text: "Penguin"}, {text: "Quokka"}, {text: "Raccoon"}, {text: "Starling"}, {text: "Toucan"}, {text: "Urchin"}, {text: "Vulture"},
-			{text: "Warthog"}, {text: "X-Ray Tetra"}, {text: "Yak"}, {text: "Zebra"},
-		];
+		var items = [];
+		for (i in 0...30) {
+			items[i] = {text: "List Item " + (i + 1)};
+		}
 
-		this.popUpList = new PopUpList();
-		this.popUpList.dataProvider = new ArrayCollection(arrayItems);
-		this.popUpList.itemToText = (item:Dynamic) -> {
+		this.listView = new ListView();
+		this.listView.dataProvider = new ArrayCollection(items);
+		this.listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
-		this.popUpList.layoutData = AnchorLayoutData.center();
-		this.popUpList.addEventListener(Event.CHANGE, popUpList_changeHandler);
-		this.addChild(this.popUpList);
+		this.listView.layoutData = AnchorLayoutData.fill();
+		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
+		this.addChild(this.listView);
 	}
 
-	private function popUpList_changeHandler(event:Event):Void {
-		trace("PopUpList selectedIndex change: " + this.popUpList.selectedIndex);
+	private function listView_changeHandler(event:Event):Void {
+		trace("ListView selectedIndex change: " + this.listView.selectedIndex);
 	}
 
 	private function backButton_triggeredHandler(event:FeathersEvent):Void {

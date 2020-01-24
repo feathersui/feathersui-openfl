@@ -1,4 +1,4 @@
-package com.feathersui.components.screens;
+package com.feathersui.components.views;
 
 import feathers.utils.DisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
