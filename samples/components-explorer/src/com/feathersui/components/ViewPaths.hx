@@ -11,7 +11,7 @@ class ViewPaths {
 	public static final LIST_VIEW = "/list-view";
 	public static final PANEL = "/panel";
 	public static final POP_UP_LIST = "/pop-up-list";
-	public static final POP_UP_MANAGER = "/pop-up-Manager";
+	public static final POP_UP_MANAGER = "/pop-up-manager";
 	public static final PROGRESS_BAR = "/progress-bar";
 	public static final RADIO = "/radio";
 	public static final SLIDER = "/slider";

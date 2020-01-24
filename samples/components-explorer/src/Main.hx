@@ -20,9 +20,6 @@ import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterAction;
 import feathers.controls.navigators.RouterNavigator;
-import feathers.controls.navigators.StackAction;
-import feathers.controls.navigators.StackItem;
-import feathers.controls.navigators.StackNavigator;
 import feathers.motion.transitions.SlideTransitions;
 import openfl.events.Event;
 
@@ -32,8 +29,12 @@ class Main extends Application {
 	}
 
 	override private function initialize():Void {
-		// #if html5
 		var navigator = new RouterNavigator();
+		#if feathersui.com
+		// to build for the feathersui.com website, run the following command:
+		// haxelib run openfl build html5 -final --haxedef=feathersui.com
+		navigator.basePath = "/samples/haxe-openfl/components-explorer";
+		#end
 		this.addChild(navigator);
 
 		var mainMenu = Route.withClass(ViewPaths.MAIN_MENU, MainMenu, [Event.CHANGE => NewAction(createPushPathAction)]);
@@ -103,10 +104,5 @@ class Main extends Application {
 		// this may return to a different path than the parameter specifies
 		return GoBack;
 		#end
-	}
-
-	private function createPushAction(event:Event):StackAction {
-		var screen = cast(event.currentTarget, MainMenu);
-		return Push(screen.selectedViewPaths);
 	}
 }
