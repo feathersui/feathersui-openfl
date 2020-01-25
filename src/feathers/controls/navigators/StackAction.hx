@@ -42,14 +42,14 @@ enum StackAction {
 
 		@since 1.0.0
 	**/
-	Pop(?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	Pop(?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Pop all items from the history stack, except for the first item.
 
 		@since 1.0.0
 	**/
-	PopToRoot(?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	PopToRoot(?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Pop all items from the history stack, except for the first item, but

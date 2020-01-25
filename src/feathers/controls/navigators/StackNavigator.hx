@@ -95,7 +95,6 @@ class StackNavigator extends BaseNavigator {
 	public var replaceTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
 
 	private var _history:Array<HistoryItem> = [];
-	private var _poppedHistoryItemInTransition:HistoryItem;
 	private var _tempRootItemID:String;
 
 	/**
@@ -160,9 +159,13 @@ class StackNavigator extends BaseNavigator {
 		// we're forcibly replacing the root item.
 		var historyItem = new HistoryItem(value, null, null);
 		this._history.push(historyItem);
-		this.showItemInternal(value, null, null);
+		this.showItemWithInjectAndReturnedObject(value, null, null, null, false);
 		return value;
 	}
+
+	private var savedInject:(Dynamic) -> Void;
+	private var savedReturnedObject:Dynamic;
+	private var savedIsPop:Bool = false;
 
 	/**
 		Registers a new item with a string identifier that can be used to
@@ -248,7 +251,7 @@ class StackNavigator extends BaseNavigator {
 		}
 		var historyItem = new HistoryItem(id, inject, transition);
 		this._history.push(historyItem);
-		return this.showItemInternal(id, transition, inject);
+		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, false);
 	}
 
 	/**
@@ -273,7 +276,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function popItem(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+	public function popItem(?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
@@ -288,8 +291,8 @@ class StackNavigator extends BaseNavigator {
 			}
 		}
 		this._history.pop();
-		this._poppedHistoryItemInTransition = this._history[this._history.length - 1];
-		return this.showItemInternal(this._poppedHistoryItemInTransition.id, transition, this._poppedHistoryItemInTransition.inject);
+		var item = this._history[this._history.length - 1];
+		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, true);
 	}
 
 	/**
@@ -311,7 +314,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function popToRootItem(?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+	public function popToRootItem(?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._history.length <= 1) {
 			// we're already at the root of the history stack, and popping has
 			// no effect.
@@ -322,7 +325,7 @@ class StackNavigator extends BaseNavigator {
 		}
 		this._history.resize(1);
 		var item = this._history[0];
-		return this.showItemInternal(item.id, transition, item.inject);
+		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, true);
 	}
 
 	/**
@@ -373,7 +376,7 @@ class StackNavigator extends BaseNavigator {
 		}
 		var historyItem = new HistoryItem(id, inject, transition);
 		this._history[this._history.length - 1] = historyItem;
-		return this.showItemInternal(id, transition, inject);
+		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, false);
 	}
 
 	/**
@@ -401,7 +404,7 @@ class StackNavigator extends BaseNavigator {
 		}
 		this._history.resize(1);
 		this._history[0] = new HistoryItem(id, inject, transition);
-		return this.showItemInternal(id, transition, inject);
+		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, false);
 	}
 
 	override private function getView(id:String):DisplayObject {
@@ -414,13 +417,39 @@ class StackNavigator extends BaseNavigator {
 		item.returnView(view);
 	}
 
+	override private function prepareActiveItemView():Void {
+		if (this.savedInject != null) {
+			this.savedInject(this.activeItemView);
+		}
+
+		if (this.savedIsPop) {
+			var item = this.getItem(this.activeItemID);
+			var returnHandlers = item.returnHandlers;
+			if (returnHandlers != null && returnHandlers.exists(this._previousViewInTransitionID)) {
+				returnHandlers.get(this._previousViewInTransitionID)(this.activeItemView, this.savedReturnedObject);
+			}
+		}
+	}
+
+	private function showItemWithInjectAndReturnedObject(id:String, ?transition:(DisplayObject, DisplayObject) -> IEffectContext, ?inject:(Dynamic) -> Void,
+			returnedObject:Dynamic, isPop:Bool):DisplayObject {
+		this.savedInject = inject;
+		this.savedReturnedObject = returnedObject;
+		this.savedIsPop = isPop;
+		var result = this.showItemInternal(id, transition);
+		this.savedInject = null;
+		this.savedReturnedObject = null;
+		this.savedIsPop = false;
+		return result;
+	}
+
 	private function stackNavigator_initializeHandler(event:FeathersEvent):Void {
 		if (this._tempRootItemID != null) {
 			// we don't show the root item until after initialization because
 			// we don't want to start any transitions if it changes before that
 			var id = this._tempRootItemID;
 			this._tempRootItemID = null;
-			this.showItemInternal(id, null);
+			this.showItemWithInjectAndReturnedObject(id, null, null, null, false);
 		}
 	}
 

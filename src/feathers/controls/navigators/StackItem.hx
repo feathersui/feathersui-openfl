@@ -45,10 +45,12 @@ class StackItem {
 		Creates a `StackItem` that instantiates a view from a class that extends
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
-	public static function withClass(viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>):StackItem {
+	public static function withClass(viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>,
+			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
 		var item = new StackItem();
 		item.viewClass = viewClass;
 		item.actions = actions;
+		item.returnHandlers = returnHandlers;
 		return item;
 	}
 
@@ -56,10 +58,12 @@ class StackItem {
 		Creates a `StackItem` that calls a function that returns a
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
-	public static function withFunction(viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>):StackItem {
+	public static function withFunction(viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>,
+			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
 		var item = new StackItem();
 		item.viewFunction = viewFunction;
 		item.actions = actions;
+		item.returnHandlers = returnHandlers;
 		return item;
 	}
 
@@ -67,10 +71,12 @@ class StackItem {
 		Creates a `StackItem` that always returns the same `DisplayObject`
 		instance when the `StackNavigator` requests the item's view.
 	**/
-	public static function withDisplayObject(viewInstance:DisplayObject, ?actions:Map<String, StackAction>):StackItem {
+	public static function withDisplayObject(viewInstance:DisplayObject, ?actions:Map<String, StackAction>,
+			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
 		var item = new StackItem();
 		item.viewInstance = viewInstance;
 		item.actions = actions;
+		item.returnHandlers = returnHandlers;
 		return item;
 	}
 
@@ -80,6 +86,7 @@ class StackItem {
 	private var viewFunction:() -> DisplayObject;
 	private var viewInstance:DisplayObject;
 	private var actions:Map<String, StackAction>;
+	private var returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>;
 
 	/**
 		A custom "push" transition for this item only. If `null`, the default
@@ -223,13 +230,13 @@ class StackItem {
 				{
 					navigator.replaceItem(id, inject, transition);
 				}
-			case Pop(transition):
+			case Pop(returnedObject, transition):
 				{
-					navigator.popItem(transition);
+					navigator.popItem(returnedObject, transition);
 				}
-			case PopToRoot(transition):
+			case PopToRoot(returnedObject, transition):
 				{
-					navigator.popToRootItem(transition);
+					navigator.popToRootItem(returnedObject, transition);
 				}
 			case PopToRootAndReplace(id, inject, transition):
 				{

@@ -364,7 +364,9 @@ class BaseNavigator extends FeathersControl {
 		return item;
 	}
 
-	private function showItemInternal(id:String, transition:(DisplayObject, DisplayObject) -> IEffectContext, ?inject:(Dynamic) -> Void):DisplayObject {
+	private function prepareActiveItemView():Void {}
+
+	private function showItemInternal(id:String, transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (!this.hasItem(id)) {
 			throw new ArgumentError('Item with id \'$id\' cannot be displayed because this id has not been added.');
 		}
@@ -386,9 +388,7 @@ class BaseNavigator extends FeathersControl {
 		if (this.activeItemView == null) {
 			throw new IllegalOperationError('Failed to display navigator item with id \'$id\'. Call to getView() incorrectly returned null.');
 		}
-		if (inject != null) {
-			inject(this.activeItemView);
-		}
+		this.prepareActiveItemView();
 		if (this.autoSizeMode == CONTENT || this.stage == null) {
 			this.activeItemView.addEventListener(Event.RESIZE, activeItemView_resizeHandler);
 		}
