@@ -62,7 +62,7 @@ enum RouterAction {
 
 		@since 1.0.0
 	**/
-	Listener(callback:(Event) -> Void);
+	Listener<E:Event>(callback : (E) -> Void);
 
 	/**
 		Call a function that creates a new action. The new action will be
@@ -70,5 +70,6 @@ enum RouterAction {
 
 		@since 1.0.0
 	**/
-	NewAction(callback:(Event) -> RouterAction);
+	NewAction<E:Event>(callback : (E) -> RouterAction);
+
 }

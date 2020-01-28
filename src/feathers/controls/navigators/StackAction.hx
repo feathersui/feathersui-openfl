@@ -27,14 +27,14 @@ enum StackAction {
 
 		@since 1.0.0
 	**/
-	Push(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	Push<T:DisplayObject>(id : String, ?inject : (T) -> Void, ?transition : (DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Replace the navigator's active view with a different view.
 
 		@since 1.0.0
 	**/
-	Replace(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	Replace<T:DisplayObject>(id : String, ?inject : (T) -> Void, ?transition : (DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Pop the active view and navigate to the previous item in the history
@@ -57,14 +57,14 @@ enum StackAction {
 
 		@since 1.0.0
 	**/
-	PopToRootAndReplace(id:String, ?inject:(Dynamic) -> Void, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	PopToRootAndReplace<T:DisplayObject>(id : String, ?inject : (T) -> Void, ?transition : (DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Call an event listener. Does not navigate to a different view.
 
 		@since 1.0.0
 	**/
-	Listener(callback:(Event) -> Void);
+	Listener<E:Event>(callback : (E) -> Void);
 
 	/**
 		Call a function that creates a new action. The new action will be
@@ -72,5 +72,6 @@ enum StackAction {
 
 		@since 1.0.0
 	**/
-	NewAction(callback:(Event) -> StackAction);
+	NewAction<E:Event>(callback : (E) -> StackAction);
+
 }
