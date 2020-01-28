@@ -57,6 +57,11 @@ script:
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
+# build stack-navigator-pass-data-between-views sample
+- cd $TRAVIS_BUILD_DIR/samples/stack-navigator-pass-data-between-views
+- haxelib run openfl build neko
+- haxelib run openfl build html5
+- haxelib run openfl build flash
 # run automated tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code

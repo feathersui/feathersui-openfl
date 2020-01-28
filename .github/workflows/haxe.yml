@@ -64,3 +64,9 @@ jobs:
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+    - name: Build samples/stack-navigator-pass-data-between-views
+      working-directory: samples/stack-navigator-pass-data-between-views
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
