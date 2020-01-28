@@ -61,7 +61,7 @@ class StackNavigator extends BaseNavigator {
 		The default transition to use for push actions, if not overridden in the
 		call to `pushItem()`.
 
-		@see `StackNavigator.pushItem`
+		@see `StackNavigator.pushItem()`
 		@see `StackNavigator.popTransition`
 
 		@since 1.0.0
@@ -73,9 +73,9 @@ class StackNavigator extends BaseNavigator {
 		The default transition to use for pop actions, if not overridden in the
 		call to `popItem()`.
 
-		@see `StackNavigator.popItem`
-		@see `StackNavigator.popToRootItem`
-		@see `StackNavigator.popToRootItemAndReplace`
+		@see `StackNavigator.popItem()`
+		@see `StackNavigator.popToRootItem()`
+		@see `StackNavigator.popToRootItemAndReplace()`
 		@see `StackNavigator.pushTransition`
 
 		@since 1.0.0
@@ -86,7 +86,7 @@ class StackNavigator extends BaseNavigator {
 		The default transition to use for replace actions, if not overridden in
 		the call to `replaceItem()`.
 
-		@see `StackNavigator.replaceItem`
+		@see `StackNavigator.replaceItem()`
 		@see `StackNavigator.pushTransition`
 		@see `StackNavigator.popTransition`
 
@@ -124,7 +124,7 @@ class StackNavigator extends BaseNavigator {
 		navigator.rootItemID = "my-item-id";
 		```
 
-		@see `StackNavigator.popToRootItem`
+		@see `StackNavigator.popToRootItem()`
 
 		@since 1.0.0
 	**/
@@ -168,23 +168,23 @@ class StackNavigator extends BaseNavigator {
 	private var savedIsPop:Bool = false;
 
 	/**
-		Registers a new item with a string identifier that can be used to
-		reference the same item in other calls, like `removeItem()` or
-		`pushItem()`.
+		Registers a new item. The `id` property of the item should be used to
+		reference the same item in other method calls, like `pushItem()` or
+		`removeItem()`.
 
-		@see `StackNavigator.removeItem`
+		@see `StackNavigator.removeItem()`
 
 		@since 1.0.0
 	**/
-	public function addItem(id:String, item:StackItem):Void {
-		this.addItemInternal(id, item);
+	public function addItem(item:StackItem):Void {
+		this.addItemInternal(item.id, item);
 	}
 
 	/**
 		Removes an existing item using the identifier assigned to it in the call
 		to `addItem()`.
 
-		@see `StackNavigator.addItem`
+		@see `StackNavigator.addItem()`
 
 		@since 1.0.0
 	**/
@@ -236,7 +236,8 @@ class StackNavigator extends BaseNavigator {
 		will return `null`.
 
 		@see `StackNavigator.pushTransition`
-		@see `StackNavigator.popItem`
+		@see `StackNavigator.popItem()`
+		@see `StackNavigator.replaceItem()`
 
 		@since 1.0.0
 	**/
@@ -270,9 +271,9 @@ class StackNavigator extends BaseNavigator {
 		will return `null`.
 
 		@see `StackNavigator.popTransition`
-		@see `StackNavigator.popToRootItem`
-		@see `StackNavigator.popAll`
-		@see `StackNavigator.popToRootItemAndReplace`
+		@see `StackNavigator.popToRootItem()`
+		@see `StackNavigator.popAll()`
+		@see `StackNavigator.popToRootItemAndReplace()`
 
 		@since 1.0.0
 	**/
@@ -308,9 +309,9 @@ class StackNavigator extends BaseNavigator {
 		`popToRootItem()` will return `null`.
 
 		@see `StackNavigator.popTransition`
-		@see `StackNavigator.popToRootItemAndReplace`
-		@see `StackNavigator.popAll`
-		@see `StackNavigator.popItem`
+		@see `StackNavigator.popToRootItemAndReplace()`
+		@see `StackNavigator.popAll()`
+		@see `StackNavigator.popItem()`
 
 		@since 1.0.0
 	**/
@@ -336,7 +337,7 @@ class StackNavigator extends BaseNavigator {
 		`popTransition` property will be used instead.
 
 		@see `StackNavigator.popTransition`
-		@see `StackNavigator.popToRootItem`
+		@see `StackNavigator.popToRootItem()`
 
 		@since 1.0.0
 	**/
@@ -392,9 +393,9 @@ class StackNavigator extends BaseNavigator {
 		`popToRootItemAndReplace()` will return `null`.
 
 		@see `StackNavigator.popTransition`
-		@see `StackNavigator.popToRootItem`
-		@see `StackNavigator.popAll`
-		@see `StackNavigator.popItem`
+		@see `StackNavigator.popToRootItem()`
+		@see `StackNavigator.popAll()`
+		@see `StackNavigator.popItem()`
 
 		@since 1.0.0
 	**/

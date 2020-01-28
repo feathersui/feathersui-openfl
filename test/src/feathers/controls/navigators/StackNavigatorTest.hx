@@ -43,7 +43,7 @@ class StackNavigatorTest {
 			injected = true;
 		}
 		var view1 = new View1();
-		this._navigator.addItem(ID_1, StackItem.withDisplayObject(view1));
+		this._navigator.addItem(StackItem.withDisplayObject(ID_1, view1));
 		Assert.isFalse(injected);
 		this._navigator.pushItem(ID_1, inject);
 		Assert.isTrue(injected, "inject must be called with pushItem() method");
@@ -56,9 +56,9 @@ class StackNavigatorTest {
 			injected = true;
 		}
 		var view1 = new View1();
-		this._navigator.addItem(ID_1, StackItem.withDisplayObject(view1));
+		this._navigator.addItem(StackItem.withDisplayObject(ID_1, view1));
 		var view2 = new View2();
-		this._navigator.addItem(ID_2, StackItem.withDisplayObject(view2));
+		this._navigator.addItem(StackItem.withDisplayObject(ID_2, view2));
 		this._navigator.rootItemID = ID_1;
 		Assert.isFalse(injected);
 		Assert.isFalse(injected);
@@ -73,9 +73,9 @@ class StackNavigatorTest {
 			injected = true;
 		}
 		var view1 = new View1();
-		this._navigator.addItem(ID_1, StackItem.withDisplayObject(view1, [Event.CHANGE => Push(ID_2, inject)]));
+		this._navigator.addItem(StackItem.withDisplayObject(ID_1, view1, [Event.CHANGE => Push(ID_2, inject)]));
 		var view2 = new View2();
-		this._navigator.addItem(ID_2, StackItem.withDisplayObject(view2));
+		this._navigator.addItem(StackItem.withDisplayObject(ID_2, view2));
 
 		this._navigator.rootItemID = ID_1;
 		Assert.isFalse(injected);
@@ -90,9 +90,9 @@ class StackNavigatorTest {
 			injected = true;
 		}
 		var view1 = new View1();
-		this._navigator.addItem(ID_1, StackItem.withDisplayObject(view1, [Event.CHANGE => Replace(ID_2, inject)]));
+		this._navigator.addItem(StackItem.withDisplayObject(ID_1, view1, [Event.CHANGE => Replace(ID_2, inject)]));
 		var view2 = new View2();
-		this._navigator.addItem(ID_2, StackItem.withDisplayObject(view2));
+		this._navigator.addItem(StackItem.withDisplayObject(ID_2, view2));
 
 		this._navigator.rootItemID = ID_1;
 		Assert.isFalse(injected);

@@ -28,7 +28,7 @@ import openfl.display.DisplayObject;
 	view.
 
 	```hx
-	var item = StackItem.withClass(SettingsScreen, [
+	var item = StackItem.withClass("settings", SettingsScreen, [
 		SettingsScreen.SHOW_ADVANCED_SETTINGS => StackActions.Push("advancedSettings"),
 		Event.COMPLETE => StackActions.Pop()
 	]);
@@ -45,9 +45,10 @@ class StackItem {
 		Creates a `StackItem` that instantiates a view from a class that extends
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
-	public static function withClass(viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>,
+	public static function withClass(id:String, viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
 		var item = new StackItem();
+		item.id = id;
 		item.viewClass = viewClass;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
@@ -58,9 +59,10 @@ class StackItem {
 		Creates a `StackItem` that calls a function that returns a
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
-	public static function withFunction(viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>,
+	public static function withFunction(id:String, viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
 		var item = new StackItem();
+		item.id = id;
 		item.viewFunction = viewFunction;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
@@ -71,9 +73,10 @@ class StackItem {
 		Creates a `StackItem` that always returns the same `DisplayObject`
 		instance when the `StackNavigator` requests the item's view.
 	**/
-	public static function withDisplayObject(viewInstance:DisplayObject, ?actions:Map<String, StackAction>,
+	public static function withDisplayObject(id:String, viewInstance:DisplayObject, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
 		var item = new StackItem();
+		item.id = id;
 		item.viewInstance = viewInstance;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
@@ -81,6 +84,13 @@ class StackItem {
 	}
 
 	private function new() {}
+
+	/**
+		The unique ID associated with this item.
+
+		@since 1.0.0
+	**/
+	public var id:String;
 
 	private var viewClass:Class<DisplayObject>;
 	private var viewFunction:() -> DisplayObject;
