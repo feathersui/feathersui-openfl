@@ -1,14 +1,14 @@
 package com.feathersui.components.views;
 
-import feathers.events.FeathersEvent;
-import feathers.core.PopUpManager;
-import feathers.controls.Label;
-import openfl.events.Event;
-import feathers.layout.AnchorLayout;
-import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
+import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.core.PopUpManager;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import openfl.events.Event;
 
 class PopUpManagerScreen extends Panel {
 	private var button:Button;
@@ -32,7 +32,7 @@ class PopUpManagerScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -41,15 +41,15 @@ class PopUpManagerScreen extends Panel {
 		this.button = new Button();
 		this.button.text = "Add Pop Up";
 		this.button.layoutData = AnchorLayoutData.center();
-		this.button.addEventListener(FeathersEvent.TRIGGERED, addPopUpButton_triggeredHandler);
+		this.button.addEventListener(TriggerEvent.TRIGGER, addPopUpButton_triggerHandler);
 		this.addChild(this.button);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 
-	private function addPopUpButton_triggeredHandler(event:FeathersEvent):Void {
+	private function addPopUpButton_triggerHandler(event:TriggerEvent):Void {
 		var popUp = new Panel();
 		popUp.layout = new AnchorLayout();
 		var message = new Label();
@@ -61,7 +61,7 @@ class PopUpManagerScreen extends Panel {
 			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
 			var closeButton = new Button();
 			closeButton.text = "Close";
-			closeButton.addEventListener(FeathersEvent.TRIGGERED, (event:FeathersEvent) -> {
+			closeButton.addEventListener(TriggerEvent.TRIGGER, (event:TriggerEvent) -> {
 				PopUpManager.removePopUp(popUp);
 			});
 			footer.addChild(closeButton);

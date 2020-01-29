@@ -1,19 +1,18 @@
 package com.feathersui.components.views;
 
-import feathers.controls.ScrollPolicy;
-import feathers.style.IDarkModeTheme;
-import feathers.events.FeathersEvent;
-import feathers.style.Theme;
-import openfl.events.Event;
 import com.feathersui.components.ViewPaths;
-import feathers.data.ArrayCollection;
-import feathers.layout.AnchorLayout;
-import feathers.controls.ListView;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
+import feathers.controls.ListView;
 import feathers.controls.Panel;
+import feathers.data.ArrayCollection;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
+import feathers.style.IDarkModeTheme;
+import feathers.style.Theme;
+import openfl.events.Event;
 
 class MainMenu extends Panel {
 	private var listView:ListView;
@@ -36,7 +35,7 @@ class MainMenu extends Panel {
 
 			var themeButton = new Button();
 			themeButton.text = "Theme";
-			themeButton.addEventListener(FeathersEvent.TRIGGERED, function(event:FeathersEvent):Void {
+			themeButton.addEventListener(TriggerEvent.TRIGGER, function(event:TriggerEvent):Void {
 				var theme = Theme.getTheme();
 				if (!Std.is(theme, IDarkModeTheme)) {
 					return;

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.data.ListViewItemState;
@@ -376,24 +377,24 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 
 	private function createButton():Void {
 		if (this.button != null) {
-			this.button.removeEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+			this.button.removeEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 			this.button = null;
 		}
 		this.button = new Button();
 		this.button.variant = PopUpList.CHILD_VARIANT_BUTTON;
-		this.button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
 	}
 
 	private function createListView():Void {
 		if (this.listView != null) {
-			this.listView.removeEventListener(FeathersEvent.TRIGGERED, listView_triggeredHandler);
+			this.listView.removeEventListener(TriggerEvent.TRIGGER, listView_triggerHandler);
 			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
 			this.listView = null;
 		}
 		this.listView = new ListView();
-		this.listView.addEventListener(FeathersEvent.TRIGGERED, listView_triggeredHandler);
+		this.listView.addEventListener(TriggerEvent.TRIGGER, listView_triggerHandler);
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
 	}
 
@@ -469,7 +470,7 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		this.button.validateNow();
 	}
 
-	private function button_triggeredHandler(event:FeathersEvent):Void {
+	private function button_triggerHandler(event:TriggerEvent):Void {
 		if (this.open) {
 			this.closeList();
 		} else {
@@ -477,7 +478,7 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function listView_triggeredHandler(event:Event):Void {
+	private function listView_triggerHandler(event:TriggerEvent):Void {
 		if (this.popUpAdapter == null || !this.popUpAdapter.persistent) {
 			this.closeList();
 		}

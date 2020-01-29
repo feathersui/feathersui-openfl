@@ -13,7 +13,7 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 
 /**
-	Events dispatched by the active view in `RouterNavigator` may triggered
+	Events dispatched by the active view in `RouterNavigator` may trigger
 	actions, such as navigation.
 
 	@see `feathers.controls.navigators.RouterNavigator`

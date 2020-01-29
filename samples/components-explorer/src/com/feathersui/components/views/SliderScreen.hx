@@ -1,15 +1,15 @@
 package com.feathersui.components.views;
 
-import feathers.events.FeathersEvent;
-import feathers.controls.Label;
-import openfl.events.Event;
-import feathers.layout.AnchorLayout;
-import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.HSlider;
-import feathers.controls.VSlider;
+import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.controls.VSlider;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import openfl.events.Event;
 
 class SliderScreen extends Panel {
 	private var horizontalSlider:HSlider;
@@ -34,7 +34,7 @@ class SliderScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -60,7 +60,7 @@ class SliderScreen extends Panel {
 		trace("HSlider value change: " + this.horizontalSlider.value);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

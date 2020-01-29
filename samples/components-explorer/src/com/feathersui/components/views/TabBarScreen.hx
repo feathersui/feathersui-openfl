@@ -1,18 +1,15 @@
 package com.feathersui.components.views;
 
-import feathers.controls.ToggleButton;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.data.TabBarItemState;
 import feathers.controls.Button;
 import feathers.controls.Label;
-import feathers.layout.AnchorLayoutData;
-import feathers.data.ArrayCollection;
 import feathers.controls.LayoutGroup;
-import feathers.layout.AnchorLayout;
-import feathers.events.FeathersEvent;
-import feathers.controls.TabBar;
-import openfl.events.Event;
 import feathers.controls.Panel;
+import feathers.controls.TabBar;
+import feathers.data.ArrayCollection;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import openfl.events.Event;
 
 class TabBarScreen extends Panel {
 	private var tabBar:TabBar;
@@ -36,7 +33,7 @@ class TabBarScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -61,7 +58,7 @@ class TabBarScreen extends Panel {
 		trace("TabBar selectedIndex change: " + this.tabBar.selectedIndex);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

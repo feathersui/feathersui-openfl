@@ -1,9 +1,9 @@
-import feathers.layout.AnchorLayoutData;
-import feathers.layout.AnchorLayout;
 import feathers.controls.Application;
-import feathers.controls.TextCallout;
 import feathers.controls.Button;
-import feathers.events.FeathersEvent;
+import feathers.controls.TextCallout;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
 
 // the Application component automatically scales the project to an appropriate
 // size for any type of device, from mobile to desktop.
@@ -23,7 +23,7 @@ class Main extends Application {
 		// the text to display on the button
 		this.button.text = "Click Me";
 		// when the button is clicked or tapped, call a function
-		this.button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 
 		// add the button as a child of the app
 		this.addChild(this.button);
@@ -32,7 +32,7 @@ class Main extends Application {
 	// store the button so that we can refer to it in other functions
 	private var button:Button;
 
-	private function button_triggeredHandler(event:FeathersEvent):Void {
+	private function button_triggerHandler(event:TriggerEvent):Void {
 		// display a pop-up message when the button is clicked or tapped
 		TextCallout.show("Hello World", this.button);
 	}

@@ -1,18 +1,15 @@
 package com.feathersui.components.views;
 
-import feathers.utils.DisplayObjectRecycler;
-import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.events.FeathersEvent;
-import feathers.data.ArrayCollection;
+import feathers.controls.Button;
 import feathers.controls.ComboBox;
 import feathers.controls.Label;
-import openfl.events.Event;
-import feathers.layout.AnchorLayout;
-import feathers.layout.AnchorLayoutData;
-import feathers.controls.Button;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
-import feathers.data.ListViewItemState;
+import feathers.data.ArrayCollection;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import openfl.events.Event;
 
 class ComboBoxScreen extends Panel {
 	private var comboBox:ComboBox;
@@ -36,7 +33,7 @@ class ComboBoxScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -63,7 +60,7 @@ class ComboBoxScreen extends Panel {
 		trace("ComboBox selectedIndex change: " + this.comboBox.selectedIndex);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

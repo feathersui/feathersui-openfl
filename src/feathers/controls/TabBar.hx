@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
@@ -343,7 +344,7 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 			}
 			this.tabToData.remove(tab);
 			this.dataToTab.remove(item);
-			tab.removeEventListener(FeathersEvent.TRIGGERED, tab_triggeredHandler);
+			tab.removeEventListener(TriggerEvent.TRIGGER, tab_triggerHandler);
 			tab.removeEventListener(Event.CHANGE, tab_changeHandler);
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
@@ -441,7 +442,7 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 			this.tabRecycler.update(tab, this._currentItemState);
 		}
 		tab.selected = this._currentItemState.selected;
-		tab.addEventListener(FeathersEvent.TRIGGERED, tab_triggeredHandler);
+		tab.addEventListener(TriggerEvent.TRIGGER, tab_triggerHandler);
 		tab.addEventListener(Event.CHANGE, tab_changeHandler);
 		this.tabToData.set(tab, item);
 		this.dataToTab.set(item, tab);
@@ -464,11 +465,11 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
-	private function tab_triggeredHandler(event:FeathersEvent):Void {
+	private function tab_triggerHandler(event:TriggerEvent):Void {
 		var tab = cast(event.currentTarget, ToggleButton);
 		var item = this.tabToData.get(tab);
 		// trigger before change
-		FeathersEvent.dispatch(this, FeathersEvent.TRIGGERED);
+		this.dispatchEvent(event);
 	}
 
 	private function tab_changeHandler(event:Event):Void {

@@ -1,17 +1,15 @@
 package com.feathersui.components.views;
 
-import feathers.events.FeathersEvent;
-import openfl.events.Event;
-import feathers.controls.Button;
-import feathers.layout.AnchorLayoutData;
-import feathers.controls.Label;
-import feathers.layout.AnchorLayout;
-import feathers.controls.LayoutGroup;
-import feathers.layout.VerticalAlign;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.VerticalLayout;
 import feathers.controls.AssetLoader;
+import feathers.controls.Button;
+import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import feathers.layout.VerticalLayout;
+import openfl.events.Event;
 
 class AssetLoaderScreen extends Panel {
 	private var syncAssetLoader:AssetLoader;
@@ -41,7 +39,7 @@ class AssetLoaderScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -65,7 +63,7 @@ class AssetLoaderScreen extends Panel {
 		this.addChild(this.urlLoader);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

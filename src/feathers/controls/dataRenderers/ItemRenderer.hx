@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.events.TriggerEvent;
 import openfl.events.Event;
 import feathers.themes.steel.components.SteelItemRendererStyles;
 
@@ -28,7 +29,7 @@ class ItemRenderer extends ToggleButton {
 		SteelItemRendererStyles.initialize();
 	}
 
-	override private function basicToggleButton_triggeredHandler(event:Event):Void {
+	override private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
 		if (!this.enabled) {
 			event.stopImmediatePropagation();
 			return;

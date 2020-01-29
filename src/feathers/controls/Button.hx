@@ -33,7 +33,7 @@ import openfl.text.TextFormat;
 	```hx
 	var button = new Button();
 	button.text = "Click Me";
-	button.addEventListener(FeathersEvent.TRIGGERED, (event) ->
+	button.addEventListener(TriggerEvent.TRIGGER, (event) ->
 	{
 		trace("button triggered!");
 	});

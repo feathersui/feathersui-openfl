@@ -8,17 +8,18 @@
 
 package feathers.utils;
 
-import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 
 /**
-	Dispatches `Event.TRIGGERED` (or a custom event type) when the target is
-	clicked or tapped.
+	Dispatches `TriggerEvent.TRIGGER` (or a custom event type) when the target
+	is clicked or tapped.
 
 	@see `feathers.controls.Button`
-	@see `feathers.events.FeathersEvent.TRIGGERED`
+	@see `feathers.events.TriggerEvent.TRIGGER`
 
 	@since 1.0.0
 **/
@@ -46,10 +47,12 @@ class PointerTrigger {
 		}
 		if (this.target != null) {
 			this.target.removeEventListener(MouseEvent.CLICK, target_clickHandler);
+			this.target.removeEventListener(TouchEvent.TOUCH_TAP, target_touchTapHandler);
 		}
 		this.target = value;
 		if (this.target != null) {
 			this.target.addEventListener(MouseEvent.CLICK, target_clickHandler);
+			this.target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapHandler);
 		}
 		return this.target;
 	}
@@ -87,6 +90,21 @@ class PointerTrigger {
 			this.target.dispatchEvent(this.eventFactory());
 			return;
 		}
-		FeathersEvent.dispatch(this.target, FeathersEvent.TRIGGERED);
+		TriggerEvent.dispatchFromMouseEvent(this.target, event);
+	}
+
+	private function target_touchTapHandler(event:TouchEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+		if (this.eventFactory != null) {
+			this.target.dispatchEvent(this.eventFactory());
+			return;
+		}
+		TriggerEvent.dispatchFromTouchEvent(this.target, event);
 	}
 }

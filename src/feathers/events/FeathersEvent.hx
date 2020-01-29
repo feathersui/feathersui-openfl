@@ -9,8 +9,8 @@
 package feathers.events;
 
 import lime.utils.ObjectPool;
-import openfl.events.EventType;
 import openfl.events.Event;
+import openfl.events.EventType;
 import openfl.events.IEventDispatcher;
 
 /**
@@ -117,17 +117,6 @@ class FeathersEvent extends Event {
 		@since 1.0.0
 	**/
 	public static inline var TRANSITION_CANCEL:EventType<FeathersEvent> = "transitionCancel";
-
-	/**
-		The `FeathersEvent.TRIGGERED` event type is dispatched when a UI
-		component is triggered. Typically, this is when a button is clicked
-		with a mouse or tapped with a touchscreen.
-
-		@see `feathers.controls.Button`
-
-		@since 1.0.0
-	**/
-	public static inline var TRIGGERED:EventType<FeathersEvent> = "triggered";
 
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false));
 

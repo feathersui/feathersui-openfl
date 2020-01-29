@@ -1,19 +1,17 @@
 package com.feathersui.components.views;
 
-import feathers.events.FeathersEvent;
-import openfl.Assets;
-import openfl.display.Bitmap;
-import feathers.layout.VerticalAlign;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.VerticalLayout;
+import feathers.controls.Button;
 import feathers.controls.Label;
-import openfl.events.Event;
+import feathers.controls.LayoutGroup;
+import feathers.controls.Panel;
+import feathers.controls.ToggleButton;
+import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
-import feathers.controls.Button;
-import feathers.controls.Panel;
-import feathers.controls.LayoutGroup;
-import feathers.controls.ToggleButton;
+import feathers.layout.VerticalLayout;
+import openfl.Assets;
+import openfl.display.Bitmap;
+import openfl.events.Event;
 
 class ButtonScreen extends Panel {
 	private var button:Button;
@@ -43,7 +41,7 @@ class ButtonScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -51,7 +49,7 @@ class ButtonScreen extends Panel {
 
 		this.button = new Button();
 		this.button.text = "Push Button";
-		this.button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		this.addChild(this.button);
 
 		this.iconButton = new Button();
@@ -66,7 +64,7 @@ class ButtonScreen extends Panel {
 		this.addChild(this.toggleButton);
 	}
 
-	private function button_triggeredHandler(event:FeathersEvent):Void {
+	private function button_triggerHandler(event:TriggerEvent):Void {
 		trace("Button triggered");
 	}
 
@@ -74,7 +72,7 @@ class ButtonScreen extends Panel {
 		trace("ToggleButton selected change: " + this.toggleButton.selected);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

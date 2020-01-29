@@ -1,14 +1,14 @@
 package com.feathersui.components.views;
 
-import feathers.events.FeathersEvent;
-import feathers.controls.Label;
-import openfl.events.Event;
-import feathers.layout.AnchorLayout;
-import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.Callout;
+import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import openfl.events.Event;
 
 class CalloutScreen extends Panel {
 	private var callout:Callout;
@@ -35,7 +35,7 @@ class CalloutScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -43,7 +43,7 @@ class CalloutScreen extends Panel {
 
 		this.belowButton = new Button();
 		this.belowButton.text = "Open Below";
-		this.belowButton.addEventListener(FeathersEvent.TRIGGERED, belowButton_triggeredHandler);
+		this.belowButton.addEventListener(TriggerEvent.TRIGGER, belowButton_triggerHandler);
 		var belowButtonLayoutData = new AnchorLayoutData();
 		belowButtonLayoutData.horizontalCenter = 0;
 		belowButtonLayoutData.top = 10;
@@ -52,7 +52,7 @@ class CalloutScreen extends Panel {
 
 		this.aboveButton = new Button();
 		this.aboveButton.text = "Open Above";
-		this.aboveButton.addEventListener(FeathersEvent.TRIGGERED, aboveButton_triggeredHandler);
+		this.aboveButton.addEventListener(TriggerEvent.TRIGGER, aboveButton_triggerHandler);
 		var aboveButtonLayoutData = new AnchorLayoutData();
 		aboveButtonLayoutData.horizontalCenter = 0;
 		aboveButtonLayoutData.bottom = 10;
@@ -80,15 +80,15 @@ class CalloutScreen extends Panel {
 		this.content.addChild(description);
 	}
 
-	private function belowButton_triggeredHandler(event:FeathersEvent):Void {
+	private function belowButton_triggerHandler(event:TriggerEvent):Void {
 		Callout.show(this.content, this.belowButton);
 	}
 
-	private function aboveButton_triggeredHandler(event:FeathersEvent):Void {
+	private function aboveButton_triggerHandler(event:TriggerEvent):Void {
 		Callout.show(this.content, this.aboveButton);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

@@ -1,13 +1,14 @@
-import feathers.layout.HorizontalLayoutData;
-import feathers.style.Theme;
-import feathers.layout.HorizontalLayout;
-import feathers.controls.LayoutGroup;
-import feathers.layout.VerticalLayoutData;
-import feathers.events.FeathersEvent;
-import feathers.layout.VerticalLayout;
-import feathers.controls.Label;
-import feathers.controls.Button;
 import feathers.controls.Application;
+import feathers.controls.Button;
+import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
+import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.HorizontalLayoutData;
+import feathers.layout.VerticalLayout;
+import feathers.layout.VerticalLayoutData;
+import feathers.style.Theme;
 
 class Main extends Application {
 	public function new() {
@@ -100,14 +101,14 @@ class Main extends Application {
 		this.clearButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.clearButton.text = "C";
 		this.clearButton.layoutData = new HorizontalLayoutData(25, 100);
-		this.clearButton.addEventListener(FeathersEvent.TRIGGERED, clearButton_triggeredHandler);
+		this.clearButton.addEventListener(TriggerEvent.TRIGGER, clearButton_triggerHandler);
 		this.rows[4].addChild(this.clearButton);
 
 		for (i in 0...10) {
 			var button = new Button();
 			button.text = Std.string(i);
 			button.layoutData = new HorizontalLayoutData(25, 100);
-			button.addEventListener(FeathersEvent.TRIGGERED, numberButton_triggeredHandler);
+			button.addEventListener(TriggerEvent.TRIGGER, numberButton_triggerHandler);
 			this.numberButtons.push(button);
 			if (i == 0) {
 				this.rows[4].addChild(button);
@@ -124,39 +125,39 @@ class Main extends Application {
 		this.equalsButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.equalsButton.text = "=";
 		this.equalsButton.layoutData = new HorizontalLayoutData(25, 100);
-		this.equalsButton.addEventListener(FeathersEvent.TRIGGERED, equalsButton_triggeredHandler);
+		this.equalsButton.addEventListener(TriggerEvent.TRIGGER, equalsButton_triggerHandler);
 		this.rows[4].addChild(this.equalsButton);
 
 		this.divideButton = new Button();
 		this.divideButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.divideButton.text = "÷";
 		this.divideButton.layoutData = new HorizontalLayoutData(25, 100);
-		this.divideButton.addEventListener(FeathersEvent.TRIGGERED, divideButton_triggeredHandler);
+		this.divideButton.addEventListener(TriggerEvent.TRIGGER, divideButton_triggerHandler);
 		this.rows[1].addChild(this.divideButton);
 
 		this.multiplyButton = new Button();
 		this.multiplyButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.multiplyButton.text = "×";
 		this.multiplyButton.layoutData = new HorizontalLayoutData(25, 100);
-		this.multiplyButton.addEventListener(FeathersEvent.TRIGGERED, multiplyButton_triggeredHandler);
+		this.multiplyButton.addEventListener(TriggerEvent.TRIGGER, multiplyButton_triggerHandler);
 		this.rows[2].addChild(this.multiplyButton);
 
 		this.subtractButton = new Button();
 		this.subtractButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.subtractButton.text = "−";
 		this.subtractButton.layoutData = new HorizontalLayoutData(25, 100);
-		this.subtractButton.addEventListener(FeathersEvent.TRIGGERED, subtractButton_triggeredHandler);
+		this.subtractButton.addEventListener(TriggerEvent.TRIGGER, subtractButton_triggerHandler);
 		this.rows[3].addChild(this.subtractButton);
 
 		this.addButton = new Button();
 		this.addButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.addButton.text = "+";
 		this.addButton.layoutData = new HorizontalLayoutData(25, 100);
-		this.addButton.addEventListener(FeathersEvent.TRIGGERED, addButton_triggeredHandler);
+		this.addButton.addEventListener(TriggerEvent.TRIGGER, addButton_triggerHandler);
 		this.rows[4].addChild(this.addButton);
 	}
 
-	private function numberButton_triggeredHandler(event:FeathersEvent):Void {
+	private function numberButton_triggerHandler(event:TriggerEvent):Void {
 		if (this.pendingNewInput) {
 			this.previousNumber = this.currentNumber;
 		}
@@ -181,11 +182,11 @@ class Main extends Application {
 		this.refreshDisplay();
 	}
 
-	private function clearButton_triggeredHandler(event:FeathersEvent):Void {
+	private function clearButton_triggerHandler(event:TriggerEvent):Void {
 		this.clear();
 	}
 
-	private function addButton_triggeredHandler(event:FeathersEvent):Void {
+	private function addButton_triggerHandler(event:TriggerEvent):Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
 			this.equals();
 		}
@@ -193,7 +194,7 @@ class Main extends Application {
 		this.pendingNewInput = true;
 	}
 
-	private function subtractButton_triggeredHandler(event:FeathersEvent):Void {
+	private function subtractButton_triggerHandler(event:TriggerEvent):Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
 			this.equals();
 		}
@@ -201,7 +202,7 @@ class Main extends Application {
 		this.pendingNewInput = true;
 	}
 
-	private function multiplyButton_triggeredHandler(event:FeathersEvent):Void {
+	private function multiplyButton_triggerHandler(event:TriggerEvent):Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
 			this.equals();
 		}
@@ -209,7 +210,7 @@ class Main extends Application {
 		this.pendingNewInput = true;
 	}
 
-	private function divideButton_triggeredHandler(event:FeathersEvent):Void {
+	private function divideButton_triggerHandler(event:TriggerEvent):Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
 			this.equals();
 		}
@@ -217,7 +218,7 @@ class Main extends Application {
 		this.pendingNewInput = true;
 	}
 
-	private function equalsButton_triggeredHandler(event:FeathersEvent):Void {
+	private function equalsButton_triggerHandler(event:TriggerEvent):Void {
 		if (this.pendingNewInput) {
 			this.pendingOperation = null;
 			return;

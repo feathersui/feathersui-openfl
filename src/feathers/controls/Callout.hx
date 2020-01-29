@@ -40,7 +40,7 @@ import feathers.core.FeathersControl;
 	`Button` is triggered:
 
 	```hx
-	function button_triggeredHandler(event:Event):Void {
+	function button_triggerHandler(event:TriggerEvent):Void {
 		var button = cast(event.currentTarget, Button);
 
 		var label = new Label();
@@ -48,7 +48,7 @@ import feathers.core.FeathersControl;
 
 		Callout.show(label, button);
 	}
-	button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+	button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 	```
 
 	@see [Tutorial: How to use the Callout component](https://feathersui.com/learn/haxe-openfl/callout/)
@@ -69,7 +69,7 @@ class Callout extends FeathersControl {
 		a `Button` is triggered:
 
 		```hx
-		function button_triggeredHandler(event:Event):Void {
+		function button_triggerHandler(event:TriggerEvent):Void {
 			var button = cast(event.currentTarget, Button);
 
 			var label = new Label();
@@ -77,7 +77,7 @@ class Callout extends FeathersControl {
 
 			Callout.show(label, button);
 		}
-		button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+		button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		```
 
 		@since 1.0.0

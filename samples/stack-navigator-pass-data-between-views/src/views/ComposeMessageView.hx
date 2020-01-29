@@ -6,11 +6,10 @@ import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 import feathers.core.InvalidationFlag;
-import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.layout.VerticalLayout;
-import openfl.events.Event;
 import valueObjects.Contact;
 
 class ComposeMessageView extends Panel {
@@ -61,7 +60,7 @@ class ComposeMessageView extends Panel {
 
 		var addRecipientButton = new Button();
 		addRecipientButton.text = "Edit";
-		addRecipientButton.addEventListener(FeathersEvent.TRIGGERED, addRecipientButton_triggeredHandler);
+		addRecipientButton.addEventListener(TriggerEvent.TRIGGER, addRecipientButton_triggerHandler);
 		this.addChild(addRecipientButton);
 	}
 
@@ -80,7 +79,7 @@ class ComposeMessageView extends Panel {
 		super.update();
 	}
 
-	private function addRecipientButton_triggeredHandler(event:Event):Void {
+	private function addRecipientButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new ContactEvent(ContactEvent.REQUEST_CONTACT, this.recipient));
 	}
 }

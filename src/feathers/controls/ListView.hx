@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.events.FlatCollectionEvent;
 import feathers.data.ListViewItemState;
@@ -401,7 +402,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			}
 			this.itemRendererToData.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
-			itemRenderer.removeEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
+			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
@@ -512,7 +513,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentItemState.selected;
 		}
-		itemRenderer.addEventListener(FeathersEvent.TRIGGERED, itemRenderer_triggeredHandler);
+		itemRenderer.addEventListener(TriggerEvent.TRIGGER, itemRenderer_triggerHandler);
 		if (Std.is(itemRenderer, IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, itemRenderer_changeHandler);
 		}
@@ -537,11 +538,11 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
-	private function itemRenderer_triggeredHandler(event:FeathersEvent):Void {
+	private function itemRenderer_triggerHandler(event:TriggerEvent):Void {
 		var itemRenderer:DisplayObject = cast(event.currentTarget, DisplayObject);
 		var item = this.itemRendererToData.get(itemRenderer);
 		// trigger before change
-		FeathersEvent.dispatch(this, FeathersEvent.TRIGGERED);
+		this.dispatchEvent(event);
 	}
 
 	private function itemRenderer_changeHandler(event:Event):Void {

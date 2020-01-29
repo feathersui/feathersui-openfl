@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
 import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -52,7 +53,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		// a hand cursor only makes sense for hyperlinks
 		this.useHandCursor = false;
 
-		this.addEventListener(FeathersEvent.TRIGGERED, basicToggleButton_triggeredHandler);
+		this.addEventListener(TriggerEvent.TRIGGER, basicToggleButton_triggerHandler);
 	}
 
 	/**
@@ -98,9 +99,9 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		button.selected = true;
 		```
 
-		**Warning:** Do not listen for `FeathersEvent.TRIGGERED` to be notified
+		**Warning:** Do not listen for `TriggerEvent.TRIGGER` to be notified
 		when the `selected` property changes. You must listen for
-		`Event.CHANGE`, which is dispatched after `FeathersEvent.TRIGGERED`.
+		`Event.CHANGE`, which is dispatched after `TriggerEvent.TRIGGER`.
 
 		@default false
 
@@ -141,7 +142,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		@default true
 
 		@see `BasicToggleButton.selected`
-		@see `feathers.events.FeathersEvent.TRIGGERED`
+		@see `feathers.events.TriggerEvent.TRIGGER`
 
 		@since 1.0.0
 	**/
@@ -499,7 +500,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
-	private function basicToggleButton_triggeredHandler(event:Event):Void {
+	private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
 		if (!this.enabled) {
 			event.stopImmediatePropagation();
 			return;

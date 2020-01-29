@@ -1,16 +1,14 @@
 package com.feathersui.components.views;
 
-import feathers.events.FeathersEvent;
-import feathers.layout.VerticalAlign;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.VerticalLayout;
-import openfl.events.Event;
-import feathers.layout.AnchorLayout;
-import feathers.layout.AnchorLayoutData;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import feathers.layout.VerticalLayout;
+import openfl.events.Event;
 
 class LabelScreen extends Panel {
 	private var label:Label;
@@ -40,7 +38,7 @@ class LabelScreen extends Panel {
 			var backButton = new Button();
 			backButton.text = "Back";
 			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(FeathersEvent.TRIGGERED, backButton_triggeredHandler);
+			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 			header.addChild(backButton);
 
 			return header;
@@ -64,7 +62,7 @@ class LabelScreen extends Panel {
 		this.addChild(this.detailLabel);
 	}
 
-	private function backButton_triggeredHandler(event:FeathersEvent):Void {
+	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }

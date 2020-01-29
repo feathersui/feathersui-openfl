@@ -13,7 +13,7 @@ import openfl.display.DisplayObject;
 import feathers.motion.effects.IEffectContext;
 
 /**
-	Events dispatched by the active view in `StackNavigator` may triggered
+	Events dispatched by the active view in `StackNavigator` may trigger
 	actions, such as navigation.
 
 	@see `feathers.controls.navigators.StackNavigator`

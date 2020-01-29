@@ -1,16 +1,16 @@
 package views;
 
 import events.ContactEvent;
-import feathers.events.FeathersEvent;
-import feathers.layout.AnchorLayoutData;
-import feathers.controls.Label;
 import feathers.controls.Button;
+import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
-import feathers.layout.AnchorLayout;
-import feathers.core.InvalidationFlag;
 import feathers.controls.ListView;
 import feathers.controls.Panel;
+import feathers.core.InvalidationFlag;
 import feathers.data.ArrayCollection;
+import feathers.events.TriggerEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
 import openfl.events.Event;
 import valueObjects.Contact;
 
@@ -63,7 +63,7 @@ class ChooseContactView extends Panel {
 			header.addChild(title);
 
 			var doneButton = new Button();
-			doneButton.addEventListener(FeathersEvent.TRIGGERED, doneButton_triggeredHandler);
+			doneButton.addEventListener(TriggerEvent.TRIGGER, doneButton_triggerHandler);
 			doneButton.text = "Done";
 			doneButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
 			header.addChild(doneButton);
@@ -89,7 +89,7 @@ class ChooseContactView extends Panel {
 		super.update();
 	}
 
-	private function doneButton_triggeredHandler(event:Event):Void {
+	private function doneButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new ContactEvent(ContactEvent.CHOOSE_CONTACT, this.selectedContact));
 	}
 

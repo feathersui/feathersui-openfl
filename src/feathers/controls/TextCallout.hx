@@ -25,12 +25,12 @@ import openfl.display.DisplayObject;
 	triggered:
 
 	```hx
-	function button_triggeredHandler(event:Event):Void
+	function button_triggerHandler(event:TriggerEvent):Void
 	{
 		var button = cast(event.currentTarget, Button);
 		TextCallout.show("Hello World", button);
 	}
-	button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+	button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 	```
 
 	@see [Tutorial: How to use the TextCallout component](https://feathersui.com/learn/haxe-openfl/text-callout/)
@@ -48,12 +48,12 @@ class TextCallout extends Callout implements ITextControl {
 		triggered:
 
 		```hx
-		function button_triggeredHandler(event:Event):Void
+		function button_triggerHandler(event:TriggerEvent):Void
 		{
 			var button = cast(event.currentTarget, Button);
 			TextCallout.show("Hello World", button);
 		}
-		button.addEventListener(FeathersEvent.TRIGGERED, button_triggeredHandler);
+		button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		```
 
 		@since 1.0.0
