@@ -154,4 +154,8 @@ class FeathersEvent extends Event {
 	public function new(type:String, bubbles:Bool = false, cancelable:Bool = false) {
 		super(type, bubbles, cancelable);
 	}
+
+	override public function clone():Event {
+		return new FeathersEvent(this.type, this.bubbles, this.cancelable);
+	}
 }

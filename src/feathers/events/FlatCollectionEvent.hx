@@ -134,4 +134,8 @@ class FlatCollectionEvent extends Event {
 	}
 
 	public var index:Int;
+
+	override public function clone():Event {
+		return new FlatCollectionEvent(this.type, this.index, this.bubbles, this.cancelable);
+	}
 }
