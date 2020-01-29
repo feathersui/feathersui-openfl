@@ -43,7 +43,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function center(x:Null<Float> = 0, y:Null<Float> = 0):AnchorLayoutData {
+	public static function center(x:Null<Float> = 0.0, y:Null<Float> = 0.0):AnchorLayoutData {
 		return new AnchorLayoutData(null, null, null, null, x, y);
 	}
 
@@ -71,8 +71,216 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function fill(padding:Null<Float> = 0):AnchorLayoutData {
+	public static function fill(padding:Null<Float> = 0.0):AnchorLayoutData {
 		return new AnchorLayoutData(padding, padding, padding, padding);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the top-left corner
+		of the parent container, with the ability to optionally specify padding
+		values to pass to `top` and `left`.
+
+		In the following example, one of the container's children is aligned to
+		the container's top-left corner:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.topLeft();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.top`
+		@see `AnchorLayoutData.left`
+
+		@since 1.0.0
+	**/
+	public static function topLeft(top:Null<Float> = 0.0, left:Null<Float> = 0.0) {
+		return new AnchorLayoutData(top, null, null, left);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the top-center edge
+		of the parent container, with the ability to optionally specify padding
+		values to pass to `top` and `horizontalCenter`.
+
+		In the following example, one of the container's children is aligned to
+		the container's top-center edge:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.topCenter();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.top`
+		@see `AnchorLayoutData.horizontalCenter`
+
+		@since 1.0.0
+	**/
+	public static function topCenter(top:Null<Float> = 0.0, horizontalCenter:Null<Float> = 0.0) {
+		return new AnchorLayoutData(top, null, null, null, horizontalCenter);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the top-right corner
+		of the parent container, with the ability to optionally specify padding
+		values to pass to `top` and `right`.
+
+		In the following example, one of the container's children is aligned to
+		the container's top-right corner:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.topRight();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.top`
+		@see `AnchorLayoutData.right`
+
+		@since 1.0.0
+	**/
+	public static function topRight(top:Null<Float> = 0.0, right:Null<Float> = 0.0) {
+		return new AnchorLayoutData(top, right);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the middle-edge
+		corner of the parent container, with the ability to optionally specify
+		padding values to pass to `verticalCenter` and `left`.
+
+		In the following example, one of the container's children is aligned to
+		the container's middle-left edge:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.middleLeft();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.verticalCenter`
+		@see `AnchorLayoutData.left`
+
+		@since 1.0.0
+	**/
+	public static function middleLeft(verticalCenter:Null<Float> = 0.0, left:Null<Float> = 0.0) {
+		return new AnchorLayoutData(null, null, null, left, null, verticalCenter);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the middle-right
+		edge of the parent container, with the ability to optionally specify
+		padding values to pass to `verticalCenter` and `right`.
+
+		In the following example, one of the container's children is aligned to
+		the container's middle-right edge:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.middleRight();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.verticalCenter`
+		@see `AnchorLayoutData.right`
+
+		@since 1.0.0
+	**/
+	public static function middleRight(verticalCenter:Null<Float> = 0.0, right:Null<Float> = 0.0) {
+		return new AnchorLayoutData(null, right, null, null, null, verticalCenter);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the bottom-left
+		corner of the parent container, with the ability to optionally specify
+		padding values to pass to `bottom` and `left`.
+
+		In the following example, one of the container's children is aligned to
+		the container's bottom-left corner:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.bottomLeft();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.bottom`
+		@see `AnchorLayoutData.left`
+
+		@since 1.0.0
+	**/
+	public static function bottomLeft(bottom:Null<Float> = 0.0, left:Null<Float> = 0.0) {
+		return new AnchorLayoutData(null, null, bottom, left);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the bottom-center
+		edge of the parent container, with the ability to optionally specify
+		padding values to pass to `bottom` and `horizontalCenter`.
+
+		In the following example, one of the container's children is aligned to
+		the container's bottom-center edge:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.bottomCenter();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.bottom`
+		@see `AnchorLayoutData.horizontalCenter`
+
+		@since 1.0.0
+	**/
+	public static function bottomCenter(bottom:Null<Float> = 0.0, horizontalCenter:Null<Float> = 0.0) {
+		return new AnchorLayoutData(null, null, bottom, null, horizontalCenter);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that aligns the child to the bottom-right
+		corner of the parent container, with the ability to optionally specify
+		padding values to pass to `bottom` and `right`.
+
+		In the following example, one of the container's children is aligned to
+		the container's bottom-right corner:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.bottomRight();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.bottom`
+		@see `AnchorLayoutData.right`
+
+		@since 1.0.0
+	**/
+	public static function bottomRight(bottom:Null<Float> = 0.0, right:Null<Float> = 0.0) {
+		return new AnchorLayoutData(null, right, bottom);
 	}
 
 	/**
