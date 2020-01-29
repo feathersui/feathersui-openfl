@@ -97,6 +97,18 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	**/
 	public static final CHILD_VARIANT_LIST_VIEW = "comboBox_listView";
 
+	private static function defaultButtonFactory():Button {
+		return new Button();
+	}
+
+	private static function defaultTextInputFactory():TextInput {
+		return new TextInput();
+	}
+
+	private static function defaultListViewFactory():ListView {
+		return new ListView();
+	}
+
 	/**
 		Creates a new `ComboBox` object.
 
@@ -293,10 +305,92 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	public var popUpAdapter:IPopUpAdapter = new DropDownPopUpAdapter();
 
 	/**
+		Creates the button, which must be of type `feathers.controls.Button`.
+
+		In the following example, a custom button factory is provided:
+
+		```hx
+		comboBox.buttonFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.Button`
+
+		@since 1.0.0
+	**/
+	public var buttonFactory(default, set):() -> Button;
+
+	private function set_buttonFactory(value:() -> Button):() -> Button {
+		if (this.buttonFactory == value) {
+			return this.buttonFactory;
+		}
+		this.buttonFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+		return this.buttonFactory;
+	}
+
+	/**
+		Creates the text input, which must be of type `feathers.controls.TextInput`.
+
+		In the following example, a custom text input factory is provided:
+
+		```hx
+		comboBox.textInputFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.TextInput`
+
+		@since 1.0.0
+	**/
+	public var textInputFactory(default, set):() -> TextInput;
+
+	private function set_textInputFactory(value:() -> TextInput):() -> TextInput {
+		if (this.textInputFactory == value) {
+			return this.textInputFactory;
+		}
+		this.textInputFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_TEXT_INPUT_FACTORY);
+		return this.textInputFactory;
+	}
+
+	/**
+		Creates the list view that is displayed as a pop-up. The list view must
+		be of type `feathers.controls.ListView`.
+
+		In the following example, a custom list view factory is provided:
+
+		```hx
+		comboBox.listViewFactory = () ->
+		{
+			return new ListView();
+		};
+		```
+
+		@see `feathers.controls.ListView`
+
+		@since 1.0.0
+	**/
+	public var listViewFactory(default, set):() -> ListView;
+
+	private function set_listViewFactory(value:() -> ListView):() -> ListView {
+		if (this.listViewFactory == value) {
+			return this.listViewFactory;
+		}
+		this.listViewFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
+		return this.listViewFactory;
+	}
+
+	/**
 		Indicates if the pop-up list is open or closed.
 
-		@see `ComboBox.openList()`
-		@see `ComboBox.closeList()`
+		@see `ComboBox.openListView()`
+		@see `ComboBox.closeListView()`
 
 		@since 1.0.0
 	**/
@@ -316,16 +410,16 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		```hx
 		if(!comboBox.open)
 		{
-			comboBox.openList();
+			comboBox.openListView();
 		}
 		```
 
 		@see `ComboBox.open`
-		@see `ComboBox.closeList()`
+		@see `ComboBox.closeListView()`
 
 		@since 1.0.0
 	**/
-	public function openList():Void {
+	public function openListView():Void {
 		if (this.open || this.stage == null) {
 			return;
 		}
@@ -349,16 +443,16 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		```hx
 		if(comboBox.open)
 		{
-			comboBox.closeList();
+			comboBox.closeListView();
 		}
 		```
 
 		@see `ComboBox.open`
-		@see `ComboBox.openList()`
+		@see `ComboBox.openListView()`
 
 		@since 1.0.0
 	**/
-	public function closeList():Void {
+	public function closeListView():Void {
 		if (!this.open) {
 			return;
 		}
@@ -408,8 +502,11 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			this.button.removeEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 			this.button = null;
 		}
-		this.button = new Button();
-		this.button.variant = ComboBox.CHILD_VARIANT_BUTTON;
+		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
+		this.button = factory();
+		if (this.button.variant == null) {
+			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
+		}
 		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
@@ -422,8 +519,11 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 			this.textInput = null;
 		}
-		this.textInput = new TextInput();
-		this.textInput.variant = ComboBox.CHILD_VARIANT_TEXT_INPUT;
+		var factory = this.textInputFactory != null ? this.textInputFactory : defaultTextInputFactory;
+		this.textInput = factory();
+		if (this.textInput.variant == null) {
+			this.textInput.variant = ComboBox.CHILD_VARIANT_TEXT_INPUT;
+		}
 		this.textInput.addEventListener(Event.CHANGE, textInput_changeHandler);
 		this.textInput.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 		this.button.initializeNow();
@@ -437,8 +537,11 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
 			this.listView = null;
 		}
-		this.listView = new ListView();
-		this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
+		var factory = this.listViewFactory != null ? this.listViewFactory : defaultListViewFactory;
+		this.listView = factory();
+		if (this.listView.variant == null) {
+			this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
+		}
 		this.listView.addEventListener(TriggerEvent.TRIGGER, listView_triggerHandler);
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
 	}
@@ -544,7 +647,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			return;
 		}
 		if (!this.open) {
-			this.openList();
+			this.openListView();
 		}
 		if (this.dataProvider != null) {
 			this._filterText = this.textInput.text;
@@ -554,21 +657,21 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 
 	private function textInput_focusInHandler(event:FocusEvent):Void {
 		if (!this.open) {
-			this.openList();
+			this.openListView();
 		}
 	}
 
 	private function button_triggerHandler(event:TriggerEvent):Void {
 		if (this.open) {
-			this.closeList();
+			this.closeListView();
 		} else {
-			this.openList();
+			this.openListView();
 		}
 	}
 
 	private function listView_triggerHandler(event:TriggerEvent):Void {
 		if (!this.popUpAdapter.persistent) {
-			this.closeList();
+			this.closeListView();
 		}
 	}
 
@@ -605,7 +708,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 					return;
 				}
 				event.preventDefault();
-				this.closeList();
+				this.closeListView();
 			case KeyCode.APP_CONTROL_BACK:
 				if (event.isDefaultPrevented()) {
 					return;
@@ -614,7 +717,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 					return;
 				}
 				event.preventDefault();
-				this.closeList();
+				this.closeListView();
 		}
 	}
 
@@ -622,7 +725,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		if (this.hitTestPoint(event.stageX, event.stageY) || this.listView.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
-		this.closeList();
+		this.closeListView();
 	}
 
 	private function comboBox_stage_touchBeginHandler(event:TouchEvent):Void {
@@ -633,7 +736,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		if (this.hitTestPoint(event.stageX, event.stageY) || this.listView.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
-		this.closeList();
+		this.closeListView();
 	}
 
 	private function comboBox_popUpAdapter_closeHandler(event:Event):Void {
