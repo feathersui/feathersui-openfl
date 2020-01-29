@@ -66,7 +66,7 @@ import feathers.controls.popups.DropDownPopUpAdapter;
 	```
 
 	@see [Tutorial: How to use the ComboBox component](https://feathersui.com/learn/haxe-openfl/combo-box/)
-	@see `feathers.controls.PopUpList`
+	@see `feathers.controls.PopUpListView`
 
 	@since 1.0.0
 **/

@@ -4,15 +4,15 @@ import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
-import feathers.controls.PopUpList;
+import feathers.controls.PopUpListView;
 import feathers.data.ArrayCollection;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import openfl.events.Event;
 
-class PopUpListScreen extends Panel {
-	private var popUpList:PopUpList;
+class PopUpListViewScreen extends Panel {
+	private var listView:PopUpListView;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -27,14 +27,14 @@ class PopUpListScreen extends Panel {
 			{text: "Warthog"}, {text: "X-Ray Tetra"}, {text: "Yak"}, {text: "Zebra"},
 		];
 
-		this.popUpList = new PopUpList();
-		this.popUpList.dataProvider = new ArrayCollection(arrayItems);
-		this.popUpList.itemToText = (item:Dynamic) -> {
+		this.listView = new PopUpListView();
+		this.listView.dataProvider = new ArrayCollection(arrayItems);
+		this.listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
-		this.popUpList.layoutData = AnchorLayoutData.center();
-		this.popUpList.addEventListener(Event.CHANGE, popUpList_changeHandler);
-		this.addChild(this.popUpList);
+		this.listView.layoutData = AnchorLayoutData.center();
+		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
+		this.addChild(this.listView);
 	}
 
 	private function createHeader():Void {
@@ -45,7 +45,7 @@ class PopUpListScreen extends Panel {
 
 		var headerTitle = new Label();
 		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "Pop Up List";
+		headerTitle.text = "Pop Up List View";
 		headerTitle.layoutData = AnchorLayoutData.center();
 		header.addChild(headerTitle);
 
@@ -56,8 +56,8 @@ class PopUpListScreen extends Panel {
 		header.addChild(backButton);
 	}
 
-	private function popUpList_changeHandler(event:Event):Void {
-		trace("PopUpList selectedIndex change: " + this.popUpList.selectedIndex);
+	private function listView_changeHandler(event:Event):Void {
+		trace("PopUpListView selectedIndex change: " + this.listView.selectedIndex);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {

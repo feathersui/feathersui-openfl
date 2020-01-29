@@ -70,7 +70,8 @@ import feathers.core.IDataSelector;
 	```
 
 	@see [Tutorial: How to use the ListView component](https://feathersui.com/learn/haxe-openfl/list-view/)
-	@see `feathers.controls.PopUpList`
+	@see `feathers.controls.PopUpListView`
+	@see `feathers.controls.ComboBox`
 
 	@since 1.0.0
 **/

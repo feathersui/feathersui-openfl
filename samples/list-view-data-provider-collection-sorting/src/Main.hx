@@ -1,6 +1,6 @@
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
-import feathers.controls.PopUpList;
+import feathers.controls.PopUpListView;
 import feathers.controls.ListView;
 import feathers.layout.AnchorLayoutData;
 import feathers.layout.AnchorLayout;
@@ -64,11 +64,11 @@ class Main extends Application {
 	}
 
 	/**
-		When the PopUpList's selection changes, we'll chage the
+		When the PopUpListView's selection changes, we'll chage the
 		sortCompareFunction on the ListView dataProvider.
 	**/
 	private function sortPicker_changeHandler(event:Event):Void {
-		var sortPicker = cast(event.currentTarget, PopUpList);
+		var sortPicker = cast(event.currentTarget, PopUpListView);
 		var sortItem = cast(sortPicker.selectedItem, SortItem);
 
 		var dataProvider = this.listView.dataProvider;
@@ -80,43 +80,38 @@ class Main extends Application {
 
 		this.view = new Panel();
 		this.view.layoutData = AnchorLayoutData.fill();
-		this.view.headerFactory = () -> {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
 
-			var sortPicker = new PopUpList();
-			sortPicker.dataProvider = new ArrayCollection([
-				// these SortItems hold references to the sort comparison
-				// functions, which we'll use in sortPicker_changeHandler()
-				new SortItem("Unsorted", null),
-				new SortItem("Alphabetical (A-Z)", this.sortAlphabetical),
-				new SortItem("Reversed (Z-A)", this.sortReversed)
-			]);
-			sortPicker.layoutData = AnchorLayoutData.center();
-			sortPicker.addEventListener(Event.CHANGE, sortPicker_changeHandler);
-			header.addChild(sortPicker);
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		var sortPicker = new PopUpListView();
+		sortPicker.dataProvider = new ArrayCollection([
+			// these SortItems hold references to the sort comparison
+			// functions, which we'll use in sortPicker_changeHandler()
+			new SortItem("Unsorted", null),
+			new SortItem("Alphabetical (A-Z)", this.sortAlphabetical),
+			new SortItem("Reversed (Z-A)", this.sortReversed)
+		]);
+		sortPicker.layoutData = AnchorLayoutData.center();
+		sortPicker.addEventListener(Event.CHANGE, sortPicker_changeHandler);
+		header.addChild(sortPicker);
+		this.view.header = header;
 
-			return header;
-		};
-		this.view.footerFactory = () -> {
-			var footer = new LayoutGroup();
+		var footer = new LayoutGroup();
+		footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		footer.layout = new AnchorLayout();
+		var poweredBy = new PoweredByFeathersUI();
+		poweredBy.layoutData = AnchorLayoutData.center();
+		footer.addChild(poweredBy);
+		this.view.footer = footer;
 
-			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			footer.layout = new AnchorLayout();
-			var poweredBy = new PoweredByFeathersUI();
-
-			poweredBy.layoutData = AnchorLayoutData.center();
-			footer.addChild(poweredBy);
-			return footer;
-		};
 		this.view.layout = new AnchorLayout();
 		this.addChild(this.view);
 	}
 }
 
 /**
-	A custom class to hold data for the PopUpList where the user chooses how
+	A custom class to hold data for the PopUpListView where the user chooses how
 	the ListView data provider should be sorted.
 **/
 class SortItem {

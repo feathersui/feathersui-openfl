@@ -18,7 +18,7 @@ import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 
 /**
-	Initialize "steel" styles for the `PopUpList` component.
+	Initialize "steel" styles for the `ComboBox` component.
 
 	@since 1.0.0
 **/

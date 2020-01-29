@@ -13,18 +13,18 @@ import feathers.controls.ButtonState;
 import openfl.display.Shape;
 import feathers.layout.HorizontalAlign;
 import feathers.controls.Button;
-import feathers.controls.PopUpList;
+import feathers.controls.PopUpListView;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 
 /**
-	Initialize "steel" styles for the `PopUpList` component.
+	Initialize "steel" styles for the `PopUpListView` component.
 
 	@since 1.0.0
 **/
 @:dox(hide)
 @:access(feathers.themes.steel.BaseSteelTheme)
-class SteelPopUpListStyles {
+class SteelPopUpListViewStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {
 		if (theme == null) {
 			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
@@ -34,8 +34,8 @@ class SteelPopUpListStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON) == null) {
-			styleProvider.setStyleFunction(Button, PopUpList.CHILD_VARIANT_BUTTON, function(button:Button):Void {
+		if (styleProvider.getStyleFunction(Button, PopUpListView.CHILD_VARIANT_BUTTON) == null) {
+			styleProvider.setStyleFunction(Button, PopUpListView.CHILD_VARIANT_BUTTON, function(button:Button):Void {
 				theme.styleProvider.getStyleFunction(Button, null)(button);
 
 				button.horizontalAlign = LEFT;

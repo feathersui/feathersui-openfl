@@ -13,11 +13,11 @@ import openfl.display.DisplayObject;
 
 /**
 	Manages the layout and positioning of a pop-up displayed by a component like
-	`ComboBox` or `PopUpList`.
+	`ComboBox` or `PopUpListView`.
 
 	@see `feathers.core.PopUpManager`
 	@see `feathers.controls.ComboBox`
-	@see `feathers.controls.PopUpList`
+	@see `feathers.controls.PopUpListView`
 
 	@since 1.0.0
 **/

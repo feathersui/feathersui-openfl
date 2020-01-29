@@ -13,7 +13,7 @@ import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.data.ListViewItemState;
 import openfl.display.DisplayObject;
-import feathers.themes.steel.components.SteelPopUpListStyles;
+import feathers.themes.steel.components.SteelPopUpListViewStyles;
 import openfl.events.TouchEvent;
 import lime.ui.KeyCode;
 import openfl.ui.Keyboard;
@@ -39,7 +39,7 @@ import feathers.core.IDataSelector;
 	selection changes:
 
 	```hx
-	var list = new PopUpList();
+	var list = new PopUpListView();
 
 	list.dataProvider = new ArrayCollection(
 	[
@@ -56,20 +56,20 @@ import feathers.core.IDataSelector;
 
 	list.addEventListener(Event.CHANGE, (event:Event) ->
 	{
-		var list = cast(event.currentTarget, PopUpList);
-		trace("PopUpList changed: " + list.selectedIndex + " " + list.selectedItem.text);
+		var list = cast(event.currentTarget, PopUpListView);
+		trace("PopUpListView changed: " + list.selectedIndex + " " + list.selectedItem.text);
 	});
 
 	this.addChild(list);
 	```
 
-	@see [Tutorial: How to use the PopUpList component](https://feathersui.com/learn/haxe-openfl/pop-up-list/)
+	@see [Tutorial: How to use the PopUpListView component](https://feathersui.com/learn/haxe-openfl/pop-up-list-view/)
 	@see `feathers.controls.ComboBox`
 
 	@since 1.0.0
 **/
 @:styleContext
-class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
+class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
 	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = "listViewFactory";
 
@@ -78,18 +78,18 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 	**/
-	public static final CHILD_VARIANT_BUTTON = "popUpList_button";
+	public static final CHILD_VARIANT_BUTTON = "popUpListView_button";
 
 	/**
-		Creates a new `PopUpList` object.
+		Creates a new `PopUpListView` object.
 
 		@since 1.0.0
 	**/
 	public function new() {
-		initializePopUpListTheme();
+		initializePopUpListViewTheme();
 
 		super();
-		this.addEventListener(KeyboardEvent.KEY_UP, popUpList_keyUpHandler);
+		this.addEventListener(KeyboardEvent.KEY_UP, popUpListView_keyUpHandler);
 	}
 
 	private var button:Button;
@@ -269,8 +269,8 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 	/**
 		Indicates if the pop-up list is open or closed.
 
-		@see `PopUpList.openList()`
-		@see `PopUpList.closeList()`
+		@see `PopUpListView.openList()`
+		@see `PopUpListView.closeList()`
 
 		@since 1.0.0
 	**/
@@ -292,8 +292,8 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 		```
 
-		@see `PopUpList.open`
-		@see `PopUpList.closeList()`
+		@see `PopUpListView.open`
+		@see `PopUpListView.closeList()`
 
 		@since 1.0.0
 	**/
@@ -306,9 +306,9 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		} else {
 			PopUpManager.addPopUp(this.listView, this.button);
 		}
-		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpList_listView_removedFromStageHandler);
-		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpList_stage_mouseDownHandler, false, 0, true);
-		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpList_stage_touchBeginHandler, false, 0, true);
+		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
+		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
+		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
 	}
 
 	/**
@@ -323,8 +323,8 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 		```
 
-		@see `PopUpList.open`
-		@see `PopUpList.openList()`
+		@see `PopUpListView.open`
+		@see `PopUpListView.openList()`
 
 		@since 1.0.0
 	**/
@@ -341,8 +341,8 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function initializePopUpListTheme():Void {
-		SteelPopUpListStyles.initialize();
+	private function initializePopUpListViewTheme():Void {
+		SteelPopUpListViewStyles.initialize();
 	}
 
 	override private function update():Void {
@@ -381,7 +381,7 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 			this.button = null;
 		}
 		this.button = new Button();
-		this.button.variant = PopUpList.CHILD_VARIANT_BUTTON;
+		this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
 		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
@@ -491,13 +491,13 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.listView.selectedIndex;
 	}
 
-	private function popUpList_listView_removedFromStageHandler(event:Event):Void {
-		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, popUpList_listView_removedFromStageHandler);
-		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpList_stage_mouseDownHandler);
-		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpList_stage_touchBeginHandler);
+	private function popUpListView_listView_removedFromStageHandler(event:Event):Void {
+		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
+		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler);
+		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler);
 	}
 
-	private function popUpList_keyUpHandler(event:KeyboardEvent):Void {
+	private function popUpListView_keyUpHandler(event:KeyboardEvent):Void {
 		if (!this.enabled) {
 			return;
 		}
@@ -523,14 +523,14 @@ class PopUpList extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function popUpList_stage_mouseDownHandler(event:MouseEvent):Void {
+	private function popUpListView_stage_mouseDownHandler(event:MouseEvent):Void {
 		if (this.button.hitTestPoint(event.stageX, event.stageY) || this.listView.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
 		this.closeList();
 	}
 
-	private function popUpList_stage_touchBeginHandler(event:TouchEvent):Void {
+	private function popUpListView_stage_touchBeginHandler(event:TouchEvent):Void {
 		if (event.isPrimaryTouchPoint) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;

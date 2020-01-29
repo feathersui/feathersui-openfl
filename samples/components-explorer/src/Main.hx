@@ -8,7 +8,7 @@ import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
 import com.feathersui.components.views.PanelScreen;
-import com.feathersui.components.views.PopUpListScreen;
+import com.feathersui.components.views.PopUpListViewScreen;
 import com.feathersui.components.views.PopUpManagerScreen;
 import com.feathersui.components.views.ProgressBarScreen;
 import com.feathersui.components.views.RadioScreen;
@@ -69,8 +69,8 @@ class Main extends Application {
 		var panel = Route.withClass(ViewPaths.PANEL, PanelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(panel);
 
-		var popUpList = Route.withClass(ViewPaths.POP_UP_LIST, PopUpListScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		this._navigator.addRoute(popUpList);
+		var popUpListView = Route.withClass(ViewPaths.POP_UP_LIST_VIEW, PopUpListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(popUpListView);
 
 		var popUpManager = Route.withClass(ViewPaths.POP_UP_MANAGER, PopUpManagerScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(popUpManager);
