@@ -81,6 +81,21 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	public static final CHILD_VARIANT_BUTTON = "popUpListView_button";
 
 	/**
+		The variant used to style the `ListView` child component in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+	**/
+	public static final CHILD_VARIANT_LIST_VIEW = "popUpListView_listView";
+
+	private static function defaultButtonFactory():Button {
+		return new Button();
+	}
+
+	private static function defaultListViewFactory():ListView {
+		return new ListView();
+	}
+
+	/**
 		Creates a new `PopUpListView` object.
 
 		@since 1.0.0
@@ -267,6 +282,61 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	public var popUpAdapter:IPopUpAdapter = null;
 
 	/**
+		Creates the button, which must be of type `feathers.controls.Button`.
+
+		In the following example, a custom button factory is provided:
+
+		```hx
+		listView.buttonFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.Button`
+
+		@since 1.0.0
+	**/
+	public var buttonFactory(default, set):() -> Button;
+
+	private function set_buttonFactory(value:() -> Button):() -> Button {
+		if (this.buttonFactory == value) {
+			return this.buttonFactory;
+		}
+		this.buttonFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+		return this.buttonFactory;
+	}
+
+	/**
+		Creates the list view that is displayed as a pop-up. The list view must
+		be of type `feathers.controls.ListView`.
+
+		In the following example, a custom list view factory is provided:
+
+		```hx
+		listView.listViewFactory = () ->
+		{
+			return new ListView();
+		};
+		```
+
+		@see `feathers.controls.ListView`
+
+		@since 1.0.0
+	**/
+	public var listViewFactory(default, set):() -> ListView;
+
+	private function set_listViewFactory(value:() -> ListView):() -> ListView {
+		if (this.listViewFactory == value) {
+			return this.listViewFactory;
+		}
+		this.listViewFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
+		return this.listViewFactory;
+	}
+
+	/**
 		Indicates if the pop-up list is open or closed.
 
 		@see `PopUpListView.openList()`
@@ -380,8 +450,11 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			this.button.removeEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 			this.button = null;
 		}
-		this.button = new Button();
-		this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
+		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
+		this.button = factory();
+		if (this.button.variant == null) {
+			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
+		}
 		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
@@ -393,7 +466,11 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
 			this.listView = null;
 		}
-		this.listView = new ListView();
+		var factory = this.listViewFactory != null ? this.listViewFactory : defaultListViewFactory;
+		this.listView = factory();
+		if (this.listView.variant == null) {
+			this.listView.variant = PopUpListView.CHILD_VARIANT_LIST_VIEW;
+		}
 		this.listView.addEventListener(TriggerEvent.TRIGGER, listView_triggerHandler);
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
 	}
