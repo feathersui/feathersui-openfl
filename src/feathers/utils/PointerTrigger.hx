@@ -52,7 +52,9 @@ class PointerTrigger {
 		this.target = value;
 		if (this.target != null) {
 			this.target.addEventListener(MouseEvent.CLICK, target_clickHandler);
-			this.target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapHandler);
+			// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
+			// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
+			// this.target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapHandler);
 		}
 		return this.target;
 	}
