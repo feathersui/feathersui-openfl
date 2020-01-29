@@ -71,7 +71,7 @@ class MainMenu extends Panel {
 			var darkModeTheme = cast(theme, IDarkModeTheme);
 			darkModeTheme.darkMode = !darkModeTheme.darkMode;
 		});
-		themeButton.layoutData = new AnchorLayoutData(null, 10.0, null, null, null, 0.0);
+		themeButton.layoutData = AnchorLayoutData.middleRight(0.0, 10.0);
 		header.addChild(themeButton);
 	}
 

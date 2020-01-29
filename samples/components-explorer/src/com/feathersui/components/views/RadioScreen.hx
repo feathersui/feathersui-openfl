@@ -55,7 +55,7 @@ class RadioScreen extends Panel {
 
 		var backButton = new Button();
 		backButton.text = "Back";
-		backButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		backButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
 		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 		header.addChild(backButton);
 	}

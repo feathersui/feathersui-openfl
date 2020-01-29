@@ -64,7 +64,7 @@ class ChooseContactView extends Panel {
 		var doneButton = new Button();
 		doneButton.addEventListener(TriggerEvent.TRIGGER, doneButton_triggerHandler);
 		doneButton.text = "Done";
-		doneButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		doneButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
 		header.addChild(doneButton);
 
 		this.contactList = new ListView();

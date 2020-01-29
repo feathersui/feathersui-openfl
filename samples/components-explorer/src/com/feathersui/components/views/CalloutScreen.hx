@@ -25,19 +25,13 @@ class CalloutScreen extends Panel {
 		this.belowButton = new Button();
 		this.belowButton.text = "Open Below";
 		this.belowButton.addEventListener(TriggerEvent.TRIGGER, belowButton_triggerHandler);
-		var belowButtonLayoutData = new AnchorLayoutData();
-		belowButtonLayoutData.horizontalCenter = 0.0;
-		belowButtonLayoutData.top = 10.0;
-		this.belowButton.layoutData = belowButtonLayoutData;
+		this.belowButton.layoutData = AnchorLayoutData.topCenter(10.0);
 		this.addChild(this.belowButton);
 
 		this.aboveButton = new Button();
 		this.aboveButton.text = "Open Above";
 		this.aboveButton.addEventListener(TriggerEvent.TRIGGER, aboveButton_triggerHandler);
-		var aboveButtonLayoutData = new AnchorLayoutData();
-		aboveButtonLayoutData.horizontalCenter = 0.0;
-		aboveButtonLayoutData.bottom = 10.0;
-		this.aboveButton.layoutData = aboveButtonLayoutData;
+		this.aboveButton.layoutData = AnchorLayoutData.bottomCenter(10.0);
 		this.addChild(this.aboveButton);
 
 		this.content = new Panel();
@@ -72,7 +66,7 @@ class CalloutScreen extends Panel {
 
 		var backButton = new Button();
 		backButton.text = "Back";
-		backButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		backButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
 		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 		header.addChild(backButton);
 	}
