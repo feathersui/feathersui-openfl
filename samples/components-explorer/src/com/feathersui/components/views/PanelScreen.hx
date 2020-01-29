@@ -14,53 +14,52 @@ class PanelScreen extends Panel {
 
 	override private function initialize():Void {
 		super.initialize();
+		this.createHeader();
 
 		this.layout = new AnchorLayout();
 
-		this.headerFactory = function():LayoutGroup {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
-
-			var headerTitle = new Label();
-			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Panel";
-			headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(headerTitle);
-
-			var backButton = new Button();
-			backButton.text = "Back";
-			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-			header.addChild(backButton);
-
-			return header;
-		};
-
 		this.panel = new Panel();
 		this.panel.layoutData = AnchorLayoutData.center();
-		this.panel.headerFactory = () -> {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			var title = new Label();
-			title.text = "Header";
-			header.addChild(title);
-			return header;
-		};
-		this.panel.footerFactory = () -> {
-			var footer = new LayoutGroup();
-			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			var title = new Label();
-			title.text = "Footer";
-			footer.addChild(title);
-			return footer;
-		};
+
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		var headerTitle = new Label();
+		headerTitle.text = "Header";
+		header.addChild(headerTitle);
+		this.panel.header = header;
+
+		var footer = new LayoutGroup();
+		footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		var footerTitle = new Label();
+		footerTitle.text = "Footer";
+		footer.addChild(footerTitle);
+		this.panel.footer = footer;
+
 		this.panel.layout = new AnchorLayout();
 		var message = new Label();
 		message.text = "I'm a Panel container";
 		message.layoutData = AnchorLayoutData.fill(10.0);
 		this.panel.addChild(message);
 		this.addChild(this.panel);
+	}
+
+	private function createHeader():Void {
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		this.header = header;
+
+		var headerTitle = new Label();
+		headerTitle.variant = Label.VARIANT_HEADING;
+		headerTitle.text = "Panel";
+		headerTitle.layoutData = AnchorLayoutData.center();
+		header.addChild(headerTitle);
+
+		var backButton = new Button();
+		backButton.text = "Back";
+		backButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
+		header.addChild(backButton);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {

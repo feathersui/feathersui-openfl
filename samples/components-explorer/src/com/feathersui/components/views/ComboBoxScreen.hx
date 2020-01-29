@@ -16,28 +16,9 @@ class ComboBoxScreen extends Panel {
 
 	override private function initialize():Void {
 		super.initialize();
+		this.createHeader();
 
 		this.layout = new AnchorLayout();
-
-		this.headerFactory = function():LayoutGroup {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
-
-			var headerTitle = new Label();
-			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Combo Box";
-			headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(headerTitle);
-
-			var backButton = new Button();
-			backButton.text = "Back";
-			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-			header.addChild(backButton);
-
-			return header;
-		};
 
 		var arrayItems = [
 			{text: "Aardvark"}, {text: "Badger"}, {text: "Cheetah"}, {text: "Dolphin"}, {text: "Elephant"}, {text: "Flamingo"}, {text: "Gecko"},
@@ -54,6 +35,25 @@ class ComboBoxScreen extends Panel {
 		this.comboBox.layoutData = AnchorLayoutData.center();
 		this.comboBox.addEventListener(Event.CHANGE, comboBox_changeHandler);
 		this.addChild(this.comboBox);
+	}
+
+	private function createHeader():Void {
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		this.header = header;
+
+		var headerTitle = new Label();
+		headerTitle.variant = Label.VARIANT_HEADING;
+		headerTitle.text = "Combo Box";
+		headerTitle.layoutData = AnchorLayoutData.center();
+		header.addChild(headerTitle);
+
+		var backButton = new Button();
+		backButton.text = "Back";
+		backButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
+		header.addChild(backButton);
 	}
 
 	private function comboBox_changeHandler(event:Event):Void {

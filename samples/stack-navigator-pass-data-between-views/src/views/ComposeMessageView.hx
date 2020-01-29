@@ -40,20 +40,16 @@ class ComposeMessageView extends Panel {
 		layout.gap = 10.0;
 		this.layout = layout;
 
-		this.headerFactory = () -> {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		this.header = header;
 
-			header.layout = new AnchorLayout();
-
-			var title = new Label();
-			title.variant = Label.VARIANT_HEADING;
-			title.text = "Send Private Message";
-			title.layoutData = AnchorLayoutData.center();
-			header.addChild(title);
-
-			return header;
-		};
+		var title = new Label();
+		title.variant = Label.VARIANT_HEADING;
+		title.text = "Send Private Message";
+		title.layoutData = AnchorLayoutData.center();
+		header.addChild(title);
 
 		this.contactNameLabel = new Label();
 		this.addChild(this.contactNameLabel);

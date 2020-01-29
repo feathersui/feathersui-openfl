@@ -17,42 +17,42 @@ class ProgressBarScreen extends Panel {
 
 	override private function initialize():Void {
 		super.initialize();
+		this.createHeader();
 
 		this.layout = new AnchorLayout();
-
-		this.headerFactory = function():LayoutGroup {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
-
-			var headerTitle = new Label();
-			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Progress Bar";
-			headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(headerTitle);
-
-			var backButton = new Button();
-			backButton.text = "Back";
-			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-			header.addChild(backButton);
-
-			return header;
-		};
 
 		this.horizontalProgress = new HProgressBar();
 		this.horizontalProgress.minimum = 0.0;
 		this.horizontalProgress.maximum = 100.0;
 		this.horizontalProgress.value = 45.0;
-		this.horizontalProgress.layoutData = AnchorLayoutData.center(-40);
+		this.horizontalProgress.layoutData = AnchorLayoutData.center(-40.0);
 		this.addChild(this.horizontalProgress);
 
 		this.verticalProgress = new VProgressBar();
 		this.verticalProgress.minimum = 0.0;
 		this.verticalProgress.maximum = 100.0;
 		this.verticalProgress.value = 45.0;
-		this.verticalProgress.layoutData = AnchorLayoutData.center(120);
+		this.verticalProgress.layoutData = AnchorLayoutData.center(120.0);
 		this.addChild(this.verticalProgress);
+	}
+
+	private function createHeader():Void {
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		this.header = header;
+
+		var headerTitle = new Label();
+		headerTitle.variant = Label.VARIANT_HEADING;
+		headerTitle.text = "Progress Bar";
+		headerTitle.layoutData = AnchorLayoutData.center();
+		header.addChild(headerTitle);
+
+		var backButton = new Button();
+		backButton.text = "Back";
+		backButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
+		header.addChild(backButton);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {

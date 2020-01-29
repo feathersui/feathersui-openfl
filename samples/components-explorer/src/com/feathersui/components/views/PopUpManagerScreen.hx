@@ -15,34 +15,34 @@ class PopUpManagerScreen extends Panel {
 
 	override private function initialize():Void {
 		super.initialize();
+		this.createHeader();
 
 		this.layout = new AnchorLayout();
-
-		this.headerFactory = function():LayoutGroup {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
-
-			var headerTitle = new Label();
-			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Pop Up Manager";
-			headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(headerTitle);
-
-			var backButton = new Button();
-			backButton.text = "Back";
-			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-			header.addChild(backButton);
-
-			return header;
-		};
 
 		this.button = new Button();
 		this.button.text = "Add Pop Up";
 		this.button.layoutData = AnchorLayoutData.center();
 		this.button.addEventListener(TriggerEvent.TRIGGER, addPopUpButton_triggerHandler);
 		this.addChild(this.button);
+	}
+
+	private function createHeader():Void {
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		this.header = header;
+
+		var headerTitle = new Label();
+		headerTitle.variant = Label.VARIANT_HEADING;
+		headerTitle.text = "Pop Up Manager";
+		headerTitle.layoutData = AnchorLayoutData.center();
+		header.addChild(headerTitle);
+
+		var backButton = new Button();
+		backButton.text = "Back";
+		backButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
+		header.addChild(backButton);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
@@ -56,17 +56,18 @@ class PopUpManagerScreen extends Panel {
 		message.text = "I'm a pop-up!";
 		message.layoutData = AnchorLayoutData.center();
 		popUp.addChild(message);
-		popUp.footerFactory = () -> {
-			var footer = new LayoutGroup();
-			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			var closeButton = new Button();
-			closeButton.text = "Close";
-			closeButton.addEventListener(TriggerEvent.TRIGGER, (event:TriggerEvent) -> {
-				PopUpManager.removePopUp(popUp);
-			});
-			footer.addChild(closeButton);
-			return footer;
-		}
+
+		var footer = new LayoutGroup();
+		footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		popUp.footer = footer;
+
+		var closeButton = new Button();
+		closeButton.text = "Close";
+		closeButton.addEventListener(TriggerEvent.TRIGGER, (event:TriggerEvent) -> {
+			PopUpManager.removePopUp(popUp);
+		});
+		footer.addChild(closeButton);
+
 		PopUpManager.addPopUp(popUp, this);
 	}
 }

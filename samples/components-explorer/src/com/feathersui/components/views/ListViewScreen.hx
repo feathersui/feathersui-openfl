@@ -16,28 +16,9 @@ class ListViewScreen extends Panel {
 
 	override private function initialize():Void {
 		super.initialize();
+		this.createHeader();
 
 		this.layout = new AnchorLayout();
-
-		this.headerFactory = function():LayoutGroup {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
-
-			var headerTitle = new Label();
-			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "List View";
-			headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(headerTitle);
-
-			var backButton = new Button();
-			backButton.text = "Back";
-			backButton.layoutData = new AnchorLayoutData(null, null, null, 10, null, 0);
-			backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-			header.addChild(backButton);
-
-			return header;
-		};
 
 		var items = [];
 		for (i in 0...30) {
@@ -52,6 +33,25 @@ class ListViewScreen extends Panel {
 		this.listView.layoutData = AnchorLayoutData.fill();
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
 		this.addChild(this.listView);
+	}
+
+	private function createHeader():Void {
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		this.header = header;
+
+		var headerTitle = new Label();
+		headerTitle.variant = Label.VARIANT_HEADING;
+		headerTitle.text = "List View";
+		headerTitle.layoutData = AnchorLayoutData.center();
+		header.addChild(headerTitle);
+
+		var backButton = new Button();
+		backButton.text = "Back";
+		backButton.layoutData = new AnchorLayoutData(null, null, null, 10.0, null, 0.0);
+		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
+		header.addChild(backButton);
 	}
 
 	private function listView_changeHandler(event:Event):Void {

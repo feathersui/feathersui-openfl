@@ -40,35 +40,39 @@ class Main extends Application {
 
 		this.view = new Panel();
 		this.view.layoutData = AnchorLayoutData.fill();
-		this.view.headerFactory = () -> {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
-
-			var title = new Label();
-			title.variant = Label.VARIANT_HEADING;
-			title.text = "Custom Theme";
-			title.layoutData = AnchorLayoutData.center();
-			header.addChild(title);
-
-			return header;
-		};
-		this.view.footerFactory = () -> {
-			var footer = new LayoutGroup();
-
-			footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			footer.layout = new AnchorLayout();
-			var poweredBy = new PoweredByFeathersUI();
-
-			poweredBy.layoutData = AnchorLayoutData.center();
-			footer.addChild(poweredBy);
-			return footer;
-		};
+		this.view.header = this.createHeader();
+		this.view.footer = this.createFooter();
 		var viewLayout = new VerticalLayout();
 		viewLayout.horizontalAlign = CENTER;
 		viewLayout.verticalAlign = MIDDLE;
 		viewLayout.gap = 20.0;
 		this.view.layout = viewLayout;
 		this.addChild(this.view);
+	}
+
+	private function createHeader():LayoutGroup {
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+
+		var title = new Label();
+		title.variant = Label.VARIANT_HEADING;
+		title.text = "Custom Theme";
+		title.layoutData = AnchorLayoutData.center();
+		header.addChild(title);
+
+		return header;
+	}
+
+	private function createFooter():LayoutGroup {
+		var footer = new LayoutGroup();
+		footer.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		footer.layout = new AnchorLayout();
+
+		var poweredBy = new PoweredByFeathersUI();
+		poweredBy.layoutData = AnchorLayoutData.center();
+		footer.addChild(poweredBy);
+
+		return footer;
 	}
 }

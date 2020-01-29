@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.InvalidationFlag;
 import feathers.core.IMeasureObject;
 import feathers.themes.steel.components.SteelPanelStyles;
 import openfl.display.DisplayObject;
@@ -25,9 +26,6 @@ import feathers.core.IValidating;
 **/
 @:styleContext
 class Panel extends ScrollContainer {
-	private static final INVALIDATION_FLAG_HEADER_FACTORY = "headerFactory";
-	private static final INVALIDATION_FLAG_FOOTER_FACTORY = "footerFactory";
-
 	/**
 		Creates a new `Panel` object.
 
@@ -39,37 +37,48 @@ class Panel extends ScrollContainer {
 		super();
 	}
 
-	private var header:IUIControl;
-	private var footer:IUIControl;
-
 	/**
+		The panel's optional header, displayed along the top edge.
 
 		@since 1.0.0
 	**/
-	public var headerFactory(default, set):() -> IUIControl = null;
+	public var header(default, set):DisplayObject = null;
 
-	private function set_headerFactory(value:() -> IUIControl):() -> IUIControl {
-		if (this.headerFactory == value) {
-			return this.headerFactory;
+	private function set_header(value:DisplayObject):DisplayObject {
+		if (this.header == value) {
+			return this.header;
 		}
-		this.headerFactory = value;
-		this.setInvalid(INVALIDATION_FLAG_HEADER_FACTORY);
-		return this.headerFactory;
+		if (this.header != null) {
+			this.removeRawChild(this.header);
+		}
+		this.header = value;
+		if (this.header != null) {
+			this.addRawChild(this.header);
+		}
+		this.setInvalid(InvalidationFlag.LAYOUT);
+		return this.header;
 	}
 
 	/**
+		The panel's optional header, displayed along the bottom edge.
 
 		@since 1.0.0
 	**/
-	public var footerFactory(default, set):() -> IUIControl = null;
+	public var footer(default, set):DisplayObject = null;
 
-	private function set_footerFactory(value:() -> IUIControl):() -> IUIControl {
-		if (this.footerFactory == value) {
-			return this.footerFactory;
+	private function set_footer(value:DisplayObject):DisplayObject {
+		if (this.footer == value) {
+			return this.footer;
 		}
-		this.footerFactory = value;
-		this.setInvalid(INVALIDATION_FLAG_FOOTER_FACTORY);
-		return this.footerFactory;
+		if (this.footer != null) {
+			this.removeRawChild(this.footer);
+		}
+		this.footer = value;
+		if (this.footer != null) {
+			this.addRawChild(this.footer);
+		}
+		this.setInvalid(InvalidationFlag.LAYOUT);
+		return this.footer;
 	}
 
 	private function initializePanelTheme():Void {
@@ -77,14 +86,6 @@ class Panel extends ScrollContainer {
 	}
 
 	override private function update():Void {
-		var headerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_FACTORY);
-		var footerInvalid = this.isInvalid(INVALIDATION_FLAG_FOOTER_FACTORY);
-		if (headerInvalid) {
-			this.createHeader();
-		}
-		if (footerInvalid) {
-			this.createFooter();
-		}
 		super.update();
 		this.layoutHeader();
 		this.layoutFooter();
@@ -224,30 +225,6 @@ class Panel extends ScrollContainer {
 			}
 			this.bottomViewPortOffset += this.footer.height;
 		}
-	}
-
-	private function createHeader():Void {
-		if (this.header != null) {
-			this.removeChild(cast(this.header, DisplayObject));
-			this.header = null;
-		}
-		if (this.headerFactory == null) {
-			return;
-		}
-		this.header = this.headerFactory();
-		this.addRawChild(cast(this.header, DisplayObject));
-	}
-
-	private function createFooter():Void {
-		if (this.footer != null) {
-			this.removeChild(cast(this.footer, DisplayObject));
-			this.footer = null;
-		}
-		if (this.footerFactory == null) {
-			return;
-		}
-		this.footer = this.footerFactory();
-		this.addRawChild(cast(this.footer, DisplayObject));
 	}
 
 	private function layoutHeader():Void {

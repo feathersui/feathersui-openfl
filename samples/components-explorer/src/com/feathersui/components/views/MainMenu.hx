@@ -19,35 +19,9 @@ class MainMenu extends Panel {
 
 	override private function initialize():Void {
 		super.initialize();
+		this.createHeader();
 
 		this.layout = new AnchorLayout();
-
-		this.headerFactory = function():LayoutGroup {
-			var header = new LayoutGroup();
-			header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-			header.layout = new AnchorLayout();
-
-			var headerTitle = new Label();
-			headerTitle.variant = Label.VARIANT_HEADING;
-			headerTitle.text = "Feathers UI";
-			headerTitle.layoutData = AnchorLayoutData.center();
-			header.addChild(headerTitle);
-
-			var themeButton = new Button();
-			themeButton.text = "Theme";
-			themeButton.addEventListener(TriggerEvent.TRIGGER, function(event:TriggerEvent):Void {
-				var theme = Theme.getTheme();
-				if (!Std.is(theme, IDarkModeTheme)) {
-					return;
-				}
-				var darkModeTheme = cast(theme, IDarkModeTheme);
-				darkModeTheme.darkMode = !darkModeTheme.darkMode;
-			});
-			themeButton.layoutData = new AnchorLayoutData(null, 10, null, null, null, 0);
-			header.addChild(themeButton);
-
-			return header;
-		};
 
 		this.listView = new ListView();
 		this.listView.dataProvider = new ArrayCollection([
@@ -72,6 +46,32 @@ class MainMenu extends Panel {
 		this.selectedViewPaths = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
 		return this.selectedViewPaths;
+	}
+
+	private function createHeader():Void {
+		var header = new LayoutGroup();
+		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
+		header.layout = new AnchorLayout();
+		this.header = header;
+
+		var headerTitle = new Label();
+		headerTitle.variant = Label.VARIANT_HEADING;
+		headerTitle.text = "Feathers UI";
+		headerTitle.layoutData = AnchorLayoutData.center();
+		header.addChild(headerTitle);
+
+		var themeButton = new Button();
+		themeButton.text = "Theme";
+		themeButton.addEventListener(TriggerEvent.TRIGGER, function(event:TriggerEvent):Void {
+			var theme = Theme.getTheme();
+			if (!Std.is(theme, IDarkModeTheme)) {
+				return;
+			}
+			var darkModeTheme = cast(theme, IDarkModeTheme);
+			darkModeTheme.darkMode = !darkModeTheme.darkMode;
+		});
+		themeButton.layoutData = new AnchorLayoutData(null, 10.0, null, null, null, 0.0);
+		header.addChild(themeButton);
 	}
 
 	private function list_changeHandler(event:Event):Void {
