@@ -285,4 +285,12 @@ class TriggerEvent extends Event {
 		@since 1.0.0
 	**/
 	public var relatedObject:InteractiveObject;
+
+	override public function clone():Event {
+		var result = new TriggerEvent(this.type, this.bubbles, this.cancelable, this.touchPointID, this.isPrimaryTouchPoint, this.localX, this.localY,
+			this.sizeX, this.sizeY, this.pressure, this.relatedObject, this.ctrlKey, this.altKey, this.shiftKey, this.commandKey);
+		result.stageX = this.stageX;
+		result.stageY = this.stageY;
+		return result;
+	}
 }
