@@ -39,9 +39,9 @@ import feathers.core.IDataSelector;
 	selection changes:
 
 	```hx
-	var list = new PopUpListView();
+	var listView = new PopUpListView();
 
-	list.dataProvider = new ArrayCollection(
+	listView.dataProvider = new ArrayCollection(
 	[
 		{ text: "Milk" },
 		{ text: "Eggs" },
@@ -49,15 +49,15 @@ import feathers.core.IDataSelector;
 		{ text: "Steak" },
 	]);
 
-	list.itemToText = (item:Dynamic) ->
+	listView.itemToText = (item:Dynamic) ->
 	{
 		return item.text;
 	};
 
-	list.addEventListener(Event.CHANGE, (event:Event) ->
+	listView.addEventListener(Event.CHANGE, (event:Event) ->
 	{
 		var list = cast(event.currentTarget, PopUpListView);
-		trace("PopUpListView changed: " + list.selectedIndex + " " + list.selectedItem.text);
+		trace("PopUpListView changed: " + listView.selectedIndex + " " + listView.selectedItem.text);
 	});
 
 	this.addChild(list);
@@ -113,13 +113,13 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	private var buttonMeasurements:Measurements = new Measurements();
 
 	/**
-		The collection of data displayed by the list.
+		The collection of data displayed by the list view.
 
 		The following example passes in a data provider and tells the item
 		renderer how to interpret the data:
 
 		```hx
-		list.dataProvider = new ArrayCollection(
+		listView.dataProvider = new ArrayCollection(
 		[
 			{ text: "Milk" },
 			{ text: "Eggs" },
@@ -127,7 +127,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			{ text: "Chicken" },
 		]);
 
-		list.itemToText = (item:Dynamic) ->
+		listView.itemToText = (item:Dynamic) ->
 		{
 			return item.text;
 		};
@@ -221,7 +221,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		renderer class:
 
 		```hx
-		list.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
+		listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
 		@since 1.0.0
@@ -255,7 +255,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		list.itemToText = (item:Dynamic) ->
+		listView.itemToText = (item:Dynamic) ->
 		{
 			return item.text;
 		};
@@ -268,7 +268,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	/**
-		Manages how the pop-up list is displayed when it is opened and closed.
+		Manages how the list view is displayed when it is opened and closed.
 
 		In the following example, a custom pop-up adapter is provided:
 
@@ -337,10 +337,10 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	/**
-		Indicates if the pop-up list is open or closed.
+		Indicates if the list view pop-up is open or closed.
 
-		@see `PopUpListView.openList()`
-		@see `PopUpListView.closeList()`
+		@see `PopUpListView.openListView()`
+		@see `PopUpListView.closeListView()`
 
 		@since 1.0.0
 	**/
@@ -356,18 +356,18 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		The following example opens the pop-up list:
 
 		```hx
-		if(!list.open)
+		if(!listView.open)
 		{
-			list.openList();
+			listView.openListView();
 		}
 		```
 
 		@see `PopUpListView.open`
-		@see `PopUpListView.closeList()`
+		@see `PopUpListView.closeListView()`
 
 		@since 1.0.0
 	**/
-	public function openList():Void {
+	public function openListView():Void {
 		if (this.open || this.stage == null) {
 			return;
 		}
@@ -387,18 +387,18 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		The following example closes the pop-up list:
 
 		```hx
-		if(list.open)
+		if(listView.open)
 		{
-			list.closeList();
+			listView.closeListView();
 		}
 		```
 
 		@see `PopUpListView.open`
-		@see `PopUpListView.openList()`
+		@see `PopUpListView.openListView()`
 
 		@since 1.0.0
 	**/
-	public function closeList():Void {
+	public function closeListView():Void {
 		if (!this.open) {
 			return;
 		}
@@ -456,6 +456,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
 		}
 		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
+		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
 	}
@@ -549,15 +550,15 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 
 	private function button_triggerHandler(event:TriggerEvent):Void {
 		if (this.open) {
-			this.closeList();
+			this.closeListView();
 		} else {
-			this.openList();
+			this.openListView();
 		}
 	}
 
 	private function listView_triggerHandler(event:TriggerEvent):Void {
 		if (this.popUpAdapter == null || !this.popUpAdapter.persistent) {
-			this.closeList();
+			this.closeListView();
 		}
 	}
 
@@ -587,7 +588,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 					return;
 				}
 				event.preventDefault();
-				this.closeList();
+				this.closeListView();
 			case KeyCode.APP_CONTROL_BACK:
 				if (event.isDefaultPrevented()) {
 					return;
@@ -596,7 +597,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 					return;
 				}
 				event.preventDefault();
-				this.closeList();
+				this.closeListView();
 		}
 	}
 
@@ -604,7 +605,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		if (this.button.hitTestPoint(event.stageX, event.stageY) || this.listView.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
-		this.closeList();
+		this.closeListView();
 	}
 
 	private function popUpListView_stage_touchBeginHandler(event:TouchEvent):Void {
@@ -615,6 +616,6 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		if (this.button.hitTestPoint(event.stageX, event.stageY) || this.listView.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
-		this.closeList();
+		this.closeListView();
 	}
 }
