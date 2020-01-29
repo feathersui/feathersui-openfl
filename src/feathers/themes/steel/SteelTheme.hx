@@ -21,7 +21,7 @@ import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.themes.steel.components.SteelListViewStyles;
 import feathers.themes.steel.components.SteelPanelStyles;
-import feathers.themes.steel.components.SteelPopUpListStyles;
+import feathers.themes.steel.components.SteelPopUpListViewStyles;
 import feathers.themes.steel.components.SteelRadioStyles;
 import feathers.themes.steel.components.SteelScrollContainerStyles;
 import feathers.themes.steel.components.SteelTabBarStyles;
@@ -62,7 +62,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelLayoutGroupStyles.initialize(this);
 		SteelListViewStyles.initialize(this);
 		SteelPanelStyles.initialize(this);
-		SteelPopUpListStyles.initialize(this);
+		SteelPopUpListViewStyles.initialize(this);
 		SteelRadioStyles.initialize(this);
 		SteelScrollContainerStyles.initialize(this);
 		SteelTabBarStyles.initialize(this);
