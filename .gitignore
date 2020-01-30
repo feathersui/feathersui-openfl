@@ -9,3 +9,5 @@ dist/
 lib/
 lib-esm/
 node_modules/
+
+haxelib/*.zip
