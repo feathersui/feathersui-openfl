@@ -157,7 +157,11 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					if (itemHeight < 0.0) {
 						itemHeight = 0.0;
 					}
-					item.height = itemHeight;
+					if (item.height != itemHeight) {
+						// to ensure that the item can continue to auto-size
+						// itself, don't set the explicit size unless needed
+						item.height = itemHeight;
+					}
 				}
 			} else if (layoutData.verticalCenter != null) {
 				item.y = layoutData.verticalCenter + (viewPortHeight - item.height) / 2.0;
@@ -170,7 +174,11 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					if (itemWidth < 0.0) {
 						itemWidth = 0.0;
 					}
-					item.width = itemWidth;
+					if (item.width != itemWidth) {
+						// to ensure that the item can continue to auto-size
+						// itself, don't set the explicit size unless needed
+						item.width = itemWidth;
+					}
 				}
 			} else if (layoutData.horizontalCenter != null) {
 				item.x = layoutData.horizontalCenter + (viewPortWidth - item.width) / 2.0;
