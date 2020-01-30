@@ -505,7 +505,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
 		this.button = factory();
 		if (this.button.variant == null) {
-			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
+			this.button.variant = ComboBox.CHILD_VARIANT_BUTTON;
 		}
 		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		this.button.initializeNow();
