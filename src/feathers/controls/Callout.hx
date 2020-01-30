@@ -557,7 +557,6 @@ class Callout extends FeathersControl {
 	public function close():Void {
 		if (this.parent != null) {
 			this.parent.removeChild(this);
-			FeathersEvent.dispatch(this, Event.CLOSE);
 		}
 	}
 
@@ -846,6 +845,8 @@ class Callout extends FeathersControl {
 	private function callout_removedFromStageHandler(event:Event):Void {
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, callout_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, callout_stage_touchBeginHandler);
+
+		FeathersEvent.dispatch(this, Event.CLOSE);
 	}
 
 	private function callout_content_resizeHandler(event:Event):Void {
