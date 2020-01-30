@@ -11,7 +11,7 @@ module.exports = merge(common, {
 Feathers UI v${package.version}
 https://feathersui.com/
 
-Copyright 2019 Bowler Hat LLC
+Copyright 2020 Bowler Hat LLC
 Released under the MIT license
 */`,
       raw: true,
