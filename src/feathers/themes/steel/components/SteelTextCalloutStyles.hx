@@ -44,10 +44,16 @@ class SteelTextCalloutStyles {
 					backgroundSkin.border = theme.getContainerBorder();
 					callout.backgroundSkin = backgroundSkin;
 				}
+
 				callout.paddingTop = 1.0;
 				callout.paddingRight = 1.0;
 				callout.paddingBottom = 1.0;
 				callout.paddingLeft = 1.0;
+
+				callout.marginTop = 10.0;
+				callout.marginRight = 10.0;
+				callout.marginBottom = 10.0;
+				callout.marginLeft = 10.0;
 			});
 		}
 	}
