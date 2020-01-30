@@ -14,12 +14,12 @@
 		"layout"
 	],
 	"description": "Cross-platform user interface components for creative frontend projects built with Haxe and OpenFL",
-	"version": "0.0.1-alpha",
+	"version": "1.0.0-alpha.1",
 	"classPath": "src",
 	"contributors": ["bowlerhat"],
 	"dependencies": {
 		"openfl": "",
 		"actuate": ""
 	},
-	"releasenote": "Initial release"
+	"releasenote": "Preview build"
 }
