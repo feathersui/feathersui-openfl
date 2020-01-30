@@ -32,14 +32,15 @@ class Measurements {
 
 		@since 1.0.0
 	**/
-	public function resetTargetFluidlyForParent(target:DisplayObject, parent:IMeasureObject):Void {
+	public function resetTargetFluidlyForParentValues(target:DisplayObject, ?parentExplicitWidth:Float, ?parentExplicitHeight:Float,
+			?parentExplicitMinWidth:Float, ?parentExplicitMinHeight:Float, ?parentExplicitMaxWidth:Float, ?parentExplicitMaxHeight:Float):Void {
 		if (target == null) {
 			return;
 		}
 		if (Std.is(target, IMeasureObject)) {
 			var measureTarget = cast(target, IMeasureObject);
 
-			var width = parent.explicitWidth;
+			var width = parentExplicitWidth;
 			if (width == null) {
 				width = this.width;
 			}
@@ -49,7 +50,7 @@ class Measurements {
 				measureTarget.width = width;
 			}
 
-			var height = parent.explicitHeight;
+			var height = parentExplicitHeight;
 			if (height == null) {
 				height = this.height;
 			}
@@ -59,7 +60,7 @@ class Measurements {
 				measureTarget.height = height;
 			}
 
-			var minWidth = parent.explicitMinWidth;
+			var minWidth = parentExplicitMinWidth;
 			if (minWidth == null || (measureTarget.explicitMinWidth != null && measureTarget.explicitMinWidth > minWidth)) {
 				minWidth = measureTarget.explicitMinWidth;
 			}
@@ -68,7 +69,7 @@ class Measurements {
 			}
 			measureTarget.minWidth = minWidth;
 
-			var minHeight = parent.explicitMinHeight;
+			var minHeight = parentExplicitMinHeight;
 			if (minHeight == null || (measureTarget.explicitMinHeight != null && measureTarget.explicitMinHeight > minHeight)) {
 				minHeight = measureTarget.explicitMinHeight;
 			}
@@ -77,7 +78,7 @@ class Measurements {
 			}
 			measureTarget.minHeight = minHeight;
 
-			var maxWidth = parent.explicitMaxWidth;
+			var maxWidth = parentExplicitMaxWidth;
 			if (maxWidth == null || (measureTarget.explicitMaxWidth != null && measureTarget.explicitMaxWidth < maxWidth)) {
 				maxWidth = measureTarget.explicitMaxWidth;
 			}
@@ -86,7 +87,7 @@ class Measurements {
 			}
 			measureTarget.maxWidth = maxWidth;
 
-			var maxHeight = parent.explicitMaxHeight;
+			var maxHeight = parentExplicitMaxHeight;
 			if (maxHeight == null || (measureTarget.explicitMaxHeight != null && measureTarget.explicitMaxHeight < maxHeight)) {
 				maxHeight = measureTarget.explicitMaxHeight;
 			}
@@ -96,16 +97,27 @@ class Measurements {
 			measureTarget.maxHeight = maxHeight;
 			return;
 		}
-		if (parent.explicitWidth != null) {
-			target.width = parent.explicitWidth;
+		if (parentExplicitWidth != null) {
+			target.width = parentExplicitWidth;
 		} else if (this.width != null) {
 			target.width = this.width;
 		}
-		if (parent.explicitHeight != null) {
-			target.height = parent.explicitHeight;
+		if (parentExplicitHeight != null) {
+			target.height = parentExplicitHeight;
 		} else if (this.height != null) {
 			target.height = this.height;
 		}
+	}
+
+	/**
+		With the saved measurements, and a parent's measurements, resets the
+		dimensions of the target display object.
+
+		@since 1.0.0
+	**/
+	public function resetTargetFluidlyForParent(target:DisplayObject, parent:IMeasureObject):Void {
+		return resetTargetFluidlyForParentValues(target, parent.explicitWidth, parent.explicitHeight, parent.explicitMinWidth, parent.explicitMinHeight,
+			parent.explicitMaxWidth, parent.explicitMaxHeight);
 	}
 
 	/**

@@ -608,8 +608,41 @@ class Callout extends FeathersControl {
 			return false;
 		}
 
+		var stageWidth = 0.0;
+		var stageHeight = 0.0;
+		if (this.stage != null) {
+			var stageTopLeft = new Point();
+			stageTopLeft = this.globalToLocal(stageTopLeft);
+
+			var stageBottomRight = new Point(this.stage.stageWidth, this.stage.stageHeight);
+			stageBottomRight = this.globalToLocal(stageBottomRight);
+
+			stageWidth = stageBottomRight.x - stageTopLeft.x;
+			stageHeight = stageBottomRight.y - stageTopLeft.y;
+		}
+
+		var maxWidthWithStage = this.explicitMaxWidth;
+		if (this.stage != null) {
+			var stageMaxWidth = stageWidth - this.marginLeft - this.marginRight;
+			if (maxWidthWithStage == null || maxWidthWithStage < stageMaxWidth) {
+				maxWidthWithStage = stageMaxWidth;
+			}
+		} else {
+			maxWidthWithStage = Math.POSITIVE_INFINITY;
+		}
+		var maxHeightWithStage = this.explicitMaxHeight;
+		if (this.stage != null) {
+			var stageMaxHeight = stageHeight - this.marginTop - this.marginBottom;
+			if (maxHeightWithStage == null || maxHeightWithStage < stageMaxHeight) {
+				maxHeightWithStage = stageMaxHeight;
+			}
+		} else {
+			maxHeightWithStage = Math.POSITIVE_INFINITY;
+		}
+
 		if (this.backgroundSkin != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this.backgroundSkin, this);
+			this._backgroundSkinMeasurements.resetTargetFluidlyForParentValues(this.backgroundSkin, this.explicitWidth, this.explicitHeight,
+				this.explicitMinWidth, this.explicitMinHeight, maxWidthWithStage, maxHeightWithStage);
 		}
 
 		var measureSkin:IMeasureObject = null;
@@ -621,10 +654,20 @@ class Callout extends FeathersControl {
 			cast(this.backgroundSkin, IValidating).validateNow();
 		}
 
+		var measureContent:IMeasureObject = null;
+		if (Std.is(this.content, IMeasureObject)) {
+			measureContent = cast(this.content, IMeasureObject);
+		}
 		if (this.content != null) {
 			var oldIgnoreContentReize = this._ignoreContentResize;
 			this._ignoreContentResize = true;
-			this._contentMeasurements.resetTargetFluidlyForParent(this.content, this);
+			this._contentMeasurements.resetTargetFluidlyForParentValues(this.content,
+				this.explicitWidth != null ? this.explicitWidth - this.paddingLeft - this.paddingRight : null,
+				this.explicitHeight != null ? this.explicitHeight - this.paddingTop - this.paddingBottom : null,
+				this.explicitMinWidth != null ? this.explicitMinWidth - this.paddingLeft - this.paddingRight : null,
+				this.explicitMinHeight != null ? this.explicitMinHeight - this.paddingLeft - this.paddingRight : null,
+				maxWidthWithStage != null ? maxWidthWithStage - this.paddingLeft - this.paddingRight : null,
+				maxHeightWithStage != null ? maxHeightWithStage - this.paddingLeft - this.paddingRight : null);
 			if (Std.is(this.content, IValidating)) {
 				cast(this.content, IValidating).validateNow();
 			}
@@ -645,7 +688,7 @@ class Callout extends FeathersControl {
 				}
 			}
 		}
-		var newHeight = 0.0;
+		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			var contentHeight = 0.0;
 			if (this.content != null) {
@@ -659,10 +702,52 @@ class Callout extends FeathersControl {
 				}
 			}
 		}
-		var newMinWidth = 0.0;
-		var newMinHeight = 0.0;
-		var newMaxWidth = Math.POSITIVE_INFINITY;
-		var newMaxHeight = Math.POSITIVE_INFINITY;
+		var newMinWidth = this.explicitMinWidth;
+		if (needsMinWidth) {
+			var contentMinWidth = 0.0;
+			if (measureContent != null) {
+				contentMinWidth = measureContent.minWidth;
+			} else if (this._contentMeasurements != null) {
+				contentMinWidth = this._contentMeasurements.minWidth;
+			}
+			newMinWidth = contentMinWidth + this.paddingLeft + this.paddingRight;
+			var backgroundMinWidth = 0.0;
+			if (measureSkin != null) {
+				backgroundMinWidth = measureSkin.minWidth;
+			} else if (this._backgroundSkinMeasurements != null) {
+				backgroundMinWidth = this._backgroundSkinMeasurements.minWidth;
+			}
+			if (newMinWidth < backgroundMinWidth) {
+				newMinWidth = backgroundMinWidth;
+			}
+			if (newMinWidth > maxWidthWithStage) {
+				newMinWidth = maxWidthWithStage;
+			}
+		}
+		var newMinHeight = this.explicitMinHeight;
+		if (needsMinHeight) {
+			var contentMinHeight = 0.0;
+			if (measureContent != null) {
+				contentMinHeight = measureContent.minWidth;
+			} else if (this._contentMeasurements != null) {
+				contentMinHeight = this._contentMeasurements.minHeight;
+			}
+			newMinHeight = contentMinHeight + this.paddingTop + this.paddingBottom;
+			var backgroundMinHeight = 0.0;
+			if (measureSkin != null) {
+				backgroundMinHeight = measureSkin.minHeight;
+			} else if (this._backgroundSkinMeasurements != null) {
+				backgroundMinHeight = this._backgroundSkinMeasurements.minHeight;
+			}
+			if (newMinHeight < backgroundMinHeight) {
+				newMinHeight = backgroundMinHeight;
+			}
+			if (newMinHeight > maxHeightWithStage) {
+				newMinHeight = maxHeightWithStage;
+			}
+		}
+		var newMaxWidth = maxWidthWithStage;
+		var newMaxHeight = maxHeightWithStage;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
