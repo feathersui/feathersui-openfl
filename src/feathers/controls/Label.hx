@@ -351,11 +351,11 @@ class Label extends FeathersControl implements ITextControl {
 			this.refreshTextStyles();
 		}
 
-		if (dataInvalid || stylesInvalid || stateInvalid) {
-			this.refreshText();
+		if (dataInvalid || stylesInvalid || stateInvalid || sizeInvalid) {
+			this.refreshText(sizeInvalid);
 		}
 
-		this.measure();
+		sizeInvalid = this.measure() || sizeInvalid;
 
 		if (stylesInvalid || stateInvalid || dataInvalid || sizeInvalid) {
 			this.layoutContent();
@@ -463,8 +463,8 @@ class Label extends FeathersControl implements ITextControl {
 		}
 	}
 
-	private function refreshText():Void {
-		if (this.text == this._previousText && !this._updatedTextStyles) {
+	private function refreshText(sizeInvalid:Bool):Void {
+		if (this.text == this._previousText && !this._updatedTextStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
@@ -481,12 +481,19 @@ class Label extends FeathersControl implements ITextControl {
 		} else if (this.explicitMaxWidth != null) {
 			textFieldWidth = this.explicitMaxWidth;
 		}
-		if (textFieldWidth != null) {
+		if (textFieldWidth == null && this.wordWrap) {
+			// to get an accurate measurement, we need to temporarily disable
+			// wrapping to multiple lines
+			this.textField.wordWrap = false;
+		} else if (textFieldWidth != null) {
 			this.textField.width = textFieldWidth;
 		}
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;
+		if (textFieldWidth == null && this.wordWrap) {
+			this.textField.wordWrap = true;
+		}
 		if (!hasText) {
 			this.textField.text = "";
 		}
