@@ -162,6 +162,9 @@ class BaseScrollContainer extends FeathersControl {
 		container.autoHideScrollBars = false;
 		```
 
+		This property has no effect if `fixedScrollBars` is `true`. Fixed scroll
+		bars are always visible.
+
 		@since 1.0.0
 	**/
 	@:style
