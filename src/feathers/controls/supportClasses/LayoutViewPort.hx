@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.utils.MeasurementsUtil;
 import openfl.display.Sprite;
 import feathers.layout.IScrollLayout;
 import feathers.core.InvalidationFlag;
@@ -255,7 +256,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		var needsMaxHeight = this.maxVisibleHeight == null;
 
 		if (this._currentBackgroundSkin != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 		}
 
 		var needsToMeasureContent = this.autoSizeMode == CONTENT || this.stage == null;

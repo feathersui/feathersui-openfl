@@ -21,6 +21,7 @@ import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.utils.PointerToState;
+import feathers.utils.MeasurementsUtil;
 
 /**
 	A simple button control with states, but no content, that is useful for
@@ -268,7 +269,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		}
 
 		if (this._currentBackgroundSkin != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 		}
 
 		var measureSkin:IMeasureObject = null;

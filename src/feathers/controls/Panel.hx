@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
 import feathers.core.InvalidationFlag;
 import feathers.core.IMeasureObject;
 import feathers.themes.steel.components.SteelPanelStyles;
@@ -103,7 +104,7 @@ class Panel extends ScrollContainer {
 		}
 
 		if (this._currentBackgroundSkin != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 		}
 
 		var measureSkin:IMeasureObject = null;

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
 import feathers.themes.steel.components.SteelTextInputStyles;
 import feathers.core.ITextControl;
 import feathers.core.FeathersControl;
@@ -520,7 +521,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 
 		if (this._backgroundSkinMeasurements != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 		}
 
 		var measureSkin:IMeasureObject = null;

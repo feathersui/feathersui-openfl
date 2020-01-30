@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
 import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DisplayObjectRecycler;
@@ -511,7 +512,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			return false;
 		}
 
-		this.buttonMeasurements.resetTargetFluidlyForParent(this.button, this);
+		MeasurementsUtil.resetFluidlyWithParent(this.buttonMeasurements, this.button, this);
 		this.button.validateNow();
 
 		var newWidth = this.explicitWidth;

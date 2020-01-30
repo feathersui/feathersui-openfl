@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
 import feathers.layout.RelativePositions;
 import feathers.core.IStateObserver;
 import feathers.core.IStateContext;
@@ -641,7 +642,7 @@ class Callout extends FeathersControl {
 		}
 
 		if (this.backgroundSkin != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParentValues(this.backgroundSkin, this.explicitWidth, this.explicitHeight,
+			MeasurementsUtil.resetFluidlyWithParentValues(this._backgroundSkinMeasurements, this.backgroundSkin, this.explicitWidth, this.explicitHeight,
 				this.explicitMinWidth, this.explicitMinHeight, maxWidthWithStage, maxHeightWithStage);
 		}
 
@@ -661,7 +662,7 @@ class Callout extends FeathersControl {
 		if (this.content != null) {
 			var oldIgnoreContentReize = this._ignoreContentResize;
 			this._ignoreContentResize = true;
-			this._contentMeasurements.resetTargetFluidlyForParentValues(this.content,
+			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this.content,
 				this.explicitWidth != null ? this.explicitWidth - this.paddingLeft - this.paddingRight : null,
 				this.explicitHeight != null ? this.explicitHeight - this.paddingTop - this.paddingBottom : null,
 				this.explicitMinWidth != null ? this.explicitMinWidth - this.paddingLeft - this.paddingRight : null,

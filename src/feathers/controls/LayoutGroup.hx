@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
 import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
@@ -382,7 +383,7 @@ class LayoutGroup extends FeathersControl {
 		var needsMaxHeight = this.explicitMaxHeight == null;
 
 		if (this._currentBackgroundSkin != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 			if (Std.is(this._currentBackgroundSkin, IValidating)) {
 				cast(this._currentBackgroundSkin, IValidating).validateNow();
 			}

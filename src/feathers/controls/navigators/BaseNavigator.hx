@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.utils.MeasurementsUtil;
 import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
 import feathers.core.IMeasureObject;
@@ -190,7 +191,7 @@ class BaseNavigator extends FeathersControl {
 		}
 
 		if (this.activeItemView != null) {
-			this._activeViewMeasurements.resetTargetFluidlyForParent(this.activeItemView, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._activeViewMeasurements, this.activeItemView, this);
 		}
 
 		var needsToMeasureContent = this.autoSizeMode == CONTENT || this.stage == null;

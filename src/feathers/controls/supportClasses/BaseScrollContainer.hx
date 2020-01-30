@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.utils.MeasurementsUtil;
 import feathers.layout.Direction;
 import openfl.errors.IllegalOperationError;
 import openfl.display.DisplayObjectContainer;
@@ -901,7 +902,7 @@ class BaseScrollContainer extends FeathersControl {
 		}
 
 		if (this._currentBackgroundSkin != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 		}
 
 		var measureSkin:IMeasureObject = null;

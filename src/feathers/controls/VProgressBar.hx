@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
 import feathers.themes.steel.components.SteelVProgressBarStyles;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
@@ -49,7 +50,7 @@ class VProgressBar extends BaseProgressBar {
 		}
 
 		if (this._backgroundSkinMeasurements != null) {
-			this._backgroundSkinMeasurements.resetTargetFluidlyForParent(this._currentBackgroundSkin, this);
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 		}
 
 		var measureBackgroundSkin:IMeasureObject = null;
