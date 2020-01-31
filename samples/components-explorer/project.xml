@@ -6,7 +6,7 @@
 	<app main="Main" path="build" file="Components" />
 
 	<!-- needed on Android to avoid hiding the back/home buttons -->
-	<window fullscreen="false"/>
+	<window fullscreen="false" if="android"/>
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>
 	<window fps="0" if="html5"/>
