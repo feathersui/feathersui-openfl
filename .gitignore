@@ -11,3 +11,5 @@ lib-esm/
 node_modules/
 
 haxelib/*.zip
+
+.DS_Store
