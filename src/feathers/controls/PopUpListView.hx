@@ -489,10 +489,10 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		this.listView.selectedIndex = this.selectedIndex;
 		this._ignoreListViewChange = oldIgnoreListViewChange;
 
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
-			this.button.text = "";
+		if (this.selectedItem != null) {
+			this.button.text = this.itemToText(this.selectedItem);
 		} else {
-			this.button.text = this.dataProvider.get(this.selectedIndex).text;
+			this.button.text = "";
 		}
 	}
 
