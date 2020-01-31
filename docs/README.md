@@ -1,9 +1,9 @@
 # feathersui-openfl API documentation
 
-Automated tests created with [dox](https://github.com/HaxeFoundation/dox).
+The API documentation is created with [dox](https://github.com/HaxeFoundation/dox).
 
-To build API docs, use the following command:
+To build the API documentation, run the following command:
 
 ```sh
-haxe docs.hxml
+haxe ./docs.hxml
 ```

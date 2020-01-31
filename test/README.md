@@ -4,7 +4,7 @@ Automated tests created with [munit](https://github.com/massiveinteractive/Massi
 
 ## Run HTML/JS tests
 
-To run HTML/JS tests in a web browser, use the following command:
+To run HTML/JS tests in a web browser, run the following command:
 
 
 ```sh

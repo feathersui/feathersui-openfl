@@ -1,7 +1,7 @@
 # feathersui-openfl haxelib
 
-To package a _.zip_ file for Haxelib, use the following command:
+To package a _.zip_ file for Haxelib, run the following command:
 
 ```sh
-haxe haxelib.hxml
+haxe ./haxelib.hxml
 ```
