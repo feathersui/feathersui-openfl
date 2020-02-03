@@ -31,12 +31,13 @@ class PackageHaxelib {
 		var packageVersion = Std.string(json.version);
 		var releaseNote = Std.string(json.releasenote);
 		var packageFileName = '${packageName}-${packageVersion}.zip';
+		var zipFilePath = FileSystem.absolutePath(Path.join(["../build/", packageFileName]));
 		Sys.println('haxelib: ${packageName}');
 		Sys.println('version: ${packageVersion}');
 		Sys.println('releasenote: ${releaseNote}');
-		Sys.println('file: ${packageFileName}');
+		Sys.println('file: ${zipFilePath}');
 
-		var zipFileOutput = File.write(packageFileName, true);
+		var zipFileOutput = File.write(zipFilePath, true);
 		var zip = new Writer(zipFileOutput);
 		zip.write(entries);
 	}
