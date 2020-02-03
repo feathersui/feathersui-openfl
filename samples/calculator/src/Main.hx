@@ -2,7 +2,6 @@ import feathers.controls.Application;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
-import feathers.events.FeathersEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.HorizontalLayout;
 import feathers.layout.HorizontalLayoutData;
@@ -130,21 +129,24 @@ class Main extends Application {
 
 		this.divideButton = new Button();
 		this.divideButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
-		this.divideButton.text = "÷";
+		// not all fonts support ÷
+		this.divideButton.text = "/";
 		this.divideButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.divideButton.addEventListener(TriggerEvent.TRIGGER, divideButton_triggerHandler);
 		this.rows[1].addChild(this.divideButton);
 
 		this.multiplyButton = new Button();
 		this.multiplyButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
-		this.multiplyButton.text = "×";
+		// not all fonts support ×
+		this.multiplyButton.text = "x";
 		this.multiplyButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.multiplyButton.addEventListener(TriggerEvent.TRIGGER, multiplyButton_triggerHandler);
 		this.rows[2].addChild(this.multiplyButton);
 
 		this.subtractButton = new Button();
 		this.subtractButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
-		this.subtractButton.text = "−";
+		// not all fonts support −
+		this.subtractButton.text = "-";
 		this.subtractButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.subtractButton.addEventListener(TriggerEvent.TRIGGER, subtractButton_triggerHandler);
 		this.rows[3].addChild(this.subtractButton);
