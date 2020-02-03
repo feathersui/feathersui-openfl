@@ -16,9 +16,12 @@
   },
   "homepage": "https://feathersui.com/",
   "main": "dist/feathersui-openfl.min.js",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "actuate": "^1.8.9-beta",
-    "openfl": "^8.9.5"
+    "openfl": "^8.9.6"
   },
   "devDependencies": {
     "brotli-webpack-plugin": "^1.1.0",
