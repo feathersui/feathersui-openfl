@@ -17,9 +17,5 @@
 	"version": "1.0.0-alpha.1",
 	"classPath": "src",
 	"contributors": ["bowlerhat"],
-	"dependencies": {
-		"openfl": "",
-		"actuate": ""
-	},
 	"releasenote": "Preview build"
 }
