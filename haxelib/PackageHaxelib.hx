@@ -25,15 +25,20 @@ class PackageHaxelib {
 		addFile(FileSystem.absolutePath("../LICENSE.md"), entries);
 		addDirectory(FileSystem.absolutePath("../src"), true, entries);
 
-		var zipFileOutput = File.write("feathersui-haxelib.zip", true);
-		var zip = new Writer(zipFileOutput);
-		zip.write(entries);
-
 		var jsonContent = File.getContent("../haxelib.json");
 		var json = Json.parse(jsonContent);
-		Sys.println('haxelib: ${json.name}');
-		Sys.println('version: ${json.version}');
-		Sys.println('note: ${json.releasenote}');
+		var packageName = Std.string(json.name);
+		var packageVersion = Std.string(json.version);
+		var releaseNote = Std.string(json.releasenote);
+		var packageFileName = '${packageName}-${packageVersion}.zip';
+		Sys.println('haxelib: ${packageName}');
+		Sys.println('version: ${packageVersion}');
+		Sys.println('releasenote: ${releaseNote}');
+		Sys.println('file: ${packageFileName}');
+
+		var zipFileOutput = File.write(packageFileName, true);
+		var zip = new Writer(zipFileOutput);
+		zip.write(entries);
 	}
 
 	private static function addFile(filePath:String, result:List<Entry>):Void {
