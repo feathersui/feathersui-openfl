@@ -8,7 +8,7 @@
 
 package feathers.events;
 
-import lime.utils.ObjectPool;
+import openfl._internal.utils.ObjectPool;
 import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
