@@ -196,6 +196,8 @@ class LayoutGroup extends FeathersControl {
 		return this.autoSizeMode;
 	}
 
+	private var _currentLayout:ILayout;
+
 	@:getter(numChildren)
 	#if !flash override #end private function get_numChildren():Int {
 		return this.items.length;
@@ -312,9 +314,13 @@ class LayoutGroup extends FeathersControl {
 			this.refreshBackgroundSkin();
 		}
 
+		if (stylesInvalid) {
+			this.refreshLayout();
+		}
+
 		if (sizeInvalid || layoutInvalid || stylesInvalid || stateInvalid) {
 			this.refreshViewPortBounds();
-			if (this.layout != null) {
+			if (this._currentLayout != null) {
 				this.handleCustomLayout();
 			} else {
 				this.handleManualLayout();
@@ -324,6 +330,20 @@ class LayoutGroup extends FeathersControl {
 
 			// final invalidation to avoid juggler next frame issues
 			this.validateChildren();
+		}
+	}
+
+	private function refreshLayout():Void {
+		var newLayout = this.layout;
+		if (this._currentLayout == newLayout) {
+			return;
+		}
+		if (this._currentLayout != null) {
+			this._currentLayout.removeEventListener(Event.CHANGE, layoutGroup_layout_changeHandler);
+		}
+		this._currentLayout = newLayout;
+		if (this._currentLayout != null) {
+			this._currentLayout.addEventListener(Event.CHANGE, layoutGroup_layout_changeHandler);
 		}
 	}
 
@@ -449,7 +469,7 @@ class LayoutGroup extends FeathersControl {
 	private function handleCustomLayout():Void {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
-		this.layout.layout(this.items, this._layoutMeasurements, this._layoutResult);
+		this._currentLayout.layout(this.items, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}
 
@@ -585,6 +605,10 @@ class LayoutGroup extends FeathersControl {
 			this.setInvalidationFlag(InvalidationFlag.LAYOUT);
 			return;
 		}
+		this.setInvalid(InvalidationFlag.LAYOUT);
+	}
+
+	private function layoutGroup_layout_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.LAYOUT);
 	}
 }

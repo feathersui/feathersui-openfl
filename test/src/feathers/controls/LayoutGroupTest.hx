@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.layout.VerticalLayout;
 import massive.munit.Assert;
 import openfl.display.Shape;
 
@@ -73,5 +74,15 @@ class LayoutGroupTest {
 		this._group.validateNow();
 		Assert.isNull(skin1.parent);
 		Assert.areEqual(this._group, skin2.parent);
+	}
+
+	@Test
+	public function testInvalidateAfterLayoutChange():Void {
+		var layout = new VerticalLayout();
+		this._group.layout = layout;
+		this._group.validateNow();
+		Assert.isFalse(this._group.isInvalid());
+		layout.gap = 1234.5;
+		Assert.isTrue(this._group.isInvalid());
 	}
 }
