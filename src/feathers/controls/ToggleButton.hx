@@ -64,7 +64,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 
 	private var _previousText:String = null;
 	private var _previousTextFormat:TextFormat = null;
-	private var _updatedTextFormat = false;
+	private var _updatedTextStyles = false;
 
 	/**
 		The text displayed by the button.
@@ -208,11 +208,30 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		```
 
 		@see `ToggleButton.text`
+		@see `ToggleButton.getTextFormatForState()`
+		@see `ToggleButton.setTextFormatForState()`
+		@see `ToggleButton.embedFonts`
 
 		@since 1.0.0
 	**/
 	@:style
 	public var textFormat:TextFormat = null;
+
+	/**
+		Determines if an embedded font is used or not.
+
+		In the following example, the button uses embedded fonts:
+
+		```hx
+		button.embedFonts = true;
+		```
+
+		@see `ToggleButton.textFormat`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var embedFonts:Bool = false;
 
 	/**
 		The font styles used to render the button's text when the button is
@@ -569,7 +588,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
-		this._updatedTextFormat = false;
+		this._updatedTextStyles = false;
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshIcon();
@@ -731,6 +750,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 	}
 
 	private function refreshTextStyles():Void {
+		if (this.textField.embedFonts != this.embedFonts) {
+			this.textField.embedFonts = this.embedFonts;
+			this._updatedTextStyles = true;
+		}
 		var textFormat = this.getCurrentTextFormat();
 		if (textFormat == this._previousTextFormat) {
 			// nothing to refresh
@@ -738,13 +761,13 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		}
 		if (textFormat != null) {
 			this.textField.defaultTextFormat = textFormat;
-			this._updatedTextFormat = true;
+			this._updatedTextStyles = true;
 			this._previousTextFormat = textFormat;
 		}
 	}
 
 	private function refreshText():Void {
-		if (this.text == this._previousText && !this._updatedTextFormat) {
+		if (this.text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
 		}

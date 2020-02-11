@@ -117,7 +117,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private var _previousText:String = null;
 	private var _previousTextFormat:TextFormat = null;
-	private var _updatedTextFormat = false;
+	private var _updatedTextStyles = false;
 
 	/**
 		The text displayed by the text input.
@@ -198,11 +198,28 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@see `TextInput.text`
 		@see `TextInput.getTextFormatForState()`
 		@see `TextInput.setTextFormatForState()`
+		@see `TextInput.embedFonts`
 
 		@since 1.0.0
 	**/
 	@:style
 	public var textFormat:TextFormat = null;
+
+	/**
+		Determines if an embedded font is used or not.
+
+		In the following example, the text input uses embedded fonts:
+
+		```hx
+		input.embedFonts = true;
+		```
+
+		@see `TextInput.textFormat`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var embedFonts:Bool = false;
 
 	private var _stateToTextFormat:Map<TextInputState, TextFormat> = new Map();
 
@@ -439,7 +456,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
-		this._updatedTextFormat = false;
+		this._updatedTextStyles = false;
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
@@ -601,6 +618,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else if (!this.enabled && this.textField.type == TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.DYNAMIC;
 		}
+		if (this.textField.embedFonts != this.embedFonts) {
+			this.textField.embedFonts = this.embedFonts;
+			this._updatedTextStyles = true;
+		}
 		var textFormat = this.getCurrentTextFormat();
 		if (textFormat == this._previousTextFormat) {
 			// nothing to refresh
@@ -608,14 +629,14 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		if (textFormat != null) {
 			this.textField.defaultTextFormat = textFormat;
-			this._updatedTextFormat = true;
+			this._updatedTextStyles = true;
 			this._previousTextFormat = textFormat;
 		}
 	}
 
 	private function refreshText():Void {
 		this.textField.restrict = restrict;
-		if (this.text == this._previousText && !this._updatedTextFormat) {
+		if (this.text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
 		}

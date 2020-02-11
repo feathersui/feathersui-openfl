@@ -124,11 +124,28 @@ class TextCallout extends Callout implements ITextControl {
 
 		@see `TextCallout.text`
 		@see `TextCallout.disabledTextFormat`
+		@see `TextCallout.embedFonts`
 
 		@since 1.0.0
 	**/
 	@:style
 	public var textFormat:TextFormat = null;
+
+	/**
+		Determines if an embedded font is used or not.
+
+		In the following example, the callout uses embedded fonts:
+
+		```hx
+		callout.embedFonts = true;
+		```
+
+		@see `TextCallout.textFormat`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var embedFonts:Bool = false;
 
 	/**
 		The font styles used to render the text callout's text when the text
@@ -179,8 +196,9 @@ class TextCallout extends Callout implements ITextControl {
 	}
 
 	private function refreshTextStyles():Void {
-		this.label.textFormat = textFormat;
-		this.label.disabledTextFormat = disabledTextFormat;
+		this.label.textFormat = this.textFormat;
+		this.label.disabledTextFormat = this.disabledTextFormat;
+		this.label.embedFonts = this.embedFonts;
 	}
 
 	private function refreshText():Void {

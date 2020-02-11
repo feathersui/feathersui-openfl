@@ -147,11 +147,28 @@ class Label extends FeathersControl implements ITextControl {
 
 		@see `Label.text`
 		@see `Label.disabledTextFormat`
+		@see `Label.embedFonts`
 
 		@since 1.0.0
 	**/
 	@:style
 	public var textFormat:TextFormat = null;
+
+	/**
+		Determines if an embedded font is used or not.
+
+		In the following example, the label uses embedded fonts:
+
+		```hx
+		label.embedFonts = true;
+		```
+
+		@see `Label.textFormat`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var embedFonts:Bool = false;
 
 	/**
 		The font styles used to render the label's text when the label is
@@ -449,6 +466,10 @@ class Label extends FeathersControl implements ITextControl {
 	private function refreshTextStyles():Void {
 		if (this.textField.wordWrap != this.wordWrap) {
 			this.textField.wordWrap = this.wordWrap;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.embedFonts != this.embedFonts) {
+			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
