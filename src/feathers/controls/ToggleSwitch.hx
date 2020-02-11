@@ -476,7 +476,9 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		}
 
 		if (this._animateSelectionChange) {
-			var tween = Actuate.tween(this.thumbSkin, this.toggleDuration, {x: xPosition});
+			var tween = Actuate.update((x : Float) -> {
+				this.thumbSkin.x = x;
+			}, this.toggleDuration, [this.thumbSkin.x], [xPosition], true);
 			this._toggleTween = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 			this._toggleTween.ease(this.toggleEase);
 			this._toggleTween.onUpdate(this.toggleTween_onUpdate);

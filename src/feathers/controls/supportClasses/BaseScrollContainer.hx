@@ -1176,7 +1176,9 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarX.alpha = 0.0;
 			return;
 		}
-		var tween = Actuate.tween(this.scrollBarX, this.hideScrollBarDuration, {alpha: 0.0});
+		var tween = Actuate.update((alpha : Float) -> {
+			this.scrollBarX.alpha = alpha;
+		}, this.hideScrollBarDuration, [this.scrollBarX.alpha], [0.0], true);
 		this._hideScrollBarX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarX.ease(this.hideScrollBarEase);
 		this._hideScrollBarX.autoVisible(false);
@@ -1195,7 +1197,9 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarY.alpha = 0.0;
 			return;
 		}
-		var tween = Actuate.tween(this.scrollBarY, this.hideScrollBarDuration, {alpha: 0.0});
+		var tween = Actuate.update((alpha : Float) -> {
+			this.scrollBarY.alpha = alpha;
+		}, this.hideScrollBarDuration, [this.scrollBarY.alpha], [0.0], true);
 		this._hideScrollBarY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarY.ease(this.hideScrollBarEase);
 		this._hideScrollBarY.autoVisible(false);
