@@ -130,7 +130,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@default ""
 
-		@see `input.textFormat`
+		@see `TextInput.textFormat`
 
 		@since 1.0.0
 	**/
