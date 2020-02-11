@@ -44,7 +44,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.text;
 	}
 
-	public var wordWrap(default, set):Bool = null;
+	public var wordWrap(default, set):Bool = false;
 
 	private function set_wordWrap(value:Bool):Bool {
 		if (this.wordWrap == value) {
@@ -55,7 +55,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.wordWrap;
 	}
 
-	public var multiline(default, set):Bool = null;
+	public var multiline(default, set):Bool = false;
 
 	private function set_multiline(value:Bool):Bool {
 		if (this.multiline == value) {
@@ -83,7 +83,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.textFormat;
 	}
 
-	public var embedFonts(default, set):Bool = null;
+	public var embedFonts(default, set):Bool = false;
 
 	private function set_embedFonts(value:Bool):Bool {
 		if (this.embedFonts == value) {
