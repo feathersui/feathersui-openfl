@@ -171,6 +171,66 @@ class Label extends FeathersControl implements ITextControl {
 	public var embedFonts:Bool = false;
 
 	/**
+		Indicates if the label's text may be selected or not.
+
+		In the following example, the label text is selectable:
+
+		```hx
+		label.selectable = true;
+		```
+
+		@since 1.0.0
+	**/
+	public var selectable(default, set):Bool = false;
+
+	private function set_selectable(value:Bool):Bool {
+		if (this.selectable == value) {
+			return this.selectable;
+		}
+		this.selectable = value;
+		this.setInvalid(InvalidationFlag.SELECTION);
+		return this.selectable;
+	}
+
+	/**
+		The start index of the selection.
+
+		If `selectable` is `false`, returns `-1`.
+
+		@since 1.0.0
+	**/
+	public var selectionBeginIndex(get, null):Int;
+
+	private function get_selectionBeginIndex():Int {
+		if (!this.selectable) {
+			return -1;
+		}
+		if (this.textField == null) {
+			return 0;
+		}
+		return this.textField.selectionBeginIndex;
+	}
+
+	/**
+		The end index of the selection.
+
+		If `selectable` is `false`, returns `-1`.
+
+		@since 1.0.0
+	**/
+	public var selectionEndIndex(get, null):Int;
+
+	private function get_selectionEndIndex():Int {
+		if (!this.selectable) {
+			return -1;
+		}
+		if (this.textField == null) {
+			return 0;
+		}
+		return this.textField.selectionEndIndex;
+	}
+
+	/**
 		The font styles used to render the label's text when the label is
 		disabled.
 
@@ -347,13 +407,13 @@ class Label extends FeathersControl implements ITextControl {
 		super.initialize();
 		if (this.textField == null) {
 			this.textField = new TextField();
-			this.textField.selectable = false;
 			this.addChild(this.textField);
 		}
 	}
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
+		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
@@ -370,6 +430,10 @@ class Label extends FeathersControl implements ITextControl {
 
 		if (dataInvalid || stylesInvalid || stateInvalid || sizeInvalid) {
 			this.refreshText(sizeInvalid);
+		}
+
+		if (dataInvalid || stylesInvalid || selectionInvalid) {
+			this.refreshSelection();
 		}
 
 		sizeInvalid = this.measure() || sizeInvalid;
@@ -520,6 +584,13 @@ class Label extends FeathersControl implements ITextControl {
 		}
 		this.textField.visible = hasText;
 		this._previousText = this.text;
+	}
+
+	private function refreshSelection():Void {
+		var selectable = this.selectable && this.enabled;
+		if (this.textField.selectable != selectable) {
+			this.textField.selectable = selectable;
+		}
 	}
 
 	private function getCurrentTextFormat():TextFormat {
