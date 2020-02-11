@@ -313,6 +313,16 @@ class Scroller extends EventDispatcher {
 	public var ease:IEasing = Quart.easeOut;
 
 	/**
+		The easing function to use when the scroll position goes outside of
+		the minimum or maximum edge and bounces back.
+
+		@see `Scroller.ease`
+
+		@since 1.0.0
+	**/
+	public var bounceEase:IEasing = null;
+
+	/**
 		The distance to scroll when the mouse wheel is scrolled.
 
 		@default 10.0
@@ -363,6 +373,8 @@ class Scroller extends EventDispatcher {
 	private var savedScrollMoves:Array<Float> = [];
 	private var animateScrollX:SimpleActuator<Dynamic, Dynamic> = null;
 	private var animateScrollY:SimpleActuator<Dynamic, Dynamic> = null;
+	private var _animateScrollXEase:IEasing = null;
+	private var _animateScrollYEase:IEasing = null;
 	private var animateScrollXEndRatio:Float = 1.0;
 	private var animateScrollYEndRatio:Float = 1.0;
 	private var targetScrollX:Float = 0.0;
@@ -418,10 +430,12 @@ class Scroller extends EventDispatcher {
 		if (this.animateScrollX != null) {
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
+			this._animateScrollXEase = null;
 		}
 		if (this.animateScrollY != null) {
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
+			this._animateScrollYEase = null;
 		}
 		this.cleanupAfterDrag();
 		this.draggingX = false;
@@ -458,15 +472,19 @@ class Scroller extends EventDispatcher {
 		animation. If you want to throw in only one direction, pass in `null`
 		for the value that you do not want to change.
 	**/
-	private function throwTo(scrollX:Null<Float>, scrollY:Null<Float>, duration:Null<Float> = null):Void {
+	private function throwTo(scrollX:Null<Float>, scrollY:Null<Float>, duration:Null<Float> = null, ease:IEasing = null):Void {
 		if (duration == null) {
 			duration = this._fixedThrowDuration;
+		}
+		if (ease == null) {
+			ease = this.ease;
 		}
 		var scrollChanged = false;
 		if (scrollX != null) {
 			if (this.animateScrollX != null) {
 				Actuate.stop(this.animateScrollX, null, false, false);
 				this.animateScrollX = null;
+				this._animateScrollXEase = null;
 			}
 			if (this.scrollX != scrollX) {
 				scrollChanged = true;
@@ -476,11 +494,12 @@ class Scroller extends EventDispatcher {
 				} else {
 					this.startScrollX = this.scrollX;
 					this.targetScrollX = scrollX;
+					this._animateScrollXEase = ease;
 					var tween = Actuate.update((scrollX : Float) -> {
 						this.scrollX = scrollX;
 					}, duration, [this.scrollX], [this.targetScrollX], true);
 					this.animateScrollX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
-					this.animateScrollX.ease(this.ease);
+					this.animateScrollX.ease(this._animateScrollXEase);
 					this.animateScrollX.onComplete(this.animateScrollX_onComplete);
 					this.refreshAnimateScrollXEndRatio();
 				}
@@ -492,6 +511,7 @@ class Scroller extends EventDispatcher {
 			if (this.animateScrollY != null) {
 				Actuate.stop(this.animateScrollY, null, false, false);
 				this.animateScrollY = null;
+				this._animateScrollYEase = null;
 			}
 			if (this.scrollY != scrollY) {
 				scrollChanged = true;
@@ -501,11 +521,12 @@ class Scroller extends EventDispatcher {
 				} else {
 					this.startScrollY = this.scrollY;
 					this.targetScrollY = scrollY;
+					this._animateScrollYEase = ease;
 					var tween = Actuate.update((scrollY : Float) -> {
 						this.scrollY = scrollY;
 					}, duration, [this.scrollY], [this.targetScrollY], true);
 					this.animateScrollY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
-					this.animateScrollY.ease(this.ease);
+					this.animateScrollY.ease(this._animateScrollYEase);
 					this.animateScrollY.onComplete(this.animateScrollY_onComplete);
 					this.refreshAnimateScrollYEndRatio();
 				}
@@ -622,7 +643,7 @@ class Scroller extends EventDispatcher {
 			this.scrollX = targetScrollX;
 			this.completeScroll();
 		} else {
-			this.throwTo(targetScrollX, null, this.elasticSnapDuration);
+			this.throwTo(targetScrollX, null, this.elasticSnapDuration, this.bounceEase);
 		}
 	}
 
@@ -643,7 +664,7 @@ class Scroller extends EventDispatcher {
 			this.scrollY = targetScrollY;
 			this.completeScroll();
 		} else {
-			this.throwTo(null, targetScrollY, this.elasticSnapDuration);
+			this.throwTo(null, targetScrollY, this.elasticSnapDuration, this.bounceEase);
 		}
 	}
 
@@ -651,7 +672,7 @@ class Scroller extends EventDispatcher {
 		var time = (Lib.getTimer() / 1000.0);
 		var currentTime = time - this.animateScrollX.startTime;
 		var ratio = currentTime / this.animateScrollX.duration;
-		ratio = this.ease.calculate(ratio);
+		ratio = this._animateScrollXEase.calculate(ratio);
 		if (ratio >= this.animateScrollXEndRatio && currentTime < this.animateScrollX.duration) {
 			// check that the currentTime is less than totalTime because if
 			// the tween is complete, we don't want it set to null before
@@ -665,6 +686,7 @@ class Scroller extends EventDispatcher {
 			}
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
+			this._animateScrollXEase = null;
 			this.finishScrollX();
 			return;
 		}
@@ -672,6 +694,7 @@ class Scroller extends EventDispatcher {
 
 	private function animateScrollX_onComplete():Void {
 		this.animateScrollX = null;
+		this._animateScrollXEase = null;
 		this.finishScrollX();
 	}
 
@@ -679,7 +702,7 @@ class Scroller extends EventDispatcher {
 		var time = (Lib.getTimer() / 1000.0);
 		var currentTime = time - this.animateScrollY.startTime;
 		var ratio = currentTime / this.animateScrollY.duration;
-		ratio = this.ease.calculate(ratio);
+		ratio = this._animateScrollYEase.calculate(ratio);
 		if (ratio >= this.animateScrollYEndRatio && currentTime < this.animateScrollY.duration) {
 			// check that the currentTime is less than totalTime because if
 			// the tween is complete, we don't want it set to null before
@@ -693,6 +716,7 @@ class Scroller extends EventDispatcher {
 			}
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
+			this._animateScrollYEase = null;
 			this.finishScrollY();
 			return;
 		}
@@ -700,6 +724,7 @@ class Scroller extends EventDispatcher {
 
 	private function animateScrollY_onComplete():Void {
 		this.animateScrollY = null;
+		this._animateScrollYEase = null;
 		this.finishScrollY();
 	}
 
@@ -737,10 +762,12 @@ class Scroller extends EventDispatcher {
 		if (this.animateScrollX != null) {
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
+			this._animateScrollXEase = null;
 		}
 		if (this.animateScrollY != null) {
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
+			this._animateScrollYEase = null;
 		}
 
 		this.target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler, false, 0, true);
