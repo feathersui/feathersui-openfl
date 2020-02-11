@@ -14,6 +14,7 @@ import com.feathersui.components.views.ProgressBarScreen;
 import com.feathersui.components.views.RadioScreen;
 import com.feathersui.components.views.SliderScreen;
 import com.feathersui.components.views.TabBarScreen;
+import com.feathersui.components.views.TextAreaScreen;
 import com.feathersui.components.views.TextInputScreen;
 import com.feathersui.components.views.ToggleSwitchScreen;
 import feathers.controls.Application;
@@ -86,6 +87,9 @@ class Main extends Application {
 
 		var tabBar = Route.withClass(ViewPaths.TAB_BAR, TabBarScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(tabBar);
+
+		var textArea = Route.withClass(ViewPaths.TEXT_AREA, TextAreaScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(textArea);
 
 		var textInput = Route.withClass(ViewPaths.TEXT_INPUT, TextInputScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(textInput);

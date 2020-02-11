@@ -16,6 +16,7 @@ class ViewPaths {
 	public static final RADIO = "/radio";
 	public static final SLIDER = "/slider";
 	public static final TAB_BAR = "/tab-bar";
+	public static final TEXT_AREA = "/text-area";
 	public static final TEXT_INPUT = "/text-input";
 	public static final TOGGLE_SWITCH = "/toggle-switch";
 }
