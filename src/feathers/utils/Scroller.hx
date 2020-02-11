@@ -638,10 +638,6 @@ class Scroller extends EventDispatcher {
 
 		if (targetScrollX == null) {
 			this.completeScroll();
-		} else if (Math.abs(targetScrollX - this.scrollX) < 1.0) {
-			// this distance is too small to animate. just finish now.
-			this.scrollX = targetScrollX;
-			this.completeScroll();
 		} else {
 			this.throwTo(targetScrollX, null, this.elasticSnapDuration, this.bounceEase);
 		}
@@ -658,10 +654,6 @@ class Scroller extends EventDispatcher {
 		}
 
 		if (targetScrollY == null) {
-			this.completeScroll();
-		} else if (Math.abs(targetScrollY - this.scrollY) < 1.0) {
-			// this distance is too small to animate. just finish now.
-			this.scrollY = targetScrollY;
 			this.completeScroll();
 		} else {
 			this.throwTo(null, targetScrollY, this.elasticSnapDuration, this.bounceEase);
