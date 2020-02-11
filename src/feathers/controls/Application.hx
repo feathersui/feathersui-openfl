@@ -45,7 +45,15 @@ class Application extends LayoutGroup {
 	}
 
 	private var _scaler:ScreenDensityScaleCalculator;
-	private var _calculatedScaleFactor:Float;
+
+	/**
+		The application's scaling factor on the current device. One pixel in
+		application coordinates is equal to this number of pixels in screen
+		coordinates.
+
+		@see `Application.customScale`
+	**/
+	public var scaleFactor(default, null):Float = 1.0;
 
 	/**
 		Instead of calculating the scale factor automatically, an application
@@ -89,19 +97,19 @@ class Application extends LayoutGroup {
 	}
 
 	private function getScaleFactor():Float {
-		var scaleFactor = 1.0;
+		var result = 1.0;
 		if (this.stage == null) {
-			return scaleFactor;
+			return result;
 		}
 		if (this.customScale != null) {
-			scaleFactor = this.customScale;
+			result = this.customScale;
 		} else {
 			#if (desktop || web)
 			this._scaler = null;
-			scaleFactor = this.stage.window.scale;
+			result = this.stage.window.scale;
 			#if (web && html5)
-			if (scaleFactor > 2.0) {
-				scaleFactor *= (this.stage.window.scale / 2.0);
+			if (result > 2.0) {
+				result *= (this.stage.window.scale / 2.0);
 			}
 			#end
 			#else
@@ -114,18 +122,18 @@ class Application extends LayoutGroup {
 				this._scaler.addScaleForDensity(480, 3); // xxhdpi
 				this._scaler.addScaleForDensity(640, 4); // xxxhpi
 			}
-			scaleFactor = this._scaler.getScale(Capabilities.screenDPI);
+			result = this._scaler.getScale(Capabilities.screenDPI);
 			#end
 		}
-		return scaleFactor;
+		return result;
 	}
 
 	private function refreshDimensions():Void {
-		var scaleFactor = this.getScaleFactor();
-		this.scaleX = scaleFactor;
-		this.scaleY = scaleFactor;
+		this.scaleFactor = this.getScaleFactor();
+		this.scaleX = this.scaleFactor;
+		this.scaleY = this.scaleFactor;
 
-		var needsToBeDivisibleByTwo = Math.floor(scaleFactor) != scaleFactor;
+		var needsToBeDivisibleByTwo = Math.floor(this.scaleFactor) != this.scaleFactor;
 		var appWidth:Float = Math.floor(this.stage.stageWidth);
 		if (needsToBeDivisibleByTwo) {
 			appWidth = MathUtil.roundDownToNearest(appWidth, 2);
@@ -137,8 +145,8 @@ class Application extends LayoutGroup {
 		}
 		this.height = appHeight;
 
-		this._popUpContainer.scaleX = scaleFactor;
-		this._popUpContainer.scaleY = scaleFactor;
+		this._popUpContainer.scaleX = this.scaleFactor;
+		this._popUpContainer.scaleY = this.scaleFactor;
 	}
 
 	private function preparePopUpContainer():Void {
