@@ -776,7 +776,7 @@ class Scroller extends EventDispatcher {
 			this.restoreMouseChildren = container.mouseChildren;
 			// if we were already scrolling, disable the pointer immediately.
 			// otherwise, wait until dragging starts
-			if (this.draggingX || this.draggingY) {
+			if (this.scrolling) {
 				container.mouseChildren = false;
 			}
 		}
@@ -815,7 +815,7 @@ class Scroller extends EventDispatcher {
 			// don't start dragging until we've moved a minimum distance
 			// we'll also reset the start position at this point, so that there
 			// isn't a sudden jump
-			if (!draggingY) {
+			if (!this.draggingY) {
 				this.startScroll();
 			}
 		}
@@ -823,7 +823,7 @@ class Scroller extends EventDispatcher {
 			this.startTouchY = stageY;
 			touchOffsetY = 0.0;
 			this.draggingY = true;
-			if (!draggingX) {
+			if (!this.draggingX) {
 				this.startScroll();
 			}
 		}
