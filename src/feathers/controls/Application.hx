@@ -133,13 +133,13 @@ class Application extends LayoutGroup {
 		this.scaleX = this.scaleFactor;
 		this.scaleY = this.scaleFactor;
 
-		var needsToBeDivisibleByTwo = Math.floor(this.scaleFactor) != this.scaleFactor;
-		var appWidth:Float = Math.floor(this.stage.stageWidth);
+		var needsToBeDivisibleByTwo = Math.ffloor(this.scaleFactor) != this.scaleFactor;
+		var appWidth = Math.ffloor(this.stage.stageWidth);
 		if (needsToBeDivisibleByTwo) {
 			appWidth = MathUtil.roundDownToNearest(appWidth, 2);
 		}
 		this.width = appWidth;
-		var appHeight:Float = Math.floor(this.stage.stageHeight);
+		var appHeight = Math.ffloor(this.stage.stageHeight);
 		if (needsToBeDivisibleByTwo) {
 			appHeight = MathUtil.roundDownToNearest(appHeight, 2);
 		}
