@@ -396,14 +396,18 @@ class Scroller extends EventDispatcher {
 		if (this.target != null) {
 			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true);
 			this.target.removeEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler);
 			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
+			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true);
 		}
 		this.target = value;
 		if (this.target != null) {
 			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler, false, 0, true);
+			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true, 0, true);
 			this.target.addEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler, false, 0, true);
 			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler, false, 0, true);
+			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true, 0, true);
 		}
 		return this.target;
 	}
@@ -970,8 +974,24 @@ class Scroller extends EventDispatcher {
 		return this.enabledY && (this.maxScrollY > this.minScrollY || this.forceElasticTop || this.forceElasticBottom);
 	}
 
+	private function target_touchBeginCaptureHandler(event:TouchEvent):Void {
+		if (!this.scrolling) {
+			return;
+		}
+		event.stopImmediatePropagation();
+		this.target_touchBeginHandler(event);
+	}
+
 	private function target_touchBeginHandler(event:TouchEvent):Void {
 		this.touchBegin(event.touchPointID, event.stageX, event.stageY);
+	}
+
+	private function target_mouseDownCaptureHandler(event:MouseEvent):Void {
+		if (!this.scrolling) {
+			return;
+		}
+		event.stopImmediatePropagation();
+		this.target_mouseDownHandler(event);
 	}
 
 	private function target_mouseDownHandler(event:MouseEvent):Void {
