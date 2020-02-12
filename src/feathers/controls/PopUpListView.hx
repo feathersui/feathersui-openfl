@@ -29,6 +29,9 @@ import openfl.events.MouseEvent;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Displays a `Button` that may be triggered to display a `ListView` as a
@@ -610,7 +613,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	private function popUpListView_stage_touchBeginHandler(event:TouchEvent):Void {
-		if (event.isPrimaryTouchPoint) {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}

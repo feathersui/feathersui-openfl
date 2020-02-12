@@ -32,6 +32,9 @@ import feathers.core.PopUpManager;
 import openfl.errors.ArgumentError;
 import openfl.display.DisplayObject;
 import feathers.core.FeathersControl;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	A pop-up container that points at (or calls out) a specific region of the
@@ -950,7 +953,7 @@ class Callout extends FeathersControl {
 	}
 
 	private function callout_stage_touchBeginHandler(event:TouchEvent):Void {
-		if (event.isPrimaryTouchPoint) {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}

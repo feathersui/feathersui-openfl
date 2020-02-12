@@ -29,6 +29,9 @@ import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
 import feathers.controls.popups.DropDownPopUpAdapter;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Displays a control consisting of a `TextInput` and `Button` that allows an
@@ -729,7 +732,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	private function comboBox_stage_touchBeginHandler(event:TouchEvent):Void {
-		if (event.isPrimaryTouchPoint) {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}

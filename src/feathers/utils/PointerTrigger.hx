@@ -13,6 +13,9 @@ import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Dispatches `TriggerEvent.TRIGGER` (or a custom event type) when the target
@@ -99,7 +102,7 @@ class PointerTrigger {
 		if (!this.enabled) {
 			return;
 		}
-		if (event.isPrimaryTouchPoint) {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
