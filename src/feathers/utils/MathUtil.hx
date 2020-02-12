@@ -17,6 +17,7 @@ class MathUtil {
 		@return	the rounded number
 
 		@see `Math.floor`
+		@see `Math.ffloor`
 
 		@since 1.0.0
 	**/
@@ -24,7 +25,7 @@ class MathUtil {
 		if (nearest == 0) {
 			return number;
 		}
-		return Math.floor(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
+		return Math.ffloor(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
 	}
 
 	/**
@@ -38,6 +39,7 @@ class MathUtil {
 		@return	the rounded number
 
 		@see `Math.ceil`
+		@see `Math.fceil`
 
 		@since 1.0.0
 	**/
@@ -45,7 +47,7 @@ class MathUtil {
 		if (nearest == 0) {
 			return number;
 		}
-		return Math.ceil(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
+		return Math.fceil(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
 	}
 
 	/**
@@ -60,6 +62,6 @@ class MathUtil {
 	**/
 	public static function roundToPrecision(number:Float, precision:Int = 0):Float {
 		var decimalPlaces = Math.pow(10, precision);
-		return Math.round(decimalPlaces * number) / decimalPlaces;
+		return Math.fround(decimalPlaces * number) / decimalPlaces;
 	}
 }
