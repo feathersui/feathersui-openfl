@@ -141,6 +141,10 @@ class TextArea extends BaseScrollContainer {
 	@:style
 	public var embedFonts:Bool = false;
 
+	override private function get_measureViewPort():Bool {
+		return false;
+	}
+
 	private function initializeTextAreaTheme():Void {
 		SteelTextAreaStyles.initialize();
 	}
