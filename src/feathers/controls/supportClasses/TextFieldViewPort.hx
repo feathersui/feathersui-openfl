@@ -8,6 +8,8 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.utils.MathUtil;
+import openfl.events.Event;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import openfl.errors.ArgumentError;
@@ -64,6 +66,17 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		this.multiline = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.multiline;
+	}
+
+	public var smoothScrolling(default, set):Bool = false;
+
+	private function set_smoothScrolling(value:Bool):Bool {
+		if (this.smoothScrolling == value) {
+			return this.smoothScrolling;
+		}
+		this.smoothScrolling = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this.smoothScrolling;
 	}
 
 	private var _updatedTextStyles = false;
@@ -310,7 +323,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
-		return false;
+		return !this.smoothScrolling;
 	}
 
 	/**
@@ -324,7 +337,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function set_scrollX(value:Float):Float {
+		if (this.scrollX == value) {
+			return this.scrollX;
+		}
 		this.scrollX = value;
+		this.setInvalid(InvalidationFlag.SCROLL);
 		return this.scrollX;
 	}
 
@@ -339,9 +356,15 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function set_scrollY(value:Float):Float {
+		if (this.scrollY == value) {
+			return this.scrollY;
+		}
 		this.scrollY = value;
+		this.setInvalid(InvalidationFlag.SCROLL);
 		return this.scrollY;
 	}
+
+	private var _ignoreTextFieldScroll:Bool = false;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -350,6 +373,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField = new TextField();
 			this.addChild(this.textField);
 		}
+
+		this.textField.mouseWheelEnabled = false;
+		this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
 	}
 
 	override private function update():Void {
@@ -357,6 +383,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
 		this._updatedTextStyles = false;
+
+		var oldIgnoreTextFieldScroll = this._ignoreTextFieldScroll;
+		this._ignoreTextFieldScroll = true;
 
 		if (stylesInvalid) {
 			this.refreshTextStyles();
@@ -369,6 +398,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		this.measure();
 
 		this.layoutTextField();
+
+		this._ignoreTextFieldScroll = oldIgnoreTextFieldScroll;
 	}
 
 	private function measureSelf():Bool {
@@ -496,11 +527,32 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function layoutTextField():Void {
-		var calculatedWidth = Math.max(this.actualWidth, this._actualVisibleWidth);
-		var calculatedHeight = Math.max(this.actualHeight, this._actualVisibleHeight);
-		this.textField.x = this.paddingLeft;
-		this.textField.y = this.paddingTop;
-		this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
-		this.textField.height = calculatedHeight - this.paddingTop - this.paddingBottom;
+		if (this.smoothScrolling) {
+			this.textField.x = this.paddingLeft;
+			this.textField.y = this.paddingTop;
+			var calculatedWidth = Math.max(this.actualWidth, this._actualVisibleWidth);
+			var calculatedHeight = Math.max(this.actualHeight, this._actualVisibleHeight);
+			this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
+			this.textField.height = calculatedHeight - this.paddingTop - this.paddingBottom;
+			this.textField.scrollV = 0;
+		} else {
+			this.textField.x = this.paddingLeft;
+			this.textField.y = this.paddingTop + this.scrollY;
+			this.textField.width = this._actualVisibleWidth - this.paddingLeft - this.paddingRight;
+			this.textField.height = this._actualVisibleHeight - this.paddingTop - this.paddingBottom;
+			var container = cast(this.parent, BaseScrollContainer);
+			this.textField.scrollV = Math.round(1.0 + ((this.textField.maxScrollV - 1.0) * (this.scrollY / container.maxScrollY)));
+		}
+	}
+
+	private function textField_scrollHandler(event:Event):Void {
+		if (this._ignoreTextFieldScroll) {
+			return;
+		}
+		var container = cast(this.parent, BaseScrollContainer);
+		if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
+			var calculatedScrollY = container.maxScrollY * (this.textField.scrollV - 1) / (this.textField.maxScrollV - 1);
+			container.scrollY = MathUtil.roundToNearest(calculatedScrollY, 10.0);
+		}
 	}
 }
