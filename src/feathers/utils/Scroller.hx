@@ -332,6 +332,16 @@ class Scroller extends EventDispatcher {
 	public var mouseWheelDelta:Float = 10.0;
 
 	/**
+		The duration, measured in seconds, of the animation when scrolling with
+		the mouse wheel.
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var mouseWheelDuration:Float = 0.0;
+
+	/**
 		Determines if mouse events should be treated like touch events.
 
 		@default false
@@ -1016,14 +1026,25 @@ class Scroller extends EventDispatcher {
 
 	private function target_mouseWheelHandler(event:MouseEvent):Void {
 		// can't use preventDefault(), so don't let it bubble
+		var targetScrollY = this.scrollY;
+		if (this.animateScrollY != null) {
+			targetScrollY = this.targetScrollY;
+		}
 		event.stopImmediatePropagation();
 		this.stop();
-		var newScrollY = this.scrollY - (event.delta * this.mouseWheelDelta);
+		var newScrollY = targetScrollY - (event.delta * this.mouseWheelDelta);
 		if (newScrollY < this.minScrollY) {
 			newScrollY = this.minScrollY;
 		} else if (newScrollY > this.maxScrollY) {
 			newScrollY = this.maxScrollY;
 		}
-		this.scrollY = newScrollY;
+		if (this.scrollY == newScrollY) {
+			return;
+		}
+		if (this.mouseWheelDuration > 0.0) {
+			this.throwTo(null, newScrollY, this.mouseWheelDuration, this.ease);
+		} else {
+			this.scrollY = newScrollY;
+		}
 	}
 }
