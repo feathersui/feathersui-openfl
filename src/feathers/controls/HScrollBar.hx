@@ -211,6 +211,9 @@ class HScrollBar extends BaseScrollBar {
 			if (this._thumbSkinMeasurements.minWidth != null && thumbWidth < this._thumbSkinMeasurements.minWidth) {
 				thumbWidth = this._thumbSkinMeasurements.minWidth;
 			}
+			if (thumbWidth < 0.0) {
+				thumbWidth = 0.0;
+			}
 			this.thumbSkin.width = thumbWidth;
 		}
 		this.thumbSkin.x = this.valueToLocation(this.value);

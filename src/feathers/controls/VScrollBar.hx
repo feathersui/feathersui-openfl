@@ -212,6 +212,9 @@ class VScrollBar extends BaseScrollBar {
 			if (this._thumbSkinMeasurements.minHeight != null && thumbHeight < this._thumbSkinMeasurements.minHeight) {
 				thumbHeight = this._thumbSkinMeasurements.minHeight;
 			}
+			if (thumbHeight < 0.0) {
+				thumbHeight = 0.0;
+			}
 			this.thumbSkin.height = thumbHeight;
 		}
 		this.thumbSkin.x = this.paddingLeft + (contentWidth - this.thumbSkin.width) / 2;
