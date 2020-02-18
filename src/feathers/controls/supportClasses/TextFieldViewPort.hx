@@ -68,6 +68,17 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.multiline;
 	}
 
+	public var restrict(default, set):String = null;
+
+	private function set_restrict(value:String):String {
+		if (this.restrict == value) {
+			return this.restrict;
+		}
+		this.restrict = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this.restrict;
+	}
+
 	public var smoothScrolling(default, set):Bool = false;
 
 	private function set_smoothScrolling(value:Bool):Bool {
@@ -505,7 +516,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.multiline = this.multiline;
 			this._updatedTextStyles = true;
 		}
-		// this.textField.restrict = restrict;
+		this.textField.restrict = this.restrict;
 		if (this.text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;

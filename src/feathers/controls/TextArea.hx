@@ -161,6 +161,7 @@ class TextArea extends BaseScrollContainer {
 
 		if (dataInvalid) {
 			this.textFieldViewPort.text = this.text;
+			this.textFieldViewPort.restrict = this.restrict;
 		}
 
 		if (stateInvalid) {
