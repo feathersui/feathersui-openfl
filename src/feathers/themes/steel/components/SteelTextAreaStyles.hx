@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.TextArea;
 import feathers.controls.TextInputState;
 import feathers.skins.RectangleSkin;
@@ -36,6 +37,11 @@ class SteelTextAreaStyles {
 		}
 
 		styleProvider.setStyleFunction(TextArea, null, function(textArea:TextArea):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+
+			textArea.autoHideScrollBars = !isDesktop;
+			textArea.fixedScrollBars = isDesktop;
+
 			if (textArea.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.cornerRadius = 6.0;
