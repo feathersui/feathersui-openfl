@@ -1227,6 +1227,9 @@ class BaseScrollContainer extends FeathersControl {
 		this.checkForRevealScrollBars();
 		this.refreshScrollRect();
 		this.refreshScrollBarValues();
+		if (this.viewPort.requiresMeasurementOnScroll) {
+			this.setInvalid(InvalidationFlag.SCROLL);
+		}
 	}
 
 	private function scroller_scrollCompleteHandler(event:Event):Void {
