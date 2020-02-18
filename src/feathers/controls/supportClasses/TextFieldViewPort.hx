@@ -414,9 +414,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function measureSelf():Bool {
-		var needsWidth = this._explicitVisibleWidth == null;
-		var needsHeight = this._explicitVisibleHeight == null;
-		var needsMinWidth = this._explicitMinVisibleWidth == null;
+		var needsWidth = this.explicitWidth == null;
+		var needsHeight = this.explicitHeight == null;
+		var needsMinWidth = this.explicitMinWidth == null;
 		var needsMinHeight = this.explicitMinHeight == null;
 		var needsMaxWidth = this.explicitMaxWidth == null;
 		var needsMaxHeight = this.explicitMaxHeight == null;
@@ -424,7 +424,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			return false;
 		}
 
-		var newWidth = this._explicitVisibleWidth;
+		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			newWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
 		}
@@ -439,7 +439,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			newMinWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
 		}
 
-		var newMinHeight = this._explicitMinVisibleWidth;
+		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
 			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
 		}
