@@ -249,12 +249,17 @@ class BaseScrollContainer extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var scrollX(get, never):Float;
+	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
 		if (this.scroller == null) {
 			return 0.0;
 		}
+		return this.scroller.scrollX;
+	}
+
+	private function set_scrollX(value:Float):Float {
+		this.scroller.scrollX = value;
 		return this.scroller.scrollX;
 	}
 
@@ -274,12 +279,17 @@ class BaseScrollContainer extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var scrollY(get, never):Float;
+	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
 		if (this.scroller == null) {
 			return 0.0;
 		}
+		return this.scroller.scrollY;
+	}
+
+	private function set_scrollY(value:Float):Float {
+		this.scroller.scrollY = value;
 		return this.scroller.scrollY;
 	}
 
