@@ -279,6 +279,11 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	override public function setChildIndex(child:DisplayObject, index:Int):Void {
+		var oldIndex = this.getChildIndex(child);
+		if(oldIndex == index) {
+			//nothing to change
+			return;
+		}
 		this._setChildIndex(child, this.getPrivateIndexForPublicIndex(index));
 		this.items.remove(child);
 		this.items.insert(index, child);
