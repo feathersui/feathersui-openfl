@@ -120,13 +120,13 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
-		The collection of data displayed by the list.
+		The collection of data displayed by the list view.
 
 		The following example passes in a data provider and tells the item
 		renderer how to interpret the data:
 
 		```hx
-		list.dataProvider = new ArrayCollection(
+		listView.dataProvider = new ArrayCollection(
 		[
 			{ text: "Milk" },
 			{ text: "Eggs" },
@@ -134,7 +134,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			{ text: "Chicken" },
 		]);
 
-		list.itemToText = (item:Dynamic) ->
+		listView.itemToText = (item:Dynamic) ->
 		{
 			return item.text;
 		};
@@ -225,17 +225,17 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	/**
 		The layout algorithm used to position and size the list view's items.
 
-		By default, if no layout is provided by the time that the list
+		By default, if no layout is provided by the time that the list view
 		initializes, a default layout that displays items vertically will be
 		created.
 
-		The following example tells the list to use a horizontal layout:
+		The following example tells the list view to use a horizontal layout:
 
 		```hx
 		var layout = new HorizontalLayout();
 		layout.gap = 20.0;
 		layout.padding = 20.0;
-		list.layout = layout;
+		listView.layout = layout;
 		```
 
 		@since 1.0.0
@@ -250,7 +250,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		class:
 
 		```hx
-		list.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
+		listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
 		@since 1.0.0
@@ -283,7 +283,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		The following example disables selection of items in the list view:
 
 		```hx
-		list.selectable = false;
+		listView.selectable = false;
 		```
 
 		@default true
@@ -321,7 +321,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		list.itemToText = (item:Dynamic) ->
+		listView.itemToText = (item:Dynamic) ->
 		{
 			return item.text;
 		};
@@ -540,7 +540,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function itemRenderer_triggerHandler(event:TriggerEvent):Void {
-		var itemRenderer:DisplayObject = cast(event.currentTarget, DisplayObject);
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var item = this.itemRendererToData.get(itemRenderer);
 		// trigger before change
 		this.dispatchEvent(event);
