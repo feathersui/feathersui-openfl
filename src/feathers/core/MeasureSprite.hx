@@ -225,6 +225,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	/**
 		@see `feathers.core.IMeasureObject.minWidth`
 	**/
+	@:flash.property
 	public var minWidth(get, set):Float;
 
 	private function get_minWidth():Float {
@@ -242,6 +243,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	/**
 		@see `feathers.core.IMeasureObject.minHeight`
 	**/
+	@:flash.property
 	public var minHeight(get, set):Float;
 
 	private function get_minHeight():Float {
@@ -327,6 +329,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	/**
 		@see `feathers.core.IMeasureObject.maxWidth`
 	**/
+	@:flash.property
 	public var maxWidth(get, set):Float;
 
 	private function get_maxWidth():Float {
@@ -344,6 +347,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	/**
 		@see `feathers.core.IMeasureObject.maxHeight`
 	**/
+	@:flash.property
 	public var maxHeight(get, set):Float;
 
 	private function get_maxHeight():Float {
