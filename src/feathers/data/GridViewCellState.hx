@@ -56,7 +56,7 @@ class GridViewCellState {
 	/**
 		Returns whether the cell is selected or not.
 
-		@see `feathers.controls.GridView.selectedRowIndex`
+		@see `feathers.controls.GridView.selectedIndex`
 		@see `feathers.controls.GridView.selectedItem`
 
 		@since 1.0.0

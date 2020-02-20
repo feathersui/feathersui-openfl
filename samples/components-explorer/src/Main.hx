@@ -4,6 +4,7 @@ import com.feathersui.components.views.ButtonScreen;
 import com.feathersui.components.views.CalloutScreen;
 import com.feathersui.components.views.CheckScreen;
 import com.feathersui.components.views.ComboBoxScreen;
+import com.feathersui.components.views.GridViewScreen;
 import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
@@ -60,6 +61,9 @@ class Main extends Application {
 
 		var comboBox = Route.withClass(ViewPaths.COMBO_BOX, ComboBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(comboBox);
+
+		var gridView = Route.withClass(ViewPaths.GRID_VIEW, GridViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(gridView);
 
 		var label = Route.withClass(ViewPaths.LABEL, LabelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(label);

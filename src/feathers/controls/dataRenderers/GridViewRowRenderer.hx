@@ -28,7 +28,7 @@ import openfl.errors.IllegalOperationError;
 **/
 @:dox(hide)
 @:access(feathers.data.GridViewCellState)
-class GridViewRowRenderer extends LayoutGroup implements IToggle {
+class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDataRenderer {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = "cellRendererFactory";
 
 	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
@@ -111,7 +111,12 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle {
 
 		@since 1.0.0
 	**/
-	public var data(default, set):Dynamic = null;
+	@:isVar
+	public var data(get, set):Dynamic = null;
+
+	private function get_data():Dynamic {
+		return this.data;
+	}
 
 	private function set_data(value:Dynamic):Dynamic {
 		if (this.data == value) {
