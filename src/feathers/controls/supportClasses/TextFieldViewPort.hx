@@ -547,12 +547,13 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.height = calculatedHeight - this.paddingTop - this.paddingBottom;
 			this.textField.scrollV = 0;
 		} else {
-			this.textField.x = this.paddingLeft;
+			this.textField.x = this.paddingLeft + this.scrollX;
 			this.textField.y = this.paddingTop + this.scrollY;
 			this.textField.width = this._actualVisibleWidth - this.paddingLeft - this.paddingRight;
 			this.textField.height = this._actualVisibleHeight - this.paddingTop - this.paddingBottom;
 			var container = cast(this.parent, BaseScrollContainer);
 			this.textField.scrollV = Math.round(1.0 + ((this.textField.maxScrollV - 1.0) * (this.scrollY / container.maxScrollY)));
+			this.textField.scrollH = Math.round(1.0 + ((this.textField.maxScrollH - 1.0) * (this.scrollX / container.maxScrollX)));
 		}
 	}
 

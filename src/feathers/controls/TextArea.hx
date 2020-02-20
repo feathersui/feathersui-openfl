@@ -141,6 +141,21 @@ class TextArea extends BaseScrollContainer {
 	@:style
 	public var embedFonts:Bool = false;
 
+	/**
+		Determines if the text will wrap when reaching the right edge, or if
+		horizontal scrolling will be required.
+
+		In the following example, the text area will not wrap its text:
+
+		```hx
+		textArea.wordWrap = false;
+		````
+
+		@since 1.0.0
+	**/
+	@:style
+	public var wordWrap:Bool = true;
+
 	override private function get_measureViewPort():Bool {
 		return false;
 	}
@@ -157,6 +172,7 @@ class TextArea extends BaseScrollContainer {
 		if (stylesInvalid) {
 			this.textFieldViewPort.textFormat = this.textFormat;
 			this.textFieldViewPort.embedFonts = this.embedFonts;
+			this.textFieldViewPort.wordWrap = this.wordWrap;
 		}
 
 		if (dataInvalid) {
