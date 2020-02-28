@@ -55,6 +55,7 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
+@defaultXmlProperty("xmlContent")
 @:styleContext
 class LayoutGroup extends FeathersControl {
 	/**
@@ -280,8 +281,8 @@ class LayoutGroup extends FeathersControl {
 
 	override public function setChildIndex(child:DisplayObject, index:Int):Void {
 		var oldIndex = this.getChildIndex(child);
-		if(oldIndex == index) {
-			//nothing to change
+		if (oldIndex == index) {
+			// nothing to change
 			return;
 		}
 		this._setChildIndex(child, this.getPrivateIndexForPublicIndex(index));
@@ -303,6 +304,29 @@ class LayoutGroup extends FeathersControl {
 			return publicIndex + this._getChildIndex(this.items[0]);
 		}
 		return publicIndex;
+	}
+
+	@:dox(hide)
+	@:noCompletion
+	public var xmlContent(default, set):Array<DisplayObject> = null;
+
+	private function set_xmlContent(value:Array<DisplayObject>):Array<DisplayObject> {
+		if (this.xmlContent == value) {
+			return this.xmlContent;
+		}
+		if (this.xmlContent != null) {
+			for (child in this.xmlContent) {
+				this.removeChild(child);
+			}
+		}
+		this.xmlContent = value;
+		if (this.xmlContent != null) {
+			for (child in this.xmlContent) {
+				this.addChild(child);
+			}
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.xmlContent;
 	}
 
 	override private function update():Void {

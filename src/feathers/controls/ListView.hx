@@ -76,6 +76,7 @@ import feathers.core.IDataSelector;
 	@since 1.0.0
 **/
 @:access(feathers.data.ListViewItemState)
+@defaultXmlProperty("dataProvider")
 @:styleContext
 class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";

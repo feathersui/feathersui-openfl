@@ -51,6 +51,7 @@ import openfl.geom.Rectangle;
 
 	@since 1.0.0
 **/
+@defaultXmlProperty("xmlContent")
 @:styleContext
 class ScrollContainer extends BaseScrollContainer {
 	/**
@@ -102,6 +103,29 @@ class ScrollContainer extends BaseScrollContainer {
 	**/
 	@:style
 	public var layout:ILayout = null;
+
+	@:dox(hide)
+	@:noCompletion
+	public var xmlContent(default, set):Array<DisplayObject> = null;
+
+	private function set_xmlContent(value:Array<DisplayObject>):Array<DisplayObject> {
+		if (this.xmlContent == value) {
+			return this.xmlContent;
+		}
+		if (this.xmlContent != null) {
+			for (child in this.xmlContent) {
+				this.removeChild(child);
+			}
+		}
+		this.xmlContent = value;
+		if (this.xmlContent != null) {
+			for (child in this.xmlContent) {
+				this.addChild(child);
+			}
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this.xmlContent;
+	}
 
 	@:getter(numChildren)
 	#if !flash override #end private function get_numChildren():Int {

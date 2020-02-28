@@ -20,6 +20,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@defaultXmlProperty("array")
 class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	/**
 		Creates a new `ArrayCollection` object with the given arguments.
