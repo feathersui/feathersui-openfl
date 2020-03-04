@@ -14,6 +14,7 @@ import feathers.utils.ScreenDensityScaleCalculator;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.system.Capabilities;
 
 /**
 	An optional root class for Feathers UI applications that will automatically
