@@ -431,6 +431,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			this.dataProvider.refresh();
 		}
 		this.pendingSelectedItem = this.selectedItem;
+		this.popUpAdapter.addEventListener(Event.OPEN, comboBox_popUpAdapter_openHandler);
 		this.popUpAdapter.addEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
 		this.popUpAdapter.open(this.listView, this);
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_listView_removedFromStageHandler);
@@ -696,6 +697,7 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, comboBox_listView_removedFromStageHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler);
+		this.closeListView();
 	}
 
 	private function comboBox_keyUpHandler(event:KeyboardEvent):Void {
@@ -742,8 +744,14 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		this.closeListView();
 	}
 
+	private function comboBox_popUpAdapter_openHandler(event:Event):Void {
+		FeathersEvent.dispatch(this, Event.OPEN);
+	}
+
 	private function comboBox_popUpAdapter_closeHandler(event:Event):Void {
+		this.popUpAdapter.removeEventListener(Event.OPEN, comboBox_popUpAdapter_openHandler);
 		this.popUpAdapter.removeEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
+		FeathersEvent.dispatch(this, Event.CLOSE);
 
 		var newSelectedItem = this.pendingSelectedItem;
 		if (this.pendingSelectedIndex != -1) {

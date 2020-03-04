@@ -376,9 +376,12 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			return;
 		}
 		if (this.popUpAdapter != null) {
+			this.popUpAdapter.addEventListener(Event.OPEN, popUpListView_popUpAdapter_openHandler);
+			this.popUpAdapter.addEventListener(Event.CLOSE, popUpListView_popUpAdapter_closeHandler);
 			this.popUpAdapter.open(this.listView, this.button);
 		} else {
 			PopUpManager.addPopUp(this.listView, this.button);
+			FeathersEvent.dispatch(this, Event.OPEN);
 		}
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
@@ -412,6 +415,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			this.listView.parent.removeChild(this.listView);
 			// TODO: fix this when focus manager is implemented
 			this.stage.focus = this;
+			FeathersEvent.dispatch(this, Event.CLOSE);
 		}
 	}
 
@@ -621,5 +625,13 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			return;
 		}
 		this.closeListView();
+	}
+
+	private function popUpListView_popUpAdapter_openHandler(event:Event):Void {
+		FeathersEvent.dispatch(this, Event.OPEN);
+	}
+
+	private function popUpListView_popUpAdapter_closeHandler(event:Event):Void {
+		FeathersEvent.dispatch(this, Event.CLOSE);
 	}
 }
