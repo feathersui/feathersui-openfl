@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.core.IValidating;
 import feathers.layout.HorizontalLayout;
 import feathers.layout.VerticalListFixedRowLayout;
@@ -27,7 +28,7 @@ import feathers.themes.steel.components.SteelGridViewStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
-import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.layout.ILayout;
@@ -309,7 +310,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public var cellRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+		set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = DisplayObjectRecycler.withClass(CellRenderer);
 
 	private function set_cellRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		GridViewCellState, DisplayObject> {

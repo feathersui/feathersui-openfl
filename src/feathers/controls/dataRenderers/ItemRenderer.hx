@@ -9,9 +9,13 @@
 package feathers.controls.dataRenderers;
 
 import feathers.events.TriggerEvent;
-import openfl.events.Event;
 import feathers.themes.steel.components.SteelItemRendererStyles;
 
+/**
+	A generic renderer for UI components that display data collections.
+
+	@since 1.0.0
+**/
 @:styleContext
 class ItemRenderer extends ToggleButton {
 	/**
