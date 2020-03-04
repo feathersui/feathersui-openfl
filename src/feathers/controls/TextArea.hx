@@ -32,6 +32,7 @@ class TextArea extends BaseScrollContainer {
 			this.textFieldViewPort.textFieldType = INPUT;
 			this.textFieldViewPort.wordWrap = true;
 			this.textFieldViewPort.multiline = true;
+			this.textFieldViewPort.addEventListener(Event.CHANGE, textArea_viewPort_changeHandler);
 			this.addChild(this.textFieldViewPort);
 			this.viewPort = this.textFieldViewPort;
 		}
@@ -156,6 +157,8 @@ class TextArea extends BaseScrollContainer {
 	@:style
 	public var wordWrap:Bool = true;
 
+	private var _ignoreViewPortTextChange = false;
+
 	override private function get_measureViewPort():Bool {
 		return false;
 	}
@@ -176,7 +179,10 @@ class TextArea extends BaseScrollContainer {
 		}
 
 		if (dataInvalid) {
+			var oldIgnoreViewPortTextChange = this._ignoreViewPortTextChange;
+			this._ignoreViewPortTextChange = true;
 			this.textFieldViewPort.text = this.text;
+			this._ignoreViewPortTextChange = oldIgnoreViewPortTextChange;
 			this.textFieldViewPort.restrict = this.restrict;
 		}
 
@@ -185,5 +191,13 @@ class TextArea extends BaseScrollContainer {
 		}
 
 		super.update();
+	}
+
+	private function textArea_viewPort_changeHandler(event:Event):Void {
+		if (this._ignoreViewPortTextChange) {
+			return;
+		}
+		@:bypassAccessor this.text = this.textFieldViewPort.text;
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 }

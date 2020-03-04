@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.events.FeathersEvent;
 import feathers.utils.MathUtil;
 import openfl.events.Event;
 import feathers.core.FeathersControl;
@@ -43,6 +44,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		}
 		this.text = value;
 		this.setInvalid(InvalidationFlag.DATA);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.text;
 	}
 
@@ -386,6 +388,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		}
 
 		this.textField.mouseWheelEnabled = false;
+		this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 		this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
 	}
 
@@ -553,8 +556,23 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.height = this._actualVisibleHeight - this.paddingTop - this.paddingBottom;
 			var container = cast(this.parent, BaseScrollContainer);
 			this.textField.scrollV = Math.round(1.0 + ((this.textField.maxScrollV - 1.0) * (this.scrollY / container.maxScrollY)));
-			this.textField.scrollH = Math.round(1.0 + ((this.textField.maxScrollH - 1.0) * (this.scrollX / container.maxScrollX)));
+			if (this.textField.maxScrollH == 0) {
+				this.textField.scrollH = 0;
+			} else {
+				this.textField.scrollH = Math.round(this.textField.maxScrollH * (this.scrollX / container.maxScrollX));
+			}
 		}
+	}
+
+	private function textField_changeHandler(event:Event):Void {
+		// don't let this event bubble. Feathers UI components don't bubble their
+		// events — especially not Event.CHANGE!
+		event.stopPropagation();
+
+		// no need to invalidate here. just store the new text.
+		@:bypassAccessor this.text = this.textField.text;
+		// but the event still needs to be dispatched
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	private function textField_scrollHandler(event:Event):Void {
