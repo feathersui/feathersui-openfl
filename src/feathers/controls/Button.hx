@@ -8,19 +8,18 @@
 
 package feathers.controls;
 
-import feathers.utils.MeasurementsUtil;
-import feathers.themes.steel.components.SteelButtonStyles;
-import openfl.display.DisplayObject;
 import feathers.core.IMeasureObject;
-import feathers.core.InvalidationFlag;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
-import feathers.core.IStateObserver;
+import feathers.utils.MeasurementsUtil;
+import openfl.display.DisplayObject;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
@@ -53,8 +52,6 @@ class Button extends BasicButton implements ITextControl {
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeButtonTheme();
-
 		super();
 	}
 
@@ -428,10 +425,6 @@ class Button extends BasicButton implements ITextControl {
 			this._stateToIcon.set(state, icon);
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
-	}
-
-	private function initializeButtonTheme():Void {
-		SteelButtonStyles.initialize();
 	}
 
 	override private function initialize():Void {

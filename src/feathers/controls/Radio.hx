@@ -8,10 +8,9 @@
 
 package feathers.controls;
 
-import feathers.themes.steel.components.SteelRadioStyles;
-import openfl.events.Event;
-import openfl.errors.IllegalOperationError;
 import feathers.core.ToggleGroup;
+import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
 
 /**
 	A selectable control that may be toggled on and off and exists in a group
@@ -63,8 +62,6 @@ class Radio extends ToggleButton implements IGroupedToggle {
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeRadioTheme();
-
 		super();
 		super.toggleable = true;
 		this.addEventListener(Event.ADDED_TO_STAGE, radio_addedToStageHandler);
@@ -105,10 +102,6 @@ class Radio extends ToggleButton implements IGroupedToggle {
 			this.toggleGroup.addItem(this);
 		}
 		return this.toggleGroup;
-	}
-
-	private function initializeRadioTheme():Void {
-		SteelRadioStyles.initialize();
 	}
 
 	private function radio_addedToStageHandler(event:Event):Void {

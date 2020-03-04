@@ -8,15 +8,11 @@
 
 package feathers.controls;
 
-import feathers.layout.RelativePositions;
-import feathers.layout.RelativePosition;
-import feathers.themes.steel.components.SteelTextCalloutStyles;
-import openfl.text.TextFormat;
-import openfl.text.TextFieldAutoSize;
-import openfl.text.TextField;
-import feathers.core.InvalidationFlag;
 import feathers.core.ITextControl;
+import feathers.core.InvalidationFlag;
+import feathers.layout.RelativePositions;
 import openfl.display.DisplayObject;
+import openfl.text.TextFormat;
 
 /**
 	A special type of `Callout` designed to display text only.
@@ -77,7 +73,6 @@ class TextCallout extends Callout implements ITextControl {
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeTextCalloutTheme();
 		super();
 	}
 
@@ -165,10 +160,6 @@ class TextCallout extends Callout implements ITextControl {
 	**/
 	@:style
 	public var disabledTextFormat:TextFormat = null;
-
-	private function initializeTextCalloutTheme():Void {
-		SteelTextCalloutStyles.initialize();
-	}
 
 	override private function initialize():Void {
 		super.initialize();

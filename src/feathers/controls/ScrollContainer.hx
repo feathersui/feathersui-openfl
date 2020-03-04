@@ -8,20 +8,16 @@
 
 package feathers.controls;
 
-import feathers.themes.steel.components.SteelScrollContainerStyles;
-import feathers.layout.IScrollLayout;
-import feathers.layout.Direction;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
+import feathers.layout.Direction;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
-import feathers.layout.Measurements;
-import feathers.utils.Scroller;
+import feathers.layout.IScrollLayout;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
-import openfl.geom.Rectangle;
 
 /**
 	A generic container that supports layout, scrolling, and a background skin.
@@ -60,8 +56,6 @@ class ScrollContainer extends BaseScrollContainer {
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeScrollContainerTheme();
-
 		super();
 
 		if (this.viewPort == null) {
@@ -255,10 +249,6 @@ class ScrollContainer extends BaseScrollContainer {
 		this._displayListBypassEnabled = false;
 		this.setChildIndex(child, index);
 		this._displayListBypassEnabled = oldBypass;
-	}
-
-	private function initializeScrollContainerTheme():Void {
-		SteelScrollContainerStyles.initialize();
 	}
 
 	override private function update():Void {

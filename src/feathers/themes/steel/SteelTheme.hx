@@ -8,36 +8,10 @@
 
 package feathers.themes.steel;
 
-import feathers.themes.steel.components.SteelApplicationStyles;
-import feathers.themes.steel.components.SteelButtonStyles;
-import feathers.themes.steel.components.SteelCalloutStyles;
-import feathers.themes.steel.components.SteelCheckStyles;
-import feathers.themes.steel.components.SteelComboBoxStyles;
-import feathers.themes.steel.components.SteelGridViewStyles;
-import feathers.themes.steel.components.SteelHProgressBarStyles;
-import feathers.themes.steel.components.SteelHScrollBarStyles;
-import feathers.themes.steel.components.SteelHSliderStyles;
-import feathers.themes.steel.components.SteelItemRendererStyles;
-import feathers.themes.steel.components.SteelLabelStyles;
-import feathers.themes.steel.components.SteelLayoutGroupStyles;
-import feathers.themes.steel.components.SteelListViewStyles;
-import feathers.themes.steel.components.SteelPanelStyles;
-import feathers.themes.steel.components.SteelPopUpListViewStyles;
-import feathers.themes.steel.components.SteelRadioStyles;
-import feathers.themes.steel.components.SteelScrollContainerStyles;
-import feathers.themes.steel.components.SteelTabBarStyles;
-import feathers.themes.steel.components.SteelTextAreaStyles;
-import feathers.themes.steel.components.SteelTextCalloutStyles;
-import feathers.themes.steel.components.SteelTextInputStyles;
-import feathers.themes.steel.components.SteelToggleButtonStyles;
-import feathers.themes.steel.components.SteelToggleSwitchStyles;
-import feathers.themes.steel.components.SteelVProgressBarStyles;
-import feathers.themes.steel.components.SteelVScrollBarStyles;
-import feathers.themes.steel.components.SteelVSliderStyles;
+import feathers.macros.SubThemeMacro;
 
 /**
-	"Steel" theme. Unlike the default version, this version references all
-	Feathers UI components, even if some are not used in the app.
+	The default "Steel" theme.
 
 	@since 1.0.0
 **/
@@ -51,31 +25,31 @@ class SteelTheme extends BaseSteelTheme {
 	public function new(?themeColor:Int, ?darkThemeColor:Int) {
 		super(themeColor, darkThemeColor);
 
-		SteelApplicationStyles.initialize(this);
-		SteelButtonStyles.initialize(this);
-		SteelCalloutStyles.initialize(this);
-		SteelCheckStyles.initialize(this);
-		SteelComboBoxStyles.initialize(this);
-		SteelGridViewStyles.initialize(this);
-		SteelHProgressBarStyles.initialize(this);
-		SteelHScrollBarStyles.initialize(this);
-		SteelHSliderStyles.initialize(this);
-		SteelItemRendererStyles.initialize(this);
-		SteelLabelStyles.initialize(this);
-		SteelLayoutGroupStyles.initialize(this);
-		SteelListViewStyles.initialize(this);
-		SteelPanelStyles.initialize(this);
-		SteelPopUpListViewStyles.initialize(this);
-		SteelRadioStyles.initialize(this);
-		SteelScrollContainerStyles.initialize(this);
-		SteelTabBarStyles.initialize(this);
-		SteelTextAreaStyles.initialize(this);
-		SteelTextCalloutStyles.initialize(this);
-		SteelTextInputStyles.initialize(this);
-		SteelToggleButtonStyles.initialize(this);
-		SteelToggleSwitchStyles.initialize(this);
-		SteelVProgressBarStyles.initialize(this);
-		SteelVScrollBarStyles.initialize(this);
-		SteelVSliderStyles.initialize(this);
+		SubThemeMacro.addSubTheme("feathers.core.Application", "feathers.themes.steel.components.SteelApplicationStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.Button", "feathers.themes.steel.components.SteelButtonStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.Callout", "feathers.themes.steel.components.SteelCalloutStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.Check", "feathers.themes.steel.components.SteelCheckStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.ComboBox", "feathers.themes.steel.components.SteelComboBoxStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.GridView", "feathers.themes.steel.components.SteelGridViewStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.HProgress", "feathers.themes.steel.components.SteelHProgressBarStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.HScrollBar", "feathers.themes.steel.components.SteelHScrollBarStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.HSlider", "feathers.themes.steel.components.SteelHSliderStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.dataRenderers.ItemRenderer", "feathers.themes.steel.components.SteelItemRendererStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.Label", "feathers.themes.steel.components.SteelLabelStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.LayoutGroup", "feathers.themes.steel.components.SteelLayoutGroupStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.ListView", "feathers.themes.steel.components.SteelListViewStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.Panel", "feathers.themes.steel.components.SteelPanelStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.PopUpListView", "feathers.themes.steel.components.SteelPopUpListViewStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.Radio", "feathers.themes.steel.components.SteelRadioStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.ScrollContainer", "feathers.themes.steel.components.SteelScrollContainerStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.TabBar", "feathers.themes.steel.components.SteelTabBarStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.TextArea", "feathers.themes.steel.components.SteelTextAreaStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.TextCallout", "feathers.themes.steel.components.SteelTextCalloutStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.TextInput", "feathers.themes.steel.components.SteelTextInputStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.ToggleButton", "feathers.themes.steel.components.SteelToggleButtonStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.ToggleSwitch", "feathers.themes.steel.components.SteelToggleSwitchStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.VProgressBar", "feathers.themes.steel.components.SteelVProgressBarStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.VScrollBar", "feathers.themes.steel.components.SteelVScrollBarStyles");
+		SubThemeMacro.addSubTheme("feathers.controls.VSlider", "feathers.themes.steel.components.SteelVSliderStyles");
 	}
 }

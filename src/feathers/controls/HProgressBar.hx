@@ -8,11 +8,10 @@
 
 package feathers.controls;
 
-import feathers.utils.MeasurementsUtil;
-import feathers.themes.steel.components.SteelHProgressBarStyles;
+import feathers.controls.supportClasses.BaseProgressBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
-import feathers.controls.supportClasses.BaseProgressBar;
+import feathers.utils.MeasurementsUtil;
 
 /**
 
@@ -30,13 +29,7 @@ class HProgressBar extends BaseProgressBar {
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeHProgressBarTheme();
-
 		super();
-	}
-
-	private function initializeHProgressBarTheme():Void {
-		SteelHProgressBarStyles.initialize();
 	}
 
 	override private function measure():Bool {

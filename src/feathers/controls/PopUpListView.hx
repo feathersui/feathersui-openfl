@@ -8,27 +8,26 @@
 
 package feathers.controls;
 
-import feathers.utils.MeasurementsUtil;
-import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.data.ListViewItemState;
-import openfl.display.DisplayObject;
-import feathers.themes.steel.components.SteelPopUpListViewStyles;
-import openfl.events.TouchEvent;
-import lime.ui.KeyCode;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import feathers.events.FeathersEvent;
-import openfl.events.Event;
-import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
-import feathers.layout.Measurements;
-import feathers.core.PopUpManager;
-import openfl.events.MouseEvent;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
+import feathers.core.InvalidationFlag;
+import feathers.core.PopUpManager;
+import feathers.data.IFlatCollection;
+import feathers.data.ListViewItemState;
+import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
+import feathers.layout.Measurements;
+import feathers.utils.DisplayObjectRecycler;
+import feathers.utils.MeasurementsUtil;
+import lime.ui.KeyCode;
+import openfl.display.DisplayObject;
+import openfl.events.Event;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -105,8 +104,6 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public function new() {
-		initializePopUpListViewTheme();
-
 		super();
 		this.addEventListener(KeyboardEvent.KEY_UP, popUpListView_keyUpHandler);
 	}
@@ -417,10 +414,6 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 			this.stage.focus = this;
 			FeathersEvent.dispatch(this, Event.CLOSE);
 		}
-	}
-
-	private function initializePopUpListViewTheme():Void {
-		SteelPopUpListViewStyles.initialize();
 	}
 
 	override private function update():Void {

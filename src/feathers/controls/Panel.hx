@@ -8,13 +8,11 @@
 
 package feathers.controls;
 
-import feathers.utils.MeasurementsUtil;
-import feathers.core.InvalidationFlag;
 import feathers.core.IMeasureObject;
-import feathers.themes.steel.components.SteelPanelStyles;
-import openfl.display.DisplayObject;
-import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
+import feathers.utils.MeasurementsUtil;
+import openfl.display.DisplayObject;
 
 /**
 	A container with a header on top and a footer on the bottom, with a region
@@ -33,8 +31,6 @@ class Panel extends ScrollContainer {
 		@since 1.0.0
 	**/
 	public function new() {
-		initializePanelTheme();
-
 		super();
 	}
 
@@ -80,10 +76,6 @@ class Panel extends ScrollContainer {
 		}
 		this.setInvalid(InvalidationFlag.LAYOUT);
 		return this.footer;
-	}
-
-	private function initializePanelTheme():Void {
-		SteelPanelStyles.initialize();
 	}
 
 	override private function update():Void {
