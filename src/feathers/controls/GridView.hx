@@ -551,9 +551,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		this.refreshRowRendererProperties(rowRenderer, item, index);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, rowRenderer_triggerHandler);
-		if (Std.is(rowRenderer, IToggle)) {
-			rowRenderer.addEventListener(Event.CHANGE, rowRenderer_changeHandler);
-		}
+		rowRenderer.addEventListener(Event.CHANGE, rowRenderer_changeHandler);
 		this.rowRendererToData.set(rowRenderer, item);
 		this.dataToRowRenderer.set(item, rowRenderer);
 		return rowRenderer;
@@ -569,6 +567,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, item:Dynamic, index:Int):Void {
 		rowRenderer.data = item;
 		rowRenderer.rowIndex = index;
+		rowRenderer.selectable = this.selectable;
 		rowRenderer.selected = index == this.selectedIndex;
 		rowRenderer.cellRendererRecycler = this.cellRendererRecycler;
 		rowRenderer.columns = this.columns;
