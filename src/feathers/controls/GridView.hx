@@ -8,10 +8,13 @@
 
 package feathers.controls;
 
+import feathers.core.IValidating;
+import feathers.layout.HorizontalLayout;
 import feathers.layout.VerticalListFixedRowLayout;
 import feathers.layout.VerticalLayout;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.data.GridViewCellState;
+import feathers.data.GridViewHeaderState;
 import feathers.events.TriggerEvent;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.events.FlatCollectionEvent;
@@ -69,8 +72,25 @@ import feathers.core.IDataSelector;
 
 	@since 1.0.0
 **/
+@:access(feathers.data.GridViewHeaderState)
 @:styleContext
 class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = "headerRendererFactory";
+
+	private static function defaultUpdateHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
+		if (Std.is(headerRenderer, ITextControl)) {
+			var textControl = cast(headerRenderer, ITextControl);
+			textControl.text = state.text;
+		}
+	}
+
+	private static function defaultResetHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
+		if (Std.is(headerRenderer, ITextControl)) {
+			var textControl = cast(headerRenderer, ITextControl);
+			textControl.text = null;
+		}
+	}
+
 	/**
 		Creates a new `GridView` object.
 
@@ -86,6 +106,8 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.viewPort = this.gridViewPort;
 		}
 	}
+
+	private var _headerContainer:LayoutGroup;
 
 	private var gridViewPort:LayoutViewPort;
 
@@ -196,6 +218,31 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this.columns;
 	}
 
+	/**
+		Manages header renderers used by the grid view.
+
+		In the following example, the grid view uses a custom header renderer
+		class:
+
+		```hx
+		gridView.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
+		```
+
+		@since 1.0.0
+	**/
+	public var headerRendererRecycler(default,
+		set):DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+
+	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		GridViewHeaderState, DisplayObject> {
+		if (this.headerRendererRecycler == value) {
+			return this.headerRendererRecycler;
+		}
+		this.headerRendererRecycler = value;
+		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+		return this.headerRendererRecycler;
+	}
+
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
 
 	/**
@@ -274,11 +321,13 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this.cellRendererRecycler;
 	}
 
+	private var activeHeaderRenderers:Array<DisplayObject> = [];
 	private var inactiveRowRenderers:Array<GridViewRowRenderer> = [];
 	private var activeRowRenderers:Array<GridViewRowRenderer> = [];
 	private var dataToRowRenderer = new ObjectMap<Dynamic, GridViewRowRenderer>();
 	private var rowRendererToData = new ObjectMap<GridViewRowRenderer, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
+	private var _currentHeaderState:GridViewHeaderState = new GridViewHeaderState();
 
 	/**
 		Determines if items in the grid view may be selected. By default only a
@@ -319,6 +368,12 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	override private function initialize():Void {
 		super.initialize();
 
+		if (this._headerContainer == null) {
+			this._headerContainer = new LayoutGroup();
+			this._headerContainer.layout = new HorizontalLayout();
+			this.addChild(this._headerContainer);
+		}
+
 		if (this._layout == null) {
 			this._layout = new VerticalListFixedRowLayout();
 		}
@@ -330,6 +385,11 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+
+		if (headerRendererInvalid || stateInvalid || dataInvalid) {
+			this.refreshHeaderRenderers();
+		}
 
 		if (selectionInvalid || stateInvalid || dataInvalid) {
 			this.refreshRowRenderers();
@@ -340,6 +400,48 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 
 		super.update();
+
+		this.layoutHeaders();
+	}
+
+	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
+		super.calculateViewPortOffsets(forceScrollBars);
+		if (this._headerContainer != null) {
+			if (Std.is(this._headerContainer, IValidating)) {
+				cast(this._headerContainer, IValidating).validateNow();
+			}
+			this.topViewPortOffset += this._headerContainer.height;
+		}
+	}
+
+	private function layoutHeaders():Void {
+		if (this._headerContainer == null) {
+			return;
+		}
+		this._headerContainer.x = 0;
+		this._headerContainer.y = 0;
+		this._headerContainer.width = this.actualWidth;
+		if (Std.is(this._headerContainer, IValidating)) {
+			cast(this._headerContainer, IValidating).validateNow();
+		}
+	}
+
+	private function refreshHeaderRenderers():Void {
+		if (this.headerRendererRecycler.update == null) {
+			this.headerRendererRecycler.update = defaultUpdateHeaderRenderer;
+			if (this.headerRendererRecycler.reset == null) {
+				this.headerRendererRecycler.reset = defaultResetHeaderRenderer;
+			}
+		}
+
+		for (headerRenderer in this.activeHeaderRenderers) {
+			this.destroyHeaderRenderer(headerRenderer);
+		}
+		for (i in 0...this.columns.length) {
+			var column = this.columns.get(i);
+			var headerRenderer = this.createHeaderRenderer(column, i);
+			this._headerContainer.addChildAt(headerRenderer, i);
+		}
 	}
 
 	private function refreshRowRenderers():Void {
@@ -470,6 +572,30 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		rowRenderer.selected = index == this.selectedIndex;
 		rowRenderer.cellRendererRecycler = this.cellRendererRecycler;
 		rowRenderer.columns = this.columns;
+	}
+
+	private function createHeaderRenderer(column:GridViewColumn, columnIndex:Int):DisplayObject {
+		var headerRenderer:GridViewRowRenderer = null;
+		headerRenderer = this.headerRendererRecycler.create();
+		/*if (this.inactiveRowRenderers.length == 0) {
+				rowRenderer = this.headerRendererRecycler.create();
+			} else {
+				rowRenderer = this.inactiveRowRenderers.shift();
+		}*/
+		this._currentHeaderState.column = column;
+		this._currentHeaderState.columnIndex = columnIndex;
+		this._currentHeaderState.text = column.headerText;
+		if (this.headerRendererRecycler.update != null) {
+			this.headerRendererRecycler.update(headerRenderer, this._currentHeaderState);
+		}
+		return headerRenderer;
+	}
+
+	private function destroyHeaderRenderer(headerRenderer:DisplayObject):Void {
+		this._headerContainer.removeChild(headerRenderer);
+		if (this.headerRendererRecycler.destroy != null) {
+			this.headerRendererRecycler.destroy(headerRenderer);
+		}
 	}
 
 	private function refreshSelectedIndicesAfterFilterOrSort():Void {

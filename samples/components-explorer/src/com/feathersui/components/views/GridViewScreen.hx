@@ -33,9 +33,9 @@ class GridViewScreen extends Panel {
 			{item: "English Muffins", dept: "Bakery", price: "2.99"},
 		]);
 		this.gridView.columns = new ArrayCollection([
-			new GridViewColumn((data) -> data.item, "Item"),
-			new GridViewColumn((data) -> data.dept, "Department"),
-			new GridViewColumn((data) -> data.price, "Unit Price")
+			new GridViewColumn("Item", (data) -> data.item),
+			new GridViewColumn("Department", (data) -> data.dept),
+			new GridViewColumn("Unit Price", (data) -> data.price)
 		]);
 		this.gridView.layoutData = AnchorLayoutData.fill();
 		this.gridView.addEventListener(Event.CHANGE, gridView_changeHandler);
