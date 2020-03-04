@@ -23,6 +23,8 @@ class ItemRenderer extends ToggleButton {
 		initializeItemRendererTheme();
 
 		super();
+		// selection will be controlled by the owning data container
+		this.toggleable = false;
 	}
 
 	private function initializeItemRendererTheme():Void {
