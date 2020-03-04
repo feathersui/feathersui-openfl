@@ -8,7 +8,8 @@
 
 package feathers.controls;
 
-import feathers.events.TriggerEvent;
+import openfl.events.TouchEvent;
+import openfl.events.MouseEvent;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.events.FlatCollectionEvent;
 import feathers.data.ListViewItemState;
@@ -305,6 +306,13 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this.selectable;
 	}
 
+	/**
+		Indicates if selection is changed with `MouseEvent.CLICK` or
+		`TouchEvent.TOUCH_TAP`. If set to `false`, the item renderers will
+		control their own selection manually.
+	**/
+	public var pointerSelectionEnabled:Bool = true;
+
 	private var _ignoreSelectionChange = false;
 
 	/**
@@ -404,7 +412,8 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			}
 			this.itemRendererToData.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
-			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, itemRenderer_triggerHandler);
+			itemRenderer.removeEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
+			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
@@ -515,7 +524,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentItemState.selected;
 		}
-		itemRenderer.addEventListener(TriggerEvent.TRIGGER, itemRenderer_triggerHandler);
+		itemRenderer.addEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
+		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
+		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
+		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
 		if (Std.is(itemRenderer, IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, itemRenderer_changeHandler);
 		}
@@ -540,11 +552,26 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
-	private function itemRenderer_triggerHandler(event:TriggerEvent):Void {
+	private function itemRenderer_touchTapHandler(event:TouchEvent):Void {
+		if (!this.selectable || !this.pointerSelectionEnabled) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var item = this.itemRendererToData.get(itemRenderer);
-		// trigger before change
-		this.dispatchEvent(event);
+		var data = this.itemRendererToData.get(itemRenderer);
+		this.selectedIndex = this.dataProvider.indexOf(data);
+	}
+
+	private function itemRenderer_clickHandler(event:MouseEvent):Void {
+		if (!this.selectable || !this.pointerSelectionEnabled) {
+			return;
+		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var data = this.itemRendererToData.get(itemRenderer);
+		this.selectedIndex = this.dataProvider.indexOf(data);
 	}
 
 	private function itemRenderer_changeHandler(event:Event):Void {
@@ -554,7 +581,18 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		if (!this.selectable) {
 			var toggle = cast(itemRenderer, IToggle);
+			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+			this._ignoreSelectionChange = true;
 			toggle.selected = false;
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+			return;
+		}
+		if (this.pointerSelectionEnabled) {
+			var toggle = cast(itemRenderer, IToggle);
+			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+			this._ignoreSelectionChange = true;
+			toggle.selected = !toggle.selected;
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 			return;
 		}
 		var item = this.itemRendererToData.get(itemRenderer);

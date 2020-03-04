@@ -537,7 +537,6 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 
 	private function createListView():Void {
 		if (this.listView != null) {
-			this.listView.removeEventListener(TriggerEvent.TRIGGER, listView_triggerHandler);
 			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
 			this.listView = null;
 		}
@@ -546,7 +545,6 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		if (this.listView.variant == null) {
 			this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
 		}
-		this.listView.addEventListener(TriggerEvent.TRIGGER, listView_triggerHandler);
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
 	}
 
@@ -673,12 +671,6 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function listView_triggerHandler(event:TriggerEvent):Void {
-		if (!this.popUpAdapter.persistent) {
-			this.closeListView();
-		}
-	}
-
 	private function listView_changeHandler(event:Event):Void {
 		if (this._ignoreListViewChange) {
 			return;
@@ -686,6 +678,9 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		if (this.open) {
 			// if the list is open, save the selected index for later
 			this.pendingSelectedIndex = this.listView.selectedIndex;
+			if (!this.popUpAdapter.persistent) {
+				this.closeListView();
+			}
 		} else {
 			// if closed, update immediately
 			this.pendingSelectedIndex = -1;
