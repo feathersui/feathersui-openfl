@@ -88,7 +88,7 @@ class TriggerEvent extends Event {
 		#if !flash
 		if (existing != null) {
 			existing.type = TriggerEvent.TRIGGER;
-			existing.bubbles = event.bubbles;
+			existing.bubbles = false; // Feathers UI events don't bubble
 			existing.cancelable = event.cancelable;
 			existing.touchPointID = -1;
 			existing.isPrimaryTouchPoint = false;
@@ -125,7 +125,7 @@ class TriggerEvent extends Event {
 		#if !flash
 		if (existing != null) {
 			existing.type = TriggerEvent.TRIGGER;
-			existing.bubbles = event.bubbles;
+			existing.bubbles = false; // Feathers UI events don't bubble
 			existing.cancelable = event.cancelable;
 			existing.touchPointID = event.touchPointID;
 			existing.isPrimaryTouchPoint = event.isPrimaryTouchPoint;
