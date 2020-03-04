@@ -29,9 +29,11 @@ final class Theme {
 	public static var fallbackTheme(get, null):ITheme;
 
 	private static function get_fallbackTheme():ITheme {
+		#if !disable_default_theme
 		if (fallbackTheme == null) {
 			fallbackTheme = new SteelTheme();
 		}
+		#end
 		return fallbackTheme;
 	}
 
