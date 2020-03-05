@@ -107,6 +107,9 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private var _headerContainer:LayoutGroup;
+	private var _headerContainerLayout:HorizontalLayout;
+
+	private var scrollBarYOffset:Float = 0.0;
 
 	private var gridViewPort:LayoutViewPort;
 
@@ -363,9 +366,13 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	override private function initialize():Void {
 		super.initialize();
 
+		if (this._headerContainerLayout == null) {
+			this._headerContainerLayout = new HorizontalLayout();
+		}
+
 		if (this._headerContainer == null) {
 			this._headerContainer = new LayoutGroup();
-			this._headerContainer.layout = new HorizontalLayout();
+			this._headerContainer.layout = this._headerContainerLayout;
 			this.addChild(this._headerContainer);
 		}
 
@@ -401,17 +408,22 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
 		super.calculateViewPortOffsets(forceScrollBars);
+		this.scrollBarYOffset = switch (this.scrollBarYPosition) {
+			case LEFT: this.leftViewPortOffset;
+			default: this.rightViewPortOffset;
+		};
 		if (this._headerContainer != null) {
 			if (Std.is(this._headerContainer, IValidating)) {
 				cast(this._headerContainer, IValidating).validateNow();
 			}
+			var maxHeaderWidth = 0.0;
+			for (headerRenderer in this.activeHeaderRenderers) {
+				maxHeaderWidth = Math.max(maxHeaderWidth, headerRenderer.width);
+			}
+			var totalHeaderWidth = maxHeaderWidth * this.activeHeaderRenderers.length;
 			this.topViewPortOffset += this._headerContainer.height;
-			var scrollBarOffset = switch (this.scrollBarYPosition) {
-				case LEFT: this.leftViewPortOffset;
-				default: this.rightViewPortOffset;
-			};
-			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._headerContainer.width + scrollBarOffset);
-			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, this._headerContainer.minWidth + scrollBarOffset);
+			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, totalHeaderWidth + this.scrollBarYOffset);
+			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, totalHeaderWidth + this.scrollBarYOffset);
 		}
 	}
 
@@ -419,12 +431,17 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this._headerContainer == null) {
 			return;
 		}
-		this._headerContainer.x = switch (this.scrollBarYPosition) {
-			case LEFT: this.leftViewPortOffset;
-			default: 0.0;
-		};
+		this._headerContainer.x = 0.0;
 		this._headerContainer.y = 0.0;
 		this._headerContainer.width = this.actualWidth;
+		this._headerContainerLayout.paddingLeft = switch (this.scrollBarYPosition) {
+			case LEFT: this.scrollBarYOffset;
+			default: 0.0;
+		};
+		var totalHeaderWidth = this.actualWidth - this.scrollBarYOffset;
+		for (headerRenderer in this.activeHeaderRenderers) {
+			headerRenderer.width = totalHeaderWidth / this.columns.length;
+		}
 		if (Std.is(this._headerContainer, IValidating)) {
 			cast(this._headerContainer, IValidating).validateNow();
 		}
@@ -441,9 +458,11 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		for (headerRenderer in this.activeHeaderRenderers) {
 			this.destroyHeaderRenderer(headerRenderer);
 		}
+		this.activeHeaderRenderers.resize(0);
 		for (i in 0...this.columns.length) {
 			var column = this.columns.get(i);
 			var headerRenderer = this.createHeaderRenderer(column, i);
+			this.activeHeaderRenderers.insert(i, headerRenderer);
 			this._headerContainer.addChildAt(headerRenderer, i);
 		}
 	}
