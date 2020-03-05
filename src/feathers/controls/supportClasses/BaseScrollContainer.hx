@@ -1149,7 +1149,12 @@ class BaseScrollContainer extends FeathersControl {
 			scrollRect = this._scrollRect2;
 		}
 		this._currentScrollRect = scrollRect;
-		scrollRect.setTo(scroller.scrollX, scroller.scrollY, this.actualWidth, this.actualHeight);
+		scrollRect.setTo(scroller.scrollX, scroller.scrollY, this.actualWidth
+			- this.leftViewPortOffset
+			- this.rightViewPortOffset,
+			this.actualHeight
+			- this.topViewPortOffset
+			- this.bottomViewPortOffset);
 		var displayViewPort = cast(this.viewPort, DisplayObject);
 		displayViewPort.scrollRect = scrollRect;
 	}
