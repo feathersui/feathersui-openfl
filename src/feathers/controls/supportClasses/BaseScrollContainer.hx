@@ -93,6 +93,12 @@ class BaseScrollContainer extends FeathersControl {
 	private var rightViewPortOffset:Float = 0.0;
 	private var bottomViewPortOffset:Float = 0.0;
 	private var leftViewPortOffset:Float = 0.0;
+	private var chromeMeasuredWidth:Float = 0.0;
+	private var chromeMeasuredMinWidth:Float = 0.0;
+	private var chromeMeasuredMaxWidth:Float = Math.POSITIVE_INFINITY;
+	private var chromeMeasuredHeight:Float = 0.0;
+	private var chromeMeasuredMinHeight:Float = 0.0;
+	private var chromeMeasuredMaxHeight:Float = Math.POSITIVE_INFINITY;
 
 	/**
 		The default background skin to display behind all content added to the
@@ -729,6 +735,12 @@ class BaseScrollContainer extends FeathersControl {
 		this.rightViewPortOffset = 0.0;
 		this.bottomViewPortOffset = 0.0;
 		this.leftViewPortOffset = 0.0;
+		this.chromeMeasuredWidth = 0.0;
+		this.chromeMeasuredMinWidth = 0.0;
+		this.chromeMeasuredMaxWidth = Math.POSITIVE_INFINITY;
+		this.chromeMeasuredHeight = 0.0;
+		this.chromeMeasuredMinHeight = 0.0;
+		this.chromeMeasuredMaxHeight = Math.POSITIVE_INFINITY;
 		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars, useActualBounds);
 		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars, useActualBounds);
 		// we need to double check the horizontal scroll bar if the scroll
@@ -937,6 +949,7 @@ class BaseScrollContainer extends FeathersControl {
 				newWidth = 0.0;
 			}
 			newWidth += this.leftViewPortOffset + this.rightViewPortOffset;
+			newWidth = Math.max(newWidth, this.chromeMeasuredWidth);
 			if (this._currentBackgroundSkin != null) {
 				newWidth = Math.max(newWidth, this._currentBackgroundSkin.width);
 			}
@@ -950,6 +963,7 @@ class BaseScrollContainer extends FeathersControl {
 				newHeight = 0.0;
 			}
 			newHeight += this.topViewPortOffset + this.bottomViewPortOffset;
+			newHeight = Math.max(newHeight, this.chromeMeasuredHeight);
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(newHeight, this._currentBackgroundSkin.height);
 			}
@@ -963,6 +977,7 @@ class BaseScrollContainer extends FeathersControl {
 				newMinWidth = 0.0;
 			}
 			newMinWidth += this.leftViewPortOffset + this.rightViewPortOffset;
+			newMinWidth = Math.max(newMinWidth, this.chromeMeasuredMinWidth);
 			if (measureSkin != null) {
 				newMinWidth = Math.max(newMinWidth, measureSkin.minWidth);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -978,6 +993,7 @@ class BaseScrollContainer extends FeathersControl {
 				newMinHeight = 0.0;
 			}
 			newMinHeight += this.topViewPortOffset + this.bottomViewPortOffset;
+			newMinHeight = Math.max(newMinHeight, this.chromeMeasuredMinHeight);
 			if (measureSkin != null) {
 				newMinHeight = Math.max(newMinHeight, measureSkin.minHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -992,6 +1008,7 @@ class BaseScrollContainer extends FeathersControl {
 				newMaxWidth = Math.POSITIVE_INFINITY;
 			}
 			newMaxWidth += this.leftViewPortOffset + this.rightViewPortOffset;
+			newMaxWidth = Math.min(newMaxWidth, this.chromeMeasuredMaxWidth);
 			if (measureSkin != null) {
 				newMaxWidth = Math.min(newMaxWidth, measureSkin.maxWidth);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -1007,6 +1024,7 @@ class BaseScrollContainer extends FeathersControl {
 				newMaxHeight = Math.POSITIVE_INFINITY;
 			}
 			newMaxHeight += this.topViewPortOffset + this.bottomViewPortOffset;
+			newMaxHeight = Math.min(newMaxHeight, this.chromeMeasuredMaxHeight);
 			if (measureSkin != null) {
 				newMaxHeight = Math.min(newMaxHeight, measureSkin.maxHeight);
 			} else if (this._backgroundSkinMeasurements != null) {

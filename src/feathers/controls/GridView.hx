@@ -406,138 +406,26 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				cast(this._headerContainer, IValidating).validateNow();
 			}
 			this.topViewPortOffset += this._headerContainer.height;
+			var scrollBarOffset = switch (this.scrollBarYPosition) {
+				case LEFT: this.leftViewPortOffset;
+				default: this.rightViewPortOffset;
+			};
+			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._headerContainer.width + scrollBarOffset);
+			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, this._headerContainer.minWidth + scrollBarOffset);
 		}
-	}
-
-	override private function measure():Bool {
-		var needsWidth = this.explicitWidth == null;
-		var needsHeight = this.explicitHeight == null;
-		var needsMinWidth = this.explicitMinWidth == null;
-		var needsMinHeight = this.explicitMinHeight == null;
-		var needsMaxWidth = this.explicitMaxWidth == null;
-		var needsMaxHeight = this.explicitMaxHeight == null;
-		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
-			return false;
-		}
-
-		if (this._currentBackgroundSkin != null) {
-			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
-		}
-
-		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
-		}
-
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
-		}
-
-		this.viewPort.validateNow();
-
-		var newWidth = this.explicitWidth;
-		if (needsWidth) {
-			if (this.measureViewPort) {
-				newWidth = this.viewPort.visibleWidth;
-			} else {
-				newWidth = 0.0;
-			}
-			newWidth += this.leftViewPortOffset + this.rightViewPortOffset;
-			if (this._headerContainer != null) {
-				newWidth = Math.max(newWidth, this._headerContainer.width);
-			}
-			if (this._currentBackgroundSkin != null) {
-				newWidth = Math.max(newWidth, this._currentBackgroundSkin.width);
-			}
-		}
-
-		var newHeight = this.explicitHeight;
-		if (needsHeight) {
-			if (this.measureViewPort) {
-				newHeight = this.viewPort.visibleHeight;
-			} else {
-				newHeight = 0.0;
-			}
-			newHeight += this.topViewPortOffset + this.bottomViewPortOffset;
-			if (this._currentBackgroundSkin != null) {
-				newHeight = Math.max(newHeight, this._currentBackgroundSkin.height);
-			}
-		}
-
-		var newMinWidth = this.explicitMinWidth;
-		if (needsMinWidth) {
-			if (this.measureViewPort) {
-				newMinWidth = this.viewPort.minVisibleWidth;
-			} else {
-				newMinWidth = 0.0;
-			}
-			newMinWidth += this.leftViewPortOffset + this.rightViewPortOffset;
-			if (this._headerContainer != null) {
-				newMinWidth = Math.max(newMinWidth, this._headerContainer.minWidth);
-			}
-			if (measureSkin != null) {
-				newMinWidth = Math.max(newMinWidth, measureSkin.minWidth);
-			} else if (this._backgroundSkinMeasurements != null) {
-				newMinWidth = Math.max(newMinWidth, this._backgroundSkinMeasurements.minWidth);
-			}
-		}
-
-		var newMinHeight = this.explicitMinHeight;
-		if (needsMinHeight) {
-			if (this.measureViewPort) {
-				newMinHeight = this.viewPort.minVisibleHeight;
-			} else {
-				newMinHeight = 0.0;
-			}
-			newMinHeight += this.topViewPortOffset + this.bottomViewPortOffset;
-			if (measureSkin != null) {
-				newMinHeight = Math.max(newMinHeight, measureSkin.minHeight);
-			} else if (this._backgroundSkinMeasurements != null) {
-				newMinHeight = Math.max(newMinHeight, this._backgroundSkinMeasurements.minHeight);
-			}
-		}
-		var newMaxWidth = this.explicitMaxWidth;
-		if (needsMaxWidth) {
-			if (this.measureViewPort) {
-				newMaxWidth = this.viewPort.maxVisibleWidth;
-			} else {
-				newMaxWidth = Math.POSITIVE_INFINITY;
-			}
-			newMaxWidth += this.leftViewPortOffset + this.rightViewPortOffset;
-			if (this._headerContainer != null) {
-				newMaxWidth = Math.max(newMaxWidth, this._headerContainer.maxWidth);
-			}
-			if (measureSkin != null) {
-				newMaxWidth = Math.min(newMaxWidth, measureSkin.maxWidth);
-			} else if (this._backgroundSkinMeasurements != null) {
-				newMaxWidth = Math.min(newMaxWidth, this._backgroundSkinMeasurements.maxWidth);
-			}
-		}
-
-		var newMaxHeight = this.explicitMaxHeight;
-		if (needsMaxHeight) {
-			if (this.measureViewPort) {
-				newMaxHeight = this.viewPort.maxVisibleHeight;
-			} else {
-				newMaxHeight = Math.POSITIVE_INFINITY;
-			}
-			newMaxHeight += this.topViewPortOffset + this.bottomViewPortOffset;
-			if (measureSkin != null) {
-				newMaxHeight = Math.min(newMaxHeight, measureSkin.maxHeight);
-			} else if (this._backgroundSkinMeasurements != null) {
-				newMaxHeight = Math.min(newMaxHeight, this._backgroundSkinMeasurements.maxHeight);
-			}
-		}
-
-		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
 	private function layoutHeaders():Void {
 		if (this._headerContainer == null) {
 			return;
 		}
-		this._headerContainer.x = 0;
-		this._headerContainer.y = 0;
+		switch (this.scrollBarYPosition) {
+			case LEFT:
+				this._headerContainer.x = this.leftViewPortOffset;
+			default:
+				this._headerContainer.x = 0.0;
+		};
+		this._headerContainer.y = 0.0;
 		this._headerContainer.width = this.actualWidth;
 		if (Std.is(this._headerContainer, IValidating)) {
 			cast(this._headerContainer, IValidating).validateNow();
