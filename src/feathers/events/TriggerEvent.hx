@@ -18,7 +18,8 @@ import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 
 /**
-	Events dispatched by Feathers UI components.
+	Represents a click, tap, or triggering key press dispatched by button
+	components.
 
 	@since 1.0.0
 **/
@@ -31,7 +32,11 @@ class TriggerEvent extends Event {
 	**/
 	public static inline var TRIGGER:EventType<TriggerEvent> = "trigger";
 
-	private static var _pool = new ObjectPool<TriggerEvent>(() -> return new TriggerEvent(null));
+	private static var _pool = new ObjectPool<TriggerEvent>(() -> return new TriggerEvent(null), (event) -> {
+		event.__preventDefault = false;
+		event.__isCanceled = false;
+		event.__isCanceledNow = false;
+	});
 
 	/**
 		Dispatches a pooled event with the specified properties.
