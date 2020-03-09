@@ -32,13 +32,13 @@ class TriggerEvent extends Event {
 	**/
 	public static inline var TRIGGER:EventType<TriggerEvent> = "trigger";
 
+	#if !flash
 	private static var _pool = new ObjectPool<TriggerEvent>(() -> return new TriggerEvent(null), (event) -> {
-		#if !flash
 		event.__preventDefault = false;
 		event.__isCanceled = false;
 		event.__isCanceledNow = false;
-		#end
 	});
+	#end
 
 	/**
 		Dispatches a pooled event with the specified properties.

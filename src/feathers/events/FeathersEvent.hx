@@ -118,13 +118,13 @@ class FeathersEvent extends Event {
 	**/
 	public static inline var TRANSITION_CANCEL:EventType<FeathersEvent> = "transitionCancel";
 
+	#if !flash
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false), (event) -> {
-		#if !flash
 		event.__preventDefault = false;
 		event.__isCanceled = false;
 		event.__isCanceledNow = false;
-		#end
 	});
+	#end
 
 	/**
 		Dispatches a pooled event with the specified properties.
