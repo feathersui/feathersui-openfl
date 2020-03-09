@@ -35,10 +35,10 @@ class FlatCollectionEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var REMOVE_ITEM:EventType<FlatCollectionEvent> = "addItem";
+	public static inline var REMOVE_ITEM:EventType<FlatCollectionEvent> = "removeItem";
 
 	/**
-		The `FlatCollectionEvent.REMOVE_ITEM` event type is dispatched when an item
+		The `FlatCollectionEvent.REPLACE_ITEM` event type is dispatched when an item
 		is replaced in a collection.
 
 		@since 1.0.0
