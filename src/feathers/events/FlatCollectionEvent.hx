@@ -95,9 +95,11 @@ class FlatCollectionEvent extends Event {
 	public static inline var SORT_CHANGE:EventType<FlatCollectionEvent> = "sortChange";
 
 	private static var _pool = new ObjectPool<FlatCollectionEvent>(() -> return new FlatCollectionEvent(null, -1, false, false), (event) -> {
+		#if !flash
 		event.__preventDefault = false;
 		event.__isCanceled = false;
 		event.__isCanceledNow = false;
+		#end
 	});
 
 	/**

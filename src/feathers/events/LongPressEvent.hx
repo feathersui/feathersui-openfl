@@ -34,9 +34,11 @@ class LongPressEvent extends Event {
 	public static inline var LONG_PRESS:EventType<LongPressEvent> = "longPress";
 
 	private static var _pool = new ObjectPool<LongPressEvent>(() -> return new LongPressEvent(null), (event) -> {
+		#if !flash
 		event.__preventDefault = false;
 		event.__isCanceled = false;
 		event.__isCanceledNow = false;
+		#end
 	});
 
 	/**
