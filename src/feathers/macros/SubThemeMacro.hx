@@ -32,16 +32,19 @@ class SubThemeMacro {
 					default:
 				}
 			}
+
 			if (found) {
 				var subThemeWrapperClassName = 'SubThemeWrapper_${subThemeType.split(".").join("_")}';
-				var wrapper = macro class $subThemeWrapperClassName {
-					public function new() {
-						// reference the sub-theme class so that it will be included in
-						// the final output
-						$p{subThemeType.split(".")}
-					}
+				var subThemeExpression = subThemeType.split(".");
+				subThemeExpression.push("initialize");
+				var definition = macro class $subThemeWrapperClassName {
+					// reference the sub-theme class (and its initialize()
+					// method) so that it will be included in the final output
+					// when dce is enabled.
+					@:keep
+					private static var subTheme:Dynamic = $p{subThemeExpression};
 				};
-				Context.defineType(wrapper);
+				Context.defineType(definition);
 			}
 		});
 		return macro {
