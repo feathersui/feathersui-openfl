@@ -29,6 +29,9 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Displays a one-dimensional list of items. Supports scrolling, custom item

@@ -22,6 +22,9 @@ import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Renders a row of data in the `GridView` component.
