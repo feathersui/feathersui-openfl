@@ -30,4 +30,5 @@ In addition to `html5`, other supported targets include `windows`, `mac`, `linux
 Check out the following tutorials for creating Feathers UI projects in popular development environments:
 
 - [HaxeDevelop](https://feathersui.com/learn/haxe-openfl/haxedevelop/)
+- [Moonshine IDE](https://feathersui.com/learn/haxe-openfl/moonshine-ide/)
 - [Visual Studio Code](https://feathersui.com/learn/haxe-openfl/visual-studio-code/)
