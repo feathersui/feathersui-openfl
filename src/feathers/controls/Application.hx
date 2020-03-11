@@ -8,13 +8,14 @@
 
 package feathers.controls;
 
-import feathers.core.PopUpManager;
-import feathers.utils.MathUtil;
-import feathers.utils.ScreenDensityScaleCalculator;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
-import openfl.events.Event;
 import openfl.system.Capabilities;
+import openfl.events.Event;
+import feathers.core.PopUpManager;
+import feathers.themes.steel.components.SteelApplicationStyles;
+import feathers.utils.ScreenDensityScaleCalculator;
+import feathers.utils.MathUtil;
 
 /**
 	An optional root class for Feathers UI applications that will automatically
@@ -36,6 +37,8 @@ class Application extends LayoutGroup {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeApplicationTheme();
+
 		super();
 
 		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler, false, 100);
@@ -88,6 +91,10 @@ class Application extends LayoutGroup {
 	public var popUpContainerFactory:() -> DisplayObjectContainer;
 
 	private var _popUpContainer:DisplayObjectContainer;
+
+	private function initializeApplicationTheme():Void {
+		SteelApplicationStyles.initialize();
+	}
 
 	private function getScaleFactor():Float {
 		var result = 1.0;

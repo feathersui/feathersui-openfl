@@ -8,18 +8,19 @@
 
 package feathers.controls;
 
-import feathers.core.IMeasureObject;
-import feathers.core.IStateObserver;
-import feathers.core.ITextControl;
-import feathers.core.IUIControl;
-import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.Measurements;
-import feathers.layout.RelativePosition;
-import feathers.layout.VerticalAlign;
 import feathers.utils.MeasurementsUtil;
+import feathers.themes.steel.components.SteelToggleButtonStyles;
+import feathers.core.ITextControl;
+import feathers.layout.RelativePosition;
+import feathers.core.IUIControl;
+import feathers.core.IStateObserver;
 import openfl.display.DisplayObject;
+import feathers.layout.Measurements;
+import feathers.core.IMeasureObject;
+import feathers.core.InvalidationFlag;
+import feathers.core.IValidating;
+import feathers.layout.HorizontalAlign;
+import feathers.layout.VerticalAlign;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
@@ -54,6 +55,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeToggleButtonTheme();
+
 		super();
 	}
 
@@ -565,6 +568,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 			this._stateToIcon.set(state, icon);
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
+	}
+
+	private function initializeToggleButtonTheme():Void {
+		SteelToggleButtonStyles.initialize();
 	}
 
 	override private function initialize():Void {

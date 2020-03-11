@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.themes.steel.components.SteelCheckStyles;
+
 /**
 	A toggle control that contains a label and a box that may be checked (or
 	unchecked) to indicate selection.
@@ -36,6 +38,12 @@ class Check extends ToggleButton {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeCheckTheme();
+
 		super();
+	}
+
+	private function initializeCheckTheme():Void {
+		SteelCheckStyles.initialize();
 	}
 }

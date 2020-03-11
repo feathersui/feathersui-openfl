@@ -8,18 +8,19 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
+import feathers.themes.steel.components.SteelTextInputStyles;
+import feathers.core.ITextControl;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
+import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
-import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
-import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
-import feathers.utils.MeasurementsUtil;
+import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
@@ -55,6 +56,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeTextInputTheme();
+
 		super();
 	}
 
@@ -428,6 +431,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this._stateToTextFormat.set(state, textFormat);
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
+	}
+
+	private function initializeTextInputTheme():Void {
+		SteelTextInputStyles.initialize();
 	}
 
 	override private function initialize():Void {

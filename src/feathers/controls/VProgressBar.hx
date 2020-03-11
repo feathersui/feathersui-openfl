@@ -8,10 +8,11 @@
 
 package feathers.controls;
 
-import feathers.controls.supportClasses.BaseProgressBar;
+import feathers.utils.MeasurementsUtil;
+import feathers.themes.steel.components.SteelVProgressBarStyles;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
-import feathers.utils.MeasurementsUtil;
+import feathers.controls.supportClasses.BaseProgressBar;
 
 /**
 
@@ -28,7 +29,13 @@ class VProgressBar extends BaseProgressBar {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeVProgressBarTheme();
+
 		super();
+	}
+
+	private function initializeVProgressBarTheme():Void {
+		SteelVProgressBarStyles.initialize();
 	}
 
 	override private function measure():Bool {

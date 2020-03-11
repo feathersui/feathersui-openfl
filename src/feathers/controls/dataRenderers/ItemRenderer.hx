@@ -9,6 +9,7 @@
 package feathers.controls.dataRenderers;
 
 import feathers.events.TriggerEvent;
+import feathers.themes.steel.components.SteelItemRendererStyles;
 
 /**
 	A generic renderer for UI components that display data collections.
@@ -23,9 +24,15 @@ class ItemRenderer extends ToggleButton {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeItemRendererTheme();
+
 		super();
 		// selection will be controlled by the owning data container
 		this.toggleable = false;
+	}
+
+	private function initializeItemRendererTheme():Void {
+		SteelItemRendererStyles.initialize();
 	}
 
 	override private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
@@ -16,11 +17,11 @@ import feathers.data.IFlatCollection;
 import feathers.data.TabBarItemState;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
-import feathers.events.TriggerEvent;
 import feathers.layout.HorizontalLayout;
 import feathers.layout.ILayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
+import feathers.themes.steel.components.SteelTabBarStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.errors.IllegalOperationError;
@@ -84,6 +85,8 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeTabBarTheme();
+
 		super();
 	}
 
@@ -246,6 +249,10 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	private var _layoutMeasurements = new Measurements();
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
+
+	private function initializeTabBarTheme():Void {
+		SteelTabBarStyles.initialize();
+	}
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);

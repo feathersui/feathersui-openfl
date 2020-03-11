@@ -8,27 +8,30 @@
 
 package feathers.controls;
 
-import feathers.controls.dataRenderers.IDataRenderer;
-import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.controls.supportClasses.BaseScrollContainer;
-import feathers.controls.supportClasses.LayoutViewPort;
-import feathers.core.IDataSelector;
-import feathers.core.ITextControl;
-import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
-import feathers.data.ListViewItemState;
-import feathers.events.FeathersEvent;
-import feathers.events.FlatCollectionEvent;
-import feathers.layout.Direction;
-import feathers.layout.ILayout;
-import feathers.layout.IScrollLayout;
+import openfl.events.TouchEvent;
+import openfl.events.MouseEvent;
 import feathers.utils.DisplayObjectRecycler;
+import feathers.events.FlatCollectionEvent;
+import feathers.data.ListViewItemState;
+import feathers.layout.Direction;
+import feathers.layout.IScrollLayout;
+import feathers.core.ITextControl;
+import feathers.controls.dataRenderers.IDataRenderer;
 import haxe.ds.ObjectMap;
-import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
+import feathers.themes.steel.components.SteelListViewStyles;
+import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import feathers.core.InvalidationFlag;
+import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.supportClasses.LayoutViewPort;
+import feathers.controls.supportClasses.BaseScrollContainer;
+import feathers.layout.ILayout;
+import feathers.data.IFlatCollection;
+import feathers.events.FeathersEvent;
+import feathers.core.IDataSelector;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -104,6 +107,8 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeListViewTheme();
+
 		super();
 		if (this.viewPort == null) {
 			this.listViewPort = new LayoutViewPort();
@@ -340,6 +345,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	**/
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
+	}
+
+	private function initializeListViewTheme():Void {
+		SteelListViewStyles.initialize();
 	}
 
 	override private function update():Void {

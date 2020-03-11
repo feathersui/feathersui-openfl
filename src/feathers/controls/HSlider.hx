@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.themes.steel.components.SteelHSliderStyles;
 import feathers.controls.supportClasses.BaseSlider;
 import feathers.core.IValidating;
 import openfl.geom.Point;
@@ -43,7 +44,13 @@ class HSlider extends BaseSlider {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeHSliderTheme();
+
 		super();
+	}
+
+	private function initializeHSliderTheme():Void {
+		SteelHSliderStyles.initialize();
 	}
 
 	override private function valueToLocation(value:Float):Float {

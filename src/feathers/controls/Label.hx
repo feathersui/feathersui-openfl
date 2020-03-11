@@ -8,17 +8,18 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
+import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
+import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
-import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
@@ -83,6 +84,8 @@ class Label extends FeathersControl implements ITextControl {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeLabelTheme();
+
 		super();
 	}
 
@@ -395,6 +398,10 @@ class Label extends FeathersControl implements ITextControl {
 	**/
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
+
+	private function initializeLabelTheme():Void {
+		SteelLabelStyles.initialize();
+	}
 
 	override private function initialize():Void {
 		super.initialize();

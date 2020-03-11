@@ -12,6 +12,7 @@ import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
+import feathers.themes.steel.components.SteelTextAreaStyles;
 import openfl.events.Event;
 import openfl.text.TextFormat;
 
@@ -22,6 +23,8 @@ class TextArea extends BaseScrollContainer {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeTextAreaTheme();
+
 		super();
 
 		if (this.viewPort == null) {
@@ -158,6 +161,10 @@ class TextArea extends BaseScrollContainer {
 
 	override private function get_measureViewPort():Bool {
 		return false;
+	}
+
+	private function initializeTextAreaTheme():Void {
+		SteelTextAreaStyles.initialize();
 	}
 
 	override private function update():Void {

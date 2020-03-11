@@ -8,29 +8,30 @@
 
 package feathers.controls;
 
-import feathers.core.FeathersControl;
-import feathers.core.IMeasureObject;
-import feathers.core.IStateContext;
+import feathers.utils.MeasurementsUtil;
+import feathers.layout.RelativePositions;
 import feathers.core.IStateObserver;
+import feathers.core.IStateContext;
+import feathers.themes.steel.components.SteelCalloutStyles;
+import openfl.display.Sprite;
+import openfl.events.TouchEvent;
+import openfl.events.MouseEvent;
+import feathers.layout.Measurements;
+import feathers.core.IMeasureObject;
+import feathers.layout.RelativePosition;
+import feathers.events.FeathersEvent;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
-import feathers.core.PopUpManager;
-import feathers.events.FeathersEvent;
-import feathers.layout.HorizontalAlign;
-import feathers.layout.Measurements;
-import feathers.layout.RelativePosition;
-import feathers.layout.RelativePositions;
 import feathers.layout.VerticalAlign;
-import feathers.utils.MeasurementsUtil;
-import openfl.display.DisplayObject;
-import openfl.display.Sprite;
-import openfl.errors.ArgumentError;
 import openfl.events.Event;
-import openfl.events.MouseEvent;
-import openfl.events.TouchEvent;
 import openfl.geom.Point;
+import feathers.layout.HorizontalAlign;
 import openfl.geom.Rectangle;
+import feathers.core.PopUpManager;
+import openfl.errors.ArgumentError;
+import openfl.display.DisplayObject;
+import feathers.core.FeathersControl;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -262,6 +263,7 @@ class Callout extends FeathersControl {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeCalloutTheme();
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, callout_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, callout_removedFromStageHandler);
@@ -560,6 +562,10 @@ class Callout extends FeathersControl {
 		if (this.parent != null) {
 			this.parent.removeChild(this);
 		}
+	}
+
+	private function initializeCalloutTheme():Void {
+		SteelCalloutStyles.initialize();
 	}
 
 	override private function update():Void {

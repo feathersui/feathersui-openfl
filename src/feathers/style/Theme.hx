@@ -10,7 +10,7 @@ package feathers.style;
 
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
-import feathers.themes.steel.SteelTheme;
+import feathers.themes.steel.DefaultSteelTheme;
 
 /**
 	Register themes globally in a Feathers UI application. May apply to the
@@ -31,7 +31,7 @@ final class Theme {
 	private static function get_fallbackTheme():ITheme {
 		#if !disable_default_theme
 		if (fallbackTheme == null) {
-			fallbackTheme = new SteelTheme();
+			fallbackTheme = new DefaultSteelTheme();
 		}
 		#end
 		return fallbackTheme;

@@ -8,26 +8,27 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
+import openfl.events.FocusEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.controls.popups.DropDownPopUpAdapter;
+import feathers.utils.DisplayObjectRecycler;
+import feathers.data.ListViewItemState;
+import openfl.display.DisplayObject;
+import feathers.themes.steel.components.SteelComboBoxStyles;
+import openfl.events.TouchEvent;
+import lime.ui.KeyCode;
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import feathers.events.FeathersEvent;
+import openfl.events.Event;
+import feathers.core.InvalidationFlag;
+import feathers.data.IFlatCollection;
+import feathers.layout.Measurements;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
-import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
-import feathers.data.ListViewItemState;
-import feathers.events.FeathersEvent;
-import feathers.events.TriggerEvent;
-import feathers.layout.Measurements;
-import feathers.utils.DisplayObjectRecycler;
-import lime.ui.KeyCode;
-import openfl.display.DisplayObject;
-import openfl.events.Event;
-import openfl.events.FocusEvent;
-import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
-import openfl.events.TouchEvent;
-import openfl.ui.Keyboard;
+import feathers.controls.popups.DropDownPopUpAdapter;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -117,6 +118,8 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeComboBoxTheme();
+
 		super();
 		this.addEventListener(KeyboardEvent.KEY_UP, comboBox_keyUpHandler);
 	}
@@ -458,6 +461,10 @@ class ComboBox extends FeathersControl implements IDataSelector<Dynamic> {
 			return;
 		}
 		this.popUpAdapter.close();
+	}
+
+	private function initializeComboBoxTheme():Void {
+		SteelComboBoxStyles.initialize();
 	}
 
 	override private function update():Void {

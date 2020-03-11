@@ -13,28 +13,32 @@ import feathers.utils.MeasurementsUtil;
 import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.controls.supportClasses.BaseScrollContainer;
-import feathers.controls.supportClasses.LayoutViewPort;
-import feathers.core.IDataSelector;
-import feathers.core.ITextControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.VerticalListFixedRowLayout;
+import feathers.layout.VerticalLayout;
+import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.data.GridViewCellState;
 import feathers.data.GridViewHeaderState;
+import feathers.events.TriggerEvent;
+import feathers.utils.DisplayObjectRecycler;
+import feathers.events.FlatCollectionEvent;
+import feathers.layout.Direction;
+import feathers.layout.IScrollLayout;
+import feathers.core.ITextControl;
+import haxe.ds.ObjectMap;
+import openfl.errors.IllegalOperationError;
+import feathers.themes.steel.components.SteelGridViewStyles;
+import openfl.display.DisplayObject;
+import openfl.events.Event;
+import feathers.core.InvalidationFlag;
+import feathers.controls.dataRenderers.CellRenderer;
+import feathers.controls.supportClasses.LayoutViewPort;
+import feathers.controls.supportClasses.BaseScrollContainer;
+import feathers.layout.ILayout;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
-import feathers.events.FlatCollectionEvent;
-import feathers.events.TriggerEvent;
-import feathers.layout.Direction;
-import feathers.layout.HorizontalLayout;
-import feathers.layout.ILayout;
-import feathers.layout.IScrollLayout;
-import feathers.layout.VerticalListFixedRowLayout;
-import feathers.utils.DisplayObjectRecycler;
-import haxe.ds.ObjectMap;
-import openfl.display.DisplayObject;
-import openfl.errors.IllegalOperationError;
-import openfl.events.Event;
+import feathers.core.IDataSelector;
 
 /**
 	Displays a list of items as a table. Each item is rendered as a row, divided
@@ -98,6 +102,8 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeGridViewTheme();
+
 		super();
 		if (this.viewPort == null) {
 			this.gridViewPort = new LayoutViewPort();
@@ -362,6 +368,10 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private var _ignoreSelectionChange = false;
+
+	private function initializeGridViewTheme():Void {
+		SteelGridViewStyles.initialize();
+	}
 
 	override private function initialize():Void {
 		super.initialize();

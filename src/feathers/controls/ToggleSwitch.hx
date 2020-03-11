@@ -8,19 +8,20 @@
 
 package feathers.controls;
 
-import feathers.core.FeathersControl;
-import feathers.core.IUIControl;
-import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
-import feathers.events.FeathersEvent;
-import feathers.layout.Measurements;
-import motion.Actuate;
-import motion.actuators.SimpleActuator;
+import feathers.themes.steel.components.SteelToggleSwitchStyles;
 import motion.easing.IEasing;
 import motion.easing.Quart;
+import motion.actuators.SimpleActuator;
+import motion.Actuate;
+import feathers.core.IValidating;
 import openfl.display.DisplayObject;
-import openfl.events.Event;
+import feathers.core.InvalidationFlag;
+import feathers.layout.Measurements;
+import feathers.core.IUIControl;
 import openfl.events.MouseEvent;
+import openfl.events.Event;
+import feathers.events.FeathersEvent;
+import feathers.core.FeathersControl;
 
 /**
 	Similar to a light switch, with on and off states that may be toggled.
@@ -53,6 +54,8 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeToggleSwitchTheme();
+
 		super();
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
@@ -257,6 +260,10 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		this.selected = selected;
 		this._animateSelectionChange = true;
 		return this.selected;
+	}
+
+	private function initializeToggleSwitchTheme():Void {
+		SteelToggleSwitchStyles.initialize();
 	}
 
 	override private function update():Void {

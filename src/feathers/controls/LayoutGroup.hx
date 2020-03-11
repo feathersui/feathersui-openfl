@@ -8,19 +8,20 @@
 
 package feathers.controls;
 
+import feathers.utils.MeasurementsUtil;
+import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.core.FeathersControl;
+import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.layout.AutoSizeMode;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
-import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.geom.Point;
@@ -81,6 +82,8 @@ class LayoutGroup extends FeathersControl {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeLayoutGroupTheme();
+
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, layoutGroup_addedToStageHandler);
 	}
@@ -290,6 +293,10 @@ class LayoutGroup extends FeathersControl {
 
 	private function _setChildIndex(child:DisplayObject, index:Int):Void {
 		super.setChildIndex(child, index);
+	}
+
+	private function initializeLayoutGroupTheme():Void {
+		SteelLayoutGroupStyles.initialize();
 	}
 
 	private function getPrivateIndexForPublicIndex(publicIndex:Int):Int {
