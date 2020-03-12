@@ -302,6 +302,8 @@ class LayoutGroup extends FeathersControl {
 	private function getPrivateIndexForPublicIndex(publicIndex:Int):Int {
 		if (this.items.length > 0) {
 			return publicIndex + this._getChildIndex(this.items[0]);
+		} else if (this._numChildren > 0) {
+			return publicIndex + this._numChildren;
 		}
 		return publicIndex;
 	}
