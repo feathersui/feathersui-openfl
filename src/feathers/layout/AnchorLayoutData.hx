@@ -8,8 +8,9 @@
 
 package feathers.layout;
 
-import openfl.events.Event;
 import feathers.events.FeathersEvent;
+import feathers.layout.AnchorLayout.AbstractAnchor;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**
@@ -71,7 +72,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function fill(padding:Null<Float> = 0.0):AnchorLayoutData {
+	public static function fill(padding:Float = 0.0):AnchorLayoutData {
 		return new AnchorLayoutData(padding, padding, padding, padding);
 	}
 
@@ -97,7 +98,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function topLeft(top:Null<Float> = 0.0, left:Null<Float> = 0.0) {
+	public static function topLeft(top:Float = 0.0, left:Float = 0.0) {
 		return new AnchorLayoutData(top, null, null, left);
 	}
 
@@ -123,7 +124,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function topCenter(top:Null<Float> = 0.0, horizontalCenter:Null<Float> = 0.0) {
+	public static function topCenter(top:Float = 0.0, horizontalCenter:Float = 0.0) {
 		return new AnchorLayoutData(top, null, null, null, horizontalCenter);
 	}
 
@@ -149,7 +150,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function topRight(top:Null<Float> = 0.0, right:Null<Float> = 0.0) {
+	public static function topRight(top:Float = 0.0, right:Float = 0.0) {
 		return new AnchorLayoutData(top, right);
 	}
 
@@ -175,7 +176,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function middleLeft(verticalCenter:Null<Float> = 0.0, left:Null<Float> = 0.0) {
+	public static function middleLeft(verticalCenter:Float = 0.0, left:Float = 0.0) {
 		return new AnchorLayoutData(null, null, null, left, null, verticalCenter);
 	}
 
@@ -201,7 +202,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function middleRight(verticalCenter:Null<Float> = 0.0, right:Null<Float> = 0.0) {
+	public static function middleRight(verticalCenter:Float = 0.0, right:Float = 0.0) {
 		return new AnchorLayoutData(null, right, null, null, null, verticalCenter);
 	}
 
@@ -227,7 +228,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function bottomLeft(bottom:Null<Float> = 0.0, left:Null<Float> = 0.0) {
+	public static function bottomLeft(bottom:Float = 0.0, left:Float = 0.0) {
 		return new AnchorLayoutData(null, null, bottom, left);
 	}
 
@@ -253,7 +254,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function bottomCenter(bottom:Null<Float> = 0.0, horizontalCenter:Null<Float> = 0.0) {
+	public static function bottomCenter(bottom:Float = 0.0, horizontalCenter:Float = 0.0) {
 		return new AnchorLayoutData(null, null, bottom, null, horizontalCenter);
 	}
 
@@ -279,7 +280,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public static function bottomRight(bottom:Null<Float> = 0.0, right:Null<Float> = 0.0) {
+	public static function bottomRight(bottom:Float = 0.0, right:Float = 0.0) {
 		return new AnchorLayoutData(null, right, bottom);
 	}
 
@@ -288,7 +289,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public function new(?top:Null<Float>, ?right:Null<Float>, ?bottom:Null<Float>, ?left:Null<Float>, ?horizontalCenter:Null<Float>,
+	public function new(?top:AbstractAnchor, ?right:AbstractAnchor, ?bottom:AbstractAnchor, ?left:AbstractAnchor, ?horizontalCenter:Null<Float>,
 			?verticalCenter:Null<Float>) {
 		super();
 		this.top = top;
@@ -322,9 +323,9 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public var top(default, set):Null<Float> = null;
+	public var top(default, set):AbstractAnchor = null;
 
-	private function set_top(value:Null<Float>):Null<Float> {
+	private function set_top(value:AbstractAnchor):AbstractAnchor {
 		if (this.top == value) {
 			return this.top;
 		}
@@ -356,9 +357,9 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public var right(default, set):Null<Float> = null;
+	public var right(default, set):AbstractAnchor = null;
 
-	private function set_right(value:Null<Float>):Null<Float> {
+	private function set_right(value:AbstractAnchor):AbstractAnchor {
 		if (this.right == value) {
 			return this.right;
 		}
@@ -390,9 +391,9 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public var bottom(default, set):Null<Float> = null;
+	public var bottom(default, set):AbstractAnchor = null;
 
-	private function set_bottom(value:Null<Float>):Null<Float> {
+	private function set_bottom(value:AbstractAnchor):AbstractAnchor {
 		if (this.bottom == value) {
 			return this.bottom;
 		}
@@ -424,9 +425,9 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public var left(default, set):Null<Float> = null;
+	public var left(default, set):AbstractAnchor = null;
 
-	private function set_left(value:Null<Float>):Null<Float> {
+	private function set_left(value:AbstractAnchor):AbstractAnchor {
 		if (this.left == value) {
 			return this.left;
 		}
