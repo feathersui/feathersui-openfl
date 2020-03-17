@@ -1255,6 +1255,7 @@ class BaseScrollContainer extends FeathersControl {
 		this._scrollerDraggingX = false;
 		this._scrollerDraggingY = false;
 		this.checkForRevealScrollBars();
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 	}
 
 	private function scroller_scrollHandler(event:Event):Void {
@@ -1264,6 +1265,7 @@ class BaseScrollContainer extends FeathersControl {
 		if (this.viewPort.requiresMeasurementOnScroll) {
 			this.setInvalid(InvalidationFlag.SCROLL);
 		}
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 	}
 
 	private function scroller_scrollCompleteHandler(event:ScrollEvent):Void {
@@ -1275,6 +1277,7 @@ class BaseScrollContainer extends FeathersControl {
 		if (!this._scrollBarYHover && !this.fixedScrollBars && this.autoHideScrollBars) {
 			this.hideScrollBarY();
 		}
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 	}
 
 	private function scrollBarX_changeHandler(event:Event):Void {
@@ -1318,6 +1321,7 @@ class BaseScrollContainer extends FeathersControl {
 	private function scrollBarX_scrollStartHandler(event:ScrollEvent):Void {
 		this.scroller.stop();
 		this._scrollerDraggingX = true;
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 	}
 
 	private function scrollBarX_scrollCompleteHandler(event:ScrollEvent):Void {
@@ -1325,11 +1329,13 @@ class BaseScrollContainer extends FeathersControl {
 		if (!this._scrollBarXHover && !this.fixedScrollBars && this.autoHideScrollBars) {
 			this.hideScrollBarX();
 		}
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 	}
 
 	private function scrollBarY_scrollStartHandler(event:ScrollEvent):Void {
 		this.scroller.stop();
 		this._scrollerDraggingY = true;
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 	}
 
 	private function scrollBarY_scrollCompleteHandler(event:ScrollEvent):Void {
@@ -1337,6 +1343,7 @@ class BaseScrollContainer extends FeathersControl {
 		if (!this._scrollBarYHover && !this.fixedScrollBars && this.autoHideScrollBars) {
 			this.hideScrollBarY();
 		}
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 	}
 
 	private function hideScrollBarX_onComplete():Void {
