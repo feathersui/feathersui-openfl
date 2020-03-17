@@ -8,19 +8,19 @@
 
 package feathers.utils;
 
-import openfl.events.TouchEvent;
+import feathers.events.ScrollEvent;
+import motion.Actuate;
+import motion.actuators.SimpleActuator;
 import motion.easing.IEasing;
 import motion.easing.Quart;
-import motion.actuators.SimpleActuator;
-import motion.Actuate;
-import feathers.events.FeathersEvent;
-import openfl.display.Stage;
 import openfl.Lib;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
-import openfl.display.DisplayObjectContainer;
 import openfl.events.MouseEvent;
-import openfl.display.InteractiveObject;
+import openfl.events.TouchEvent;
 
 /**
 	Utility that provides touch and mouse wheel scrolling capabilities for any
@@ -69,7 +69,7 @@ class Scroller extends EventDispatcher {
 			return this.scrollX;
 		}
 		this.scrollX = value;
-		FeathersEvent.dispatch(this, Event.SCROLL);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 		return this.scrollX;
 	}
 
@@ -85,7 +85,7 @@ class Scroller extends EventDispatcher {
 			return this.scrollY;
 		}
 		this.scrollY = value;
-		FeathersEvent.dispatch(this, Event.SCROLL);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 		return this.scrollY;
 	}
 
@@ -629,7 +629,7 @@ class Scroller extends EventDispatcher {
 			var container = cast(this.target, DisplayObjectContainer);
 			container.mouseChildren = false;
 		}
-		FeathersEvent.dispatch(this, FeathersEvent.SCROLL_START);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 	}
 
 	private function completeScroll():Void {
@@ -637,7 +637,7 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 		this.scrolling = false;
-		FeathersEvent.dispatch(this, FeathersEvent.SCROLL_COMPLETE);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 	}
 
 	private function finishScrollX():Void {

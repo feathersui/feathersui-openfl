@@ -68,26 +68,6 @@ class FeathersEvent extends Event {
 	public static inline var STATE_CHANGE:EventType<FeathersEvent> = "stateChange";
 
 	/**
-		The `FeathersEvent.SCROLL_START` event type is dispatched when a
-		scrolling container starts scrolling.
-
-		@see `feathers.utils.Scroller`
-
-		@since 1.0.0
-	**/
-	public static inline var SCROLL_START:EventType<FeathersEvent> = "scrollStart";
-
-	/**
-		The `FeathersEvent.SCROLL_COMPLETE` event type is dispatched when a
-		scrolling container completes scrolling.
-
-		@see `feathers.utils.Scroller`
-
-		@since 1.0.0
-	**/
-	public static inline var SCROLL_COMPLETE:EventType<FeathersEvent> = "scrollComplete";
-
-	/**
 		The `FeathersEvent.TRANSITION_START` event type is dispatched when a
 		navigator start transitioning between items.
 
