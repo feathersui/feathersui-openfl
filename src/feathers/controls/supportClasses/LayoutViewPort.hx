@@ -316,6 +316,18 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._layoutMeasurements.maxHeight = viewPortMaxHeight;
 	}
 
+	override private function handleCustomLayout():Void {
+		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
+		this._ignoreLayoutChanges = true;
+		if (Std.is(this._currentLayout, IScrollLayout)) {
+			var scrollLayout = cast(this._currentLayout, IScrollLayout);
+			scrollLayout.scrollX = this.scrollX;
+			scrollLayout.scrollY = this.scrollY;
+		}
+		this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
+		super.handleCustomLayout();
+	}
+
 	override private function handleLayoutResult():Void {
 		var contentWidth = this._layoutResult.contentWidth;
 		var contentHeight = this._layoutResult.contentHeight;
