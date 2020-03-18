@@ -8,30 +8,31 @@
 
 package feathers.controls;
 
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.events.FlatCollectionEvent;
-import feathers.data.ListViewItemState;
-import feathers.layout.Direction;
-import feathers.layout.IScrollLayout;
-import feathers.core.ITextControl;
+import feathers.layout.IVirtualLayout;
 import feathers.controls.dataRenderers.IDataRenderer;
-import haxe.ds.ObjectMap;
-import openfl.errors.IllegalOperationError;
+import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.supportClasses.BaseScrollContainer;
+import feathers.controls.supportClasses.LayoutViewPort;
+import feathers.core.IDataSelector;
+import feathers.core.ITextControl;
+import feathers.core.InvalidationFlag;
+import feathers.data.IFlatCollection;
+import feathers.data.ListViewItemState;
+import feathers.events.FeathersEvent;
+import feathers.events.FlatCollectionEvent;
+import feathers.layout.Direction;
+import feathers.layout.ILayout;
+import feathers.layout.IScrollLayout;
+import feathers.layout.VirtualLayoutCache;
 import feathers.themes.steel.components.SteelListViewStyles;
+import feathers.utils.DisplayObjectRecycler;
+import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
+import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
-import feathers.core.InvalidationFlag;
-import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.controls.supportClasses.LayoutViewPort;
-import feathers.controls.supportClasses.BaseScrollContainer;
-import feathers.layout.ILayout;
-import feathers.data.IFlatCollection;
-import feathers.events.FeathersEvent;
-import feathers.core.IDataSelector;
+import openfl.geom.Point;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -164,6 +165,8 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.RESET, dataProvider_resetHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
@@ -173,6 +176,8 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.RESET, dataProvider_resetHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
@@ -280,6 +285,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
+	private var _virtualCache:Array<Dynamic> = [];
 
 	/**
 		Determines if items in the list view may be selected. By default only a
@@ -354,12 +360,23 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
+		var scrollInvalid = this.isInvalid(InvalidationFlag.SCROLL);
 		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 
-		if (itemRendererInvalid || selectionInvalid || stateInvalid || dataInvalid) {
+		if (scrollInvalid) {
+			this.listViewPort.scrollX = this.scrollX;
+			this.listViewPort.scrollY = this.scrollY;
+		}
+
+		var layoutInvalidFromScroll = false;
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			layoutInvalidFromScroll = scrollInvalid && scrollLayout.requiresLayoutOnScroll;
+		}
+		if (itemRendererInvalid || selectionInvalid || stateInvalid || dataInvalid || layoutInvalidFromScroll) {
 			this.refreshItemRenderers();
 		}
 
@@ -609,6 +626,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			var virtualLayout = cast(this.layout, IVirtualLayout);
+			this._virtualCache.insert(event.index, virtualLayout.createEmptyCacheItem());
+		}
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -618,6 +639,9 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.remove(event.index);
+		}
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -627,6 +651,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			var virtualLayout = cast(this.layout, IVirtualLayout);
+			this._virtualCache[event.index] = virtualLayout.createEmptyCacheItem();
+		}
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -635,11 +663,33 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
+	private function dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.resize(0);
+		}
+	}
+
+	private function dataProvider_resetHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.resize(0);
+		}
+	}
+
 	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			// we don't know exactly which indices have changed, so reset the
+			// whole cache.
+			this._virtualCache.resize(0);
+		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
 	private function dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			// we don't know exactly which indices have changed, so reset the
+			// whole cache.
+			this._virtualCache.resize(0);
+		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 }
