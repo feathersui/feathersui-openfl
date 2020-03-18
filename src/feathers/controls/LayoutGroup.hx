@@ -112,6 +112,7 @@ class LayoutGroup extends FeathersControl {
 	private var _layoutMeasurements:Measurements = new Measurements();
 	private var _ignoreChildChanges:Bool = false;
 	private var _ignoreChildChangesButSetFlags:Bool = false;
+	private var _ignoreLayoutChanges:Bool = false;
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 
@@ -640,6 +641,9 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function layoutGroup_layout_changeHandler(event:Event):Void {
+		if (this._ignoreLayoutChanges) {
+			return;
+		}
 		this.setInvalid(InvalidationFlag.LAYOUT);
 	}
 }
