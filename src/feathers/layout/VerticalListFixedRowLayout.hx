@@ -16,7 +16,10 @@ import openfl.events.EventDispatcher;
 
 /**
 	A simple list layout that positions items from top to bottom, in a single
-	column, where every item fills the entire width of the container.
+	column, where every item has the same width and height. The items fill the
+	entire width of the container. The height of items is determined by the
+	measured height of the first item, or it may be overridden using the
+	`rowHeight` property.
 
 	@since 1.0.0
 **/
