@@ -40,10 +40,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IScrollLa
 	public var scrollX(default, set):Float = 0.0;
 
 	private function set_scrollX(value:Float):Float {
-		if (this.scrollX == value) {
-			return this.scrollX;
-		}
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		this.scrollX = value;
 		return this.scrollX;
 	}
 
@@ -53,10 +50,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IScrollLa
 	public var scrollY(default, set):Float = 0.0;
 
 	private function set_scrollY(value:Float):Float {
-		if (this.scrollY == value) {
-			return this.scrollY;
-		}
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		this.scrollY = value;
 		return this.scrollY;
 	}
 
