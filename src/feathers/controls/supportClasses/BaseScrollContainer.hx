@@ -15,7 +15,6 @@ import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
-import feathers.events.FeathersEvent;
 import feathers.events.ScrollEvent;
 import feathers.layout.Direction;
 import feathers.layout.Measurements;
@@ -1260,10 +1259,11 @@ class BaseScrollContainer extends FeathersControl {
 
 	private function scroller_scrollHandler(event:Event):Void {
 		this.checkForRevealScrollBars();
-		this.refreshScrollRect();
-		this.refreshScrollBarValues();
 		if (this.viewPort.requiresMeasurementOnScroll) {
 			this.setInvalid(InvalidationFlag.SCROLL);
+		} else {
+			this.refreshScrollRect();
+			this.refreshScrollBarValues();
 		}
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 	}
