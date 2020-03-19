@@ -741,13 +741,13 @@ class BaseScrollContainer extends FeathersControl {
 		this.chromeMeasuredHeight = 0.0;
 		this.chromeMeasuredMinHeight = 0.0;
 		this.chromeMeasuredMaxHeight = Math.POSITIVE_INFINITY;
-		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars, useActualBounds);
-		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && scrollPolicyX != OFF, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars && scrollPolicyY != OFF, useActualBounds);
 		// we need to double check the horizontal scroll bar if the scroll
 		// bars are fixed because adding a vertical scroll bar may require a
 		// horizontal one too.
 		if (this.fixedScrollBars && this.showScrollBarY && !this.showScrollBarX) {
-			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars, useActualBounds);
+			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && scrollPolicyX != OFF, useActualBounds);
 		}
 	}
 
