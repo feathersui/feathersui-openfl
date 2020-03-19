@@ -93,7 +93,7 @@ class Panel extends ScrollContainer {
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
-		super.calculateViewPortOffsets(forceScrollBars);
+		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
 		if (this.header != null) {
 			if (Std.is(this.header, IValidating)) {
 				cast(this.header, IValidating).validateNow();

@@ -417,7 +417,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
-		super.calculateViewPortOffsets(forceScrollBars);
+		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
 		this.scrollBarYOffset = switch (this.scrollBarYPosition) {
 			case LEFT: this.leftViewPortOffset;
 			default: this.rightViewPortOffset;
