@@ -256,11 +256,36 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 				}
 				if (startIndex != -1) {
 					endIndex = i;
-					if (positionY > maxY) {
+					if (positionY >= maxY) {
 						break;
 					}
 				}
 			}
+		}
+		// if we reached the end with extra space, try back-filling so that the
+		// number of visible items remains mostly stable
+		if (positionY < maxY && startIndex > 0) {
+			do {
+				startIndex--;
+				var itemHeight = 0.0;
+				if (this.virtualCache != null) {
+					var cacheItem = Std.downcast(this.virtualCache[startIndex], VirtualCacheItem);
+					if (cacheItem != null) {
+						itemHeight = cacheItem.itemHeight;
+						if (estimatedItemHeight == null) {
+							estimatedItemHeight = itemHeight;
+						}
+					} else if (estimatedItemHeight != null) {
+						itemHeight = estimatedItemHeight;
+					}
+				}
+				if (itemHeight > 0.0) {
+					positionY += itemHeight;
+					if (positionY >= maxY) {
+						break;
+					}
+				}
+			} while (startIndex > 0);
 		}
 		if (startIndex < 0) {
 			startIndex = 0;
