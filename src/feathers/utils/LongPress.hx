@@ -190,7 +190,6 @@ class LongPress {
 		}
 		this._stopNextTrigger = false;
 		event.stopImmediatePropagation();
-		trace("stop propagation");
 	}
 
 	private function cleanupMouseEvents():Void {
