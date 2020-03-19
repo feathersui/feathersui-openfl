@@ -210,6 +210,21 @@ class BaseNavigator extends FeathersControl {
 			measureView = cast(this.activeItemView, IMeasureObject);
 		}
 
+		if (this.activeItemView != null) {
+			// optimization: pass down explicit width and height to active view
+			// as soon as possible to avoid expensive validation measurement
+			if (!needsWidth && this.activeItemView.width != this.explicitWidth) {
+				this.activeItemView.width = this.explicitWidth;
+			} else if (!needsToMeasureContent && this.activeItemView.width != stageWidth) {
+				this.activeItemView.width = stageWidth;
+			}
+			if (!needsHeight && this.activeItemView.height != this.explicitHeight) {
+				this.activeItemView.height = this.explicitHeight;
+			} else if (!needsToMeasureContent && this.activeItemView.height != stageHeight) {
+				this.activeItemView.height = stageHeight;
+			}
+		}
+
 		if (Std.is(this.activeItemView, IValidating)) {
 			cast(this.activeItemView, IValidating).validateNow();
 		}
