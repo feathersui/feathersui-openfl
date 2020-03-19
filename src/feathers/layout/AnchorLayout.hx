@@ -43,6 +43,26 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
+				var layoutData:AnchorLayoutData = null;
+				if (layoutObject != null && Std.is(layoutObject.layoutData, AnchorLayoutData)) {
+					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
+				}
+				// optimization: if width and height are known, set them before
+				// validation because measurement could be expensive
+				if (measurements.width != null) {
+					var leftAnchor:Anchor = layoutData.left;
+					var rightAnchor:Anchor = layoutData.right;
+					if (leftAnchor != null && rightAnchor != null && leftAnchor.relativeTo == null && rightAnchor.relativeTo == null) {
+						item.width = measurements.width - leftAnchor.value - rightAnchor.value;
+					}
+				}
+				if (measurements.height != null) {
+					var topAnchor:Anchor = layoutData.top;
+					var bottomAnchor:Anchor = layoutData.bottom;
+					if (topAnchor != null && bottomAnchor != null && topAnchor.relativeTo == null && bottomAnchor.relativeTo == null) {
+						item.height = measurements.height - topAnchor.value - bottomAnchor.value;
+					}
+				}
 			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
