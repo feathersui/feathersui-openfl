@@ -190,10 +190,6 @@ class BaseNavigator extends FeathersControl {
 			return false;
 		}
 
-		if (this.activeItemView != null) {
-			MeasurementsUtil.resetFluidlyWithParent(this._activeViewMeasurements, this.activeItemView, this);
-		}
-
 		var needsToMeasureContent = this.autoSizeMode == CONTENT || this.stage == null;
 		var stageWidth:Float = 0.0;
 		var stageHeight:Float = 0.0;
@@ -211,6 +207,9 @@ class BaseNavigator extends FeathersControl {
 		}
 
 		if (this.activeItemView != null) {
+			if (needsToMeasureContent) {
+				MeasurementsUtil.resetFluidlyWithParent(this._activeViewMeasurements, this.activeItemView, this);
+			}
 			// optimization: pass down explicit width and height to active view
 			// as soon as possible to avoid expensive validation measurement
 			if (!needsWidth && this.activeItemView.width != this.explicitWidth) {
