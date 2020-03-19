@@ -8,11 +8,10 @@
 
 package feathers.controls;
 
-import feathers.layout.IVirtualLayout;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
-import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.core.IDataSelector;
 import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
@@ -23,7 +22,7 @@ import feathers.events.FlatCollectionEvent;
 import feathers.layout.Direction;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
-import feathers.layout.VirtualLayoutCache;
+import feathers.layout.IVirtualLayout;
 import feathers.themes.steel.components.SteelListViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
@@ -32,7 +31,6 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
-import openfl.geom.Point;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -112,13 +110,13 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		super();
 		if (this.viewPort == null) {
-			this.listViewPort = new LayoutViewPort();
+			this.listViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.listViewPort);
 			this.viewPort = this.listViewPort;
 		}
 	}
 
-	private var listViewPort:LayoutViewPort;
+	private var listViewPort:AdvancedLayoutViewPort;
 
 	override private function get_primaryDirection():Direction {
 		if (Std.is(this.layout, IScrollLayout)) {
@@ -160,6 +158,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this.dataProvider == value) {
 			return this.dataProvider;
 		}
+		this._virtualCache.resize(0);
 		if (this.dataProvider != null) {
 			this.dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
@@ -172,6 +171,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
+			this._virtualCache.resize(this.dataProvider.length);
 			this.dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
@@ -317,6 +317,17 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this.selectable;
 	}
 
+	public var virtualLayout(default, set):Bool = true;
+
+	private function set_virtualLayout(value:Bool):Bool {
+		if (this.virtualLayout = value) {
+			return this.virtualLayout;
+		}
+		this.virtualLayout = value;
+		this.setInvalid(InvalidationFlag.LAYOUT);
+		return this.virtualLayout;
+	}
+
 	/**
 		Indicates if selection is changed with `MouseEvent.CLICK` or
 		`TouchEvent.TOUCH_TAP`. If set to `false`, the item renderers will
@@ -357,37 +368,24 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		SteelListViewStyles.initialize();
 	}
 
+	private var _layoutItems:Array<DisplayObject> = [];
+
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
 		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var scrollInvalid = this.isInvalid(InvalidationFlag.SCROLL);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
-		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-
-		if (scrollInvalid) {
-			this.listViewPort.scrollX = this.scrollX;
-			this.listViewPort.scrollY = this.scrollY;
-		}
-
-		var layoutInvalidFromScroll = false;
-		if (Std.is(this.layout, IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
-			layoutInvalidFromScroll = scrollInvalid && scrollLayout.requiresLayoutOnScroll;
-		}
-		if (itemRendererInvalid || selectionInvalid || stateInvalid || dataInvalid || layoutInvalidFromScroll) {
-			this.refreshItemRenderers();
-		}
 
 		if (layoutInvalid || stylesInvalid) {
 			this.listViewPort.layout = this.layout;
 		}
 
+		this.listViewPort.refreshChildren = this.refreshItemRenderers;
+
 		super.update();
 	}
 
-	private function refreshItemRenderers():Void {
+	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
+		this._layoutItems = items;
+
 		if (this.itemRendererRecycler.update == null) {
 			this.itemRendererRecycler.update = defaultUpdateItemRenderer;
 			if (this.itemRendererRecycler.reset == null) {
@@ -469,9 +467,22 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private var _currentItemState = new ListViewItemState();
+	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 
 	private function findUnrenderedData():Void {
-		for (i in 0...this.dataProvider.length) {
+		// remove all old items, then fill with null
+		this._layoutItems.resize(0);
+		this._layoutItems.resize(this.dataProvider.length);
+
+		if (this.virtualLayout && Std.is(this.layout, IVirtualLayout)) {
+			var virtualLayout = cast(this.layout, IVirtualLayout);
+			virtualLayout.virtualCache = this._virtualCache;
+			virtualLayout.getVisibleIndices(this.dataProvider.length, this.listViewPort.visibleWidth, this.listViewPort.visibleHeight, this._visibleIndices);
+		} else {
+			this._visibleIndices.start = 0;
+			this._visibleIndices.end = this.dataProvider.length - 1;
+		}
+		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
 			var item = this.dataProvider.get(i);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
@@ -498,7 +509,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
-				this.listViewPort.setChildIndex(itemRenderer, i);
+				this._layoutItems[i] = itemRenderer;
 				var removed = inactiveItemRenderers.remove(itemRenderer);
 				if (!removed) {
 					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
@@ -517,7 +528,8 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			var itemRenderer = this.createItemRenderer(item, index);
 			itemRenderer.visible = true;
 			this.activeItemRenderers.push(itemRenderer);
-			this.listViewPort.addChildAt(itemRenderer, index);
+			this.listViewPort.addChild(itemRenderer);
+			this._layoutItems[index] = itemRenderer;
 		}
 		this._unrenderedData.resize(0);
 	}
@@ -627,8 +639,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
-			this._virtualCache.insert(event.index, virtualLayout.createEmptyCacheItem());
+			this._virtualCache.insert(event.index, null);
 		}
 		if (this.selectedIndex == -1) {
 			return;
@@ -652,8 +663,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
-			this._virtualCache[event.index] = virtualLayout.createEmptyCacheItem();
+			this._virtualCache[event.index] = null;
 		}
 		if (this.selectedIndex == -1) {
 			return;
@@ -672,6 +682,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private function dataProvider_resetHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
+			this._virtualCache.resize(this.dataProvider.length);
 		}
 	}
 
@@ -680,6 +691,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
 			this._virtualCache.resize(0);
+			this._virtualCache.resize(this.dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
@@ -689,6 +701,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
 			this._virtualCache.resize(0);
+			this._virtualCache.resize(this.dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}

@@ -10,6 +10,7 @@ package feathers.layout;
 
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
+import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
@@ -23,7 +24,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
-class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayout {
+class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayout {
 	/**
 		Creates a new `VerticalListFixedRowLayout` object.
 
@@ -53,6 +54,18 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		return this.scrollY;
 	}
 
+	@:isVar
+	public var virtualCache(get, set):Array<Dynamic>;
+
+	private function get_virtualCache():Array<Dynamic> {
+		return this.virtualCache;
+	}
+
+	private function set_virtualCache(value:Array<Dynamic>):Array<Dynamic> {
+		this.virtualCache = value;
+		return this.virtualCache;
+	}
+
 	/**
 		@see `feathers.layout.IScrollLayout.primaryDirection`
 	**/
@@ -68,7 +81,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 	public var requiresLayoutOnScroll(get, never):Bool;
 
 	private function get_requiresLayoutOnScroll():Bool {
-		return false;
+		return true;
 	}
 
 	/**
@@ -125,11 +138,86 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 		@see `feathers.layout.ILayout.layout`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		var viewPortWidth = measurements.width;
-		var maxWidth:Float = 0.0;
-		var maxHeight:Float = 0.0;
-		if (viewPortWidth == null || this.rowHeight == null) {
-			for (item in items) {
+		var viewPortWidth = this.calculateViewPortWidth(items, measurements);
+		var actualRowHeight = this.calculateRowHeight(items, viewPortWidth);
+		var positionY = 0.0;
+		for (item in items) {
+			if (item != null) {
+				if (Std.is(item, ILayoutObject)) {
+					if (!cast(item, ILayoutObject).includeInLayout) {
+						continue;
+					}
+				}
+				item.x = 0.0;
+				item.y = positionY;
+				item.width = viewPortWidth;
+				item.height = actualRowHeight;
+			}
+			positionY += actualRowHeight;
+		}
+		if (result == null) {
+			result = new LayoutBoundsResult();
+		}
+		result.contentWidth = viewPortWidth;
+		result.contentHeight = items.length * actualRowHeight;
+		result.viewPortWidth = viewPortWidth;
+		var viewPortHeight = measurements.height;
+		if (viewPortHeight != null) {
+			result.viewPortHeight = viewPortHeight;
+		} else if (this.requestedRowCount != null) {
+			result.viewPortHeight = actualRowHeight * this.requestedRowCount;
+		} else {
+			result.viewPortHeight = positionY;
+		}
+		return result;
+	}
+
+	private function calculateViewPortWidth(items:Array<DisplayObject>, measurements:Measurements):Float {
+		if (measurements.width != null) {
+			return measurements.width;
+		}
+		var maxWidth = 0.0;
+		for (i in 0...items.length) {
+			var item = items[i];
+			if (item == null) {
+				continue;
+			}
+			if (Std.is(item, ILayoutObject)) {
+				if (!cast(item, ILayoutObject).includeInLayout) {
+					continue;
+				}
+			}
+			if (Std.is(item, IValidating)) {
+				cast(item, IValidating).validateNow();
+			}
+			var itemWidth = item.width;
+			if (itemWidth > maxWidth) {
+				maxWidth = itemWidth;
+			}
+		}
+		return maxWidth;
+	}
+
+	private function calculateRowHeight(items:Array<DisplayObject>, viewPortWidth:Float):Float {
+		var actualRowHeight = 0.0;
+		if (this.rowHeight != null) {
+			actualRowHeight = this.rowHeight;
+		} else {
+			// find the height of the first existing item
+			for (i in 0...items.length) {
+				var item = items[i];
+				if (item == null) {
+					if (this.virtualCache == null || virtualCache.length <= i) {
+						continue;
+					}
+					var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+					if (cacheItem == null) {
+						continue;
+					}
+					actualRowHeight = cacheItem.itemHeight;
+					break;
+				}
+				item.width = viewPortWidth;
 				if (Std.is(item, ILayoutObject)) {
 					if (!cast(item, ILayoutObject).includeInLayout) {
 						continue;
@@ -138,53 +226,73 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IScrollLayou
 				if (Std.is(item, IValidating)) {
 					cast(item, IValidating).validateNow();
 				}
-				if (viewPortWidth == null && item.width > maxWidth) {
-					maxWidth = item.width;
+				actualRowHeight = item.height;
+				if (this.virtualCache != null) {
+					// since all items are the same height, we can store just
+					// one value as an optimization
+					var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
+					if (cacheItem == null) {
+						cacheItem = new VirtualCacheItem(actualRowHeight);
+						this.virtualCache[0] = cacheItem;
+						FeathersEvent.dispatch(this, Event.CHANGE);
+					} else if (cacheItem.itemHeight != actualRowHeight) {
+						cacheItem.itemHeight = actualRowHeight;
+						this.virtualCache[0] = cacheItem;
+						FeathersEvent.dispatch(this, Event.CHANGE);
+					}
+					// changing the item height in the cache may affect the
+					// number of items that are visible, so we dispatch
+					// Event.CHANGE need to check that again
 				}
-				if (this.rowHeight == null && item.height > maxHeight) {
-					maxHeight = item.height;
-				}
+				break;
 			}
 		}
-		var itemWidth = maxWidth;
-		if (viewPortWidth != null) {
-			itemWidth = viewPortWidth;
-		}
-		var itemHeight = maxHeight;
+		return actualRowHeight;
+	}
+
+	public function getVisibleIndices(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange {
+		var itemHeight = 0.0;
 		if (this.rowHeight != null) {
 			itemHeight = this.rowHeight;
+		} else if (this.virtualCache != null) {
+			var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				itemHeight = cacheItem.itemHeight;
+			}
 		}
-		var positionY = 0.0;
-		for (item in items) {
-			if (Std.is(item, ILayoutObject)) {
-				if (!cast(item, ILayoutObject).includeInLayout) {
-					continue;
+		var startIndex = 0;
+		var endIndex = 0;
+		if (itemHeight > 0.0) {
+			startIndex = Math.floor(this.scrollY / itemHeight);
+			if (startIndex < 0) {
+				startIndex = 0;
+			}
+			endIndex = startIndex + Math.ceil(height / itemHeight);
+			if (endIndex >= itemCount) {
+				var oldEndIndex = endIndex;
+				endIndex = itemCount - 1;
+				// for performance reasons, it's better to always display the same
+				// number of items, even if we technically don't need that many
+				startIndex -= (oldEndIndex - endIndex);
+				if (startIndex < 0) {
+					startIndex = 0;
 				}
 			}
-			item.x = 0.0;
-			item.y = positionY;
-			item.width = itemWidth;
-			item.height = itemHeight;
-			positionY += itemHeight;
 		}
 		if (result == null) {
-			result = new LayoutBoundsResult();
+			return new VirtualLayoutRange(startIndex, endIndex);
 		}
-		result.contentWidth = itemWidth;
-		result.contentHeight = positionY;
-		if (viewPortWidth != null) {
-			result.viewPortWidth = viewPortWidth;
-		} else {
-			result.viewPortWidth = itemWidth;
-		}
-		var viewPortHeight = measurements.height;
-		if (viewPortHeight != null) {
-			result.viewPortHeight = viewPortHeight;
-		} else if (this.requestedRowCount != null) {
-			result.viewPortHeight = itemHeight * this.requestedRowCount;
-		} else {
-			result.viewPortHeight = positionY;
-		}
+		result.start = startIndex;
+		result.end = endIndex;
 		return result;
 	}
+}
+
+@:dox(hide)
+private class VirtualCacheItem {
+	public function new(itemHeight:Float) {
+		this.itemHeight = itemHeight;
+	}
+
+	public var itemHeight:Float;
 }
