@@ -231,7 +231,11 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 		var endIndex = -1;
 		var estimatedItemHeight:Null<Float> = null;
 		var positionY = 0.0;
-		var maxY = this.scrollY + height;
+		var scrollY = this.scrollY;
+		if (scrollY < 0.0) {
+			scrollY = 0.0;
+		}
+		var maxY = scrollY + height;
 		for (i in 0...itemCount) {
 			var itemHeight = 0.0;
 			if (this.virtualCache != null) {
@@ -247,7 +251,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 			}
 			if (itemHeight > 0.0) {
 				positionY += itemHeight;
-				if (startIndex == -1 && positionY >= this.scrollY) {
+				if (startIndex == -1 && positionY >= scrollY) {
 					startIndex = i;
 				}
 				if (startIndex != -1) {
