@@ -235,6 +235,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 		if (scrollY < 0.0) {
 			scrollY = 0.0;
 		}
+		var minItems = 0;
 		var maxY = scrollY + height;
 		for (i in 0...itemCount) {
 			var itemHeight = 0.0;
@@ -244,6 +245,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 					itemHeight = cacheItem.itemHeight;
 					if (estimatedItemHeight == null) {
 						estimatedItemHeight = itemHeight;
+						minItems = Math.ceil(height / estimatedItemHeight) + 1;
 					}
 				} else if (estimatedItemHeight != null) {
 					itemHeight = estimatedItemHeight;
@@ -256,7 +258,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 				}
 				if (startIndex != -1) {
 					endIndex = i;
-					if (positionY >= maxY) {
+					if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
 						break;
 					}
 				}
@@ -264,7 +266,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 		}
 		// if we reached the end with extra space, try back-filling so that the
 		// number of visible items remains mostly stable
-		if (positionY < maxY && startIndex > 0) {
+		if ((positionY < maxY || (endIndex - startIndex + 1) < minItems) && startIndex > 0) {
 			do {
 				startIndex--;
 				var itemHeight = 0.0;
@@ -274,6 +276,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 						itemHeight = cacheItem.itemHeight;
 						if (estimatedItemHeight == null) {
 							estimatedItemHeight = itemHeight;
+							minItems = Math.ceil(height / estimatedItemHeight) + 1;
 						}
 					} else if (estimatedItemHeight != null) {
 						itemHeight = estimatedItemHeight;
@@ -281,7 +284,7 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 				}
 				if (itemHeight > 0.0) {
 					positionY += itemHeight;
-					if (positionY >= maxY) {
+					if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
 						break;
 					}
 				}
