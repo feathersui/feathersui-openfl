@@ -380,6 +380,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		this.listViewPort.refreshChildren = this.refreshItemRenderers;
 
+		for (flag in this._invalidationFlags.keys()) {
+			this.listViewPort.setInvalid(flag);
+		}
+
 		super.update();
 	}
 
