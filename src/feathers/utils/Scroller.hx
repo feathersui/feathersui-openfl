@@ -912,10 +912,6 @@ class Scroller extends EventDispatcher {
 
 		this.cleanupAfterDrag();
 
-		if (!this.draggingX && !this.draggingY) {
-			return;
-		}
-
 		var finishingX = !this.canDragX();
 		var finishingY = !this.canDragY();
 		if (this.scrollX < this.minScrollX || this.scrollX > this.maxScrollX) {
@@ -928,6 +924,10 @@ class Scroller extends EventDispatcher {
 		}
 
 		if (finishingX && finishingY) {
+			return;
+		}
+
+		if (!this.draggingX && !this.draggingY) {
 			return;
 		}
 
