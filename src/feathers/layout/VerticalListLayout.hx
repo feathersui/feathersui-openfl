@@ -25,9 +25,9 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
-class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualLayout {
+class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 	/**
-		Creates a new `VerticalListVariableRowLayout` object.
+		Creates a new `VerticalListLayout` object.
 
 		@since 1.0.0
 	**/
@@ -89,7 +89,8 @@ class VerticalListVariableRowLayout extends EventDispatcher implements IVirtualL
 		The number of rows to render, if the height of the container has not
 		been set explicitly. If `null`, shows all rows.
 
-		In the following example, the layout's requested row count is set to 2 items:
+		In the following example, the layout's requested row count is set to 2
+		complete items:
 
 		```hx
 		layout.requestedRowCount = 2.0;

@@ -9,7 +9,7 @@
 package feathers.themes.steel.components;
 
 import feathers.utils.DeviceUtil;
-import feathers.layout.VerticalListVariableRowLayout;
+import feathers.layout.VerticalListLayout;
 import feathers.controls.ListView;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
@@ -43,7 +43,7 @@ class SteelListViewStyles {
 			listView.fixedScrollBars = isDesktop;
 
 			if (listView.layout == null) {
-				listView.layout = new VerticalListVariableRowLayout();
+				listView.layout = new VerticalListLayout();
 			}
 
 			if (listView.backgroundSkin == null) {
