@@ -8,13 +8,14 @@
 
 package feathers.controls.navigators;
 
-import openfl.errors.ArgumentError;
-import feathers.layout.RelativePosition;
-import feathers.events.FlatCollectionEvent;
-import openfl.display.DisplayObject;
-import openfl.events.Event;
 import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
+import feathers.events.FlatCollectionEvent;
+import feathers.layout.RelativePosition;
+import feathers.themes.steel.components.SteelTabNavigatorStyles;
+import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
+import openfl.events.Event;
 
 /**
 
@@ -33,6 +34,8 @@ class TabNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeTabNavigatorTheme();
+
 		super();
 	}
 
@@ -85,6 +88,10 @@ class TabNavigator extends BaseNavigator {
 
 	private function itemToText(item:TabItem):String {
 		return item.text;
+	}
+
+	private function initializeTabNavigatorTheme():Void {
+		SteelTabNavigatorStyles.initialize();
 	}
 
 	override private function update():Void {
