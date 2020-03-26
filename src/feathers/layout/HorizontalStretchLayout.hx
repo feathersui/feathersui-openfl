@@ -157,6 +157,38 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		The maximum width of an item in the layout.
+
+		@since 1.0.0
+	**/
+	public var maxItemWidth(default, set):Float = Math.POSITIVE_INFINITY;
+
+	private function set_maxItemWidth(value:Float):Float {
+		if (this.maxItemWidth == value) {
+			return this.maxItemWidth;
+		}
+		this.maxItemWidth = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.maxItemWidth;
+	}
+
+	/**
+		The minimum width of an item in the layout.
+
+		@since 1.0.0
+	**/
+	public var minItemWidth(default, set):Float = 0.0;
+
+	private function set_minItemWidth(value:Float):Float {
+		if (this.minItemWidth == value) {
+			return this.minItemWidth;
+		}
+		this.minItemWidth = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.minItemWidth;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
@@ -263,7 +295,13 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 		}
 		var percentToPixels = remainingWidth / totalPercentWidth;
 		for (item in items) {
-			item.width = percentToPixels * 100.0;
+			var itemWidth = percentToPixels * 100.0;
+			if (itemWidth < this.minItemWidth) {
+				itemWidth = this.minItemWidth;
+			} else if (itemWidth > this.maxItemWidth) {
+				itemWidth = this.maxItemWidth;
+			}
+			item.width = itemWidth;
 			if (Std.is(item, IValidating)) {
 				// changing the width of the item may cause its height
 				// to change, so we need to validate. the height is

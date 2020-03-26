@@ -157,6 +157,38 @@ class VerticalStretchLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		The maximum height of an item in the layout.
+
+		@since 1.0.0
+	**/
+	public var maxItemHeight(default, set):Float = Math.POSITIVE_INFINITY;
+
+	private function set_maxItemHeight(value:Float):Float {
+		if (this.maxItemHeight == value) {
+			return this.maxItemHeight;
+		}
+		this.maxItemHeight = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.maxItemHeight;
+	}
+
+	/**
+		The minimum height of an item in the layout.
+
+		@since 1.0.0
+	**/
+	public var minItemHeight(default, set):Float = 0.0;
+
+	private function set_minItemHeight(value:Float):Float {
+		if (this.minItemHeight == value) {
+			return this.minItemHeight;
+		}
+		this.minItemHeight = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.minItemHeight;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
@@ -266,7 +298,13 @@ class VerticalStretchLayout extends EventDispatcher implements ILayout {
 		}
 		var percentToPixels = remainingHeight / totalPercentHeight;
 		for (item in items) {
-			item.height = percentToPixels * 100.0;
+			var itemHeight = percentToPixels * 100.0;
+			if (itemHeight < this.minItemHeight) {
+				itemHeight = this.minItemHeight;
+			} else if (itemHeight > this.maxItemHeight) {
+				itemHeight = this.maxItemHeight;
+			}
+			item.height = itemHeight;
 			if (Std.is(item, IValidating)) {
 				// changing the width of the item may cause its height
 				// to change, so we need to validate. the height is
