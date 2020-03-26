@@ -11,6 +11,7 @@ package feathers.themes.steel.components;
 import feathers.controls.TabBar;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleButtonState;
+import feathers.layout.HorizontalStretchLayout;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -32,6 +33,15 @@ class SteelTabBarStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
+
+		if (styleProvider.getStyleFunction(TabBar, null) == null) {
+			styleProvider.setStyleFunction(TabBar, null, function(tabBar:TabBar):Void {
+				if (tabBar.layout == null) {
+					tabBar.layout = new HorizontalStretchLayout();
+				}
+			});
+		}
+
 		if (styleProvider.getStyleFunction(ToggleButton, TabBar.CHILD_VARIANT_TAB) == null) {
 			styleProvider.setStyleFunction(ToggleButton, TabBar.CHILD_VARIANT_TAB, function(button:ToggleButton):Void {
 				if (button.backgroundSkin == null) {
