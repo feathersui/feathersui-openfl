@@ -8,6 +8,11 @@
 
 package feathers.controls;
 
+import feathers.core.IUIControl;
+import feathers.core.IStateContext;
+import feathers.core.IValidating;
+import feathers.core.IStateObserver;
+import openfl.display.DisplayObject;
 import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
@@ -257,7 +262,7 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		```hx
 		var layout = new HorizontalStretchLayout();
 		layout.maxItemWidth = 300.0;
-		listView.layout = layout;
+		tabBar.layout = layout;
 		```
 
 		@since 1.0.0
@@ -265,9 +270,53 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	@:style
 	public var layout:ILayout = null;
 
+	private var _currentBackgroundSkin:DisplayObject = null;
+	private var _backgroundSkinMeasurements:Measurements = null;
+
+	/**
+		The default background skin to display behind the tabs.
+
+		The following example passes a bitmap for the tab bar to use as a
+		background skin:
+
+		```hx
+		tabBar.backgroundSkin = new Bitmap(bitmapData);
+		```
+
+		@default null
+
+		@see `TabBar.disabledBackgroundSkin`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var backgroundSkin:DisplayObject = null;
+
+	/**
+		A background skin to display behind the tabs when the tab bar is
+		disabled.
+
+		The following example gives the tab bar a disabled background skin:
+
+		```hx
+		tabBar.disabledBackgroundSkin = new Bitmap(bitmapData);
+		tabBar.enabled = false;
+		```
+
+		@default null
+
+		@see `TabBar.backgroundSkin`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var disabledBackgroundSkin:DisplayObject = null;
+
 	private var _layoutMeasurements = new Measurements();
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
+
+	private var _currentItemState = new TabBarItemState();
 
 	private function initializeTabBarTheme():Void {
 		SteelTabBarStyles.initialize();
@@ -281,6 +330,10 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var tabsInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_FACTORY);
 
+		if (stylesInvalid || stateInvalid) {
+			this.refreshBackgroundSkin();
+		}
+
 		if (tabsInvalid || selectionInvalid || stateInvalid || dataInvalid) {
 			this.refreshTabs();
 		}
@@ -288,6 +341,8 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		this.refreshViewPortBounds();
 		this.handleLayout();
 		this.handleLayoutResult();
+
+		this.layoutBackgroundSkin();
 
 		// final invalidation to avoid juggler next frame issues
 		this.validateChildren();
@@ -393,9 +448,76 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		this.inactiveTabs.resize(0);
 	}
 
-	private var _currentItemState = new TabBarItemState();
+	private function refreshBackgroundSkin():Void {
+		var oldSkin = this._currentBackgroundSkin;
+		this._currentBackgroundSkin = this.getCurrentBackgroundSkin();
+		if (this._currentBackgroundSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentBackgroundSkin(oldSkin);
+		if (this._currentBackgroundSkin == null) {
+			this._backgroundSkinMeasurements = null;
+			return;
+		}
+		if (Std.is(this._currentBackgroundSkin, IUIControl)) {
+			cast(this._currentBackgroundSkin, IUIControl).initializeNow();
+		}
+		if (this._backgroundSkinMeasurements == null) {
+			this._backgroundSkinMeasurements = new Measurements(this._currentBackgroundSkin);
+		} else {
+			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
+		}
+		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
+			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
+		}
+		this.addChildAt(this._currentBackgroundSkin, 0);
+	}
+
+	private function getCurrentBackgroundSkin():DisplayObject {
+		if (!this.enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
+		}
+		return this.backgroundSkin;
+	}
+
+	private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if (Std.is(skin, IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = null;
+		}
+		this._backgroundSkinMeasurements.restore(skin);
+		if (skin.parent == this) {
+			// we need to restore these values so that they won't be lost the
+			// next time that this skin is used for measurement
+			this.removeChild(skin);
+		}
+	}
+
+	private function layoutBackgroundSkin():Void {
+		if (this._currentBackgroundSkin == null) {
+			return;
+		}
+		this._currentBackgroundSkin.x = 0.0;
+		this._currentBackgroundSkin.y = 0.0;
+
+		// don't set the width or height explicitly unless necessary because if
+		// our explicit dimensions are cleared later, the measurement may not be
+		// accurate anymore
+		if (this._currentBackgroundSkin.width != this.actualWidth) {
+			this._currentBackgroundSkin.width = this.actualWidth;
+		}
+		if (this._currentBackgroundSkin.height != this.actualHeight) {
+			this._currentBackgroundSkin.height = this.actualHeight;
+		}
+		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+			cast(this._currentBackgroundSkin, IValidating).validateNow();
+		}
+	}
 
 	private function findUnrenderedData():Void {
+		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		for (i in 0...this.dataProvider.length) {
 			var item = this.dataProvider.get(i);
 			var tab = this.dataToTab.get(item);
@@ -419,7 +541,7 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				tab.visible = true;
-				this.addChildAt(tab, i);
+				this.addChildAt(tab, i + depthOffset);
 				var removed = this.inactiveTabs.remove(tab);
 				if (!removed) {
 					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
@@ -433,12 +555,13 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	}
 
 	private function renderUnrenderedData():Void {
+		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		for (item in this._unrenderedData) {
 			var index = this.dataProvider.indexOf(item);
 			var tab = this.createTab(item, index);
 			tab.visible = true;
 			this.activeTabs.push(tab);
-			this.addChildAt(tab, index);
+			this.addChildAt(tab, index + depthOffset);
 		}
 		this._unrenderedData.resize(0);
 	}
