@@ -62,6 +62,11 @@ script:
 - haxelib run openfl build neko
 - haxelib run openfl build html5
 - haxelib run openfl build flash
+# build tab-navigator sample
+- cd $TRAVIS_BUILD_DIR/samples/tab-navigator
+- haxelib run openfl build neko
+- haxelib run openfl build html5
+- haxelib run openfl build flash
 # run automated tests
 - cd $TRAVIS_BUILD_DIR/test
 - haxelib run munit test -neko -result-exit-code

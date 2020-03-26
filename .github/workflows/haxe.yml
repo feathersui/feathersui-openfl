@@ -70,3 +70,9 @@ jobs:
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+    - name: Build samples/tab-navigator
+      working-directory: samples/tab-navigator
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
