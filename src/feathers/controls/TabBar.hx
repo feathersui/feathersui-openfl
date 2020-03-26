@@ -245,7 +245,26 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		return Std.string(data);
 	}
 
-	private var _layout:ILayout = new HorizontalStretchLayout();
+	/**
+		The layout algorithm used to position and size the tabs.
+
+		By default, if no layout is provided by the time that the list view
+		initializes, a default layout that displays items horizontally will be
+		created.
+
+		The following example tells the list view to use a custom layout:
+
+		```hx
+		var layout = new HorizontalStretchLayout();
+		layout.maxItemWidth = 300.0;
+		listView.layout = layout;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var layout:ILayout = null;
+
 	private var _layoutMeasurements = new Measurements();
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
@@ -281,7 +300,7 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	private function handleLayout():Void {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
-		this._layout.layout(cast this.activeTabs, this._layoutMeasurements, this._layoutResult);
+		this.layout.layout(cast this.activeTabs, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}
 
