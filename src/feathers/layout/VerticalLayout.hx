@@ -447,8 +447,8 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			}
 		}
 		remainingHeight -= totalMeasuredHeight;
-		if (remainingHeight < 0) {
-			remainingHeight = 0;
+		if (remainingHeight < 0.0) {
+			remainingHeight = 0.0;
 		}
 		var needsAnotherPass = true;
 		while (needsAnotherPass) {
