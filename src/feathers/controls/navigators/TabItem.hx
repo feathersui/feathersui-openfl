@@ -80,7 +80,14 @@ class TabItem {
 		return item;
 	}
 
-	private function new() {}
+	private function new() {
+		this.internalID = Std.string(internalIDCounter);
+		internalIDCounter++;
+	}
+
+	private static var internalIDCounter = 0;
+
+	private var internalID:String;
 
 	/**
 		The text to display in the tab bar.

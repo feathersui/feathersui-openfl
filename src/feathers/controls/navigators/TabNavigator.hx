@@ -47,13 +47,13 @@ class TabNavigator extends BaseNavigator {
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler);
 			for (item in this.dataProvider) {
-				this.removeItemInternal(item.text);
+				this.removeItemInternal(item.internalID);
 			}
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
 			for (item in this.dataProvider) {
-				this.addItemInternal(item.text, item);
+				this.addItemInternal(item.internalID, item);
 			}
 			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler, false, 0, true);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler, false, 0, true);
@@ -114,23 +114,23 @@ class TabNavigator extends BaseNavigator {
 
 	private function tabNavigator_tabBar_changeHandler(event:Event):Void {
 		var item = cast(this.tabBar.selectedItem, TabItem);
-		var result = this.showItemInternal(item.text, null);
+		var result = this.showItemInternal(item.internalID, null);
 	}
 
 	private function tabNavigator_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
 		var item = event.addedItem;
-		this.addItemInternal(item.text, item);
+		this.addItemInternal(item.internalID, item);
 	}
 
 	private function tabNavigator_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
 		var item = event.removedItem;
-		this.removeItemInternal(item.text);
+		this.removeItemInternal(item.internalID);
 	}
 
 	private function tabNavigator_dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
 		var addedItem = event.addedItem;
 		var removedItem = event.removedItem;
-		this.removeItemInternal(removedItem.text);
-		this.addItemInternal(addedItem.text, addedItem);
+		this.removeItemInternal(removedItem.internalID);
+		this.addItemInternal(addedItem.internalID, addedItem);
 	}
 }
