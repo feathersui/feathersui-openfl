@@ -15,6 +15,7 @@ import feathers.layout.IScrollLayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
+import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 
@@ -23,7 +24,17 @@ import openfl.events.Event;
 class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	public function new() {
 		super();
+
+		// an invisible background that makes the entire width and height of the
+		// viewport interactive for touch scrolling
+		this._background = new Sprite();
+		this._background.graphics.beginFill(0xff00ff, 0.0);
+		this._background.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
+		this._background.graphics.endFill();
+		this.addChild(this._background);
 	}
+
+	private var _background:Sprite;
 
 	private var _actualMinVisibleWidth:Float = 0.0;
 	private var _explicitMinVisibleWidth:Null<Float> = null;
@@ -326,6 +337,11 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this._actualVisibleHeight = viewPortHeight;
 		this._actualMinVisibleWidth = viewPortWidth;
 		this._actualMinVisibleHeight = viewPortHeight;
+
+		this._background.x = 0.0;
+		this._background.y = 0.0;
+		this._background.width = this.actualWidth;
+		this._background.height = this.actualHeight;
 	}
 
 	private function layout_changeHandler(event:Event):Void {
