@@ -8,6 +8,8 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
+import feathers.layout.HorizontalLayout;
 import feathers.controls.TabBar;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleButtonState;
@@ -36,8 +38,20 @@ class SteelTabBarStyles {
 
 		if (styleProvider.getStyleFunction(TabBar, null) == null) {
 			styleProvider.setStyleFunction(TabBar, null, function(tabBar:TabBar):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
+				if (tabBar.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = theme.getControlFill();
+					skin.disabledFill = theme.getControlDisabledFill();
+					tabBar.backgroundSkin = skin;
+				}
 				if (tabBar.layout == null) {
-					tabBar.layout = new HorizontalStretchLayout();
+					var layout = new HorizontalLayout();
+					if (!isDesktop) {
+						layout.horizontalAlign = CENTER;
+					}
+					tabBar.layout = layout;
 				}
 			});
 		}

@@ -182,6 +182,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		return SolidColor(this.controlFillColor2);
 	}
 
+	private function getControlDisabledFill():FillStyle {
+		return SolidColor(this.controlDisabledFillColor, 0.7);
+	}
+
 	private function getButtonFill():FillStyle {
 		return Gradient(GradientType.LINEAR, [this.controlFillColor1, this.controlFillColor2], [1.0, 1.0], [0, 0xff], Math.PI / 2);
 	}
