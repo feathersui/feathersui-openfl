@@ -15,7 +15,7 @@ import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
 /**
-	Positions items from top to bottom in a single column.
+	Positions items from left to right in a single row.
 
 	@see [Tutorial: How to use HorizontalLayout with layout containers](https://feathersui.com/learn/haxe-openfl/horizontal-layout/)
 	@see `feathers.layout.HorizontalLayoutData`
