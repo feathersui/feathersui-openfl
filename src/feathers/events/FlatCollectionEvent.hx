@@ -111,7 +111,8 @@ class FlatCollectionEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static function dispatch(dispatcher:IEventDispatcher, type:String, index:Int, bubbles:Bool = false, cancelable:Bool = false):Bool {
+	public static function dispatch(dispatcher:IEventDispatcher, type:String, index:Int, addedItem:Dynamic = null, removedItem:Dynamic = null,
+			bubbles:Bool = false, cancelable:Bool = false):Bool {
 		#if flash
 		var event = new FlatCollectionEvent(type, index, bubbles, cancelable);
 		return dispatcher.dispatchEvent(event);
@@ -119,6 +120,8 @@ class FlatCollectionEvent extends Event {
 		var event = _pool.get();
 		event.type = type;
 		event.index = index;
+		event.addedItem = addedItem;
+		event.removedItem = removedItem;
 		event.bubbles = bubbles;
 		event.cancelable = cancelable;
 		var result = dispatcher.dispatchEvent(event);
@@ -134,14 +137,18 @@ class FlatCollectionEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public function new(type:String, index:Int, bubbles:Bool = false, cancelable:Bool = false) {
+	public function new(type:String, index:Int, addedItem:Dynamic = null, removedItem:Dynamic = null, bubbles:Bool = false, cancelable:Bool = false) {
 		super(type, bubbles, cancelable);
 		this.index = index;
+		this.addedItem = addedItem;
+		this.removedItem = removedItem;
 	}
 
 	public var index:Int;
+	public var addedItem:Dynamic;
+	public var removedItem:Dynamic;
 
 	override public function clone():Event {
-		return new FlatCollectionEvent(this.type, this.index, this.bubbles, this.cancelable);
+		return new FlatCollectionEvent(this.type, this.index, this.addedItem, this.removedItem, this.bubbles, this.cancelable);
 	}
 }

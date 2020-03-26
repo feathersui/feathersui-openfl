@@ -156,14 +156,14 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 				var includeItem = this.filterFunction(item);
 				if (includeItem) {
 					this._filterAndSortData[index] = item;
-					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index);
+					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
 					FeathersEvent.dispatch(this, Event.CHANGE);
 					return;
 				} else {
 					// if the item is excluded, the item at this index is
 					// removed instead of being replaced by the new item
 					this._filterAndSortData.remove(oldItem);
-					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index);
+					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index, null, oldItem);
 					FeathersEvent.dispatch(this, Event.CHANGE);
 					return;
 				}
@@ -173,14 +173,15 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 				// then try to figure out where the new item goes when inserted
 				var sortedIndex = this.getSortedInsertionIndex(item);
 				this._filterAndSortData[sortedIndex] = item;
-				FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index);
+				FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
 				FeathersEvent.dispatch(this, Event.CHANGE);
 				return;
 			}
 		}
 		// no filter or sort
+		var oldItem = (index < this.array.length) ? this.array[index] : null;
 		this.array[index] = item;
-		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index);
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
@@ -256,7 +257,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			this._filterAndSortData.remove(item);
 		}
 		this.array.remove(item);
-		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index);
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index, null, item);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
@@ -276,10 +277,10 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			this._filterAndSortData.remove(item);
 			this.array.remove(item);
 		} else {
-			var item = this.array[index];
+			item = this.array[index];
 			this.array.remove(item);
 		}
-		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index);
+		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index, null, item);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return item;
 	}
@@ -451,14 +452,14 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 				this._filterAndSortData.insert(sortedIndex, item);
 				if (dispatchEvents) {
 					// don't dispatch these events if the item is filtered!
-					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.ADD_ITEM, index);
+					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.ADD_ITEM, index, item);
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
 			}
 		} else {
 			this.array.insert(index, item);
 			if (dispatchEvents) {
-				FlatCollectionEvent.dispatch(this, FlatCollectionEvent.ADD_ITEM, index);
+				FlatCollectionEvent.dispatch(this, FlatCollectionEvent.ADD_ITEM, index, item);
 				FeathersEvent.dispatch(this, Event.CHANGE);
 			}
 		}
