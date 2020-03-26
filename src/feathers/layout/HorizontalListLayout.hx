@@ -108,12 +108,137 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	}
 
 	/**
+		The space, in pixels, between the parent container's top edge and its
+		content.
+
+		In the following example, the layout's top padding is set to 20 pixels:
+
+		```hx
+		layout.paddingTop = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingTop(default, set):Float = 0.0;
+
+	private function set_paddingTop(value:Float):Float {
+		if (this.paddingTop == value) {
+			return this.paddingTop;
+		}
+		this.paddingTop = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingTop;
+	}
+
+	/**
+		The space, in pixels, between the parent container's right edge and its
+		content.
+
+		In the following example, the layout's right padding is set to 20 pixels:
+
+		```hx
+		layout.paddingRight = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingRight(default, set):Float = 0.0;
+
+	private function set_paddingRight(value:Float):Float {
+		if (this.paddingRight == value) {
+			return this.paddingRight;
+		}
+		this.paddingRight = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingRight;
+	}
+
+	/**
+		The space, in pixels, between the parent container's bottom edge and its
+		content.
+
+		In the following example, the layout's bottom padding is set to 20 pixels:
+
+		```hx
+		layout.paddingBottom = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingBottom(default, set):Float = 0.0;
+
+	private function set_paddingBottom(value:Float):Float {
+		if (this.paddingBottom == value) {
+			return this.paddingBottom;
+		}
+		this.paddingBottom = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingBottom;
+	}
+
+	/**
+		The space, in pixels, between the parent container's left edge and its
+		content.
+
+		In the following example, the layout's left padding is set to 20 pixels:
+
+		```hx
+		layout.paddingLeft = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingLeft(default, set):Float = 0.0;
+
+	private function set_paddingLeft(value:Float):Float {
+		if (this.paddingLeft == value) {
+			return this.paddingLeft;
+		}
+		this.paddingLeft = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingLeft;
+	}
+
+	/**
+		The space, in pixels, between each two adjacent items in the layout.
+
+		In the following example, the layout's gap is set to 20 pixels:
+
+		```hx
+		layout.gap = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var gap(default, set):Float = 0.0;
+
+	private function set_gap(value:Float):Float {
+		if (this.gap == value) {
+			return this.gap;
+		}
+		this.gap = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.gap;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortHeight = this.calculateViewPortHeight(items, measurements);
-		var virtualColumnWidth = this.calculateVirtualColumnWidth(items, viewPortHeight);
-		var positionX = 0.0;
+		var itemHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
+		var virtualColumnWidth = this.calculateVirtualColumnWidth(items, itemHeight);
+		var positionX = this.paddingLeft;
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
@@ -124,7 +249,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 						itemWidth = cacheItem.itemWidth;
 					}
 				}
-				positionX += itemWidth;
+				positionX += itemWidth + this.gap;
 				continue;
 			}
 			if (Std.is(item, ILayoutObject)) {
@@ -133,8 +258,8 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				}
 			}
 			item.x = positionX;
-			item.y = 0.0;
-			item.height = viewPortHeight;
+			item.y = this.paddingTop;
+			item.height = itemHeight;
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -151,8 +276,12 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
 			}
-			positionX += itemWidth;
+			positionX += itemWidth + this.gap;
 		}
+		if (items.length > 0) {
+			positionX -= this.gap;
+		}
+		positionX += this.paddingRight;
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
@@ -193,10 +322,10 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				maxHeight = itemHeight;
 			}
 		}
-		return maxHeight;
+		return maxHeight + this.paddingTop + this.paddingBottom;
 	}
 
-	private function calculateVirtualColumnWidth(items:Array<DisplayObject>, viewPortHeight:Float):Float {
+	private function calculateVirtualColumnWidth(items:Array<DisplayObject>, itemHeight:Float):Float {
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
@@ -209,7 +338,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				}
 				return cacheItem.itemWidth;
 			}
-			item.height = viewPortHeight;
+			item.height = itemHeight;
 			if (Std.is(item, ILayoutObject)) {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
@@ -227,7 +356,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		var startIndex = -1;
 		var endIndex = -1;
 		var estimatedItemWidth:Null<Float> = null;
-		var positionX = 0.0;
+		var positionX = this.paddingLeft;
 		var scrollX = this.scrollX;
 		if (scrollX < 0.0) {
 			scrollX = 0.0;
@@ -242,22 +371,20 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
 						estimatedItemWidth = itemWidth;
-						minItems = Math.ceil(width / estimatedItemWidth) + 1;
+						minItems = Math.ceil(width / (estimatedItemWidth) + this.gap) + 1;
 					}
 				} else if (estimatedItemWidth != null) {
 					itemWidth = estimatedItemWidth;
 				}
 			}
-			if (itemWidth > 0.0) {
-				positionX += itemWidth;
-				if (startIndex == -1 && positionX >= scrollX) {
-					startIndex = i;
-				}
-				if (startIndex != -1) {
-					endIndex = i;
-					if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
-						break;
-					}
+			positionX += itemWidth + this.gap;
+			if (startIndex == -1 && positionX >= scrollX) {
+				startIndex = i;
+			}
+			if (startIndex != -1) {
+				endIndex = i;
+				if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
+					break;
 				}
 			}
 		}
@@ -273,17 +400,15 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 						itemWidth = cacheItem.itemWidth;
 						if (estimatedItemWidth == null) {
 							estimatedItemWidth = itemWidth;
-							minItems = Math.ceil(width / estimatedItemWidth) + 1;
+							minItems = Math.ceil(width / (estimatedItemWidth) + this.gap) + 1;
 						}
 					} else if (estimatedItemWidth != null) {
 						itemWidth = estimatedItemWidth;
 					}
 				}
-				if (itemWidth > 0.0) {
-					positionX += itemWidth;
-					if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
-						break;
-					}
+				positionX += itemWidth + this.gap;
+				if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
+					break;
 				}
 			} while (startIndex > 0);
 		}

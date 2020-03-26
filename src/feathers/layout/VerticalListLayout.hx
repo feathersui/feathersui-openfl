@@ -112,12 +112,137 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 	}
 
 	/**
+		The space, in pixels, between the parent container's top edge and its
+		content.
+
+		In the following example, the layout's top padding is set to 20 pixels:
+
+		```hx
+		layout.paddingTop = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingTop(default, set):Float = 0.0;
+
+	private function set_paddingTop(value:Float):Float {
+		if (this.paddingTop == value) {
+			return this.paddingTop;
+		}
+		this.paddingTop = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingTop;
+	}
+
+	/**
+		The space, in pixels, between the parent container's right edge and its
+		content.
+
+		In the following example, the layout's right padding is set to 20 pixels:
+
+		```hx
+		layout.paddingRight = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingRight(default, set):Float = 0.0;
+
+	private function set_paddingRight(value:Float):Float {
+		if (this.paddingRight == value) {
+			return this.paddingRight;
+		}
+		this.paddingRight = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingRight;
+	}
+
+	/**
+		The space, in pixels, between the parent container's bottom edge and its
+		content.
+
+		In the following example, the layout's bottom padding is set to 20 pixels:
+
+		```hx
+		layout.paddingBottom = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingBottom(default, set):Float = 0.0;
+
+	private function set_paddingBottom(value:Float):Float {
+		if (this.paddingBottom == value) {
+			return this.paddingBottom;
+		}
+		this.paddingBottom = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingBottom;
+	}
+
+	/**
+		The space, in pixels, between the parent container's left edge and its
+		content.
+
+		In the following example, the layout's left padding is set to 20 pixels:
+
+		```hx
+		layout.paddingLeft = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingLeft(default, set):Float = 0.0;
+
+	private function set_paddingLeft(value:Float):Float {
+		if (this.paddingLeft == value) {
+			return this.paddingLeft;
+		}
+		this.paddingLeft = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingLeft;
+	}
+
+	/**
+		The space, in pixels, between each two adjacent items in the layout.
+
+		In the following example, the layout's gap is set to 20 pixels:
+
+		```hx
+		layout.gap = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var gap(default, set):Float = 0.0;
+
+	private function set_gap(value:Float):Float {
+		if (this.gap == value) {
+			return this.gap;
+		}
+		this.gap = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.gap;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortWidth = this.calculateViewPortWidth(items, measurements);
-		var virtualRowHeight = this.calculateVirtualRowHeight(items, viewPortWidth);
-		var positionY = 0.0;
+		var itemWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		var virtualRowHeight = this.calculateVirtualRowHeight(items, itemWidth);
+		var positionY = this.paddingTop;
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
@@ -128,7 +253,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 						itemHeight = cacheItem.itemHeight;
 					}
 				}
-				positionY += itemHeight;
+				positionY += itemHeight + this.gap;
 				continue;
 			}
 			if (Std.is(item, ILayoutObject)) {
@@ -136,9 +261,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 					continue;
 				}
 			}
-			item.x = 0.0;
+			item.x = this.paddingLeft;
 			item.y = positionY;
-			item.width = viewPortWidth;
+			item.width = itemWidth;
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -155,8 +280,12 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
 			}
-			positionY += itemHeight;
+			positionY += itemHeight + this.gap;
 		}
+		if (items.length > 0) {
+			positionY -= this.gap;
+		}
+		positionY += this.paddingBottom;
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
@@ -197,10 +326,10 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 				maxWidth = itemWidth;
 			}
 		}
-		return maxWidth;
+		return maxWidth + this.paddingLeft + this.paddingRight;
 	}
 
-	private function calculateVirtualRowHeight(items:Array<DisplayObject>, viewPortWidth:Float):Float {
+	private function calculateVirtualRowHeight(items:Array<DisplayObject>, itemWidth:Float):Float {
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
@@ -213,7 +342,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 				}
 				return cacheItem.itemHeight;
 			}
-			item.width = viewPortWidth;
+			item.width = itemWidth;
 			if (Std.is(item, ILayoutObject)) {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
@@ -231,7 +360,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		var startIndex = -1;
 		var endIndex = -1;
 		var estimatedItemHeight:Null<Float> = null;
-		var positionY = 0.0;
+		var positionY = this.paddingTop;
 		var scrollY = this.scrollY;
 		if (scrollY < 0.0) {
 			scrollY = 0.0;
@@ -246,22 +375,20 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 					itemHeight = cacheItem.itemHeight;
 					if (estimatedItemHeight == null) {
 						estimatedItemHeight = itemHeight;
-						minItems = Math.ceil(height / estimatedItemHeight) + 1;
+						minItems = Math.ceil(height / (estimatedItemHeight + this.gap)) + 1;
 					}
 				} else if (estimatedItemHeight != null) {
 					itemHeight = estimatedItemHeight;
 				}
 			}
-			if (itemHeight > 0.0) {
-				positionY += itemHeight;
-				if (startIndex == -1 && positionY >= scrollY) {
-					startIndex = i;
-				}
-				if (startIndex != -1) {
-					endIndex = i;
-					if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
-						break;
-					}
+			positionY += itemHeight + this.gap;
+			if (startIndex == -1 && positionY >= scrollY) {
+				startIndex = i;
+			}
+			if (startIndex != -1) {
+				endIndex = i;
+				if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
+					break;
 				}
 			}
 		}
@@ -277,17 +404,15 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 						itemHeight = cacheItem.itemHeight;
 						if (estimatedItemHeight == null) {
 							estimatedItemHeight = itemHeight;
-							minItems = Math.ceil(height / estimatedItemHeight) + 1;
+							minItems = Math.ceil(height / (estimatedItemHeight + this.gap)) + 1;
 						}
 					} else if (estimatedItemHeight != null) {
 						itemHeight = estimatedItemHeight;
 					}
 				}
-				if (itemHeight > 0.0) {
-					positionY += itemHeight;
-					if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
-						break;
-					}
+				positionY += itemHeight + this.gap;
+				if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
+					break;
 				}
 			} while (startIndex > 0);
 		}
