@@ -15,7 +15,7 @@ import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
 /**
-	Positions items from left to right in a single column, and all items are
+	Positions items from left to right in a single row, and all items are
 	resized to have the same width and height.
 
 	@see [Tutorial: How to use HorizontalStretchLayout with layout containers](https://feathersui.com/learn/haxe-openfl/horizontal-stretch-layout/)
