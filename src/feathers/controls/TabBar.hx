@@ -17,7 +17,7 @@ import feathers.data.IFlatCollection;
 import feathers.data.TabBarItemState;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
-import feathers.layout.HorizontalLayout;
+import feathers.layout.HorizontalStretchLayout;
 import feathers.layout.ILayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
@@ -245,7 +245,7 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		return Std.string(data);
 	}
 
-	private var _layout:ILayout = new HorizontalLayout();
+	private var _layout:ILayout = new HorizontalStretchLayout();
 	private var _layoutMeasurements = new Measurements();
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
