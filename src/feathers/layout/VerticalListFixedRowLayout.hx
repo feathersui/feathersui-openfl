@@ -135,12 +135,137 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	}
 
 	/**
+		The space, in pixels, between the parent container's top edge and its
+		content.
+
+		In the following example, the layout's top padding is set to 20 pixels:
+
+		```hx
+		layout.paddingTop = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingTop(default, set):Float = 0.0;
+
+	private function set_paddingTop(value:Float):Float {
+		if (this.paddingTop == value) {
+			return this.paddingTop;
+		}
+		this.paddingTop = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingTop;
+	}
+
+	/**
+		The space, in pixels, between the parent container's right edge and its
+		content.
+
+		In the following example, the layout's right padding is set to 20 pixels:
+
+		```hx
+		layout.paddingRight = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingRight(default, set):Float = 0.0;
+
+	private function set_paddingRight(value:Float):Float {
+		if (this.paddingRight == value) {
+			return this.paddingRight;
+		}
+		this.paddingRight = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingRight;
+	}
+
+	/**
+		The space, in pixels, between the parent container's bottom edge and its
+		content.
+
+		In the following example, the layout's bottom padding is set to 20 pixels:
+
+		```hx
+		layout.paddingBottom = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingBottom(default, set):Float = 0.0;
+
+	private function set_paddingBottom(value:Float):Float {
+		if (this.paddingBottom == value) {
+			return this.paddingBottom;
+		}
+		this.paddingBottom = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingBottom;
+	}
+
+	/**
+		The space, in pixels, between the parent container's left edge and its
+		content.
+
+		In the following example, the layout's left padding is set to 20 pixels:
+
+		```hx
+		layout.paddingLeft = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var paddingLeft(default, set):Float = 0.0;
+
+	private function set_paddingLeft(value:Float):Float {
+		if (this.paddingLeft == value) {
+			return this.paddingLeft;
+		}
+		this.paddingLeft = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.paddingLeft;
+	}
+
+	/**
+		The space, in pixels, between each two adjacent items in the layout.
+
+		In the following example, the layout's gap is set to 20 pixels:
+
+		```hx
+		layout.gap = 20.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	public var gap(default, set):Float = 0.0;
+
+	private function set_gap(value:Float):Float {
+		if (this.gap == value) {
+			return this.gap;
+		}
+		this.gap = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.gap;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortWidth = this.calculateViewPortWidth(items, measurements);
-		var actualRowHeight = this.calculateRowHeight(items, viewPortWidth);
-		var positionY = 0.0;
+		var itemWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		var actualRowHeight = this.calculateRowHeight(items, itemWidth);
+		var positionY = this.paddingTop;
 		for (item in items) {
 			if (item != null) {
 				if (Std.is(item, ILayoutObject)) {
@@ -148,18 +273,22 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 						continue;
 					}
 				}
-				item.x = 0.0;
+				item.x = this.paddingLeft;
 				item.y = positionY;
-				item.width = viewPortWidth;
+				item.width = itemWidth;
 				item.height = actualRowHeight;
 			}
-			positionY += actualRowHeight;
+			positionY += actualRowHeight + this.gap;
 		}
+		if (items.length > 0) {
+			positionY -= this.gap;
+		}
+		positionY += this.paddingBottom;
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
 		result.contentWidth = viewPortWidth;
-		result.contentHeight = items.length * actualRowHeight;
+		result.contentHeight = positionY;
 		result.viewPortWidth = viewPortWidth;
 		var viewPortHeight = measurements.height;
 		if (viewPortHeight != null) {
@@ -195,10 +324,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				maxWidth = itemWidth;
 			}
 		}
-		return maxWidth;
+		return maxWidth + this.paddingLeft + this.paddingRight;
 	}
 
-	private function calculateRowHeight(items:Array<DisplayObject>, viewPortWidth:Float):Float {
+	private function calculateRowHeight(items:Array<DisplayObject>, itemWidth:Float):Float {
 		var actualRowHeight = 0.0;
 		if (this.rowHeight != null) {
 			actualRowHeight = this.rowHeight;
@@ -217,7 +346,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					actualRowHeight = cacheItem.itemHeight;
 					break;
 				}
-				item.width = viewPortWidth;
+				item.width = itemWidth;
 				if (Std.is(item, ILayoutObject)) {
 					if (!cast(item, ILayoutObject).includeInLayout) {
 						continue;
@@ -260,6 +389,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				itemHeight = cacheItem.itemHeight;
 			}
 		}
+		itemHeight += this.gap;
 		var startIndex = 0;
 		var endIndex = 0;
 		if (itemHeight > 0.0) {
