@@ -8,6 +8,8 @@
 
 package feathers.controls.navigators;
 
+import openfl.errors.ArgumentError;
+import feathers.layout.RelativePosition;
 import feathers.events.FlatCollectionEvent;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -63,6 +65,14 @@ class TabNavigator extends BaseNavigator {
 		return this.dataProvider;
 	}
 
+	/**
+		The position of the navigator's tab bar.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var tabBarPosition:RelativePosition = BOTTOM;
+
 	override private function initialize():Void {
 		super.initialize();
 
@@ -92,11 +102,25 @@ class TabNavigator extends BaseNavigator {
 		this.tabBar.x = 0.0;
 		this.tabBar.width = this.actualWidth;
 		this.tabBar.validateNow();
-		this.tabBar.y = this.actualHeight - this.tabBar.height;
+		switch (this.tabBarPosition) {
+			case TOP:
+				this.tabBar.y = 0.0;
+			case BOTTOM:
+				this.tabBar.y = this.actualHeight - this.tabBar.height;
+			default:
+				throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
+		}
 
 		if (this.activeItemView != null) {
 			this.activeItemView.x = 0.0;
-			this.activeItemView.y = 0.0;
+			switch (this.tabBarPosition) {
+				case TOP:
+					this.activeItemView.y = this.tabBar.height;
+				case BOTTOM:
+					this.activeItemView.y = 0.0;
+				default:
+					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
+			}
 			this.activeItemView.width = this.actualWidth;
 			this.activeItemView.height = this.actualHeight - this.tabBar.height;
 		}
