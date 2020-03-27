@@ -903,6 +903,11 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarX.step = 0.0;
 			var displayScrollBarX = cast(this.scrollBarX, DisplayObjectContainer);
 			displayScrollBarX.visible = this.showScrollBarX;
+			if (!this.autoHideScrollBars) {
+				// if autoHideScrollBars was true before, the scroll bars may
+				// have been hidden, and we need to show them again
+				this.scrollBarX.alpha = 1.0;
+			}
 		}
 		if (this.scrollBarY != null) {
 			this.scrollBarY.minimum = this.scroller.minScrollY;
@@ -912,6 +917,11 @@ class BaseScrollContainer extends FeathersControl {
 			this.scrollBarY.step = 0.0;
 			var displayScrollBarY = cast(this.scrollBarY, DisplayObjectContainer);
 			displayScrollBarY.visible = this.showScrollBarY;
+			if (!this.autoHideScrollBars) {
+				// if autoHideScrollBars was true before, the scroll bars may
+				// have been hidden, and we need to show them again
+				this.scrollBarY.alpha = 1.0;
+			}
 		}
 	}
 
