@@ -607,7 +607,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function createHeaderRenderer(column:GridViewColumn, columnIndex:Int):DisplayObject {
-		var headerRenderer:GridViewRowRenderer = null;
+		var headerRenderer:DisplayObject = null;
 		headerRenderer = this.headerRendererRecycler.create();
 		/*if (this.inactiveRowRenderers.length == 0) {
 				rowRenderer = this.headerRendererRecycler.create();
