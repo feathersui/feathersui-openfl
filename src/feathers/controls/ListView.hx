@@ -648,7 +648,8 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this.selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex <= event.index) {
+		if (this.selectedIndex >= event.index) {
+			@:bypassAccessor this.selectedIndex++;
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -661,6 +662,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		if (this.selectedIndex == event.index) {
+			@:bypassAccessor this.selectedIndex = -1;
+			FeathersEvent.dispatch(this, Event.CHANGE);
+		} else if (this.selectedIndex > event.index) {
+			@:bypassAccessor this.selectedIndex--;
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -673,6 +678,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		if (this.selectedIndex == event.index) {
+			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -681,6 +687,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
 		}
+		this.selectedIndex = -1;
 	}
 
 	private function dataProvider_resetHandler(event:FlatCollectionEvent):Void {
@@ -688,6 +695,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._virtualCache.resize(0);
 			this._virtualCache.resize(this.dataProvider.length);
 		}
+		this.selectedIndex = -1;
 	}
 
 	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
