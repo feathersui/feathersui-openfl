@@ -20,4 +20,5 @@ class ViewPaths {
 	public static final TEXT_AREA = "/text-area";
 	public static final TEXT_INPUT = "/text-input";
 	public static final TOGGLE_SWITCH = "/toggle-switch";
+	public static final TREE_VIEW = "/tree-view";
 }

@@ -31,7 +31,7 @@ class MainMenu extends Panel {
 			new MenuItem("Pop Up List View", ViewPaths.POP_UP_LIST_VIEW), new MenuItem("Pop Up Manager", ViewPaths.POP_UP_MANAGER),
 			new MenuItem("Progress Bar", ViewPaths.PROGRESS_BAR), new MenuItem("Radio", ViewPaths.RADIO), new MenuItem("Slider", ViewPaths.SLIDER),
 			new MenuItem("Tab Bar", ViewPaths.TAB_BAR), new MenuItem("Text Area", ViewPaths.TEXT_AREA), new MenuItem("Text Input", ViewPaths.TEXT_INPUT),
-			new MenuItem("Toggle Switch", ViewPaths.TOGGLE_SWITCH),
+			new MenuItem("Toggle Switch", ViewPaths.TOGGLE_SWITCH), new MenuItem("Tree View", ViewPaths.TREE_VIEW),
 		]);
 		this.listView.layoutData = AnchorLayoutData.fill();
 		this.listView.addEventListener(Event.CHANGE, list_changeHandler);

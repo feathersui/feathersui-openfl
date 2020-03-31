@@ -18,6 +18,7 @@ import com.feathersui.components.views.TabBarScreen;
 import com.feathersui.components.views.TextAreaScreen;
 import com.feathersui.components.views.TextInputScreen;
 import com.feathersui.components.views.ToggleSwitchScreen;
+import com.feathersui.components.views.TreeViewScreen;
 import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterAction;
@@ -100,6 +101,9 @@ class Main extends Application {
 
 		var toggleSwitch = Route.withClass(ViewPaths.TOGGLE_SWITCH, ToggleSwitchScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(toggleSwitch);
+
+		var treeView = Route.withClass(ViewPaths.TREE_VIEW, TreeViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(treeView);
 	}
 
 	private function createPushPathAction(event:Event):RouterAction {
