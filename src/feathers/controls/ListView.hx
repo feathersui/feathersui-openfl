@@ -244,7 +244,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		The following example tells the list view to use a horizontal layout:
 
 		```hx
-		var layout = new HorizontalLayout();
+		var layout = new HorizontalListLayout();
 		layout.gap = 20.0;
 		layout.padding = 20.0;
 		listView.layout = layout;
