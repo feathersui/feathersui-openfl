@@ -292,6 +292,10 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();
 		}
+		if (this.array.length == 0) {
+			// nothing to remove
+			return;
+		}
 		if (this._filterAndSortData != null) {
 			this._filterAndSortData.resize(0);
 		}

@@ -82,11 +82,14 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function get(location:Array<Int>):TreeNode<T> {
 		if (location == null || location.length == 0) {
-			return null;
+			throw new RangeError('Branch not found at location: ${location}');
 		}
 		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
+			if (index < 0 || index >= branchChildren.length) {
+				throw new RangeError('Branch not found at location: ${location}');
+			}
 			var child = branchChildren[index];
 			branchChildren = child.children;
 			if (branchChildren == null) {
@@ -94,6 +97,9 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 			}
 		}
 		var index = location[location.length - 1];
+		if (index < 0 || index >= branchChildren.length) {
+			throw new RangeError('Branch not found at location: ${location}');
+		}
 		return branchChildren[index];
 	}
 
