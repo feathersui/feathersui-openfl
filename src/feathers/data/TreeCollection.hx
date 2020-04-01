@@ -15,19 +15,17 @@ import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
 /**
-	Wraps an `Array` in the common `IHierarchicalCollection` API used for data
-	collections by hierarchical Feathers UI controls, including `TreeView`.
 
 	@since 1.0.0
 **/
 @defaultXmlProperty("array")
-class ArrayHierarchicalCollection<T, U:T & {children:Array<T>}> extends EventDispatcher implements IHierarchicalCollection<T> {
+class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollection<TreeNode<T>> {
 	/**
-		Creates a new `ArrayHierarchicalCollection` object with the given arguments.
+		Creates a new `TreeCollection` object with the given arguments.
 
 		@since 1.0.0
 	**/
-	public function new(?array:Array<T>) {
+	public function new(?array:Array<TreeNode<T>>) {
 		super();
 		if (array == null) {
 			array = [];
@@ -36,7 +34,7 @@ class ArrayHierarchicalCollection<T, U:T & {children:Array<T>}> extends EventDis
 	}
 
 	/**
-		The `Array` data source for this collection.
+		The `Array<TreeNode>` data source for this collection.
 
 		The following example replaces the data source with a new array:
 
@@ -46,9 +44,9 @@ class ArrayHierarchicalCollection<T, U:T & {children:Array<T>}> extends EventDis
 
 		@since 1.0.0
 	**/
-	public var array(default, set):Array<T> = null;
+	public var array(default, set):Array<TreeNode<T>> = null;
 
-	private function set_array(value:Array<T>):Array<T> {
+	private function set_array(value:Array<TreeNode<T>>):Array<TreeNode<T>> {
 		if (this.array == value) {
 			return this.array;
 		}
@@ -65,79 +63,77 @@ class ArrayHierarchicalCollection<T, U:T & {children:Array<T>}> extends EventDis
 		@see `feathers.data.IHierarchicalCollection.getLength`
 	**/
 	public function getLength(?location:Array<Int>):Int {
-		var branch = this.array;
+		var branchChildren = this.array;
 		if (location != null && location.length > 0) {
-			for (i in 0...location.length - 1) {
-				var child = branch[i];
-				branch = this.itemToChildren(child);
-				if (branch == null) {
+			for (i in 0...location.length) {
+				var index = location[i];
+				var child = branchChildren[index];
+				branchChildren = child.children;
+				if (branchChildren == null) {
 					throw new RangeError('Branch not found at location: ${location}');
 				}
 			}
 		}
-		return branch.length;
+		return branchChildren.length;
 	}
 
 	/**
 		@see `feathers.data.IHierarchicalCollection.get`
 	**/
-	public function get(location:Array<Int>):T {
+	public function get(location:Array<Int>):TreeNode<T> {
 		if (location == null || location.length == 0) {
 			return null;
 		}
-		var branch = this.array;
+		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
-			var child = branch[i];
-			branch = this.itemToChildren(child);
-			if (branch == null) {
+			var index = location[i];
+			var child = branchChildren[index];
+			branchChildren = child.children;
+			if (branchChildren == null) {
 				throw new RangeError('Branch not found at location: ${location}');
 			}
 		}
 		var index = location[location.length - 1];
-		return branch[index];
+		return branchChildren[index];
 	}
 
 	/**
 		@see `feathers.data.IHierarchicalCollection.set`
 	**/
-	public function set(location:Array<Int>, value:T):Void {
+	public function set(location:Array<Int>, value:TreeNode<T>):Void {
 		if (location == null || location.length == 0) {
 			throw new RangeError('Branch not found at location: ${location}');
 		}
-		var branch = this.array;
+		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
-			var child = branch[i];
-			branch = this.itemToChildren(child);
-			if (branch == null) {
+			var index = location[i];
+			var child = branchChildren[index];
+			branchChildren = child.children;
+			if (branchChildren == null) {
 				throw new RangeError('Branch not found at location: ${location}');
 			}
 		}
 		var index = location[location.length - 1];
-		var oldValue = branch[index];
-		branch[index] = value;
+		var oldValue = branchChildren[index];
+		branchChildren[index] = value;
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REPLACE_ITEM, location, value, oldValue);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	/**
-		@see `feathers.data.IHierarchicalCollection.isItemBranch`
+		@see `feathers.data.IHierarchicalCollection.isBranch`
 	**/
-	public dynamic function isItemBranch(item:T):Bool {
-		return this.itemToChildren(item) != null;
-	}
-
-	/**
-		@see `feathers.data.IHierarchicalCollection.isLocationBranch`
-	**/
-	public function isLocationBranch(location:Array<Int>):Bool {
-		var item = this.get(location);
-		return this.isItemBranch(item);
+	public function isBranch(item:TreeNode<T>):Bool {
+		if (item == null) {
+			return false;
+		}
+		return item.isBranch();
 	}
 
 	/**
 		@see `feathers.data.IHierarchicalCollection.locationOf`
 	**/
-	public function locationOf(item:T):Array<Int> {
+	public function locationOf(item:TreeNode<T>):Array<Int> {
 		var result:Array<Int> = [];
 		var found = this.findItemInBranch(this.array, item, result);
 		if (!found) {
@@ -146,30 +142,16 @@ class ArrayHierarchicalCollection<T, U:T & {children:Array<T>}> extends EventDis
 		return result;
 	}
 
-	private function itemToChildren(item:T):Array<T> {
-		var type = Type.getClass(item);
-		if (type == null) {
-			if (!Reflect.hasField(item, "children")) {
-				return null;
-			}
-		} else if (Type.getInstanceFields(type).indexOf("children") == -1) {
-			return null;
-		}
-		var branch:U = cast(item);
-		return branch.children;
-	}
-
-	private function findItemInBranch(branch:Array<T>, itemToFind:T, result:Array<Int>):Bool {
-		for (i in 0...branch.length) {
-			var item = branch[i];
+	private function findItemInBranch(branchChildren:Array<TreeNode<T>>, itemToFind:TreeNode<T>, result:Array<Int>):Bool {
+		for (i in 0...branchChildren.length) {
+			var item = branchChildren[i];
 			if (item == itemToFind) {
 				result.push(i);
 				return true;
 			}
-			if (this.isItemBranch(item)) {
+			if (item.isBranch()) {
 				result.push(i);
-				var children = this.itemToChildren(item);
-				var found = this.findItemInBranch(children, itemToFind, result);
+				var found = this.findItemInBranch(item.children, itemToFind, result);
 				if (found) {
 					return true;
 				}
