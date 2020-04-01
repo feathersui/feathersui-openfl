@@ -225,6 +225,39 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
+	/**
+		@see `feathers.data.IHierarchicalCollection.updateAt`
+	**/
+	public function updateAt(location:Array<Int>):Void {
+		if (location == null || location.length == 0) {
+			throw new RangeError('Branch not found at location: ${location}');
+		}
+		var branchChildren = this.array;
+		for (i in 0...location.length - 1) {
+			var index = location[i];
+			if (index < 0 || index >= branchChildren.length) {
+				throw new RangeError('Failed to update item at location ${location}. Expected a value between 0 and ${branchChildren.length - 1} at index ${i}.');
+			}
+			var child = branchChildren[index];
+			branchChildren = child.children;
+			if (branchChildren == null) {
+				throw new RangeError('Branch not found at location: ${location}');
+			}
+		}
+		var index = location[location.length - 1];
+		if (index < 0 || index >= branchChildren.length) {
+			throw new RangeError('Failed to update item at index ${index}. Expected a value between 0 and ${branchChildren.length - 1}.');
+		}
+		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.UPDATE_ITEM, location);
+	}
+
+	/**
+		@see `feathers.data.IHierarchicalCollection.updateAll`
+	**/
+	public function updateAll():Void {
+		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.UPDATE_ALL, null);
+	}
+
 	private function findItemInBranch(branchChildren:Array<TreeNode<T>>, itemToFind:TreeNode<T>, result:Array<Int>):Bool {
 		for (i in 0...branchChildren.length) {
 			var item = branchChildren[i];

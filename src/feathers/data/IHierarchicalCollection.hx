@@ -24,4 +24,6 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 	function isBranch(item:T):Bool;
 	function removeAt(location:Array<Int>):Void;
 	function removeAll():Void;
+	function updateAt(location:Array<Int>):Void;
+	function updateAll():Void;
 }
