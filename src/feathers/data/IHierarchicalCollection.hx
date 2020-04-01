@@ -20,5 +20,8 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 	function set(location:Array<Int>, value:T):Void;
 	function getLength(?location:Array<Int>):Int;
 	function locationOf(item:T):Array<Int>;
+	function contains(item:T):Bool;
 	function isBranch(item:T):Bool;
+	function removeAt(location:Array<Int>):Void;
+	function removeAll():Void;
 }

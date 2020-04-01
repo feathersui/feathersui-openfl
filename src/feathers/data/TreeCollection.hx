@@ -142,6 +142,83 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		return result;
 	}
 
+	/**
+		@see `feathers.data.IHierarchicalCollection.locationOf`
+	**/
+	public function contains(item:TreeNode<T>):Bool {
+		return this.locationOf(item) != null;
+	}
+
+	/**
+		@see `feathers.data.IHierarchicalCollection.removeAt`
+	**/
+	public function addAt(itemToAdd:TreeNode<T>, location:Array<Int>):Void {
+		if (location == null || location.length == 0) {
+			throw new RangeError('Branch not found at location: ${location}');
+		}
+		var branchChildren = this.array;
+		for (i in 0...location.length - 1) {
+			var index = location[i];
+			var child = branchChildren[index];
+			branchChildren = child.children;
+			if (branchChildren == null) {
+				throw new RangeError('Branch not found at location: ${location}');
+			}
+		}
+		var index = location[location.length - 1];
+		branchChildren.insert(index, itemToAdd);
+		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.ADD_ITEM, location, itemToAdd);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+	}
+
+	/**
+		@see `feathers.data.IHierarchicalCollection.removeAt`
+	**/
+	public function removeAt(location:Array<Int>):Void {
+		if (location == null || location.length == 0) {
+			throw new RangeError('Branch not found at location: ${location}');
+		}
+		var branchChildren = this.array;
+		for (i in 0...location.length - 1) {
+			var index = location[i];
+			var child = branchChildren[index];
+			branchChildren = child.children;
+			if (branchChildren == null) {
+				throw new RangeError('Branch not found at location: ${location}');
+			}
+		}
+		var index = location[location.length - 1];
+		var removedItem = branchChildren[index];
+		branchChildren.remove(removedItem);
+		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ITEM, location, null, removedItem);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+	}
+
+	/**
+		@see `feathers.data.IHierarchicalCollection.removeAt`
+	**/
+	public function remove(item:TreeNode<T>):Void {
+		var location = this.locationOf(item);
+		if (location == null) {
+			// nothing to remove
+			return;
+		}
+		this.removeAt(location);
+	}
+
+	/**
+		@see `feathers.data.IHierarchicalCollection.removeAll`
+	**/
+	public function removeAll():Void {
+		if (this.array.length == 0) {
+			// nothing to remove
+			return;
+		}
+		this.array.resize(0);
+		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, null);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+	}
+
 	private function findItemInBranch(branchChildren:Array<TreeNode<T>>, itemToFind:TreeNode<T>, result:Array<Int>):Bool {
 		for (i in 0...branchChildren.length) {
 			var item = branchChildren[i];
