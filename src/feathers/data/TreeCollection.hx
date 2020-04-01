@@ -67,6 +67,9 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		if (location != null && location.length > 0) {
 			for (i in 0...location.length) {
 				var index = location[i];
+				if (index < 0 || index >= branchChildren.length) {
+					throw new RangeError('Branch not found at location: ${location}');
+				}
 				var child = branchChildren[index];
 				branchChildren = child.children;
 				if (branchChildren == null) {
@@ -82,23 +85,23 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function get(location:Array<Int>):TreeNode<T> {
 		if (location == null || location.length == 0) {
-			throw new RangeError('Branch not found at location: ${location}');
+			throw new RangeError('Item not found at location: ${location}');
 		}
 		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
 			if (index < 0 || index >= branchChildren.length) {
-				throw new RangeError('Branch not found at location: ${location}');
+				throw new RangeError('Item not found at location: ${location}');
 			}
 			var child = branchChildren[index];
 			branchChildren = child.children;
 			if (branchChildren == null) {
-				throw new RangeError('Branch not found at location: ${location}');
+				throw new RangeError('Item not found at location: ${location}');
 			}
 		}
 		var index = location[location.length - 1];
 		if (index < 0 || index >= branchChildren.length) {
-			throw new RangeError('Branch not found at location: ${location}');
+			throw new RangeError('Item not found at location: ${location}');
 		}
 		return branchChildren[index];
 	}
@@ -108,18 +111,24 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function set(location:Array<Int>, value:TreeNode<T>):Void {
 		if (location == null || location.length == 0) {
-			throw new RangeError('Branch not found at location: ${location}');
+			throw new RangeError('Item not found at location: ${location}');
 		}
 		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
+			if (index < 0 || index >= branchChildren.length) {
+				throw new RangeError('Item not found at location: ${location}');
+			}
 			var child = branchChildren[index];
 			branchChildren = child.children;
 			if (branchChildren == null) {
-				throw new RangeError('Branch not found at location: ${location}');
+				throw new RangeError('Item not found at location: ${location}');
 			}
 		}
 		var index = location[location.length - 1];
+		if (index < 0 || index >= branchChildren.length) {
+			throw new RangeError('Item not found at location: ${location}');
+		}
 		var oldValue = branchChildren[index];
 		branchChildren[index] = value;
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REPLACE_ITEM, location, value, oldValue);
@@ -160,18 +169,24 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function addAt(itemToAdd:TreeNode<T>, location:Array<Int>):Void {
 		if (location == null || location.length == 0) {
-			throw new RangeError('Branch not found at location: ${location}');
+			throw new RangeError('Item not found at location: ${location}');
 		}
 		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
+			if (index < 0 || index >= branchChildren.length) {
+				throw new RangeError('Item not found at location: ${location}');
+			}
 			var child = branchChildren[index];
 			branchChildren = child.children;
 			if (branchChildren == null) {
-				throw new RangeError('Branch not found at location: ${location}');
+				throw new RangeError('Item not found at location: ${location}');
 			}
 		}
 		var index = location[location.length - 1];
+		if (index < 0 || index >= branchChildren.length) {
+			throw new RangeError('Item not found at location: ${location}');
+		}
 		branchChildren.insert(index, itemToAdd);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.ADD_ITEM, location, itemToAdd);
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -182,18 +197,24 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function removeAt(location:Array<Int>):Void {
 		if (location == null || location.length == 0) {
-			throw new RangeError('Branch not found at location: ${location}');
+			throw new RangeError('Item not found at location: ${location}');
 		}
 		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
+			if (index < 0 || index >= branchChildren.length) {
+				throw new RangeError('Item not found at location: ${location}');
+			}
 			var child = branchChildren[index];
 			branchChildren = child.children;
 			if (branchChildren == null) {
-				throw new RangeError('Branch not found at location: ${location}');
+				throw new RangeError('Item not found at location: ${location}');
 			}
 		}
 		var index = location[location.length - 1];
+		if (index < 0 || index >= branchChildren.length) {
+			throw new RangeError('Item not found at location: ${location}');
+		}
 		var removedItem = branchChildren[index];
 		branchChildren.remove(removedItem);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ITEM, location, null, removedItem);
@@ -230,7 +251,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function updateAt(location:Array<Int>):Void {
 		if (location == null || location.length == 0) {
-			throw new RangeError('Branch not found at location: ${location}');
+			throw new RangeError('Item not found at location: ${location}');
 		}
 		var branchChildren = this.array;
 		for (i in 0...location.length - 1) {
@@ -241,12 +262,12 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 			var child = branchChildren[index];
 			branchChildren = child.children;
 			if (branchChildren == null) {
-				throw new RangeError('Branch not found at location: ${location}');
+				throw new RangeError('Failed to update item at location ${location}. Expected branch.');
 			}
 		}
 		var index = location[location.length - 1];
 		if (index < 0 || index >= branchChildren.length) {
-			throw new RangeError('Failed to update item at index ${index}. Expected a value between 0 and ${branchChildren.length - 1}.');
+			throw new RangeError('Failed to update item at index ${index}. Expected a value between 0 and ${branchChildren.length - 1} at index ${location.length - 1}.');
 		}
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.UPDATE_ITEM, location);
 	}
