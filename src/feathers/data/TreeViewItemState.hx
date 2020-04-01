@@ -22,8 +22,11 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public function new(data:Dynamic = null, branch:Bool = false, selected:Bool = false, text:String = null) {
+	public function new(data:Dynamic = null, location:Array<Int> = null, layoutIndex:Int = -1, branch:Bool = false, selected:Bool = false,
+			text:String = null) {
 		this.data = data;
+		this.location = location;
+		this.layoutIndex = layoutIndex;
 		this.branch = branch;
 		this.selected = false;
 		this.text = text;
@@ -35,6 +38,20 @@ class TreeViewItemState {
 		@since 1.0.0
 	**/
 	public var data(default, null):Dynamic;
+
+	/**
+		The location of the item in the `TreeView` data provider.
+
+		@since 1.0.0
+	**/
+	public var location(default, null):Array<Int>;
+
+	/**
+		Returns the location of the item in the `TreeView` layout.
+
+		@since 1.0.0
+	**/
+	public var layoutIndex(default, null):Int;
 
 	/**
 		Returns whether the item is a branch or not.

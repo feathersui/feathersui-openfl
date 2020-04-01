@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.IFlatCollection;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
@@ -15,10 +16,10 @@ import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
 import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
+import feathers.data.IHierarchicalCollection;
 import feathers.data.TreeViewItemState;
 import feathers.events.FeathersEvent;
-import feathers.events.FlatCollectionEvent;
+import feathers.events.HierarchicalCollectionEvent;
 import feathers.layout.Direction;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
@@ -45,7 +46,7 @@ import openfl.ui.Multitouch;
 @:access(feathers.data.TreeViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+class TreeView extends BaseScrollContainer {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
@@ -87,6 +88,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return Direction.NONE;
 	}
 
+	private var openBranches(default, set):IFlatCollection<Dynamic>;
+
+	private function set_openBranches(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
+		return this.openBranches;
+	}
+
 	/**
 		The collection of data displayed by the tree view.
 
@@ -94,67 +101,64 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		@since 1.0.0
 	**/
-	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
+	public var dataProvider(default, set):IHierarchicalCollection<Dynamic> = null;
 
-	private function set_dataProvider(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
+	private function set_dataProvider(value:IHierarchicalCollection<Dynamic>):IHierarchicalCollection<Dynamic> {
 		if (this.dataProvider == value) {
 			return this.dataProvider;
 		}
 		this._virtualCache.resize(0);
 		if (this.dataProvider != null) {
 			this.dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.RESET, dataProvider_resetHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, dataProvider_resetHandler);
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
-			this._virtualCache.resize(this.dataProvider.length);
+			var newSize = this.calculateTotalLayoutCount([]);
+			this._virtualCache.resize(newSize);
 			this.dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.RESET, dataProvider_resetHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, dataProvider_resetHandler);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
 	}
 
 	/**
-		@see `feathers.core.IDataSelector.selectedIndex`
+		@since 1.0.0
 	**/
 	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	public var selectedLocation(get, set):Array<Int> = null;
 
-	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+	private function get_selectedLocation():Array<Int> {
+		return this.selectedLocation;
 	}
 
-	private function set_selectedIndex(value:Int):Int {
+	private function set_selectedLocation(value:Array<Int>):Array<Int> {
 		if (!this.selectable || this.dataProvider == null) {
-			value = -1;
+			value = null;
 		}
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this.selectedLocation == value || this.compareLocations(this.selectedLocation, value) == 0) {
+			return this.selectedLocation;
 		}
-		this.selectedIndex = value;
+		this.selectedLocation = value;
 		// using @:bypassAccessor because if we were to call the selectedItem
 		// setter, this change wouldn't be saved properly
-		if (this.selectedIndex == -1) {
+		if (this.selectedLocation == null) {
 			@:bypassAccessor this.selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedLocation);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this.selectedLocation;
 	}
 
 	/**
@@ -169,10 +173,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (!this.selectable || this.dataProvider == null) {
-			this.selectedIndex = -1;
+			this.selectedLocation = null;
 			return this.selectedItem;
 		}
-		this.selectedIndex = this.dataProvider.indexOf(value);
+		this.selectedLocation = this.dataProvider.locationOf(value);
 		return this.selectedItem;
 	}
 
@@ -226,7 +230,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var activeItemRenderers:Array<DisplayObject> = [];
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
-	private var _unrenderedData:Array<Dynamic> = [];
+	private var _unrenderedLocations:Array<Array<Int>> = [];
+	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 
 	/**
@@ -254,7 +259,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		this.selectable = value;
 		if (!this.selectable) {
-			this.selectedIndex = -1;
+			this.selectedLocation = null;
 		}
 		return this.selectable;
 	}
@@ -310,6 +315,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		SteelTreeViewStyles.initialize();
 	}
 
+	private var _layoutLocations:Array<Array<Int>> = [];
 	private var _layoutItems:Array<DisplayObject> = [];
 
 	override private function update():Void {
@@ -382,7 +388,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
 			this._currentItemState.data = item;
-			// this._currentItemState.index = -1;
+			this._currentItemState.location = null;
+			this._currentItemState.layoutIndex = -1;
 			this._currentItemState.selected = false;
 			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
@@ -418,69 +425,95 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
 		this._layoutItems.resize(0);
-		this._layoutItems.resize(this.dataProvider.length);
+		var newSize = this.calculateTotalLayoutCount([]);
+		this._layoutItems.resize(newSize);
 
 		if (this.virtualLayout && Std.is(this.layout, IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
 			virtualLayout.virtualCache = this._virtualCache;
-			virtualLayout.getVisibleIndices(this.dataProvider.length, this.treeViewPort.visibleWidth, this.treeViewPort.visibleHeight, this._visibleIndices);
+			virtualLayout.getVisibleIndices(this._layoutItems.length, this.treeViewPort.visibleWidth, this.treeViewPort.visibleHeight, this._visibleIndices);
 		} else {
 			this._visibleIndices.start = 0;
-			this._visibleIndices.end = this.dataProvider.length - 1;
+			this._visibleIndices.end = this._layoutItems.length - 1;
 		}
-		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
-			var item = this.dataProvider.get(i);
-			var itemRenderer = this.dataToItemRenderer.get(item);
-			if (itemRenderer != null) {
-				this._currentItemState.data = item;
-				// this._currentItemState.index = i;
-				this._currentItemState.selected = item == this.selectedItem;
-				this._currentItemState.text = itemToText(item);
-				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-				this._ignoreSelectionChange = true;
-				if (this.itemRendererRecycler.update != null) {
-					this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
-				}
-				if (Std.is(itemRenderer, IDataRenderer)) {
-					var dataRenderer = cast(itemRenderer, IDataRenderer);
-					// if the renderer is an IDataRenderer, this cannot be overridden
-					dataRenderer.data = this._currentItemState.data;
-				}
-				if (Std.is(itemRenderer, IToggle)) {
-					var toggle = cast(itemRenderer, IToggle);
-					// if the renderer is an IToggle, this cannot be overridden
-					toggle.selected = this._currentItemState.selected;
-				}
-				this._ignoreSelectionChange = oldIgnoreSelectionChange;
-				// if this item renderer used to be the typical layout item, but
-				// it isn't anymore, it may have been set invisible
-				itemRenderer.visible = true;
-				this._layoutItems[i] = itemRenderer;
-				var removed = inactiveItemRenderers.remove(itemRenderer);
-				if (!removed) {
-					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-						+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
-				}
-				activeItemRenderers.push(itemRenderer);
+		this.findUnrenderedDataForLocation([], 0);
+	}
+
+	private function findUnrenderedDataForLocation(location:Array<Int>, layoutIndex:Int):Int {
+		if (this.dataProvider == null) {
+			return layoutIndex;
+		}
+		for (i in 0...this.dataProvider.getLength(location)) {
+			location.push(i);
+			var item = this.dataProvider.get(location);
+			if (layoutIndex < this._visibleIndices.start || layoutIndex > this._visibleIndices.end) {
+				this._layoutItems[layoutIndex] = null;
 			} else {
-				this._unrenderedData.push(item);
+				this.findItemRenderer(item, location.copy(), layoutIndex);
 			}
+			layoutIndex++;
+			if (this.dataProvider.isItemBranch(item) && this.openBranches.contains(item)) {
+				layoutIndex = this.findUnrenderedDataForLocation(location, layoutIndex);
+			}
+			location.pop();
 		}
+		return layoutIndex;
+	}
+
+	private function findItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
+		var itemRenderer = this.dataToItemRenderer.get(item);
+		if (itemRenderer == null) {
+			this._unrenderedLocations.push(location);
+			this._unrenderedLayoutIndices.push(layoutIndex);
+			return;
+		}
+		this._currentItemState.data = item;
+		this._currentItemState.location = location;
+		this._currentItemState.layoutIndex = layoutIndex;
+		this._currentItemState.selected = item == this.selectedItem;
+		this._currentItemState.text = itemToText(item);
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this.itemRendererRecycler.update != null) {
+			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			// if the renderer is an IDataRenderer, this cannot be overridden
+			dataRenderer.data = this._currentItemState.data;
+		}
+		if (Std.is(itemRenderer, IToggle)) {
+			var toggle = cast(itemRenderer, IToggle);
+			// if the renderer is an IToggle, this cannot be overridden
+			toggle.selected = this._currentItemState.selected;
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		// if this item renderer used to be the typical layout item, but
+		// it isn't anymore, it may have been set invisible
+		itemRenderer.visible = true;
+		this._layoutItems[layoutIndex] = itemRenderer;
+		var removed = inactiveItemRenderers.remove(itemRenderer);
+		if (!removed) {
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
+				+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+		}
+		activeItemRenderers.push(itemRenderer);
 	}
 
 	private function renderUnrenderedData():Void {
-		for (item in this._unrenderedData) {
-			var index = this.dataProvider.indexOf(item);
-			var itemRenderer = this.createItemRenderer(item, index);
+		for (location in this._unrenderedLocations) {
+			var layoutIndex = this._unrenderedLayoutIndices.shift();
+			var item = this.dataProvider.get(location);
+			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
 			itemRenderer.visible = true;
 			this.activeItemRenderers.push(itemRenderer);
 			this.treeViewPort.addChild(itemRenderer);
-			this._layoutItems[index] = itemRenderer;
+			this._layoutItems[layoutIndex] = itemRenderer;
 		}
-		this._unrenderedData.resize(0);
+		this._unrenderedLocations.resize(0);
 	}
 
-	private function createItemRenderer(item:Dynamic, index:Int):DisplayObject {
+	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
 		var itemRenderer:DisplayObject = null;
 		if (this.inactiveItemRenderers.length == 0) {
 			itemRenderer = this.itemRendererRecycler.create();
@@ -488,7 +521,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			itemRenderer = this.inactiveItemRenderers.shift();
 		}
 		this._currentItemState.data = item;
-		// this._currentItemState.index = index;
+		this._currentItemState.location = location;
+		this._currentItemState.layoutIndex = layoutIndex;
+		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isItemBranch(item);
 		this._currentItemState.selected = item == this.selectedItem;
 		this._currentItemState.text = itemToText(item);
 		if (this.itemRendererRecycler.update != null) {
@@ -523,13 +558,30 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function refreshSelectedIndicesAfterFilterOrSort():Void {
-		if (this.selectedIndex == -1) {
+	private function refreshSelectedLocationAfterFilterOrSort():Void {
+		if (this.selectedLocation == null) {
 			return;
 		}
-		// the index may have changed, possibily even to -1, if the item was
-		// filtered out
-		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
+		// the location may have changed, possibily even to null, if the item
+		// was filtered out
+		this.selectedLocation = this.dataProvider.locationOf(this.selectedItem);
+	}
+
+	private function calculateTotalLayoutCount(location:Array<Int>):Int {
+		var itemCount = 0;
+		if (this.dataProvider != null) {
+			itemCount = this.dataProvider.getLength(location);
+		}
+		var result = itemCount;
+		for (i in 0...itemCount) {
+			location.push(i);
+			var item = this.dataProvider.get(location);
+			if (this.dataProvider.isItemBranch(item) && this.openBranches.contains(item)) {
+				result += this.calculateTotalLayoutCount(location);
+			}
+			location.pop();
+		}
+		return result;
 	}
 
 	private function itemRenderer_touchTapHandler(event:TouchEvent):Void {
@@ -542,7 +594,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var data = this.itemRendererToData.get(itemRenderer);
-		this.selectedIndex = this.dataProvider.indexOf(data);
+		this.selectedLocation = this.dataProvider.locationOf(data);
 	}
 
 	private function itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -551,7 +603,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var data = this.itemRendererToData.get(itemRenderer);
-		this.selectedIndex = this.dataProvider.indexOf(data);
+		this.selectedLocation = this.dataProvider.locationOf(data);
 	}
 
 	private function itemRenderer_changeHandler(event:Event):Void {
@@ -580,75 +632,76 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function dataProvider_changeHandler(event:Event):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.resize(0);
+			var newSize = this.calculateTotalLayoutCount([]);
+			this._virtualCache.resize(newSize);
+		}
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 
-	private function dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
-		if (this._virtualCache != null) {
-			this._virtualCache.insert(event.index, null);
+	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
+		var length1 = location1.length;
+		var length2 = location2.length;
+		var min = length1;
+		if (length2 < min) {
+			min = length2;
 		}
-		if (this.selectedIndex == -1) {
+		for (i in 0...min) {
+			var index1 = location1[i];
+			var index2 = location2[i];
+			if (index1 < index2) {
+				return -1;
+			}
+			if (index1 > index2) {
+				return 1;
+			}
+		}
+		if (length1 < length2) {
+			return -1;
+		} else if (length1 > length2) {
+			return 1;
+		}
+		return 0;
+	}
+
+	private function dataProvider_addItemHandler(event:HierarchicalCollectionEvent):Void {
+		if (this.selectedLocation == null) {
 			return;
 		}
-		if (this.selectedIndex <= event.index) {
+		if (this.compareLocations(this.selectedLocation, event.location) >= 0) {
+			this.selectedLocation = this.dataProvider.locationOf(this.selectedItem);
+		}
+	}
+
+	private function dataProvider_removeItemHandler(event:HierarchicalCollectionEvent):Void {
+		if (this.selectedLocation == null) {
+			return;
+		}
+
+		var comparisonResult = this.compareLocations(this.selectedLocation, event.location);
+		if (comparisonResult == 0) {
+			this.selectedLocation = null;
+		} else if (comparisonResult > 0) {
+			this.selectedLocation = this.dataProvider.locationOf(this.selectedItem);
+		}
+	}
+
+	private function dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
+		if (this.selectedLocation == null) {
+			return;
+		}
+		if (this.compareLocations(this.selectedLocation, event.location) == 0) {
+			@:bypassAccessor this.selectedItem = this.dataProvider.get(event.location);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
 
-	private function dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
-		if (this._virtualCache != null) {
-			this._virtualCache.remove(event.index);
-		}
-		if (this.selectedIndex == -1) {
-			return;
-		}
-		if (this.selectedIndex == event.index) {
-			FeathersEvent.dispatch(this, Event.CHANGE);
-		}
+	private function dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
+		this.selectedLocation = null;
 	}
 
-	private function dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
-		if (this._virtualCache != null) {
-			this._virtualCache[event.index] = null;
-		}
-		if (this.selectedIndex == -1) {
-			return;
-		}
-		if (this.selectedIndex == event.index) {
-			FeathersEvent.dispatch(this, Event.CHANGE);
-		}
-	}
-
-	private function dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
-		if (this._virtualCache != null) {
-			this._virtualCache.resize(0);
-		}
-	}
-
-	private function dataProvider_resetHandler(event:FlatCollectionEvent):Void {
-		if (this._virtualCache != null) {
-			this._virtualCache.resize(0);
-			this._virtualCache.resize(this.dataProvider.length);
-		}
-	}
-
-	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
-		if (this._virtualCache != null) {
-			// we don't know exactly which indices have changed, so reset the
-			// whole cache.
-			this._virtualCache.resize(0);
-			this._virtualCache.resize(this.dataProvider.length);
-		}
-		this.refreshSelectedIndicesAfterFilterOrSort();
-	}
-
-	private function dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
-		if (this._virtualCache != null) {
-			// we don't know exactly which indices have changed, so reset the
-			// whole cache.
-			this._virtualCache.resize(0);
-			this._virtualCache.resize(this.dataProvider.length);
-		}
-		this.refreshSelectedIndicesAfterFilterOrSort();
+	private function dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
+		this.selectedLocation = null;
 	}
 }
