@@ -248,9 +248,18 @@ class ArrayCollectionTest {
 
 	@Test
 	public function testRemoveAllWithEmptyCollection():Void {
-		var collection = new ArrayCollection();
-		// just make sure that it doesn't throw
-		collection.removeAll();
+		this._collection = new ArrayCollection();
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var removeAllEvent = false;
+		this._collection.addEventListener(FlatCollectionEvent.REMOVE_ALL, function(event:FlatCollectionEvent):Void {
+			removeAllEvent = true;
+		});
+		this._collection.removeAll();
+		Assert.isFalse(changeEvent, "Event.CHANGE must not be dispatched after removing all from empty collection");
+		Assert.isFalse(removeAllEvent, "FlatCollectionEvent.REMOVE_ALL must not be dispatched after removing all from empty collection");
 	}
 
 	@Test
