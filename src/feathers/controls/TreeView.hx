@@ -8,12 +8,10 @@
 
 package feathers.controls;
 
-import feathers.data.IFlatCollection;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
-import feathers.core.IDataSelector;
 import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
 import feathers.data.IHierarchicalCollection;
@@ -88,11 +86,7 @@ class TreeView extends BaseScrollContainer {
 		return Direction.NONE;
 	}
 
-	private var openBranches(default, set):IFlatCollection<Dynamic>;
-
-	private function set_openBranches(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
-		return this.openBranches;
-	}
+	private var openBranches:Array<Dynamic> = [];
 
 	/**
 		The collection of data displayed by the tree view.
@@ -452,7 +446,7 @@ class TreeView extends BaseScrollContainer {
 				this.findItemRenderer(item, location.copy(), layoutIndex);
 			}
 			layoutIndex++;
-			if (this.dataProvider.isItemBranch(item) && this.openBranches.contains(item)) {
+			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				layoutIndex = this.findUnrenderedDataForLocation(location, layoutIndex);
 			}
 			location.pop();
@@ -523,7 +517,7 @@ class TreeView extends BaseScrollContainer {
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
-		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isItemBranch(item);
+		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isBranch(item);
 		this._currentItemState.selected = item == this.selectedItem;
 		this._currentItemState.text = itemToText(item);
 		if (this.itemRendererRecycler.update != null) {
@@ -568,15 +562,15 @@ class TreeView extends BaseScrollContainer {
 	}
 
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
-		var itemCount = 0;
-		if (this.dataProvider != null) {
-			itemCount = this.dataProvider.getLength(location);
+		if (this.dataProvider == null) {
+			return 0;
 		}
+		var itemCount = this.dataProvider.getLength(location);
 		var result = itemCount;
 		for (i in 0...itemCount) {
 			location.push(i);
 			var item = this.dataProvider.get(location);
-			if (this.dataProvider.isItemBranch(item) && this.openBranches.contains(item)) {
+			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				result += this.calculateTotalLayoutCount(location);
 			}
 			location.pop();
@@ -641,6 +635,15 @@ class TreeView extends BaseScrollContainer {
 	}
 
 	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
+		var null1 = location1 == null;
+		var null2 = location2 == null;
+		if (null1 && null2) {
+			return 0;
+		} else if (null1) {
+			return 1;
+		} else if (null2) {
+			return -1;
+		}
 		var length1 = location1.length;
 		var length2 = location2.length;
 		var min = length1;

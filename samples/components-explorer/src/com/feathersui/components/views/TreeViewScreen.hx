@@ -5,7 +5,8 @@ import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.TreeView;
 import feathers.controls.Panel;
-import feathers.data.ArrayCollection;
+import feathers.data.TreeCollection;
+import feathers.data.TreeNode;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
@@ -20,15 +21,36 @@ class TreeViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var items = [];
-		for (i in 0...30) {
-			items[i] = {text: "Tree Item " + (i + 1)};
-		}
+		var data = [
+			new TreeNode({text: "Node 1"}, [
+				new TreeNode({text: "Node 1A"}, [
+					new TreeNode({text: "Node 1A-I"}),
+					new TreeNode({text: "Node 1A-II"}),
+					new TreeNode({text: "Node 1A-III"}),
+					new TreeNode({text: "Node 1A-IV"})
+				]),
+				new TreeNode({text: "Node 1B"}),
+				new TreeNode({text: "Node 1C"})
+			]),
+			new TreeNode({text: "Node 2"}, [
+				new TreeNode({text: "Node 2A"}),
+				new TreeNode({text: "Node 2B"}),
+				new TreeNode({text: "Node 2C"})
+			]),
+			new TreeNode({text: "Node 3"}),
+			new TreeNode({text: "Node 4"}, [
+				new TreeNode({text: "Node 4A"}),
+				new TreeNode({text: "Node 4B"}),
+				new TreeNode({text: "Node 4C"}),
+				new TreeNode({text: "Node 4D"}),
+				new TreeNode({text: "Node 4E"})
+			])
+		];
 
 		this.treeView = new TreeView();
-		this.treeView.dataProvider = new ArrayCollection(items);
-		this.treeView.itemToText = (item:Dynamic) -> {
-			return item.text;
+		this.treeView.dataProvider = new TreeCollection(data);
+		this.treeView.itemToText = (item) -> {
+			return item.data.text;
 		};
 		this.treeView.layoutData = AnchorLayoutData.fill();
 		this.treeView.addEventListener(Event.CHANGE, treeView_changeHandler);
