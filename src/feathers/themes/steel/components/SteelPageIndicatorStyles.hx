@@ -46,6 +46,8 @@ class SteelPageIndicatorStyles {
 					layout.paddingRight = 4.0;
 					layout.paddingBottom = 4.0;
 					layout.paddingLeft = 4.0;
+					layout.horizontalAlign = CENTER;
+					layout.verticalAlign = MIDDLE;
 					pages.layout = layout;
 				}
 			});
