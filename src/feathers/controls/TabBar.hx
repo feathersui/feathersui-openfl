@@ -220,7 +220,7 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		In the following example, the tab bar uses a custom tab renderer class:
 
 		```hx
-		tabBar.itemRendererRecycler = DisplayObjectRecycler.withClass(ToggleButton);
+		tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton);
 		```
 
 		@since 1.0.0
@@ -265,11 +265,11 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 	/**
 		The layout algorithm used to position and size the tabs.
 
-		By default, if no layout is provided by the time that the list view
+		By default, if no layout is provided by the time that the tab bar
 		initializes, a default layout that displays items horizontally will be
 		created.
 
-		The following example tells the list view to use a custom layout:
+		The following example tells the tab bar to use a custom layout:
 
 		```hx
 		var layout = new HorizontalStretchLayout();
@@ -550,9 +550,6 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 				}
 				tab.selected = this._currentItemState.selected;
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;
-				// if this item renderer used to be the typical layout item, but
-				// it isn't anymore, it may have been set invisible
-				tab.visible = true;
 				this.addChildAt(tab, i + depthOffset);
 				var removed = this.inactiveTabs.remove(tab);
 				if (!removed) {
@@ -571,7 +568,6 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 		for (item in this._unrenderedData) {
 			var index = this.dataProvider.indexOf(item);
 			var tab = this.createTab(item, index);
-			tab.visible = true;
 			this.activeTabs.push(tab);
 			this.addChildAt(tab, index + depthOffset);
 		}
@@ -586,16 +582,20 @@ class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
 			tab = this.inactiveTabs.shift();
 		}
 		if (tab.variant == null) {
+			// if the factory set a variant already, don't use the default
 			tab.variant = TabBar.CHILD_VARIANT_TAB;
 		}
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = item == this.selectedItem;
 		this._currentItemState.text = itemToText(item);
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
 		if (this.tabRecycler.update != null) {
 			this.tabRecycler.update(tab, this._currentItemState);
 		}
 		tab.selected = this._currentItemState.selected;
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		tab.addEventListener(TriggerEvent.TRIGGER, tab_triggerHandler);
 		tab.addEventListener(Event.CHANGE, tab_changeHandler);
 		this.tabToData.set(tab, item);
