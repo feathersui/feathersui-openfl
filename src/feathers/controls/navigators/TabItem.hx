@@ -69,7 +69,7 @@ class TabItem {
 
 	/**
 		Creates a `TabItem` that always returns the same `DisplayObject`
-		instance when the `TabkNavigator` requests the item's view.
+		instance when the `TabNavigator` requests the item's view.
 
 		@since 1.0.0
 	**/
