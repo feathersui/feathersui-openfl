@@ -532,6 +532,9 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._visibleIndices.start = 0;
 			this._visibleIndices.end = this.dataProvider.length - 1;
 		}
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
 		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
 			var item = this.dataProvider.get(i);
 			var itemRenderer = this.dataToItemRenderer.get(item);
