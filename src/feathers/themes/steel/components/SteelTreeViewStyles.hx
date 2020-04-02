@@ -36,7 +36,7 @@ class SteelTreeViewStyles {
 			return;
 		}
 
-		styleProvider.setStyleFunction(TreeView, null, function(treeView:TreeView):Void {
+		function styleTreeViewWithWithBorderVariant(treeView:TreeView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			treeView.autoHideScrollBars = !isDesktop;
@@ -49,11 +49,46 @@ class SteelTreeViewStyles {
 			if (treeView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
-				// backgroundSkin.border = theme.getContainerBorder();
+				backgroundSkin.border = theme.getContainerBorder();
 				backgroundSkin.width = 160.0;
 				backgroundSkin.height = 160.0;
 				treeView.backgroundSkin = backgroundSkin;
 			}
+
+			treeView.paddingTop = 1.0;
+			treeView.paddingRight = 1.0;
+			treeView.paddingBottom = 1.0;
+			treeView.paddingLeft = 1.0;
+		}
+
+		function styleTreeViewWithWithBorderlessVariant(treeView:TreeView):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+
+			treeView.autoHideScrollBars = !isDesktop;
+			treeView.fixedScrollBars = isDesktop;
+
+			if (treeView.layout == null) {
+				treeView.layout = new VerticalListLayout();
+			}
+
+			if (treeView.backgroundSkin == null) {
+				var backgroundSkin = new RectangleSkin();
+				backgroundSkin.fill = theme.getContainerFill();
+				backgroundSkin.width = 160.0;
+				backgroundSkin.height = 160.0;
+				treeView.backgroundSkin = backgroundSkin;
+			}
+		}
+
+		styleProvider.setStyleFunction(TreeView, null, function(treeView:TreeView):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+			if (isDesktop) {
+				styleTreeViewWithWithBorderVariant(treeView);
+			} else {
+				styleTreeViewWithWithBorderlessVariant(treeView);
+			}
 		});
+		styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDER, styleTreeViewWithWithBorderVariant);
+		styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDERLESS, styleTreeViewWithWithBorderlessVariant);
 	}
 }

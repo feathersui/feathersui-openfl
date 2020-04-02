@@ -80,6 +80,40 @@ import feathers.core.IDataSelector;
 @:access(feathers.data.GridViewHeaderState)
 @:styleContext
 class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+	/**
+		A variant used to style the grid view without a border. The variant is
+		used by default on mobile.
+
+		The following example uses this variant:
+
+		```hx
+		var gridView = new GridView();
+		gridView.variant = GridView.VARIANT_BORDERLESS;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_BORDERLESS = "borderless";
+
+	/**
+		A variant used to style the grid view with a border. This variant is
+		used by default on desktop.
+
+		The following example uses this variant:
+
+		```hx
+		var gridView = new GridView();
+		gridView.variant = GridView.VARIANT_BORDER;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_BORDER = "border";
+
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = "headerRendererFactory";
 
 	private static function defaultUpdateHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {

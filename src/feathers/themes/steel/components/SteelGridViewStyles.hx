@@ -35,7 +35,7 @@ class SteelGridViewStyles {
 			return;
 		}
 
-		styleProvider.setStyleFunction(GridView, null, function(gridView:GridView):Void {
+		function styleGridViewWithWithBorderVariant(gridView:GridView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			gridView.autoHideScrollBars = !isDesktop;
@@ -44,11 +44,42 @@ class SteelGridViewStyles {
 			if (gridView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
-				// backgroundSkin.border = theme.getContainerBorder();
+				backgroundSkin.border = theme.getContainerBorder();
 				backgroundSkin.width = 160.0;
 				backgroundSkin.height = 160.0;
 				gridView.backgroundSkin = backgroundSkin;
 			}
+
+			gridView.paddingTop = 1.0;
+			gridView.paddingRight = 1.0;
+			gridView.paddingBottom = 1.0;
+			gridView.paddingLeft = 1.0;
+		}
+
+		function styleGridViewWithWithBorderlessVariant(gridView:GridView):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+
+			gridView.autoHideScrollBars = !isDesktop;
+			gridView.fixedScrollBars = isDesktop;
+
+			if (gridView.backgroundSkin == null) {
+				var backgroundSkin = new RectangleSkin();
+				backgroundSkin.fill = theme.getContainerFill();
+				backgroundSkin.width = 160.0;
+				backgroundSkin.height = 160.0;
+				gridView.backgroundSkin = backgroundSkin;
+			}
+		}
+
+		styleProvider.setStyleFunction(GridView, null, function(gridView:GridView):Void {
+			var isDesktop = DeviceUtil.isDesktop();
+			if (isDesktop) {
+				styleGridViewWithWithBorderVariant(gridView);
+			} else {
+				styleGridViewWithWithBorderlessVariant(gridView);
+			}
 		});
+		styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDER, styleGridViewWithWithBorderVariant);
+		styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithWithBorderlessVariant);
 	}
 }

@@ -84,6 +84,40 @@ import openfl.ui.Multitouch;
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+	/**
+		A variant used to style the list view without a border. The variant is
+		used by default on mobile.
+
+		The following example uses this variant:
+
+		```hx
+		var listView = new ListView();
+		listView.variant = ListView.VARIANT_BORDERLESS;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_BORDERLESS = "borderless";
+
+	/**
+		A variant used to style the list view with a border. This variant is
+		used by default on desktop.
+
+		The following example uses this variant:
+
+		```hx
+		var listView = new ListView();
+		listView.variant = ListView.VARIANT_BORDER;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_BORDER = "border";
+
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
