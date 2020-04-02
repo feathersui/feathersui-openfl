@@ -149,18 +149,18 @@ class TabNavigator extends BaseNavigator {
 	}
 
 	private function tabNavigator_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
-		var item = event.addedItem;
+		var item = cast(event.addedItem, TabItem);
 		this.addItemInternal(item.internalID, item);
 	}
 
 	private function tabNavigator_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
-		var item = event.removedItem;
+		var item = cast(event.removedItem, TabItem);
 		this.removeItemInternal(item.internalID);
 	}
 
 	private function tabNavigator_dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
-		var addedItem = event.addedItem;
-		var removedItem = event.removedItem;
+		var addedItem = cast(event.addedItem, TabItem);
+		var removedItem = cast(event.removedItem, TabItem);
 		this.removeItemInternal(removedItem.internalID);
 		this.addItemInternal(addedItem.internalID, addedItem);
 	}
