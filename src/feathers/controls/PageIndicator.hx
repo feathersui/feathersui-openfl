@@ -8,6 +8,11 @@
 
 package feathers.controls;
 
+import openfl.errors.ArgumentError;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.VerticalLayout;
+import openfl.events.TouchEvent;
+import openfl.events.MouseEvent;
 import feathers.data.PageIndicatorItemState;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.errors.IllegalOperationError;
@@ -26,6 +31,9 @@ import feathers.core.InvalidationFlag;
 import feathers.core.FeathersControl;
 import feathers.core.IIndexSelector;
 import feathers.themes.steel.components.SteelPageIndicatorStyles;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	@since 1.0.0
@@ -51,6 +59,12 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 		initializePageIndicatorTheme();
 
 		super();
+
+		this.mouseChildren = this.interactionMode == PRECISE;
+		this.addEventListener(MouseEvent.CLICK, pageIndicator_clickHandler);
+		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
+		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
+		// this.addEventListener(TouchEvent.TOUCH_TAP, pageIndicator_touchTapHandler);
 	}
 
 	/**
@@ -182,6 +196,17 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
 
+	public var interactionMode(default, set):PageIndicatorInteractionMode = PREVIOUS_NEXT;
+
+	private function set_interactionMode(value:PageIndicatorInteractionMode):PageIndicatorInteractionMode {
+		if (this.interactionMode == value) {
+			return this.interactionMode;
+		}
+		this.interactionMode = value;
+		this.mouseChildren = this.interactionMode == PRECISE;
+		return this.interactionMode;
+	}
+
 	private var _layoutMeasurements = new Measurements();
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
@@ -224,6 +249,9 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 	}
 
 	private function handleLayout():Void {
+		if (!Std.is(this.layout, HorizontalLayout) && !Std.is(this.layout, VerticalLayout)) {
+			throw new ArgumentError("PageIndicator must use HorizontalLayout or VerticalLayout");
+		}
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		this.layout.layout(cast this.activeToggleButtons, this._layoutMeasurements, this._layoutResult);
@@ -346,6 +374,10 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 
 	private function layoutBackgroundSkin():Void {
 		if (this._currentBackgroundSkin == null) {
+			this.graphics.clear();
+			this.graphics.beginFill(0xff00ff, 0.0);
+			this.graphics.drawRect(0, 0, this.actualWidth, this.actualHeight);
+			this.graphics.endFill();
 			return;
 		}
 		this._currentBackgroundSkin.x = 0.0;
@@ -411,5 +443,48 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 			return;
 		}
 		this.selectedIndex = this.activeToggleButtons.indexOf(button);
+	}
+
+	private function handleClickOrTap(localX:Float, localY:Float):Void {
+		var button = this.activeToggleButtons[this.selectedIndex];
+		var selectedIndex = this.selectedIndex;
+		if (Std.is(this.layout, VerticalLayout)) {
+			if (localY < button.y) {
+				selectedIndex--;
+			} else if (localY > (button.y + button.height)) {
+				selectedIndex++;
+			}
+		} else {
+			if (localX < button.x) {
+				selectedIndex--;
+			} else if (localX > (button.x + button.width)) {
+				selectedIndex++;
+			}
+		}
+		if (selectedIndex < 0) {
+			selectedIndex = 0;
+		} else if (selectedIndex > this.maxSelectedIndex) {
+			selectedIndex = this.maxSelectedIndex;
+		}
+		this.selectedIndex = selectedIndex;
+	}
+
+	private function pageIndicator_clickHandler(event:MouseEvent):Void {
+		if (!this.enabled || this.interactionMode != PREVIOUS_NEXT) {
+			return;
+		}
+		this.handleClickOrTap(event.localX, event.localY);
+	}
+
+	private function pageIndicator_touchTapHandler(event:TouchEvent):Void {
+		if (!this.enabled || this.interactionMode != PREVIOUS_NEXT) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+
+		this.handleClickOrTap(event.localX, event.localY);
 	}
 }
