@@ -453,14 +453,14 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this._headerContainer == null) {
 			return;
 		}
-		this._headerContainer.x = 0.0;
-		this._headerContainer.y = 0.0;
-		this._headerContainer.width = this.actualWidth;
+		this._headerContainer.x = this.paddingLeft;
+		this._headerContainer.y = this.paddingTop;
+		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 		this._headerContainerLayout.paddingLeft = switch (this.scrollBarYPosition) {
 			case LEFT: this.scrollBarYOffset;
 			default: 0.0;
 		};
-		var totalHeaderWidth = this.actualWidth - this.scrollBarYOffset;
+		var totalHeaderWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.scrollBarYOffset;
 		for (headerRenderer in this.activeHeaderRenderers) {
 			headerRenderer.width = totalHeaderWidth / this.columns.length;
 		}

@@ -122,9 +122,9 @@ class Panel extends ScrollContainer {
 		if (this.header == null) {
 			return;
 		}
-		this.header.x = 0;
-		this.header.y = 0;
-		this.header.width = this.actualWidth;
+		this.header.x = this.paddingLeft;
+		this.header.y = this.paddingTop;
+		this.header.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 		if (Std.is(this.header, IValidating)) {
 			cast(this.header, IValidating).validateNow();
 		}
@@ -134,11 +134,11 @@ class Panel extends ScrollContainer {
 		if (this.footer == null) {
 			return;
 		}
-		this.footer.x = 0;
-		this.footer.width = this.actualWidth;
+		this.footer.x = this.paddingLeft;
+		this.footer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 		if (Std.is(this.footer, IValidating)) {
 			cast(this.footer, IValidating).validateNow();
 		}
-		this.footer.y = this.actualHeight - this.footer.height;
+		this.footer.y = this.actualHeight - this.footer.height - this.paddingBottom;
 	}
 }
