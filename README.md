@@ -40,6 +40,7 @@ Haxe is supported by [more editors and IDEs](https://haxe.org/documentation/intr
 ## Help & Support
 
 - [Documentation](https://feathersui.com/learn/haxe-openfl/)
+- [Sample Projects](https://feathersui.com/samples/haxe-openfl/)
 - [Community Forum](https://community.feathersui.com/)
 - [Discord Chat](https://discord.feathersui.com/)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/feathersui)
