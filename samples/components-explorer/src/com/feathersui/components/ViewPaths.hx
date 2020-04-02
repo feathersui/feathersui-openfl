@@ -11,6 +11,7 @@ class ViewPaths {
 	public static final LABEL = "/label";
 	public static final LIST_VIEW = "/list-view";
 	public static final PAGE_INDICATOR = "/page-indicator";
+	public static final PAGE_NAVIGATOR = "/page-navigator";
 	public static final PANEL = "/panel";
 	public static final POP_UP_LIST_VIEW = "/pop-up-list-view";
 	public static final POP_UP_MANAGER = "/pop-up-manager";

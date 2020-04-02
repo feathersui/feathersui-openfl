@@ -9,6 +9,7 @@ import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
 import com.feathersui.components.views.PageIndicatorScreen;
+import com.feathersui.components.views.PageNavigatorScreen;
 import com.feathersui.components.views.PanelScreen;
 import com.feathersui.components.views.PopUpListViewScreen;
 import com.feathersui.components.views.PopUpManagerScreen;
@@ -75,6 +76,9 @@ class Main extends Application {
 
 		var pageIndicator = Route.withClass(ViewPaths.PAGE_INDICATOR, PageIndicatorScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(pageIndicator);
+
+		var pageNavigator = Route.withClass(ViewPaths.PAGE_NAVIGATOR, PageNavigatorScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(pageNavigator);
 
 		var panel = Route.withClass(ViewPaths.PANEL, PanelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(panel);
