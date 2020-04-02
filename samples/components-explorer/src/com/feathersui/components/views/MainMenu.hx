@@ -27,10 +27,11 @@ class MainMenu extends Panel {
 		this.listView.dataProvider = new ArrayCollection([
 			new MenuItem("Asset Loader", ViewPaths.ASSET_LOADER), new MenuItem("Button", ViewPaths.BUTTON), new MenuItem("Callout", ViewPaths.CALLOUT),
 			new MenuItem("Check", ViewPaths.CHECK), new MenuItem("Combo Box", ViewPaths.COMBO_BOX), new MenuItem("Grid View", ViewPaths.GRID_VIEW),
-			new MenuItem("Label", ViewPaths.LABEL), new MenuItem("List View", ViewPaths.LIST_VIEW), new MenuItem("Panel", ViewPaths.PANEL),
-			new MenuItem("Pop Up List View", ViewPaths.POP_UP_LIST_VIEW), new MenuItem("Pop Up Manager", ViewPaths.POP_UP_MANAGER),
-			new MenuItem("Progress Bar", ViewPaths.PROGRESS_BAR), new MenuItem("Radio", ViewPaths.RADIO), new MenuItem("Slider", ViewPaths.SLIDER),
-			new MenuItem("Tab Bar", ViewPaths.TAB_BAR), new MenuItem("Text Area", ViewPaths.TEXT_AREA), new MenuItem("Text Input", ViewPaths.TEXT_INPUT),
+			new MenuItem("Label", ViewPaths.LABEL), new MenuItem("List View", ViewPaths.LIST_VIEW), new MenuItem("Page Indicator", ViewPaths.PAGE_INDICATOR),
+			new MenuItem("Panel", ViewPaths.PANEL), new MenuItem("Pop Up List View", ViewPaths.POP_UP_LIST_VIEW),
+			new MenuItem("Pop Up Manager", ViewPaths.POP_UP_MANAGER), new MenuItem("Progress Bar", ViewPaths.PROGRESS_BAR),
+			new MenuItem("Radio", ViewPaths.RADIO), new MenuItem("Slider", ViewPaths.SLIDER), new MenuItem("Tab Bar", ViewPaths.TAB_BAR),
+			new MenuItem("Text Area", ViewPaths.TEXT_AREA), new MenuItem("Text Input", ViewPaths.TEXT_INPUT),
 			new MenuItem("Toggle Switch", ViewPaths.TOGGLE_SWITCH), new MenuItem("Tree View", ViewPaths.TREE_VIEW),
 		]);
 		this.listView.layoutData = AnchorLayoutData.fill();
