@@ -69,7 +69,7 @@ class TabNavigatorScreen extends Panel {
 	}
 
 	private function tabNavigator_changeHandler(event:Event):Void {
-		trace("TabIndicator activeItemID change: " + this.navigator.activeItemID);
+		trace("TabNavigator activeItemID change: " + this.navigator.activeItemID);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {

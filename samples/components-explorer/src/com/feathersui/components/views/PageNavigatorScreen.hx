@@ -69,7 +69,7 @@ class PageNavigatorScreen extends Panel {
 	}
 
 	private function pageNavigator_changeHandler(event:Event):Void {
-		trace("PageIndicator activeItemID change: " + this.navigator.activeItemID);
+		trace("PageNavigator activeItemID change: " + this.navigator.activeItemID);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
