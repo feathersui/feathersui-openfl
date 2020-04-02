@@ -170,7 +170,7 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 	private var _ignoreListViewChange = false;
 
 	/**
-		@see `feathers.core.IDataSelector.selectedIndex`
+		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
 	@:isVar
 	public var selectedIndex(get, set):Int = -1;
@@ -197,6 +197,18 @@ class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.selectedIndex;
+	}
+
+	/**
+		@see `feathers.core.IIndexSelector.maxSelectedIndex`
+	**/
+	public var maxSelectedIndex(get, never):Int;
+
+	private function get_maxSelectedIndex():Int {
+		if (this.dataProvider == null) {
+			return -1;
+		}
+		return this.dataProvider.length - 1;
 	}
 
 	/**

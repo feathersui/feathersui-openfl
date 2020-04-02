@@ -13,45 +13,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
-interface IDataSelector<T> {
-	/**
-		The index of the currently selected item in the item collection. Returns
-		`-1` if no item is selected.
-
-		The following example selects an item by passing its index to the
-		`selectedIndex` property:
-
-		```hx
-		control.selectedIndex = 2;
-		```
-
-		The following example clears the currently selected index:
-
-		```hx
-		control.selectedIndex = -1;
-		```
-
-		The following example listens for when the selection of a `ListView`
-		component changes, and it requests the new selected index:
-
-		```hx
-		var listView = new ListView();
-		function changeHandler(event:Event):Void
-		{
-			var listView = cast(event.currentTarget, ListView);
-			trace("selection change: " + listView.selectedIndex);
-		}
-		listView.addEventListener(Event.CHANGE, changeHandler);
-		```
-
-		@default -1
-
-		@see `IDataSelector.selectedItem`
-
-		@since 1.0.0
-	**/
-	public var selectedIndex(get, set):Int;
-
+interface IDataSelector<T> extends IIndexSelector {
 	/**
 		The currently selected item. Returns `null` if no item is selected.
 

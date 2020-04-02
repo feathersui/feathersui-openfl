@@ -100,6 +100,15 @@ class ToggleGroup extends EventDispatcher implements IDataSelector<IToggle> {
 	}
 
 	/**
+		@see `feathers.core.IIndexSelector.maxSelectedIndex`
+	**/
+	public var maxSelectedIndex(get, never):Int;
+
+	private function get_maxSelectedIndex():Int {
+		return this._items.length - 1;
+	}
+
+	/**
 		The currently selected toggle.
 
 		In the following example, the selected item is changed:

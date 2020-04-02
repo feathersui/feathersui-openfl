@@ -254,7 +254,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
 
 	/**
-		@see `feathers.core.IDataSelector.selectedIndex`
+		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
 	@:isVar
 	public var selectedIndex(get, set):Int = -1;
@@ -281,6 +281,18 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.selectedIndex;
+	}
+
+	/**
+		@see `feathers.core.IIndexSelector.maxSelectedIndex`
+	**/
+	public var maxSelectedIndex(get, never):Int;
+
+	private function get_maxSelectedIndex():Int {
+		if (this.dataProvider == null) {
+			return -1;
+		}
+		return this.dataProvider.length - 1;
 	}
 
 	/**
