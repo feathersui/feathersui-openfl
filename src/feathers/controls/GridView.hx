@@ -193,21 +193,21 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return this.dataProvider;
 		}
 		if (this.dataProvider != null) {
-			this.dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this.dataProvider.removeEventListener(Event.CHANGE, gridView_dataProvider_changeHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, gridView_dataProvider_addItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_dataProvider_removeItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, gridView_dataProvider_replaceItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, gridView_dataProvider_sortChangeHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, gridView_dataProvider_filterChangeHandler);
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
-			this.dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this.dataProvider.addEventListener(Event.CHANGE, gridView_dataProvider_changeHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, gridView_dataProvider_addItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_dataProvider_removeItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, gridView_dataProvider_replaceItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, gridView_dataProvider_sortChangeHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, gridView_dataProvider_filterChangeHandler);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
@@ -250,11 +250,11 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return this.columns;
 		}
 		if (this.columns != null) {
-			this.columns.removeEventListener(Event.CHANGE, columns_changeHandler);
+			this.columns.removeEventListener(Event.CHANGE, gridView_columns_changeHandler);
 		}
 		this.columns = value;
 		if (this.columns != null) {
-			this.columns.addEventListener(Event.CHANGE, columns_changeHandler);
+			this.columns.addEventListener(Event.CHANGE, gridView_columns_changeHandler);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.columns;
@@ -558,8 +558,8 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			}
 			this.rowRendererToData.remove(rowRenderer);
 			this.dataToRowRenderer.remove(item);
-			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, rowRenderer_triggerHandler);
-			rowRenderer.removeEventListener(Event.CHANGE, rowRenderer_changeHandler);
+			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
+			rowRenderer.removeEventListener(Event.CHANGE, gridView_rowRenderer_changeHandler);
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
 			if (this._rowRendererRecycler.reset != null) {
@@ -629,8 +629,8 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._rowRendererRecycler.update(rowRenderer, item);
 		}
 		this.refreshRowRendererProperties(rowRenderer, item, index);
-		rowRenderer.addEventListener(TriggerEvent.TRIGGER, rowRenderer_triggerHandler);
-		rowRenderer.addEventListener(Event.CHANGE, rowRenderer_changeHandler);
+		rowRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
+		rowRenderer.addEventListener(Event.CHANGE, gridView_rowRenderer_changeHandler);
 		this.rowRendererToData.set(rowRenderer, item);
 		this.dataToRowRenderer.set(item, rowRenderer);
 		return rowRenderer;
@@ -685,14 +685,14 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
-	private function rowRenderer_triggerHandler(event:TriggerEvent):Void {
+	private function gridView_rowRenderer_triggerHandler(event:TriggerEvent):Void {
 		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
 		var item = this.rowRendererToData.get(rowRenderer);
 		// trigger before change
 		this.dispatchEvent(event);
 	}
 
-	private function rowRenderer_changeHandler(event:Event):Void {
+	private function gridView_rowRenderer_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
@@ -706,11 +706,11 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedItem = item;
 	}
 
-	private function dataProvider_changeHandler(event:Event):Void {
+	private function gridView_dataProvider_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 
-	private function dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
+	private function gridView_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -719,7 +719,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
+	private function gridView_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -728,7 +728,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
+	private function gridView_dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -737,15 +737,15 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
+	private function gridView_dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
-	private function dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
+	private function gridView_dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
-	private function columns_changeHandler(event:Event):Void {
+	private function gridView_columns_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 }

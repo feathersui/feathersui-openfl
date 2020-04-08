@@ -139,23 +139,23 @@ class TreeView extends BaseScrollContainer {
 		}
 		this._virtualCache.resize(0);
 		if (this.dataProvider != null) {
-			this.dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, dataProvider_resetHandler);
+			this.dataProvider.removeEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeView_dataProvider_addItemHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeView_dataProvider_removeItemHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
+			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
 			var newSize = this.calculateTotalLayoutCount([]);
 			this._virtualCache.resize(newSize);
-			this.dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, dataProvider_resetHandler);
+			this.dataProvider.addEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeView_dataProvider_addItemHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeView_dataProvider_removeItemHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
+			this.dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
@@ -418,10 +418,10 @@ class TreeView extends BaseScrollContainer {
 			this.itemRendererToData.remove(itemRenderer);
 			this.itemRendererToLayoutIndex.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
-			itemRenderer.removeEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
-			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
+			itemRenderer.removeEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
+			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
 			if (Std.is(itemRenderer, IToggle)) {
-				itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
+				itemRenderer.removeEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
 			}
 			if (Std.is(itemRenderer, IOpenCloseToggle)) {
 				itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
@@ -616,12 +616,12 @@ class TreeView extends BaseScrollContainer {
 			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
 			openCloseItem.opened = this._currentItemState.opened;
 		}
-		itemRenderer.addEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
+		itemRenderer.addEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
 		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
 		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
 		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
 		if (Std.is(itemRenderer, IToggle)) {
-			itemRenderer.addEventListener(Event.CHANGE, itemRenderer_changeHandler);
+			itemRenderer.addEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
 		}
 		if (Std.is(itemRenderer, IOpenCloseToggle)) {
 			itemRenderer.addEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
@@ -694,7 +694,7 @@ class TreeView extends BaseScrollContainer {
 		}
 	}
 
-	private function itemRenderer_touchTapHandler(event:TouchEvent):Void {
+	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this.selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -711,7 +711,7 @@ class TreeView extends BaseScrollContainer {
 		this.selectedLocation = this.dataProvider.locationOf(data);
 	}
 
-	private function itemRenderer_clickHandler(event:MouseEvent):Void {
+	private function treeView_itemRenderer_clickHandler(event:MouseEvent):Void {
 		if (!this.selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -724,7 +724,7 @@ class TreeView extends BaseScrollContainer {
 		this.selectedLocation = this.dataProvider.locationOf(data);
 	}
 
-	private function itemRenderer_changeHandler(event:Event):Void {
+	private function treeView_itemRenderer_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
@@ -767,7 +767,7 @@ class TreeView extends BaseScrollContainer {
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 
-	private function dataProvider_changeHandler(event:Event):Void {
+	private function treeView_dataProvider_changeHandler(event:Event):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
 			var newSize = this.calculateTotalLayoutCount([]);
@@ -810,7 +810,7 @@ class TreeView extends BaseScrollContainer {
 		return 0;
 	}
 
-	private function dataProvider_addItemHandler(event:HierarchicalCollectionEvent):Void {
+	private function treeView_dataProvider_addItemHandler(event:HierarchicalCollectionEvent):Void {
 		if (this.selectedLocation == null) {
 			return;
 		}
@@ -819,7 +819,7 @@ class TreeView extends BaseScrollContainer {
 		}
 	}
 
-	private function dataProvider_removeItemHandler(event:HierarchicalCollectionEvent):Void {
+	private function treeView_dataProvider_removeItemHandler(event:HierarchicalCollectionEvent):Void {
 		if (this.selectedLocation == null) {
 			return;
 		}
@@ -832,7 +832,7 @@ class TreeView extends BaseScrollContainer {
 		}
 	}
 
-	private function dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
+	private function treeView_dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
 		if (this.selectedLocation == null) {
 			return;
 		}
@@ -842,11 +842,11 @@ class TreeView extends BaseScrollContainer {
 		}
 	}
 
-	private function dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
+	private function treeView_dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
 		this.selectedLocation = null;
 	}
 
-	private function dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
+	private function treeView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
 		this.selectedLocation = null;
 	}
 }

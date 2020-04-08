@@ -195,26 +195,26 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		this._virtualCache.resize(0);
 		if (this.dataProvider != null) {
-			this.dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.RESET, dataProvider_resetHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this.dataProvider.removeEventListener(Event.CHANGE, listView_dataProvider_changeHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, listView_dataProvider_addItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, listView_dataProvider_removeItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, listView_dataProvider_replaceItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, listView_dataProvider_removeAllHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
 			this._virtualCache.resize(this.dataProvider.length);
-			this.dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, dataProvider_removeAllHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.RESET, dataProvider_resetHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this.dataProvider.addEventListener(Event.CHANGE, listView_dataProvider_changeHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, listView_dataProvider_addItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, listView_dataProvider_removeItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, listView_dataProvider_replaceItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, listView_dataProvider_removeAllHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
@@ -484,9 +484,9 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			}
 			this.itemRendererToData.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
-			itemRenderer.removeEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
-			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
-			itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
+			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
+			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
+			itemRenderer.removeEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
@@ -625,12 +625,12 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentItemState.selected;
 		}
-		itemRenderer.addEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
+		itemRenderer.addEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
 		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
 		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
 		if (Std.is(itemRenderer, IToggle)) {
-			itemRenderer.addEventListener(Event.CHANGE, itemRenderer_changeHandler);
+			itemRenderer.addEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 		}
 		this.itemRendererToData.set(itemRenderer, item);
 		this.dataToItemRenderer.set(item, itemRenderer);
@@ -653,7 +653,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
-	private function itemRenderer_touchTapHandler(event:TouchEvent):Void {
+	private function listView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this.selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -670,7 +670,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.dataProvider.indexOf(data);
 	}
 
-	private function itemRenderer_clickHandler(event:MouseEvent):Void {
+	private function listView_itemRenderer_clickHandler(event:MouseEvent):Void {
 		if (!this.selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -683,7 +683,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedIndex = this.dataProvider.indexOf(data);
 	}
 
-	private function itemRenderer_changeHandler(event:Event):Void {
+	private function listView_itemRenderer_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
@@ -700,11 +700,11 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedItem = item;
 	}
 
-	private function dataProvider_changeHandler(event:Event):Void {
+	private function listView_dataProvider_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 
-	private function dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
+	private function listView_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache.insert(event.index, null);
 		}
@@ -717,7 +717,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
+	private function listView_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache.remove(event.index);
 		}
@@ -733,7 +733,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
+	private function listView_dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache[event.index] = null;
 		}
@@ -746,14 +746,14 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
+	private function listView_dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
 		}
 		this.selectedIndex = -1;
 	}
 
-	private function dataProvider_resetHandler(event:FlatCollectionEvent):Void {
+	private function listView_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
 			this._virtualCache.resize(this.dataProvider.length);
@@ -761,7 +761,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedIndex = -1;
 	}
 
-	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
+	private function listView_dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
@@ -771,7 +771,7 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
-	private function dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
+	private function listView_dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
