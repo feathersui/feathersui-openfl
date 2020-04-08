@@ -652,11 +652,15 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 			} else {
 				newWidth = 0.0;
 			}
-			if (this._currentIcon != null && (this.iconPosition == LEFT || this.iconPosition == RIGHT)) {
-				if (hasText) {
-					newWidth += adjustedGap;
+			if (this._currentIcon != null) {
+				if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+					if (hasText) {
+						newWidth += adjustedGap;
+					}
+					newWidth += this._currentIcon.width;
+				} else if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+					newWidth = Math.max(newWidth, this._currentIcon.width);
 				}
-				newWidth += this._currentIcon.width;
 			}
 			newWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentBackgroundSkin != null) {
@@ -671,11 +675,15 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 			} else {
 				newHeight = 0.0;
 			}
-			if (this._currentIcon != null && (this.iconPosition == TOP || this.iconPosition == BOTTOM)) {
-				if (hasText) {
-					newHeight += adjustedGap;
+			if (this._currentIcon != null) {
+				if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+					if (hasText) {
+						newHeight += adjustedGap;
+					}
+					newHeight += this._currentIcon.height;
+				} else if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+					newHeight = Math.max(newHeight, this._currentIcon.height);
 				}
-				newHeight += this._currentIcon.height;
 			}
 			newHeight += this.paddingTop + this.paddingBottom;
 			if (this._currentBackgroundSkin != null) {
@@ -690,11 +698,15 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 			} else {
 				newMinWidth = 0.0;
 			}
-			if (this._currentIcon != null && (this.iconPosition == LEFT || this.iconPosition == RIGHT)) {
-				if (hasText) {
-					newMinWidth += adjustedGap;
+			if (this._currentIcon != null) {
+				if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+					if (hasText) {
+						newMinWidth += adjustedGap;
+					}
+					newMinWidth += this._currentIcon.width;
+				} else if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+					newMinWidth = Math.max(newMinWidth, this._currentIcon.width);
 				}
-				newMinWidth += this._currentIcon.width;
 			}
 			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
@@ -711,11 +723,15 @@ class ToggleButton extends BasicToggleButton implements ITextControl {
 			} else {
 				newMinHeight = 0.0;
 			}
-			if (this._currentIcon != null && (this.iconPosition == TOP || this.iconPosition == BOTTOM)) {
-				if (hasText) {
-					newMinHeight += adjustedGap;
+			if (this._currentIcon != null) {
+				if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+					if (hasText) {
+						newMinHeight += adjustedGap;
+					}
+					newMinHeight += this._currentIcon.height;
+				} else if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+					newMinHeight = Math.max(newMinHeight, this._currentIcon.height);
 				}
-				newMinHeight += this._currentIcon.height;
 			}
 			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
