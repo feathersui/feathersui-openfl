@@ -19,6 +19,8 @@ import feathers.core.IUIControl;
 interface IDataRenderer extends IUIControl {
 	/**
 		The data to render.
+
+		@since 1.0.0
 	**/
 	public var data(get, set):Dynamic;
 }
