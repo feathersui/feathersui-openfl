@@ -16,11 +16,13 @@ import motion.easing.Quart;
 import openfl.Lib;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
-import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Utility that provides touch and mouse wheel scrolling capabilities for any
@@ -376,6 +378,7 @@ class Scroller extends EventDispatcher {
 	private var _fixedThrowDuration:Float = 2.996998998998728;
 	private var restoreMouseChildren:Bool = false;
 	private var touchPointID:Int = -1;
+	private var previousTouchPointID:Int = -1;
 	private var startTouchX:Float = 0.0;
 	private var startTouchY:Float = 0.0;
 	private var startScrollX:Float = 0.0;
@@ -390,7 +393,6 @@ class Scroller extends EventDispatcher {
 	private var targetScrollX:Float = 0.0;
 	private var targetScrollY:Float = 0.0;
 	private var snappingToEdge:Bool = false;
-	private var stage:Stage = null;
 
 	/**
 		The container used for scrolling.
@@ -410,6 +412,8 @@ class Scroller extends EventDispatcher {
 			this.target.removeEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler);
 			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
 			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true);
+			this.target.removeEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true);
+			this.target.removeEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true);
 		}
 		this.target = value;
 		if (this.target != null) {
@@ -418,6 +422,10 @@ class Scroller extends EventDispatcher {
 			this.target.addEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler, false, 0, true);
 			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler, false, 0, true);
 			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true, 0, true);
+			this.target.addEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true, 0, true);
+			// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
+			// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
+			// this.target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true, 0, true);
 		}
 		return this.target;
 	}
@@ -627,6 +635,7 @@ class Scroller extends EventDispatcher {
 		this.scrolling = true;
 		if (Std.is(this.target, DisplayObjectContainer)) {
 			var container = cast(this.target, DisplayObjectContainer);
+			this.restoreMouseChildren = container.mouseChildren;
 			container.mouseChildren = false;
 		}
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
@@ -637,6 +646,10 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 		this.scrolling = false;
+		if (Std.is(this.target, DisplayObjectContainer)) {
+			var container = cast(this.target, DisplayObjectContainer);
+			container.mouseChildren = this.restoreMouseChildren;
+		}
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 	}
 
@@ -738,6 +751,7 @@ class Scroller extends EventDispatcher {
 		if (this.touchPointID == -1) {
 			return;
 		}
+		this.previousTouchPointID = this.scrolling ? this.touchPointID : -1;
 		this.touchPointID = -1;
 		this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 		if (this.target.stage != null) {
@@ -745,10 +759,6 @@ class Scroller extends EventDispatcher {
 			this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
 			this.target.stage.removeEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler);
 			this.target.stage.removeEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler);
-		}
-		if (Std.is(this.target, DisplayObjectContainer)) {
-			var container = cast(this.target, DisplayObjectContainer);
-			container.mouseChildren = this.restoreMouseChildren;
 		}
 	}
 
@@ -783,13 +793,13 @@ class Scroller extends EventDispatcher {
 		this.target.stage.addEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler, false, 0, true);
 		if (Std.is(this.target, DisplayObjectContainer)) {
 			var container = cast(this.target, DisplayObjectContainer);
-			this.restoreMouseChildren = container.mouseChildren;
 			// if we were already scrolling, disable the pointer immediately.
 			// otherwise, wait until dragging starts
 			if (this.scrolling) {
 				container.mouseChildren = false;
 			}
 		}
+		this.previousTouchPointID = -1;
 		this.touchPointID = touchPointID;
 		this.startTouchX = stageX;
 		this.startTouchY = stageY;
@@ -1018,6 +1028,27 @@ class Scroller extends EventDispatcher {
 
 	private function target_stage_touchEndHandler(event:TouchEvent):Void {
 		this.touchEnd(event.touchPointID);
+	}
+
+	private function target_clickCaptureHandler(event:MouseEvent):Void {
+		if (this.previousTouchPointID == -1) {
+			return;
+		}
+		this.previousTouchPointID = -1;
+		event.stopImmediatePropagation();
+	}
+
+	private function target_touchTapCaptureHandler(event:TouchEvent):Void {
+		if (this.previousTouchPointID != event.touchPointID) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			this.previousTouchPointID = TOUCH_ID_MOUSE;
+			return;
+		}
+		this.previousTouchPointID = -1;
+		event.stopImmediatePropagation();
 	}
 
 	private function target_stage_mouseUpHandler(event:MouseEvent):Void {
