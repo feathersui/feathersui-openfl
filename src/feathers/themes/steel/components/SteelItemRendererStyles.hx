@@ -67,6 +67,7 @@ class SteelItemRendererStyles {
 			itemRenderer.paddingRight = 10.0;
 			itemRenderer.paddingBottom = 4.0;
 			itemRenderer.paddingLeft = 10.0;
+			itemRenderer.gap = 6.0;
 
 			itemRenderer.horizontalAlign = LEFT;
 		});
