@@ -9,9 +9,11 @@
 package feathers.controls;
 
 import feathers.controls.dataRenderers.IDataRenderer;
-import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.dataRenderers.ITreeViewItemRenderer;
+import feathers.controls.dataRenderers.TreeViewItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
+import feathers.core.IOpenCloseToggle;
 import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
 import feathers.data.IHierarchicalCollection;
@@ -242,7 +244,7 @@ class TreeView extends BaseScrollContainer {
 		@since 1.0.0
 	**/
 	public var itemRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+		set):DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(TreeViewItemRenderer);
 
 	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		TreeViewItemState, DisplayObject> {
@@ -312,6 +314,7 @@ class TreeView extends BaseScrollContainer {
 	public var pointerSelectionEnabled:Bool = true;
 
 	private var _ignoreSelectionChange = false;
+	private var _ignoreOpenedChange = false;
 
 	/**
 		Converts an item to text to display within tree view. By default, the
@@ -415,14 +418,24 @@ class TreeView extends BaseScrollContainer {
 			this.dataToItemRenderer.remove(item);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
-			itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
+			if (Std.is(itemRenderer, IToggle)) {
+				itemRenderer.removeEventListener(Event.CHANGE, itemRenderer_changeHandler);
+			}
+			if (Std.is(itemRenderer, IOpenCloseToggle)) {
+				itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
+				itemRenderer.removeEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
+			}
 			this._currentItemState.data = item;
 			this._currentItemState.location = null;
 			this._currentItemState.layoutIndex = -1;
 			this._currentItemState.selected = false;
 			this._currentItemState.text = null;
+			this._currentItemState.branch = false;
+			this._currentItemState.opened = false;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
+			var oldIgnoreOpenedChange = this._ignoreOpenedChange;
+			this._ignoreOpenedChange = true;
 			if (this.itemRendererRecycler.reset != null) {
 				this.itemRendererRecycler.reset(itemRenderer, this._currentItemState);
 			}
@@ -430,10 +443,19 @@ class TreeView extends BaseScrollContainer {
 				var toggle = cast(itemRenderer, IToggle);
 				toggle.selected = false;
 			}
+			if (Std.is(itemRenderer, IOpenCloseToggle)) {
+				var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
+				openCloseItem.opened = false;
+			}
+			if (Std.is(itemRenderer, ITreeViewItemRenderer)) {
+				var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
+				treeItem.branch = false;
+			}
 			if (Std.is(itemRenderer, IDataRenderer)) {
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
 				dataRenderer.data = null;
 			}
+			this._ignoreOpenedChange = oldIgnoreOpenedChange;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -499,10 +521,14 @@ class TreeView extends BaseScrollContainer {
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
+		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isBranch(item);
+		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
 		this._currentItemState.selected = item == this.selectedItem;
 		this._currentItemState.text = itemToText(item);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
+		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
+		this._ignoreOpenedChange = true;
 		if (this.itemRendererRecycler.update != null) {
 			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
 		}
@@ -516,6 +542,16 @@ class TreeView extends BaseScrollContainer {
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentItemState.selected;
 		}
+		if (Std.is(itemRenderer, ITreeViewItemRenderer)) {
+			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
+			treeItem.location = this._currentItemState.location;
+			treeItem.branch = this._currentItemState.branch;
+		}
+		if (Std.is(itemRenderer, IOpenCloseToggle)) {
+			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
+			openCloseItem.opened = this._currentItemState.opened;
+		}
+		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
@@ -553,6 +589,7 @@ class TreeView extends BaseScrollContainer {
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
 		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isBranch(item);
+		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
 		this._currentItemState.selected = item == this.selectedItem;
 		this._currentItemState.text = itemToText(item);
 		if (this.itemRendererRecycler.update != null) {
@@ -568,12 +605,25 @@ class TreeView extends BaseScrollContainer {
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentItemState.selected;
 		}
+		if (Std.is(itemRenderer, ITreeViewItemRenderer)) {
+			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
+			treeItem.location = this._currentItemState.location;
+			treeItem.branch = this._currentItemState.branch;
+		}
+		if (Std.is(itemRenderer, IOpenCloseToggle)) {
+			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
+			openCloseItem.opened = this._currentItemState.opened;
+		}
 		itemRenderer.addEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
 		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
 		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
 		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
 		if (Std.is(itemRenderer, IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, itemRenderer_changeHandler);
+		}
+		if (Std.is(itemRenderer, IOpenCloseToggle)) {
+			itemRenderer.addEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
+			itemRenderer.addEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 		}
 		this.itemRendererToData.set(itemRenderer, item);
 		this.dataToItemRenderer.set(item, itemRenderer);
@@ -658,6 +708,26 @@ class TreeView extends BaseScrollContainer {
 		}
 		var item = this.itemRendererToData.get(itemRenderer);
 		this.selectedItem = item;
+	}
+
+	private function treeView_itemRenderer_openHandler(event:Event):Void {
+		if (this._ignoreOpenedChange) {
+			return;
+		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.openBranches.push(item);
+		this.setInvalid(InvalidationFlag.DATA);
+	}
+
+	private function treeView_itemRenderer_closeHandler(event:Event):Void {
+		if (this._ignoreOpenedChange) {
+			return;
+		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.openBranches.remove(item);
+		this.setInvalid(InvalidationFlag.DATA);
 	}
 
 	private function dataProvider_changeHandler(event:Event):Void {

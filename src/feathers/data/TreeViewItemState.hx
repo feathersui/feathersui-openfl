@@ -61,6 +61,14 @@ class TreeViewItemState {
 	public var branch(default, null):Bool;
 
 	/**
+		Returns whether the branch is opened or closed. If the item is a leaf,
+		the value will always be `false`.
+
+		@since 1.0.0
+	**/
+	public var opened(default, null):Bool;
+
+	/**
 		Returns whether the item is selected or not.
 
 		@since 1.0.0
