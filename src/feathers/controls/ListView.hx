@@ -376,8 +376,9 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	/**
 		Indicates if selection is changed with `MouseEvent.CLICK` or
-		`TouchEvent.TOUCH_TAP`. If set to `false`, the item renderers will
-		control their own selection manually.
+		`TouchEvent.TOUCH_TAP` when the item renderer does not implement the
+		`IToggle` interface. If set to `false`, all item renderers must control
+		their own selection manually (not only ones that implement `IToggle`).
 	**/
 	public var pointerSelectionEnabled:Bool = true;
 
@@ -648,6 +649,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (Std.is(itemRenderer, IToggle)) {
+			// handled by Event.CHANGE listener instead
+			return;
+		}
 		var data = this.itemRendererToData.get(itemRenderer);
 		this.selectedIndex = this.dataProvider.indexOf(data);
 	}
@@ -657,6 +662,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (Std.is(itemRenderer, IToggle)) {
+			// handled by Event.CHANGE listener instead
+			return;
+		}
 		var data = this.itemRendererToData.get(itemRenderer);
 		this.selectedIndex = this.dataProvider.indexOf(data);
 	}
@@ -671,14 +680,6 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
 			toggle.selected = false;
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			return;
-		}
-		if (this.pointerSelectionEnabled) {
-			var toggle = cast(itemRenderer, IToggle);
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			toggle.selected = !toggle.selected;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 			return;
 		}
