@@ -260,6 +260,7 @@ class TreeView extends BaseScrollContainer {
 	private var activeItemRenderers:Array<DisplayObject> = [];
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
+	private var itemRendererToLayoutIndex = new ObjectMap<DisplayObject, Int>();
 	private var _unrenderedLocations:Array<Array<Int>> = [];
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _virtualCache:Array<Dynamic> = [];
@@ -415,6 +416,7 @@ class TreeView extends BaseScrollContainer {
 				return;
 			}
 			this.itemRendererToData.remove(itemRenderer);
+			this.itemRendererToLayoutIndex.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
@@ -626,6 +628,7 @@ class TreeView extends BaseScrollContainer {
 			itemRenderer.addEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 		}
 		this.itemRendererToData.set(itemRenderer, item);
+		this.itemRendererToLayoutIndex.set(itemRenderer, layoutIndex);
 		this.dataToItemRenderer.set(item, itemRenderer);
 		return itemRenderer;
 	}
@@ -661,6 +664,34 @@ class TreeView extends BaseScrollContainer {
 			location.pop();
 		}
 		return result;
+	}
+
+	private function insertChildrenIntoVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
+		var length = this.dataProvider.getLength(location);
+		for (i in 0...length) {
+			location.push(i);
+			layoutIndex++;
+			this._virtualCache.insert(layoutIndex, null);
+			var item = this.dataProvider.get(location);
+			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+				insertChildrenIntoVirtualCache(location, layoutIndex);
+			}
+			location.pop();
+		}
+	}
+
+	private function removeChildrenFromVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
+		var length = this.dataProvider.getLength(location);
+		for (i in 0...length) {
+			location.push(i);
+			layoutIndex++;
+			this._virtualCache.remove(layoutIndex);
+			var item = this.dataProvider.get(location);
+			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+				removeChildrenFromVirtualCache(location, layoutIndex);
+			}
+			location.pop();
+		}
 	}
 
 	private function itemRenderer_touchTapHandler(event:TouchEvent):Void {
@@ -717,6 +748,9 @@ class TreeView extends BaseScrollContainer {
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var item = this.itemRendererToData.get(itemRenderer);
 		this.openBranches.push(item);
+		var layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
+		var location = this.dataProvider.locationOf(item);
+		insertChildrenIntoVirtualCache(location, layoutIndex);
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 
@@ -727,6 +761,9 @@ class TreeView extends BaseScrollContainer {
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var item = this.itemRendererToData.get(itemRenderer);
 		this.openBranches.remove(item);
+		var layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
+		var location = this.dataProvider.locationOf(item);
+		removeChildrenFromVirtualCache(location, layoutIndex);
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 
