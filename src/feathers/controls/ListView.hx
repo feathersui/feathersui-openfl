@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
@@ -503,6 +504,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
 				dataRenderer.data = null;
 			}
+			if (Std.is(itemRenderer, IListViewItemRenderer)) {
+				var listRenderer = cast(itemRenderer, IListViewItemRenderer);
+				listRenderer.index = -1;
+			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -554,6 +559,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 					// if the renderer is an IDataRenderer, this cannot be overridden
 					dataRenderer.data = this._currentItemState.data;
 				}
+				if (Std.is(itemRenderer, IListViewItemRenderer)) {
+					var listRenderer = cast(itemRenderer, IListViewItemRenderer);
+					listRenderer.index = this._currentItemState.index;
+				}
 				if (Std.is(itemRenderer, IToggle)) {
 					var toggle = cast(itemRenderer, IToggle);
 					// if the renderer is an IToggle, this cannot be overridden
@@ -601,6 +610,10 @@ class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._currentItemState.text = itemToText(item);
 		if (this.itemRendererRecycler.update != null) {
 			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		}
+		if (Std.is(itemRenderer, IListViewItemRenderer)) {
+			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
+			listRenderer.index = this._currentItemState.index;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
