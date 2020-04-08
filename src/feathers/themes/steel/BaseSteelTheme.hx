@@ -187,11 +187,11 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	}
 
 	private function getButtonFill():FillStyle {
-		return Gradient(GradientType.LINEAR, [this.controlFillColor1, this.controlFillColor2], [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, [this.controlFillColor1, this.controlFillColor2], [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
 	private function getButtonDownFill():FillStyle {
-		return Gradient(GradientType.LINEAR, [this.controlFillColor2, this.controlFillColor1], [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, [this.controlFillColor2, this.controlFillColor1], [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
 	private function getButtonDisabledFill():FillStyle {
@@ -239,7 +239,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		if (!this.darkMode) {
 			colors.reverse();
 		}
-		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
 	private function getReversedActiveThemeFill():FillStyle {
@@ -247,7 +247,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		if (this.darkMode) {
 			colors.reverse();
 		}
-		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2);
+		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
 	private function getOverlayFill():FillStyle {

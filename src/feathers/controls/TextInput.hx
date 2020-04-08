@@ -691,7 +691,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 				this.textField.y = this.paddingTop;
 				this.textField.height = maxHeight;
 			default: // middle or null
-				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2;
+				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2.0;
 				this.textField.height = Math.min(maxHeight, this.textField.height);
 		}
 	}

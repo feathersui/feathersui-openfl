@@ -147,7 +147,7 @@ class VSlider extends BaseSlider {
 		var locationMinusHalfThumbHeight = location.y;
 		if (this.thumbSkin != null) {
 			trackHeightMinusThumbHeight -= this.thumbSkin.height;
-			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2;
+			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2.0;
 		}
 		this._thumbStartX = location.x;
 		this._thumbStartY = Math.min(trackHeightMinusThumbHeight - this.maximumPadding, Math.max(this.minimumPadding, locationMinusHalfThumbHeight));
@@ -159,7 +159,7 @@ class VSlider extends BaseSlider {
 			if (Std.is(this.thumbSkin, IValidating)) {
 				cast(this.thumbSkin, IValidating).validateNow();
 			}
-			location += Math.round(this.thumbSkin.height / 2);
+			location += Math.round(this.thumbSkin.height / 2.0);
 		}
 
 		this.secondaryTrackSkin.y = 0.0;
@@ -175,8 +175,8 @@ class VSlider extends BaseSlider {
 			cast(this.trackSkin, IValidating).validateNow();
 		}
 
-		this.secondaryTrackSkin.x = (this.actualWidth - this.secondaryTrackSkin.width) / 2;
-		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
+		this.secondaryTrackSkin.x = (this.actualWidth - this.secondaryTrackSkin.width) / 2.0;
+		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2.0;
 	}
 
 	override private function layoutSingleTrack():Void {
@@ -191,7 +191,7 @@ class VSlider extends BaseSlider {
 			cast(this.trackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
+		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2.0;
 	}
 
 	override private function layoutThumb():Void {
@@ -199,7 +199,7 @@ class VSlider extends BaseSlider {
 			return;
 		}
 		var thumbLocation = this.valueToLocation(this.value);
-		this.thumbSkin.x = Math.round((this.actualWidth - this.thumbSkin.width) / 2);
+		this.thumbSkin.x = Math.round((this.actualWidth - this.thumbSkin.width) / 2.0);
 		this.thumbSkin.y = thumbLocation;
 	}
 }

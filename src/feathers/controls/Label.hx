@@ -665,7 +665,7 @@ class Label extends FeathersControl implements ITextControl {
 			case BOTTOM:
 				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
 			default: // middle or null
-				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2;
+				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2.0;
 		}
 	}
 

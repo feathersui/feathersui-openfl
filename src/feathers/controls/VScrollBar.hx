@@ -61,7 +61,7 @@ class VScrollBar extends BaseScrollBar {
 		var locationMinusHalfThumbHeight = location.y;
 		if (this.thumbSkin != null) {
 			trackHeightMinusThumbHeight -= this.thumbSkin.height;
-			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2;
+			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2.0;
 		}
 		this._thumbStartX = location.x;
 		this._thumbStartY = Math.min(trackHeightMinusThumbHeight, locationMinusHalfThumbHeight);
@@ -137,7 +137,7 @@ class VScrollBar extends BaseScrollBar {
 			if (Std.is(this.thumbSkin, IValidating)) {
 				cast(this.thumbSkin, IValidating).validateNow();
 			}
-			location += Math.round(this.thumbSkin.height / 2);
+			location += Math.round(this.thumbSkin.height / 2.0);
 		}
 
 		this.secondaryTrackSkin.y = 0.0;
@@ -153,8 +153,8 @@ class VScrollBar extends BaseScrollBar {
 			cast(this.trackSkin, IValidating).validateNow();
 		}
 
-		this.secondaryTrackSkin.x = (this.actualWidth - this.secondaryTrackSkin.width) / 2;
-		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
+		this.secondaryTrackSkin.x = (this.actualWidth - this.secondaryTrackSkin.width) / 2.0;
+		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2.0;
 	}
 
 	override private function layoutSingleTrack():Void {
@@ -169,7 +169,7 @@ class VScrollBar extends BaseScrollBar {
 			cast(this.trackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2;
+		this.trackSkin.x = (this.actualWidth - this.trackSkin.width) / 2.0;
 	}
 
 	override private function layoutThumb():Void {
@@ -217,7 +217,7 @@ class VScrollBar extends BaseScrollBar {
 			}
 			this.thumbSkin.height = thumbHeight;
 		}
-		this.thumbSkin.x = this.paddingLeft + (contentWidth - this.thumbSkin.width) / 2;
+		this.thumbSkin.x = this.paddingLeft + (contentWidth - this.thumbSkin.width) / 2.0;
 		this.thumbSkin.y = this.valueToLocation(this.value);
 	}
 }

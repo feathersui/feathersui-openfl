@@ -28,7 +28,7 @@ class CircleSkin extends BaseGraphicsPathSkin {
 
 	override private function drawPath():Void {
 		var radius = this.getRadius();
-		this.graphics.drawCircle(this.actualWidth / 2, this.actualHeight / 2, radius);
+		this.graphics.drawCircle(this.actualWidth / 2.0, this.actualHeight / 2.0, radius);
 	}
 
 	private inline function getRadius():Float {
@@ -39,13 +39,13 @@ class CircleSkin extends BaseGraphicsPathSkin {
 		if (shorterSide > this.actualHeight) {
 			shorterSide = this.actualHeight;
 		}
-		return (shorterSide / 2) - thicknessOffset;
+		return (shorterSide / 2.0) - thicknessOffset;
 	}
 
 	override private function getGradientMatrix(radians:Float):Matrix {
 		var radius = this.getRadius();
 		var matrix = new Matrix();
-		matrix.createGradientBox(radius, radius, radians, (this.actualWidth - radius) / 2, (this.actualHeight - radius) / 2);
+		matrix.createGradientBox(radius, radius, radians, (this.actualWidth - radius) / 2.0, (this.actualHeight - radius) / 2.0);
 		return matrix;
 	}
 }

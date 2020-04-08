@@ -486,7 +486,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 		} else if (this._toggleTween == null) {
 			this.thumbSkin.x = xPosition;
 		}
-		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2);
+		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2.0);
 
 		this._animateSelectionChange = false;
 	}
@@ -507,8 +507,8 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 			cast(this.secondaryTrackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2;
-		this.secondaryTrackSkin.y = (this.actualHeight - this.secondaryTrackSkin.height) / 2;
+		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2.0;
+		this.secondaryTrackSkin.y = (this.actualHeight - this.secondaryTrackSkin.height) / 2.0;
 	}
 
 	private function layoutSingleTrack():Void {
@@ -522,7 +522,7 @@ class ToggleSwitch extends FeathersControl implements IToggle {
 			cast(this.trackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2;
+		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2.0;
 	}
 
 	private function toggleSwitch_mouseDownHandler(event:MouseEvent):Void {

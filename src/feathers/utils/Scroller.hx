@@ -367,7 +367,7 @@ class Scroller extends EventDispatcher {
 		}
 		this.decelerationRate = value;
 		this._logDecelerationRate = Math.log(this.decelerationRate);
-		this._fixedThrowDuration = -0.1 / Math.log(Math.pow(this.decelerationRate, 1000 / 60));
+		this._fixedThrowDuration = -0.1 / Math.log(Math.pow(this.decelerationRate, 1000.0 / 60.0));
 		return this.decelerationRate;
 	}
 
