@@ -14,7 +14,7 @@ import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.core.IValidating;
-import feathers.layout.HorizontalLayout;
+import feathers.layout.GridViewRowLayout;
 import feathers.layout.VerticalListFixedRowLayout;
 import feathers.layout.VerticalLayout;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
@@ -147,9 +147,9 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private var _headerContainer:LayoutGroup;
-	private var _headerContainerLayout:HorizontalLayout;
+	private var _headerContainerLayout:GridViewRowLayout;
 
-	private var scrollBarYOffset:Float = 0.0;
+	private var scrollBarYWidthOffset:Float = 0.0;
 
 	private var gridViewPort:LayoutViewPort;
 
@@ -423,7 +423,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		super.initialize();
 
 		if (this._headerContainerLayout == null) {
-			this._headerContainerLayout = new HorizontalLayout();
+			this._headerContainerLayout = new GridViewRowLayout();
 		}
 
 		if (this._headerContainer == null) {
@@ -464,7 +464,7 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
 		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
-		this.scrollBarYOffset = switch (this.scrollBarYPosition) {
+		this.scrollBarYWidthOffset = switch (this.scrollBarYPosition) {
 			case LEFT: this.leftViewPortOffset;
 			default: this.rightViewPortOffset;
 		};
@@ -478,8 +478,8 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			}
 			var totalHeaderWidth = maxHeaderWidth * this.activeHeaderRenderers.length;
 			this.topViewPortOffset += this._headerContainer.height;
-			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, totalHeaderWidth + this.scrollBarYOffset);
-			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, totalHeaderWidth + this.scrollBarYOffset);
+			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, totalHeaderWidth + this.scrollBarYWidthOffset);
+			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, totalHeaderWidth + this.scrollBarYWidthOffset);
 		}
 	}
 
@@ -490,11 +490,12 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._headerContainer.x = this.paddingLeft;
 		this._headerContainer.y = this.paddingTop;
 		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
-		this._headerContainerLayout.paddingLeft = switch (this.scrollBarYPosition) {
-			case LEFT: this.scrollBarYOffset;
-			default: 0.0;
+		switch (this.scrollBarYPosition) {
+			case LEFT:
+				this._headerContainer.x += this.scrollBarYWidthOffset;
+			default: // do nothing
 		};
-		var totalHeaderWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.scrollBarYOffset;
+		var totalHeaderWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.scrollBarYWidthOffset;
 		for (headerRenderer in this.activeHeaderRenderers) {
 			headerRenderer.width = totalHeaderWidth / this.columns.length;
 		}
@@ -504,6 +505,8 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function refreshHeaderRenderers():Void {
+		this._headerContainerLayout.columns = this.columns;
+
 		if (this.headerRendererRecycler.update == null) {
 			this.headerRendererRecycler.update = defaultUpdateHeaderRenderer;
 			if (this.headerRendererRecycler.reset == null) {

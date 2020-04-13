@@ -17,7 +17,7 @@ import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
 import feathers.data.GridViewCellState;
 import feathers.data.IFlatCollection;
-import feathers.layout.HorizontalLayout;
+import feathers.layout.GridViewRowLayout;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
@@ -176,13 +176,14 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		return this.cellRendererRecycler;
 	}
 
+	private var _rowLayout:GridViewRowLayout;
+
 	override private function initialize():Void {
 		super.initialize();
 
 		if (this.layout == null) {
-			var layout = new HorizontalLayout();
-			layout.verticalAlign = MIDDLE;
-			this.layout = layout;
+			this._rowLayout = new GridViewRowLayout();
+			this.layout = this._rowLayout;
 		}
 	}
 
@@ -196,6 +197,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	}
 
 	private function preLayout():Void {
+		this._rowLayout.columns = this.columns;
+
 		if (this.cellRendererRecycler.update == null) {
 			this.cellRendererRecycler.update = defaultUpdateCellRenderer;
 			if (this.cellRendererRecycler.reset == null) {
