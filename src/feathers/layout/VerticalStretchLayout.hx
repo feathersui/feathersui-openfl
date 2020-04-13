@@ -283,8 +283,10 @@ class VerticalStretchLayout extends EventDispatcher implements ILayout {
 			}
 			totalPercentHeight += 100.0;
 		}
-		var remainingHeight = explicitHeight;
-		if (remainingHeight == null) {
+		var remainingHeight = 0.0;
+		if (explicitHeight != null) {
+			remainingHeight = explicitHeight;
+		} else {
 			remainingHeight = this.paddingTop + this.paddingBottom + ((maxMinHeight + this.gap) * items.length) - this.gap;
 			if (explicitMinHeight != null && remainingHeight < explicitMinHeight) {
 				remainingHeight = explicitMinHeight;

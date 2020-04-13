@@ -280,8 +280,10 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 			}
 			totalPercentWidth += 100.0;
 		}
-		var remainingWidth = explicitWidth;
-		if (remainingWidth == null) {
+		var remainingWidth = 0.0;
+		if (explicitWidth != null) {
+			remainingWidth = explicitWidth;
+		} else {
 			remainingWidth = this.paddingLeft + this.paddingRight + ((maxMinWidth + this.gap) * items.length) - this.gap;
 			if (explicitMinWidth != null && remainingWidth < explicitMinWidth) {
 				remainingWidth = explicitMinWidth;

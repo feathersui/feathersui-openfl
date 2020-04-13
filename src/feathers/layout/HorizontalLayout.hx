@@ -382,17 +382,14 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			totalMeasuredWidth += item.width + this.gap;
 		}
 		totalMeasuredWidth -= this.gap;
-		/*if (this.firstGap != null && itemCount > 1) {
-				totalMeasuredWidth += (this.firstGap - this.gap);
-			} else if (this.lastGap != null && itemCount > 2) {
-				totalMeasuredWidth += (this.lastGap - this.gap);
-		}*/
 		totalMeasuredWidth += this.paddingLeft + this.paddingRight;
 		if (totalPercentWidth < 100.0) {
 			totalPercentWidth = 100.0;
 		}
-		var remainingWidth = explicitWidth;
-		if (remainingWidth == null) {
+		var remainingWidth = 0.0;
+		if (explicitWidth != null) {
+			remainingWidth = explicitWidth;
+		} else {
 			remainingWidth = totalMeasuredWidth + totalMinWidth;
 			if (explicitMinWidth != null && remainingWidth < explicitMinWidth) {
 				remainingWidth = explicitMinWidth;

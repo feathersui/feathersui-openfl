@@ -428,17 +428,14 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			totalMeasuredHeight += item.height + this.gap;
 		}
 		totalMeasuredHeight -= this.gap;
-		/*if (this.firstGap != null && itemCount > 1) {
-				totalMeasuredHeight += (this.firstGap - this.gap);
-			} else if (this.lastGap != null && itemCount > 2) {
-				totalMeasuredHeight += (this.lastGap - this.gap);
-		}*/
 		totalMeasuredHeight += this.paddingTop + this.paddingBottom;
 		if (totalPercentHeight < 100.0) {
 			totalPercentHeight = 100.0;
 		}
-		var remainingHeight = explicitHeight;
-		if (remainingHeight == null) {
+		var remainingHeight = 0.0;
+		if (explicitHeight != null) {
+			remainingHeight = explicitHeight;
+		} else {
 			remainingHeight = totalMeasuredHeight + totalMinHeight;
 			if (explicitMinHeight != null && remainingHeight < explicitMinHeight) {
 				remainingHeight = explicitMinHeight;
