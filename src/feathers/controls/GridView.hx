@@ -273,7 +273,11 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public var headerRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+		set):DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = DisplayObjectRecycler.withFunction(() -> {
+			var headerRenderer = new ItemRenderer();
+			headerRenderer.toggleable = false;
+			return headerRenderer;
+		});
 
 	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		GridViewHeaderState, DisplayObject> {
