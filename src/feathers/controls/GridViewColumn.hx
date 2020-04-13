@@ -40,6 +40,35 @@ class GridViewColumn extends EventDispatcher {
 	public var headerText:String;
 
 	/**
+		The width of the column, measured in pixels.
+
+		In the following example, the column's width is customized.
+
+		```hx
+		column.width = 120.0;
+		```
+
+		@since 1.0.0
+	**/
+	public var width:Null<Float> = null;
+
+	/**
+		The minimum width of the column, measured in pixels.
+
+		If the `width` is specified explicitly, then the `minWidth` will be
+		ignored.
+
+		In the following example, the column's minimum width is customized.
+
+		```hx
+		column.minWidth = 120.0;
+		```
+
+		@since 1.0.0
+	**/
+	public var minWidth:Null<Float> = null;
+
+	/**
 		Converts an item to text to display within a grid view cell. By default,
 		the `toString()` method is called to convert an item to text. This
 		method may be replaced to provide custom text.

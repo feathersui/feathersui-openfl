@@ -51,19 +51,11 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		@see `feathers.layout.ILayout.layout`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		this.validateItems(items);
-		this.applyPercentWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);
+		this.applyColumnWidths(items, measurements.width, measurements.minWidth, measurements.maxWidth);
 
 		var contentWidth = 0.0;
 		var contentHeight = 0.0;
 		for (item in items) {
-			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
-				if (!layoutObject.includeInLayout) {
-					continue;
-				}
-			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -95,7 +87,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
-		this.applyVerticalAlign(items, viewPortHeight);
+		this.applyViewPortHeight(items, viewPortHeight);
 
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;
@@ -115,62 +107,59 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function validateItems(items:Array<DisplayObject>) {
-		for (item in items) {
+		for (i in 0...this.columns.length) {
+			var column = this.columns.get(i);
+			var item = items[i];
+			var columnWidth = column.width;
+			if (columnWidth != null) {
+				item.width = columnWidth;
+			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 		}
 	}
 
-	private inline function applyVerticalAlign(items:Array<DisplayObject>, viewPortHeight:Float):Void {
+	private inline function applyViewPortHeight(items:Array<DisplayObject>, viewPortHeight:Float):Void {
 		for (item in items) {
-			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
-				if (!layoutObject.includeInLayout) {
-					continue;
-				}
-			}
 			item.height = viewPortHeight;
 		}
 	}
 
-	private function applyPercentWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
+	private function applyColumnWidths(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
 			explicitMaxWidth:Null<Float>):Void {
-		var pendingItems:Array<ILayoutObject> = [];
+		var pendingIndices:Array<Int> = [];
 		var totalMeasuredWidth = 0.0;
 		var totalMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
-		for (item in items) {
-			if (Std.is(item, ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
-				if (!layoutItem.includeInLayout) {
-					continue;
+		for (i in 0...this.columns.length) {
+			var column = this.columns.get(i);
+			var columnWidth = column.width;
+			var item = items[i];
+			if (columnWidth != null) {
+				item.width = columnWidth;
+				if (Std.is(item, IValidating)) {
+					// changing the width of the item may cause its height
+					// to change, so we need to validate. the height is
+					// needed for measurement.
+					cast(item, IValidating).validateNow();
 				}
-				var layoutData = Std.downcast(layoutItem.layoutData, HorizontalLayoutData);
-				if (layoutData != null) {
-					var percentWidth = layoutData.percentWidth;
-					if (percentWidth != null) {
-						if (percentWidth < 0.0) {
-							percentWidth = 0.0;
-						}
-						if (Std.is(layoutItem, IMeasureObject)) {
-							var measureItem = cast(layoutItem, IMeasureObject);
-							totalMinWidth += measureItem.minWidth;
-						}
-						totalPercentWidth += percentWidth;
-						pendingItems.push(layoutItem);
-						continue;
-					}
+			} else {
+				var percentWidth = 100.0;
+				var columnMinWidth = column.minWidth;
+				if (columnMinWidth != null) {
+					totalMinWidth += columnMinWidth;
 				}
+				totalPercentWidth += percentWidth;
+				pendingIndices.push(i);
+				continue;
 			}
 			totalMeasuredWidth += item.width;
 		}
-		if (totalPercentWidth < 100.0) {
-			totalPercentWidth = 100.0;
-		}
-		var remainingWidth = explicitWidth;
-		if (remainingWidth == null) {
+		var remainingWidth = 0.0;
+		if (explicitWidth != null) {
+			remainingWidth = explicitWidth;
+		} else {
 			remainingWidth = totalMeasuredWidth + totalMinWidth;
 			if (explicitMinWidth != null && remainingWidth < explicitMinWidth) {
 				remainingWidth = explicitMinWidth;
@@ -186,39 +175,31 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		while (needsAnotherPass) {
 			needsAnotherPass = false;
 			var percentToPixels = remainingWidth / totalPercentWidth;
-			for (layoutItem in pendingItems) {
-				var layoutData = cast(layoutItem.layoutData, HorizontalLayoutData);
-				var percentWidth = layoutData.percentWidth;
-				if (percentWidth < 0.0) {
-					percentWidth = 0.0;
-				}
+			for (index in pendingIndices) {
+				var item = items[index];
+				var column = this.columns.get(index);
+				var percentWidth = 100.0;
 				var itemWidth = percentToPixels * percentWidth;
-				if (Std.is(layoutItem, IMeasureObject)) {
-					var measureItem = cast(layoutItem, IMeasureObject);
-					var itemMinWidth = measureItem.explicitMinWidth;
-					if (itemMinWidth != null && itemMinWidth > remainingWidth) {
-						// we try to respect the item's minimum width, but if
-						// it's larger than the remaining space, we need to
-						// force it to fit
-						itemMinWidth = remainingWidth;
-					}
-					if (itemWidth < itemMinWidth) {
-						itemWidth = itemMinWidth;
-						remainingWidth -= itemWidth;
-						totalPercentWidth -= percentWidth;
-						pendingItems.remove(layoutItem);
-						needsAnotherPass = true;
-					}
-					// we don't check maxWidth here because it is used in
-					// validateItems() for performance optimization, so it
-					// isn't a real maximum
+				var columnMinWidth = column.minWidth;
+				if (columnMinWidth != null && columnMinWidth > remainingWidth) {
+					// we try to respect the item's minimum width, but if
+					// it's larger than the remaining space, we need to
+					// force it to fit
+					columnMinWidth = remainingWidth;
 				}
-				cast(layoutItem, DisplayObject).width = itemWidth;
-				if (Std.is(layoutItem, IValidating)) {
+				if (itemWidth < columnMinWidth) {
+					itemWidth = columnMinWidth;
+					remainingWidth -= itemWidth;
+					totalPercentWidth -= percentWidth;
+					pendingIndices.remove(index);
+					needsAnotherPass = true;
+				}
+				item.width = itemWidth;
+				if (Std.is(item, IValidating)) {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
-					cast(layoutItem, IValidating).validateNow();
+					cast(item, IValidating).validateNow();
 				}
 			}
 		}

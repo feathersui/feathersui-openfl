@@ -349,7 +349,6 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentCellState.selected;
 		}
-		cellRenderer.width = this.actualWidth / this.columns.length;
 	}
 
 	private function cellRenderer_touchTapHandler(event:TouchEvent):Void {
