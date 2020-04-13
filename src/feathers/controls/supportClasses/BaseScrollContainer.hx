@@ -565,6 +565,7 @@ class BaseScrollContainer extends FeathersControl {
 	private var _scrollRect1:Rectangle = new Rectangle();
 	private var _scrollRect2:Rectangle = new Rectangle();
 
+	private var _ignoreScrollerChanges = false;
 	private var _viewPortBoundsChanged = false;
 	private var _ignoreViewPortResizing = false;
 	private var _previousViewPortWidth = 0.0;
@@ -598,6 +599,9 @@ class BaseScrollContainer extends FeathersControl {
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var scrollBarFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
 
+		var oldIgnoreScrollerChanges = this._ignoreScrollerChanges;
+		this._ignoreScrollerChanges = true;
+
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
 		}
@@ -614,6 +618,8 @@ class BaseScrollContainer extends FeathersControl {
 		this.refreshScrollRect();
 		this.refreshScrollBarValues();
 		this.layoutChildren();
+
+		this._ignoreScrollerChanges = oldIgnoreScrollerChanges;
 	}
 
 	private function needsMeasurement():Bool {
@@ -1293,6 +1299,9 @@ class BaseScrollContainer extends FeathersControl {
 	}
 
 	private function scroller_scrollHandler(event:Event):Void {
+		if (this._ignoreScrollerChanges) {
+			return;
+		}
 		this.checkForRevealScrollBars();
 		if (this.viewPort.requiresMeasurementOnScroll) {
 			this.setInvalid(InvalidationFlag.SCROLL);
