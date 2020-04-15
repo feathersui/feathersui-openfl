@@ -62,6 +62,12 @@ class Scroller extends EventDispatcher {
 	/**
 		The current horizontal scroll position.
 
+		When the value of the `scrollX` property changes, the scroller will
+		dispatch an event of type `ScrollEvent.SCROLL`. This event is dispatched
+		when other scroll position properties change too.
+
+		@see `feathers.events.ScrollEvent.SCROLL`
+
 		@since 1.0.0
 	**/
 	public var scrollX(default, set):Float = 0.0;
@@ -77,6 +83,12 @@ class Scroller extends EventDispatcher {
 
 	/**
 		The current vertical scroll position.
+
+		When the value of the `scrollY` property changes, the scroller will
+		dispatch an event of type `ScrollEvent.SCROLL`. This event is dispatched
+		when other scroll position properties change too.
+
+		@see `feathers.events.ScrollEvent.SCROLL`
 
 		@since 1.0.0
 	**/

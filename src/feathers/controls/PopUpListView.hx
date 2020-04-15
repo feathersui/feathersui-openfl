@@ -373,8 +373,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 		```
 
+		When the pop-up list opens, the component will dispatch an event of type
+		`Event.OPEN`.
+
 		@see `PopUpListView.open`
 		@see `PopUpListView.closeListView()`
+		@see `openfl.events.Event.OPEN`
 
 		@since 1.0.0
 	**/
@@ -407,8 +411,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 		```
 
+		When the pop-up list closes, the component will dispatch an event of
+		type `Event.CLOSE`.
+
 		@see `PopUpListView.open`
 		@see `PopUpListView.openListView()`
+		@see `openfl.events.Event.CLOSE`
 
 		@since 1.0.0
 	**/

@@ -51,6 +51,8 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.set(location, object);
 		```
 
+		@see `feathers.data.HierarchicalCollectionEvent.REPLACE_ITEM`
+
 		@since 1.0.0
 	**/
 	function set(location:Array<Int>, value:T):Void;
@@ -136,6 +138,8 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.addAt(item, location);
 		```
 
+		@see `feathers.data.HierarchicalCollectionEvent.ADD_ITEM`
+
 		@since 1.0.0
 	**/
 	function addAt(itemToAdd:T, location:Array<Int>):Void;
@@ -149,6 +153,8 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.addAt(item, location);
 		collection.remove(item);
 		```
+
+		@see `feathers.data.HierarchicalCollectionEvent.REMOVE_ITEM`
 
 		@since 1.0.0
 	**/
@@ -165,6 +171,8 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.removeAt(location);
 		```
 
+		@see `feathers.data.HierarchicalCollectionEvent.REMOVE_ITEM`
+
 		@since 1.0.0
 	**/
 	function removeAt(location:Array<Int>):Void;
@@ -178,6 +186,8 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		```hx
 		collection.removeAll();
 		```
+
+		@see `feathers.data.HierarchicalCollectionEvent.REMOVE_ALL`
 
 		@since 1.0.0
 	**/

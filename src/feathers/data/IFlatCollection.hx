@@ -46,6 +46,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		};
 		```
 
+		@see `feathers.data.FlatCollectionEvent.FILTER_CHANGE`
+
 		@since 1.0.0
 	**/
 	public var filterFunction(get, set):(T) -> Bool;
@@ -73,6 +75,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 			return 0;
 		};
 		```
+
+		@see `feathers.data.FlatCollectionEvent.SORT_CHANGE`
 
 		@since 1.0.0
 	**/
@@ -103,6 +107,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		collection.set(0, object);
 		```
 
+		@see `feathers.data.FlatCollectionEvent.REPLACE_ITEM`
+
 		@since 1.0.0
 	**/
 	public function set(index:Int, item:T):Void;
@@ -117,6 +123,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		collection.add(object);
 		```
 
+		@see `feathers.data.FlatCollectionEvent.ADD_ITEM`
+
 		@since 1.0.0
 	**/
 	public function add(item:T):Void;
@@ -130,6 +138,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		```hx
 		collection.addAt(object, 0);
 		```
+
+		@see `feathers.data.FlatCollectionEvent.ADD_ITEM`
 
 		@since 1.0.0
 	**/
@@ -171,6 +181,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		collection1.reset(collection2);
 		```
 
+		@see `feathers.data.FlatCollectionEvent.RESET`
+
 		@since 1.0.0
 	**/
 	public function reset(collection:IFlatCollection<T> = null):Void;
@@ -187,6 +199,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		collection.remove(item);
 		```
 
+		@see `feathers.data.FlatCollectionEvent.REMOVE_ITEM`
+
 		@since 1.0.0
 	**/
 	public function remove(item:T):Void;
@@ -201,6 +215,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		collection.removeAt(0);
 		```
 
+		@see `feathers.data.FlatCollectionEvent.REMOVE_ITEM`
+
 		@since 1.0.0
 	**/
 	public function removeAt(index:Int):T;
@@ -213,6 +229,8 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		```hx
 		collection.removeAll();
 		```
+
+		@see `feathers.data.FlatCollectionEvent.REMOVE_ALL`
 
 		@since 1.0.0
 	**/

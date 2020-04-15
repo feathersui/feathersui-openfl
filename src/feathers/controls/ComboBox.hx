@@ -424,8 +424,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		```
 
+		When the pop-up list opens, the component will dispatch an event of type
+		`Event.OPEN`.
+
 		@see `ComboBox.open`
 		@see `ComboBox.closeListView()`
+		@see `openfl.events.Event.OPEN`
 
 		@since 1.0.0
 	**/
@@ -458,8 +462,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		```
 
+		When the pop-up list closes, the component will dispatch an event of
+		type `Event.CLOSE`.
+
 		@see `ComboBox.open`
 		@see `ComboBox.openListView()`
+		@see `openfl.events.Event.CLOSE`
 
 		@since 1.0.0
 	**/

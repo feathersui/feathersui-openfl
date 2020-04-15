@@ -73,6 +73,11 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 	/**
 		@see `feathers.controls.popups.IPopUpAdapter.close`
+
+		When the adapter closes, it will dispatch an event of type
+		`Event.CLOSE`.
+
+		@see `openfl.events.Event.CLOSE`
 	**/
 	public function close():Void {
 		if (!this.active) {

@@ -25,6 +25,8 @@ class HierarchicalCollectionEvent extends Event {
 		The `HierarchicalCollectionEvent.ADD_ITEM` event type is dispatched when
 		an item is added to a collection.
 
+		@see `feathers.data.IHierarchicalCollection.addAt()`
+
 		@since 1.0.0
 	**/
 	public static inline var ADD_ITEM:EventType<HierarchicalCollectionEvent> = "addItem";
@@ -32,6 +34,9 @@ class HierarchicalCollectionEvent extends Event {
 	/**
 		The `HierarchicalCollectionEvent.REMOVE_ITEM` event type is dispatched
 		when an item is removed from a collection.
+
+		@see `feathers.data.IHierarchicalCollection.remove()`
+		@see `feathers.data.IHierarchicalCollection.removeAt()`
 
 		@since 1.0.0
 	**/
@@ -41,6 +46,8 @@ class HierarchicalCollectionEvent extends Event {
 		The `HierarchicalCollectionEvent.REPLACE_ITEM` event type is dispatched
 		when an item is replaced in a collection.
 
+		@see `feathers.data.IHierarchicalCollection.set()`
+
 		@since 1.0.0
 	**/
 	public static inline var REPLACE_ITEM:EventType<HierarchicalCollectionEvent> = "replaceItem";
@@ -49,6 +56,8 @@ class HierarchicalCollectionEvent extends Event {
 		The `HierarchicalCollectionEvent.UPDATE_ITEM` event type is dispatched
 		when the `updateAt()` method is called on the collection.
 
+		@see `feathers.data.IHierarchicalCollection.updateItem()`
+
 		@since 1.0.0
 	**/
 	public static inline var UPDATE_ITEM:EventType<HierarchicalCollectionEvent> = "updateItem";
@@ -56,6 +65,8 @@ class HierarchicalCollectionEvent extends Event {
 	/**
 		The `HierarchicalCollectionEvent.UPDATE_ALL` event type is dispatched
 		when the `updateAll()` method is called on the collection.
+
+		@see `feathers.data.IHierarchicalCollection.updateAll()`
 
 		@since 1.0.0
 	**/
@@ -73,6 +84,8 @@ class HierarchicalCollectionEvent extends Event {
 		The `HierarchicalCollectionEvent.REMOVE_ALL` event type is dispatched
 		when all items are removed from the collection simulatanously by calling
 		`removeAll()` on the collection.
+
+		@see `feathers.data.IHierarchicalCollection.removeAll()`
 
 		@since 1.0.0
 	**/

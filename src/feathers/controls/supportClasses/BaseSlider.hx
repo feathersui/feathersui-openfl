@@ -39,6 +39,9 @@ class BaseSlider extends FeathersControl implements IRange {
 		The value of the slider, which must be between the `minimum` and the
 		`maximum`.
 
+		When the `value` property changes, the slider will dispatch an event of
+		type `Event.CHANGE`.
+
 		In the following example, the value is changed to `12.0`:
 
 		```hx
@@ -53,6 +56,7 @@ class BaseSlider extends FeathersControl implements IRange {
 		@see `BaseSlider.minimum`
 		@see `BaseSlider.maximum`
 		@see `BaseSlider.step`
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

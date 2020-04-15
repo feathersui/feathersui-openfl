@@ -39,6 +39,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		The value of the scroll bar, which must be between the `minimum` and the
 		`maximum`.
 
+		When the `value` property changes, the scroll bar will dispatch an event
+		of type `Event.CHANGE`.
+
 		In the following example, the value is changed to `12.0`:
 
 		```hx
@@ -53,6 +56,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		@see `BaseScrollBar.minimum`
 		@see `BaseScrollBar.maximum`
 		@see `BaseScrollBar.step`
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

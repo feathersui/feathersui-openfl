@@ -25,6 +25,9 @@ interface IPopUpAdapter extends IEventDispatcher {
 	/**
 		Indicates if the pop-up is currently active or not.
 
+		@see `openfl.events.Event.OPEN`
+		@see `openfl.events.Event.CLOSE`
+
 		@since 1.0.0
 	**/
 	var active(get, never):Bool;
@@ -40,12 +43,21 @@ interface IPopUpAdapter extends IEventDispatcher {
 	/**
 		Displays the pop-up.
 
+		When the adapter opens, it will dispatch an event of type `Event.OPEN`.
+
+		@see `openfl.events.Event.OPEN`
+
 		@since 1.0.0
 	**/
 	function open(content:DisplayObject, source:DisplayObject):Void;
 
 	/**
 		Hides the pop-up.
+
+		When the callout closes, it will dispatch an event of type
+		`Event.CLOSE`.
+
+		@see `openfl.events.Event.CLOSE`
 
 		@since 1.0.0
 	**/

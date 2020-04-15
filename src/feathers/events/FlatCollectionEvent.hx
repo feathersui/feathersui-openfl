@@ -25,6 +25,9 @@ class FlatCollectionEvent extends Event {
 		The `FlatCollectionEvent.ADD_ITEM` event type is dispatched when an item is
 		added to a collection.
 
+		@see `feathers.data.IFlatCollection.add()`
+		@see `feathers.data.IFlatCollection.addAt()`
+
 		@since 1.0.0
 	**/
 	public static inline var ADD_ITEM:EventType<FlatCollectionEvent> = "addItem";
@@ -32,6 +35,9 @@ class FlatCollectionEvent extends Event {
 	/**
 		The `FlatCollectionEvent.REMOVE_ITEM` event type is dispatched when an item
 		is removed from a collection.
+
+		@see `feathers.data.IFlatCollection.remove()`
+		@see `feathers.data.IFlatCollection.removeAt()`
 
 		@since 1.0.0
 	**/
@@ -41,6 +47,8 @@ class FlatCollectionEvent extends Event {
 		The `FlatCollectionEvent.REPLACE_ITEM` event type is dispatched when an item
 		is replaced in a collection.
 
+		@see `feathers.data.IFlatCollection.set()`
+
 		@since 1.0.0
 	**/
 	public static inline var REPLACE_ITEM:EventType<FlatCollectionEvent> = "replaceItem";
@@ -49,6 +57,8 @@ class FlatCollectionEvent extends Event {
 		The `FlatCollectionEvent.UPDATE_ITEM` event type is dispatched when the
 		`updateAt()` method is called on the collection.
 
+		@see `feathers.data.IFlatCollection.updateItem()`
+
 		@since 1.0.0
 	**/
 	public static inline var UPDATE_ITEM:EventType<FlatCollectionEvent> = "updateItem";
@@ -56,6 +66,8 @@ class FlatCollectionEvent extends Event {
 	/**
 		The `FlatCollectionEvent.UPDATE_ALL` event type is dispatched when the
 		`updateAll()` method is called on the collection.
+
+		@see `feathers.data.IFlatCollection.updateAll()`
 
 		@since 1.0.0
 	**/
@@ -74,6 +86,8 @@ class FlatCollectionEvent extends Event {
 		items are removed from the collection simulatanously by calling
 		`removeAll()` on the collection.
 
+		@see `feathers.data.IFlatCollection.removeAll()`
+
 		@since 1.0.0
 	**/
 	public static inline var REMOVE_ALL:EventType<FlatCollectionEvent> = "removeAll";
@@ -82,6 +96,8 @@ class FlatCollectionEvent extends Event {
 		The `FlatCollectionEvent.FILTER_CHANGE` event type is dispatched when a
 		filter function has been applied to or removed from a collection.
 
+		@see `feathers.data.IFlatCollection.filterFunction`
+
 		@since 1.0.0
 	**/
 	public static inline var FILTER_CHANGE:EventType<FlatCollectionEvent> = "filterChange";
@@ -89,6 +105,8 @@ class FlatCollectionEvent extends Event {
 	/**
 		The `FlatCollectionEvent.SORT_CHANGE` event type is dispatched when a
 		sort compare function has been applied to or removed from a collection.
+
+		@see `feathers.data.IFlatCollection.sortCompareFunction`
 
 		@since 1.0.0
 	**/

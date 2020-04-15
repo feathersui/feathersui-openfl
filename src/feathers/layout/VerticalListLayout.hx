@@ -55,6 +55,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		return this.scrollY;
 	}
 
+	/**
+		@see `feathers.layout.IVirtualLayout.virtualCache`
+	**/
 	@:isVar
 	public var virtualCache(get, set):Array<Dynamic>;
 
@@ -236,7 +239,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 	}
 
 	/**
-		@see `feathers.layout.ILayout.layout`
+		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortWidth = this.calculateViewPortWidth(items, measurements);
@@ -356,6 +359,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		return 0.0;
 	}
 
+	/**
+		@see `feathers.layout.IVirtualLayout.getVisibleIndices()`
+	**/
 	public function getVisibleIndices(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange {
 		var startIndex = -1;
 		var endIndex = -1;

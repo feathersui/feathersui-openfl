@@ -48,7 +48,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
-		@see `feathers.layout.ILayout.layout`
+		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.applyColumnWidths(items, measurements.width, measurements.minWidth, measurements.maxWidth);

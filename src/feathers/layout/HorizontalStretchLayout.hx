@@ -159,6 +159,13 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 	/**
 		The maximum width of an item in the layout.
 
+		In the following example, the layout's maximum item width is set to 20
+		pixels:
+
+		```hx
+		layout.maxItemWidth = 20.0;
+		```
+
 		@since 1.0.0
 	**/
 	public var maxItemWidth(default, set):Float = Math.POSITIVE_INFINITY;
@@ -175,6 +182,13 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 	/**
 		The minimum width of an item in the layout.
 
+		In the following example, the layout's minimum item width is set to 20
+		pixels:
+
+		```hx
+		layout.minItemWidth = 20.0;
+		```
+
 		@since 1.0.0
 	**/
 	public var minItemWidth(default, set):Float = 0.0;
@@ -189,7 +203,7 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
-		@see `feathers.layout.ILayout.layout`
+		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.applyDistributedWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);

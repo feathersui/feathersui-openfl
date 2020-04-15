@@ -17,6 +17,12 @@ package feathers.core;
 **/
 interface IOpenCloseToggle extends IUIControl {
 	/**
+		Indicates if the toggle is opened or closed.
+
+		Dispatches an event of type `openfl.events.Event.OPEN` when changed to
+		`true`, and dispatches an event of type `openfl.events.Event.CLOSE` when
+		changed to `false`.
+
 		@since 1.0.0
 	**/
 	public var opened(get, set):Bool;

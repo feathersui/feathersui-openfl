@@ -122,6 +122,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	/**
 		The text displayed by the text input.
 
+		When the value of the `text` property changes, the text input will
+		dispatch an event of type `Event.CHANGE`.
+
 		The following example sets the text input's text:
 
 		```hx
@@ -131,6 +134,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@default ""
 
 		@see `TextInput.textFormat`
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

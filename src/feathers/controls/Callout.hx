@@ -556,6 +556,11 @@ class Callout extends FeathersControl {
 	/**
 		Closes the callout, if opened.
 
+		When the callout closes, it will dispatch an event of type
+		`Event.CLOSE`.
+
+		@see `openfl.events.Event.CLOSE`
+
 		@since 1.0.0
 	**/
 	public function close():Void {

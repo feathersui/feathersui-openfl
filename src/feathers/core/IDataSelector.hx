@@ -17,6 +17,9 @@ interface IDataSelector<T> {
 	/**
 		The currently selected item. Returns `null` if no item is selected.
 
+		When the value of the `selectedItem` property changes, the component
+		will dispatch an event of type `Event.CHANGE`.
+
 		The following example changes the selected item:
 
 		```hx
@@ -49,6 +52,7 @@ interface IDataSelector<T> {
 		@default null
 
 		@see `IIndexSelector.selectedIndex`
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

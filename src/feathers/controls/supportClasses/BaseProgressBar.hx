@@ -34,6 +34,9 @@ class BaseProgressBar extends FeathersControl {
 		The value of the progress bar, which must be between the `minimum` and
 		the `maximum`.
 
+		When the `value` property changes, the progress bar will dispatch an event
+		of type `Event.CHANGE`.
+
 		In the following example, the value is changed to `12.0`:
 
 		```hx
@@ -46,6 +49,7 @@ class BaseProgressBar extends FeathersControl {
 
 		@see `BaseProgressBar.minimum`
 		@see `BaseProgressBar.maximum`
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

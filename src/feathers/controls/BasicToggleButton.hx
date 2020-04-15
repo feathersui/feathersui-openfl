@@ -60,6 +60,9 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	/**
 		The current state of the toggle button.
 
+		When the value of the `currentState` property changes, the button will
+		dispatch an event of type `FeathersEvent.STATE_CHANGE`.
+
 		@see `feathers.controls.ToggleButtonState`
 		@see `feathers.events.FeathersEvent.STATE_CHANGE`
 
@@ -94,10 +97,21 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		management is enabled, and the button has focus, a button may also be
 		triggered with the spacebar.
 
+		When the value of the `selected` property changes, the button will
+		dispatch an event of type `Event.CHANGE`.
+
 		The following example selects the button:
 
 		```hx
 		button.selected = true;
+		```
+
+		The following example listens for changes to the `selected` property:
+
+		```hx
+		button.addEventListener(Event.CHANGE, (event:Event) -> {
+			trace("selected changed: " + button.selected)
+		});
 		```
 
 		**Warning:** Do not listen for `TriggerEvent.TRIGGER` to be notified

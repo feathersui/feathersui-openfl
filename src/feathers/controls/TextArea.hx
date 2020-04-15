@@ -43,6 +43,9 @@ class TextArea extends BaseScrollContainer {
 	/**
 		The text displayed by the text area.
 
+		When the value of the `text` property changes, the text area will
+		dispatch an event of type `Event.CHANGE`.
+
 		The following example sets the text area's text:
 
 		```hx
@@ -52,6 +55,7 @@ class TextArea extends BaseScrollContainer {
 		@default ""
 
 		@see `TextArea.textFormat`
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

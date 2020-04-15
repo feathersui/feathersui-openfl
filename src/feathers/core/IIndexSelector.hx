@@ -17,6 +17,9 @@ interface IIndexSelector {
 	/**
 		The currently selected index. Returns `-1` if no index is selected.
 
+		When the value of the `selectedIndex` property changes, the component
+		will dispatch an event of type `Event.CHANGE`.
+
 		The following example selects a specific index:
 
 		```hx
@@ -45,6 +48,7 @@ interface IIndexSelector {
 		@default -1
 
 		@see `IIndexSelector.maxSelectedIndex`
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

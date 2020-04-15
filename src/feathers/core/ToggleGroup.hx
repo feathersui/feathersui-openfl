@@ -54,6 +54,9 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 	/**
 		The index of the currently selected toggle.
 
+		When the value of the `selectedIndex` property changes, the component
+		will dispatch an event of type `Event.CHANGE`.
+
 		In the following example, the selected index is changed:
 
 		```hx
@@ -61,6 +64,8 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		```
 
 		@default -1
+
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/
@@ -111,6 +116,9 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 	/**
 		The currently selected toggle.
 
+		When the value of the `selectedItem` property changes, the component
+		will dispatch an event of type `Event.CHANGE`.
+
 		In the following example, the selected item is changed:
 
 		```hx
@@ -118,6 +126,8 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		```
 
 		@default null
+
+		@see `openfl.events.Event.CHANGE`
 
 		@since 1.0.0
 	**/

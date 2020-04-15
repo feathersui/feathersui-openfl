@@ -100,15 +100,67 @@ class BaseScrollContainer extends FeathersControl {
 	private var chromeMeasuredMinHeight:Float = 0.0;
 	private var chromeMeasuredMaxHeight:Float = Math.POSITIVE_INFINITY;
 
+	/**
+		The minimum space, in pixels, between the container's top edge and the
+		container's content.
+
+		In the following example, the container's top padding is set to 20
+		pixels:
+
+		```hx
+		container.paddingTop = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingTop:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the container's right edge and the
+		container's content.
+
+		In the following example, the container's right padding is set to 20
+		pixels:
+
+		```hx
+		container.paddingRight = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingRight:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the container's bottom edge and
+		the container's content.
+
+		In the following example, the container's bottom padding is set to 20
+		pixels:
+
+		```hx
+		container.paddingBottom = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingBottom:Float = 0.0;
 
+	/**
+		The minimum space, in pixels, between the container's left edge and the
+		container's content.
+
+		In the following example, the container's left padding is set to 20
+		pixels:
+
+		```hx
+		container.paddingLeft = 20.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var paddingLeft:Float = 0.0;
 
@@ -255,6 +307,10 @@ class BaseScrollContainer extends FeathersControl {
 		The number of pixels the container has been scrolled horizontally (on
 		the x-axis).
 
+		When the value of `scrollX` changes, the container dispatches an event
+		of type `ScrollEvent.SCROLL`. This event is dispatched when other
+		scroll position properties change too.
+
 		In the following example, the horizontal scroll position is modified
 		immediately, without being animated:
 
@@ -264,6 +320,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		@see `BaseScrollContainer.minScrollX`
 		@see `BaseScrollContainer.maxScrollX`
+		@see `feathers.events.ScrollEvent.SCROLL`
 
 		@since 1.0.0
 	**/
@@ -285,6 +342,10 @@ class BaseScrollContainer extends FeathersControl {
 		The number of pixels the container has been scrolled vertically (on the
 		y-axis).
 
+		When the value of `scrollY` changes, the container dispatches an event
+		of type `ScrollEvent.SCROLL`. This event is dispatched when other
+		scroll position properties change too.
+
 		In the following example, the vertical scroll position is modified
 		immediately, without being animated:
 
@@ -294,6 +355,7 @@ class BaseScrollContainer extends FeathersControl {
 
 		@see `BaseScrollContainer.minScrollY`
 		@see `BaseScrollContainer.maxScrollY`
+		@see `feathers.events.ScrollEvent.SCROLL`
 
 		@since 1.0.0
 	**/

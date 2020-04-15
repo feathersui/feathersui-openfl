@@ -57,6 +57,9 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	/**
 		The current state of the button.
 
+		When the value of the `currentState` property changes, the button will
+		dispatch an event of type `FeathersEvent.STATE_CHANGE`.
+
 		@see `feathers.controls.ButtonState`
 		@see `feathers.events.FeathersEvent.STATE_CHANGE`
 

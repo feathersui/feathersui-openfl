@@ -219,7 +219,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
-		@see `feathers.layout.ILayout.layout`
+		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.validateItems(items);

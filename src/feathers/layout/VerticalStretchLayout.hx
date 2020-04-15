@@ -159,6 +159,13 @@ class VerticalStretchLayout extends EventDispatcher implements ILayout {
 	/**
 		The maximum height of an item in the layout.
 
+		In the following example, the layout's maximum item height is set to 20
+		pixels:
+
+		```hx
+		layout.maxItemHeight = 20.0;
+		```
+
 		@since 1.0.0
 	**/
 	public var maxItemHeight(default, set):Float = Math.POSITIVE_INFINITY;
@@ -175,6 +182,13 @@ class VerticalStretchLayout extends EventDispatcher implements ILayout {
 	/**
 		The minimum height of an item in the layout.
 
+		In the following example, the layout's minimum item height is set to 20
+		pixels:
+
+		```hx
+		layout.minItemHeight = 20.0;
+		```
+
 		@since 1.0.0
 	**/
 	public var minItemHeight(default, set):Float = 0.0;
@@ -189,7 +203,7 @@ class VerticalStretchLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
-		@see `feathers.layout.ILayout.layout`
+		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.applyDistributedHeight(items, measurements.height, measurements.minHeight, measurements.maxHeight);
