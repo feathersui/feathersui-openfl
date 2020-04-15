@@ -35,8 +35,7 @@ import openfl.text.TextFormat;
 	var button = new ToggleButton();
 	button.text = "Click Me";
 	button.selected = true;
-	button.addEventListener(Event.CHANGE, (event) ->
-	{
+	button.addEventListener(Event.CHANGE, (event) -> {
 		var button = cast(event.currentTarget, ToggleButton);
 		trace("toggle button changed: " + button.selected);
 	});

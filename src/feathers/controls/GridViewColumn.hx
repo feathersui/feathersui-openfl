@@ -88,8 +88,7 @@ class GridViewColumn extends EventDispatcher {
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		column.itemToText = (item:Dynamic) ->
-		{
+		column.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```

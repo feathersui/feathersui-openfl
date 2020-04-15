@@ -150,7 +150,7 @@ class TextArea extends BaseScrollContainer {
 
 		```hx
 		textArea.wordWrap = false;
-		````
+		```
 
 		@since 1.0.0
 	**/

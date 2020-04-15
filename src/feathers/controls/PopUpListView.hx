@@ -46,21 +46,18 @@ import openfl.ui.Multitouch;
 	```hx
 	var listView = new PopUpListView();
 
-	listView.dataProvider = new ArrayCollection(
-	[
+	listView.dataProvider = new ArrayCollection([
 		{ text: "Milk" },
 		{ text: "Eggs" },
 		{ text: "Bread" },
 		{ text: "Steak" },
 	]);
 
-	listView.itemToText = (item:Dynamic) ->
-	{
+	listView.itemToText = (item:Dynamic) -> {
 		return item.text;
 	};
 
-	listView.addEventListener(Event.CHANGE, (event:Event) ->
-	{
+	listView.addEventListener(Event.CHANGE, (event:Event) -> {
 		var list = cast(event.currentTarget, PopUpListView);
 		trace("PopUpListView changed: " + listView.selectedIndex + " " + listView.selectedItem.text);
 	});
@@ -124,16 +121,14 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		renderer how to interpret the data:
 
 		```hx
-		listView.dataProvider = new ArrayCollection(
-		[
+		listView.dataProvider = new ArrayCollection([
 			{ text: "Milk" },
 			{ text: "Eggs" },
 			{ text: "Bread" },
 			{ text: "Chicken" },
 		]);
 
-		listView.itemToText = (item:Dynamic) ->
-		{
+		listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```
@@ -272,8 +267,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		listView.itemToText = (item:Dynamic) ->
-		{
+		listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```

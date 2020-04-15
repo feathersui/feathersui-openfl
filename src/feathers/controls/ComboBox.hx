@@ -47,21 +47,18 @@ import openfl.ui.Multitouch;
 	```hx
 	var comboBox = new ComboBox();
 
-	comboBox.dataProvider = new ArrayCollection(
-	[
+	comboBox.dataProvider = new ArrayCollection([
 		{ text: "Milk" },
 		{ text: "Eggs" },
 		{ text: "Bread" },
 		{ text: "Steak" },
 	]);
 
-	comboBox.itemToText = (item:Dynamic) ->
-	{
+	comboBox.itemToText = (item:Dynamic) -> {
 		return item.text;
 	};
 
-	comboBox.addEventListener(Event.CHANGE, (event:Event) ->
-	{
+	comboBox.addEventListener(Event.CHANGE, (event:Event) -> {
 		var comboBox = cast(event.currentTarget, ComboBox);
 		trace("ComboBox changed: " + comboBox.selectedIndex + " " + comboBox.selectedItem.text);
 	});
@@ -139,16 +136,14 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		renderer how to interpret the data:
 
 		```hx
-		comboBox.dataProvider = new ArrayCollection(
-		[
+		comboBox.dataProvider = new ArrayCollection([
 			{ text: "Milk" },
 			{ text: "Eggs" },
 			{ text: "Bread" },
 			{ text: "Chicken" },
 		]);
 
-		comboBox.itemToText = (item:Dynamic) ->
-		{
+		comboBox.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```
@@ -291,8 +286,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		comboBox.itemToText = (item:Dynamic) ->
-		{
+		comboBox.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```

@@ -54,21 +54,18 @@ import openfl.ui.Multitouch;
 	```hx
 	var listView = new ListView();
 
-	listView.dataProvider = new ArrayCollection(
-	[
+	listView.dataProvider = new ArrayCollection([
 		{ text: "Milk" },
 		{ text: "Eggs" },
 		{ text: "Bread" },
 		{ text: "Chicken" },
 	]);
 
-	listView.itemToText = (item:Dynamic) ->
-	{
+	listView.itemToText = (item:Dynamic) -> {
 		return item.text;
 	};
 
-	listView.addEventListener(Event.CHANGE, (event:Event) ->
-	{
+	listView.addEventListener(Event.CHANGE, (event:Event) -> {
 		var listView = cast(event.currentTarget, ListView);
 		trace("ListView changed: " + listView.selectedIndex + " " + listView.selectedItem.text);
 	});
@@ -168,16 +165,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		renderer how to interpret the data:
 
 		```hx
-		listView.dataProvider = new ArrayCollection(
-		[
+		listView.dataProvider = new ArrayCollection([
 			{ text: "Milk" },
 			{ text: "Eggs" },
 			{ text: "Bread" },
 			{ text: "Chicken" },
 		]);
 
-		listView.itemToText = (item:Dynamic) ->
-		{
+		listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```
@@ -365,6 +360,18 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		return this.selectable;
 	}
 
+	/**
+		Indicates if the list view's layout is allowed to virtualize items or
+		not.
+
+		The following example disables virtual layouts:
+
+		```hx
+		listView.virtualLayout = false;
+		```
+
+		@since 1.0.0
+	**/
 	public var virtualLayout(default, set):Bool = true;
 
 	private function set_virtualLayout(value:Bool):Bool {
@@ -381,6 +388,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		`TouchEvent.TOUCH_TAP` when the item renderer does not implement the
 		`IToggle` interface. If set to `false`, all item renderers must control
 		their own selection manually (not only ones that implement `IToggle`).
+
+		The following example disables pointer selection:
+
+		```hx
+		listView.pointerSelectionEnabled = false;
+		```
+
+		@since 1.0.0
 	**/
 	public var pointerSelectionEnabled:Bool = true;
 
@@ -401,8 +416,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		listView.itemToText = (item:Dynamic) ->
-		{
+		listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```

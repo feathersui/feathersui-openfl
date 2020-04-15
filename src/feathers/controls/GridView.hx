@@ -47,7 +47,7 @@ import openfl.events.Event;
 	changes:
 
 	```hx
-	var gridView = new ListView();
+	var gridView = new GridView();
 
 	gridView.dataProvider = new ArrayCollection([
 		{ item: "Chicken breast", dept: "Meat", price: "5.90" },
@@ -61,8 +61,7 @@ import openfl.events.Event;
 		new GridViewColumn("Price", (data) -> data.price)
 	]);
 
-	gridView.addEventListener(Event.CHANGE, (event:Event) ->
-	{
+	gridView.addEventListener(Event.CHANGE, (event:Event) -> {
 		var gridView = cast(event.currentTarget, GridView);
 		trace("GridView changed: " + gridView.selectedIndex + " " + gridView.selectedItem.item);
 	});

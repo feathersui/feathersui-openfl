@@ -110,7 +110,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		Determines if an item from the collection is a branch or not.
 
 		The following example iterates over the items at the root of a
-		collection and prints the locations of branches to the console:
+		collection and prints the locations of branches to the debug console:
 
 		```hx
 		for(i in 0...collection.getLength()) {

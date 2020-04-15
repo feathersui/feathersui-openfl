@@ -33,8 +33,7 @@ import feathers.core.FeathersControl;
 	```hx
 	var toggleSwitch = new ToggleSwitch();
 	toggleSwitch.selected = true;
-	toggleSwitch.addEventListener(Event.CHANGE, (event) ->
-	{
+	toggleSwitch.addEventListener(Event.CHANGE, (event) -> {
 		var toggleSwitch = cast(event.currentTarget, ToggleSwitch);
 		trace("toggle switch changed: " + toggleSwitch.selected);
 	});

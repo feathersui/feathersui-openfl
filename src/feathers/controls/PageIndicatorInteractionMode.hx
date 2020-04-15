@@ -33,16 +33,4 @@ enum PageIndicatorInteractionMode {
 		@since 1.0.0
 	**/
 	PRECISE;
-
-	/**
-		The scroller may scroll if the content is larger than the view port's
-		bounds. If the interaction mode is touch, the elastic edges will only be
-		active if the maximum scroll position is greater than the minimum scroll
-		position. Similarly, if the scroll bar display mode is fixed, the scroll
-		bar will only be visible when the maximum scroll position is greater
-		than the minimum scroll position.
-
-		@since 1.0.0
-	**/
-	AUTO;
 }

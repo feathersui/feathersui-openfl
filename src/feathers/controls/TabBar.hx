@@ -42,15 +42,13 @@ import openfl.events.Event;
 
 	```hx
 	var tabs = new TabBar();
-	tabs.dataProvider = new ArrayCollection(
-	[
+	tabs.dataProvider = new ArrayCollection([
 		{ text: "Latest Posts" },
 		{ text: "Profile" },
 		{ text: "Settings" }
 	]);
 
-	tabBar.itemToText = (item:Dynamic) ->
-	{
+	tabBar.itemToText = (item:Dynamic) -> {
 		return item.text;
 	};
 
@@ -103,15 +101,13 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		to interpret the data:
 
 		```hx
-		tabBar.dataProvider = new ArrayCollection(
-		[
+		tabBar.dataProvider = new ArrayCollection([
 			{ text: "Latest Posts" },
 			{ text: "Profile" },
 			{ text: "Settings" }
 		]);
 
-		tabBar.itemToText = (item:Dynamic) ->
-		{
+		tabBar.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```
@@ -251,8 +247,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		tabBar.itemToText = (item:Dynamic) ->
-		{
+		tabBar.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```

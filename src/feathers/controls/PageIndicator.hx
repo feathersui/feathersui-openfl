@@ -36,6 +36,27 @@ import openfl.ui.Multitouch;
 #end
 
 /**
+	Displays a series of dots or other symbols, usually corresponding to a page
+	index in another UI control, such as `PageNavigator`.
+
+	The following example creates a page indicator, sets its range and selected
+	index, and lsitens for when the selection changes:
+
+	```hx
+	var pages = new PageIndicator();
+
+	pages.maxSelectedIndex = 5;
+	pages.selectedIndex = 1;
+
+	pages.addEventListener(Event.CHANGE, (event:Event) -> {
+		var pages = cast(event.currentTarget, PageIndicator);
+		trace("PageIndicator changed: " + pages.selectedIndex);
+	});
+	```
+
+	@see [Tutorial: How to use the PageIndicator component](https://feathersui.com/learn/haxe-openfl/page-indicator/)
+	@see `feathers.controls.navigators.PageNavigator`
+
 	@since 1.0.0
 **/
 @:access(feathers.data.PageIndicatorItemState)
@@ -196,6 +217,21 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
 
+	/**
+		Determines how the selected index changes when the page indicator is
+		clicked or tapped. If precise, the exact page must be chosen. If
+		previous/next, the selection increases or decreases by one.
+		Previous/next interaction is recommended on mobile, due to the low
+		precision of touches.
+
+		In the following example, the interaction mode is changed to precise:
+
+		```hx
+		pages.interactionMode = PRECISE;
+		```
+
+		@since 1.0.0
+	**/
 	public var interactionMode(default, set):PageIndicatorInteractionMode = PREVIOUS_NEXT;
 
 	private function set_interactionMode(value:PageIndicatorInteractionMode):PageIndicatorInteractionMode {
