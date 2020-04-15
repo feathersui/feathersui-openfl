@@ -8,6 +8,8 @@
 
 package feathers.data;
 
+import feathers.controls.GridViewColumn;
+
 /**
 	Represents the current state of a `GridView` cell renderer.
 
@@ -33,7 +35,7 @@ class GridViewCellState {
 	}
 
 	/**
-		An item from the collection displayed by the `GridView`.
+		An row from the collection displayed by the `GridView`.
 
 		@since 1.0.0
 	**/
@@ -52,6 +54,13 @@ class GridViewCellState {
 		@since 1.0.0
 	**/
 	public var columnIndex(default, null):Int;
+
+	/**
+		The column of the cell.
+
+		@since 1.0.0
+	**/
+	public var column(default, null):GridViewColumn;
 
 	/**
 		Returns whether the cell is selected or not.

@@ -264,6 +264,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			this._currentCellState.data = null;
 			this._currentCellState.rowIndex = -1;
 			this._currentCellState.columnIndex = -1;
+			this._currentCellState.column = null;
 			this._currentCellState.selected = false;
 			this._currentCellState.text = null;
 			var cellRendererRecycler = storage.cellRendererRecycler != null ? storage.cellRendererRecycler : this.cellRendererRecycler;
@@ -277,6 +278,11 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			if (Std.is(cellRenderer, IDataRenderer)) {
 				var dataRenderer = cast(cellRenderer, IDataRenderer);
 				dataRenderer.data = null;
+			}
+			if (Std.is(cellRenderer, IGridViewCellRenderer)) {
+				var gridCell = cast(cellRenderer, IGridViewCellRenderer);
+				gridCell.column = null;
+				gridCell.columnIndex = -1;
 			}
 			cellRenderer.removeEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
@@ -332,8 +338,9 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		var storage = this._defaultStorage;
 		var cellRendererRecycler = storage.cellRendererRecycler != null ? storage.cellRendererRecycler : this.cellRendererRecycler;
 		this._currentCellState.data = this.data;
-		this._currentCellState.columnIndex = columnIndex;
 		this._currentCellState.rowIndex = this.rowIndex;
+		this._currentCellState.columnIndex = columnIndex;
+		this._currentCellState.column = column;
 		this._currentCellState.selected = this.selected;
 		this._currentCellState.text = column.itemToText(this.data);
 		if (cellRendererRecycler.update != null) {
@@ -348,6 +355,11 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			var toggle = cast(cellRenderer, IToggle);
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentCellState.selected;
+		}
+		if (Std.is(cellRenderer, IGridViewCellRenderer)) {
+			var gridCell = cast(cellRenderer, IGridViewCellRenderer);
+			gridCell.column = this._currentCellState.column;
+			gridCell.columnIndex = this._currentCellState.columnIndex;
 		}
 	}
 

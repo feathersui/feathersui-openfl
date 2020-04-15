@@ -8,37 +8,33 @@
 
 package feathers.controls;
 
-import feathers.core.IMeasureObject;
-import feathers.utils.MeasurementsUtil;
 import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
+import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.supportClasses.BaseScrollContainer;
+import feathers.controls.supportClasses.LayoutViewPort;
+import feathers.core.IDataSelector;
+import feathers.core.ITextControl;
 import feathers.core.IValidating;
-import feathers.layout.GridViewRowLayout;
-import feathers.layout.VerticalListFixedRowLayout;
-import feathers.layout.VerticalLayout;
-import feathers.controls.dataRenderers.GridViewRowRenderer;
+import feathers.core.InvalidationFlag;
 import feathers.data.GridViewCellState;
 import feathers.data.GridViewHeaderState;
-import feathers.events.TriggerEvent;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.events.FlatCollectionEvent;
-import feathers.layout.Direction;
-import feathers.layout.IScrollLayout;
-import feathers.core.ITextControl;
-import haxe.ds.ObjectMap;
-import openfl.errors.IllegalOperationError;
-import feathers.themes.steel.components.SteelGridViewStyles;
-import openfl.display.DisplayObject;
-import openfl.events.Event;
-import feathers.core.InvalidationFlag;
-import feathers.controls.dataRenderers.CellRenderer;
-import feathers.controls.supportClasses.LayoutViewPort;
-import feathers.controls.supportClasses.BaseScrollContainer;
-import feathers.layout.ILayout;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
-import feathers.core.IDataSelector;
+import feathers.events.FlatCollectionEvent;
+import feathers.events.TriggerEvent;
+import feathers.layout.Direction;
+import feathers.layout.GridViewRowLayout;
+import feathers.layout.ILayout;
+import feathers.layout.IScrollLayout;
+import feathers.layout.VerticalListFixedRowLayout;
+import feathers.themes.steel.components.SteelGridViewStyles;
+import feathers.utils.DisplayObjectRecycler;
+import haxe.ds.ObjectMap;
+import openfl.display.DisplayObject;
+import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
 
 /**
 	Displays a list of items as a table. Each item is rendered as a row, divided
@@ -519,6 +515,17 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 
 		for (headerRenderer in this.activeHeaderRenderers) {
+			this._currentHeaderState.column = null;
+			this._currentHeaderState.columnIndex = null;
+			this._currentHeaderState.text = null;
+			if (this.headerRendererRecycler.reset != null) {
+				this.headerRendererRecycler.reset(headerRenderer, this._currentHeaderState);
+			}
+			if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
+				var header = cast(headerRenderer, IGridViewHeaderRenderer);
+				header.column = null;
+				header.columnIndex = -1;
+			}
 			this.destroyHeaderRenderer(headerRenderer);
 		}
 		this.activeHeaderRenderers.resize(0);
@@ -662,16 +669,21 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private function createHeaderRenderer(column:GridViewColumn, columnIndex:Int):DisplayObject {
 		var headerRenderer:DisplayObject = null;
 		headerRenderer = this.headerRendererRecycler.create();
-		/*if (this.inactiveRowRenderers.length == 0) {
+		/*if (this.inactiveHeaderRenderers.length == 0) {
 				rowRenderer = this.headerRendererRecycler.create();
 			} else {
-				rowRenderer = this.inactiveRowRenderers.shift();
+				rowRenderer = this.inactiveHeaderRenderers.shift();
 		}*/
 		this._currentHeaderState.column = column;
 		this._currentHeaderState.columnIndex = columnIndex;
 		this._currentHeaderState.text = column.headerText;
 		if (this.headerRendererRecycler.update != null) {
 			this.headerRendererRecycler.update(headerRenderer, this._currentHeaderState);
+		}
+		if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
+			var header = cast(headerRenderer, IGridViewHeaderRenderer);
+			header.column = this._currentHeaderState.column;
+			header.columnIndex = this._currentHeaderState.columnIndex;
 		}
 		return headerRenderer;
 	}
