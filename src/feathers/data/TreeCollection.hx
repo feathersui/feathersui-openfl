@@ -15,6 +15,10 @@ import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
 /**
+	Wraps an `Array` data source with a common API for use with UI controls that
+	support hierarchical data, such as `TreeView`.
+
+	@see `feathers.controls.TreeView`
 
 	@since 1.0.0
 **/
@@ -165,7 +169,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	}
 
 	/**
-		@see `feathers.data.IHierarchicalCollection.removeAt`
+		@see `feathers.data.IHierarchicalCollection.addAt`
 	**/
 	public function addAt(itemToAdd:TreeNode<T>, location:Array<Int>):Void {
 		if (location == null || location.length == 0) {
