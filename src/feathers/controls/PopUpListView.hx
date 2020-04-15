@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IIndexSelector;
 import feathers.utils.MeasurementsUtil;
 import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -73,7 +74,7 @@ import openfl.ui.Multitouch;
 	@since 1.0.0
 **/
 @:styleContext
-class PopUpListView extends FeathersControl implements IDataSelector<Dynamic> {
+class PopUpListView extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
 	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = "listViewFactory";
 

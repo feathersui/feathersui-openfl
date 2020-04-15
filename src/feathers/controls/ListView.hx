@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IIndexSelector;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -84,7 +85,7 @@ import openfl.ui.Multitouch;
 @:access(feathers.data.ListViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class ListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+class ListView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> {
 	/**
 		A variant used to style the list view without a border. The variant is
 		used by default on mobile.

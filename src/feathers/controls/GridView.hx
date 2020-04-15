@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IIndexSelector;
 import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
@@ -55,9 +56,9 @@ import openfl.events.Event;
 		{ item: "Whole Wheat Bread", dept: "Bakery", price: "2.49" }
 	]);
 	gridView.columns = new ArrayCollection([
-		new GridViewColumn((data) -> data.item),
-		new GridViewColumn((data) -> data.dept),
-		new GridViewColumn((data) -> data.price)
+		new GridViewColumn("Item", (data) -> data.item),
+		new GridViewColumn("Department", (data) -> data.dept),
+		new GridViewColumn("Price", (data) -> data.price)
 	]);
 
 	gridView.addEventListener(Event.CHANGE, (event:Event) ->
@@ -75,7 +76,7 @@ import openfl.events.Event;
 **/
 @:access(feathers.data.GridViewHeaderState)
 @:styleContext
-class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> {
 	/**
 		A variant used to style the grid view without a border. The variant is
 		used by default on mobile.
@@ -170,9 +171,9 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			{ item: "Whole Wheat Bread", dept: "Bakery", price: "2.49" }
 		]);
 		gridView.columns = new ArrayCollection([
-			new GridViewColumn((data) -> data.item),
-			new GridViewColumn((data) -> data.dept),
-			new GridViewColumn((data) -> data.price)
+			new GridViewColumn("Item", (data) -> data.item),
+			new GridViewColumn("Department", (data) -> data.dept),
+			new GridViewColumn("Price", (data) -> data.price)
 		]);
 		```
 
@@ -226,9 +227,9 @@ class GridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			{ item: "Whole Wheat Bread", dept: "Bakery", price: "2.49" }
 		]);
 		gridView.columns = new ArrayCollection([
-			new GridViewColumn((data) -> data.item),
-			new GridViewColumn((data) -> data.dept),
-			new GridViewColumn((data) -> data.price)
+			new GridViewColumn("Item", (data) -> data.item),
+			new GridViewColumn("Department", (data) -> data.dept),
+			new GridViewColumn("Price", (data) -> data.price)
 		]);
 		```
 

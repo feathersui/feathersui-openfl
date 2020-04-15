@@ -26,7 +26,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
-class ToggleGroup extends EventDispatcher implements IDataSelector<IToggle> {
+class ToggleGroup extends EventDispatcher implements IIndexSelector implements IDataSelector<IToggle> {
 	/**
 		Creates a new `ToggleGroup` object.
 

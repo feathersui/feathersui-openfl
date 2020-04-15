@@ -18,6 +18,11 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 class GridViewColumn extends EventDispatcher {
+	/**
+		Creates a new `GridViewColumn` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(headerText:String, itemToText:(Dynamic) -> String = null) {
 		super();
 		this.headerText = headerText;

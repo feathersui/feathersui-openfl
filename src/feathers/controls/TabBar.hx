@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IIndexSelector;
 import feathers.core.IUIControl;
 import feathers.core.IStateContext;
 import feathers.core.IValidating;
@@ -66,7 +67,7 @@ import openfl.events.Event;
 **/
 @:access(feathers.data.TabBarItemState)
 @:styleContext
-class TabBar extends FeathersControl implements IDataSelector<Dynamic> {
+class TabBar extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_TAB_FACTORY = "tabFactory";
 
 	/**

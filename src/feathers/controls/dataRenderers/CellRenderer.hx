@@ -12,6 +12,8 @@ package feathers.controls.dataRenderers;
 	A custom renderer for `GridView` that syncs up with other cell renderers
 	in the same parent row.
 
+	@see `feathers.controls.GridView`
+
 	@since 1.0.0
 **/
 class CellRenderer extends ItemRenderer {

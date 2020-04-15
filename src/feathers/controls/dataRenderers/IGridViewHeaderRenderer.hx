@@ -13,6 +13,8 @@ import feathers.core.IUIControl;
 /**
 	A header renderer optimized for the `GridView` component.
 
+	@see `feathers.controls.GridView`
+
 	@since 1.0.0
 **/
 interface IGridViewHeaderRenderer extends IUIControl {

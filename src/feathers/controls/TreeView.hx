@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IDataSelector;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
 import feathers.controls.dataRenderers.TreeViewItemRenderer;
@@ -46,7 +47,7 @@ import openfl.ui.Multitouch;
 @:access(feathers.data.TreeViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class TreeView extends BaseScrollContainer {
+class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	/**
 		A variant used to style the tree view without a border. The variant is
 		used by default on mobile.

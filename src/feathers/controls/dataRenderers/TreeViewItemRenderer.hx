@@ -17,6 +17,8 @@ import feathers.themes.steel.components.SteelTreeViewItemRendererStyles;
 /**
 	A branch and leaf renderer for `TreeView`.
 
+	@see `feathers.controls.TreeView`
+
 	@since 1.0.0
 **/
 @:styleContext

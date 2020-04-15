@@ -13,6 +13,8 @@ import feathers.core.IUIControl;
 /**
 	An item renderer optimized for the `TreeView` component.
 
+	@see `feathers.controls.TreeView`
+
 	@since 1.0.0
 **/
 interface ITreeViewItemRenderer extends IUIControl {

@@ -13,7 +13,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
-interface IDataSelector<T> extends IIndexSelector {
+interface IDataSelector<T> {
 	/**
 		The currently selected item. Returns `null` if no item is selected.
 
@@ -48,7 +48,7 @@ interface IDataSelector<T> extends IIndexSelector {
 
 		@default null
 
-		@see `IDataSelector.selectedIndex`
+		@see `IIndexSelector.selectedIndex`
 
 		@since 1.0.0
 	**/
