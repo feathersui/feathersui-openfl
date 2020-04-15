@@ -171,15 +171,17 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		if (remainingWidth < 0.0) {
 			remainingWidth = 0.0;
 		}
-		var needsAnotherPass = true;
-		while (needsAnotherPass) {
-			needsAnotherPass = false;
+		var needsAnotherPass = false;
+		do {
+			var widthSum = 0.0;
 			var percentToPixels = remainingWidth / totalPercentWidth;
 			for (index in pendingIndices) {
 				var item = items[index];
 				var column = this.columns.get(index);
 				var percentWidth = 100.0;
-				var itemWidth = percentToPixels * percentWidth;
+				// round to nearest pixel so that there aren't any visual gaps
+				// between items. we'll append the remainder at the end.
+				var itemWidth = Math.ffloor(percentToPixels * percentWidth);
 				var columnMinWidth = column.minWidth;
 				if (columnMinWidth != null && columnMinWidth > remainingWidth) {
 					// we try to respect the item's minimum width, but if
@@ -201,7 +203,21 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 					// needed for measurement.
 					cast(item, IValidating).validateNow();
 				}
+				widthSum += itemWidth;
 			}
+			if (needsAnotherPass) {
+				widthSum = 0.0;
+			} else {
+				remainingWidth -= widthSum;
+			}
+		} while (needsAnotherPass);
+
+		if (remainingWidth > 0.0 && pendingIndices.length > 0) {
+			// minimize the impact of a non-integer width by adding the
+			// remainder to the final item
+			var index = pendingIndices[pendingIndices.length - 1];
+			var finalItem = items[index];
+			finalItem.width += remainingWidth;
 		}
 	}
 }
