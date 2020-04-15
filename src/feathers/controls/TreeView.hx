@@ -38,7 +38,53 @@ import openfl.ui.Multitouch;
 #end
 
 /**
+	Displays a hierarchical tree of items. Supports scrolling, custom item
+	renderers, and custom layouts.
 
+	The following example creates a tree, gives it a data provider, tells
+	the item renderer how to interpret the data, and listens for when the
+	selection changes:
+
+	```hx
+	var treeView = new TreeView();
+
+	treeView.dataProvider = new TreeCollection([
+		new TreeNode({text: "Node 1"}, [
+			new TreeNode({text: "Node 1A"}, [
+				new TreeNode({text: "Node 1A-I"}),
+				new TreeNode({text: "Node 1A-II"}),
+				new TreeNode({text: "Node 1A-III"}),
+				new TreeNode({text: "Node 1A-IV"})
+			]),
+			new TreeNode({text: "Node 1B"}),
+			new TreeNode({text: "Node 1C"})
+		]),
+		new TreeNode({text: "Node 2"}, [
+			new TreeNode({text: "Node 2A"}),
+			new TreeNode({text: "Node 2B"}),
+			new TreeNode({text: "Node 2C"})
+		]),
+		new TreeNode({text: "Node 3"}),
+		new TreeNode({text: "Node 4"}, [
+			new TreeNode({text: "Node 4A"}),
+			new TreeNode({text: "Node 4B"}),
+			new TreeNode({text: "Node 4C"}),
+			new TreeNode({text: "Node 4D"}),
+			new TreeNode({text: "Node 4E"})
+		])
+	]);
+
+	treeView.itemToText = (item:Dynamic) -> {
+		return item.text;
+	};
+
+	treeView.addEventListener(Event.CHANGE, (event:Event) -> {
+		var treeView = cast(event.currentTarget, TreeView);
+		trace("TreeView changed: " + treeView.selectedLocation + " " + treeView.selectedItem.text);
+	});
+
+	this.addChild(treeView);
+	```
 
 	@see [Tutorial: How to use the TreeView component](https://feathersui.com/learn/haxe-openfl/tree-view/)
 
@@ -128,6 +174,41 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	/**
 		The collection of data displayed by the tree view.
 
+		The following example passes in a data provider and tells the item
+		renderer how to interpret the data:
+
+		```hx
+		treeView.dataProvider = new TreeCollection([
+			new TreeNode({text: "Node 1"}, [
+				new TreeNode({text: "Node 1A"}, [
+					new TreeNode({text: "Node 1A-I"}),
+					new TreeNode({text: "Node 1A-II"}),
+					new TreeNode({text: "Node 1A-III"}),
+					new TreeNode({text: "Node 1A-IV"})
+				]),
+				new TreeNode({text: "Node 1B"}),
+				new TreeNode({text: "Node 1C"})
+			]),
+			new TreeNode({text: "Node 2"}, [
+				new TreeNode({text: "Node 2A"}),
+				new TreeNode({text: "Node 2B"}),
+				new TreeNode({text: "Node 2C"})
+			]),
+			new TreeNode({text: "Node 3"}),
+			new TreeNode({text: "Node 4"}, [
+				new TreeNode({text: "Node 4A"}),
+				new TreeNode({text: "Node 4B"}),
+				new TreeNode({text: "Node 4C"}),
+				new TreeNode({text: "Node 4D"}),
+				new TreeNode({text: "Node 4E"})
+			])
+		]);
+
+		treeView.itemToText = (item:Dynamic) -> {
+			return item.text;
+		};
+		```
+
 		@default null
 
 		@since 1.0.0
@@ -163,6 +244,36 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		The currently selected location. Returns `null` if no location is
+		selected.
+
+		The following example selects a specific location:
+
+		```hx
+		treeView.selectedLocation = [2, 0];
+		```
+
+		The following example clears the currently selected location:
+
+		```hx
+		treeView.selectedLocation = null;
+		```
+
+		The following example listens for when the selection changes, and it
+		prints the new selected location to the debug console:
+
+		```hx
+		var treeView = new TreeView();
+		function changeHandler(event:Event):Void
+		{
+			var treeView = cast(event.currentTarget, TreeView);
+			trace("selection change: " + treeView.selectedLocation);
+		}
+		treeView.addEventListener(Event.CHANGE, changeHandler);
+		```
+
+		@default null
+
 		@since 1.0.0
 	**/
 	@:isVar
@@ -296,6 +407,18 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this.selectable;
 	}
 
+	/**
+		Indicates if the tree view's layout is allowed to virtualize items or
+		not.
+
+		The following example disables virtual layouts:
+
+		```hx
+		treeView.virtualLayout = false;
+		```
+
+		@since 1.0.0
+	**/
 	public var virtualLayout(default, set):Bool = true;
 
 	private function set_virtualLayout(value:Bool):Bool {
@@ -312,6 +435,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		`TouchEvent.TOUCH_TAP` when the item renderer does not implement the
 		`IToggle` interface. If set to `false`, all item renderers must control
 		their own selection manually (not only ones that implement `IToggle`).
+
+		The following example disables pointer selection:
+
+		```hx
+		treeView.pointerSelectionEnabled = false;
+		```
+
+		@since 1.0.0
 	**/
 	public var pointerSelectionEnabled:Bool = true;
 
@@ -333,8 +464,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		implementation of `itemToText()` might look like this:
 
 		```hx
-		treeView.itemToText = (item:Dynamic) ->
-		{
+		treeView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```
