@@ -650,7 +650,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				}
 				this.refreshRowRendererProperties(rowRenderer, item, i);
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;
-				this.gridViewPort.setChildIndex(rowRenderer, i);
 				this._layoutItems[i] = rowRenderer;
 				var removed = inactiveRowRenderers.remove(rowRenderer);
 				if (!removed) {
