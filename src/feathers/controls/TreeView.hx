@@ -322,6 +322,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this.selectedItem;
 	}
 
+	private var _previousLayout:ILayout;
+
 	/**
 		The layout algorithm used to position and size the tree view's items.
 
@@ -487,7 +489,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
 		if (layoutInvalid || stylesInvalid) {
+			if (this._previousLayout != this.layout) {
+				this._layoutItems.resize(0);
+				var newSize = this.calculateTotalLayoutCount([]);
+				this._layoutItems.resize(newSize);
+			}
 			this.treeViewPort.layout = this.layout;
+			this._previousLayout = this.layout;
 		}
 
 		this.treeViewPort.refreshChildren = this.refreshItemRenderers;

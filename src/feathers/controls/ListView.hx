@@ -277,6 +277,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		return this.selectedItem;
 	}
 
+	private var _previousLayout:ILayout;
+
 	/**
 		The layout algorithm used to position and size the list view's items.
 
@@ -438,7 +440,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
 		if (layoutInvalid || stylesInvalid) {
+			if (this._previousLayout != this.layout) {
+				// don't keep the old layout's cache because it may not be
+				// compatible with the new layout
+				this._virtualCache.resize(0);
+				this._virtualCache.resize(this.dataProvider.length);
+			}
 			this.listViewPort.layout = this.layout;
+			this._previousLayout = this.layout;
 		}
 
 		this.listViewPort.refreshChildren = this.refreshItemRenderers;
@@ -448,6 +457,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		super.update();
+
+		this._previousLayout = this.layout;
 	}
 
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
