@@ -147,8 +147,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _headerContainer:LayoutGroup;
 	private var _headerContainerLayout:GridViewRowLayout;
 
-	private var scrollBarYWidthOffset:Float = 0.0;
-
 	private var gridViewPort:AdvancedLayoutViewPort;
 
 	override private function get_primaryDirection():Direction {
@@ -501,22 +499,21 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
 		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
-		this.scrollBarYWidthOffset = switch (this.scrollBarYPosition) {
-			case LEFT: this.leftViewPortOffset;
-			default: this.rightViewPortOffset;
-		};
+
 		if (this._headerContainer != null) {
+			switch (this.scrollBarYPosition) {
+				case LEFT:
+					this._headerContainerLayout.paddingLeft = this.leftViewPortOffset;
+				default:
+					this._headerContainerLayout.paddingRight = this.rightViewPortOffset;
+			};
+
 			if (Std.is(this._headerContainer, IValidating)) {
 				cast(this._headerContainer, IValidating).validateNow();
 			}
-			var maxHeaderWidth = 0.0;
-			for (headerRenderer in this.activeHeaderRenderers) {
-				maxHeaderWidth = Math.max(maxHeaderWidth, headerRenderer.width);
-			}
-			var totalHeaderWidth = maxHeaderWidth * this.activeHeaderRenderers.length;
 			this.topViewPortOffset += this._headerContainer.height;
-			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, totalHeaderWidth + this.scrollBarYWidthOffset);
-			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, totalHeaderWidth + this.scrollBarYWidthOffset);
+			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._headerContainer.width);
+			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, this._headerContainer.width);
 		}
 	}
 
@@ -527,15 +524,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerContainer.x = this.paddingLeft;
 		this._headerContainer.y = this.paddingTop;
 		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
-		switch (this.scrollBarYPosition) {
-			case LEFT:
-				this._headerContainer.x += this.scrollBarYWidthOffset;
-			default: // do nothing
-		};
-		var totalHeaderWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.scrollBarYWidthOffset;
-		for (headerRenderer in this.activeHeaderRenderers) {
-			headerRenderer.width = totalHeaderWidth / this.columns.length;
-		}
 		if (Std.is(this._headerContainer, IValidating)) {
 			cast(this._headerContainer, IValidating).validateNow();
 		}
