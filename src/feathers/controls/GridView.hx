@@ -8,14 +8,14 @@
 
 package feathers.controls;
 
-import feathers.core.IIndexSelector;
 import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
-import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.core.IDataSelector;
+import feathers.core.IIndexSelector;
 import feathers.core.ITextControl;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
@@ -29,6 +29,8 @@ import feathers.layout.Direction;
 import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
+import feathers.layout.IVirtualLayout.VirtualLayoutRange;
+import feathers.layout.IVirtualLayout;
 import feathers.layout.VerticalListFixedRowLayout;
 import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.utils.DisplayObjectRecycler;
@@ -136,7 +138,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		super();
 		if (this.viewPort == null) {
-			this.gridViewPort = new LayoutViewPort();
+			this.gridViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.gridViewPort);
 			this.viewPort = this.gridViewPort;
 		}
@@ -147,7 +149,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var scrollBarYWidthOffset:Float = 0.0;
 
-	private var gridViewPort:LayoutViewPort;
+	private var gridViewPort:AdvancedLayoutViewPort;
 
 	override private function get_primaryDirection():Direction {
 		if (Std.is(this._layout, IScrollLayout)) {
@@ -188,20 +190,26 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this.dataProvider == value) {
 			return this.dataProvider;
 		}
+		this._virtualCache.resize(0);
 		if (this.dataProvider != null) {
 			this.dataProvider.removeEventListener(Event.CHANGE, gridView_dataProvider_changeHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, gridView_dataProvider_addItemHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_dataProvider_removeItemHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, gridView_dataProvider_replaceItemHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, gridView_dataProvider_removeAllHandler);
+			this.dataProvider.removeEventListener(FlatCollectionEvent.RESET, gridView_dataProvider_resetHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, gridView_dataProvider_sortChangeHandler);
 			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, gridView_dataProvider_filterChangeHandler);
 		}
 		this.dataProvider = value;
 		if (this.dataProvider != null) {
+			this._virtualCache.resize(this.dataProvider.length);
 			this.dataProvider.addEventListener(Event.CHANGE, gridView_dataProvider_changeHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, gridView_dataProvider_addItemHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_dataProvider_removeItemHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, gridView_dataProvider_replaceItemHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, gridView_dataProvider_removeAllHandler);
+			this.dataProvider.addEventListener(FlatCollectionEvent.RESET, gridView_dataProvider_resetHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, gridView_dataProvider_sortChangeHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, gridView_dataProvider_filterChangeHandler);
 		}
@@ -351,6 +359,29 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _layout:ILayout;
 
 	/**
+		Indicates if the grid view's layout is allowed to virtualize items or
+		not.
+
+		The following example disables virtual layouts:
+
+		```hx
+		gridView.virtualLayout = false;
+		```
+
+		@since 1.0.0
+	**/
+	public var virtualLayout(default, set):Bool = true;
+
+	private function set_virtualLayout(value:Bool):Bool {
+		if (this.virtualLayout = value) {
+			return this.virtualLayout;
+		}
+		this.virtualLayout = value;
+		this.setInvalid(InvalidationFlag.LAYOUT);
+		return this.virtualLayout;
+	}
+
+	/**
 		Manages cell renderers used by the grid view.
 
 		In the following example, the grid view uses a custom cell renderer
@@ -381,6 +412,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var dataToRowRenderer = new ObjectMap<Dynamic, GridViewRowRenderer>();
 	private var rowRendererToData = new ObjectMap<GridViewRowRenderer, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
+	private var _layoutItems:Array<DisplayObject> = [];
+	private var _virtualCache:Array<Dynamic> = [];
+	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
+
 	private var _currentHeaderState:GridViewHeaderState = new GridViewHeaderState();
 
 	/**
@@ -449,12 +484,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.refreshHeaderRenderers();
 		}
 
-		if (selectionInvalid || stateInvalid || dataInvalid) {
-			this.refreshRowRenderers();
-		}
-
 		if (layoutInvalid || stylesInvalid) {
 			this.gridViewPort.layout = this._layout;
+		}
+
+		this.gridViewPort.refreshChildren = this.refreshRowRenderers;
+
+		for (flag in this._invalidationFlags.keys()) {
+			this.gridViewPort.setInvalid(flag);
 		}
 
 		super.update();
@@ -537,7 +574,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function refreshRowRenderers():Void {
+	private function refreshRowRenderers(items:Array<DisplayObject>):Void {
+		this._layoutItems = items;
+
 		this.refreshInactiveRowRenderers();
 		if (this.dataProvider == null) {
 			return;
@@ -597,7 +636,22 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function findUnrenderedData():Void {
-		for (i in 0...this.dataProvider.length) {
+		// remove all old items, then fill with null
+		this._layoutItems.resize(0);
+		this._layoutItems.resize(this.dataProvider.length);
+
+		if (this.virtualLayout && Std.is(this._layout, IVirtualLayout)) {
+			var virtualLayout = cast(this._layout, IVirtualLayout);
+			virtualLayout.virtualCache = this._virtualCache;
+			virtualLayout.getVisibleIndices(this.dataProvider.length, this.gridViewPort.visibleWidth, this.gridViewPort.visibleHeight, this._visibleIndices);
+		} else {
+			this._visibleIndices.start = 0;
+			this._visibleIndices.end = this.dataProvider.length - 1;
+		}
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
+		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
 			var item = this.dataProvider.get(i);
 			var rowRenderer = this.dataToRowRenderer.get(item);
 			if (rowRenderer != null) {
@@ -609,6 +663,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				this.refreshRowRendererProperties(rowRenderer, item, i);
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;
 				this.gridViewPort.setChildIndex(rowRenderer, i);
+				this._layoutItems[i] = rowRenderer;
 				var removed = inactiveRowRenderers.remove(rowRenderer);
 				if (!removed) {
 					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
@@ -627,7 +682,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var rowRenderer = this.createRowRenderer(item, index);
 			rowRenderer.visible = true;
 			this.activeRowRenderers.push(rowRenderer);
-			this.gridViewPort.addChildAt(rowRenderer, index);
+			this.gridViewPort.addChild(rowRenderer);
+			this._layoutItems[index] = rowRenderer;
 		}
 		this._unrenderedData.resize(0);
 	}
@@ -730,6 +786,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.insert(event.index, null);
+		}
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -739,6 +798,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.remove(event.index);
+		}
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -748,6 +810,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache[event.index] = null;
+		}
 		if (this.selectedIndex == -1) {
 			return;
 		}
@@ -756,11 +821,38 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
+	private function gridView_dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.resize(0);
+		}
+		this.selectedIndex = -1;
+	}
+
+	private function gridView_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache.resize(0);
+			this._virtualCache.resize(this.dataProvider.length);
+		}
+		this.selectedIndex = -1;
+	}
+
 	private function gridView_dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			// we don't know exactly which indices have changed, so reset the
+			// whole cache.
+			this._virtualCache.resize(0);
+			this._virtualCache.resize(this.dataProvider.length);
+		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
 	private function gridView_dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			// we don't know exactly which indices have changed, so reset the
+			// whole cache.
+			this._virtualCache.resize(0);
+			this._virtualCache.resize(this.dataProvider.length);
+		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
