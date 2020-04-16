@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.events.FeathersEvent;
 import feathers.controls.GridViewColumn;
 import feathers.data.IFlatCollection;
 import feathers.core.IMeasureObject;
@@ -33,6 +34,28 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
+	public var paddingLeft(default, set):Float = 0.0;
+
+	private function set_paddingLeft(value:Float):Float {
+		if (this.paddingLeft == value) {
+			return this.paddingLeft;
+		}
+		this.paddingLeft = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this.paddingLeft;
+	}
+
+	public var paddingRight(default, set):Float = 0.0;
+
+	private function set_paddingRight(value:Float):Float {
+		if (this.paddingRight == value) {
+			return this.paddingRight;
+		}
+		this.paddingRight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this.paddingRight;
+	}
+
 	/**
 		The collection of columns displayed by the `GridView`.
 	**/
@@ -53,7 +76,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.applyColumnWidths(items, measurements.width, measurements.minWidth, measurements.maxWidth);
 
-		var contentWidth = 0.0;
+		var contentWidth = this.paddingLeft;
 		var contentHeight = 0.0;
 		for (item in items) {
 			if (Std.is(item, IValidating)) {
@@ -65,6 +88,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			item.x = contentWidth;
 			contentWidth += item.width;
 		}
+		contentWidth += this.paddingRight;
 
 		var viewPortWidth = contentWidth;
 		if (measurements.width != null) {
@@ -156,6 +180,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			}
 			totalMeasuredWidth += item.width;
 		}
+		totalMeasuredWidth += this.paddingLeft + this.paddingRight;
 		var remainingWidth = 0.0;
 		if (explicitWidth != null) {
 			remainingWidth = explicitWidth;
