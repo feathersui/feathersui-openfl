@@ -8,8 +8,6 @@
 
 package feathers.themes.steel.components;
 
-import feathers.layout.VerticalAlign;
-import feathers.layout.HorizontalAlign;
 import feathers.layout.HorizontalLayout;
 import feathers.controls.LayoutGroup;
 import feathers.skins.RectangleSkin;
@@ -33,30 +31,28 @@ class SteelLayoutGroupStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(LayoutGroup, null) != null) {
-			return;
+		if (styleProvider.getStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR) == null) {
+			styleProvider.setStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR, function(group:LayoutGroup):Void {
+				if (group.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = theme.getHeaderFill();
+					backgroundSkin.width = 44.0;
+					backgroundSkin.height = 44.0;
+					backgroundSkin.minHeight = 44.0;
+					group.backgroundSkin = backgroundSkin;
+				}
+				if (group.layout == null) {
+					var layout = new HorizontalLayout();
+					layout.horizontalAlign = LEFT;
+					layout.verticalAlign = MIDDLE;
+					layout.paddingTop = 4.0;
+					layout.paddingRight = 10.0;
+					layout.paddingBottom = 4.0;
+					layout.paddingLeft = 10.0;
+					layout.gap = 4.0;
+					group.layout = layout;
+				}
+			});
 		}
-
-		styleProvider.setStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR, function(group:LayoutGroup):Void {
-			if (group.backgroundSkin == null) {
-				var backgroundSkin = new RectangleSkin();
-				backgroundSkin.fill = theme.getHeaderFill();
-				backgroundSkin.width = 44.0;
-				backgroundSkin.height = 44.0;
-				backgroundSkin.minHeight = 44.0;
-				group.backgroundSkin = backgroundSkin;
-			}
-			if (group.layout == null) {
-				var layout = new HorizontalLayout();
-				layout.horizontalAlign = LEFT;
-				layout.verticalAlign = MIDDLE;
-				layout.paddingTop = 4.0;
-				layout.paddingRight = 10.0;
-				layout.paddingBottom = 4.0;
-				layout.paddingLeft = 10.0;
-				layout.gap = 4.0;
-				group.layout = layout;
-			}
-		});
 	}
 }

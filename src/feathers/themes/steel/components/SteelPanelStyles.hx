@@ -31,21 +31,19 @@ class SteelPanelStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(Panel, null) != null) {
-			return;
+		if (styleProvider.getStyleFunction(Panel, null) == null) {
+			styleProvider.setStyleFunction(Panel, null, function(panel:Panel):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
+				panel.autoHideScrollBars = !isDesktop;
+				panel.fixedScrollBars = isDesktop;
+
+				if (panel.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = theme.getContainerFill();
+					panel.backgroundSkin = backgroundSkin;
+				}
+			});
 		}
-
-		styleProvider.setStyleFunction(Panel, null, function(panel:Panel):Void {
-			var isDesktop = DeviceUtil.isDesktop();
-
-			panel.autoHideScrollBars = !isDesktop;
-			panel.fixedScrollBars = isDesktop;
-
-			if (panel.backgroundSkin == null) {
-				var backgroundSkin = new RectangleSkin();
-				backgroundSkin.fill = theme.getContainerFill();
-				panel.backgroundSkin = backgroundSkin;
-			}
-		});
 	}
 }

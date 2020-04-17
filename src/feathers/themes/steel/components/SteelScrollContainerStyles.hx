@@ -31,21 +31,19 @@ class SteelScrollContainerStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(ScrollContainer, null) != null) {
-			return;
+		if (styleProvider.getStyleFunction(ScrollContainer, null) == null) {
+			styleProvider.setStyleFunction(ScrollContainer, null, function(container:ScrollContainer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
+				container.autoHideScrollBars = !isDesktop;
+				container.fixedScrollBars = isDesktop;
+
+				if (container.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = theme.getContainerFill();
+					container.backgroundSkin = backgroundSkin;
+				}
+			});
 		}
-
-		styleProvider.setStyleFunction(ScrollContainer, null, function(container:ScrollContainer):Void {
-			var isDesktop = DeviceUtil.isDesktop();
-
-			container.autoHideScrollBars = !isDesktop;
-			container.fixedScrollBars = isDesktop;
-
-			if (container.backgroundSkin == null) {
-				var backgroundSkin = new RectangleSkin();
-				backgroundSkin.fill = theme.getContainerFill();
-				container.backgroundSkin = backgroundSkin;
-			}
-		});
 	}
 }

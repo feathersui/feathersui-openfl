@@ -30,11 +30,6 @@ class SteelGridViewStyles {
 			return;
 		}
 
-		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(GridView, null) != null) {
-			return;
-		}
-
 		function styleGridViewWithWithBorderVariant(gridView:GridView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
@@ -71,15 +66,22 @@ class SteelGridViewStyles {
 			}
 		}
 
-		styleProvider.setStyleFunction(GridView, null, function(gridView:GridView):Void {
-			var isDesktop = DeviceUtil.isDesktop();
-			if (isDesktop) {
-				styleGridViewWithWithBorderVariant(gridView);
-			} else {
-				styleGridViewWithWithBorderlessVariant(gridView);
-			}
-		});
-		styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDER, styleGridViewWithWithBorderVariant);
-		styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithWithBorderlessVariant);
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(GridView, null) == null) {
+			styleProvider.setStyleFunction(GridView, null, function(gridView:GridView):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+				if (isDesktop) {
+					styleGridViewWithWithBorderVariant(gridView);
+				} else {
+					styleGridViewWithWithBorderlessVariant(gridView);
+				}
+			});
+		}
+		if (styleProvider.getStyleFunction(GridView, GridView.VARIANT_BORDER) == null) {
+			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDER, styleGridViewWithWithBorderVariant);
+		}
+		if (styleProvider.getStyleFunction(GridView, GridView.VARIANT_BORDERLESS) == null) {
+			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithWithBorderlessVariant);
+		}
 	}
 }

@@ -31,11 +31,6 @@ class SteelTreeViewStyles {
 			return;
 		}
 
-		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(TreeView, null) != null) {
-			return;
-		}
-
 		function styleTreeViewWithWithBorderVariant(treeView:TreeView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
@@ -80,15 +75,22 @@ class SteelTreeViewStyles {
 			}
 		}
 
-		styleProvider.setStyleFunction(TreeView, null, function(treeView:TreeView):Void {
-			var isDesktop = DeviceUtil.isDesktop();
-			if (isDesktop) {
-				styleTreeViewWithWithBorderVariant(treeView);
-			} else {
-				styleTreeViewWithWithBorderlessVariant(treeView);
-			}
-		});
-		styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDER, styleTreeViewWithWithBorderVariant);
-		styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDERLESS, styleTreeViewWithWithBorderlessVariant);
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(TreeView, null) == null) {
+			styleProvider.setStyleFunction(TreeView, null, function(treeView:TreeView):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+				if (isDesktop) {
+					styleTreeViewWithWithBorderVariant(treeView);
+				} else {
+					styleTreeViewWithWithBorderlessVariant(treeView);
+				}
+			});
+		}
+		if (styleProvider.getStyleFunction(TreeView, TreeView.VARIANT_BORDER) == null) {
+			styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDER, styleTreeViewWithWithBorderVariant);
+		}
+		if (styleProvider.getStyleFunction(TreeView, TreeView.VARIANT_BORDERLESS) == null) {
+			styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDERLESS, styleTreeViewWithWithBorderlessVariant);
+		}
 	}
 }

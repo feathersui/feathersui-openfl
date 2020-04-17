@@ -31,32 +31,30 @@ class SteelTextInputStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(TextInput, null) != null) {
-			return;
+		if (styleProvider.getStyleFunction(TextInput, null) == null) {
+			styleProvider.setStyleFunction(TextInput, null, function(input:TextInput):Void {
+				if (input.backgroundSkin == null) {
+					var inputSkin = new RectangleSkin();
+					inputSkin.cornerRadius = 6.0;
+					inputSkin.width = 160.0;
+					inputSkin.fill = theme.getInsetFill();
+					inputSkin.border = theme.getInsetBorder();
+					inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
+					input.backgroundSkin = inputSkin;
+				}
+
+				if (input.textFormat == null) {
+					input.textFormat = theme.getTextFormat();
+				}
+				if (input.getTextFormatForState(DISABLED) == null) {
+					input.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+				}
+
+				input.paddingTop = 6.0;
+				input.paddingRight = 10.0;
+				input.paddingBottom = 6.0;
+				input.paddingLeft = 10.0;
+			});
 		}
-
-		styleProvider.setStyleFunction(TextInput, null, function(input:TextInput):Void {
-			if (input.backgroundSkin == null) {
-				var inputSkin = new RectangleSkin();
-				inputSkin.cornerRadius = 6.0;
-				inputSkin.width = 160.0;
-				inputSkin.fill = theme.getInsetFill();
-				inputSkin.border = theme.getInsetBorder();
-				inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
-				input.backgroundSkin = inputSkin;
-			}
-
-			if (input.textFormat == null) {
-				input.textFormat = theme.getTextFormat();
-			}
-			if (input.getTextFormatForState(DISABLED) == null) {
-				input.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
-			}
-
-			input.paddingTop = 6.0;
-			input.paddingRight = 10.0;
-			input.paddingBottom = 6.0;
-			input.paddingLeft = 10.0;
-		});
 	}
 }

@@ -31,11 +31,6 @@ class SteelListViewStyles {
 			return;
 		}
 
-		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(ListView, null) != null) {
-			return;
-		}
-
 		function styleListViewWithWithBorderVariant(listView:ListView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
@@ -80,15 +75,22 @@ class SteelListViewStyles {
 			}
 		}
 
-		styleProvider.setStyleFunction(ListView, null, function(listView:ListView):Void {
-			var isDesktop = DeviceUtil.isDesktop();
-			if (isDesktop) {
-				styleListViewWithWithBorderVariant(listView);
-			} else {
-				styleListViewWithWithBorderlessVariant(listView);
-			}
-		});
-		styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDER, styleListViewWithWithBorderVariant);
-		styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDERLESS, styleListViewWithWithBorderlessVariant);
+		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(ListView, null) == null) {
+			styleProvider.setStyleFunction(ListView, null, function(listView:ListView):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+				if (isDesktop) {
+					styleListViewWithWithBorderVariant(listView);
+				} else {
+					styleListViewWithWithBorderlessVariant(listView);
+				}
+			});
+		}
+		if (styleProvider.getStyleFunction(ListView, ListView.VARIANT_BORDER) == null) {
+			styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDER, styleListViewWithWithBorderVariant);
+		}
+		if (styleProvider.getStyleFunction(ListView, ListView.VARIANT_BORDERLESS) == null) {
+			styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDERLESS, styleListViewWithWithBorderlessVariant);
+		}
 	}
 }

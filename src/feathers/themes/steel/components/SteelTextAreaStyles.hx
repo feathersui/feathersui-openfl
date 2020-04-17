@@ -32,38 +32,36 @@ class SteelTextAreaStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(TextArea, null) != null) {
-			return;
-		}
+		if (styleProvider.getStyleFunction(TextArea, null) == null) {
+			styleProvider.setStyleFunction(TextArea, null, function(textArea:TextArea):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 
-		styleProvider.setStyleFunction(TextArea, null, function(textArea:TextArea):Void {
-			var isDesktop = DeviceUtil.isDesktop();
+				textArea.autoHideScrollBars = !isDesktop;
+				textArea.fixedScrollBars = isDesktop;
 
-			textArea.autoHideScrollBars = !isDesktop;
-			textArea.fixedScrollBars = isDesktop;
-
-			if (textArea.backgroundSkin == null) {
-				var backgroundSkin = new RectangleSkin();
-				backgroundSkin.cornerRadius = 6.0;
-				backgroundSkin.width = 160.0;
-				backgroundSkin.height = 120.0;
-				backgroundSkin.fill = theme.getInsetFill();
-				backgroundSkin.border = theme.getInsetBorder();
-				backgroundSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
-				textArea.backgroundSkin = backgroundSkin;
-			}
-
-			if (textArea.textFormat == null) {
-				textArea.textFormat = theme.getTextFormat();
-			}
-			/*if (textArea.getTextFormatForState(DISABLED) == null) {
-					textArea.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+				if (textArea.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.cornerRadius = 6.0;
+					backgroundSkin.width = 160.0;
+					backgroundSkin.height = 120.0;
+					backgroundSkin.fill = theme.getInsetFill();
+					backgroundSkin.border = theme.getInsetBorder();
+					backgroundSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
+					textArea.backgroundSkin = backgroundSkin;
 				}
 
-				textArea.paddingTop = 6.0;
-				textArea.paddingRight = 10.0;
-				textArea.paddingBottom = 6.0;
-				textArea.paddingLeft = 10.0; */
-		});
+				if (textArea.textFormat == null) {
+					textArea.textFormat = theme.getTextFormat();
+				}
+				/*if (textArea.getTextFormatForState(DISABLED) == null) {
+						textArea.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+					}
+
+					textArea.paddingTop = 6.0;
+					textArea.paddingRight = 10.0;
+					textArea.paddingBottom = 6.0;
+					textArea.paddingLeft = 10.0; */
+			});
+		}
 	}
 }

@@ -30,31 +30,29 @@ class SteelVProgressBarStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(VProgressBar, null) != null) {
-			return;
+		if (styleProvider.getStyleFunction(VProgressBar, null) == null) {
+			styleProvider.setStyleFunction(VProgressBar, null, function(progress:VProgressBar):Void {
+				if (progress.fillSkin == null) {
+					var fillSkin = new RectangleSkin();
+					fillSkin.fill = theme.getActiveThemeFill();
+					// fillSkin.disabledFill = theme.getButtonDisabledFill();
+					fillSkin.border = theme.getActiveFillBorder();
+					fillSkin.cornerRadius = 6.0;
+					fillSkin.width = 8.0;
+					fillSkin.height = 8.0;
+					progress.fillSkin = fillSkin;
+				}
+
+				if (progress.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = theme.getInsetFill();
+					backgroundSkin.border = theme.getInsetBorder();
+					backgroundSkin.cornerRadius = 6.0;
+					backgroundSkin.width = 8.0;
+					backgroundSkin.height = 200.0;
+					progress.backgroundSkin = backgroundSkin;
+				}
+			});
 		}
-
-		styleProvider.setStyleFunction(VProgressBar, null, function(progress:VProgressBar):Void {
-			if (progress.fillSkin == null) {
-				var fillSkin = new RectangleSkin();
-				fillSkin.fill = theme.getActiveThemeFill();
-				// fillSkin.disabledFill = theme.getButtonDisabledFill();
-				fillSkin.border = theme.getActiveFillBorder();
-				fillSkin.cornerRadius = 6.0;
-				fillSkin.width = 8.0;
-				fillSkin.height = 8.0;
-				progress.fillSkin = fillSkin;
-			}
-
-			if (progress.backgroundSkin == null) {
-				var backgroundSkin = new RectangleSkin();
-				backgroundSkin.fill = theme.getInsetFill();
-				backgroundSkin.border = theme.getInsetBorder();
-				backgroundSkin.cornerRadius = 6.0;
-				backgroundSkin.width = 8.0;
-				backgroundSkin.height = 200.0;
-				progress.backgroundSkin = backgroundSkin;
-			}
-		});
 	}
 }

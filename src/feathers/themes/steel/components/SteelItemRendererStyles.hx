@@ -32,44 +32,42 @@ class SteelItemRendererStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(ItemRenderer, null) != null) {
-			return;
+		if (styleProvider.getStyleFunction(ItemRenderer, null) == null) {
+			styleProvider.setStyleFunction(ItemRenderer, null, function(itemRenderer:ItemRenderer):Void {
+				if (itemRenderer.backgroundSkin == null) {
+					var skin = new UnderlineSkin();
+					skin.fill = theme.getContainerFill();
+					skin.border = theme.getDividerBorder();
+					skin.selectedFill = theme.getActiveThemeFill();
+					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getActiveThemeFill());
+					skin.width = 44.0;
+					skin.height = 44.0;
+					skin.minWidth = 44.0;
+					skin.minHeight = 44.0;
+					itemRenderer.backgroundSkin = skin;
+				}
+
+				if (itemRenderer.textFormat == null) {
+					itemRenderer.textFormat = theme.getTextFormat();
+				}
+				if (itemRenderer.disabledTextFormat == null) {
+					itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+				if (itemRenderer.selectedTextFormat == null) {
+					itemRenderer.selectedTextFormat = theme.getActiveTextFormat();
+				}
+				if (itemRenderer.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
+					itemRenderer.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
+				}
+
+				itemRenderer.paddingTop = 4.0;
+				itemRenderer.paddingRight = 10.0;
+				itemRenderer.paddingBottom = 4.0;
+				itemRenderer.paddingLeft = 10.0;
+				itemRenderer.gap = 6.0;
+
+				itemRenderer.horizontalAlign = LEFT;
+			});
 		}
-
-		styleProvider.setStyleFunction(ItemRenderer, null, function(itemRenderer:ItemRenderer):Void {
-			if (itemRenderer.backgroundSkin == null) {
-				var skin = new UnderlineSkin();
-				skin.fill = theme.getContainerFill();
-				skin.border = theme.getDividerBorder();
-				skin.selectedFill = theme.getActiveThemeFill();
-				skin.setFillForState(ToggleButtonState.DOWN(false), theme.getActiveThemeFill());
-				skin.width = 44.0;
-				skin.height = 44.0;
-				skin.minWidth = 44.0;
-				skin.minHeight = 44.0;
-				itemRenderer.backgroundSkin = skin;
-			}
-
-			if (itemRenderer.textFormat == null) {
-				itemRenderer.textFormat = theme.getTextFormat();
-			}
-			if (itemRenderer.disabledTextFormat == null) {
-				itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
-			}
-			if (itemRenderer.selectedTextFormat == null) {
-				itemRenderer.selectedTextFormat = theme.getActiveTextFormat();
-			}
-			if (itemRenderer.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
-				itemRenderer.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
-			}
-
-			itemRenderer.paddingTop = 4.0;
-			itemRenderer.paddingRight = 10.0;
-			itemRenderer.paddingBottom = 4.0;
-			itemRenderer.paddingLeft = 10.0;
-			itemRenderer.gap = 6.0;
-
-			itemRenderer.horizontalAlign = LEFT;
-		});
 	}
 }

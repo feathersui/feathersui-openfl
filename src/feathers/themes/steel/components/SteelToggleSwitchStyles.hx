@@ -32,45 +32,43 @@ class SteelToggleSwitchStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(ToggleSwitch, null) != null) {
-			return;
+		if (styleProvider.getStyleFunction(ToggleSwitch, null) == null) {
+			styleProvider.setStyleFunction(ToggleSwitch, null, function(toggle:ToggleSwitch):Void {
+				if (toggle.trackSkin == null) {
+					var trackSkin = new RectangleSkin();
+					trackSkin.width = 64.0;
+					trackSkin.height = 32.0;
+					trackSkin.minWidth = 64.0;
+					trackSkin.minHeight = 32.0;
+					trackSkin.cornerRadius = 32.0;
+					trackSkin.fill = theme.getInsetFill();
+					trackSkin.border = theme.getInsetBorder();
+					trackSkin.selectedFill = theme.getReversedActiveThemeFill();
+					trackSkin.selectedBorder = theme.getActiveFillBorder();
+
+					var track = new BasicToggleButton();
+					track.toggleable = false;
+					track.keepDownStateOnRollOut = true;
+					track.backgroundSkin = trackSkin;
+					toggle.trackSkin = track;
+				}
+				if (toggle.thumbSkin == null) {
+					var thumbSkin = new CircleSkin();
+					thumbSkin.width = 32.0;
+					thumbSkin.height = 32.0;
+					thumbSkin.minWidth = 32.0;
+					thumbSkin.minHeight = 32.0;
+					thumbSkin.fill = theme.getButtonFill();
+					thumbSkin.border = theme.getBorder();
+					thumbSkin.selectedBorder = theme.getActiveFillBorder();
+
+					var thumb = new BasicToggleButton();
+					thumb.toggleable = false;
+					thumb.keepDownStateOnRollOut = true;
+					thumb.backgroundSkin = thumbSkin;
+					toggle.thumbSkin = thumb;
+				}
+			});
 		}
-
-		styleProvider.setStyleFunction(ToggleSwitch, null, function(toggle:ToggleSwitch):Void {
-			if (toggle.trackSkin == null) {
-				var trackSkin = new RectangleSkin();
-				trackSkin.width = 64.0;
-				trackSkin.height = 32.0;
-				trackSkin.minWidth = 64.0;
-				trackSkin.minHeight = 32.0;
-				trackSkin.cornerRadius = 32.0;
-				trackSkin.fill = theme.getInsetFill();
-				trackSkin.border = theme.getInsetBorder();
-				trackSkin.selectedFill = theme.getReversedActiveThemeFill();
-				trackSkin.selectedBorder = theme.getActiveFillBorder();
-
-				var track = new BasicToggleButton();
-				track.toggleable = false;
-				track.keepDownStateOnRollOut = true;
-				track.backgroundSkin = trackSkin;
-				toggle.trackSkin = track;
-			}
-			if (toggle.thumbSkin == null) {
-				var thumbSkin = new CircleSkin();
-				thumbSkin.width = 32.0;
-				thumbSkin.height = 32.0;
-				thumbSkin.minWidth = 32.0;
-				thumbSkin.minHeight = 32.0;
-				thumbSkin.fill = theme.getButtonFill();
-				thumbSkin.border = theme.getBorder();
-				thumbSkin.selectedBorder = theme.getActiveFillBorder();
-
-				var thumb = new BasicToggleButton();
-				thumb.toggleable = false;
-				thumb.keepDownStateOnRollOut = true;
-				thumb.backgroundSkin = thumbSkin;
-				toggle.thumbSkin = thumb;
-			}
-		});
 	}
 }
