@@ -8,6 +8,7 @@
 
 package feathers.themes.steel;
 
+import feathers.events.StyleProviderEvent;
 import feathers.style.IStyleProvider;
 import feathers.style.IStyleObject;
 import openfl.display.GradientType;
@@ -70,7 +71,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		}
 		this.darkMode = value;
 		this.refreshColors();
-		this.styleProvider.dispatchEvent(new Event(Event.CHANGE));
+		this.styleProvider.dispatchEvent(new StyleProviderEvent(StyleProviderEvent.STYLES_CHANGE));
 		return this.darkMode;
 	}
 
@@ -344,7 +345,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	#if html5
 	private function mediaQueryList_changeHandler(event:MediaQueryListEvent):Void {
-		this.styleProvider.dispatchEvent(new Event(Event.CHANGE));
+		this.styleProvider.dispatchEvent(new StyleProviderEvent(StyleProviderEvent.STYLES_CHANGE));
 	}
 	#end
 }

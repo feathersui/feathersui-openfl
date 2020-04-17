@@ -8,16 +8,17 @@
 
 package feathers.core;
 
-import openfl.errors.ArgumentError;
-import feathers.style.IStyleObject;
-import openfl.events.Event;
-import openfl.errors.IllegalOperationError;
 import feathers.events.FeathersEvent;
+import feathers.events.StyleProviderEvent;
 import feathers.layout.ILayoutData;
 import feathers.layout.ILayoutObject;
-import feathers.style.IVariantStyleObject;
+import feathers.style.IStyleObject;
 import feathers.style.IStyleProvider;
+import feathers.style.IVariantStyleObject;
 import feathers.style.Theme;
+import openfl.errors.ArgumentError;
+import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
 
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed
@@ -375,12 +376,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 		if (this._currentStyleProvider != styleProvider) {
 			if (this._currentStyleProvider != null) {
-				this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+				this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
 				this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 			}
 			this._currentStyleProvider = styleProvider;
 			if (this._currentStyleProvider != null) {
-				this._currentStyleProvider.addEventListener(Event.CHANGE, styleProvider_changeHandler, false, 0, true);
+				this._currentStyleProvider.addEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler, false, 0, true);
 				this._currentStyleProvider.addEventListener(Event.CLEAR, styleProvider_clearHandler, false, 0, true);
 			}
 		}
@@ -440,18 +441,21 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
 		if (this._currentStyleProvider != null) {
-			this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+			this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
 			this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 			this._currentStyleProvider = null;
 		}
 	}
 
-	private function styleProvider_changeHandler(event:Event):Void {
+	private function styleProvider_stylesChangeHandler(event:StyleProviderEvent):Void {
+		if (!event.affectsTarget(this)) {
+			return;
+		}
 		this.applyStyles();
 	}
 
 	private function styleProvider_clearHandler(event:Event):Void {
-		this._currentStyleProvider.removeEventListener(Event.CHANGE, styleProvider_changeHandler);
+		this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
 		this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 		this._currentStyleProvider = null;
 		this.applyStyles();

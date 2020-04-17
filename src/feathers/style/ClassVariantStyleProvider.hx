@@ -8,8 +8,7 @@
 
 package feathers.style;
 
-import feathers.events.FeathersEvent;
-import openfl.events.Event;
+import feathers.events.StyleProviderEvent;
 import openfl.events.EventDispatcher;
 
 /**
@@ -81,11 +80,25 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		var typeName = Type.getClassName(type);
 		var styleTarget = variant == null ? Class(typeName) : ClassAndVariant(typeName, variant);
 		if (callback == null) {
+			if (!styleTargets.exists(styleTarget)) {
+				// nothing changed
+				return;
+			}
 			styleTargets.remove(styleTarget);
 		} else {
+			var oldCallback = styleTargets.get(styleTarget);
+			if (Reflect.compareMethods(callback, oldCallback) || (Reflect.compare(callback, oldCallback) == 0)) {
+				// nothing changed
+				return;
+			}
 			styleTargets.set(styleTarget, callback);
 		}
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		StyleProviderEvent.dispatch(this, StyleProviderEvent.STYLES_CHANGE, (target:IStyleObject) -> {
+			var styleContext:Class<IStyleObject> = this.getStyleContext(target);
+			var variant:String = this.getVariant(target);
+			var otherCallback:Dynamic = this.getStyleFunctionInternal(styleContext, variant, false);
+			return Reflect.compareMethods(callback, otherCallback) || (Reflect.compare(callback, otherCallback) == 0);
+		});
 	}
 
 	/**
