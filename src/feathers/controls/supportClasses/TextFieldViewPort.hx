@@ -569,10 +569,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
 
-		// no need to invalidate here. just store the new text.
-		@:bypassAccessor this.text = this.textField.text;
-		// but the event still needs to be dispatched
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		// don't try to use @:bypassAccessor here because we need to measure
+		// again just in case it affected the maximum y scroll position
+		this.text = this.textField.text;
 	}
 
 	private function textField_scrollHandler(event:Event):Void {

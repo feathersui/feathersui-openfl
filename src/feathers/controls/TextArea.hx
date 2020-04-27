@@ -366,8 +366,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (this._ignoreViewPortTextChange) {
 			return;
 		}
-		@:bypassAccessor this.text = this.textFieldViewPort.text;
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		// don't try to use @:bypassAccessor here because we need to measure
+		// again just in case it affected the maximum y scroll position
+		this.text = this.textFieldViewPort.text;
 	}
 
 	private function textArea_viewPort_focusInHandler(event:FocusEvent):Void {
