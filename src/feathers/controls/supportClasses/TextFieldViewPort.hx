@@ -95,6 +95,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	private var _updatedTextStyles = false;
 	private var _previousText:String = null;
 	private var _previousTextFormat:TextFormat = null;
+	private var _previousWidth:Null<Float> = null;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 
@@ -520,7 +521,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this._updatedTextStyles = true;
 		}
 		this.textField.restrict = this.restrict;
-		if (this.text == this._previousText && !this._updatedTextStyles) {
+		var calculatedWidth = this._explicitVisibleWidth;
+		if (calculatedWidth != null) {
+			calculatedWidth -= (this.paddingLeft + this.paddingRight);
+		}
+		if (this.text == this._previousText && !this._updatedTextStyles && calculatedWidth != this._previousWidth) {
 			// nothing to refresh
 			return;
 		}
@@ -530,6 +535,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
+		if (calculatedWidth != null) {
+			this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
+		} else {
+			this.textField.width = Math.NaN;
+		}
 		this.textField.autoSize = LEFT;
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
@@ -538,6 +548,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.text = "";
 		}
 		this._previousText = this.text;
+		this._previousWidth = calculatedWidth;
 	}
 
 	private function layoutTextField():Void {
