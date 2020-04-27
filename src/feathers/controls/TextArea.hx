@@ -194,6 +194,70 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	@:style
 	public var wordWrap:Bool = true;
 
+	/**
+		The minimum space, in pixels, between the view port's top edge and the
+		text.
+
+		In the following example, the text padding is set to 20 pixels on the
+		top edge:
+
+		```hx
+		textArea.textPaddingTop = 20.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var textPaddingTop:Float = 0.0;
+
+	/**
+		The minimum space, in pixels, between the view port's right edge and
+		the text.
+
+		In the following example, the text padding is set to 20 pixels on the
+		right edge:
+
+		```hx
+		textArea.textPaddingRight = 20.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var textPaddingRight:Float = 0.0;
+
+	/**
+		The minimum space, in pixels, between the view port's bottom edge and
+		the text.
+
+		In the following example, the text padding is set to 20 pixels on the
+		bottom edge:
+
+		```hx
+		textArea.textPaddingBottom = 20.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var textPaddingBottom:Float = 0.0;
+
+	/**
+		The minimum space, in pixels, between the view port's left edge and the
+		text.
+
+		In the following example, the text padding is set to 20 pixels on the
+		left edge:
+
+		```hx
+		textArea.textPaddingLeft = 20.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var textPaddingLeft:Float = 0.0;
+
 	private var _ignoreViewPortTextChange = false;
 
 	override private function get_measureViewPort():Bool {
@@ -257,6 +321,10 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.textFieldViewPort.textFormat = this.getCurrentTextFormat();
 			this.textFieldViewPort.embedFonts = this.embedFonts;
 			this.textFieldViewPort.wordWrap = this.wordWrap;
+			this.textFieldViewPort.paddingTop = this.textPaddingTop;
+			this.textFieldViewPort.paddingRight = this.textPaddingRight;
+			this.textFieldViewPort.paddingBottom = this.textPaddingBottom;
+			this.textFieldViewPort.paddingLeft = this.textPaddingLeft;
 		}
 
 		if (dataInvalid) {
