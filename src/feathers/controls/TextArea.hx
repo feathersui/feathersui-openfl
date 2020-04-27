@@ -10,13 +10,16 @@ package feathers.controls;
 
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
+import feathers.core.IStateContext;
+import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.themes.steel.components.SteelTextAreaStyles;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.text.TextFormat;
 
-class TextArea extends BaseScrollContainer {
+class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl {
 	/**
 		Creates a new `TextArea` object.
 
@@ -33,12 +36,40 @@ class TextArea extends BaseScrollContainer {
 			this.textFieldViewPort.wordWrap = true;
 			this.textFieldViewPort.multiline = true;
 			this.textFieldViewPort.addEventListener(Event.CHANGE, textArea_viewPort_changeHandler);
+			this.textFieldViewPort.addEventListener(FocusEvent.FOCUS_IN, textArea_viewPort_focusInHandler);
+			this.textFieldViewPort.addEventListener(FocusEvent.FOCUS_OUT, textArea_viewPort_focusOutHandler);
 			this.addChild(this.textFieldViewPort);
 			this.viewPort = this.textFieldViewPort;
 		}
 	}
 
 	private var textFieldViewPort:TextFieldViewPort;
+
+	/**
+		The current state of the text area.
+
+		@see `feathers.controls.TextInputState`
+		@see `FeathersEvent.STATE_CHANGE`
+
+		@since 1.0.0
+	**/
+	public var currentState(get, null):TextInputState = ENABLED;
+
+	private function get_currentState():TextInputState {
+		return this.currentState;
+	}
+
+	override private function set_enabled(value:Bool):Bool {
+		super.enabled = value;
+		if (this.enabled) {
+			if (this.currentState == DISABLED) {
+				this.changeState(ENABLED);
+			}
+		} else {
+			this.changeState(DISABLED);
+		}
+		return this.enabled;
+	}
 
 	/**
 		The text displayed by the text area.
@@ -111,6 +142,8 @@ class TextArea extends BaseScrollContainer {
 		return this.restrict;
 	}
 
+	private var _stateToTextFormat:Map<TextInputState, TextFormat> = new Map();
+
 	/**
 		The font styles used to render the text area's text.
 
@@ -167,6 +200,50 @@ class TextArea extends BaseScrollContainer {
 		return false;
 	}
 
+	/**
+		Gets the text format to be used by the text area when its `currentState`
+		property matches the specified state value.
+
+		If a text format is not defined for a specific state, returns `null`.
+
+		@see `TextArea.setTextFormatForState()`
+		@see `TextArea.textFormat`
+		@see `TextArea.currentState`
+		@see `feathers.controls.TextInputState`
+
+		@since 1.0.0
+	**/
+	public function getTextFormatForState(state:TextInputState):TextFormat {
+		return this._stateToTextFormat.get(state);
+	}
+
+	/**
+		Set the text format to be used by the text area when its `currentState`
+		property matches the specified state value.
+
+		If a text format is not defined for a specific state, the value of the
+		`textFormat` property will be used instead.
+
+		@see `TextArea.getTextFormatForState()`
+		@see `TextArea.textFormat`
+		@see `TextArea.currentState`
+		@see `feathers.controls.TextInputState`
+
+		@since 1.0.0
+	**/
+	@style
+	public function setTextFormatForState(state:TextInputState, textFormat:TextFormat):Void {
+		if (!this.setStyle("setTextFormatForState", state)) {
+			return;
+		}
+		if (textFormat == null) {
+			this._stateToTextFormat.remove(state);
+		} else {
+			this._stateToTextFormat.set(state, textFormat);
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+	}
+
 	private function initializeTextAreaTheme():Void {
 		SteelTextAreaStyles.initialize();
 	}
@@ -177,7 +254,7 @@ class TextArea extends BaseScrollContainer {
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
 		if (stylesInvalid) {
-			this.textFieldViewPort.textFormat = this.textFormat;
+			this.textFieldViewPort.textFormat = this.getCurrentTextFormat();
 			this.textFieldViewPort.embedFonts = this.embedFonts;
 			this.textFieldViewPort.wordWrap = this.wordWrap;
 		}
@@ -197,11 +274,39 @@ class TextArea extends BaseScrollContainer {
 		super.update();
 	}
 
+	private function getCurrentTextFormat():TextFormat {
+		var result = this._stateToTextFormat.get(this.currentState);
+		if (result != null) {
+			return result;
+		}
+		return this.textFormat;
+	}
+
+	private function changeState(state:TextInputState):Void {
+		if (!this.enabled) {
+			state = DISABLED;
+		}
+		if (this.currentState == state) {
+			return;
+		}
+		this.currentState = state;
+		this.setInvalid(InvalidationFlag.STATE);
+		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
 	private function textArea_viewPort_changeHandler(event:Event):Void {
 		if (this._ignoreViewPortTextChange) {
 			return;
 		}
 		@:bypassAccessor this.text = this.textFieldViewPort.text;
 		FeathersEvent.dispatch(this, Event.CHANGE);
+	}
+
+	private function textArea_viewPort_focusInHandler(event:FocusEvent):Void {
+		this.changeState(FOCUSED);
+	}
+
+	private function textArea_viewPort_focusOutHandler(event:FocusEvent):Void {
+		this.changeState(ENABLED);
 	}
 }
