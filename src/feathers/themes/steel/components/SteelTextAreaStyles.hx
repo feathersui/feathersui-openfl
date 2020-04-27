@@ -53,14 +53,19 @@ class SteelTextAreaStyles {
 				if (textArea.textFormat == null) {
 					textArea.textFormat = theme.getTextFormat();
 				}
-				/*if (textArea.getTextFormatForState(DISABLED) == null) {
-						textArea.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
-					}
+				if (textArea.getTextFormatForState(DISABLED) == null) {
+					textArea.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+				}
 
-					textArea.paddingTop = 6.0;
-					textArea.paddingRight = 10.0;
-					textArea.paddingBottom = 6.0;
-					textArea.paddingLeft = 10.0; */
+				textArea.paddingTop = 1.0;
+				textArea.paddingRight = 1.0;
+				textArea.paddingBottom = 1.0;
+				textArea.paddingLeft = 1.0;
+
+				textArea.textPaddingTop = 4.0;
+				textArea.textPaddingRight = 9.0;
+				textArea.textPaddingBottom = 5.0;
+				textArea.textPaddingLeft = 9.0;
 			});
 		}
 	}
