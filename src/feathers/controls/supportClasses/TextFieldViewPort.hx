@@ -395,6 +395,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
+		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
 		this._updatedTextStyles = false;
@@ -406,7 +407,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.refreshTextStyles();
 		}
 
-		if (dataInvalid || stylesInvalid) {
+		if (dataInvalid || sizeInvalid || stylesInvalid) {
 			this.refreshText();
 		}
 
@@ -512,8 +513,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		if (this.textField.type != textFieldType) {
 			this.textField.type = textFieldType;
 		}
-		if (this.textField.wordWrap != this.wordWrap) {
-			this.textField.wordWrap = this.wordWrap;
+		var calculatedWordWrap = this._explicitVisibleWidth != null ? this.wordWrap : false;
+		if (this.textField.wordWrap != calculatedWordWrap) {
+			this.textField.wordWrap = calculatedWordWrap;
 			this._updatedTextStyles = true;
 		}
 		if (this.textField.multiline != this.multiline) {
@@ -537,8 +539,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		}
 		if (calculatedWidth != null) {
 			this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
-		} else {
-			this.textField.width = Math.NaN;
 		}
 		this.textField.autoSize = LEFT;
 		this._textMeasuredWidth = this.textField.width;
