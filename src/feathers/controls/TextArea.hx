@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.display.DisplayObject;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
 import feathers.core.IStateContext;
@@ -264,6 +265,57 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return false;
 	}
 
+	private var _stateToSkin:Map<TextInputState, DisplayObject> = new Map();
+
+	/**
+		Gets the skin to be used by the text area when its `currentState`
+		property matches the specified state value.
+
+		If a skin is not defined for a specific state, returns `null`.
+
+		@see `TextArea.setSkinForState()`
+		@see `TextArea.backgroundSkin`
+		@see `TextArea.currentState`
+		@see `feathers.controls.TextInputState`
+
+		@since 1.0.0
+	**/
+	public function getSkinForState(state:TextInputState):DisplayObject {
+		return this._stateToSkin.get(state);
+	}
+
+	/**
+		Set the skin to be used by the text area when its `currentState`
+		property matches the specified state value.
+
+		If a skin is not defined for a specific state, the value of the
+		`backgroundSkin` property will be used instead.
+
+		@see `TextArea.getSkinForState()`
+		@see `TextArea.backgroundSkin`
+		@see `TextArea.currentState`
+		@see `feathers.controls.TextInputState`
+
+		@since 1.0.0
+	**/
+	@style
+	public function setSkinForState(state:TextInputState, skin:DisplayObject):Void {
+		if (!this.setStyle("setSkinForState", state)) {
+			return;
+		}
+		var oldSkin = this._stateToSkin.get(state);
+		if (oldSkin != null && oldSkin == this._currentBackgroundSkin) {
+			this.removeCurrentBackgroundSkin(oldSkin);
+			this._currentBackgroundSkin = null;
+		}
+		if (skin == null) {
+			this._stateToSkin.remove(state);
+		} else {
+			this._stateToSkin.set(state, skin);
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+	}
+
 	/**
 		Gets the text format to be used by the text area when its `currentState`
 		property matches the specified state value.
@@ -340,6 +392,14 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 
 		super.update();
+	}
+
+	override private function getCurrentBackgroundSkin():DisplayObject {
+		var result = this._stateToSkin.get(this.currentState);
+		if (result != null) {
+			return result;
+		}
+		return super.getCurrentBackgroundSkin();
 	}
 
 	private function getCurrentTextFormat():TextFormat {
