@@ -592,7 +592,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		var container = cast(this.parent, BaseScrollContainer);
 		if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
 			var calculatedScrollY = container.maxScrollY * (this.textField.scrollV - 1) / (this.textField.maxScrollV - 1);
-			container.scrollY = MathUtil.roundToNearest(calculatedScrollY, 10.0);
+			var metrics = this.textField.getLineMetrics(0);
+			var stepSize = metrics.height + metrics.leading;
+			container.scrollY = MathUtil.roundToNearest(calculatedScrollY, stepSize);
 		}
 	}
 }
