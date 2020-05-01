@@ -545,7 +545,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.text = "\u8203"; // zero-width space
 		}
 		if (calculatedWidth != null) {
-			this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
+			this.textField.width = calculatedWidth;
 		}
 		this.textField.autoSize = LEFT;
 		this._savedLineMetrics = this.textField.getLineMetrics(0);
@@ -609,28 +609,47 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			var container = cast(this.parent, BaseScrollContainer);
 			container.validateNow();
 
-			if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
+			if (container.maxScrollY > 0.0) {
 				var caretIndex = this.textField.caretIndex;
 				if (caretIndex == this.textField.length) {
 					caretIndex--;
 				}
 				var lineIndex = this.textField.getLineIndexOfChar(this.textField.caretIndex - 1);
-				var minScrollVForLine = this.textField.maxScrollV - (this.textField.numLines - lineIndex - 1);
-				var numLinesAtMinScrollV = this.textField.numLines - this.textField.maxScrollV;
-				var maxScrollVForLine = minScrollVForLine + (this.textField.numLines - this.textField.maxScrollV);
-				if (maxScrollVForLine > this.textField.maxScrollV) {
-					maxScrollVForLine = this.textField.maxScrollV;
-				}
+				if (this.smoothScrolling) {
+					var lineHeight = this._savedLineMetrics.height + this._savedLineMetrics.leading;
+					var minScrollYForLine = container.maxScrollY - (this.textField.numLines - lineIndex - 1) * lineHeight;
+					var maxScrollYForLine = minScrollYForLine + ((this.textField.numLines - Math.floor(this.visibleHeight / lineHeight)) * lineHeight);
 
-				var targetScrollV = this.textField.scrollV;
-				if ((minScrollVForLine - this.textField.scrollV) > 0) {
-					targetScrollV = minScrollVForLine;
-				} else if ((this.textField.scrollV - maxScrollVForLine) > 0) {
-					targetScrollV = maxScrollVForLine;
-				}
+					var targetScrollY = this.scrollY;
+					if ((minScrollYForLine - targetScrollY) > 0.0) {
+						targetScrollY = minScrollYForLine;
+					} else if ((targetScrollY - maxScrollYForLine) > 0.0) {
+						targetScrollY = maxScrollYForLine;
+					}
 
-				if (targetScrollV != this.textField.scrollV) {
-					container.scrollY = (targetScrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
+					container.scrollY = targetScrollY;
+				} else if (this.textField.maxScrollV > 1) {
+					var caretIndex = this.textField.caretIndex;
+					if (caretIndex == this.textField.length) {
+						caretIndex--;
+					}
+					var lineIndex = this.textField.getLineIndexOfChar(this.textField.caretIndex - 1);
+					var minScrollVForLine = this.textField.maxScrollV - (this.textField.numLines - lineIndex - 1);
+					var maxScrollVForLine = minScrollVForLine + (this.textField.numLines - this.textField.maxScrollV);
+					if (maxScrollVForLine > this.textField.maxScrollV) {
+						maxScrollVForLine = this.textField.maxScrollV;
+					}
+
+					var targetScrollV = this.textField.scrollV;
+					if ((minScrollVForLine - targetScrollV) > 0) {
+						targetScrollV = minScrollVForLine;
+					} else if ((targetScrollV - maxScrollVForLine) > 0) {
+						targetScrollV = maxScrollVForLine;
+					}
+
+					if (targetScrollV != this.textField.scrollV) {
+						container.scrollY = (targetScrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
+					}
 				}
 			}
 		}
@@ -645,7 +664,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function textField_scrollHandler(event:Event):Void {
-		if (this._ignoreTextFieldScroll) {
+		if (this._ignoreTextFieldScroll || this.smoothScrolling) {
 			return;
 		}
 		var container = cast(this.parent, BaseScrollContainer);
