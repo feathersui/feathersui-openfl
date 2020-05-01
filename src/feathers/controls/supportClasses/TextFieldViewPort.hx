@@ -18,6 +18,7 @@ import openfl.events.FocusEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
+import openfl.text.TextLineMetrics;
 
 class TextFieldViewPort extends FeathersControl implements IViewPort {
 	public function new() {
@@ -97,6 +98,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	private var _previousText:String = null;
 	private var _previousTextFormat:TextFormat = null;
 	private var _previousWidth:Null<Float> = null;
+	private var _savedLineMetrics:TextLineMetrics = null;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 
@@ -532,7 +534,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		if (calculatedWidth != null) {
 			calculatedWidth -= (this.paddingLeft + this.paddingRight);
 		}
-		if (this.text == this._previousText && !this._updatedTextStyles && calculatedWidth != this._previousWidth) {
+		if (this.text == this._previousText && !this._updatedTextStyles && calculatedWidth == this._previousWidth) {
 			// nothing to refresh
 			return;
 		}
@@ -546,8 +548,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
 		}
 		this.textField.autoSize = LEFT;
+		this._savedLineMetrics = this.textField.getLineMetrics(0);
 		this._textMeasuredWidth = this.textField.width;
-		this._textMeasuredHeight = this.textField.height;
+		this._textMeasuredHeight = (this._savedLineMetrics.height + this._savedLineMetrics.leading) * this.textField.numLines;
 		this.textField.autoSize = NONE;
 		if (!hasText) {
 			this.textField.text = "";
@@ -573,23 +576,19 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			// for some reason, in flash, after changing the TextField's height,
 			// you need to access textHeight to get a valid maxScrollV
 			var textFieldHeight = this.textField.textHeight;
-			var container = cast(this.parent, BaseScrollContainer);
-			if (this.textField.maxScrollV == 1 || container.maxScrollY == container.minScrollY) {
+			var maxScrollX = this.actualWidth - this._actualVisibleWidth;
+			var maxScrollY = this.actualHeight - this._actualVisibleHeight;
+			if (this.textField.maxScrollV == 1 || maxScrollY == 0.0) {
 				this.textField.scrollV = 1;
 			} else {
-				this.textField.scrollV = 1 + Math.round(((this.textField.maxScrollV - 1.0) * (this.scrollY / container.maxScrollY)));
+				this.textField.scrollV = 1 + Math.floor(this.scrollY / (this._savedLineMetrics.height + this._savedLineMetrics.leading));
 			}
-			if (this.textField.maxScrollH == 0 || container.maxScrollX == container.minScrollX) {
+			if (this.textField.maxScrollH == 0 || maxScrollX == 0.0) {
 				this.textField.scrollH = 0;
 			} else {
-				this.textField.scrollH = Math.round(this.textField.maxScrollH * (this.scrollX / container.maxScrollX));
+				this.textField.scrollH = Math.round(this.textField.maxScrollH * (this.scrollX / maxScrollX));
 			}
 		}
-	}
-
-	private inline function calculateStepSize():Float {
-		var metrics = this.textField.getLineMetrics(0);
-		return metrics.height + metrics.leading;
 	}
 
 	private function textField_changeHandler(event:Event):Void {
@@ -631,8 +630,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 				}
 
 				if (targetScrollV != this.textField.scrollV) {
-					var calculatedScrollY = container.maxScrollY * (targetScrollV - 1) / (this.textField.maxScrollV - 1);
-					container.scrollY = MathUtil.roundToNearest(calculatedScrollY, this.calculateStepSize());
+					container.scrollY = (targetScrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
 				}
 			}
 		}
@@ -652,8 +650,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		}
 		var container = cast(this.parent, BaseScrollContainer);
 		if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
-			var calculatedScrollY = container.maxScrollY * (this.textField.scrollV - 1) / (this.textField.maxScrollV - 1);
-			container.scrollY = MathUtil.roundToNearest(calculatedScrollY, this.calculateStepSize());
+			container.scrollY = (this.textField.scrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
 		}
 	}
 }
