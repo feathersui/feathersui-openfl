@@ -20,6 +20,9 @@ import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.text.TextFormat;
 
+/**
+	@since 1.0.0
+**/
 class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl {
 	/**
 		Creates a new `TextArea` object.
@@ -142,6 +145,20 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.restrict;
 	}
+
+	/**
+		Indicates if scrolling is smooth or strictly by line.
+
+		In the following example, smooth scrolling is enabled:
+
+		```hx
+		textArea.smoothScrolling = true;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var smoothScrolling:Bool = false;
 
 	private var _stateToTextFormat:Map<TextInputState, TextFormat> = new Map();
 
@@ -377,6 +394,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.textFieldViewPort.paddingRight = this.textPaddingRight;
 			this.textFieldViewPort.paddingBottom = this.textPaddingBottom;
 			this.textFieldViewPort.paddingLeft = this.textPaddingLeft;
+			this.textFieldViewPort.smoothScrolling = this.smoothScrolling;
 		}
 
 		if (dataInvalid) {
