@@ -550,7 +550,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		this.textField.autoSize = LEFT;
 		this._savedLineMetrics = this.textField.getLineMetrics(0);
 		this._textMeasuredWidth = this.textField.width;
-		this._textMeasuredHeight = (this._savedLineMetrics.height + this._savedLineMetrics.leading) * this.textField.numLines;
+		this._textMeasuredHeight = 4 + (this._savedLineMetrics.height + this._savedLineMetrics.leading) * this.textField.numLines;
 		this.textField.autoSize = NONE;
 		if (!hasText) {
 			this.textField.text = "";
@@ -581,7 +581,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			if (this.textField.maxScrollV == 1 || maxScrollY == 0.0) {
 				this.textField.scrollV = 1;
 			} else {
-				this.textField.scrollV = 1 + Math.floor(this.scrollY / (this._savedLineMetrics.height + this._savedLineMetrics.leading));
+				this.textField.scrollV = 1 + Math.ceil(this.scrollY / (this._savedLineMetrics.height + this._savedLineMetrics.leading));
 			}
 			if (this.textField.maxScrollH == 0 || maxScrollX == 0.0) {
 				this.textField.scrollH = 0;
@@ -629,11 +629,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 					container.scrollY = targetScrollY;
 				} else if (this.textField.maxScrollV > 1) {
-					var caretIndex = this.textField.caretIndex;
-					if (caretIndex == this.textField.length) {
-						caretIndex--;
-					}
-					var lineIndex = this.textField.getLineIndexOfChar(this.textField.caretIndex - 1);
 					var minScrollVForLine = this.textField.maxScrollV - (this.textField.numLines - lineIndex - 1);
 					var maxScrollVForLine = minScrollVForLine + (this.textField.numLines - this.textField.maxScrollV);
 					if (maxScrollVForLine > this.textField.maxScrollV) {
