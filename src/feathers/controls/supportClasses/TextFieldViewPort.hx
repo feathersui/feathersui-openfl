@@ -8,12 +8,13 @@
 
 package feathers.controls.supportClasses;
 
-import feathers.events.FeathersEvent;
-import feathers.utils.MathUtil;
-import openfl.events.Event;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
+import feathers.events.FeathersEvent;
+import feathers.utils.MathUtil;
 import openfl.errors.ArgumentError;
+import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
@@ -378,6 +379,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.scrollY;
 	}
 
+	private var _textFieldHasFocus:Bool = false;
+
 	private var _ignoreTextFieldScroll:Bool = false;
 
 	override private function initialize():Void {
@@ -391,6 +394,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		this.textField.mouseWheelEnabled = false;
 		this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 		this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
+		this.textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
+		this.textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
 	}
 
 	override private function update():Void {
@@ -559,20 +564,32 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			var calculatedHeight = Math.max(this.actualHeight, this._actualVisibleHeight);
 			this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
 			this.textField.height = calculatedHeight - this.paddingTop - this.paddingBottom;
-			this.textField.scrollV = 0;
+			this.textField.scrollV = 1;
 		} else {
 			this.textField.x = this.paddingLeft + this.scrollX;
 			this.textField.y = this.paddingTop + this.scrollY;
 			this.textField.width = this._actualVisibleWidth - this.paddingLeft - this.paddingRight;
 			this.textField.height = this._actualVisibleHeight - this.paddingTop - this.paddingBottom;
+			// for some reason, in flash, after changing the TextField's height,
+			// you need to access textHeight to get a valid maxScrollV
+			var textFieldHeight = this.textField.textHeight;
 			var container = cast(this.parent, BaseScrollContainer);
-			this.textField.scrollV = Math.round(1.0 + ((this.textField.maxScrollV - 1.0) * (this.scrollY / container.maxScrollY)));
-			if (this.textField.maxScrollH == 0) {
+			if (this.textField.maxScrollV == 1 || container.maxScrollY == container.minScrollY) {
+				this.textField.scrollV = 1;
+			} else {
+				this.textField.scrollV = 1 + Math.round(((this.textField.maxScrollV - 1.0) * (this.scrollY / container.maxScrollY)));
+			}
+			if (this.textField.maxScrollH == 0 || container.maxScrollX == container.minScrollX) {
 				this.textField.scrollH = 0;
 			} else {
 				this.textField.scrollH = Math.round(this.textField.maxScrollH * (this.scrollX / container.maxScrollX));
 			}
 		}
+	}
+
+	private inline function calculateStepSize():Float {
+		var metrics = this.textField.getLineMetrics(0);
+		return metrics.height + metrics.leading;
 	}
 
 	private function textField_changeHandler(event:Event):Void {
@@ -583,6 +600,50 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		// don't try to use @:bypassAccessor here because we need to measure
 		// again just in case it affected the maximum y scroll position
 		this.text = this.textField.text;
+
+		if (this._textFieldHasFocus) {
+			// if we have focus, we should update the scroll position so that
+			// the caret is visible
+
+			// first, validate the parent container so that the scroll bars are
+			// made visible, if they weren't before
+			var container = cast(this.parent, BaseScrollContainer);
+			container.validateNow();
+
+			if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
+				var caretIndex = this.textField.caretIndex;
+				if (caretIndex == this.textField.length) {
+					caretIndex--;
+				}
+				var lineIndex = this.textField.getLineIndexOfChar(this.textField.caretIndex - 1);
+				var minScrollVForLine = this.textField.maxScrollV - (this.textField.numLines - lineIndex - 1);
+				var numLinesAtMinScrollV = this.textField.numLines - this.textField.maxScrollV;
+				var maxScrollVForLine = minScrollVForLine + (this.textField.numLines - this.textField.maxScrollV);
+				if (maxScrollVForLine > this.textField.maxScrollV) {
+					maxScrollVForLine = this.textField.maxScrollV;
+				}
+
+				var targetScrollV = this.textField.scrollV;
+				if ((minScrollVForLine - this.textField.scrollV) > 0) {
+					targetScrollV = minScrollVForLine;
+				} else if ((this.textField.scrollV - maxScrollVForLine) > 0) {
+					targetScrollV = maxScrollVForLine;
+				}
+
+				if (targetScrollV != this.textField.scrollV) {
+					var calculatedScrollY = container.maxScrollY * (targetScrollV - 1) / (this.textField.maxScrollV - 1);
+					container.scrollY = MathUtil.roundToNearest(calculatedScrollY, this.calculateStepSize());
+				}
+			}
+		}
+	}
+
+	private function textField_focusInHandler(event:FocusEvent):Void {
+		this._textFieldHasFocus = true;
+	}
+
+	private function textField_focusOutHandler(event:FocusEvent):Void {
+		this._textFieldHasFocus = false;
 	}
 
 	private function textField_scrollHandler(event:Event):Void {
@@ -592,9 +653,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		var container = cast(this.parent, BaseScrollContainer);
 		if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
 			var calculatedScrollY = container.maxScrollY * (this.textField.scrollV - 1) / (this.textField.maxScrollV - 1);
-			var metrics = this.textField.getLineMetrics(0);
-			var stepSize = metrics.height + metrics.leading;
-			container.scrollY = MathUtil.roundToNearest(calculatedScrollY, stepSize);
+			container.scrollY = MathUtil.roundToNearest(calculatedScrollY, this.calculateStepSize());
 		}
 	}
 }
