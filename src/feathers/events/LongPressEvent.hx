@@ -19,7 +19,7 @@ import openfl.events.TouchEvent;
 
 /**
 	Dispatched with a short delay after `MouseEvent.MOUSE_DOWN` or
-	TouchEvent.TOUCH_BEGIN`.
+	`TouchEvent.TOUCH_BEGIN`.
 
 	@since 1.0.0
 **/

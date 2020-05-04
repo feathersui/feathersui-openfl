@@ -17,8 +17,21 @@ import openfl.display.BitmapData;
 
 /**
 	Renders `BitmapData` in nine slices using the `scale9Grid` property.
+
+	The following example creates a bitmap with `scale9Grid`.
+
+	```hx
+	var bitmap = new Scale9Bitmap(Assets.getBitmapData("myBitmap"), new Rectangle(4.0, 4.0, 16.0, 8.0));
+	```
+
+	@since 1.0.0
 **/
 class Scale9Bitmap extends Shape {
+	/**
+		Creates a new `Scale9Bitmap` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(bitmapData:BitmapData, scale9Grid:Rectangle, smoothing:Bool = false) {
 		super();
 		this._allowRefresh = false;
@@ -93,6 +106,13 @@ class Scale9Bitmap extends Shape {
 		#end
 	}
 
+	/**
+		Controls whether or not the bitmap is smoothed when scaled.
+
+		@see `openfl.display.Bitmap.smoothing`
+
+		@since 1.0.0
+	**/
 	public var smoothing(default, set):Bool = false;
 
 	private function set_smoothing(value:Bool):Bool {
@@ -106,6 +126,13 @@ class Scale9Bitmap extends Shape {
 		return this.smoothing;
 	}
 
+	/**
+		The `BitmapData` object being referenced.
+
+		@see `openfl.display.Bitmap.bitmapData`
+
+		@since 1.0.0
+	**/
 	public var bitmapData(default, set):BitmapData;
 
 	private function set_bitmapData(value:BitmapData):BitmapData {

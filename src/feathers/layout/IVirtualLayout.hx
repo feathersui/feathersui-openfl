@@ -44,12 +44,31 @@ interface IVirtualLayout extends IScrollLayout {
 	function getVisibleIndices(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange;
 }
 
+/**
+	The range of items currently displayed by a virtual layout.
+
+	@since 1.0.0
+**/
 class VirtualLayoutRange {
+	/**
+		Creates a `VirtualLayoutRange` object with the given arguments.
+	**/
 	public function new(start:Int, end:Int) {
 		this.start = start;
 		this.end = end;
 	}
 
+	/**
+		The start index of the range.
+
+		@since 1.0.0
+	**/
 	public var start:Int;
+
+	/**
+		The end index of the range.
+
+		@since 1.0.0
+	**/
 	public var end:Int;
 }

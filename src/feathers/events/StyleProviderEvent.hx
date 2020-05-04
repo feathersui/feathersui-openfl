@@ -14,6 +14,13 @@ import openfl.events.Event;
 import openfl.events.EventType;
 import openfl.events.IEventDispatcher;
 
+/**
+	Events dispatched by style provider implementations.
+
+	@see `feathers.style.IStyleProvider`
+
+	@since 1.0.0
+**/
 class StyleProviderEvent extends Event {
 	/**
 		The `StyleProviderEvent.STYLES_CHANGE` event type is dispatched when the
@@ -54,13 +61,18 @@ class StyleProviderEvent extends Event {
 		#end
 	}
 
-	public function new(type:String, ?affectsTarget:(IStyleObject) -> Bool) {
+	private function new(type:String, ?affectsTarget:(IStyleObject) -> Bool) {
 		super(type);
 		if (affectsTarget != null) {
 			this.affectsTarget = affectsTarget;
 		}
 	}
 
+	/**
+		Determines if the event affects the specified style object.
+
+		@since 1.0.0
+	**/
 	public dynamic function affectsTarget(value:IStyleObject):Bool {
 		return true;
 	}
