@@ -14,6 +14,8 @@ import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.themes.steel.components.SteelVScrollBarStyles;
 
 /**
+	A vertical scroll bar, for use with scrolling containers like
+	`ScrollContainer` and `ListView`.
 
 	@see [Tutorial: How to use the HScrollBar and VScrollBar components](https://feathersui.com/learn/haxe-openfl/scroll-bar/)
 	@see `feathers.controls.HScrollBar`

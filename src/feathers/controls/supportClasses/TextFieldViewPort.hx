@@ -20,6 +20,13 @@ import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import openfl.text.TextLineMetrics;
 
+/**
+	An implementation of `IViewPort` for `TextArea`.
+
+	@see `feathers.controls.TextArea`
+
+	@since 1.0.0
+**/
 class TextFieldViewPort extends FeathersControl implements IViewPort {
 	public function new() {
 		super();
@@ -27,6 +34,13 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 	private var textField:TextField;
 
+	/**
+		Indicates if it's a dynamic or input text field.
+
+		@see `openfl.text.TextField.type`
+
+		@since 1.0.0
+	**/
 	public var textFieldType(default, set):TextFieldType = DYNAMIC;
 
 	private function set_textFieldType(value:TextFieldType):TextFieldType {
@@ -38,6 +52,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.textFieldType;
 	}
 
+	/**
+		The text to display.
+
+		@since 1.0.0
+	**/
 	public var text(default, set):String = null;
 
 	private function set_text(value:String):String {
@@ -50,6 +69,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.text;
 	}
 
+	/**
+		Determines if the text will wrap when reaching the right edge, or if
+		horizontal scrolling will be required.
+
+		@since 1.0.0
+	**/
 	public var wordWrap(default, set):Bool = false;
 
 	private function set_wordWrap(value:Bool):Bool {
@@ -61,6 +86,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.wordWrap;
 	}
 
+	/**
+		Indicates if the multiple lines of text may be displayed.
+
+		@since 1.0.0
+	**/
 	public var multiline(default, set):Bool = false;
 
 	private function set_multiline(value:Bool):Bool {
@@ -72,6 +102,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.multiline;
 	}
 
+	/**
+		Limits the set of characters that may be typed with the keyboard.
+
+		@since 1.0.0
+	**/
 	public var restrict(default, set):String = null;
 
 	private function set_restrict(value:String):String {
@@ -83,6 +118,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.restrict;
 	}
 
+	/**
+		Determines if scrolling is smooth or line by line.
+
+		@since 1.0.0
+	**/
 	public var smoothScrolling(default, set):Bool = false;
 
 	private function set_smoothScrolling(value:Bool):Bool {
@@ -102,6 +142,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 
+	/**
+		The font styles used to render the text.
+
+		@since 1.0.0
+	**/
 	public var textFormat(default, set):TextFormat = null;
 
 	private function set_textFormat(value:TextFormat):TextFormat {
@@ -113,6 +158,11 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.textFormat;
 	}
 
+	/**
+		Determines if an embedded font is used or not.
+
+		@since 1.0.0
+	**/
 	public var embedFonts(default, set):Bool = false;
 
 	private function set_embedFonts(value:Bool):Bool {
@@ -124,6 +174,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.embedFonts;
 	}
 
+	/**
+		The minimum space, in pixels, between the view port's top edge and the
+		text.
+
+		@since 1.0.0
+	**/
 	public var paddingTop(default, set):Float = 0.0;
 
 	private function set_paddingTop(value:Float):Float {
@@ -135,6 +191,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.paddingTop;
 	}
 
+	/**
+		The minimum space, in pixels, between the view port's right edge and the
+		text.
+
+		@since 1.0.0
+	**/
 	public var paddingRight(default, set):Float = 0.0;
 
 	private function set_paddingRight(value:Float):Float {
@@ -146,6 +208,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.paddingRight;
 	}
 
+	/**
+		The minimum space, in pixels, between the view port's bottom edge and
+		the text.
+
+		@since 1.0.0
+	**/
 	public var paddingBottom(default, set):Float = 0.0;
 
 	private function set_paddingBottom(value:Float):Float {
@@ -157,6 +225,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.paddingBottom;
 	}
 
+	/**
+		The minimum space, in pixels, between the view port's left edge and the
+		text.
+
+		@since 1.0.0
+	**/
 	public var paddingLeft(default, set):Float = 0.0;
 
 	private function set_paddingLeft(value:Float):Float {

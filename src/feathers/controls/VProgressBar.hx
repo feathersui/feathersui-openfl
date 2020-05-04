@@ -15,6 +15,17 @@ import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseProgressBar;
 
 /**
+	Displays the progress of a task in a vertical direction, from bottom to top.
+
+	The following example creates a progress bar:
+
+	```hx
+	var progressBar = new VProgressBar();
+	progressBar.minimum = 0.0;
+	progressBar.maximum = 100.0;
+	progressBar.value = 50.0;
+	this.addChild(progressBar);
+	```
 
 	@see [Tutorial: How to use the HProgressBar and VProgressBar components](https://feathersui.com/learn/haxe-openfl/progress-bar/)
 	@see `feathers.controls.HProgressBar`
