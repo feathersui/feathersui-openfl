@@ -18,10 +18,24 @@ import openfl.errors.ArgumentError;
 import openfl.events.Event;
 
 /**
+	A container that supports navigation between views using a tab bar.
+
+	The following example creates a tab navigator and adds some items:
+
+	```hx
+	var navigator = new TabNavigator();
+	navigator.dataProvider = new ArrayCollection([
+		TabItem.withClass("Home", HomeView),
+		TabItem.withClass("Profile", ProfileView),
+		TabItem.withClass("Settings", SettingsView)
+	]);
+	addChild(this.navigator);
+	```
 
 	@see [Tutorial: How to use the TabNavigator component](https://feathersui.com/learn/haxe-openfl/tab-navigator/)
 	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 	@see `feathers.controls.navigators.TabItem`
+	@see `feathers.controls.TabBar`
 
 	@since 1.0.0
 **/

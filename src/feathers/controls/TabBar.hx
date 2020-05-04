@@ -60,6 +60,7 @@ import openfl.events.Event;
 	```
 
 	@see [Tutorial: How to use the TabBar component](https://feathersui.com/learn/haxe-openfl/tab-bar/)
+	@see `feathers.controls.navigators.TabNavigator`
 
 	@since 1.0.0
 **/

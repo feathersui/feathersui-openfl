@@ -13,26 +13,18 @@ import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
 
 /**
-	An individual item that will be displayed by a `StackNavigator` component.
-	Provides the view, an optional function to set properties before the view is
-	displayed, and an optional list of events to map to actions (like push, pop,
-	and replace) on the `StackNavigator`.
+	An individual item that will be displayed by a `TabNavigator` component.
 
-	The following example creates a new `StackItem` using the `SettingsView`
-	class to instantiate the view instance. This item is given am id of
-	`"settings"`. When the view dispatches the
-	`SettingsView.SHOW_ADVANCED_SETTINGS` event, the `StackNavigator` will push
-	a different item with the ID `"advancedSettings"` onto its history stack.
-	When the view instance dispatches `Event.COMPLETE`, the `StackNavigator`
-	will pop the view from its history stack and return navigate to the previous
-	view.
+	The following example creates a tab navigator and adds some items:
 
 	```hx
-	var item = StackItem.withClass("settings", SettingsScreen, [
-		SettingsScreen.SHOW_ADVANCED_SETTINGS => StackActions.Push("advancedSettings"),
-		Event.COMPLETE => StackActions.Pop()
+	var navigator = new TabNavigator();
+	navigator.dataProvider = new ArrayCollection([
+		TabItem.withClass("Home", HomeView),
+		TabItem.withClass("Profile", ProfileView),
+		TabItem.withClass("Settings", SettingsView)
 	]);
-	navigator.addItem("settings", item);
+	addChild(this.navigator);
 	```
 
 	@see [Tutorial: How to use the TabNavigator component](https://feathersui.com/learn/haxe-openfl/tab-navigator/)
