@@ -71,7 +71,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		}
 		this.darkMode = value;
 		this.refreshColors();
-		this.styleProvider.dispatchEvent(new StyleProviderEvent(StyleProviderEvent.STYLES_CHANGE));
+		StyleProviderEvent.dispatch(this.styleProvider, StyleProviderEvent.STYLES_CHANGE);
 		return this.darkMode;
 	}
 
