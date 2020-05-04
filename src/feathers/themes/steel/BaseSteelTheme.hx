@@ -345,7 +345,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	#if html5
 	private function mediaQueryList_changeHandler(event:MediaQueryListEvent):Void {
-		this.styleProvider.dispatchEvent(new StyleProviderEvent(StyleProviderEvent.STYLES_CHANGE));
+		StyleProviderEvent.dispatch(this.styleProvider, StyleProviderEvent.STYLES_CHANGE);
 	}
 	#end
 }
