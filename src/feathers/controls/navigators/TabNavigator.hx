@@ -8,8 +8,11 @@
 
 package feathers.controls.navigators;
 
+import feathers.core.IDataSelector;
+import feathers.core.IIndexSelector;
 import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
+import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.layout.RelativePosition;
 import feathers.themes.steel.components.SteelTabNavigatorStyles;
@@ -41,7 +44,7 @@ import openfl.events.Event;
 **/
 @:access(feathers.controls.navigators.TabItem)
 @:styleContext
-class TabNavigator extends BaseNavigator {
+class TabNavigator extends BaseNavigator implements IIndexSelector implements IDataSelector<TabItem> {
 	/**
 		Creates a new `TabNavigator` object.
 
@@ -83,6 +86,67 @@ class TabNavigator extends BaseNavigator {
 	}
 
 	/**
+		@see `feathers.core.IIndexSelector.selectedIndex`
+	**/
+	@:isVar
+	public var selectedIndex(get, set):Int = -1;
+
+	private function get_selectedIndex():Int {
+		return this.selectedIndex;
+	}
+
+	private function set_selectedIndex(value:Int):Int {
+		if (this.dataProvider == null) {
+			value = -1;
+		}
+		if (this.selectedIndex == value) {
+			return this.selectedIndex;
+		}
+		this.selectedIndex = value;
+		// using @:bypassAccessor because if we were to call the selectedItem
+		// setter, this change wouldn't be saved properly
+		if (this.selectedIndex == -1) {
+			@:bypassAccessor this.selectedItem = null;
+		} else {
+			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+		}
+		this.setInvalid(InvalidationFlag.SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this.selectedIndex;
+	}
+
+	/**
+		@see `feathers.core.IIndexSelector.maxSelectedIndex`
+	**/
+	public var maxSelectedIndex(get, never):Int;
+
+	private function get_maxSelectedIndex():Int {
+		if (this.dataProvider == null) {
+			return -1;
+		}
+		return this.dataProvider.length - 1;
+	}
+
+	/**
+		@see `feathers.core.IDataSelector.selectedItem`
+	**/
+	@:isVar
+	public var selectedItem(get, set):TabItem = null;
+
+	private function get_selectedItem():TabItem {
+		return this.selectedItem;
+	}
+
+	private function set_selectedItem(value:TabItem):TabItem {
+		if (this.dataProvider == null) {
+			this.selectedIndex = -1;
+			return this.selectedItem;
+		}
+		this.selectedIndex = this.dataProvider.indexOf(value);
+		return this.selectedItem;
+	}
+
+	/**
 		The position of the navigator's tab bar.
 
 		@since 1.0.0
@@ -110,10 +174,15 @@ class TabNavigator extends BaseNavigator {
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
+		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
 
 		if (dataInvalid) {
 			this.tabBar.itemToText = this.itemToText;
 			this.tabBar.dataProvider = this.dataProvider;
+		}
+
+		if (selectionInvalid) {
+			this.tabBar.selectedIndex = this.selectedIndex;
 		}
 
 		super.update();
