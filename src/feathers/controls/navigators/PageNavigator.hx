@@ -18,10 +18,24 @@ import openfl.errors.ArgumentError;
 import openfl.events.Event;
 
 /**
+	A container that supports navigation between views using a `PageIndicator`.
+
+	The following example creates a page navigator and adds some items:
+
+	```hx
+	var navigator = new PageNavigator();
+	navigator.dataProvider = new ArrayCollection([
+		PageItem.withClass(WizardView1),
+		PageItem.withClass(WizardView1),
+		PageItem.withClass(WizardView3)
+	]);
+	addChild(this.navigator);
+	```
 
 	@see [Tutorial: How to use the PageNavigator component](https://feathersui.com/learn/haxe-openfl/page-navigator/)
 	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 	@see `feathers.controls.navigators.PageItem`
+	@see `feathers.controls.PageIndicator`
 
 	@since 1.0.0
 **/

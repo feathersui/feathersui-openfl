@@ -11,6 +11,19 @@ package feathers.controls.navigators;
 import openfl.display.DisplayObject;
 
 /**
+	An individual item that will be displayed by a `PageNavigator` component.
+
+	The following example creates a page navigator and adds some items:
+
+	```hx
+	var navigator = new PageNavigator();
+	navigator.dataProvider = new ArrayCollection([
+		PageItem.withClass(WizardView1),
+		PageItem.withClass(WizardView1),
+		PageItem.withClass(WizardView3)
+	]);
+	addChild(this.navigator);
+	```
 
 	@see [Tutorial: How to use the PageNavigator component](https://feathersui.com/learn/haxe-openfl/page-navigator/)
 	@see `feathers.controls.PageNavigator`
