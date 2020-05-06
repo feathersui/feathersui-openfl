@@ -8,6 +8,9 @@
 
 package feathers.core;
 
+#if html5
+import openfl.events.KeyboardEvent;
+#end
 import openfl.ui.Keyboard;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusManager;
@@ -49,8 +52,12 @@ class DefaultFocusManager implements IFocusManager {
 			this.root.removeEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler);
 			this.root.removeEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler);
 			var stage = this.root.stage;
-			stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_root_mouseFocusChangeHandler);
-			stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_root_keyFocusChangeHandler);
+			stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler);
+			#if html5
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler);
+			#else
+			stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler);
+			#end
 		}
 		this.root = value;
 		if (this.root != null) {
@@ -60,8 +67,12 @@ class DefaultFocusManager implements IFocusManager {
 			this.root.addEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler, false, 0, true);
 			this.root.addEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler, false, 0, true);
 			var stage = this.root.stage;
-			stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_root_mouseFocusChangeHandler, false, 0, true);
-			stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_root_keyFocusChangeHandler, false, 0, true);
+			stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler, false, 0, true);
+			#if html5
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler, false, 0, true);
+			#else
+			stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler, false, 0, true);
+			#end
 		}
 		return this.root;
 	}
@@ -247,7 +258,7 @@ class DefaultFocusManager implements IFocusManager {
 		this.clearFocusManager(target);
 	}
 
-	private function defaultFocusManager_root_mouseFocusChangeHandler(event:FocusEvent):Void {
+	private function defaultFocusManager_stage_mouseFocusChangeHandler(event:FocusEvent):Void {
 		var textField = Std.downcast(event.relatedObject, TextField);
 		if (textField != null && textField.type == INPUT) {
 			// let OpenFL handle setting mouse focus on an input TextField
@@ -259,14 +270,10 @@ class DefaultFocusManager implements IFocusManager {
 		event.preventDefault();
 	}
 
-	private function defaultFocusManager_root_keyFocusChangeHandler(event:FocusEvent):Void {
-		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
-			return;
-		}
-
+	private function handleKeyboardFocusChange(event:Event, shiftKey:Bool):Void {
 		var newFocus:IFocusObject = null;
 		var currentFocus = this.focus;
-		if (event.shiftKey) {
+		if (shiftKey) {
 			if (currentFocus != null) {
 				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 			}
@@ -290,6 +297,24 @@ class DefaultFocusManager implements IFocusManager {
 		}
 		this.focus = newFocus;
 	}
+
+	#if html5
+	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
+		if (event.keyCode != Keyboard.TAB) {
+			return;
+		}
+		this.handleKeyboardFocusChange(event, event.shiftKey);
+	}
+	#end
+
+	#if !html5
+	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
+		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
+			return;
+		}
+		this.handleKeyboardFocusChange(event, event.shiftKey);
+	}
+	#end
 
 	private function defaultFocusManager_root_mouseDownHandler(event:MouseEvent):Void {
 		var focusTarget:IFocusObject = null;
