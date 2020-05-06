@@ -8,20 +8,23 @@
 
 package feathers.controls;
 
-import feathers.utils.PointerTrigger;
-import openfl.display.DisplayObject;
-import openfl.events.MouseEvent;
+import feathers.utils.KeyToState;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
-import feathers.core.IUIControl;
-import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
+import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
-import feathers.utils.PointerToState;
 import feathers.utils.MeasurementsUtil;
+import feathers.utils.PointerToState;
+import feathers.utils.PointerTrigger;
+import openfl.display.DisplayObject;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.ui.Keyboard;
 
 /**
 	A simple button control with states, but no content, that is useful for
@@ -84,6 +87,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	}
 
 	private var _pointerToState:PointerToState<ButtonState> = null;
+	private var _keyToState:KeyToState<ButtonState> = null;
 	private var _pointerTrigger:PointerTrigger = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
@@ -184,7 +188,11 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		super.initialize();
 
 		if (this._pointerToState == null) {
-			this._pointerToState = new PointerToState<ButtonState>(this, this.changeState, UP, DOWN, HOVER);
+			this._pointerToState = new PointerToState(this, this.changeState, UP, DOWN, HOVER);
+		}
+
+		if (this._keyToState == null) {
+			this._keyToState = new KeyToState(this, this.changeState, UP, DOWN);
 		}
 
 		if (this._pointerTrigger == null) {

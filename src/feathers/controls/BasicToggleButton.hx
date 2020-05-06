@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.KeyToState;
 import feathers.utils.MeasurementsUtil;
 import feathers.events.TriggerEvent;
 import feathers.utils.PointerTrigger;
@@ -172,6 +173,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	}
 
 	private var _pointerToState:PointerToState<ToggleButtonState> = null;
+	private var _keyToState:KeyToState<ToggleButtonState> = null;
 	private var _pointerTrigger:PointerTrigger = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
@@ -295,6 +297,10 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		if (this._pointerToState == null) {
 			this._pointerToState = new PointerToState(this, this.changeState, UP(false), DOWN(false), HOVER(false));
+		}
+
+		if (this._keyToState == null) {
+			this._keyToState = new KeyToState(this, this.changeState, UP(false), DOWN(false));
 		}
 
 		if (this._pointerTrigger == null) {
