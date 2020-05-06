@@ -190,6 +190,42 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this.setLayoutDataInternal(value);
 	}
 
+	/**
+		@see `feathers.layout.IFocusObject.focusManager`
+	**/
+	@:isVar
+	public var focusManager(get, set):IFocusManager = null;
+
+	private function get_focusManager():IFocusManager {
+		return this.focusManager;
+	}
+
+	private function set_focusManager(value:IFocusManager):IFocusManager {
+		if (this.focusManager == value) {
+			return this.focusManager;
+		}
+		this.focusManager = value;
+		return this.focusManager;
+	}
+
+	/**
+		@see `feathers.layout.IFocusObject.focusEnabled`
+	**/
+	@:isVar
+	public var focusEnabled(get, set):Bool = true;
+
+	private function get_focusEnabled():Bool {
+		return this.focusEnabled;
+	}
+
+	private function set_focusEnabled(value:Bool):Bool {
+		if (this.focusEnabled == value) {
+			return this.focusEnabled;
+		}
+		this.focusEnabled = value;
+		return this.focusEnabled;
+	}
+
 	private function clearStyle_layoutData():ILayoutData {
 		return this.setLayoutDataInternal(null);
 	}
