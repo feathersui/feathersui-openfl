@@ -34,7 +34,7 @@ class DeviceUtil {
 		#if mobile
 		return false;
 		#elseif desktop
-		return true
+		return true;
 		#elseif flash
 		return Mouse.supportsCursor;
 		#elseif html5
