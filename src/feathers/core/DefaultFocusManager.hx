@@ -37,6 +37,10 @@ class DefaultFocusManager implements IFocusManager {
 	**/
 	public function new(root:DisplayObjectContainer) {
 		this.root = root;
+		if (this.root.stage.focus == null) {
+			// needed for some targets, like Neko
+			this.root.stage.focus = this.root.stage;
+		}
 	}
 
 	public var root(default, set):DisplayObjectContainer;
