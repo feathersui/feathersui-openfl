@@ -14,8 +14,8 @@
 		"layout"
 	],
 	"description": "Cross-platform user interface components for creative frontend projects built with Haxe and OpenFL",
-	"version": "1.0.0-alpha.1",
+	"version": "1.0.0-alpha.2",
 	"classPath": "src",
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build"
+	"releasenote": "Preview build: GridView, PageIndicator, PageNavigator, TabNavigator, TextArea, TreeView"
 }
