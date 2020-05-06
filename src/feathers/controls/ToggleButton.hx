@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IFocusObject;
 import feathers.utils.MeasurementsUtil;
 import feathers.themes.steel.components.SteelToggleButtonStyles;
 import feathers.core.ITextControl;
@@ -47,7 +48,7 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 @:styleContext
-class ToggleButton extends BasicToggleButton implements ITextControl {
+class ToggleButton extends BasicToggleButton implements ITextControl implements IFocusObject {
 	/**
 		Creates a new `ToggleButton` object.
 

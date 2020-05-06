@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.core.IIndexSelector;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
@@ -147,6 +149,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this.addChild(this.listViewPort);
 			this.viewPort = this.listViewPort;
 		}
+		this.addEventListener(KeyboardEvent.KEY_DOWN, listView_keyDownHandler);
 	}
 
 	private var listViewPort:AdvancedLayoutViewPort;
@@ -805,5 +808,63 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._virtualCache.resize(this.dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
+	}
+
+	private function navigateWithKeyboard(startIndex:Int, keyCode:Int):Int {
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return -1;
+		}
+		switch (keyCode) {
+			case Keyboard.UP:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.DOWN:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.LEFT:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.RIGHT:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.PAGE_UP:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.PAGE_DOWN:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.HOME:
+				return 0;
+			case Keyboard.END:
+				return this.dataProvider.length - 1;
+		}
+		return startIndex;
+	}
+
+	private function listView_keyDownHandler(event:KeyboardEvent):Void {
+		this.focusRect = false;
+		var index = this.navigateWithKeyboard(this.selectedIndex, event.keyCode);
+		if (this.selectedIndex != index) {
+			event.preventDefault();
+			this.selectedIndex = index;
+		}
 	}
 }

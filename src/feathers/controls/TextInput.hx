@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IFocusObject;
 import feathers.utils.MeasurementsUtil;
 import feathers.themes.steel.components.SteelTextInputStyles;
 import feathers.core.ITextControl;
@@ -49,7 +50,7 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 @:styleContext
-class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl {
+class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl implements IFocusObject {
 	/**
 		Creates a new `TextInput` object.
 
@@ -59,6 +60,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		initializeTextInputTheme();
 
 		super();
+
+		this.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 	}
 
 	/**
@@ -780,6 +783,12 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@:bypassAccessor this.scrollX = this.textField.scrollH;
 		// but the event still needs to be dispatched
 		FeathersEvent.dispatch(this, Event.SCROLL);
+	}
+
+	private function textInput_focusInHandler(event:FocusEvent):Void {
+		if (Reflect.compare(event.target, this) == 0) {
+			this.stage.focus = this.textField;
+		}
 	}
 
 	private function textField_focusInHandler(event:FocusEvent):Void {

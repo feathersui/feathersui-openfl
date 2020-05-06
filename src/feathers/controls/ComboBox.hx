@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
 import feathers.events.TriggerEvent;
 import openfl.events.FocusEvent;
@@ -72,7 +73,7 @@ import openfl.ui.Multitouch;
 	@since 1.0.0
 **/
 @:styleContext
-class ComboBox extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> {
+class ComboBox extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
 	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = "textInputFactory";
 	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = "listViewFactory";

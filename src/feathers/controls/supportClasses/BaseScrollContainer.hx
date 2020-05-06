@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.core.IFocusObject;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IStateContext;
@@ -38,7 +39,7 @@ import openfl.geom.Rectangle;
 
 	@since 1.0.0
 **/
-class BaseScrollContainer extends FeathersControl {
+class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = "scrollBarFactory";
 
 	private static function defaultScrollBarXFactory():IScrollBar {

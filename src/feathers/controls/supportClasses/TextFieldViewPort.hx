@@ -30,6 +30,8 @@ import openfl.text.TextLineMetrics;
 class TextFieldViewPort extends FeathersControl implements IViewPort {
 	public function new() {
 		super();
+
+		this.addEventListener(FocusEvent.FOCUS_IN, textFieldViewPort_focusInHandler);
 	}
 
 	private var textField:TextField;
@@ -739,6 +741,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		var container = cast(this.parent, BaseScrollContainer);
 		if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
 			container.scrollY = (this.textField.scrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
+		}
+	}
+
+	private function textFieldViewPort_focusInHandler(event:FocusEvent):Void {
+		if (Reflect.compare(event.target, this) == 0) {
+			this.stage.focus = this.textField;
 		}
 	}
 }

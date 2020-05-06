@@ -45,6 +45,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.addChild(this.textFieldViewPort);
 			this.viewPort = this.textFieldViewPort;
 		}
+
+		this.addEventListener(FocusEvent.FOCUS_IN, textArea_focusInHandler);
 	}
 
 	private var textFieldViewPort:TextFieldViewPort;
@@ -438,6 +440,12 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.currentState = state;
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
+	private function textArea_focusInHandler(event:FocusEvent):Void {
+		if (Reflect.compare(event.target, this) == 0) {
+			this.stage.focus = this.textFieldViewPort;
+		}
 	}
 
 	private function textArea_viewPort_changeHandler(event:Event):Void {

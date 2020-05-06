@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IFocusObject;
 import feathers.themes.steel.components.SteelToggleSwitchStyles;
 import motion.easing.IEasing;
 import motion.easing.Quart;
@@ -46,7 +47,7 @@ import feathers.core.FeathersControl;
 	@since 1.0.0
 **/
 @:styleContext
-class ToggleSwitch extends FeathersControl implements IToggle {
+class ToggleSwitch extends FeathersControl implements IToggle implements IFocusObject {
 	/**
 		Creates a new `ToggleSwitch` object.
 

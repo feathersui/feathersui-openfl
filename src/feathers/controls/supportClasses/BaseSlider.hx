@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.core.IFocusObject;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
@@ -30,7 +31,7 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
-class BaseSlider extends FeathersControl implements IRange {
+class BaseSlider extends FeathersControl implements IRange implements IFocusObject {
 	private function new() {
 		super();
 	}

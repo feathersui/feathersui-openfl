@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IFocusObject;
 import feathers.utils.MeasurementsUtil;
 import feathers.themes.steel.components.SteelButtonStyles;
 import openfl.display.DisplayObject;
@@ -45,7 +46,7 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 @:styleContext
-class Button extends BasicButton implements ITextControl {
+class Button extends BasicButton implements ITextControl implements IFocusObject {
 	/**
 		Creates a new `Button` object.
 
