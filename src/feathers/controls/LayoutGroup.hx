@@ -296,6 +296,14 @@ class LayoutGroup extends FeathersControl {
 		super.setChildIndex(child, index);
 	}
 
+	override public function getChildAt(index:Int):DisplayObject {
+		return this.items[index];
+	}
+
+	private function _getChildAt(index:Int):DisplayObject {
+		return super.getChildAt(index);
+	}
+
 	private function initializeLayoutGroupTheme():Void {
 		SteelLayoutGroupStyles.initialize();
 	}
