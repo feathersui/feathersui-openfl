@@ -31,8 +31,10 @@ class DeviceUtil {
 		@since 1.0.0
 	**/
 	public static function isDesktop():Bool {
-		#if desktop
-		return true;
+		#if mobile
+		return false;
+		#elseif desktop
+		return true
 		#elseif flash
 		return Mouse.supportsCursor;
 		#elseif html5
@@ -51,6 +53,10 @@ class DeviceUtil {
 	public static function isMobile():Bool {
 		#if mobile
 		return true;
+		#elseif desktop
+		return false;
+		#elseif flash
+		return !Mouse.supportsCursor;
 		#elseif html5
 		var htmlWindow = cast(Lib.global, Window);
 		return htmlWindow.matchMedia(MEDIA_QUERY_MOBILE).matches;
