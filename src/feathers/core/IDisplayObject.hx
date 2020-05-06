@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.display.DisplayObjectContainer;
 import openfl.events.IEventDispatcher;
 
 /**
@@ -67,4 +68,6 @@ interface IDisplayObject extends IEventDispatcher {
 	#else
 	public var visible(get, set):Bool;
 	#end
+
+	public var parent(default, never):DisplayObjectContainer;
 }
