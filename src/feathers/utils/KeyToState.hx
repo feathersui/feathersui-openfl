@@ -11,6 +11,7 @@ package feathers.utils;
 import feathers.core.IStateContext;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
@@ -54,6 +55,7 @@ class KeyToState<T> {
 		}
 		if (this.target != null) {
 			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+			this.target.removeEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
 			this.target.removeEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
 			this.target.removeEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
 		}
@@ -61,6 +63,7 @@ class KeyToState<T> {
 		if (this.target != null) {
 			this.currentState = this.upState;
 			this.target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+			this.target.addEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
 			this.target.addEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
 			this.target.addEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
 		}
@@ -123,7 +126,7 @@ class KeyToState<T> {
 	**/
 	public var enabled(default, default):Bool = true;
 
-	private var _down:Bool = false;
+	private var _downKeyCode:Null<UInt> = null;
 
 	private function changeState(value:T):Void {
 		var oldState = this.currentState;
@@ -139,23 +142,31 @@ class KeyToState<T> {
 		}
 	}
 
-	private function target_removedFromStageHandler(event:Event):Void {
+	private function resetKeyState():Void {
+		this._downKeyCode = null;
 		this.changeState(this.upState);
 	}
 
+	private function target_removedFromStageHandler(event:Event):Void {
+		this.resetKeyState();
+	}
+
+	private function target_focusOutHandler(event:FocusEvent):Void {
+		this.resetKeyState();
+	}
+
 	private function target_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.keyCode != Keyboard.SPACE) {
+		if (!this.enabled || this._downKeyCode != null || (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER)) {
 			return;
 		}
-		this._down = true;
+		this._downKeyCode = event.keyCode;
 		this.changeState(this.downState);
 	}
 
 	private function target_keyUpHandler(event:KeyboardEvent):Void {
-		if (event.keyCode != Keyboard.SPACE) {
+		if (this._downKeyCode == null || event.keyCode != this._downKeyCode) {
 			return;
 		}
-		this._down = false;
-		this.changeState(this.upState);
+		this.resetKeyState();
 	}
 }
