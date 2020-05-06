@@ -14,6 +14,7 @@
 - HorizontalStretchLayout: new layout
 - VerticalStretchLayout: new layout
 - Scale9Bitmap: new custom display object for rendering `BitmapData` with `scale9Grid`
+- Basic keyboard focus management
 - Improved support for Neko and HashLink
 
 ## 1.0.0-alpha.1 (2020-02-03)
