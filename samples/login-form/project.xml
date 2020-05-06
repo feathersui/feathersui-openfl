@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Login Form" package="com.feathersui.samples.LoginForm" version="1.0.0" company="Bowler Hat LLC" />
+	<meta title="Login Form — Feathers UI Samples" if="html5"/>
+	<app main="Main" path="build" file="LoginForm" />
+
+	<window allow-high-dpi="true"/>
+	<window fps="60"/>
+	<window fps="0" if="html5"/>
+	
+	<source path="../../src" />
+	<source path="src" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+
+	<icon path="assets/icons/feathersui-icon.svg"/>
+</project>
