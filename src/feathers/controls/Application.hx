@@ -16,6 +16,7 @@ import feathers.core.PopUpManager;
 import feathers.themes.steel.components.SteelApplicationStyles;
 import feathers.utils.ScreenDensityScaleCalculator;
 import feathers.utils.MathUtil;
+import feathers.utils.DeviceUtil;
 
 /**
 	An optional root class for Feathers UI applications that will automatically
@@ -104,25 +105,29 @@ class Application extends LayoutGroup {
 		if (this.customScale != null) {
 			result = this.customScale;
 		} else {
-			#if (desktop || web)
+			#if ((desktop && !air) || (web && !flash))
 			this._scaler = null;
 			result = this.stage.window.scale;
-			#if (web && html5)
+			#if web
 			if (result > 2.0) {
 				result *= (this.stage.window.scale / 2.0);
 			}
 			#end
 			#else
-			if (this._scaler == null) {
-				this._scaler = new ScreenDensityScaleCalculator();
-				this._scaler.addScaleForDensity(120, 0.75); // ldpi
-				this._scaler.addScaleForDensity(160, 1); // mdpi
-				this._scaler.addScaleForDensity(240, 1.5); // hdpi
-				this._scaler.addScaleForDensity(320, 2); // xhdpi
-				this._scaler.addScaleForDensity(480, 3); // xxhdpi
-				this._scaler.addScaleForDensity(640, 4); // xxxhpi
+			if (DeviceUtil.isDesktop()) {
+				result = this.stage.contentsScaleFactor;
+			} else {
+				if (this._scaler == null) {
+					this._scaler = new ScreenDensityScaleCalculator();
+					this._scaler.addScaleForDensity(120, 0.75); // ldpi
+					this._scaler.addScaleForDensity(160, 1); // mdpi
+					this._scaler.addScaleForDensity(240, 1.5); // hdpi
+					this._scaler.addScaleForDensity(320, 2); // xhdpi
+					this._scaler.addScaleForDensity(480, 3); // xxhdpi
+					this._scaler.addScaleForDensity(640, 4); // xxxhpi
+				}
+				result = this._scaler.getScale(Capabilities.screenDPI);
 			}
-			result = this._scaler.getScale(Capabilities.screenDPI);
 			#end
 		}
 		return result;
@@ -172,6 +177,11 @@ class Application extends LayoutGroup {
 	}
 
 	private function application_addedToStageHandler(event:Event):Void {
+		#if flash
+		if (Reflect.hasField(this.stage, "nativeWindow")) {
+			Reflect.field(this.stage, "nativeWindow").visible = true;
+		}
+		#end
 		this.addEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
 		this.stage.addEventListener(Event.RESIZE, application_stage_resizeHandler, false, 0, true);
 		this.preparePopUpContainer();
