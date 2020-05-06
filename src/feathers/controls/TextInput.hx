@@ -191,6 +191,33 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	/**
+		Masks the text so that it cannot be read.
+
+		In the following example, the text input's text is displayed as a
+		password:
+
+		```hx
+		input.displayAsPassword = true;
+		```
+
+		@default null
+
+		@see [`TextField.displayAsPassword`](https://api.openfl.org/openfl/text/TextField.html#displayAsPassword)
+
+		@since 1.0.0
+	**/
+	public var displayAsPassword(default, set):Bool;
+
+	private function set_displayAsPassword(value:Bool):Bool {
+		if (this.displayAsPassword == value) {
+			return this.displayAsPassword;
+		}
+		this.displayAsPassword = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this.displayAsPassword;
+	}
+
+	/**
 		The font styles used to render the text input's text.
 
 		In the following example, the text input's formatting is customized:
@@ -624,6 +651,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.displayAsPassword != this.displayAsPassword) {
+			this.textField.displayAsPassword = this.displayAsPassword;
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
