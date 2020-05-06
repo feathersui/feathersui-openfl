@@ -260,7 +260,7 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function defaultFocusManager_root_keyFocusChangeHandler(event:FocusEvent):Void {
-		if (event.keyCode != Keyboard.TAB) {
+		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
 			return;
 		}
 
