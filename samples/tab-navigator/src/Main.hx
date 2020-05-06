@@ -11,7 +11,13 @@ class Main extends Application {
 		super();
 
 		var navigator = new TabNavigator();
-		navigator.dataProvider = new ArrayCollection([TabItem.withClass("A", A), TabItem.withClass("B", B), TabItem.withClass("C", C)]);
+		navigator.dataProvider = new ArrayCollection([
+			// @formatter:off
+			TabItem.withClass("A", A),
+			TabItem.withClass("B", B),
+			TabItem.withClass("C", C)
+			// @formatter:on
+		]);
 		this.addChild(navigator);
 	}
 }
