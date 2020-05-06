@@ -8,15 +8,17 @@
 
 package feathers.controls;
 
-import openfl.display.DisplayObjectContainer;
-import openfl.display.Sprite;
-import openfl.system.Capabilities;
-import openfl.events.Event;
+import feathers.core.DefaultFocusManager;
+import feathers.core.IFocusManager;
 import feathers.core.PopUpManager;
 import feathers.themes.steel.components.SteelApplicationStyles;
-import feathers.utils.ScreenDensityScaleCalculator;
-import feathers.utils.MathUtil;
 import feathers.utils.DeviceUtil;
+import feathers.utils.MathUtil;
+import feathers.utils.ScreenDensityScaleCalculator;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.system.Capabilities;
 
 /**
 	An optional root class for Feathers UI applications that will automatically
@@ -41,6 +43,10 @@ class Application extends LayoutGroup {
 		initializeApplicationTheme();
 
 		super();
+
+		#if !disable_focus_manager
+		this.focusManager = new DefaultFocusManager(this);
+		#end
 
 		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler, false, 100);
 	}
