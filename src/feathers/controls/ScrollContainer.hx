@@ -207,6 +207,13 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		return this.layoutViewPort.getChildAt(index);
 	}
 
+	override public function getChildIndex(child:DisplayObject):Int {
+		if (!this._displayListBypassEnabled) {
+			return super.getChildIndex(child);
+		}
+		return this.items.indexOf(child);
+	}
+
 	override public function setChildIndex(child:DisplayObject, index:Int):Void {
 		if (!this._displayListBypassEnabled) {
 			return super.setChildIndex(child, index);
@@ -259,6 +266,14 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		var oldBypass = this._displayListBypassEnabled;
 		this._displayListBypassEnabled = false;
 		var result = this.getChildAt(index);
+		this._displayListBypassEnabled = oldBypass;
+		return result;
+	}
+
+	private function getRawChildIndex(child:DisplayObject):Int {
+		var oldBypass = this._displayListBypassEnabled;
+		this._displayListBypassEnabled = false;
+		var result = this.getChildIndex(child);
 		this._displayListBypassEnabled = oldBypass;
 		return result;
 	}
