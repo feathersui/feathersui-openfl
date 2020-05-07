@@ -47,6 +47,14 @@ class SteelToggleButtonStyles {
 					button.backgroundSkin = skin;
 				}
 
+				if (button.focusRectSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = null;
+					skin.border = theme.getActiveFillBorder();
+					skin.cornerRadius = 6.0;
+					button.focusRectSkin = skin;
+				}
+
 				if (button.textFormat == null) {
 					button.textFormat = theme.getTextFormat();
 				}

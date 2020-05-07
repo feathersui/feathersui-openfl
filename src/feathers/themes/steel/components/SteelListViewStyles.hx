@@ -50,6 +50,13 @@ class SteelListViewStyles {
 				listView.backgroundSkin = backgroundSkin;
 			}
 
+			if (listView.focusRectSkin == null) {
+				var skin = new RectangleSkin();
+				skin.fill = null;
+				skin.border = theme.getActiveFillBorder();
+				listView.focusRectSkin = skin;
+			}
+
 			listView.paddingTop = 1.0;
 			listView.paddingRight = 1.0;
 			listView.paddingBottom = 1.0;
@@ -72,6 +79,13 @@ class SteelListViewStyles {
 				backgroundSkin.width = 160.0;
 				backgroundSkin.height = 160.0;
 				listView.backgroundSkin = backgroundSkin;
+			}
+
+			if (listView.focusRectSkin == null) {
+				var skin = new RectangleSkin();
+				skin.fill = null;
+				skin.border = theme.getActiveFillBorder();
+				listView.focusRectSkin = skin;
 			}
 		}
 

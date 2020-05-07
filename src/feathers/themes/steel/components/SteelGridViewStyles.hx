@@ -45,6 +45,13 @@ class SteelGridViewStyles {
 				gridView.backgroundSkin = backgroundSkin;
 			}
 
+			if (gridView.focusRectSkin == null) {
+				var skin = new RectangleSkin();
+				skin.fill = null;
+				skin.border = theme.getActiveFillBorder();
+				gridView.focusRectSkin = skin;
+			}
+
 			gridView.paddingTop = 1.0;
 			gridView.paddingRight = 1.0;
 			gridView.paddingBottom = 1.0;
@@ -63,6 +70,13 @@ class SteelGridViewStyles {
 				backgroundSkin.width = 160.0;
 				backgroundSkin.height = 160.0;
 				gridView.backgroundSkin = backgroundSkin;
+			}
+
+			if (gridView.focusRectSkin == null) {
+				var skin = new RectangleSkin();
+				skin.fill = null;
+				skin.border = theme.getActiveFillBorder();
+				gridView.focusRectSkin = skin;
 			}
 		}
 

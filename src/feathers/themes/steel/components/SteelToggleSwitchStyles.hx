@@ -68,6 +68,13 @@ class SteelToggleSwitchStyles {
 					thumb.backgroundSkin = thumbSkin;
 					toggle.thumbSkin = thumb;
 				}
+				if (toggle.focusRectSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = null;
+					skin.border = theme.getActiveFillBorder();
+					skin.cornerRadius = 32.0;
+					toggle.focusRectSkin = skin;
+				}
 			});
 		}
 	}
