@@ -8,6 +8,8 @@
 
 package feathers.core;
 
+import openfl.display.DisplayObjectContainer;
+
 /**
 	Manages focus of UI components.
 
@@ -22,4 +24,11 @@ interface IFocusManager {
 		@since 1.0.0
 	**/
 	public var focus(get, set):IFocusObject;
+
+	/**
+		A place for UI components to draw their focus indicators, if requested.
+
+		@since 1.0.0
+	**/
+	public var focusPane(get, never):DisplayObjectContainer;
 }

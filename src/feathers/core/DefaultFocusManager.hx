@@ -16,6 +16,7 @@ import feathers.core.IUIControl;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
+import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
@@ -83,6 +84,19 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	/**
+		@see `feathers.core.IFocusManager.focusPane`
+	**/
+	public var focusPane(get, null):DisplayObjectContainer = null;
+
+	private function get_focusPane():DisplayObjectContainer {
+		if (this.focusPane == null) {
+			this.focusPane = new Sprite();
+			PopUpManager.forStage(this.root.stage).addPopUp(this.focusPane, false, false);
+		}
+		return this.focusPane;
+	}
+
+	/**
 		@see `feathers.core.IFocusManager.focus`
 	**/
 	@:isVar
@@ -95,6 +109,9 @@ class DefaultFocusManager implements IFocusManager {
 	private function set_focus(value:IFocusObject):IFocusObject {
 		if (this.focus == value) {
 			return this.focus;
+		}
+		if (this.focus != null) {
+			this.focus.showFocus(false);
 		}
 		this.focus = value;
 		this.root.stage.focus = cast(value, InteractiveObject);
@@ -310,6 +327,9 @@ class DefaultFocusManager implements IFocusManager {
 			event.preventDefault();
 		}
 		this.focus = newFocus;
+		if (this.focus != null) {
+			this.focus.showFocus(true);
+		}
 	}
 
 	#if html5

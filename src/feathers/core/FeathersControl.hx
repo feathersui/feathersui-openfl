@@ -16,9 +16,11 @@ import feathers.style.IStyleObject;
 import feathers.style.IStyleProvider;
 import feathers.style.IVariantStyleObject;
 import feathers.style.Theme;
+import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.geom.Point;
 
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed
@@ -224,6 +226,51 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 		this.focusEnabled = value;
 		return this.focusEnabled;
+	}
+
+	/**
+		An optional skin to display when an `IFocusObject` component receives
+		focus.
+
+		@since 1.0.0
+	**/
+	@:isVar
+	public var focusRectSkin(get, set):DisplayObject = null;
+
+	private function get_focusRectSkin():DisplayObject {
+		return this.focusRectSkin;
+	}
+
+	private function set_focusRectSkin(value:DisplayObject):DisplayObject {
+		if (this.focusRectSkin == value) {
+			return this.focusRectSkin;
+		}
+		if (this.focusRectSkin != null) {
+			this.showFocus(false);
+		}
+		this.focusRectSkin = value;
+		return this.focusRectSkin;
+	}
+
+	/**
+		@see `feathers.core.IFocusObject.showFocus()`
+	**/
+	public function showFocus(show:Bool):Void {
+		if (this.focusManager == null || this.focusRectSkin == null) {
+			return;
+		}
+		if (show) {
+			this.focusManager.focusPane.addChild(this.focusRectSkin);
+			var point = new Point(0, 0);
+			point = this.localToGlobal(point);
+			point = this.focusManager.focusPane.globalToLocal(point);
+			this.focusRectSkin.x = point.x;
+			this.focusRectSkin.y = point.y;
+			this.focusRectSkin.width = this.actualWidth;
+			this.focusRectSkin.height = this.actualHeight;
+		} else if (this.focusRectSkin.parent != null) {
+			this.focusRectSkin.parent.removeChild(this.focusRectSkin);
+		}
 	}
 
 	private function clearStyle_layoutData():ILayoutData {

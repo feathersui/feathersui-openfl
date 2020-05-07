@@ -29,4 +29,11 @@ interface IFocusObject extends IDisplayObject {
 		@since 1.0.0
 	**/
 	public var focusEnabled(get, set):Bool;
+
+	/**
+		Shows a focus indicator.
+
+		@since 1.0.0
+	**/
+	public function showFocus(show:Bool):Void;
 }
