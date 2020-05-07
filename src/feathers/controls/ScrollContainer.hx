@@ -8,20 +8,18 @@
 
 package feathers.controls;
 
-import feathers.themes.steel.components.SteelScrollContainerStyles;
-import feathers.layout.IScrollLayout;
-import feathers.layout.Direction;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.LayoutViewPort;
+import feathers.core.IFocusContainer;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
+import feathers.layout.Direction;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
-import feathers.layout.Measurements;
-import feathers.utils.Scroller;
+import feathers.layout.IScrollLayout;
+import feathers.themes.steel.components.SteelScrollContainerStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
-import openfl.geom.Rectangle;
 
 /**
 	A generic container that supports layout, scrolling, and a background skin.
@@ -53,7 +51,7 @@ import openfl.geom.Rectangle;
 **/
 @defaultXmlProperty("xmlContent")
 @:styleContext
-class ScrollContainer extends BaseScrollContainer {
+class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	/**
 		Creates a new `ScrollContainer` object.
 
@@ -125,6 +123,21 @@ class ScrollContainer extends BaseScrollContainer {
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.xmlContent;
+	}
+
+	/**
+		@see `feathers.core.IFocusContainer.childFocusEnabled`
+	**/
+	@:isVar
+	public var childFocusEnabled(get, set):Bool = true;
+
+	private function get_childFocusEnabled():Bool {
+		return this.enabled && this.childFocusEnabled;
+	}
+
+	private function set_childFocusEnabled(value:Bool):Bool {
+		this.childFocusEnabled = value;
+		return this.childFocusEnabled;
 	}
 
 	@:getter(numChildren)
