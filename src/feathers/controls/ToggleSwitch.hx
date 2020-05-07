@@ -57,6 +57,18 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		initializeToggleSwitchTheme();
 
 		super();
+
+		// MouseEvent.CLICK is dispatched only if the same object is under the
+		// pointer for both MouseEvent.MOUSE_DOWN and MouseEvent.MOUSE_UP. The
+		// thumb/track might change skins between MouseEvent.MOUSE_DOWN and
+		// MouseEvent.MOUSE_UP, and this would prevent MouseEvent.CLICK.
+		// setting mouseChildren to false keeps the button as the target.
+		this.mouseChildren = false;
+		// when focused, keyboard space/enter trigger MouseEvent.CLICK
+		this.buttonMode = true;
+		// a hand cursor only makes sense for hyperlinks
+		this.useHandCursor = false;
+
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
 	}
