@@ -144,6 +144,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		initializeListViewTheme();
 
 		super();
+
+		this.tabEnabled = true;
+		this.focusRect = false;
+
 		if (this.viewPort == null) {
 			this.listViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.listViewPort);

@@ -469,6 +469,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.addChild(this.textField);
 		}
 
+		this.textField.selectable = true;
+		this.textField.tabEnabled = false;
 		this.textField.mouseWheelEnabled = false;
 		this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 		this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);

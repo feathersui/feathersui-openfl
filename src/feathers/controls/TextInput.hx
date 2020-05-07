@@ -61,6 +61,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		super();
 
+		this.tabEnabled = true;
+		this.tabChildren = false;
+		this.focusRect = false;
+
 		this.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 	}
 
@@ -476,6 +480,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (this.textField == null) {
 			this.textField = new TextField();
 			this.textField.selectable = true;
+			this.textField.tabEnabled = false;
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
 			this.textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);

@@ -56,6 +56,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		initializeButtonTheme();
 
 		super();
+
+		this.tabEnabled = true;
+		this.tabChildren = false;
+		this.focusRect = false;
 	}
 
 	private var textField:TextField;

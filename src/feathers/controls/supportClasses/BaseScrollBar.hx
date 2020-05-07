@@ -33,6 +33,9 @@ import feathers.core.FeathersControl;
 class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private function new() {
 		super();
+
+		this.tabChildren = false;
+		this.focusRect = false;
 	}
 
 	/**

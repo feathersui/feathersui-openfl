@@ -69,6 +69,10 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		// a hand cursor only makes sense for hyperlinks
 		this.useHandCursor = false;
 
+		this.tabEnabled = true;
+		this.tabChildren = false;
+		this.focusRect = false;
+
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
 	}

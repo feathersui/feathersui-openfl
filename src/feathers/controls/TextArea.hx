@@ -34,6 +34,10 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		super();
 
+		this.tabEnabled = true;
+		this.tabChildren = false;
+		this.focusRect = false;
+
 		if (this.viewPort == null) {
 			this.textFieldViewPort = new TextFieldViewPort();
 			this.textFieldViewPort.textFieldType = INPUT;
