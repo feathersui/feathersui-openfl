@@ -8,10 +8,7 @@
 
 package feathers.core;
 
-#if html5
-import openfl.events.KeyboardEvent;
-#end
-import openfl.ui.Keyboard;
+import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusManager;
 import feathers.core.IFocusObject;
@@ -23,6 +20,10 @@ import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
+import openfl.ui.Keyboard;
+#if html5
+import openfl.events.KeyboardEvent;
+#end
 
 /**
 	The default implementation of `IFocusManager`.
@@ -157,6 +158,9 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function findPreviousContainerFocus(container:DisplayObjectContainer, beforeChild:DisplayObject, fallbackToGlobal:Bool):IFocusObject {
+		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
+			container = container.parent;
+		}
 		var startIndex = container.numChildren - 1;
 		if (beforeChild != null) {
 			startIndex = container.getChildIndex(beforeChild) - 1;
@@ -186,6 +190,9 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function findNextContainerFocus(container:DisplayObjectContainer, afterChild:DisplayObject, fallbackToGlobal:Bool):IFocusObject {
+		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
+			container = container.parent;
+		}
 		var startIndex = 0;
 		if (afterChild != null) {
 			startIndex = container.getChildIndex(afterChild) + 1;
@@ -278,7 +285,7 @@ class DefaultFocusManager implements IFocusManager {
 		var newFocus:IFocusObject = null;
 		var currentFocus = this.focus;
 		if (shiftKey) {
-			if (currentFocus != null) {
+			if (currentFocus != null && currentFocus.parent != null) {
 				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 			}
 			if (newFocus == null) {
@@ -288,7 +295,7 @@ class DefaultFocusManager implements IFocusManager {
 			if (currentFocus != null) {
 				if (Std.is(currentFocus, IFocusContainer) && cast(currentFocus, IFocusContainer).childFocusEnabled) {
 					newFocus = this.findNextContainerFocus(cast(currentFocus, DisplayObjectContainer), null, true);
-				} else {
+				} else if (currentFocus.parent != null) {
 					newFocus = this.findNextContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 				}
 			}
