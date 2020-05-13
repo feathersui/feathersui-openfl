@@ -1,0 +1,33 @@
+name: npm CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Haxe
+      run: |
+        sudo add-apt-repository ppa:haxe/releases -y
+        sudo apt-get update
+        sudo apt-get install haxe -y
+        mkdir $GITHUB_WORKSPACE/.haxelib
+        haxelib setup $GITHUB_WORKSPACE/.haxelib
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: v12.x
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
+        haxelib install actuate --quiet
+        haxelib install dox --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE --quiet
+    - name: Install npm dependencies
+      run: npm ci
+    - name: Build npm module
+      run: npm run build
