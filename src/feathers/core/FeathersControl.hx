@@ -46,6 +46,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this.addEventListener(Event.REMOVED_FROM_STAGE, feathersControl_removedFromStageHandler);
 	}
 
+	private var _waitingToApplyStyles:Bool = false;
 	private var _initializing:Bool = false;
 
 	/**
@@ -141,10 +142,13 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._customStyleProvider;
 		}
 		this._customStyleProvider = value;
-		if (this.initialized) {
-			// ignore if we're not initialized yet because it will be handled
-			// later. otherwise, apply the new styles immediately.
+		if (this.initialized && this.stage != null) {
+			// ignore if we're not initialized yet or we haven't been added to
+			// the stage because it will be handled later. otherwise, apply the
+			// new styles immediately.
 			this.applyStyles();
+		} else {
+			this._waitingToApplyStyles = true;
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this._customStyleProvider;
@@ -305,10 +309,13 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this.variant;
 		}
 		this.variant = value;
-		if (this.initialized) {
-			// ignore if we're not initialized yet because it will be handled
-			// later. otherwise, apply the new styles immediately.
+		if (this.initialized && this.stage != null) {
+			// ignore if we're not initialized yet or we haven't been added to
+			// the stage because it will be handled later. otherwise, apply the
+			// new styles immediately.
 			this.applyStyles();
+		} else {
+			this._waitingToApplyStyles = true;
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
 		return this.variant;
@@ -325,6 +332,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 				throw new IllegalOperationError("A component cannot validate until after it has finished initializing.");
 			}
 			this.initializeNow();
+		}
+		if (this._waitingToApplyStyles) {
 			this.applyStyles();
 		}
 		super.validateNow();
@@ -341,6 +350,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (this.initialized || this._initializing) {
 			return;
 		}
+		this._waitingToApplyStyles = true;
 		this._initializing = true;
 		this.initialize();
 		this.setInvalid(); // set everything invalid
@@ -441,6 +451,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (!this.initialized) {
 			throw new IllegalOperationError("Cannot apply styles until after a Feathers UI component has initialized.");
 		}
+		this._waitingToApplyStyles = false;
 		var styleProvider = this._customStyleProvider;
 		if (styleProvider == null) {
 			styleProvider = this._currentStyleProvider;
@@ -519,7 +530,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (!this.initialized) {
 			this.initializeNow();
 		}
-		this.applyStyles();
+		if (this._waitingToApplyStyles) {
+			this.applyStyles();
+		}
 	}
 
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
