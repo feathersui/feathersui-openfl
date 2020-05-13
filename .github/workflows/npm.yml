@@ -20,13 +20,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: v12.x
-    - name: Set up Haxelib dependencies
-      run: |
-        haxelib install lime --quiet
-        haxelib install openfl --quiet
-        haxelib install actuate --quiet
-        haxelib install dox --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE --quiet
     - name: Install npm dependencies
       run: npm ci
     - name: Build npm module
