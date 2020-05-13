@@ -43,7 +43,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
-		this.addEventListener(Event.REMOVED_FROM_STAGE, feathersControl_removedFromStageHandler);
 	}
 
 	private var _waitingToApplyStyles:Bool = false;
@@ -535,26 +534,29 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 	}
 
-	private function feathersControl_removedFromStageHandler(event:Event):Void {
-		if (this._currentStyleProvider != null) {
-			this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
-			this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
-			this._currentStyleProvider = null;
-		}
-	}
-
 	private function styleProvider_stylesChangeHandler(event:StyleProviderEvent):Void {
 		if (!event.affectsTarget(this)) {
 			return;
 		}
-		this.applyStyles();
+		if (this.stage != null) {
+			this.applyStyles();
+		} else {
+			this._waitingToApplyStyles = true;
+		}
 	}
 
 	private function styleProvider_clearHandler(event:Event):Void {
+		if (this._currentStyleProvider == this._customStyleProvider) {
+			this._customStyleProvider = null;
+		}
 		this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
 		this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 		this._currentStyleProvider = null;
-		this.applyStyles();
+		if (this.stage != null) {
+			this.applyStyles();
+		} else {
+			this._waitingToApplyStyles = true;
+		}
 	}
 
 	private function layoutData_changeHandler(event:Event):Void {
