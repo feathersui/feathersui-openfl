@@ -16,7 +16,7 @@ jobs:
         sudo apt-get install haxe -y
         mkdir $GITHUB_WORKSPACE/.haxelib
         haxelib setup $GITHUB_WORKSPACE/.haxelib
-    - name: Set up Dependencies
+    - name: Set up Haxelib dependencies
       run: |
         haxelib install lime --quiet
         haxelib install openfl --quiet
