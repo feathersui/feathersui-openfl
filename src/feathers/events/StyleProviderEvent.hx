@@ -54,7 +54,7 @@ class StyleProviderEvent extends Event {
 		#else
 		var event = _pool.get();
 		event.type = type;
-		event.affectsTarget = affectsTarget;
+		event.affectsTarget = affectsTarget != null ? affectsTarget : defaultAffectsTarget;
 		var result = dispatcher.dispatchEvent(event);
 		_pool.release(event);
 		return result;
@@ -63,9 +63,7 @@ class StyleProviderEvent extends Event {
 
 	private function new(type:String, ?affectsTarget:(IStyleObject) -> Bool) {
 		super(type);
-		if (affectsTarget != null) {
-			this.affectsTarget = affectsTarget;
-		}
+		this.affectsTarget = affectsTarget != null ? affectsTarget : defaultAffectsTarget;
 	}
 
 	/**
@@ -73,11 +71,13 @@ class StyleProviderEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public dynamic function affectsTarget(value:IStyleObject):Bool {
-		return true;
-	}
+	public var affectsTarget:(value:IStyleObject) -> Bool;
 
 	override public function clone():Event {
 		return new StyleProviderEvent(this.type, this.affectsTarget);
+	}
+
+	private static function defaultAffectsTarget(value:IStyleObject):Bool {
+		return true;
 	}
 }
