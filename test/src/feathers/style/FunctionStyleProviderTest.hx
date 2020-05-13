@@ -70,6 +70,7 @@ class FunctionStyleProviderTest {
 
 		this._appliedStyles = false;
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
+		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._appliedStyles, "Must not apply style provider before initialization when style provider dispatches Event.CLEAR");
 	}
 
@@ -118,6 +119,7 @@ class FunctionStyleProviderTest {
 
 		this._appliedStyles = false;
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
+		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._appliedStyles, "Must not apply style provider when is off stage and style provider dispatches Event.CLEAR");
 	}
 
@@ -162,6 +164,7 @@ class FunctionStyleProviderTest {
 
 		this._appliedStyles = false;
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
+		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._appliedStyles, "Must not apply cleared style provider after it dispatches Event.CLEAR");
 	}
 
@@ -248,6 +251,7 @@ class FunctionStyleProviderTest {
 
 		this._appliedStyles = false;
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
+		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._appliedStyles, "Must not apply style provider when removed from stage");
 		TestMain.openfl_root.addChild(this._control);
 		Assert.isFalse(this._appliedStyles, "Must not apply cleared style provider when waiting after removal");

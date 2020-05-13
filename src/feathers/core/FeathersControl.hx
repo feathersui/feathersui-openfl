@@ -140,7 +140,13 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (this._customStyleProvider == value) {
 			return this._customStyleProvider;
 		}
+		if (this._customStyleProvider != null) {
+			this._customStyleProvider.removeEventListener(Event.CLEAR, customStyleProvider_clearHandler);
+		}
 		this._customStyleProvider = value;
+		if (this._customStyleProvider != null) {
+			this._customStyleProvider.addEventListener(Event.CLEAR, customStyleProvider_clearHandler, false, 0, true);
+		}
 		if (this.initialized && this.stage != null) {
 			// ignore if we're not initialized yet or we haven't been added to
 			// the stage because it will be handled later. otherwise, apply the
@@ -545,10 +551,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 	}
 
+	private function customStyleProvider_clearHandler(event:Event):Void {
+		this._customStyleProvider = null;
+	}
+
 	private function styleProvider_clearHandler(event:Event):Void {
-		if (this._currentStyleProvider == this._customStyleProvider) {
-			this._customStyleProvider = null;
-		}
+		// clear it immediately or it might get reused
 		this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
 		this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
 		this._currentStyleProvider = null;
