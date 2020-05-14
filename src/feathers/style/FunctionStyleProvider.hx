@@ -8,8 +8,7 @@
 
 package feathers.style;
 
-import feathers.events.FeathersEvent;
-import openfl.events.Event;
+import feathers.events.StyleProviderEvent;
 import openfl.events.EventDispatcher;
 
 /**
@@ -58,7 +57,7 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 			return this.callback;
 		}
 		this.callback = value;
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		StyleProviderEvent.dispatch(this, StyleProviderEvent.STYLES_CHANGE);
 		return this.callback;
 	}
 
