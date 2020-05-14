@@ -30,6 +30,7 @@ import feathers.layout.MeasurementsTest;
 import feathers.layout.VerticalLayoutTest;
 import feathers.style.ClassVariantStyleProviderTest;
 import feathers.style.FunctionStyleProviderTest;
+import feathers.style.StyleProviderAndVariantTest;
 import feathers.style.StyleProviderRestrictedStyleTest;
 import feathers.style.ThemeTest;
 import feathers.themes.DefaultThemeTest;
@@ -74,6 +75,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(feathers.layout.VerticalLayoutTest);
 		add(feathers.style.ClassVariantStyleProviderTest);
 		add(feathers.style.FunctionStyleProviderTest);
+		add(feathers.style.StyleProviderAndVariantTest);
 		add(feathers.style.StyleProviderRestrictedStyleTest);
 		add(feathers.style.ThemeTest);
 		add(feathers.themes.DefaultThemeTest);
