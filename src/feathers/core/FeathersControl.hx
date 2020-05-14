@@ -43,6 +43,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
+		this.addEventListener(Event.REMOVED_FROM_STAGE, feathersControl_removedFromStageHandler);
 	}
 
 	private var _waitingToApplyStyles:Bool = false;
@@ -490,7 +491,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		// theme sets them
 		this._applyingStyles = true;
 
-		// if there was a different style provider previously, clear old styles
+		// there may have been a different style provider previously, so clear
+		// any old styles that may have been set by it
 		this.clearStyles();
 
 		// then, set the styles from the main style provider
@@ -528,6 +530,16 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this._clearingStyles = oldClearingStyles;
 	}
 
+	private function clearStyleProvider():Void {
+		if (this._currentStyleProvider == null) {
+			return;
+		}
+		this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
+		this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
+		this._currentStyleProvider = null;
+		this._waitingToApplyStyles = true;
+	}
+
 	private function feathersControl_addedToStageHandler(event:Event):Void {
 		// initialize before setting the validation queue to avoid
 		// getting added to the validation queue before initialization
@@ -538,6 +550,14 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (this._waitingToApplyStyles) {
 			this.applyStyles();
 		}
+	}
+
+	private function feathersControl_removedFromStageHandler(event:Event):Void {
+		// since there's no concept of disposing a Feathers UI component, we
+		// need to clear the style provider here so that there are no memory
+		// leaks. the style provider holds a reference to the component through
+		// an event listener.
+		this.clearStyleProvider();
 	}
 
 	private function styleProvider_stylesChangeHandler(event:StyleProviderEvent):Void {
@@ -552,18 +572,17 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function customStyleProvider_clearHandler(event:Event):Void {
+		this._customStyleProvider.removeEventListener(Event.CLEAR, customStyleProvider_clearHandler);
 		this._customStyleProvider = null;
+		// no need to call applyStyles() here because another listener will
+		// handle it
 	}
 
 	private function styleProvider_clearHandler(event:Event):Void {
-		// clear it immediately or it might get reused
-		this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
-		this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
-		this._currentStyleProvider = null;
+		// clear it immediately because we don't want it to get reused
+		this.clearStyleProvider();
 		if (this.stage != null) {
 			this.applyStyles();
-		} else {
-			this._waitingToApplyStyles = true;
 		}
 	}
 
