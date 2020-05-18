@@ -46,6 +46,13 @@ class SteelTabBarStyles {
 					skin.disabledFill = theme.getControlDisabledFill();
 					tabBar.backgroundSkin = skin;
 				}
+				if (tabBar.focusRectSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = null;
+					skin.border = theme.getActiveFillBorder();
+					skin.cornerRadius = 6.0;
+					tabBar.focusRectSkin = skin;
+				}
 				if (tabBar.layout == null) {
 					var layout = new HorizontalLayout();
 					if (!isDesktop) {

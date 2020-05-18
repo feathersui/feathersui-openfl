@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
 import feathers.core.IUIControl;
@@ -94,6 +96,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		initializeTabBarTheme();
 
 		super();
+
+		this.addEventListener(KeyboardEvent.KEY_DOWN, tabBar_keyDownHandler);
 	}
 
 	/**
@@ -615,6 +619,63 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
+	}
+
+	private function navigateWithKeyboard(startIndex:Int, keyCode:Int):Int {
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return -1;
+		}
+		switch (keyCode) {
+			case Keyboard.UP:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.DOWN:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.LEFT:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.RIGHT:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.PAGE_UP:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.PAGE_DOWN:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.HOME:
+				return 0;
+			case Keyboard.END:
+				return this.dataProvider.length - 1;
+		}
+		return startIndex;
+	}
+
+	private function tabBar_keyDownHandler(event:KeyboardEvent):Void {
+		var index = this.navigateWithKeyboard(this.selectedIndex, event.keyCode);
+		if (this.selectedIndex != index) {
+			event.preventDefault();
+			this.selectedIndex = index;
+		}
 	}
 
 	private function tab_triggerHandler(event:TriggerEvent):Void {
