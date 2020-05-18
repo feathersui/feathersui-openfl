@@ -8,8 +8,10 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IFocusObject;
 import feathers.events.TriggerEvent;
 import feathers.themes.steel.components.SteelItemRendererStyles;
+import openfl.geom.Point;
 
 /**
 	A generic renderer for UI components that display data collections.
@@ -31,6 +33,29 @@ class ItemRenderer extends ToggleButton {
 
 	private function initializeItemRendererTheme():Void {
 		SteelItemRendererStyles.initialize();
+	}
+
+	override private function initialize():Void {
+		super.initialize();
+		this._pointerToState.customHitTest = this.customHitTest;
+		this._pointerTrigger.customHitTest = this.customHitTest;
+	}
+
+	private function customHitTest(stageX:Float, stageY:Float):Bool {
+		var objects = this.getObjectsUnderPoint(new Point(stageX, stageY));
+		if (objects.length > 0) {
+			var lastObject = objects[objects.length - 1];
+			while (lastObject != null && lastObject != this) {
+				if (Std.is(lastObject, IFocusObject)) {
+					var focusable = cast(lastObject, IFocusObject);
+					if (focusable.focusEnabled) {
+						return false;
+					}
+				}
+				lastObject = lastObject.parent;
+			}
+		}
+		return true;
 	}
 
 	override private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
