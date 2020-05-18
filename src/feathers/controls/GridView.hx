@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
@@ -137,11 +139,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		initializeGridViewTheme();
 
 		super();
+
+		this.tabEnabled = true;
+		this.focusRect = false;
+
 		if (this.viewPort == null) {
 			this.gridViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.gridViewPort);
 			this.viewPort = this.gridViewPort;
 		}
+		this.addEventListener(KeyboardEvent.KEY_DOWN, gridView_keyDownHandler);
 	}
 
 	private var _headerContainer:LayoutGroup;
@@ -745,6 +752,63 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
+	}
+
+	private function navigateWithKeyboard(startIndex:Int, keyCode:Int):Int {
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return -1;
+		}
+		switch (keyCode) {
+			case Keyboard.UP:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.DOWN:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.LEFT:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.RIGHT:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.PAGE_UP:
+				var result = startIndex - 1;
+				if (result < 0) {
+					result = 0;
+				}
+				return result;
+			case Keyboard.PAGE_DOWN:
+				var result = startIndex + 1;
+				if (result >= this.dataProvider.length) {
+					result = this.dataProvider.length - 1;
+				}
+				return result;
+			case Keyboard.HOME:
+				return 0;
+			case Keyboard.END:
+				return this.dataProvider.length - 1;
+		}
+		return startIndex;
+	}
+
+	private function gridView_keyDownHandler(event:KeyboardEvent):Void {
+		var index = this.navigateWithKeyboard(this.selectedIndex, event.keyCode);
+		if (this.selectedIndex != index) {
+			event.preventDefault();
+			this.selectedIndex = index;
+		}
 	}
 
 	private function gridView_rowRenderer_triggerHandler(event:TriggerEvent):Void {
