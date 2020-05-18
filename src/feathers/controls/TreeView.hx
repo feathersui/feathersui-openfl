@@ -894,7 +894,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			}
 			var child = this.dataProvider.get(locationOfBranch);
 			if (this.dataProvider.isBranch(child)) {
-				if (this.openBranches.contains(child)) {
+				if (this.openBranches.indexOf(child) != -1) {
 					var result = this.displayIndexToLocationAtBranch(target, locationOfBranch);
 					if (result != null) {
 						return result;
@@ -920,7 +920,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			}
 			var child = this.dataProvider.get(locationOfBranch);
 			if (this.dataProvider.isBranch(child)) {
-				if (this.openBranches.contains(child)) {
+				if (this.openBranches.indexOf(child) != -1) {
 					var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, returnNearestIfBranchNotOpen);
 					if (result != -1) {
 						return result;
@@ -979,7 +979,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		if (this.selectedLocation != null && event.keyCode == Keyboard.SPACE) {
 			event.stopPropagation();
-			if (this.openBranches.contains(this.selectedItem)) {
+			if (this.openBranches.indexOf(this.selectedItem) != -1) {
 				this.openBranches.remove(this.selectedItem);
 			} else {
 				this.openBranches.push(this.selectedItem);
