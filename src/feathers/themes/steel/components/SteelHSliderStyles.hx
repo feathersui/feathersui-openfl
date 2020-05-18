@@ -8,10 +8,10 @@
 
 package feathers.themes.steel.components;
 
-import feathers.controls.BasicButton;
-import feathers.skins.CircleSkin;
+import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.HSlider;
+import feathers.skins.CircleSkin;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -36,16 +36,24 @@ class SteelHSliderStyles {
 		if (styleProvider.getStyleFunction(HSlider, null) == null) {
 			styleProvider.setStyleFunction(HSlider, null, function(slider:HSlider):Void {
 				if (slider.thumbSkin == null) {
-					var thumbSkin = new CircleSkin();
-					thumbSkin.fill = theme.getButtonFill();
-					thumbSkin.border = theme.getButtonBorder();
-					thumbSkin.setFillForState(ButtonState.DOWN, theme.getButtonDownFill());
-					thumbSkin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
-					thumbSkin.width = 24.0;
-					thumbSkin.height = 24.0;
-					var thumb = new BasicButton();
+					var thumb = new Button();
+					thumb.styleProvider = null;
 					thumb.keepDownStateOnRollOut = true;
-					thumb.backgroundSkin = thumbSkin;
+
+					var backgroundSkin = new CircleSkin();
+					backgroundSkin.fill = theme.getButtonFill();
+					backgroundSkin.border = theme.getButtonBorder();
+					backgroundSkin.setFillForState(ButtonState.DOWN, theme.getButtonDownFill());
+					backgroundSkin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
+					backgroundSkin.width = 24.0;
+					backgroundSkin.height = 24.0;
+					thumb.backgroundSkin = backgroundSkin;
+
+					var focusRectSkin = new CircleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getActiveFillBorder();
+					thumb.focusRectSkin = focusRectSkin;
+
 					slider.thumbSkin = thumb;
 				}
 

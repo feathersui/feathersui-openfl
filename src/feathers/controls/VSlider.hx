@@ -8,10 +8,12 @@
 
 package feathers.controls;
 
-import feathers.themes.steel.components.SteelVSliderStyles;
 import feathers.controls.supportClasses.BaseSlider;
 import feathers.core.IValidating;
+import feathers.themes.steel.components.SteelVSliderStyles;
+import openfl.events.KeyboardEvent;
 import openfl.geom.Point;
+import openfl.ui.Keyboard;
 
 /**
 
@@ -47,6 +49,8 @@ class VSlider extends BaseSlider {
 		initializeVSliderTheme();
 
 		super();
+
+		this.addEventListener(KeyboardEvent.KEY_DOWN, vSlider_keyDownHandler);
 	}
 
 	private function initializeVSliderTheme():Void {
@@ -201,5 +205,23 @@ class VSlider extends BaseSlider {
 		var thumbLocation = this.valueToLocation(this.value);
 		this.thumbSkin.x = Math.round((this.actualWidth - this.thumbSkin.width) / 2.0);
 		this.thumbSkin.y = thumbLocation;
+	}
+
+	private function vSlider_keyDownHandler(event:KeyboardEvent):Void {
+		var newValue = this.value;
+		switch (event.keyCode) {
+			case Keyboard.DOWN:
+				newValue -= this.step;
+			case Keyboard.UP:
+				newValue += this.step;
+			case Keyboard.HOME:
+				newValue = this.minimum;
+			case Keyboard.END:
+				newValue = this.maximum;
+			default:
+				return;
+		}
+		event.stopPropagation();
+		this.value = newValue;
 	}
 }

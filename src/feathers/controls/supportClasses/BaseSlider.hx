@@ -177,7 +177,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
-	public var step(default, set):Float = 0.0;
+	public var step(default, set):Float = 0.1;
 
 	private function set_step(value:Float):Float {
 		if (this.step == value) {
@@ -323,6 +323,16 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	private var _pointerStartY:Float = 0.0;
 	private var _thumbStartX:Float = 0.0;
 	private var _thumbStartY:Float = 0.0;
+
+	override public function showFocus(show:Bool):Void {
+		super.showFocus(show);
+		if (Std.is(this.thumbSkin, IFocusObject)) {
+			var focusThumb = cast(this.thumbSkin, IFocusObject);
+			if (focusThumb.focusEnabled) {
+				focusThumb.showFocus(show);
+			}
+		}
+	}
 
 	override private function initialize():Void {
 		super.initialize();
