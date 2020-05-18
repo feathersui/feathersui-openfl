@@ -20,6 +20,10 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+#if html5
+import js.Lib;
+import js.html.WheelEvent;
+#end
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -345,6 +349,8 @@ class Scroller extends EventDispatcher {
 	**/
 	public var mouseWheelDelta:Float = 10.0;
 
+	private var _mouseWheelDeltaMode:Int = 1;
+
 	/**
 		The duration, measured in seconds, of the animation when scrolling with
 		the mouse wheel.
@@ -422,6 +428,10 @@ class Scroller extends EventDispatcher {
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true);
 			this.target.removeEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler);
+			#if html5
+			var window = cast(Lib.global, js.html.Window);
+			window.removeEventListener("wheel", window_wheelCaptureHandler, {capture: true});
+			#end
 			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
 			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true);
 			this.target.removeEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true);
@@ -432,6 +442,10 @@ class Scroller extends EventDispatcher {
 			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler, false, 0, true);
 			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true, 0, true);
 			this.target.addEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler, false, 0, true);
+			#if html5
+			var window = cast(Lib.global, js.html.Window);
+			window.addEventListener("wheel", window_wheelCaptureHandler, {capture: true});
+			#end
 			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler, false, 0, true);
 			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true, 0, true);
 			this.target.addEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true, 0, true);
@@ -700,7 +714,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function animateScrollX_endRatio_onUpdate():Void {
-		var time = (Lib.getTimer() / 1000.0);
+		var time = (openfl.Lib.getTimer() / 1000.0);
 		var currentTime = time - this.animateScrollX.startTime;
 		var ratio = currentTime / this.animateScrollX.duration;
 		ratio = this._animateScrollXEase.calculate(ratio);
@@ -730,7 +744,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function animateScrollY_endRatio_onUpdate():Void {
-		var time = (Lib.getTimer() / 1000.0);
+		var time = (openfl.Lib.getTimer() / 1000.0);
 		var currentTime = time - this.animateScrollY.startTime;
 		var ratio = currentTime / this.animateScrollY.duration;
 		ratio = this._animateScrollYEase.calculate(ratio);
@@ -924,7 +938,7 @@ class Scroller extends EventDispatcher {
 
 		this.savedScrollMoves.push(scrollX);
 		this.savedScrollMoves.push(scrollY);
-		this.savedScrollMoves.push(Lib.getTimer());
+		this.savedScrollMoves.push(openfl.Lib.getTimer());
 	}
 
 	private function touchEnd(touchPointID:Int):Void {
@@ -954,7 +968,7 @@ class Scroller extends EventDispatcher {
 		}
 
 		// find scroll position measured 100ms ago, if possible
-		var targetTime = Lib.getTimer() - 100;
+		var targetTime = openfl.Lib.getTimer() - 100;
 		var endIndex = this.savedScrollMoves.length - 1;
 		var startIndex = endIndex;
 		var i = endIndex;
@@ -1067,6 +1081,12 @@ class Scroller extends EventDispatcher {
 		this.touchEnd(TOUCH_ID_MOUSE);
 	}
 
+	#if html5
+	private function window_wheelCaptureHandler(event:WheelEvent):Void {
+		this._mouseWheelDeltaMode = event.deltaMode;
+	}
+	#end
+
 	private function target_mouseWheelHandler(event:MouseEvent):Void {
 		// can't use preventDefault(), so don't let it bubble
 		var targetScrollY = this.scrollY;
@@ -1075,7 +1095,14 @@ class Scroller extends EventDispatcher {
 		}
 		event.stopImmediatePropagation();
 		this.stop();
-		var newScrollY = targetScrollY - (event.delta * this.mouseWheelDelta);
+		var deltaLines = event.delta;
+		switch (this._mouseWheelDeltaMode) {
+			case 0: // pixels
+				deltaLines = Std.int(deltaLines / 40);
+			case 2: // pages
+				deltaLines = deltaLines * 16;
+		}
+		var newScrollY = targetScrollY - (deltaLines * this.mouseWheelDelta);
 		if (newScrollY < this.minScrollY) {
 			newScrollY = this.minScrollY;
 		} else if (newScrollY > this.maxScrollY) {
