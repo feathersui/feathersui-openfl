@@ -147,6 +147,20 @@ class PointerToState<T> {
 	**/
 	public var keepDownStateOnRollOut(default, default):Bool = false;
 
+	/**
+		In addition to the normal hit testing for mouse/touch events, a custom
+		function may impose additional rules that determine if the target
+		should change state.
+
+		The function should return `true` if the target should change state, and
+		`false` if it should not change state.
+
+		@default null
+
+		@since 1.0.0
+	**/
+	public var customHitTest(default, default):(stageX:Float, stageY:Float) -> Bool;
+
 	private var _hoverBeforeDown:Bool = false;
 	private var _down:Bool = false;
 
@@ -178,6 +192,9 @@ class PointerToState<T> {
 		if (!this.enabled) {
 			return;
 		}
+		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
+			return;
+		}
 		this._hoverBeforeDown = true;
 		if (this._down) {
 			this.changeState(this.downState);
@@ -200,6 +217,9 @@ class PointerToState<T> {
 
 	private function target_mouseDownHandler(event:MouseEvent):Void {
 		if (!this.enabled) {
+			return;
+		}
+		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		this._down = true;

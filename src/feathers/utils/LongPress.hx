@@ -81,7 +81,8 @@ class LongPress {
 	public var duration:Float = 0.5;
 
 	/**
-		The event type to dispatch on long press.
+		The event type to dispatch on long press. If `null`, dispatches an
+		instance of `LongPressEvent`.
 
 		@since 1.0.0
 	**/
@@ -105,6 +106,20 @@ class LongPress {
 	**/
 	public var enabled(default, default):Bool = true;
 
+	/**
+		In addition to the normal hit testing for mouse/touch events, a custom
+		function may impose additional rules that determine if the target
+		should be triggered.
+
+		The function should return `true` if the target should be triggered, and
+		`false` if it should not be triggered.
+
+		@default null
+
+		@since 1.0.0
+	**/
+	public var customHitTest(default, default):(stageX:Float, stageY:Float) -> Bool;
+
 	private var _savedMouseEvent:MouseEvent;
 	private var _savedTouchEvent:TouchEvent;
 	private var _startTime:Float;
@@ -114,8 +129,7 @@ class LongPress {
 		if (!this.enabled) {
 			return;
 		}
-		if (this.eventFactory != null) {
-			this.target.dispatchEvent(this.eventFactory());
+		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		this._startTime = Lib.getTimer();
@@ -135,8 +149,7 @@ class LongPress {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
-		if (this.eventFactory != null) {
-			this.target.dispatchEvent(this.eventFactory());
+		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		this._startTime = Lib.getTimer();
@@ -215,11 +228,19 @@ class LongPress {
 		}
 		this._stopNextTrigger = true;
 		if (this._savedMouseEvent != null) {
-			LongPressEvent.dispatchFromMouseEvent(this.target, this._savedMouseEvent);
 			this.cleanupMouseEvents();
+			if (this.eventFactory != null) {
+				this.target.dispatchEvent(this.eventFactory());
+				return;
+			}
+			LongPressEvent.dispatchFromMouseEvent(this.target, this._savedMouseEvent);
+			return;
+		}
+		this.cleanupTouchEvents();
+		if (this.eventFactory != null) {
+			this.target.dispatchEvent(this.eventFactory());
 			return;
 		}
 		LongPressEvent.dispatchFromTouchEvent(this.target, this._savedTouchEvent);
-		this.cleanupTouchEvents();
 	}
 }

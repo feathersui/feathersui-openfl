@@ -63,7 +63,8 @@ class PointerTrigger {
 	}
 
 	/**
-		The event type to dispatch on trigger.
+		The event type to dispatch on trigger. If `null`, dispatches an instance
+		of `TriggerEvent`.
 
 		@since 1.0.0
 	**/
@@ -87,8 +88,25 @@ class PointerTrigger {
 	**/
 	public var enabled(default, default):Bool = true;
 
+	/**
+		In addition to the normal hit testing for mouse/touch events, a custom
+		function may impose additional rules that determine if the target
+		should be triggered.
+
+		The function should return `true` if the target should be triggered, and
+		`false` if it should not be triggered.
+
+		@default null
+
+		@since 1.0.0
+	**/
+	public var customHitTest(default, default):(stageX:Float, stageY:Float) -> Bool;
+
 	private function target_clickHandler(event:MouseEvent):Void {
 		if (!this.enabled) {
+			return;
+		}
+		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		if (this.eventFactory != null) {
@@ -104,6 +122,9 @@ class PointerTrigger {
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		if (this.eventFactory != null) {
