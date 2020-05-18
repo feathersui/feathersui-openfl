@@ -58,6 +58,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.focusRect = null;
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, baseScrollContainer_keyDownHandler);
+		this.addEventListener(Event.ADDED_TO_STAGE, baseScrollContainer_addedToStageHandler);
+		this.addEventListener(Event.REMOVED_FROM_STAGE, baseScrollContainer_removedFromStageHandler);
 	}
 
 	/**
@@ -76,8 +78,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.viewPort != null) {
 			this.viewPort.removeEventListener(Event.RESIZE, viewPort_resizeHandler);
 		}
-		this.viewPort = value;
 		if (this.scroller != null) {
+			this.scroller.target = null;
+		}
+		this.viewPort = value;
+		if (this.scroller != null && this.stage != null) {
 			this.scroller.target = cast(this.viewPort, InteractiveObject);
 		}
 		if (this.viewPort != null) {
@@ -718,7 +723,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.scroller == null) {
 			this.scroller = new Scroller();
 		}
-		this.scroller.target = cast(this.viewPort, InteractiveObject);
 		this.scroller.addEventListener(Event.SCROLL, scroller_scrollHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_START, scroller_scrollStartHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, scroller_scrollCompleteHandler);
@@ -1476,6 +1480,14 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.scrollX != newScrollX && this.scrollPolicyX != OFF) {
 			this.scrollX = newScrollX;
 		}
+	}
+
+	private function baseScrollContainer_addedToStageHandler(event:Event):Void {
+		this.scroller.target = cast(this.viewPort, InteractiveObject);
+	}
+
+	private function baseScrollContainer_removedFromStageHandler(event:Event):Void {
+		this.scroller.target = null;
 	}
 
 	private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
