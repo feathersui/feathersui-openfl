@@ -8,12 +8,12 @@
 
 package feathers.controls;
 
-import feathers.core.IDataSelector;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
 import feathers.controls.dataRenderers.TreeViewItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
+import feathers.core.IDataSelector;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
@@ -31,8 +31,10 @@ import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -153,11 +155,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		initializeTreeViewTheme();
 
 		super();
+
+		this.tabEnabled = true;
+		this.focusRect = false;
+
 		if (this.viewPort == null) {
 			this.treeViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.treeViewPort);
 			this.viewPort = this.treeViewPort;
 		}
+		this.addEventListener(KeyboardEvent.KEY_DOWN, treeView_keyDownHandler);
 	}
 
 	private var treeViewPort:AdvancedLayoutViewPort;
@@ -481,7 +488,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		SteelTreeViewStyles.initialize();
 	}
 
-	private var _layoutLocations:Array<Array<Int>> = [];
 	private var _layoutItems:Array<DisplayObject> = [];
 
 	override private function update():Void {
@@ -833,6 +839,161 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
+	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
+		var null1 = location1 == null;
+		var null2 = location2 == null;
+		if (null1 && null2) {
+			return 0;
+		} else if (null1) {
+			return 1;
+		} else if (null2) {
+			return -1;
+		}
+		var length1 = location1.length;
+		var length2 = location2.length;
+		var min = length1;
+		if (length2 < min) {
+			min = length2;
+		}
+		for (i in 0...min) {
+			var index1 = location1[i];
+			var index2 = location2[i];
+			if (index1 < index2) {
+				return -1;
+			}
+			if (index1 > index2) {
+				return 1;
+			}
+		}
+		if (length1 < length2) {
+			return -1;
+		} else if (length1 > length2) {
+			return 1;
+		}
+		return 0;
+	}
+
+	private var _currentDisplayIndex:Int;
+
+	private function displayIndexToLocation(displayIndex:Int):Array<Int> {
+		this._currentDisplayIndex = -1;
+		return this.displayIndexToLocationAtBranch(displayIndex, []);
+	}
+
+	private function displayIndexToLocationAtBranch(target:Int, locationOfBranch:Array<Int>):Array<Int> {
+		for (i in 0...this.dataProvider.getLength(locationOfBranch)) {
+			this._currentDisplayIndex++;
+			locationOfBranch[locationOfBranch.length] = i;
+			if (this._currentDisplayIndex == target) {
+				return locationOfBranch;
+			}
+			var child = this.dataProvider.get(locationOfBranch);
+			if (this.dataProvider.isBranch(child)) {
+				if (this.openBranches.contains(child)) {
+					var result = this.displayIndexToLocationAtBranch(target, locationOfBranch);
+					if (result != null) {
+						return result;
+					}
+				}
+			}
+			locationOfBranch.resize(locationOfBranch.length - 1);
+		}
+		return null;
+	}
+
+	private function locationToDisplayIndex(location:Array<Int>, returnNearestIfBranchNotOpen:Bool):Int {
+		this._currentDisplayIndex = -1;
+		return this.locationToDisplayIndexAtBranch([], location, returnNearestIfBranchNotOpen);
+	}
+
+	private function locationToDisplayIndexAtBranch(locationOfBranch:Array<Int>, locationToFind:Array<Int>, returnNearestIfBranchNotOpen:Bool):Int {
+		for (i in 0...this.dataProvider.getLength(locationOfBranch)) {
+			this._currentDisplayIndex++;
+			locationOfBranch[locationOfBranch.length] = i;
+			if (this.compareLocations(locationOfBranch, locationToFind) == 0) {
+				return this._currentDisplayIndex;
+			}
+			var child = this.dataProvider.get(locationOfBranch);
+			if (this.dataProvider.isBranch(child)) {
+				if (this.openBranches.contains(child)) {
+					var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, returnNearestIfBranchNotOpen);
+					if (result != -1) {
+						return result;
+					}
+				} else if (returnNearestIfBranchNotOpen) {
+					// if the location is inside a closed branch
+					// return that branch
+					return this._currentDisplayIndex;
+				}
+			}
+			locationOfBranch.resize(locationOfBranch.length - 1);
+		}
+		// location was not found!
+		return -1;
+	}
+
+	private function navigateWithKeyboard(startLocation:Array<Int>, keyCode:Int):Array<Int> {
+		if (this.dataProvider == null || this.dataProvider.getLength() == 0) {
+			return [];
+		}
+		var startIndex = this.locationToDisplayIndex(startLocation, false);
+		var result = startIndex;
+		switch (keyCode) {
+			case Keyboard.UP:
+				result = result - 1;
+				if (result < 0) {
+					result = 0;
+				}
+			case Keyboard.DOWN:
+				result = result + 1;
+				if (result >= this._layoutItems.length) {
+					result = this._layoutItems.length - 1;
+				}
+			case Keyboard.LEFT:
+				result = result - 1;
+				if (result < 0) {
+					result = 0;
+				}
+			case Keyboard.RIGHT:
+				result = result + 1;
+				if (result >= this._layoutItems.length) {
+					result = this._layoutItems.length - 1;
+				}
+			case Keyboard.PAGE_UP:
+				result = result - 1;
+				if (result < 0) {
+					result = 0;
+				}
+			case Keyboard.PAGE_DOWN:
+				result = result + 1;
+				if (result >= this._layoutItems.length) {
+					result = this._layoutItems.length - 1;
+				}
+			case Keyboard.HOME:
+				result = 0;
+			case Keyboard.END:
+				result = this._layoutItems.length - 1;
+		}
+		return this.displayIndexToLocation(result);
+	}
+
+	private function treeView_keyDownHandler(event:KeyboardEvent):Void {
+		if (this.selectedLocation != null && event.keyCode == Keyboard.SPACE) {
+			if (this.openBranches.contains(this.selectedItem)) {
+				this.openBranches.remove(this.selectedItem);
+			} else {
+				this.openBranches.push(this.selectedItem);
+			}
+			this.setInvalid(InvalidationFlag.DATA);
+			return;
+		}
+		var location = this.navigateWithKeyboard(this.selectedLocation, event.keyCode);
+		if (this.compareLocations(this.selectedLocation, location) != 0) {
+			event.preventDefault();
+			this.selectedLocation = location;
+		}
+	}
+
 	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this.selectable || !this.pointerSelectionEnabled) {
 			return;
@@ -913,40 +1074,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._virtualCache.resize(newSize);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-	}
-
-	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
-		var null1 = location1 == null;
-		var null2 = location2 == null;
-		if (null1 && null2) {
-			return 0;
-		} else if (null1) {
-			return 1;
-		} else if (null2) {
-			return -1;
-		}
-		var length1 = location1.length;
-		var length2 = location2.length;
-		var min = length1;
-		if (length2 < min) {
-			min = length2;
-		}
-		for (i in 0...min) {
-			var index1 = location1[i];
-			var index2 = location2[i];
-			if (index1 < index2) {
-				return -1;
-			}
-			if (index1 > index2) {
-				return 1;
-			}
-		}
-		if (length1 < length2) {
-			return -1;
-		} else if (length1 > length2) {
-			return 1;
-		}
-		return 0;
 	}
 
 	private function treeView_dataProvider_addItemHandler(event:HierarchicalCollectionEvent):Void {
