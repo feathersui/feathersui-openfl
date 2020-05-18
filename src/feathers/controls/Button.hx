@@ -647,11 +647,12 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	private function refreshText():Void {
+		var hasText = this.text != null && this.text.length > 0;
+		this.textField.visible = hasText;
 		if (this.text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
 		}
-		var hasText = this.text != null && this.text.length > 0;
 		if (hasText) {
 			this.textField.text = this.text;
 		} else {
@@ -664,7 +665,6 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (!hasText) {
 			this.textField.text = "";
 		}
-		this.textField.visible = hasText;
 		this._previousText = this.text;
 	}
 

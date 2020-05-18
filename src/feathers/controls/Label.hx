@@ -549,11 +549,12 @@ class Label extends FeathersControl implements ITextControl {
 	}
 
 	private function refreshText(sizeInvalid:Bool):Void {
+		var hasText = this.text != null && this.text.length > 0;
+		this.textField.visible = hasText;
 		if (this.text == this._previousText && !this._updatedTextStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
-		var hasText = this.text != null && this.text.length > 0;
 		if (hasText) {
 			this.textField.text = this.text;
 		} else {
@@ -582,7 +583,6 @@ class Label extends FeathersControl implements ITextControl {
 		if (!hasText) {
 			this.textField.text = "";
 		}
-		this.textField.visible = hasText;
 		this._previousText = this.text;
 	}
 
