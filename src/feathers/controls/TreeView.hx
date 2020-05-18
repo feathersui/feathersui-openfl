@@ -169,6 +169,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private var treeViewPort:AdvancedLayoutViewPort;
 
+	override private function get_focusEnabled():Bool {
+		return (this.selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
+			&& this.enabled
+			&& this.focusEnabled;
+	}
+
 	override private function get_primaryDirection():Direction {
 		if (Std.is(this.layout, IScrollLayout)) {
 			return cast(this.layout, IScrollLayout).primaryDirection;
@@ -978,6 +984,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function treeView_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
 		if (this.selectedLocation != null && event.keyCode == Keyboard.SPACE) {
 			if (this.openBranches.contains(this.selectedItem)) {
 				this.openBranches.remove(this.selectedItem);

@@ -671,6 +671,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function tabBar_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
 		var index = this.navigateWithKeyboard(this.selectedIndex, event.keyCode);
 		if (this.selectedIndex != index) {
 			event.preventDefault();

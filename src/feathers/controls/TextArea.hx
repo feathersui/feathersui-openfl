@@ -55,6 +55,10 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	private var textFieldViewPort:TextFieldViewPort;
 
+	override private function get_focusEnabled():Bool {
+		return this.enabled && this.focusEnabled;
+	}
+
 	/**
 		The current state of the text area.
 

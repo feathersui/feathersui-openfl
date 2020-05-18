@@ -158,6 +158,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var listViewPort:AdvancedLayoutViewPort;
 
+	override private function get_focusEnabled():Bool {
+		return (this.selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
+			&& this.enabled
+			&& this.focusEnabled;
+	}
+
 	override private function get_primaryDirection():Direction {
 		if (Std.is(this.layout, IScrollLayout)) {
 			return cast(this.layout, IScrollLayout).primaryDirection;
@@ -864,6 +870,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function listView_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
 		var index = this.navigateWithKeyboard(this.selectedIndex, event.keyCode);
 		if (this.selectedIndex != index) {
 			event.preventDefault();

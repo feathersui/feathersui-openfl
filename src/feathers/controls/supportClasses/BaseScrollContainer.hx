@@ -8,6 +8,8 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.core.IFocusObject;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
@@ -52,6 +54,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function new() {
 		super();
+
+		this.addEventListener(KeyboardEvent.KEY_DOWN, baseScrollContainer_keyDownHandler);
 	}
 
 	/**
@@ -100,6 +104,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var chromeMeasuredHeight:Float = 0.0;
 	private var chromeMeasuredMinHeight:Float = 0.0;
 	private var chromeMeasuredMaxHeight:Float = Math.POSITIVE_INFINITY;
+
+	override private function get_focusEnabled():Bool {
+		return (this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX) && super.focusEnabled;
+	}
 
 	/**
 		The minimum space, in pixels, between the container's top edge and the
@@ -1351,6 +1359,52 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (!this._scrollerDraggingY && this.scroller.draggingY) {
 			this._scrollerDraggingY = true;
 			this.revealScrollBarY();
+		}
+	}
+
+	private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || event.isDefaultPrevented()) {
+			return;
+		}
+
+		var newScrollX = this.scrollX;
+		var newScrollY = this.scrollY;
+		switch (event.keyCode) {
+			case Keyboard.UP:
+				newScrollY = this.scrollY - 10.0;
+			case Keyboard.DOWN:
+				newScrollY = this.scrollY + 10.0;
+			case Keyboard.LEFT:
+				newScrollX = this.scrollX - 10.0;
+			case Keyboard.RIGHT:
+				newScrollX = this.scrollX + 10.0;
+			case Keyboard.PAGE_UP:
+				newScrollY = this.scrollY - this.viewPort.visibleHeight;
+			case Keyboard.PAGE_DOWN:
+				newScrollY = this.scrollY + this.viewPort.visibleHeight;
+			case Keyboard.HOME:
+				newScrollY = this.minScrollY;
+			case Keyboard.END:
+				newScrollY = this.maxScrollY;
+		}
+		if (newScrollY < this.minScrollY) {
+			newScrollY = this.minScrollY;
+		} else if (newScrollY > this.maxScrollY) {
+			newScrollY = this.maxScrollY;
+		}
+		if (newScrollX < this.minScrollX) {
+			newScrollX = this.minScrollX;
+		} else if (newScrollX > this.maxScrollX) {
+			newScrollX = this.maxScrollX;
+		}
+
+		if (this.scrollY != newScrollY && this.scrollPolicyY != OFF) {
+			event.preventDefault();
+			this.scrollY = newScrollY;
+		}
+		if (this.scrollX != newScrollX && this.scrollPolicyX != OFF) {
+			event.preventDefault();
+			this.scrollX = newScrollX;
 		}
 	}
 
