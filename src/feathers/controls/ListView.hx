@@ -864,7 +864,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function listView_keyDownHandler(event:KeyboardEvent):Void {
-		this.focusRect = false;
 		var index = this.navigateWithKeyboard(this.selectedIndex, event.keyCode);
 		if (this.selectedIndex != index) {
 			event.preventDefault();
