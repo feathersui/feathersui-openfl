@@ -113,6 +113,8 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		return this.opened;
 	}
 
+	private var _ignoreOpenCloseChange = false;
+
 	@:style
 	public var indentation:Float = 0.0;
 
@@ -130,7 +132,10 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	override private function update():Void {
 		this.disclosureButton.visible = this.branch;
+		var oldIgnoreOpenCloseChange = this._ignoreOpenCloseChange;
+		this._ignoreOpenCloseChange = true;
 		this.disclosureButton.selected = this.opened;
+		this._ignoreOpenCloseChange = oldIgnoreOpenCloseChange;
 		super.update();
 	}
 
@@ -155,6 +160,9 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	}
 
 	private function treeViewItemRenderer_disclosureButton_changeHandler(event:Event):Void {
+		if (this._ignoreOpenCloseChange) {
+			return;
+		}
 		this.opened = this.disclosureButton.selected;
 	}
 }
