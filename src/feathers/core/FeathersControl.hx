@@ -271,20 +271,26 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 		if (show) {
 			this.focusManager.focusPane.addChild(this.focusRectSkin);
-			var point = new Point(0, 0);
-			point = this.localToGlobal(point);
-			point = this.focusManager.focusPane.globalToLocal(point);
-			this.focusRectSkin.x = point.x;
-			this.focusRectSkin.y = point.y;
-			this.focusRectSkin.width = this.actualWidth;
-			this.focusRectSkin.height = this.actualHeight;
+			this.addEventListener(Event.ENTER_FRAME, feathersControl_focusRect_enterFrameHandler);
+			this.positionFocusRect();
 		} else if (this.focusRectSkin.parent != null) {
+			this.removeEventListener(Event.ENTER_FRAME, feathersControl_focusRect_enterFrameHandler);
 			this.focusRectSkin.parent.removeChild(this.focusRectSkin);
 		}
 	}
 
 	private function clearStyle_layoutData():ILayoutData {
 		return this.setLayoutDataInternal(null);
+	}
+
+	private function positionFocusRect():Void {
+		var point = new Point(0, 0);
+		point = this.localToGlobal(point);
+		point = this.focusManager.focusPane.globalToLocal(point);
+		this.focusRectSkin.x = point.x;
+		this.focusRectSkin.y = point.y;
+		this.focusRectSkin.width = this.actualWidth;
+		this.focusRectSkin.height = this.actualHeight;
 	}
 
 	private function setLayoutDataInternal(value:ILayoutData):ILayoutData {
@@ -588,6 +594,10 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	private function layoutData_changeHandler(event:Event):Void {
 		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
+	}
+
+	private function feathersControl_focusRect_enterFrameHandler(event:Event):Void {
+		this.positionFocusRect();
 	}
 }
 
