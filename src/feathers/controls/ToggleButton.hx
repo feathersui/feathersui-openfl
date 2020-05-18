@@ -9,22 +9,25 @@
 package feathers.controls;
 
 import feathers.core.IFocusObject;
-import feathers.utils.MeasurementsUtil;
-import feathers.themes.steel.components.SteelToggleButtonStyles;
-import feathers.core.ITextControl;
-import feathers.layout.RelativePosition;
-import feathers.core.IUIControl;
-import feathers.core.IStateObserver;
-import openfl.display.DisplayObject;
-import feathers.layout.Measurements;
 import feathers.core.IMeasureObject;
-import feathers.core.InvalidationFlag;
+import feathers.core.IStateObserver;
+import feathers.core.ITextControl;
+import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
 import feathers.layout.HorizontalAlign;
+import feathers.layout.Measurements;
+import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
+import feathers.themes.steel.components.SteelToggleButtonStyles;
+import feathers.utils.MeasurementsUtil;
+import openfl.display.DisplayObject;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
+import openfl.ui.Keyboard;
 
 /**
 	A button that may be selected and deselected when clicked.
@@ -58,6 +61,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		initializeToggleButtonTheme();
 
 		super();
+
+		this.addEventListener(KeyboardEvent.KEY_DOWN, toggleButton_keyDownHandler);
 	}
 
 	private var textField:TextField;
@@ -1036,5 +1041,15 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			// next time that this icon is used for measurement
 			this.removeChild(icon);
 		}
+	}
+
+	private function toggleButton_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || (this.buttonMode && this.focusRect == true)) {
+			return;
+		}
+		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
+			return;
+		}
+		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 	}
 }

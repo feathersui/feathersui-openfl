@@ -141,14 +141,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		super();
 
 		this.tabEnabled = true;
-		this.focusRect = false;
+		this.focusRect = null;
 
 		if (this.viewPort == null) {
 			this.gridViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.gridViewPort);
 			this.viewPort = this.gridViewPort;
 		}
-		this.addEventListener(KeyboardEvent.KEY_DOWN, gridView_keyDownHandler);
 	}
 
 	private var _headerContainer:LayoutGroup;
@@ -760,64 +759,46 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
-	private function navigateWithKeyboard(startIndex:Int, keyCode:Int):Int {
+	private function navigateWithKeyboard(event:KeyboardEvent):Void {
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
-			return -1;
-		}
-		switch (keyCode) {
-			case Keyboard.UP:
-				var result = startIndex - 1;
-				if (result < 0) {
-					result = 0;
-				}
-				return result;
-			case Keyboard.DOWN:
-				var result = startIndex + 1;
-				if (result >= this.dataProvider.length) {
-					result = this.dataProvider.length - 1;
-				}
-				return result;
-			case Keyboard.LEFT:
-				var result = startIndex - 1;
-				if (result < 0) {
-					result = 0;
-				}
-				return result;
-			case Keyboard.RIGHT:
-				var result = startIndex + 1;
-				if (result >= this.dataProvider.length) {
-					result = this.dataProvider.length - 1;
-				}
-				return result;
-			case Keyboard.PAGE_UP:
-				var result = startIndex - 1;
-				if (result < 0) {
-					result = 0;
-				}
-				return result;
-			case Keyboard.PAGE_DOWN:
-				var result = startIndex + 1;
-				if (result >= this.dataProvider.length) {
-					result = this.dataProvider.length - 1;
-				}
-				return result;
-			case Keyboard.HOME:
-				return 0;
-			case Keyboard.END:
-				return this.dataProvider.length - 1;
-		}
-		return startIndex;
-	}
-
-	private function gridView_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
 			return;
 		}
-		var index = this.navigateWithKeyboard(this.selectedIndex, event.keyCode);
-		if (this.selectedIndex != index) {
-			event.preventDefault();
-			this.selectedIndex = index;
+		var result = this.selectedIndex;
+		switch (event.keyCode) {
+			case Keyboard.UP:
+				result = result - 1;
+			case Keyboard.DOWN:
+				result = result + 1;
+			case Keyboard.LEFT:
+				result = result - 1;
+			case Keyboard.RIGHT:
+				result = result + 1;
+			case Keyboard.PAGE_UP:
+				result = result - 1;
+			case Keyboard.PAGE_DOWN:
+				result = result + 1;
+			case Keyboard.HOME:
+				result = 0;
+			case Keyboard.END:
+				result = this.dataProvider.length - 1;
+			default:
+				// not keyboard navigation
+				return;
 		}
+		if (result < 0) {
+			result = 0;
+		} else if (result >= this.dataProvider.length) {
+			result = this.dataProvider.length - 1;
+		}
+		event.stopPropagation();
+		this.selectedIndex = result;
+	}
+
+	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		this.navigateWithKeyboard(event);
 	}
 
 	private function gridView_rowRenderer_triggerHandler(event:TriggerEvent):Void {

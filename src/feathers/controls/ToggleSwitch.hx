@@ -8,21 +8,23 @@
 
 package feathers.controls;
 
+import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
+import feathers.core.IUIControl;
+import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
+import feathers.events.FeathersEvent;
+import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelToggleSwitchStyles;
+import motion.Actuate;
+import motion.actuators.SimpleActuator;
 import motion.easing.IEasing;
 import motion.easing.Quart;
-import motion.actuators.SimpleActuator;
-import motion.Actuate;
-import feathers.core.IValidating;
 import openfl.display.DisplayObject;
-import feathers.core.InvalidationFlag;
-import feathers.layout.Measurements;
-import feathers.core.IUIControl;
-import openfl.events.MouseEvent;
 import openfl.events.Event;
-import feathers.events.FeathersEvent;
-import feathers.core.FeathersControl;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.ui.Keyboard;
 
 /**
 	Similar to a light switch, with on and off states that may be toggled.
@@ -71,8 +73,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		this.tabEnabled = true;
 		this.tabChildren = false;
-		this.focusRect = false;
+		this.focusRect = null;
 
+		this.addEventListener(KeyboardEvent.KEY_DOWN, toggleSwitch_keyDownHandler);
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
 	}
@@ -539,6 +542,16 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 
 		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2.0;
+	}
+
+	private function toggleSwitch_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || (this.buttonMode && this.focusRect == true)) {
+			return;
+		}
+		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
+			return;
+		}
+		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 	}
 
 	private function toggleSwitch_mouseDownHandler(event:MouseEvent):Void {

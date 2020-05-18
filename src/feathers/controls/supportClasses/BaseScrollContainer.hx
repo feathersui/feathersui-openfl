@@ -55,6 +55,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function new() {
 		super();
 
+		this.focusRect = null;
+
 		this.addEventListener(KeyboardEvent.KEY_DOWN, baseScrollContainer_keyDownHandler);
 	}
 
@@ -476,6 +478,64 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return 0.0;
 		}
 		return this.scroller.maxScrollY;
+	}
+
+	/**
+		The number of pixels the horizontal scroll position can be adjusted by
+		a step (such as with the left/right keyboard arrow keys, or a step
+		button on the horizontal scroll bar).
+
+		In the following example, the horizontal scroll step is set to 20 pixels:
+
+		```hx
+		container.scrollStepX = 20.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:isVar
+	public var scrollStepX(get, set):Float = 0.0;
+
+	private function get_scrollStepX():Float {
+		return this.scrollStepX;
+	}
+
+	private function set_scrollStepX(value:Float):Float {
+		if (this.scrollStepX == value) {
+			return this.scrollStepX;
+		}
+		this.scrollStepX = value;
+		this.setInvalid(InvalidationFlag.SCROLL);
+		return this.scrollStepX;
+	}
+
+	/**
+		The number of pixels the vertical scroll position can be adjusted by
+		a step (such as with the up/down keyboard arrow keys, or a step button
+		on the vertical scroll bar).
+
+		In the following example, the vertical scroll step is set to 20 pixels:
+
+		```hx
+		container.scrollStepY = 20.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:isVar
+	public var scrollStepY(get, set):Float = 0.0;
+
+	private function get_scrollStepY():Float {
+		return this.scrollStepY;
+	}
+
+	private function set_scrollStepY(value:Float):Float {
+		if (this.scrollStepY == value) {
+			return this.scrollStepY;
+		}
+		this.scrollStepY = value;
+		this.setInvalid(InvalidationFlag.SCROLL);
+		return this.scrollStepY;
 	}
 
 	/**
@@ -991,7 +1051,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarX.maximum = this.scroller.maxScrollX;
 			this.scrollBarX.value = this.scroller.scrollX;
 			this.scrollBarX.page = (this.scroller.maxScrollX - this.scroller.minScrollX) * this.viewPort.visibleWidth / this.viewPort.width;
-			this.scrollBarX.step = 0.0;
+			this.scrollBarX.step = this.scrollStepX;
 			var displayScrollBarX = cast(this.scrollBarX, DisplayObjectContainer);
 			displayScrollBarX.visible = this.showScrollBarX;
 			if (!this.autoHideScrollBars) {
@@ -1005,7 +1065,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarY.maximum = this.scroller.maxScrollY;
 			this.scrollBarY.value = this.scroller.scrollY;
 			this.scrollBarY.page = (this.scroller.maxScrollY - this.scroller.minScrollY) * this.viewPort.visibleHeight / this.viewPort.height;
-			this.scrollBarY.step = 0.0;
+			this.scrollBarY.step = this.scrollStepY;
 			var displayScrollBarY = cast(this.scrollBarY, DisplayObjectContainer);
 			displayScrollBarY.visible = this.showScrollBarY;
 			if (!this.autoHideScrollBars) {
@@ -1362,22 +1422,30 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 	}
 
-	private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.isDefaultPrevented()) {
+	private function scrollWithKeyboard(event:KeyboardEvent):Void {
+		if (this.scrollPolicyY == OFF && this.scrollPolicyX == OFF) {
 			return;
 		}
 
+		var stepX = this.scrollStepX;
+		if (stepX <= 0.0) {
+			stepX = 1.0;
+		}
+		var stepY = this.scrollStepY;
+		if (stepY <= 0.0) {
+			stepY = 1.0;
+		}
 		var newScrollX = this.scrollX;
 		var newScrollY = this.scrollY;
 		switch (event.keyCode) {
 			case Keyboard.UP:
-				newScrollY = this.scrollY - 10.0;
+				newScrollY = this.scrollY - stepY;
 			case Keyboard.DOWN:
-				newScrollY = this.scrollY + 10.0;
+				newScrollY = this.scrollY + stepY;
 			case Keyboard.LEFT:
-				newScrollX = this.scrollX - 10.0;
+				newScrollX = this.scrollX - stepX;
 			case Keyboard.RIGHT:
-				newScrollX = this.scrollX + 10.0;
+				newScrollX = this.scrollX + stepX;
 			case Keyboard.PAGE_UP:
 				newScrollY = this.scrollY - this.viewPort.visibleHeight;
 			case Keyboard.PAGE_DOWN:
@@ -1386,6 +1454,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 				newScrollY = this.minScrollY;
 			case Keyboard.END:
 				newScrollY = this.maxScrollY;
+			default:
+				// not keyboard scrolling
+				return;
 		}
 		if (newScrollY < this.minScrollY) {
 			newScrollY = this.minScrollY;
@@ -1398,14 +1469,21 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			newScrollX = this.maxScrollX;
 		}
 
+		event.stopPropagation();
 		if (this.scrollY != newScrollY && this.scrollPolicyY != OFF) {
-			event.preventDefault();
 			this.scrollY = newScrollY;
 		}
 		if (this.scrollX != newScrollX && this.scrollPolicyX != OFF) {
-			event.preventDefault();
 			this.scrollX = newScrollX;
 		}
+	}
+
+	private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || event.isDefaultPrevented()) {
+			return;
+		}
+
+		this.scrollWithKeyboard(event);
 	}
 
 	private function scroller_scrollStartHandler(event:ScrollEvent):Void {

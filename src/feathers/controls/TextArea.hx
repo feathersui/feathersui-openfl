@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import openfl.display.DisplayObject;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
@@ -36,11 +38,10 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		this.tabEnabled = true;
 		this.tabChildren = false;
-		this.focusRect = false;
+		this.focusRect = null;
 
 		if (this.viewPort == null) {
 			this.textFieldViewPort = new TextFieldViewPort();
-			this.textFieldViewPort.textFieldType = INPUT;
 			this.textFieldViewPort.wordWrap = true;
 			this.textFieldViewPort.multiline = true;
 			this.textFieldViewPort.addEventListener(Event.CHANGE, textArea_viewPort_changeHandler);
@@ -57,6 +58,28 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	override private function get_focusEnabled():Bool {
 		return this.enabled && this.focusEnabled;
+	}
+
+	/**
+		Indicates if the text area is editable.
+
+		The following example disables editing:
+
+		```hx
+		textArea.editable = false;
+		```
+
+		@since 1.0.0
+	**/
+	public var editable(default, set):Bool = true;
+
+	private function set_editable(value:Bool):Bool {
+		if (this.editable == value) {
+			return this.editable;
+		}
+		this.editable = value;
+		this.setInvalid(InvalidationFlag.STATE);
+		return this.editable;
 	}
 
 	/**
@@ -417,6 +440,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		if (stateInvalid) {
 			this.textFieldViewPort.enabled = this.enabled;
+			this.textFieldViewPort.textFieldType = this.editable ? INPUT : DYNAMIC;
 		}
 
 		super.update();
@@ -454,6 +478,25 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textFieldViewPort;
 		}
+	}
+
+	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		switch (event.keyCode) {
+			case Keyboard.UP:
+			case Keyboard.DOWN:
+			case Keyboard.LEFT:
+			case Keyboard.RIGHT:
+			case Keyboard.PAGE_UP:
+			case Keyboard.PAGE_DOWN:
+			case Keyboard.HOME:
+			case Keyboard.END:
+			default:
+				return;
+		}
+		event.stopPropagation();
 	}
 
 	private function textArea_viewPort_changeHandler(event:Event):Void {

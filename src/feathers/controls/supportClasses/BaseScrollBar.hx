@@ -35,7 +35,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		super();
 
 		this.tabChildren = false;
-		this.focusRect = false;
+		this.focusRect = null;
 	}
 
 	/**

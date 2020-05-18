@@ -9,22 +9,25 @@
 package feathers.controls;
 
 import feathers.core.IFocusObject;
-import feathers.utils.MeasurementsUtil;
-import feathers.themes.steel.components.SteelButtonStyles;
-import openfl.display.DisplayObject;
 import feathers.core.IMeasureObject;
-import feathers.core.InvalidationFlag;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
-import feathers.core.IStateObserver;
+import feathers.themes.steel.components.SteelButtonStyles;
+import feathers.utils.MeasurementsUtil;
+import openfl.display.DisplayObject;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
+import openfl.ui.Keyboard;
 
 /**
 	A push button control that may be triggered when pressed and released.
@@ -60,6 +63,8 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		this.tabEnabled = true;
 		this.tabChildren = false;
 		this.focusRect = false;
+
+		this.addEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
 	}
 
 	private var textField:TextField;
@@ -888,5 +893,15 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			// next time that this icon is used for measurement
 			this.removeChild(icon);
 		}
+	}
+
+	private function button_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || (this.buttonMode && this.focusRect == true)) {
+			return;
+		}
+		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
+			return;
+		}
+		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 	}
 }

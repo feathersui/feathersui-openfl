@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.core.IFocusObject;
 import feathers.utils.MeasurementsUtil;
 import feathers.themes.steel.components.SteelTextInputStyles;
@@ -63,9 +65,32 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		this.tabEnabled = true;
 		this.tabChildren = false;
-		this.focusRect = false;
+		this.focusRect = null;
 
 		this.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
+		this.addEventListener(KeyboardEvent.KEY_DOWN, textInput_keyDownHandler);
+	}
+
+	/**
+		Indicates if the text input is editable.
+
+		The following example disables editing:
+
+		```hx
+		textInput.editable = false;
+		```
+
+		@since 1.0.0
+	**/
+	public var editable(default, set):Bool = true;
+
+	private function set_editable(value:Bool):Bool {
+		if (this.editable == value) {
+			return this.editable;
+		}
+		this.editable = value;
+		this.setInvalid(InvalidationFlag.STATE);
+		return this.editable;
 	}
 
 	/**
@@ -652,9 +677,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.enabled && this.textField.type != TextFieldType.INPUT) {
+		if (this.enabled && this.editable && this.textField.type != TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.INPUT;
-		} else if (!this.enabled && this.textField.type == TextFieldType.INPUT) {
+		} else if ((!this.enabled || !this.editable) && this.textField.type == TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.DYNAMIC;
 		}
 		if (this.textField.embedFonts != this.embedFonts) {
@@ -794,6 +819,25 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textField;
 		}
+	}
+
+	private function textInput_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		switch (event.keyCode) {
+			case Keyboard.UP:
+			case Keyboard.DOWN:
+			case Keyboard.LEFT:
+			case Keyboard.RIGHT:
+			case Keyboard.PAGE_UP:
+			case Keyboard.PAGE_DOWN:
+			case Keyboard.HOME:
+			case Keyboard.END:
+			default:
+				return;
+		}
+		event.stopPropagation();
 	}
 
 	private function textField_focusInHandler(event:FocusEvent):Void {

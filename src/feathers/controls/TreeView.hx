@@ -157,14 +157,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		super();
 
 		this.tabEnabled = true;
-		this.focusRect = false;
+		this.focusRect = null;
 
 		if (this.viewPort == null) {
 			this.treeViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.treeViewPort);
 			this.viewPort = this.treeViewPort;
 		}
-		this.addEventListener(KeyboardEvent.KEY_DOWN, treeView_keyDownHandler);
 	}
 
 	private var treeViewPort:AdvancedLayoutViewPort;
@@ -938,56 +937,48 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return -1;
 	}
 
-	private function navigateWithKeyboard(startLocation:Array<Int>, keyCode:Int):Array<Int> {
-		if (this.dataProvider == null || this.dataProvider.getLength() == 0) {
-			return [];
+	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (this._layoutItems.length == 0) {
+			return;
 		}
-		var startIndex = this.locationToDisplayIndex(startLocation, false);
+		var startIndex = this.locationToDisplayIndex(this.selectedLocation, false);
 		var result = startIndex;
-		switch (keyCode) {
+		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
-				if (result < 0) {
-					result = 0;
-				}
 			case Keyboard.DOWN:
 				result = result + 1;
-				if (result >= this._layoutItems.length) {
-					result = this._layoutItems.length - 1;
-				}
 			case Keyboard.LEFT:
 				result = result - 1;
-				if (result < 0) {
-					result = 0;
-				}
 			case Keyboard.RIGHT:
 				result = result + 1;
-				if (result >= this._layoutItems.length) {
-					result = this._layoutItems.length - 1;
-				}
 			case Keyboard.PAGE_UP:
 				result = result - 1;
-				if (result < 0) {
-					result = 0;
-				}
 			case Keyboard.PAGE_DOWN:
 				result = result + 1;
-				if (result >= this._layoutItems.length) {
-					result = this._layoutItems.length - 1;
-				}
 			case Keyboard.HOME:
 				result = 0;
 			case Keyboard.END:
 				result = this._layoutItems.length - 1;
+			default:
+				// not keyboard navigation
+				return;
 		}
-		return this.displayIndexToLocation(result);
+		if (result < 0) {
+			result = 0;
+		} else if (result >= this._layoutItems.length) {
+			result = this._layoutItems.length - 1;
+		}
+		event.stopPropagation();
+		this.selectedLocation = this.displayIndexToLocation(result);
 	}
 
-	private function treeView_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || event.isDefaultPrevented()) {
 			return;
 		}
 		if (this.selectedLocation != null && event.keyCode == Keyboard.SPACE) {
+			event.stopPropagation();
 			if (this.openBranches.contains(this.selectedItem)) {
 				this.openBranches.remove(this.selectedItem);
 			} else {
@@ -996,11 +987,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.setInvalid(InvalidationFlag.DATA);
 			return;
 		}
-		var location = this.navigateWithKeyboard(this.selectedLocation, event.keyCode);
-		if (this.compareLocations(this.selectedLocation, location) != 0) {
-			event.preventDefault();
-			this.selectedLocation = location;
-		}
+		this.navigateWithKeyboard(event);
 	}
 
 	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
