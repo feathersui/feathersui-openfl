@@ -126,7 +126,7 @@ class KeyToState<T> {
 	**/
 	public var enabled(default, default):Bool = true;
 
-	private var _downKeyCode:Null<UInt> = null;
+	private var _downKeyCode:Null<Int> = null;
 
 	private function changeState(value:T):Void {
 		var oldState = this.currentState;
