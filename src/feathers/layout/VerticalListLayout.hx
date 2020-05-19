@@ -483,9 +483,42 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		@see `feathers.layout.IScrollLayout.getNearestScrollPositionForIndex()`
 	**/
 	public function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point {
+		var estimatedItemHeight:Null<Float> = null;
+		var minY = 0.0;
+		var maxY = 0.0;
+		var positionY = this.paddingTop;
+		for (i in 0...itemCount) {
+			var itemHeight = 0.0;
+			if (this.virtualCache != null) {
+				var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+				if (cacheItem != null) {
+					itemHeight = cacheItem.itemHeight;
+					if (estimatedItemHeight == null) {
+						estimatedItemHeight = itemHeight;
+					}
+				} else if (estimatedItemHeight != null) {
+					itemHeight = estimatedItemHeight;
+				}
+			}
+			if (i == index) {
+				maxY = positionY;
+				minY = maxY + itemHeight - height;
+				break;
+			}
+			positionY += itemHeight + this.gap;
+		}
+
+		var targetY = this.scrollY;
+		if (targetY < minY) {
+			targetY = minY;
+		} else if (targetY > maxY) {
+			targetY = maxY;
+		}
 		if (result == null) {
 			result = new Point();
 		}
+		result.x = this.scrollX;
+		result.y = targetY;
 		return result;
 	}
 

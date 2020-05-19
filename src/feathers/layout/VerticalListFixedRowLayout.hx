@@ -470,9 +470,31 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		@see `feathers.layout.IScrollLayout.getNearestScrollPositionForIndex()`
 	**/
 	public function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point {
+		var itemHeight = 0.0;
+		if (this.rowHeight != null) {
+			itemHeight = this.rowHeight;
+		} else if (this.virtualCache != null) {
+			var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				itemHeight = cacheItem.itemHeight;
+			}
+		}
+		itemHeight += this.gap;
+
+		var maxY = this.paddingTop + (itemHeight * index);
+		var minY = maxY + itemHeight - height;
+
+		var targetY = this.scrollY;
+		if (targetY < minY) {
+			targetY = minY;
+		} else if (targetY > maxY) {
+			targetY = maxY;
+		}
 		if (result == null) {
 			result = new Point();
 		}
+		result.x = this.scrollX;
+		result.y = targetY;
 		return result;
 	}
 
