@@ -10,7 +10,6 @@ package feathers.controls;
 
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
-import feathers.events.TriggerEvent;
 import openfl.events.FocusEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DisplayObjectRecycler;
@@ -415,6 +414,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private var _filterText:String = "";
 
+	override public function showFocus(show:Bool):Void {
+		super.showFocus(show);
+		if (this.textInput != null) {
+			this.textInput.showFocus(show);
+		}
+	}
+
 	/**
 		Opens the pop-up list, if it is not already open.
 
@@ -521,7 +527,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private function createButton():Void {
 		if (this.button != null) {
-			this.button.removeEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
+			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
+			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
 			this.button = null;
 		}
 		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
@@ -529,7 +536,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.button.variant == null) {
 			this.button.variant = ComboBox.CHILD_VARIANT_BUTTON;
 		}
-		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
+		this.button.addEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
+		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
 		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
@@ -681,7 +689,19 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 	}
 
-	private function button_triggerHandler(event:TriggerEvent):Void {
+	private function button_mouseDownHandler(event:MouseEvent):Void {
+		if (this.open) {
+			this.closeListView();
+		} else {
+			this.openListView();
+		}
+	}
+
+	private function button_touchBeginHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
 		if (this.open) {
 			this.closeListView();
 		} else {

@@ -12,7 +12,6 @@ import openfl.events.FocusEvent;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
 import feathers.utils.MeasurementsUtil;
-import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.data.ListViewItemState;
@@ -481,7 +480,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function createButton():Void {
 		if (this.button != null) {
-			this.button.removeEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
+			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
+			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
 			this.button = null;
 		}
 		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
@@ -489,7 +489,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.button.variant == null) {
 			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
 		}
-		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
+		this.button.addEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
+		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
 		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
@@ -580,7 +581,19 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.button.validateNow();
 	}
 
-	private function button_triggerHandler(event:TriggerEvent):Void {
+	private function button_mouseDownHandler(event:MouseEvent):Void {
+		if (this.open) {
+			this.closeListView();
+		} else {
+			this.openListView();
+		}
+	}
+
+	private function button_touchBeginHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
 		if (this.open) {
 			this.closeListView();
 		} else {
