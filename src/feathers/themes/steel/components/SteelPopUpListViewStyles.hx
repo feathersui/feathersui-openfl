@@ -8,6 +8,8 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
+import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.layout.RelativePosition;
 import feathers.controls.ButtonState;
 import openfl.display.Shape;
@@ -34,6 +36,14 @@ class SteelPopUpListViewStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(PopUpListView, null) == null) {
+			styleProvider.setStyleFunction(PopUpListView, null, function(listView:PopUpListView):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+				if (isDesktop) {
+					listView.popUpAdapter = new DropDownPopUpAdapter();
+				}
+			});
+		}
 		if (styleProvider.getStyleFunction(Button, PopUpListView.CHILD_VARIANT_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, PopUpListView.CHILD_VARIANT_BUTTON, function(button:Button):Void {
 				theme.styleProvider.getStyleFunction(Button, null)(button);
