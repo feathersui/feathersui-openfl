@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import openfl.geom.Point;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
@@ -475,6 +476,16 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		}
 		result.start = startIndex;
 		result.end = endIndex;
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.IScrollLayout.getNearestScrollPositionForIndex()`
+	**/
+	public function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point {
+		if (result == null) {
+			result = new Point();
+		}
 		return result;
 	}
 

@@ -8,6 +8,8 @@
 
 package feathers.layout;
 
+import openfl.geom.Point;
+
 /**
 	A layout that is affected by changes to scroll position.
 
@@ -47,4 +49,9 @@ interface IScrollLayout extends ILayout {
 		@since 1.0.0
 	**/
 	var requiresLayoutOnScroll(get, never):Bool;
+
+	/**
+		@since 1.0.0
+	**/
+	function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point;
 }
