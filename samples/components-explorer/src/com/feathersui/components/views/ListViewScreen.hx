@@ -1,8 +1,5 @@
 package com.feathersui.components.views;
 
-import feathers.layout.VerticalListFixedRowLayout;
-import feathers.layout.HorizontalListLayout;
-import feathers.layout.VerticalListLayout;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
@@ -24,15 +21,11 @@ class ListViewScreen extends Panel {
 		this.layout = new AnchorLayout();
 
 		var items = [];
-		for (i in 0...5) {
+		for (i in 0...30) {
 			items[i] = {text: "List Item " + (i + 1)};
 		}
 
-		var layout = new VerticalListFixedRowLayout();
-		layout.verticalAlign = BOTTOM;
-
 		this.listView = new ListView();
-		this.listView.layout = layout;
 		this.listView.dataProvider = new ArrayCollection(items);
 		this.listView.itemToText = (item:Dynamic) -> {
 			return item.text;
