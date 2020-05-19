@@ -307,11 +307,11 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 			if (this.virtualCache != null) {
 				var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
 				if (cacheItem == null) {
-					cacheItem = new VirtualCacheItem(virtualRowHeight);
+					cacheItem = new VirtualCacheItem(itemHeight);
 					this.virtualCache[i] = cacheItem;
 					FeathersEvent.dispatch(this, Event.CHANGE);
-				} else if (cacheItem.itemHeight != virtualRowHeight) {
-					cacheItem.itemHeight = virtualRowHeight;
+				} else if (cacheItem.itemHeight != itemHeight) {
+					cacheItem.itemHeight = itemHeight;
 					this.virtualCache[i] = cacheItem;
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}

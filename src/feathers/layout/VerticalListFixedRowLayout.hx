@@ -385,7 +385,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					if (this.virtualCache == null || virtualCache.length <= i) {
 						continue;
 					}
-					var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+					var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
 					if (cacheItem == null) {
 						continue;
 					}
