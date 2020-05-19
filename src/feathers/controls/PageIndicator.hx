@@ -482,19 +482,21 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 	}
 
 	private function handleClickOrTap(localX:Float, localY:Float):Void {
-		var button = this.activeToggleButtons[this.selectedIndex];
 		var selectedIndex = this.selectedIndex;
-		if (Std.is(this.layout, VerticalLayout)) {
-			if (localY < button.y) {
-				selectedIndex--;
-			} else if (localY > (button.y + button.height)) {
-				selectedIndex++;
-			}
-		} else {
-			if (localX < button.x) {
-				selectedIndex--;
-			} else if (localX > (button.x + button.width)) {
-				selectedIndex++;
+		if (selectedIndex != -1) {
+			var button = this.activeToggleButtons[selectedIndex];
+			if (Std.is(this.layout, VerticalLayout)) {
+				if (localY < button.y) {
+					selectedIndex--;
+				} else if (localY > (button.y + button.height)) {
+					selectedIndex++;
+				}
+			} else {
+				if (localX < button.x) {
+					selectedIndex--;
+				} else if (localX > (button.x + button.width)) {
+					selectedIndex++;
+				}
 			}
 		}
 		if (selectedIndex < 0) {
