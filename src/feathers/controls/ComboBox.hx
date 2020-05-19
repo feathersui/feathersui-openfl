@@ -120,6 +120,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		initializeComboBoxTheme();
 
 		super();
+
+		this.addEventListener(FocusEvent.FOCUS_IN, comboBox_focusInHandler);
 		this.addEventListener(KeyboardEvent.KEY_UP, comboBox_keyUpHandler);
 	}
 
@@ -709,6 +711,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler);
 		this.closeListView();
+	}
+
+	private function comboBox_focusInHandler(event:FocusEvent):Void {
+		if (Reflect.compare(event.target, this) == 0) {
+			this.stage.focus = this.textInput;
+		}
 	}
 
 	private function comboBox_keyUpHandler(event:KeyboardEvent):Void {
