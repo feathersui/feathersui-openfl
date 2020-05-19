@@ -8,15 +8,14 @@
 
 package feathers.themes.steel.components;
 
-import feathers.utils.DeviceUtil;
-import feathers.layout.HorizontalLayout;
 import feathers.controls.TabBar;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleButtonState;
-import feathers.layout.HorizontalStretchLayout;
+import feathers.layout.HorizontalLayout;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `TabBar` component.

@@ -26,7 +26,6 @@ import feathers.data.IFlatCollection;
 import feathers.data.TabBarItemState;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
-import feathers.layout.HorizontalStretchLayout;
 import feathers.layout.ILayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
@@ -274,7 +273,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		The following example tells the tab bar to use a custom layout:
 
 		```hx
-		var layout = new HorizontalStretchLayout();
+		var layout = new HorizontalDistributedLayout();
 		layout.maxItemWidth = 300.0;
 		tabBar.layout = layout;
 		```

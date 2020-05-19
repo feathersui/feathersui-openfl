@@ -165,7 +165,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 		The following example tells the page indicator to use a custom layout:
 
 		```hx
-		var layout = new HorizontalStretchLayout();
+		var layout = new HorizontalDistributedLayout();
 		layout.maxItemWidth = 300.0;
 		pages.layout = layout;
 		```

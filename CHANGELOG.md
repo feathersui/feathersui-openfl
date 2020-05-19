@@ -11,8 +11,8 @@
 - AnchorLayoutData: anchors may optionally be relative to other children in the container
 - HorizontalListLayout: new layout optimized for lists
 - VerticalListLayout: new layout optimized for lists
-- HorizontalStretchLayout: new layout
-- VerticalStretchLayout: new layout
+- HorizontalDistributedLayout: new layout
+- VerticalDistributedLayout: new layout
 - Scale9Bitmap: new custom display object for rendering `BitmapData` with `scale9Grid`
 - Basic keyboard focus management
 - Improved support for Neko and HashLink

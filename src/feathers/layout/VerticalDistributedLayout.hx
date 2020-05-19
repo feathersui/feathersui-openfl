@@ -15,16 +15,16 @@ import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
 /**
-	Positions items from left to right in a single row, and all items are
+	Positions items from top to bottom in a single column, and all items are
 	resized to have the same width and height.
 
-	@see [Tutorial: How to use HorizontalStretchLayout with layout containers](https://feathersui.com/learn/haxe-openfl/horizontal-stretch-layout/)
+	@see [Tutorial: How to use VerticalDistributedLayout with layout containers](https://feathersui.com/learn/haxe-openfl/vertical-distributed-layout/)
 
 	@since 1.0.0
 **/
-class HorizontalStretchLayout extends EventDispatcher implements ILayout {
+class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 	/**
-		Creates a new `HorizontalStretchLayout` object.
+		Creates a new `VerticalDistributedLayout` object.
 
 		@since 1.0.0
 	**/
@@ -157,59 +157,59 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
-		The maximum width of an item in the layout.
+		The maximum height of an item in the layout.
 
-		In the following example, the layout's maximum item width is set to 20
+		In the following example, the layout's maximum item height is set to 20
 		pixels:
 
 		```hx
-		layout.maxItemWidth = 20.0;
+		layout.maxItemHeight = 20.0;
 		```
 
 		@since 1.0.0
 	**/
-	public var maxItemWidth(default, set):Float = Math.POSITIVE_INFINITY;
+	public var maxItemHeight(default, set):Float = Math.POSITIVE_INFINITY;
 
-	private function set_maxItemWidth(value:Float):Float {
-		if (this.maxItemWidth == value) {
-			return this.maxItemWidth;
+	private function set_maxItemHeight(value:Float):Float {
+		if (this.maxItemHeight == value) {
+			return this.maxItemHeight;
 		}
-		this.maxItemWidth = value;
+		this.maxItemHeight = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.maxItemWidth;
+		return this.maxItemHeight;
 	}
 
 	/**
-		The minimum width of an item in the layout.
+		The minimum height of an item in the layout.
 
-		In the following example, the layout's minimum item width is set to 20
+		In the following example, the layout's minimum item height is set to 20
 		pixels:
 
 		```hx
-		layout.minItemWidth = 20.0;
+		layout.minItemHeight = 20.0;
 		```
 
 		@since 1.0.0
 	**/
-	public var minItemWidth(default, set):Float = 0.0;
+	public var minItemHeight(default, set):Float = 0.0;
 
-	private function set_minItemWidth(value:Float):Float {
-		if (this.minItemWidth == value) {
-			return this.minItemWidth;
+	private function set_minItemHeight(value:Float):Float {
+		if (this.minItemHeight == value) {
+			return this.minItemHeight;
 		}
-		this.minItemWidth = value;
+		this.minItemHeight = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.minItemWidth;
+		return this.minItemHeight;
 	}
 
 	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		this.applyDistributedWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);
+		this.applyDistributedHeight(items, measurements.height, measurements.minHeight, measurements.maxHeight);
 
-		var contentWidth = this.paddingLeft;
-		var contentHeight = 0.0;
+		var contentWidth = 0.0;
+		var contentHeight = this.paddingTop;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
@@ -221,20 +221,17 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
-			if (contentHeight < item.height) {
-				contentHeight = item.height;
+			if (contentWidth < item.width) {
+				contentWidth = item.width;
 			}
-			if (measurements.height != null) {
-				item.height = measurements.height;
-			}
-			item.x = contentWidth;
-			contentWidth += item.width + this.gap;
+			item.y = contentHeight;
+			contentHeight += item.height + this.gap;
 		}
-		contentWidth += this.paddingRight;
+		contentWidth += this.paddingLeft + this.paddingRight;
+		contentHeight += this.paddingBottom;
 		if (items.length > 0) {
-			contentWidth -= this.gap;
+			contentHeight -= this.gap;
 		}
-		contentHeight += this.paddingTop + this.paddingBottom;
 
 		var viewPortWidth = contentWidth;
 		if (measurements.width != null) {
@@ -274,50 +271,56 @@ class HorizontalStretchLayout extends EventDispatcher implements ILayout {
 		return result;
 	}
 
-	private function applyDistributedWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
-			explicitMaxWidth:Null<Float>):Void {
-		var maxMinWidth = 0.0;
-		var totalPercentWidth = 0.0;
+	private inline function validateItems(items:Array<DisplayObject>) {
 		for (item in items) {
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
-			var itemMinWidth = 0.0;
+		}
+	}
+
+	private function applyDistributedHeight(items:Array<DisplayObject>, explicitHeight:Null<Float>, explicitMinHeight:Null<Float>,
+			explicitMaxHeight:Null<Float>):Void {
+		var maxMinHeight = 0.0;
+		var totalPercentHeight = 0.0;
+		for (item in items) {
+			if (Std.is(item, IValidating)) {
+				cast(item, IValidating).validateNow();
+			}
+			var itemMinHeight = 0.0;
 			if (Std.is(item, IMeasureObject)) {
 				var measureItem = cast(item, IMeasureObject);
-				itemMinWidth = measureItem.minWidth;
-			} else {
-				itemMinWidth = item.width;
+				itemMinHeight = measureItem.minHeight;
 			}
-			if (maxMinWidth < itemMinWidth) {
-				maxMinWidth = itemMinWidth;
+			if (maxMinHeight < itemMinHeight) {
+				maxMinHeight = itemMinHeight;
 			}
-			totalPercentWidth += 100.0;
+			totalPercentHeight += 100.0;
 		}
-		var remainingWidth = 0.0;
-		if (explicitWidth != null) {
-			remainingWidth = explicitWidth;
+		var remainingHeight = 0.0;
+		if (explicitHeight != null) {
+			remainingHeight = explicitHeight;
 		} else {
-			remainingWidth = this.paddingLeft + this.paddingRight + ((maxMinWidth + this.gap) * items.length) - this.gap;
-			if (explicitMinWidth != null && remainingWidth < explicitMinWidth) {
-				remainingWidth = explicitMinWidth;
-			} else if (explicitMaxWidth != null && remainingWidth > explicitMaxWidth) {
-				remainingWidth = explicitMaxWidth;
+			remainingHeight = this.paddingTop + this.paddingBottom + ((maxMinHeight + this.gap) * items.length) - this.gap;
+			if (explicitMinHeight != null && remainingHeight < explicitMinHeight) {
+				remainingHeight = explicitMinHeight;
+			} else if (explicitMaxHeight != null && remainingHeight > explicitMaxHeight) {
+				remainingHeight = explicitMaxHeight;
 			}
 		}
-		remainingWidth -= (this.paddingLeft + this.paddingRight + this.gap * (items.length - 1));
-		if (remainingWidth < 0.0) {
-			remainingWidth = 0.0;
+		remainingHeight -= (this.paddingTop + this.paddingBottom + this.gap * (items.length - 1));
+		if (remainingHeight < 0.0) {
+			remainingHeight = 0.0;
 		}
-		var percentToPixels = remainingWidth / totalPercentWidth;
+		var percentToPixels = remainingHeight / totalPercentHeight;
 		for (item in items) {
-			var itemWidth = percentToPixels * 100.0;
-			if (itemWidth < this.minItemWidth) {
-				itemWidth = this.minItemWidth;
-			} else if (itemWidth > this.maxItemWidth) {
-				itemWidth = this.maxItemWidth;
+			var itemHeight = percentToPixels * 100.0;
+			if (itemHeight < this.minItemHeight) {
+				itemHeight = this.minItemHeight;
+			} else if (itemHeight > this.maxItemHeight) {
+				itemHeight = this.maxItemHeight;
 			}
-			item.width = itemWidth;
+			item.height = itemHeight;
 			if (Std.is(item, IValidating)) {
 				// changing the width of the item may cause its height
 				// to change, so we need to validate. the height is
