@@ -480,8 +480,10 @@ class BaseNavigator extends FeathersControl {
 			// see the comment in the listener for details.
 			this.addEventListener(Event.ENTER_FRAME, baseNavigator_transitionWait_enterFrameHandler);
 		} else {
-			// the view may have been hidden if the transition was delayed
-			this.activeItemView.visible = true;
+			if (this.activeItemView != null) {
+				// the view may have been hidden if the transition was delayed
+				this.activeItemView.visible = true;
+			}
 			var transitionContext = defaultTransition(this._previousViewInTransition, this.activeItemView);
 			transitionContext.addEventListener(Event.COMPLETE, transition_completeHandler);
 			transitionContext.addEventListener(Event.CANCEL, transition_cancelHandler);
