@@ -323,7 +323,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			viewPortWidth = measurements.width;
 		} else {
 			if (this.requestedColumnCount != null) {
-				result.viewPortWidth = virtualColumnWidth * this.requestedColumnCount;
+				viewPortWidth = virtualColumnWidth * this.requestedColumnCount;
 			}
 			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
 				viewPortWidth = measurements.minWidth;
@@ -489,6 +489,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			horizontalOffset = (maxAlignmentWidth - contentWidth) / 2.0;
 		}
 		for (item in items) {
+			if (item == null) {
+				continue;
+			}
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);

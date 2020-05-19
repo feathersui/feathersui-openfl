@@ -327,7 +327,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 			viewPortHeight = measurements.height;
 		} else {
 			if (this.requestedRowCount != null) {
-				result.viewPortHeight = virtualRowHeight * this.requestedRowCount;
+				viewPortHeight = virtualRowHeight * this.requestedRowCount;
 			}
 			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
 				viewPortHeight = measurements.minHeight;
@@ -493,6 +493,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 			verticalOffset = (maxAlignmentHeight - contentHeight) / 2.0;
 		}
 		for (item in items) {
+			if (item == null) {
+				continue;
+			}
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
