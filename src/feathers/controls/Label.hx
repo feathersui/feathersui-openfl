@@ -92,6 +92,7 @@ class Label extends FeathersControl implements ITextControl {
 	private var textField:TextField;
 
 	private var _previousText:String = null;
+	private var _previousHTMLText:String = null;
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
@@ -106,8 +107,12 @@ class Label extends FeathersControl implements ITextControl {
 		label.text = "Good afternoon!";
 		```
 
+		Note: If the `htmlText` property is not `null`, the `text` property will
+		be ignored.
+
 		@default ""
 
+		@see `Label.htmlText`
 		@see `Label.textFormat`
 
 		@since 1.0.0
@@ -134,6 +139,34 @@ class Label extends FeathersControl implements ITextControl {
 		this.text = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.text;
+	}
+
+	/**
+		Text displayed by the label that is parsed as a simple form of HTML.
+
+		The following example sets the label's HTML text:
+
+		```hx
+		label.htmlText = "<b>Hello</b> <i>World</i>";
+		```
+
+		@default null
+
+		@see `Label.text`
+		@see `openfl.text.TextField.htmlText`
+
+		@since 1.0.0
+	**/
+	@:isVar
+	public var htmlText(default, set):String = null;
+
+	private function set_htmlText(value:String):String {
+		if (this.htmlText == value) {
+			return this.htmlText;
+		}
+		this.htmlText = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this.htmlText;
 	}
 
 	/**
@@ -550,12 +583,15 @@ class Label extends FeathersControl implements ITextControl {
 
 	private function refreshText(sizeInvalid:Bool):Void {
 		var hasText = this.text != null && this.text.length > 0;
-		this.textField.visible = hasText;
-		if (this.text == this._previousText && !this._updatedTextStyles && !sizeInvalid) {
+		var hasHTMLText = this.htmlText != null && this.htmlText.length > 0;
+		this.textField.visible = hasText || hasHTMLText;
+		if (this.text == this._previousText && this.htmlText == this._previousHTMLText && !this._updatedTextStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
-		if (hasText) {
+		if (hasHTMLText) {
+			this.textField.htmlText = this.htmlText;
+		} else if (hasText) {
 			this.textField.text = this.text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
@@ -580,10 +616,11 @@ class Label extends FeathersControl implements ITextControl {
 		if (textFieldWidth == null && this.wordWrap) {
 			this.textField.wordWrap = true;
 		}
-		if (!hasText) {
+		if (!hasText && !hasHTMLText) {
 			this.textField.text = "";
 		}
 		this._previousText = this.text;
+		this._previousHTMLText = this.htmlText;
 	}
 
 	private function refreshSelection():Void {
