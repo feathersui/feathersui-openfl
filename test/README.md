@@ -26,7 +26,6 @@ haxelib run munit test -swf
 ```
 
 **Warning:** You may need to click to activate the plugin before the tests will run.
-```
 
 To choose a specific web browser that has the plugin installed, add the `-browser` option:
 
