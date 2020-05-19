@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.FocusEvent;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
 import feathers.utils.MeasurementsUtil;
@@ -107,6 +108,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		initializePopUpListViewTheme();
 
 		super();
+
+		this.addEventListener(FocusEvent.FOCUS_IN, popUpListView_focusInHandler);
 		this.addEventListener(KeyboardEvent.KEY_UP, popUpListView_keyUpHandler);
 	}
 
@@ -362,6 +365,13 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		return this.listView.parent != null;
 	}
 
+	override public function showFocus(show:Bool):Void {
+		super.showFocus(show);
+		if (this.button != null) {
+			this.button.showFocus(show);
+		}
+	}
+
 	/**
 		Opens the pop-up list, if it is not already open.
 
@@ -592,6 +602,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler);
+	}
+
+	private function popUpListView_focusInHandler(event:FocusEvent):Void {
+		if (Reflect.compare(event.target, this) == 0) {
+			this.stage.focus = this.button;
+		}
 	}
 
 	private function popUpListView_keyUpHandler(event:KeyboardEvent):Void {
