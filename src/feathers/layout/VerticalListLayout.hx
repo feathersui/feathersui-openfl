@@ -239,6 +239,38 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 	}
 
 	/**
+		How the content is positioned vertically (along the y-axis) within the
+		container.
+
+		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
+		layout.
+
+		The following example aligns the container's content to the bottom:
+
+		```hx
+		layout.verticalAlign = BOTTOM;
+		```
+
+		@default feathers.layout.VerticalAlign.TOP
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
+	**/
+	public var verticalAlign(default, set):VerticalAlign = TOP;
+
+	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
+		if (this.verticalAlign == value) {
+			return this.verticalAlign;
+		}
+		this.verticalAlign = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.verticalAlign;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
@@ -289,20 +321,30 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 			positionY -= this.gap;
 		}
 		positionY += this.paddingBottom;
+
+		var viewPortHeight = positionY;
+		if (measurements.height != null) {
+			viewPortHeight = measurements.height;
+		} else {
+			if (this.requestedRowCount != null) {
+				result.viewPortHeight = virtualRowHeight * this.requestedRowCount;
+			}
+			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
+				viewPortHeight = measurements.minHeight;
+			} else if (measurements.maxHeight != null && viewPortHeight > measurements.maxHeight) {
+				viewPortHeight = measurements.maxHeight;
+			}
+		}
+
+		this.applyVerticalAlign(items, positionY, viewPortHeight);
+
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
 		result.contentWidth = viewPortWidth;
 		result.contentHeight = positionY;
 		result.viewPortWidth = viewPortWidth;
-		var viewPortHeight = measurements.height;
-		if (viewPortHeight != null) {
-			result.viewPortHeight = viewPortHeight;
-		} else if (this.requestedRowCount != null) {
-			result.viewPortHeight = virtualRowHeight * this.requestedRowCount;
-		} else {
-			result.viewPortHeight = positionY;
-		}
+		result.viewPortHeight = viewPortHeight;
 		return result;
 	}
 
@@ -434,6 +476,32 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		result.start = startIndex;
 		result.end = endIndex;
 		return result;
+	}
+
+	private inline function applyVerticalAlign(items:Array<DisplayObject>, contentHeight:Float, viewPortHeight:Float):Void {
+		if (this.verticalAlign != BOTTOM && this.verticalAlign != MIDDLE) {
+			return;
+		}
+		var maxAlignmentHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
+		if (contentHeight >= maxAlignmentHeight) {
+			return;
+		}
+		var verticalOffset = 0.0;
+		if (this.verticalAlign == BOTTOM) {
+			verticalOffset = maxAlignmentHeight - contentHeight;
+		} else if (this.verticalAlign == MIDDLE) {
+			verticalOffset = (maxAlignmentHeight - contentHeight) / 2.0;
+		}
+		for (item in items) {
+			var layoutObject:ILayoutObject = null;
+			if (Std.is(item, ILayoutObject)) {
+				layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
+			item.y = Math.max(this.paddingTop, item.y + verticalOffset);
+		}
 	}
 }
 

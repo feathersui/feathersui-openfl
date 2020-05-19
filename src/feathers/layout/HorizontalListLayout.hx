@@ -235,6 +235,38 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	}
 
 	/**
+		How the content is positioned horizontally (along the x-axis) within the
+		container.
+
+		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
+		layout.
+
+		The following example aligns the container's content to the right:
+
+		```hx
+		layout.horizontalAlign = RIGHT;
+		```
+
+		@default feathers.layout.HorizontalAlign.LEFT
+
+		@see `feathers.layout.HorizontalAlign.LEFT`
+		@see `feathers.layout.HorizontalAlign.CENTER`
+		@see `feathers.layout.HorizontalAlign.RIGHT`
+
+		@since 1.0.0
+	**/
+	public var horizontalAlign(default, set):HorizontalAlign = LEFT;
+
+	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
+		if (this.horizontalAlign == value) {
+			return this.horizontalAlign;
+		}
+		this.horizontalAlign = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this.horizontalAlign;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
@@ -285,20 +317,30 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			positionX -= this.gap;
 		}
 		positionX += this.paddingRight;
+
+		var viewPortWidth = positionX;
+		if (measurements.height != null) {
+			viewPortWidth = measurements.width;
+		} else {
+			if (this.requestedColumnCount != null) {
+				result.viewPortWidth = virtualColumnWidth * this.requestedColumnCount;
+			}
+			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
+				viewPortWidth = measurements.minWidth;
+			} else if (measurements.maxWidth != null && viewPortWidth > measurements.maxWidth) {
+				viewPortWidth = measurements.maxWidth;
+			}
+		}
+
+		this.applyHorizontalAlign(items, positionX, viewPortWidth);
+
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
 		result.contentWidth = positionX;
 		result.contentHeight = viewPortHeight;
 		result.viewPortHeight = viewPortHeight;
-		var viewPortWidth = measurements.width;
-		if (viewPortWidth != null) {
-			result.viewPortWidth = viewPortWidth;
-		} else if (this.requestedColumnCount != null) {
-			result.viewPortWidth = virtualColumnWidth * this.requestedColumnCount;
-		} else {
-			result.viewPortWidth = positionX;
-		}
+		result.viewPortWidth = viewPortWidth;
 		return result;
 	}
 
@@ -430,6 +472,32 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		result.start = startIndex;
 		result.end = endIndex;
 		return result;
+	}
+
+	private inline function applyHorizontalAlign(items:Array<DisplayObject>, contentWidth:Float, viewPortWidth:Float):Void {
+		if (this.horizontalAlign != RIGHT && this.horizontalAlign != CENTER) {
+			return;
+		}
+		var maxAlignmentWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		if (contentWidth >= maxAlignmentWidth) {
+			return;
+		}
+		var horizontalOffset = 0.0;
+		if (this.horizontalAlign == RIGHT) {
+			horizontalOffset = maxAlignmentWidth - contentWidth;
+		} else if (this.horizontalAlign == CENTER) {
+			horizontalOffset = (maxAlignmentWidth - contentWidth) / 2.0;
+		}
+		for (item in items) {
+			var layoutObject:ILayoutObject = null;
+			if (Std.is(item, ILayoutObject)) {
+				layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
+			item.x = Math.max(this.paddingLeft, item.x + horizontalOffset);
+		}
 	}
 }
 
