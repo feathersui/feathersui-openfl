@@ -14,6 +14,7 @@ class LabelScreen extends Panel {
 	private var label:Label;
 	private var headingLabel:Label;
 	private var detailLabel:Label;
+	private var htmlLabel:Label;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -26,7 +27,7 @@ class LabelScreen extends Panel {
 		this.layout = layout;
 
 		this.label = new Label();
-		this.label.text = "Label";
+		this.label.text = "This is a simple label";
 		this.addChild(this.label);
 
 		this.headingLabel = new Label();
@@ -38,6 +39,10 @@ class LabelScreen extends Panel {
 		this.detailLabel.variant = Label.VARIANT_DETAIL;
 		this.detailLabel.text = "A detail label displays smaller text";
 		this.addChild(this.detailLabel);
+
+		this.htmlLabel = new Label();
+		this.htmlLabel.htmlText = "Use basic <b>HTML</b> — <i>including</i> <font color=\"#ff0000\">colors</font> and <font color=\"#0000ff\"><u><a href=\"https://feathersui.com/\">links</a></u></font>";
+		this.addChild(this.htmlLabel);
 	}
 
 	private function createHeader():Void {
