@@ -489,6 +489,57 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return Std.string(data);
 	}
 
+	/**
+		Scrolls the list view so that the specified item renderer is completely
+		visible. If the item renderer is already completely visible, does not
+		update the scroll position.
+
+		A custom animation duration may be specified. To update the scroll
+		position without animation, pass a value of `0.0` for the duration.
+
+		 @since 1.0.0
+	**/
+	public function scrollToLocation(location:Array<Int>, ?animationDuration:Float):Void {
+		if (this.dataProvider == null || this.dataProvider.getLength() == 0) {
+			return;
+		}
+
+		var targetX = this.scrollX;
+		var targetY = this.scrollY;
+		if (Std.is(this.layout, IScrollLayout)) {
+			var displayIndex = this.locationToDisplayIndex(location, true);
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			var result = scrollLayout.getNearestScrollPositionForIndex(displayIndex, this._layoutItems.length, this.viewPort.visibleWidth,
+				this.viewPort.visibleHeight);
+			targetX = result.x;
+			targetY = result.y;
+		} else {
+			var item = this.dataProvider.get(location);
+			var itemRenderer = this.dataToItemRenderer.get(item);
+			if (itemRenderer == null) {
+				return;
+			}
+
+			var maxX = itemRenderer.x;
+			var minX = maxX + itemRenderer.width - this.viewPort.visibleWidth;
+			if (targetX < minX) {
+				targetX = minX;
+			} else if (targetX > maxX) {
+				targetX = maxX;
+			}
+
+			var maxY = itemRenderer.y;
+			var minY = maxY + itemRenderer.height - this.viewPort.visibleHeight;
+			if (targetY < minY) {
+				targetY = minY;
+			} else if (targetY > maxY) {
+				targetY = maxY;
+			}
+		}
+		this.scroller.scrollX = targetX;
+		this.scroller.scrollY = targetY;
+	}
+
 	private function initializeTreeViewTheme():Void {
 		SteelTreeViewStyles.initialize();
 	}
@@ -971,6 +1022,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		event.stopPropagation();
 		this.selectedLocation = this.displayIndexToLocation(result);
+		if (this.selectedLocation != null) {
+			this.scrollToLocation(this.selectedLocation);
+		}
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {

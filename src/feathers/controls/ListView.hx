@@ -441,6 +441,56 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		return Std.string(data);
 	}
 
+	/**
+		Scrolls the list view so that the specified item renderer is completely
+		visible. If the item renderer is already completely visible, does not
+		update the scroll position.
+
+		A custom animation duration may be specified. To update the scroll
+		position without animation, pass a value of `0.0` for the duration.
+
+		 @since 1.0.0
+	**/
+	public function scrollToIndex(index:Int, ?animationDuration:Float):Void {
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
+
+		var targetX = this.scrollX;
+		var targetY = this.scrollY;
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			var result = scrollLayout.getNearestScrollPositionForIndex(index, this.dataProvider.length, this.viewPort.visibleWidth,
+				this.viewPort.visibleHeight);
+			targetX = result.x;
+			targetY = result.y;
+		} else {
+			var item = this.dataProvider.get(index);
+			var itemRenderer = this.dataToItemRenderer.get(item);
+			if (itemRenderer == null) {
+				return;
+			}
+
+			var maxX = itemRenderer.x;
+			var minX = maxX + itemRenderer.width - this.viewPort.visibleWidth;
+			if (targetX < minX) {
+				targetX = minX;
+			} else if (targetX > maxX) {
+				targetX = maxX;
+			}
+
+			var maxY = itemRenderer.y;
+			var minY = maxY + itemRenderer.height - this.viewPort.visibleHeight;
+			if (targetY < minY) {
+				targetY = minY;
+			} else if (targetY > maxY) {
+				targetY = maxY;
+			}
+		}
+		this.scroller.scrollX = targetX;
+		this.scroller.scrollY = targetY;
+	}
+
 	private function initializeListViewTheme():Void {
 		SteelListViewStyles.initialize();
 	}
@@ -852,6 +902,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		event.stopPropagation();
 		this.selectedIndex = result;
+		if (this.selectedIndex != -1) {
+			this.scrollToIndex(this.selectedIndex);
+		}
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {

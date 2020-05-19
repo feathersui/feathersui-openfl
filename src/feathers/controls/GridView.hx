@@ -460,6 +460,56 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _ignoreSelectionChange = false;
 
+	/**
+		Scrolls the grid view so that the specified row is completely visible.
+		If the row is already completely visible, does not update the scroll
+		position.
+
+		A custom animation duration may be specified. To update the scroll
+		position without animation, pass a value of `0.0` for the duration.
+
+		 @since 1.0.0
+	**/
+	public function scrollToRowIndex(rowIndex:Int, ?animationDuration:Float):Void {
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
+
+		var targetX = this.scrollX;
+		var targetY = this.scrollY;
+		if (Std.is(this._layout, IScrollLayout)) {
+			var scrollLayout = cast(this._layout, IScrollLayout);
+			var result = scrollLayout.getNearestScrollPositionForIndex(rowIndex, this.dataProvider.length, this.viewPort.visibleWidth,
+				this.viewPort.visibleHeight);
+			targetX = result.x;
+			targetY = result.y;
+		} else {
+			var row = this.dataProvider.get(rowIndex);
+			var rowRenderer = this.dataToRowRenderer.get(row);
+			if (rowRenderer == null) {
+				return;
+			}
+
+			var maxX = rowRenderer.x;
+			var minX = maxX + rowRenderer.width - this.viewPort.visibleWidth;
+			if (targetX < minX) {
+				targetX = minX;
+			} else if (targetX > maxX) {
+				targetX = maxX;
+			}
+
+			var maxY = rowRenderer.y;
+			var minY = maxY + rowRenderer.height - this.viewPort.visibleHeight;
+			if (targetY < minY) {
+				targetY = minY;
+			} else if (targetY > maxY) {
+				targetY = maxY;
+			}
+		}
+		this.scroller.scrollX = targetX;
+		this.scroller.scrollY = targetY;
+	}
+
 	private function initializeGridViewTheme():Void {
 		SteelGridViewStyles.initialize();
 	}
@@ -792,6 +842,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		event.stopPropagation();
 		this.selectedIndex = result;
+		if (this.selectedIndex != -1) {
+			this.scrollToRowIndex(this.selectedIndex);
+		}
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
