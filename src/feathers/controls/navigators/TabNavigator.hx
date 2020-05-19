@@ -82,6 +82,11 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler, false, 0, true);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			this.selectedIndex = -1;
+		} else {
+			this.selectedIndex = 0;
+		}
 		return this.dataProvider;
 	}
 
@@ -154,6 +159,8 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	@:style
 	public var tabBarPosition:RelativePosition = BOTTOM;
 
+	private var _ignoreSelectionChange = false;
+
 	override private function initialize():Void {
 		super.initialize();
 
@@ -182,7 +189,17 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 
 		if (selectionInvalid) {
+			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+			this._ignoreSelectionChange = true;
 			this.tabBar.selectedIndex = this.selectedIndex;
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+
+			if (this.selectedItem == null && this.activeItemID != null) {
+				this.clearActiveItemInternal();
+			}
+			if (this.selectedItem != null && this.activeItemID != this.selectedItem.internalID) {
+				this.showItemInternal(this.selectedItem.internalID, null);
+			}
 		}
 
 		super.update();
@@ -227,8 +244,10 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function tabNavigator_tabBar_changeHandler(event:Event):Void {
-		var item = cast(this.tabBar.selectedItem, TabItem);
-		var result = this.showItemInternal(item.internalID, null);
+		if (this._ignoreSelectionChange) {
+			return;
+		}
+		this.selectedIndex = this.tabBar.selectedIndex;
 	}
 
 	private function tabNavigator_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {

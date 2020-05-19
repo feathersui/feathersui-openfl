@@ -82,6 +82,11 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, pageNavigator_dataProvider_replaceItemHandler, false, 0, true);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			this.selectedIndex = -1;
+		} else {
+			this.selectedIndex = 0;
+		}
 		return this.dataProvider;
 	}
 
@@ -154,6 +159,8 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	@:style
 	public var pageIndicatorPosition:RelativePosition = BOTTOM;
 
+	private var _ignoreSelectionChange = false;
+
 	override private function initialize():Void {
 		super.initialize();
 
@@ -177,7 +184,17 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		}
 
 		if (selectionInvalid) {
+			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+			this._ignoreSelectionChange = true;
 			this.pageIndicator.selectedIndex = this.selectedIndex;
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+
+			if (this.selectedItem == null && this.activeItemID != null) {
+				this.clearActiveItemInternal();
+			}
+			if (this.selectedItem != null && this.activeItemID != this.selectedItem.internalID) {
+				this.showItemInternal(this.selectedItem.internalID, null);
+			}
 		}
 
 		super.update();
@@ -222,8 +239,10 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private function pageNavigator_pageIndicator_changeHandler(event:Event):Void {
-		var item = this.dataProvider.get(this.pageIndicator.selectedIndex);
-		var result = this.showItemInternal(item.internalID, null);
+		if (this._ignoreSelectionChange) {
+			return;
+		}
+		this.selectedIndex = this.pageIndicator.selectedIndex;
 	}
 
 	private function pageNavigator_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
