@@ -414,7 +414,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {
-		return this.listView.parent != null;
+		return this.listView != null && this.listView.parent != null;
 	}
 
 	private var _filterText:String = "";
