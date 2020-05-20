@@ -8,21 +8,20 @@
 
 package feathers.controls;
 
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import feathers.core.IIndexSelector;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
+import feathers.core.IIndexSelector;
 import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.data.ListViewItemState;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
+import feathers.events.ListViewEvent;
 import feathers.layout.Direction;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
@@ -33,8 +32,10 @@ import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -153,6 +154,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this.addChild(this.listViewPort);
 			this.viewPort = this.listViewPort;
 		}
+
+		this.addEventListener(KeyboardEvent.KEY_DOWN, listView_keyDownHandler);
 	}
 
 	private var listViewPort:AdvancedLayoutViewPort;
@@ -741,7 +744,24 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
 	}
 
+	private function dispatchItemTriggerEvent(data:Dynamic):Void {
+		var index = this.dataProvider.indexOf(data);
+		this._currentItemState.data = data;
+		this._currentItemState.index = index;
+		this._currentItemState.text = this.itemToText(data);
+		this._currentItemState.selected = this.selectedIndex == index;
+		this.dispatchEvent(new ListViewEvent(ListViewEvent.ITEM_TRIGGER, this._currentItemState));
+	}
+
 	private function listView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var data = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(data);
+
 		if (!this.selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -754,11 +774,18 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// handled by Event.CHANGE listener instead
 			return;
 		}
-		var data = this.itemRendererToData.get(itemRenderer);
 		this.selectedIndex = this.dataProvider.indexOf(data);
 	}
 
 	private function listView_itemRenderer_clickHandler(event:MouseEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var data = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(data);
+
 		if (!this.selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -767,8 +794,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// handled by Event.CHANGE listener instead
 			return;
 		}
-		var data = this.itemRendererToData.get(itemRenderer);
-		this.selectedIndex = this.dataProvider.indexOf(data);
+		this.selectedItem = this.dataProvider.indexOf(data);
 	}
 
 	private function listView_itemRenderer_changeHandler(event:Event):Void {
@@ -912,5 +938,16 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		this.navigateWithKeyboard(event);
+	}
+
+	private function listView_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
+			if (this.selectedItem != null) {
+				this.dispatchItemTriggerEvent(this.selectedItem);
+			}
+		}
 	}
 }
