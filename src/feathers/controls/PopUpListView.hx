@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.ListViewEvent;
 import openfl.events.FocusEvent;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
@@ -109,7 +110,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		super();
 
 		this.addEventListener(FocusEvent.FOCUS_IN, popUpListView_focusInHandler);
-		this.addEventListener(KeyboardEvent.KEY_UP, popUpListView_keyUpHandler);
 	}
 
 	private var button:Button;
@@ -404,6 +404,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			PopUpManager.addPopUp(this.listView, this.button);
 			FeathersEvent.dispatch(this, Event.OPEN);
 		}
+		this.stage.focus = this.listView;
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
@@ -434,12 +435,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (!this.open) {
 			return;
 		}
+		// TODO: fix this when focus manager is implemented
+		this.stage.focus = this;
 		if (this.popUpAdapter != null) {
 			this.popUpAdapter.close();
 		} else {
 			this.listView.parent.removeChild(this.listView);
-			// TODO: fix this when focus manager is implemented
-			this.stage.focus = this;
 			FeathersEvent.dispatch(this, Event.CLOSE);
 		}
 	}
@@ -482,6 +483,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.button != null) {
 			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
+			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
 			this.button = null;
 		}
 		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
@@ -491,6 +493,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 		this.button.addEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
 		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
+		this.button.addEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
 		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
@@ -499,6 +502,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	private function createListView():Void {
 		if (this.listView != null) {
 			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
+			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
+			this.listView.removeEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
 			this.listView = null;
 		}
 		var factory = this.listViewFactory != null ? this.listViewFactory : defaultListViewFactory;
@@ -507,6 +512,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this.listView.variant = PopUpListView.CHILD_VARIANT_LIST_VIEW;
 		}
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
+		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
+		this.listView.addEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
 	}
 
 	private function refreshData():Void {
@@ -581,6 +588,58 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.button.validateNow();
 	}
 
+	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
+		var result = this.selectedIndex;
+		switch (event.keyCode) {
+			case Keyboard.UP:
+				result = result - 1;
+			case Keyboard.DOWN:
+				result = result + 1;
+			case Keyboard.LEFT:
+				result = result - 1;
+			case Keyboard.RIGHT:
+				result = result + 1;
+			case Keyboard.PAGE_UP:
+				result = result - 1;
+			case Keyboard.PAGE_DOWN:
+				result = result + 1;
+			case Keyboard.HOME:
+				result = 0;
+			case Keyboard.END:
+				result = this.dataProvider.length - 1;
+			default:
+				// not keyboard navigation
+				return;
+		}
+		if (result < 0) {
+			result = 0;
+		} else if (result >= this.dataProvider.length) {
+			result = this.dataProvider.length - 1;
+		}
+		event.stopPropagation();
+		this.selectedIndex = result;
+	}
+
+	private function button_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+		if (!open) {
+			this.navigateWithKeyboard(event);
+		}
+		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
+			return;
+		}
+		if (this.open) {
+			this.closeListView();
+		} else {
+			this.openListView();
+		}
+	}
+
 	private function button_mouseDownHandler(event:MouseEvent):Void {
 		if (this.open) {
 			this.closeListView();
@@ -601,12 +660,16 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 	}
 
+	private function listView_itemTriggerHandler(event:ListViewEvent):Void {
+		this.dispatchEvent(event);
+		if (this.popUpAdapter == null || !this.popUpAdapter.persistent) {
+			this.closeListView();
+		}
+	}
+
 	private function listView_changeHandler(event:Event):Void {
 		if (this._ignoreListViewChange) {
 			return;
-		}
-		if (this.popUpAdapter == null || !this.popUpAdapter.persistent) {
-			this.closeListView();
 		}
 		this.selectedIndex = this.listView.selectedIndex;
 	}
@@ -623,7 +686,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 	}
 
-	private function popUpListView_keyUpHandler(event:KeyboardEvent):Void {
+	private function popUpListView_listView_keyUpHandler(event:KeyboardEvent):Void {
 		if (!this.enabled) {
 			return;
 		}
