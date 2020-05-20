@@ -96,6 +96,14 @@ class SteelCheckStyles {
 
 				check.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
 
+				if (check.focusRectSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = null;
+					skin.border = theme.getActiveFillBorder();
+					skin.cornerRadius = 6.0;
+					check.focusRectSkin = skin;
+				}
+
 				check.gap = 6.0;
 			});
 		}

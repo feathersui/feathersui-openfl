@@ -8,12 +8,13 @@
 
 package feathers.themes.steel.components;
 
-import openfl.display.Shape;
-import feathers.skins.CircleSkin;
-import feathers.controls.ToggleButtonState;
 import feathers.controls.Radio;
+import feathers.controls.ToggleButtonState;
+import feathers.skins.CircleSkin;
+import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import openfl.display.Shape;
 
 /**
 	Initialize "steel" styles for the `Radio` component.
@@ -85,6 +86,14 @@ class SteelRadioStyles {
 				disabledAndSelectedIcon.addChild(disabledSymbol);
 
 				radio.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
+
+				if (radio.focusRectSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = null;
+					skin.border = theme.getActiveFillBorder();
+					skin.cornerRadius = 6.0;
+					radio.focusRectSkin = skin;
+				}
 
 				radio.gap = 6.0;
 			});
