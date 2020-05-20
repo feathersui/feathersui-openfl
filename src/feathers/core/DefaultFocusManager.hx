@@ -168,10 +168,10 @@ class DefaultFocusManager implements IFocusManager {
 		if (Std.is(target, IFocusObject)) {
 			var targetWithFocus = cast(target, IFocusObject);
 			if (targetWithFocus.focusManager == this) {
-				targetWithFocus.focusManager = null;
 				if (this.focus == targetWithFocus) {
 					this.focus = null;
 				}
+				targetWithFocus.focusManager = null;
 			}
 		}
 		var container = Std.downcast(target, DisplayObjectContainer);
