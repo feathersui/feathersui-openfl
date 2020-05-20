@@ -224,8 +224,10 @@ class LayoutGroup extends FeathersControl {
 			this.items.remove(child);
 		}
 		index = this.getPrivateIndexForPublicIndex(index);
-		var result = this._addChildAt(child, index);
+		// insert into the array first, so that display list APIs work in an
+		// Event.ADDED listener
 		this.items.insert(index, child);
+		var result = this._addChildAt(child, index);
 		this.setInvalid(InvalidationFlag.LAYOUT);
 		return result;
 	}
