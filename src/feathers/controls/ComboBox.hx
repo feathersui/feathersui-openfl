@@ -212,6 +212,10 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else {
 			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
 		}
+		if (this.open) {
+			this.pendingSelectedIndex = value;
+			this.pendingSelectedItem = this.selectedItem;
+		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.selectedIndex;
@@ -710,6 +714,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		event.stopPropagation();
 		this.selectedIndex = result;
+		if (this.open) {
+			this.listView.scrollToIndex(this.selectedIndex);
+		}
 	}
 
 	private function comboBox_textInput_keyDownHandler(event:KeyboardEvent):Void {
@@ -717,6 +724,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return;
 		}
 		this.navigateWithKeyboard(event);
+		if (event.keyCode == Keyboard.ENTER) {
+			this.closeListView();
+		}
 	}
 
 	private function textInput_changeHandler(event:Event):Void {
