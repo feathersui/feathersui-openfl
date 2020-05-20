@@ -404,10 +404,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			PopUpManager.addPopUp(this.listView, this.button);
 			FeathersEvent.dispatch(this, Event.OPEN);
 		}
+		this.listView.validateNow();
 		this.stage.focus = this.listView;
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
+		this.listView.scrollToIndex(this.selectedIndex);
 	}
 
 	/**
