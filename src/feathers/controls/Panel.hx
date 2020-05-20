@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IFocusExtras;
 import feathers.utils.MeasurementsUtil;
 import feathers.core.InvalidationFlag;
 import feathers.core.IMeasureObject;
@@ -26,7 +27,7 @@ import feathers.core.IValidating;
 	@since 1.0.0
 **/
 @:styleContext
-class Panel extends ScrollContainer {
+class Panel extends ScrollContainer implements IFocusExtras {
 	/**
 		Creates a new `Panel` object.
 
@@ -50,10 +51,12 @@ class Panel extends ScrollContainer {
 			return this.header;
 		}
 		if (this.header != null) {
+			this.focusExtrasBefore.remove(this.header);
 			this.removeRawChild(this.header);
 		}
 		this.header = value;
 		if (this.header != null) {
+			this.focusExtrasBefore.push(this.header);
 			this.addRawChild(this.header);
 		}
 		this.setInvalid(InvalidationFlag.LAYOUT);
@@ -72,14 +75,32 @@ class Panel extends ScrollContainer {
 			return this.footer;
 		}
 		if (this.footer != null) {
+			this.focusExtrasAfter.remove(this.footer);
 			this.removeRawChild(this.footer);
 		}
 		this.footer = value;
 		if (this.footer != null) {
+			this.focusExtrasAfter.push(this.footer);
 			this.addRawChild(this.footer);
 		}
 		this.setInvalid(InvalidationFlag.LAYOUT);
 		return this.footer;
+	}
+
+	@:dox(hide)
+	@:isVar
+	public var focusExtrasBefore(get, never):Array<DisplayObject> = [];
+
+	private function get_focusExtrasBefore():Array<DisplayObject> {
+		return this.focusExtrasBefore;
+	}
+
+	@:dox(hide)
+	@:isVar
+	public var focusExtrasAfter(get, never):Array<DisplayObject> = [];
+
+	private function get_focusExtrasAfter():Array<DisplayObject> {
+		return this.focusExtrasAfter;
 	}
 
 	private function initializePanelTheme():Void {

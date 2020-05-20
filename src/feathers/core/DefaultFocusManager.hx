@@ -160,6 +160,21 @@ class DefaultFocusManager implements IFocusManager {
 					var child = container.getChildAt(i);
 					this.setFocusManager(child);
 				}
+				if (Std.is(container, IFocusExtras)) {
+					var containerWithExtras = cast(container, IFocusExtras);
+					var extras = containerWithExtras.focusExtrasBefore;
+					if (extras != null) {
+						for (child in extras) {
+							this.setFocusManager(child);
+						}
+					}
+					extras = containerWithExtras.focusExtrasAfter;
+					if (extras != null) {
+						for (child in extras) {
+							this.setFocusManager(child);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -180,6 +195,21 @@ class DefaultFocusManager implements IFocusManager {
 				var child = container.getChildAt(i);
 				this.clearFocusManager(child);
 			}
+			if (Std.is(container, IFocusExtras)) {
+				var containerWithExtras = cast(container, IFocusExtras);
+				var extras = containerWithExtras.focusExtrasBefore;
+				if (extras != null) {
+					for (child in extras) {
+						this.clearFocusManager(child);
+					}
+				}
+				extras = containerWithExtras.focusExtrasAfter;
+				if (extras != null) {
+					for (child in extras) {
+						this.clearFocusManager(child);
+					}
+				}
+			}
 		}
 	}
 
@@ -187,19 +217,69 @@ class DefaultFocusManager implements IFocusManager {
 		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
 			container = container.parent;
 		}
+		var hasProcessedBeforeChild = beforeChild == null;
+		if (Std.is(container, IFocusExtras)) {
+			var focusWithExtras = cast(container, IFocusExtras);
+			var extras = focusWithExtras.focusExtrasAfter;
+			if (extras != null) {
+				var skip = false;
+				var startIndex = extras.length - 1;
+				if (beforeChild != null) {
+					startIndex = extras.indexOf(beforeChild) - 1;
+					hasProcessedBeforeChild = startIndex >= -1;
+					skip = !hasProcessedBeforeChild;
+				}
+				if (!skip) {
+					var i = startIndex;
+					while (i >= 0) {
+						var child = extras[i];
+						var foundChild = this.findPreviousChildFocus(child);
+						if (foundChild != null) {
+							return foundChild;
+						}
+						i--;
+					}
+				}
+			}
+		}
 		var startIndex = container.numChildren - 1;
-		if (beforeChild != null) {
+		if (beforeChild != null && !hasProcessedBeforeChild) {
 			startIndex = container.getChildIndex(beforeChild) - 1;
+			hasProcessedBeforeChild = startIndex >= -1;
 		}
 
 		var i = startIndex;
 		while (i >= 0) {
 			var child = container.getChildAt(i);
 			var foundChild = this.findPreviousChildFocus(child);
-			if (this.isValidFocus(foundChild)) {
+			if (foundChild != null) {
 				return foundChild;
 			}
 			i--;
+		}
+		if (Std.is(container, IFocusExtras)) {
+			var focusWithExtras = cast(container, IFocusExtras);
+			var extras = focusWithExtras.focusExtrasBefore;
+			if (extras != null) {
+				var skip = false;
+				var startIndex = extras.length - 1;
+				if (beforeChild != null && !hasProcessedBeforeChild) {
+					startIndex = extras.indexOf(beforeChild) - 1;
+					hasProcessedBeforeChild = startIndex >= -1;
+					skip = !hasProcessedBeforeChild;
+				}
+				if (!skip) {
+					var i = startIndex;
+					while (i >= 0) {
+						var child = extras[i];
+						var foundChild = this.findPreviousChildFocus(child);
+						if (foundChild != null) {
+							return foundChild;
+						}
+						i--;
+					}
+				}
+			}
 		}
 
 		if (fallbackToGlobal && container != this.root) {
@@ -219,20 +299,69 @@ class DefaultFocusManager implements IFocusManager {
 		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
 			container = container.parent;
 		}
+		var hasProcessedAfterChild = afterChild == null;
+		if (Std.is(container, IFocusExtras)) {
+			var focusWithExtras = cast(container, IFocusExtras);
+			var extras = focusWithExtras.focusExtrasBefore;
+			if (extras != null) {
+				var skip = false;
+				var startIndex = 0;
+				if (afterChild != null) {
+					startIndex = extras.indexOf(afterChild) + 1;
+					hasProcessedAfterChild = startIndex > 0;
+					skip = !hasProcessedAfterChild;
+				}
+				if (!skip) {
+					for (i in startIndex...extras.length) {
+						var child = extras[i];
+						var foundChild = this.findNextChildFocus(child);
+						if (foundChild != null) {
+							return foundChild;
+						}
+					}
+				}
+			}
+		}
 		var startIndex = 0;
-		if (afterChild != null) {
+		if (afterChild != null && !hasProcessedAfterChild) {
 			startIndex = container.getChildIndex(afterChild) + 1;
+			hasProcessedAfterChild = startIndex > 0;
 		}
 		for (i in startIndex...container.numChildren) {
 			var child = container.getChildAt(i);
 			var foundChild = this.findNextChildFocus(child);
-			if (this.isValidFocus(foundChild)) {
+			if (foundChild != null) {
 				return foundChild;
+			}
+		}
+		if (Std.is(container, IFocusExtras)) {
+			var focusWithExtras = cast(container, IFocusExtras);
+			var extras = focusWithExtras.focusExtrasAfter;
+			if (extras != null) {
+				var skip = false;
+				var startIndex = 0;
+				if (afterChild != null && !hasProcessedAfterChild) {
+					startIndex = extras.indexOf(afterChild) + 1;
+					hasProcessedAfterChild = startIndex > 0;
+					skip = !hasProcessedAfterChild;
+				}
+				if (!skip) {
+					for (i in startIndex...extras.length) {
+						var child = extras[i];
+						var foundChild = this.findNextChildFocus(child);
+						if (foundChild != null) {
+							return foundChild;
+						}
+					}
+				}
 			}
 		}
 
 		if (fallbackToGlobal && container != this.root) {
-			return this.findNextContainerFocus(container.parent, container, true);
+			var foundChild = this.findNextContainerFocus(container.parent, container, true);
+			if (foundChild != null) {
+				return foundChild;
+			}
 		}
 		return null;
 	}
@@ -293,8 +422,61 @@ class DefaultFocusManager implements IFocusManager {
 		}
 	}
 
+	private function shouldBeManaged(target:DisplayObject):Bool {
+		if (target == this.root) {
+			return true;
+		}
+		var container = target.parent;
+		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
+			container = container.parent;
+		}
+		var valid = container.getChildIndex(target) != -1;
+		if (!valid && Std.is(container, IFocusExtras)) {
+			var container = cast(container, IFocusExtras);
+			if (container.focusExtrasBefore != null) {
+				for (child in container.focusExtrasBefore) {
+					if (child == target) {
+						valid = true;
+						break;
+					}
+					if (Std.is(child, DisplayObjectContainer)) {
+						valid = cast(child, DisplayObjectContainer).contains(child);
+						if (valid) {
+							break;
+						}
+					}
+				}
+			}
+			if (!valid && container.focusExtrasAfter != null) {
+				for (child in container.focusExtrasAfter) {
+					if (child == target) {
+						valid = true;
+						break;
+					}
+					if (Std.is(child, DisplayObjectContainer)) {
+						valid = cast(child, DisplayObjectContainer).contains(child);
+						if (valid) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (!valid) {
+			return false;
+		}
+		if (container != null && container != this.root) {
+			return this.shouldBeManaged(container);
+		}
+		return true;
+	}
+
 	private function defaultFocusManager_root_addedHandler(event:Event):Void {
 		var target = cast(event.target, DisplayObject);
+		var valid = this.shouldBeManaged(target);
+		if (!valid) {
+			return;
+		}
 		this.setFocusManager(target);
 	}
 
@@ -315,7 +497,7 @@ class DefaultFocusManager implements IFocusManager {
 		event.preventDefault();
 	}
 
-	private function handleKeyboardFocusChange(event:Event, shiftKey:Bool):Void {
+	private function handleKeyboardFocusChange(event:Event, shiftKey:Bool):IFocusObject {
 		var newFocus:IFocusObject = null;
 		var currentFocus = this.focus;
 		if (shiftKey) {
@@ -337,13 +519,11 @@ class DefaultFocusManager implements IFocusManager {
 				newFocus = this.findNextContainerFocus(this.root, null, false);
 			}
 		}
-		if (newFocus != null) {
-			event.preventDefault();
-		}
 		this.focus = newFocus;
 		if (this.focus != null) {
 			this.focus.showFocus(true);
 		}
+		return newFocus;
 	}
 
 	#if html5
@@ -351,7 +531,10 @@ class DefaultFocusManager implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB) {
 			return;
 		}
-		this.handleKeyboardFocusChange(event, event.shiftKey);
+		var newFocus = this.handleKeyboardFocusChange(event, event.shiftKey);
+		if (newFocus != null) {
+			event.preventDefault();
+		}
 	}
 	#end
 
@@ -364,6 +547,7 @@ class DefaultFocusManager implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
 			return;
 		}
+		event.preventDefault();
 		this.handleKeyboardFocusChange(event, event.shiftKey);
 	}
 	#end
