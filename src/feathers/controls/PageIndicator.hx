@@ -8,6 +8,9 @@
 
 package feathers.controls;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
+import feathers.core.IFocusObject;
 import openfl.errors.ArgumentError;
 import feathers.layout.HorizontalLayout;
 import feathers.layout.VerticalLayout;
@@ -61,7 +64,7 @@ import openfl.ui.Multitouch;
 **/
 @:access(feathers.data.PageIndicatorItemState)
 @:styleContext
-class PageIndicator extends FeathersControl implements IIndexSelector {
+class PageIndicator extends FeathersControl implements IIndexSelector implements IFocusObject {
 	private static final INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY = "toggleButtonFactory";
 
 	/**
@@ -86,6 +89,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
 		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
 		// this.addEventListener(TouchEvent.TOUCH_TAP, pageIndicator_touchTapHandler);
+		this.addEventListener(KeyboardEvent.KEY_DOWN, pageIndicator_keyDownHandler);
 	}
 
 	/**
@@ -466,6 +470,45 @@ class PageIndicator extends FeathersControl implements IIndexSelector {
 		if (this.toggleButtonRecycler.destroy != null) {
 			this.toggleButtonRecycler.destroy(button);
 		}
+	}
+
+	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		var result = this.selectedIndex;
+		switch (event.keyCode) {
+			case Keyboard.UP:
+				result = result - 1;
+			case Keyboard.DOWN:
+				result = result + 1;
+			case Keyboard.LEFT:
+				result = result - 1;
+			case Keyboard.RIGHT:
+				result = result + 1;
+			case Keyboard.PAGE_UP:
+				result = result - 1;
+			case Keyboard.PAGE_DOWN:
+				result = result + 1;
+			case Keyboard.HOME:
+				result = 0;
+			case Keyboard.END:
+				result = this.maxSelectedIndex;
+			default:
+				// not keyboard navigation
+				return;
+		}
+		if (result < 0) {
+			result = 0;
+		} else if (result > this.maxSelectedIndex) {
+			result = this.maxSelectedIndex;
+		}
+		event.stopPropagation();
+		this.selectedIndex = result;
+	}
+
+	private function pageIndicator_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+		this.navigateWithKeyboard(event);
 	}
 
 	private function pageIndicator_toggleButton_changeHandler(event:Event):Void {
