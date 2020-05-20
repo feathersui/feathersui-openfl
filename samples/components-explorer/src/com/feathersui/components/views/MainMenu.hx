@@ -7,6 +7,7 @@ import feathers.controls.LayoutGroup;
 import feathers.controls.ListView;
 import feathers.controls.Panel;
 import feathers.data.ArrayCollection;
+import feathers.events.ListViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
@@ -51,7 +52,7 @@ class MainMenu extends Panel {
 			// @formatter:on
 		]);
 		this.listView.layoutData = AnchorLayoutData.fill();
-		this.listView.addEventListener(Event.CHANGE, list_changeHandler);
+		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
 		this.addChild(this.listView);
 	}
 
@@ -92,9 +93,9 @@ class MainMenu extends Panel {
 		header.addChild(themeButton);
 	}
 
-	private function list_changeHandler(event:Event):Void {
-		var selectedItem = this.listView.selectedItem;
-		this.selectedViewPaths = selectedItem.screenID;
+	private function listView_itemTriggerHandler(event:ListViewEvent):Void {
+		var triggeredItem = event.state.data;
+		this.selectedViewPaths = triggeredItem.screenID;
 	}
 }
 
