@@ -549,6 +549,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private function createTextInput():Void {
 		if (this.textInput != null) {
 			this.textInput.removeEventListener(Event.CHANGE, textInput_changeHandler);
+			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 			this.textInput = null;
 		}
@@ -558,6 +559,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.variant = ComboBox.CHILD_VARIANT_TEXT_INPUT;
 		}
 		this.textInput.addEventListener(Event.CHANGE, textInput_changeHandler);
+		this.textInput.addEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 		this.textInput.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 		this.button.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
@@ -673,6 +675,48 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		this.button.validateNow();
 		this.textInput.validateNow();
+	}
+
+	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
+		var result = this.selectedIndex;
+		switch (event.keyCode) {
+			case Keyboard.UP:
+				result = result - 1;
+			case Keyboard.DOWN:
+				result = result + 1;
+			case Keyboard.LEFT:
+				result = result - 1;
+			case Keyboard.RIGHT:
+				result = result + 1;
+			case Keyboard.PAGE_UP:
+				result = result - 1;
+			case Keyboard.PAGE_DOWN:
+				result = result + 1;
+			case Keyboard.HOME:
+				result = 0;
+			case Keyboard.END:
+				result = this.dataProvider.length - 1;
+			default:
+				// not keyboard navigation
+				return;
+		}
+		if (result < 0) {
+			result = 0;
+		} else if (result >= this.dataProvider.length) {
+			result = this.dataProvider.length - 1;
+		}
+		event.stopPropagation();
+		this.selectedIndex = result;
+	}
+
+	private function comboBox_textInput_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
+		this.navigateWithKeyboard(event);
 	}
 
 	private function textInput_changeHandler(event:Event):Void {
