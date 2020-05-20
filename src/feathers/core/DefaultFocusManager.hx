@@ -430,7 +430,12 @@ class DefaultFocusManager implements IFocusManager {
 		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
 			container = container.parent;
 		}
-		var valid = #if flash container.contains(target) #else container.getChildIndex(target) != -1 #end;
+		var valid = false;
+		try {
+			valid = container.getChildIndex(target) != -1;
+		} catch (e) {
+			// throws on some targets
+		}
 		if (!valid && Std.is(container, IFocusExtras)) {
 			var container = cast(container, IFocusExtras);
 			if (container.focusExtrasBefore != null) {
