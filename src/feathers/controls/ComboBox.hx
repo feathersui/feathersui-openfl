@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.ListViewEvent;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
 import openfl.events.FocusEvent;
@@ -566,6 +567,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private function createListView():Void {
 		if (this.listView != null) {
 			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
+			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 			this.listView = null;
 		}
 		var factory = this.listViewFactory != null ? this.listViewFactory : defaultListViewFactory;
@@ -574,6 +576,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
 		}
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
+		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 	}
 
 	private function refreshData():Void {
@@ -711,6 +714,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 	}
 
+	private function comboBox_listView_itemTriggerHandler(event:ListViewEvent):Void {
+		if (!this.popUpAdapter.persistent) {
+			this.closeListView();
+		}
+	}
+
 	private function listView_changeHandler(event:Event):Void {
 		if (this._ignoreListViewChange) {
 			return;
@@ -718,9 +727,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.open) {
 			// if the list is open, save the selected index for later
 			this.pendingSelectedIndex = this.listView.selectedIndex;
-			if (!this.popUpAdapter.persistent) {
-				this.closeListView();
-			}
 		} else {
 			// if closed, update immediately
 			this.pendingSelectedIndex = -1;
