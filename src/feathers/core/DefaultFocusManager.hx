@@ -114,6 +114,10 @@ class DefaultFocusManager implements IFocusManager {
 
 	private function set_focus(value:IFocusObject):IFocusObject {
 		if (this.focus == value) {
+			// in some cases, the stage focus seems to get cleared, so even
+			// though our focus hasn't changed, we should still pass it to the
+			// stage
+			this.root.stage.focus = cast(value, InteractiveObject);
 			return this.focus;
 		}
 		if (this.focus != null) {
