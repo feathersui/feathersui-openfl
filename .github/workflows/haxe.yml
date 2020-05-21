@@ -9,11 +9,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: haxeui/haxeui-core/.github/actions/haxe@master
+      with:
+        haxe-version: 4.0.5
     - name: Set up Haxe
       run: |
-        sudo add-apt-repository ppa:haxe/releases -y
-        sudo apt-get update
-        sudo apt-get install haxe=1:4.0.5-1 -y
         mkdir $GITHUB_WORKSPACE/.haxelib
         haxelib setup $GITHUB_WORKSPACE/.haxelib
     - name: Set up Haxelib dependencies
