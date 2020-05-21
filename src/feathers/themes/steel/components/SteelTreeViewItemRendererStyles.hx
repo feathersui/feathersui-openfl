@@ -69,7 +69,7 @@ class SteelTreeViewItemRendererStyles {
 				itemRenderer.paddingLeft = 10.0;
 				itemRenderer.gap = 6.0;
 
-				itemRenderer.indentation = 12.0;
+				itemRenderer.indentation = 20.0;
 
 				itemRenderer.horizontalAlign = LEFT;
 			});
@@ -78,21 +78,27 @@ class SteelTreeViewItemRendererStyles {
 			styleProvider.setStyleFunction(ToggleButton, TreeViewItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON, function(button:ToggleButton):Void {
 				if (button.icon == null) {
 					var icon = new Shape();
+					icon.graphics.beginFill(0xff00ff, 0.0);
+					icon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+					icon.graphics.endFill();
 					icon.graphics.beginFill(theme.textColor);
-					icon.graphics.moveTo(0.0, 0.0);
-					icon.graphics.lineTo(12.0, 6.0);
-					icon.graphics.lineTo(0.0, 12.0);
-					icon.graphics.lineTo(0.0, 0.0);
+					icon.graphics.moveTo(4.0, 4.0);
+					icon.graphics.lineTo(16.0, 10.0);
+					icon.graphics.lineTo(4.0, 16.0);
+					icon.graphics.lineTo(4.0, 4.0);
 					icon.graphics.endFill();
 					button.icon = icon;
 				}
 				if (button.selectedIcon == null) {
 					var selectedIcon = new Shape();
+					selectedIcon.graphics.beginFill(0xff00ff, 0.0);
+					selectedIcon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+					selectedIcon.graphics.endFill();
 					selectedIcon.graphics.beginFill(theme.textColor);
-					selectedIcon.graphics.moveTo(0.0, 0.0);
-					selectedIcon.graphics.lineTo(12.0, 0.0);
-					selectedIcon.graphics.lineTo(6.0, 12.0);
-					selectedIcon.graphics.lineTo(0.0, 0.0);
+					selectedIcon.graphics.moveTo(4.0, 4.0);
+					selectedIcon.graphics.lineTo(16.0, 4.0);
+					selectedIcon.graphics.lineTo(10.0, 16.0);
+					selectedIcon.graphics.lineTo(4.0, 4.0);
 					selectedIcon.graphics.endFill();
 					button.selectedIcon = selectedIcon;
 				}
