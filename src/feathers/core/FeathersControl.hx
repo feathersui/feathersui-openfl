@@ -279,6 +279,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 	}
 
+	@:noCompletion
 	private function clearStyle_layoutData():ILayoutData {
 		return this.setLayoutDataInternal(null);
 	}
