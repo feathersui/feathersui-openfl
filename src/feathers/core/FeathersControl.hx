@@ -245,6 +245,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@since 1.0.0
 	**/
 	@:isVar
+	@style
 	public var focusRectSkin(get, set):DisplayObject = null;
 
 	private function get_focusRectSkin():DisplayObject {
@@ -252,7 +253,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function set_focusRectSkin(value:DisplayObject):DisplayObject {
-		if (this.focusRectSkin == value) {
+		if (!this.setStyle("focusRectSkin")) {
 			return this.focusRectSkin;
 		}
 		if (this.focusRectSkin != null) {
@@ -282,6 +283,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	@:noCompletion
 	private function clearStyle_layoutData():ILayoutData {
 		return this.setLayoutDataInternal(null);
+	}
+
+	@:noCompletion
+	private function clearStyle_focusRectSkin():DisplayObject {
+		this.focusRectSkin = null;
+		return this.focusRectSkin;
 	}
 
 	private function positionFocusRect():Void {
