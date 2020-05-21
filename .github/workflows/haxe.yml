@@ -13,7 +13,7 @@ jobs:
       run: |
         sudo add-apt-repository ppa:haxe/releases -y
         sudo apt-get update
-        sudo apt-get install haxe=4.0.5-1 -y
+        sudo apt-get install haxe=1:4.0.5-1 -y
         mkdir $GITHUB_WORKSPACE/.haxelib
         haxelib setup $GITHUB_WORKSPACE/.haxelib
     - name: Set up Haxelib dependencies
