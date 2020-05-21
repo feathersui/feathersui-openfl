@@ -64,6 +64,8 @@ class SteelTabBarStyles {
 
 		if (styleProvider.getStyleFunction(ToggleButton, TabBar.CHILD_VARIANT_TAB) == null) {
 			styleProvider.setStyleFunction(ToggleButton, TabBar.CHILD_VARIANT_TAB, function(button:ToggleButton):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
@@ -74,8 +76,13 @@ class SteelTabBarStyles {
 					skin.border = theme.getButtonBorder();
 					skin.selectedBorder = theme.getActiveFillBorder();
 					skin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
-					skin.maxWidth = 100.0;
-					skin.minWidth = 20.0;
+					if (isDesktop) {
+						skin.maxWidth = 100.0;
+						skin.minWidth = 20.0;
+					} else {
+						skin.minWidth = 44.0;
+						skin.minHeight = 44.0;
+					}
 					button.backgroundSkin = skin;
 				}
 
