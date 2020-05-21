@@ -47,7 +47,7 @@ class SteelScrollContainerStyles {
 				if (container.focusRectSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = null;
-					skin.border = theme.getActiveFillBorder();
+					skin.border = theme.getFocusBorder();
 					container.focusRectSkin = skin;
 				}
 			});

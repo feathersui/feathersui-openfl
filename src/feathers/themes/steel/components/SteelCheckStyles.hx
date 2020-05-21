@@ -99,7 +99,7 @@ class SteelCheckStyles {
 				if (check.focusRectSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = null;
-					skin.border = theme.getActiveFillBorder();
+					skin.border = theme.getFocusBorder();
 					skin.cornerRadius = 6.0;
 					check.focusRectSkin = skin;
 				}

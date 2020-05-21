@@ -71,7 +71,7 @@ class SteelToggleSwitchStyles {
 				if (toggle.focusRectSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = null;
-					skin.border = theme.getActiveFillBorder();
+					skin.border = theme.getFocusBorder();
 					skin.cornerRadius = 32.0;
 					toggle.focusRectSkin = skin;
 				}

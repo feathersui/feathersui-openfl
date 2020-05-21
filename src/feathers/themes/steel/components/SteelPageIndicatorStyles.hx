@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.RectangleSkin;
 import feathers.controls.PageIndicator;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleButtonState;
@@ -36,6 +37,13 @@ class SteelPageIndicatorStyles {
 
 		if (styleProvider.getStyleFunction(PageIndicator, null) == null) {
 			styleProvider.setStyleFunction(PageIndicator, null, function(pages:PageIndicator):Void {
+				if (pages.focusRectSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = null;
+					skin.border = theme.getFocusBorder();
+					skin.cornerRadius = 6.0;
+					pages.focusRectSkin = skin;
+				}
 				if (pages.layout == null) {
 					var layout = new HorizontalLayout();
 					layout.gap = 10.0;

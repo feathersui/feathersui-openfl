@@ -87,6 +87,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var disabledInsetFillColor:Int;
 	private var insetBorderColor:Int;
 	private var activeFillBorderColor:Int;
+	private var focusBorderColor:Int;
 	private var containerFillColor:Int;
 	private var headerFillColor:Int;
 	private var overlayFillColor:Int;
@@ -129,6 +130,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.disabledInsetFillColor = 0x383838;
 			this.insetBorderColor = 0x484848;
 			this.activeFillBorderColor = 0x080808;
+			this.focusBorderColor = this.themeColor;
 			this.containerFillColor = 0x383838;
 			this.headerFillColor = 0x3f3f3f;
 			this.overlayFillColor = 0x6f6f6f;
@@ -153,6 +155,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.disabledInsetFillColor = 0xf8f8f8;
 			this.insetBorderColor = 0xcccccc;
 			this.activeFillBorderColor = this.darken(this.themeColor, 0x2f2f2f);
+			this.focusBorderColor = this.darken(this.themeColor, 0x1f1f1f);
 			this.containerFillColor = 0xf8f8f8;
 			this.headerFillColor = 0xececec;
 			this.overlayFillColor = 0x8f8f8f;
@@ -225,6 +228,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getDividerBorder(thickness:Float = 1.0):LineStyle {
 		return SolidColor(thickness, this.dividerColor);
+	}
+
+	private function getFocusBorder(thickness:Float = 1.0):LineStyle {
+		return SolidColor(thickness, this.focusBorderColor);
 	}
 
 	private function getInsetFill():FillStyle {

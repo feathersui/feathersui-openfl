@@ -52,7 +52,7 @@ class SteelVSliderStyles {
 
 					var focusRectSkin = new CircleSkin();
 					focusRectSkin.fill = null;
-					focusRectSkin.border = theme.getActiveFillBorder();
+					focusRectSkin.border = theme.getFocusBorder();
 					thumb.focusRectSkin = focusRectSkin;
 
 					slider.thumbSkin = thumb;
