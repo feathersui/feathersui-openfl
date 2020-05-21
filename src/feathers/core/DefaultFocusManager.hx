@@ -433,7 +433,7 @@ class DefaultFocusManager implements IFocusManager {
 		var valid = false;
 		try {
 			valid = container.getChildIndex(target) != -1;
-		} catch (e) {
+		} catch (e:Dynamic) {
 			// throws on some targets
 		}
 		if (!valid && Std.is(container, IFocusExtras)) {
