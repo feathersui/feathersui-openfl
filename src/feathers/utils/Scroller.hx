@@ -424,6 +424,7 @@ class Scroller extends EventDispatcher {
 			return this.target;
 		}
 		if (this.target != null) {
+			this.cleanupAfterDrag();
 			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
 			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true);
