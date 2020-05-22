@@ -48,6 +48,7 @@ class CalloutScreen extends Panel {
 		this.content.layout = new AnchorLayout();
 		var description = new Label();
 		description.text = "A callout displays content in a pop-up container, with an arrow that points to its origin.\n\nTap anywhere outside of the callout to close it.";
+		description.wordWrap = true;
 		description.layoutData = AnchorLayoutData.fill();
 		this.content.addChild(description);
 	}
