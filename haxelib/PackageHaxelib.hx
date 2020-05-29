@@ -24,6 +24,7 @@ class PackageHaxelib {
 		addFile(FileSystem.absolutePath("../CONTRIBUTING.md"), entries);
 		addFile(FileSystem.absolutePath("../LICENSE.md"), entries);
 		addDirectory(FileSystem.absolutePath("../src"), true, entries);
+		addDirectory(FileSystem.absolutePath("../tools"), true, entries);
 
 		var jsonContent = File.getContent("../haxelib.json");
 		var json = Json.parse(jsonContent);
