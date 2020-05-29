@@ -37,7 +37,8 @@ class Run {
 				var newProjectArgHandler = createNewProjectArgHandler(newProject);
 				newProjectArgHandler.parse(args);
 				createProject(newProject, Path.join([templatePath, "new-project"]));
-			}, @doc("Shows help information")
+			},
+			@doc("Displays a list of available commands or the usage of a specific command")
 			["help"] => function() {
 				if (args.length > 0) {
 					var helpArgHandler = createHelpArgHandler();
