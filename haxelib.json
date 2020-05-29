@@ -18,7 +18,9 @@
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
-		"hxargs": ""
+		"hxargs": "",
+		"actuate": "",
+		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
 	"releasenote": "Preview build: GridView, PageIndicator, PageNavigator, TabNavigator, TextArea, TreeView"
