@@ -12,17 +12,13 @@ jobs:
     - uses: haxeui/haxeui-core/.github/actions/haxe@master
       with:
         haxe-version: 4.0.5
-    - name: Set up Haxe
-      run: |
-        mkdir $GITHUB_WORKSPACE/.haxelib
-        haxelib setup $GITHUB_WORKSPACE/.haxelib
     - name: Set up Haxelib dependencies
       run: |
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install dox --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Build .swc file
       run: haxelib run openfl build flash
     - name: Build API documentation
