@@ -31,63 +31,54 @@ jobs:
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/calculator
       working-directory: samples/calculator
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/components-explorer
       working-directory: samples/components-explorer
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/custom-theme
       working-directory: samples/custom-theme
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/horizontal-layout-percentage-sizing
       working-directory: samples/horizontal-layout-percentage-sizing
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/list-view-data-provider-collection-sorting
       working-directory: samples/list-view-data-provider-collection-sorting
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/login-form
       working-directory: samples/login-form
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/stack-navigator-pass-data-between-views
       working-directory: samples/stack-navigator-pass-data-between-views
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
     - name: Build samples/tab-navigator
       working-directory: samples/tab-navigator
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
-        haxelib run openfl build air
 
   build-windows:
 
@@ -106,6 +97,7 @@ jobs:
         haxelib install actuate --quiet
         haxelib install dox --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
     - name: Build samples/hello-world
       working-directory: samples/hello-world
       run: |
