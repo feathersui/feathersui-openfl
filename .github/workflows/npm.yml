@@ -1,4 +1,4 @@
-name: npm CI
+name: npm
 
 on: [push]
 

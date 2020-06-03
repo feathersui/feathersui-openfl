@@ -1,10 +1,10 @@
-name: Haxe CI
+name: Samples
 
 on: [push]
 
 jobs:
 
-  build:
+  build-linux:
 
     runs-on: ubuntu-latest
 
@@ -18,67 +18,133 @@ jobs:
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
-        haxelib install dox --quiet
+        haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
-    - name: Build .swc file
-      run: haxelib run openfl build flash
-    - name: Build API documentation
-      working-directory: docs
-      run: haxe docs.hxml
     - name: Build samples/hello-world
       working-directory: samples/hello-world
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/calculator
       working-directory: samples/calculator
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/components-explorer
       working-directory: samples/components-explorer
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/custom-theme
       working-directory: samples/custom-theme
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/horizontal-layout-percentage-sizing
       working-directory: samples/horizontal-layout-percentage-sizing
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/list-view-data-provider-collection-sorting
       working-directory: samples/list-view-data-provider-collection-sorting
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/login-form
       working-directory: samples/login-form
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/stack-navigator-pass-data-between-views
       working-directory: samples/stack-navigator-pass-data-between-views
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
     - name: Build samples/tab-navigator
       working-directory: samples/tab-navigator
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
         haxelib run openfl build flash
+        haxelib run openfl build hl
+        haxelib run openfl build linux
+
+  build-macos:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: haxeui/haxeui-core/.github/actions/haxe@master
+      with:
+        haxe-version: 4.0.5
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
+        haxelib install actuate --quiet
+        haxelib install hxcpp --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Build samples/hello-world
+      working-directory: samples/hello-world
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/calculator
+      working-directory: samples/calculator
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/components-explorer
+      working-directory: samples/components-explorer
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/custom-theme
+      working-directory: samples/custom-theme
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/horizontal-layout-percentage-sizing
+      working-directory: samples/horizontal-layout-percentage-sizing
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/list-view-data-provider-collection-sorting
+      working-directory: samples/list-view-data-provider-collection-sorting
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/login-form
+      working-directory: samples/login-form
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/stack-navigator-pass-data-between-views
+      working-directory: samples/stack-navigator-pass-data-between-views
+      run: |
+        haxelib run openfl build mac
+    - name: Build samples/tab-navigator
+      working-directory: samples/tab-navigator
+      run: |
+        haxelib run openfl build mac
 
   build-windows:
 
@@ -95,42 +161,51 @@ jobs:
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
-        haxelib install dox --quiet
+        haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
     - name: Build samples/hello-world
       working-directory: samples/hello-world
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/calculator
       working-directory: samples/calculator
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/components-explorer
       working-directory: samples/components-explorer
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/custom-theme
       working-directory: samples/custom-theme
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/horizontal-layout-percentage-sizing
       working-directory: samples/horizontal-layout-percentage-sizing
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/list-view-data-provider-collection-sorting
       working-directory: samples/list-view-data-provider-collection-sorting
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/login-form
       working-directory: samples/login-form
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/stack-navigator-pass-data-between-views
       working-directory: samples/stack-navigator-pass-data-between-views
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows
     - name: Build samples/tab-navigator
       working-directory: samples/tab-navigator
       run: |
         haxelib run openfl build air
+        haxelib run openfl build windows

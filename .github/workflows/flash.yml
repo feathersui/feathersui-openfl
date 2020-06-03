@@ -1,0 +1,23 @@
+name: Flash
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: haxeui/haxeui-core/.github/actions/haxe@master
+      with:
+        haxe-version: 4.0.5
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
+        haxelib install actuate --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Build Flash .swc library
+      run: haxelib run openfl build flash
