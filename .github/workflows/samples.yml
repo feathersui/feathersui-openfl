@@ -27,7 +27,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/calculator
       working-directory: samples/calculator
       run: |
@@ -35,7 +34,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/components-explorer
       working-directory: samples/components-explorer
       run: |
@@ -51,7 +49,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/horizontal-layout-percentage-sizing
       working-directory: samples/horizontal-layout-percentage-sizing
       run: |
@@ -59,7 +56,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/list-view-data-provider-collection-sorting
       working-directory: samples/list-view-data-provider-collection-sorting
       run: |
@@ -67,7 +63,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/login-form
       working-directory: samples/login-form
       run: |
@@ -75,7 +70,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/stack-navigator-pass-data-between-views
       working-directory: samples/stack-navigator-pass-data-between-views
       run: |
@@ -83,7 +77,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/tab-navigator
       working-directory: samples/tab-navigator
       run: |
@@ -91,7 +84,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
 
   build-macos:
 
@@ -109,40 +101,8 @@ jobs:
         haxelib install actuate --quiet
         haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
-    - name: Build samples/hello-world
-      working-directory: samples/hello-world
-      run: |
-        haxelib run openfl build mac
-    - name: Build samples/calculator
-      working-directory: samples/calculator
-      run: |
-        haxelib run openfl build mac
     - name: Build samples/components-explorer
       working-directory: samples/components-explorer
-      run: |
-        haxelib run openfl build mac
-    - name: Build samples/custom-theme
-      working-directory: samples/custom-theme
-      run: |
-        haxelib run openfl build mac
-    - name: Build samples/horizontal-layout-percentage-sizing
-      working-directory: samples/horizontal-layout-percentage-sizing
-      run: |
-        haxelib run openfl build mac
-    - name: Build samples/list-view-data-provider-collection-sorting
-      working-directory: samples/list-view-data-provider-collection-sorting
-      run: |
-        haxelib run openfl build mac
-    - name: Build samples/login-form
-      working-directory: samples/login-form
-      run: |
-        haxelib run openfl build mac
-    - name: Build samples/stack-navigator-pass-data-between-views
-      working-directory: samples/stack-navigator-pass-data-between-views
-      run: |
-        haxelib run openfl build mac
-    - name: Build samples/tab-navigator
-      working-directory: samples/tab-navigator
       run: |
         haxelib run openfl build mac
 
@@ -168,12 +128,10 @@ jobs:
       working-directory: samples/hello-world
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/calculator
       working-directory: samples/calculator
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/components-explorer
       working-directory: samples/components-explorer
       run: |
@@ -183,29 +141,23 @@ jobs:
       working-directory: samples/custom-theme
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/horizontal-layout-percentage-sizing
       working-directory: samples/horizontal-layout-percentage-sizing
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/list-view-data-provider-collection-sorting
       working-directory: samples/list-view-data-provider-collection-sorting
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/login-form
       working-directory: samples/login-form
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/stack-navigator-pass-data-between-views
       working-directory: samples/stack-navigator-pass-data-between-views
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/tab-navigator
       working-directory: samples/tab-navigator
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
