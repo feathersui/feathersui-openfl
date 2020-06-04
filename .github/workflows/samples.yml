@@ -112,7 +112,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: joshtynjala/setup-adobe-air-action@master
+    - uses: joshtynjala/setup-adobe-air-action@v1
     - uses: haxeui/haxeui-core/.github/actions/haxe@master
       with:
         haxe-version: 4.0.5
