@@ -17,6 +17,7 @@ class ButtonScreen extends Panel {
 	private var button:Button;
 	private var iconButton:Button;
 	private var toggleButton:ToggleButton;
+	private var disabledButton:Button;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -43,6 +44,11 @@ class ButtonScreen extends Panel {
 		this.toggleButton.selected = true;
 		this.toggleButton.addEventListener(Event.CHANGE, toggleButton_changeHandler);
 		this.addChild(this.toggleButton);
+
+		this.disabledButton = new Button();
+		this.disabledButton.enabled = false;
+		this.disabledButton.text = "Disabled Button";
+		this.addChild(this.disabledButton);
 	}
 
 	private function createHeader():Void {
