@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.skins.RectangleSkin;
 import feathers.layout.VerticalLayout;
 import massive.munit.Assert;
 import openfl.display.Shape;
@@ -29,6 +30,28 @@ class LayoutGroupTest {
 		}
 		this._group = null;
 		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+	}
+
+	@Test
+	public function testMeasureSkinWidthAndHeight():Void {
+		var backgroundSkin = new RectangleSkin();
+		backgroundSkin.width = 100.0;
+		backgroundSkin.height = 150.0;
+		this._group.backgroundSkin = backgroundSkin;
+		this._group.validateNow();
+		Assert.areEqual(backgroundSkin.width, this._group.width);
+		Assert.areEqual(backgroundSkin.height, this._group.height);
+	}
+
+	@Test
+	public function testMeasureSkinMinWidthAndMinHeight():Void {
+		var backgroundSkin = new RectangleSkin();
+		backgroundSkin.minWidth = 100.0;
+		backgroundSkin.minHeight = 150.0;
+		this._group.backgroundSkin = backgroundSkin;
+		this._group.validateNow();
+		Assert.areEqual(backgroundSkin.minWidth, this._group.width);
+		Assert.areEqual(backgroundSkin.minHeight, this._group.height);
 	}
 
 	@Test
