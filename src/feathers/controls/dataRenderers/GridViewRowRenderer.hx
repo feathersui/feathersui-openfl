@@ -188,6 +188,10 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	}
 
 	override private function update():Void {
+		// children are allowed to change during update() in a subclass up
+		// until it calls super.update().
+		this._ignoreChildChangesButSetFlags = false;
+
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		this.preLayout();

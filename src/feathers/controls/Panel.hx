@@ -108,6 +108,10 @@ class Panel extends ScrollContainer implements IFocusExtras {
 	}
 
 	override private function update():Void {
+		// children are allowed to change during update() in a subclass up
+		// until it calls super.update().
+		this._ignoreChildChangesButSetFlags = false;
+
 		super.update();
 		this.layoutHeader();
 		this.layoutFooter();

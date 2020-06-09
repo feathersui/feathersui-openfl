@@ -342,6 +342,18 @@ class LayoutGroup extends FeathersControl {
 		return this.xmlContent;
 	}
 
+	override public function validateNow():Void {
+		// for the start of validation, we're going to ignore when children
+		// resize or dispatch changes to layout data. this allows subclasses
+		// to modify children in draw() before the layout is applied.
+		var oldIgnoreChildChanges = this._ignoreChildChangesButSetFlags;
+		this._ignoreChildChangesButSetFlags = true;
+		super.validateNow();
+		// if super.validateNow() returns without calling update(), the flag
+		// won't be reset before layout is called, so we need reset manually.
+		this._ignoreChildChangesButSetFlags = oldIgnoreChildChanges;
+	}
+
 	override private function update():Void {
 		// children are allowed to change during update() in a subclass up
 		// until it calls super.update().
