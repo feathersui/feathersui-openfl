@@ -189,7 +189,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@see `feathers.data.IFlatCollection.add`
 	**/
 	public function add(item:T):Void {
-		inline this.addAt(item, this.array.length);
+		inline this.addAt(item, this.length);
 	}
 
 	/**
