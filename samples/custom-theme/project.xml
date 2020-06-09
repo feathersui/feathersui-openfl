@@ -3,7 +3,7 @@
 	
 	<meta title="Custom Theme" package="com.feathersui.samples.CustomTheme" version="1.0.0" company="Bowler Hat LLC" />
 	<meta title="Custom Theme — Feathers UI Samples" if="html5"/>
-	<app main="Main" path="build" file="CustomTheme" />
+	<app main="Main" file="CustomTheme" />
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>

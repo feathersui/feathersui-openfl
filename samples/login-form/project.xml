@@ -3,7 +3,7 @@
 	
 	<meta title="Login Form" package="com.feathersui.samples.LoginForm" version="1.0.0" company="Bowler Hat LLC" />
 	<meta title="Login Form — Feathers UI Samples" if="html5"/>
-	<app main="Main" path="build" file="LoginForm" />
+	<app main="Main" file="LoginForm" />
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>

@@ -2,7 +2,7 @@
 <project>
 	<meta title="Collection Sorting" package="com.feathersui.samples.ListViewSorting" version="1.0.0" company="Bowler Hat LLC" />
 	<meta title="Sort a ListView data provider with sortCompareFunction (ArrayCollection) — Feathers UI Samples" if="html5"/>
-	<app main="Main" path="build" file="ListViewSorting" />
+	<app main="Main" file="ListViewSorting" />
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>

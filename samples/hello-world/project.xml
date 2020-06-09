@@ -3,7 +3,7 @@
 	
 	<meta title="Hello World" package="com.feathersui.samples.HelloWorld" version="1.0.0" company="Bowler Hat LLC" />
 	<meta title="Hello World — Feathers UI Samples" if="html5"/>
-	<app main="Main" path="build" file="HelloWorld" />
+	<app main="Main" file="HelloWorld" />
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>

@@ -3,7 +3,7 @@
 	
 	<meta title="Data Passing" package="com.feathersui.samples.StackNavigatorPassData" version="1.0.0" company="Bowler Hat LLC" />
 	<meta title="Pass data between StackNavigator views — Feathers UI Samples" if="html5"/>
-	<app main="Main" path="build" file="StackNavigatorPassData" />
+	<app main="Main" file="StackNavigatorPassData" />
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>
