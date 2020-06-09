@@ -509,7 +509,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				// don't keep the old layout's cache because it may not be
 				// compatible with the new layout
 				this._virtualCache.resize(0);
-				this._virtualCache.resize(this.dataProvider.length);
+				if (this.dataProvider != null) {
+					this._virtualCache.resize(this.dataProvider.length);
+				}
 			}
 			this.listViewPort.layout = this.layout;
 			this._previousLayout = this.layout;
@@ -619,6 +621,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
 		this._layoutItems.resize(0);
+		this._visibleIndices.start = 0;
+		this._visibleIndices.end = 0;
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
 		this._layoutItems.resize(this.dataProvider.length);
 
 		if (this.virtualLayout && Std.is(this.layout, IVirtualLayout)) {
@@ -628,9 +635,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			this._visibleIndices.start = 0;
 			this._visibleIndices.end = this.dataProvider.length - 1;
-		}
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
-			return;
 		}
 		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
 			var item = this.dataProvider.get(i);
