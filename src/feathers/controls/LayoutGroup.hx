@@ -490,16 +490,27 @@ class LayoutGroup extends FeathersControl {
 		if (needsMaxHeight) {
 			viewPortMaxHeight = Math.POSITIVE_INFINITY;
 		}
-		if (this._currentBackgroundSkin != null) {
+		if (this._backgroundSkinMeasurements != null) {
 			// because the layout might need it, we account for the
 			// dimensions of the background skin when determining the minimum
 			// dimensions of the view port.
-			// we can't use the minimum dimensions of the background skin
-			if (this._currentBackgroundSkin.width > viewPortMinWidth) {
-				viewPortMinWidth = this._currentBackgroundSkin.width;
+			if (this._backgroundSkinMeasurements.width != null) {
+				if (this._backgroundSkinMeasurements.width > viewPortMinWidth) {
+					viewPortMinWidth = this._backgroundSkinMeasurements.width;
+				}
+			} else if (this._backgroundSkinMeasurements.minWidth != null) {
+				if (this._backgroundSkinMeasurements.minWidth > viewPortMinWidth) {
+					viewPortMinWidth = this._backgroundSkinMeasurements.minWidth;
+				}
 			}
-			if (this._currentBackgroundSkin.height > viewPortMinHeight) {
-				viewPortMinHeight = this._currentBackgroundSkin.height;
+			if (this._backgroundSkinMeasurements.height != null) {
+				if (this._backgroundSkinMeasurements.height > viewPortMinHeight) {
+					viewPortMinHeight = this._backgroundSkinMeasurements.height;
+				}
+			} else if (this._backgroundSkinMeasurements.minHeight != null) {
+				if (this._backgroundSkinMeasurements.minHeight > viewPortMinHeight) {
+					viewPortMinHeight = this._backgroundSkinMeasurements.minHeight;
+				}
 			}
 		}
 		this._layoutMeasurements.minWidth = viewPortMinWidth;
