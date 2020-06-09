@@ -5,6 +5,7 @@ import feathers.controls.BasicButtonMeasurementTest;
 import feathers.controls.BasicButtonTest;
 import feathers.controls.BasicToggleButtonTest;
 import feathers.controls.ButtonTest;
+import feathers.controls.GridViewTest;
 import feathers.controls.HProgressBarTest;
 import feathers.controls.LabelTest;
 import feathers.controls.LayoutGroupTest;
@@ -50,6 +51,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(feathers.controls.BasicButtonTest);
 		add(feathers.controls.BasicToggleButtonTest);
 		add(feathers.controls.ButtonTest);
+		add(feathers.controls.GridViewTest);
 		add(feathers.controls.HProgressBarTest);
 		add(feathers.controls.LabelTest);
 		add(feathers.controls.LayoutGroupTest);

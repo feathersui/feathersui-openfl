@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.ArrayCollection;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import feathers.controls.dataRenderers.CellRenderer;
@@ -540,6 +541,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 
+		this.validateColumns();
+
 		if (headerRendererInvalid || stateInvalid || dataInvalid) {
 			this.refreshHeaderRenderers();
 		}
@@ -576,6 +579,19 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.topViewPortOffset += this._headerContainer.height;
 			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._headerContainer.width);
 			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, this._headerContainer.width);
+		}
+	}
+
+	private function validateColumns():Void {
+		if (this.columns != null) {
+			return;
+		}
+		if (this.dataProvider != null && this.dataProvider.length > 0) {
+			var item = this.dataProvider.get(0);
+			this.columns = new ArrayCollection(Reflect.fields(item)
+				.map((fieldName) -> new GridViewColumn(fieldName, (item) -> Reflect.getProperty(item, fieldName))));
+		} else {
+			this.columns = new ArrayCollection();
 		}
 	}
 
@@ -688,6 +704,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
 		this._layoutItems.resize(0);
+		this._visibleIndices.start = 0;
+		this._visibleIndices.end = 0;
+		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			return;
+		}
 		this._layoutItems.resize(this.dataProvider.length);
 
 		if (this.virtualLayout && Std.is(this._layout, IVirtualLayout)) {
