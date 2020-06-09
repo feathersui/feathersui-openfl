@@ -4,6 +4,7 @@
 *.code-workspace
 
 build/
+bin/
 dist/
 
 lib/
