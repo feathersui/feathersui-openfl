@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.errors.IllegalOperationError;
 import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusManager;
@@ -39,6 +40,26 @@ class DefaultFocusManager implements IFocusManager {
 	**/
 	public function new(root:DisplayObjectContainer) {
 		this.root = root;
+	}
+
+	private var _enabled = true;
+
+	@:flash.property
+	public var enabled(get, set):Bool;
+
+	private function get_enabled():Bool {
+		return this._enabled;
+	}
+
+	private function set_enabled(value:Bool):Bool {
+		if (this._enabled == value) {
+			return this._enabled;
+		}
+		if (value && this._root == null) {
+			throw new IllegalOperationError("Cannot enable focus manager without a root container.");
+		}
+		this._enabled = value;
+		return this._enabled;
 	}
 
 	private var _root:DisplayObjectContainer = null;
@@ -525,6 +546,9 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function defaultFocusManager_stage_mouseFocusChangeHandler(event:FocusEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		var textField = Std.downcast(event.relatedObject, TextField);
 		if (textField != null && textField.type == INPUT) {
 			// let OpenFL handle setting mouse focus on an input TextField
@@ -567,6 +591,9 @@ class DefaultFocusManager implements IFocusManager {
 
 	#if html5
 	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (event.keyCode != Keyboard.TAB) {
 			return;
 		}
@@ -579,6 +606,9 @@ class DefaultFocusManager implements IFocusManager {
 
 	#if !html5
 	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (event.keyCode == Keyboard.UP || event.keyCode == Keyboard.DOWN || event.keyCode == Keyboard.LEFT || event.keyCode == Keyboard.RIGHT) {
 			event.preventDefault();
 			return;
@@ -592,6 +622,9 @@ class DefaultFocusManager implements IFocusManager {
 	#end
 
 	private function defaultFocusManager_root_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		var focusTarget:IFocusObject = null;
 		var target = cast(event.target, DisplayObject);
 		do {
@@ -611,6 +644,9 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function defaultFocusManager_root_activateHandler(event:Event):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (this._focus != null && this._root.stage != null) {
 			this._root.stage.focus = cast(this._focus, InteractiveObject);
 		}

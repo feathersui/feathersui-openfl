@@ -33,4 +33,12 @@ interface IFocusManager {
 	**/
 	@:flash.property
 	public var focusPane(get, never):DisplayObjectContainer;
+
+	/**
+		Specifies if this focus manager is enabled or disabled.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var enabled(get, set):Bool;
 }
