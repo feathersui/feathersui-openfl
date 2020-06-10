@@ -50,41 +50,27 @@ class DefaultFocusManager implements IFocusManager {
 		if (this.root != null) {
 			this.clearFocusManager(this.root);
 			this.root.removeEventListener(Event.ADDED_TO_STAGE, defaultFocusManager_root_addedToStageHandler);
+			this.root.removeEventListener(Event.REMOVED_FROM_STAGE, defaultFocusManager_root_removedFromStageHandler);
 			this.root.removeEventListener(Event.ADDED, defaultFocusManager_root_addedHandler);
 			this.root.removeEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler);
 			this.root.removeEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler);
 			this.root.removeEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler);
-			var stage = this.root.stage;
-			stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler);
-			#if html5
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler);
-			#else
-			stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler);
-			#end
+			if (this.root.stage != null) {
+				this.handleRemovedFromStage();
+			}
 		}
 		this.root = value;
 		if (this.root != null) {
-			if (this.root.stage == null) {
-				this.root.addEventListener(Event.ADDED_TO_STAGE, defaultFocusManager_root_addedToStageHandler, false, 0, true);
-			} else {
-				this.root.stage.stageFocusRect = false;
-				if (this.root.stage.focus == null) {
-					// needed for some targets, like Neko
-					this.root.stage.focus = this.root.stage;
-				}
+			if (this.root.stage != null) {
+				this.handleAddedToStage();
 			}
 			this.setFocusManager(this.root);
+			this.root.addEventListener(Event.ADDED_TO_STAGE, defaultFocusManager_root_addedToStageHandler, false, 0, true);
+			this.root.addEventListener(Event.REMOVED_FROM_STAGE, defaultFocusManager_root_removedFromStageHandler, false, 0, true);
 			this.root.addEventListener(Event.ADDED, defaultFocusManager_root_addedHandler, false, 0, true);
 			this.root.addEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler, false, 0, true);
 			this.root.addEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler, false, 0, true);
 			this.root.addEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler, false, 0, true);
-			var stage = this.root.stage;
-			stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler, false, 0, true);
-			#if html5
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler, false, 0, true);
-			#else
-			stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler, false, 0, true);
-			#end
 		}
 		return this.root;
 	}
@@ -114,17 +100,21 @@ class DefaultFocusManager implements IFocusManager {
 
 	private function set_focus(value:IFocusObject):IFocusObject {
 		if (this.focus == value) {
-			// in some cases, the stage focus seems to get cleared, so even
-			// though our focus hasn't changed, we should still pass it to the
-			// stage
-			this.root.stage.focus = cast(value, InteractiveObject);
+			if (this.root.stage != null) {
+				// in some cases, the stage focus seems to get cleared, so even
+				// though our focus hasn't changed, we should still pass it to the
+				// stage
+				this.root.stage.focus = cast(value, InteractiveObject);
+			}
 			return this.focus;
 		}
 		if (this.focus != null) {
 			this.focus.showFocus(false);
 		}
 		this.focus = value;
-		this.root.stage.focus = cast(value, InteractiveObject);
+		if (this.root.stage != null) {
+			this.root.stage.focus = cast(value, InteractiveObject);
+		}
 		return this.focus;
 	}
 
@@ -418,12 +408,37 @@ class DefaultFocusManager implements IFocusManager {
 		return null;
 	}
 
-	private function defaultFocusManager_root_addedToStageHandler(event:Event):Void {
-		this.root.stage.stageFocusRect = false;
-		if (this.root.stage.focus == null) {
+	private function handleAddedToStage():Void {
+		var stage = this.root.stage;
+		stage.stageFocusRect = false;
+		if (stage.focus == null) {
 			// needed for some targets, like Neko
-			this.root.stage.focus = this.root.stage;
+			stage.focus = stage;
 		}
+		stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler, false, 0, true);
+		#if html5
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler, false, 0, true);
+		#else
+		stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler, false, 0, true);
+		#end
+	}
+
+	private function handleRemovedFromStage():Void {
+		var stage = this.root.stage;
+		stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler);
+		#if html5
+		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler);
+		#else
+		stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler);
+		#end
+	}
+
+	private function defaultFocusManager_root_addedToStageHandler(event:Event):Void {
+		this.handleAddedToStage();
+	}
+
+	private function defaultFocusManager_root_removedFromStageHandler(event:Event):Void {
+		this.handleRemovedFromStage();
 	}
 
 	private function shouldBeManaged(target:DisplayObject):Bool {
