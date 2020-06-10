@@ -23,6 +23,7 @@ interface IFocusManager {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var focus(get, set):IFocusObject;
 
 	/**
@@ -30,5 +31,6 @@ interface IFocusManager {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var focusPane(get, never):DisplayObjectContainer;
 }
