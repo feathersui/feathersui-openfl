@@ -464,7 +464,14 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
-		if (endIndex < 0) {
+		if (estimatedItemWidth == null) {
+			// if we don't have a good width yet, just return one index for
+			// performance reasons. this will force one item to be measured, and
+			// then we'll have an estimate.
+			// the alternative is making every single item visible, which is
+			// terrible for performance.
+			endIndex = startIndex;
+		} else if (endIndex < 0) {
 			endIndex = startIndex;
 		}
 		if (result == null) {
