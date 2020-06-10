@@ -331,6 +331,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 				newMinHeight = 0.0;
 			}
 		}
+
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
 			if (measureSkin != null) {
