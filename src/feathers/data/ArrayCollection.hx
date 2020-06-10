@@ -66,6 +66,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	/**
 		@see `feathers.data.IFlatCollection.length`
 	**/
+	@:flash.property
 	public var length(get, never):Int;
 
 	private function get_length():Int {
@@ -80,46 +81,50 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 
 	private var _pendingRefresh:Bool = false;
 
+	private var _filterFunction:(T) -> Bool = null;
+
 	/**
 		@see `feathers.data.IFlatCollection.filterFunction`
 	**/
-	@:isVar
+	@:flash.property
 	public var filterFunction(get, set):(T) -> Bool;
 
 	private function get_filterFunction():(T) -> Bool {
-		return this.filterFunction;
+		return this._filterFunction;
 	}
 
 	private function set_filterFunction(value:(T) -> Bool):(T) -> Bool {
-		if (this.filterFunction == value) {
-			return this.filterFunction;
+		if (this._filterFunction == value) {
+			return this._filterFunction;
 		}
-		this.filterFunction = value;
+		this._filterFunction = value;
 		this._pendingRefresh = true;
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.FILTER_CHANGE, -1);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.filterFunction;
+		return this._filterFunction;
 	}
+
+	private var _sortCompareFunction:(T, T) -> Int = null;
 
 	/**
 		@see `feathers.data.IFlatCollection.sortCompareFunction`
 	**/
-	@:isVar
+	@:flash.property
 	public var sortCompareFunction(get, set):(T, T) -> Int;
 
 	private function get_sortCompareFunction():(T, T) -> Int {
-		return this.sortCompareFunction;
+		return this._sortCompareFunction;
 	}
 
 	private function set_sortCompareFunction(value:(T, T) -> Int):(T, T) -> Int {
-		if (this.sortCompareFunction == value) {
-			return this.sortCompareFunction;
+		if (this._sortCompareFunction == value) {
+			return this._sortCompareFunction;
 		}
-		this.sortCompareFunction = value;
+		this._sortCompareFunction = value;
 		this._pendingRefresh = true;
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.SORT_CHANGE, -1);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.sortCompareFunction;
+		return this._sortCompareFunction;
 	}
 
 	/**
@@ -152,8 +157,8 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			var oldItem = this._filterAndSortData[index];
 			var unfilteredIndex = this.array.indexOf(oldItem);
 			this.array[unfilteredIndex] = item;
-			if (this.filterFunction != null) {
-				var includeItem = this.filterFunction(item);
+			if (this._filterFunction != null) {
+				var includeItem = this._filterFunction(item);
 				if (includeItem) {
 					this._filterAndSortData[index] = item;
 					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
@@ -167,7 +172,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 					FeathersEvent.dispatch(this, Event.CHANGE);
 					return;
 				}
-			} else if (this.sortCompareFunction != null) {
+			} else if (this._sortCompareFunction != null) {
 				// remove the old item first!
 				this._filterAndSortData.remove(oldItem);
 				// then try to figure out where the new item goes when inserted
@@ -358,14 +363,14 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		@see `feathers.data.IFlatCollection.refresh`
 	**/
 	public function refresh():Void {
-		if (this.filterFunction == null && this.sortCompareFunction == null) {
+		if (this._filterFunction == null && this._sortCompareFunction == null) {
 			return;
 		}
 		this._pendingRefresh = true;
-		if (this.filterFunction != null) {
+		if (this._filterFunction != null) {
 			FlatCollectionEvent.dispatch(this, FlatCollectionEvent.FILTER_CHANGE, -1);
 		}
-		if (this.sortCompareFunction != null) {
+		if (this._sortCompareFunction != null) {
 			FlatCollectionEvent.dispatch(this, FlatCollectionEvent.SORT_CHANGE, -1);
 		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -373,7 +378,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 
 	private function refreshFilterAndSort():Void {
 		this._pendingRefresh = false;
-		if (this.filterFunction != null) {
+		if (this._filterFunction != null) {
 			var result = this._filterAndSortData;
 			if (result != null) {
 				// reuse the old array to avoid garbage collection
@@ -383,12 +388,12 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			}
 			for (i in 0...this.array.length) {
 				var item = this.array[i];
-				if (this.filterFunction(item)) {
+				if (this._filterFunction(item)) {
 					result.push(item);
 				}
 			}
 			this._filterAndSortData = result;
-		} else if (this.sortCompareFunction != null) // no filter
+		} else if (this._sortCompareFunction != null) // no filter
 		{
 			var result = this._filterAndSortData;
 			if (result != null) {
@@ -405,18 +410,18 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		{
 			this._filterAndSortData = null;
 		}
-		if (this.sortCompareFunction != null) {
-			this._filterAndSortData.sort(this.sortCompareFunction);
+		if (this._sortCompareFunction != null) {
+			this._filterAndSortData.sort(this._sortCompareFunction);
 		}
 	}
 
 	private function getSortedInsertionIndex(item:T):Int {
-		if (this.sortCompareFunction == null) {
+		if (this._sortCompareFunction == null) {
 			return this._filterAndSortData.length;
 		}
 		for (i in 0...this._filterAndSortData.length) {
 			var otherItem = this._filterAndSortData[i];
-			var result = this.sortCompareFunction(item, otherItem);
+			var result = this._sortCompareFunction(item, otherItem);
 			if (result < 1) {
 				return i;
 			}
@@ -445,12 +450,12 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			this.array.insert(unfilteredIndex, item);
 			// but check if the item should be in the filtered data
 			var includeItem = true;
-			if (this.filterFunction != null) {
-				includeItem = this.filterFunction(item);
+			if (this._filterFunction != null) {
+				includeItem = this._filterFunction(item);
 			}
 			if (includeItem) {
 				var sortedIndex = index;
-				if (this.sortCompareFunction != null) {
+				if (this._sortCompareFunction != null) {
 					sortedIndex = this.getSortedInsertionIndex(item);
 				}
 				this._filterAndSortData.insert(sortedIndex, item);

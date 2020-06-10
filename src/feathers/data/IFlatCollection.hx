@@ -29,6 +29,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var length(get, never):Int;
 
 	/**
@@ -50,6 +51,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var filterFunction(get, set):(T) -> Bool;
 
 	/**
@@ -80,6 +82,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var sortCompareFunction(get, set):(T, T) -> Int;
 
 	/**
