@@ -8,10 +8,11 @@
 
 package feathers.controls;
 
-import openfl.geom.Point;
-import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseScrollBar;
+import feathers.core.IMeasureObject;
+import feathers.core.IValidating;
 import feathers.themes.steel.components.SteelHScrollBarStyles;
+import openfl.geom.Point;
 
 /**
 	A horizontal scroll bar, for use with scrolling containers like
@@ -199,7 +200,9 @@ class HScrollBar extends BaseScrollBar {
 		var contentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 
 		if (this.fixedThumbSize) {
-			this.thumbSkin.width = this._thumbSkinMeasurements.width;
+			if (this._thumbSkinMeasurements.width != null) {
+				this.thumbSkin.width = this._thumbSkinMeasurements.width;
+			}
 		} else {
 			var thumbWidth = contentWidth * this.getAdjustedPage() / range;
 			if (thumbWidth > 0.0) {
@@ -210,8 +213,15 @@ class HScrollBar extends BaseScrollBar {
 				widthOffset *= valueOffset / (range * thumbWidth / contentWidth);
 				thumbWidth -= widthOffset;
 			}
-			if (this._thumbSkinMeasurements.minWidth != null && thumbWidth < this._thumbSkinMeasurements.minWidth) {
-				thumbWidth = this._thumbSkinMeasurements.minWidth;
+			if (this._thumbSkinMeasurements.minWidth != null) {
+				if (thumbWidth < this._thumbSkinMeasurements.minWidth) {
+					thumbWidth = this._thumbSkinMeasurements.minWidth;
+				}
+			} else if (Std.is(this.thumbSkin, IMeasureObject)) {
+				var measureSkin = cast(this.thumbSkin, IMeasureObject);
+				if (thumbWidth < measureSkin.minWidth) {
+					thumbWidth = measureSkin.minWidth;
+				}
 			}
 			if (thumbWidth < 0.0) {
 				thumbWidth = 0.0;

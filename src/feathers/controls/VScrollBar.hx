@@ -8,10 +8,11 @@
 
 package feathers.controls;
 
-import openfl.geom.Point;
-import feathers.core.IValidating;
 import feathers.controls.supportClasses.BaseScrollBar;
+import feathers.core.IMeasureObject;
+import feathers.core.IValidating;
 import feathers.themes.steel.components.SteelVScrollBarStyles;
+import openfl.geom.Point;
 
 /**
 	A vertical scroll bar, for use with scrolling containers like
@@ -200,7 +201,9 @@ class VScrollBar extends BaseScrollBar {
 		var contentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 
 		if (this.fixedThumbSize) {
-			this.thumbSkin.height = this._thumbSkinMeasurements.height;
+			if (this._thumbSkinMeasurements.height != null) {
+				this.thumbSkin.height = this._thumbSkinMeasurements.height;
+			}
 		} else {
 			var thumbHeight = contentHeight * this.getAdjustedPage() / range;
 			if (thumbHeight > 0.0) {
@@ -211,8 +214,15 @@ class VScrollBar extends BaseScrollBar {
 				heightOffset *= valueOffset / (range * thumbHeight / contentHeight);
 				thumbHeight -= heightOffset;
 			}
-			if (this._thumbSkinMeasurements.minHeight != null && thumbHeight < this._thumbSkinMeasurements.minHeight) {
-				thumbHeight = this._thumbSkinMeasurements.minHeight;
+			if (this._thumbSkinMeasurements.minHeight != null) {
+				if (thumbHeight < this._thumbSkinMeasurements.minHeight) {
+					thumbHeight = this._thumbSkinMeasurements.minHeight;
+				}
+			} else if (Std.is(this.thumbSkin, IMeasureObject)) {
+				var measureSkin = cast(this.thumbSkin, IMeasureObject);
+				if (thumbHeight < measureSkin.minHeight) {
+					thumbHeight = measureSkin.minHeight;
+				}
 			}
 			if (thumbHeight < 0.0) {
 				thumbHeight = 0.0;
