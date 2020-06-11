@@ -152,6 +152,8 @@ class DefaultFocusManager implements IFocusManager {
 
 	/**
 		Finds the next or previous focus.
+
+		@since 1.0.0
 	**/
 	public function findNextFocus(backward:Bool):IFocusObject {
 		var newFocus:IFocusObject = null;
