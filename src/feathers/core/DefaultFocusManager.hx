@@ -147,6 +147,34 @@ class DefaultFocusManager implements IFocusManager {
 		return this._focus;
 	}
 
+	/**
+		Finds the next or previous focus.
+	**/
+	public function findNextFocus(backward:Bool):IFocusObject {
+		var newFocus:IFocusObject = null;
+		var currentFocus = this._focus;
+		if (backward) {
+			if (currentFocus != null && currentFocus.parent != null) {
+				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
+			}
+			if (newFocus == null) {
+				newFocus = this.findPreviousContainerFocus(this._root, null, false);
+			}
+		} else {
+			if (currentFocus != null) {
+				if (Std.is(currentFocus, IFocusContainer) && cast(currentFocus, IFocusContainer).childFocusEnabled) {
+					newFocus = this.findNextContainerFocus(cast(currentFocus, DisplayObjectContainer), null, true);
+				} else if (currentFocus.parent != null) {
+					newFocus = this.findNextContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
+				}
+			}
+			if (newFocus == null) {
+				newFocus = this.findNextContainerFocus(this._root, null, false);
+			}
+		}
+		return newFocus;
+	}
+
 	private function isValidFocus(target:IFocusObject):Bool {
 		if (target == null || target.focusManager != this) {
 			return false;
@@ -561,27 +589,7 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function handleKeyboardFocusChange(event:Event, shiftKey:Bool):IFocusObject {
-		var newFocus:IFocusObject = null;
-		var currentFocus = this._focus;
-		if (shiftKey) {
-			if (currentFocus != null && currentFocus.parent != null) {
-				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
-			}
-			if (newFocus == null) {
-				newFocus = this.findPreviousContainerFocus(this._root, null, false);
-			}
-		} else {
-			if (currentFocus != null) {
-				if (Std.is(currentFocus, IFocusContainer) && cast(currentFocus, IFocusContainer).childFocusEnabled) {
-					newFocus = this.findNextContainerFocus(cast(currentFocus, DisplayObjectContainer), null, true);
-				} else if (currentFocus.parent != null) {
-					newFocus = this.findNextContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
-				}
-			}
-			if (newFocus == null) {
-				newFocus = this.findNextContainerFocus(this._root, null, false);
-			}
-		}
+		var newFocus = this.findNextFocus(shiftKey);
 		this.focus = newFocus;
 		if (this._focus != null) {
 			this._focus.showFocus(true);
