@@ -448,6 +448,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (this.textField == null) {
 			this.textField = new TextField();
 			this.textField.selectable = false;
+			this.textField.multiline = true;
 			this.addChild(this.textField);
 		}
 	}

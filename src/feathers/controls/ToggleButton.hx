@@ -584,6 +584,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (this.textField == null) {
 			this.textField = new TextField();
 			this.textField.selectable = false;
+			this.textField.multiline = true;
 			this.addChild(this.textField);
 		}
 	}

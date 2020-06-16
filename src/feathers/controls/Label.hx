@@ -440,6 +440,7 @@ class Label extends FeathersControl implements ITextControl {
 		super.initialize();
 		if (this.textField == null) {
 			this.textField = new TextField();
+			this.textField.multiline = true;
 			this.addChild(this.textField);
 		}
 	}
