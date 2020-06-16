@@ -42,7 +42,7 @@ class ScrollEvent extends Event {
 		position of a container changes. This is basically alias for
 		`openfl.events.Event.SCROLL`.
 	**/
-	public static inline var SCROLL:EventType<Event> = "scroll";
+	public static inline var SCROLL:EventType<ScrollEvent> = "scroll";
 
 	#if !flash
 	private static var _pool = new ObjectPool<ScrollEvent>(() -> return new ScrollEvent(null, false, false), (event) -> {
