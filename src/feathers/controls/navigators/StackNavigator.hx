@@ -410,26 +410,22 @@ class StackNavigator extends BaseNavigator {
 
 	override private function getView(id:String):DisplayObject {
 		var item = cast(this._addedItems.get(id), StackItem);
-		return item.getView(this);
+		var view = item.getView(this);
+		if (this.savedInject != null) {
+			this.savedInject(view);
+		}
+		if (this.savedIsPop) {
+			var returnHandlers = item.returnHandlers;
+			if (returnHandlers != null && returnHandlers.exists(this._previousViewInTransitionID)) {
+				returnHandlers.get(this._previousViewInTransitionID)(view, this.savedReturnedObject);
+			}
+		}
+		return view;
 	}
 
 	override private function disposeView(id:String, view:DisplayObject):Void {
 		var item = cast(this._addedItems.get(id), StackItem);
 		item.returnView(view);
-	}
-
-	override private function prepareActiveItemView():Void {
-		if (this.savedInject != null) {
-			this.savedInject(this.activeItemView);
-		}
-
-		if (this.savedIsPop) {
-			var item = this.getItem(this.activeItemID);
-			var returnHandlers = item.returnHandlers;
-			if (returnHandlers != null && returnHandlers.exists(this._previousViewInTransitionID)) {
-				returnHandlers.get(this._previousViewInTransitionID)(this.activeItemView, this.savedReturnedObject);
-			}
-		}
 	}
 
 	private function showItemWithInjectAndReturnedObject(id:String, ?transition:(DisplayObject, DisplayObject) -> IEffectContext, ?inject:(Dynamic) -> Void,
