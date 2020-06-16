@@ -319,6 +319,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return this.scrollBarYFactory;
 	}
 
+	private var _temporaryScrollX = 0.0;
+
 	/**
 		The number of pixels the container has been scrolled horizontally (on
 		the x-axis).
@@ -344,15 +346,21 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function get_scrollX():Float {
 		if (this.scroller == null) {
-			return 0.0;
+			return this._temporaryScrollX;
 		}
 		return this.scroller.scrollX;
 	}
 
 	private function set_scrollX(value:Float):Float {
+		if (this.scroller == null) {
+			this._temporaryScrollX = value;
+			return this._temporaryScrollX;
+		}
 		this.scroller.scrollX = value;
 		return this.scroller.scrollX;
 	}
+
+	private var _temporaryScrollY = 0.0;
 
 	/**
 		The number of pixels the container has been scrolled vertically (on the
@@ -379,12 +387,16 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function get_scrollY():Float {
 		if (this.scroller == null) {
-			return 0.0;
+			return this._temporaryScrollY;
 		}
 		return this.scroller.scrollY;
 	}
 
 	private function set_scrollY(value:Float):Float {
+		if (this.scroller == null) {
+			this._temporaryScrollY = value;
+			return this._temporaryScrollY;
+		}
 		this.scroller.scrollY = value;
 		return this.scroller.scrollY;
 	}
@@ -723,6 +735,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.scroller == null) {
 			this.scroller = new Scroller();
 		}
+		this.scroller.scrollX = this._temporaryScrollX;
+		this.scroller.scrollY = this._temporaryScrollY;
 		this.scroller.addEventListener(Event.SCROLL, scroller_scrollHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_START, scroller_scrollStartHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, scroller_scrollCompleteHandler);
