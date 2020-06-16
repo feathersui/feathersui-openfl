@@ -291,7 +291,20 @@ class RouterNavigator extends BaseNavigator {
 
 	override private function getView(id:String):DisplayObject {
 		var item = cast(this._addedItems.get(id), Route);
-		return item.getView(this);
+		var view = item.getView(this);
+		if (item.injectState != null) {
+			#if html5
+			var state = this.htmlWindow.history.state;
+			#else
+			var state = null;
+			if (this._history.length > 0) {
+				var historyItem = this._history[this._history.length - 1];
+				state = historyItem.state;
+			}
+			#end
+			item.injectState(view, state);
+		}
+		return view;
 	}
 
 	override private function disposeView(id:String, view:DisplayObject):Void {

@@ -27,11 +27,13 @@ class Route {
 		Creates a `Route` that instantiates a view from a class that extends
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
-	public static function withClass(path:String, viewClass:Class<DisplayObject>, ?actions:Map<String, RouterAction>):Route {
+	public static function withClass(path:String, viewClass:Class<DisplayObject>, ?actions:Map<String, RouterAction>,
+			?injectState:(view:Dynamic, state:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewClass = viewClass;
 		item.actions = actions;
+		item.injectState = injectState;
 		return item;
 	}
 
@@ -39,11 +41,13 @@ class Route {
 		Creates a `Route` that calls a function that returns a
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
-	public static function withFunction(path:String, viewFunction:() -> DisplayObject, ?actions:Map<String, RouterAction>):Route {
+	public static function withFunction(path:String, viewFunction:() -> DisplayObject, ?actions:Map<String, RouterAction>,
+			?injectState:(view:Dynamic, state:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewFunction = viewFunction;
 		item.actions = actions;
+		item.injectState = injectState;
 		return item;
 	}
 
@@ -51,11 +55,13 @@ class Route {
 		Creates a `Route` that always returns the same `DisplayObject`
 		instance when the `RouterNavigator` requests the item's view.
 	**/
-	public static function withDisplayObject(path:String, viewInstance:DisplayObject, ?actions:Map<String, RouterAction>):Route {
+	public static function withDisplayObject(path:String, viewInstance:DisplayObject, ?actions:Map<String, RouterAction>,
+			?injectState:(view:Dynamic, state:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewInstance = viewInstance;
 		item.actions = actions;
+		item.injectState = injectState;
 		return item;
 	}
 
@@ -67,6 +73,14 @@ class Route {
 		@since 1.0.0
 	**/
 	public var path:String;
+
+	/**
+		An optional function to parse the current history state when a view is
+		shown.
+
+		@since 1.0.0
+	**/
+	public dynamic function injectState(view:DisplayObject, state:Dynamic):Void {}
 
 	private var viewClass:Class<DisplayObject>;
 	private var viewFunction:() -> DisplayObject;
