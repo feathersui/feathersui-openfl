@@ -53,8 +53,8 @@ class RouterNavigator extends BaseNavigator {
 	#if html5
 	private var htmlWindow:Window;
 	#else
-	private var _history:Array<String> = [];
-	private var _forwardHistory:Array<String> = [];
+	private var _history:Array<HistoryItem> = [];
+	private var _forwardHistory:Array<HistoryItem> = [];
 	#end
 
 	/**
@@ -137,7 +137,7 @@ class RouterNavigator extends BaseNavigator {
 		}
 		this.htmlWindow.history.pushState(state, null, path);
 		#else
-		this._history.push(path);
+		this._history.push(new HistoryItem(path, state));
 		this._forwardHistory.resize(0);
 		#end
 		if (transition == null) {
@@ -169,7 +169,7 @@ class RouterNavigator extends BaseNavigator {
 		}
 		this.htmlWindow.history.replaceState(state, null, path);
 		#else
-		this._history[this._history.length - 1] = path;
+		this._history[this._history.length - 1] = new HistoryItem(path, state);
 		this._forwardHistory.resize(0);
 		#end
 		if (transition == null) {
@@ -263,7 +263,8 @@ class RouterNavigator extends BaseNavigator {
 		#else
 		var pathname = "/";
 		if (this._history.length > 0) {
-			pathname = this._history[this._history.length - 1];
+			var item = this._history[this._history.length - 1];
+			pathname = item.url;
 		}
 		#end
 		pathname = pathname.toLowerCase();
@@ -350,3 +351,15 @@ class RouterNavigator extends BaseNavigator {
 	}
 	#end
 }
+
+#if !html5
+private class HistoryItem {
+	public function new(url:String, state:Dynamic) {
+		this.url = url;
+		this.state = state;
+	}
+
+	public var url:String;
+	public var state:Dynamic;
+}
+#end
