@@ -251,6 +251,15 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
 			this.dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
 		}
+
+		// reset the scroll position because this is a drastic change and
+		// the data is probably completely different
+		this.scrollX = 0.0;
+		this.scrollY = 0.0;
+
+		// clear the selection for the same reason
+		this.selectedLocation = null;
+
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
 	}

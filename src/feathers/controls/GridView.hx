@@ -224,6 +224,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, gridView_dataProvider_sortChangeHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, gridView_dataProvider_filterChangeHandler);
 		}
+
+		// reset the scroll position because this is a drastic change and
+		// the data is probably completely different
+		this.scrollX = 0.0;
+		this.scrollY = 0.0;
+
+		// clear the selection for the same reason
+		this.selectedIndex = -1;
+
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
 	}

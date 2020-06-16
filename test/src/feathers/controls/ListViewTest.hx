@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.ScrollEvent;
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
 import massive.munit.Assert;
@@ -76,5 +77,51 @@ class ListViewTest {
 		Assert.areEqual(-1, this._listView.selectedIndex);
 		this._listView.selectedItem = this._listView.dataProvider.get(1);
 		Assert.areEqual(1, this._listView.selectedIndex);
+	}
+
+	@Test
+	public function testDeselectAllOnNullDataProvider():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.selectedIndex = 1;
+		var changed = false;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._listView.dataProvider = null;
+		Assert.isTrue(changed);
+		Assert.areEqual(-1, this._listView.selectedIndex);
+		Assert.areEqual(null, this._listView.selectedItem);
+	}
+
+	@Test
+	public function testResetScrollOnNullDataProvider():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.scrollX = 10.0;
+		this._listView.scrollY = 10.0;
+		var scrolled = false;
+		this._listView.addEventListener(ScrollEvent.SCROLL, function(event:ScrollEvent):Void {
+			scrolled = true;
+		});
+		Assert.isFalse(scrolled);
+		this._listView.dataProvider = null;
+		Assert.isTrue(scrolled);
+		Assert.areEqual(0.0, this._listView.scrollX);
+		Assert.areEqual(0.0, this._listView.scrollY);
+	}
+
+	@Test
+	public function testDeselectAllOnDataProviderRemoveAll():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.selectedIndex = 1;
+		var changed = false;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._listView.dataProvider.removeAll();
+		Assert.isTrue(changed);
+		Assert.areEqual(-1, this._listView.selectedIndex);
+		Assert.areEqual(null, this._listView.selectedItem);
 	}
 }
