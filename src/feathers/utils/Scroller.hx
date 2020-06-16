@@ -341,13 +341,13 @@ class Scroller extends EventDispatcher {
 	public var bounceEase:IEasing = null;
 
 	/**
-		The distance to scroll when the mouse wheel is scrolled.
+		The distance to scroll when the mouse wheel is scrolled vertically.
 
 		@default 10.0
 
 		@since 1.0.0
 	**/
-	public var mouseWheelDelta:Float = 10.0;
+	public var mouseWheelDeltaY:Float = 10.0;
 
 	private var _mouseWheelDeltaMode:Int = 1;
 
@@ -1103,7 +1103,7 @@ class Scroller extends EventDispatcher {
 			case 2: // pages
 				deltaLines = deltaLines * 16;
 		}
-		var newScrollY = targetScrollY - (deltaLines * this.mouseWheelDelta);
+		var newScrollY = targetScrollY - (deltaLines * this.mouseWheelDeltaY);
 		if (newScrollY < this.minScrollY) {
 			newScrollY = this.minScrollY;
 		} else if (newScrollY > this.maxScrollY) {
