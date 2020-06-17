@@ -305,6 +305,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		return new TextFormat(this.fontName, this.detailFontSize, this.disabledTextColor);
 	}
 
+	private function getActiveDetailTextFormat():TextFormat {
+		return new TextFormat(this.fontName, this.detailFontSize, this.activeTextColor);
+	}
+
 	private function getHeaderFill():FillStyle {
 		return SolidColor(this.headerFillColor);
 	}
