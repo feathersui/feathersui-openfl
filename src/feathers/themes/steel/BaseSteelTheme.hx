@@ -94,6 +94,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var borderColor:Int;
 	private var dividerColor:Int;
 	private var textColor:Int;
+	private var secondaryTextColor:Int;
 	private var activeTextColor:Int;
 	private var disabledTextColor:Int;
 	private var fontName:String;
@@ -139,6 +140,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.textColor = 0xf1f1f1;
 			this.activeTextColor = 0xf1f1f1;
 			this.disabledTextColor = 0x8f8f8f;
+			this.secondaryTextColor = 0xcfcfcf;
 		} else // light
 		{
 			if (this.customThemeColor != null) {
@@ -164,6 +166,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.textColor = 0x1f1f1f;
 			this.activeTextColor = 0xefefef;
 			this.disabledTextColor = 0x9f9f9f;
+			this.secondaryTextColor = 0x6f6f6f;
 		}
 	}
 
@@ -276,6 +279,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getDisabledTextFormat():TextFormat {
 		return new TextFormat(this.fontName, this.fontSize, this.disabledTextColor);
+	}
+
+	private function getSecondaryTextFormat():TextFormat {
+		return new TextFormat(this.fontName, this.fontSize, this.secondaryTextColor);
 	}
 
 	private function getActiveTextFormat():TextFormat {

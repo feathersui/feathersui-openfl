@@ -39,6 +39,7 @@ class SteelTextInputStyles {
 					inputSkin.width = 160.0;
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();
+					inputSkin.disabledFill = theme.getDisabledInsetFill();
 					inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
 					input.backgroundSkin = inputSkin;
 				}
@@ -48,6 +49,9 @@ class SteelTextInputStyles {
 				}
 				if (input.getTextFormatForState(DISABLED) == null) {
 					input.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+				}
+				if (input.promptTextFormat == null) {
+					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
 				input.paddingTop = 6.0;
