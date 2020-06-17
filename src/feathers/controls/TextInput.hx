@@ -146,10 +146,14 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var _stateToSkin:Map<TextInputState, DisplayObject> = new Map();
 
 	private var textField:TextField;
+	private var promptTextField:TextField;
 
 	private var _previousText:String = null;
+	private var _previousPrompt:String = null;
 	private var _previousTextFormat:TextFormat = null;
+	private var _previousPromptTextFormat:TextFormat = null;
 	private var _updatedTextStyles = false;
+	private var _updatedPromptStyles = false;
 
 	/**
 		The text displayed by the text input.
@@ -193,6 +197,38 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.setInvalid(InvalidationFlag.DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this.text;
+	}
+
+	/**
+		The text displayed by the text input when the length of the `text`
+		property is `0`.
+
+		The following example sets the text input's prompt:
+
+		```hx
+		input.prompt = "Minimum 8 characters required";
+		```
+
+		@default null
+
+		@see `TextInput.promptTextFormat`
+
+		@since 1.0.0
+	**/
+	@:isVar
+	public var prompt(get, set):String = null;
+
+	private function get_prompt():String {
+		return this.prompt;
+	}
+
+	private function set_prompt(value:String):String {
+		if (this.prompt == value) {
+			return this.prompt;
+		}
+		this.prompt = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this.prompt;
 	}
 
 	/**
@@ -267,6 +303,22 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	**/
 	@:style
 	public var textFormat:TextFormat = null;
+
+	/**
+		The font styles used to render the text input's prompt text.
+
+		In the following example, the text input's prompt formatting is customized:
+
+		```hx
+		input.promptTextFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		```
+
+		@see `TextInput.prompt`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var promptTextFormat:TextFormat = null;
 
 	/**
 		Determines if an embedded font is used or not.
@@ -402,6 +454,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
+	private var _promptTextMeasuredWidth:Float;
+	private var _promptTextMeasuredHeight:Float;
 
 	/**
 		Gets the skin to be used by the text input when its `currentState`
@@ -526,12 +580,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.refreshBackgroundSkin();
 		}
 
+		if (dataInvalid) {
+			this.refreshPrompt();
+		}
+
 		if (stylesInvalid || stateInvalid) {
 			this.refreshTextStyles();
+			this.refreshPromptStyles();
 		}
 
 		if (dataInvalid || stylesInvalid || stateInvalid) {
 			this.refreshText();
+		}
+
+		if (dataInvalid || stylesInvalid) {
+			this.refreshPromptText();
 		}
 
 		if (scrollInvalid) {
@@ -702,6 +765,66 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 	}
 
+	private function refreshPrompt():Void {
+		if (this.prompt == null) {
+			if (this.promptTextField != null) {
+				this.removeChild(this.promptTextField);
+				this.promptTextField = null;
+			}
+			return;
+		}
+		if (this.promptTextField == null) {
+			this.promptTextField = new TextField();
+			this.promptTextField.selectable = false;
+			this.addChild(this.promptTextField);
+		}
+		this.promptTextField.visible = this.text.length == 0;
+	}
+
+	private function refreshPromptText():Void {
+		if (this.prompt == null || this.prompt == this._previousPrompt && !this._updatedPromptStyles) {
+			// nothing to refresh
+			return;
+		}
+		var hasText = this.prompt.length > 0;
+		if (hasText) {
+			this.promptTextField.text = this.prompt;
+		} else {
+			this.promptTextField.text = "\u8203"; // zero-width space
+		}
+		this.promptTextField.autoSize = TextFieldAutoSize.LEFT;
+		this._promptTextMeasuredWidth = this.promptTextField.width;
+		this._promptTextMeasuredHeight = this.promptTextField.height;
+		this.promptTextField.autoSize = TextFieldAutoSize.NONE;
+		if (!hasText) {
+			this.promptTextField.text = "";
+		}
+		this._previousPrompt = this.prompt;
+	}
+
+	private function refreshPromptStyles():Void {
+		if (this.prompt == null) {
+			return;
+		}
+		if (this.promptTextField.embedFonts != this.embedFonts) {
+			this.promptTextField.embedFonts = this.embedFonts;
+			this._updatedPromptStyles = true;
+		}
+		var textFormat = this.promptTextFormat;
+		if (textFormat == null) {
+			textFormat = this.textFormat;
+		}
+		if (textFormat == this._previousPromptTextFormat) {
+			// nothing to refresh
+			return;
+		}
+		if (textFormat != null) {
+			this.promptTextField.defaultTextFormat = textFormat;
+			this._updatedPromptStyles = true;
+			this._previousPromptTextFormat = textFormat;
+		}
+	}
+
 	private function refreshText():Void {
 		this.textField.restrict = restrict;
 		if (this.text == this._previousText && !this._updatedTextStyles) {
@@ -748,19 +871,34 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			this.textField.height = this._textMeasuredHeight;
 		}
+		this.alignTextField(this.textField, maxHeight);
+
+		if (this.promptTextField != null) {
+			this.promptTextField.x = this.paddingLeft;
+			this.promptTextField.width = this.textField.width;
+			if (this._promptTextMeasuredHeight > maxHeight) {
+				this.promptTextField.height = maxHeight;
+			} else {
+				this.promptTextField.height = this._promptTextMeasuredHeight;
+			}
+			this.alignTextField(this.promptTextField, maxHeight);
+		}
+	}
+
+	private inline function alignTextField(textField:TextField, maxHeight:Float):Void {
 		switch (this.verticalAlign) {
 			case TOP:
-				this.textField.y = this.paddingTop;
-				this.textField.height = Math.min(maxHeight, this.textField.height);
+				textField.y = this.paddingTop;
+				textField.height = Math.min(maxHeight, textField.height);
 			case BOTTOM:
-				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
-				this.textField.height = Math.min(maxHeight, this.textField.height);
+				textField.y = this.actualHeight - this.paddingBottom - textField.height;
+				textField.height = Math.min(maxHeight, textField.height);
 			case JUSTIFY:
-				this.textField.y = this.paddingTop;
-				this.textField.height = maxHeight;
+				textField.y = this.paddingTop;
+				textField.height = maxHeight;
 			default: // middle or null
-				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2.0;
-				this.textField.height = Math.min(maxHeight, this.textField.height);
+				textField.y = this.paddingTop + (maxHeight - textField.height) / 2.0;
+				textField.height = Math.min(maxHeight, textField.height);
 		}
 	}
 
@@ -802,10 +940,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
 
-		// no need to invalidate here. just store the new text.
-		@:bypassAccessor this.text = this.textField.text;
-		// but the event still needs to be dispatched
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		this.text = this.textField.text;
 	}
 
 	private function textField_scrollHandler(event:Event):Void {
