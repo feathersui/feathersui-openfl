@@ -56,6 +56,9 @@ class SteelTextAreaStyles {
 				if (textArea.getTextFormatForState(DISABLED) == null) {
 					textArea.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
 				}
+				if (textArea.promptTextFormat == null) {
+					textArea.promptTextFormat = theme.getSecondaryTextFormat();
+				}
 
 				textArea.paddingTop = 1.0;
 				textArea.paddingRight = 1.0;
