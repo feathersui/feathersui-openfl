@@ -8,9 +8,6 @@
 
 package feathers.controls;
 
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import openfl.display.DisplayObject;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
 import feathers.core.IStateContext;
@@ -18,9 +15,14 @@ import feathers.core.ITextControl;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.themes.steel.components.SteelTextAreaStyles;
+import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
+import openfl.ui.Keyboard;
 
 /**
 	@since 1.0.0
@@ -55,6 +57,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private var textFieldViewPort:TextFieldViewPort;
+	private var promptTextField:TextField;
+
+	private var _previousPrompt:String = null;
+	private var _previousPromptTextFormat:TextFormat = null;
+	private var _updatedPromptStyles = false;
+	private var _promptTextMeasuredWidth:Float;
+	private var _promptTextMeasuredHeight:Float;
 
 	override private function get_focusEnabled():Bool {
 		return this.enabled && this.focusEnabled;
@@ -180,6 +189,38 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	/**
+		The text displayed by the text area when the length of the `text`
+		property is `0`.
+
+		The following example sets the text area's prompt:
+
+		```hx
+		textArea.prompt = "Minimum 8 characters required";
+		```
+
+		@default null
+
+		@see `TextArea.promptTextFormat`
+
+		@since 1.0.0
+	**/
+	@:isVar
+	public var prompt(get, set):String = null;
+
+	private function get_prompt():String {
+		return this.prompt;
+	}
+
+	private function set_prompt(value:String):String {
+		if (this.prompt == value) {
+			return this.prompt;
+		}
+		this.prompt = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this.prompt;
+	}
+
+	/**
 		Indicates if scrolling is smooth or strictly by line.
 
 		In the following example, smooth scrolling is enabled:
@@ -213,6 +254,22 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	**/
 	@:style
 	public var textFormat:TextFormat = null;
+
+	/**
+		The font styles used to render the text area's prompt text.
+
+		In the following example, the text area's prompt formatting is customized:
+
+		```hx
+		textArea.promptTextFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		```
+
+		@see `TextArea.prompt`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var promptTextFormat:TextFormat = null;
 
 	/**
 		Determines if an embedded font is used or not.
@@ -419,6 +476,20 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
+		this._updatedPromptStyles = false;
+
+		if (dataInvalid) {
+			this.refreshPrompt();
+		}
+
+		if (stylesInvalid || stateInvalid) {
+			this.refreshPromptStyles();
+		}
+
+		if (dataInvalid || stylesInvalid) {
+			this.refreshPromptText();
+		}
+
 		if (stylesInvalid) {
 			this.textFieldViewPort.textFormat = this.getCurrentTextFormat();
 			this.textFieldViewPort.embedFonts = this.embedFonts;
@@ -444,6 +515,87 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 
 		super.update();
+	}
+
+	override private function layoutChildren():Void {
+		super.layoutChildren();
+		this.layoutPrompt();
+	}
+
+	private function refreshPrompt():Void {
+		if (this.prompt == null) {
+			if (this.promptTextField != null) {
+				this.removeChild(this.promptTextField);
+				this.promptTextField = null;
+			}
+			return;
+		}
+		if (this.promptTextField == null) {
+			this.promptTextField = new TextField();
+			this.promptTextField.selectable = false;
+			this.addChild(this.promptTextField);
+		}
+		this.promptTextField.visible = this.text.length == 0;
+	}
+
+	private function refreshPromptText():Void {
+		if (this.prompt == null || this.prompt == this._previousPrompt && !this._updatedPromptStyles) {
+			// nothing to refresh
+			return;
+		}
+		var hasText = this.prompt.length > 0;
+		if (hasText) {
+			this.promptTextField.text = this.prompt;
+		} else {
+			this.promptTextField.text = "\u8203"; // zero-width space
+		}
+		this.promptTextField.autoSize = TextFieldAutoSize.LEFT;
+		this._promptTextMeasuredWidth = this.promptTextField.width;
+		this._promptTextMeasuredHeight = this.promptTextField.height;
+		this.promptTextField.autoSize = TextFieldAutoSize.NONE;
+		if (!hasText) {
+			this.promptTextField.text = "";
+		}
+		this._previousPrompt = this.prompt;
+	}
+
+	private function refreshPromptStyles():Void {
+		if (this.prompt == null) {
+			return;
+		}
+		if (this.promptTextField.embedFonts != this.embedFonts) {
+			this.promptTextField.embedFonts = this.embedFonts;
+			this._updatedPromptStyles = true;
+		}
+		var textFormat = this.promptTextFormat;
+		if (textFormat == null) {
+			textFormat = this.textFormat;
+		}
+		if (textFormat == this._previousPromptTextFormat) {
+			// nothing to refresh
+			return;
+		}
+		if (textFormat != null) {
+			this.promptTextField.defaultTextFormat = textFormat;
+			this._updatedPromptStyles = true;
+			this._previousPromptTextFormat = textFormat;
+		}
+	}
+
+	private function layoutPrompt():Void {
+		this.promptTextField.x = this.paddingLeft + this.textPaddingLeft;
+		this.promptTextField.y = this.paddingTop + this.textPaddingTop;
+
+		if (this._promptTextMeasuredWidth > this.viewPort.visibleWidth) {
+			this.promptTextField.width = this.viewPort.visibleHeight;
+		} else {
+			this.promptTextField.width = this._promptTextMeasuredWidth;
+		}
+		if (this._promptTextMeasuredHeight > this.viewPort.visibleHeight) {
+			this.promptTextField.height = this.viewPort.visibleHeight;
+		} else {
+			this.promptTextField.height = this._promptTextMeasuredHeight;
+		}
 	}
 
 	override private function getCurrentBackgroundSkin():DisplayObject {
