@@ -66,7 +66,7 @@ class SteelButtonStyles {
 				button.paddingRight = 10.0;
 				button.paddingBottom = 4.0;
 				button.paddingLeft = 10.0;
-				button.gap = 6.0;
+				button.gap = 4.0;
 			});
 		}
 	}
