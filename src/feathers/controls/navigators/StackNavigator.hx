@@ -446,6 +446,8 @@ class StackNavigator extends BaseNavigator {
 			// we don't want to start any transitions if it changes before that
 			var id = this._tempRootItemID;
 			this._tempRootItemID = null;
+			var historyItem = new HistoryItem(id, null, null);
+			this._history.push(historyItem);
 			this.showItemWithInjectAndReturnedObject(id, null, null, null, false);
 		}
 	}
