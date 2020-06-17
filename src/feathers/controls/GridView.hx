@@ -162,13 +162,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var gridViewPort:AdvancedLayoutViewPort;
 
-	override private function get_primaryDirection():Direction {
-		if (Std.is(this._layout, IScrollLayout)) {
-			return cast(this._layout, IScrollLayout).primaryDirection;
-		}
-		return Direction.NONE;
-	}
-
 	/**
 		The collection of data displayed by the grid view.
 
@@ -569,6 +562,22 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this.layoutHeaders();
+	}
+
+	override private function refreshScrollerValues():Void {
+		super.refreshScrollerValues();
+		if (Std.is(this._layout, IScrollLayout)) {
+			var scrollLayout = cast(this._layout, IScrollLayout);
+			this.scroller.forceElasticTop = scrollLayout.elasticTop;
+			this.scroller.forceElasticRight = scrollLayout.elasticRight;
+			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
+			this.scroller.forceElasticLeft = scrollLayout.elasticLeft;
+		} else {
+			this.scroller.forceElasticTop = false;
+			this.scroller.forceElasticRight = false;
+			this.scroller.forceElasticBottom = false;
+			this.scroller.forceElasticLeft = false;
+		}
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {

@@ -68,12 +68,39 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	}
 
 	/**
-		@see `feathers.layout.IScrollLayout.primaryDirection`
+		@see `feathers.layout.IScrollLayout.elasticTop`
 	**/
-	public var primaryDirection(get, never):Direction;
+	public var elasticTop(get, never):Bool;
 
-	private function get_primaryDirection():Direction {
-		return Direction.HORIZONTAL;
+	private function get_elasticTop():Bool {
+		return false;
+	}
+
+	/**
+		@see `feathers.layout.IScrollLayout.elasticRight`
+	**/
+	public var elasticRight(get, never):Bool;
+
+	private function get_elasticRight():Bool {
+		return true;
+	}
+
+	/**
+		@see `feathers.layout.IScrollLayout.elasticBottom`
+	**/
+	public var elasticBottom(get, never):Bool;
+
+	private function get_elasticBottom():Bool {
+		return false;
+	}
+
+	/**
+		@see `feathers.layout.IScrollLayout.elasticLeft`
+	**/
+	public var elasticLeft(get, never):Bool;
+
+	private function get_elasticLeft():Bool {
+		return true;
 	}
 
 	/**

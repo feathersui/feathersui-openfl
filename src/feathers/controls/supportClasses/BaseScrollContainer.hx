@@ -725,12 +725,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return true;
 	}
 
-	private var primaryDirection(get, never):Direction;
-
-	private function get_primaryDirection():Direction {
-		return Direction.NONE;
-	}
-
 	override private function initialize():Void {
 		if (this.scroller == null) {
 			this.scroller = new Scroller();
@@ -1056,10 +1050,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.scroller.enabledX = this.scrollPolicyX != OFF;
 		this.scroller.enabledY = this.scrollPolicyY != OFF;
 		this.scroller.elasticEdges = this.elasticEdges;
-		this.scroller.forceElasticLeft = this.primaryDirection == HORIZONTAL;
-		this.scroller.forceElasticRight = this.primaryDirection == HORIZONTAL;
-		this.scroller.forceElasticTop = this.primaryDirection == VERTICAL;
-		this.scroller.forceElasticBottom = this.primaryDirection == VERTICAL;
 		this.scroller.simulateTouch = this.simulateTouch;
 	}
 

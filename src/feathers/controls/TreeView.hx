@@ -174,13 +174,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			&& this.focusEnabled;
 	}
 
-	override private function get_primaryDirection():Direction {
-		if (Std.is(this.layout, IScrollLayout)) {
-			return cast(this.layout, IScrollLayout).primaryDirection;
-		}
-		return Direction.NONE;
-	}
-
 	private var openBranches:Array<Dynamic> = [];
 
 	/**
@@ -576,6 +569,22 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 
 		super.update();
+	}
+
+	override private function refreshScrollerValues():Void {
+		super.refreshScrollerValues();
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			this.scroller.forceElasticTop = scrollLayout.elasticTop;
+			this.scroller.forceElasticRight = scrollLayout.elasticRight;
+			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
+			this.scroller.forceElasticLeft = scrollLayout.elasticLeft;
+		} else {
+			this.scroller.forceElasticTop = false;
+			this.scroller.forceElasticRight = false;
+			this.scroller.forceElasticBottom = false;
+			this.scroller.forceElasticLeft = false;
+		}
 	}
 
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {

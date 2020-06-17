@@ -166,13 +166,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			&& this.focusEnabled;
 	}
 
-	override private function get_primaryDirection():Direction {
-		if (Std.is(this.layout, IScrollLayout)) {
-			return cast(this.layout, IScrollLayout).primaryDirection;
-		}
-		return Direction.NONE;
-	}
-
 	/**
 		The collection of data displayed by the list view.
 
@@ -535,6 +528,22 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this._previousLayout = this.layout;
+	}
+
+	override private function refreshScrollerValues():Void {
+		super.refreshScrollerValues();
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			this.scroller.forceElasticTop = scrollLayout.elasticTop;
+			this.scroller.forceElasticRight = scrollLayout.elasticRight;
+			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
+			this.scroller.forceElasticLeft = scrollLayout.elasticLeft;
+		} else {
+			this.scroller.forceElasticTop = false;
+			this.scroller.forceElasticRight = false;
+			this.scroller.forceElasticBottom = false;
+			this.scroller.forceElasticLeft = false;
+		}
 	}
 
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {

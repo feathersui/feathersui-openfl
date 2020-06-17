@@ -71,13 +71,6 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 
 	private var layoutViewPort:LayoutViewPort;
 
-	override private function get_primaryDirection():Direction {
-		if (Std.is(this.layout, IScrollLayout)) {
-			return cast(this.layout, IScrollLayout).primaryDirection;
-		}
-		return Direction.NONE;
-	}
-
 	private var _ignoreChildChanges:Bool = false;
 	private var _ignoreChildChangesButSetFlags:Bool = false;
 	private var _displayListBypassEnabled = true;
@@ -322,6 +315,22 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		super.update();
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 		this._displayListBypassEnabled = oldBypass;
+	}
+
+	override private function refreshScrollerValues():Void {
+		super.refreshScrollerValues();
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			this.scroller.forceElasticTop = scrollLayout.elasticTop;
+			this.scroller.forceElasticRight = scrollLayout.elasticRight;
+			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
+			this.scroller.forceElasticLeft = scrollLayout.elasticLeft;
+		} else {
+			this.scroller.forceElasticTop = false;
+			this.scroller.forceElasticRight = false;
+			this.scroller.forceElasticBottom = false;
+			this.scroller.forceElasticLeft = false;
+		}
 	}
 
 	private function scrollContainer_child_layoutDataChangeHandler(event:FeathersEvent):Void {

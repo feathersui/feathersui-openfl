@@ -31,12 +31,32 @@ interface IScrollLayout extends ILayout {
 	var scrollY(default, set):Float;
 
 	/**
-		The primary direction that this layout is expected to scroll. Not all
-		layouts will necessarily have a primary direction.
+		Indicates if the top edge is elastic.
 
 		@since 1.0.0
 	**/
-	var primaryDirection(get, never):Direction;
+	var elasticTop(get, never):Bool;
+
+	/**
+		Indicates if the right edge is elastic.
+
+		@since 1.0.0
+	**/
+	var elasticRight(get, never):Bool;
+
+	/**
+		Indicates if the bottom edge is elastic.
+
+		@since 1.0.0
+	**/
+	var elasticBottom(get, never):Bool;
+
+	/**
+		Indicates if the left edge is elastic.
+
+		@since 1.0.0
+	**/
+	var elasticLeft(get, never):Bool;
 
 	/**
 		Determines if the container calls `layout()` when the scroll position
