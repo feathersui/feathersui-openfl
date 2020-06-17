@@ -575,6 +575,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
 
 		this._updatedTextStyles = false;
+		this._updatedPromptStyles = false;
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
