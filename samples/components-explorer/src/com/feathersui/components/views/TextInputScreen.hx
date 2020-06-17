@@ -1,5 +1,6 @@
 package com.feathersui.components.views;
 
+import feathers.layout.VerticalLayout;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
@@ -12,17 +13,31 @@ import openfl.events.Event;
 
 class TextInputScreen extends Panel {
 	private var textInput:TextInput;
+	private var textInputWithPrompt:TextInput;
+	private var disabledTextInput:TextInput;
 
 	override private function initialize():Void {
 		super.initialize();
 		this.createHeader();
 
-		this.layout = new AnchorLayout();
+		var layout = new VerticalLayout();
+		layout.horizontalAlign = CENTER;
+		layout.verticalAlign = MIDDLE;
+		layout.gap = 20.0;
+		this.layout = layout;
 
 		this.textInput = new TextInput();
 		this.textInput.text = "";
-		this.textInput.layoutData = AnchorLayoutData.center();
 		this.addChild(this.textInput);
+
+		this.textInputWithPrompt = new TextInput();
+		this.textInputWithPrompt.prompt = "An optional prompt";
+		this.addChild(this.textInputWithPrompt);
+
+		this.disabledTextInput = new TextInput();
+		this.disabledTextInput.enabled = false;
+		this.disabledTextInput.text = "Disabled text input";
+		this.addChild(this.disabledTextInput);
 	}
 
 	private function createHeader():Void {
