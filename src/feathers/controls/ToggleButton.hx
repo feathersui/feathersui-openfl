@@ -653,21 +653,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			if (hasText) {
-				newWidth = this._textMeasuredWidth;
-			} else {
-				newWidth = 0.0;
-			}
-			if (this._currentIcon != null) {
-				if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-					if (hasText) {
-						newWidth += adjustedGap;
-					}
-					newWidth += this._currentIcon.width;
-				} else if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-					newWidth = Math.max(newWidth, this._currentIcon.width);
-				}
-			}
+			newWidth = this.measureContentWidth();
 			newWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentBackgroundSkin != null) {
 				newWidth = Math.max(this._currentBackgroundSkin.width, newWidth);
@@ -676,21 +662,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			if (hasText) {
-				newHeight = this._textMeasuredHeight;
-			} else {
-				newHeight = 0.0;
-			}
-			if (this._currentIcon != null) {
-				if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-					if (hasText) {
-						newHeight += adjustedGap;
-					}
-					newHeight += this._currentIcon.height;
-				} else if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-					newHeight = Math.max(newHeight, this._currentIcon.height);
-				}
-			}
+			newHeight = this.measureContentHeight();
 			newHeight += this.paddingTop + this.paddingBottom;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
@@ -699,21 +671,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			if (hasText) {
-				newMinWidth = this._textMeasuredWidth;
-			} else {
-				newMinWidth = 0.0;
-			}
-			if (this._currentIcon != null) {
-				if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-					if (hasText) {
-						newMinWidth += adjustedGap;
-					}
-					newMinWidth += this._currentIcon.width;
-				} else if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-					newMinWidth = Math.max(newMinWidth, this._currentIcon.width);
-				}
-			}
+			newMinWidth = this.measureContentMinWidth();
 			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
@@ -724,21 +682,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			if (hasText) {
-				newMinHeight = this._textMeasuredHeight;
-			} else {
-				newMinHeight = 0.0;
-			}
-			if (this._currentIcon != null) {
-				if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-					if (hasText) {
-						newMinHeight += adjustedGap;
-					}
-					newMinHeight += this._currentIcon.height;
-				} else if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-					newMinHeight = Math.max(newMinHeight, this._currentIcon.height);
-				}
-			}
+			newMinHeight = this.measureContentMinHeight();
 			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
@@ -769,6 +713,83 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+	}
+
+	private function measureContentWidth():Float {
+		var adjustedGap = this.gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = this.minGap;
+		}
+		var contentWidth = this.text != null ? this._textMeasuredWidth : 0.0;
+		if (this._currentIcon != null) {
+			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+				if (this.text != null) {
+					contentWidth += adjustedGap;
+				}
+				contentWidth += this._currentIcon.width;
+			} else if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+				contentWidth = Math.max(contentWidth, this._currentIcon.width);
+			}
+		}
+		return contentWidth;
+	}
+
+	private function measureContentHeight():Float {
+		var adjustedGap = this.gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = this.minGap;
+		}
+
+		var contentHeight = this.text != null ? this._textMeasuredHeight : 0.0;
+		if (this._currentIcon != null) {
+			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+				if (this.text != null) {
+					contentHeight += adjustedGap;
+				}
+				contentHeight += this._currentIcon.height;
+			} else if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+				contentHeight = Math.max(contentHeight, this._currentIcon.height);
+			}
+		}
+		return contentHeight;
+	}
+
+	private function measureContentMinWidth():Float {
+		var adjustedGap = this.gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = this.minGap;
+		}
+		var contentMinWidth = this.text != null ? this._textMeasuredWidth : 0.0;
+		if (this._currentIcon != null) {
+			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+				if (this.text != null) {
+					contentMinWidth += adjustedGap;
+				}
+				contentMinWidth += this._currentIcon.width;
+			} else if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+				contentMinWidth = Math.max(contentMinWidth, this._currentIcon.width);
+			}
+		}
+		return contentMinWidth;
+	}
+
+	private function measureContentMinHeight():Float {
+		var adjustedGap = this.gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = this.minGap;
+		}
+		var contentMinHeight = this.text != null ? this._textMeasuredHeight : 0.0;
+		if (this._currentIcon != null) {
+			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+				if (this.text != null) {
+					contentMinHeight += adjustedGap;
+				}
+				contentMinHeight += this._currentIcon.height;
+			} else if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+				contentMinHeight = Math.max(contentMinHeight, this._currentIcon.height);
+			}
+		}
+		return contentMinHeight;
 	}
 
 	private function refreshTextStyles():Void {
