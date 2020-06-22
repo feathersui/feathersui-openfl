@@ -199,6 +199,10 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (!this.setStyle("layoutData")) {
 			return this.layoutData;
 		}
+		// in a -final build, this forces the clearStyle
+		// function to be kept if the property is kept
+		// otherwise, it would be removed by dce
+		this._previousClearStyle = this.clearStyle_layoutData;
 		return this.setLayoutDataInternal(value);
 	}
 
@@ -259,6 +263,10 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (this.focusRectSkin != null) {
 			this.showFocus(false);
 		}
+		// in a -final build, this forces the clearStyle
+		// function to be kept if the property is kept
+		// otherwise, it would be removed by dce
+		this._previousClearStyle = this.clearStyle_focusRectSkin;
 		this.focusRectSkin = value;
 		return this.focusRectSkin;
 	}
