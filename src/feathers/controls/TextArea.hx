@@ -583,6 +583,10 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function layoutPrompt():Void {
+		if (this.prompt == null) {
+			return;
+		}
+
 		this.promptTextField.x = this.paddingLeft + this.textPaddingLeft;
 		this.promptTextField.y = this.paddingTop + this.textPaddingTop;
 
