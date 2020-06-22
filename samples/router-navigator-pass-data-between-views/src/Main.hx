@@ -19,6 +19,11 @@ class Main extends Application {
 		]);
 
 		var navigator = new RouterNavigator();
+		#if feathersui.com
+		// to build for the feathersui.com website, run the following command:
+		// haxelib run openfl build html5 -final --haxedef=feathersui.com
+		navigator.basePath = "/samples/haxe-openfl/router-navigator-pass-data-between-views";
+		#end
 
 		navigator.addRoute(Route.withClass(ComposeMessageView.ROUTE_PATH, ComposeMessageView, [
 			ContactEvent.REQUEST_CONTACT => NewAction((event:ContactEvent) -> {
