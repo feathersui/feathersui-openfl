@@ -8,23 +8,24 @@
 
 package feathers.controls;
 
-import openfl.display.MovieClip;
-import openfl.display.BitmapData;
-import openfl.utils.AssetType;
-import openfl.display.Bitmap;
-import openfl.Assets;
-import openfl.net.URLRequest;
-import openfl.events.Event;
-import openfl.events.SecurityErrorEvent;
-import openfl.events.IOErrorEvent;
-import openfl.display.Loader;
-import openfl.geom.Rectangle;
-import openfl.display.StageScaleMode;
-import openfl.display.DisplayObject;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import feathers.layout.Measurements;
 import feathers.utils.ScaleUtil;
+import openfl.Assets;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
+import openfl.display.Loader;
+import openfl.display.MovieClip;
+import openfl.display.StageScaleMode;
+import openfl.errors.SecurityError;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.events.SecurityErrorEvent;
+import openfl.geom.Rectangle;
+import openfl.net.URLRequest;
+import openfl.utils.AssetType;
 
 /**
 	Loads and displays an asset using either OpenFL's asset management system or
@@ -108,8 +109,8 @@ class AssetLoader extends FeathersControl {
 						this.setInvalid(InvalidationFlag.DATA);
 						this.dispatchEvent(new Event(Event.COMPLETE));
 					}).onError((event:Dynamic) -> {
-							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-						});
+						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+					});
 				}
 			} else if (Assets.exists(this.source, AssetType.MOVIE_CLIP)) {
 				this.cleanupLoader();
@@ -127,8 +128,8 @@ class AssetLoader extends FeathersControl {
 						this.setInvalid(InvalidationFlag.DATA);
 						this.dispatchEvent(new Event(Event.COMPLETE));
 					}).onError((event:Dynamic) -> {
-							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-						});
+						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+					});
 				}
 			} else {
 				if (this.loader == null) {
@@ -138,7 +139,15 @@ class AssetLoader extends FeathersControl {
 					this.loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loader_contentLoaderInfo_securityErrorHandler);
 					this.addChild(this.loader);
 				}
-				this.loader.load(new URLRequest(this.source));
+				try {
+					this.loader.load(new URLRequest(this.source));
+				} catch (e:Dynamic) {
+					if (Std.is(e, SecurityError)) {
+						var securityError = cast(e, SecurityError);
+						this.dispatchEvent(new SecurityErrorEvent(SecurityErrorEvent.SECURITY_ERROR, false, false, securityError.message,
+							securityError.errorID));
+					}
+				}
 			}
 		}
 		this.setInvalid(InvalidationFlag.DATA);
