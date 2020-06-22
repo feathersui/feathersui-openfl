@@ -52,7 +52,7 @@ class StackNavigatorTest {
 	@Test
 	public function testInject_withReplaceItemMethod():Void {
 		var injected = false;
-		var inject = (view:View1) -> {
+		var inject = (view:View2) -> {
 			injected = true;
 		}
 		var view1 = new View1();
@@ -69,7 +69,7 @@ class StackNavigatorTest {
 	@Test
 	public function testInject_withPushStackAction():Void {
 		var injected = false;
-		var inject = (view:View1) -> {
+		var inject = (view:View2) -> {
 			injected = true;
 		}
 		var view1 = new View1();
@@ -86,7 +86,7 @@ class StackNavigatorTest {
 	@Test
 	public function testInject_withReplaceStackAction():Void {
 		var injected = false;
-		var inject = (view:View1) -> {
+		var inject = (view:View2) -> {
 			injected = true;
 		}
 		var view1 = new View1();
