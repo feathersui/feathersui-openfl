@@ -1,14 +1,4 @@
--cp ../src
--D doc-gen
--D display
--lib lime
--lib openfl
--lib actuate
---remap flash:openfl
---macro ImportAll.run("feathers")
---no-output
---interp
--xml ../build/xml/feathers.xml
+-cmd haxelib run openfl build ../project.xml html5 -xml -clean
 
 --next
--cmd haxelib run dox -o ../build/api -i ../build/xml -in feathers --title "Feathers UI API Reference (Haxe/OpenFL)" --toplevel-package feathers -theme ./feathersui-theme -D website "https://feathersui.com" -D textColor 0x292522 -D source-path "https://github.com/BowlerHatLLC/feathersui-openfl/tree/master/src/"
+-cmd haxelib run dox -o ../build/api -i ../build/html5/types.xml -in feathers --title "Feathers UI API Reference (Haxe/OpenFL)" --toplevel-package feathers -theme ./feathersui-theme -D website "https://feathersui.com" -D textColor 0x292522 -D source-path "https://github.com/BowlerHatLLC/feathersui-openfl/tree/master/src/"

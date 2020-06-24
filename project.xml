@@ -9,5 +9,7 @@
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
 
+	<haxeflag name="--macro" value="include('feathers')"/>
+
 	<template path="templates" if="flash"/>
 </project>
