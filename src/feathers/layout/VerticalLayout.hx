@@ -273,7 +273,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		this.applyPercentWidth(items, viewPortWidth);
 		this.applyHorizontalAlign(items, viewPortWidth);
-		this.applyVerticalAlign(items, contentHeight, viewPortHeight);
+		this.applyVerticalAlign(items, contentHeight - this.paddingTop - this.paddingBottom, viewPortHeight);
 
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;

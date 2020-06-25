@@ -362,7 +362,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 			}
 		}
 
-		this.applyVerticalAlign(items, positionY, viewPortHeight);
+		this.applyVerticalAlign(items, positionY - this.paddingTop - this.paddingBottom, viewPortHeight);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();

@@ -364,7 +364,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 			}
 		}
 
-		this.applyVerticalAlign(items, positionY, viewPortHeight);
+		this.applyVerticalAlign(items, positionY - this.paddingTop - this.paddingBottom, viewPortHeight);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();

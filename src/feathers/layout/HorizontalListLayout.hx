@@ -360,7 +360,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			}
 		}
 
-		this.applyHorizontalAlign(items, positionX, viewPortWidth);
+		this.applyHorizontalAlign(items, positionX - this.paddingLeft - this.paddingRight, viewPortWidth);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();
