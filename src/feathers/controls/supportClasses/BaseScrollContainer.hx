@@ -8,10 +8,8 @@
 
 package feathers.controls.supportClasses;
 
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import feathers.core.IFocusObject;
 import feathers.core.FeathersControl;
+import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
@@ -19,9 +17,9 @@ import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
 import feathers.events.ScrollEvent;
-import feathers.layout.Direction;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
+import feathers.utils.MathUtil;
 import feathers.utils.MeasurementsUtil;
 import feathers.utils.Scroller;
 import motion.Actuate;
@@ -33,8 +31,10 @@ import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.geom.Rectangle;
+import openfl.ui.Keyboard;
 
 /**
 	A base class for scrolling containers.
@@ -1610,8 +1610,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function viewPort_resizeHandler(event:Event):Void {
+		// using fuzzy comparison here because floating point errors can creep
+		// in and cause an infinite loop
 		if (this._ignoreViewPortResizing
-			|| (this.viewPort.width == this._previousViewPortWidth && this.viewPort.height == this._previousViewPortHeight)) {
+			|| (MathUtil.fuzzyEquals(this.viewPort.width, this._previousViewPortWidth)
+				&& MathUtil.fuzzyEquals(this.viewPort.height, this._previousViewPortHeight))) {
 			return;
 		}
 		this._previousViewPortWidth = this.viewPort.width;
