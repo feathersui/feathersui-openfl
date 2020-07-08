@@ -57,6 +57,8 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		this.addEventListener(MouseEvent.CLICK, basicButton_clickHandler);
 	}
 
+	private var _currentState:ButtonState = UP;
+
 	/**
 		The current state of the button.
 
@@ -68,22 +70,23 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):ButtonState = UP;
+	@:flash.property
+	public var currentState(get, never):ButtonState;
 
 	private function get_currentState():ButtonState {
-		return this.currentState;
+		return this._currentState;
 	}
 
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
-		if (this.enabled) {
-			if (this.currentState == DISABLED) {
+		if (this._enabled) {
+			if (this._currentState == DISABLED) {
 				this.changeState(UP);
 			}
 		} else {
 			this.changeState(DISABLED);
 		}
-		return this.enabled;
+		return this._enabled;
 	}
 
 	private var _pointerToState:PointerToState<ButtonState> = null;
@@ -246,7 +249,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		var result = this._stateToSkin.get(this.currentState);
+		var result = this._stateToSkin.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
@@ -379,19 +382,19 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	}
 
 	private function changeState(state:ButtonState):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			state = DISABLED;
 		}
-		if (this.currentState == state) {
+		if (this._currentState == state) {
 			return;
 		}
-		this.currentState = state;
+		this._currentState = state;
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
 	private function basicButton_clickHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			event.stopImmediatePropagation();
 			return;
 		}

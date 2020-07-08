@@ -162,8 +162,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	override private function get_focusEnabled():Bool {
 		return (this.selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
-			&& this.enabled
-			&& this.focusEnabled;
+			&& this._enabled
+			&& this._focusEnabled;
 	}
 
 	/**
@@ -227,45 +227,48 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.scrollY = 0.0;
 
 		// clear the selection for the same reason
-		this.selectedIndex = -1;
+		this.selectedIndex = -1; // use the setter
 
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
 	}
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (!this.selectable || this.dataProvider == null) {
 			value = -1;
 		}
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this._selectedIndex == value) {
+			return this._selectedIndex;
 		}
-		this.selectedIndex = value;
-		// using @:bypassAccessor because if we were to call the selectedItem
-		// setter, this change wouldn't be saved properly
-		if (this.selectedIndex == -1) {
-			@:bypassAccessor this.selectedItem = null;
+		this._selectedIndex = value;
+		// using variable because if we were to call the selectedItem setter,
+		// then this change wouldn't be saved properly
+		if (this._selectedIndex == -1) {
+			this._selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			this._selectedItem = this.dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -275,23 +278,27 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		return this.dataProvider.length - 1;
 	}
 
+	private var _selectedItem:Dynamic = null;
+
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:isVar
-	public var selectedItem(get, set):Dynamic = null;
+	@:flash.property
+	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (!this.selectable || this.dataProvider == null) {
+			// use the setter
 			this.selectedIndex = -1;
-			return this.selectedItem;
+			return this._selectedItem;
 		}
+		// use the setter
 		this.selectedIndex = this.dataProvider.indexOf(value);
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private var _previousLayout:ILayout;
@@ -374,6 +381,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this.selectable = value;
 		if (!this.selectable) {
+			// use the setter
 			this.selectedIndex = -1;
 		}
 		return this.selectable;
@@ -660,7 +668,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			if (itemRenderer != null) {
 				this._currentItemState.data = item;
 				this._currentItemState.index = i;
-				this._currentItemState.selected = item == this.selectedItem;
+				this._currentItemState.selected = item == this._selectedItem;
 				this._currentItemState.text = itemToText(item);
 				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 				this._ignoreSelectionChange = true;
@@ -719,7 +727,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
-		this._currentItemState.selected = item == this.selectedItem;
+		this._currentItemState.selected = item == this._selectedItem;
 		this._currentItemState.text = itemToText(item);
 		if (this.itemRendererRecycler.update != null) {
 			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
@@ -758,12 +766,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshSelectedIndicesAfterFilterOrSort():Void {
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
-		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
+		this.selectedIndex = this.dataProvider.indexOf(this._selectedItem); // use the setter
 	}
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {
@@ -771,12 +779,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._currentItemState.data = data;
 		this._currentItemState.index = index;
 		this._currentItemState.text = this.itemToText(data);
-		this._currentItemState.selected = this.selectedIndex == index;
+		this._currentItemState.selected = this._selectedIndex == index;
 		this.dispatchEvent(new ListViewEvent(ListViewEvent.ITEM_TRIGGER, this._currentItemState));
 	}
 
 	private function listView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 
@@ -796,11 +804,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// handled by Event.CHANGE listener instead
 			return;
 		}
+		// use the setter
 		this.selectedIndex = this.dataProvider.indexOf(data);
 	}
 
 	private function listView_itemRenderer_clickHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 
@@ -816,7 +825,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// handled by Event.CHANGE listener instead
 			return;
 		}
-		this.selectedItem = this.dataProvider.indexOf(data);
+		// use the setter
+		this.selectedItem = data;
 	}
 
 	private function listView_itemRenderer_changeHandler(event:Event):Void {
@@ -833,6 +843,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var item = this.itemRendererToData.get(itemRenderer);
+		// use the setter
 		this.selectedItem = item;
 	}
 
@@ -844,11 +855,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache.insert(event.index, null);
 		}
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex >= event.index) {
-			@:bypassAccessor this.selectedIndex++;
+		if (this._selectedIndex >= event.index) {
+			this._selectedIndex++;
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -860,11 +871,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this.selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex == event.index) {
-			@:bypassAccessor this.selectedIndex = -1;
+		if (this._selectedIndex == event.index) {
+			this._selectedIndex = -1;
 			FeathersEvent.dispatch(this, Event.CHANGE);
-		} else if (this.selectedIndex > event.index) {
-			@:bypassAccessor this.selectedIndex--;
+		} else if (this._selectedIndex > event.index) {
+			this._selectedIndex--;
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -873,11 +884,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache[event.index] = null;
 		}
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex == event.index) {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+		if (this._selectedIndex == event.index) {
+			this._selectedItem = this.dataProvider.get(this._selectedIndex);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -886,6 +897,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
 		}
+		// use the setter
 		this.selectedIndex = -1;
 	}
 
@@ -894,6 +906,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._virtualCache.resize(0);
 			this._virtualCache.resize(this.dataProvider.length);
 		}
+		// use the setter
 		this.selectedIndex = -1;
 	}
 
@@ -921,7 +934,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
 			return;
 		}
-		var result = this.selectedIndex;
+		var result = this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
@@ -949,26 +962,27 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			result = this.dataProvider.length - 1;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.selectedIndex = result;
-		if (this.selectedIndex != -1) {
-			this.scrollToIndex(this.selectedIndex);
+		if (this._selectedIndex != -1) {
+			this.scrollToIndex(this._selectedIndex);
 		}
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.isDefaultPrevented()) {
+		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
 		this.navigateWithKeyboard(event);
 	}
 
 	private function listView_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.isDefaultPrevented()) {
+		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
-			if (this.selectedItem != null) {
-				this.dispatchItemTriggerEvent(this.selectedItem);
+			if (this._selectedItem != null) {
+				this.dispatchItemTriggerEvent(this._selectedItem);
 			}
 		}
 	}

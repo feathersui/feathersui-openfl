@@ -56,5 +56,6 @@ interface IDataSelector<T> {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var selectedItem(get, set):T;
 }

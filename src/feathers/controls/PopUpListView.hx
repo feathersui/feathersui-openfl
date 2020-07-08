@@ -148,17 +148,19 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.dataProvider == value) {
 			return this.dataProvider;
 		}
-		var oldSelectedIndex = this.selectedIndex;
-		var oldSelectedItem = this.selectedItem;
+		var oldSelectedIndex = this._selectedIndex;
+		var oldSelectedItem = this._selectedItem;
 		this.dataProvider = value;
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			// use the setter
 			this.selectedIndex = -1;
 		} else {
+			// use the setter
 			this.selectedIndex = 0;
 		}
 		// this ensures that Event.CHANGE will dispatch for selectedItem
 		// changing, even if selectedIndex has not changed.
-		if (this.selectedIndex == oldSelectedIndex && this.selectedItem != oldSelectedItem) {
+		if (this._selectedIndex == oldSelectedIndex && this._selectedItem != oldSelectedItem) {
 			this.setInvalid(InvalidationFlag.SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
@@ -168,39 +170,42 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private var _ignoreListViewChange = false;
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (this.dataProvider == null) {
 			value = -1;
 		}
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this._selectedIndex == value) {
+			return this._selectedIndex;
 		}
-		this.selectedIndex = value;
-		// using @:bypassAccessor because if we were to call the selectedItem
-		// setter, this change wouldn't be saved properly
-		if (this.selectedIndex == -1) {
-			@:bypassAccessor this.selectedItem = null;
+		this._selectedIndex = value;
+		// using variable because if we were to call the selectedItem setter,
+		// then this change wouldn't be saved properly
+		if (this._selectedIndex == -1) {
+			this._selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			this._selectedItem = this.dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -210,23 +215,27 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		return this.dataProvider.length - 1;
 	}
 
+	private var _selectedItem:Dynamic = null;
+
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:isVar
-	public var selectedItem(get, set):Dynamic = null;
+	@:flash.property
+	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
+			// use the setter
 			this.selectedIndex = -1;
-			return this.selectedItem;
+			return this._selectedItem;
 		}
+		// use the setter
 		this.selectedIndex = this.dataProvider.indexOf(value);
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	/**
@@ -409,7 +418,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
-		this.listView.scrollToIndex(this.selectedIndex);
+		this.listView.scrollToIndex(this._selectedIndex);
 	}
 
 	/**
@@ -527,19 +536,19 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	private function refreshSelection():Void {
 		var oldIgnoreListViewChange = this._ignoreListViewChange;
 		this._ignoreListViewChange = true;
-		this.listView.selectedIndex = this.selectedIndex;
+		this.listView.selectedIndex = this._selectedIndex;
 		this._ignoreListViewChange = oldIgnoreListViewChange;
 
-		if (this.selectedItem != null) {
-			this.button.text = this.itemToText(this.selectedItem);
+		if (this._selectedItem != null) {
+			this.button.text = this.itemToText(this._selectedItem);
 		} else {
 			this.button.text = "";
 		}
 	}
 
 	private function refreshEnabled():Void {
-		this.button.enabled = this.enabled;
-		this.listView.enabled = this.enabled;
+		this.button.enabled = this._enabled;
+		this.listView.enabled = this._enabled;
 	}
 
 	private function measure():Bool {
@@ -594,7 +603,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
 			return;
 		}
-		var result = this.selectedIndex;
+		var result = this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
@@ -622,11 +631,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			result = this.dataProvider.length - 1;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.selectedIndex = result;
 	}
 
 	private function button_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		if (!open) {
@@ -673,6 +683,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this._ignoreListViewChange) {
 			return;
 		}
+		// use the setter
 		this.selectedIndex = this.listView.selectedIndex;
 	}
 
@@ -689,7 +700,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function popUpListView_listView_keyUpHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		switch (event.keyCode) {

@@ -271,6 +271,8 @@ class Callout extends FeathersControl {
 
 	private var _contentMeasurements:Measurements;
 
+	private var _content:DisplayObject;
+
 	/**
 		The display object that will be displayed by the callout.
 
@@ -289,33 +291,39 @@ class Callout extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var content(default, set):DisplayObject;
+	public var content(get, set):DisplayObject;
+
+	private function get_content():DisplayObject {
+		return this._content;
+	}
 
 	private function set_content(value:DisplayObject):DisplayObject {
-		if (this.content == value) {
-			return this.content;
+		if (this._content == value) {
+			return this._content;
 		}
-		if (this.content != null) {
-			this.content.removeEventListener(Event.RESIZE, callout_content_resizeHandler);
-			this._contentMeasurements.restore(this.content);
+		if (this._content != null) {
+			this._content.removeEventListener(Event.RESIZE, callout_content_resizeHandler);
+			this._contentMeasurements.restore(this._content);
 		}
-		this.content = value;
-		if (this.content != null) {
-			this.content.addEventListener(Event.RESIZE, callout_content_resizeHandler, false, 0, true);
-			this.addChild(this.content);
-			if (Std.is(this.content, IUIControl)) {
-				cast(this.content, IUIControl).initializeNow();
+		this._content = value;
+		if (this._content != null) {
+			this._content.addEventListener(Event.RESIZE, callout_content_resizeHandler, false, 0, true);
+			this.addChild(this._content);
+			if (Std.is(this._content, IUIControl)) {
+				cast(this._content, IUIControl).initializeNow();
 			}
 			if (this._contentMeasurements == null) {
-				this._contentMeasurements = new Measurements(this.content);
+				this._contentMeasurements = new Measurements(this._content);
 			} else {
-				this._contentMeasurements.save(this.content);
+				this._contentMeasurements.save(this._content);
 			}
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		this.setInvalid(InvalidationFlag.SIZE);
-		return this.content;
+		return this._content;
 	}
+
+	private var _origin:DisplayObject;
 
 	/**
 		A callout may be positioned relative to another display object, known as
@@ -326,19 +334,24 @@ class Callout extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var origin(default, set):DisplayObject;
+	@:flash.property
+	public var origin(get, set):DisplayObject;
+
+	private function get_origin():DisplayObject {
+		return this._origin;
+	}
 
 	private function set_origin(value:DisplayObject):DisplayObject {
-		if (this.origin == value) {
-			return this.origin;
+		if (this._origin == value) {
+			return this._origin;
 		}
 		if (value != null && value.stage == null) {
 			throw new ArgumentError("origin must be added to the stage.");
 		}
-		this.origin = value;
+		this._origin = value;
 		this._lastPopUpOriginBounds = null;
 		this.setInvalid(INVALIDATION_FLAG_ORIGIN);
-		return this.origin;
+		return this._origin;
 	}
 
 	/**
@@ -664,21 +677,21 @@ class Callout extends FeathersControl {
 		}
 
 		var measureContent:IMeasureObject = null;
-		if (Std.is(this.content, IMeasureObject)) {
-			measureContent = cast(this.content, IMeasureObject);
+		if (Std.is(this._content, IMeasureObject)) {
+			measureContent = cast(this._content, IMeasureObject);
 		}
-		if (this.content != null) {
+		if (this._content != null) {
 			var oldIgnoreContentReize = this._ignoreContentResize;
 			this._ignoreContentResize = true;
-			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this.content,
+			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this._content,
 				this.explicitWidth != null ? this.explicitWidth - this.paddingLeft - this.paddingRight : null,
 				this.explicitHeight != null ? this.explicitHeight - this.paddingTop - this.paddingBottom : null,
 				this.explicitMinWidth != null ? this.explicitMinWidth - this.paddingLeft - this.paddingRight : null,
 				this.explicitMinHeight != null ? this.explicitMinHeight - this.paddingLeft - this.paddingRight : null,
 				maxWidthWithStage != null ? maxWidthWithStage - this.paddingLeft - this.paddingRight : null,
 				maxHeightWithStage != null ? maxHeightWithStage - this.paddingLeft - this.paddingRight : null);
-			if (Std.is(this.content, IValidating)) {
-				cast(this.content, IValidating).validateNow();
+			if (Std.is(this._content, IValidating)) {
+				cast(this._content, IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentReize;
 		}
@@ -686,8 +699,8 @@ class Callout extends FeathersControl {
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			var contentWidth = 0.0;
-			if (this.content != null) {
-				contentWidth = this.content.width;
+			if (this._content != null) {
+				contentWidth = this._content.width;
 			}
 			newWidth = contentWidth + this.paddingLeft + this.paddingRight;
 			if (this.backgroundSkin != null) {
@@ -700,8 +713,8 @@ class Callout extends FeathersControl {
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			var contentHeight = 0.0;
-			if (this.content != null) {
-				contentHeight = this.content.height;
+			if (this._content != null) {
+				contentHeight = this._content.height;
 			}
 			newHeight = contentHeight + this.paddingTop + this.paddingBottom;
 			if (this.backgroundSkin != null) {
@@ -806,8 +819,8 @@ class Callout extends FeathersControl {
 	}
 
 	private function refreshEnabled():Void {
-		if (Std.is(this.content, IUIControl)) {
-			cast(this.content, IUIControl).enabled = this.enabled;
+		if (Std.is(this._content, IUIControl)) {
+			cast(this._content, IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -825,26 +838,26 @@ class Callout extends FeathersControl {
 			this.backgroundSkin.height = backgroundHeight;
 		}
 
-		if (this.content != null) {
-			this.content.x = xPosition + this.paddingLeft;
-			this.content.y = yPosition + this.paddingTop;
+		if (this._content != null) {
+			this._content.x = xPosition + this.paddingLeft;
+			this._content.y = yPosition + this.paddingTop;
 			var oldIgnoreContentResize = this._ignoreContentResize;
 			this._ignoreContentResize = true;
-			this.content.width = backgroundWidth - this.paddingLeft - this.paddingRight;
-			this.content.height = backgroundHeight - this.paddingTop - this.paddingBottom;
-			if (Std.is(this.content, IValidating)) {
-				cast(this.content, IValidating).validateNow();
+			this._content.width = backgroundWidth - this.paddingLeft - this.paddingRight;
+			this._content.height = backgroundHeight - this.paddingTop - this.paddingBottom;
+			if (Std.is(this._content, IValidating)) {
+				cast(this._content, IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;
 		}
 	}
 
 	private function positionRelativeToOrigin():Void {
-		if (this.origin == null) {
+		if (this._origin == null) {
 			return;
 		}
 		var popUpRoot = PopUpManager.forStage(this.stage).root;
-		var bounds = this.origin.getBounds(popUpRoot);
+		var bounds = this._origin.getBounds(popUpRoot);
 		var hasPopUpBounds = this._lastPopUpOriginBounds != null;
 		if (hasPopUpBounds && this._lastPopUpOriginBounds.equals(bounds)) {
 			return;

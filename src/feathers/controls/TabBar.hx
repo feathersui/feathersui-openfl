@@ -146,48 +146,53 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
 			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
-		if (this.selectedIndex == -1 && this.dataProvider != null && this.dataProvider.length > 0) {
+		if (this._selectedIndex == -1 && this.dataProvider != null && this.dataProvider.length > 0) {
+			// use the setter
 			this.selectedIndex = 0;
-		} else if (this.selectedIndex != -1 && (this.dataProvider == null || this.dataProvider.length == 0)) {
+		} else if (this._selectedIndex != -1 && (this.dataProvider == null || this.dataProvider.length == 0)) {
+			// use the setter
 			this.selectedIndex = -1;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		return this.dataProvider;
 	}
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (this.dataProvider == null) {
 			value = -1;
 		}
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this._selectedIndex == value) {
+			return this._selectedIndex;
 		}
-		this.selectedIndex = value;
-		// using @:bypassAccessor because if we were to call the selectedItem
-		// setter, this change wouldn't be saved properly
-		if (this.selectedIndex == -1) {
-			@:bypassAccessor this.selectedItem = null;
+		this._selectedIndex = value;
+		// using variable because if we were to call the selectedItem setter,
+		// then this change wouldn't be saved properly
+		if (this._selectedIndex == -1) {
+			this._selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			this._selectedItem = this.dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -197,23 +202,27 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		return this.dataProvider.length - 1;
 	}
 
+	private var _selectedItem:Dynamic = null;
+
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:isVar
-	public var selectedItem(get, set):Dynamic = null;
+	@:flash.property
+	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
+			// use the setter
 			this.selectedIndex = -1;
-			return this.selectedItem;
+			return this._selectedItem;
 		}
+		// use the setter
 		this.selectedIndex = this.dataProvider.indexOf(value);
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	/**
@@ -487,7 +496,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.disabledBackgroundSkin != null) {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
 			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
@@ -537,7 +546,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			if (tab != null) {
 				this._currentItemState.data = item;
 				this._currentItemState.index = i;
-				this._currentItemState.selected = item == this.selectedItem;
+				this._currentItemState.selected = item == this._selectedItem;
 				this._currentItemState.text = itemToText(item);
 				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 				this._ignoreSelectionChange = true;
@@ -588,7 +597,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		}
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
-		this._currentItemState.selected = item == this.selectedItem;
+		this._currentItemState.selected = item == this._selectedItem;
 		this._currentItemState.text = itemToText(item);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
@@ -612,19 +621,19 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function refreshSelectedIndicesAfterFilterOrSort():Void {
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
-		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
+		this.selectedIndex = this.dataProvider.indexOf(this._selectedItem); // use the setter
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
 			return;
 		}
-		var result = this.selectedIndex;
+		var result = this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
@@ -652,11 +661,12 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			result = this.dataProvider.length - 1;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.selectedIndex = result;
 	}
 
 	private function tabBar_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		this.navigateWithKeyboard(event);
@@ -680,6 +690,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return;
 		}
 		var item = this.tabToData.get(tab);
+		// use the setter
 		this.selectedItem = item;
 	}
 
@@ -688,28 +699,28 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex <= event.index) {
+		if (this._selectedIndex <= event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
 
 	private function dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex == event.index) {
+		if (this._selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
 
 	private function dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex == event.index) {
+		if (this._selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}

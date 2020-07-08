@@ -20,6 +20,7 @@ interface IScrollBar extends IRange {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var step(get, set):Float;
 
 	/**
@@ -28,5 +29,6 @@ interface IScrollBar extends IRange {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var page(get, set):Float;
 }

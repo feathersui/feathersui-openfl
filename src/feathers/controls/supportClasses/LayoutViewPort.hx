@@ -44,6 +44,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleWidth`
 	**/
+	@:flash.property
 	public var minVisibleWidth(get, set):Null<Float>;
 
 	private function get_minVisibleWidth():Null<Float> {
@@ -72,25 +73,32 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitMinVisibleWidth;
 	}
 
+	private var _maxVisibleWidth:Null<Float> = Math.POSITIVE_INFINITY;
+
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
 	**/
-	public var maxVisibleWidth(default, set):Null<Float> = Math.POSITIVE_INFINITY;
+	@:flash.property
+	public var maxVisibleWidth(get, set):Null<Float>;
+
+	private function get_maxVisibleWidth():Null<Float> {
+		return this._maxVisibleWidth;
+	}
 
 	private function set_maxVisibleWidth(value:Null<Float>):Null<Float> {
-		if (this.maxVisibleWidth == value) {
-			return this.maxVisibleWidth;
+		if (this._maxVisibleWidth == value) {
+			return this._maxVisibleWidth;
 		}
 		if (value == null) {
 			throw new ArgumentError("maxVisibleWidth cannot be null");
 		}
-		var oldValue = this.maxVisibleWidth;
-		this.maxVisibleWidth = value;
+		var oldValue = this._maxVisibleWidth;
+		this._maxVisibleWidth = value;
 		if (this._explicitVisibleWidth == null && (this._actualVisibleWidth > value || this._actualVisibleWidth == oldValue)) {
 			// only invalidate if this change might affect the visibleWidth
 			this.setInvalid(InvalidationFlag.SIZE);
 		}
-		return this.maxVisibleWidth;
+		return this._maxVisibleWidth;
 	}
 
 	private var _actualVisibleWidth:Float = 0.0;
@@ -99,6 +107,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleWidth`
 	**/
+	@:flash.property
 	public var visibleWidth(get, set):Null<Float>;
 
 	private function get_visibleWidth():Null<Float> {
@@ -125,6 +134,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleHeight`
 	**/
+	@:flash.property
 	public var minVisibleHeight(get, set):Null<Float>;
 
 	private function get_minVisibleHeight():Null<Float> {
@@ -153,29 +163,32 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitMinVisibleHeight;
 	}
 
+	private var _maxVisibleHeight:Null<Float> = Math.POSITIVE_INFINITY;
+
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
 	**/
-	public var maxVisibleHeight(default, set):Null<Float> = Math.POSITIVE_INFINITY;
+	@:flash.property
+	public var maxVisibleHeight(get, set):Null<Float>;
 
 	private function get_maxVisibleHeight():Null<Float> {
-		return this.maxVisibleHeight;
+		return this._maxVisibleHeight;
 	}
 
 	private function set_maxVisibleHeight(value:Null<Float>):Null<Float> {
-		if (this.maxVisibleHeight == value) {
-			return this.maxVisibleHeight;
+		if (this._maxVisibleHeight == value) {
+			return this._maxVisibleHeight;
 		}
 		if (value == null) {
 			throw new ArgumentError("maxVisibleHeight cannot be null");
 		}
-		var oldValue = this.maxVisibleHeight;
-		this.maxVisibleHeight = value;
+		var oldValue = this._maxVisibleHeight;
+		this._maxVisibleHeight = value;
 		if (this._explicitVisibleHeight == null && (this._actualVisibleHeight > value || this._actualVisibleHeight == oldValue)) {
 			// only invalidate if this change might affect the visibleHeight
 			this.setInvalid(InvalidationFlag.SIZE);
 		}
-		return this.maxVisibleHeight;
+		return this._maxVisibleHeight;
 	}
 
 	private var _actualVisibleHeight:Float = 0.0;
@@ -184,6 +197,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleHeight`
 	**/
+	@:flash.property
 	public var visibleHeight(get, set):Null<Float>;
 
 	private function get_visibleHeight():Null<Float> {
@@ -207,6 +221,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.requiresMeasurementOnScroll`
 	**/
+	@:flash.property
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
@@ -217,34 +232,38 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return false;
 	}
 
+	private var _scrollX:Float = 0.0;
+
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollX`
 	**/
-	@:isVar
-	public var scrollX(get, set):Float = 0.0;
+	@:flash.property
+	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
-		return this.scrollX;
+		return this._scrollX;
 	}
 
 	private function set_scrollX(value:Float):Float {
-		this.scrollX = value;
-		return this.scrollX;
+		this._scrollX = value;
+		return this._scrollX;
 	}
+
+	private var _scrollY:Float = 0.0;
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollY`
 	**/
-	@:isVar
-	public var scrollY(get, set):Float = 0.0;
+	@:flash.property
+	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
-		return this.scrollY;
+		return this._scrollY;
 	}
 
 	private function set_scrollY(value:Float):Float {
-		this.scrollY = value;
-		return this.scrollY;
+		this._scrollY = value;
+		return this._scrollY;
 	}
 
 	override private function refreshViewPortBounds():Void {
@@ -252,8 +271,8 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		var needsHeight = this._explicitVisibleHeight == null;
 		var needsMinWidth = this._explicitMinVisibleWidth == null;
 		var needsMinHeight = this._explicitMinVisibleHeight == null;
-		var needsMaxWidth = this.maxVisibleWidth == null;
-		var needsMaxHeight = this.maxVisibleHeight == null;
+		var needsMaxWidth = this._maxVisibleWidth == null;
+		var needsMaxHeight = this._maxVisibleHeight == null;
 
 		if (this._currentBackgroundSkin != null) {
 			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
@@ -290,11 +309,11 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		if (needsMinHeight) {
 			viewPortMinHeight = 0.0;
 		}
-		var viewPortMaxWidth = this.maxVisibleWidth;
+		var viewPortMaxWidth = this._maxVisibleWidth;
 		if (needsMaxWidth) {
 			viewPortMaxWidth = Math.POSITIVE_INFINITY;
 		}
-		var viewPortMaxHeight = this.maxVisibleHeight;
+		var viewPortMaxHeight = this._maxVisibleHeight;
 		if (needsMaxHeight) {
 			viewPortMaxHeight = Math.POSITIVE_INFINITY;
 		}
@@ -321,8 +340,8 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._ignoreLayoutChanges = true;
 		if (Std.is(this._currentLayout, IScrollLayout)) {
 			var scrollLayout = cast(this._currentLayout, IScrollLayout);
-			scrollLayout.scrollX = this.scrollX;
-			scrollLayout.scrollY = this.scrollY;
+			scrollLayout.scrollX = this._scrollX;
+			scrollLayout.scrollY = this._scrollY;
 		}
 		this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 		super.handleCustomLayout();

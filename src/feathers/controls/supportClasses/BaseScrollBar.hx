@@ -38,6 +38,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.focusRect = null;
 	}
 
+	private var _value:Float = 0.0;
+
 	/**
 		The value of the scroll bar, which must be between the `minimum` and the
 		`maximum`.
@@ -63,24 +65,26 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var value(get, set):Float = 0.0;
+	@:flash.property
+	public var value(get, set):Float;
 
 	private function get_value():Float {
-		return this.value;
+		return this._value;
 	}
 
 	private function set_value(value:Float):Float {
-		if (this.value == value) {
-			return this.value;
+		if (this._value == value) {
+			return this._value;
 		}
-		this.value = value;
+		this._value = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		if (this.liveDragging || !this._dragging) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
-		return this.value;
+		return this._value;
 	}
+
+	private var _minimum:Float = 0.0;
 
 	/**
 		The scroll bar's value cannot be smaller than the minimum.
@@ -101,24 +105,27 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var minimum(get, set):Float = 0.0;
+	@:flash.property
+	public var minimum(get, set):Float;
 
 	private function get_minimum():Float {
-		return this.minimum;
+		return this._minimum;
 	}
 
 	private function set_minimum(value:Float):Float {
-		if (this.minimum == value) {
-			return this.minimum;
+		if (this._minimum == value) {
+			return this._minimum;
 		}
-		this.minimum = value;
-		if (this.initialized && this.value < this.minimum) {
-			this.value = this.minimum;
+		this._minimum = value;
+		if (this.initialized && this._value < this._minimum) {
+			// use the setter
+			this.value = this._minimum;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.minimum;
+		return this._minimum;
 	}
+
+	private var _maximum:Float = 1.0;
 
 	/**
 		The scroll bar's value cannot be larger than the maximum.
@@ -139,24 +146,27 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var maximum(get, set):Float = 1.0;
+	@:flash.property
+	public var maximum(get, set):Float;
 
 	private function get_maximum():Float {
-		return this.maximum;
+		return this._maximum;
 	}
 
 	private function set_maximum(value:Float):Float {
-		if (this.maximum == value) {
-			return this.maximum;
+		if (this._maximum == value) {
+			return this._maximum;
 		}
-		this.maximum = value;
-		if (this.initialized && this.value > this.maximum) {
-			this.value = this.maximum;
+		this._maximum = value;
+		if (this.initialized && this._value > this._maximum) {
+			// use the setter
+			this.value = this._maximum;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.maximum;
+		return this._maximum;
 	}
+
+	private var _step:Float = 0.0;
 
 	/**
 		As the scroll bar's thumb is dragged, the `value` is snapped to the
@@ -181,21 +191,23 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var step(get, set):Float = 0.0;
+	@:flash.property
+	public var step(get, set):Float;
 
 	private function get_step():Float {
-		return this.step;
+		return this._step;
 	}
 
 	private function set_step(value:Float):Float {
-		if (this.step == value) {
-			return this.step;
+		if (this._step == value) {
+			return this._step;
 		}
-		this.step = value;
+		this._step = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.step;
+		return this._step;
 	}
+
+	private var _page:Float = 0.0;
 
 	/**
 		The amount the scroll bar value must change to get from one "page" to
@@ -223,20 +235,20 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var page(get, set):Float = 0.0;
+	@:flash.property
+	public var page(get, set):Float;
 
 	private function get_page():Float {
-		return this.page;
+		return this._page;
 	}
 
 	private function set_page(value:Float):Float {
-		if (this.page == value) {
-			return this.page;
+		if (this._page == value) {
+			return this._page;
 		}
-		this.page = value;
+		this._page = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.page;
+		return this._page;
 	}
 
 	/**
@@ -442,10 +454,12 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 	override private function initialize():Void {
 		super.initialize();
-		if (this.value < this.minimum) {
-			this.value = this.minimum;
-		} else if (this.value > this.maximum) {
-			this.value = this.maximum;
+		if (this._value < this._minimum) {
+			// use the setter
+			this.value = this._minimum;
+		} else if (this._value > this._maximum) {
+			// use the setter
+			this.value = this._maximum;
 		}
 	}
 
@@ -607,7 +621,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 	private function refreshEnabled():Void {
 		if (Std.is(this.thumbSkin, IUIControl)) {
-			cast(this.thumbSkin, IUIControl).enabled = this.enabled;
+			cast(this.thumbSkin, IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -651,11 +665,11 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 	private function normalizeValue():Float {
 		var normalized = 0.0;
-		if (this.minimum != this.maximum) {
-			normalized = (this.value - this.minimum) / (this.maximum - this.minimum);
+		if (this._minimum != this._maximum) {
+			normalized = (this._value - this._minimum) / (this._maximum - this._minimum);
 			if (normalized < 0.0) {
 				normalized = 0.0;
-			} else if (normalized > 1) {
+			} else if (normalized > 1.0) {
 				normalized = 1.0;
 			}
 		}
@@ -675,10 +689,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function getAdjustedPage():Float {
-		var range = this.maximum - this.minimum;
-		var adjustedPage = this.page;
+		var range = this._maximum - this._minimum;
+		var adjustedPage = this._page;
 		if (adjustedPage == 0) {
-			adjustedPage = this.step;
+			adjustedPage = this._step;
 		} else if (adjustedPage > range) {
 			adjustedPage = range;
 		}
@@ -703,6 +717,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private function thumbSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
+		// use the setter
 		this.value = this.locationToValue(location.x, location.y);
 	}
 
@@ -729,6 +744,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this._dragging = true;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 
+		// use the setter
 		this.value = this.locationToValue(location.x, location.y);
 	}
 
@@ -736,6 +752,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
 
+		// use the setter
 		this.value = this.locationToValue(location.x, location.y);
 	}
 

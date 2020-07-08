@@ -58,6 +58,8 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		this.addEventListener(TriggerEvent.TRIGGER, basicToggleButton_triggerHandler);
 	}
 
+	private var _currentState:ToggleButtonState = UP(false);
+
 	/**
 		The current state of the toggle button.
 
@@ -69,26 +71,28 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):ToggleButtonState = UP(false);
+	@:flash.property
+	public var currentState(get, never):ToggleButtonState;
 
 	private function get_currentState():ToggleButtonState {
-		return this.currentState;
+		return this._currentState;
 	}
 
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
-		if (this.enabled) {
-			var toggleState = cast(@:bypassAccessor this.currentState, ToggleButtonState);
-			switch (toggleState) {
+		if (this._enabled) {
+			switch (this._currentState) {
 				case DISABLED(selected):
 					this.changeState(UP(selected));
 				default: // do nothing
 			}
 		} else {
-			this.changeState(DISABLED(this.selected));
+			this.changeState(DISABLED(this._selected));
 		}
-		return this.enabled;
+		return this._enabled;
 	}
+
+	private var _selected:Bool = false;
 
 	/**
 		Indicates if the button is selected or not. The button may be selected
@@ -125,24 +129,26 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var selected(get, set):Bool = false;
+	@:flash.property
+	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
-		return this.selected;
+		return this._selected;
 	}
 
 	private function set_selected(value:Bool):Bool {
-		if (this.selected == value) {
-			return this.selected;
+		if (this._selected == value) {
+			return this._selected;
 		}
-		this.selected = value;
+		this._selected = value;
 		this.setInvalid(InvalidationFlag.SELECTION);
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
-		return this.selected;
+		return this._selected;
 	}
+
+	private var _toggleable:Bool = true;
 
 	/**
 		Determines if the button may be selected or deselected as a result of
@@ -162,14 +168,19 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 		@since 1.0.0
 	**/
-	public var toggleable(default, set):Bool = true;
+	@:flash.property
+	public var toggleable(get, set):Bool;
+
+	private function get_toggleable():Bool {
+		return this._toggleable;
+	}
 
 	private function set_toggleable(value:Bool):Bool {
-		if (this.toggleable == value) {
-			return this.toggleable;
+		if (this._toggleable == value) {
+			return this._toggleable;
 		}
-		this.toggleable = value;
-		return this.toggleable;
+		this._toggleable = value;
+		return this._toggleable;
 	}
 
 	private var _pointerToState:PointerToState<ToggleButtonState> = null;
@@ -355,11 +366,11 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		var result = this._stateToSkin.get(this.currentState);
+		var result = this._stateToSkin.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
-		if (this.selected && this.selectedBackgroundSkin != null) {
+		if (this._selected && this.selectedBackgroundSkin != null) {
 			return this.selectedBackgroundSkin;
 		}
 		return this.backgroundSkin;
@@ -491,44 +502,44 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 
 	private function changeState(state:ToggleButtonState):Void {
 		var toggleState = cast(state, ToggleButtonState);
-		if (!this.enabled) {
-			toggleState = DISABLED(this.selected);
+		if (!this._enabled) {
+			toggleState = DISABLED(this._selected);
 		}
 		switch (toggleState) {
 			case UP(selected):
-				if (this.selected != selected) {
-					toggleState = UP(this.selected);
+				if (this._selected != selected) {
+					toggleState = UP(this._selected);
 				}
 			case DOWN(_):
-				if (this.selected != selected) {
-					toggleState = DOWN(this.selected);
+				if (this._selected != selected) {
+					toggleState = DOWN(this._selected);
 				}
 			case HOVER(_):
-				if (this.selected != selected) {
-					toggleState = HOVER(this.selected);
+				if (this._selected != selected) {
+					toggleState = HOVER(this._selected);
 				}
 			case DISABLED(_):
-				if (this.selected != selected) {
-					toggleState = DISABLED(this.selected);
+				if (this._selected != selected) {
+					toggleState = DISABLED(this._selected);
 				}
 			default: // do nothing
 		}
-		if (this.currentState == toggleState) {
+		if (this._currentState == toggleState) {
 			return;
 		}
-		this.currentState = toggleState;
+		this._currentState = toggleState;
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
 	private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			event.stopImmediatePropagation();
 			return;
 		}
-		if (!this.toggleable) {
+		if (!this._toggleable) {
 			return;
 		}
-		this.selected = !this.selected;
+		this.selected = !this._selected;
 	}
 }

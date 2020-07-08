@@ -56,6 +56,8 @@ class AssetLoader extends FeathersControl {
 	private var loader:Loader;
 	private var _contentMeasurements:Measurements = new Measurements();
 
+	private var _source:String;
+
 	/**
 		Sets the loader's source, which may be either the name of an asset or a
 		URL to load the asset from the web instead.
@@ -74,11 +76,16 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var source(default, set):String;
+	@:flash.property
+	public var source(get, set):String;
+
+	private function get_source():String {
+		return this._source;
+	}
 
 	private function set_source(value:String):String {
-		if (this.source == value) {
-			return this.source;
+		if (this._source == value) {
+			return this._source;
 		}
 		if (this.loader != null) {
 			this.loader.unloadAndStop();
@@ -87,21 +94,21 @@ class AssetLoader extends FeathersControl {
 			this.removeChild(this.content);
 			this.content = null;
 		}
-		this.source = value;
-		if (this.source == null) {
+		this._source = value;
+		if (this._source == null) {
 			this.cleanupLoader();
 		} else {
-			if (Assets.exists(this.source, AssetType.IMAGE)) {
+			if (Assets.exists(this._source, AssetType.IMAGE)) {
 				this.cleanupLoader();
-				if (Assets.isLocal(this.source, AssetType.IMAGE)) {
-					var bitmapData = Assets.getBitmapData(this.source);
+				if (Assets.isLocal(this._source, AssetType.IMAGE)) {
+					var bitmapData = Assets.getBitmapData(this._source);
 					var bitmap = new Bitmap(bitmapData);
 					this._contentMeasurements.save(bitmap);
 					this.addChild(bitmap);
 					this.content = bitmap;
 				} else // async
 				{
-					var future = Assets.loadBitmapData(this.source).onComplete((bitmapData:BitmapData) -> {
+					var future = Assets.loadBitmapData(this._source).onComplete((bitmapData:BitmapData) -> {
 						var bitmap = new Bitmap(bitmapData);
 						this._contentMeasurements.save(bitmap);
 						this.addChild(bitmap);
@@ -112,16 +119,16 @@ class AssetLoader extends FeathersControl {
 						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 					});
 				}
-			} else if (Assets.exists(this.source, AssetType.MOVIE_CLIP)) {
+			} else if (Assets.exists(this._source, AssetType.MOVIE_CLIP)) {
 				this.cleanupLoader();
-				if (Assets.isLocal(this.source, AssetType.MOVIE_CLIP)) {
-					var movieClip = Assets.getMovieClip(this.source);
+				if (Assets.isLocal(this._source, AssetType.MOVIE_CLIP)) {
+					var movieClip = Assets.getMovieClip(this._source);
 					this._contentMeasurements.save(movieClip);
 					this.addChild(movieClip);
 					this.content = movieClip;
 				} else // async
 				{
-					var future = Assets.loadMovieClip(this.source).onComplete((movieClip:MovieClip) -> {
+					var future = Assets.loadMovieClip(this._source).onComplete((movieClip:MovieClip) -> {
 						this._contentMeasurements.save(movieClip);
 						this.addChild(movieClip);
 						this.content = movieClip;
@@ -140,7 +147,7 @@ class AssetLoader extends FeathersControl {
 					this.addChild(this.loader);
 				}
 				try {
-					this.loader.load(new URLRequest(this.source));
+					this.loader.load(new URLRequest(this._source));
 				} catch (e:Dynamic) {
 					if (Std.is(e, SecurityError)) {
 						var securityError = cast(e, SecurityError);
@@ -151,8 +158,10 @@ class AssetLoader extends FeathersControl {
 			}
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.source;
+		return this._source;
 	}
+
+	private var _scaleMode:StageScaleMode = StageScaleMode.SHOW_ALL;
 
 	/**
 
@@ -172,15 +181,20 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var scaleMode(default, set):StageScaleMode = StageScaleMode.SHOW_ALL;
+	@:flash.property
+	public var scaleMode(get, set):StageScaleMode;
+
+	private function get_scaleMode():StageScaleMode {
+		return this._scaleMode;
+	}
 
 	private function set_scaleMode(value:StageScaleMode):StageScaleMode {
-		if (this.scaleMode == value) {
-			return this.scaleMode;
+		if (this._scaleMode == value) {
+			return this._scaleMode;
 		}
-		this.scaleMode = value;
+		this._scaleMode = value;
 		this.setInvalid(InvalidationFlag.LAYOUT);
-		return this.scaleMode;
+		return this._scaleMode;
 	}
 
 	override private function update():Void {
@@ -206,7 +220,7 @@ class AssetLoader extends FeathersControl {
 		var contentHeight = this._contentMeasurements.height;
 		var widthScale = 1.0;
 		var heightScale = 1.0;
-		if (this.content != null && this.scaleMode != StageScaleMode.NO_SCALE) {
+		if (this.content != null && this._scaleMode != StageScaleMode.NO_SCALE) {
 			if (!needsWidth) {
 				widthScale = this.explicitWidth / contentWidth;
 			} else if (this.explicitMaxWidth != null && this.explicitMaxWidth < contentWidth) {
@@ -307,7 +321,7 @@ class AssetLoader extends FeathersControl {
 			return;
 		}
 
-		switch (this.scaleMode) {
+		switch (this._scaleMode) {
 			case StageScaleMode.EXACT_FIT:
 				this.content.x = 0.0;
 				this.content.y = 0.0;

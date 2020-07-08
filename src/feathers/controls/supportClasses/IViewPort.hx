@@ -29,6 +29,7 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var visibleWidth(get, set):Null<Float>;
 
 	/**
@@ -40,6 +41,7 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var visibleHeight(get, set):Null<Float>;
 
 	/**
@@ -51,6 +53,7 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var minVisibleWidth(get, set):Null<Float>;
 
 	/**
@@ -62,6 +65,7 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var minVisibleHeight(get, set):Null<Float>;
 
 	/**
@@ -73,7 +77,8 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
-	public var maxVisibleWidth(default, set):Null<Float>;
+	@:flash.property
+	public var maxVisibleWidth(get, set):Null<Float>;
 
 	/**
 		The maximum height of the view port. This value may be different from
@@ -84,13 +89,15 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
-	public var maxVisibleHeight(default, set):Null<Float>;
+	@:flash.property
+	public var maxVisibleHeight(get, set):Null<Float>;
 
 	/**
 		The current horizontal scroll position (on the x-axis).
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var scrollX(get, set):Float;
 
 	/**
@@ -98,6 +105,7 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var scrollY(get, set):Float;
 
 	/**
@@ -106,5 +114,6 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var requiresMeasurementOnScroll(get, never):Bool;
 }

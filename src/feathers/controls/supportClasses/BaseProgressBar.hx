@@ -344,7 +344,7 @@ class BaseProgressBar extends FeathersControl {
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.disabledBackgroundSkin != null) {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
 			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
@@ -385,7 +385,7 @@ class BaseProgressBar extends FeathersControl {
 	}
 
 	private function getCurrentFillSkin():DisplayObject {
-		if (!this.enabled && this.disabledFillSkin != null) {
+		if (!this._enabled && this.disabledFillSkin != null) {
 			return this.disabledFillSkin;
 		}
 		return this.fillSkin;

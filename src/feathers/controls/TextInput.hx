@@ -93,6 +93,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this.editable;
 	}
 
+	private var _currentState:TextInputState = ENABLED;
+
 	/**
 		The current state of the text input.
 
@@ -101,22 +103,23 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public var currentState(get, null):TextInputState = ENABLED;
+	@:flash.property
+	public var currentState(get, null):TextInputState;
 
 	private function get_currentState():TextInputState {
-		return this.currentState;
+		return this._currentState;
 	}
 
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
-		if (this.enabled) {
-			if (this.currentState == DISABLED) {
+		if (this._enabled) {
+			if (this._currentState == DISABLED) {
 				this.changeState(ENABLED);
 			}
 		} else {
 			this.changeState(DISABLED);
 		}
-		return this.enabled;
+		return this._enabled;
 	}
 
 	private var _backgroundSkinMeasurements:Measurements = null;
@@ -155,6 +158,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var _updatedTextStyles = false;
 	private var _updatedPromptStyles = false;
 
+	private var _text:String = "";
+
 	/**
 		The text displayed by the text input.
 
@@ -174,29 +179,29 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var text(get, set):String = "";
+	@:flash.property
+	public var text(get, set):String;
 
 	private function get_text():String {
-		return this.text;
+		return this._text;
 	}
 
 	private function set_text(value:String):String {
 		if (value == null) {
 			// null gets converted to an empty string
-			if (this.text.length == 0) {
+			if (this._text.length == 0) {
 				// already an empty string
-				return this.text;
+				return this._text;
 			}
 			value = "";
 		}
-		if (this.text == value) {
-			return this.text;
+		if (this._text == value) {
+			return this._text;
 		}
-		this.text = value;
+		this._text = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.text;
+		return this._text;
 	}
 
 	/**
@@ -632,7 +637,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		var result = this._stateToSkin.get(this.currentState);
+		var result = this._stateToSkin.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
@@ -741,9 +746,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.enabled && this.editable && this.textField.type != TextFieldType.INPUT) {
+		if (this._enabled && this.editable && this.textField.type != TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.INPUT;
-		} else if ((!this.enabled || !this.editable) && this.textField.type == TextFieldType.INPUT) {
+		} else if ((!this._enabled || !this.editable) && this.textField.type == TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.DYNAMIC;
 		}
 		if (this.textField.embedFonts != this.embedFonts) {
@@ -779,7 +784,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.promptTextField.selectable = false;
 			this.addChild(this.promptTextField);
 		}
-		this.promptTextField.visible = this.text.length == 0;
+		this.promptTextField.visible = this._text.length == 0;
 	}
 
 	private function refreshPromptText():Void {
@@ -828,13 +833,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private function refreshText():Void {
 		this.textField.restrict = restrict;
-		if (this.text == this._previousText && !this._updatedTextStyles) {
+		if (this._text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
 		}
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
-			this.textField.text = this.text;
+			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
@@ -845,7 +850,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (!hasText) {
 			this.textField.text = "";
 		}
-		this._previousText = this.text;
+		this._previousText = this._text;
 	}
 
 	private function refreshScrollPosition():Void {
@@ -853,7 +858,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function getCurrentTextFormat():TextFormat {
-		var result = this._stateToTextFormat.get(this.currentState);
+		var result = this._stateToTextFormat.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
@@ -925,13 +930,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function changeState(state:TextInputState):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			state = DISABLED;
 		}
-		if (this.currentState == state) {
+		if (this._currentState == state) {
 			return;
 		}
-		this.currentState = state;
+		this._currentState = state;
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
@@ -941,6 +946,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
 
+		// use the setter
 		this.text = this.textField.text;
 	}
 
@@ -958,7 +964,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function textInput_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.isDefaultPrevented()) {
+		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
 		switch (event.keyCode) {

@@ -21,5 +21,6 @@ interface IListViewItemRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var index(get, set):Int;
 }

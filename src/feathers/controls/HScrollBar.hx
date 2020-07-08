@@ -56,7 +56,7 @@ class HScrollBar extends BaseScrollBar {
 		var xOffset = x - this._pointerStartX;
 		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
 		percentage = xPosition / trackScrollableWidth;
-		return this.minimum + percentage * (this.maximum - this.minimum);
+		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
 
 	override private function saveThumbStart(location:Point):Void {
@@ -179,7 +179,7 @@ class HScrollBar extends BaseScrollBar {
 			return;
 		}
 
-		var range = this.maximum - this.minimum;
+		var range = this._maximum - this._minimum;
 		this.thumbSkin.visible = range > 0.0;
 		if (!this.thumbSkin.visible) {
 			return;
@@ -190,10 +190,10 @@ class HScrollBar extends BaseScrollBar {
 		}
 
 		var valueOffset = 0.0;
-		if (this.value < this.minimum) {
-			valueOffset = this.minimum - this.value;
-		} else if (this.value > this.maximum) {
-			valueOffset = this.value - this.maximum;
+		if (this._value < this._minimum) {
+			valueOffset = this._minimum - this._value;
+		} else if (this._value > this._maximum) {
+			valueOffset = this._value - this._maximum;
 		}
 
 		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
@@ -228,7 +228,7 @@ class HScrollBar extends BaseScrollBar {
 			}
 			this.thumbSkin.width = thumbWidth;
 		}
-		this.thumbSkin.x = this.valueToLocation(this.value);
+		this.thumbSkin.x = this.valueToLocation(this._value);
 		this.thumbSkin.y = this.paddingTop + (contentHeight - this.thumbSkin.height) / 2.0;
 	}
 }

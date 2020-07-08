@@ -163,17 +163,19 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.dataProvider == value) {
 			return this.dataProvider;
 		}
-		var oldSelectedIndex = this.selectedIndex;
-		var oldSelectedItem = this.selectedItem;
+		var oldSelectedIndex = this._selectedIndex;
+		var oldSelectedItem = this._selectedItem;
 		this.dataProvider = value;
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			// use the setter
 			this.selectedIndex = -1;
 		} else {
+			// uset the setter
 			this.selectedIndex = 0;
 		}
 		// this ensures that Event.CHANGE will dispatch for selectedItem
 		// changing, even if selectedIndex has not changed.
-		if (this.selectedIndex == oldSelectedIndex && this.selectedItem != oldSelectedItem) {
+		if (this._selectedIndex == oldSelectedIndex && this._selectedItem != oldSelectedItem) {
 			this.setInvalid(InvalidationFlag.SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
@@ -187,43 +189,46 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var pendingSelectedIndex = -1;
 	private var pendingSelectedItem:Dynamic = null;
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (this.dataProvider == null) {
 			value = -1;
 		}
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this._selectedIndex == value) {
+			return this._selectedIndex;
 		}
-		this.selectedIndex = value;
-		// using @:bypassAccessor because if we were to call the selectedItem
-		// setter, this change wouldn't be saved properly
-		if (this.selectedIndex == -1) {
-			@:bypassAccessor this.selectedItem = null;
+		this._selectedIndex = value;
+		// using variable because if we were to call the selectedItem setter,
+		// then this change wouldn't be saved properly
+		if (this._selectedIndex == -1) {
+			this._selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			this._selectedItem = this.dataProvider.get(this._selectedIndex);
 		}
 		if (this.open) {
 			this.pendingSelectedIndex = value;
-			this.pendingSelectedItem = this.selectedItem;
+			this.pendingSelectedItem = this._selectedItem;
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	/**
 		@see `feathers.core.IndexSelector.maxSelectedIndex`
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -233,23 +238,27 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this.dataProvider.length - 1;
 	}
 
+	private var _selectedItem:Dynamic = null;
+
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:isVar
-	public var selectedItem(get, set):Dynamic = null;
+	@:flash.property
+	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (this.dataProvider == null) {
+			// use the setter
 			this.selectedIndex = -1;
-			return this.selectedItem;
+			return this._selectedItem;
 		}
+		// use the setter
 		this.selectedIndex = this.dataProvider.indexOf(value);
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	/**
@@ -455,7 +464,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.dataProvider != null) {
 			this.dataProvider.refresh();
 		}
-		this.pendingSelectedItem = this.selectedItem;
+		this.pendingSelectedItem = this._selectedItem;
 		this.popUpAdapter.addEventListener(Event.OPEN, comboBox_popUpAdapter_openHandler);
 		this.popUpAdapter.addEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
 		this.popUpAdapter.open(this.listView, this);
@@ -463,7 +472,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_listView_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler, false, 0, true);
-		this.listView.scrollToIndex(this.selectedIndex);
+		this.listView.scrollToIndex(this._selectedIndex);
 	}
 
 	/**
@@ -594,13 +603,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private function refreshSelection():Void {
 		var oldIgnoreListViewChange = this._ignoreListViewChange;
 		this._ignoreListViewChange = true;
-		this.listView.selectedIndex = this.selectedIndex;
+		this.listView.selectedIndex = this._selectedIndex;
 		this._ignoreListViewChange = oldIgnoreListViewChange;
 
 		var oldIgnoreTextInputChange = this._ignoreTextInputChange;
 		this._ignoreTextInputChange = true;
-		if (this.selectedItem != null) {
-			this.textInput.text = this.itemToText(this.selectedItem);
+		if (this._selectedItem != null) {
+			this.textInput.text = this.itemToText(this._selectedItem);
 		} else {
 			this.textInput.text = "";
 		}
@@ -608,9 +617,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function refreshEnabled():Void {
-		this.button.enabled = this.enabled;
-		this.textInput.enabled = this.enabled;
-		this.listView.enabled = this.enabled;
+		this.button.enabled = this._enabled;
+		this.textInput.enabled = this._enabled;
+		this.listView.enabled = this._enabled;
 	}
 
 	private function comboBoxFilterFunction(item:Dynamic):Bool {
@@ -685,7 +694,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
 			return;
 		}
-		var result = this.selectedIndex;
+		var result = this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
@@ -713,14 +722,15 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			result = this.dataProvider.length - 1;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.selectedIndex = result;
 		if (this.open) {
-			this.listView.scrollToIndex(this.selectedIndex);
+			this.listView.scrollToIndex(this._selectedIndex);
 		}
 	}
 
 	private function comboBox_textInput_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		this.navigateWithKeyboard(event);
@@ -784,6 +794,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else {
 			// if closed, update immediately
 			this.pendingSelectedIndex = -1;
+			// use the setter
 			this.selectedIndex = this.listView.selectedIndex;
 		}
 	}
@@ -802,7 +813,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_keyUpHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		switch (event.keyCode) {
@@ -877,6 +888,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.dataProvider != null) {
 			this.dataProvider.refresh();
 		}
+		// use the setter
 		this.selectedItem = newSelectedItem;
 		// even if the selected item has not changed, invalidate because the
 		// displayed text may need to be updated

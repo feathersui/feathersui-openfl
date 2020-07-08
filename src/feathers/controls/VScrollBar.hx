@@ -56,7 +56,7 @@ class VScrollBar extends BaseScrollBar {
 		var yOffset = y - this._pointerStartY;
 		var yPosition = Math.min(Math.max(0.0, this._thumbStartY + yOffset), trackScrollableHeight);
 		percentage = yPosition / trackScrollableHeight;
-		return this.minimum + percentage * (this.maximum - this.minimum);
+		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
 
 	override private function saveThumbStart(location:Point):Void {
@@ -180,7 +180,7 @@ class VScrollBar extends BaseScrollBar {
 			return;
 		}
 
-		var range = this.maximum - this.minimum;
+		var range = this._maximum - this._minimum;
 		this.thumbSkin.visible = range > 0.0;
 		if (!this.thumbSkin.visible) {
 			return;
@@ -191,10 +191,10 @@ class VScrollBar extends BaseScrollBar {
 		}
 
 		var valueOffset = 0.0;
-		if (this.value < this.minimum) {
-			valueOffset = this.minimum - this.value;
-		} else if (this.value > this.maximum) {
-			valueOffset = this.value - this.maximum;
+		if (this._value < this._minimum) {
+			valueOffset = this._minimum - this._value;
+		} else if (this._value > this._maximum) {
+			valueOffset = this._value - this._maximum;
 		}
 
 		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
@@ -230,6 +230,6 @@ class VScrollBar extends BaseScrollBar {
 			this.thumbSkin.height = thumbHeight;
 		}
 		this.thumbSkin.x = this.paddingLeft + (contentWidth - this.thumbSkin.width) / 2.0;
-		this.thumbSkin.y = this.valueToLocation(this.value);
+		this.thumbSkin.y = this.valueToLocation(this._value);
 	}
 }

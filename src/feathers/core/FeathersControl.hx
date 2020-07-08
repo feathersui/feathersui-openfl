@@ -90,23 +90,25 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	**/
 	public var created(default, null):Bool = false;
 
+	private var _enabled:Bool = true;
+
 	/**
 		@see `feathers.core.IUIControl.enabled`
 	**/
-	@:isVar
-	public var enabled(get, set):Bool = true;
+	@:flash.property
+	public var enabled(get, set):Bool;
 
 	private function get_enabled():Bool {
-		return this.enabled;
+		return this._enabled;
 	}
 
 	private function set_enabled(value:Bool):Bool {
-		if (this.enabled == value) {
-			return this.enabled;
+		if (this._enabled == value) {
+			return this._enabled;
 		}
-		this.enabled = value;
+		this._enabled = value;
 		this.setInvalid(InvalidationFlag.STATE);
-		return this.enabled;
+		return this._enabled;
 	}
 
 	private var _currentStyleProvider:IStyleProvider = null;
@@ -169,35 +171,50 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var styleContext(get, never):Class<IStyleObject>;
 
 	private function get_styleContext():Class<IStyleObject> {
 		return null;
 	}
 
+	private var _includeInLayout:Bool = true;
+
 	/**
 		@see `feathers.layout.ILayoutObject.includeInLayout`
 	**/
-	public var includeInLayout(default, set):Bool = true;
+	@:flash.property
+	public var includeInLayout(get, set):Bool;
+
+	private function get_includeInLayout():Bool {
+		return this._includeInLayout;
+	}
 
 	private function set_includeInLayout(value:Bool):Bool {
-		if (this.includeInLayout == value) {
-			return this.includeInLayout;
+		if (this._includeInLayout == value) {
+			return this._includeInLayout;
 		}
-		this.includeInLayout = value;
+		this._includeInLayout = value;
 		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
-		return this.includeInLayout;
+		return this._includeInLayout;
 	}
+
+	private var _layoutData:ILayoutData;
 
 	/**
 		@see `feathers.layout.ILayoutObject.layoutData`
 	**/
 	@style
-	public var layoutData(default, set):ILayoutData = null;
+	@:flash.property
+	public var layoutData(get, set):ILayoutData;
+
+	private function get_layoutData():ILayoutData {
+		return this._layoutData;
+	}
 
 	private function set_layoutData(value:ILayoutData):ILayoutData {
 		if (!this.setStyle("layoutData")) {
-			return this.layoutData;
+			return this._layoutData;
 		}
 		// in a -final build, this forces the clearStyle
 		// function to be kept if the property is kept
@@ -206,40 +223,44 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this.setLayoutDataInternal(value);
 	}
 
+	private var _focusManager:IFocusManager = null;
+
 	/**
 		@see `feathers.layout.IFocusObject.focusManager`
 	**/
-	@:isVar
-	public var focusManager(get, set):IFocusManager = null;
+	@:flash.property
+	public var focusManager(get, set):IFocusManager;
 
 	private function get_focusManager():IFocusManager {
-		return this.focusManager;
+		return this._focusManager;
 	}
 
 	private function set_focusManager(value:IFocusManager):IFocusManager {
-		if (this.focusManager == value) {
-			return this.focusManager;
+		if (this._focusManager == value) {
+			return this._focusManager;
 		}
-		this.focusManager = value;
-		return this.focusManager;
+		this._focusManager = value;
+		return this._focusManager;
 	}
+
+	private var _focusEnabled:Bool = true;
 
 	/**
 		@see `feathers.layout.IFocusObject.focusEnabled`
 	**/
-	@:isVar
-	public var focusEnabled(get, set):Bool = true;
+	@:flash.property
+	public var focusEnabled(get, set):Bool;
 
 	private function get_focusEnabled():Bool {
-		return this.focusEnabled;
+		return this._focusEnabled;
 	}
 
 	private function set_focusEnabled(value:Bool):Bool {
-		if (this.focusEnabled == value) {
-			return this.focusEnabled;
+		if (this._focusEnabled == value) {
+			return this._focusEnabled;
 		}
-		this.focusEnabled = value;
-		return this.focusEnabled;
+		this._focusEnabled = value;
+		return this._focusEnabled;
 	}
 
 	/**
@@ -275,11 +296,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `feathers.core.IFocusObject.showFocus()`
 	**/
 	public function showFocus(show:Bool):Void {
-		if (this.focusManager == null || this.focusRectSkin == null) {
+		if (this._focusManager == null || this.focusRectSkin == null) {
 			return;
 		}
 		if (show) {
-			this.focusManager.focusPane.addChild(this.focusRectSkin);
+			this._focusManager.focusPane.addChild(this.focusRectSkin);
 			this.addEventListener(Event.ENTER_FRAME, feathersControl_focusRect_enterFrameHandler);
 			this.positionFocusRect();
 		} else if (this.focusRectSkin.parent != null) {
@@ -302,7 +323,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private function positionFocusRect():Void {
 		var point = new Point(0, 0);
 		point = this.localToGlobal(point);
-		point = this.focusManager.focusPane.globalToLocal(point);
+		point = this._focusManager.focusPane.globalToLocal(point);
 		this.focusRectSkin.x = point.x;
 		this.focusRectSkin.y = point.y;
 		this.focusRectSkin.width = this.actualWidth;
@@ -310,19 +331,21 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function setLayoutDataInternal(value:ILayoutData):ILayoutData {
-		if (this.layoutData == value) {
-			return this.layoutData;
+		if (this._layoutData == value) {
+			return this._layoutData;
 		}
-		if (this.layoutData != null) {
-			this.layoutData.removeEventListener(Event.CHANGE, layoutData_changeHandler);
+		if (this._layoutData != null) {
+			this._layoutData.removeEventListener(Event.CHANGE, layoutData_changeHandler);
 		}
-		@:bypassAccessor this.layoutData = value;
-		if (this.layoutData != null) {
-			this.layoutData.addEventListener(Event.CHANGE, layoutData_changeHandler, false, 0, true);
+		this._layoutData = value;
+		if (this._layoutData != null) {
+			this._layoutData.addEventListener(Event.CHANGE, layoutData_changeHandler, false, 0, true);
 		}
 		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
-		return this.layoutData;
+		return this._layoutData;
 	}
+
+	private var _variant:String;
 
 	/**
 		May be used to provide multiple different variations of the same UI
@@ -330,13 +353,18 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
-	public var variant(default, set):String = null;
+	@:flash.property
+	public var variant(get, set):String;
+
+	private function get_variant():String {
+		return this._variant;
+	}
 
 	private function set_variant(value:String):String {
-		if (this.variant == value) {
-			return this.variant;
+		if (this._variant == value) {
+			return this._variant;
 		}
-		this.variant = value;
+		this._variant = value;
 		if (this.initialized && this.stage != null) {
 			// ignore if we're not initialized yet or we haven't been added to
 			// the stage because it will be handled later. otherwise, apply the
@@ -346,7 +374,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			this._waitingToApplyStyles = true;
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.variant;
+		return this._variant;
 	}
 
 	private var _applyingStyles:Bool = false;

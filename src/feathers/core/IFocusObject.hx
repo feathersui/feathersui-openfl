@@ -21,6 +21,7 @@ interface IFocusObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var focusManager(get, set):IFocusManager;
 
 	/**
@@ -28,6 +29,7 @@ interface IFocusObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var focusEnabled(get, set):Bool;
 
 	/**

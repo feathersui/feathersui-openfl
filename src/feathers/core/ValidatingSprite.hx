@@ -36,10 +36,17 @@ class ValidatingSprite extends Sprite implements IValidating {
 	private var _setInvalidCount:Int = 0;
 	private var _validationQueue:ValidationQueue = null;
 
+	private var _depth:Int = -1;
+
 	/**
 		@see `feathers.core.IValidating.depth`
 	**/
-	public var depth(default, null):Int = -1;
+	@:flash.property
+	public var depth(get, never):Int;
+
+	private function get_depth():Int {
+		return this._depth;
+	}
 
 	/**
 		Indicates whether the control is pending validation or not. By default,
@@ -213,7 +220,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 	private function update():Void {}
 
 	private function validatingSprite_addedToStageHandler(event:Event):Void {
-		this.depth = DisplayUtil.getDisplayObjectDepthFromStage(this);
+		this._depth = DisplayUtil.getDisplayObjectDepthFromStage(this);
 		this._validationQueue = ValidationQueue.forStage(this.stage);
 		if (this.isInvalid()) {
 			this._setInvalidCount = 0;
@@ -223,7 +230,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 	}
 
 	private function validatingSprite_removedFromStageHandler(event:Event):Void {
-		this.depth = -1;
+		this._depth = -1;
 		this._validationQueue = null;
 	}
 }

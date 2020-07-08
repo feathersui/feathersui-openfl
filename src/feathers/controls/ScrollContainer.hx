@@ -118,19 +118,24 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		return this.xmlContent;
 	}
 
+	private var _childFocusEnabled:Bool = true;
+
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:isVar
-	public var childFocusEnabled(get, set):Bool = true;
+	@:flash.property
+	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
-		return this.enabled && this.childFocusEnabled;
+		return this._enabled && this._childFocusEnabled;
 	}
 
 	private function set_childFocusEnabled(value:Bool):Bool {
-		this.childFocusEnabled = value;
-		return this.childFocusEnabled;
+		if (this._childFocusEnabled == value) {
+			return this._childFocusEnabled;
+		}
+		this._childFocusEnabled = value;
+		return this._childFocusEnabled;
 	}
 
 	public var numRawChildren(get, null):Int;

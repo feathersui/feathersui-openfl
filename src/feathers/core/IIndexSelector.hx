@@ -52,6 +52,7 @@ interface IIndexSelector {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	/**
@@ -63,5 +64,6 @@ interface IIndexSelector {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 }

@@ -156,8 +156,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	override private function get_focusEnabled():Bool {
 		return (this.selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
-			&& this.enabled
-			&& this.focusEnabled;
+			&& this._enabled
+			&& this._focusEnabled;
 	}
 
 	private var gridViewPort:AdvancedLayoutViewPort;
@@ -308,39 +308,42 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (!this.selectable || this.dataProvider == null) {
 			value = -1;
 		}
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this._selectedIndex == value) {
+			return this._selectedIndex;
 		}
-		this.selectedIndex = value;
-		// using @:bypassAccessor because if we were to call the selectedItem
-		// setter, this change wouldn't be saved properly
-		if (this.selectedIndex == -1) {
-			@:bypassAccessor this.selectedItem = null;
+		this._selectedIndex = value;
+		// using variable because if we were to call the selectedItem setter,
+		// then this change wouldn't be saved properly
+		if (this._selectedIndex == -1) {
+			this._selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			this._selectedItem = this.dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -350,23 +353,27 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this.dataProvider.length - 1;
 	}
 
+	private var _selectedItem:Dynamic = null;
+
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:isVar
-	public var selectedItem(get, set):Dynamic = null;
+	@:flash.property
+	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (!this.selectable || this.dataProvider == null) {
+			// use the setter
 			this.selectedIndex = -1;
-			return this.selectedItem;
+			return this._selectedItem;
 		}
+		// use the setter
 		this.selectedIndex = this.dataProvider.indexOf(value);
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private var _layout:ILayout;
@@ -456,6 +463,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this.selectable = value;
 		if (!this.selectable) {
+			// use the setter
 			this.selectedIndex = -1;
 		}
 		return this.selectable;
@@ -805,7 +813,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.data = item;
 		rowRenderer.rowIndex = index;
 		rowRenderer.selectable = this.selectable;
-		rowRenderer.selected = index == this.selectedIndex;
+		rowRenderer.selected = index == this._selectedIndex;
 		rowRenderer.cellRendererRecycler = this.cellRendererRecycler;
 		rowRenderer.columns = this.columns;
 	}
@@ -840,19 +848,19 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshSelectedIndicesAfterFilterOrSort():Void {
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
-		this.selectedIndex = this.dataProvider.indexOf(this.selectedItem);
+		this.selectedIndex = this.dataProvider.indexOf(this._selectedItem); // use the setter
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
 			return;
 		}
-		var result = this.selectedIndex;
+		var result = this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
@@ -880,14 +888,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			result = this.dataProvider.length - 1;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.selectedIndex = result;
-		if (this.selectedIndex != -1) {
-			this.scrollToRowIndex(this.selectedIndex);
+		if (this._selectedIndex != -1) {
+			this.scrollToRowIndex(this._selectedIndex);
 		}
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.isDefaultPrevented()) {
+		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
 		this.navigateWithKeyboard(event);
@@ -911,6 +920,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var item = this.rowRendererToData.get(rowRenderer);
+		// use the setter
 		this.selectedItem = item;
 	}
 
@@ -922,10 +932,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache.insert(event.index, null);
 		}
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex <= event.index) {
+		if (this._selectedIndex <= event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -934,10 +944,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache.remove(event.index);
 		}
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex == event.index) {
+		if (this._selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -946,10 +956,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache[event.index] = null;
 		}
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this.selectedIndex == event.index) {
+		if (this._selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -958,6 +968,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
 		}
+		// use the setter
 		this.selectedIndex = -1;
 	}
 
@@ -966,6 +977,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._virtualCache.resize(0);
 			this._virtualCache.resize(this.dataProvider.length);
 		}
+		// use the setter
 		this.selectedIndex = -1;
 	}
 

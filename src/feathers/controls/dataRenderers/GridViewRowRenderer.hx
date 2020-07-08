@@ -67,6 +67,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	private var _columnToCellRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
 	private var _cellRendererToColumn = new ObjectMap<DisplayObject, GridViewColumn>();
 
+	private var _selected:Bool = false;
+
 	/**
 		Indicates if the row is selected or not.
 
@@ -75,21 +77,21 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var selected(get, set):Bool = false;
+	@:flash.property
+	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
-		return this.selected;
+		return this._selected;
 	}
 
 	private function set_selected(value:Bool):Bool {
-		if (this.selected == value) {
-			return this.selected;
+		if (this._selected == value) {
+			return this._selected;
 		}
-		this.selected = value;
+		this._selected = value;
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selected;
+		return this._selected;
 	}
 
 	public var selectable:Bool = true;
@@ -113,6 +115,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		return this.rowIndex;
 	}
 
+	private var _data:Dynamic = null;
+
 	/**
 		The item from the data provider that is rendered by this row.
 
@@ -121,20 +125,20 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var data(get, set):Dynamic = null;
+	@:flash.property
+	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
-		return this.data;
+		return this._data;
 	}
 
 	private function set_data(value:Dynamic):Dynamic {
-		if (this.data == value) {
-			return this.data;
+		if (this._data == value) {
+			return this._data;
 		}
-		this.data = value;
+		this._data = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.data;
+		return this._data;
 	}
 
 	/**
@@ -211,7 +215,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		}
 
 		this.refreshInactiveCellRenderers(this._defaultStorage, false);
-		if (this.data == null) {
+		if (this._data == null) {
 			return;
 		}
 
@@ -341,19 +345,19 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
 		var storage = this._defaultStorage;
 		var cellRendererRecycler = storage.cellRendererRecycler != null ? storage.cellRendererRecycler : this.cellRendererRecycler;
-		this._currentCellState.data = this.data;
+		this._currentCellState.data = this._data;
 		this._currentCellState.rowIndex = this.rowIndex;
 		this._currentCellState.columnIndex = columnIndex;
 		this._currentCellState.column = column;
-		this._currentCellState.selected = this.selected;
-		this._currentCellState.text = column.itemToText(this.data);
+		this._currentCellState.selected = this._selected;
+		this._currentCellState.text = column.itemToText(this._data);
 		if (cellRendererRecycler.update != null) {
 			cellRendererRecycler.update(cellRenderer, this._currentCellState);
 		}
 		if (Std.is(cellRenderer, IDataRenderer)) {
 			var dataRenderer = cast(cellRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
-			dataRenderer.data = this.data;
+			dataRenderer.data = this._data;
 		}
 		if (Std.is(cellRenderer, IToggle)) {
 			var toggle = cast(cellRenderer, IToggle);
@@ -375,6 +379,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
+		// use the setter
 		this.selected = true;
 	}
 
@@ -382,6 +387,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		if (!this.selectable) {
 			return;
 		}
+		// use the setter
 		this.selected = true;
 	}
 }

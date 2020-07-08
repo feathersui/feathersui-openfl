@@ -25,5 +25,6 @@ interface IToggle extends IUIControl {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var selected(get, set):Bool;
 }

@@ -83,6 +83,8 @@ class TextCallout extends Callout implements ITextControl {
 
 	private var label:Label;
 
+	private var _text:String;
+
 	/**
 		The text displayed by the text callout.
 
@@ -97,20 +99,20 @@ class TextCallout extends Callout implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:isVar
+	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
-		return this.text;
+		return this._text;
 	}
 
 	private function set_text(value:String):String {
-		if (this.text == value) {
-			return this.text;
+		if (this._text == value) {
+			return this._text;
 		}
-		this.text = value;
+		this._text = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.text;
+		return this._text;
 	}
 
 	/**
@@ -202,6 +204,6 @@ class TextCallout extends Callout implements ITextControl {
 	}
 
 	private function refreshText():Void {
-		this.label.text = this.text;
+		this.label.text = this._text;
 	}
 }

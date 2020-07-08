@@ -36,6 +36,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		super();
 	}
 
+	private var _value:Float = 0.0;
+
 	/**
 		The value of the slider, which must be between the `minimum` and the
 		`maximum`.
@@ -61,24 +63,26 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var value(get, set):Float = 0.0;
+	@:flash.property
+	public var value(get, set):Float;
 
 	private function get_value():Float {
-		return this.value;
+		return this._value;
 	}
 
 	private function set_value(value:Float):Float {
-		if (this.value == value) {
-			return this.value;
+		if (this._value == value) {
+			return this._value;
 		}
-		this.value = value;
+		this._value = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		if (this.liveDragging || !this._dragging) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
-		return this.value;
+		return this._value;
 	}
+
+	private var _minimum:Float = 0.0;
 
 	/**
 		The slider's value cannot be smaller than the minimum.
@@ -99,24 +103,27 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var minimum(get, set):Float = 0.0;
+	@:flash.property
+	public var minimum(get, set):Float;
 
 	private function get_minimum():Float {
-		return this.minimum;
+		return this._minimum;
 	}
 
 	private function set_minimum(value:Float):Float {
-		if (this.minimum == value) {
-			return this.minimum;
+		if (this._minimum == value) {
+			return this._minimum;
 		}
-		this.minimum = value;
-		if (this.initialized && this.value < this.minimum) {
-			this.value = this.minimum;
+		this._minimum = value;
+		if (this.initialized && this._value < this._minimum) {
+			// use the setter
+			this.value = this._minimum;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.minimum;
+		return this._minimum;
 	}
+
+	private var _maximum:Float = 0.0;
 
 	/**
 		The slider's value cannot be larger than the maximum.
@@ -137,24 +144,27 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var maximum(get, set):Float = 1.0;
+	@:flash.property
+	public var maximum(get, set):Float;
 
 	private function get_maximum():Float {
-		return this.maximum;
+		return this._maximum;
 	}
 
 	private function set_maximum(value:Float):Float {
-		if (this.maximum == value) {
-			return this.maximum;
+		if (this._maximum == value) {
+			return this._maximum;
 		}
-		this.maximum = value;
-		if (this.initialized && this.value > this.maximum) {
-			this.value = this.maximum;
+		this._maximum = value;
+		if (this.initialized && this._value > this._maximum) {
+			// use the setter
+			this.value = this._maximum;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.maximum;
+		return this._maximum;
 	}
+
+	private var _step:Float = 0.1;
 
 	/**
 		As the slider's thumb is dragged, the `value` is snapped to the nearest
@@ -177,15 +187,20 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
-	public var step(default, set):Float = 0.1;
+	@:flash.property
+	public var step(get, set):Float;
+
+	private function get_step():Float {
+		return this._step;
+	}
 
 	private function set_step(value:Float):Float {
-		if (this.step == value) {
-			return this.step;
+		if (this._step == value) {
+			return this._step;
 		}
-		this.step = value;
+		this._step = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.step;
+		return this._step;
 	}
 
 	/**
@@ -203,7 +218,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
-	public var liveDragging(default, default):Bool = true;
+	public var liveDragging:Bool = true;
 
 	private var thumbContainer:Sprite;
 	private var _currentThumbSkin:DisplayObject = null;
@@ -336,10 +351,12 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 	override private function initialize():Void {
 		super.initialize();
-		if (this.value < this.minimum) {
-			this.value = this.minimum;
-		} else if (this.value > this.maximum) {
-			this.value = this.maximum;
+		if (this._value < this._minimum) {
+			// use the setter
+			this.value = this._minimum;
+		} else if (this._value > this._maximum) {
+			// use the setter
+			this.value = this._maximum;
 		}
 	}
 
@@ -501,13 +518,13 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 	private function refreshEnabled():Void {
 		if (Std.is(this.thumbSkin, IUIControl)) {
-			cast(this.thumbSkin, IUIControl).enabled = this.enabled;
+			cast(this.thumbSkin, IUIControl).enabled = this._enabled;
 		}
 		if (Std.is(this.trackSkin, IUIControl)) {
-			cast(this.trackSkin, IUIControl).enabled = this.enabled;
+			cast(this.trackSkin, IUIControl).enabled = this._enabled;
 		}
 		if (Std.is(this.secondaryTrackSkin, IUIControl)) {
-			cast(this.secondaryTrackSkin, IUIControl).enabled = this.enabled;
+			cast(this.secondaryTrackSkin, IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -534,8 +551,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 	private function normalizeValue():Float {
 		var normalized = 1.0;
-		if (this.minimum != this.maximum) {
-			normalized = (this.value - this.minimum) / (this.maximum - this.minimum);
+		if (this._minimum != this._maximum) {
+			normalized = (this._value - this._minimum) / (this._maximum - this._minimum);
 			if (normalized < 0.0) {
 				normalized = 0.0;
 			} else if (normalized > 1) {
@@ -574,6 +591,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	private function thumbSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
+		// use the setter
 		this.value = this.locationToValue(location.x, location.y);
 	}
 
@@ -597,6 +615,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		this._pointerStartX = location.x;
 		this._pointerStartY = location.y;
 		this._dragging = true;
+		// use the setter
 		this.value = this.locationToValue(location.x, location.y);
 	}
 
@@ -604,6 +623,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
 
+		// use the setter
 		this.value = this.locationToValue(location.x, location.y);
 	}
 

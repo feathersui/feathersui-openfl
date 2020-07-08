@@ -58,21 +58,23 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	var mediaQueryList:MediaQueryList;
 	#end
 
-	@:isVar
-	public var darkMode(get, set):Bool = false;
+	private var _darkMode:Bool = false;
+
+	@:flash.property
+	public var darkMode(get, set):Bool;
 
 	private function get_darkMode():Bool {
-		return this.darkMode;
+		return this._darkMode;
 	}
 
 	private function set_darkMode(value:Bool):Bool {
-		if (this.darkMode == value) {
-			return this.darkMode;
+		if (this._darkMode == value) {
+			return this._darkMode;
 		}
-		this.darkMode = value;
+		this._darkMode = value;
 		this.refreshColors();
 		StyleProviderEvent.dispatch(this.styleProvider, StyleProviderEvent.STYLES_CHANGE);
-		return this.darkMode;
+		return this._darkMode;
 	}
 
 	private var customThemeColor:Null<Int>;
@@ -114,7 +116,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	#end
 
 	private function refreshColors():Void {
-		if (this.darkMode) {
+		if (this._darkMode) {
 			if (this.customDarkThemeColor != null) {
 				this.themeColor = this.customDarkThemeColor;
 			} else if (this.customThemeColor != null) {
@@ -247,7 +249,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getActiveThemeFill():FillStyle {
 		var colors = [this.themeColor, this.offsetThemeColor];
-		if (!this.darkMode) {
+		if (!this._darkMode) {
 			colors.reverse();
 		}
 		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
@@ -255,7 +257,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getReversedActiveThemeFill():FillStyle {
 		var colors = [this.themeColor, this.offsetThemeColor];
-		if (this.darkMode) {
+		if (this._darkMode) {
 			colors.reverse();
 		}
 		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);

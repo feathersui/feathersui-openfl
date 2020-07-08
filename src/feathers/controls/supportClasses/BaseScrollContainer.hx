@@ -826,12 +826,12 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function refreshEnabled():Void {
-		this.viewPort.enabled = this.enabled;
+		this.viewPort.enabled = this._enabled;
 		if (this.scrollBarX != null) {
-			this.scrollBarX.enabled = this.enabled;
+			this.scrollBarX.enabled = this._enabled;
 		}
 		if (this.scrollBarY != null) {
-			this.scrollBarY.enabled = this.enabled;
+			this.scrollBarY.enabled = this._enabled;
 		}
 	}
 
@@ -1236,7 +1236,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.disabledBackgroundSkin != null) {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
 			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
@@ -1495,7 +1495,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.isDefaultPrevented()) {
+		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
 

@@ -85,7 +85,7 @@ class VSlider extends BaseSlider {
 		var yPosition = Math.min(Math.max(0.0, this._thumbStartY + yOffset), trackScrollableHeight);
 		percentage = 1.0 - (yPosition / trackScrollableHeight);
 
-		return this.minimum + percentage * (this.maximum - this.minimum);
+		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
 
 	override private function measure():Bool {
@@ -202,26 +202,27 @@ class VSlider extends BaseSlider {
 		if (this.thumbSkin == null) {
 			return;
 		}
-		var thumbLocation = this.valueToLocation(this.value);
+		var thumbLocation = this.valueToLocation(this._value);
 		this.thumbSkin.x = Math.round((this.actualWidth - this.thumbSkin.width) / 2.0);
 		this.thumbSkin.y = thumbLocation;
 	}
 
 	private function vSlider_keyDownHandler(event:KeyboardEvent):Void {
-		var newValue = this.value;
+		var newValue = this._value;
 		switch (event.keyCode) {
 			case Keyboard.DOWN:
-				newValue -= this.step;
+				newValue -= this._step;
 			case Keyboard.UP:
-				newValue += this.step;
+				newValue += this._step;
 			case Keyboard.HOME:
-				newValue = this.minimum;
+				newValue = this._minimum;
 			case Keyboard.END:
-				newValue = this.maximum;
+				newValue = this._maximum;
 			default:
 				return;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.value = newValue;
 	}
 }

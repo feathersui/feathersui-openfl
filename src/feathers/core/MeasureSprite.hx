@@ -52,6 +52,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (this.scaleX != 1.0) {
 			value /= this.scaleX;
 		}
+		// use the setter here
 		this.explicitWidth = value;
 		#if !flash
 		return this.scaledActualWidth;
@@ -68,6 +69,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (this.scaleY != 1.0) {
 			value /= this.scaleY;
 		}
+		// use the setter here
 		this.explicitHeight = value;
 		#if !flash
 		return this.scaledActualHeight;
@@ -94,21 +96,23 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		#end
 	}
 
+	private var _explicitWidth:Null<Float> = null;
+
 	/**
 		@see `feathers.core.IMeasureObject.explicitWidth`
 	**/
-	@:isVar
-	public var explicitWidth(get, set):Null<Float> = null;
+	@:flash.property
+	public var explicitWidth(get, set):Null<Float>;
 
 	private function get_explicitWidth():Null<Float> {
-		return this.explicitWidth;
+		return this._explicitWidth;
 	}
 
 	private function set_explicitWidth(value:Null<Float>):Null<Float> {
-		if (this.explicitWidth == value) {
-			return this.explicitWidth;
+		if (this._explicitWidth == value) {
+			return this._explicitWidth;
 		}
-		this.explicitWidth = value;
+		this._explicitWidth = value;
 		if (value == null) {
 			if (this.actualWidth != 0.0) {
 				this.actualWidth = 0.0;
@@ -121,24 +125,26 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 				this.setInvalid(InvalidationFlag.SIZE);
 			}
 		}
-		return this.explicitWidth;
+		return this._explicitWidth;
 	}
+
+	private var _explicitHeight:Null<Float> = null;
 
 	/**
 		@see `feathers.core.IMeasureObject.explicitHeight`
 	**/
-	@:isVar
-	public var explicitHeight(get, set):Null<Float> = null;
+	@:flash.property
+	public var explicitHeight(get, set):Null<Float>;
 
 	private function get_explicitHeight():Null<Float> {
-		return this.explicitHeight;
+		return this._explicitHeight;
 	}
 
 	private function set_explicitHeight(value:Null<Float>):Null<Float> {
-		if (this.explicitHeight == value) {
-			return this.explicitHeight;
+		if (this._explicitHeight == value) {
+			return this._explicitHeight;
 		}
-		this.explicitHeight = value;
+		this._explicitHeight = value;
 		if (value == null) {
 			if (this.actualHeight != 0.0) {
 				this.actualHeight = 0.0;
@@ -151,25 +157,27 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 				this.setInvalid(InvalidationFlag.SIZE);
 			}
 		}
-		return this.explicitHeight;
+		return this._explicitHeight;
 	}
+
+	private var _explicitMinWidth:Null<Float> = null;
 
 	/**
 		@see `feathers.core.IMeasureObject.explicitMinWidth`
 	**/
-	@:isVar
-	public var explicitMinWidth(get, set):Null<Float> = null;
+	@:flash.property
+	public var explicitMinWidth(get, set):Null<Float>;
 
 	private function get_explicitMinWidth():Null<Float> {
-		return this.explicitMinWidth;
+		return this._explicitMinWidth;
 	}
 
 	private function set_explicitMinWidth(value:Null<Float>):Null<Float> {
-		if (this.explicitMinWidth == value) {
-			return this.explicitMinWidth;
+		if (this._explicitMinWidth == value) {
+			return this._explicitMinWidth;
 		}
-		var oldValue = this.explicitMinWidth;
-		this.explicitMinWidth = value;
+		var oldValue = this._explicitMinWidth;
+		this._explicitMinWidth = value;
 		if (value == null) {
 			this.actualMinWidth = 0.0;
 			this.scaledActualMinWidth = 0.0;
@@ -179,31 +187,33 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			// value for the comparisons below
 			var actualWidth = this.actualWidth;
 			this.saveMeasurements(this.actualWidth, this.actualHeight, value, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
-			if (this.explicitWidth == null && (actualWidth < value || actualWidth == oldValue)) {
+			if (this._explicitWidth == null && (actualWidth < value || actualWidth == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
 				this.setInvalid(InvalidationFlag.SIZE);
 			}
 		}
-		return this.explicitMinWidth;
+		return this._explicitMinWidth;
 	}
+
+	private var _explicitMinHeight:Null<Float> = null;
 
 	/**
 		@see `feathers.core.IMeasureObject.explicitMinHeight`
 	**/
-	@:isVar
-	public var explicitMinHeight(get, set):Null<Float> = null;
+	@:flash.property
+	public var explicitMinHeight(get, set):Null<Float>;
 
 	private function get_explicitMinHeight():Null<Float> {
-		return this.explicitMinHeight;
+		return this._explicitMinHeight;
 	}
 
 	private function set_explicitMinHeight(value:Null<Float>):Null<Float> {
-		if (this.explicitMinHeight == value) {
-			return this.explicitMinHeight;
+		if (this._explicitMinHeight == value) {
+			return this._explicitMinHeight;
 		}
-		var oldValue = this.explicitMinHeight;
-		this.explicitMinHeight = value;
+		var oldValue = this._explicitMinHeight;
+		this._explicitMinHeight = value;
 		if (value == null) {
 			this.actualMinHeight = 0.0;
 			this.scaledActualMinHeight = 0.0;
@@ -213,13 +223,13 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			// value for the comparisons below
 			var actualHeight = this.actualHeight;
 			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, value, this.actualMaxWidth, this.actualMaxHeight);
-			if (this.explicitHeight == null && (actualHeight < value || actualHeight == oldValue)) {
+			if (this._explicitHeight == null && (actualHeight < value || actualHeight == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
 				this.setInvalid(InvalidationFlag.SIZE);
 			}
 		}
-		return this.explicitMinHeight;
+		return this._explicitMinHeight;
 	}
 
 	/**
@@ -236,6 +246,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (this.scaleX != 1) {
 			value /= this.scaleX;
 		}
+		// use the setter here
 		this.explicitMinWidth = value;
 		return this.scaledActualMinWidth;
 	}
@@ -254,26 +265,29 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (this.scaleY != 1) {
 			value /= this.scaleY;
 		}
+		// use the setter here
 		this.explicitMinHeight = value;
 		return this.scaledActualMinHeight;
 	}
 
+	private var _explicitMaxWidth:Null<Float> = null;
+
 	/**
 		@see `feathers.core.IMeasureObject.explicitMaxWidth`
 	**/
-	@:isVar
-	public var explicitMaxWidth(get, set):Null<Float> = null;
+	@:flash.property
+	public var explicitMaxWidth(get, set):Null<Float>;
 
 	private function get_explicitMaxWidth():Null<Float> {
-		return this.explicitMaxWidth;
+		return this._explicitMaxWidth;
 	}
 
 	private function set_explicitMaxWidth(value:Null<Float>):Null<Float> {
-		if (this.explicitMaxWidth == value) {
-			return this.explicitMaxWidth;
+		if (this._explicitMaxWidth == value) {
+			return this._explicitMaxWidth;
 		}
-		var oldValue = this.explicitMaxWidth;
-		this.explicitMaxWidth = value;
+		var oldValue = this._explicitMaxWidth;
+		this._explicitMaxWidth = value;
 		if (value == null) {
 			this.actualMaxWidth = Math.POSITIVE_INFINITY;
 			this.scaledActualMaxWidth = Math.POSITIVE_INFINITY;
@@ -283,31 +297,33 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			// value for the comparisons below
 			var actualWidth = this.actualWidth;
 			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, value, this.actualMaxHeight);
-			if (this.explicitWidth == null && (actualWidth > value || actualWidth == oldValue)) {
+			if (this._explicitWidth == null && (actualWidth > value || actualWidth == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
 				this.setInvalid(InvalidationFlag.SIZE);
 			}
 		}
-		return this.explicitMaxWidth;
+		return this._explicitMaxWidth;
 	}
+
+	private var _explicitMaxHeight:Null<Float> = null;
 
 	/**
 		@see `feathers.core.IMeasureObject.explicitMaxHeight`
 	**/
-	@:isVar
-	public var explicitMaxHeight(get, set):Null<Float> = null;
+	@:flash.property
+	public var explicitMaxHeight(get, set):Null<Float>;
 
 	private function get_explicitMaxHeight():Null<Float> {
-		return this.explicitMaxHeight;
+		return this._explicitMaxHeight;
 	}
 
 	private function set_explicitMaxHeight(value:Null<Float>):Null<Float> {
-		if (this.explicitMaxHeight == value) {
-			return this.explicitMaxHeight;
+		if (this._explicitMaxHeight == value) {
+			return this._explicitMaxHeight;
 		}
-		var oldValue = this.explicitMaxHeight;
-		this.explicitMaxHeight = value;
+		var oldValue = this._explicitMaxHeight;
+		this._explicitMaxHeight = value;
 		if (value == null) {
 			this.actualMaxHeight = Math.POSITIVE_INFINITY;
 			this.scaledActualMaxHeight = Math.POSITIVE_INFINITY;
@@ -317,13 +333,13 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			// value for the comparisons below
 			var actualHeight = this.actualHeight;
 			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, value);
-			if (this.explicitHeight == null && (actualHeight > value || actualHeight == oldValue)) {
+			if (this._explicitHeight == null && (actualHeight > value || actualHeight == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
 				this.setInvalid(InvalidationFlag.SIZE);
 			}
 		}
-		return this.explicitMaxHeight;
+		return this._explicitMaxHeight;
 	}
 
 	/**
@@ -340,6 +356,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (this.scaleX != 1) {
 			value /= this.scaleX;
 		}
+		// use the setter here
 		this.explicitMaxWidth = value;
 		return this.scaledActualMaxWidth;
 	}
@@ -358,6 +375,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (this.scaleY != 1) {
 			value /= this.scaleY;
 		}
+		// use the setter here
 		this.explicitMaxHeight = value;
 		return this.scaledActualMaxHeight;
 	}
@@ -366,6 +384,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@see `feathers.core.IMeasureObject.resetWidth`
 	**/
 	public function resetWidth():Void {
+		// use the setter here
 		this.explicitWidth = null;
 	}
 
@@ -373,6 +392,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@see `feathers.core.IMeasureObject.resetHeight`
 	**/
 	public function resetHeight():Void {
+		// use the setter here
 		this.explicitHeight = null;
 	}
 
@@ -380,6 +400,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@see `feathers.core.IMeasureObject.resetMinWidth`
 	**/
 	public function resetMinWidth():Void {
+		// use the setter here
 		this.explicitMinWidth = null;
 	}
 
@@ -387,6 +408,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@see `feathers.core.IMeasureObject.resetMinHeight`
 	**/
 	public function resetMinHeight():Void {
+		// use the setter here
 		this.explicitMinHeight = null;
 	}
 
@@ -394,6 +416,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@see `feathers.core.IMeasureObject.resetMaxWidth`
 	**/
 	public function resetMaxWidth():Void {
+		// use the setter here
 		this.explicitMaxWidth = null;
 	}
 
@@ -401,6 +424,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		@see `feathers.core.IMeasureObject.resetMaxHeight`
 	**/
 	public function resetMaxHeight():Void {
+		// use the setter here
 		this.explicitMaxHeight = null;
 	}
 
@@ -421,20 +445,20 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		}
 		// if any of the dimensions were set explicitly, the explicit values must
 		// take precedence over the measured values
-		if (this.explicitMinWidth != null) {
-			minWidth = this.explicitMinWidth;
+		if (this._explicitMinWidth != null) {
+			minWidth = this._explicitMinWidth;
 		}
-		if (this.explicitMinHeight != null) {
-			minHeight = this.explicitMinHeight;
+		if (this._explicitMinHeight != null) {
+			minHeight = this._explicitMinHeight;
 		}
-		if (this.explicitMaxWidth != null) {
-			maxWidth = this.explicitMaxWidth;
+		if (this._explicitMaxWidth != null) {
+			maxWidth = this._explicitMaxWidth;
 		} else if (maxWidth == null) {
 			// since it's optional, this is our default
 			maxWidth = Math.POSITIVE_INFINITY;
 		}
-		if (this.explicitMaxHeight != null) {
-			maxHeight = this.explicitMaxHeight;
+		if (this._explicitMaxHeight != null) {
+			maxHeight = this._explicitMaxHeight;
 		} else if (maxHeight == null) {
 			// since it's optional, this is our default
 			maxHeight = Math.POSITIVE_INFINITY;
@@ -444,23 +468,23 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		// swapped because we'd prefer to avoid a situation where min > max
 		// but don't change anything that's explicit, even if it doesn't meet
 		// that preference.
-		if (this.explicitMaxWidth == null && maxWidth < minWidth) {
+		if (this._explicitMaxWidth == null && maxWidth < minWidth) {
 			maxWidth = minWidth;
 		}
-		if (this.explicitMinWidth == null && minWidth > maxWidth) {
+		if (this._explicitMinWidth == null && minWidth > maxWidth) {
 			minWidth = maxWidth;
 		}
-		if (this.explicitMaxHeight == null && maxHeight < minHeight) {
+		if (this._explicitMaxHeight == null && maxHeight < minHeight) {
 			maxHeight = minHeight;
 		}
-		if (this.explicitMinHeight == null && minHeight > maxHeight) {
+		if (this._explicitMinHeight == null && minHeight > maxHeight) {
 			minHeight = maxHeight;
 		}
 
 		// now, proceed with the final width and height values, based on the
 		// measurements passed in, and the adjustments to
-		if (this.explicitWidth != null) {
-			width = this.explicitWidth;
+		if (this._explicitWidth != null) {
+			width = this._explicitWidth;
 		} else {
 			if (width < minWidth) {
 				width = minWidth;
@@ -468,8 +492,8 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 				width = maxWidth;
 			}
 		}
-		if (this.explicitHeight != null) {
-			height = this.explicitHeight;
+		if (this._explicitHeight != null) {
+			height = this._explicitHeight;
 		} else {
 			if (height < minHeight) {
 				height = minHeight;

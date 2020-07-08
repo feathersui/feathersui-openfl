@@ -73,6 +73,8 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextStyles = false;
 
+	private var _text:String;
+
 	/**
 		The text displayed by the button.
 
@@ -88,20 +90,20 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 		@since 1.0.0
 	**/
-	@:isVar
+	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
-		return this.text;
+		return this._text;
 	}
 
 	private function set_text(value:String):String {
-		if (this.text == value) {
-			return this.text;
+		if (this._text == value) {
+			return this._text;
 		}
-		this.text = value;
+		this._text = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.text;
+		return this._text;
 	}
 
 	/**
@@ -488,7 +490,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			return false;
 		}
 
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
 			this.refreshTextFieldDimensions(true);
 		}
@@ -584,10 +586,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentWidth = this.text != null ? this._textMeasuredWidth : 0.0;
+		var contentWidth = this._text != null ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -604,10 +606,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			adjustedGap = this.minGap;
 		}
 
-		var contentHeight = this.text != null ? this._textMeasuredHeight : 0.0;
+		var contentHeight = this._text != null ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentHeight += adjustedGap;
 				}
 				contentHeight += this._currentIcon.height;
@@ -623,10 +625,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinWidth = this.text != null ? this._textMeasuredWidth : 0.0;
+		var contentMinWidth = this._text != null ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -642,10 +644,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinHeight = this.text != null ? this._textMeasuredHeight : 0.0;
+		var contentMinHeight = this._text != null ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentMinHeight += adjustedGap;
 				}
 				contentMinHeight += this._currentIcon.height;
@@ -674,14 +676,14 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	private function refreshText():Void {
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		this.textField.visible = hasText;
-		if (this.text == this._previousText && !this._updatedTextStyles) {
+		if (this._text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
 		}
 		if (hasText) {
-			this.textField.text = this.text;
+			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
@@ -692,11 +694,11 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (!hasText) {
 			this.textField.text = "";
 		}
-		this._previousText = this.text;
+		this._previousText = this._text;
 	}
 
 	private function getCurrentTextFormat():TextFormat {
-		var result = this._stateToTextFormat.get(this.currentState);
+		var result = this._stateToTextFormat.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
@@ -706,7 +708,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	private function layoutContent():Void {
 		this.refreshTextFieldDimensions(false);
 
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		var iconIsInLayout = this._currentIcon != null && this.iconPosition != MANUAL;
 		if (hasText && iconIsInLayout) {
 			this.positionSingleChild(this.textField);
@@ -725,7 +727,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
-		if (this.text == null || this.text.length == 0) {
+		if (this._text == null || this._text.length == 0) {
 			return;
 		}
 
@@ -895,7 +897,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	private function getCurrentIcon():DisplayObject {
-		var result = this._stateToIcon.get(this.currentState);
+		var result = this._stateToIcon.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
@@ -918,7 +920,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	private function button_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || (this.buttonMode && this.focusRect == true)) {
+		if (!this._enabled || (this.buttonMode && this.focusRect == true)) {
 			return;
 		}
 		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {

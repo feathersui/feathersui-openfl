@@ -29,6 +29,7 @@ interface IUIControl extends IDisplayObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var enabled(get, set):Bool;
 
 	/**

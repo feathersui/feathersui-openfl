@@ -62,6 +62,8 @@ class Application extends LayoutGroup {
 	**/
 	public var scaleFactor(default, null):Float = 1.0;
 
+	private var _customScale:Null<Float> = null;
+
 	/**
 		Instead of calculating the scale factor automatically, an application
 		may be given a custom scale factor. Using this scale factor, the
@@ -76,15 +78,20 @@ class Application extends LayoutGroup {
 
 		@since 1.0.0
 	**/
-	public var customScale(default, set):Null<Float> = null;
+	@:flash.property
+	public var customScale(get, set):Null<Float>;
+
+	private function get_customScale():Null<Float> {
+		return this._customScale;
+	}
 
 	private function set_customScale(value:Null<Float>):Null<Float> {
-		if (this.customScale == value) {
-			return this.customScale;
+		if (this._customScale == value) {
+			return this._customScale;
 		}
-		this.customScale = value;
+		this._customScale = value;
 		this.refreshDimensions();
-		return this.customScale;
+		return this._customScale;
 	}
 
 	/**
@@ -108,8 +115,8 @@ class Application extends LayoutGroup {
 		if (this.stage == null) {
 			return result;
 		}
-		if (this.customScale != null) {
-			result = this.customScale;
+		if (this._customScale != null) {
+			result = this._customScale;
 		} else {
 			#if ((desktop && !air) || (web && !flash))
 			this._scaler = null;

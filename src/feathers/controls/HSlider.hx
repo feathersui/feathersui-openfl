@@ -83,7 +83,7 @@ class HSlider extends BaseSlider {
 		var xOffset = x - this._pointerStartX - this.minimumPadding;
 		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
 		percentage = xPosition / trackScrollableWidth;
-		return this.minimum + percentage * (this.maximum - this.minimum);
+		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
 
 	override private function measure():Bool {
@@ -199,26 +199,27 @@ class HSlider extends BaseSlider {
 		if (this.thumbSkin == null) {
 			return;
 		}
-		var thumbLocation = this.valueToLocation(this.value);
+		var thumbLocation = this.valueToLocation(this._value);
 		this.thumbSkin.x = thumbLocation;
 		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2.0);
 	}
 
 	private function hSlider_keyDownHandler(event:KeyboardEvent):Void {
-		var newValue = this.value;
+		var newValue = this._value;
 		switch (event.keyCode) {
 			case Keyboard.LEFT:
-				newValue -= this.step;
+				newValue -= this._step;
 			case Keyboard.RIGHT:
-				newValue += this.step;
+				newValue += this._step;
 			case Keyboard.HOME:
-				newValue = this.minimum;
+				newValue = this._minimum;
 			case Keyboard.END:
-				newValue = this.maximum;
+				newValue = this._maximum;
 			default:
 				return;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.value = newValue;
 	}
 }

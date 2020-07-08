@@ -44,6 +44,8 @@ class ItemRenderer extends ToggleButton {
 	private var _previousSecondaryTextFormat:TextFormat = null;
 	private var _updatedSecondaryTextStyles = false;
 
+	private var _secondaryText:String;
+
 	/**
 		The optional secondary text displayed by the item renderer.
 
@@ -59,20 +61,20 @@ class ItemRenderer extends ToggleButton {
 
 		@since 1.0.0
 	**/
-	@:isVar
+	@:flash.property
 	public var secondaryText(get, set):String;
 
 	private function get_secondaryText():String {
-		return this.secondaryText;
+		return this._secondaryText;
 	}
 
 	private function set_secondaryText(value:String):String {
-		if (this.secondaryText == value) {
-			return this.secondaryText;
+		if (this._secondaryText == value) {
+			return this._secondaryText;
 		}
-		this.secondaryText = value;
+		this._secondaryText = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.secondaryText;
+		return this._secondaryText;
 	}
 
 	/**
@@ -236,7 +238,7 @@ class ItemRenderer extends ToggleButton {
 	}
 
 	private function refreshSecondaryTextField():Void {
-		if (this.secondaryText == null) {
+		if (this._secondaryText == null) {
 			if (this.secondaryTextField != null) {
 				this.removeChild(this.secondaryTextField);
 				this.secondaryTextField = null;
@@ -276,14 +278,14 @@ class ItemRenderer extends ToggleButton {
 		if (this.secondaryTextField == null) {
 			return;
 		}
-		var hasText = this.secondaryText != null && this.secondaryText.length > 0;
+		var hasText = this._secondaryText != null && this._secondaryText.length > 0;
 		this.secondaryTextField.visible = hasText;
-		if (this.secondaryText == this._previousSecondaryText && !this._updatedSecondaryTextStyles) {
+		if (this._secondaryText == this._previousSecondaryText && !this._updatedSecondaryTextStyles) {
 			// nothing to refresh
 			return;
 		}
 		if (hasText) {
-			this.secondaryTextField.text = this.secondaryText;
+			this.secondaryTextField.text = this._secondaryText;
 		} else {
 			this.secondaryTextField.text = "\u8203"; // zero-width space
 		}
@@ -294,18 +296,18 @@ class ItemRenderer extends ToggleButton {
 		if (!hasText) {
 			this.secondaryTextField.text = "";
 		}
-		this._previousSecondaryText = this.secondaryText;
+		this._previousSecondaryText = this._secondaryText;
 	}
 
 	private function getCurrentSecondaryTextFormat():TextFormat {
-		var result = this._stateToSecondaryTextFormat.get(this.currentState);
+		var result = this._stateToSecondaryTextFormat.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
-		if (!this.enabled && this.disabledSecondaryTextFormat != null) {
+		if (!this._enabled && this.disabledSecondaryTextFormat != null) {
 			return this.disabledSecondaryTextFormat;
 		}
-		if (this.selected && this.selectedSecondaryTextFormat != null) {
+		if (this._selected && this.selectedSecondaryTextFormat != null) {
 			return this.selectedSecondaryTextFormat;
 		}
 		return this.secondaryTextFormat;
@@ -335,7 +337,7 @@ class ItemRenderer extends ToggleButton {
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
-		if (this.text == null || this.text.length == 0) {
+		if (this._text == null || this._text.length == 0) {
 			return;
 		}
 
@@ -401,13 +403,13 @@ class ItemRenderer extends ToggleButton {
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentWidth = this.text != null ? this._textMeasuredWidth : 0.0;
-		if (this.secondaryText != null) {
+		var contentWidth = this._text != null ? this._textMeasuredWidth : 0.0;
+		if (this._secondaryText != null) {
 			contentWidth = Math.max(contentWidth, this._secondaryTextMeasuredWidth);
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -424,16 +426,16 @@ class ItemRenderer extends ToggleButton {
 			adjustedGap = this.minGap;
 		}
 
-		var contentHeight = this.text != null ? this._textMeasuredHeight : 0.0;
-		if (this.secondaryText != null) {
+		var contentHeight = this._text != null ? this._textMeasuredHeight : 0.0;
+		if (this._secondaryText != null) {
 			contentHeight += this._secondaryTextMeasuredHeight;
-			if (this.text != null) {
+			if (this._text != null) {
 				contentHeight += adjustedGap;
 			}
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentHeight += adjustedGap;
 				}
 				contentHeight += this._currentIcon.height;
@@ -449,13 +451,13 @@ class ItemRenderer extends ToggleButton {
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinWidth = this.text != null ? this._textMeasuredWidth : 0.0;
-		if (this.secondaryText != null) {
+		var contentMinWidth = this._text != null ? this._textMeasuredWidth : 0.0;
+		if (this._secondaryText != null) {
 			contentMinWidth = Math.max(contentMinWidth, this._secondaryTextMeasuredWidth);
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -471,16 +473,16 @@ class ItemRenderer extends ToggleButton {
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinHeight = this.text != null ? this._textMeasuredHeight : 0.0;
-		if (this.secondaryText != null) {
+		var contentMinHeight = this._text != null ? this._textMeasuredHeight : 0.0;
+		if (this._secondaryText != null) {
 			contentMinHeight += this._secondaryTextMeasuredHeight;
-			if (this.text != null) {
+			if (this._text != null) {
 				contentMinHeight += adjustedGap;
 			}
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentMinHeight += adjustedGap;
 				}
 				contentMinHeight += this._currentIcon.height;
@@ -526,13 +528,13 @@ class ItemRenderer extends ToggleButton {
 	}
 
 	override private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			event.stopImmediatePropagation();
 			return;
 		}
-		if (!this.toggleable || this.selected) {
+		if (!this.toggleable || this._selected) {
 			return;
 		}
-		this.selected = !this.selected;
+		this.selected = !this._selected;
 	}
 }

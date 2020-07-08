@@ -36,7 +36,8 @@ interface ILayoutObject extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var includeInLayout(default, set):Bool;
+	@:flash.property
+	public var includeInLayout(get, set):Bool;
 
 	/**
 		Optional, extra data used by some `ILayout` implementations.
@@ -48,5 +49,6 @@ interface ILayoutObject extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var layoutData(default, set):ILayoutData;
+	@:flash.property
+	public var layoutData(get, set):ILayoutData;
 }

@@ -23,6 +23,7 @@ interface ITreeViewItemRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var location(get, set):Array<Int>;
 
 	/**
@@ -30,5 +31,6 @@ interface ITreeViewItemRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var branch(get, set):Bool;
 }

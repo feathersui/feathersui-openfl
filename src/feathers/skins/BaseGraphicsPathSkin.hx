@@ -40,33 +40,40 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	private var _previousBorder:LineStyle = null;
 	private var _previousFill:FillStyle = null;
 
+	private var _stateContext:IStateContext<Dynamic>;
+
 	/**
 		An optional `IStateContext` that is used to change the styles of the
 		skin when its state changes.
 
 		@since 1.0.0
 	**/
-	public var stateContext(default, set):IStateContext<Dynamic>;
+	@:flash.property
+	public var stateContext(get, set):IStateContext<Dynamic>;
+
+	private function get_stateContext():IStateContext<Dynamic> {
+		return this._stateContext;
+	}
 
 	private function set_stateContext(value:IStateContext<Dynamic>):IStateContext<Dynamic> {
-		if (this.stateContext == value) {
-			return this.stateContext;
+		if (this._stateContext == value) {
+			return this._stateContext;
 		}
-		if (this.stateContext != null) {
-			this.stateContext.removeEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler);
-			if (Std.is(this.stateContext, IToggle)) {
-				this.stateContext.removeEventListener(Event.CHANGE, stateContextToggle_changeHandler);
+		if (this._stateContext != null) {
+			this._stateContext.removeEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler);
+			if (Std.is(this._stateContext, IToggle)) {
+				this._stateContext.removeEventListener(Event.CHANGE, stateContextToggle_changeHandler);
 			}
 		}
-		this.stateContext = value;
-		if (this.stateContext != null) {
-			this.stateContext.addEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler, false, 0, true);
-			if (Std.is(this.stateContext, IToggle)) {
-				this.stateContext.addEventListener(Event.CHANGE, stateContextToggle_changeHandler);
+		this._stateContext = value;
+		if (this._stateContext != null) {
+			this._stateContext.addEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler, false, 0, true);
+			if (Std.is(this._stateContext, IToggle)) {
+				this._stateContext.addEventListener(Event.CHANGE, stateContextToggle_changeHandler);
 			}
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.stateContext;
+		return this._stateContext;
 	}
 
 	private var _stateToFill:Map<EnumValue, FillStyle>;
@@ -433,23 +440,23 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	}
 
 	private function getCurrentBorderWithoutCache():LineStyle {
-		if (this.stateContext == null) {
+		if (this._stateContext == null) {
 			return this.border;
 		}
 		if (this._stateToBorder != null) {
-			var result = this._stateToBorder.get(this.stateContext.currentState);
+			var result = this._stateToBorder.get(this._stateContext.currentState);
 			if (result != null) {
 				return result;
 			}
 		}
-		if (this.disabledBorder != null && Std.is(this.stateContext, IUIControl)) {
-			var control = cast(this.stateContext, IUIControl);
+		if (this.disabledBorder != null && Std.is(this._stateContext, IUIControl)) {
+			var control = cast(this._stateContext, IUIControl);
 			if (!control.enabled) {
 				return this.disabledBorder;
 			}
 		}
-		if (this.selectedBorder != null && Std.is(this.stateContext, IToggle)) {
-			var toggle = cast(this.stateContext, IToggle);
+		if (this.selectedBorder != null && Std.is(this._stateContext, IToggle)) {
+			var toggle = cast(this._stateContext, IToggle);
 			if (toggle.selected) {
 				return this.selectedBorder;
 			}
@@ -476,23 +483,23 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 	}
 
 	private function getCurrentFillWithoutCache() {
-		if (this.stateContext == null) {
+		if (this._stateContext == null) {
 			return this.fill;
 		}
 		if (this._stateToFill != null) {
-			var result = this._stateToFill.get(this.stateContext.currentState);
+			var result = this._stateToFill.get(this._stateContext.currentState);
 			if (result != null) {
 				return result;
 			}
 		}
-		if (this.disabledFill != null && Std.is(this.stateContext, IUIControl)) {
-			var control = cast(this.stateContext, IUIControl);
+		if (this.disabledFill != null && Std.is(this._stateContext, IUIControl)) {
+			var control = cast(this._stateContext, IUIControl);
 			if (!control.enabled) {
 				return this.disabledFill;
 			}
 		}
-		if (this.selectedFill != null && Std.is(this.stateContext, IToggle)) {
-			var toggle = cast(this.stateContext, IToggle);
+		if (this.selectedFill != null && Std.is(this._stateContext, IToggle)) {
+			var toggle = cast(this._stateContext, IToggle);
 			if (toggle.selected) {
 				return this.selectedFill;
 			}

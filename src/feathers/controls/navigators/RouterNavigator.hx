@@ -332,7 +332,7 @@ class RouterNavigator extends BaseNavigator {
 	}
 	#else
 	private function routerNavigator_stage_keyUpHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		switch (event.keyCode) {

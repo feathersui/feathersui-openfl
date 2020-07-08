@@ -41,76 +41,84 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		this.mouseChildren = true;
 	}
 
+	private var _data:Dynamic;
+
 	/**
 		@since 1.0.0
 	**/
-	@:isVar
+	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
-		return this.data;
+		return this._data;
 	}
 
 	private function set_data(value:Dynamic):Dynamic {
-		if (this.data == value) {
-			return this.data;
+		if (this._data == value) {
+			return this._data;
 		}
-		this.data = value;
+		this._data = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.data;
+		return this._data;
 	}
 
-	@:isVar
+	private var _location:Array<Int>;
+
+	@:flash.property
 	public var location(get, set):Array<Int>;
 
 	private function get_location():Array<Int> {
-		return this.location;
+		return this._location;
 	}
 
 	private function set_location(value:Array<Int>):Array<Int> {
-		if (this.location == value) {
-			return this.location;
+		if (this._location == value) {
+			return this._location;
 		}
-		this.location = value;
+		this._location = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.location;
+		return this._location;
 	}
 
-	@:isVar
+	private var _branch:Bool = false;
+
+	@:flash.property
 	public var branch(get, set):Bool;
 
 	private function get_branch():Bool {
-		return this.branch;
+		return this._branch;
 	}
 
 	private function set_branch(value:Bool):Bool {
-		if (this.branch == value) {
-			return this.branch;
+		if (this._branch == value) {
+			return this._branch;
 		}
-		this.branch = value;
+		this._branch = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.branch;
+		return this._branch;
 	}
 
-	@:isVar
+	private var _opened:Bool = false;
+
+	@:flash.property
 	public var opened(get, set):Bool;
 
 	private function get_opened():Bool {
-		return this.opened;
+		return this._opened;
 	}
 
 	private function set_opened(value:Bool):Bool {
-		if (this.opened == value) {
-			return this.opened;
+		if (this._opened == value) {
+			return this._opened;
 		}
-		this.opened = value;
+		this._opened = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		if (this.opened) {
+		if (this._opened) {
 			FeathersEvent.dispatch(this, Event.OPEN);
 		} else {
 			FeathersEvent.dispatch(this, Event.CLOSE);
 		}
-		return this.opened;
+		return this._opened;
 	}
 
 	private var _ignoreOpenCloseChange = false;
@@ -131,10 +139,10 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	}
 
 	override private function update():Void {
-		this.disclosureButton.visible = this.branch;
+		this.disclosureButton.visible = this._branch;
 		var oldIgnoreOpenCloseChange = this._ignoreOpenCloseChange;
 		this._ignoreOpenCloseChange = true;
-		this.disclosureButton.selected = this.opened;
+		this.disclosureButton.selected = this._opened;
 		this._ignoreOpenCloseChange = oldIgnoreOpenCloseChange;
 		super.update();
 	}
@@ -144,8 +152,8 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		var paddingLeft = this.paddingLeft;
 		var disclosureGap = this.gap;
 		var depth = 0;
-		if (this.location != null) {
-			depth = this.location.length - 1;
+		if (this._location != null) {
+			depth = this._location.length - 1;
 		}
 		var indent = this.indentation * depth;
 		@:bypassAccessor this.paddingLeft = paddingLeft + indent + this.disclosureButton.width + disclosureGap;
@@ -163,6 +171,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		if (this._ignoreOpenCloseChange) {
 			return;
 		}
+		// use the setter
 		this.opened = this.disclosureButton.selected;
 	}
 }

@@ -51,6 +51,8 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 	private var _ignoreChanges:Bool = false;
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		The index of the currently selected toggle.
 
@@ -69,11 +71,11 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
@@ -82,8 +84,8 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 			throw new RangeError("Index " + value + " is out of range " + itemCount + " for ToggleGroup.");
 		}
 
-		var hasChanged = this.selectedIndex != value;
-		this.selectedIndex = value;
+		var hasChanged = this._selectedIndex != value;
+		this._selectedIndex = value;
 
 		// refresh all of the items
 		var oldIgnoreChanges = this._ignoreChanges;
@@ -101,12 +103,13 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 			// item (happens below in the item's onChange listener).
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -131,16 +134,18 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var selectedItem(get, set):IToggle;
 
 	private function get_selectedItem():IToggle {
-		if (this.selectedIndex == -1) {
+		if (this._selectedIndex == -1) {
 			return null;
 		}
-		return this._items[this.selectedIndex];
+		return this._items[this._selectedIndex];
 	}
 
 	private function set_selectedItem(value:IToggle):IToggle {
+		// use the setter
 		this.selectedIndex = this._items.indexOf(value);
 		return this.selectedItem;
 	}
@@ -171,7 +176,8 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 			return this.requireSelection;
 		}
 		this.requireSelection = value;
-		if (this.requireSelection && this.selectedIndex == -1 && this._items.length > 0) {
+		if (this.requireSelection && this._selectedIndex == -1 && this._items.length > 0) {
+			// use the setter
 			this.selectedIndex = 0;
 		}
 		return this.requireSelection;
@@ -203,7 +209,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		this._items.push(item);
 		if (item.selected) {
 			this.selectedItem = item;
-		} else if (this.selectedIndex < 0 && this.requireSelection) {
+		} else if (this._selectedIndex < 0 && this.requireSelection) {
 			this.selectedItem = item;
 		} else {
 			item.selected = false;
@@ -241,17 +247,17 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		if (Std.is(item, IGroupedToggle)) {
 			cast(item, IGroupedToggle).toggleGroup = null;
 		}
-		if (this.selectedIndex > index) {
+		if (this._selectedIndex > index) {
 			// the same item is selected, but its index has changed.
-			this.selectedIndex -= 1;
+			this.selectedIndex -= 1; // use the setter
 		} else if (this.selectedIndex == index) {
 			if (this.requireSelection) {
 				var maxSelectedIndex = this._items.length - 1;
-				if (this.selectedIndex > maxSelectedIndex) {
+				if (this._selectedIndex > maxSelectedIndex) {
 					// we want to keep the same index, if possible, but if
 					// we can't because it is too high, we should select the
 					// next highest item.
-					this.selectedIndex = maxSelectedIndex;
+					this.selectedIndex = maxSelectedIndex; // use the setter
 				} else {
 					// we need to manually dispatch the change event because
 					// the selected index hasn't changed, but the selected
@@ -261,7 +267,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 			} else {
 				// selection isn't required, and we just removed the selected
 				// item, so no item should be selected.
-				this.selectedIndex = -1;
+				this.selectedIndex = -1; // use the setter
 			}
 		}
 	}
@@ -285,6 +291,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 			}
 		}
 		this._items.resize(0);
+		// use the setter
 		this.selectedIndex = -1;
 	}
 
@@ -363,12 +370,15 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		}
 		this._items.remove(item);
 		this._items.insert(index, item);
-		if (this.selectedIndex >= 0) {
-			if (this.selectedIndex == oldIndex) {
+		if (this._selectedIndex >= 0) {
+			if (this._selectedIndex == oldIndex) {
+				// use the setter
 				this.selectedIndex = index;
-			} else if (oldIndex < this.selectedIndex && index > this.selectedIndex) {
+			} else if (oldIndex < this._selectedIndex && index > this._selectedIndex) {
+				// use the setter
 				this.selectedIndex--;
-			} else if (oldIndex > this.selectedIndex && index < this.selectedIndex) {
+			} else if (oldIndex > this._selectedIndex && index < this._selectedIndex) {
+				// use the setter
 				this.selectedIndex++;
 			}
 		}
@@ -383,8 +393,9 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		var index = this._items.indexOf(item);
 		if (item.selected || (this.requireSelection && this.selectedIndex == index)) {
 			// don't let it deselect the item
-			this.selectedIndex = index;
+			this.selectedIndex = index; // use the setter
 		} else if (!item.selected) {
+			// use the setter
 			this.selectedIndex = -1;
 		}
 	}

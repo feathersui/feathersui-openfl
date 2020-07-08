@@ -473,7 +473,7 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	private function stackNavigator_stage_keyUpHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		switch (event.keyCode) {

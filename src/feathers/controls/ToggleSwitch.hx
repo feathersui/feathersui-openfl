@@ -80,6 +80,8 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
 	}
 
+	private var _selected:Bool = false;
+
 	/**
 		Indicates if the toggle switch is selected or not.
 
@@ -99,22 +101,22 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var selected(get, set):Bool = false;
+	@:flash.property
+	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
-		return this.selected;
+		return this._selected;
 	}
 
 	private function set_selected(value:Bool):Bool {
 		this._animateSelectionChange = false;
-		if (this.selected == value) {
-			return this.selected;
+		if (this._selected == value) {
+			return this._selected;
 		}
-		this.selected = value;
+		this._selected = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		this.setInvalid(InvalidationFlag.SELECTION);
-		return this.selected;
+		return this._selected;
 	}
 
 	private var _currentThumbSkin:DisplayObject = null;
@@ -273,12 +275,12 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		@see `ToggleSwitch.selected`
 	**/
 	public function setSelectionWithAnimation(selected:Bool):Bool {
-		if (this.selected == selected) {
-			return this.selected;
+		if (this._selected == selected) {
+			return this._selected;
 		}
 		this.selected = selected;
 		this._animateSelectionChange = true;
-		return this.selected;
+		return this._selected;
 	}
 
 	private function initializeToggleSwitchTheme():Void {
@@ -447,13 +449,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 	private function refreshSelection():Void {
 		if (Std.is(this.thumbSkin, IToggle)) {
-			cast(this.thumbSkin, IToggle).selected = this.selected;
+			cast(this.thumbSkin, IToggle).selected = this._selected;
 		}
 		if (Std.is(this.trackSkin, IToggle)) {
-			cast(this.trackSkin, IToggle).selected = this.selected;
+			cast(this.trackSkin, IToggle).selected = this._selected;
 		}
 		if (Std.is(this.secondaryTrackSkin, IToggle)) {
-			cast(this.secondaryTrackSkin, IToggle).selected = this.selected;
+			cast(this.secondaryTrackSkin, IToggle).selected = this._selected;
 		}
 
 		// stop the tween, no matter what
@@ -465,13 +467,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 	private function refreshEnabled():Void {
 		if (Std.is(this.thumbSkin, IUIControl)) {
-			cast(this.thumbSkin, IUIControl).enabled = this.enabled;
+			cast(this.thumbSkin, IUIControl).enabled = this._enabled;
 		}
 		if (Std.is(this.trackSkin, IUIControl)) {
-			cast(this.trackSkin, IUIControl).enabled = this.enabled;
+			cast(this.trackSkin, IUIControl).enabled = this._enabled;
 		}
 		if (Std.is(this.secondaryTrackSkin, IUIControl)) {
-			cast(this.secondaryTrackSkin, IUIControl).enabled = this.enabled;
+			cast(this.secondaryTrackSkin, IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -490,7 +492,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 
 		var xPosition = this.paddingLeft;
-		if (this.selected) {
+		if (this._selected) {
 			xPosition = this.actualWidth - this.thumbSkin.width - this.paddingRight;
 		}
 
@@ -545,7 +547,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function toggleSwitch_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || (this.buttonMode && this.focusRect == true)) {
+		if (!this._enabled || (this.buttonMode && this.focusRect == true)) {
 			return;
 		}
 		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
@@ -555,7 +557,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function toggleSwitch_mouseDownHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		this._dragStartX = this.mouseX;
@@ -565,26 +567,26 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function toggleSwitch_clickHandler(event:MouseEvent):Void {
-		if (!this.enabled || this._ignoreClick) {
+		if (!this._enabled || this._ignoreClick) {
 			return;
 		}
-		this.setSelectionWithAnimation(!this.selected);
+		this.setSelectionWithAnimation(!this._selected);
 	}
 
 	private function toggleSwitch_stage_mouseMoveHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 
 		var halfDistance = (this.actualWidth - this.paddingLeft - this.paddingRight) / 2.0;
 		var dragOffset = this.mouseX - this._dragStartX;
-		var selected = this.selected;
+		var selected = this._selected;
 		if (dragOffset >= halfDistance) {
 			selected = true;
 		} else if (dragOffset <= -halfDistance) {
 			selected = false;
 		}
-		if (this.selected != selected) {
+		if (this._selected != selected) {
 			this._ignoreClick = true;
 			this._dragStartX = this.mouseX;
 			this.setSelectionWithAnimation(selected);

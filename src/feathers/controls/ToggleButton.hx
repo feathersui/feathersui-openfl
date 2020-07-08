@@ -71,6 +71,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextStyles = false;
 
+	private var _text:String;
+
 	/**
 		The text displayed by the button.
 
@@ -86,20 +88,20 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		@since 1.0.0
 	**/
-	@:isVar
+	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
-		return this.text;
+		return this._text;
 	}
 
 	private function set_text(value:String):String {
-		if (this.text == value) {
-			return this.text;
+		if (this._text == value) {
+			return this._text;
 		}
-		this.text = value;
+		this._text = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.text;
+		return this._text;
 	}
 
 	private var _stateToIcon:Map<ToggleButtonState, DisplayObject> = new Map();
@@ -624,7 +626,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			return false;
 		}
 
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
 			this.refreshTextFieldDimensions(true);
 		}
@@ -720,10 +722,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentWidth = this.text != null ? this._textMeasuredWidth : 0.0;
+		var contentWidth = this._text != null ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -740,10 +742,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			adjustedGap = this.minGap;
 		}
 
-		var contentHeight = this.text != null ? this._textMeasuredHeight : 0.0;
+		var contentHeight = this._text != null ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentHeight += adjustedGap;
 				}
 				contentHeight += this._currentIcon.height;
@@ -759,10 +761,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinWidth = this.text != null ? this._textMeasuredWidth : 0.0;
+		var contentMinWidth = this._text != null ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -778,10 +780,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (adjustedGap == Math.POSITIVE_INFINITY) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinHeight = this.text != null ? this._textMeasuredHeight : 0.0;
+		var contentMinHeight = this._text != null ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this.text != null) {
+				if (this._text != null) {
 					contentMinHeight += adjustedGap;
 				}
 				contentMinHeight += this._currentIcon.height;
@@ -810,14 +812,14 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function refreshText():Void {
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		this.textField.visible = hasText;
-		if (this.text == this._previousText && !this._updatedTextStyles) {
+		if (this._text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
 		}
 		if (hasText) {
-			this.textField.text = this.text;
+			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
@@ -828,18 +830,18 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (!hasText) {
 			this.textField.text = "";
 		}
-		this._previousText = this.text;
+		this._previousText = this._text;
 	}
 
 	private function getCurrentTextFormat():TextFormat {
-		var result = this._stateToTextFormat.get(this.currentState);
+		var result = this._stateToTextFormat.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
-		if (!this.enabled && this.disabledTextFormat != null) {
+		if (!this._enabled && this.disabledTextFormat != null) {
 			return this.disabledTextFormat;
 		}
-		if (this.selected && this.selectedTextFormat != null) {
+		if (this._selected && this.selectedTextFormat != null) {
 			return this.selectedTextFormat;
 		}
 		return this.textFormat;
@@ -848,7 +850,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	private function layoutContent():Void {
 		this.refreshTextFieldDimensions(false);
 
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		var iconIsInLayout = this._currentIcon != null && this.iconPosition != MANUAL;
 		if (hasText && iconIsInLayout) {
 			this.positionSingleChild(this.textField);
@@ -867,7 +869,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
-		if (this.text == null || this.text.length == 0) {
+		if (this._text == null || this._text.length == 0) {
 			return;
 		}
 
@@ -1037,14 +1039,14 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function getCurrentIcon():DisplayObject {
-		var result = this._stateToIcon.get(this.currentState);
+		var result = this._stateToIcon.get(this._currentState);
 		if (result != null) {
 			return result;
 		}
-		if (!this.enabled && this.disabledIcon != null) {
+		if (!this._enabled && this.disabledIcon != null) {
 			return this.disabledIcon;
 		}
-		if (this.selected && this.selectedIcon != null) {
+		if (this._selected && this.selectedIcon != null) {
 			return this.selectedIcon;
 		}
 		return this.icon;
@@ -1066,7 +1068,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function toggleButton_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || (this.buttonMode && this.focusRect == true)) {
+		if (!this._enabled || (this.buttonMode && this.focusRect == true)) {
 			return;
 		}
 		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {

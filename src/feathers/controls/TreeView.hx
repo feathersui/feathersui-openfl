@@ -170,8 +170,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	override private function get_focusEnabled():Bool {
 		return (this.selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
-			&& this.enabled
-			&& this.focusEnabled;
+			&& this._enabled
+			&& this._focusEnabled;
 	}
 
 	private var openBranches:Array<Dynamic> = [];
@@ -257,6 +257,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this.dataProvider;
 	}
 
+	private var _selectedLocation:Array<Int> = null;
+
 	/**
 		The currently selected location. Returns `null` if no location is
 		selected.
@@ -290,50 +292,52 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var selectedLocation(get, set):Array<Int> = null;
+	@:flash.property
+	public var selectedLocation(get, set):Array<Int>;
 
 	private function get_selectedLocation():Array<Int> {
-		return this.selectedLocation;
+		return this._selectedLocation;
 	}
 
 	private function set_selectedLocation(value:Array<Int>):Array<Int> {
 		if (!this.selectable || this.dataProvider == null) {
 			value = null;
 		}
-		if (this.selectedLocation == value || this.compareLocations(this.selectedLocation, value) == 0) {
-			return this.selectedLocation;
+		if (this._selectedLocation == value || this.compareLocations(this._selectedLocation, value) == 0) {
+			return this._selectedLocation;
 		}
-		this.selectedLocation = value;
-		// using @:bypassAccessor because if we were to call the selectedItem
-		// setter, this change wouldn't be saved properly
-		if (this.selectedLocation == null) {
-			@:bypassAccessor this.selectedItem = null;
+		this._selectedLocation = value;
+		// using variable because if we were to call the selectedItem setter,
+		// then this change wouldn't be saved properly
+		if (this._selectedLocation == null) {
+			this._selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedLocation);
+			this._selectedItem = this.dataProvider.get(this._selectedLocation);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedLocation;
+		return this._selectedLocation;
 	}
+
+	private var _selectedItem:Dynamic = null;
 
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:isVar
-	public var selectedItem(get, set):Dynamic = null;
+	@:flash.property
+	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
 		if (!this.selectable || this.dataProvider == null) {
-			this.selectedLocation = null;
-			return this.selectedItem;
+			this._selectedLocation = null;
+			return this._selectedItem;
 		}
-		this.selectedLocation = this.dataProvider.locationOf(value);
-		return this.selectedItem;
+		this._selectedLocation = this.dataProvider.locationOf(value);
+		return this._selectedItem;
 	}
 
 	private var _previousLayout:ILayout;
@@ -418,6 +422,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		this.selectable = value;
 		if (!this.selectable) {
+			// use the setter
 			this.selectedLocation = null;
 		}
 		return this.selectable;
@@ -744,7 +749,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._currentItemState.layoutIndex = layoutIndex;
 		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isBranch(item);
 		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
-		this._currentItemState.selected = item == this.selectedItem;
+		this._currentItemState.selected = item == this._selectedItem;
 		this._currentItemState.text = itemToText(item);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
@@ -811,7 +816,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._currentItemState.layoutIndex = layoutIndex;
 		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isBranch(item);
 		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
-		this._currentItemState.selected = item == this.selectedItem;
+		this._currentItemState.selected = item == this._selectedItem;
 		this._currentItemState.text = itemToText(item);
 		if (this.itemRendererRecycler.update != null) {
 			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
@@ -860,12 +865,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function refreshSelectedLocationAfterFilterOrSort():Void {
-		if (this.selectedLocation == null) {
+		if (this._selectedLocation == null) {
 			return;
 		}
 		// the location may have changed, possibily even to null, if the item
 		// was filtered out
-		this.selectedLocation = this.dataProvider.locationOf(this.selectedItem);
+		this.selectedLocation = this.dataProvider.locationOf(this._selectedItem); // use the setter
 	}
 
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
@@ -1010,7 +1015,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this._layoutItems.length == 0) {
 			return;
 		}
-		var startIndex = this.locationToDisplayIndex(this.selectedLocation, false);
+		var startIndex = this.locationToDisplayIndex(this._selectedLocation, false);
 		var result = startIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
@@ -1039,22 +1044,23 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			result = this._layoutItems.length - 1;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.selectedLocation = this.displayIndexToLocation(result);
-		if (this.selectedLocation != null) {
-			this.scrollToLocation(this.selectedLocation);
+		if (this._selectedLocation != null) {
+			this.scrollToLocation(this._selectedLocation);
 		}
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || event.isDefaultPrevented()) {
+		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
-		if (this.selectedLocation != null && event.keyCode == Keyboard.SPACE) {
+		if (this._selectedLocation != null && event.keyCode == Keyboard.SPACE) {
 			event.stopPropagation();
-			if (this.openBranches.indexOf(this.selectedItem) != -1) {
-				this.openBranches.remove(this.selectedItem);
+			if (this.openBranches.indexOf(this._selectedItem) != -1) {
+				this.openBranches.remove(this._selectedItem);
 			} else {
-				this.openBranches.push(this.selectedItem);
+				this.openBranches.push(this._selectedItem);
 			}
 			this.setInvalid(InvalidationFlag.DATA);
 			return;
@@ -1076,6 +1082,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		var data = this.itemRendererToData.get(itemRenderer);
+		// use the setter
 		this.selectedLocation = this.dataProvider.locationOf(data);
 	}
 
@@ -1089,6 +1096,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		var data = this.itemRendererToData.get(itemRenderer);
+		// use the setter
 		this.selectedLocation = this.dataProvider.locationOf(data);
 	}
 
@@ -1106,6 +1114,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		var item = this.itemRendererToData.get(itemRenderer);
+		// use the setter
 		this.selectedItem = item;
 	}
 
@@ -1145,42 +1154,47 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function treeView_dataProvider_addItemHandler(event:HierarchicalCollectionEvent):Void {
-		if (this.selectedLocation == null) {
+		if (this._selectedLocation == null) {
 			return;
 		}
-		if (this.compareLocations(this.selectedLocation, event.location) >= 0) {
-			this.selectedLocation = this.dataProvider.locationOf(this.selectedItem);
+		if (this.compareLocations(this._selectedLocation, event.location) >= 0) {
+			// use the setter
+			this.selectedLocation = this.dataProvider.locationOf(this._selectedItem);
 		}
 	}
 
 	private function treeView_dataProvider_removeItemHandler(event:HierarchicalCollectionEvent):Void {
-		if (this.selectedLocation == null) {
+		if (this._selectedLocation == null) {
 			return;
 		}
 
-		var comparisonResult = this.compareLocations(this.selectedLocation, event.location);
+		var comparisonResult = this.compareLocations(this._selectedLocation, event.location);
 		if (comparisonResult == 0) {
+			// use the setter
 			this.selectedLocation = null;
 		} else if (comparisonResult > 0) {
-			this.selectedLocation = this.dataProvider.locationOf(this.selectedItem);
+			// use the setter
+			this.selectedLocation = this.dataProvider.locationOf(this._selectedItem);
 		}
 	}
 
 	private function treeView_dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
-		if (this.selectedLocation == null) {
+		if (this._selectedLocation == null) {
 			return;
 		}
-		if (this.compareLocations(this.selectedLocation, event.location) == 0) {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(event.location);
+		if (this.compareLocations(this._selectedLocation, event.location) == 0) {
+			this._selectedItem = this.dataProvider.get(event.location);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
 
 	private function treeView_dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
+		// use the setter
 		this.selectedLocation = null;
 	}
 
 	private function treeView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
+		// use the setter
 		this.selectedLocation = null;
 	}
 }

@@ -19,5 +19,6 @@ interface IDarkModeTheme extends ITheme {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var darkMode(get, set):Bool;
 }

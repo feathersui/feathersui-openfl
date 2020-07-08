@@ -24,7 +24,8 @@ interface IValidating {
 
 		@since 1.0.0
 	**/
-	public var depth(default, never):Int;
+	@:flash.property
+	public var depth(get, never):Int;
 
 	/**
 		Immediately validates the display object, if it is invalid. The

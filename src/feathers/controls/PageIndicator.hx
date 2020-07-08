@@ -92,52 +92,58 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		this.addEventListener(KeyboardEvent.KEY_DOWN, pageIndicator_keyDownHandler);
 	}
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this._selectedIndex == value) {
+			return this._selectedIndex;
 		}
-		if (value < -1 || value > this.maxSelectedIndex) {
-			throw new RangeError("Index " + value + " is out of range " + this.maxSelectedIndex + " for PageIndicator.");
+		if (value < -1 || value > this._maxSelectedIndex) {
+			throw new RangeError("Index " + value + " is out of range " + this._maxSelectedIndex + " for PageIndicator.");
 		}
 
-		this.selectedIndex = value;
+		this._selectedIndex = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
+
+	private var _maxSelectedIndex:Int = -1;
 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:isVar
+	@:flash.property
 	public var maxSelectedIndex(get, set):Int;
 
 	private function get_maxSelectedIndex():Int {
-		return this.maxSelectedIndex;
+		return this._maxSelectedIndex;
 	}
 
 	private function set_maxSelectedIndex(value:Int):Int {
-		if (this.maxSelectedIndex == value) {
-			return this.maxSelectedIndex;
+		if (this._maxSelectedIndex == value) {
+			return this._maxSelectedIndex;
 		}
-		this.maxSelectedIndex = value;
+		this._maxSelectedIndex = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		if (this.maxSelectedIndex >= 0 && this.selectedIndex < 0) {
+		if (this._maxSelectedIndex >= 0 && this._selectedIndex < 0) {
+			// use the setter
 			this.selectedIndex = 0;
-		} else if (this.selectedIndex > this.maxSelectedIndex) {
-			this.selectedIndex = this.maxSelectedIndex;
+		} else if (this.selectedIndex > this._maxSelectedIndex) {
+			// use the setter
+			this.selectedIndex = this._maxSelectedIndex;
 		}
-		return this.maxSelectedIndex;
+		return this._maxSelectedIndex;
 	}
 
 	/**
@@ -315,7 +321,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		this.refreshInactiveToggleButtons(buttonsInvalid);
 
 		this.recoverInactiveToggleButtons();
-		for (i in 0...this.maxSelectedIndex + 1) {
+		for (i in 0...this._maxSelectedIndex + 1) {
 			this.createToggleButton(i);
 		}
 		this.freeInactiveToggleButtons();
@@ -391,7 +397,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.disabledBackgroundSkin != null) {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
 			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;
@@ -452,7 +458,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			button.variant = PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON;
 		}
 		this._currentItemState.index = index;
-		this._currentItemState.selected = index == this.selectedIndex;
+		this._currentItemState.selected = index == this._selectedIndex;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this.toggleButtonRecycler.update != null) {
@@ -473,7 +479,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
-		var result = this.selectedIndex;
+		var result = this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
@@ -490,22 +496,23 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			case Keyboard.HOME:
 				result = 0;
 			case Keyboard.END:
-				result = this.maxSelectedIndex;
+				result = this._maxSelectedIndex;
 			default:
 				// not keyboard navigation
 				return;
 		}
 		if (result < 0) {
 			result = 0;
-		} else if (result > this.maxSelectedIndex) {
-			result = this.maxSelectedIndex;
+		} else if (result > this._maxSelectedIndex) {
+			result = this._maxSelectedIndex;
 		}
 		event.stopPropagation();
+		// use the setter
 		this.selectedIndex = result;
 	}
 
 	private function pageIndicator_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		this.navigateWithKeyboard(event);
@@ -521,11 +528,12 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			button.selected = true;
 			return;
 		}
+		// use the setter
 		this.selectedIndex = this.activeToggleButtons.indexOf(button);
 	}
 
 	private function handleClickOrTap(localX:Float, localY:Float):Void {
-		var selectedIndex = this.selectedIndex;
+		var selectedIndex = this._selectedIndex;
 		if (selectedIndex != -1) {
 			var button = this.activeToggleButtons[selectedIndex];
 			if (Std.is(this.layout, VerticalLayout)) {
@@ -544,21 +552,22 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		}
 		if (selectedIndex < 0) {
 			selectedIndex = 0;
-		} else if (selectedIndex > this.maxSelectedIndex) {
-			selectedIndex = this.maxSelectedIndex;
+		} else if (selectedIndex > this._maxSelectedIndex) {
+			selectedIndex = this._maxSelectedIndex;
 		}
+		// use the setter
 		this.selectedIndex = selectedIndex;
 	}
 
 	private function pageIndicator_clickHandler(event:MouseEvent):Void {
-		if (!this.enabled || this.interactionMode != PREVIOUS_NEXT) {
+		if (!this._enabled || this.interactionMode != PREVIOUS_NEXT) {
 			return;
 		}
 		this.handleClickOrTap(event.localX, event.localY);
 	}
 
 	private function pageIndicator_touchTapHandler(event:TouchEvent):Void {
-		if (!this.enabled || this.interactionMode != PREVIOUS_NEXT) {
+		if (!this._enabled || this.interactionMode != PREVIOUS_NEXT) {
 			return;
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {

@@ -250,6 +250,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleWidth`
 	**/
+	@:flash.property
 	public var minVisibleWidth(get, set):Null<Float>;
 
 	private function get_minVisibleWidth():Null<Float> {
@@ -278,25 +279,32 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this._explicitMinVisibleWidth;
 	}
 
+	private var _maxVisibleWidth:Null<Float> = Math.POSITIVE_INFINITY;
+
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
 	**/
-	public var maxVisibleWidth(default, set):Null<Float> = Math.POSITIVE_INFINITY;
+	@:flash.property
+	public var maxVisibleWidth(get, set):Null<Float>;
+
+	private function get_maxVisibleWidth():Null<Float> {
+		return this._maxVisibleWidth;
+	}
 
 	private function set_maxVisibleWidth(value:Null<Float>):Null<Float> {
-		if (this.maxVisibleWidth == value) {
-			return this.maxVisibleWidth;
+		if (this._maxVisibleWidth == value) {
+			return this._maxVisibleWidth;
 		}
 		if (value == null) {
 			throw new ArgumentError("maxVisibleWidth cannot be null");
 		}
-		var oldValue = this.maxVisibleWidth;
-		this.maxVisibleWidth = value;
+		var oldValue = this._maxVisibleWidth;
+		this._maxVisibleWidth = value;
 		if (this._explicitVisibleWidth == null && (this._actualVisibleWidth > value || this._actualVisibleWidth == oldValue)) {
 			// only invalidate if this change might affect the visibleWidth
 			this.setInvalid(InvalidationFlag.SIZE);
 		}
-		return this.maxVisibleWidth;
+		return this._maxVisibleWidth;
 	}
 
 	private var _actualVisibleWidth:Float = 0.0;
@@ -305,6 +313,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleWidth`
 	**/
+	@:flash.property
 	public var visibleWidth(get, set):Null<Float>;
 
 	private function get_visibleWidth():Null<Float> {
@@ -331,6 +340,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleHeight`
 	**/
+	@:flash.property
 	public var minVisibleHeight(get, set):Null<Float>;
 
 	private function get_minVisibleHeight():Null<Float> {
@@ -359,29 +369,32 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this._explicitMinVisibleHeight;
 	}
 
+	private var _maxVisibleHeight:Null<Float> = Math.POSITIVE_INFINITY;
+
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
 	**/
-	public var maxVisibleHeight(default, set):Null<Float> = Math.POSITIVE_INFINITY;
+	@:flash.property
+	public var maxVisibleHeight(get, set):Null<Float>;
 
 	private function get_maxVisibleHeight():Null<Float> {
-		return this.maxVisibleHeight;
+		return this._maxVisibleHeight;
 	}
 
 	private function set_maxVisibleHeight(value:Null<Float>):Null<Float> {
-		if (this.maxVisibleHeight == value) {
-			return this.maxVisibleHeight;
+		if (this._maxVisibleHeight == value) {
+			return this._maxVisibleHeight;
 		}
 		if (value == null) {
 			throw new ArgumentError("maxVisibleHeight cannot be null");
 		}
-		var oldValue = this.maxVisibleHeight;
-		this.maxVisibleHeight = value;
+		var oldValue = this._maxVisibleHeight;
+		this._maxVisibleHeight = value;
 		if (this._explicitVisibleHeight == null && (this._actualVisibleHeight > value || this._actualVisibleHeight == oldValue)) {
 			// only invalidate if this change might affect the visibleHeight
 			this.setInvalid(InvalidationFlag.SIZE);
 		}
-		return this.maxVisibleHeight;
+		return this._maxVisibleHeight;
 	}
 
 	private var _actualVisibleHeight:Float = 0.0;
@@ -390,6 +403,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleHeight`
 	**/
+	@:flash.property
 	public var visibleHeight(get, set):Null<Float>;
 
 	private function get_visibleHeight():Null<Float> {
@@ -413,48 +427,53 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.requiresMeasurementOnScroll`
 	**/
+	@:flash.property
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
 		return !this.smoothScrolling;
 	}
 
+	private var _scrollX:Float = 0.0;
+
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollX`
 	**/
-	@:isVar
-	public var scrollX(get, set):Float = 0.0;
+	@:flash.property
+	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
-		return this.scrollX;
+		return this._scrollX;
 	}
 
 	private function set_scrollX(value:Float):Float {
-		if (this.scrollX == value) {
-			return this.scrollX;
+		if (this._scrollX == value) {
+			return this._scrollX;
 		}
-		this.scrollX = value;
+		this._scrollX = value;
 		this.setInvalid(InvalidationFlag.SCROLL);
-		return this.scrollX;
+		return this._scrollX;
 	}
+
+	private var _scrollY:Float = 0.0;
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollY`
 	**/
-	@:isVar
-	public var scrollY(get, set):Float = 0.0;
+	@:flash.property
+	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
-		return this.scrollY;
+		return this._scrollY;
 	}
 
 	private function set_scrollY(value:Float):Float {
-		if (this.scrollY == value) {
-			return this.scrollY;
+		if (this._scrollY == value) {
+			return this._scrollY;
 		}
-		this.scrollY = value;
+		this._scrollY = value;
 		this.setInvalid(InvalidationFlag.SCROLL);
-		return this.scrollY;
+		return this._scrollY;
 	}
 
 	private var _textFieldHasFocus:Bool = false;
@@ -594,7 +613,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function refreshText():Void {
-		var textFieldType = this.enabled ? this.textFieldType : TextFieldType.DYNAMIC;
+		var textFieldType = this._enabled ? this.textFieldType : TextFieldType.DYNAMIC;
 		if (this.textField.type != textFieldType) {
 			this.textField.type = textFieldType;
 		}
@@ -647,8 +666,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.height = calculatedHeight - this.paddingTop - this.paddingBottom;
 			this.textField.scrollV = 1;
 		} else {
-			this.textField.x = this.paddingLeft + this.scrollX;
-			this.textField.y = this.paddingTop + this.scrollY;
+			this.textField.x = this.paddingLeft + this._scrollX;
+			this.textField.y = this.paddingTop + this._scrollY;
 			this.textField.width = this._actualVisibleWidth - this.paddingLeft - this.paddingRight;
 			this.textField.height = this._actualVisibleHeight - this.paddingTop - this.paddingBottom;
 			// for some reason, in flash, after changing the TextField's height,
@@ -659,12 +678,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			if (this.textField.maxScrollV == 1 || maxScrollY == 0.0) {
 				this.textField.scrollV = 1;
 			} else {
-				this.textField.scrollV = 1 + Math.ceil(this.scrollY / (this._savedLineMetrics.height + this._savedLineMetrics.leading));
+				this.textField.scrollV = 1 + Math.ceil(this._scrollY / (this._savedLineMetrics.height + this._savedLineMetrics.leading));
 			}
 			if (this.textField.maxScrollH == 0 || maxScrollX == 0.0) {
 				this.textField.scrollH = 0;
 			} else {
-				this.textField.scrollH = Math.round(this.textField.maxScrollH * (this.scrollX / maxScrollX));
+				this.textField.scrollH = Math.round(this.textField.maxScrollH * (this._scrollX / maxScrollX));
 			}
 		}
 	}
@@ -698,7 +717,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 					var minScrollYForLine = container.maxScrollY - (this.textField.numLines - lineIndex - 1) * lineHeight;
 					var maxScrollYForLine = minScrollYForLine + ((this.textField.numLines - Math.floor(this.visibleHeight / lineHeight)) * lineHeight);
 
-					var targetScrollY = this.scrollY;
+					var targetScrollY = this._scrollY;
 					if ((minScrollYForLine - targetScrollY) > 0.0) {
 						targetScrollY = minScrollYForLine;
 					} else if ((targetScrollY - maxScrollYForLine) > 0.0) {

@@ -98,6 +98,8 @@ class Label extends FeathersControl implements ITextControl {
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 
+	private var _text:String = "";
+
 	/**
 		The text displayed by the label.
 
@@ -117,28 +119,28 @@ class Label extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var text(get, set):String = "";
+	@:flash.property
+	public var text(get, set):String;
 
 	private function get_text():String {
-		return this.text;
+		return this._text;
 	}
 
 	private function set_text(value:String):String {
 		if (value == null) {
 			// null gets converted to an empty string
-			if (this.text.length == 0) {
+			if (this._text.length == 0) {
 				// already an empty string
-				return this.text;
+				return this._text;
 			}
 			value = "";
 		}
-		if (this.text == value) {
-			return this.text;
+		if (this._text == value) {
+			return this._text;
 		}
-		this.text = value;
+		this._text = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.text;
+		return this._text;
 	}
 
 	/**
@@ -583,17 +585,17 @@ class Label extends FeathersControl implements ITextControl {
 	}
 
 	private function refreshText(sizeInvalid:Bool):Void {
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		var hasHTMLText = this.htmlText != null && this.htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;
-		if (this.text == this._previousText && this.htmlText == this._previousHTMLText && !this._updatedTextStyles && !sizeInvalid) {
+		if (this._text == this._previousText && this.htmlText == this._previousHTMLText && !this._updatedTextStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
 		if (hasHTMLText) {
 			this.textField.htmlText = this.htmlText;
 		} else if (hasText) {
-			this.textField.text = this.text;
+			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
@@ -620,19 +622,19 @@ class Label extends FeathersControl implements ITextControl {
 		if (!hasText && !hasHTMLText) {
 			this.textField.text = "";
 		}
-		this._previousText = this.text;
+		this._previousText = this._text;
 		this._previousHTMLText = this.htmlText;
 	}
 
 	private function refreshSelection():Void {
-		var selectable = this.selectable && this.enabled;
+		var selectable = this.selectable && this._enabled;
 		if (this.textField.selectable != selectable) {
 			this.textField.selectable = selectable;
 		}
 	}
 
 	private function getCurrentTextFormat():TextFormat {
-		if (!this.enabled && this.disabledTextFormat != null) {
+		if (!this._enabled && this.disabledTextFormat != null) {
 			return this.disabledTextFormat;
 		}
 		return this.textFormat;
@@ -664,7 +666,7 @@ class Label extends FeathersControl implements ITextControl {
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
-		if (!this.enabled && this.disabledBackgroundSkin != null) {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
 			return this.disabledBackgroundSkin;
 		}
 		return this.backgroundSkin;

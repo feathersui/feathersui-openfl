@@ -20,5 +20,6 @@ interface IFocusContainer extends IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 }

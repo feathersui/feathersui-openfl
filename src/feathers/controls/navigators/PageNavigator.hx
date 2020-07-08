@@ -83,46 +83,51 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		if (this.dataProvider == null || this.dataProvider.length == 0) {
+			// use the setter
 			this.selectedIndex = -1;
 		} else {
+			// use the setter
 			this.selectedIndex = 0;
 		}
 		return this.dataProvider;
 	}
 
+	private var _selectedIndex:Int = -1;
+
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:isVar
-	public var selectedIndex(get, set):Int = -1;
+	@:flash.property
+	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
 		if (this.dataProvider == null) {
 			value = -1;
 		}
-		if (this.selectedIndex == value) {
-			return this.selectedIndex;
+		if (this._selectedIndex == value) {
+			return this._selectedIndex;
 		}
-		this.selectedIndex = value;
-		// using @:bypassAccessor because if we were to call the selectedItem
-		// setter, this change wouldn't be saved properly
-		if (this.selectedIndex == -1) {
-			@:bypassAccessor this.selectedItem = null;
+		this._selectedIndex = value;
+		// using variable because if we were to call the selectedItem setter,
+		// then this change wouldn't be saved properly
+		if (this._selectedIndex == -1) {
+			this._selectedItem = null;
 		} else {
-			@:bypassAccessor this.selectedItem = this.dataProvider.get(this.selectedIndex);
+			this._selectedItem = this.dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.selectedIndex;
+		return this._selectedIndex;
 	}
 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
+	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -132,23 +137,27 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		return this.dataProvider.length - 1;
 	}
 
+	private var _selectedItem:PageItem = null;
+
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:isVar
-	public var selectedItem(get, set):PageItem = null;
+	@:flash.property
+	public var selectedItem(get, set):PageItem;
 
 	private function get_selectedItem():PageItem {
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	private function set_selectedItem(value:PageItem):PageItem {
 		if (this.dataProvider == null) {
+			// use the setter
 			this.selectedIndex = -1;
-			return this.selectedItem;
+			return this._selectedItem;
 		}
+		// use the setter
 		this.selectedIndex = this.dataProvider.indexOf(value);
-		return this.selectedItem;
+		return this._selectedItem;
 	}
 
 	/**
@@ -186,14 +195,14 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		if (selectionInvalid) {
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			this.pageIndicator.selectedIndex = this.selectedIndex;
+			this.pageIndicator.selectedIndex = this._selectedIndex;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 
-			if (this.selectedItem == null && this.activeItemID != null) {
+			if (this._selectedItem == null && this.activeItemID != null) {
 				this.clearActiveItemInternal();
 			}
-			if (this.selectedItem != null && this.activeItemID != this.selectedItem.internalID) {
-				this.showItemInternal(this.selectedItem.internalID, null);
+			if (this._selectedItem != null && this.activeItemID != this._selectedItem.internalID) {
+				this.showItemInternal(this._selectedItem.internalID, null);
 			}
 		}
 
@@ -242,6 +251,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		if (this._ignoreSelectionChange) {
 			return;
 		}
+		// use the setter
 		this.selectedIndex = this.pageIndicator.selectedIndex;
 	}
 
