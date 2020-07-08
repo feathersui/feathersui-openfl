@@ -86,4 +86,19 @@ class MathUtil {
 		var decimalPlaces = Math.pow(10, precision);
 		return Math.fround(decimalPlaces * number) / decimalPlaces;
 	}
+
+	/**
+		Compares two `Float` values in a way that they are considered equal if
+		their difference is below a certain threshold. Useful for meaningful
+		comparisons between numbers that may be slightly different due to
+		floating point errors.
+
+		@param		n1				the first number to compare
+		@param		n2				the second number to compare
+		@param		maxDifference	the maximum difference between the two numbers to be considered equal
+		@return		true if the numbers are considered equal
+	**/
+	public static function fuzzyEquals(n1:Float, n2:Float, maxDifference:Float = 0.000001):Bool {
+		return Math.abs(n1 - n2) <= maxDifference;
+	}
 }
