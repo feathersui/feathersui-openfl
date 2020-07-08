@@ -15,6 +15,7 @@ import feathers.core.IMeasureObject;
 import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
+import feathers.core.IHTMLTextControl;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -41,7 +42,7 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 @:styleContext
-class Label extends FeathersControl implements ITextControl {
+class Label extends FeathersControl implements ITextControl implements IHTMLTextControl {
 	/**
 		A variant used to style the label using a Larger text format for
 		headings. Variants allow themes to provide an assortment of different
@@ -90,14 +91,12 @@ class Label extends FeathersControl implements ITextControl {
 	}
 
 	private var textField:TextField;
-
 	private var _previousText:String = null;
 	private var _previousHTMLText:String = null;
 	private var _previousTextFormat:TextFormat = null;
 	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-
 	private var _text:String = "";
 
 	/**
@@ -143,6 +142,8 @@ class Label extends FeathersControl implements ITextControl {
 		return this._text;
 	}
 
+	private var _htmlText:String = null;
+
 	/**
 		Text displayed by the label that is parsed as a simple form of HTML.
 
@@ -159,16 +160,20 @@ class Label extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var htmlText(default, set):String = null;
+	@:flash.property
+	public var htmlText(get, set):String;
+
+	private function get_htmlText():String {
+		return this._htmlText;
+	}
 
 	private function set_htmlText(value:String):String {
-		if (this.htmlText == value) {
-			return this.htmlText;
+		if (this._htmlText == value) {
+			return this._htmlText;
 		}
-		this.htmlText = value;
+		this._htmlText = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.htmlText;
+		return this._htmlText;
 	}
 
 	/**
@@ -586,14 +591,14 @@ class Label extends FeathersControl implements ITextControl {
 
 	private function refreshText(sizeInvalid:Bool):Void {
 		var hasText = this._text != null && this._text.length > 0;
-		var hasHTMLText = this.htmlText != null && this.htmlText.length > 0;
+		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;
-		if (this._text == this._previousText && this.htmlText == this._previousHTMLText && !this._updatedTextStyles && !sizeInvalid) {
+		if (this._text == this._previousText && this._htmlText == this._previousHTMLText && !this._updatedTextStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
 		if (hasHTMLText) {
-			this.textField.htmlText = this.htmlText;
+			this.textField.htmlText = this._htmlText;
 		} else if (hasText) {
 			this.textField.text = this._text;
 		} else {
@@ -623,7 +628,7 @@ class Label extends FeathersControl implements ITextControl {
 			this.textField.text = "";
 		}
 		this._previousText = this._text;
-		this._previousHTMLText = this.htmlText;
+		this._previousHTMLText = this._htmlText;
 	}
 
 	private function refreshSelection():Void {
