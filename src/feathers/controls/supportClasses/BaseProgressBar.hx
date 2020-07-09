@@ -25,10 +25,12 @@ import feathers.core.FeathersControl;
 
 	@since 1.0.0
 **/
-class BaseProgressBar extends FeathersControl {
+class BaseProgressBar extends FeathersControl implements IRange {
 	private function new() {
 		super();
 	}
+
+	private var _value:Float = 0.0;
 
 	/**
 		The value of the progress bar, which must be between the `minimum` and
@@ -53,17 +55,24 @@ class BaseProgressBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var value(default, set):Float = 0.0;
+	@:flash.property
+	public var value(get, set):Float;
+
+	private function get_value():Float {
+		return this._value;
+	}
 
 	private function set_value(value:Float):Float {
-		if (this.value == value) {
-			return this.value;
+		if (this._value == value) {
+			return this._value;
 		}
-		this.value = value;
+		this._value = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.value;
+		return this._value;
 	}
+
+	private var _minimum:Float = 0.0;
 
 	/**
 		The progress bar's value cannot be smaller than the minimum.
@@ -83,19 +92,27 @@ class BaseProgressBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var minimum(default, set):Float = 0.0;
+	@:flash.property
+	public var minimum(get, set):Float;
+
+	private function get_minimum():Float {
+		return this._minimum;
+	}
 
 	private function set_minimum(value:Float):Float {
-		if (this.minimum == value) {
-			return this.minimum;
+		if (this._minimum == value) {
+			return this._minimum;
 		}
-		this.minimum = value;
-		if (this.initialized && this.value < this.minimum) {
-			this.value = this.minimum;
+		this._minimum = value;
+		if (this.initialized && this._value < this._minimum) {
+			// use the setter
+			this.value = this._minimum;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.minimum;
+		return this._minimum;
 	}
+
+	private var _maximum:Float = 1.0;
 
 	/**
 		The progress bar's value cannot be larger than the maximum.
@@ -115,18 +132,24 @@ class BaseProgressBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var maximum(default, set):Float = 1.0;
+	@:flash.property
+	public var maximum(get, set):Float;
+
+	private function get_maximum():Float {
+		return this._maximum;
+	}
 
 	private function set_maximum(value:Float):Float {
-		if (this.maximum == value) {
-			return this.maximum;
+		if (this._maximum == value) {
+			return this._maximum;
 		}
-		this.maximum = value;
-		if (this.initialized && this.value > this.maximum) {
-			this.value = this.maximum;
+		this._maximum = value;
+		if (this.initialized && this._value > this._maximum) {
+			// use the setter
+			this.value = this._maximum;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.maximum;
+		return this._maximum;
 	}
 
 	private var _backgroundSkinMeasurements:Measurements = null;

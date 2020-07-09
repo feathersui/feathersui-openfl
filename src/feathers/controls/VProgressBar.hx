@@ -131,8 +131,8 @@ class VProgressBar extends BaseProgressBar {
 			return;
 		}
 		var percentage = 1.0;
-		if (this.minimum != this.maximum) {
-			percentage = (this.value - this.minimum) / (this.maximum - this.minimum);
+		if (this._minimum != this._maximum) {
+			percentage = (this._value - this._minimum) / (this._maximum - this._minimum);
 			if (percentage < 0.0) {
 				percentage = 0.0;
 			} else if (percentage > 1.0) {
@@ -144,7 +144,7 @@ class VProgressBar extends BaseProgressBar {
 			calculatedHeight = this._fillSkinMeasurements.height;
 			// if the size is too small, and the value is equal to the
 			// minimum, people don't expect to see the fill
-			this._currentFillSkin.visible = this.value > this.minimum;
+			this._currentFillSkin.visible = this._value > this._minimum;
 		} else {
 			// if it was hidden before, we want to show it again
 			this._currentFillSkin.visible = true;
