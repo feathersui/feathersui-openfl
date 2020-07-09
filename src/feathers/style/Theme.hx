@@ -19,6 +19,8 @@ import feathers.themes.steel.DefaultSteelTheme;
 	@since 1.0.0
 **/
 final class Theme {
+	private static var _fallbackTheme:ITheme;
+
 	/**
 		The fallback theme used when the primary theme does not provide styles
 		for a target object. Generally, this function is only used internally
@@ -26,15 +28,16 @@ final class Theme {
 
 		@since 1.0.0
 	**/
-	public static var fallbackTheme(get, null):ITheme;
+	@:flash.property
+	public static var fallbackTheme(get, never):ITheme;
 
 	private static function get_fallbackTheme():ITheme {
 		#if !disable_default_theme
-		if (fallbackTheme == null) {
-			fallbackTheme = new DefaultSteelTheme();
+		if (_fallbackTheme == null) {
+			_fallbackTheme = new DefaultSteelTheme();
 		}
 		#end
-		return fallbackTheme;
+		return _fallbackTheme;
 	}
 
 	private static var primaryTheme:ITheme;
@@ -88,6 +91,6 @@ final class Theme {
 		if (primaryTheme != null) {
 			return primaryTheme;
 		}
-		return fallbackTheme;
+		return _fallbackTheme;
 	}
 }

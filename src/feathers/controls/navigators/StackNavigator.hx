@@ -104,7 +104,7 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var stackSize(get, null):Int;
+	public var stackSize(get, never):Int;
 
 	private function get_stackSize():Int {
 		return this._history.length;
