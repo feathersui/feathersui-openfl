@@ -210,6 +210,8 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	@:style
 	public var embedFonts:Bool = false;
 
+	private var _selectable:Bool = false;
+
 	/**
 		Indicates if the label's text may be selected or not.
 
@@ -221,15 +223,20 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	public var selectable(default, set):Bool = false;
+	@:flash.property
+	public var selectable(get, set):Bool;
+
+	private function get_selectable():Bool {
+		return this._selectable;
+	}
 
 	private function set_selectable(value:Bool):Bool {
-		if (this.selectable == value) {
-			return this.selectable;
+		if (this._selectable == value) {
+			return this._selectable;
 		}
-		this.selectable = value;
+		this._selectable = value;
 		this.setInvalid(InvalidationFlag.SELECTION);
-		return this.selectable;
+		return this._selectable;
 	}
 
 	/**
@@ -239,10 +246,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	public var selectionBeginIndex(get, null):Int;
+	@:flash.property
+	public var selectionBeginIndex(get, never):Int;
 
 	private function get_selectionBeginIndex():Int {
-		if (!this.selectable) {
+		if (!this._selectable) {
 			return -1;
 		}
 		if (this.textField == null) {
@@ -258,10 +266,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	public var selectionEndIndex(get, null):Int;
+	@:flash.property
+	public var selectionEndIndex(get, never):Int;
 
 	private function get_selectionEndIndex():Int {
-		if (!this.selectable) {
+		if (!this._selectable) {
 			return -1;
 		}
 		if (this.textField == null) {
@@ -632,7 +641,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	}
 
 	private function refreshSelection():Void {
-		var selectable = this.selectable && this._enabled;
+		var selectable = this._selectable && this._enabled;
 		if (this.textField.selectable != selectable) {
 			this.textField.selectable = selectable;
 		}

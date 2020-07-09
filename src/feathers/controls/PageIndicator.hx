@@ -84,7 +84,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		super();
 
-		this.mouseChildren = this.interactionMode == PRECISE;
+		this.mouseChildren = this._interactionMode == PRECISE;
 		this.addEventListener(MouseEvent.CLICK, pageIndicator_clickHandler);
 		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
 		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
@@ -227,6 +227,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
 
+	private var _interactionMode:PageIndicatorInteractionMode = PREVIOUS_NEXT;
+
 	/**
 		Determines how the selected index changes when the page indicator is
 		clicked or tapped. If precise, the exact page must be chosen. If
@@ -242,15 +244,20 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public var interactionMode(default, set):PageIndicatorInteractionMode = PREVIOUS_NEXT;
+	@:flash.property
+	public var interactionMode(get, set):PageIndicatorInteractionMode;
+
+	private function get_interactionMode():PageIndicatorInteractionMode {
+		return this._interactionMode;
+	}
 
 	private function set_interactionMode(value:PageIndicatorInteractionMode):PageIndicatorInteractionMode {
-		if (this.interactionMode == value) {
-			return this.interactionMode;
+		if (this._interactionMode == value) {
+			return this._interactionMode;
 		}
-		this.interactionMode = value;
-		this.mouseChildren = this.interactionMode == PRECISE;
-		return this.interactionMode;
+		this._interactionMode = value;
+		this.mouseChildren = this._interactionMode == PRECISE;
+		return this._interactionMode;
 	}
 
 	private var _layoutMeasurements = new Measurements();
@@ -560,14 +567,14 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function pageIndicator_clickHandler(event:MouseEvent):Void {
-		if (!this._enabled || this.interactionMode != PREVIOUS_NEXT) {
+		if (!this._enabled || this._interactionMode != PREVIOUS_NEXT) {
 			return;
 		}
 		this.handleClickOrTap(event.localX, event.localY);
 	}
 
 	private function pageIndicator_touchTapHandler(event:TouchEvent):Void {
-		if (!this._enabled || this.interactionMode != PREVIOUS_NEXT) {
+		if (!this._enabled || this._interactionMode != PREVIOUS_NEXT) {
 			return;
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {

@@ -37,8 +37,8 @@ class Scale9Bitmap extends Shape {
 		this._allowRefresh = false;
 		this.bitmapData = bitmapData;
 		this.scale9Grid = scale9Grid;
-		this._width = this.bitmapData.width;
-		this._height = this.bitmapData.height;
+		this._width = this._bitmapData.width;
+		this._height = this._bitmapData.height;
 		this.smoothing = smoothing;
 		this._allowRefresh = true;
 		this.refreshSubBitmapData();
@@ -106,6 +106,8 @@ class Scale9Bitmap extends Shape {
 		#end
 	}
 
+	private var _smoothing:Bool = false;
+
 	/**
 		Controls whether or not the bitmap is smoothed when scaled.
 
@@ -113,18 +115,25 @@ class Scale9Bitmap extends Shape {
 
 		@since 1.0.0
 	**/
-	public var smoothing(default, set):Bool = false;
+	@:flash.property
+	public var smoothing(get, set):Bool;
+
+	private function get_smoothing():Bool {
+		return this._smoothing;
+	}
 
 	private function set_smoothing(value:Bool):Bool {
-		if (this.smoothing == value) {
-			return this.smoothing;
+		if (this._smoothing == value) {
+			return this._smoothing;
 		}
-		this.smoothing = value;
+		this._smoothing = value;
 		if (this._allowRefresh) {
 			this.draw();
 		}
-		return this.smoothing;
+		return this._smoothing;
 	}
+
+	private var _bitmapData:BitmapData;
 
 	/**
 		The `BitmapData` object being referenced.
@@ -133,21 +142,26 @@ class Scale9Bitmap extends Shape {
 
 		@since 1.0.0
 	**/
-	public var bitmapData(default, set):BitmapData;
+	@:flash.property
+	public var bitmapData(get, set):BitmapData;
+
+	private function get_bitmapData():BitmapData {
+		return this._bitmapData;
+	}
 
 	private function set_bitmapData(value:BitmapData):BitmapData {
-		if (this.bitmapData == value) {
-			return this.bitmapData;
+		if (this._bitmapData == value) {
+			return this._bitmapData;
 		}
-		this.bitmapData = value;
-		if (this.bitmapData == null) {
+		this._bitmapData = value;
+		if (this._bitmapData == null) {
 			throw new ArgumentError("Invalid BitmapData");
 		}
 		if (this._allowRefresh) {
 			this.refreshSubBitmapData();
 			this.draw();
 		}
-		return this.bitmapData;
+		return this._bitmapData;
 	}
 
 	private var _scale9Grid:Rectangle;
@@ -221,40 +235,40 @@ class Scale9Bitmap extends Shape {
 		this.top = Std.int(Math.max(0.0, this._scale9Grid.y));
 		this.center = Std.int(Math.max(0.0, this._scale9Grid.width));
 		this.middle = Std.int(Math.max(0.0, this._scale9Grid.height));
-		this.right = Std.int(Math.max(0.0, this.bitmapData.width - this.left - this.center));
-		this.bottom = Std.int(Math.max(0.0, this.bitmapData.height - this.top - this.middle));
+		this.right = Std.int(Math.max(0.0, this._bitmapData.width - this.left - this.center));
+		this.bottom = Std.int(Math.max(0.0, this._bitmapData.height - this.top - this.middle));
 
 		this._point.setTo(0.0, 0.0);
 
 		this.topLeft = new BitmapData(this.left, this.top);
 		this._rectangle.setTo(0.0, 0.0, this.topLeft.width, this.topLeft.height);
-		this.topLeft.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.topLeft.copyPixels(this._bitmapData, this._rectangle, this._point);
 		this.topCenter = new BitmapData(this.center, this.top);
 		this._rectangle.setTo(this.left, 0.0, this.topCenter.width, this.topCenter.height);
-		this.topCenter.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.topCenter.copyPixels(this._bitmapData, this._rectangle, this._point);
 		this.topRight = new BitmapData(this.right, this.top);
 		this._rectangle.setTo(this.left + this.center, 0.0, this.topRight.width, this.topRight.height);
-		this.topRight.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.topRight.copyPixels(this._bitmapData, this._rectangle, this._point);
 
 		this.middleLeft = new BitmapData(this.left, this.middle);
 		this._rectangle.setTo(0.0, this.top, this.middleLeft.width, this.middleLeft.height);
-		this.middleLeft.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.middleLeft.copyPixels(this._bitmapData, this._rectangle, this._point);
 		this.middleCenter = new BitmapData(this.center, this.middle);
 		this._rectangle.setTo(this.left, this.top, this.middleCenter.width, this.middleCenter.height);
-		this.middleCenter.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.middleCenter.copyPixels(this._bitmapData, this._rectangle, this._point);
 		this.middleRight = new BitmapData(this.right, this.middle);
 		this._rectangle.setTo(this.left + this.center, this.top, this.middleRight.width, this.middleRight.height);
-		this.middleRight.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.middleRight.copyPixels(this._bitmapData, this._rectangle, this._point);
 
 		this.bottomLeft = new BitmapData(this.top, this.bottom);
 		this._rectangle.setTo(0.0, this.top + this.middle, this.bottomLeft.width, this.bottomLeft.height);
-		this.bottomLeft.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.bottomLeft.copyPixels(this._bitmapData, this._rectangle, this._point);
 		this.bottomCenter = new BitmapData(this.center, this.bottom);
 		this._rectangle.setTo(this.left, this.top + this.middle, this.bottomCenter.width, this.bottomCenter.height);
-		this.bottomCenter.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.bottomCenter.copyPixels(this._bitmapData, this._rectangle, this._point);
 		this.bottomRight = new BitmapData(this.right, this.bottom);
 		this._rectangle.setTo(this.left + this.center, this.top + this.middle, this.bottomRight.width, this.bottomRight.height);
-		this.bottomRight.copyPixels(this.bitmapData, this._rectangle, this._point);
+		this.bottomRight.copyPixels(this._bitmapData, this._rectangle, this._point);
 	}
 
 	private function draw():Void {
@@ -266,8 +280,8 @@ class Scale9Bitmap extends Shape {
 
 		if (this._scale9Grid == null) {
 			this._matrix.identity();
-			this._matrix.scale(this._width / this.bitmapData.width, this._height / this.bitmapData.height);
-			this.graphics.beginBitmapFill(this.bitmapData, this._matrix, false, this.smoothing);
+			this._matrix.scale(this._width / this._bitmapData.width, this._height / this._bitmapData.height);
+			this.graphics.beginBitmapFill(this._bitmapData, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(0.0, 0.0, this._width, this._height);
 			this.graphics.endFill();
 			return;
@@ -280,7 +294,7 @@ class Scale9Bitmap extends Shape {
 
 		if (this.topLeft != null) {
 			this._matrix.identity();
-			this.graphics.beginBitmapFill(this.topLeft, null, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.topLeft, null, false, this._smoothing);
 			this.graphics.drawRect(0.0, 0.0, left, top);
 			this.graphics.endFill();
 		}
@@ -288,14 +302,14 @@ class Scale9Bitmap extends Shape {
 			this._matrix.identity();
 			this._matrix.scale(center2 / center, 1.0);
 			this._matrix.translate(left, 0.0);
-			this.graphics.beginBitmapFill(this.topCenter, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.topCenter, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(left, 0.0, center2, top);
 			this.graphics.endFill();
 		}
 		if (this.topRight != null) {
 			this._matrix.identity();
 			this._matrix.translate(this._width - right, 0.0);
-			this.graphics.beginBitmapFill(this.topRight, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.topRight, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(this._width - right, 0.0, right, top);
 			this.graphics.endFill();
 		}
@@ -306,7 +320,7 @@ class Scale9Bitmap extends Shape {
 			this._matrix.identity();
 			this._matrix.scale(1.0, middle2 / middle);
 			this._matrix.translate(0.0, top);
-			this.graphics.beginBitmapFill(this.middleLeft, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.middleLeft, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(0.0, top, left, middle2);
 			this.graphics.endFill();
 		}
@@ -314,7 +328,7 @@ class Scale9Bitmap extends Shape {
 			this._matrix.identity();
 			this._matrix.scale(center2 / center, middle2 / middle);
 			this._matrix.translate(left, top);
-			this.graphics.beginBitmapFill(this.middleCenter, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.middleCenter, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(left, top, center2, middle2);
 			this.graphics.endFill();
 		}
@@ -322,7 +336,7 @@ class Scale9Bitmap extends Shape {
 			this._matrix.identity();
 			this._matrix.scale(1.0, middle2 / middle);
 			this._matrix.translate(this._width - right, top);
-			this.graphics.beginBitmapFill(this.middleRight, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.middleRight, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(this._width - right, top, right, middle2);
 			this.graphics.endFill();
 		}
@@ -332,7 +346,7 @@ class Scale9Bitmap extends Shape {
 		if (this.bottomLeft != null) {
 			this._matrix.identity();
 			this._matrix.translate(0.0, this._height - bottom);
-			this.graphics.beginBitmapFill(this.bottomLeft, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.bottomLeft, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(0.0, this._height - bottom, left, bottom);
 			this.graphics.endFill();
 		}
@@ -340,14 +354,14 @@ class Scale9Bitmap extends Shape {
 			this._matrix.identity();
 			this._matrix.scale(center2 / center, 1.0);
 			this._matrix.translate(left, this._height - bottom);
-			this.graphics.beginBitmapFill(this.bottomCenter, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.bottomCenter, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(left, this._height - bottom, center2, bottom);
 			this.graphics.endFill();
 		}
 		if (this.bottomRight != null) {
 			this._matrix.identity();
 			this._matrix.translate(this._width - right, this._height - bottom);
-			this.graphics.beginBitmapFill(this.bottomRight, this._matrix, false, this.smoothing);
+			this.graphics.beginBitmapFill(this.bottomRight, this._matrix, false, this._smoothing);
 			this.graphics.drawRect(this._width - right, this._height - bottom, right, bottom);
 			this.graphics.endFill();
 		}

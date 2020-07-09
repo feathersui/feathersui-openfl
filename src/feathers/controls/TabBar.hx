@@ -99,6 +99,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		this.addEventListener(KeyboardEvent.KEY_DOWN, tabBar_keyDownHandler);
 	}
 
+	private var _dataProvider:IFlatCollection<Dynamic> = null;
+
 	/**
 		The collection of data displayed by the tab bar.
 
@@ -123,38 +125,43 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
-	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
+	@:flash.property
+	public var dataProvider(get, set):IFlatCollection<Dynamic>;
+
+	private function get_dataProvider():IFlatCollection<Dynamic> {
+		return this._dataProvider;
+	}
 
 	private function set_dataProvider(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
-		if (this.dataProvider == value) {
-			return this.dataProvider;
+		if (this._dataProvider == value) {
+			return this._dataProvider;
 		}
-		if (this.dataProvider != null) {
-			this.dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+		if (this._dataProvider != null) {
+			this._dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
-		this.dataProvider = value;
-		if (this.dataProvider != null) {
-			this.dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+		this._dataProvider = value;
+		if (this._dataProvider != null) {
+			this._dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
-		if (this._selectedIndex == -1 && this.dataProvider != null && this.dataProvider.length > 0) {
+		if (this._selectedIndex == -1 && this._dataProvider != null && this._dataProvider.length > 0) {
 			// use the setter
 			this.selectedIndex = 0;
-		} else if (this._selectedIndex != -1 && (this.dataProvider == null || this.dataProvider.length == 0)) {
+		} else if (this._selectedIndex != -1 && (this._dataProvider == null || this._dataProvider.length == 0)) {
 			// use the setter
 			this.selectedIndex = -1;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.dataProvider;
+		return this._dataProvider;
 	}
 
 	private var _selectedIndex:Int = -1;
@@ -170,7 +177,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			value = -1;
 		}
 		if (this._selectedIndex == value) {
@@ -182,7 +189,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this._selectedIndex == -1) {
 			this._selectedItem = null;
 		} else {
-			this._selectedItem = this.dataProvider.get(this._selectedIndex);
+			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -196,10 +203,10 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return -1;
 		}
-		return this.dataProvider.length - 1;
+		return this._dataProvider.length - 1;
 	}
 
 	private var _selectedItem:Dynamic = null;
@@ -215,13 +222,13 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
 		// use the setter
-		this.selectedIndex = this.dataProvider.indexOf(value);
+		this.selectedIndex = this._dataProvider.indexOf(value);
 		return this._selectedItem;
 	}
 
@@ -403,7 +410,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		var tabsInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_FACTORY);
 		this.refreshInactiveTabs(tabsInvalid);
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return;
 		}
 
@@ -540,8 +547,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 	private function findUnrenderedData():Void {
 		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
-		for (i in 0...this.dataProvider.length) {
-			var item = this.dataProvider.get(i);
+		for (i in 0...this._dataProvider.length) {
+			var item = this._dataProvider.get(i);
 			var tab = this.dataToTab.get(item);
 			if (tab != null) {
 				this._currentItemState.data = item;
@@ -576,7 +583,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	private function renderUnrenderedData():Void {
 		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		for (item in this._unrenderedData) {
-			var index = this.dataProvider.indexOf(item);
+			var index = this._dataProvider.indexOf(item);
 			var tab = this.createTab(item, index);
 			this.activeTabs.push(tab);
 			this.addChildAt(tab, index + depthOffset);
@@ -626,11 +633,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		}
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
-		this.selectedIndex = this.dataProvider.indexOf(this._selectedItem); // use the setter
+		this.selectedIndex = this._dataProvider.indexOf(this._selectedItem); // use the setter
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
 		var result = this._selectedIndex;
@@ -650,15 +657,15 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			case Keyboard.HOME:
 				result = 0;
 			case Keyboard.END:
-				result = this.dataProvider.length - 1;
+				result = this._dataProvider.length - 1;
 			default:
 				// not keyboard navigation
 				return;
 		}
 		if (result < 0) {
 			result = 0;
-		} else if (result >= this.dataProvider.length) {
-			result = this.dataProvider.length - 1;
+		} else if (result >= this._dataProvider.length) {
+			result = this._dataProvider.length - 1;
 		}
 		event.stopPropagation();
 		// use the setter

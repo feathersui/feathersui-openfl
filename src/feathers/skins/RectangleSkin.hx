@@ -26,21 +26,28 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 		super();
 	}
 
+	private var _cornerRadius:Null<Float> = null;
+
 	/**
 		The rectangle may optionally have rounded corners, and this sets their
 		radius, measured in pixels.
 
 		@since 1.0.0
 	**/
-	public var cornerRadius(default, set):Null<Float> = null;
+	@:flash.property
+	public var cornerRadius(get, set):Null<Float>;
+
+	private function get_cornerRadius():Null<Float> {
+		return this._cornerRadius;
+	}
 
 	private function set_cornerRadius(value:Float):Float {
-		if (this.cornerRadius == value) {
-			return this.cornerRadius;
+		if (this._cornerRadius == value) {
+			return this._cornerRadius;
 		}
-		this.cornerRadius = value;
+		this._cornerRadius = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.cornerRadius;
+		return this._cornerRadius;
 	}
 
 	override private function drawPath():Void {
@@ -48,11 +55,11 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 		var thickness = getLineThickness(currentBorder);
 		var thicknessOffset = thickness / 2.0;
 
-		if (this.cornerRadius == 0.0 || this.cornerRadius == null) {
+		if (this._cornerRadius == 0.0 || this._cornerRadius == null) {
 			this.graphics.drawRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness);
 		} else {
-			this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, this.cornerRadius,
-				this.cornerRadius);
+			this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, this._cornerRadius,
+				this._cornerRadius);
 		}
 	}
 }

@@ -158,6 +158,8 @@ class LayoutGroup extends FeathersControl {
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
 
+	private var _autoSizeMode:AutoSizeMode = CONTENT;
+
 	/**
 		Determines how the layout group will set its own size when its
 		dimensions (width and height) aren't set explicitly.
@@ -178,16 +180,21 @@ class LayoutGroup extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var autoSizeMode(default, set):AutoSizeMode = CONTENT;
+	@:flash.property
+	public var autoSizeMode(get, set):AutoSizeMode;
+
+	private function get_autoSizeMode():AutoSizeMode {
+		return this._autoSizeMode;
+	}
 
 	private function set_autoSizeMode(value:AutoSizeMode):AutoSizeMode {
-		if (this.autoSizeMode == value) {
-			return this.autoSizeMode;
+		if (this._autoSizeMode == value) {
+			return this._autoSizeMode;
 		}
-		this.autoSizeMode = value;
+		this._autoSizeMode = value;
 		this.setInvalid(InvalidationFlag.SIZE);
 		if (this.stage != null) {
-			if (this.autoSizeMode == STAGE) {
+			if (this._autoSizeMode == STAGE) {
 				this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler);
 				this.addEventListener(Event.REMOVED_FROM_STAGE, layoutGroup_removedFromStageHandler);
 			} else {
@@ -195,7 +202,7 @@ class LayoutGroup extends FeathersControl {
 				this.removeEventListener(Event.REMOVED_FROM_STAGE, layoutGroup_removedFromStageHandler);
 			}
 		}
-		return this.autoSizeMode;
+		return this._autoSizeMode;
 	}
 
 	private var _currentLayout:ILayout;
@@ -319,27 +326,34 @@ class LayoutGroup extends FeathersControl {
 		return publicIndex;
 	}
 
+	private var _xmlContent:Array<DisplayObject> = null;
+
 	@:dox(hide)
 	@:noCompletion
-	public var xmlContent(default, set):Array<DisplayObject> = null;
+	@:flash.property
+	public var xmlContent(get, set):Array<DisplayObject>;
+
+	private function get_xmlContent():Array<DisplayObject> {
+		return this._xmlContent;
+	}
 
 	private function set_xmlContent(value:Array<DisplayObject>):Array<DisplayObject> {
-		if (this.xmlContent == value) {
-			return this.xmlContent;
+		if (this._xmlContent == value) {
+			return this._xmlContent;
 		}
-		if (this.xmlContent != null) {
-			for (child in this.xmlContent) {
+		if (this._xmlContent != null) {
+			for (child in this._xmlContent) {
 				this.removeChild(child);
 			}
 		}
-		this.xmlContent = value;
-		if (this.xmlContent != null) {
-			for (child in this.xmlContent) {
+		this._xmlContent = value;
+		if (this._xmlContent != null) {
+			for (child in this._xmlContent) {
 				this.addChild(child);
 			}
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.xmlContent;
+		return this._xmlContent;
 	}
 
 	override public function validateNow():Void {
@@ -463,7 +477,7 @@ class LayoutGroup extends FeathersControl {
 			}
 		}
 
-		var needsToMeasureContent = this.autoSizeMode == CONTENT || this.stage == null;
+		var needsToMeasureContent = this._autoSizeMode == CONTENT || this.stage == null;
 		var stageWidth:Float = 0.0;
 		var stageHeight:Float = 0.0;
 		if (!needsToMeasureContent) {
@@ -631,7 +645,7 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function layoutGroup_addedToStageHandler(event:Event):Void {
-		if (this.autoSizeMode == STAGE) {
+		if (this._autoSizeMode == STAGE) {
 			// if we validated before being added to the stage, or if we've
 			// been removed from stage and added again, we need to be sure
 			// that the new stage dimensions are accounted for.

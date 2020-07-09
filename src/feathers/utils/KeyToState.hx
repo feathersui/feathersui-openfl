@@ -32,14 +32,16 @@ class KeyToState<T> {
 	public function new(target:InteractiveObject = null, callback:(T) -> Void = null, upState:T, downState:T) {
 		this.target = target;
 		if (upState != null) {
-			this.upState = upState;
+			this._upState = upState;
 		}
 		if (downState != null) {
 			this.downState = downState;
 		}
-		this.currentState = this.upState;
+		this._currentState = this._upState;
 		this.callback = callback;
 	}
+
+	private var _target:InteractiveObject = null;
 
 	/**
 		The target component that should change state based on pointer (mouse or
@@ -47,28 +49,35 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	public var target(default, set):InteractiveObject = null;
+	@:flash.property
+	public var target(get, set):InteractiveObject;
+
+	private function get_target():InteractiveObject {
+		return this._target;
+	}
 
 	private function set_target(value:InteractiveObject):InteractiveObject {
-		if (this.target == value) {
-			return this.target;
+		if (this._target == value) {
+			return this._target;
 		}
-		if (this.target != null) {
-			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this.target.removeEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
-			this.target.removeEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
-			this.target.removeEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
+		if (this._target != null) {
+			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+			this._target.removeEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
+			this._target.removeEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
+			this._target.removeEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
 		}
-		this.target = value;
-		if (this.target != null) {
-			this.currentState = this.upState;
-			this.target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this.target.addEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
-			this.target.addEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
-			this.target.addEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
+		this._target = value;
+		if (this._target != null) {
+			this._currentState = this._upState;
+			this._target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+			this._target.addEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
+			this._target.addEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
+			this._target.addEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
 		}
-		return this.target;
+		return this._target;
 	}
+
+	private var _callback:(T) -> Void = null;
 
 	/**
 		The function to call when the state is changed.
@@ -81,18 +90,25 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	public var callback(default, set):(T) -> Void = null;
+	@:flash.property
+	public var callback(get, set):(T) -> Void;
+
+	private function get_callback():(T) -> Void {
+		return this._callback;
+	}
 
 	private function set_callback(value:(T) -> Void):(T) -> Void {
-		if (this.callback == value) {
-			return this.callback;
+		if (this._callback == value) {
+			return this._callback;
 		}
-		this.callback = value;
-		if (this.callback != null) {
-			this.callback(this.currentState);
+		this._callback = value;
+		if (this._callback != null) {
+			this._callback(this._currentState);
 		}
-		return callback;
+		return this._callback;
 	}
+
+	private var _currentState:T;
 
 	/**
 		The current state of the utility. May be different than the state of the
@@ -100,21 +116,52 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	public var currentState(default, null):T;
+	@:flash.property
+	public var currentState(get, never):T;
+
+	private function get_currentState():T {
+		return this._currentState;
+	}
+
+	private var _upState:T = null;
 
 	/**
 		The value for the "up" state.
 
 		@since 1.0.0
 	**/
-	public var upState(default, default):T = null;
+	@:flash.property
+	public var upState(get, set):T;
+
+	private function get_upState():T {
+		return this._upState;
+	}
+
+	private function set_upState(value:T):T {
+		this._upState = value;
+		return this._upState;
+	}
+
+	private var _downState:T = null;
 
 	/**
 		The value for the "down" state.
 
 		@since 1.0.0
 	**/
-	public var downState(default, default):T = null;
+	@:flash.property
+	public var downState(get, set):T;
+
+	private function get_downState():T {
+		return this._downState;
+	}
+
+	private function set_downState(value:T):T {
+		this._downState = value;
+		return this._downState;
+	}
+
+	private var _enabled:Bool = true;
 
 	/**
 		May be set to `false` to disable the state changes temporarily until set
@@ -124,27 +171,37 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	public var enabled(default, default):Bool = true;
+	@:flash.property
+	public var enabled(get, set):Bool;
+
+	private function get_enabled():Bool {
+		return this._enabled;
+	}
+
+	private function set_enabled(value:Bool):Bool {
+		this._enabled = value;
+		return this._enabled;
+	}
 
 	private var _downKeyCode:Null<Int> = null;
 
 	private function changeState(value:T):Void {
-		var oldState = this.currentState;
-		if (Std.is(this.target, IStateContext)) {
-			oldState = cast(this.target, IStateContext<Dynamic>).currentState;
+		var oldState = this._currentState;
+		if (Std.is(this._target, IStateContext)) {
+			oldState = cast(this._target, IStateContext<Dynamic>).currentState;
 		}
-		this.currentState = value;
+		this._currentState = value;
 		if (oldState == value) {
 			return;
 		}
-		if (this.callback != null) {
-			this.callback(value);
+		if (this._callback != null) {
+			this._callback(value);
 		}
 	}
 
 	private function resetKeyState():Void {
 		this._downKeyCode = null;
-		this.changeState(this.upState);
+		this.changeState(this._upState);
 	}
 
 	private function target_removedFromStageHandler(event:Event):Void {
@@ -156,11 +213,11 @@ class KeyToState<T> {
 	}
 
 	private function target_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this.enabled || this._downKeyCode != null || (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER)) {
+		if (!this._enabled || this._downKeyCode != null || (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER)) {
 			return;
 		}
 		this._downKeyCode = event.keyCode;
-		this.changeState(this.downState);
+		this.changeState(this._downState);
 	}
 
 	private function target_keyUpHandler(event:KeyboardEvent):Void {

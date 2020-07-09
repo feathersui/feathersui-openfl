@@ -291,6 +291,7 @@ class Callout extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var content(get, set):DisplayObject;
 
 	private function get_content():DisplayObject {

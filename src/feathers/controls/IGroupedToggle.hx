@@ -25,5 +25,5 @@ interface IGroupedToggle extends IToggle {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var toggleGroup(default, set):ToggleGroup;
+	public var toggleGroup(get, set):ToggleGroup;
 }

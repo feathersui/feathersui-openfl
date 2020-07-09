@@ -39,9 +39,11 @@ class PointerToState<T> {
 		if (hoverState != null) {
 			this.hoverState = hoverState;
 		}
-		this.currentState = this.upState;
+		this._currentState = this._upState;
 		this.callback = callback;
 	}
+
+	private var _target:InteractiveObject = null;
 
 	/**
 		The target component that should change state based on pointer (mouse or
@@ -49,28 +51,35 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	public var target(default, set):InteractiveObject = null;
+	@:flash.property
+	public var target(get, set):InteractiveObject;
+
+	private function get_target():InteractiveObject {
+		return this._target;
+	}
 
 	private function set_target(value:InteractiveObject):InteractiveObject {
-		if (this.target == value) {
-			return this.target;
+		if (this._target == value) {
+			return this._target;
 		}
-		if (this.target != null) {
-			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this.target.removeEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
-			this.target.removeEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
-			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+		if (this._target != null) {
+			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+			this._target.removeEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
+			this._target.removeEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
+			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
 		}
-		this.target = value;
-		if (this.target != null) {
-			this.currentState = this.upState;
-			this.target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this.target.addEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
-			this.target.addEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
-			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+		this._target = value;
+		if (this._target != null) {
+			this._currentState = this._upState;
+			this._target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+			this._target.addEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
+			this._target.addEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
+			this._target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
 		}
-		return this.target;
+		return this._target;
 	}
+
+	private var _callback:(T) -> Void = null;
 
 	/**
 		The function to call when the state is changed.
@@ -83,18 +92,25 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	public var callback(default, set):(T) -> Void = null;
+	@:flash.property
+	public var callback(get, set):(T) -> Void;
+
+	private function get_callback():(T) -> Void {
+		return this._callback;
+	}
 
 	private function set_callback(value:(T) -> Void):(T) -> Void {
-		if (this.callback == value) {
-			return this.callback;
+		if (this._callback == value) {
+			return this._callback;
 		}
-		this.callback = value;
-		if (this.callback != null) {
-			this.callback(this.currentState);
+		this._callback = value;
+		if (this._callback != null) {
+			this._callback(this._currentState);
 		}
-		return callback;
+		return this._callback;
 	}
+
+	private var _currentState:T;
 
 	/**
 		The current state of the utility. May be different than the state of the
@@ -102,28 +118,71 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	public var currentState(default, null):T;
+	@:flash.property
+	public var currentState(get, never):T;
+
+	private function get_currentState():T {
+		return this._currentState;
+	}
+
+	private var _upState:T = null;
 
 	/**
 		The value for the "up" state.
 
 		@since 1.0.0
 	**/
-	public var upState(default, default):T = null;
+	@:flash.property
+	public var upState(get, set):T;
+
+	private function get_upState():T {
+		return this._upState;
+	}
+
+	private function set_upState(value:T):T {
+		this._upState = value;
+		return this._upState;
+	}
+
+	private var _downState:T = null;
 
 	/**
 		The value for the "down" state.
 
 		@since 1.0.0
 	**/
-	public var downState(default, default):T = null;
+	@:flash.property
+	public var downState(get, set):T;
+
+	private function get_downState():T {
+		return this._downState;
+	}
+
+	private function set_downState(value:T):T {
+		this._downState = value;
+		return this._downState;
+	}
+
+	private var _hoverState:T = null;
 
 	/**
 		The value for the "hover" state.
 
 		@since 1.0.0
 	**/
-	public var hoverState(default, default):T = null;
+	@:flash.property
+	public var hoverState(get, set):T;
+
+	private function get_hoverState():T {
+		return this._hoverState;
+	}
+
+	private function set_hoverState(value:T):T {
+		this._hoverState = value;
+		return this._hoverState;
+	}
+
+	private var _enabled:Bool = true;
 
 	/**
 		May be set to `false` to disable the state changes temporarily until set
@@ -133,7 +192,19 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	public var enabled(default, default):Bool = true;
+	@:flash.property
+	public var enabled(get, set):Bool;
+
+	private function get_enabled():Bool {
+		return this._enabled;
+	}
+
+	private function set_enabled(value:Bool):Bool {
+		this._enabled = value;
+		return this._enabled;
+	}
+
+	private var _keepDownStateOnRollOut:Bool = false;
 
 	/**
 		If `true`, the current state will remain as `downState` until
@@ -145,7 +216,19 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	public var keepDownStateOnRollOut(default, default):Bool = false;
+	@:flash.property
+	public var keepDownStateOnRollOut(get, set):Bool;
+
+	private function get_keepDownStateOnRollOut():Bool {
+		return this._keepDownStateOnRollOut;
+	}
+
+	private function set_keepDownStateOnRollOut(value:Bool):Bool {
+		this._keepDownStateOnRollOut = value;
+		return this._keepDownStateOnRollOut;
+	}
+
+	private var _customHitTest:(stageX:Float, stageY:Float) -> Bool;
 
 	/**
 		In addition to the normal hit testing for mouse/touch events, a custom
@@ -159,79 +242,90 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	public var customHitTest(default, default):(stageX:Float, stageY:Float) -> Bool;
+	@:flash.property
+	public var customHitTest(get, set):(stageX:Float, stageY:Float) -> Bool;
+
+	private function get_customHitTest():(stageX:Float, stageY:Float) -> Bool {
+		return this._customHitTest;
+	}
+
+	private function set_customHitTest(value:(stageX:Float, stageY:Float) -> Bool):(stageX:Float, stageY:Float) -> Bool {
+		this._customHitTest = value;
+		return this._customHitTest;
+	}
 
 	private var _hoverBeforeDown:Bool = false;
+
 	private var _down:Bool = false;
 
 	private function changeState(value:T):Void {
-		var oldState = this.currentState;
-		if (Std.is(this.target, IStateContext)) {
-			oldState = cast(this.target, IStateContext<Dynamic>).currentState;
+		var oldState = this._currentState;
+		if (Std.is(this._target, IStateContext)) {
+			oldState = cast(this._target, IStateContext<Dynamic>).currentState;
 		}
-		this.currentState = value;
+		this._currentState = value;
 		if (oldState == value) {
 			return;
 		}
-		if (this.callback != null) {
-			this.callback(value);
+		if (this._callback != null) {
+			this._callback(value);
 		}
 	}
 
 	private function resetTouchState():Void {
 		this._hoverBeforeDown = false;
-		this.changeState(this.upState);
+		this.changeState(this._upState);
 	}
 
 	private function target_removedFromStageHandler(event:Event):Void {
-		this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
+		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
 		this.resetTouchState();
 	}
 
 	private function target_rollOverHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
-		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
+		if (this._customHitTest != null && !this._customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		this._hoverBeforeDown = true;
 		if (this._down) {
-			this.changeState(this.downState);
+			this.changeState(this._downState);
 		} else {
-			this.changeState(this.hoverState);
+			this.changeState(this._hoverState);
 		}
 	}
 
 	private function target_rollOutHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		this._hoverBeforeDown = false;
-		if (this.keepDownStateOnRollOut && this._down) {
-			this.changeState(this.downState);
+		if (this._keepDownStateOnRollOut && this._down) {
+			this.changeState(this._downState);
 			return;
 		}
-		this.changeState(this.upState);
+		this.changeState(this._upState);
 	}
 
 	private function target_mouseDownHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
-		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
+		if (this._customHitTest != null && !this._customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		this._down = true;
-		this.target.stage.addEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler, false, 0, true);
-		this.changeState(this.downState);
+		this._target.stage.addEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler, false, 0, true);
+		this.changeState(this._downState);
 	}
 
 	private function stage_mouseUpHandler(event:MouseEvent):Void {
 		this._down = false;
-		this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
-		if (this._hoverBeforeDown && this.target.hitTestPoint(event.stageX, event.stageY)) {
-			this.changeState(this.hoverState);
+		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
+		if (this._hoverBeforeDown && this._target.hitTestPoint(event.stageX, event.stageY)) {
+			this.changeState(this._hoverState);
 		} else {
 			this.resetTouchState();
 		}

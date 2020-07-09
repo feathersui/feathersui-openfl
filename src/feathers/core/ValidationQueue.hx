@@ -48,12 +48,19 @@ class ValidationQueue {
 	private var _stage:Stage = null;
 	private var _queue:Array<IValidating> = [];
 
+	private var _validating:Bool = false;
+
 	/**
 		If `true`, the queue is currently validating.
 
 		@since 1.0.0
 	**/
-	public var validating(default, null):Bool = false;
+	@:flash.property
+	public var validating(get, never):Bool;
+
+	private function get_validating():Bool {
+		return this._validating;
+	}
 
 	/**
 		Cleans up the validation queue.
@@ -79,7 +86,7 @@ class ValidationQueue {
 			return;
 		}
 		var queueLength = this._queue.length;
-		if (this.validating) {
+		if (this._validating) {
 			// special case: we need to keep it sorted
 			var depth = control.depth;
 
@@ -116,14 +123,14 @@ class ValidationQueue {
 		@since 1.0.0
 	**/
 	public function validateNow():Void {
-		if (this.validating) {
+		if (this._validating) {
 			return;
 		}
 		var queueLength = this._queue.length;
 		if (queueLength == 0) {
 			return;
 		}
-		this.validating = true;
+		this._validating = true;
 		if (queueLength > 1) {
 			this._queue.sort(function(first:IValidating, second:IValidating):Int {
 				var difference = second.depth - first.depth;
@@ -148,7 +155,7 @@ class ValidationQueue {
 			}
 			item.validateNow();
 		}
-		this.validating = false;
+		this._validating = false;
 	}
 
 	private function stage_enterFrameHandler(event:Event):Void {

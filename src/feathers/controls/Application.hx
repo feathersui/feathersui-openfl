@@ -53,6 +53,8 @@ class Application extends LayoutGroup {
 
 	private var _scaler:ScreenDensityScaleCalculator;
 
+	private var _scaleFactor:Float = 1.0;
+
 	/**
 		The application's scaling factor on the current device. One pixel in
 		application coordinates is equal to this number of pixels in screen
@@ -60,7 +62,12 @@ class Application extends LayoutGroup {
 
 		@see `Application.customScale`
 	**/
-	public var scaleFactor(default, null):Float = 1.0;
+	@:flash.property
+	public var scaleFactor(get, never):Float;
+
+	private function get_scaleFactor():Float {
+		return this._scaleFactor;
+	}
 
 	private var _customScale:Null<Float> = null;
 
@@ -147,11 +154,11 @@ class Application extends LayoutGroup {
 	}
 
 	private function refreshDimensions():Void {
-		this.scaleFactor = this.getScaleFactor();
-		this.scaleX = this.scaleFactor;
-		this.scaleY = this.scaleFactor;
+		this._scaleFactor = this.getScaleFactor();
+		this.scaleX = this._scaleFactor;
+		this.scaleY = this._scaleFactor;
 
-		var needsToBeDivisibleByTwo = Math.ffloor(this.scaleFactor) != this.scaleFactor;
+		var needsToBeDivisibleByTwo = Math.ffloor(this._scaleFactor) != this._scaleFactor;
 		var appWidth = Math.ffloor(this.stage.stageWidth);
 		if (needsToBeDivisibleByTwo) {
 			appWidth = MathUtil.roundDownToNearest(appWidth, 2);
@@ -163,8 +170,8 @@ class Application extends LayoutGroup {
 		}
 		this.height = appHeight;
 
-		this._popUpContainer.scaleX = this.scaleFactor;
-		this._popUpContainer.scaleY = this.scaleFactor;
+		this._popUpContainer.scaleX = this._scaleFactor;
+		this._popUpContainer.scaleY = this._scaleFactor;
 	}
 
 	private function preparePopUpContainer():Void {

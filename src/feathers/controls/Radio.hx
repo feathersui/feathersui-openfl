@@ -74,6 +74,8 @@ class Radio extends ToggleButton implements IGroupedToggle {
 		throw new IllegalOperationError("Radio toggleable must always be true");
 	}
 
+	private var _toggleGroup:ToggleGroup = null;
+
 	/**
 		The `ToggleGroup` that this radio has been added to, or `null` if the
 		radio has not been added to a group.
@@ -82,11 +84,16 @@ class Radio extends ToggleButton implements IGroupedToggle {
 
 		@since 1.0.0
 	**/
-	public var toggleGroup(default, set):ToggleGroup = null;
+	@:flash.property
+	public var toggleGroup(get, set):ToggleGroup;
+
+	private function get_toggleGroup():ToggleGroup {
+		return this._toggleGroup;
+	}
 
 	private function set_toggleGroup(value:ToggleGroup):ToggleGroup {
-		if (this.toggleGroup == value) {
-			return this.toggleGroup;
+		if (this._toggleGroup == value) {
+			return this._toggleGroup;
 		}
 		// a null toggle group will automatically add it to
 		// defaultRadioGroup. however, if toggleGroup is already
@@ -94,17 +101,17 @@ class Radio extends ToggleButton implements IGroupedToggle {
 		// otherwise we'd remove the radio from defaultRadioGroup and then
 		// immediately add it back because ToggleGroup sets the toggleGroup
 		// property to null when removing an item.
-		if (value == null && this.toggleGroup != defaultRadioGroup && this.stage != null) {
+		if (value == null && this._toggleGroup != defaultRadioGroup && this.stage != null) {
 			value = defaultRadioGroup;
 		}
-		if (this.toggleGroup != null && this.toggleGroup.hasItem(this)) {
-			this.toggleGroup.removeItem(this);
+		if (this._toggleGroup != null && this._toggleGroup.hasItem(this)) {
+			this._toggleGroup.removeItem(this);
 		}
-		this.toggleGroup = value;
-		if (this.toggleGroup != null && !this.toggleGroup.hasItem(this)) {
-			this.toggleGroup.addItem(this);
+		this._toggleGroup = value;
+		if (this._toggleGroup != null && !this._toggleGroup.hasItem(this)) {
+			this._toggleGroup.addItem(this);
 		}
-		return this.toggleGroup;
+		return this._toggleGroup;
 	}
 
 	private function initializeRadioTheme():Void {
@@ -112,16 +119,16 @@ class Radio extends ToggleButton implements IGroupedToggle {
 	}
 
 	private function radio_addedToStageHandler(event:Event):Void {
-		if (this.toggleGroup == null) {
-			this.toggleGroup = defaultRadioGroup;
+		if (this._toggleGroup == null) {
+			this._toggleGroup = defaultRadioGroup;
 		}
 		this.addEventListener(Event.REMOVED_FROM_STAGE, radio_removedFromStageHandler);
 	}
 
 	private function radio_removedFromStageHandler(event:Event):Void {
 		this.removeEventListener(Event.REMOVED_FROM_STAGE, radio_removedFromStageHandler);
-		if (this.toggleGroup == defaultRadioGroup) {
-			this.toggleGroup.removeItem(this);
+		if (this._toggleGroup == defaultRadioGroup) {
+			this._toggleGroup.removeItem(this);
 		}
 	}
 }

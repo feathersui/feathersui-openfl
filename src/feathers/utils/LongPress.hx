@@ -40,31 +40,38 @@ class LongPress {
 		this.eventFactory = eventFactory;
 	}
 
+	private var _target:InteractiveObject = null;
+
 	/**
 		The target component that should dispatch the event.
 
 		@since 1.0.0
 	**/
-	public var target(default, set):InteractiveObject = null;
+	@:flash.property
+	public var target(get, set):InteractiveObject;
+
+	private function get_target():InteractiveObject {
+		return this._target;
+	}
 
 	private function set_target(value:InteractiveObject):InteractiveObject {
-		if (this.target == value) {
-			return this.target;
+		if (this._target == value) {
+			return this._target;
 		}
-		if (this.target != null) {
+		if (this._target != null) {
 			this.cleanupMouseEvents();
 			this.cleanupTouchEvents();
-			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
-			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
-			this.target.removeEventListener(TriggerEvent.TRIGGER, target_triggerHandler);
+			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+			this._target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
+			this._target.removeEventListener(TriggerEvent.TRIGGER, target_triggerHandler);
 		}
-		this.target = value;
-		if (this.target != null) {
-			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
-			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
-			this.target.addEventListener(TriggerEvent.TRIGGER, target_triggerHandler, false, 10);
+		this._target = value;
+		if (this._target != null) {
+			this._target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
+			this._target.addEventListener(TriggerEvent.TRIGGER, target_triggerHandler, false, 10);
 		}
-		return this.target;
+		return this._target;
 	}
 
 	/**
@@ -80,21 +87,30 @@ class LongPress {
 	**/
 	public var duration:Float = 0.5;
 
+	private var _eventFactory:() -> Event = null;
+
 	/**
 		The event type to dispatch on long press. If `null`, dispatches an
 		instance of `LongPressEvent`.
 
 		@since 1.0.0
 	**/
-	public var eventFactory(default, set):() -> Event = null;
+	@:flash.property
+	public var eventFactory(get, set):() -> Event;
+
+	private function get_eventFactory():() -> Event {
+		return this._eventFactory;
+	}
 
 	private function set_eventFactory(value:() -> Event):() -> Event {
-		if (this.eventFactory == value) {
-			return this.eventFactory;
+		if (this._eventFactory == value) {
+			return this._eventFactory;
 		}
-		this.eventFactory = value;
-		return eventFactory;
+		this._eventFactory = value;
+		return this._eventFactory;
 	}
+
+	private var _enabled:Bool = true;
 
 	/**
 		May be set to `false` to disable the long press event temporarily until
@@ -104,7 +120,19 @@ class LongPress {
 
 		@since 1.0.0
 	**/
-	public var enabled(default, default):Bool = true;
+	@:flash.property
+	public var enabled(get, set):Bool;
+
+	private function get_enabled():Bool {
+		return this._enabled;
+	}
+
+	private function set_enabled(value:Bool):Bool {
+		this._enabled = value;
+		return this._enabled;
+	}
+
+	private var _customHitTest:(stageX:Float, stageY:Float) -> Bool;
 
 	/**
 		In addition to the normal hit testing for mouse/touch events, a custom
@@ -118,7 +146,17 @@ class LongPress {
 
 		@since 1.0.0
 	**/
-	public var customHitTest(default, default):(stageX:Float, stageY:Float) -> Bool;
+	@:flash.property
+	public var customHitTest(get, set):(stageX:Float, stageY:Float) -> Bool;
+
+	private function get_customHitTest():(stageX:Float, stageY:Float) -> Bool {
+		return this._customHitTest;
+	}
+
+	private function set_customHitTest(value:(stageX:Float, stageY:Float) -> Bool):(stageX:Float, stageY:Float) -> Bool {
+		this._customHitTest = value;
+		return this._customHitTest;
+	}
 
 	private var _savedMouseEvent:MouseEvent;
 	private var _savedTouchEvent:TouchEvent;
@@ -126,39 +164,39 @@ class LongPress {
 	private var _stopNextTrigger:Bool = false;
 
 	private function target_mouseDownHandler(event:MouseEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
-		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
+		if (this._customHitTest != null && !this._customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		this._startTime = Lib.getTimer();
 		this._stopNextTrigger = false;
 		this._savedMouseEvent = event.clone();
-		var stage:Stage = this.target.stage;
+		var stage:Stage = this._target.stage;
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler, false, 0, true);
 		stage.addEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler, false, 0, true);
-		this.target.addEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
+		this._target.addEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
 	}
 
 	private function target_touchBeginHandler(event:TouchEvent):Void {
-		if (!this.enabled) {
+		if (!this._enabled) {
 			return;
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
-		if (this.customHitTest != null && !this.customHitTest(event.stageX, event.stageY)) {
+		if (this._customHitTest != null && !this._customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
 		this._startTime = Lib.getTimer();
 		this._stopNextTrigger = false;
 		this._savedTouchEvent = event.clone();
-		var stage:Stage = this.target.stage;
+		var stage:Stage = this._target.stage;
 		stage.addEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler, false, 0, true);
 		stage.addEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler, false, 0, true);
-		this.target.addEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
+		this._target.addEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
 	}
 
 	private function target_stage_mouseMoveHandler(event:MouseEvent):Void {
@@ -206,18 +244,18 @@ class LongPress {
 	}
 
 	private function cleanupMouseEvents():Void {
-		var stage:Stage = this.target.stage;
+		var stage:Stage = this._target.stage;
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
 		stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
-		this.target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
+		this._target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
 		this._savedMouseEvent = null;
 	}
 
 	private function cleanupTouchEvents():Void {
-		var stage:Stage = this.target.stage;
+		var stage:Stage = this._target.stage;
 		stage.removeEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler);
 		stage.removeEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler);
-		this.target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
+		this._target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
 		this._savedTouchEvent = null;
 	}
 
@@ -229,18 +267,18 @@ class LongPress {
 		this._stopNextTrigger = true;
 		if (this._savedMouseEvent != null) {
 			this.cleanupMouseEvents();
-			if (this.eventFactory != null) {
-				this.target.dispatchEvent(this.eventFactory());
+			if (this._eventFactory != null) {
+				this._target.dispatchEvent(this._eventFactory());
 				return;
 			}
-			LongPressEvent.dispatchFromMouseEvent(this.target, this._savedMouseEvent);
+			LongPressEvent.dispatchFromMouseEvent(this._target, this._savedMouseEvent);
 			return;
 		}
 		this.cleanupTouchEvents();
-		if (this.eventFactory != null) {
-			this.target.dispatchEvent(this.eventFactory());
+		if (this._eventFactory != null) {
+			this._target.dispatchEvent(this._eventFactory());
 			return;
 		}
-		LongPressEvent.dispatchFromTouchEvent(this.target, this._savedTouchEvent);
+		LongPressEvent.dispatchFromTouchEvent(this._target, this._savedTouchEvent);
 	}
 }

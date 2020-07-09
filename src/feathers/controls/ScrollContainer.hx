@@ -95,27 +95,34 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	@:style
 	public var layout:ILayout = null;
 
+	private var _xmlContent:Array<DisplayObject> = null;
+
 	@:dox(hide)
 	@:noCompletion
-	public var xmlContent(default, set):Array<DisplayObject> = null;
+	@:flash.property
+	public var xmlContent(get, set):Array<DisplayObject>;
+
+	private function get_xmlContent():Array<DisplayObject> {
+		return this._xmlContent;
+	}
 
 	private function set_xmlContent(value:Array<DisplayObject>):Array<DisplayObject> {
-		if (this.xmlContent == value) {
-			return this.xmlContent;
+		if (this._xmlContent == value) {
+			return this._xmlContent;
 		}
-		if (this.xmlContent != null) {
-			for (child in this.xmlContent) {
+		if (this._xmlContent != null) {
+			for (child in this._xmlContent) {
 				this.removeChild(child);
 			}
 		}
-		this.xmlContent = value;
-		if (this.xmlContent != null) {
-			for (child in this.xmlContent) {
+		this._xmlContent = value;
+		if (this._xmlContent != null) {
+			for (child in this._xmlContent) {
 				this.addChild(child);
 			}
 		}
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.xmlContent;
+		return this._xmlContent;
 	}
 
 	private var _childFocusEnabled:Bool = true;
@@ -138,7 +145,8 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		return this._childFocusEnabled;
 	}
 
-	public var numRawChildren(get, null):Int;
+	@:flash.property
+	public var numRawChildren(get, never):Int;
 
 	private function get_numRawChildren():Int {
 		var oldBypass = this._displayListBypassEnabled;

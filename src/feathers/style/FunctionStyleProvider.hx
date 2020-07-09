@@ -41,8 +41,11 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 	**/
 	public function new(?callback:(Dynamic) -> Void) {
 		super();
+		// use the setter
 		this.callback = callback;
 	}
+
+	private var _callback:(Dynamic) -> Void;
 
 	/**
 		The function that is called when this style provider is asked to apply
@@ -50,15 +53,20 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 
 		@since 1.0.0
 	**/
-	public var callback(default, set):(Dynamic) -> Void;
+	@:flash.property
+	public var callback(get, set):(Dynamic) -> Void;
+
+	private function get_callback():(Dynamic) -> Void {
+		return this._callback;
+	}
 
 	private function set_callback(value:(Dynamic) -> Void):(Dynamic) -> Void {
-		if (this.callback == value) {
-			return this.callback;
+		if (this._callback == value) {
+			return this._callback;
 		}
-		this.callback = value;
+		this._callback = value;
 		StyleProviderEvent.dispatch(this, StyleProviderEvent.STYLES_CHANGE);
-		return this.callback;
+		return this._callback;
 	}
 
 	/**
@@ -67,9 +75,9 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 		@since 1.0.0
 	**/
 	public function applyStyles(target:IStyleObject):Void {
-		if (this.callback == null) {
+		if (this._callback == null) {
 			return;
 		}
-		this.callback(target);
+		this._callback(target);
 	}
 }

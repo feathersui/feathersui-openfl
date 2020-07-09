@@ -37,6 +37,8 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		this.array = array;
 	}
 
+	private var _array:Array<TreeNode<T>> = null;
+
 	/**
 		The `Array<TreeNode>` data source for this collection.
 
@@ -48,26 +50,30 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 
 		@since 1.0.0
 	**/
-	public var array(default, set):Array<TreeNode<T>> = null;
+	public var array(get, set):Array<TreeNode<T>>;
+
+	private function get_array():Array<TreeNode<T>> {
+		return this._array;
+	}
 
 	private function set_array(value:Array<TreeNode<T>>):Array<TreeNode<T>> {
-		if (this.array == value) {
-			return this.array;
+		if (this._array == value) {
+			return this._array;
 		}
 		if (value == null) {
 			value = [];
 		}
-		this.array = value;
+		this._array = value;
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.RESET, null);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.array;
+		return this._array;
 	}
 
 	/**
 		@see `feathers.data.IHierarchicalCollection.getLength`
 	**/
 	public function getLength(?location:Array<Int>):Int {
-		var branchChildren = this.array;
+		var branchChildren = this._array;
 		if (location != null && location.length > 0) {
 			for (i in 0...location.length) {
 				var index = location[i];
@@ -91,7 +97,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
-		var branchChildren = this.array;
+		var branchChildren = this._array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
 			if (index < 0 || index >= branchChildren.length) {
@@ -117,7 +123,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
-		var branchChildren = this.array;
+		var branchChildren = this._array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
 			if (index < 0 || index >= branchChildren.length) {
@@ -154,7 +160,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function locationOf(item:TreeNode<T>):Array<Int> {
 		var result:Array<Int> = [];
-		var found = this.findItemInBranch(this.array, item, result);
+		var found = this.findItemInBranch(this._array, item, result);
 		if (!found) {
 			return null;
 		}
@@ -175,7 +181,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
-		var branchChildren = this.array;
+		var branchChildren = this._array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
 			if (index < 0 || index >= branchChildren.length) {
@@ -203,7 +209,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
-		var branchChildren = this.array;
+		var branchChildren = this._array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
 			if (index < 0 || index >= branchChildren.length) {
@@ -241,11 +247,11 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		@see `feathers.data.IHierarchicalCollection.removeAll`
 	**/
 	public function removeAll():Void {
-		if (this.array.length == 0) {
+		if (this._array.length == 0) {
 			// nothing to remove
 			return;
 		}
-		this.array.resize(0);
+		this._array.resize(0);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, null);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
@@ -257,7 +263,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
-		var branchChildren = this.array;
+		var branchChildren = this._array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
 			if (index < 0 || index >= branchChildren.length) {

@@ -132,6 +132,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var buttonMeasurements = new Measurements();
 	private var textInputMeasurements = new Measurements();
 
+	private var _dataProvider:IFlatCollection<Dynamic> = null;
+
 	/**
 		The collection of data displayed by the list.
 
@@ -157,16 +159,21 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
+	@:flash.property
+	public var dataProvider(get, set):IFlatCollection<Dynamic>;
+
+	private function get_dataProvider():IFlatCollection<Dynamic> {
+		return this._dataProvider;
+	}
 
 	private function set_dataProvider(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
-		if (this.dataProvider == value) {
-			return this.dataProvider;
+		if (this._dataProvider == value) {
+			return this._dataProvider;
 		}
 		var oldSelectedIndex = this._selectedIndex;
 		var oldSelectedItem = this._selectedItem;
-		this.dataProvider = value;
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		this._dataProvider = value;
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			// use the setter
 			this.selectedIndex = -1;
 		} else {
@@ -179,11 +186,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.setInvalid(InvalidationFlag.SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
-		if (this.dataProvider != null) {
-			this.dataProvider.filterFunction = this.comboBoxFilterFunction;
+		if (this._dataProvider != null) {
+			this._dataProvider.filterFunction = this.comboBoxFilterFunction;
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.dataProvider;
+		return this._dataProvider;
 	}
 
 	private var pendingSelectedIndex = -1;
@@ -202,7 +209,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			value = -1;
 		}
 		if (this._selectedIndex == value) {
@@ -214,7 +221,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._selectedIndex == -1) {
 			this._selectedItem = null;
 		} else {
-			this._selectedItem = this.dataProvider.get(this._selectedIndex);
+			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
 		if (this.open) {
 			this.pendingSelectedIndex = value;
@@ -232,10 +239,10 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return -1;
 		}
-		return this.dataProvider.length - 1;
+		return this._dataProvider.length - 1;
 	}
 
 	private var _selectedItem:Dynamic = null;
@@ -251,13 +258,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
 		// use the setter
-		this.selectedIndex = this.dataProvider.indexOf(value);
+		this.selectedIndex = this._dataProvider.indexOf(value);
 		return this._selectedItem;
 	}
 
@@ -330,6 +337,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	@:style
 	public var popUpAdapter:IPopUpAdapter = new DropDownPopUpAdapter();
 
+	private var _buttonFactory:() -> Button;
+
 	/**
 		Creates the button, which must be of type `feathers.controls.Button`.
 
@@ -346,16 +355,23 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	public var buttonFactory(default, set):() -> Button;
+	@:flash.property
+	public var buttonFactory(get, set):() -> Button;
+
+	private function get_buttonFactory():() -> Button {
+		return this._buttonFactory;
+	}
 
 	private function set_buttonFactory(value:() -> Button):() -> Button {
-		if (this.buttonFactory == value) {
-			return this.buttonFactory;
+		if (this._buttonFactory == value) {
+			return this._buttonFactory;
 		}
-		this.buttonFactory = value;
+		this._buttonFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
-		return this.buttonFactory;
+		return this._buttonFactory;
 	}
+
+	private var _textInputFactory:() -> TextInput;
 
 	/**
 		Creates the text input, which must be of type `feathers.controls.TextInput`.
@@ -373,16 +389,23 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	public var textInputFactory(default, set):() -> TextInput;
+	@:flash.property
+	public var textInputFactory(get, set):() -> TextInput;
+
+	private function get_textInputFactory():() -> TextInput {
+		return this._textInputFactory;
+	}
 
 	private function set_textInputFactory(value:() -> TextInput):() -> TextInput {
-		if (this.textInputFactory == value) {
-			return this.textInputFactory;
+		if (this._textInputFactory == value) {
+			return this._textInputFactory;
 		}
-		this.textInputFactory = value;
+		this._textInputFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_TEXT_INPUT_FACTORY);
-		return this.textInputFactory;
+		return this._textInputFactory;
 	}
+
+	private var _listViewFactory:() -> ListView;
 
 	/**
 		Creates the list view that is displayed as a pop-up. The list view must
@@ -401,15 +424,20 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	public var listViewFactory(default, set):() -> ListView;
+	@:flash.property
+	public var listViewFactory(get, set):() -> ListView;
+
+	private function get_listViewFactory():() -> ListView {
+		return this._listViewFactory;
+	}
 
 	private function set_listViewFactory(value:() -> ListView):() -> ListView {
-		if (this.listViewFactory == value) {
-			return this.listViewFactory;
+		if (this._listViewFactory == value) {
+			return this._listViewFactory;
 		}
-		this.listViewFactory = value;
+		this._listViewFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
-		return this.listViewFactory;
+		return this._listViewFactory;
 	}
 
 	/**
@@ -420,6 +448,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {
@@ -461,8 +490,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return;
 		}
 		this._filterText = "";
-		if (this.dataProvider != null) {
-			this.dataProvider.refresh();
+		if (this._dataProvider != null) {
+			this._dataProvider.refresh();
 		}
 		this.pendingSelectedItem = this._selectedItem;
 		this.popUpAdapter.addEventListener(Event.OPEN, comboBox_popUpAdapter_openHandler);
@@ -547,7 +576,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
 			this.button = null;
 		}
-		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
+		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this.button = factory();
 		if (this.button.variant == null) {
 			this.button.variant = ComboBox.CHILD_VARIANT_BUTTON;
@@ -566,7 +595,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 			this.textInput = null;
 		}
-		var factory = this.textInputFactory != null ? this.textInputFactory : defaultTextInputFactory;
+		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
 		this.textInput = factory();
 		if (this.textInput.variant == null) {
 			this.textInput.variant = ComboBox.CHILD_VARIANT_TEXT_INPUT;
@@ -585,7 +614,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 			this.listView = null;
 		}
-		var factory = this.listViewFactory != null ? this.listViewFactory : defaultListViewFactory;
+		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this.listView = factory();
 		if (this.listView.variant == null) {
 			this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
@@ -595,7 +624,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function refreshData():Void {
-		this.listView.dataProvider = this.dataProvider;
+		this.listView.dataProvider = this._dataProvider;
 		this.listView.itemRendererRecycler = this.itemRendererRecycler;
 		this.listView.itemToText = this.itemToText;
 	}
@@ -691,7 +720,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
 		var result = this._selectedIndex;
@@ -711,15 +740,15 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			case Keyboard.HOME:
 				result = 0;
 			case Keyboard.END:
-				result = this.dataProvider.length - 1;
+				result = this._dataProvider.length - 1;
 			default:
 				// not keyboard navigation
 				return;
 		}
 		if (result < 0) {
 			result = 0;
-		} else if (result >= this.dataProvider.length) {
-			result = this.dataProvider.length - 1;
+		} else if (result >= this._dataProvider.length) {
+			result = this._dataProvider.length - 1;
 		}
 		event.stopPropagation();
 		// use the setter
@@ -746,9 +775,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (!this.open) {
 			this.openListView();
 		}
-		if (this.dataProvider != null) {
+		if (this._dataProvider != null) {
 			this._filterText = this.textInput.text;
-			this.dataProvider.refresh();
+			this._dataProvider.refresh();
 		}
 	}
 
@@ -867,11 +896,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		var newSelectedItem = this.pendingSelectedItem;
 		if (this.pendingSelectedIndex != -1) {
-			newSelectedItem = this.dataProvider.get(this.pendingSelectedIndex);
+			newSelectedItem = this._dataProvider.get(this.pendingSelectedIndex);
 		} else {
 			var filterText = this._filterText.toLowerCase();
-			if (this.dataProvider.length > 0) {
-				for (item in this.dataProvider) {
+			if (this._dataProvider.length > 0) {
+				for (item in this._dataProvider) {
 					var itemText = this.itemToText(item).toLowerCase();
 					if (itemText == filterText) {
 						// if the filtered data contains a match, use it
@@ -885,8 +914,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this._filterText = "";
 		this.pendingSelectedIndex = -1;
 		this.pendingSelectedItem = null;
-		if (this.dataProvider != null) {
-			this.dataProvider.refresh();
+		if (this._dataProvider != null) {
+			this._dataProvider.refresh();
 		}
 		// use the setter
 		this.selectedItem = newSelectedItem;
