@@ -48,6 +48,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	private var _waitingToApplyStyles:Bool = false;
 	private var _initializing:Bool = false;
+	private var _initialized:Bool = false;
 
 	/**
 		Determines if the component has been initialized yet. The `initialize()`
@@ -69,7 +70,14 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
-	public var initialized(default, null):Bool = false;
+	@:flash.property
+	public var initialized(get, never):Bool;
+
+	private function get_initialized():Bool {
+		return this._initialized;
+	}
+
+	private var _created:Bool = false;
 
 	/**
 		Determines if the component has been initialized and validated for the
@@ -88,7 +96,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `FeathersEvent.CREATION_COMPLETE`
 		@see `FeathersControl.update()`
 	**/
-	public var created(default, null):Bool = false;
+	@:flash.property
+	public var created(get, never):Bool;
+
+	private function get_created():Bool {
+		return this._created;
+	}
 
 	private var _enabled:Bool = true;
 
@@ -130,6 +143,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var styleProvider(get, set):IStyleProvider;
 
 	private function get_styleProvider():IStyleProvider {
@@ -150,7 +164,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (this._customStyleProvider != null) {
 			this._customStyleProvider.addEventListener(Event.CLEAR, customStyleProvider_clearHandler, false, 0, true);
 		}
-		if (this.initialized && this.stage != null) {
+		if (this._initialized && this.stage != null) {
 			// ignore if we're not initialized yet or we haven't been added to
 			// the stage because it will be handled later. otherwise, apply the
 			// new styles immediately.
@@ -263,49 +277,51 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._focusEnabled;
 	}
 
+	private var _focusRectSkin:DisplayObject = null;
+
 	/**
 		An optional skin to display when an `IFocusObject` component receives
 		focus.
 
 		@since 1.0.0
 	**/
-	@:isVar
 	@style
-	public var focusRectSkin(get, set):DisplayObject = null;
+	@:flash.property
+	public var focusRectSkin(get, set):DisplayObject;
 
 	private function get_focusRectSkin():DisplayObject {
-		return this.focusRectSkin;
+		return this._focusRectSkin;
 	}
 
 	private function set_focusRectSkin(value:DisplayObject):DisplayObject {
 		if (!this.setStyle("focusRectSkin")) {
-			return this.focusRectSkin;
+			return this._focusRectSkin;
 		}
-		if (this.focusRectSkin != null) {
+		if (this._focusRectSkin != null) {
 			this.showFocus(false);
 		}
 		// in a -final build, this forces the clearStyle
 		// function to be kept if the property is kept
 		// otherwise, it would be removed by dce
 		this._previousClearStyle = this.clearStyle_focusRectSkin;
-		this.focusRectSkin = value;
-		return this.focusRectSkin;
+		this._focusRectSkin = value;
+		return this._focusRectSkin;
 	}
 
 	/**
 		@see `feathers.core.IFocusObject.showFocus()`
 	**/
 	public function showFocus(show:Bool):Void {
-		if (this._focusManager == null || this.focusRectSkin == null) {
+		if (this._focusManager == null || this._focusRectSkin == null) {
 			return;
 		}
 		if (show) {
-			this._focusManager.focusPane.addChild(this.focusRectSkin);
+			this._focusManager.focusPane.addChild(this._focusRectSkin);
 			this.addEventListener(Event.ENTER_FRAME, feathersControl_focusRect_enterFrameHandler);
 			this.positionFocusRect();
-		} else if (this.focusRectSkin.parent != null) {
+		} else if (this._focusRectSkin.parent != null) {
 			this.removeEventListener(Event.ENTER_FRAME, feathersControl_focusRect_enterFrameHandler);
-			this.focusRectSkin.parent.removeChild(this.focusRectSkin);
+			this._focusRectSkin.parent.removeChild(this._focusRectSkin);
 		}
 	}
 
@@ -316,18 +332,18 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	@:noCompletion
 	private function clearStyle_focusRectSkin():DisplayObject {
-		this.focusRectSkin = null;
-		return this.focusRectSkin;
+		this._focusRectSkin = null;
+		return this._focusRectSkin;
 	}
 
 	private function positionFocusRect():Void {
 		var point = new Point(0, 0);
 		point = this.localToGlobal(point);
 		point = this._focusManager.focusPane.globalToLocal(point);
-		this.focusRectSkin.x = point.x;
-		this.focusRectSkin.y = point.y;
-		this.focusRectSkin.width = this.actualWidth;
-		this.focusRectSkin.height = this.actualHeight;
+		this._focusRectSkin.x = point.x;
+		this._focusRectSkin.y = point.y;
+		this._focusRectSkin.width = this.actualWidth;
+		this._focusRectSkin.height = this.actualHeight;
 	}
 
 	private function setLayoutDataInternal(value:ILayoutData):ILayoutData {
@@ -365,7 +381,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._variant;
 		}
 		this._variant = value;
-		if (this.initialized && this.stage != null) {
+		if (this._initialized && this.stage != null) {
 			// ignore if we're not initialized yet or we haven't been added to
 			// the stage because it will be handled later. otherwise, apply the
 			// new styles immediately.
@@ -383,7 +399,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private var _restrictedStyles:Array<StyleDefinition> = [];
 
 	override public function validateNow():Void {
-		if (!this.initialized) {
+		if (!this._initialized) {
 			if (this._initializing) {
 				throw new IllegalOperationError("A component cannot validate until after it has finished initializing.");
 			}
@@ -393,8 +409,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			this.applyStyles();
 		}
 		super.validateNow();
-		if (!this.created) {
-			this.created = true;
+		if (!this._created) {
+			this._created = true;
 			FeathersEvent.dispatch(this, FeathersEvent.CREATION_COMPLETE);
 		}
 	}
@@ -403,7 +419,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `feathers.core.IUIControl.initializeNow`
 	**/
 	public function initializeNow():Void {
-		if (this.initialized || this._initializing) {
+		if (this._initialized || this._initializing) {
 			return;
 		}
 		this._waitingToApplyStyles = true;
@@ -411,7 +427,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this.initialize();
 		this.setInvalid(); // set everything invalid
 		this._initializing = false;
-		this.initialized = true;
+		this._initialized = true;
 		FeathersEvent.dispatch(this, FeathersEvent.INITIALIZE);
 	}
 
@@ -504,7 +520,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function applyStyles():Void {
-		if (!this.initialized) {
+		if (!this._initialized) {
 			throw new IllegalOperationError("Cannot apply styles until after a Feathers UI component has initialized.");
 		}
 		this._waitingToApplyStyles = false;
@@ -594,7 +610,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		// initialize before setting the validation queue to avoid
 		// getting added to the validation queue before initialization
 		// completes.
-		if (!this.initialized) {
+		if (!this._initialized) {
 			this.initializeNow();
 		}
 		if (this._waitingToApplyStyles) {

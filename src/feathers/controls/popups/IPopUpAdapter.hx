@@ -30,6 +30,7 @@ interface IPopUpAdapter extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	var active(get, never):Bool;
 
 	/**
@@ -38,6 +39,7 @@ interface IPopUpAdapter extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	var persistent(get, never):Bool;
 
 	/**

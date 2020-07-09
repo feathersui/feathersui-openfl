@@ -216,21 +216,28 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		return this._explicitVisibleWidth;
 	}
 
-	public var layout(default, set):ILayout;
+	private var _layout:ILayout = null;
+
+	@:flash.property
+	public var layout(get, set):ILayout;
+
+	private function get_layout():ILayout {
+		return this._layout;
+	}
 
 	private function set_layout(value:ILayout):ILayout {
-		if (this.layout == value) {
-			return this.layout;
+		if (this._layout == value) {
+			return this._layout;
 		}
-		if (this.layout != null) {
-			this.layout.removeEventListener(Event.CHANGE, layout_changeHandler);
+		if (this._layout != null) {
+			this._layout.removeEventListener(Event.CHANGE, layout_changeHandler);
 		}
-		this.layout = value;
-		if (this.layout != null) {
-			this.layout.addEventListener(Event.CHANGE, layout_changeHandler);
+		this._layout = value;
+		if (this._layout != null) {
+			this._layout.addEventListener(Event.CHANGE, layout_changeHandler);
 		}
 		this.setInvalid(InvalidationFlag.LAYOUT);
-		return this.layout;
+		return this._layout;
 	}
 
 	private var _layoutItems:Array<DisplayObject> = [];
@@ -242,10 +249,10 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
-		if (!Std.is(this.layout, IScrollLayout)) {
+		if (!Std.is(this._layout, IScrollLayout)) {
 			return false;
 		}
-		return cast(this.layout, IScrollLayout).requiresLayoutOnScroll;
+		return cast(this._layout, IScrollLayout).requiresLayoutOnScroll;
 	}
 
 	private var _layoutMeasurements = new Measurements();
@@ -300,15 +307,15 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this.refreshLayoutMeasurements();
 		this.refreshLayoutProperties();
 		this.refreshChildren(this._layoutItems);
-		this.layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
+		this._layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
 		this.handleLayoutResult();
 	}
 
 	private function refreshLayoutProperties():Void {
 		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 		this._ignoreLayoutChanges = true;
-		if (Std.is(this.layout, IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
+		if (Std.is(this._layout, IScrollLayout)) {
+			var scrollLayout = cast(this._layout, IScrollLayout);
 			scrollLayout.scrollX = this._scrollX;
 			scrollLayout.scrollY = this._scrollY;
 		}

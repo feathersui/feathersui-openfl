@@ -37,28 +37,28 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public var data(default, null):Dynamic;
+	public var data:Dynamic;
 
 	/**
 		The location of the item in the `TreeView` data provider.
 
 		@since 1.0.0
 	**/
-	public var location(default, null):Array<Int>;
+	public var location:Array<Int>;
 
 	/**
 		Returns the location of the item in the `TreeView` layout.
 
 		@since 1.0.0
 	**/
-	public var layoutIndex(default, null):Int;
+	public var layoutIndex:Int;
 
 	/**
 		Returns whether the item is a branch or not.
 
 		@since 1.0.0
 	**/
-	public var branch(default, null):Bool;
+	public var branch:Bool;
 
 	/**
 		Returns whether the branch is opened or closed. If the item is a leaf,
@@ -66,14 +66,14 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public var opened(default, null):Bool;
+	public var opened:Bool;
 
 	/**
 		Returns whether the item is selected or not.
 
 		@since 1.0.0
 	**/
-	public var selected(default, null):Bool;
+	public var selected:Bool;
 
 	/**
 		Returns the text to display for the item, as returned by the function
@@ -83,5 +83,5 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public var text(default, null):String;
+	public var text:String;
 }

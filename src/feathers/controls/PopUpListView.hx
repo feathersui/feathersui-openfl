@@ -117,6 +117,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private var buttonMeasurements:Measurements = new Measurements();
 
+	private var _dataProvider:IFlatCollection<Dynamic> = null;
+
 	/**
 		The collection of data displayed by the list view.
 
@@ -142,16 +144,21 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
+	@:flash.property
+	public var dataProvider(get, set):IFlatCollection<Dynamic>;
+
+	private function get_dataProvider():IFlatCollection<Dynamic> {
+		return this._dataProvider;
+	}
 
 	private function set_dataProvider(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
-		if (this.dataProvider == value) {
-			return this.dataProvider;
+		if (this._dataProvider == value) {
+			return this._dataProvider;
 		}
 		var oldSelectedIndex = this._selectedIndex;
 		var oldSelectedItem = this._selectedItem;
-		this.dataProvider = value;
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		this._dataProvider = value;
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			// use the setter
 			this.selectedIndex = -1;
 		} else {
@@ -165,7 +172,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.dataProvider;
+		return this._dataProvider;
 	}
 
 	private var _ignoreListViewChange = false;
@@ -183,7 +190,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			value = -1;
 		}
 		if (this._selectedIndex == value) {
@@ -195,7 +202,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this._selectedIndex == -1) {
 			this._selectedItem = null;
 		} else {
-			this._selectedItem = this.dataProvider.get(this._selectedIndex);
+			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -209,10 +216,10 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return -1;
 		}
-		return this.dataProvider.length - 1;
+		return this._dataProvider.length - 1;
 	}
 
 	private var _selectedItem:Dynamic = null;
@@ -228,13 +235,13 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
 		// use the setter
-		this.selectedIndex = this.dataProvider.indexOf(value);
+		this.selectedIndex = this._dataProvider.indexOf(value);
 		return this._selectedItem;
 	}
 
@@ -304,6 +311,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	@:style
 	public var popUpAdapter:IPopUpAdapter = null;
 
+	private var _buttonFactory:() -> Button;
+
 	/**
 		Creates the button, which must be of type `feathers.controls.Button`.
 
@@ -320,16 +329,23 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public var buttonFactory(default, set):() -> Button;
+	@:flash.property
+	public var buttonFactory(get, set):() -> Button;
+
+	private function get_buttonFactory():() -> Button {
+		return this._buttonFactory;
+	}
 
 	private function set_buttonFactory(value:() -> Button):() -> Button {
-		if (this.buttonFactory == value) {
-			return this.buttonFactory;
+		if (this._buttonFactory == value) {
+			return this._buttonFactory;
 		}
-		this.buttonFactory = value;
+		this._buttonFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
-		return this.buttonFactory;
+		return this._buttonFactory;
 	}
+
+	private var _listViewFactory:() -> ListView;
 
 	/**
 		Creates the list view that is displayed as a pop-up. The list view must
@@ -348,15 +364,20 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public var listViewFactory(default, set):() -> ListView;
+	@:flash.property
+	public var listViewFactory(get, set):() -> ListView;
+
+	private function get_listViewFactory():() -> ListView {
+		return this._listViewFactory;
+	}
 
 	private function set_listViewFactory(value:() -> ListView):() -> ListView {
-		if (this.listViewFactory == value) {
-			return this.listViewFactory;
+		if (this._listViewFactory == value) {
+			return this._listViewFactory;
 		}
-		this.listViewFactory = value;
+		this._listViewFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
-		return this.listViewFactory;
+		return this._listViewFactory;
 	}
 
 	/**
@@ -367,6 +388,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {
@@ -497,7 +519,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
 			this.button = null;
 		}
-		var factory = this.buttonFactory != null ? this.buttonFactory : defaultButtonFactory;
+		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this.button = factory();
 		if (this.button.variant == null) {
 			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
@@ -517,7 +539,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this.listView.removeEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
 			this.listView = null;
 		}
-		var factory = this.listViewFactory != null ? this.listViewFactory : defaultListViewFactory;
+		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this.listView = factory();
 		if (this.listView.variant == null) {
 			this.listView.variant = PopUpListView.CHILD_VARIANT_LIST_VIEW;
@@ -528,7 +550,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function refreshData():Void {
-		this.listView.dataProvider = this.dataProvider;
+		this.listView.dataProvider = this._dataProvider;
 		this.listView.itemRendererRecycler = this.itemRendererRecycler;
 		this.listView.itemToText = this.itemToText;
 	}
@@ -600,7 +622,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
 		var result = this._selectedIndex;
@@ -620,15 +642,15 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			case Keyboard.HOME:
 				result = 0;
 			case Keyboard.END:
-				result = this.dataProvider.length - 1;
+				result = this._dataProvider.length - 1;
 			default:
 				// not keyboard navigation
 				return;
 		}
 		if (result < 0) {
 			result = 0;
-		} else if (result >= this.dataProvider.length) {
-			result = this.dataProvider.length - 1;
+		} else if (result >= this._dataProvider.length) {
+			result = this._dataProvider.length - 1;
 		}
 		event.stopPropagation();
 		// use the setter

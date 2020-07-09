@@ -39,28 +39,28 @@ class GridViewCellState {
 
 		@since 1.0.0
 	**/
-	public var data(default, null):Dynamic;
+	public var data:Dynamic;
 
 	/**
 		The vertical position of the cell within the `GridView`.
 
 		@since 1.0.0
 	**/
-	public var rowIndex(default, null):Int;
+	public var rowIndex:Int;
 
 	/**
 		The horizontal position of the cell within the `GridView`.
 
 		@since 1.0.0
 	**/
-	public var columnIndex(default, null):Int;
+	public var columnIndex:Int;
 
 	/**
 		The column of the cell.
 
 		@since 1.0.0
 	**/
-	public var column(default, null):GridViewColumn;
+	public var column:GridViewColumn;
 
 	/**
 		Returns whether the cell is selected or not.
@@ -70,7 +70,7 @@ class GridViewCellState {
 
 		@since 1.0.0
 	**/
-	public var selected(default, null):Bool;
+	public var selected:Bool;
 
 	/**
 		Returns the text to display for the cell, as returned by the function
@@ -80,5 +80,5 @@ class GridViewCellState {
 
 		@since 1.0.0
 	**/
-	public var text(default, null):String;
+	public var text:String;
 }

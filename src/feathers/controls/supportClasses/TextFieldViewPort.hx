@@ -36,6 +36,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 	private var textField:TextField;
 
+	private var _textFieldType:TextFieldType = DYNAMIC;
+
 	/**
 		Indicates if it's a dynamic or input text field.
 
@@ -43,33 +45,47 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 		@since 1.0.0
 	**/
-	public var textFieldType(default, set):TextFieldType = DYNAMIC;
+	@:flash.property
+	public var textFieldType(get, set):TextFieldType;
+
+	private function get_textFieldType():TextFieldType {
+		return this._textFieldType;
+	}
 
 	private function set_textFieldType(value:TextFieldType):TextFieldType {
-		if (this.textFieldType == value) {
-			return this.textFieldType;
+		if (this._textFieldType == value) {
+			return this._textFieldType;
 		}
-		this.textFieldType = value;
+		this._textFieldType = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.textFieldType;
+		return this._textFieldType;
 	}
+
+	private var _text:String;
 
 	/**
 		The text to display.
 
 		@since 1.0.0
 	**/
-	public var text(default, set):String = null;
+	@:flash.property
+	public var text(get, set):String;
+
+	private function get_text():String {
+		return this._text;
+	}
 
 	private function set_text(value:String):String {
-		if (this.text == value) {
-			return this.text;
+		if (this._text == value) {
+			return this._text;
 		}
-		this.text = value;
+		this._text = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.text;
+		return this._text;
 	}
+
+	private var _wordWrap:Bool = false;
 
 	/**
 		Determines if the text will wrap when reaching the right edge, or if
@@ -77,63 +93,89 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 		@since 1.0.0
 	**/
-	public var wordWrap(default, set):Bool = false;
+	@:flash.property
+	public var wordWrap(get, set):Bool;
+
+	private function get_wordWrap():Bool {
+		return this._wordWrap;
+	}
 
 	private function set_wordWrap(value:Bool):Bool {
-		if (this.wordWrap == value) {
-			return this.wordWrap;
+		if (this._wordWrap == value) {
+			return this._wordWrap;
 		}
-		this.wordWrap = value;
+		this._wordWrap = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.wordWrap;
+		return this._wordWrap;
 	}
+
+	private var _multiline:Bool = false;
 
 	/**
 		Indicates if the multiple lines of text may be displayed.
 
 		@since 1.0.0
 	**/
-	public var multiline(default, set):Bool = false;
+	@:flash.property
+	public var multiline(get, set):Bool;
+
+	private function get_multiline():Bool {
+		return this._multiline;
+	}
 
 	private function set_multiline(value:Bool):Bool {
-		if (this.multiline == value) {
-			return this.multiline;
+		if (this._multiline == value) {
+			return this._multiline;
 		}
-		this.multiline = value;
+		this._multiline = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.multiline;
+		return this._multiline;
 	}
+
+	private var _restrict:String;
 
 	/**
 		Limits the set of characters that may be typed with the keyboard.
 
 		@since 1.0.0
 	**/
-	public var restrict(default, set):String = null;
+	@:flash.property
+	public var restrict(get, set):String;
+
+	private function get_restrict():String {
+		return this._restrict;
+	}
 
 	private function set_restrict(value:String):String {
-		if (this.restrict == value) {
-			return this.restrict;
+		if (this._restrict == value) {
+			return this._restrict;
 		}
-		this.restrict = value;
+		this._restrict = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.restrict;
+		return this._restrict;
 	}
+
+	private var _smoothScrolling:Bool = false;
 
 	/**
 		Determines if scrolling is smooth or line by line.
 
 		@since 1.0.0
 	**/
-	public var smoothScrolling(default, set):Bool = false;
+	@:flash.property
+	public var smoothScrolling(get, set):Bool;
+
+	private function get_smoothScrolling():Bool {
+		return this._smoothScrolling;
+	}
 
 	private function set_smoothScrolling(value:Bool):Bool {
-		if (this.smoothScrolling == value) {
-			return this.smoothScrolling;
+		if (this._smoothScrolling == value) {
+			return this._smoothScrolling;
 		}
-		this.smoothScrolling = value;
+		this._smoothScrolling = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.smoothScrolling;
+		return this._smoothScrolling;
 	}
 
 	private var _updatedTextStyles = false;
@@ -144,37 +186,53 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 
+	private var _textFormat:TextFormat;
+
 	/**
 		The font styles used to render the text.
 
 		@since 1.0.0
 	**/
-	public var textFormat(default, set):TextFormat = null;
+	@:flash.property
+	public var textFormat(get, set):TextFormat;
+
+	private function get_textFormat():TextFormat {
+		return this._textFormat;
+	}
 
 	private function set_textFormat(value:TextFormat):TextFormat {
-		if (this.textFormat == value) {
-			return this.textFormat;
+		if (this._textFormat == value) {
+			return this._textFormat;
 		}
-		this.textFormat = value;
+		this._textFormat = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.textFormat;
+		return this._textFormat;
 	}
+
+	private var _embedFonts:Bool = false;
 
 	/**
 		Determines if an embedded font is used or not.
 
 		@since 1.0.0
 	**/
-	public var embedFonts(default, set):Bool = false;
+	@:flash.property
+	public var embedFonts(get, set):Bool;
+
+	private function get_embedFonts():Bool {
+		return this._embedFonts;
+	}
 
 	private function set_embedFonts(value:Bool):Bool {
-		if (this.embedFonts == value) {
-			return this.embedFonts;
+		if (this._embedFonts == value) {
+			return this._embedFonts;
 		}
-		this.embedFonts = value;
+		this._embedFonts = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.embedFonts;
+		return this._embedFonts;
 	}
+
+	private var _paddingTop:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the view port's top edge and the
@@ -182,16 +240,23 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 		@since 1.0.0
 	**/
-	public var paddingTop(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingTop(get, set):Float;
+
+	private function get_paddingTop():Float {
+		return this._paddingTop;
+	}
 
 	private function set_paddingTop(value:Float):Float {
-		if (this.paddingTop == value) {
-			return this.paddingTop;
+		if (this._paddingTop == value) {
+			return this._paddingTop;
 		}
-		this.paddingTop = value;
+		this._paddingTop = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingTop;
+		return this._paddingTop;
 	}
+
+	private var _paddingRight:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the view port's right edge and the
@@ -199,16 +264,23 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 		@since 1.0.0
 	**/
-	public var paddingRight(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
 
 	private function set_paddingRight(value:Float):Float {
-		if (this.paddingRight == value) {
-			return this.paddingRight;
+		if (this._paddingRight == value) {
+			return this._paddingRight;
 		}
-		this.paddingRight = value;
+		this._paddingRight = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingRight;
+		return this._paddingRight;
 	}
+
+	private var _paddingBottom:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the view port's bottom edge and
@@ -216,16 +288,23 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 		@since 1.0.0
 	**/
-	public var paddingBottom(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingBottom(get, set):Float;
+
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
+	}
 
 	private function set_paddingBottom(value:Float):Float {
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
 		}
-		this.paddingBottom = value;
+		this._paddingBottom = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingBottom;
+		return this._paddingBottom;
 	}
+
+	private var _paddingLeft:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the view port's left edge and the
@@ -233,15 +312,20 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 		@since 1.0.0
 	**/
-	public var paddingLeft(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
 
 	private function set_paddingLeft(value:Float):Float {
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this.paddingLeft = value;
+		this._paddingLeft = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.paddingLeft;
+		return this._paddingLeft;
 	}
 
 	private var _actualMinVisibleWidth:Float = 0.0;
@@ -431,7 +515,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
-		return !this.smoothScrolling;
+		return !this._smoothScrolling;
 	}
 
 	private var _scrollX:Float = 0.0;
@@ -535,22 +619,22 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			newWidth = this._textMeasuredWidth + this._paddingLeft + this._paddingRight;
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newHeight = this._textMeasuredHeight + this._paddingTop + this._paddingBottom;
 		}
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			newMinWidth = this._textMeasuredWidth + this._paddingLeft + this._paddingRight;
 		}
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newMinHeight = this._textMeasuredHeight + this._paddingTop + this._paddingBottom;
 		}
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
@@ -601,43 +685,43 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.textField.embedFonts != this.embedFonts) {
-			this.textField.embedFonts = this.embedFonts;
+		if (this.textField.embedFonts != this._embedFonts) {
+			this.textField.embedFonts = this._embedFonts;
 			this._updatedTextStyles = true;
 		}
-		if (this.textFormat != this._previousTextFormat) {
-			this.textField.defaultTextFormat = textFormat;
+		if (this._textFormat != this._previousTextFormat) {
+			this.textField.defaultTextFormat = this._textFormat;
 			this._updatedTextStyles = true;
-			this._previousTextFormat = textFormat;
+			this._previousTextFormat = this._textFormat;
 		}
 	}
 
 	private function refreshText():Void {
-		var textFieldType = this._enabled ? this.textFieldType : TextFieldType.DYNAMIC;
+		var textFieldType = this._enabled ? this._textFieldType : TextFieldType.DYNAMIC;
 		if (this.textField.type != textFieldType) {
 			this.textField.type = textFieldType;
 		}
-		var calculatedWordWrap = this._explicitVisibleWidth != null ? this.wordWrap : false;
+		var calculatedWordWrap = this._explicitVisibleWidth != null ? this._wordWrap : false;
 		if (this.textField.wordWrap != calculatedWordWrap) {
 			this.textField.wordWrap = calculatedWordWrap;
 			this._updatedTextStyles = true;
 		}
-		if (this.textField.multiline != this.multiline) {
-			this.textField.multiline = this.multiline;
+		if (this.textField.multiline != this._multiline) {
+			this.textField.multiline = this._multiline;
 			this._updatedTextStyles = true;
 		}
-		this.textField.restrict = this.restrict;
+		this.textField.restrict = this._restrict;
 		var calculatedWidth = this._explicitVisibleWidth;
 		if (calculatedWidth != null) {
-			calculatedWidth -= (this.paddingLeft + this.paddingRight);
+			calculatedWidth -= (this._paddingLeft + this._paddingRight);
 		}
-		if (this.text == this._previousText && !this._updatedTextStyles && calculatedWidth == this._previousWidth) {
+		if (this._text == this._previousText && !this._updatedTextStyles && calculatedWidth == this._previousWidth) {
 			// nothing to refresh
 			return;
 		}
-		var hasText = this.text != null && this.text.length > 0;
+		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
-			this.textField.text = this.text;
+			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
@@ -652,24 +736,24 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		if (!hasText) {
 			this.textField.text = "";
 		}
-		this._previousText = this.text;
+		this._previousText = this._text;
 		this._previousWidth = calculatedWidth;
 	}
 
 	private function layoutTextField():Void {
-		if (this.smoothScrolling) {
-			this.textField.x = this.paddingLeft;
-			this.textField.y = this.paddingTop;
+		if (this._smoothScrolling) {
+			this.textField.x = this._paddingLeft;
+			this.textField.y = this._paddingTop;
 			var calculatedWidth = Math.max(this.actualWidth, this._actualVisibleWidth);
 			var calculatedHeight = Math.max(this.actualHeight, this._actualVisibleHeight);
-			this.textField.width = calculatedWidth - this.paddingLeft - this.paddingRight;
-			this.textField.height = calculatedHeight - this.paddingTop - this.paddingBottom;
+			this.textField.width = calculatedWidth - this._paddingLeft - this._paddingRight;
+			this.textField.height = calculatedHeight - this._paddingTop - this._paddingBottom;
 			this.textField.scrollV = 1;
 		} else {
-			this.textField.x = this.paddingLeft + this._scrollX;
-			this.textField.y = this.paddingTop + this._scrollY;
-			this.textField.width = this._actualVisibleWidth - this.paddingLeft - this.paddingRight;
-			this.textField.height = this._actualVisibleHeight - this.paddingTop - this.paddingBottom;
+			this.textField.x = this._paddingLeft + this._scrollX;
+			this.textField.y = this._paddingTop + this._scrollY;
+			this.textField.width = this._actualVisibleWidth - this._paddingLeft - this._paddingRight;
+			this.textField.height = this._actualVisibleHeight - this._paddingTop - this._paddingBottom;
 			// for some reason, in flash, after changing the TextField's height,
 			// you need to access textHeight to get a valid maxScrollV
 			var textFieldHeight = this.textField.textHeight;
@@ -693,8 +777,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
 
-		// don't try to use @:bypassAccessor here because we need to measure
-		// again just in case it affected the maximum y scroll position
+		// don't try to set the variable directly here because we need to
+		// measure again just in case it affected the maximum y scroll position
 		this.text = this.textField.text;
 
 		if (this._textFieldHasFocus) {
@@ -712,7 +796,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 					caretIndex--;
 				}
 				var lineIndex = this.textField.getLineIndexOfChar(this.textField.caretIndex - 1);
-				if (this.smoothScrolling) {
+				if (this._smoothScrolling) {
 					var lineHeight = this._savedLineMetrics.height + this._savedLineMetrics.leading;
 					var minScrollYForLine = container.maxScrollY - (this.textField.numLines - lineIndex - 1) * lineHeight;
 					var maxScrollYForLine = minScrollYForLine + ((this.textField.numLines - Math.floor(this.visibleHeight / lineHeight)) * lineHeight);
@@ -756,7 +840,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function textField_scrollHandler(event:Event):Void {
-		if (this._ignoreTextFieldScroll || this.smoothScrolling) {
+		if (this._ignoreTextFieldScroll || this._smoothScrolling) {
 			return;
 		}
 		var container = cast(this.parent, BaseScrollContainer);

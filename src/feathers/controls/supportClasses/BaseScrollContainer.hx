@@ -259,6 +259,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var showScrollBarX = false;
 	private var showScrollBarY = false;
 
+	private var _scrollBarXFactory:() -> IScrollBar = defaultScrollBarXFactory;
+
 	/**
 		Creates the horizontal scroll bar. The horizontal scroll bar may be any
 		implementation of `IScrollBar`, but typically, the
@@ -278,16 +280,23 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	public var scrollBarXFactory(default, set):() -> IScrollBar = defaultScrollBarXFactory;
+	@:flash.property
+	public var scrollBarXFactory(get, set):() -> IScrollBar;
+
+	private function get_scrollBarXFactory():() -> IScrollBar {
+		return this._scrollBarXFactory;
+	}
 
 	private function set_scrollBarXFactory(value:() -> IScrollBar):() -> IScrollBar {
-		if (this.scrollBarXFactory == value) {
-			return this.scrollBarXFactory;
+		if (this._scrollBarXFactory == value) {
+			return this._scrollBarXFactory;
 		}
-		this.scrollBarXFactory = value;
+		this._scrollBarXFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
-		return this.scrollBarXFactory;
+		return this._scrollBarXFactory;
 	}
+
+	private var _scrollBarYFactory:() -> IScrollBar = defaultScrollBarYFactory;
 
 	/**
 		Creates the vertical scroll bar. The vertical scroll bar may be any
@@ -308,15 +317,20 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	public var scrollBarYFactory(default, set):() -> IScrollBar = defaultScrollBarYFactory;
+	@:flash.property
+	public var scrollBarYFactory(get, set):() -> IScrollBar;
+
+	private function get_scrollBarYFactory():() -> IScrollBar {
+		return this._scrollBarYFactory;
+	}
 
 	private function set_scrollBarYFactory(value:() -> IScrollBar):() -> IScrollBar {
-		if (this.scrollBarYFactory == value) {
-			return this.scrollBarYFactory;
+		if (this._scrollBarYFactory == value) {
+			return this._scrollBarYFactory;
 		}
-		this.scrollBarYFactory = value;
+		this._scrollBarYFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
-		return this.scrollBarYFactory;
+		return this._scrollBarYFactory;
 	}
 
 	private var _temporaryScrollX = 0.0;
@@ -342,6 +356,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -383,6 +398,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
@@ -416,6 +432,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var minScrollX(get, never):Float;
 
 	private function get_minScrollX():Float {
@@ -440,6 +457,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var minScrollY(get, never):Float;
 
 	private function get_minScrollY():Float {
@@ -464,6 +482,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var maxScrollX(get, never):Float;
 
 	private function get_maxScrollX():Float {
@@ -488,6 +507,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var maxScrollY(get, never):Float;
 
 	private function get_maxScrollY():Float {
@@ -496,6 +516,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 		return this.scroller.maxScrollY;
 	}
+
+	private var _scrollStepX:Float = 0.0;
 
 	/**
 		The number of pixels the horizontal scroll position can be adjusted by
@@ -510,21 +532,23 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var scrollStepX(get, set):Float = 0.0;
+	@:flash.property
+	public var scrollStepX(get, set):Float;
 
 	private function get_scrollStepX():Float {
-		return this.scrollStepX;
+		return this._scrollStepX;
 	}
 
 	private function set_scrollStepX(value:Float):Float {
-		if (this.scrollStepX == value) {
-			return this.scrollStepX;
+		if (this._scrollStepX == value) {
+			return this._scrollStepX;
 		}
-		this.scrollStepX = value;
+		this._scrollStepX = value;
 		this.setInvalid(InvalidationFlag.SCROLL);
-		return this.scrollStepX;
+		return this._scrollStepX;
 	}
+
+	private var _scrollStepY:Float = 0.0;
 
 	/**
 		The number of pixels the vertical scroll position can be adjusted by
@@ -539,21 +563,23 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var scrollStepY(get, set):Float = 0.0;
+	@:flash.property
+	public var scrollStepY(get, set):Float;
 
 	private function get_scrollStepY():Float {
-		return this.scrollStepY;
+		return this._scrollStepY;
 	}
 
 	private function set_scrollStepY(value:Float):Float {
-		if (this.scrollStepY == value) {
-			return this.scrollStepY;
+		if (this._scrollStepY == value) {
+			return this._scrollStepY;
 		}
-		this.scrollStepY = value;
+		this._scrollStepY = value;
 		this.setInvalid(InvalidationFlag.SCROLL);
-		return this.scrollStepY;
+		return this._scrollStepY;
 	}
+
+	private var _scrollPolicyX:ScrollPolicy = AUTO;
 
 	/**
 		Determines whether the container may scroll horizontally (on the x-axis)
@@ -569,16 +595,23 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	public var scrollPolicyX(default, set):ScrollPolicy = AUTO;
+	@:flash.property
+	public var scrollPolicyX(get, set):ScrollPolicy;
+
+	private function get_scrollPolicyX():ScrollPolicy {
+		return this._scrollPolicyX;
+	}
 
 	private function set_scrollPolicyX(value:ScrollPolicy):ScrollPolicy {
-		if (this.scrollPolicyX == value) {
-			return this.scrollPolicyX;
+		if (this._scrollPolicyX == value) {
+			return this._scrollPolicyX;
 		}
-		this.scrollPolicyX = value;
+		this._scrollPolicyX = value;
 		this.setInvalid(InvalidationFlag.SCROLL);
-		return this.scrollPolicyX;
+		return this._scrollPolicyX;
 	}
+
+	private var _scrollPolicyY:ScrollPolicy = AUTO;
 
 	/**
 		Determines whether the container may scroll vertically (on the y-axis)
@@ -594,15 +627,20 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	public var scrollPolicyY(default, set):ScrollPolicy = AUTO;
+	@:flash.property
+	public var scrollPolicyY(get, set):ScrollPolicy;
+
+	private function get_scrollPolicyY():ScrollPolicy {
+		return this._scrollPolicyY;
+	}
 
 	private function set_scrollPolicyY(value:ScrollPolicy):ScrollPolicy {
-		if (this.scrollPolicyY == value) {
-			return this.scrollPolicyY;
+		if (this._scrollPolicyY == value) {
+			return this._scrollPolicyY;
 		}
-		this.scrollPolicyY = value;
+		this._scrollPolicyY = value;
 		this.setInvalid(InvalidationFlag.SCROLL);
-		return this.scrollPolicyY;
+		return this._scrollPolicyY;
 	}
 
 	/**
@@ -794,7 +832,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.removeChild(cast(this.scrollBarY, DisplayObject));
 			this.scrollBarY = null;
 		}
-		var scrollBarXFactory = this.scrollBarXFactory;
+		var scrollBarXFactory = this._scrollBarXFactory;
 		if (scrollBarXFactory == null) {
 			scrollBarXFactory = defaultScrollBarXFactory;
 		}
@@ -809,7 +847,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.scrollBarX.addEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
 		this.addChild(cast(this.scrollBarX, DisplayObject));
 
-		var scrollBarYFactory = this.scrollBarYFactory;
+		var scrollBarYFactory = this._scrollBarYFactory;
 		if (scrollBarYFactory == null) {
 			scrollBarYFactory = defaultScrollBarYFactory;
 		}
@@ -922,9 +960,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			}
 			var totalWidth = this.viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset;
 			if (forceScrollBars
-				|| this.scrollPolicyX == ON
+				|| this._scrollPolicyX == ON
 				|| ((totalWidth > scrollerWidth || (this.explicitMaxWidth != null && totalWidth > this.explicitMaxWidth))
-					&& this.scrollPolicyX != OFF)) {
+					&& this._scrollPolicyX != OFF)) {
 				this.showScrollBarX = true;
 				if (this.fixedScrollBars) {
 					if (this.scrollBarXPosition == TOP) {
@@ -951,9 +989,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			}
 			var totalHeight = this.viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset;
 			if (forceScrollBars
-				|| this.scrollPolicyY == ON
+				|| this._scrollPolicyY == ON
 				|| ((totalHeight > scrollerHeight || (this.explicitMaxHeight != null && totalHeight > this.explicitMaxHeight))
-					&& this.scrollPolicyY != OFF)) {
+					&& this._scrollPolicyY != OFF)) {
 				this.showScrollBarY = true;
 				if (this.fixedScrollBars) {
 					if (this.scrollBarYPosition == LEFT) {
@@ -1047,8 +1085,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function refreshScrollerValues():Void {
-		this.scroller.enabledX = this.scrollPolicyX != OFF;
-		this.scroller.enabledY = this.scrollPolicyY != OFF;
+		this.scroller.enabledX = this._scrollPolicyX != OFF;
+		this.scroller.enabledY = this._scrollPolicyY != OFF;
 		this.scroller.elasticEdges = this.elasticEdges;
 		this.scroller.simulateTouch = this.simulateTouch;
 	}
@@ -1059,7 +1097,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarX.maximum = this.scroller.maxScrollX;
 			this.scrollBarX.value = this.scroller.scrollX;
 			this.scrollBarX.page = (this.scroller.maxScrollX - this.scroller.minScrollX) * this.viewPort.visibleWidth / this.viewPort.width;
-			this.scrollBarX.step = this.scrollStepX;
+			this.scrollBarX.step = this._scrollStepX;
 			var displayScrollBarX = cast(this.scrollBarX, DisplayObjectContainer);
 			displayScrollBarX.visible = this.showScrollBarX;
 			if (!this.autoHideScrollBars) {
@@ -1073,7 +1111,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarY.maximum = this.scroller.maxScrollY;
 			this.scrollBarY.value = this.scroller.scrollY;
 			this.scrollBarY.page = (this.scroller.maxScrollY - this.scroller.minScrollY) * this.viewPort.visibleHeight / this.viewPort.height;
-			this.scrollBarY.step = this.scrollStepY;
+			this.scrollBarY.step = this._scrollStepY;
 			var displayScrollBarY = cast(this.scrollBarY, DisplayObjectContainer);
 			displayScrollBarY.visible = this.showScrollBarY;
 			if (!this.autoHideScrollBars) {
@@ -1431,15 +1469,15 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function scrollWithKeyboard(event:KeyboardEvent):Void {
-		if (this.scrollPolicyY == OFF && this.scrollPolicyX == OFF) {
+		if (this._scrollPolicyY == OFF && this._scrollPolicyX == OFF) {
 			return;
 		}
 
-		var stepX = this.scrollStepX;
+		var stepX = this._scrollStepX;
 		if (stepX <= 0.0) {
 			stepX = 1.0;
 		}
-		var stepY = this.scrollStepY;
+		var stepY = this._scrollStepY;
 		if (stepY <= 0.0) {
 			stepY = 1.0;
 		}
@@ -1478,10 +1516,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 
 		event.stopPropagation();
-		if (this.scrollY != newScrollY && this.scrollPolicyY != OFF) {
+		if (this.scrollY != newScrollY && this._scrollPolicyY != OFF) {
 			this.scrollY = newScrollY;
 		}
-		if (this.scrollX != newScrollX && this.scrollPolicyX != OFF) {
+		if (this.scrollX != newScrollX && this._scrollPolicyX != OFF) {
 			this.scrollX = newScrollX;
 		}
 	}

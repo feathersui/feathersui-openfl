@@ -266,7 +266,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	public var liveDragging(default, default):Bool = true;
+	public var liveDragging:Bool = true;
 
 	private var thumbContainer:Sprite;
 	private var _currentThumbSkin:DisplayObject = null;

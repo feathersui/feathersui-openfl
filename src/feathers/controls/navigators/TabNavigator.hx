@@ -58,38 +58,45 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 	private var tabBar:TabBar;
 
+	private var _dataProvider:IFlatCollection<TabItem> = null;
+
+	@:flash.property
 	public var dataProvider(default, set):IFlatCollection<TabItem>;
 
+	private function get_dataProvider():IFlatCollection<TabItem> {
+		return this._dataProvider;
+	}
+
 	private function set_dataProvider(value:IFlatCollection<TabItem>):IFlatCollection<TabItem> {
-		if (this.dataProvider == value) {
-			return this.dataProvider;
+		if (this._dataProvider == value) {
+			return this._dataProvider;
 		}
-		if (this.dataProvider != null) {
-			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler);
-			for (item in this.dataProvider) {
+		if (this._dataProvider != null) {
+			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler);
+			for (item in this._dataProvider) {
 				this.removeItemInternal(item.internalID);
 			}
 		}
-		this.dataProvider = value;
-		if (this.dataProvider != null) {
-			for (item in this.dataProvider) {
+		this._dataProvider = value;
+		if (this._dataProvider != null) {
+			for (item in this._dataProvider) {
 				this.addItemInternal(item.internalID, item);
 			}
-			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler, false, 0, true);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler, false, 0, true);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler, false, 0, true);
+			this._dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler, false, 0, true);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler, false, 0, true);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler, false, 0, true);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			// use the setter
 			this.selectedIndex = -1;
 		} else {
 			// use the setter
 			this.selectedIndex = 0;
 		}
-		return this.dataProvider;
+		return this._dataProvider;
 	}
 
 	private var _selectedIndex:Int = -1;
@@ -105,7 +112,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			value = -1;
 		}
 		if (this._selectedIndex == value) {
@@ -117,7 +124,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		if (this._selectedIndex == -1) {
 			this._selectedItem = null;
 		} else {
-			this._selectedItem = this.dataProvider.get(this._selectedIndex);
+			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -131,10 +138,10 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return -1;
 		}
-		return this.dataProvider.length - 1;
+		return this._dataProvider.length - 1;
 	}
 
 	private var _selectedItem:TabItem = null;
@@ -150,13 +157,13 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function set_selectedItem(value:TabItem):TabItem {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
 		// use the setter
-		this.selectedIndex = this.dataProvider.indexOf(value);
+		this.selectedIndex = this._dataProvider.indexOf(value);
 		return this._selectedItem;
 	}
 
@@ -194,7 +201,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		if (dataInvalid) {
 			this.tabBar.itemToText = this.itemToText;
-			this.tabBar.dataProvider = this.dataProvider;
+			this.tabBar.dataProvider = this._dataProvider;
 		}
 
 		if (selectionInvalid) {

@@ -37,14 +37,14 @@ class GridViewHeaderState {
 
 		@since 1.0.0
 	**/
-	public var column(default, null):GridViewColumn;
+	public var column:GridViewColumn;
 
 	/**
 		The horizontal position of the header within the `GridView`.
 
 		@since 1.0.0
 	**/
-	public var columnIndex(default, null):Int;
+	public var columnIndex:Int;
 
 	/**
 		Returns the text to display for the header, as returned by the function
@@ -54,5 +54,5 @@ class GridViewHeaderState {
 
 		@since 1.0.0
 	**/
-	public var text(default, null):String;
+	public var text:String;
 }

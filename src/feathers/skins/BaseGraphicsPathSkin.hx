@@ -78,22 +78,31 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 	private var _stateToFill:Map<EnumValue, FillStyle>;
 
+	private var _fill:FillStyle = SolidColor(0xcccccc);
+
 	/**
 		How the path's fill is styled. For example, it could be a solid color,
 		a gradient, or a tiled bitmap.
 
 		@since 1.0.0
 	**/
-	public var fill(default, set):FillStyle = SolidColor(0xcccccc);
+	@:flash.property
+	public var fill(get, set):FillStyle;
+
+	private function get_fill():FillStyle {
+		return this._fill;
+	}
 
 	private function set_fill(value:FillStyle):FillStyle {
-		if (this.fill == value) {
-			return this.fill;
+		if (this._fill == value) {
+			return this._fill;
 		}
-		this.fill = value;
+		this._fill = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.fill;
+		return this._fill;
 	}
+
+	private var _disabledFill:FillStyle;
 
 	/**
 		How the path's fill is styled when the state context is disabled. To
@@ -104,16 +113,23 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public var disabledFill(default, set):FillStyle = null;
+	@:flash.property
+	public var disabledFill(get, set):FillStyle;
+
+	private function get_disabledFill():FillStyle {
+		return this._disabledFill;
+	}
 
 	private function set_disabledFill(value:FillStyle):FillStyle {
-		if (this.disabledFill == value) {
-			return this.disabledFill;
+		if (this._disabledFill == value) {
+			return this._disabledFill;
 		}
-		this.disabledFill = value;
+		this._disabledFill = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.disabledFill;
+		return this._disabledFill;
 	}
+
+	private var _selectedFill:FillStyle;
 
 	/**
 		How the path's fill is styled when the state context is selected. To
@@ -123,34 +139,48 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public var selectedFill(default, set):FillStyle = null;
+	@:flash.property
+	public var selectedFill(get, set):FillStyle;
+
+	private function get_selectedFill():FillStyle {
+		return this._selectedFill;
+	}
 
 	private function set_selectedFill(value:FillStyle):FillStyle {
-		if (this.selectedFill == value) {
-			return this.selectedFill;
+		if (this._selectedFill == value) {
+			return this._selectedFill;
 		}
-		this.selectedFill = value;
+		this._selectedFill = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.selectedFill;
+		return this._selectedFill;
 	}
 
 	private var _stateToBorder:Map<EnumValue, LineStyle>;
+
+	private var _border:LineStyle;
 
 	/**
 		How the path's border is styled.
 
 		@since 1.0.0
 	**/
-	public var border(default, set):LineStyle;
+	@:flash.property
+	public var border(get, set):LineStyle;
+
+	private function get_border():LineStyle {
+		return this._border;
+	}
 
 	private function set_border(value:LineStyle):LineStyle {
-		if (this.border == value) {
-			return this.border;
+		if (this._border == value) {
+			return this._border;
 		}
-		this.border = value;
+		this._border = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.border;
+		return this._border;
 	}
+
+	private var _disabledBorder:LineStyle;
 
 	/**
 		How the path's border is styled when the state context is disabled. To
@@ -161,16 +191,23 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public var disabledBorder(default, set):LineStyle;
+	@:flash.property
+	public var disabledBorder(get, set):LineStyle;
+
+	private function get_disabledBorder():LineStyle {
+		return this._disabledBorder;
+	}
 
 	private function set_disabledBorder(value:LineStyle):LineStyle {
-		if (this.disabledBorder == value) {
-			return this.disabledBorder;
+		if (this._disabledBorder == value) {
+			return this._disabledBorder;
 		}
-		this.disabledBorder = value;
+		this._disabledBorder = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.disabledBorder;
+		return this._disabledBorder;
 	}
+
+	private var _selectedBorder:LineStyle;
 
 	/**
 		How the path's border is styled when the state context is selected. To
@@ -180,15 +217,20 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 		@since 1.0.0
 	**/
-	public var selectedBorder(default, set):LineStyle;
+	@:flash.property
+	public var selectedBorder(get, set):LineStyle;
+
+	private function get_selectedBorder():LineStyle {
+		return this._selectedBorder;
+	}
 
 	private function set_selectedBorder(value:LineStyle):LineStyle {
-		if (this.selectedBorder == value) {
-			return this.selectedBorder;
+		if (this._selectedBorder == value) {
+			return this._selectedBorder;
 		}
-		this.selectedBorder = value;
+		this._selectedBorder = value;
 		this.setInvalid(InvalidationFlag.STYLES);
-		return this.selectedBorder;
+		return this._selectedBorder;
 	}
 
 	/**
@@ -441,7 +483,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 	private function getCurrentBorderWithoutCache():LineStyle {
 		if (this._stateContext == null) {
-			return this.border;
+			return this._border;
 		}
 		if (this._stateToBorder != null) {
 			var result = this._stateToBorder.get(this._stateContext.currentState);
@@ -449,19 +491,19 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 				return result;
 			}
 		}
-		if (this.disabledBorder != null && Std.is(this._stateContext, IUIControl)) {
+		if (this._disabledBorder != null && Std.is(this._stateContext, IUIControl)) {
 			var control = cast(this._stateContext, IUIControl);
 			if (!control.enabled) {
-				return this.disabledBorder;
+				return this._disabledBorder;
 			}
 		}
-		if (this.selectedBorder != null && Std.is(this._stateContext, IToggle)) {
+		if (this._selectedBorder != null && Std.is(this._stateContext, IToggle)) {
 			var toggle = cast(this._stateContext, IToggle);
 			if (toggle.selected) {
-				return this.selectedBorder;
+				return this._selectedBorder;
 			}
 		}
-		return this.border;
+		return this._border;
 	}
 
 	/**
@@ -484,7 +526,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 	private function getCurrentFillWithoutCache() {
 		if (this._stateContext == null) {
-			return this.fill;
+			return this._fill;
 		}
 		if (this._stateToFill != null) {
 			var result = this._stateToFill.get(this._stateContext.currentState);
@@ -492,19 +534,19 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 				return result;
 			}
 		}
-		if (this.disabledFill != null && Std.is(this._stateContext, IUIControl)) {
+		if (this._disabledFill != null && Std.is(this._stateContext, IUIControl)) {
 			var control = cast(this._stateContext, IUIControl);
 			if (!control.enabled) {
-				return this.disabledFill;
+				return this._disabledFill;
 			}
 		}
-		if (this.selectedFill != null && Std.is(this._stateContext, IToggle)) {
+		if (this._selectedFill != null && Std.is(this._stateContext, IToggle)) {
 			var toggle = cast(this._stateContext, IToggle);
 			if (toggle.selected) {
-				return this.selectedFill;
+				return this._selectedFill;
 			}
 		}
-		return this.fill;
+		return this._fill;
 	}
 
 	/**

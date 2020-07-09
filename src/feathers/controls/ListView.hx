@@ -161,10 +161,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var listViewPort:AdvancedLayoutViewPort;
 
 	override private function get_focusEnabled():Bool {
-		return (this.selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
+		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled
 			&& this._focusEnabled;
 	}
+
+	private var _dataProvider:IFlatCollection<Dynamic> = null;
 
 	/**
 		The collection of data displayed by the list view.
@@ -191,34 +193,39 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var dataProvider(default, set):IFlatCollection<Dynamic> = null;
+	@:flash.property
+	public var dataProvider(get, set):IFlatCollection<Dynamic>;
+
+	private function get_dataProvider():IFlatCollection<Dynamic> {
+		return this._dataProvider;
+	}
 
 	private function set_dataProvider(value:IFlatCollection<Dynamic>):IFlatCollection<Dynamic> {
-		if (this.dataProvider == value) {
-			return this.dataProvider;
+		if (this._dataProvider == value) {
+			return this._dataProvider;
 		}
 		this._virtualCache.resize(0);
-		if (this.dataProvider != null) {
-			this.dataProvider.removeEventListener(Event.CHANGE, listView_dataProvider_changeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, listView_dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, listView_dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, listView_dataProvider_replaceItemHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, listView_dataProvider_removeAllHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
-			this.dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
+		if (this._dataProvider != null) {
+			this._dataProvider.removeEventListener(Event.CHANGE, listView_dataProvider_changeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, listView_dataProvider_addItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, listView_dataProvider_removeItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, listView_dataProvider_replaceItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, listView_dataProvider_removeAllHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
 		}
-		this.dataProvider = value;
-		if (this.dataProvider != null) {
-			this._virtualCache.resize(this.dataProvider.length);
-			this.dataProvider.addEventListener(Event.CHANGE, listView_dataProvider_changeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, listView_dataProvider_addItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, listView_dataProvider_removeItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, listView_dataProvider_replaceItemHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, listView_dataProvider_removeAllHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
-			this.dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
+		this._dataProvider = value;
+		if (this._dataProvider != null) {
+			this._virtualCache.resize(this._dataProvider.length);
+			this._dataProvider.addEventListener(Event.CHANGE, listView_dataProvider_changeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, listView_dataProvider_addItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, listView_dataProvider_removeItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, listView_dataProvider_replaceItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, listView_dataProvider_removeAllHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
 		}
 
 		// reset the scroll position because this is a drastic change and
@@ -230,7 +237,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.selectedIndex = -1; // use the setter
 
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.dataProvider;
+		return this._dataProvider;
 	}
 
 	private var _selectedIndex:Int = -1;
@@ -246,7 +253,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		if (!this.selectable || this.dataProvider == null) {
+		if (!this._selectable || this._dataProvider == null) {
 			value = -1;
 		}
 		if (this._selectedIndex == value) {
@@ -258,7 +265,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._selectedIndex == -1) {
 			this._selectedItem = null;
 		} else {
-			this._selectedItem = this.dataProvider.get(this._selectedIndex);
+			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -272,10 +279,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return -1;
 		}
-		return this.dataProvider.length - 1;
+		return this._dataProvider.length - 1;
 	}
 
 	private var _selectedItem:Dynamic = null;
@@ -291,13 +298,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (!this.selectable || this.dataProvider == null) {
+		if (!this._selectable || this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
 		// use the setter
-		this.selectedIndex = this.dataProvider.indexOf(value);
+		this.selectedIndex = this._dataProvider.indexOf(value);
 		return this._selectedItem;
 	}
 
@@ -356,6 +363,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _unrenderedData:Array<Dynamic> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 
+	private var _selectable:Bool = true;
+
 	/**
 		Determines if items in the list view may be selected. By default only a
 		single item may be selected at any given time. In other words, if item
@@ -373,19 +382,26 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		@see `ListView.selectedItem`
 		@see `ListView.selectedIndex`
 	**/
-	public var selectable(default, set):Bool = true;
+	@:flash.property
+	public var selectable(get, set):Bool;
+
+	private function get_selectable():Bool {
+		return this._selectable;
+	}
 
 	private function set_selectable(value:Bool):Bool {
-		if (this.selectable == value) {
-			return this.selectable;
+		if (this._selectable == value) {
+			return this._selectable;
 		}
-		this.selectable = value;
-		if (!this.selectable) {
+		this._selectable = value;
+		if (!this._selectable) {
 			// use the setter
 			this.selectedIndex = -1;
 		}
-		return this.selectable;
+		return this._selectable;
 	}
+
+	private var _virtualLayout:Bool = true;
 
 	/**
 		Indicates if the list view's layout is allowed to virtualize items or
@@ -399,15 +415,20 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var virtualLayout(default, set):Bool = true;
+	@:flash.property
+	public var virtualLayout(get, set):Bool;
+
+	private function get_virtualLayout():Bool {
+		return this._virtualLayout;
+	}
 
 	private function set_virtualLayout(value:Bool):Bool {
-		if (this.virtualLayout = value) {
-			return this.virtualLayout;
+		if (this._virtualLayout = value) {
+			return this._virtualLayout;
 		}
-		this.virtualLayout = value;
+		this._virtualLayout = value;
 		this.setInvalid(InvalidationFlag.LAYOUT);
-		return this.virtualLayout;
+		return this._virtualLayout;
 	}
 
 	/**
@@ -465,7 +486,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		 @since 1.0.0
 	**/
 	public function scrollToIndex(index:Int, ?animationDuration:Float):Void {
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
 
@@ -473,12 +494,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var targetY = this.scrollY;
 		if (Std.is(this.layout, IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
-			var result = scrollLayout.getNearestScrollPositionForIndex(index, this.dataProvider.length, this.viewPort.visibleWidth,
+			var result = scrollLayout.getNearestScrollPositionForIndex(index, this._dataProvider.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);
 			targetX = result.x;
 			targetY = result.y;
 		} else {
-			var item = this.dataProvider.get(index);
+			var item = this._dataProvider.get(index);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer == null) {
 				return;
@@ -519,8 +540,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				// don't keep the old layout's cache because it may not be
 				// compatible with the new layout
 				this._virtualCache.resize(0);
-				if (this.dataProvider != null) {
-					this._virtualCache.resize(this.dataProvider.length);
+				if (this._dataProvider != null) {
+					this._virtualCache.resize(this._dataProvider.length);
 				}
 			}
 			this.listViewPort.layout = this.layout;
@@ -566,7 +587,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(itemRendererInvalid);
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return;
 		}
 
@@ -649,21 +670,21 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._layoutItems.resize(0);
 		this._visibleIndices.start = 0;
 		this._visibleIndices.end = 0;
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
-		this._layoutItems.resize(this.dataProvider.length);
+		this._layoutItems.resize(this._dataProvider.length);
 
-		if (this.virtualLayout && Std.is(this.layout, IVirtualLayout)) {
+		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
 			virtualLayout.virtualCache = this._virtualCache;
-			virtualLayout.getVisibleIndices(this.dataProvider.length, this.listViewPort.visibleWidth, this.listViewPort.visibleHeight, this._visibleIndices);
+			virtualLayout.getVisibleIndices(this._dataProvider.length, this.listViewPort.visibleWidth, this.listViewPort.visibleHeight, this._visibleIndices);
 		} else {
 			this._visibleIndices.start = 0;
-			this._visibleIndices.end = this.dataProvider.length - 1;
+			this._visibleIndices.end = this._dataProvider.length - 1;
 		}
 		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
-			var item = this.dataProvider.get(i);
+			var item = this._dataProvider.get(i);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
 				this._currentItemState.data = item;
@@ -708,7 +729,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function renderUnrenderedData():Void {
 		for (item in this._unrenderedData) {
-			var index = this.dataProvider.indexOf(item);
+			var index = this._dataProvider.indexOf(item);
 			var itemRenderer = this.createItemRenderer(item, index);
 			itemRenderer.visible = true;
 			this.activeItemRenderers.push(itemRenderer);
@@ -771,11 +792,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
-		this.selectedIndex = this.dataProvider.indexOf(this._selectedItem); // use the setter
+		this.selectedIndex = this._dataProvider.indexOf(this._selectedItem); // use the setter
 	}
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {
-		var index = this.dataProvider.indexOf(data);
+		var index = this._dataProvider.indexOf(data);
 		this._currentItemState.data = data;
 		this._currentItemState.index = index;
 		this._currentItemState.text = this.itemToText(data);
@@ -792,7 +813,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var data = this.itemRendererToData.get(itemRenderer);
 		this.dispatchItemTriggerEvent(data);
 
-		if (!this.selectable || !this.pointerSelectionEnabled) {
+		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
@@ -805,7 +826,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		// use the setter
-		this.selectedIndex = this.dataProvider.indexOf(data);
+		this.selectedIndex = this._dataProvider.indexOf(data);
 	}
 
 	private function listView_itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -817,7 +838,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var data = this.itemRendererToData.get(itemRenderer);
 		this.dispatchItemTriggerEvent(data);
 
-		if (!this.selectable || !this.pointerSelectionEnabled) {
+		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
@@ -834,7 +855,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (!this.selectable) {
+		if (!this._selectable) {
 			var toggle = cast(itemRenderer, IToggle);
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
@@ -888,7 +909,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		if (this._selectedIndex == event.index) {
-			this._selectedItem = this.dataProvider.get(this._selectedIndex);
+			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -904,7 +925,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function listView_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
 			this._virtualCache.resize(0);
-			this._virtualCache.resize(this.dataProvider.length);
+			this._virtualCache.resize(this._dataProvider.length);
 		}
 		// use the setter
 		this.selectedIndex = -1;
@@ -915,7 +936,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
 			this._virtualCache.resize(0);
-			this._virtualCache.resize(this.dataProvider.length);
+			this._virtualCache.resize(this._dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
@@ -925,13 +946,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
 			this._virtualCache.resize(0);
-			this._virtualCache.resize(this.dataProvider.length);
+			this._virtualCache.resize(this._dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
-		if (this.dataProvider == null || this.dataProvider.length == 0) {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
 		var result = this._selectedIndex;
@@ -951,15 +972,15 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			case Keyboard.HOME:
 				result = 0;
 			case Keyboard.END:
-				result = this.dataProvider.length - 1;
+				result = this._dataProvider.length - 1;
 			default:
 				// not keyboard navigation
 				return;
 		}
 		if (result < 0) {
 			result = 0;
-		} else if (result >= this.dataProvider.length) {
-			result = this.dataProvider.length - 1;
+		} else if (result >= this._dataProvider.length) {
+			result = this._dataProvider.length - 1;
 		}
 		event.stopPropagation();
 		// use the setter
