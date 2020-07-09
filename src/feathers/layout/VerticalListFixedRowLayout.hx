@@ -35,44 +35,61 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		super();
 	}
 
+	private var _scrollX:Float = 0.0;
+
 	/**
 		@see `feathers.layout.IScrollLayout.scrollX`
 	**/
-	public var scrollX(default, set):Float = 0.0;
+	@:flash.property
+	public var scrollX(get, set):Float;
+
+	private function get_scrollX():Float {
+		return this._scrollX;
+	}
 
 	private function set_scrollX(value:Float):Float {
-		this.scrollX = value;
-		return this.scrollX;
+		this._scrollX = value;
+		return this._scrollX;
 	}
+
+	private var _scrollY:Float = 0.0;
 
 	/**
 		@see `feathers.layout.IScrollLayout.scrollY`
 	**/
-	public var scrollY(default, set):Float = 0.0;
+	@:flash.property
+	public var scrollY(get, set):Float;
+
+	private function get_scrollY():Float {
+		return this._scrollY;
+	}
 
 	private function set_scrollY(value:Float):Float {
-		this.scrollY = value;
-		return this.scrollY;
+		this._scrollY = value;
+		return this._scrollY;
 	}
+
+	private var _virtualCache:Array<Dynamic>;
 
 	/**
 		@see `feathers.layout.IVirtualLayout.virtualCache`
 	**/
-	@:isVar
+	@:flash.property
 	public var virtualCache(get, set):Array<Dynamic>;
 
 	private function get_virtualCache():Array<Dynamic> {
-		return this.virtualCache;
+		return this._virtualCache;
 	}
 
 	private function set_virtualCache(value:Array<Dynamic>):Array<Dynamic> {
-		this.virtualCache = value;
-		return this.virtualCache;
+		this._virtualCache = value;
+		return this._virtualCache;
 	}
 
 	/**
 		@see `feathers.layout.IScrollLayout.elasticTop`
 	**/
+	@:flash.property
 	public var elasticTop(get, never):Bool;
 
 	private function get_elasticTop():Bool {
@@ -82,6 +99,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	/**
 		@see `feathers.layout.IScrollLayout.elasticRight`
 	**/
+	@:flash.property
 	public var elasticRight(get, never):Bool;
 
 	private function get_elasticRight():Bool {
@@ -91,6 +109,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	/**
 		@see `feathers.layout.IScrollLayout.elasticBottom`
 	**/
+	@:flash.property
 	public var elasticBottom(get, never):Bool;
 
 	private function get_elasticBottom():Bool {
@@ -100,6 +119,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	/**
 		@see `feathers.layout.IScrollLayout.elasticLeft`
 	**/
+	@:flash.property
 	public var elasticLeft(get, never):Bool;
 
 	private function get_elasticLeft():Bool {
@@ -109,11 +129,14 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	/**
 		@see `feathers.layout.IScrollLayout.requiresLayoutOnScroll`
 	**/
+	@:flash.property
 	public var requiresLayoutOnScroll(get, never):Bool;
 
 	private function get_requiresLayoutOnScroll():Bool {
 		return true;
 	}
+
+	private var _rowHeight:Null<Float> = null;
 
 	/**
 		The height to set on each item, or `null`, if the row height should be
@@ -129,16 +152,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var rowHeight(default, set):Null<Float> = null;
+	@:flash.property
+	public var rowHeight(get, set):Null<Float>;
+
+	private function get_rowHeight():Null<Float> {
+		return this._rowHeight;
+	}
 
 	private function set_rowHeight(value:Null<Float>):Null<Float> {
-		if (this.rowHeight == value) {
-			return this.rowHeight;
+		if (this._rowHeight == value) {
+			return this._rowHeight;
 		}
-		this.rowHeight = value;
+		this._rowHeight = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.rowHeight;
+		return this._rowHeight;
 	}
+
+	private var _requestedRowCount:Null<Float> = 5.0;
 
 	/**
 		The number of rows to render, if the height of the container has not
@@ -154,16 +184,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var requestedRowCount(default, set):Null<Float> = 5.0;
+	@:flash.property
+	public var requestedRowCount(get, set):Null<Float>;
+
+	private function get_requestedRowCount():Null<Float> {
+		return this._requestedRowCount;
+	}
 
 	private function set_requestedRowCount(value:Null<Float>):Null<Float> {
-		if (this.requestedRowCount == value) {
-			return this.requestedRowCount;
+		if (this._requestedRowCount == value) {
+			return this._requestedRowCount;
 		}
-		this.requestedRowCount = value;
+		this._requestedRowCount = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.requestedRowCount;
+		return this._requestedRowCount;
 	}
+
+	private var _paddingTop:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's top edge and its
@@ -179,16 +216,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var paddingTop(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingTop(get, set):Float;
+
+	private function get_paddingTop():Float {
+		return this._paddingTop;
+	}
 
 	private function set_paddingTop(value:Float):Float {
-		if (this.paddingTop == value) {
-			return this.paddingTop;
+		if (this._paddingTop == value) {
+			return this._paddingTop;
 		}
-		this.paddingTop = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingTop;
+		this._paddingTop = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingTop;
 	}
+
+	private var _paddingRight:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's right edge and its
@@ -204,16 +248,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var paddingRight(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
 
 	private function set_paddingRight(value:Float):Float {
-		if (this.paddingRight == value) {
-			return this.paddingRight;
+		if (this._paddingRight == value) {
+			return this._paddingRight;
 		}
-		this.paddingRight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingRight;
+		this._paddingRight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingRight;
 	}
+
+	private var _paddingBottom:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's bottom edge and its
@@ -229,16 +280,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var paddingBottom(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingBottom(get, set):Float;
+
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
+	}
 
 	private function set_paddingBottom(value:Float):Float {
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
 		}
-		this.paddingBottom = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingBottom;
+		this._paddingBottom = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingBottom;
 	}
+
+	private var _paddingLeft:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's left edge and its
@@ -254,16 +312,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var paddingLeft(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
 
 	private function set_paddingLeft(value:Float):Float {
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this.paddingLeft = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingLeft;
+		this._paddingLeft = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingLeft;
 	}
+
+	private var _gap:Float = 0.0;
 
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
@@ -278,16 +343,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var gap(default, set):Float = 0.0;
+	@:flash.property
+	public var gap(get, set):Float;
+
+	private function get_gap():Float {
+		return this._gap;
+	}
 
 	private function set_gap(value:Float):Float {
-		if (this.gap == value) {
-			return this.gap;
+		if (this._gap == value) {
+			return this._gap;
 		}
-		this.gap = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.gap;
+		this._gap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._gap;
 	}
+
+	private var _verticalAlign:VerticalAlign = TOP;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
@@ -310,15 +382,20 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
-	public var verticalAlign(default, set):VerticalAlign = TOP;
+	@:flash.property
+	public var verticalAlign(get, set):VerticalAlign;
+
+	private function get_verticalAlign():VerticalAlign {
+		return this._verticalAlign;
+	}
 
 	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
-		if (this.verticalAlign == value) {
-			return this.verticalAlign;
+		if (this._verticalAlign == value) {
+			return this._verticalAlign;
 		}
-		this.verticalAlign = value;
+		this._verticalAlign = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.verticalAlign;
+		return this._verticalAlign;
 	}
 
 	/**
@@ -326,9 +403,9 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortWidth = this.calculateViewPortWidth(items, measurements);
-		var itemWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		var itemWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
 		var actualRowHeight = this.calculateRowHeight(items, itemWidth);
-		var positionY = this.paddingTop;
+		var positionY = this._paddingTop;
 		for (item in items) {
 			if (item != null) {
 				if (Std.is(item, ILayoutObject)) {
@@ -336,24 +413,24 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 						continue;
 					}
 				}
-				item.x = this.paddingLeft;
+				item.x = this._paddingLeft;
 				item.y = positionY;
 				item.width = itemWidth;
 				item.height = actualRowHeight;
 			}
-			positionY += actualRowHeight + this.gap;
+			positionY += actualRowHeight + this._gap;
 		}
 		if (items.length > 0) {
-			positionY -= this.gap;
+			positionY -= this._gap;
 		}
-		positionY += this.paddingBottom;
+		positionY += this._paddingBottom;
 
 		var viewPortHeight = positionY;
 		if (measurements.height != null) {
 			viewPortHeight = measurements.height;
 		} else {
-			if (this.requestedRowCount != null) {
-				viewPortHeight = actualRowHeight * this.requestedRowCount;
+			if (this._requestedRowCount != null) {
+				viewPortHeight = actualRowHeight * this._requestedRowCount;
 			}
 			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
 				viewPortHeight = measurements.minHeight;
@@ -362,7 +439,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 			}
 		}
 
-		this.applyVerticalAlign(items, positionY - this.paddingTop - this.paddingBottom, viewPortHeight);
+		this.applyVerticalAlign(items, positionY - this._paddingTop - this._paddingBottom, viewPortHeight);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();
@@ -397,22 +474,22 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				maxWidth = itemWidth;
 			}
 		}
-		return maxWidth + this.paddingLeft + this.paddingRight;
+		return maxWidth + this._paddingLeft + this._paddingRight;
 	}
 
 	private function calculateRowHeight(items:Array<DisplayObject>, itemWidth:Float):Float {
 		var actualRowHeight = 0.0;
-		if (this.rowHeight != null) {
-			actualRowHeight = this.rowHeight;
+		if (this._rowHeight != null) {
+			actualRowHeight = this._rowHeight;
 		} else {
 			// find the height of the first existing item
 			for (i in 0...items.length) {
 				var item = items[i];
 				if (item == null) {
-					if (this.virtualCache == null || virtualCache.length <= i) {
+					if (this._virtualCache == null || this._virtualCache.length <= i) {
 						continue;
 					}
-					var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
+					var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
 					if (cacheItem == null) {
 						continue;
 					}
@@ -429,17 +506,17 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					cast(item, IValidating).validateNow();
 				}
 				actualRowHeight = item.height;
-				if (this.virtualCache != null) {
+				if (this._virtualCache != null) {
 					// since all items are the same height, we can store just
 					// one value as an optimization
-					var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
+					var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
 					if (cacheItem == null) {
 						cacheItem = new VirtualCacheItem(actualRowHeight);
-						this.virtualCache[0] = cacheItem;
+						this._virtualCache[0] = cacheItem;
 						FeathersEvent.dispatch(this, Event.CHANGE);
 					} else if (cacheItem.itemHeight != actualRowHeight) {
 						cacheItem.itemHeight = actualRowHeight;
-						this.virtualCache[0] = cacheItem;
+						this._virtualCache[0] = cacheItem;
 						FeathersEvent.dispatch(this, Event.CHANGE);
 					}
 					// changing the item height in the cache may affect the
@@ -457,19 +534,19 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	**/
 	public function getVisibleIndices(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange {
 		var itemHeight = 0.0;
-		if (this.rowHeight != null) {
-			itemHeight = this.rowHeight;
-		} else if (this.virtualCache != null) {
-			var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
+		if (this._rowHeight != null) {
+			itemHeight = this._rowHeight;
+		} else if (this._virtualCache != null) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
 			if (cacheItem != null) {
 				itemHeight = cacheItem.itemHeight;
 			}
 		}
-		itemHeight += this.gap;
+		itemHeight += this._gap;
 		var startIndex = 0;
 		var endIndex = 0;
 		if (itemHeight > 0.0) {
-			startIndex = Math.floor(this.scrollY / itemHeight);
+			startIndex = Math.floor(this._scrollY / itemHeight);
 			if (startIndex < 0) {
 				startIndex = 0;
 			}
@@ -498,20 +575,20 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	**/
 	public function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point {
 		var itemHeight = 0.0;
-		if (this.rowHeight != null) {
-			itemHeight = this.rowHeight;
-		} else if (this.virtualCache != null) {
-			var cacheItem = Std.downcast(this.virtualCache[0], VirtualCacheItem);
+		if (this._rowHeight != null) {
+			itemHeight = this._rowHeight;
+		} else if (this._virtualCache != null) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
 			if (cacheItem != null) {
 				itemHeight = cacheItem.itemHeight;
 			}
 		}
-		itemHeight += this.gap;
+		itemHeight += this._gap;
 
-		var maxY = this.paddingTop + (itemHeight * index);
+		var maxY = this._paddingTop + (itemHeight * index);
 		var minY = maxY + itemHeight - height;
 
-		var targetY = this.scrollY;
+		var targetY = this._scrollY;
 		if (targetY < minY) {
 			targetY = minY;
 		} else if (targetY > maxY) {
@@ -520,23 +597,23 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		if (result == null) {
 			result = new Point();
 		}
-		result.x = this.scrollX;
+		result.x = this._scrollX;
 		result.y = targetY;
 		return result;
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, contentHeight:Float, viewPortHeight:Float):Void {
-		if (this.verticalAlign != BOTTOM && this.verticalAlign != MIDDLE) {
+		if (this._verticalAlign != BOTTOM && this._verticalAlign != MIDDLE) {
 			return;
 		}
-		var maxAlignmentHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
+		var maxAlignmentHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
 		if (contentHeight >= maxAlignmentHeight) {
 			return;
 		}
 		var verticalOffset = 0.0;
-		if (this.verticalAlign == BOTTOM) {
+		if (this._verticalAlign == BOTTOM) {
 			verticalOffset = maxAlignmentHeight - contentHeight;
-		} else if (this.verticalAlign == MIDDLE) {
+		} else if (this._verticalAlign == MIDDLE) {
 			verticalOffset = (maxAlignmentHeight - contentHeight) / 2.0;
 		}
 		for (item in items) {
@@ -550,7 +627,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					continue;
 				}
 			}
-			item.y = Math.max(this.paddingTop, item.y + verticalOffset);
+			item.y = Math.max(this._paddingTop, item.y + verticalOffset);
 		}
 	}
 }

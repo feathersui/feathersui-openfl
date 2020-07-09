@@ -32,44 +32,61 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		super();
 	}
 
+	private var _scrollX:Float = 0.0;
+
 	/**
 		@see `feathers.layout.IScrollLayout.scrollX`
 	**/
-	public var scrollX(default, set):Float = 0.0;
+	@:flash.property
+	public var scrollX(get, set):Float;
+
+	private function get_scrollX():Float {
+		return this._scrollX;
+	}
 
 	private function set_scrollX(value:Float):Float {
-		this.scrollX = value;
-		return this.scrollX;
+		this._scrollX = value;
+		return this._scrollX;
 	}
+
+	private var _scrollY:Float = 0.0;
 
 	/**
 		@see `feathers.layout.IScrollLayout.scrollY`
 	**/
-	public var scrollY(default, set):Float = 0.0;
+	@:flash.property
+	public var scrollY(get, set):Float;
+
+	private function get_scrollY():Float {
+		return this._scrollY;
+	}
 
 	private function set_scrollY(value:Float):Float {
-		this.scrollY = value;
-		return this.scrollY;
+		this._scrollY = value;
+		return this._scrollY;
 	}
+
+	private var _virtualCache:Array<Dynamic>;
 
 	/**
 		@see `feathers.layout.IVirtualLayout.virtualCache`
 	**/
-	@:isVar
+	@:flash.property
 	public var virtualCache(get, set):Array<Dynamic>;
 
 	private function get_virtualCache():Array<Dynamic> {
-		return this.virtualCache;
+		return this._virtualCache;
 	}
 
 	private function set_virtualCache(value:Array<Dynamic>):Array<Dynamic> {
-		this.virtualCache = value;
-		return this.virtualCache;
+		this._virtualCache = value;
+		return this._virtualCache;
 	}
 
 	/**
 		@see `feathers.layout.IScrollLayout.elasticTop`
 	**/
+	@:flash.property
 	public var elasticTop(get, never):Bool;
 
 	private function get_elasticTop():Bool {
@@ -79,6 +96,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	/**
 		@see `feathers.layout.IScrollLayout.elasticRight`
 	**/
+	@:flash.property
 	public var elasticRight(get, never):Bool;
 
 	private function get_elasticRight():Bool {
@@ -88,6 +106,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	/**
 		@see `feathers.layout.IScrollLayout.elasticBottom`
 	**/
+	@:flash.property
 	public var elasticBottom(get, never):Bool;
 
 	private function get_elasticBottom():Bool {
@@ -97,6 +116,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	/**
 		@see `feathers.layout.IScrollLayout.elasticLeft`
 	**/
+	@:flash.property
 	public var elasticLeft(get, never):Bool;
 
 	private function get_elasticLeft():Bool {
@@ -106,11 +126,14 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	/**
 		@see `feathers.layout.IScrollLayout.requiresLayoutOnScroll`
 	**/
+	@:flash.property
 	public var requiresLayoutOnScroll(get, never):Bool;
 
 	private function get_requiresLayoutOnScroll():Bool {
 		return true;
 	}
+
+	private var _requestedColumnCount:Null<Float> = 5.0;
 
 	/**
 		The number of columns to render, if the width of the container has not
@@ -127,16 +150,23 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 		@since 1.0.0
 	**/
-	public var requestedColumnCount(default, set):Null<Float> = 5.0;
+	@:flash.property
+	public var requestedColumnCount(get, set):Null<Float>;
+
+	private function get_requestedColumnCount():Null<Float> {
+		return this._requestedColumnCount;
+	}
 
 	private function set_requestedColumnCount(value:Null<Float>):Null<Float> {
-		if (this.requestedColumnCount == value) {
-			return this.requestedColumnCount;
+		if (this._requestedColumnCount == value) {
+			return this._requestedColumnCount;
 		}
-		this.requestedColumnCount = value;
+		this._requestedColumnCount = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.requestedColumnCount;
+		return this._requestedColumnCount;
 	}
+
+	private var _paddingTop:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's top edge and its
@@ -152,16 +182,23 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 		@since 1.0.0
 	**/
-	public var paddingTop(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingTop(get, set):Float;
+
+	private function get_paddingTop():Float {
+		return this._paddingTop;
+	}
 
 	private function set_paddingTop(value:Float):Float {
-		if (this.paddingTop == value) {
-			return this.paddingTop;
+		if (this._paddingTop == value) {
+			return this._paddingTop;
 		}
-		this.paddingTop = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingTop;
+		this._paddingTop = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingTop;
 	}
+
+	private var _paddingRight:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's right edge and its
@@ -177,16 +214,23 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 		@since 1.0.0
 	**/
-	public var paddingRight(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
 
 	private function set_paddingRight(value:Float):Float {
-		if (this.paddingRight == value) {
-			return this.paddingRight;
+		if (this._paddingRight == value) {
+			return this._paddingRight;
 		}
-		this.paddingRight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingRight;
+		this._paddingRight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingRight;
 	}
+
+	private var _paddingBottom:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's bottom edge and its
@@ -202,16 +246,23 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 		@since 1.0.0
 	**/
-	public var paddingBottom(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingBottom(get, set):Float;
+
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
+	}
 
 	private function set_paddingBottom(value:Float):Float {
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
 		}
-		this.paddingBottom = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingBottom;
+		this._paddingBottom = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingBottom;
 	}
+
+	private var _paddingLeft:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's left edge and its
@@ -227,16 +278,23 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 		@since 1.0.0
 	**/
-	public var paddingLeft(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
 
 	private function set_paddingLeft(value:Float):Float {
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this.paddingLeft = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingLeft;
+		this._paddingLeft = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingLeft;
 	}
+
+	private var _gap:Float = 0.0;
 
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
@@ -251,16 +309,23 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 		@since 1.0.0
 	**/
-	public var gap(default, set):Float = 0.0;
+	@:flash.property
+	public var gap(get, set):Float;
+
+	private function get_gap():Float {
+		return this._gap;
+	}
 
 	private function set_gap(value:Float):Float {
-		if (this.gap == value) {
-			return this.gap;
+		if (this._gap == value) {
+			return this._gap;
 		}
-		this.gap = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.gap;
+		this._gap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._gap;
 	}
+
+	private var _horizontalAlign:HorizontalAlign = LEFT;
 
 	/**
 		How the content is positioned horizontally (along the x-axis) within the
@@ -283,15 +348,20 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 		@since 1.0.0
 	**/
-	public var horizontalAlign(default, set):HorizontalAlign = LEFT;
+	@:flash.property
+	public var horizontalAlign(get, set):HorizontalAlign;
+
+	private function get_horizontalAlign():HorizontalAlign {
+		return this._horizontalAlign;
+	}
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
-		if (this.horizontalAlign == value) {
-			return this.horizontalAlign;
+		if (this._horizontalAlign == value) {
+			return this._horizontalAlign;
 		}
-		this.horizontalAlign = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.horizontalAlign;
+		this._horizontalAlign = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._horizontalAlign;
 	}
 
 	/**
@@ -299,20 +369,20 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		var viewPortHeight = this.calculateViewPortHeight(items, measurements);
-		var itemHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
+		var itemHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
 		var virtualColumnWidth = this.calculateVirtualColumnWidth(items, itemHeight);
-		var positionX = this.paddingLeft;
+		var positionX = this._paddingLeft;
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
 				var itemWidth = virtualColumnWidth;
-				if (this.virtualCache != null) {
-					var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+				if (this._virtualCache != null) {
+					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 					if (cacheItem != null) {
 						itemWidth = cacheItem.itemWidth;
 					}
 				}
-				positionX += itemWidth + this.gap;
+				positionX += itemWidth + this._gap;
 				continue;
 			}
 			if (Std.is(item, ILayoutObject)) {
@@ -321,37 +391,37 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				}
 			}
 			item.x = positionX;
-			item.y = this.paddingTop;
+			item.y = this._paddingTop;
 			item.height = itemHeight;
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			var itemWidth = item.width;
-			if (this.virtualCache != null) {
-				var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem == null) {
 					cacheItem = new VirtualCacheItem(itemWidth);
-					this.virtualCache[i] = cacheItem;
+					this._virtualCache[i] = cacheItem;
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				} else if (cacheItem.itemWidth != itemWidth) {
 					cacheItem.itemWidth = itemWidth;
-					this.virtualCache[i] = cacheItem;
+					this._virtualCache[i] = cacheItem;
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
 			}
-			positionX += itemWidth + this.gap;
+			positionX += itemWidth + this._gap;
 		}
 		if (items.length > 0) {
-			positionX -= this.gap;
+			positionX -= this._gap;
 		}
-		positionX += this.paddingRight;
+		positionX += this._paddingRight;
 
 		var viewPortWidth = positionX;
 		if (measurements.height != null) {
 			viewPortWidth = measurements.width;
 		} else {
-			if (this.requestedColumnCount != null) {
-				viewPortWidth = virtualColumnWidth * this.requestedColumnCount;
+			if (this._requestedColumnCount != null) {
+				viewPortWidth = virtualColumnWidth * this._requestedColumnCount;
 			}
 			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
 				viewPortWidth = measurements.minWidth;
@@ -360,7 +430,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			}
 		}
 
-		this.applyHorizontalAlign(items, positionX - this.paddingLeft - this.paddingRight, viewPortWidth);
+		this.applyHorizontalAlign(items, positionX - this._paddingLeft - this._paddingRight, viewPortWidth);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();
@@ -395,17 +465,17 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				maxHeight = itemHeight;
 			}
 		}
-		return maxHeight + this.paddingTop + this.paddingBottom;
+		return maxHeight + this._paddingTop + this._paddingBottom;
 	}
 
 	private function calculateVirtualColumnWidth(items:Array<DisplayObject>, itemHeight:Float):Float {
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
-				if (this.virtualCache == null || virtualCache.length <= i) {
+				if (this._virtualCache == null || this._virtualCache.length <= i) {
 					continue;
 				}
-				var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem == null) {
 					continue;
 				}
@@ -432,8 +502,8 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		var startIndex = -1;
 		var endIndex = -1;
 		var estimatedItemWidth:Null<Float> = null;
-		var positionX = this.paddingLeft;
-		var scrollX = this.scrollX;
+		var positionX = this._paddingLeft;
+		var scrollX = this._scrollX;
 		if (scrollX < 0.0) {
 			scrollX = 0.0;
 		}
@@ -441,19 +511,19 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		var maxX = scrollX + width;
 		for (i in 0...itemCount) {
 			var itemWidth = 0.0;
-			if (this.virtualCache != null) {
-				var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem != null) {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
 						estimatedItemWidth = itemWidth;
-						minItems = Math.ceil(width / (estimatedItemWidth) + this.gap) + 1;
+						minItems = Math.ceil(width / (estimatedItemWidth) + this._gap) + 1;
 					}
 				} else if (estimatedItemWidth != null) {
 					itemWidth = estimatedItemWidth;
 				}
 			}
-			positionX += itemWidth + this.gap;
+			positionX += itemWidth + this._gap;
 			if (startIndex == -1 && positionX >= scrollX) {
 				startIndex = i;
 			}
@@ -470,19 +540,19 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			do {
 				startIndex--;
 				var itemWidth = 0.0;
-				if (this.virtualCache != null) {
-					var cacheItem = Std.downcast(this.virtualCache[startIndex], VirtualCacheItem);
+				if (this._virtualCache != null) {
+					var cacheItem = Std.downcast(this._virtualCache[startIndex], VirtualCacheItem);
 					if (cacheItem != null) {
 						itemWidth = cacheItem.itemWidth;
 						if (estimatedItemWidth == null) {
 							estimatedItemWidth = itemWidth;
-							minItems = Math.ceil(width / (estimatedItemWidth) + this.gap) + 1;
+							minItems = Math.ceil(width / (estimatedItemWidth) + this._gap) + 1;
 						}
 					} else if (estimatedItemWidth != null) {
 						itemWidth = estimatedItemWidth;
 					}
 				}
-				positionX += itemWidth + this.gap;
+				positionX += itemWidth + this._gap;
 				if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
 					break;
 				}
@@ -516,11 +586,11 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		var estimatedItemWidth:Null<Float> = null;
 		var minX = 0.0;
 		var maxX = 0.0;
-		var positionX = this.paddingLeft;
+		var positionX = this._paddingLeft;
 		for (i in 0...itemCount) {
 			var itemWidth = 0.0;
-			if (this.virtualCache != null) {
-				var cacheItem = Std.downcast(this.virtualCache[i], VirtualCacheItem);
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem != null) {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
@@ -535,10 +605,10 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				minX = maxX + itemWidth - width;
 				break;
 			}
-			positionX += itemWidth + this.gap;
+			positionX += itemWidth + this._gap;
 		}
 
-		var targetX = this.scrollX;
+		var targetX = this._scrollX;
 		if (targetX < minX) {
 			targetX = minX;
 		} else if (targetX > maxX) {
@@ -548,22 +618,22 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			result = new Point();
 		}
 		result.x = targetX;
-		result.y = this.scrollY;
+		result.y = this._scrollY;
 		return result;
 	}
 
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, contentWidth:Float, viewPortWidth:Float):Void {
-		if (this.horizontalAlign != RIGHT && this.horizontalAlign != CENTER) {
+		if (this._horizontalAlign != RIGHT && this._horizontalAlign != CENTER) {
 			return;
 		}
-		var maxAlignmentWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		var maxAlignmentWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
 		if (contentWidth >= maxAlignmentWidth) {
 			return;
 		}
 		var horizontalOffset = 0.0;
-		if (this.horizontalAlign == RIGHT) {
+		if (this._horizontalAlign == RIGHT) {
 			horizontalOffset = maxAlignmentWidth - contentWidth;
-		} else if (this.horizontalAlign == CENTER) {
+		} else if (this._horizontalAlign == CENTER) {
 			horizontalOffset = (maxAlignmentWidth - contentWidth) / 2.0;
 		}
 		for (item in items) {
@@ -577,7 +647,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 					continue;
 				}
 			}
-			item.x = Math.max(this.paddingLeft, item.x + horizontalOffset);
+			item.x = Math.max(this._paddingLeft, item.x + horizontalOffset);
 		}
 	}
 }

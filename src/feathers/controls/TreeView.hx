@@ -169,12 +169,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var treeViewPort:AdvancedLayoutViewPort;
 
 	override private function get_focusEnabled():Bool {
-		return (this.selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
+		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled
 			&& this._focusEnabled;
 	}
 
 	private var openBranches:Array<Dynamic> = [];
+
+	private var _dataProvider:IHierarchicalCollection<Dynamic> = null;
 
 	/**
 		The collection of data displayed by the tree view.
@@ -218,31 +220,36 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		@since 1.0.0
 	**/
-	public var dataProvider(default, set):IHierarchicalCollection<Dynamic> = null;
+	@:flash.property
+	public var dataProvider(get, set):IHierarchicalCollection<Dynamic>;
+
+	private function get_dataProvider():IHierarchicalCollection<Dynamic> {
+		return this._dataProvider;
+	}
 
 	private function set_dataProvider(value:IHierarchicalCollection<Dynamic>):IHierarchicalCollection<Dynamic> {
-		if (this.dataProvider == value) {
-			return this.dataProvider;
+		if (this._dataProvider == value) {
+			return this._dataProvider;
 		}
 		this._virtualCache.resize(0);
-		if (this.dataProvider != null) {
-			this.dataProvider.removeEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeView_dataProvider_addItemHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeView_dataProvider_removeItemHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
-			this.dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
+		if (this._dataProvider != null) {
+			this._dataProvider.removeEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeView_dataProvider_addItemHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeView_dataProvider_removeItemHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
 		}
-		this.dataProvider = value;
-		if (this.dataProvider != null) {
+		this._dataProvider = value;
+		if (this._dataProvider != null) {
 			var newSize = this.calculateTotalLayoutCount([]);
 			this._virtualCache.resize(newSize);
-			this.dataProvider.addEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeView_dataProvider_addItemHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeView_dataProvider_removeItemHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
-			this.dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
+			this._dataProvider.addEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeView_dataProvider_addItemHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeView_dataProvider_removeItemHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
 		}
 
 		// reset the scroll position because this is a drastic change and
@@ -254,7 +261,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedLocation = null;
 
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.dataProvider;
+		return this._dataProvider;
 	}
 
 	private var _selectedLocation:Array<Int> = null;
@@ -300,7 +307,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function set_selectedLocation(value:Array<Int>):Array<Int> {
-		if (!this.selectable || this.dataProvider == null) {
+		if (!this._selectable || this._dataProvider == null) {
 			value = null;
 		}
 		if (this._selectedLocation == value || this.compareLocations(this._selectedLocation, value) == 0) {
@@ -312,7 +319,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this._selectedLocation == null) {
 			this._selectedItem = null;
 		} else {
-			this._selectedItem = this.dataProvider.get(this._selectedLocation);
+			this._selectedItem = this._dataProvider.get(this._selectedLocation);
 		}
 		this.setInvalid(InvalidationFlag.SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -332,11 +339,11 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (!this.selectable || this.dataProvider == null) {
+		if (!this._selectable || this._dataProvider == null) {
 			this._selectedLocation = null;
 			return this._selectedItem;
 		}
-		this._selectedLocation = this.dataProvider.locationOf(value);
+		this._selectedLocation = this._dataProvider.locationOf(value);
 		return this._selectedItem;
 	}
 
@@ -397,6 +404,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 
+	private var _selectable:Bool = true;
+
 	/**
 		Determines if items in the tree view may be selected. By default only a
 		single item may be selected at any given time. In other words, if item
@@ -414,19 +423,26 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		@see `TreeView.selectedItem`
 		@see `TreeView.selectedIndex`
 	**/
-	public var selectable(default, set):Bool = true;
+	@:flash.property
+	public var selectable(get, set):Bool;
+
+	private function get_selectable():Bool {
+		return this._selectable;
+	}
 
 	private function set_selectable(value:Bool):Bool {
-		if (this.selectable == value) {
-			return this.selectable;
+		if (this._selectable == value) {
+			return this._selectable;
 		}
-		this.selectable = value;
-		if (!this.selectable) {
+		this._selectable = value;
+		if (!this._selectable) {
 			// use the setter
 			this.selectedLocation = null;
 		}
-		return this.selectable;
+		return this._selectable;
 	}
+
+	private var _virtualLayout:Bool = true;
 
 	/**
 		Indicates if the tree view's layout is allowed to virtualize items or
@@ -440,15 +456,20 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		@since 1.0.0
 	**/
-	public var virtualLayout(default, set):Bool = true;
+	@:flash.property
+	public var virtualLayout(get, set):Bool;
+
+	private function get_virtualLayout():Bool {
+		return this._virtualLayout;
+	}
 
 	private function set_virtualLayout(value:Bool):Bool {
-		if (this.virtualLayout = value) {
-			return this.virtualLayout;
+		if (this._virtualLayout = value) {
+			return this._virtualLayout;
 		}
-		this.virtualLayout = value;
+		this._virtualLayout = value;
 		this.setInvalid(InvalidationFlag.LAYOUT);
-		return this.virtualLayout;
+		return this._virtualLayout;
 	}
 
 	/**
@@ -507,7 +528,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		 @since 1.0.0
 	**/
 	public function scrollToLocation(location:Array<Int>, ?animationDuration:Float):Void {
-		if (this.dataProvider == null || this.dataProvider.getLength() == 0) {
+		if (this._dataProvider == null || this._dataProvider.getLength() == 0) {
 			return;
 		}
 
@@ -521,7 +542,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			targetX = result.x;
 			targetY = result.y;
 		} else {
-			var item = this.dataProvider.get(location);
+			var item = this._dataProvider.get(location);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer == null) {
 				return;
@@ -604,7 +625,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(itemRendererInvalid);
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return;
 		}
 
@@ -705,7 +726,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var newSize = this.calculateTotalLayoutCount([]);
 		this._layoutItems.resize(newSize);
 
-		if (this.virtualLayout && Std.is(this.layout, IVirtualLayout)) {
+		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
 			virtualLayout.virtualCache = this._virtualCache;
 			virtualLayout.getVisibleIndices(this._layoutItems.length, this.treeViewPort.visibleWidth, this.treeViewPort.visibleHeight, this._visibleIndices);
@@ -717,19 +738,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function findUnrenderedDataForLocation(location:Array<Int>, layoutIndex:Int):Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return layoutIndex;
 		}
-		for (i in 0...this.dataProvider.getLength(location)) {
+		for (i in 0...this._dataProvider.getLength(location)) {
 			location.push(i);
-			var item = this.dataProvider.get(location);
+			var item = this._dataProvider.get(location);
 			if (layoutIndex < this._visibleIndices.start || layoutIndex > this._visibleIndices.end) {
 				this._layoutItems[layoutIndex] = null;
 			} else {
 				this.findItemRenderer(item, location.copy(), layoutIndex);
 			}
 			layoutIndex++;
-			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				layoutIndex = this.findUnrenderedDataForLocation(location, layoutIndex);
 			}
 			location.pop();
@@ -747,7 +768,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
-		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isBranch(item);
+		this._currentItemState.branch = this._dataProvider != null && this._dataProvider.isBranch(item);
 		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
 		this._currentItemState.selected = item == this._selectedItem;
 		this._currentItemState.text = itemToText(item);
@@ -794,7 +815,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private function renderUnrenderedData():Void {
 		for (location in this._unrenderedLocations) {
 			var layoutIndex = this._unrenderedLayoutIndices.shift();
-			var item = this.dataProvider.get(location);
+			var item = this._dataProvider.get(location);
 			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
 			itemRenderer.visible = true;
 			this.activeItemRenderers.push(itemRenderer);
@@ -814,7 +835,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
-		this._currentItemState.branch = this.dataProvider != null && this.dataProvider.isBranch(item);
+		this._currentItemState.branch = this._dataProvider != null && this._dataProvider.isBranch(item);
 		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
 		this._currentItemState.selected = item == this._selectedItem;
 		this._currentItemState.text = itemToText(item);
@@ -870,19 +891,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		// the location may have changed, possibily even to null, if the item
 		// was filtered out
-		this.selectedLocation = this.dataProvider.locationOf(this._selectedItem); // use the setter
+		this.selectedLocation = this._dataProvider.locationOf(this._selectedItem); // use the setter
 	}
 
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
-		if (this.dataProvider == null) {
+		if (this._dataProvider == null) {
 			return 0;
 		}
-		var itemCount = this.dataProvider.getLength(location);
+		var itemCount = this._dataProvider.getLength(location);
 		var result = itemCount;
 		for (i in 0...itemCount) {
 			location.push(i);
-			var item = this.dataProvider.get(location);
-			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			var item = this._dataProvider.get(location);
+			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				result += this.calculateTotalLayoutCount(location);
 			}
 			location.pop();
@@ -891,13 +912,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function insertChildrenIntoVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
-		var length = this.dataProvider.getLength(location);
+		var length = this._dataProvider.getLength(location);
 		for (i in 0...length) {
 			location.push(i);
 			layoutIndex++;
 			this._virtualCache.insert(layoutIndex, null);
-			var item = this.dataProvider.get(location);
-			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			var item = this._dataProvider.get(location);
+			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				insertChildrenIntoVirtualCache(location, layoutIndex);
 			}
 			location.pop();
@@ -905,13 +926,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function removeChildrenFromVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
-		var length = this.dataProvider.getLength(location);
+		var length = this._dataProvider.getLength(location);
 		for (i in 0...length) {
 			location.push(i);
 			layoutIndex++;
 			this._virtualCache.remove(layoutIndex);
-			var item = this.dataProvider.get(location);
-			if (this.dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			var item = this._dataProvider.get(location);
+			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				removeChildrenFromVirtualCache(location, layoutIndex);
 			}
 			location.pop();
@@ -960,14 +981,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function displayIndexToLocationAtBranch(target:Int, locationOfBranch:Array<Int>):Array<Int> {
-		for (i in 0...this.dataProvider.getLength(locationOfBranch)) {
+		for (i in 0...this._dataProvider.getLength(locationOfBranch)) {
 			this._currentDisplayIndex++;
 			locationOfBranch[locationOfBranch.length] = i;
 			if (this._currentDisplayIndex == target) {
 				return locationOfBranch;
 			}
-			var child = this.dataProvider.get(locationOfBranch);
-			if (this.dataProvider.isBranch(child)) {
+			var child = this._dataProvider.get(locationOfBranch);
+			if (this._dataProvider.isBranch(child)) {
 				if (this.openBranches.indexOf(child) != -1) {
 					var result = this.displayIndexToLocationAtBranch(target, locationOfBranch);
 					if (result != null) {
@@ -986,14 +1007,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function locationToDisplayIndexAtBranch(locationOfBranch:Array<Int>, locationToFind:Array<Int>, returnNearestIfBranchNotOpen:Bool):Int {
-		for (i in 0...this.dataProvider.getLength(locationOfBranch)) {
+		for (i in 0...this._dataProvider.getLength(locationOfBranch)) {
 			this._currentDisplayIndex++;
 			locationOfBranch[locationOfBranch.length] = i;
 			if (this.compareLocations(locationOfBranch, locationToFind) == 0) {
 				return this._currentDisplayIndex;
 			}
-			var child = this.dataProvider.get(locationOfBranch);
-			if (this.dataProvider.isBranch(child)) {
+			var child = this._dataProvider.get(locationOfBranch);
+			if (this._dataProvider.isBranch(child)) {
 				if (this.openBranches.indexOf(child) != -1) {
 					var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, returnNearestIfBranchNotOpen);
 					if (result != -1) {
@@ -1069,7 +1090,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
-		if (!this.selectable || !this.pointerSelectionEnabled) {
+		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
@@ -1083,11 +1104,11 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var data = this.itemRendererToData.get(itemRenderer);
 		// use the setter
-		this.selectedLocation = this.dataProvider.locationOf(data);
+		this.selectedLocation = this._dataProvider.locationOf(data);
 	}
 
 	private function treeView_itemRenderer_clickHandler(event:MouseEvent):Void {
-		if (!this.selectable || !this.pointerSelectionEnabled) {
+		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
@@ -1097,7 +1118,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var data = this.itemRendererToData.get(itemRenderer);
 		// use the setter
-		this.selectedLocation = this.dataProvider.locationOf(data);
+		this.selectedLocation = this._dataProvider.locationOf(data);
 	}
 
 	private function treeView_itemRenderer_changeHandler(event:Event):Void {
@@ -1105,7 +1126,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (!this.selectable) {
+		if (!this._selectable) {
 			var toggle = cast(itemRenderer, IToggle);
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
@@ -1126,7 +1147,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var item = this.itemRendererToData.get(itemRenderer);
 		this.openBranches.push(item);
 		var layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
-		var location = this.dataProvider.locationOf(item);
+		var location = this._dataProvider.locationOf(item);
 		insertChildrenIntoVirtualCache(location, layoutIndex);
 		this.setInvalid(InvalidationFlag.DATA);
 	}
@@ -1139,7 +1160,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var item = this.itemRendererToData.get(itemRenderer);
 		this.openBranches.remove(item);
 		var layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
-		var location = this.dataProvider.locationOf(item);
+		var location = this._dataProvider.locationOf(item);
 		removeChildrenFromVirtualCache(location, layoutIndex);
 		this.setInvalid(InvalidationFlag.DATA);
 	}
@@ -1159,7 +1180,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		if (this.compareLocations(this._selectedLocation, event.location) >= 0) {
 			// use the setter
-			this.selectedLocation = this.dataProvider.locationOf(this._selectedItem);
+			this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
 		}
 	}
 
@@ -1174,7 +1195,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.selectedLocation = null;
 		} else if (comparisonResult > 0) {
 			// use the setter
-			this.selectedLocation = this.dataProvider.locationOf(this._selectedItem);
+			this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
 		}
 	}
 
@@ -1183,7 +1204,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		if (this.compareLocations(this._selectedLocation, event.location) == 0) {
-			this._selectedItem = this.dataProvider.get(event.location);
+			this._selectedItem = this._dataProvider.get(event.location);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}

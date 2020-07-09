@@ -71,6 +71,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.addEventListener(KeyboardEvent.KEY_DOWN, textInput_keyDownHandler);
 	}
 
+	private var _editable:Bool = true;
+
 	/**
 		Indicates if the text input is editable.
 
@@ -82,15 +84,20 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public var editable(default, set):Bool = true;
+	@:flash.property
+	public var editable(get, set):Bool;
+
+	private function get_editable():Bool {
+		return this._editable;
+	}
 
 	private function set_editable(value:Bool):Bool {
-		if (this.editable == value) {
-			return this.editable;
+		if (this._editable == value) {
+			return this._editable;
 		}
-		this.editable = value;
+		this._editable = value;
 		this.setInvalid(InvalidationFlag.STATE);
-		return this.editable;
+		return this._editable;
 	}
 
 	private var _currentState:TextInputState = ENABLED;
@@ -104,7 +111,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var currentState(get, null):TextInputState;
+	public var currentState(get, never):TextInputState;
 
 	private function get_currentState():TextInputState {
 		return this._currentState;
@@ -204,6 +211,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._text;
 	}
 
+	private var _prompt:String;
+
 	/**
 		The text displayed by the text input when the length of the `text`
 		property is `0`.
@@ -220,21 +229,23 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var prompt(get, set):String = null;
+	@:flash.property
+	public var prompt(get, set):String;
 
 	private function get_prompt():String {
-		return this.prompt;
+		return this._prompt;
 	}
 
 	private function set_prompt(value:String):String {
-		if (this.prompt == value) {
-			return this.prompt;
+		if (this._prompt == value) {
+			return this._prompt;
 		}
-		this.prompt = value;
+		this._prompt = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.prompt;
+		return this._prompt;
 	}
+
+	private var _restrict:String;
 
 	/**
 		Limits the set of characters that may be typed into the `TextInput`.
@@ -252,16 +263,23 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public var restrict(default, set):String;
+	@:flash.property
+	public var restrict(get, set):String;
+
+	private function get_restrict():String {
+		return this._restrict;
+	}
 
 	private function set_restrict(value:String):String {
-		if (this.restrict == value) {
-			return this.restrict;
+		if (this._restrict == value) {
+			return this._restrict;
 		}
-		this.restrict = value;
+		this._restrict = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.restrict;
+		return this._restrict;
 	}
+
+	private var _displayAsPassword:Bool = false;
 
 	/**
 		Masks the text so that it cannot be read.
@@ -279,15 +297,20 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public var displayAsPassword(default, set):Bool;
+	@:flash.property
+	public var displayAsPassword(get, set):Bool;
+
+	private function get_displayAsPassword():Bool {
+		return this._displayAsPassword;
+	}
 
 	private function set_displayAsPassword(value:Bool):Bool {
-		if (this.displayAsPassword == value) {
-			return this.displayAsPassword;
+		if (this._displayAsPassword == value) {
+			return this._displayAsPassword;
 		}
-		this.displayAsPassword = value;
+		this._displayAsPassword = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.displayAsPassword;
+		return this._displayAsPassword;
 	}
 
 	/**
@@ -433,6 +456,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
+	private var _scrollX:Float = 0.0;
+
 	/**
 		The horizontal scroll position (on the x-axis) of the text, measured in
 		pixels.
@@ -445,16 +470,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public var scrollX(default, set):Float = 0.0;
+	@:flash.property
+	public var scrollX(get, set):Float;
+
+	private function get_scrollX():Float {
+		return this._scrollX;
+	}
 
 	private function set_scrollX(value:Float):Float {
-		if (this.scrollX == value) {
-			return this.scrollX;
+		if (this._scrollX == value) {
+			return this._scrollX;
 		}
-		this.scrollX = value;
+		this._scrollX = value;
 		this.setInvalid(InvalidationFlag.SCROLL);
 		FeathersEvent.dispatch(this, Event.SCROLL);
-		return this.scrollX;
+		return this._scrollX;
 	}
 
 	private var _textMeasuredWidth:Float;
@@ -746,17 +776,17 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshTextStyles():Void {
-		if (this._enabled && this.editable && this.textField.type != TextFieldType.INPUT) {
+		if (this._enabled && this._editable && this.textField.type != TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.INPUT;
-		} else if ((!this._enabled || !this.editable) && this.textField.type == TextFieldType.INPUT) {
+		} else if ((!this._enabled || !this._editable) && this.textField.type == TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.DYNAMIC;
 		}
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
 		}
-		if (this.textField.displayAsPassword != this.displayAsPassword) {
-			this.textField.displayAsPassword = this.displayAsPassword;
+		if (this.textField.displayAsPassword != this._displayAsPassword) {
+			this.textField.displayAsPassword = this._displayAsPassword;
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
@@ -772,7 +802,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshPrompt():Void {
-		if (this.prompt == null) {
+		if (this._prompt == null) {
 			if (this.promptTextField != null) {
 				this.removeChild(this.promptTextField);
 				this.promptTextField = null;
@@ -788,13 +818,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshPromptText():Void {
-		if (this.prompt == null || this.prompt == this._previousPrompt && !this._updatedPromptStyles) {
+		if (this._prompt == null || this._prompt == this._previousPrompt && !this._updatedPromptStyles) {
 			// nothing to refresh
 			return;
 		}
-		var hasText = this.prompt.length > 0;
+		var hasText = this._prompt.length > 0;
 		if (hasText) {
-			this.promptTextField.text = this.prompt;
+			this.promptTextField.text = this._prompt;
 		} else {
 			this.promptTextField.text = "\u8203"; // zero-width space
 		}
@@ -805,11 +835,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (!hasText) {
 			this.promptTextField.text = "";
 		}
-		this._previousPrompt = this.prompt;
+		this._previousPrompt = this._prompt;
 	}
 
 	private function refreshPromptStyles():Void {
-		if (this.prompt == null) {
+		if (this._prompt == null) {
 			return;
 		}
 		if (this.promptTextField.embedFonts != this.embedFonts) {
@@ -832,7 +862,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshText():Void {
-		this.textField.restrict = restrict;
+		this.textField.restrict = this._restrict;
 		if (this._text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;
@@ -854,7 +884,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshScrollPosition():Void {
-		this.textField.scrollH = Math.round(this.scrollX);
+		this.textField.scrollH = Math.round(this._scrollX);
 	}
 
 	private function getCurrentTextFormat():TextFormat {
@@ -952,7 +982,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private function textField_scrollHandler(event:Event):Void {
 		// no need to invalidate here. just store the new scroll position.
-		@:bypassAccessor this.scrollX = this.textField.scrollH;
+		this._scrollX = this.textField.scrollH;
 		// but the event still needs to be dispatched
 		FeathersEvent.dispatch(this, Event.SCROLL);
 	}

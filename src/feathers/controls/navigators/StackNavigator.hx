@@ -67,7 +67,7 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 
 	**/
-	public var pushTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+	public var pushTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		The default transition to use for pop actions, if not overridden in the
@@ -80,7 +80,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var popTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+	public var popTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		The default transition to use for replace actions, if not overridden in
@@ -92,7 +92,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var replaceTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+	public var replaceTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	private var _history:Array<HistoryItem> = [];
 	private var _tempRootItemID:String;
@@ -103,6 +103,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var stackSize(get, null):Int;
 
 	private function get_stackSize():Int {
@@ -128,6 +129,7 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var rootItemID(get, set):String;
 
 	private function get_rootItemID():String {

@@ -22,14 +22,16 @@ interface IEffectContext extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	var target(default, never):Dynamic;
+	@:flash.property
+	var target(get, never):Dynamic;
 
 	/**
 		The total running time of the effect, measured in seconds.
 
 		@since 1.0.0
 	**/
-	var duration(default, never):Float;
+	@:flash.property
+	var duration(get, never):Float;
 
 	/**
 		The current position of the effect, in the range of `0.0` to `1.0`.
@@ -38,7 +40,8 @@ interface IEffectContext extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	var position(default, set):Float;
+	@:flash.property
+	var position(get, set):Float;
 
 	/**
 		Starts playing the effect from the current position.

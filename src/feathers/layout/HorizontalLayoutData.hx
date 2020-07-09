@@ -33,6 +33,8 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 		this.percentHeight = percentHeight;
 	}
 
+	private var _percentWidth:Null<Float> = null;
+
 	/**
 		The width of the layout object, as a percentage of the parent
 		container's width. The parent container will calculate the sum of all of
@@ -61,16 +63,23 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public var percentWidth(default, set):Null<Float> = null;
+	@:flash.property
+	public var percentWidth(get, set):Null<Float>;
+
+	private function get_percentWidth():Null<Float> {
+		return this._percentWidth;
+	}
 
 	private function set_percentWidth(value:Null<Float>):Null<Float> {
-		if (this.percentWidth == value) {
-			return this.percentWidth;
+		if (this._percentWidth == value) {
+			return this._percentWidth;
 		}
-		this.percentWidth = value;
+		this._percentWidth = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.percentWidth;
+		return this._percentWidth;
 	}
+
+	private var _percentHeight:Null<Float> = null;
 
 	/**
 		The height of the layout object, as a percentage of the parent
@@ -98,14 +107,19 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	public var percentHeight(default, set):Null<Float> = null;
+	@:flash.property
+	public var percentHeight(get, set):Null<Float>;
+
+	private function get_percentHeight():Null<Float> {
+		return this._percentHeight;
+	}
 
 	private function set_percentHeight(value:Null<Float>):Null<Float> {
-		if (this.percentHeight == value) {
-			return this.percentHeight;
+		if (this._percentHeight == value) {
+			return this._percentHeight;
 		}
-		this.percentHeight = value;
+		this._percentHeight = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.percentHeight;
+		return this._percentHeight;
 	}
 }

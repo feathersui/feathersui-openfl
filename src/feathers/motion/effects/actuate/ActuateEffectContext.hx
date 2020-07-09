@@ -45,25 +45,27 @@ class ActuateEffectContext extends BaseEffectContext {
 		@since 1.0.0
 	**/
 	public function new(target:Dynamic, actuator:IReadableGenericActuator, interruptBehavior:EffectInterruptBehavior = END) {
-		this.actuator = actuator;
+		this._actuator = actuator;
 		this.interruptBehavior = interruptBehavior;
 
-		var originalEase = actuator.getEase();
+		var originalEase = this._actuator.getEase();
 
 		// we want setting the position property to be linear, but when
 		// play() or playReverse() is called, we'll use the saved transition
-		actuator.ease(Linear.easeNone);
+		this._actuator.ease(Linear.easeNone);
 
-		this._onComplete = actuator.getOnComplete();
-		this._onCompleteParams = actuator.getOnCompleteParams();
-		actuator.onComplete(null, null);
+		this._onComplete = this._actuator.getOnComplete();
+		this._onCompleteParams = this._actuator.getOnCompleteParams();
+		this._actuator.onComplete(null, null);
 
 		if (target == null) {
-			target = actuator.getTarget();
+			target = this._actuator.getTarget();
 		}
 
-		super(target, actuator.getDuration(), originalEase);
+		super(target, this._actuator.getDuration(), originalEase);
 	}
+
+	private var _actuator:IReadableGenericActuator;
 
 	/**
 		The actuator that is controlled by the effect.
@@ -72,7 +74,12 @@ class ActuateEffectContext extends BaseEffectContext {
 
 		@since 1.0.0
 	**/
-	public var actuator(default, null):IReadableGenericActuator;
+	@:flash.property
+	public var actuator(get, never):IReadableGenericActuator;
+
+	private function get_actuator():IReadableGenericActuator {
+		return this._actuator;
+	}
 
 	/**
 		Indicates how the effect behaves when it is interrupted. Interrupted
@@ -87,7 +94,7 @@ class ActuateEffectContext extends BaseEffectContext {
 
 		@since 1.0.0
 	**/
-	public var interruptBehavior(default, default):EffectInterruptBehavior;
+	public var interruptBehavior:EffectInterruptBehavior;
 
 	private var _onComplete:Dynamic;
 	private var _onCompleteParams:Array<Dynamic>;
@@ -101,7 +108,7 @@ class ActuateEffectContext extends BaseEffectContext {
 	}
 
 	override private function updateEffect():Void {
-		this.actuator.goto(this.position);
+		this._actuator.goto(this.position);
 	}
 
 	override private function cleanupEffect():Void {

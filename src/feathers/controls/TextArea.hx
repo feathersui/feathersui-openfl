@@ -69,6 +69,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._enabled && this._focusEnabled;
 	}
 
+	private var _editable:Bool = true;
+
 	/**
 		Indicates if the text area is editable.
 
@@ -80,15 +82,20 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	public var editable(default, set):Bool = true;
+	@:flash.property
+	public var editable(get, set):Bool;
+
+	private function get_editable():Bool {
+		return this._editable;
+	}
 
 	private function set_editable(value:Bool):Bool {
-		if (this.editable == value) {
-			return this.editable;
+		if (this._editable == value) {
+			return this._editable;
 		}
-		this.editable = value;
+		this._editable = value;
 		this.setInvalid(InvalidationFlag.STATE);
-		return this.editable;
+		return this._editable;
 	}
 
 	private var _currentState:TextInputState = ENABLED;
@@ -102,7 +109,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var currentState(get, null):TextInputState;
+	public var currentState(get, never):TextInputState;
 
 	private function get_currentState():TextInputState {
 		return this._currentState;
@@ -166,32 +173,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._text;
 	}
 
-	/**
-		Limits the set of characters that may be typed into the `TextArea`.
-
-		In the following example, the text area's allowed characters are
-		restricted:
-
-		```hx
-		textArea.restrict = "0-9";
-		```
-
-		@default null
-
-		@see [`TextField.restrict`](https://api.openfl.org/openfl/text/TextField.html#restrict)
-
-		@since 1.0.0
-	**/
-	public var restrict(default, set):String;
-
-	private function set_restrict(value:String):String {
-		if (this.restrict == value) {
-			return this.restrict;
-		}
-		this.restrict = value;
-		this.setInvalid(InvalidationFlag.DATA);
-		return this.restrict;
-	}
+	private var _prompt:String;
 
 	/**
 		The text displayed by the text area when the length of the `text`
@@ -209,20 +191,54 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:isVar
-	public var prompt(get, set):String = null;
+	@:flash.property
+	public var prompt(get, set):String;
 
 	private function get_prompt():String {
-		return this.prompt;
+		return this._prompt;
 	}
 
 	private function set_prompt(value:String):String {
-		if (this.prompt == value) {
-			return this.prompt;
+		if (this._prompt == value) {
+			return this._prompt;
 		}
-		this.prompt = value;
+		this._prompt = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.prompt;
+		return this._prompt;
+	}
+
+	private var _restrict:String;
+
+	/**
+		Limits the set of characters that may be typed into the `TextArea`.
+
+		In the following example, the text area's allowed characters are
+		restricted:
+
+		```hx
+		textArea.restrict = "0-9";
+		```
+
+		@default null
+
+		@see [`TextField.restrict`](https://api.openfl.org/openfl/text/TextField.html#restrict)
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var restrict(get, set):String;
+
+	private function get_restrict():String {
+		return this._restrict;
+	}
+
+	private function set_restrict(value:String):String {
+		if (this._restrict == value) {
+			return this._restrict;
+		}
+		this._restrict = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this._restrict;
 	}
 
 	/**
@@ -511,12 +527,12 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this._ignoreViewPortTextChange = true;
 			this.textFieldViewPort.text = this._text;
 			this._ignoreViewPortTextChange = oldIgnoreViewPortTextChange;
-			this.textFieldViewPort.restrict = this.restrict;
+			this.textFieldViewPort.restrict = this._restrict;
 		}
 
 		if (stateInvalid) {
 			this.textFieldViewPort.enabled = this._enabled;
-			this.textFieldViewPort.textFieldType = this.editable ? INPUT : DYNAMIC;
+			this.textFieldViewPort.textFieldType = this._editable ? INPUT : DYNAMIC;
 		}
 
 		super.update();
@@ -528,7 +544,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function refreshPrompt():Void {
-		if (this.prompt == null) {
+		if (this._prompt == null) {
 			if (this.promptTextField != null) {
 				this.removeChild(this.promptTextField);
 				this.promptTextField = null;
@@ -544,13 +560,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function refreshPromptText():Void {
-		if (this.prompt == null || this.prompt == this._previousPrompt && !this._updatedPromptStyles) {
+		if (this._prompt == null || this._prompt == this._previousPrompt && !this._updatedPromptStyles) {
 			// nothing to refresh
 			return;
 		}
-		var hasText = this.prompt.length > 0;
+		var hasText = this._prompt.length > 0;
 		if (hasText) {
-			this.promptTextField.text = this.prompt;
+			this.promptTextField.text = this._prompt;
 		} else {
 			this.promptTextField.text = "\u8203"; // zero-width space
 		}
@@ -561,11 +577,11 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (!hasText) {
 			this.promptTextField.text = "";
 		}
-		this._previousPrompt = this.prompt;
+		this._previousPrompt = this._prompt;
 	}
 
 	private function refreshPromptStyles():Void {
-		if (this.prompt == null) {
+		if (this._prompt == null) {
 			return;
 		}
 		if (this.promptTextField.embedFonts != this.embedFonts) {
@@ -588,7 +604,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function layoutPrompt():Void {
-		if (this.prompt == null) {
+		if (this._prompt == null) {
 			return;
 		}
 

@@ -75,7 +75,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var forwardTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+	public var forwardTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		The default transition to use for back navigation actions.
@@ -84,14 +84,14 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var backTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+	public var backTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		The default transition to use for replace navigation actions.
 
 		@since 1.0.0
 	**/
-	public var replaceTransition(default, default):(DisplayObject, DisplayObject) -> IEffectContext;
+	public var replaceTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 
 	/**
 		Adds a route to the navigator.

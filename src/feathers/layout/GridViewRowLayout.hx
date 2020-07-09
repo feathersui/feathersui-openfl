@@ -34,40 +34,61 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
-	public var paddingLeft(default, set):Float = 0.0;
+	private var _paddingLeft:Float = 0.0;
+
+	@:flash.property
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
 
 	private function set_paddingLeft(value:Float):Float {
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this.paddingLeft = value;
+		this._paddingLeft = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.paddingLeft;
+		return this._paddingLeft;
 	}
 
-	public var paddingRight(default, set):Float = 0.0;
+	private var _paddingRight:Float = 0.0;
+
+	@:flash.property
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
 
 	private function set_paddingRight(value:Float):Float {
-		if (this.paddingRight == value) {
-			return this.paddingRight;
+		if (this._paddingRight == value) {
+			return this._paddingRight;
 		}
-		this.paddingRight = value;
-		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this.paddingRight;
+		this._paddingRight = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this._paddingRight;
 	}
+
+	private var _columns:IFlatCollection<GridViewColumn>;
 
 	/**
 		The collection of columns displayed by the `GridView`.
 	**/
-	public var columns(default, set):IFlatCollection<GridViewColumn>;
+	@:flash.property
+	public var columns(get, set):IFlatCollection<GridViewColumn>;
+
+	private function get_columns():IFlatCollection<GridViewColumn> {
+		return this._columns;
+	}
 
 	private function set_columns(value:IFlatCollection<GridViewColumn>):IFlatCollection<GridViewColumn> {
-		if (this.columns == value) {
-			return this.columns;
+		if (this._columns == value) {
+			return this._columns;
 		}
-		this.columns = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.columns;
+		this._columns = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._columns;
 	}
 
 	/**
@@ -76,7 +97,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.applyColumnWidths(items, measurements.width, measurements.minWidth, measurements.maxWidth);
 
-		var contentWidth = this.paddingLeft;
+		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
 		for (item in items) {
 			if (Std.is(item, IValidating)) {
@@ -88,7 +109,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			item.x = contentWidth;
 			contentWidth += item.width;
 		}
-		contentWidth += this.paddingRight;
+		contentWidth += this._paddingRight;
 
 		var viewPortWidth = contentWidth;
 		if (measurements.width != null) {
@@ -131,8 +152,8 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function validateItems(items:Array<DisplayObject>) {
-		for (i in 0...this.columns.length) {
-			var column = this.columns.get(i);
+		for (i in 0...this._columns.length) {
+			var column = this._columns.get(i);
 			var item = items[i];
 			var columnWidth = column.width;
 			if (columnWidth != null) {
@@ -156,8 +177,8 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		var totalMeasuredWidth = 0.0;
 		var totalMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
-		for (i in 0...this.columns.length) {
-			var column = this.columns.get(i);
+		for (i in 0...this._columns.length) {
+			var column = this._columns.get(i);
 			var columnWidth = column.width;
 			var item = items[i];
 			if (columnWidth != null) {
@@ -180,7 +201,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			}
 			totalMeasuredWidth += item.width;
 		}
-		totalMeasuredWidth += this.paddingLeft + this.paddingRight;
+		totalMeasuredWidth += this._paddingLeft + this._paddingRight;
 		var remainingWidth = 0.0;
 		if (explicitWidth != null) {
 			remainingWidth = explicitWidth;
@@ -202,7 +223,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			var percentToPixels = remainingWidth / totalPercentWidth;
 			for (index in pendingIndices) {
 				var item = items[index];
-				var column = this.columns.get(index);
+				var column = this._columns.get(index);
 				var percentWidth = 100.0;
 				// round to nearest pixel so that there aren't any visual gaps
 				// between items. we'll append the remainder at the end.

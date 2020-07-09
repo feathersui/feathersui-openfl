@@ -50,6 +50,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var array(get, set):Array<TreeNode<T>>;
 
 	private function get_array():Array<TreeNode<T>> {

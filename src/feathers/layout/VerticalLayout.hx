@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.events.FeathersEvent;
 import feathers.core.IMeasureObject;
 import openfl.events.Event;
 import openfl.display.DisplayObject;
@@ -32,6 +33,8 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
+	private var _paddingTop:Float = 0.0;
+
 	/**
 		The space, in pixels, between the parent container's top edge and its
 		content.
@@ -46,16 +49,23 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingTop(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingTop(get, set):Float;
+
+	private function get_paddingTop():Float {
+		return this._paddingTop;
+	}
 
 	private function set_paddingTop(value:Float):Float {
-		if (this.paddingTop == value) {
-			return this.paddingTop;
+		if (this._paddingTop == value) {
+			return this._paddingTop;
 		}
-		this.paddingTop = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingTop;
+		this._paddingTop = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingTop;
 	}
+
+	private var _paddingRight:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's right edge and its
@@ -71,16 +81,23 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingRight(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
 
 	private function set_paddingRight(value:Float):Float {
-		if (this.paddingRight == value) {
-			return this.paddingRight;
+		if (this._paddingRight == value) {
+			return this._paddingRight;
 		}
-		this.paddingRight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingRight;
+		this._paddingRight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingRight;
 	}
+
+	private var _paddingBottom:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's bottom edge and its
@@ -96,16 +113,23 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingBottom(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingBottom(get, set):Float;
+
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
+	}
 
 	private function set_paddingBottom(value:Float):Float {
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
 		}
-		this.paddingBottom = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingBottom;
+		this._paddingBottom = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingBottom;
 	}
+
+	private var _paddingLeft:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's left edge and its
@@ -121,16 +145,23 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingLeft(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
 
 	private function set_paddingLeft(value:Float):Float {
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this.paddingLeft = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingLeft;
+		this._paddingLeft = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingLeft;
 	}
+
+	private var _gap:Float = 0.0;
 
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
@@ -145,16 +176,23 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var gap(default, set):Float = 0.0;
+	@:flash.property
+	public var gap(get, set):Float;
+
+	private function get_gap():Float {
+		return this._gap;
+	}
 
 	private function set_gap(value:Float):Float {
-		if (this.gap == value) {
-			return this.gap;
+		if (this._gap == value) {
+			return this._gap;
 		}
-		this.gap = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.gap;
+		this._gap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._gap;
 	}
+
+	private var _horizontalAlign:HorizontalAlign = LEFT;
 
 	/**
 		How the content is positioned horizontally (along the x-axis) within the
@@ -175,16 +213,23 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var horizontalAlign(default, set):HorizontalAlign = LEFT;
+	@:flash.property
+	public var horizontalAlign(get, set):HorizontalAlign;
+
+	private function get_horizontalAlign():HorizontalAlign {
+		return this._horizontalAlign;
+	}
 
 	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
-		if (this.horizontalAlign == value) {
-			return this.horizontalAlign;
+		if (this._horizontalAlign == value) {
+			return this._horizontalAlign;
 		}
-		this.horizontalAlign = value;
+		this._horizontalAlign = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.horizontalAlign;
+		return this._horizontalAlign;
 	}
+
+	private var _verticalAlign:VerticalAlign = TOP;
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
@@ -207,15 +252,20 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var verticalAlign(default, set):VerticalAlign = TOP;
+	@:flash.property
+	public var verticalAlign(get, set):VerticalAlign;
+
+	private function get_verticalAlign():VerticalAlign {
+		return this._verticalAlign;
+	}
 
 	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
-		if (this.verticalAlign == value) {
-			return this.verticalAlign;
+		if (this._verticalAlign == value) {
+			return this._verticalAlign;
 		}
-		this.verticalAlign = value;
+		this._verticalAlign = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.verticalAlign;
+		return this._verticalAlign;
 	}
 
 	/**
@@ -226,7 +276,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		this.applyPercentHeight(items, measurements.height, measurements.minHeight, measurements.maxHeight);
 
 		var contentWidth = 0.0;
-		var contentHeight = this.paddingTop;
+		var contentHeight = this._paddingTop;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
@@ -242,12 +292,12 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 				contentWidth = item.width;
 			}
 			item.y = contentHeight;
-			contentHeight += item.height + this.gap;
+			contentHeight += item.height + this._gap;
 		}
-		contentWidth += this.paddingLeft + this.paddingRight;
-		contentHeight += this.paddingBottom;
+		contentWidth += this._paddingLeft + this._paddingRight;
+		contentHeight += this._paddingBottom;
 		if (items.length > 0) {
-			contentHeight -= this.gap;
+			contentHeight -= this._gap;
 		}
 
 		var viewPortWidth = contentWidth;
@@ -273,7 +323,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		this.applyPercentWidth(items, viewPortWidth);
 		this.applyHorizontalAlign(items, viewPortWidth);
-		this.applyVerticalAlign(items, contentHeight - this.paddingTop - this.paddingBottom, viewPortHeight);
+		this.applyVerticalAlign(items, contentHeight - this._paddingTop - this._paddingBottom, viewPortHeight);
 
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;
@@ -309,32 +359,32 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 			}
-			switch (this.horizontalAlign) {
+			switch (this._horizontalAlign) {
 				case RIGHT:
-					item.x = Math.max(this.paddingLeft, this.paddingLeft + (viewPortWidth - this.paddingLeft - this.paddingRight) - item.width);
+					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight) - item.width);
 				case CENTER:
-					item.x = Math.max(this.paddingLeft, this.paddingLeft + (viewPortWidth - this.paddingLeft - this.paddingRight - item.width) / 2.0);
+					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight - item.width) / 2.0);
 				case JUSTIFY:
-					item.x = this.paddingLeft;
-					item.width = viewPortWidth - this.paddingLeft - this.paddingRight;
+					item.x = this._paddingLeft;
+					item.width = viewPortWidth - this._paddingLeft - this._paddingRight;
 				default:
-					item.x = this.paddingLeft;
+					item.x = this._paddingLeft;
 			}
 		}
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, contentHeight:Float, viewPortHeight:Float):Void {
-		if (this.verticalAlign != BOTTOM && this.verticalAlign != MIDDLE) {
+		if (this._verticalAlign != BOTTOM && this._verticalAlign != MIDDLE) {
 			return;
 		}
-		var maxAlignmentHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
+		var maxAlignmentHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
 		if (contentHeight >= maxAlignmentHeight) {
 			return;
 		}
 		var verticalOffset = 0.0;
-		if (this.verticalAlign == BOTTOM) {
+		if (this._verticalAlign == BOTTOM) {
 			verticalOffset = maxAlignmentHeight - contentHeight;
-		} else if (this.verticalAlign == MIDDLE) {
+		} else if (this._verticalAlign == MIDDLE) {
 			verticalOffset = (maxAlignmentHeight - contentHeight) / 2.0;
 		}
 		for (item in items) {
@@ -345,12 +395,12 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 			}
-			item.y = Math.max(this.paddingTop, item.y + verticalOffset);
+			item.y = Math.max(this._paddingTop, item.y + verticalOffset);
 		}
 	}
 
 	private function applyPercentWidth(items:Array<DisplayObject>, viewPortWidth:Float):Void {
-		var availableWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		var availableWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
 		for (item in items) {
 			if (!Std.is(item, ILayoutObject)) {
 				continue;
@@ -419,16 +469,16 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 							totalMinHeight += measureItem.minHeight;
 						}
 						totalPercentHeight += percentHeight;
-						totalMeasuredHeight += this.gap;
+						totalMeasuredHeight += this._gap;
 						pendingItems.push(layoutItem);
 						continue;
 					}
 				}
 			}
-			totalMeasuredHeight += item.height + this.gap;
+			totalMeasuredHeight += item.height + this._gap;
 		}
-		totalMeasuredHeight -= this.gap;
-		totalMeasuredHeight += this.paddingTop + this.paddingBottom;
+		totalMeasuredHeight -= this._gap;
+		totalMeasuredHeight += this._paddingTop + this._paddingBottom;
 		if (totalPercentHeight < 100.0) {
 			totalPercentHeight = 100.0;
 		}

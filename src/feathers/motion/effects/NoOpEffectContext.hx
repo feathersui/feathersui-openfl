@@ -26,35 +26,56 @@ class NoOpEffectContext extends EventDispatcher implements IEffectContext {
 	**/
 	public function new(target:Dynamic) {
 		super();
-		this.target = target;
+		this._target = target;
 	}
+
+	private var _target:Dynamic;
 
 	/**
 		The object targeted by the affect.
 
 		@since 1.0.0
 	**/
-	public var target(default, null):Dynamic;
+	@:flash.property
+	public var target(get, never):Dynamic;
+
+	private function get_target():Dynamic {
+		return this._target;
+	}
+
+	private var _duration:Float = 0.0;
 
 	/**
 		The duration of this effect is always `0.0` seconds.
 
 		@since 1.0.0
 	**/
-	public var duration(default, null):Float = 0.0;
+	@:flash.property
+	public var duration(get, never):Float;
+
+	private function get_duration():Float {
+		return this._duration;
+	}
+
+	private var _position:Float = 0.0;
 
 	/**
 		The position of this effect is always `0.0`.
 
 		@since 1.0.0
 	**/
-	public var position(default, set):Float = 0.0;
+	@:flash.property
+	public var position(get, set):Float;
+
+	private function get_position():Float {
+		return this._position;
+	}
 
 	private function set_position(value:Float):Float {
 		if (value != 0.0) {
 			throw new RangeError("Position must always be 0.0");
 		}
-		return this.position;
+		return this._position;
 	}
 
 	/**

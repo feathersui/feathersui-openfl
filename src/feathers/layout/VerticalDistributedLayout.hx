@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.events.FeathersEvent;
 import feathers.core.IMeasureObject;
 import openfl.events.Event;
 import openfl.display.DisplayObject;
@@ -32,6 +33,8 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
+	private var _paddingTop:Float = 0.0;
+
 	/**
 		The space, in pixels, between the parent container's top edge and its
 		content.
@@ -46,16 +49,23 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingTop(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingTop(get, set):Float;
+
+	private function get_paddingTop():Float {
+		return this._paddingTop;
+	}
 
 	private function set_paddingTop(value:Float):Float {
-		if (this.paddingTop == value) {
-			return this.paddingTop;
+		if (this._paddingTop == value) {
+			return this._paddingTop;
 		}
-		this.paddingTop = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingTop;
+		this._paddingTop = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingTop;
 	}
+
+	private var _paddingRight:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's right edge and its
@@ -71,16 +81,23 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingRight(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
 
 	private function set_paddingRight(value:Float):Float {
-		if (this.paddingRight == value) {
-			return this.paddingRight;
+		if (this._paddingRight == value) {
+			return this._paddingRight;
 		}
-		this.paddingRight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingRight;
+		this._paddingRight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingRight;
 	}
+
+	private var _paddingBottom:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's bottom edge and its
@@ -96,16 +113,23 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingBottom(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingBottom(get, set):Float;
+
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
+	}
 
 	private function set_paddingBottom(value:Float):Float {
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
 		}
-		this.paddingBottom = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingBottom;
+		this._paddingBottom = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingBottom;
 	}
+
+	private var _paddingLeft:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's left edge and its
@@ -121,16 +145,23 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingLeft(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
 
 	private function set_paddingLeft(value:Float):Float {
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this.paddingLeft = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingLeft;
+		this._paddingLeft = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingLeft;
 	}
+
+	private var _gap:Float = 0.0;
 
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
@@ -145,16 +176,23 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var gap(default, set):Float = 0.0;
+	@:flash.property
+	public var gap(get, set):Float;
+
+	private function get_gap():Float {
+		return this._gap;
+	}
 
 	private function set_gap(value:Float):Float {
-		if (this.gap == value) {
-			return this.gap;
+		if (this._gap == value) {
+			return this._gap;
 		}
-		this.gap = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.gap;
+		this._gap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._gap;
 	}
+
+	private var _maxItemHeight:Float = Math.POSITIVE_INFINITY;
 
 	/**
 		The maximum height of an item in the layout.
@@ -168,16 +206,23 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var maxItemHeight(default, set):Float = Math.POSITIVE_INFINITY;
+	@:flash.property
+	public var maxItemHeight(get, set):Float;
+
+	private function get_maxItemHeight():Float {
+		return this._maxItemHeight;
+	}
 
 	private function set_maxItemHeight(value:Float):Float {
-		if (this.maxItemHeight == value) {
-			return this.maxItemHeight;
+		if (this._maxItemHeight == value) {
+			return this._maxItemHeight;
 		}
-		this.maxItemHeight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.maxItemHeight;
+		this._maxItemHeight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._maxItemHeight;
 	}
+
+	private var _minItemHeight:Float = 0.0;
 
 	/**
 		The minimum height of an item in the layout.
@@ -191,15 +236,20 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var minItemHeight(default, set):Float = 0.0;
+	@:flash.property
+	public var minItemHeight(get, set):Float;
+
+	private function get_minItemHeight():Float {
+		return this._minItemHeight;
+	}
 
 	private function set_minItemHeight(value:Float):Float {
-		if (this.minItemHeight == value) {
-			return this.minItemHeight;
+		if (this._minItemHeight == value) {
+			return this._minItemHeight;
 		}
-		this.minItemHeight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.minItemHeight;
+		this._minItemHeight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._minItemHeight;
 	}
 
 	/**
@@ -209,7 +259,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		this.applyDistributedHeight(items, measurements.height, measurements.minHeight, measurements.maxHeight);
 
 		var contentWidth = 0.0;
-		var contentHeight = this.paddingTop;
+		var contentHeight = this._paddingTop;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
@@ -225,12 +275,12 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 				contentWidth = item.width;
 			}
 			item.y = contentHeight;
-			contentHeight += item.height + this.gap;
+			contentHeight += item.height + this._gap;
 		}
-		contentWidth += this.paddingLeft + this.paddingRight;
-		contentHeight += this.paddingBottom;
+		contentWidth += this._paddingLeft + this._paddingRight;
+		contentHeight += this._paddingBottom;
 		if (items.length > 0) {
-			contentHeight -= this.gap;
+			contentHeight -= this._gap;
 		}
 
 		var viewPortWidth = contentWidth;
@@ -301,24 +351,24 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		if (explicitHeight != null) {
 			remainingHeight = explicitHeight;
 		} else {
-			remainingHeight = this.paddingTop + this.paddingBottom + ((maxMinHeight + this.gap) * items.length) - this.gap;
+			remainingHeight = this._paddingTop + this._paddingBottom + ((maxMinHeight + this._gap) * items.length) - this._gap;
 			if (explicitMinHeight != null && remainingHeight < explicitMinHeight) {
 				remainingHeight = explicitMinHeight;
 			} else if (explicitMaxHeight != null && remainingHeight > explicitMaxHeight) {
 				remainingHeight = explicitMaxHeight;
 			}
 		}
-		remainingHeight -= (this.paddingTop + this.paddingBottom + this.gap * (items.length - 1));
+		remainingHeight -= (this._paddingTop + this._paddingBottom + this._gap * (items.length - 1));
 		if (remainingHeight < 0.0) {
 			remainingHeight = 0.0;
 		}
 		var percentToPixels = remainingHeight / totalPercentHeight;
 		for (item in items) {
 			var itemHeight = percentToPixels * 100.0;
-			if (itemHeight < this.minItemHeight) {
-				itemHeight = this.minItemHeight;
-			} else if (itemHeight > this.maxItemHeight) {
-				itemHeight = this.maxItemHeight;
+			if (itemHeight < this._minItemHeight) {
+				itemHeight = this._minItemHeight;
+			} else if (itemHeight > this._maxItemHeight) {
+				itemHeight = this._maxItemHeight;
 			}
 			item.height = itemHeight;
 			if (Std.is(item, IValidating)) {

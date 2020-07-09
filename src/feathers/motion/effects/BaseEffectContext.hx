@@ -25,10 +25,12 @@ import openfl.events.EventDispatcher;
 class BaseEffectContext extends EventDispatcher implements IEffectContext {
 	private function new(target:Dynamic, duration:Float, ?ease:IEasing) {
 		super();
-		this.target = target;
-		this.duration = duration;
-		this.ease = ease;
+		this._target = target;
+		this._duration = duration;
+		this._ease = ease;
 	}
+
+	private var _target:Dynamic;
 
 	/**
 		The effect's target object, which may be modified in some way, such as
@@ -36,14 +38,28 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 
 		@since 1.0.0
 	**/
-	public var target(default, null):Dynamic;
+	@:flash.property
+	public var target(get, never):Dynamic;
+
+	private function get_target():Dynamic {
+		return this._target;
+	}
+
+	private var _duration:Float = 0.0;
 
 	/**
 		The total running time of the effect, measured in seconds.
 
 		@since 1.0.0
 	**/
-	public var duration(default, null):Float;
+	@:flash.property
+	public var duration(get, never):Float;
+
+	private function get_duration():Float {
+		return this._duration;
+	}
+
+	private var _position:Float = 0.0;
 
 	/**
 		The current position of the effect, in the range of `0.0` to `1.0`.
@@ -52,22 +68,34 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 
 		@since 1.0.0
 	**/
-	public var position(default, set):Float = 0.0;
+	@:flash.property
+	public var position(get, set):Float;
+
+	private function get_position():Float {
+		return this._position;
+	}
+
+	private function set_position(value:Float):Float {
+		if (this._position == value) {
+			return this._position;
+		}
+		this._position = value;
+		this.updateEffect();
+		return this._position;
+	}
+
+	private var _ease:IEasing;
 
 	/**
 		The easing function to use for animation.
 
 		@since 1.0.0
 	**/
-	public var ease(default, null):IEasing;
+	@:flash.property
+	public var ease(get, never):IEasing;
 
-	private function set_position(value:Float):Float {
-		if (this.position == value) {
-			return this.position;
-		}
-		this.position = value;
-		this.updateEffect();
-		return this.position;
+	private function get_ease():IEasing {
+		return this._ease;
 	}
 
 	private var _playing:Bool = false;
@@ -91,13 +119,13 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		this._playing = true;
 		this._reversed = false;
 
-		var duration = this.duration * (1.0 - this.position);
+		var duration = this._duration * (1.0 - this._position);
 		// using Actuate.update() instead of Actuate.tween() because tween()
 		// fails when using -dce full
 		this._animatePlayback = Actuate.update(function(value:Float):Void {
 			position = value;
-		}, duration, [this.position], [1.0]);
-		this._animatePlayback.ease(this.ease);
+		}, duration, [this._position], [1.0]);
+		this._animatePlayback.ease(this._ease);
 		this._animatePlayback.onComplete(this.animatePlayback_onComplete);
 	}
 
@@ -119,13 +147,13 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		this._playing = true;
 		this._reversed = true;
 
-		var duration = this.duration * this.position;
+		var duration = this._duration * this._position;
 		// using Actuate.update() instead of Actuate.tween() because tween()
 		// fails when using -dce full
 		this._animatePlayback = Actuate.update(function(value:Float):Void {
 			position = value;
-		}, duration, [this.position], [0.0]);
-		this._animatePlayback.ease(this.ease);
+		}, duration, [this._position], [0.0]);
+		this._animatePlayback.ease(this._ease);
 		this._animatePlayback.onComplete(this.animatePlayback_onComplete);
 	}
 
@@ -170,7 +198,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 	**/
 	public function toEnd():Void {
 		this.pause();
-		this.position = 1.0;
+		this._position = 1.0;
 		this.cleanupEffect();
 		FeathersEvent.dispatch(this, Event.COMPLETE);
 	}

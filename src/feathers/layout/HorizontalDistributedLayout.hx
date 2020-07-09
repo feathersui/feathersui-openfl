@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.events.FeathersEvent;
 import feathers.core.IMeasureObject;
 import openfl.events.Event;
 import openfl.display.DisplayObject;
@@ -32,6 +33,8 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
+	private var _paddingTop:Float = 0.0;
+
 	/**
 		The space, in pixels, between the parent container's top edge and its
 		content.
@@ -46,16 +49,23 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingTop(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingTop(get, set):Float;
+
+	private function get_paddingTop():Float {
+		return this._paddingTop;
+	}
 
 	private function set_paddingTop(value:Float):Float {
-		if (this.paddingTop == value) {
-			return this.paddingTop;
+		if (this._paddingTop == value) {
+			return this._paddingTop;
 		}
-		this.paddingTop = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingTop;
+		this._paddingTop = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingTop;
 	}
+
+	private var _paddingRight:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's right edge and its
@@ -71,16 +81,23 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingRight(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
 
 	private function set_paddingRight(value:Float):Float {
-		if (this.paddingRight == value) {
-			return this.paddingRight;
+		if (this._paddingRight == value) {
+			return this._paddingRight;
 		}
-		this.paddingRight = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingRight;
+		this._paddingRight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingRight;
 	}
+
+	private var _paddingBottom:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's bottom edge and its
@@ -96,16 +113,23 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingBottom(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingBottom(get, set):Float;
+
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
+	}
 
 	private function set_paddingBottom(value:Float):Float {
-		if (this.paddingBottom == value) {
-			return this.paddingBottom;
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
 		}
-		this.paddingBottom = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingBottom;
+		this._paddingBottom = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingBottom;
 	}
+
+	private var _paddingLeft:Float = 0.0;
 
 	/**
 		The space, in pixels, between the parent container's left edge and its
@@ -121,16 +145,23 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var paddingLeft(default, set):Float = 0.0;
+	@:flash.property
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
 
 	private function set_paddingLeft(value:Float):Float {
-		if (this.paddingLeft == value) {
-			return this.paddingLeft;
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this.paddingLeft = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.paddingLeft;
+		this._paddingLeft = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._paddingLeft;
 	}
+
+	private var _gap:Float = 0.0;
 
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
@@ -145,16 +176,23 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var gap(default, set):Float = 0.0;
+	@:flash.property
+	public var gap(get, set):Float;
+
+	private function get_gap():Float {
+		return this._gap;
+	}
 
 	private function set_gap(value:Float):Float {
-		if (this.gap == value) {
-			return this.gap;
+		if (this._gap == value) {
+			return this._gap;
 		}
-		this.gap = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.gap;
+		this._gap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._gap;
 	}
+
+	private var _maxItemWidth:Float = Math.POSITIVE_INFINITY;
 
 	/**
 		The maximum width of an item in the layout.
@@ -168,16 +206,23 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var maxItemWidth(default, set):Float = Math.POSITIVE_INFINITY;
+	@:flash.property
+	public var maxItemWidth(get, set):Float;
+
+	private function get_maxItemWidth():Float {
+		return this._maxItemWidth;
+	}
 
 	private function set_maxItemWidth(value:Float):Float {
-		if (this.maxItemWidth == value) {
-			return this.maxItemWidth;
+		if (this._maxItemWidth == value) {
+			return this._maxItemWidth;
 		}
-		this.maxItemWidth = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.maxItemWidth;
+		this._maxItemWidth = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._maxItemWidth;
 	}
+
+	private var _minItemWidth:Float = 0.0;
 
 	/**
 		The minimum width of an item in the layout.
@@ -191,15 +236,20 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public var minItemWidth(default, set):Float = 0.0;
+	@:flash.property
+	public var minItemWidth(get, set):Float;
+
+	private function get_minItemWidth():Float {
+		return this._minItemWidth;
+	}
 
 	private function set_minItemWidth(value:Float):Float {
-		if (this.minItemWidth == value) {
-			return this.minItemWidth;
+		if (this._minItemWidth == value) {
+			return this._minItemWidth;
 		}
-		this.minItemWidth = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.minItemWidth;
+		this._minItemWidth = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._minItemWidth;
 	}
 
 	/**
@@ -208,7 +258,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.applyDistributedWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);
 
-		var contentWidth = this.paddingLeft;
+		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
@@ -228,13 +278,13 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 				item.height = measurements.height;
 			}
 			item.x = contentWidth;
-			contentWidth += item.width + this.gap;
+			contentWidth += item.width + this._gap;
 		}
-		contentWidth += this.paddingRight;
+		contentWidth += this._paddingRight;
 		if (items.length > 0) {
-			contentWidth -= this.gap;
+			contentWidth -= this._gap;
 		}
-		contentHeight += this.paddingTop + this.paddingBottom;
+		contentHeight += this._paddingTop + this._paddingBottom;
 
 		var viewPortWidth = contentWidth;
 		if (measurements.width != null) {
@@ -298,24 +348,24 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		if (explicitWidth != null) {
 			remainingWidth = explicitWidth;
 		} else {
-			remainingWidth = this.paddingLeft + this.paddingRight + ((maxMinWidth + this.gap) * items.length) - this.gap;
+			remainingWidth = this._paddingLeft + this._paddingRight + ((maxMinWidth + this._gap) * items.length) - this._gap;
 			if (explicitMinWidth != null && remainingWidth < explicitMinWidth) {
 				remainingWidth = explicitMinWidth;
 			} else if (explicitMaxWidth != null && remainingWidth > explicitMaxWidth) {
 				remainingWidth = explicitMaxWidth;
 			}
 		}
-		remainingWidth -= (this.paddingLeft + this.paddingRight + this.gap * (items.length - 1));
+		remainingWidth -= (this._paddingLeft + this._paddingRight + this._gap * (items.length - 1));
 		if (remainingWidth < 0.0) {
 			remainingWidth = 0.0;
 		}
 		var percentToPixels = remainingWidth / totalPercentWidth;
 		for (item in items) {
 			var itemWidth = percentToPixels * 100.0;
-			if (itemWidth < this.minItemWidth) {
-				itemWidth = this.minItemWidth;
-			} else if (itemWidth > this.maxItemWidth) {
-				itemWidth = this.maxItemWidth;
+			if (itemWidth < this._minItemWidth) {
+				itemWidth = this._minItemWidth;
+			} else if (itemWidth > this._maxItemWidth) {
+				itemWidth = this._maxItemWidth;
 			}
 			item.width = itemWidth;
 			if (Std.is(item, IValidating)) {

@@ -54,14 +54,16 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var enabledX(default, default) = true;
+	public var enabledX = true;
 
 	/**
 		Determines if the target can be scrolled vertically (on the y-axis).
 
 		@since 1.0.0
 	**/
-	public var enabledY(default, default) = true;
+	public var enabledY = true;
+
+	private var _scrollX:Float = 0.0;
 
 	/**
 		The current horizontal scroll position.
@@ -74,16 +76,23 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var scrollX(default, set):Float = 0.0;
+	@:flash.property
+	public var scrollX(get, set):Float;
+
+	private function get_scrollX():Float {
+		return this._scrollX;
+	}
 
 	private function set_scrollX(value:Float):Float {
-		if (this.scrollX == value) {
-			return this.scrollX;
+		if (this._scrollX == value) {
+			return this._scrollX;
 		}
-		this.scrollX = value;
+		this._scrollX = value;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
-		return this.scrollX;
+		return this._scrollX;
 	}
+
+	private var _scrollY:Float = 0.0;
 
 	/**
 		The current vertical scroll position.
@@ -96,44 +105,79 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var scrollY(default, set):Float = 0.0;
+	@:flash.property
+	public var scrollY(get, set):Float;
+
+	private function get_scrollY():Float {
+		return this._scrollY;
+	}
 
 	private function set_scrollY(value:Float):Float {
-		if (this.scrollY == value) {
-			return this.scrollY;
+		if (this._scrollY == value) {
+			return this._scrollY;
 		}
-		this.scrollY = value;
+		this._scrollY = value;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
-		return this.scrollY;
+		return this._scrollY;
 	}
+
+	private var _minScrollX:Float = 0.0;
 
 	/**
 		The minimum horizontal scroll position.
 
 		@since 1.0.0
 	**/
-	public var minScrollX(default, null):Float = 0.0;
+	@:flash.property
+	public var minScrollX(get, never):Float;
+
+	private function get_minScrollX():Float {
+		return this._minScrollX;
+	}
+
+	private var _minScrollY:Float = 0.0;
 
 	/**
 		The minimum vertical scroll position.
 
 		@since 1.0.0
 	**/
-	public var minScrollY(default, null):Float = 0.0;
+	@:flash.property
+	public var minScrollY(get, never):Float;
+
+	private function get_minScrollY():Float {
+		return this._minScrollY;
+	}
+
+	private var _maxScrollX:Float = 0.0;
 
 	/**
 		The maximum horizontal scroll position.
 
 		@since 1.0.0
 	**/
-	public var maxScrollX(default, null):Float = 0.0;
+	@:flash.property
+	public var maxScrollX(get, never):Float;
+
+	private function get_maxScrollX():Float {
+		return this._maxScrollX;
+	}
+
+	private var _maxScrollY:Float = 0.0;
 
 	/**
 		The maximum vertical scroll position.
 
 		@since 1.0.0
 	**/
-	public var maxScrollY(default, null):Float = 0.0;
+	@:flash.property
+	public var maxScrollY(get, never):Float;
+
+	private function get_maxScrollY():Float {
+		return this._maxScrollY;
+	}
+
+	private var _visibleWidth:Float = 0.0;
 
 	/**
 		The width of the target's scrollable region.
@@ -142,7 +186,14 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var visibleWidth(default, null):Float = 0.0;
+	@:flash.property
+	public var visibleWidth(get, never):Float;
+
+	private function get_visibleWidth():Float {
+		return this._visibleWidth;
+	}
+
+	private var _visibleHeight:Float = 0.0;
 
 	/**
 		The height of the target's scrollable region.
@@ -151,7 +202,14 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var visibleHeight(default, null):Float = 0.0;
+	@:flash.property
+	public var visibleHeight(get, never):Float;
+
+	private function get_visibleHeight():Float {
+		return this._visibleHeight;
+	}
+
+	private var _contentWidth:Float = 0.0;
 
 	/**
 		The width of the target's content. Will not scroll unless the width
@@ -161,7 +219,14 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var contentWidth(default, null):Float = 0.0;
+	@:flash.property
+	public var contentWidth(get, never):Float;
+
+	private function get_contentWidth():Float {
+		return this._contentWidth;
+	}
+
+	private var _contentHeight:Float = 0.0;
 
 	/**
 		The height of the target's content. Will not scroll unless the height
@@ -171,28 +236,54 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var contentHeight(default, null):Float = 0.0;
+	@:flash.property
+	public var contentHeight(get, never):Float;
+
+	private function get_contentHeight():Float {
+		return this._contentHeight;
+	}
+
+	private var _scrolling:Bool = false;
 
 	/**
 		Determines if scrolling is currently active.
 
 		@since 1.0.0
 	**/
-	public var scrolling(default, null):Bool = false;
+	@:flash.property
+	public var scrolling(get, never):Bool;
+
+	private function get_scrolling():Bool {
+		return this._scrolling;
+	}
+
+	private var _draggingX:Bool = false;
 
 	/**
 		Determines if a touch is dragging the target horizontally (on the x-axis).
 
 		@since 1.0.0
 	**/
-	public var draggingX(default, null):Bool = false;
+	@:flash.property
+	public var draggingX(get, never):Bool;
+
+	private function get_draggingX():Bool {
+		return this._draggingX;
+	}
+
+	private var _draggingY:Bool = false;
 
 	/**
 		Determines if a touch is dragging the target vertically (on the y-axis).
 
 		@since 1.0.0
 	**/
-	public var draggingY(default, null):Bool = false;
+	@:flash.property
+	public var draggingY(get, never):Bool;
+
+	private function get_draggingY():Bool {
+		return this._draggingY;
+	}
 
 	/**
 		The minimum distance, measured in pixels, that the target must be
@@ -202,7 +293,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var minDragDistance(default, default):Float = 6.0;
+	public var minDragDistance:Float = 6.0;
 
 	/**
 		Determines if the scrolling can go beyond the edges of the viewport and
@@ -214,7 +305,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var elasticEdges(default, default):Bool = true;
+	public var elasticEdges:Bool = true;
 
 	/**
 		Forces elasticity on the top edge, even if the height of the target's
@@ -228,7 +319,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var forceElasticTop(default, default):Bool = false;
+	public var forceElasticTop:Bool = false;
 
 	/**
 		Forces elasticity on the right edge, even if the width of the target's
@@ -242,7 +333,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var forceElasticRight(default, default):Bool = false;
+	public var forceElasticRight:Bool = false;
 
 	/**
 		Forces elasticity on the bottom edge, even if the height of the target's
@@ -256,7 +347,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var forceElasticBottom(default, default):Bool = false;
+	public var forceElasticBottom:Bool = false;
 
 	/**
 		Forces elasticity on the left edge, even if the width of the target's
@@ -270,7 +361,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var forceElasticLeft(default, default):Bool = false;
+	public var forceElasticLeft:Bool = false;
 
 	/**
 		 If the scroll position goes outside the minimum or maximum bounds when
@@ -288,7 +379,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var elasticity(default, default):Float = 0.33;
+	public var elasticity:Float = 0.33;
 
 	/**
 		If the scroll position goes outside the minimum or maximum bounds when
@@ -307,7 +398,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var throwElasticity(default, default):Float = 0.05;
+	public var throwElasticity:Float = 0.05;
 
 	/**
 		The duration, measured in seconds, of the animation when a the scroller
@@ -319,7 +410,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var elasticSnapDuration(default, default):Float = 0.5;
+	public var elasticSnapDuration:Float = 0.5;
 
 	/**
 		The easing function to use when animating the scroll position.
@@ -370,6 +461,8 @@ class Scroller extends EventDispatcher {
 	**/
 	public var simulateTouch:Bool = false;
 
+	private var _decelerationRate:Float = 0.998;
+
 	/**
 		This value is used to decelerate the scroller when "thrown". The
 		velocity of a throw is multiplied by this value once per millisecond to
@@ -379,16 +472,21 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var decelerationRate(default, set):Float = 0.998;
+	@:flash.property
+	public var decelerationRate(get, set):Float;
+
+	private function get_decelerationRate():Float {
+		return this._decelerationRate;
+	}
 
 	private function set_decelerationRate(value:Float):Float {
-		if (this.decelerationRate == value) {
-			return this.decelerationRate;
+		if (this._decelerationRate == value) {
+			return this._decelerationRate;
 		}
-		this.decelerationRate = value;
-		this._logDecelerationRate = Math.log(this.decelerationRate);
-		this._fixedThrowDuration = -0.1 / Math.log(Math.pow(this.decelerationRate, 1000.0 / 60.0));
-		return this.decelerationRate;
+		this._decelerationRate = value;
+		this._logDecelerationRate = Math.log(this._decelerationRate);
+		this._fixedThrowDuration = -0.1 / Math.log(Math.pow(this._decelerationRate, 1000.0 / 60.0));
+		return this._decelerationRate;
 	}
 
 	// this value is precalculated. See the `decelerationRate` setter for the dynamic calculation.
@@ -412,49 +510,56 @@ class Scroller extends EventDispatcher {
 	private var targetScrollY:Float = 0.0;
 	private var snappingToEdge:Bool = false;
 
+	private var _target:InteractiveObject;
+
 	/**
 		The container used for scrolling.
 
 		@since 1.0.0
 	**/
-	public var target(default, set):InteractiveObject;
+	@:flash.property
+	public var target(get, set):InteractiveObject;
+
+	private function get_target():InteractiveObject {
+		return this._target;
+	}
 
 	private function set_target(value:InteractiveObject):InteractiveObject {
-		if (this.target == value) {
-			return this.target;
+		if (this._target == value) {
+			return this._target;
 		}
-		if (this.target != null) {
+		if (this._target != null) {
 			this.cleanupAfterDrag();
-			this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
-			this.target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true);
-			this.target.removeEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler);
+			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true);
+			this._target.removeEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler);
 			#if html5
 			var window = cast(Lib.global, js.html.Window);
 			window.removeEventListener("wheel", window_wheelCaptureHandler, {capture: true});
 			#end
-			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
-			this.target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true);
-			this.target.removeEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true);
-			this.target.removeEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true);
+			this._target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
+			this._target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true);
+			this._target.removeEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true);
+			this._target.removeEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true);
 		}
-		this.target = value;
-		if (this.target != null) {
-			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler, false, 0, true);
-			this.target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true, 0, true);
-			this.target.addEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler, false, 0, true);
+		this._target = value;
+		if (this._target != null) {
+			this._target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler, false, 0, true);
+			this._target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownCaptureHandler, true, 0, true);
+			this._target.addEventListener(MouseEvent.MOUSE_WHEEL, target_mouseWheelHandler, false, 0, true);
 			#if html5
 			var window = cast(Lib.global, js.html.Window);
 			window.addEventListener("wheel", window_wheelCaptureHandler, {capture: true});
 			#end
-			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler, false, 0, true);
-			this.target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true, 0, true);
-			this.target.addEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true, 0, true);
+			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler, false, 0, true);
+			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true, 0, true);
+			this._target.addEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true, 0, true);
 			// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
 			// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-			// this.target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true, 0, true);
+			// this._target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true, 0, true);
 		}
-		return this.target;
+		return this._target;
 	}
 
 	/**
@@ -463,10 +568,10 @@ class Scroller extends EventDispatcher {
 		@since 1.0.0
 	**/
 	public function setDimensions(?visibleWidth:Null<Float>, ?visibleHeight:Null<Float>, ?contentWidth:Null<Float>, ?contentHeight:Null<Float>):Void {
-		this.visibleWidth = visibleWidth != null ? visibleWidth : 0.0;
-		this.visibleHeight = visibleHeight != null ? visibleHeight : 0.0;
-		this.contentWidth = contentWidth != null ? contentWidth : 0.0;
-		this.contentHeight = contentHeight != null ? contentHeight : 0.0;
+		this._visibleWidth = visibleWidth != null ? visibleWidth : 0.0;
+		this._visibleHeight = visibleHeight != null ? visibleHeight : 0.0;
+		this._contentWidth = contentWidth != null ? contentWidth : 0.0;
+		this._contentHeight = contentHeight != null ? contentHeight : 0.0;
 		this.calculateMinAndMax();
 	}
 
@@ -487,8 +592,8 @@ class Scroller extends EventDispatcher {
 			this._animateScrollYEase = null;
 		}
 		this.cleanupAfterDrag();
-		this.draggingX = false;
-		this.draggingY = false;
+		this._draggingX = false;
+		this._draggingY = false;
 		this.completeScroll();
 	}
 
@@ -499,14 +604,14 @@ class Scroller extends EventDispatcher {
 			if (Math.abs(velocityX) <= MINIMUM_VELOCITY) {
 				this.finishScrollX();
 			} else {
-				targetX = this.scrollX + this.calculateDistanceFromVelocity(velocityX);
+				targetX = this._scrollX + this.calculateDistanceFromVelocity(velocityX);
 			}
 		}
 		if (velocityY != null) {
 			if (Math.abs(velocityY) <= MINIMUM_VELOCITY) {
 				this.finishScrollY();
 			} else {
-				targetY = this.scrollY + this.calculateDistanceFromVelocity(velocityY);
+				targetY = this._scrollY + this.calculateDistanceFromVelocity(velocityY);
 			}
 		}
 		this.throwTo(targetX, targetY, this._fixedThrowDuration);
@@ -535,18 +640,20 @@ class Scroller extends EventDispatcher {
 				this.animateScrollX = null;
 				this._animateScrollXEase = null;
 			}
-			if (this.scrollX != scrollX) {
+			if (this._scrollX != scrollX) {
 				scrollChanged = true;
 				this.startScroll();
 				if (duration == 0) {
+					// use the setter
 					this.scrollX = scrollX;
 				} else {
-					this.startScrollX = this.scrollX;
+					this.startScrollX = this._scrollX;
 					this.targetScrollX = scrollX;
 					this._animateScrollXEase = ease;
 					var tween = Actuate.update((scrollX : Float) -> {
+						// use the setter
 						this.scrollX = scrollX;
-					}, duration, [this.scrollX], [this.targetScrollX], true);
+					}, duration, [this._scrollX], [this.targetScrollX], true);
 					this.animateScrollX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 					this.animateScrollX.ease(this._animateScrollXEase);
 					this.animateScrollX.onComplete(this.animateScrollX_onComplete);
@@ -562,18 +669,20 @@ class Scroller extends EventDispatcher {
 				this.animateScrollY = null;
 				this._animateScrollYEase = null;
 			}
-			if (this.scrollY != scrollY) {
+			if (this._scrollY != scrollY) {
 				scrollChanged = true;
 				this.startScroll();
 				if (duration == 0) {
+					// use the setter
 					this.scrollY = scrollY;
 				} else {
-					this.startScrollY = this.scrollY;
+					this.startScrollY = this._scrollY;
 					this.targetScrollY = scrollY;
 					this._animateScrollYEase = ease;
 					var tween = Actuate.update((scrollY : Float) -> {
+						// use the setter
 						this.scrollY = scrollY;
-					}, duration, [this.scrollY], [this.targetScrollY], true);
+					}, duration, [this._scrollY], [this.targetScrollY], true);
 					this.animateScrollY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 					this.animateScrollY.ease(this._animateScrollYEase);
 					this.animateScrollY.onComplete(this.animateScrollY_onComplete);
@@ -591,10 +700,10 @@ class Scroller extends EventDispatcher {
 	private function refreshAnimateScrollXEndRatio():Void {
 		var distance = Math.abs(this.targetScrollX - this.startScrollX);
 		var ratioOutOfBounds = 0.0;
-		if (this.targetScrollX > this.maxScrollX) {
-			ratioOutOfBounds = (this.targetScrollX - this.maxScrollX) / distance;
-		} else if (this.targetScrollX < this.minScrollX) {
-			ratioOutOfBounds = (this.minScrollX - this.targetScrollX) / distance;
+		if (this.targetScrollX > this._maxScrollX) {
+			ratioOutOfBounds = (this.targetScrollX - this._maxScrollX) / distance;
+		} else if (this.targetScrollX < this._minScrollX) {
+			ratioOutOfBounds = (this._minScrollX - this.targetScrollX) / distance;
 		}
 		if (ratioOutOfBounds > 0.0) {
 			if (this.elasticEdges) {
@@ -617,10 +726,10 @@ class Scroller extends EventDispatcher {
 	private function refreshAnimateScrollYEndRatio():Void {
 		var distance = Math.abs(this.targetScrollY - this.startScrollY);
 		var ratioOutOfBounds = 0.0;
-		if (this.targetScrollY > this.maxScrollY) {
-			ratioOutOfBounds = (this.targetScrollY - this.maxScrollY) / distance;
-		} else if (this.targetScrollY < this.minScrollY) {
-			ratioOutOfBounds = (this.minScrollY - this.targetScrollY) / distance;
+		if (this.targetScrollY > this._maxScrollY) {
+			ratioOutOfBounds = (this.targetScrollY - this._maxScrollY) / distance;
+		} else if (this.targetScrollY < this._minScrollY) {
+			ratioOutOfBounds = (this._minScrollY - this.targetScrollY) / distance;
 		}
 		if (ratioOutOfBounds > 0.0) {
 			if (this.elasticEdges) {
@@ -641,27 +750,27 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function calculateMinAndMax():Void {
-		var oldMaxScrollX = this.maxScrollX;
-		var oldMaxScrollY = this.maxScrollY;
-		this.minScrollX = 0.0;
-		this.minScrollY = 0.0;
-		this.maxScrollX = Math.max(this.contentWidth, this.visibleWidth) - this.visibleWidth;
-		this.maxScrollY = Math.max(this.contentHeight, this.visibleHeight) - this.visibleHeight;
-		if (oldMaxScrollX != this.maxScrollX) {
+		var oldMaxScrollX = this._maxScrollX;
+		var oldMaxScrollY = this._maxScrollY;
+		this._minScrollX = 0.0;
+		this._minScrollY = 0.0;
+		this._maxScrollX = Math.max(this._contentWidth, this._visibleWidth) - this._visibleWidth;
+		this._maxScrollY = Math.max(this._contentHeight, this._visibleHeight) - this._visibleHeight;
+		if (oldMaxScrollX != this._maxScrollX) {
 			this.refreshAnimateScrollXEndRatio();
 		}
-		if (oldMaxScrollY != this.maxScrollY) {
+		if (oldMaxScrollY != this._maxScrollY) {
 			this.refreshAnimateScrollYEndRatio();
 		}
 	}
 
 	private function startScroll():Void {
-		if (this.scrolling) {
+		if (this._scrolling) {
 			return;
 		}
-		this.scrolling = true;
-		if (Std.is(this.target, DisplayObjectContainer)) {
-			var container = cast(this.target, DisplayObjectContainer);
+		this._scrolling = true;
+		if (Std.is(this._target, DisplayObjectContainer)) {
+			var container = cast(this._target, DisplayObjectContainer);
 			this.restoreMouseChildren = container.mouseChildren;
 			container.mouseChildren = false;
 		}
@@ -669,25 +778,25 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function completeScroll():Void {
-		if (!this.scrolling || this.draggingX || this.draggingY || this.animateScrollX != null || this.animateScrollY != null) {
+		if (!this._scrolling || this._draggingX || this._draggingY || this.animateScrollX != null || this.animateScrollY != null) {
 			return;
 		}
-		this.scrolling = false;
-		if (Std.is(this.target, DisplayObjectContainer)) {
-			var container = cast(this.target, DisplayObjectContainer);
+		this._scrolling = false;
+		if (Std.is(this._target, DisplayObjectContainer)) {
+			var container = cast(this._target, DisplayObjectContainer);
 			container.mouseChildren = this.restoreMouseChildren;
 		}
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 	}
 
 	private function finishScrollX():Void {
-		this.draggingX = false;
+		this._draggingX = false;
 
 		var targetScrollX:Null<Float> = null;
-		if (this.scrollX < this.minScrollX) {
-			targetScrollX = this.minScrollX;
-		} else if (this.scrollX > this.maxScrollX) {
-			targetScrollX = this.maxScrollX;
+		if (this._scrollX < this._minScrollX) {
+			targetScrollX = this._minScrollX;
+		} else if (this._scrollX > this._maxScrollX) {
+			targetScrollX = this._maxScrollX;
 		}
 
 		if (targetScrollX == null) {
@@ -698,13 +807,13 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function finishScrollY():Void {
-		this.draggingY = false;
+		this._draggingY = false;
 
 		var targetScrollY:Null<Float> = null;
-		if (this.scrollY < this.minScrollY) {
-			targetScrollY = this.minScrollY;
-		} else if (this.scrollY > this.maxScrollY) {
-			targetScrollY = this.maxScrollY;
+		if (this._scrollY < this._minScrollY) {
+			targetScrollY = this._minScrollY;
+		} else if (this._scrollY > this._maxScrollY) {
+			targetScrollY = this._maxScrollY;
 		}
 
 		if (targetScrollY == null) {
@@ -724,10 +833,12 @@ class Scroller extends EventDispatcher {
 			// the tween is complete, we don't want it set to null before
 			// the onComplete callback
 			if (!this.elasticEdges) {
-				if (this.scrollX < this.minScrollX) {
-					this.scrollX = this.minScrollX;
-				} else if (this.scrollX > this.maxScrollX) {
-					this.scrollX = this.maxScrollX;
+				if (this._scrollX < this._minScrollX) {
+					// use the setter
+					this.scrollX = this._minScrollX;
+				} else if (this._scrollX > this._maxScrollX) {
+					// use the setter
+					this.scrollX = this._maxScrollX;
 				}
 			}
 			Actuate.stop(this.animateScrollX, null, false, false);
@@ -754,10 +865,12 @@ class Scroller extends EventDispatcher {
 			// the tween is complete, we don't want it set to null before
 			// the onComplete callback
 			if (!this.elasticEdges) {
-				if (this.scrollY < this.minScrollY) {
-					this.scrollY = this.minScrollY;
-				} else if (this.scrollY > this.maxScrollY) {
-					this.scrollY = this.maxScrollY;
+				if (this._scrollY < this._minScrollY) {
+					// use the setter
+					this.scrollY = this._minScrollY;
+				} else if (this._scrollY > this._maxScrollY) {
+					// use the setter
+					this.scrollY = this._maxScrollY;
 				}
 			}
 			Actuate.stop(this.animateScrollY, null, false, false);
@@ -778,14 +891,14 @@ class Scroller extends EventDispatcher {
 		if (this.touchPointID == -1) {
 			return;
 		}
-		this.previousTouchPointID = this.scrolling ? this.touchPointID : -1;
+		this.previousTouchPointID = this._scrolling ? this.touchPointID : -1;
 		this.touchPointID = -1;
-		this.target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-		if (this.target.stage != null) {
-			this.target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
-			this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
-			this.target.stage.removeEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler);
-			this.target.stage.removeEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler);
+		this._target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
+		if (this._target.stage != null) {
+			this._target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
+			this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
+			this._target.stage.removeEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler);
+			this._target.stage.removeEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler);
 		}
 	}
 
@@ -813,16 +926,16 @@ class Scroller extends EventDispatcher {
 			this._animateScrollYEase = null;
 		}
 
-		this.target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler, false, 0, true);
-		this.target.stage.addEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler, false, 0, true);
-		this.target.stage.addEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler, false, 0, true);
-		this.target.stage.addEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler, false, 0, true);
-		this.target.stage.addEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler, false, 0, true);
-		if (Std.is(this.target, DisplayObjectContainer)) {
-			var container = cast(this.target, DisplayObjectContainer);
+		this._target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler, false, 0, true);
+		this._target.stage.addEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler, false, 0, true);
+		this._target.stage.addEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler, false, 0, true);
+		this._target.stage.addEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler, false, 0, true);
+		this._target.stage.addEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler, false, 0, true);
+		if (Std.is(this._target, DisplayObjectContainer)) {
+			var container = cast(this._target, DisplayObjectContainer);
 			// if we were already scrolling, disable the pointer immediately.
 			// otherwise, wait until dragging starts
-			if (this.scrolling) {
+			if (this._scrolling) {
 				container.mouseChildren = false;
 			}
 		}
@@ -830,8 +943,8 @@ class Scroller extends EventDispatcher {
 		this.touchPointID = touchPointID;
 		this.startTouchX = stageX;
 		this.startTouchY = stageY;
-		this.startScrollX = this.scrollX;
-		this.startScrollY = this.scrollY;
+		this.startScrollX = this._scrollX;
+		this.startScrollY = this._scrollY;
 		this.savedScrollMoves = [];
 	}
 
@@ -844,7 +957,7 @@ class Scroller extends EventDispatcher {
 		var touchOffsetY = stageY - this.startTouchY;
 		var scaleX = 1.0;
 		var scaleY = 1.0;
-		var current = this.target;
+		var current = this._target;
 		while (current != current.stage) {
 			scaleX /= current.scaleX;
 			scaleY /= current.scaleY;
@@ -855,27 +968,27 @@ class Scroller extends EventDispatcher {
 
 		var canDragX = this.canDragX();
 		var canDragY = this.canDragY();
-		if (!this.draggingX && canDragX && Math.abs(touchOffsetX) > this.minDragDistance) {
+		if (!this._draggingX && canDragX && Math.abs(touchOffsetX) > this.minDragDistance) {
 			this.startTouchX = stageX;
 			touchOffsetX = 0.0;
-			this.draggingX = true;
+			this._draggingX = true;
 			// don't start dragging until we've moved a minimum distance
 			// we'll also reset the start position at this point, so that there
 			// isn't a sudden jump
-			if (!this.draggingY) {
+			if (!this._draggingY) {
 				this.startScroll();
 			}
 		}
-		if (!this.draggingY && canDragY && Math.abs(touchOffsetY) > this.minDragDistance) {
+		if (!this._draggingY && canDragY && Math.abs(touchOffsetY) > this.minDragDistance) {
 			this.startTouchY = stageY;
 			touchOffsetY = 0.0;
-			this.draggingY = true;
-			if (!this.draggingX) {
+			this._draggingY = true;
+			if (!this._draggingX) {
 				this.startScroll();
 			}
 		}
 
-		if (!this.draggingX && !this.draggingY) {
+		if (!this._draggingX && !this._draggingY) {
 			return;
 		}
 
@@ -883,24 +996,24 @@ class Scroller extends EventDispatcher {
 		if (canDragX) {
 			scrollX -= touchOffsetX;
 			if (this.elasticEdges) {
-				if (scrollX < this.minScrollX) {
-					if (this.maxScrollX > this.minScrollX || this.forceElasticLeft) {
-						scrollX = scrollX - (scrollX - this.minScrollX) * (1.0 - this.elasticity);
+				if (scrollX < this._minScrollX) {
+					if (this._maxScrollX > this._minScrollX || this.forceElasticLeft) {
+						scrollX = scrollX - (scrollX - this._minScrollX) * (1.0 - this.elasticity);
 					} else {
-						scrollX = this.minScrollX;
+						scrollX = this._minScrollX;
 					}
-				} else if (scrollX > this.maxScrollX) {
-					if (this.maxScrollX > this.minScrollX || this.forceElasticRight) {
-						scrollX = scrollX - (scrollX - this.maxScrollX) * (1.0 - this.elasticity);
+				} else if (scrollX > this._maxScrollX) {
+					if (this._maxScrollX > this._minScrollX || this.forceElasticRight) {
+						scrollX = scrollX - (scrollX - this._maxScrollX) * (1.0 - this.elasticity);
 					} else {
-						scrollX = this.maxScrollX;
+						scrollX = this._maxScrollX;
 					}
 				}
 			} else {
-				if (scrollX < this.minScrollX) {
-					scrollX = this.minScrollX;
-				} else if (scrollX > this.maxScrollX) {
-					scrollX = this.maxScrollX;
+				if (scrollX < this._minScrollX) {
+					scrollX = this._minScrollX;
+				} else if (scrollX > this._maxScrollX) {
+					scrollX = this._maxScrollX;
 				}
 			}
 		}
@@ -908,24 +1021,24 @@ class Scroller extends EventDispatcher {
 		if (canDragY) {
 			scrollY -= touchOffsetY;
 			if (this.elasticEdges) {
-				if (scrollY < this.minScrollY) {
-					if (this.maxScrollY > this.minScrollY || this.forceElasticTop) {
-						scrollY = scrollY - (scrollY - this.minScrollY) * (1.0 - this.elasticity);
+				if (scrollY < this._minScrollY) {
+					if (this._maxScrollY > this._minScrollY || this.forceElasticTop) {
+						scrollY = scrollY - (scrollY - this._minScrollY) * (1.0 - this.elasticity);
 					} else {
-						scrollY = this.minScrollY;
+						scrollY = this._minScrollY;
 					}
-				} else if (scrollY > this.maxScrollY) {
-					if (this.maxScrollY > this.minScrollY || this.forceElasticBottom) {
-						scrollY = scrollY - (scrollY - this.maxScrollY) * (1.0 - this.elasticity);
+				} else if (scrollY > this._maxScrollY) {
+					if (this._maxScrollY > this._minScrollY || this.forceElasticBottom) {
+						scrollY = scrollY - (scrollY - this._maxScrollY) * (1.0 - this.elasticity);
 					} else {
-						scrollY = this.maxScrollY;
+						scrollY = this._maxScrollY;
 					}
 				}
 			} else {
-				if (scrollY < this.minScrollY) {
-					scrollY = this.minScrollY;
-				} else if (scrollY > this.maxScrollY) {
-					scrollY = this.maxScrollY;
+				if (scrollY < this._minScrollY) {
+					scrollY = this._minScrollY;
+				} else if (scrollY > this._maxScrollY) {
+					scrollY = this._maxScrollY;
 				}
 			}
 		}
@@ -951,11 +1064,11 @@ class Scroller extends EventDispatcher {
 
 		var finishingX = !this.canDragX();
 		var finishingY = !this.canDragY();
-		if (this.scrollX < this.minScrollX || this.scrollX > this.maxScrollX) {
+		if (this._scrollX < this._minScrollX || this._scrollX > this._maxScrollX) {
 			finishingX = true;
 			this.finishScrollX();
 		}
-		if (this.scrollY < this.minScrollY || this.scrollY > this.maxScrollY) {
+		if (this._scrollY < this._minScrollY || this._scrollY > this._maxScrollY) {
 			finishingY = true;
 			this.finishScrollY();
 		}
@@ -964,7 +1077,7 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 
-		if (!this.draggingX && !this.draggingY) {
+		if (!this._draggingX && !this._draggingY) {
 			return;
 		}
 
@@ -980,10 +1093,10 @@ class Scroller extends EventDispatcher {
 
 		// the scroll position hasn't changed, so don't scroll
 		if (startIndex == endIndex) {
-			if (!finishingX && this.draggingX) {
+			if (!finishingX && this._draggingX) {
 				this.finishScrollX();
 			}
-			if (!finishingY && this.draggingY) {
+			if (!finishingY && this._draggingY) {
 				this.finishScrollY();
 			}
 			return;
@@ -992,37 +1105,36 @@ class Scroller extends EventDispatcher {
 		var timeOffset = this.savedScrollMoves[endIndex] - this.savedScrollMoves[startIndex];
 		var velocityX:Null<Float> = null;
 		var velocityY:Null<Float> = null;
-		if (!finishingX && this.draggingX) {
-			var movedX = this.scrollX - this.savedScrollMoves[startIndex - 2];
+		if (!finishingX && this._draggingX) {
+			var movedX = this._scrollX - this.savedScrollMoves[startIndex - 2];
 			velocityX = -movedX / timeOffset;
 		}
-		if (!finishingY && this.draggingY) {
-			var movedY = this.scrollY - this.savedScrollMoves[startIndex - 1];
+		if (!finishingY && this._draggingY) {
+			var movedY = this._scrollY - this.savedScrollMoves[startIndex - 1];
 			velocityY = -movedY / timeOffset;
 		}
 
 		if (velocityX != null || velocityY != null) {
 			this.throwWithVelocity(velocityX, velocityY);
 		}
-		if (velocityX == null && this.draggingX) {
+		if (velocityX == null && this._draggingX) {
 			this.finishScrollX();
 		}
-		if (velocityY == null && this.draggingY) {
-			this.draggingY = false;
+		if (velocityY == null && this._draggingY) {
 			this.finishScrollY();
 		}
 	}
 
 	private function canDragX():Bool {
-		return this.enabledX && (this.maxScrollX > this.minScrollX || this.forceElasticLeft || this.forceElasticRight);
+		return this.enabledX && (this._maxScrollX > this._minScrollX || this.forceElasticLeft || this.forceElasticRight);
 	}
 
 	private function canDragY():Bool {
-		return this.enabledY && (this.maxScrollY > this.minScrollY || this.forceElasticTop || this.forceElasticBottom);
+		return this.enabledY && (this._maxScrollY > this._minScrollY || this.forceElasticTop || this.forceElasticBottom);
 	}
 
 	private function target_touchBeginCaptureHandler(event:TouchEvent):Void {
-		if (!this.scrolling) {
+		if (!this._scrolling) {
 			return;
 		}
 		event.stopImmediatePropagation();
@@ -1034,7 +1146,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function target_mouseDownCaptureHandler(event:MouseEvent):Void {
-		if (!this.scrolling) {
+		if (!this._scrolling) {
 			return;
 		}
 		event.stopImmediatePropagation();
@@ -1090,7 +1202,7 @@ class Scroller extends EventDispatcher {
 
 	private function target_mouseWheelHandler(event:MouseEvent):Void {
 		// can't use preventDefault(), so don't let it bubble
-		var targetScrollY = this.scrollY;
+		var targetScrollY = this._scrollY;
 		if (this.animateScrollY != null) {
 			targetScrollY = this.targetScrollY;
 		}
@@ -1104,17 +1216,18 @@ class Scroller extends EventDispatcher {
 				deltaLines = deltaLines * 16;
 		}
 		var newScrollY = targetScrollY - (deltaLines * this.mouseWheelDeltaY);
-		if (newScrollY < this.minScrollY) {
-			newScrollY = this.minScrollY;
-		} else if (newScrollY > this.maxScrollY) {
-			newScrollY = this.maxScrollY;
+		if (newScrollY < this._minScrollY) {
+			newScrollY = this._minScrollY;
+		} else if (newScrollY > this._maxScrollY) {
+			newScrollY = this._maxScrollY;
 		}
-		if (this.scrollY == newScrollY) {
+		if (this._scrollY == newScrollY) {
 			return;
 		}
 		if (this.mouseWheelDuration > 0.0) {
 			this.throwTo(null, newScrollY, this.mouseWheelDuration, this.ease);
 		} else {
+			// use the setter
 			this.scrollY = newScrollY;
 		}
 	}

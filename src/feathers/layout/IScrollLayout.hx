@@ -21,20 +21,23 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
-	var scrollX(default, set):Float;
+	@:flash.property
+	var scrollX(get, set):Float;
 
 	/**
 		The vertical scroll position of the container using this layout.
 
 		@since 1.0.0
 	**/
-	var scrollY(default, set):Float;
+	@:flash.property
+	var scrollY(get, set):Float;
 
 	/**
 		Indicates if the top edge is elastic.
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	var elasticTop(get, never):Bool;
 
 	/**
@@ -42,6 +45,7 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	var elasticRight(get, never):Bool;
 
 	/**
@@ -49,6 +53,7 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	var elasticBottom(get, never):Bool;
 
 	/**
@@ -56,6 +61,7 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	var elasticLeft(get, never):Bool;
 
 	/**
@@ -68,6 +74,7 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	var requiresLayoutOnScroll(get, never):Bool;
 
 	/**
