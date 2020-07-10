@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    "feathersui-openfl": "./lib/feathers/index.js"
+    "feathersui-openfl": "./lib/feathersui-defineProperties-wrapper.js"
   },
   devtool: "source-map",
   output: {

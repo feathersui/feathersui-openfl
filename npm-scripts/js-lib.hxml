@@ -18,4 +18,5 @@
 -D tools
 -D commonjs
 -D howlerjs
+--macro JSPropertiesMacro.defineProperties()
 --no-inline

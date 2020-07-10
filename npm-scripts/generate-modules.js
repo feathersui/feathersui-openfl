@@ -560,6 +560,17 @@ function startCreateLibCjsIndexModules() {
         dirToPackages[dirNameDirName] = new Set();
       }
       dirToPackages[dirNameDirName].add(dirName);
+
+      //if there are no files in the parent package, add it
+      if(!dirToFiles.hasOwnProperty(dirNameDirName)) {
+        dirToFiles[dirNameDirName] = new Set();
+      }
+
+      let dirNameDirNameDirName = _path.dirname(dirNameDirName);
+      if(!dirToPackages.hasOwnProperty(dirNameDirNameDirName)) {
+        dirToPackages[dirNameDirNameDirName] = new Set();
+      }
+      dirToPackages[dirNameDirNameDirName].add(dirNameDirName);
     }
 
     for (let dir in dirToFiles)
