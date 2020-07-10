@@ -132,7 +132,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this._multiline;
 	}
 
-	private var _restrict:String;
+	// for some reason, naming this _restrict fails in hxcpp
+	private var __restrict:String;
 
 	/**
 		Limits the set of characters that may be typed with the keyboard.
@@ -143,16 +144,16 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 	public var restrict(get, set):String;
 
 	private function get_restrict():String {
-		return this._restrict;
+		return this.__restrict;
 	}
 
 	private function set_restrict(value:String):String {
-		if (this._restrict == value) {
-			return this._restrict;
+		if (this.__restrict == value) {
+			return this.__restrict;
 		}
-		this._restrict = value;
+		this.__restrict = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this._restrict;
+		return this.__restrict;
 	}
 
 	private var _smoothScrolling:Bool = false;
@@ -710,7 +711,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this.textField.multiline = this._multiline;
 			this._updatedTextStyles = true;
 		}
-		this.textField.restrict = this._restrict;
+		this.textField.restrict = this.__restrict;
 		var calculatedWidth = this._explicitVisibleWidth;
 		if (calculatedWidth != null) {
 			calculatedWidth -= (this._paddingLeft + this._paddingRight);
