@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: krdlab/setup-haxe@v1
       with:
-        haxe-version: 4.1.2
+        haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
       run: |
         haxelib install lime --quiet
@@ -91,7 +91,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: haxeui/haxeui-core/.github/actions/haxe@master
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -113,7 +113,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: joshtynjala/setup-adobe-air-action@v1
-    - uses: haxeui/haxeui-core/.github/actions/haxe@master
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
