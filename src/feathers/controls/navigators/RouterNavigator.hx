@@ -137,7 +137,7 @@ class RouterNavigator extends BaseNavigator {
 		}
 		this.htmlWindow.history.pushState(state, null, path);
 		#else
-		this._history.push(new HistoryItem(path, state));
+		this._history.push(new HistoryItem(Location.fromString(path), state));
 		this._forwardHistory.resize(0);
 		#end
 		if (transition == null) {
@@ -169,7 +169,7 @@ class RouterNavigator extends BaseNavigator {
 		}
 		this.htmlWindow.history.replaceState(state, null, path);
 		#else
-		this._history[this._history.length - 1] = new HistoryItem(path, state);
+		this._history[this._history.length - 1] = new HistoryItem(Location.fromString(path), state);
 		this._forwardHistory.resize(0);
 		#end
 		if (transition == null) {
@@ -254,6 +254,24 @@ class RouterNavigator extends BaseNavigator {
 		this.matchRouteAndShow(null);
 	}
 
+	/**
+		Returns the current location.
+
+		@since 1.0.0
+	**/
+	public var location(get, never):#if html5 js.html.Location #else Location #end;
+
+	private function get_location():#if html5 js.html.Location #else Location #end {
+		#if html5
+		return this.htmlWindow.location;
+		#else
+		if (this._history.length > 0) {
+			return this._history[this._history.length - 1].location;
+		}
+		return new Location("/");
+		#end
+	}
+
 	private function matchRoute():Route {
 		#if html5
 		var pathname = this.htmlWindow.location.pathname;
@@ -264,7 +282,7 @@ class RouterNavigator extends BaseNavigator {
 		var pathname = "/";
 		if (this._history.length > 0) {
 			var item = this._history[this._history.length - 1];
-			pathname = item.url;
+			pathname = item.location.pathname;
 		}
 		#end
 		pathname = pathname.toLowerCase();
@@ -367,12 +385,110 @@ class RouterNavigator extends BaseNavigator {
 
 #if !html5
 private class HistoryItem {
-	public function new(url:String, state:Dynamic) {
-		this.url = url;
+	public function new(location:Location, state:Dynamic) {
+		this.location = location;
 		this.state = state;
 	}
 
-	public var url:String;
+	public var location:Location;
 	public var state:Dynamic;
+}
+
+class Location {
+	public static function fromString(value:String):Location {
+		var pathname = value;
+		var search = "";
+		var hash = "";
+		var splitWithHash = pathname.split("#");
+		pathname = splitWithHash[0];
+		if (splitWithHash.length > 1) {
+			hash = splitWithHash[1];
+		}
+		var splitWithSearch = pathname.split("?");
+		pathname = splitWithSearch[0];
+		if (splitWithSearch.length > 1) {
+			search = splitWithSearch[1];
+		}
+		return new Location(pathname, search, hash);
+	}
+
+	public function new(pathname:String, search:String = "", hash:String = "") {
+		this._pathname = pathname;
+		this._search = search;
+		this._hash = hash;
+	}
+
+	private var _protocol:String = "file:";
+
+	@:flash.property
+	public var protocol(get, null):String;
+
+	public function get_protocol():String {
+		return this._protocol;
+	}
+
+	private var _hostname:String = ".";
+
+	@:flash.property
+	public var hostname(get, null):String;
+
+	public function get_hostname():String {
+		return ".";
+	}
+
+	@:flash.property
+	public var host(get, null):String;
+
+	public function get_host():String {
+		return this.hostname;
+	}
+
+	@:flash.property
+	public var port(get, null):String;
+
+	public function get_port():String {
+		return "";
+	}
+
+	@:flash.property
+	public var origin(get, never):String;
+
+	public function get_origin():String {
+		return this._protocol + "//" + this._hostname;
+	}
+
+	private var _pathname:String = "/";
+
+	@:flash.property
+	public var pathname(get, never):String;
+
+	public function get_pathname():String {
+		return this._pathname;
+	}
+
+	private var _search:String = "";
+
+	@:flash.property
+	public var search(get, never):String;
+
+	public function get_search():String {
+		return this._search;
+	}
+
+	private var _hash:String = "";
+
+	@:flash.property
+	public var hash(get, never):String;
+
+	public function get_hash():String {
+		return this._hash;
+	}
+
+	@:flash.property
+	public var href(get, never):String;
+
+	public function get_href():String {
+		return this.origin + this.pathname + this.search + this.hash;
+	}
 }
 #end
