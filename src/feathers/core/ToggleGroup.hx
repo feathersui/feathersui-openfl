@@ -136,16 +136,16 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var selectedItem(get, set):IToggle;
+	public var selectedItem(get, set):#if flash Dynamic #else IToggle #end;
 
-	private function get_selectedItem():IToggle {
+	private function get_selectedItem():#if flash Dynamic #else IToggle #end {
 		if (this._selectedIndex == -1) {
 			return null;
 		}
 		return this._items[this._selectedIndex];
 	}
 
-	private function set_selectedItem(value:IToggle):IToggle {
+	private function set_selectedItem(value:#if flash Dynamic #else IToggle #end):#if flash Dynamic #else IToggle #end {
 		// use the setter
 		this.selectedIndex = this._items.indexOf(value);
 		return this.selectedItem;

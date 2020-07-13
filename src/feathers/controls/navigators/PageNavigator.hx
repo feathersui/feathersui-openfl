@@ -150,13 +150,13 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
 	@:flash.property
-	public var selectedItem(get, set):PageItem;
+	public var selectedItem(get, set):#if flash Dynamic #else PageItem #end;
 
-	private function get_selectedItem():PageItem {
+	private function get_selectedItem():#if flash Dynamic #else PageItem #end {
 		return this._selectedItem;
 	}
 
-	private function set_selectedItem(value:PageItem):PageItem {
+	private function set_selectedItem(value:#if flash Dynamic #else PageItem #end):#if flash Dynamic #else PageItem #end {
 		if (this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;

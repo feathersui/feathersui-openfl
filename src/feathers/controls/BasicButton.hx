@@ -71,9 +71,9 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var currentState(get, never):ButtonState;
+	public var currentState(get, never):#if flash Dynamic #else ButtonState #end;
 
-	private function get_currentState():ButtonState {
+	private function get_currentState():#if flash Dynamic #else ButtonState #end {
 		return this._currentState;
 	}
 

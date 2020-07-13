@@ -150,13 +150,13 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
 	@:flash.property
-	public var selectedItem(get, set):TabItem;
+	public var selectedItem(get, set):#if flash Dynamic #else TabItem #end;
 
-	private function get_selectedItem():TabItem {
+	private function get_selectedItem():#if flash Dynamic #else TabItem #end {
 		return this._selectedItem;
 	}
 
-	private function set_selectedItem(value:TabItem):TabItem {
+	private function set_selectedItem(value:#if flash Dynamic #else TabItem #end):#if flash Dynamic #else TabItem #end {
 		if (this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;

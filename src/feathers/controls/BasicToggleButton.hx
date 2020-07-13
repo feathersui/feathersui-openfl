@@ -72,9 +72,9 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var currentState(get, never):ToggleButtonState;
+	public var currentState(get, never):#if flash Dynamic #else ToggleButtonState #end;
 
-	private function get_currentState():ToggleButtonState {
+	private function get_currentState():#if flash Dynamic #else ToggleButtonState #end {
 		return this._currentState;
 	}
 
