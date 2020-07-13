@@ -5,6 +5,7 @@ import com.feathersui.components.views.CalloutScreen;
 import com.feathersui.components.views.CheckScreen;
 import com.feathersui.components.views.ComboBoxScreen;
 import com.feathersui.components.views.GridViewScreen;
+import com.feathersui.components.views.GroupListViewScreen;
 import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
@@ -68,6 +69,9 @@ class Main extends Application {
 
 		var gridView = Route.withClass(ViewPaths.GRID_VIEW, GridViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(gridView);
+
+		var groupListView = Route.withClass(ViewPaths.GROUP_LIST_VIEW, GroupListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(groupListView);
 
 		var label = Route.withClass(ViewPaths.LABEL, LabelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(label);

@@ -33,6 +33,7 @@ class MainMenu extends Panel {
 			new MenuItem("Check", ViewPaths.CHECK),
 			new MenuItem("Combo Box", ViewPaths.COMBO_BOX),
 			new MenuItem("Grid View", ViewPaths.GRID_VIEW),
+			new MenuItem("Group List View", ViewPaths.GROUP_LIST_VIEW),
 			new MenuItem("Label", ViewPaths.LABEL),
 			new MenuItem("List View", ViewPaths.LIST_VIEW),
 			new MenuItem("Page Indicator", ViewPaths.PAGE_INDICATOR),
