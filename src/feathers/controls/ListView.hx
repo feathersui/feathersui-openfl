@@ -801,7 +801,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._currentItemState.index = index;
 		this._currentItemState.text = this.itemToText(data);
 		this._currentItemState.selected = this._selectedIndex == index;
-		this.dispatchEvent(new ListViewEvent(ListViewEvent.ITEM_TRIGGER, this._currentItemState));
+		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, this._currentItemState);
 	}
 
 	private function listView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
