@@ -9,10 +9,12 @@
 package feathers.events;
 
 import feathers.style.IStyleObject;
-import openfl._internal.utils.ObjectPool;
 import openfl.events.Event;
 import openfl.events.EventType;
 import openfl.events.IEventDispatcher;
+#if !flash
+import openfl._internal.utils.ObjectPool;
+#end
 
 /**
 	Events dispatched by style provider implementations.
@@ -32,9 +34,12 @@ class StyleProviderEvent extends Event {
 
 	#if !flash
 	private static var _pool = new ObjectPool<StyleProviderEvent>(() -> return new StyleProviderEvent(null, null), (event) -> {
+		event.target = null;
+		event.currentTarget = null;
 		event.__preventDefault = false;
 		event.__isCanceled = false;
 		event.__isCanceledNow = false;
+		event.affectsTarget = null;
 	});
 	#end
 

@@ -8,10 +8,12 @@
 
 package feathers.events;
 
-import openfl._internal.utils.ObjectPool;
 import openfl.events.EventType;
 import openfl.events.Event;
 import openfl.events.IEventDispatcher;
+#if !flash
+import openfl._internal.utils.ObjectPool;
+#end
 
 /**
 	Events dispatched by flat collections.
@@ -114,9 +116,13 @@ class FlatCollectionEvent extends Event {
 
 	#if !flash
 	private static var _pool = new ObjectPool<FlatCollectionEvent>(() -> return new FlatCollectionEvent(null, -1, false, false), (event) -> {
+		event.target = null;
+		event.currentTarget = null;
 		event.__preventDefault = false;
 		event.__isCanceled = false;
 		event.__isCanceledNow = false;
+		event.addedItem = null;
+		event.removedItem = null;
 	});
 	#end
 
