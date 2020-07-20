@@ -387,7 +387,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		@see `feathers.layout.VerticalAlign.BOTTOM`
 	**/
 	@:style
-	public var verticalAlign:VerticalAlign = MIDDLE;
+	public var verticalAlign:VerticalAlign = TOP;
 
 	/**
 		Determines if the text is displayed on a single line, or if it wraps.
