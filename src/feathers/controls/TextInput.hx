@@ -977,8 +977,20 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
 
-		// use the setter
-		this.text = this.textField.text;
+		var oldText = this._text;
+
+		// no need to invalidate here. just store the new text.
+		this._text = this.textField.text;
+		// ...UNLESS the prompt needs to be shown or hidden as a result of the
+		// changed text
+		var hasText = this._text != null && this._text.length > 0;
+		var hasOldText = oldText != null && oldText.length > 0;
+		var hasPrompt = this._prompt != null && this._prompt.length > 0;
+		if (hasPrompt && ((!hasText && hasOldText) || (hasText && !hasOldText))) {
+			this.setInvalid(InvalidationFlag.DATA);
+		}
+		// either way, the event still needs to be dispatched
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	private function textField_scrollHandler(event:Event):Void {
