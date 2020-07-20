@@ -109,9 +109,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var currentState(get, never):TextInputState;
+	public var currentState(get, never):#if flash Dynamic #else TextInputState #end;
 
-	private function get_currentState():TextInputState {
+	private function get_currentState():#if flash Dynamic #else TextInputState #end {
 		return this._currentState;
 	}
 
