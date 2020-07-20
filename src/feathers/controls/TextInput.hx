@@ -903,43 +903,45 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private function layoutContent():Void {
 		this.layoutBackgroundSkin();
 
-		this.textField.x = this.paddingLeft;
-		this.textField.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+		var textFieldWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		this.textField.width = textFieldWidth;
 
+		var textFieldHeight = this._textMeasuredHeight;
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
-		if (this._textMeasuredHeight > maxHeight) {
-			this.textField.height = maxHeight;
-		} else {
-			this.textField.height = this._textMeasuredHeight;
+		if (textFieldHeight > maxHeight || this.verticalAlign == JUSTIFY) {
+			textFieldHeight = maxHeight;
 		}
-		this.alignTextField(this.textField, maxHeight);
+		this.textField.height = textFieldHeight;
+
+		this.textField.x = this.paddingLeft;
+		this.alignTextField(this.textField, textFieldHeight, maxHeight);
 
 		if (this.promptTextField != null) {
-			this.promptTextField.x = this.paddingLeft;
-			this.promptTextField.width = this.textField.width;
-			if (this._promptTextMeasuredHeight > maxHeight) {
-				this.promptTextField.height = maxHeight;
-			} else {
-				this.promptTextField.height = this._promptTextMeasuredHeight;
+			this.promptTextField.width = textFieldWidth;
+
+			var textFieldHeight = this._promptTextMeasuredHeight;
+			if (textFieldHeight > maxHeight || this.verticalAlign == JUSTIFY) {
+				textFieldHeight = maxHeight;
 			}
-			this.alignTextField(this.promptTextField, maxHeight);
+			this.promptTextField.height = textFieldHeight;
+
+			this.promptTextField.x = this.paddingLeft;
+			this.alignTextField(this.promptTextField, textFieldHeight, maxHeight);
 		}
 	}
 
-	private inline function alignTextField(textField:TextField, maxHeight:Float):Void {
+	private inline function alignTextField(textField:TextField, textFieldHeight:Float, maxHeight:Float):Void {
+		// performance: use the textFieldHeight variable instead of calling the
+		// TextField height getter, which can trigger a text engine reflow
 		switch (this.verticalAlign) {
 			case TOP:
 				textField.y = this.paddingTop;
-				textField.height = Math.min(maxHeight, textField.height);
 			case BOTTOM:
-				textField.y = this.actualHeight - this.paddingBottom - textField.height;
-				textField.height = Math.min(maxHeight, textField.height);
+				textField.y = this.actualHeight - this.paddingBottom - textFieldHeight;
 			case JUSTIFY:
 				textField.y = this.paddingTop;
-				textField.height = maxHeight;
 			default: // middle or null
-				textField.y = this.paddingTop + (maxHeight - textField.height) / 2.0;
-				textField.height = Math.min(maxHeight, textField.height);
+				textField.y = this.paddingTop + (maxHeight - textFieldHeight) / 2.0;
 		}
 	}
 

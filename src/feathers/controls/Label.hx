@@ -709,19 +709,22 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		this.textField.x = this.paddingLeft;
 		this.textField.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 
+		var textFieldHeight = this._textMeasuredHeight;
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
-		if (this._textMeasuredHeight > maxHeight) {
-			this.textField.height = maxHeight;
-		} else {
-			this.textField.height = this._textMeasuredHeight;
+		if (textFieldHeight > maxHeight) {
+			textFieldHeight = maxHeight;
 		}
+		this.textField.height = textFieldHeight;
+
+		// performance: use the textFieldHeight variable instead of calling the
+		// TextField height getter, which can trigger a text engine reflow
 		switch (this.verticalAlign) {
 			case TOP:
 				this.textField.y = this.paddingTop;
 			case BOTTOM:
-				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
+				this.textField.y = this.actualHeight - this.paddingBottom - textFieldHeight;
 			default: // middle or null
-				this.textField.y = this.paddingTop + (maxHeight - this.textField.height) / 2.0;
+				this.textField.y = this.paddingTop + (maxHeight - textFieldHeight) / 2.0;
 		}
 	}
 
