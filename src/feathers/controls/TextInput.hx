@@ -823,13 +823,15 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			// nothing to refresh
 			return;
 		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.promptTextField.autoSize = TextFieldAutoSize.LEFT;
 		var hasText = this._prompt.length > 0;
 		if (hasText) {
 			this.promptTextField.text = this._prompt;
 		} else {
 			this.promptTextField.text = "\u8203"; // zero-width space
 		}
-		this.promptTextField.autoSize = TextFieldAutoSize.LEFT;
 		this._promptTextMeasuredWidth = this.promptTextField.width;
 		this._promptTextMeasuredHeight = this.promptTextField.height;
 		this.promptTextField.autoSize = TextFieldAutoSize.NONE;
@@ -868,13 +870,15 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			// nothing to refresh
 			return;
 		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.textField.autoSize = TextFieldAutoSize.LEFT;
 		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;

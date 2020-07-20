@@ -606,6 +606,9 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			// nothing to refresh
 			return;
 		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.textField.autoSize = TextFieldAutoSize.LEFT;
 		if (hasHTMLText) {
 			this.textField.htmlText = this._htmlText;
 		} else if (hasText) {
@@ -613,7 +616,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
 		var textFieldWidth:Null<Float> = null;
 		if (this.explicitWidth != null) {
 			textFieldWidth = this.explicitWidth;

@@ -818,12 +818,14 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			// nothing to refresh
 			return;
 		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.textField.autoSize = TextFieldAutoSize.LEFT;
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;

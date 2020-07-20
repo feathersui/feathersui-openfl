@@ -284,12 +284,14 @@ class ItemRenderer extends ToggleButton {
 			// nothing to refresh
 			return;
 		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.secondaryTextField.autoSize = TextFieldAutoSize.LEFT;
 		if (hasText) {
 			this.secondaryTextField.text = this._secondaryText;
 		} else {
 			this.secondaryTextField.text = "\u8203"; // zero-width space
 		}
-		this.secondaryTextField.autoSize = TextFieldAutoSize.LEFT;
 		this._secondaryTextMeasuredWidth = this.secondaryTextField.width;
 		this._secondaryTextMeasuredHeight = this.secondaryTextField.height;
 		this.secondaryTextField.autoSize = TextFieldAutoSize.NONE;

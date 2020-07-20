@@ -720,16 +720,18 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			// nothing to refresh
 			return;
 		}
+		if (calculatedWidth != null) {
+			this.textField.width = calculatedWidth;
+		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.textField.autoSize = LEFT;
 		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u8203"; // zero-width space
 		}
-		if (calculatedWidth != null) {
-			this.textField.width = calculatedWidth;
-		}
-		this.textField.autoSize = LEFT;
 		this._savedLineMetrics = this.textField.getLineMetrics(0);
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = 4 + (this._savedLineMetrics.height + this._savedLineMetrics.leading) * this.textField.numLines;
