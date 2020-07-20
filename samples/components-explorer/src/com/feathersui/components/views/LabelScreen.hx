@@ -15,6 +15,7 @@ class LabelScreen extends Panel {
 	private var headingLabel:Label;
 	private var detailLabel:Label;
 	private var htmlLabel:Label;
+	private var wrappedLabel:Label;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -43,6 +44,12 @@ class LabelScreen extends Panel {
 		this.htmlLabel = new Label();
 		this.htmlLabel.htmlText = "Use basic <b>HTML</b> — <i>including</i> <font color=\"#ff0000\">colors</font> and <font color=\"#0000ff\"><u><a href=\"https://feathersui.com/\">links</a></u></font>";
 		this.addChild(this.htmlLabel);
+
+		this.wrappedLabel = new Label();
+		this.wrappedLabel.text = "A label's text may optionally wrap to multiple lines";
+		this.wrappedLabel.wordWrap = true;
+		this.wrappedLabel.width = 200.0; // wrap at 100 pixels wide
+		this.addChild(this.wrappedLabel);
 	}
 
 	private function createHeader():Void {
