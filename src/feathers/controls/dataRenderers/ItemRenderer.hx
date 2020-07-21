@@ -34,6 +34,12 @@ class ItemRenderer extends ToggleButton {
 		initializeItemRendererTheme();
 
 		super();
+
+		// accessory views need to be accessible to mouse/touch
+		this.mouseChildren = true;
+		// for some reason, useHandCursor = false is not always respected
+		// so buttonMode needs to be false
+		this.buttonMode = false;
 	}
 
 	private var secondaryTextField:TextField;

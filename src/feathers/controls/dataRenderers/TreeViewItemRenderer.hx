@@ -38,7 +38,6 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	public function new() {
 		initializeTreeViewItemRendererTheme();
 		super();
-		this.mouseChildren = true;
 	}
 
 	private var _data:Dynamic;
