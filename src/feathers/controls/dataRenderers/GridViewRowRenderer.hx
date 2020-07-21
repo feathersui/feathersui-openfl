@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.layout.ILayoutIndexObject;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
 import openfl.events.MouseEvent;
@@ -313,6 +314,10 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 				gridCell.column = null;
 				gridCell.columnIndex = -1;
 			}
+			if (Std.is(cellRenderer, ILayoutIndexObject)) {
+				var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
+				layoutIndexObject.layoutIndex = -1;
+			}
 			cellRenderer.removeEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
 		}
@@ -389,6 +394,10 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			var gridCell = cast(cellRenderer, IGridViewCellRenderer);
 			gridCell.column = this._currentCellState.column;
 			gridCell.columnIndex = this._currentCellState.columnIndex;
+		}
+		if (Std.is(cellRenderer, ILayoutIndexObject)) {
+			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
+			layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
 		}
 	}
 

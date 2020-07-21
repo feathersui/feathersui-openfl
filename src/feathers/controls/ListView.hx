@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -644,6 +645,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
 				dataRenderer.data = null;
 			}
+			if (Std.is(itemRenderer, ILayoutIndexObject)) {
+				var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+				layoutIndexObject.layoutIndex = -1;
+			}
 			if (Std.is(itemRenderer, IListViewItemRenderer)) {
 				var listRenderer = cast(itemRenderer, IListViewItemRenderer);
 				listRenderer.index = -1;
@@ -705,6 +710,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 					var listRenderer = cast(itemRenderer, IListViewItemRenderer);
 					listRenderer.index = this._currentItemState.index;
 				}
+				if (Std.is(itemRenderer, ILayoutIndexObject)) {
+					var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+					layoutIndexObject.layoutIndex = this._currentItemState.index;
+				}
 				if (Std.is(itemRenderer, IToggle)) {
 					var toggle = cast(itemRenderer, IToggle);
 					// if the renderer is an IToggle, this cannot be overridden
@@ -756,6 +765,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (Std.is(itemRenderer, IListViewItemRenderer)) {
 			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
 			listRenderer.index = this._currentItemState.index;
+		}
+		if (Std.is(itemRenderer, ILayoutIndexObject)) {
+			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+			layoutIndexObject.layoutIndex = this._currentItemState.index;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);

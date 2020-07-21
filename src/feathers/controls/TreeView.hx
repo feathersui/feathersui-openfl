@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.layout.ILayoutIndexObject;
 import feathers.events.TreeViewEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
@@ -701,6 +702,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
 				treeItem.branch = false;
 			}
+			if (Std.is(itemRenderer, ILayoutIndexObject)) {
+				var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+				layoutIndexObject.layoutIndex = -1;
+			}
 			if (Std.is(itemRenderer, IDataRenderer)) {
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
 				dataRenderer.data = null;
@@ -797,6 +802,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			treeItem.location = this._currentItemState.location;
 			treeItem.branch = this._currentItemState.branch;
 		}
+		if (Std.is(itemRenderer, ILayoutIndexObject)) {
+			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+			layoutIndexObject.layoutIndex = this._currentItemState.layoutIndex;
+		}
 		if (Std.is(itemRenderer, IOpenCloseToggle)) {
 			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
 			openCloseItem.opened = this._currentItemState.opened;
@@ -859,6 +868,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
 			treeItem.location = this._currentItemState.location;
 			treeItem.branch = this._currentItemState.branch;
+		}
+		if (Std.is(itemRenderer, ILayoutIndexObject)) {
+			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+			layoutIndexObject.layoutIndex = this._currentItemState.layoutIndex;
 		}
 		if (Std.is(itemRenderer, IOpenCloseToggle)) {
 			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
