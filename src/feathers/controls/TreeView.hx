@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TreeViewEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
 import feathers.controls.dataRenderers.TreeViewItemRenderer;
@@ -896,6 +897,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedLocation = this._dataProvider.locationOf(this._selectedItem); // use the setter
 	}
 
+	private function dispatchItemTriggerEvent(data:Dynamic):Void {
+		var location = this._dataProvider.locationOf(data);
+		var itemRenderer = this.dataToItemRenderer.get(data);
+		this._currentItemState.data = data;
+		this._currentItemState.location = location;
+		this._currentItemState.layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
+		this._currentItemState.branch = this._dataProvider != null && this._dataProvider.isBranch(data);
+		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(data) != -1;
+		this._currentItemState.selected = data == this._selectedItem;
+		this._currentItemState.text = itemToText(data);
+		TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_TRIGGER, this._currentItemState);
+	}
+
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
 		if (this._dataProvider == null) {
 			return 0;
@@ -1078,6 +1092,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
+
+		if (event.keyCode == Keyboard.ENTER) {
+			if (this._selectedItem != null) {
+				this.dispatchItemTriggerEvent(this._selectedItem);
+			}
+		}
+
 		if (this._selectedLocation != null && event.keyCode == Keyboard.SPACE) {
 			event.stopPropagation();
 			if (this.openBranches.indexOf(this._selectedItem) != -1) {
@@ -1092,6 +1113,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var data = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(data);
+
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -1099,26 +1124,26 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		if (Std.is(itemRenderer, IToggle)) {
 			// handled by Event.CHANGE listener instead
 			return;
 		}
-		var data = this.itemRendererToData.get(itemRenderer);
 		// use the setter
 		this.selectedLocation = this._dataProvider.locationOf(data);
 	}
 
 	private function treeView_itemRenderer_clickHandler(event:MouseEvent):Void {
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var data = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(data);
+
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		if (Std.is(itemRenderer, IToggle)) {
 			// handled by Event.CHANGE listener instead
 			return;
 		}
-		var data = this.itemRendererToData.get(itemRenderer);
 		// use the setter
 		this.selectedLocation = this._dataProvider.locationOf(data);
 	}
