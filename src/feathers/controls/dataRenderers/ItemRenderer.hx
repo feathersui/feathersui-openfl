@@ -8,6 +8,8 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.layout.ILayoutIndexObject;
+import openfl.display.DisplayObject;
 import feathers.core.IFocusObject;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
@@ -24,7 +26,7 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 @:styleContext
-class ItemRenderer extends ToggleButton {
+class ItemRenderer extends ToggleButton implements ILayoutIndexObject {
 	/**
 		Creates a new `ItemRenderer` object.
 
@@ -81,6 +83,28 @@ class ItemRenderer extends ToggleButton {
 		this._secondaryText = value;
 		this.setInvalid(InvalidationFlag.DATA);
 		return this._secondaryText;
+	}
+
+	private var _layoutIndex:Int = -1;
+
+	/**
+		@see `feathers.layout.ILayoutIndexObject.layoutIndex`
+	**/
+	@:flash.property
+	public var layoutIndex(get, set):Int;
+
+	private function get_layoutIndex():Int {
+		return this._layoutIndex;
+	}
+
+	private function set_layoutIndex(value:Int):Int {
+		if (this._layoutIndex == value) {
+			return this._layoutIndex;
+		}
+		this._layoutIndex = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this._layoutIndex;
 	}
 
 	/**
@@ -164,6 +188,27 @@ class ItemRenderer extends ToggleButton {
 	**/
 	@:style
 	public var selectedSecondaryTextFormat:TextFormat = null;
+
+	/**
+		The display object to use as the background skin when the alternate
+		skin is enabled.
+
+		The following example passes a bitmap to use as an alternate background
+		skin:
+
+		```hx
+		itemRenderer.alternateBackgroundSkin = new Bitmap(bitmapData);
+		```
+
+		@default null
+
+		@see `BasicButton.backgroundSkin`
+
+		@since 1.0.0
+
+	**/
+	@:style
+	public var alternateBackgroundSkin:DisplayObject = null;
 
 	private var _stateToSecondaryTextFormat:Map<ToggleButtonState, TextFormat> = new Map();
 
@@ -499,6 +544,17 @@ class ItemRenderer extends ToggleButton {
 			}
 		}
 		return contentMinHeight;
+	}
+
+	override private function getCurrentBackgroundSkin():DisplayObject {
+		var result = this._stateToSkin.get(this._currentState);
+		if (result != null) {
+			return result;
+		}
+		if (this.alternateBackgroundSkin != null && (this._layoutIndex % 2) == 1) {
+			return this.alternateBackgroundSkin;
+		}
+		return this.backgroundSkin;
 	}
 
 	override private function layoutContent():Void {
