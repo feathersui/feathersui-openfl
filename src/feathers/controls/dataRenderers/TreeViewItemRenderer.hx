@@ -43,7 +43,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	private var _data:Dynamic;
 
 	/**
-		@since 1.0.0
+		@see `feathers.controls.dataRenderers.IDataRenderer.data`
 	**/
 	@:flash.property
 	public var data(get, set):Dynamic;
@@ -63,6 +63,9 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	private var _location:Array<Int>;
 
+	/**
+		@see `feathers.controls.dataRenderers.ITreeViewItemRenderer.location`
+	**/
 	@:flash.property
 	public var location(get, set):Array<Int>;
 
@@ -81,6 +84,9 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	private var _branch:Bool = false;
 
+	/**
+		@see `feathers.controls.dataRenderers.ITreeViewItemRenderer.branch`
+	**/
 	@:flash.property
 	public var branch(get, set):Bool;
 
@@ -99,6 +105,9 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	private var _opened:Bool = false;
 
+	/**
+		@see `feathers.core.IOpenCloseToggle.opened`
+	**/
 	@:flash.property
 	public var opened(get, set):Bool;
 
@@ -122,6 +131,12 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	private var _ignoreOpenCloseChange = false;
 
+	/**
+		The space, measured in pixels, added to the left side of the item
+		renderer at each level of the hierarchy.
+
+		@since 1.0.0
+	**/
 	@:style
 	public var indentation:Float = 0.0;
 
