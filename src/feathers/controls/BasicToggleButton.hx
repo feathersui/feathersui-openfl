@@ -510,15 +510,15 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 				if (this._selected != selected) {
 					toggleState = UP(this._selected);
 				}
-			case DOWN(_):
+			case DOWN(selected):
 				if (this._selected != selected) {
 					toggleState = DOWN(this._selected);
 				}
-			case HOVER(_):
+			case HOVER(selected):
 				if (this._selected != selected) {
 					toggleState = HOVER(this._selected);
 				}
-			case DISABLED(_):
+			case DISABLED(selected):
 				if (this._selected != selected) {
 					toggleState = DISABLED(this._selected);
 				}
