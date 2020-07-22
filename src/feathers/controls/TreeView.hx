@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.ArgumentError;
 import feathers.layout.ILayoutIndexObject;
 import feathers.events.TreeViewEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
@@ -402,8 +403,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var inactiveItemRenderers:Array<DisplayObject> = [];
 	private var activeItemRenderers:Array<DisplayObject> = [];
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
+	private var dataToLayoutIndex = new ObjectMap<Dynamic, Int>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
-	private var itemRendererToLayoutIndex = new ObjectMap<DisplayObject, Int>();
 	private var _unrenderedLocations:Array<Array<Int>> = [];
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _virtualCache:Array<Dynamic> = [];
@@ -519,6 +520,52 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	**/
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
+	}
+
+	/**
+		Indicates if a branch is currently opened or closed. If the object is
+		not a branch, or does not exist in the data provider, returns `false`.
+
+		@since 1.0.0
+	**/
+	public function isBranchOpen(branch:Dynamic):Bool {
+		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+			return false;
+		}
+		return this._dataProvider.isBranch(branch) && this.openBranches.indexOf(branch) != -1;
+	}
+
+	/**
+		Opens or closes a branch.
+
+		@since 1.0.0
+	**/
+	public function toggleBranch(branch:Dynamic, open:Bool):Void {
+		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+			throw new ArgumentError("Cannot open branch because it is not in the data provider.");
+		}
+		if (!this._dataProvider.isBranch(branch)) {
+			throw new ArgumentError("Cannot open item because it is not a branch.");
+		}
+		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
+			// nothing to change
+			return;
+		}
+		if (open) {
+			this.openBranches.push(branch);
+			var layoutIndex = this.dataToLayoutIndex.get(branch);
+			var location = this._dataProvider.locationOf(branch);
+			insertChildrenIntoVirtualCache(location, layoutIndex);
+			FeathersEvent.dispatch(this, Event.OPEN);
+		} else {
+			this.openBranches.remove(branch);
+			var layoutIndex = this.dataToLayoutIndex.get(branch);
+			var location = this._dataProvider.locationOf(branch);
+			removeChildrenFromVirtualCache(location, layoutIndex);
+			FeathersEvent.dispatch(this, Event.CLOSE);
+		}
+		this.setInvalid(InvalidationFlag.DATA);
 	}
 
 	/**
@@ -665,8 +712,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				return;
 			}
 			this.itemRendererToData.remove(itemRenderer);
-			this.itemRendererToLayoutIndex.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
+			this.dataToLayoutIndex.remove(item);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
 			if (Std.is(itemRenderer, IToggle)) {
@@ -889,8 +936,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			itemRenderer.addEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 		}
 		this.itemRendererToData.set(itemRenderer, item);
-		this.itemRendererToLayoutIndex.set(itemRenderer, layoutIndex);
 		this.dataToItemRenderer.set(item, itemRenderer);
+		this.dataToLayoutIndex.set(item, layoutIndex);
 		return itemRenderer;
 	}
 
@@ -912,10 +959,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {
 		var location = this._dataProvider.locationOf(data);
-		var itemRenderer = this.dataToItemRenderer.get(data);
 		this._currentItemState.data = data;
 		this._currentItemState.location = location;
-		this._currentItemState.layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
+		this._currentItemState.layoutIndex = this.dataToLayoutIndex.get(data);
 		this._currentItemState.branch = this._dataProvider != null && this._dataProvider.isBranch(data);
 		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(data) != -1;
 		this._currentItemState.selected = data == this._selectedItem;
@@ -1114,12 +1160,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		if (this._selectedLocation != null && event.keyCode == Keyboard.SPACE) {
 			event.stopPropagation();
-			if (this.openBranches.indexOf(this._selectedItem) != -1) {
-				this.openBranches.remove(this._selectedItem);
-			} else {
-				this.openBranches.push(this._selectedItem);
+			if (this._dataProvider.isBranch(this._selectedItem)) {
+				this.toggleBranch(this._selectedItem, this.openBranches.indexOf(this._selectedItem) == -1);
 			}
-			this.setInvalid(InvalidationFlag.DATA);
 			return;
 		}
 		this.navigateWithKeyboard(event);
@@ -1185,11 +1228,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var item = this.itemRendererToData.get(itemRenderer);
-		this.openBranches.push(item);
-		var layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
-		var location = this._dataProvider.locationOf(item);
-		insertChildrenIntoVirtualCache(location, layoutIndex);
-		this.setInvalid(InvalidationFlag.DATA);
+		this.toggleBranch(item, true);
 	}
 
 	private function treeView_itemRenderer_closeHandler(event:Event):Void {
@@ -1198,11 +1237,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var item = this.itemRendererToData.get(itemRenderer);
-		this.openBranches.remove(item);
-		var layoutIndex = this.itemRendererToLayoutIndex.get(itemRenderer);
-		var location = this._dataProvider.locationOf(item);
-		removeChildrenFromVirtualCache(location, layoutIndex);
-		this.setInvalid(InvalidationFlag.DATA);
+		this.toggleBranch(item, false);
 	}
 
 	private function treeView_dataProvider_changeHandler(event:Event):Void {
