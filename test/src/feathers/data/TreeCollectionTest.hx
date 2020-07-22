@@ -147,6 +147,32 @@ import openfl.events.Event;
 	}
 
 	@Test
+	public function testAddAtEndOfBranch():Void {
+		var itemToAdd = new TreeNode(new MockItem("New Item"));
+		var originalLength = this._collection.getLength([0]);
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var addItemEvent = false;
+		var locationFromEvent:Array<Int> = null;
+		this._collection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			addItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.addAt(itemToAdd, [0, originalLength]);
+		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after adding to collection");
+		Assert.isTrue(addItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must be dispatched after adding to collection");
+		Assert.areEqual(originalLength + 1, this._collection.getLength([0]), "Collection length must change after adding to collection");
+		Assert.areEqual(2, this._collection.locationOf(itemToAdd).length, "Adding item to collection returns incorrect location");
+		Assert.areEqual(0, this._collection.locationOf(itemToAdd)[0], "Adding item to collection returns incorrect location");
+		Assert.areEqual(originalLength, this._collection.locationOf(itemToAdd)[1], "Adding item to collection returns incorrect location");
+		Assert.areEqual(2, locationFromEvent.length, "Adding item to collection returns incorrect location in event");
+		Assert.areEqual(0, locationFromEvent[0], "Adding item to collection returns incorrect location in event");
+		Assert.areEqual(originalLength, locationFromEvent[1], "Adding item to collection returns incorrect location in event");
+	}
+
+	@Test
 	public function testSet():Void {
 		var itemToAdd = new TreeNode(new MockItem("New Item"));
 		var originalLength = this._collection.getLength([0]);

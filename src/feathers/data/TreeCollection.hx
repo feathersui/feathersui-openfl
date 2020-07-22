@@ -180,23 +180,23 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	**/
 	public function addAt(itemToAdd:TreeNode<T>, location:Array<Int>):Void {
 		if (location == null || location.length == 0) {
-			throw new RangeError('Item not found at location: ${location}');
+			throw new RangeError('Item cannot be added at location: ${location}');
 		}
 		var branchChildren = this._array;
 		for (i in 0...location.length - 1) {
 			var index = location[i];
 			if (index < 0 || index >= branchChildren.length) {
-				throw new RangeError('Item not found at location: ${location}');
+				throw new RangeError('Item cannot be added at location: ${location}');
 			}
 			var child = branchChildren[index];
 			branchChildren = child.children;
 			if (branchChildren == null) {
-				throw new RangeError('Item not found at location: ${location}');
+				throw new RangeError('Item cannot be added at location: ${location}');
 			}
 		}
 		var index = location[location.length - 1];
-		if (index < 0 || index >= branchChildren.length) {
-			throw new RangeError('Item not found at location: ${location}');
+		if (index < 0 || index > branchChildren.length) {
+			throw new RangeError('Item cannot be added at location: ${location}');
 		}
 		branchChildren.insert(index, itemToAdd);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.ADD_ITEM, location, itemToAdd);
