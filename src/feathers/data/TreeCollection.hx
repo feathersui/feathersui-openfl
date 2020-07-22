@@ -137,7 +137,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 			}
 		}
 		var index = location[location.length - 1];
-		if (index < 0 || index >= branchChildren.length) {
+		if (index < 0 || index > branchChildren.length) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
 		var oldValue = branchChildren[index];

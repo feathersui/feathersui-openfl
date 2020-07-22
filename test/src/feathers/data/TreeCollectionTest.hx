@@ -209,6 +209,32 @@ import openfl.events.Event;
 	}
 
 	@Test
+	public function testSetAfterEndOfBranch():Void {
+		var itemToAdd = new TreeNode(new MockItem("New Item"));
+		var originalLength = this._collection.getLength([0]);
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var replaceItemEvent = false;
+		var locationFromEvent:Array<Int> = null;
+		this._collection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			replaceItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.set([0, originalLength], itemToAdd);
+		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after setting item after end of collection");
+		Assert.isTrue(replaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must be dispatched after setting item after end of collection");
+		Assert.areEqual(originalLength + 1, this._collection.getLength([0]), "Collection length must change after setting item after end in collection");
+		Assert.areEqual(2, this._collection.locationOf(itemToAdd).length, "Setting item after end of collection returns incorrect location");
+		Assert.areEqual(0, this._collection.locationOf(itemToAdd)[0], "Setting item after end of collection returns incorrect location");
+		Assert.areEqual(originalLength, this._collection.locationOf(itemToAdd)[1], "Setting item after end of collection returns incorrect location");
+		Assert.areEqual(2, locationFromEvent.length, "Setting item after end of collection returns incorrect location in event");
+		Assert.areEqual(0, locationFromEvent[0], "Setting item after end of collection returns incorrect location in event");
+		Assert.areEqual(originalLength, locationFromEvent[1], "Setting item after end of collection returns incorrect location in event");
+	}
+
+	@Test
 	public function testRemove():Void {
 		var originalLength = this._collection.getLength([0]);
 		var itemToRemove = this._collection.get([0, 1]);
