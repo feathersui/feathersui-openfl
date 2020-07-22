@@ -173,6 +173,28 @@ class ArrayCollectionTest {
 	}
 
 	@Test
+	public function testSetAfterEnd():Void {
+		var itemToAdd = new MockItem("New Item", 100);
+		var originalLength = this._collection.length;
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var replaceItemEvent = false;
+		var indexFromEvent = -1;
+		this._collection.addEventListener(FlatCollectionEvent.REPLACE_ITEM, function(event:FlatCollectionEvent):Void {
+			replaceItemEvent = true;
+			indexFromEvent = event.index;
+		});
+		this._collection.set(originalLength, itemToAdd);
+		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after setting item after end of collection");
+		Assert.isTrue(replaceItemEvent, "FlatCollectionEvent.REPLACE_ITEM must be dispatched after setting item after end of collection");
+		Assert.areEqual(originalLength + 1, this._collection.length, "Collection length must change after setting item after end of collection");
+		Assert.areEqual(originalLength, this._collection.indexOf(itemToAdd), "Setting item after end of collection returns incorrect index");
+		Assert.areEqual(originalLength, indexFromEvent, "Setting item after end of collection returns incorrect index in event");
+	}
+
+	@Test
 	public function testRemove():Void {
 		var originalLength = this._collection.length;
 		var expectedIndex = 1;
