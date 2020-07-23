@@ -215,6 +215,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ITEM, listView_dataProvider_updateItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ALL, listView_dataProvider_updateAllHandler);
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
@@ -227,6 +229,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, listView_dataProvider_resetHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, listView_dataProvider_sortChangeHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, listView_dataProvider_filterChangeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ITEM, listView_dataProvider_updateItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ALL, listView_dataProvider_updateAllHandler);
 		}
 
 		// reset the scroll position because this is a drastic change and
@@ -718,34 +722,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			var item = this._dataProvider.get(i);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
-				this._currentItemState.data = item;
-				this._currentItemState.index = i;
-				this._currentItemState.selected = item == this._selectedItem;
-				this._currentItemState.text = itemToText(item);
-				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-				this._ignoreSelectionChange = true;
-				if (this.itemRendererRecycler.update != null) {
-					this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
-				}
-				if (Std.is(itemRenderer, IDataRenderer)) {
-					var dataRenderer = cast(itemRenderer, IDataRenderer);
-					// if the renderer is an IDataRenderer, this cannot be overridden
-					dataRenderer.data = this._currentItemState.data;
-				}
-				if (Std.is(itemRenderer, IListViewItemRenderer)) {
-					var listRenderer = cast(itemRenderer, IListViewItemRenderer);
-					listRenderer.index = this._currentItemState.index;
-				}
-				if (Std.is(itemRenderer, ILayoutIndexObject)) {
-					var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
-					layoutIndexObject.layoutIndex = this._currentItemState.index;
-				}
-				if (Std.is(itemRenderer, IToggle)) {
-					var toggle = cast(itemRenderer, IToggle);
-					// if the renderer is an IToggle, this cannot be overridden
-					toggle.selected = this._currentItemState.selected;
-				}
-				this._ignoreSelectionChange = oldIgnoreSelectionChange;
+				this.refreshItemRendererProperties(itemRenderer, item, i);
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
@@ -760,6 +737,37 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				this._unrenderedData.push(item);
 			}
 		}
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, index:Int):Void {
+		this._currentItemState.data = item;
+		this._currentItemState.index = index;
+		this._currentItemState.selected = item == this._selectedItem;
+		this._currentItemState.text = itemToText(item);
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this.itemRendererRecycler.update != null) {
+			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		}
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			// if the renderer is an IDataRenderer, this cannot be overridden
+			dataRenderer.data = this._currentItemState.data;
+		}
+		if (Std.is(itemRenderer, IListViewItemRenderer)) {
+			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
+			listRenderer.index = this._currentItemState.index;
+		}
+		if (Std.is(itemRenderer, ILayoutIndexObject)) {
+			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+			layoutIndexObject.layoutIndex = this._currentItemState.index;
+		}
+		if (Std.is(itemRenderer, IToggle)) {
+			var toggle = cast(itemRenderer, IToggle);
+			// if the renderer is an IToggle, this cannot be overridden
+			toggle.selected = this._currentItemState.selected;
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
 	private function renderUnrenderedData():Void {
@@ -781,31 +789,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			itemRenderer = this.inactiveItemRenderers.shift();
 		}
-		this._currentItemState.data = item;
-		this._currentItemState.index = index;
-		this._currentItemState.selected = item == this._selectedItem;
-		this._currentItemState.text = itemToText(item);
-		if (this.itemRendererRecycler.update != null) {
-			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
-		}
-		if (Std.is(itemRenderer, IListViewItemRenderer)) {
-			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
-			listRenderer.index = this._currentItemState.index;
-		}
-		if (Std.is(itemRenderer, ILayoutIndexObject)) {
-			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
-			layoutIndexObject.layoutIndex = this._currentItemState.index;
-		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			// if the renderer is an IDataRenderer, this cannot be overridden
-			dataRenderer.data = this._currentItemState.data;
-		}
-		if (Std.is(itemRenderer, IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
-			// if the renderer is an IToggle, this cannot be overridden
-			toggle.selected = this._currentItemState.selected;
-		}
+		this.refreshItemRendererProperties(itemRenderer, item, index);
 		itemRenderer.addEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
 		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
@@ -988,6 +972,31 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._virtualCache.resize(this._dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
+	}
+
+	private function updateItemRendererForIndex(index:Int):Void {
+		var item = this._dataProvider.get(index);
+		var itemRenderer = this.dataToItemRenderer.get(item);
+		if (itemRenderer == null) {
+			return;
+		}
+		// in order to display the same item with modified properties, this
+		// hack tricks the item renderer into thinking that it has been given
+		// a different item to render.
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			cast(itemRenderer, IDataRenderer).data = null;
+		}
+		this.refreshItemRendererProperties(itemRenderer, item, index);
+	}
+
+	private function listView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
+		this.updateItemRendererForIndex(event.index);
+	}
+
+	private function listView_dataProvider_updateAllHandler(event:FlatCollectionEvent):Void {
+		for (i in 0...this._dataProvider.length) {
+			this.updateItemRendererForIndex(i);
+		}
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
