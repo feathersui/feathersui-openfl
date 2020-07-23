@@ -383,6 +383,102 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
+	/**
+		Using a callback that returns either `true` or `false`, returns the
+		first item in the collection where the callback returns `true`.
+
+		@since 1.0.0
+	**/
+	public function find(callback:(item:T, index:Int, collection:ArrayCollection<T>) -> Bool):T {
+		for (i in 0...this.length) {
+			var item = this.get(i);
+			var result = callback(item, i, this);
+			if (result) {
+				return item;
+			}
+		}
+		return null;
+	}
+
+	/**
+		Using a callback that returns either `true` or `false`, returns the
+		first item in the collection where the callback returns `true`.
+
+		@since 1.0.0
+	**/
+	public function findIndex(callback:(item:T, index:Int, collection:ArrayCollection<T>) -> Bool):Int {
+		for (i in 0...this.length) {
+			var item = this.get(i);
+			var result = callback(item, i, this);
+			if (result) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+		Using a callback that returns either `true` or `false`, determines if
+		at all items in the collection return `true`.
+
+		@since 1.0.0
+	**/
+	public function some(callback:(item:T, index:Int, collection:ArrayCollection<T>) -> Bool):Bool {
+		for (i in 0...this.length) {
+			var item = this.get(i);
+			var result = callback(item, i, this);
+			if (result) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+		Using a callback that returns either `true` or `false`, determines if
+		at least one item in the collection returns `true`.
+
+		@since 1.0.0
+	**/
+	public function every(callback:(item:T, index:Int, collection:ArrayCollection<T>) -> Bool):Bool {
+		for (i in 0...this.length) {
+			var item = this.get(i);
+			var result = callback(item, i, this);
+			if (!result) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+		Iterates through every item in the collection and passes it to a
+		callback.
+
+		@since 1.0.0
+	**/
+	public function forEach(callback:(item:T, index:Int, collection:ArrayCollection<T>) -> Void):Void {
+		for (i in 0...this.length) {
+			var item = this.get(i);
+			callback(item, i, this);
+		}
+	}
+
+	/**
+		Creates a new collection using a callback for each item in the existing
+		collection.
+
+		@since 1.0.0
+	**/
+	public function map<U>(callback:(item:T, index:Int, collection:ArrayCollection<T>) -> U):ArrayCollection<U> {
+		var result:Array<U> = [];
+		for (i in 0...this.length) {
+			var item = this.get(i);
+			result.push(callback(item, i, this));
+		}
+		return new ArrayCollection(result);
+	}
+
 	private function refreshFilterAndSort():Void {
 		this._pendingRefresh = false;
 		if (this._filterFunction != null) {
