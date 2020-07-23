@@ -26,7 +26,7 @@ import openfl.text.TextFormat;
 	@since 1.0.0
 **/
 @:styleContext
-class ItemRenderer extends ToggleButton implements ILayoutIndexObject {
+class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements IDataRenderer {
 	/**
 		Creates a new `ItemRenderer` object.
 
@@ -44,14 +44,33 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject {
 		this.buttonMode = false;
 	}
 
-	private var secondaryTextField:TextField;
+	private var _data:Dynamic;
 
+	/**
+		@see `feathers.controls.dataRenderers.IDataRenderer.data`
+	**/
+	@:flash.property
+	public var data(get, set):Dynamic;
+
+	private function get_data():Dynamic {
+		return this._data;
+	}
+
+	private function set_data(value:Dynamic):Dynamic {
+		if (this._data == value) {
+			return this._data;
+		}
+		this._data = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this._data;
+	}
+
+	private var secondaryTextField:TextField;
 	private var _secondaryTextMeasuredWidth:Float;
 	private var _secondaryTextMeasuredHeight:Float;
 	private var _previousSecondaryText:String = null;
 	private var _previousSecondaryTextFormat:TextFormat = null;
 	private var _updatedSecondaryTextStyles = false;
-
 	private var _secondaryText:String;
 
 	/**

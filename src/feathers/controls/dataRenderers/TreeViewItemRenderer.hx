@@ -22,7 +22,7 @@ import feathers.themes.steel.components.SteelTreeViewItemRendererStyles;
 	@since 1.0.0
 **/
 @:styleContext
-class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer implements IDataRenderer implements IOpenCloseToggle {
+class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer implements IOpenCloseToggle {
 	/**
 		The variant used to style the `ToggleButton` child component in a theme.
 
@@ -38,27 +38,6 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	public function new() {
 		initializeTreeViewItemRendererTheme();
 		super();
-	}
-
-	private var _data:Dynamic;
-
-	/**
-		@see `feathers.controls.dataRenderers.IDataRenderer.data`
-	**/
-	@:flash.property
-	public var data(get, set):Dynamic;
-
-	private function get_data():Dynamic {
-		return this._data;
-	}
-
-	private function set_data(value:Dynamic):Dynamic {
-		if (this._data == value) {
-			return this._data;
-		}
-		this._data = value;
-		this.setInvalid(InvalidationFlag.DATA);
-		return this._data;
 	}
 
 	private var _location:Array<Int>;
