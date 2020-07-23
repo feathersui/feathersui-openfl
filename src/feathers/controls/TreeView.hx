@@ -569,6 +569,32 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		Returns the current item renderer used to render a specific item from
+		the data provider. May return `null` if an item doesn't currently have
+		an item renderer.
+
+		**Note:** Most tree views use "virtual" layouts, which means that only
+		the currently-visible subset of items will have an item renderer. As the
+		tree view scrolls, the items with item renderers will change, and item
+		renderers may even be re-used to display different items.
+
+		@since 1.0.0
+	**/
+	public function itemToItemRenderer(item:Dynamic):DisplayObject {
+		return this.dataToItemRenderer.get(item);
+	}
+
+	/**
+		Returns the current item from the data provider that is rendered by a
+		specific item renderer.
+
+		@since 1.0.0
+	**/
+	public function itemRendererToItem(itemRenderer:DisplayObject):Dynamic {
+		return this.itemRendererToData.get(itemRenderer);
+	}
+
+	/**
 		Scrolls the list view so that the specified item renderer is completely
 		visible. If the item renderer is already completely visible, does not
 		update the scroll position.
