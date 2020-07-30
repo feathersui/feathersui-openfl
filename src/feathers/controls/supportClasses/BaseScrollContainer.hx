@@ -232,10 +232,26 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		container.fixedScrollBars = true;
 		```
 
+		This property has no effect if `showScrollBars` is `false`.
+
 		@since 1.0.0
 	**/
 	@:style
 	public var fixedScrollBars:Bool = false;
+
+	/**
+		Determines if scroll bars are displayed or not.
+
+		In the following example, the scroll bars are hidden:
+
+		```hx
+		container.showScrollBars = false;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var showScrollBars:Bool = true;
 
 	/**
 		Determines if the scroll bars should be automatically hidden after
@@ -249,7 +265,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		```
 
 		This property has no effect if `fixedScrollBars` is `true`. Fixed scroll
-		bars are always visible.
+		bars are always visible. Similarly, if `showScrollBars` is `false`, then
+		the scroll bars are always hidden.
 
 		@since 1.0.0
 	**/
@@ -940,13 +957,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.chromeMeasuredHeight = 0.0;
 		this.chromeMeasuredMinHeight = 0.0;
 		this.chromeMeasuredMaxHeight = Math.POSITIVE_INFINITY;
-		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && scrollPolicyX != OFF, useActualBounds);
-		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars && scrollPolicyY != OFF, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && scrollPolicyX != OFF, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars && this.showScrollBars && scrollPolicyY != OFF, useActualBounds);
 		// we need to double check the horizontal scroll bar if the scroll
 		// bars are fixed because adding a vertical scroll bar may require a
 		// horizontal one too.
 		if (this.fixedScrollBars && this.showScrollBarY && !this.showScrollBarX) {
-			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && scrollPolicyX != OFF, useActualBounds);
+			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && scrollPolicyX != OFF, useActualBounds);
 		}
 	}
 
@@ -957,6 +974,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 				// even if explicitWidth is null, the view port might measure
 				// a view port width smaller than its content width
 				scrollerWidth = this.viewPort.visibleWidth + this.leftViewPortOffset + this.rightViewPortOffset;
+			}
+			if (!this.showScrollBars) {
+				this.showScrollBarX = false;
+				return;
 			}
 			var totalWidth = this.viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset;
 			if (forceScrollBars
@@ -986,6 +1007,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 				// even if explicitHeight is null, the view port might measure
 				// a view port height smaller than its content height
 				scrollerHeight = this.viewPort.visibleHeight + this.topViewPortOffset + this.bottomViewPortOffset;
+			}
+			if (!this.showScrollBars) {
+				this.showScrollBarY = false;
+				return;
 			}
 			var totalHeight = this.viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset;
 			if (forceScrollBars
