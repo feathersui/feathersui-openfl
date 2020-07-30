@@ -144,7 +144,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		this.setInvalid(InvalidationFlag.SELECTION);
 		this.setInvalid(InvalidationFlag.STATE);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+		this.changeState(this.currentState);
 		return this._selected;
 	}
 
