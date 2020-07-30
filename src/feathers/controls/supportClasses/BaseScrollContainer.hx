@@ -1125,7 +1125,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarX.step = this._scrollStepX;
 			var displayScrollBarX = cast(this.scrollBarX, DisplayObjectContainer);
 			displayScrollBarX.visible = this.showScrollBarX;
-			if (!this.autoHideScrollBars) {
+			if (this.fixedScrollBars || !this.autoHideScrollBars) {
 				// if autoHideScrollBars was true before, the scroll bars may
 				// have been hidden, and we need to show them again
 				this.scrollBarX.alpha = 1.0;
@@ -1139,7 +1139,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarY.step = this._scrollStepY;
 			var displayScrollBarY = cast(this.scrollBarY, DisplayObjectContainer);
 			displayScrollBarY.visible = this.showScrollBarY;
-			if (!this.autoHideScrollBars) {
+			if (this.fixedScrollBars || !this.autoHideScrollBars) {
 				// if autoHideScrollBars was true before, the scroll bars may
 				// have been hidden, and we need to show them again
 				this.scrollBarY.alpha = 1.0;
