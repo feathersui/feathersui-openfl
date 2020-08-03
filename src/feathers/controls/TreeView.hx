@@ -846,6 +846,65 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._unrenderedLayoutIndices.push(layoutIndex);
 			return;
 		}
+		this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
+		// if this item renderer used to be the typical layout item, but
+		// it isn't anymore, it may have been set invisible
+		itemRenderer.visible = true;
+		this._layoutItems[layoutIndex] = itemRenderer;
+		var removed = inactiveItemRenderers.remove(itemRenderer);
+		if (!removed) {
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
+				+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+		}
+		activeItemRenderers.push(itemRenderer);
+	}
+
+	private function renderUnrenderedData():Void {
+		for (location in this._unrenderedLocations) {
+			var layoutIndex = this._unrenderedLayoutIndices.shift();
+			var item = this._dataProvider.get(location);
+			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
+			itemRenderer.visible = true;
+			this.activeItemRenderers.push(itemRenderer);
+			this.treeViewPort.addChild(itemRenderer);
+			this._layoutItems[layoutIndex] = itemRenderer;
+		}
+		this._unrenderedLocations.resize(0);
+	}
+
+	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
+		var itemRenderer:DisplayObject = null;
+		if (this.inactiveItemRenderers.length == 0) {
+			itemRenderer = this.itemRendererRecycler.create();
+		} else {
+			itemRenderer = this.inactiveItemRenderers.shift();
+		}
+		this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
+		itemRenderer.addEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
+		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
+		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
+		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
+		if (Std.is(itemRenderer, IToggle)) {
+			itemRenderer.addEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
+		}
+		if (Std.is(itemRenderer, IOpenCloseToggle)) {
+			itemRenderer.addEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
+			itemRenderer.addEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
+		}
+		this.itemRendererToData.set(itemRenderer, item);
+		this.dataToItemRenderer.set(item, itemRenderer);
+		this.dataToLayoutIndex.set(item, layoutIndex);
+		return itemRenderer;
+	}
+
+	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
+		this.treeViewPort.removeChild(itemRenderer);
+		if (this.itemRendererRecycler.destroy != null) {
+			this.itemRendererRecycler.destroy(itemRenderer);
+		}
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
@@ -885,93 +944,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
-		// if this item renderer used to be the typical layout item, but
-		// it isn't anymore, it may have been set invisible
-		itemRenderer.visible = true;
-		this._layoutItems[layoutIndex] = itemRenderer;
-		var removed = inactiveItemRenderers.remove(itemRenderer);
-		if (!removed) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-				+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
-		}
-		activeItemRenderers.push(itemRenderer);
-	}
-
-	private function renderUnrenderedData():Void {
-		for (location in this._unrenderedLocations) {
-			var layoutIndex = this._unrenderedLayoutIndices.shift();
-			var item = this._dataProvider.get(location);
-			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
-			itemRenderer.visible = true;
-			this.activeItemRenderers.push(itemRenderer);
-			this.treeViewPort.addChild(itemRenderer);
-			this._layoutItems[layoutIndex] = itemRenderer;
-		}
-		this._unrenderedLocations.resize(0);
-	}
-
-	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
-		var itemRenderer:DisplayObject = null;
-		if (this.inactiveItemRenderers.length == 0) {
-			itemRenderer = this.itemRendererRecycler.create();
-		} else {
-			itemRenderer = this.inactiveItemRenderers.shift();
-		}
-		this._currentItemState.data = item;
-		this._currentItemState.location = location;
-		this._currentItemState.layoutIndex = layoutIndex;
-		this._currentItemState.branch = this._dataProvider != null && this._dataProvider.isBranch(item);
-		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
-		this._currentItemState.selected = item == this._selectedItem;
-		this._currentItemState.text = itemToText(item);
-		if (this.itemRendererRecycler.update != null) {
-			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
-		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			// if the renderer is an IDataRenderer, this cannot be overridden
-			dataRenderer.data = this._currentItemState.data;
-		}
-		if (Std.is(itemRenderer, IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
-			// if the renderer is an IToggle, this cannot be overridden
-			toggle.selected = this._currentItemState.selected;
-		}
-		if (Std.is(itemRenderer, ITreeViewItemRenderer)) {
-			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
-			treeItem.location = this._currentItemState.location;
-			treeItem.branch = this._currentItemState.branch;
-		}
-		if (Std.is(itemRenderer, ILayoutIndexObject)) {
-			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
-			layoutIndexObject.layoutIndex = this._currentItemState.layoutIndex;
-		}
-		if (Std.is(itemRenderer, IOpenCloseToggle)) {
-			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
-			openCloseItem.opened = this._currentItemState.opened;
-		}
-		itemRenderer.addEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
-		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
-		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
-		if (Std.is(itemRenderer, IToggle)) {
-			itemRenderer.addEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
-		}
-		if (Std.is(itemRenderer, IOpenCloseToggle)) {
-			itemRenderer.addEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
-			itemRenderer.addEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
-		}
-		this.itemRendererToData.set(itemRenderer, item);
-		this.dataToItemRenderer.set(item, itemRenderer);
-		this.dataToLayoutIndex.set(item, layoutIndex);
-		return itemRenderer;
-	}
-
-	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
-		this.treeViewPort.removeChild(itemRenderer);
-		if (this.itemRendererRecycler.destroy != null) {
-			this.itemRendererRecycler.destroy(itemRenderer);
-		}
 	}
 
 	private function refreshSelectedLocationAfterFilterOrSort():Void {
