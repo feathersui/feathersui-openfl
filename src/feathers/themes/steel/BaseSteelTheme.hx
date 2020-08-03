@@ -93,6 +93,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var containerFillColor:Int;
 	private var headerFillColor:Int;
 	private var overlayFillColor:Int;
+	private var subHeadingFillColor:Int;
 	private var borderColor:Int;
 	private var dividerColor:Int;
 	private var textColor:Int;
@@ -137,6 +138,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.containerFillColor = 0x383838;
 			this.headerFillColor = 0x3f3f3f;
 			this.overlayFillColor = 0x6f6f6f;
+			this.subHeadingFillColor = 0x2c2c2c;
 			this.borderColor = 0x080808;
 			this.dividerColor = 0x282828;
 			this.textColor = 0xf1f1f1;
@@ -163,6 +165,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.containerFillColor = 0xf8f8f8;
 			this.headerFillColor = 0xececec;
 			this.overlayFillColor = 0x8f8f8f;
+			this.subHeadingFillColor = 0xdfdfdf;
 			this.borderColor = 0xacacac;
 			this.dividerColor = 0xdfdfdf;
 			this.textColor = 0x1f1f1f;
@@ -273,6 +276,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getContainerFill():FillStyle {
 		return SolidColor(this.containerFillColor);
+	}
+
+	private function getSubHeadingFill():FillStyle {
+		return SolidColor(this.subHeadingFillColor);
 	}
 
 	private function getTextFormat():TextFormat {

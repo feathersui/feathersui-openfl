@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.style.IVariantStyleObject;
 import feathers.data.GroupListViewItemType;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -87,6 +88,8 @@ import openfl.ui.Multitouch;
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+	public static final CHILD_VARIANT_HEADER = "groupListView_header";
+
 	/**
 		A variant used to style the group list view without a border. The
 		variant is used by default on mobile.
@@ -887,6 +890,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			itemRenderer = recycler.create();
 		} else {
 			itemRenderer = inactive.shift();
+		}
+		if (type == HEADER && Std.is(itemRenderer, IVariantStyleObject)) {
+			var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+			if (variantItemRenderer.variant == null) {
+				variantItemRenderer.variant = GroupListView.CHILD_VARIANT_HEADER;
+			}
 		}
 		this.refreshItemRendererProperties(itemRenderer, location.length == 1 ? HEADER : STANDARD, item, location, layoutIndex);
 		itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
