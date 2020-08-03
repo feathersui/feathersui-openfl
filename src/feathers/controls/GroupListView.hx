@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.GroupListViewItemType;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
@@ -121,6 +122,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	public static final VARIANT_BORDER = "border";
 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
+	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = "headerRendererFactory";
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
@@ -353,6 +355,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	@:style
 	public var layout:ILayout = null;
 
+	private var _oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
+
 	/**
 		Manages item renderers used by the group list view.
 
@@ -373,13 +377,46 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this.itemRendererRecycler == value) {
 			return this.itemRendererRecycler;
 		}
+		this._oldItemRendererRecycler = this.itemRendererRecycler;
 		this.itemRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this.itemRendererRecycler;
 	}
 
+	private var _oldHeaderRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
+
+	/**
+		Manages header renderers used by the group list view.
+
+		In the following example, the group list view uses a custom header
+		renderer class:
+
+		```hx
+		groupListView.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
+		```
+
+		@default null
+
+		@since 1.0.0
+	**/
+	public var headerRendererRecycler(default,
+		set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+
+	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		GroupListViewItemState, DisplayObject> {
+		if (this.headerRendererRecycler == value) {
+			return this.headerRendererRecycler;
+		}
+		this._oldHeaderRendererRecycler = this.headerRendererRecycler;
+		this.headerRendererRecycler = value;
+		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+		return this.headerRendererRecycler;
+	}
+
 	private var inactiveItemRenderers:Array<DisplayObject> = [];
 	private var activeItemRenderers:Array<DisplayObject> = [];
+	private var inactiveHeaderRenderers:Array<DisplayObject> = [];
+	private var activeHeaderRenderers:Array<DisplayObject> = [];
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var itemRendererToLayoutIndex = new ObjectMap<DisplayObject, Int>();
@@ -497,6 +534,32 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		@since 1.0.0
 	**/
 	public dynamic function itemToText(data:Dynamic):String {
+		return Std.string(data);
+	}
+
+	/**
+		Converts an group to text to display within a group list view header. By
+		default, the `toString()` method is called to convert an item to text.
+		This method may be replaced to provide custom text.
+
+		For example, consider the following item:
+
+		```hx
+		{ text: "Example Section" }
+		```
+
+		If the `GroupListView` should display the text "Example Item", a custom
+		implementation of `itemToHeaderText()` might look like this:
+
+		```hx
+		groupListView.itemToHeaderText = (item:Dynamic) -> {
+			return item.text;
+		};
+		```
+
+		@since 1.0.0
+	**/
+	public dynamic function itemToHeaderText(data:Dynamic):String {
 		return Std.string(data);
 	}
 
@@ -631,37 +694,59 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this.itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
-
-		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		this.refreshInactiveItemRenderers(itemRendererInvalid);
-		if (this._dataProvider == null) {
-			return;
+		if (this.headerRendererRecycler.update == null) {
+			this.headerRendererRecycler.update = defaultUpdateItemRenderer;
+			if (this.headerRendererRecycler.reset == null) {
+				this.headerRendererRecycler.reset = defaultResetItemRenderer;
+			}
 		}
 
-		this.findUnrenderedData();
-		this.recoverInactiveItemRenderers();
-		this.renderUnrenderedData();
-		this.freeInactiveItemRenderers();
-		if (this.inactiveItemRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
-		}
-	}
-
-	private function refreshInactiveItemRenderers(factoryInvalid:Bool):Void {
 		var temp = this.inactiveItemRenderers;
 		this.inactiveItemRenderers = this.activeItemRenderers;
 		this.activeItemRenderers = temp;
 		if (this.activeItemRenderers.length > 0) {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
 		}
-		if (factoryInvalid) {
-			this.recoverInactiveItemRenderers();
-			this.freeInactiveItemRenderers();
+		var temp = this.inactiveHeaderRenderers;
+		this.inactiveHeaderRenderers = this.activeHeaderRenderers;
+		this.activeHeaderRenderers = temp;
+		if (this.activeHeaderRenderers.length > 0) {
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active header renderers should be empty before updating.");
+		}
+
+		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		if (itemRendererInvalid) {
+			this.recoverInactiveItemRenderers(this.inactiveItemRenderers);
+			this.freeInactiveItemRenderers(this.inactiveItemRenderers, this._oldItemRendererRecycler);
+			this._oldItemRendererRecycler = null;
+		}
+		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+		if (headerRendererInvalid || itemRendererInvalid) {
+			this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers);
+			this.freeInactiveItemRenderers(this.inactiveHeaderRenderers, this._oldHeaderRendererRecycler);
+			this._oldHeaderRendererRecycler = null;
+		}
+
+		if (this._dataProvider == null) {
+			return;
+		}
+
+		this.findUnrenderedData();
+		this.recoverInactiveItemRenderers(this.inactiveItemRenderers);
+		this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers);
+		this.renderUnrenderedData();
+		this.freeInactiveItemRenderers(this.inactiveItemRenderers, this.itemRendererRecycler);
+		this.freeInactiveItemRenderers(this.inactiveHeaderRenderers, this.headerRendererRecycler);
+		if (this.inactiveItemRenderers.length > 0) {
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
+		}
+		if (this.inactiveHeaderRenderers.length > 0) {
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive header renderers should be empty after updating.");
 		}
 	}
 
-	private function recoverInactiveItemRenderers():Void {
-		for (itemRenderer in this.inactiveItemRenderers) {
+	private function recoverInactiveItemRenderers(inactive:Array<DisplayObject>):Void {
+		for (itemRenderer in inactive) {
 			if (itemRenderer == null) {
 				continue;
 			}
@@ -677,6 +762,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if (Std.is(itemRenderer, IToggle)) {
 				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
+			this._currentItemState.type = inactive == this.inactiveHeaderRenderers ? HEADER : STANDARD;
 			this._currentItemState.data = item;
 			this._currentItemState.location = null;
 			this._currentItemState.layoutIndex = -1;
@@ -699,14 +785,18 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 	}
 
-	private function freeInactiveItemRenderers():Void {
-		for (itemRenderer in this.inactiveItemRenderers) {
+	private function freeInactiveItemRenderers(inactive:Array<DisplayObject>,
+			recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
+		for (itemRenderer in inactive) {
 			if (itemRenderer == null) {
 				continue;
 			}
-			this.destroyItemRenderer(itemRenderer);
+			this.groupViewPort.removeChild(itemRenderer);
+			if (recycler != null && recycler.destroy != null) {
+				recycler.destroy(itemRenderer);
+			}
 		}
-		this.inactiveItemRenderers.resize(0);
+		inactive.resize(0);
 	}
 
 	private var _currentItemState = new GroupListViewItemState();
@@ -757,11 +847,69 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._unrenderedLayoutIndices.push(layoutIndex);
 			return;
 		}
+		var type = location.length == 1 ? HEADER : STANDARD;
+		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
+		// if this item renderer used to be the typical layout item, but
+		// it isn't anymore, it may have been set invisible
+		itemRenderer.visible = true;
+		this._layoutItems[layoutIndex] = itemRenderer;
+		var inactive = type == HEADER ? this.inactiveHeaderRenderers : this.inactiveItemRenderers;
+		var active = location.length == 1 ? this.activeHeaderRenderers : this.activeItemRenderers;
+		var removed = inactive.remove(itemRenderer);
+		if (!removed) {
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
+				+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+		}
+		active.push(itemRenderer);
+	}
+
+	private function renderUnrenderedData():Void {
+		for (location in this._unrenderedLocations) {
+			var layoutIndex = this._unrenderedLayoutIndices.shift();
+			var item = this._dataProvider.get(location);
+			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
+			itemRenderer.visible = true;
+			var type = location.length == 1 ? HEADER : STANDARD;
+			var active = location.length == 1 ? this.activeHeaderRenderers : this.activeItemRenderers;
+			active.push(itemRenderer);
+			this.groupViewPort.addChild(itemRenderer);
+			this._layoutItems[layoutIndex] = itemRenderer;
+		}
+		this._unrenderedLocations.resize(0);
+	}
+
+	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
+		var type = location.length == 1 ? HEADER : STANDARD;
+		var inactive = type == HEADER ? this.inactiveHeaderRenderers : this.inactiveItemRenderers;
+		var recycler = type == HEADER ? this.headerRendererRecycler : this.itemRendererRecycler;
+		var itemRenderer:DisplayObject = null;
+		if (inactive.length == 0) {
+			itemRenderer = recycler.create();
+		} else {
+			itemRenderer = inactive.shift();
+		}
+		this.refreshItemRendererProperties(itemRenderer, location.length == 1 ? HEADER : STANDARD, item, location, layoutIndex);
+		itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
+		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
+		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
+		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
+		if (Std.is(itemRenderer, IToggle)) {
+			itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
+		}
+		this.itemRendererToData.set(itemRenderer, item);
+		this.itemRendererToLayoutIndex.set(itemRenderer, layoutIndex);
+		this.dataToItemRenderer.set(item, itemRenderer);
+		return itemRenderer;
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, type:GroupListViewItemType, item:Dynamic, location:Array<Int>,
+			layoutIndex:Int):Void {
+		this._currentItemState.type = type;
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
 		this._currentItemState.selected = location.length > 1 && item == this._selectedItem;
-		this._currentItemState.text = itemToText(item);
+		this._currentItemState.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this.itemRendererRecycler.update != null) {
@@ -778,74 +926,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			toggle.selected = this._currentItemState.selected;
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
-		// if this item renderer used to be the typical layout item, but
-		// it isn't anymore, it may have been set invisible
-		itemRenderer.visible = true;
-		this._layoutItems[layoutIndex] = itemRenderer;
-		var removed = inactiveItemRenderers.remove(itemRenderer);
-		if (!removed) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-				+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
-		}
-		activeItemRenderers.push(itemRenderer);
-	}
-
-	private function renderUnrenderedData():Void {
-		for (location in this._unrenderedLocations) {
-			var layoutIndex = this._unrenderedLayoutIndices.shift();
-			var item = this._dataProvider.get(location);
-			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
-			itemRenderer.visible = true;
-			this.activeItemRenderers.push(itemRenderer);
-			this.groupViewPort.addChild(itemRenderer);
-			this._layoutItems[layoutIndex] = itemRenderer;
-		}
-		this._unrenderedLocations.resize(0);
-	}
-
-	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
-		var itemRenderer:DisplayObject = null;
-		if (this.inactiveItemRenderers.length == 0) {
-			itemRenderer = this.itemRendererRecycler.create();
-		} else {
-			itemRenderer = this.inactiveItemRenderers.shift();
-		}
-		this._currentItemState.data = item;
-		this._currentItemState.location = location;
-		this._currentItemState.layoutIndex = layoutIndex;
-		this._currentItemState.selected = location.length > 1 && item == this._selectedItem;
-		this._currentItemState.text = itemToText(item);
-		if (this.itemRendererRecycler.update != null) {
-			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
-		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
-			// if the renderer is an IDataRenderer, this cannot be overridden
-			dataRenderer.data = this._currentItemState.data;
-		}
-		if (Std.is(itemRenderer, IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
-			// if the renderer is an IToggle, this cannot be overridden
-			toggle.selected = this._currentItemState.selected;
-		}
-		itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
-		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
-		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
-		if (Std.is(itemRenderer, IToggle)) {
-			itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
-		}
-		this.itemRendererToData.set(itemRenderer, item);
-		this.itemRendererToLayoutIndex.set(itemRenderer, layoutIndex);
-		this.dataToItemRenderer.set(item, itemRenderer);
-		return itemRenderer;
-	}
-
-	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
-		this.groupViewPort.removeChild(itemRenderer);
-		if (this.itemRendererRecycler.destroy != null) {
-			this.itemRendererRecycler.destroy(itemRenderer);
-		}
 	}
 
 	private function refreshSelectedLocationAfterFilterOrSort():Void {

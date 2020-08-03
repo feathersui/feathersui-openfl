@@ -49,7 +49,10 @@ class GroupListViewScreen extends Panel {
 
 		this.groupListView = new GroupListView();
 		this.groupListView.dataProvider = new TreeCollection(data);
-		this.groupListView.itemToText = (item) -> {
+		this.groupListView.itemToText = (item:TreeNode<Dynamic>) -> {
+			return item.data.text;
+		};
+		this.groupListView.itemToHeaderText = (item:TreeNode<Dynamic>) -> {
 			return item.data.text;
 		};
 		this.groupListView.layoutData = AnchorLayoutData.fill();

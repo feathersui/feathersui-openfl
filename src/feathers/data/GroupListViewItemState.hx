@@ -22,13 +22,22 @@ class GroupListViewItemState {
 
 		@since 1.0.0
 	**/
-	public function new(data:Dynamic = null, location:Array<Int> = null, layoutIndex:Int = -1, selected:Bool = false, text:String = null) {
+	public function new(type:GroupListViewItemType = STANDARD, data:Dynamic = null, location:Array<Int> = null, layoutIndex:Int = -1, selected:Bool = false,
+			text:String = null) {
+		this.type = type;
 		this.data = data;
 		this.location = location;
 		this.layoutIndex = layoutIndex;
 		this.selected = false;
 		this.text = text;
 	}
+
+	/**
+		The type of item that this state represents.
+
+		@since 1.0.0
+	**/
+	public var type:GroupListViewItemType;
 
 	/**
 		An item from the collection used as the `GroupListView` data provider.
