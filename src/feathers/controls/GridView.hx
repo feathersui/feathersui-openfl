@@ -790,12 +790,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				this.refreshRowRendererProperties(rowRenderer, item, i);
 				this._ignoreSelectionChange = oldIgnoreSelectionChange;
 				this._layoutItems[i] = rowRenderer;
-				var removed = inactiveRowRenderers.remove(rowRenderer);
+				var removed = this.inactiveRowRenderers.remove(rowRenderer);
 				if (!removed) {
 					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
 						+ ": row renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
 				}
-				activeRowRenderers.push(rowRenderer);
+				this.activeRowRenderers.push(rowRenderer);
 			} else {
 				this._unrenderedData.push(item);
 			}

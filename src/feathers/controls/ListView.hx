@@ -727,12 +727,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
 				this._layoutItems[i] = itemRenderer;
-				var removed = inactiveItemRenderers.remove(itemRenderer);
+				var removed = this.inactiveItemRenderers.remove(itemRenderer);
 				if (!removed) {
 					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
 						+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
 				}
-				activeItemRenderers.push(itemRenderer);
+				this.activeItemRenderers.push(itemRenderer);
 			} else {
 				this._unrenderedData.push(item);
 			}
