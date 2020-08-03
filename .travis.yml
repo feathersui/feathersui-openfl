@@ -18,7 +18,6 @@ install:
 - haxelib install dox --quiet
 - haxelib install munit --quiet
 - haxelib dev feathersui . --quiet
-- npm ci
 script:
 # build documentation
 - cd $TRAVIS_BUILD_DIR/docs
