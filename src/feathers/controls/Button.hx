@@ -895,7 +895,9 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (Std.is(this._currentIcon, IStateObserver)) {
 			cast(this._currentIcon, IStateObserver).stateContext = this;
 		}
-		this.addChild(this._currentIcon);
+		var index = this.getChildIndex(this.textField);
+		// the icon should be below the text
+		this.addChildAt(this._currentIcon, index);
 	}
 
 	private function getCurrentIcon():DisplayObject {
