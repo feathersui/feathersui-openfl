@@ -41,6 +41,13 @@ class SteelCheckStyles {
 					check.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
+				if (check.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = SolidColor(0x000000, 0.0);
+					backgroundSkin.border = null;
+					check.backgroundSkin = backgroundSkin;
+				}
+
 				var icon = new RectangleSkin();
 				icon.width = 24.0;
 				icon.height = 24.0;

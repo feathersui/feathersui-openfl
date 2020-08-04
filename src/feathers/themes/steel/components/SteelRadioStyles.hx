@@ -42,6 +42,13 @@ class SteelRadioStyles {
 					radio.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
+				if (radio.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = SolidColor(0x000000, 0.0);
+					backgroundSkin.border = null;
+					radio.backgroundSkin = backgroundSkin;
+				}
+
 				var icon = new CircleSkin();
 				icon.width = 24.0;
 				icon.height = 24.0;
