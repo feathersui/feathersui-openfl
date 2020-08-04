@@ -26,7 +26,7 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 		super();
 	}
 
-	private var _cornerRadius:Null<Float> = null;
+	private var _cornerRadius:Float = 0.0;
 
 	/**
 		The rectangle may optionally have rounded corners, and this sets their
@@ -35,9 +35,9 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var cornerRadius(get, set):Null<Float>;
+	public var cornerRadius(get, set):Float;
 
-	private function get_cornerRadius():Null<Float> {
+	private function get_cornerRadius():Float {
 		return this._cornerRadius;
 	}
 
@@ -55,7 +55,7 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 		var thickness = getLineThickness(currentBorder);
 		var thicknessOffset = thickness / 2.0;
 
-		if (this._cornerRadius == 0.0 || this._cornerRadius == null) {
+		if (this._cornerRadius == 0.0) {
 			this.graphics.drawRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness);
 		} else {
 			this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, this._cornerRadius,
