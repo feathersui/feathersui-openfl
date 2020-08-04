@@ -546,7 +546,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		var startIndex = 0;
 		var endIndex = 0;
 		if (itemHeight > 0.0) {
-			startIndex = Math.floor(this._scrollY / itemHeight);
+			startIndex = Math.floor((this._scrollY - this._paddingTop) / itemHeight);
 			if (startIndex < 0) {
 				startIndex = 0;
 			}
