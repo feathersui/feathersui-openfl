@@ -95,6 +95,7 @@ class SteelRadioStyles {
 					radio.focusRectSkin = skin;
 				}
 
+				radio.horizontalAlign = LEFT;
 				radio.gap = 4.0;
 			});
 		}

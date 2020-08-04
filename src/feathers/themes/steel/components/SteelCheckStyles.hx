@@ -104,6 +104,7 @@ class SteelCheckStyles {
 					check.focusRectSkin = skin;
 				}
 
+				check.horizontalAlign = LEFT;
 				check.gap = 4.0;
 			});
 		}
