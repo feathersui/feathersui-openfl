@@ -8,6 +8,8 @@
 
 package feathers.skins;
 
+import feathers.graphics.LineStyle;
+import feathers.graphics.FillStyle;
 import openfl.geom.Matrix;
 
 /**

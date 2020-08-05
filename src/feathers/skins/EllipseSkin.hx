@@ -8,6 +8,9 @@
 
 package feathers.skins;
 
+import feathers.graphics.LineStyle;
+import feathers.graphics.FillStyle;
+
 /**
 	A skin for Feathers UI components that draws an ellipse. The ellipse's fill
 	and border may be styled.
