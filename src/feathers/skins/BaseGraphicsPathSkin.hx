@@ -30,8 +30,11 @@ import feathers.graphics.LineStyle;
 	@since 1.0.0
 **/
 class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
-	private function new() {
+	private function new(?fill:FillStyle, ?border:LineStyle) {
 		super();
+		this.fill = fill;
+		this.border = border;
+
 		this.mouseChildren = false;
 		this.tabEnabled = false;
 		this.tabChildren = false;
@@ -78,7 +81,7 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 
 	private var _stateToFill:Map<EnumValue, FillStyle>;
 
-	private var _fill:FillStyle = SolidColor(0xcccccc);
+	private var _fill:FillStyle;
 
 	/**
 		How the path's fill is styled. For example, it could be a solid color,

@@ -8,6 +8,8 @@
 
 package feathers.skins;
 
+import feathers.graphics.LineStyle;
+import feathers.graphics.FillStyle;
 import feathers.core.InvalidationFlag;
 
 /**
@@ -22,8 +24,8 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	public function new() {
-		super();
+	public function new(?fill:FillStyle, ?border:LineStyle) {
+		super(fill, border);
 	}
 
 	private var _cornerRadius:Float = 0.0;

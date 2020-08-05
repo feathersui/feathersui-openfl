@@ -22,8 +22,8 @@ class CircleSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	public function new() {
-		super();
+	public function new(?fill:FillStyle, ?border:LineStyle) {
+		super(fill, border);
 	}
 
 	override private function drawPath():Void {
