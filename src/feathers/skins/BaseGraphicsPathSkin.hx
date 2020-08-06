@@ -29,55 +29,15 @@ import feathers.graphics.LineStyle;
 
 	@since 1.0.0
 **/
-class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
+class BaseGraphicsPathSkin extends ProgrammaticSkin {
 	private function new(?fill:FillStyle, ?border:LineStyle) {
 		super();
 		this.fill = fill;
 		this.border = border;
-
-		this.mouseChildren = false;
-		this.tabEnabled = false;
-		this.tabChildren = false;
 	}
 
 	private var _previousBorder:LineStyle = null;
 	private var _previousFill:FillStyle = null;
-
-	private var _stateContext:IStateContext<Dynamic>;
-
-	/**
-		An optional `IStateContext` that is used to change the styles of the
-		skin when its state changes.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	public var stateContext(get, set):IStateContext<Dynamic>;
-
-	private function get_stateContext():IStateContext<Dynamic> {
-		return this._stateContext;
-	}
-
-	private function set_stateContext(value:IStateContext<Dynamic>):IStateContext<Dynamic> {
-		if (this._stateContext == value) {
-			return this._stateContext;
-		}
-		if (this._stateContext != null) {
-			this._stateContext.removeEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler);
-			if (Std.is(this._stateContext, IToggle)) {
-				this._stateContext.removeEventListener(Event.CHANGE, stateContextToggle_changeHandler);
-			}
-		}
-		this._stateContext = value;
-		if (this._stateContext != null) {
-			this._stateContext.addEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler, false, 0, true);
-			if (Std.is(this._stateContext, IToggle)) {
-				this._stateContext.addEventListener(Event.CHANGE, stateContextToggle_changeHandler);
-			}
-		}
-		this.setInvalid(InvalidationFlag.DATA);
-		return this._stateContext;
-	}
 
 	private var _stateToFill:Map<EnumValue, FillStyle>;
 
@@ -550,43 +510,5 @@ class BaseGraphicsPathSkin extends MeasureSprite implements IStateObserver {
 			}
 		}
 		return this._fill;
-	}
-
-	/**
-		Checks if a the current state requires the skin to be redrawn.
-
-		Subclasses may need to override this method if they add any additional
-		state-dependent properties similar to `getCurrentBorder` and
-		`getCurrentFill`.
-
-		@since 1.0.0
-	**/
-	@:dox(show)
-	private function needsStateUpdate():Bool {
-		var updated = false;
-		if (this._previousBorder != getCurrentBorderWithoutCache()) {
-			this._previousBorder = null;
-			updated = true;
-		}
-		if (this._previousFill != getCurrentFillWithoutCache()) {
-			this._previousFill = null;
-			updated = true;
-		}
-		return updated;
-	}
-
-	private function checkForStateChange():Void {
-		if (!this.needsStateUpdate()) {
-			return;
-		}
-		this.setInvalid(InvalidationFlag.STATE);
-	}
-
-	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {
-		this.checkForStateChange();
-	}
-
-	private function stateContextToggle_changeHandler(event:Event):Void {
-		this.checkForStateChange();
 	}
 }
