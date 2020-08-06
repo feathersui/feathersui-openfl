@@ -511,4 +511,17 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		}
 		return this._fill;
 	}
+
+	override private function needsStateUpdate():Bool {
+		var updated = false;
+		if (this._previousBorder != getCurrentBorderWithoutCache()) {
+			this._previousBorder = null;
+			updated = true;
+		}
+		if (this._previousFill != getCurrentFillWithoutCache()) {
+			this._previousFill = null;
+			updated = true;
+		}
+		return updated;
+	}
 }
