@@ -80,13 +80,27 @@ final class Theme {
 		@since 1.0.0
 	**/
 	public static function getTheme(?object:IStyleObject):ITheme {
-		if (roots != null && Std.is(object, DisplayObject)) {
-			var displayObject = cast(object, DisplayObject);
-			for (root in roots) {
-				if (root.contains(displayObject)) {
-					return rootToTheme.get(root);
+		if (Std.is(object, DisplayObject)) {
+			var current = cast(object, DisplayObject);
+			while (current != null) {
+				if (Std.is(current, IStyleObject)) {
+					var currentStylable = cast(current, IStyleObject);
+					if (!currentStylable.themeEnabled) {
+						return null;
+					}
+				}
+				current = current.parent;
+			}
+			if (roots != null) {
+				var displayObject = cast(object, DisplayObject);
+				for (root in roots) {
+					if (root.contains(displayObject)) {
+						return rootToTheme.get(root);
+					}
 				}
 			}
+		} else if (object != null && !object.themeEnabled) {
+			return null;
 		}
 		if (primaryTheme != null) {
 			return primaryTheme;

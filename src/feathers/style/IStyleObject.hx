@@ -13,4 +13,19 @@ package feathers.style;
 
 	@since 1.0.0
 **/
-interface IStyleObject {}
+interface IStyleObject {
+	/**
+		Determines if the style object and its children should be styled by a
+		theme or not.
+
+		In the following example, the object's theme is disabled.
+
+		```hx
+		object.themeEnabled = false;
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var themeEnabled(get, set):Bool;
+}

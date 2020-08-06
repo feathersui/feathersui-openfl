@@ -124,6 +124,35 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._enabled;
 	}
 
+	private var _themeEnabled:Bool = true;
+
+	/**
+		@see `feathers.style.IStyleObject.themeEnabled`
+	**/
+	@:flash.property
+	public var themeEnabled(get, set):Bool;
+
+	private function get_themeEnabled():Bool {
+		return this._themeEnabled;
+	}
+
+	private function set_themeEnabled(value:Bool):Bool {
+		if (this._themeEnabled == value) {
+			return this._themeEnabled;
+		}
+		this._themeEnabled = value;
+		if (this._initialized && this.stage != null) {
+			// ignore if we're not initialized yet or we haven't been added to
+			// the stage because it will be handled later. otherwise, apply the
+			// new styles immediately.
+			this.applyStyles();
+		} else {
+			this._waitingToApplyStyles = true;
+		}
+		this.setInvalid(InvalidationFlag.STYLES);
+		return this._themeEnabled;
+	}
+
 	private var _currentStyleProvider:IStyleProvider = null;
 	private var _customStyleProvider:IStyleProvider = null;
 
@@ -534,7 +563,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 				styleProvider = theme.getStyleProvider(this);
 			}
 		}
-		if (styleProvider == null) {
+		if (this._themeEnabled && styleProvider == null) {
 			var theme = Theme.fallbackTheme;
 			if (theme != null) {
 				styleProvider = theme.getStyleProvider(this);
