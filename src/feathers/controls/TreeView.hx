@@ -375,6 +375,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	@:style
 	public var layout:ILayout = null;
 
+	private var _oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = null;
+
 	/**
 		Manages item renderers used by the tree view.
 
@@ -395,6 +397,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this.itemRendererRecycler == value) {
 			return this.itemRendererRecycler;
 		}
+		this._oldItemRendererRecycler = this.itemRendererRecycler;
 		this.itemRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this.itemRendererRecycler;
@@ -707,9 +710,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 
 		this.findUnrenderedData();
-		this.recoverInactiveItemRenderers();
+		this.recoverInactiveItemRenderers(this.itemRendererRecycler);
 		this.renderUnrenderedData();
-		this.freeInactiveItemRenderers();
+		this.freeInactiveItemRenderers(this.itemRendererRecycler);
 		if (this.inactiveItemRenderers.length > 0) {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
 		}
@@ -723,12 +726,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
 		}
 		if (factoryInvalid) {
-			this.recoverInactiveItemRenderers();
-			this.freeInactiveItemRenderers();
+			this.recoverInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
+			this.freeInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
+			this._oldItemRendererRecycler = null;
 		}
 	}
 
-	private function recoverInactiveItemRenderers():Void {
+	private function recoverInactiveItemRenderers(recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):Void {
 		for (itemRenderer in this.inactiveItemRenderers) {
 			if (itemRenderer == null) {
 				continue;
@@ -760,8 +764,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._ignoreSelectionChange = true;
 			var oldIgnoreOpenedChange = this._ignoreOpenedChange;
 			this._ignoreOpenedChange = true;
-			if (this.itemRendererRecycler.reset != null) {
-				this.itemRendererRecycler.reset(itemRenderer, this._currentItemState);
+			if (recycler != null && recycler.reset != null) {
+				recycler.reset(itemRenderer, this._currentItemState);
 			}
 			if (Std.is(itemRenderer, IToggle)) {
 				var toggle = cast(itemRenderer, IToggle);
@@ -788,12 +792,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function freeInactiveItemRenderers():Void {
+	private function freeInactiveItemRenderers(recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):Void {
 		for (itemRenderer in this.inactiveItemRenderers) {
 			if (itemRenderer == null) {
 				continue;
 			}
-			this.destroyItemRenderer(itemRenderer);
+			this.destroyItemRenderer(itemRenderer, recycler);
 		}
 		this.inactiveItemRenderers.resize(0);
 	}
@@ -897,10 +901,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return itemRenderer;
 	}
 
-	private function destroyItemRenderer(itemRenderer:DisplayObject):Void {
+	private function destroyItemRenderer(itemRenderer:DisplayObject, recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):Void {
 		this.treeViewPort.removeChild(itemRenderer);
-		if (this.itemRendererRecycler.destroy != null) {
-			this.itemRendererRecycler.destroy(itemRenderer);
+		if (recycler != null && recycler.destroy != null) {
+			recycler.destroy(itemRenderer);
 		}
 	}
 

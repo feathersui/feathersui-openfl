@@ -301,6 +301,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._columns;
 	}
 
+	private var _oldHeaderRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = null;
+
 	/**
 		Manages header renderers used by the grid view.
 
@@ -325,6 +327,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this.headerRendererRecycler == value) {
 			return this.headerRendererRecycler;
 		}
+		this._oldHeaderRendererRecycler = this.headerRendererRecycler;
 		this.headerRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		return this.headerRendererRecycler;
@@ -708,6 +711,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 		}
 
+		var recycler = this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this.headerRendererRecycler;
 		for (headerRenderer in this.activeHeaderRenderers) {
 			var header = this.headerRendererToData.get(headerRenderer);
 			this.headerRendererToData.remove(headerRenderer);
@@ -716,16 +720,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._currentHeaderState.column = null;
 			this._currentHeaderState.columnIndex = -1;
 			this._currentHeaderState.text = null;
-			if (this.headerRendererRecycler.reset != null) {
-				this.headerRendererRecycler.reset(headerRenderer, this._currentHeaderState);
+			if (recycler != null && recycler.reset != null) {
+				recycler.reset(headerRenderer, this._currentHeaderState);
 			}
 			if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
 				var header = cast(headerRenderer, IGridViewHeaderRenderer);
 				header.column = null;
 				header.columnIndex = -1;
 			}
-			this.destroyHeaderRenderer(headerRenderer);
+			this.destroyHeaderRenderer(headerRenderer, recycler);
 		}
+		this._oldHeaderRendererRecycler = null;
 		this.activeHeaderRenderers.resize(0);
 		for (i in 0...this._columns.length) {
 			var column = this._columns.get(i);
@@ -905,10 +910,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return headerRenderer;
 	}
 
-	private function destroyHeaderRenderer(headerRenderer:DisplayObject):Void {
+	private function destroyHeaderRenderer(headerRenderer:DisplayObject, recycler:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>):Void {
 		this._headerContainer.removeChild(headerRenderer);
-		if (this.headerRendererRecycler.destroy != null) {
-			this.headerRendererRecycler.destroy(headerRenderer);
+		if (recycler != null && recycler.destroy != null) {
+			recycler.destroy(headerRenderer);
 		}
 	}
 

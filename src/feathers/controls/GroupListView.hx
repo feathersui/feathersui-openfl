@@ -726,14 +726,18 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		if (itemRendererInvalid) {
-			this.recoverInactiveItemRenderers(this.inactiveItemRenderers);
-			this.freeInactiveItemRenderers(this.inactiveItemRenderers, this._oldItemRendererRecycler);
+			this.recoverInactiveItemRenderers(this.inactiveItemRenderers,
+				this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
+			this.freeInactiveItemRenderers(this.inactiveItemRenderers,
+				this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
 			this._oldItemRendererRecycler = null;
 		}
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		if (headerRendererInvalid || itemRendererInvalid) {
-			this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers);
-			this.freeInactiveItemRenderers(this.inactiveHeaderRenderers, this._oldHeaderRendererRecycler);
+			this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers,
+				this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this.headerRendererRecycler);
+			this.freeInactiveItemRenderers(this.inactiveHeaderRenderers,
+				this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this.headerRendererRecycler);
 			this._oldHeaderRendererRecycler = null;
 		}
 
@@ -742,8 +746,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		this.findUnrenderedData();
-		this.recoverInactiveItemRenderers(this.inactiveItemRenderers);
-		this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers);
+		this.recoverInactiveItemRenderers(this.inactiveItemRenderers, this.itemRendererRecycler);
+		this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers, this.headerRendererRecycler);
 		this.renderUnrenderedData();
 		this.freeInactiveItemRenderers(this.inactiveItemRenderers, this.itemRendererRecycler);
 		this.freeInactiveItemRenderers(this.inactiveHeaderRenderers, this.headerRendererRecycler);
@@ -755,7 +759,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 	}
 
-	private function recoverInactiveItemRenderers(inactive:Array<DisplayObject>):Void {
+	private function recoverInactiveItemRenderers(inactive:Array<DisplayObject>,
+			recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
 		for (itemRenderer in inactive) {
 			if (itemRenderer == null) {
 				continue;

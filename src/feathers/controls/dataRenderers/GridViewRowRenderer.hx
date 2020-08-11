@@ -175,8 +175,6 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		return this._columns;
 	}
 
-	private var _cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
-
 	/**
 		Manages cell renderers used by the column.
 
@@ -189,17 +187,18 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 
 	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
-		return this._cellRendererRecycler;
+		return this._defaultStorage.cellRendererRecycler;
 	}
 
 	private function set_cellRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		GridViewCellState, DisplayObject> {
-		if (this._cellRendererRecycler == value) {
-			return this._cellRendererRecycler;
+		if (this._defaultStorage.cellRendererRecycler == value) {
+			return this._defaultStorage.cellRendererRecycler;
 		}
-		this._cellRendererRecycler = value;
+		this._defaultStorage.oldCellRendererRecycler = this._defaultStorage.cellRendererRecycler;
+		this._defaultStorage.cellRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_CELL_RENDERER_FACTORY);
-		return this._cellRendererRecycler;
+		return this._defaultStorage.cellRendererRecycler;
 	}
 
 	private var _rowLayout:GridViewRowLayout;
@@ -229,10 +228,10 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	private function preLayout():Void {
 		this._rowLayout.columns = this._columns;
 
-		if (this._cellRendererRecycler.update == null) {
-			this._cellRendererRecycler.update = defaultUpdateCellRenderer;
-			if (this._cellRendererRecycler.reset == null) {
-				this._cellRendererRecycler.reset = defaultResetCellRenderer;
+		if (this._defaultStorage.cellRendererRecycler.update == null) {
+			this._defaultStorage.cellRendererRecycler.update = defaultUpdateCellRenderer;
+			if (this._defaultStorage.cellRendererRecycler.reset == null) {
+				this._defaultStorage.cellRendererRecycler.reset = defaultResetCellRenderer;
 			}
 		}
 
@@ -257,6 +256,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		if (forceCleanup) {
 			this.recoverInactiveCellRenderers(storage);
 			this.freeInactiveCellRenderers(storage);
+			storage.oldCellRendererRecycler = null;
 		}
 	}
 
@@ -297,8 +297,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			this._currentCellState.column = null;
 			this._currentCellState.selected = false;
 			this._currentCellState.text = null;
-			var cellRendererRecycler = storage.cellRendererRecycler != null ? storage.cellRendererRecycler : this._cellRendererRecycler;
-			if (cellRendererRecycler.reset != null) {
+			var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
+			if (cellRendererRecycler != null && cellRendererRecycler.reset != null) {
 				cellRendererRecycler.reset(cellRenderer, this._currentCellState);
 			}
 			if (Std.is(cellRenderer, IToggle)) {
@@ -345,9 +345,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	private function createCellRenderer(columnIndex:Int, column:GridViewColumn):DisplayObject {
 		var cellRenderer:DisplayObject = null;
 		var storage = this._defaultStorage;
-		var cellRendererRecycler = storage.cellRendererRecycler != null ? storage.cellRendererRecycler : this._cellRendererRecycler;
 		if (storage.inactiveCellRenderers.length == 0) {
-			cellRenderer = cellRendererRecycler.create();
+			cellRenderer = storage.cellRendererRecycler.create();
 		} else {
 			cellRenderer = storage.inactiveCellRenderers.shift();
 		}
@@ -362,23 +361,22 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 
 	private function destroyCellRenderer(cellRenderer:DisplayObject, storage:CellRendererStorage):Void {
 		this.removeChild(cellRenderer);
-		var cellRendererRecycler = storage.cellRendererRecycler != null ? storage.cellRendererRecycler : this._cellRendererRecycler;
-		if (cellRendererRecycler.destroy != null) {
+		var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
+		if (cellRendererRecycler != null && cellRendererRecycler.destroy != null) {
 			cellRendererRecycler.destroy(cellRenderer);
 		}
 	}
 
 	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
 		var storage = this._defaultStorage;
-		var cellRendererRecycler = storage.cellRendererRecycler != null ? storage.cellRendererRecycler : this._cellRendererRecycler;
 		this._currentCellState.data = this._data;
 		this._currentCellState.rowIndex = this._rowIndex;
 		this._currentCellState.columnIndex = columnIndex;
 		this._currentCellState.column = column;
 		this._currentCellState.selected = this._selected;
 		this._currentCellState.text = column.itemToText(this._data);
-		if (cellRendererRecycler.update != null) {
-			cellRendererRecycler.update(cellRenderer, this._currentCellState);
+		if (storage.cellRendererRecycler.update != null) {
+			storage.cellRendererRecycler.update(cellRenderer, this._currentCellState);
 		}
 		if (Std.is(cellRenderer, IDataRenderer)) {
 			var dataRenderer = cast(cellRenderer, IDataRenderer);
@@ -425,6 +423,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 private class CellRendererStorage {
 	public function new(cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = null) {}
 
+	public var oldCellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 	public var activeCellRenderers:Array<DisplayObject> = [];
 	public var inactiveCellRenderers:Array<DisplayObject> = [];
