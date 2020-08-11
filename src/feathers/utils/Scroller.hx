@@ -1201,13 +1201,18 @@ class Scroller extends EventDispatcher {
 	#end
 
 	private function target_mouseWheelHandler(event:MouseEvent):Void {
-		// can't use preventDefault(), so don't let it bubble
+		if (this._scrolling) {
+			// if we're already scrolling, we need to handle the event, even
+			// if the position doesn't technically change
+
+			// can't use preventDefault(), so don't let it bubble
+			event.stopImmediatePropagation();
+			this.stop();
+		}
 		var targetScrollY = this._scrollY;
 		if (this.animateScrollY != null) {
 			targetScrollY = this.targetScrollY;
 		}
-		event.stopImmediatePropagation();
-		this.stop();
 		var deltaLines = event.delta;
 		switch (this._mouseWheelDeltaMode) {
 			case 0: // pixels
@@ -1223,6 +1228,11 @@ class Scroller extends EventDispatcher {
 		}
 		if (this._scrollY == newScrollY) {
 			return;
+		}
+		if (!this._scrolling) {
+			// if we weren't scrolling before, we are now
+			event.stopImmediatePropagation();
+			this.stop();
 		}
 		if (this.mouseWheelDuration > 0.0) {
 			this.throwTo(null, newScrollY, this.mouseWheelDuration, this.ease);
