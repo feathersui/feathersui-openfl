@@ -8,14 +8,11 @@
 
 package feathers.utils;
 
-import openfl.errors.ArgumentError;
-import feathers.layout.Direction;
 import feathers.events.ScrollEvent;
 import motion.Actuate;
 import motion.actuators.SimpleActuator;
 import motion.easing.IEasing;
 import motion.easing.Quart;
-import openfl.Lib;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
@@ -452,16 +449,12 @@ class Scroller extends EventDispatcher {
 	public var mouseWheelDeltaY:Float = 10.0;
 
 	/**
-		The direction of scrolling when the user scrolls the mouse wheel
-		vertically. In some cases, it is common for a container that only
-		scrolls horizontally to scroll even when the mouse wheel is scrolled
-		vertically.
-
-		@default `Direction.VERTICAL`
+		Determines if rotating the mouse wheel vertically changes the `scrollX`
+		position instead of `scrollY`.
 
 		@since 1.0.0
 	**/
-	public var mouseWheelDirectionY:Direction = VERTICAL;
+	public var mouseWheelYScrollsX:Bool = false;
 
 	private var _mouseWheelDeltaMode:Int = 1;
 
@@ -1241,29 +1234,28 @@ class Scroller extends EventDispatcher {
 		}
 		var newScrollX:Null<Float> = null;
 		var newScrollY:Null<Float> = null;
-		switch (this.mouseWheelDirectionY) {
-			case HORIZONTAL:
-				var targetScrollX = this._scrollX;
-				if (this.animateScrollX != null) {
-					targetScrollX = this.targetScrollX;
-				}
-				newScrollX = targetScrollX - (deltaLines * this.mouseWheelDeltaX);
-				if (newScrollX < this._minScrollX) {
-					newScrollX = this._minScrollX;
-				} else if (newScrollX > this._maxScrollX) {
-					newScrollX = this._maxScrollX;
-				}
-			default: // vertical
-				var targetScrollY = this._scrollY;
-				if (this.animateScrollY != null) {
-					targetScrollY = this.targetScrollY;
-				}
-				newScrollY = targetScrollY - (deltaLines * this.mouseWheelDeltaY);
-				if (newScrollY < this._minScrollY) {
-					newScrollY = this._minScrollY;
-				} else if (newScrollY > this._maxScrollY) {
-					newScrollY = this._maxScrollY;
-				}
+		if (this.mouseWheelYScrollsX) {
+			var targetScrollX = this._scrollX;
+			if (this.animateScrollX != null) {
+				targetScrollX = this.targetScrollX;
+			}
+			newScrollX = targetScrollX - (deltaLines * this.mouseWheelDeltaX);
+			if (newScrollX < this._minScrollX) {
+				newScrollX = this._minScrollX;
+			} else if (newScrollX > this._maxScrollX) {
+				newScrollX = this._maxScrollX;
+			}
+		} else {
+			var targetScrollY = this._scrollY;
+			if (this.animateScrollY != null) {
+				targetScrollY = this.targetScrollY;
+			}
+			newScrollY = targetScrollY - (deltaLines * this.mouseWheelDeltaY);
+			if (newScrollY < this._minScrollY) {
+				newScrollY = this._minScrollY;
+			} else if (newScrollY > this._maxScrollY) {
+				newScrollY = this._maxScrollY;
+			}
 		}
 		if ((newScrollX == null || newScrollX == this._scrollX) && (newScrollY == null || newScrollY == this._scrollY)) {
 			return;
