@@ -458,6 +458,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private var activeHeaderRenderers:Array<DisplayObject> = [];
+	private var dataToHeaderRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
+	private var headerRendererToData = new ObjectMap<DisplayObject, GridViewColumn>();
 	private var inactiveRowRenderers:Array<GridViewRowRenderer> = [];
 	private var activeRowRenderers:Array<GridViewRowRenderer> = [];
 	private var dataToRowRenderer = new ObjectMap<Dynamic, GridViewRowRenderer>();
@@ -557,6 +559,29 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this.scroller.scrollX = targetX;
 		this.scroller.scrollY = targetY;
+	}
+
+	/**
+		Returns the current header renderer used to render a specific column.
+
+		@see `GridView.columns`
+
+		@since 1.0.0
+	**/
+	public function columnToHeaderRenderer(column:GridViewColumn):DisplayObject {
+		return this.dataToHeaderRenderer.get(column);
+	}
+
+	/**
+		Returns the current column that is rendered by a specific header
+		renderer.
+
+		@see `GridView.columns`
+
+		@since 1.0.0
+	**/
+	public function headerRendererToColumn(headerRenderer:DisplayObject):GridViewColumn {
+		return this.headerRendererToData.get(headerRenderer);
 	}
 
 	private function initializeGridViewTheme():Void {
@@ -684,6 +709,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		for (headerRenderer in this.activeHeaderRenderers) {
+			var header = this.headerRendererToData.get(headerRenderer);
+			this.headerRendererToData.remove(headerRenderer);
+			this.dataToHeaderRenderer.remove(header);
+
 			this._currentHeaderState.column = null;
 			this._currentHeaderState.columnIndex = -1;
 			this._currentHeaderState.text = null;
@@ -870,6 +899,20 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (variantHeaderRenderer.variant == null) {
 			variantHeaderRenderer.variant = GridView.CHILD_VARIANT_HEADER;
 		}
+		this.refreshHeaderRendererProperties(headerRenderer, column, columnIndex);
+		this.headerRendererToData.set(headerRenderer, column);
+		this.dataToHeaderRenderer.set(column, headerRenderer);
+		return headerRenderer;
+	}
+
+	private function destroyHeaderRenderer(headerRenderer:DisplayObject):Void {
+		this._headerContainer.removeChild(headerRenderer);
+		if (this.headerRendererRecycler.destroy != null) {
+			this.headerRendererRecycler.destroy(headerRenderer);
+		}
+	}
+
+	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, column:GridViewColumn, columnIndex:Int):Void {
 		this._currentHeaderState.column = column;
 		this._currentHeaderState.columnIndex = columnIndex;
 		this._currentHeaderState.text = column.headerText;
@@ -880,14 +923,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var header = cast(headerRenderer, IGridViewHeaderRenderer);
 			header.column = this._currentHeaderState.column;
 			header.columnIndex = this._currentHeaderState.columnIndex;
-		}
-		return headerRenderer;
-	}
-
-	private function destroyHeaderRenderer(headerRenderer:DisplayObject):Void {
-		this._headerContainer.removeChild(headerRenderer);
-		if (this.headerRendererRecycler.destroy != null) {
-			this.headerRendererRecycler.destroy(headerRenderer);
 		}
 	}
 
