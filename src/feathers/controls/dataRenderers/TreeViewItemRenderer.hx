@@ -151,9 +151,13 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			depth = this._location.length - 1;
 		}
 		var indent = this.indentation * depth;
-		@:bypassAccessor this.paddingLeft = paddingLeft + indent + this.disclosureButton.width + disclosureGap;
+		this.runWithoutInvalidation(() -> {
+			this.paddingLeft = paddingLeft + indent + this.disclosureButton.width + disclosureGap;
+		});
 		super.layoutContent();
-		@:bypassAccessor this.paddingLeft = paddingLeft;
+		this.runWithoutInvalidation(() -> {
+			this.paddingLeft = paddingLeft;
+		});
 		this.disclosureButton.x = this.paddingLeft + indent;
 		this.disclosureButton.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this.disclosureButton.height) / 2.0;
 	}
