@@ -120,7 +120,8 @@ class Radio extends ToggleButton implements IGroupedToggle {
 
 	private function radio_addedToStageHandler(event:Event):Void {
 		if (this._toggleGroup == null) {
-			this._toggleGroup = defaultRadioGroup;
+			// use the setter
+			this.toggleGroup = defaultRadioGroup;
 		}
 		this.addEventListener(Event.REMOVED_FROM_STAGE, radio_removedFromStageHandler);
 	}
