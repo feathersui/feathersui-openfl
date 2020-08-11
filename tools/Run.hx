@@ -114,7 +114,40 @@ class Run {
 
 	private static function createProject(newProject:NewProjectOptions, templatePath:String):Void {
 		var projectPath = newProject.path;
-		var projectName = Path.withoutDirectory(projectPath);
+		var folderName = Path.withoutDirectory(projectPath);
+		folderName = StringTools.trim(folderName);
+		var projectName = "";
+		var needsUpper = false;
+		for (i in 0...folderName.length) {
+			var char = folderName.charAt(i);
+			if (i == 0) {
+				if (~/[a-zA-Z]/.match(char)) {
+					// first character of a type name must be upper case
+					needsUpper = true;
+				} else if (char != "_") {
+					// skip invalid character
+					continue;
+				}
+			} else {
+				if (~/[\s\-]/.match(char)) {
+					// make the *next* character upper case
+					// in other words, we basically convert to CamelCase when we
+					// encounter whitespace or dashes
+					needsUpper = true;
+					continue;
+				}
+				if (!~/[0-9a-zA-Z_]/.match(char)) {
+					// skip invalid character
+					continue;
+				}
+			}
+			if (needsUpper) {
+				needsUpper = false;
+				projectName += char.toUpperCase();
+			} else {
+				projectName += char;
+			}
+		}
 		if (newProject.verbose) {
 			Sys.println('New project: ${projectName}');
 		}
