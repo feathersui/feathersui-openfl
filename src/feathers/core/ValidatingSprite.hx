@@ -75,6 +75,22 @@ class ValidatingSprite extends Sprite implements IValidating {
 		return this._invalidationFlags.exists(flag);
 	}
 
+	@:noCompletion
+	private var _ignoreInvalidationFlags = false;
+
+	/**
+		Calls a function that temporarily disables invalidation. In other words,
+		calls to `setInvalid()` will be ignored until the function returns.
+
+		@since 1.0.0
+	**/
+	public function runWithoutInvalidation(callback:() -> Void):Void {
+		var oldIgnoreValidation = this._ignoreInvalidationFlags;
+		this._ignoreInvalidationFlags = true;
+		callback();
+		this._ignoreInvalidationFlags = oldIgnoreValidation;
+	}
+
 	/**
 		Call this function to tell the UI control that a redraw is pending.
 		The redraw will happen immediately before OpenFL renders the UI
@@ -98,6 +114,9 @@ class ValidatingSprite extends Sprite implements IValidating {
 		@since 1.0.0
 	**/
 	public function setInvalid(flag:String = null):Void {
+		if (this._ignoreInvalidationFlags) {
+			return;
+		}
 		var alreadyInvalid = this.isInvalid();
 		var alreadyDelayedInvalid = false;
 		if (this._validating) {
@@ -194,6 +213,9 @@ class ValidatingSprite extends Sprite implements IValidating {
 	**/
 	@:dox(show)
 	private function setInvalidationFlag(flag:String):Void {
+		if (this._ignoreInvalidationFlags) {
+			return;
+		}
 		if (this._invalidationFlags.exists(flag)) {
 			return;
 		}
