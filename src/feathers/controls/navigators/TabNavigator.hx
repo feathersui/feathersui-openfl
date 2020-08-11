@@ -61,7 +61,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	private var _dataProvider:IFlatCollection<TabItem> = null;
 
 	@:flash.property
-	public var dataProvider(default, set):IFlatCollection<TabItem>;
+	public var dataProvider(get, set):IFlatCollection<TabItem>;
 
 	private function get_dataProvider():IFlatCollection<TabItem> {
 		return this._dataProvider;
