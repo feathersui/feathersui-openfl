@@ -1253,7 +1253,7 @@ class Scroller extends EventDispatcher {
 				} else if (newScrollX > this._maxScrollX) {
 					newScrollX = this._maxScrollX;
 				}
-			case VERTICAL:
+			default: // vertical
 				var targetScrollY = this._scrollY;
 				if (this.animateScrollY != null) {
 					targetScrollY = this.targetScrollY;
@@ -1264,8 +1264,6 @@ class Scroller extends EventDispatcher {
 				} else if (newScrollY > this._maxScrollY) {
 					newScrollY = this._maxScrollY;
 				}
-			default:
-				throw new ArgumentError("Unknown mouseWheelDirectionY: " + this.mouseWheelDirectionY);
 		}
 		if ((newScrollX == null || newScrollX == this._scrollX) && (newScrollY == null || newScrollY == this._scrollY)) {
 			return;
