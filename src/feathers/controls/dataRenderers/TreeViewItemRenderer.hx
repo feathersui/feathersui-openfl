@@ -27,6 +27,8 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		The variant used to style the `ToggleButton` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_DISCLOSURE_BUTTON = "treeViewItemRenderer_disclosureButton";
 

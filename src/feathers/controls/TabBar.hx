@@ -75,6 +75,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		The variant used to style the tab child components in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_TAB = "tabBar_tab";
 

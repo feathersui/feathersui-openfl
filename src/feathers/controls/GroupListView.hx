@@ -88,6 +88,13 @@ import openfl.ui.Multitouch;
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+	/**
+		The variant used to style the group headers in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
 	public static final CHILD_VARIANT_HEADER = "groupListView_header";
 
 	/**

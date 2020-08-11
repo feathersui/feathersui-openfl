@@ -81,6 +81,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		The variant used to style the `Button` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_BUTTON = "popUpListView_button";
 
@@ -88,6 +90,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		The variant used to style the `ListView` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_LIST_VIEW = "popUpListView_listView";
 

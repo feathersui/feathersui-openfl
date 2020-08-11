@@ -71,6 +71,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		The variant used to style the toggle button child components in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_TOGGLE_BUTTON = "pageIndicator_toggleButton";
 

@@ -82,6 +82,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		The variant used to style the `Button` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_BUTTON = "comboBox_button";
 
@@ -89,6 +91,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		The variant used to style the `TextInput` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_TEXT_INPUT = "comboBox_textInput";
 
@@ -96,6 +100,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		The variant used to style the `ListView` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_LIST_VIEW = "comboBox_listView";
 
