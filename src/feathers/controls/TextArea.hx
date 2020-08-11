@@ -683,8 +683,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (this._ignoreViewPortTextChange) {
 			return;
 		}
-		// don't try to use @:bypassAccessor here because we need to measure
-		// again just in case it affected the maximum y scroll position
+		// don't try to skip the setter because we need to measure again. the
+		// new text may result in a different maximum y scroll position.
 		this.text = this.textFieldViewPort.text;
 	}
 
