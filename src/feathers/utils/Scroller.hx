@@ -8,6 +8,8 @@
 
 package feathers.utils;
 
+import openfl.errors.ArgumentError;
+import feathers.layout.Direction;
 import feathers.events.ScrollEvent;
 import motion.Actuate;
 import motion.actuators.SimpleActuator;
@@ -432,6 +434,15 @@ class Scroller extends EventDispatcher {
 	public var bounceEase:IEasing = null;
 
 	/**
+		The distance to scroll when the mouse wheel is scrolled horizontally.
+
+		@default 10.0
+
+		@since 1.0.0
+	**/
+	public var mouseWheelDeltaX:Float = 10.0;
+
+	/**
 		The distance to scroll when the mouse wheel is scrolled vertically.
 
 		@default 10.0
@@ -439,6 +450,18 @@ class Scroller extends EventDispatcher {
 		@since 1.0.0
 	**/
 	public var mouseWheelDeltaY:Float = 10.0;
+
+	/**
+		The direction of scrolling when the user scrolls the mouse wheel
+		vertically. In some cases, it is common for a container that only
+		scrolls horizontally to scroll even when the mouse wheel is scrolled
+		vertically.
+
+		@default `Direction.VERTICAL`
+
+		@since 1.0.0
+	**/
+	public var mouseWheelDirectionY:Direction = VERTICAL;
 
 	private var _mouseWheelDeltaMode:Int = 1;
 
@@ -1209,10 +1232,6 @@ class Scroller extends EventDispatcher {
 			event.stopImmediatePropagation();
 			this.stop();
 		}
-		var targetScrollY = this._scrollY;
-		if (this.animateScrollY != null) {
-			targetScrollY = this.targetScrollY;
-		}
 		var deltaLines = event.delta;
 		switch (this._mouseWheelDeltaMode) {
 			case 0: // pixels
@@ -1220,13 +1239,35 @@ class Scroller extends EventDispatcher {
 			case 2: // pages
 				deltaLines = deltaLines * 16;
 		}
-		var newScrollY = targetScrollY - (deltaLines * this.mouseWheelDeltaY);
-		if (newScrollY < this._minScrollY) {
-			newScrollY = this._minScrollY;
-		} else if (newScrollY > this._maxScrollY) {
-			newScrollY = this._maxScrollY;
+		var newScrollX:Null<Float> = null;
+		var newScrollY:Null<Float> = null;
+		switch (this.mouseWheelDirectionY) {
+			case HORIZONTAL:
+				var targetScrollX = this._scrollX;
+				if (this.animateScrollX != null) {
+					targetScrollX = this.targetScrollX;
+				}
+				newScrollX = targetScrollX - (deltaLines * this.mouseWheelDeltaX);
+				if (newScrollX < this._minScrollX) {
+					newScrollX = this._minScrollX;
+				} else if (newScrollX > this._maxScrollX) {
+					newScrollX = this._maxScrollX;
+				}
+			case VERTICAL:
+				var targetScrollY = this._scrollY;
+				if (this.animateScrollY != null) {
+					targetScrollY = this.targetScrollY;
+				}
+				newScrollY = targetScrollY - (deltaLines * this.mouseWheelDeltaY);
+				if (newScrollY < this._minScrollY) {
+					newScrollY = this._minScrollY;
+				} else if (newScrollY > this._maxScrollY) {
+					newScrollY = this._maxScrollY;
+				}
+			default:
+				throw new ArgumentError("Unknown mouseWheelDirectionY: " + this.mouseWheelDirectionY);
 		}
-		if (this._scrollY == newScrollY) {
+		if ((newScrollX == null || newScrollX == this._scrollX) && (newScrollY == null || newScrollY == this._scrollY)) {
 			return;
 		}
 		if (!this._scrolling) {
@@ -1235,10 +1276,15 @@ class Scroller extends EventDispatcher {
 			this.stop();
 		}
 		if (this.mouseWheelDuration > 0.0) {
-			this.throwTo(null, newScrollY, this.mouseWheelDuration, this.ease);
+			this.throwTo(newScrollX, newScrollY, this.mouseWheelDuration, this.ease);
 		} else {
-			// use the setter
-			this.scrollY = newScrollY;
+			// use the setters
+			if (newScrollX != null) {
+				this.scrollX = newScrollX;
+			}
+			if (newScrollY != null) {
+				this.scrollY = newScrollY;
+			}
 		}
 	}
 }
