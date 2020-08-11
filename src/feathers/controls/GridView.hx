@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.style.IVariantStyleObject;
 import feathers.data.ArrayCollection;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
@@ -114,6 +115,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	public static final VARIANT_BORDER = "border";
+
+	/**
+		The variant used to style the column headers in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_HEADER = "gridView_header";
 
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = "headerRendererFactory";
 
@@ -856,6 +866,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			} else {
 				rowRenderer = this.inactiveHeaderRenderers.shift();
 		}*/
+		var variantHeaderRenderer = cast(headerRenderer, IVariantStyleObject);
+		if (variantHeaderRenderer.variant == null) {
+			variantHeaderRenderer.variant = GridView.CHILD_VARIANT_HEADER;
+		}
 		this._currentHeaderState.column = column;
 		this._currentHeaderState.columnIndex = columnIndex;
 		this._currentHeaderState.text = column.headerText;
