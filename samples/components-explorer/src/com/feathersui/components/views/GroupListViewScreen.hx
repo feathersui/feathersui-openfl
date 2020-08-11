@@ -22,29 +22,123 @@ class GroupListViewScreen extends Panel {
 		this.layout = new AnchorLayout();
 
 		var data = [
-			new TreeNode({text: "Node 1"}, [
-				new TreeNode({text: "Node 1A"}, [
-					new TreeNode({text: "Node 1A-I"}),
-					new TreeNode({text: "Node 1A-II"}),
-					new TreeNode({text: "Node 1A-III"}),
-					new TreeNode({text: "Node 1A-IV"})
-				]),
-				new TreeNode({text: "Node 1B"}),
-				new TreeNode({text: "Node 1C"})
+			// @formatter:off
+			new TreeNode({text: "A"}, [
+				new TreeNode({text: "Aardvark"}),
+				new TreeNode({text: "Alligator"}),
+				new TreeNode({text: "Antelope"})
 			]),
-			new TreeNode({text: "Node 2"}, [
-				new TreeNode({text: "Node 2A"}),
-				new TreeNode({text: "Node 2B"}),
-				new TreeNode({text: "Node 2C"})
+			new TreeNode({text: "B"}, [
+				new TreeNode({text: "Badger"}),
+				new TreeNode({text: "Bear"}),
+				new TreeNode({text: "Beaver"}),
+				new TreeNode({text: "Buffalo"})
 			]),
-			new TreeNode({text: "Node 3"}),
-			new TreeNode({text: "Node 4"}, [
-				new TreeNode({text: "Node 4A"}),
-				new TreeNode({text: "Node 4B"}),
-				new TreeNode({text: "Node 4C"}),
-				new TreeNode({text: "Node 4D"}),
-				new TreeNode({text: "Node 4E"})
-			])
+			new TreeNode({text: "C"}, [
+				new TreeNode({text: "Cheetah"}),
+				new TreeNode({text: "Chimpanzee"})
+			]),
+			new TreeNode({text: "D"}, [
+				new TreeNode({text: "Dolphin"}),
+				new TreeNode({text: "Donkey"}),
+				new TreeNode({text: "Duck"}),
+			]),
+			new TreeNode({text: "E"}, [
+				new TreeNode({text: "Eagle"}),
+				new TreeNode({text: "Earthworm"}),
+				new TreeNode({text: "Elephant"}),
+				new TreeNode({text: "Elk"}),
+			]),
+			new TreeNode({text: "F"}, [
+				new TreeNode({text: "Flamingo"}),
+				new TreeNode({text: "Fox"})
+			]),
+			new TreeNode({text: "G"}, [
+				new TreeNode({text: "Gecko"}),
+				new TreeNode({text: "Goat"}),
+				new TreeNode({text: "Goose"})
+			]),
+			new TreeNode({text: "H"}, [
+				new TreeNode({text: "Hedgehog"}),
+				new TreeNode({text: "Horse"})
+			]),
+			new TreeNode({text: "I"}, [
+				new TreeNode({text: "Igunana"}),
+			]),
+			new TreeNode({text: "J"}, [
+				new TreeNode({text: "Jaguar"}),
+				new TreeNode({text: "Jellyfish"})
+			]),
+			new TreeNode({text: "K"}, [
+				new TreeNode({text: "Kangaroo"})
+			]),
+			new TreeNode({text: "L"}, [
+				new TreeNode({text: "Lobster"}),
+				new TreeNode({text: "Lynx"})
+			]),
+			new TreeNode({text: "M"}, [
+				new TreeNode({text: "Monkey"}),
+				new TreeNode({text: "Moose"}),
+				new TreeNode({text: "Mule"})
+			]),
+			new TreeNode({text: "N"}, [
+				new TreeNode({text: "Newt"})
+			]),
+			new TreeNode({text: "O"}, [
+				new TreeNode({text: "Ocelot"}),
+				new TreeNode({text: "Octopus"}),
+				new TreeNode({text: "Ostrich"})
+			]),
+			new TreeNode({text: "P"}, [
+				new TreeNode({text: "Panther"}),
+				new TreeNode({text: "Penguin"}),
+				new TreeNode({text: "Pig"}),
+				new TreeNode({text: "Platypus"}),
+			]),
+			new TreeNode({text: "Q"}, [
+				new TreeNode({text: "Quokka"})
+			]),
+			new TreeNode({text: "R"}, [
+				new TreeNode({text: "Rabbit"}),
+				new TreeNode({text: "Raccoon"}),
+				new TreeNode({text: "Rat"})
+			]),
+			new TreeNode({text: "S"}, [
+				new TreeNode({text: "Scorpion"}),
+				new TreeNode({text: "Seal"}),
+				new TreeNode({text: "Sloth"}),
+				new TreeNode({text: "Snake"}),
+				new TreeNode({text: "Squid"}),
+				new TreeNode({text: "Squirrel"}),
+				new TreeNode({text: "Starling"})
+			]),
+			new TreeNode({text: "T"}, [
+				new TreeNode({text: "Tiger"}),
+				new TreeNode({text: "Toucan"}),
+				new TreeNode({text: "Turkey"})
+			]),
+			new TreeNode({text: "U"}, [
+				new TreeNode({text: "Urchin"})
+			]),
+			new TreeNode({text: "V"}, [
+				new TreeNode({text: "Vulture"})
+			]),
+			new TreeNode({text: "W"}, [
+				new TreeNode({text: "Wallaby"}),
+				new TreeNode({text: "Warthog"}),
+				new TreeNode({text: "Wolf"}),
+				new TreeNode({text: "Wombat"})
+			]),
+			new TreeNode({text: "X"}, [
+				new TreeNode({text: "X-Ray Tetra"})
+			]),
+			new TreeNode({text: "Y"}, [
+				new TreeNode({text: "Yak"})
+			]),
+			new TreeNode({text: "Z"}, [
+				new TreeNode({text: "Zebra"})
+			]),
+			// @formatter:on
 		];
 
 		this.groupListView = new GroupListView();
