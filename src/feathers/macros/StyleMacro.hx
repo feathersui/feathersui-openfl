@@ -62,23 +62,54 @@ class StyleMacro {
 							Context.currentPos());
 					}
 
-					// generate a setter
 					var clearStyleName = "clearStyle_" + field.name;
+
+					// generate a backing variable
+					var backingVarName = "__" + field.name;
+					extraFields.push({
+						name: backingVarName,
+						access: [Access.APrivate],
+						kind: FieldType.FVar(type, e),
+						pos: Context.currentPos(),
+						meta: [
+							{
+								name: ":noCompletion",
+								pos: Context.currentPos()
+							}
+						]
+					});
+
+					// generate a getter
+					var getter:Function = {
+						expr: macro {
+							return $i{backingVarName};
+						},
+						ret: type,
+						args: []
+					};
+					extraFields.push({
+						name: "get_" + field.name,
+						access: [Access.APrivate],
+						kind: FieldType.FFun(getter),
+						pos: Context.currentPos()
+					});
+
+					// generate a setter
 					var setter:Function = {
 						expr: macro {
 							if (!this.setStyle($v{field.name})) {
-								return $i{field.name};
+								return $i{backingVarName};
 							}
-							if ($i{field.name} == value) {
-								return $i{field.name};
+							if ($i{backingVarName} == value) {
+								return $i{backingVarName};
 							}
 							// in a -final build, this forces the clearStyle
 							// function to be kept if the property is kept
 							// otherwise, it would be removed by dce/closure
 							this._previousClearStyle = $i{clearStyleName};
-							$i{field.name} = value;
+							$i{backingVarName} = value;
 							this.setInvalid(feathers.core.InvalidationFlag.STYLES);
-							return $i{field.name};
+							return $i{backingVarName};
 						},
 						ret: type,
 						args: [{name: "value", type: type}]
@@ -121,14 +152,19 @@ class StyleMacro {
 						]
 					});
 
-					// change from a variable to a property
+					// change from a variable to a property with get/set
 					var propField:Field = {
 						name: field.name,
 						access: field.access,
-						kind: FieldType.FProp("default", "set", type, e),
+						kind: FieldType.FProp("get", "set", type),
 						pos: field.pos,
 						doc: field.doc,
-						meta: field.meta
+						meta: field.meta.concat([
+							{
+								name: ":flash.property",
+								pos: Context.currentPos()
+							}
+						])
 					};
 					return propField;
 				default:
