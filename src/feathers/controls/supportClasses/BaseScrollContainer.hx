@@ -62,6 +62,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.addEventListener(Event.REMOVED_FROM_STAGE, baseScrollContainer_removedFromStageHandler);
 	}
 
+	private var _viewPort:IViewPort;
+
 	/**
 		The display object rendered and scrolled within the container, provided
 		by a subclass of `BaseScrollContainer`.
@@ -69,26 +71,30 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		@since 1.0.0
 	**/
 	@:dox(show)
-	private var viewPort(default, set):IViewPort;
+	private var viewPort(get, set):IViewPort;
+
+	private function get_viewPort():IViewPort {
+		return this._viewPort;
+	}
 
 	private function set_viewPort(value:IViewPort):IViewPort {
-		if (this.viewPort == value) {
-			return this.viewPort;
+		if (this._viewPort == value) {
+			return this._viewPort;
 		}
-		if (this.viewPort != null) {
-			this.viewPort.removeEventListener(Event.RESIZE, viewPort_resizeHandler);
+		if (this._viewPort != null) {
+			this._viewPort.removeEventListener(Event.RESIZE, viewPort_resizeHandler);
 		}
 		if (this.scroller != null) {
 			this.scroller.target = null;
 		}
-		this.viewPort = value;
+		this._viewPort = value;
 		if (this.scroller != null && this.stage != null) {
-			this.scroller.target = cast(this.viewPort, InteractiveObject);
+			this.scroller.target = cast(this._viewPort, InteractiveObject);
 		}
-		if (this.viewPort != null) {
-			this.viewPort.addEventListener(Event.RESIZE, viewPort_resizeHandler);
+		if (this._viewPort != null) {
+			this._viewPort.addEventListener(Event.RESIZE, viewPort_resizeHandler);
 		}
-		return this.viewPort;
+		return this._viewPort;
 	}
 
 	private var scroller:Scroller;
@@ -821,7 +827,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function needsMeasurement():Bool {
-		return (this.isInvalid(InvalidationFlag.SCROLL) && this.viewPort.requiresMeasurementOnScroll)
+		return (this.isInvalid(InvalidationFlag.SCROLL) && this._viewPort.requiresMeasurementOnScroll)
 			|| this.isInvalid(InvalidationFlag.DATA)
 			|| this.isInvalid(InvalidationFlag.SIZE)
 			|| this.isInvalid(InvalidationFlag.STYLES)
@@ -881,7 +887,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function refreshEnabled():Void {
-		this.viewPort.enabled = this._enabled;
+		this._viewPort.enabled = this._enabled;
 		if (this.scrollBarX != null) {
 			this.scrollBarX.enabled = this._enabled;
 		}
@@ -898,12 +904,12 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			cast(this.scrollBarY, IValidating).validateNow();
 		}
 
-		this.viewPort.scrollX = this.scrollX;
-		this.viewPort.scrollY = this.scrollY;
+		this._viewPort.scrollX = this.scrollX;
+		this._viewPort.scrollY = this.scrollY;
 
 		if (!this.needsMeasurement()) {
-			this.viewPort.validateNow();
-			this.scroller.setDimensions(this.viewPort.visibleWidth, this.viewPort.visibleHeight, this.viewPort.width, this.viewPort.height);
+			this._viewPort.validateNow();
+			this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
 			return;
 		}
 		var loopCount = 0;
@@ -925,7 +931,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.calculateViewPortOffsets(false, true);
 
 			this.refreshViewPortBoundsForLayout();
-			this.scroller.setDimensions(this.viewPort.visibleWidth, this.viewPort.visibleHeight, this.viewPort.width, this.viewPort.height);
+			this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
 
 			loopCount++;
 			if (loopCount >= 10) {
@@ -939,8 +945,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			}
 		} while (this._viewPortBoundsChanged);
 
-		this._previousViewPortWidth = this.viewPort.width;
-		this._previousViewPortHeight = this.viewPort.height;
+		this._previousViewPortWidth = this._viewPort.width;
+		this._previousViewPortHeight = this._viewPort.height;
 	}
 
 	private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
@@ -973,13 +979,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			if (!useActualBounds && !forceScrollBars && scrollerWidth == null) {
 				// even if explicitWidth is null, the view port might measure
 				// a view port width smaller than its content width
-				scrollerWidth = this.viewPort.visibleWidth + this.leftViewPortOffset + this.rightViewPortOffset;
+				scrollerWidth = this._viewPort.visibleWidth + this.leftViewPortOffset + this.rightViewPortOffset;
 			}
 			if (!this.showScrollBars) {
 				this.showScrollBarX = false;
 				return;
 			}
-			var totalWidth = this.viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset;
+			var totalWidth = this._viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset;
 			if (forceScrollBars
 				|| this._scrollPolicyX == ON
 				|| ((totalWidth > scrollerWidth || (this.explicitMaxWidth != null && totalWidth > this.explicitMaxWidth))
@@ -1006,13 +1012,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			if (!useActualBounds && !forceScrollBars && scrollerHeight == null) {
 				// even if explicitHeight is null, the view port might measure
 				// a view port height smaller than its content height
-				scrollerHeight = this.viewPort.visibleHeight + this.topViewPortOffset + this.bottomViewPortOffset;
+				scrollerHeight = this._viewPort.visibleHeight + this.topViewPortOffset + this.bottomViewPortOffset;
 			}
 			if (!this.showScrollBars) {
 				this.showScrollBarY = false;
 				return;
 			}
-			var totalHeight = this.viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset;
+			var totalHeight = this._viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset;
 			if (forceScrollBars
 				|| this._scrollPolicyY == ON
 				|| ((totalHeight > scrollerHeight || (this.explicitMaxHeight != null && totalHeight > this.explicitMaxHeight))
@@ -1041,41 +1047,41 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		// infinite loop)
 		this._ignoreViewPortResizing = true;
 
-		this.viewPort.x = this.paddingLeft + this.leftViewPortOffset;
-		this.viewPort.y = this.paddingTop + this.topViewPortOffset;
+		this._viewPort.x = this.paddingLeft + this.leftViewPortOffset;
+		this._viewPort.y = this.paddingTop + this.topViewPortOffset;
 		if (this.explicitWidth == null) {
-			this.viewPort.visibleWidth = null;
+			this._viewPort.visibleWidth = null;
 		} else {
-			this.viewPort.visibleWidth = this.explicitWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+			this._viewPort.visibleWidth = this.explicitWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 		}
 		if (this.explicitHeight == null) {
-			this.viewPort.visibleHeight = null;
+			this._viewPort.visibleHeight = null;
 		} else {
-			this.viewPort.visibleHeight = this.explicitHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
+			this._viewPort.visibleHeight = this.explicitHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
 		}
 		if (this.explicitMinWidth == null) {
-			this.viewPort.minVisibleWidth = null;
+			this._viewPort.minVisibleWidth = null;
 		} else {
-			this.viewPort.minVisibleWidth = this.explicitMinWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+			this._viewPort.minVisibleWidth = this.explicitMinWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 		}
 		if (this.explicitMinHeight == null) {
-			this.viewPort.minVisibleHeight = null;
+			this._viewPort.minVisibleHeight = null;
 		} else {
-			this.viewPort.minVisibleHeight = this.explicitMinHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop
+			this._viewPort.minVisibleHeight = this.explicitMinHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop
 				- this.paddingBottom;
 		}
 		if (this.explicitMaxWidth == null) {
-			this.viewPort.maxVisibleWidth = Math.POSITIVE_INFINITY;
+			this._viewPort.maxVisibleWidth = Math.POSITIVE_INFINITY;
 		} else {
-			this.viewPort.maxVisibleWidth = this.explicitMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+			this._viewPort.maxVisibleWidth = this.explicitMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 		}
 		if (this.explicitMaxHeight == null) {
-			this.viewPort.maxVisibleHeight = Math.POSITIVE_INFINITY;
+			this._viewPort.maxVisibleHeight = Math.POSITIVE_INFINITY;
 		} else {
-			this.viewPort.maxVisibleHeight = this.explicitMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop
+			this._viewPort.maxVisibleHeight = this.explicitMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop
 				- this.paddingBottom;
 		}
-		this.viewPort.validateNow();
+		this._viewPort.validateNow();
 
 		// we don't want to listen for a resize event from the view port
 		// while it is validating this time. during the next validation is
@@ -1091,22 +1097,22 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		// infinite loop)
 		this._ignoreViewPortResizing = true;
 
-		this.viewPort.x = this.paddingLeft + this.leftViewPortOffset;
-		this.viewPort.y = this.paddingTop + this.topViewPortOffset;
-		this.viewPort.visibleWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
-		this.viewPort.visibleHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
-		this.viewPort.minVisibleWidth = this.actualMinWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
-		this.viewPort.minVisibleHeight = this.actualMinHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
-		this.viewPort.maxVisibleWidth = this.actualMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
-		this.viewPort.maxVisibleHeight = this.actualMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
+		this._viewPort.x = this.paddingLeft + this.leftViewPortOffset;
+		this._viewPort.y = this.paddingTop + this.topViewPortOffset;
+		this._viewPort.visibleWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+		this._viewPort.visibleHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
+		this._viewPort.minVisibleWidth = this.actualMinWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+		this._viewPort.minVisibleHeight = this.actualMinHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
+		this._viewPort.maxVisibleWidth = this.actualMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+		this._viewPort.maxVisibleHeight = this.actualMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
 
 		// this time, we care whether a resize event is dispatched while the
 		// view port is validating because it means we'll need to try another
 		// measurement pass. we restore the flag before calling validate().
 		this._ignoreViewPortResizing = oldIgnoreViewPortResizing;
 
-		this.viewPort.validateNow();
-		this.scroller.setDimensions(this.viewPort.visibleWidth, this.viewPort.visibleHeight, this.viewPort.width, this.viewPort.height);
+		this._viewPort.validateNow();
+		this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
 	}
 
 	private function refreshScrollerValues():Void {
@@ -1121,7 +1127,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarX.minimum = this.scroller.minScrollX;
 			this.scrollBarX.maximum = this.scroller.maxScrollX;
 			this.scrollBarX.value = this.scroller.scrollX;
-			this.scrollBarX.page = (this.scroller.maxScrollX - this.scroller.minScrollX) * this.viewPort.visibleWidth / this.viewPort.width;
+			this.scrollBarX.page = (this.scroller.maxScrollX - this.scroller.minScrollX) * this._viewPort.visibleWidth / this._viewPort.width;
 			this.scrollBarX.step = this._scrollStepX;
 			var displayScrollBarX = cast(this.scrollBarX, DisplayObjectContainer);
 			displayScrollBarX.visible = this.showScrollBarX;
@@ -1135,7 +1141,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarY.minimum = this.scroller.minScrollY;
 			this.scrollBarY.maximum = this.scroller.maxScrollY;
 			this.scrollBarY.value = this.scroller.scrollY;
-			this.scrollBarY.page = (this.scroller.maxScrollY - this.scroller.minScrollY) * this.viewPort.visibleHeight / this.viewPort.height;
+			this.scrollBarY.page = (this.scroller.maxScrollY - this.scroller.minScrollY) * this._viewPort.visibleHeight / this._viewPort.height;
 			this.scrollBarY.step = this._scrollStepY;
 			var displayScrollBarY = cast(this.scrollBarY, DisplayObjectContainer);
 			displayScrollBarY.visible = this.showScrollBarY;
@@ -1171,12 +1177,12 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
-		this.viewPort.validateNow();
+		this._viewPort.validateNow();
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			if (this.measureViewPort) {
-				newWidth = this.viewPort.visibleWidth;
+				newWidth = this._viewPort.visibleWidth;
 			} else {
 				newWidth = 0.0;
 			}
@@ -1191,7 +1197,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			if (this.measureViewPort) {
-				newHeight = this.viewPort.visibleHeight;
+				newHeight = this._viewPort.visibleHeight;
 			} else {
 				newHeight = 0.0;
 			}
@@ -1206,7 +1212,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
 			if (this.measureViewPort) {
-				newMinWidth = this.viewPort.minVisibleWidth;
+				newMinWidth = this._viewPort.minVisibleWidth;
 			} else {
 				newMinWidth = 0.0;
 			}
@@ -1223,7 +1229,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
 			if (this.measureViewPort) {
-				newMinHeight = this.viewPort.minVisibleHeight;
+				newMinHeight = this._viewPort.minVisibleHeight;
 			} else {
 				newMinHeight = 0.0;
 			}
@@ -1239,7 +1245,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
 			if (this.measureViewPort) {
-				newMaxWidth = this.viewPort.maxVisibleWidth;
+				newMaxWidth = this._viewPort.maxVisibleWidth;
 			} else {
 				newMaxWidth = Math.POSITIVE_INFINITY;
 			}
@@ -1256,7 +1262,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
 			if (this.measureViewPort) {
-				newMaxHeight = this.viewPort.maxVisibleHeight;
+				newMaxHeight = this._viewPort.maxVisibleHeight;
 			} else {
 				newMaxHeight = Math.POSITIVE_INFINITY;
 			}
@@ -1416,7 +1422,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			- this.bottomViewPortOffset
 			- this.paddingTop
 			- this.paddingBottom);
-		var displayViewPort = cast(this.viewPort, DisplayObject);
+		var displayViewPort = cast(this._viewPort, DisplayObject);
 		displayViewPort.scrollRect = scrollRect;
 	}
 
@@ -1518,9 +1524,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			case Keyboard.RIGHT:
 				newScrollX = this.scrollX + stepX;
 			case Keyboard.PAGE_UP:
-				newScrollY = this.scrollY - this.viewPort.visibleHeight;
+				newScrollY = this.scrollY - this._viewPort.visibleHeight;
 			case Keyboard.PAGE_DOWN:
-				newScrollY = this.scrollY + this.viewPort.visibleHeight;
+				newScrollY = this.scrollY + this._viewPort.visibleHeight;
 			case Keyboard.HOME:
 				newScrollY = this.minScrollY;
 			case Keyboard.END:
@@ -1550,7 +1556,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function baseScrollContainer_addedToStageHandler(event:Event):Void {
-		this.scroller.target = cast(this.viewPort, InteractiveObject);
+		this.scroller.target = cast(this._viewPort, InteractiveObject);
 	}
 
 	private function baseScrollContainer_removedFromStageHandler(event:Event):Void {
@@ -1577,7 +1583,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		this.checkForRevealScrollBars();
-		if (this.viewPort.requiresMeasurementOnScroll) {
+		if (this._viewPort.requiresMeasurementOnScroll) {
 			this.setInvalid(InvalidationFlag.SCROLL);
 		} else {
 			this.refreshScrollRect();
@@ -1676,12 +1682,12 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		// using fuzzy comparison here because floating point errors can creep
 		// in and cause an infinite loop
 		if (this._ignoreViewPortResizing
-			|| (MathUtil.fuzzyEquals(this.viewPort.width, this._previousViewPortWidth)
-				&& MathUtil.fuzzyEquals(this.viewPort.height, this._previousViewPortHeight))) {
+			|| (MathUtil.fuzzyEquals(this._viewPort.width, this._previousViewPortWidth)
+				&& MathUtil.fuzzyEquals(this._viewPort.height, this._previousViewPortHeight))) {
 			return;
 		}
-		this._previousViewPortWidth = this.viewPort.width;
-		this._previousViewPortHeight = this.viewPort.height;
+		this._previousViewPortWidth = this._viewPort.width;
+		this._previousViewPortHeight = this._viewPort.height;
 		if (this._validating) {
 			this._viewPortBoundsChanged = true;
 		} else {

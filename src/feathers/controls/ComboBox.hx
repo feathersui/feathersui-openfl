@@ -274,6 +274,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._selectedItem;
 	}
 
+	private var _itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+
 	/**
 		Manages item renderers used by the list view.
 
@@ -286,17 +288,21 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+	@:flash.property
+	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
+
+	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
+		return this._itemRendererRecycler;
+	}
 
 	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		ListViewItemState, DisplayObject> {
-		if (this.itemRendererRecycler == value) {
-			return this.itemRendererRecycler;
+		if (this._itemRendererRecycler == value) {
+			return this._itemRendererRecycler;
 		}
-		this.itemRendererRecycler = value;
+		this._itemRendererRecycler = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.itemRendererRecycler;
+		return this._itemRendererRecycler;
 	}
 
 	/**
@@ -631,7 +637,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private function refreshData():Void {
 		this.listView.dataProvider = this._dataProvider;
-		this.listView.itemRendererRecycler = this.itemRendererRecycler;
+		this.listView.itemRendererRecycler = this._itemRendererRecycler;
 		this.listView.itemToText = this.itemToText;
 	}
 

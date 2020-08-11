@@ -303,6 +303,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _oldHeaderRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = null;
 
+	private var _headerRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = DisplayObjectRecycler.withFunction(() -> {
+		var headerRenderer = new ItemRenderer();
+		headerRenderer.toggleable = false;
+		return headerRenderer;
+	});
+
 	/**
 		Manages header renderers used by the grid view.
 
@@ -315,22 +321,22 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var headerRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = DisplayObjectRecycler.withFunction(() -> {
-			var headerRenderer = new ItemRenderer();
-			headerRenderer.toggleable = false;
-			return headerRenderer;
-		});
+	@:flash.property
+	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>;
+
+	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> {
+		return this._headerRendererRecycler;
+	}
 
 	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		GridViewHeaderState, DisplayObject> {
-		if (this.headerRendererRecycler == value) {
-			return this.headerRendererRecycler;
+		if (this._headerRendererRecycler == value) {
+			return this._headerRendererRecycler;
 		}
-		this._oldHeaderRendererRecycler = this.headerRendererRecycler;
-		this.headerRendererRecycler = value;
+		this._oldHeaderRendererRecycler = this._headerRendererRecycler;
+		this._headerRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
-		return this.headerRendererRecycler;
+		return this._headerRendererRecycler;
 	}
 
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
@@ -435,6 +441,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._virtualLayout;
 	}
 
+	private var _cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = DisplayObjectRecycler.withClass(CellRenderer);
+
 	/**
 		Manages cell renderers used by the grid view.
 
@@ -447,17 +455,21 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var cellRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = DisplayObjectRecycler.withClass(CellRenderer);
+	@:flash.property
+	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
+
+	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
+		return this._cellRendererRecycler;
+	}
 
 	private function set_cellRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		GridViewCellState, DisplayObject> {
-		if (this.cellRendererRecycler == value) {
-			return this.cellRendererRecycler;
+		if (this._cellRendererRecycler == value) {
+			return this._cellRendererRecycler;
 		}
-		this.cellRendererRecycler = value;
+		this._cellRendererRecycler = value;
 		this.setInvalid(InvalidationFlag.DATA);
-		return this.cellRendererRecycler;
+		return this._cellRendererRecycler;
 	}
 
 	private var activeHeaderRenderers:Array<DisplayObject> = [];
@@ -704,14 +716,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private function refreshHeaderRenderers():Void {
 		this._headerContainerLayout.columns = this._columns;
 
-		if (this.headerRendererRecycler.update == null) {
-			this.headerRendererRecycler.update = defaultUpdateHeaderRenderer;
-			if (this.headerRendererRecycler.reset == null) {
-				this.headerRendererRecycler.reset = defaultResetHeaderRenderer;
+		if (this._headerRendererRecycler.update == null) {
+			this._headerRendererRecycler.update = defaultUpdateHeaderRenderer;
+			if (this._headerRendererRecycler.reset == null) {
+				this._headerRendererRecycler.reset = defaultResetHeaderRenderer;
 			}
 		}
 
-		var recycler = this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this.headerRendererRecycler;
+		var recycler = this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this._headerRendererRecycler;
 		for (headerRenderer in this.activeHeaderRenderers) {
 			var header = this.headerRendererToData.get(headerRenderer);
 			this.headerRendererToData.remove(headerRenderer);
@@ -888,15 +900,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.rowIndex = index;
 		rowRenderer.selectable = this._selectable;
 		rowRenderer.selected = index == this._selectedIndex;
-		rowRenderer.cellRendererRecycler = this.cellRendererRecycler;
+		rowRenderer.cellRendererRecycler = this._cellRendererRecycler;
 		rowRenderer.columns = this._columns;
 	}
 
 	private function createHeaderRenderer(column:GridViewColumn, columnIndex:Int):DisplayObject {
 		var headerRenderer:DisplayObject = null;
-		headerRenderer = this.headerRendererRecycler.create();
+		headerRenderer = this._headerRendererRecycler.create();
 		/*if (this.inactiveHeaderRenderers.length == 0) {
-				rowRenderer = this.headerRendererRecycler.create();
+				rowRenderer = this._headerRendererRecycler.create();
 			} else {
 				rowRenderer = this.inactiveHeaderRenderers.shift();
 		}*/
@@ -921,8 +933,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._currentHeaderState.column = column;
 		this._currentHeaderState.columnIndex = columnIndex;
 		this._currentHeaderState.text = column.headerText;
-		if (this.headerRendererRecycler.update != null) {
-			this.headerRendererRecycler.update(headerRenderer, this._currentHeaderState);
+		if (this._headerRendererRecycler.update != null) {
+			this._headerRendererRecycler.update(headerRenderer, this._currentHeaderState);
 		}
 		if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
 			var header = cast(headerRenderer, IGridViewHeaderRenderer);

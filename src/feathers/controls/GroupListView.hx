@@ -367,6 +367,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private var _oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
 
+	private var _itemRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+
 	/**
 		Manages item renderers used by the group list view.
 
@@ -379,21 +381,27 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+	@:flash.property
+	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
+
+	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
+		return this._itemRendererRecycler;
+	}
 
 	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		GroupListViewItemState, DisplayObject> {
-		if (this.itemRendererRecycler == value) {
-			return this.itemRendererRecycler;
+		if (this._itemRendererRecycler == value) {
+			return this._itemRendererRecycler;
 		}
-		this._oldItemRendererRecycler = this.itemRendererRecycler;
-		this.itemRendererRecycler = value;
+		this._oldItemRendererRecycler = this._itemRendererRecycler;
+		this._itemRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		return this.itemRendererRecycler;
+		return this._itemRendererRecycler;
 	}
 
 	private var _oldHeaderRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
+
+	private var _headerRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
 
 	/**
 		Manages header renderers used by the group list view.
@@ -409,18 +417,22 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public var headerRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+	@:flash.property
+	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
+
+	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
+		return this._headerRendererRecycler;
+	}
 
 	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		GroupListViewItemState, DisplayObject> {
-		if (this.headerRendererRecycler == value) {
-			return this.headerRendererRecycler;
+		if (this._headerRendererRecycler == value) {
+			return this._headerRendererRecycler;
 		}
-		this._oldHeaderRendererRecycler = this.headerRendererRecycler;
-		this.headerRendererRecycler = value;
+		this._oldHeaderRendererRecycler = this._headerRendererRecycler;
+		this._headerRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
-		return this.headerRendererRecycler;
+		return this._headerRendererRecycler;
 	}
 
 	private var inactiveItemRenderers:Array<DisplayObject> = [];
@@ -698,16 +710,16 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
 		this._layoutItems = items;
 
-		if (this.itemRendererRecycler.update == null) {
-			this.itemRendererRecycler.update = defaultUpdateItemRenderer;
-			if (this.itemRendererRecycler.reset == null) {
-				this.itemRendererRecycler.reset = defaultResetItemRenderer;
+		if (this._itemRendererRecycler.update == null) {
+			this._itemRendererRecycler.update = defaultUpdateItemRenderer;
+			if (this._itemRendererRecycler.reset == null) {
+				this._itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
-		if (this.headerRendererRecycler.update == null) {
-			this.headerRendererRecycler.update = defaultUpdateItemRenderer;
-			if (this.headerRendererRecycler.reset == null) {
-				this.headerRendererRecycler.reset = defaultResetItemRenderer;
+		if (this._headerRendererRecycler.update == null) {
+			this._headerRendererRecycler.update = defaultUpdateItemRenderer;
+			if (this._headerRendererRecycler.reset == null) {
+				this._headerRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
 
@@ -727,17 +739,17 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		if (itemRendererInvalid) {
 			this.recoverInactiveItemRenderers(this.inactiveItemRenderers,
-				this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
+				this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this._itemRendererRecycler);
 			this.freeInactiveItemRenderers(this.inactiveItemRenderers,
-				this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
+				this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this._itemRendererRecycler);
 			this._oldItemRendererRecycler = null;
 		}
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		if (headerRendererInvalid || itemRendererInvalid) {
 			this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers,
-				this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this.headerRendererRecycler);
+				this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this._headerRendererRecycler);
 			this.freeInactiveItemRenderers(this.inactiveHeaderRenderers,
-				this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this.headerRendererRecycler);
+				this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this._headerRendererRecycler);
 			this._oldHeaderRendererRecycler = null;
 		}
 
@@ -746,11 +758,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		this.findUnrenderedData();
-		this.recoverInactiveItemRenderers(this.inactiveItemRenderers, this.itemRendererRecycler);
-		this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers, this.headerRendererRecycler);
+		this.recoverInactiveItemRenderers(this.inactiveItemRenderers, this._itemRendererRecycler);
+		this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers, this._headerRendererRecycler);
 		this.renderUnrenderedData();
-		this.freeInactiveItemRenderers(this.inactiveItemRenderers, this.itemRendererRecycler);
-		this.freeInactiveItemRenderers(this.inactiveHeaderRenderers, this.headerRendererRecycler);
+		this.freeInactiveItemRenderers(this.inactiveItemRenderers, this._itemRendererRecycler);
+		this.freeInactiveItemRenderers(this.inactiveHeaderRenderers, this._headerRendererRecycler);
 		if (this.inactiveItemRenderers.length > 0) {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
 		}
@@ -785,8 +797,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			if (this.itemRendererRecycler.reset != null) {
-				this.itemRendererRecycler.reset(itemRenderer, this._currentItemState);
+			if (recycler != null && recycler.reset != null) {
+				recycler.reset(itemRenderer, this._currentItemState);
 			}
 			if (Std.is(itemRenderer, IToggle)) {
 				var toggle = cast(itemRenderer, IToggle);
@@ -896,7 +908,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
 		var type = location.length == 1 ? HEADER : STANDARD;
 		var inactive = type == HEADER ? this.inactiveHeaderRenderers : this.inactiveItemRenderers;
-		var recycler = type == HEADER ? this.headerRendererRecycler : this.itemRendererRecycler;
+		var recycler = type == HEADER ? this._headerRendererRecycler : this._itemRendererRecycler;
 		var itemRenderer:DisplayObject = null;
 		if (inactive.length == 0) {
 			itemRenderer = recycler.create();
@@ -933,8 +945,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this._currentItemState.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this.itemRendererRecycler.update != null) {
-			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		if (this._itemRendererRecycler.update != null) {
+			this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);

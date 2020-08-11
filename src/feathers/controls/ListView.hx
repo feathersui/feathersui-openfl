@@ -338,6 +338,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
 
+	private var _itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+
 	/**
 		Manages item renderers used by the list view.
 
@@ -350,18 +352,22 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(default,
-		set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
+	@:flash.property
+	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
+
+	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
+		return this._itemRendererRecycler;
+	}
 
 	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		ListViewItemState, DisplayObject> {
-		if (this.itemRendererRecycler == value) {
-			return this.itemRendererRecycler;
+		if (this._itemRendererRecycler == value) {
+			return this._itemRendererRecycler;
 		}
-		this._oldItemRendererRecycler = this.itemRendererRecycler;
-		this.itemRendererRecycler = value;
+		this._oldItemRendererRecycler = this._itemRendererRecycler;
+		this._itemRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		return this.itemRendererRecycler;
+		return this._itemRendererRecycler;
 	}
 
 	private var inactiveItemRenderers:Array<DisplayObject> = [];
@@ -612,10 +618,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
 		this._layoutItems = items;
 
-		if (this.itemRendererRecycler.update == null) {
-			this.itemRendererRecycler.update = defaultUpdateItemRenderer;
-			if (this.itemRendererRecycler.reset == null) {
-				this.itemRendererRecycler.reset = defaultResetItemRenderer;
+		if (this._itemRendererRecycler.update == null) {
+			this._itemRendererRecycler.update = defaultUpdateItemRenderer;
+			if (this._itemRendererRecycler.reset == null) {
+				this._itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
 
@@ -626,9 +632,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		this.findUnrenderedData();
-		this.recoverInactiveItemRenderers(this.itemRendererRecycler);
+		this.recoverInactiveItemRenderers(this._itemRendererRecycler);
 		this.renderUnrenderedData();
-		this.freeInactiveItemRenderers(this.itemRendererRecycler);
+		this.freeInactiveItemRenderers(this._itemRendererRecycler);
 		if (this.inactiveItemRenderers.length > 0) {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
 		}
@@ -642,8 +648,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
 		}
 		if (factoryInvalid) {
-			this.recoverInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
-			this.freeInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this.itemRendererRecycler);
+			this.recoverInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this._itemRendererRecycler);
+			this.freeInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this._itemRendererRecycler);
 			this._oldItemRendererRecycler = null;
 		}
 	}
@@ -750,8 +756,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._currentItemState.text = itemToText(item);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this.itemRendererRecycler.update != null) {
-			this.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		if (this._itemRendererRecycler.update != null) {
+			this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
@@ -789,7 +795,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function createItemRenderer(item:Dynamic, index:Int):DisplayObject {
 		var itemRenderer:DisplayObject = null;
 		if (this.inactiveItemRenderers.length == 0) {
-			itemRenderer = this.itemRendererRecycler.create();
+			itemRenderer = this._itemRendererRecycler.create();
 		} else {
 			itemRenderer = this.inactiveItemRenderers.shift();
 		}
