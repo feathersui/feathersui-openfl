@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DeviceUtil;
 import feathers.controls.GridView;
 import feathers.skins.RectangleSkin;
@@ -96,6 +97,56 @@ class SteelGridViewStyles {
 		}
 		if (styleProvider.getStyleFunction(GridView, GridView.VARIANT_BORDERLESS) == null) {
 			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithWithBorderlessVariant);
+		}
+
+		if (styleProvider.getStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER) == null) {
+			styleProvider.setStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER, function(itemRenderer:ItemRenderer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
+				if (itemRenderer.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = theme.getSubHeadingFill();
+					if (isDesktop) {
+						skin.width = 22.0;
+						skin.height = 22.0;
+						skin.minWidth = 22.0;
+						skin.minHeight = 22.0;
+					} else {
+						skin.width = 44.0;
+						skin.height = 44.0;
+						skin.minWidth = 44.0;
+						skin.minHeight = 44.0;
+					}
+					itemRenderer.backgroundSkin = skin;
+				}
+
+				if (itemRenderer.textFormat == null) {
+					itemRenderer.textFormat = theme.getTextFormat();
+				}
+				if (itemRenderer.disabledTextFormat == null) {
+					itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+				if (itemRenderer.selectedTextFormat == null) {
+					itemRenderer.selectedTextFormat = theme.getActiveTextFormat();
+				}
+				if (itemRenderer.secondaryTextFormat == null) {
+					itemRenderer.secondaryTextFormat = theme.getDetailTextFormat();
+				}
+				if (itemRenderer.disabledSecondaryTextFormat == null) {
+					itemRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
+				}
+				if (itemRenderer.selectedSecondaryTextFormat == null) {
+					itemRenderer.selectedSecondaryTextFormat = theme.getActiveDetailTextFormat();
+				}
+
+				itemRenderer.paddingTop = 4.0;
+				itemRenderer.paddingRight = 10.0;
+				itemRenderer.paddingBottom = 4.0;
+				itemRenderer.paddingLeft = 10.0;
+				itemRenderer.gap = 4.0;
+
+				itemRenderer.horizontalAlign = LEFT;
+			});
 		}
 	}
 }
