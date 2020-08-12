@@ -667,7 +667,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
-		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
+		if (this.fixedScrollBars && this.showScrollBars) {
+			// this extra call may be needed for the left/right offsets?
+			super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
+		}
 
 		if (this._headerContainer != null) {
 			switch (this.scrollBarYPosition) {
@@ -684,6 +687,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._headerContainer.width);
 			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, this._headerContainer.width);
 		}
+
+		// call after measuring the headers because they affect the
+		// topViewPortOffset used in
+		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
 	}
 
 	private function validateColumns():Void {
