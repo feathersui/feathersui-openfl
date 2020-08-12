@@ -136,7 +136,6 @@ class Panel extends ScrollContainer implements IFocusExtras {
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
-		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
 		if (this._header != null) {
 			if (Std.is(this._header, IValidating)) {
 				cast(this._header, IValidating).validateNow();
@@ -159,6 +158,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 				this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, measureFooter.minWidth);
 			}
 		}
+		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
 	}
 
 	private function layoutHeader():Void {
