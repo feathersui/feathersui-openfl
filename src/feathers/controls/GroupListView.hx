@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.ArgumentError;
 import feathers.style.IVariantStyleObject;
 import feathers.data.GroupListViewItemType;
 import feathers.controls.dataRenderers.IDataRenderer;
@@ -303,6 +304,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		if (this._selectedLocation == value || this.compareLocations(this._selectedLocation, value) == 0) {
 			return this._selectedLocation;
+		}
+		if (value != null && value.length != 2) {
+			throw new ArgumentError("GroupListView selectedLocation must have a length of 2");
 		}
 		this._selectedLocation = value;
 		// using variable because if we were to call the selectedItem setter,
