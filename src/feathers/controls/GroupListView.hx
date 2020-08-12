@@ -945,8 +945,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this._currentItemState.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this._itemRendererRecycler.update != null) {
-			this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		if (type == HEADER) {
+			if (this._headerRendererRecycler.update != null) {
+				this._headerRendererRecycler.update(itemRenderer, this._currentItemState);
+			}
+		} else {
+			if (this._itemRendererRecycler.update != null) {
+				this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
+			}
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
