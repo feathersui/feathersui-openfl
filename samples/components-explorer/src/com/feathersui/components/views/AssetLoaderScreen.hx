@@ -23,7 +23,11 @@ class AssetLoaderScreen extends Panel {
 		var layout = new VerticalLayout();
 		layout.horizontalAlign = CENTER;
 		layout.verticalAlign = MIDDLE;
-		layout.gap = 20.0;
+		layout.gap = 10.0;
+		layout.paddingTop = 10.0;
+		layout.paddingRight = 10.0;
+		layout.paddingBottom = 10.0;
+		layout.paddingLeft = 10.0;
 		this.layout = layout;
 
 		this.syncAssetLoader = new AssetLoader();
@@ -31,17 +35,26 @@ class AssetLoaderScreen extends Panel {
 		// <assets id="haxe" path="assets/img/haxe.png"/>
 		this.syncAssetLoader.source = "haxe";
 		this.addChild(this.syncAssetLoader);
+		var syncLabel = new Label();
+		syncLabel.text = "Asset (Sync)";
+		this.addChild(syncLabel);
 
 		this.asyncAssetLoader = new AssetLoader();
 		// uses openfl.Assets.loadBitmap() to get a non-embedded asset by ID
 		// <assets id="openfl" path="assets/img/openfl.png" embed="false"/>
 		this.asyncAssetLoader.source = "openfl";
 		this.addChild(this.asyncAssetLoader);
+		var asyncLabel = new Label();
+		asyncLabel.text = "Asset (Async)";
+		this.addChild(asyncLabel);
 
 		this.urlLoader = new AssetLoader();
 		// uses openfl.display.Loader to load an image from the web
 		this.urlLoader.source = "https://feathersui.com/samples/haxe-openfl/components-explorer/images/feathersui-icon.png";
 		this.addChild(this.urlLoader);
+		var urlLabel = new Label();
+		urlLabel.text = "URL (Async)";
+		this.addChild(urlLabel);
 	}
 
 	private function createHeader():Void {
