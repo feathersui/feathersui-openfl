@@ -918,9 +918,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			// if we don't need to do any measurement, we can skip
 			// this stuff and improve performance
 			if (this.measureViewPort) {
+				this.resetViewPortOffsets();
 				this.calculateViewPortOffsets(true, false);
 				this.refreshViewPortBoundsForMeasurement();
 			}
+			this.resetViewPortOffsets();
 			this.calculateViewPortOffsets(false, false);
 
 			this.measure();
@@ -928,6 +930,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			// just in case measure() is overridden, we need to call
 			// this again and use actualWidth/Height instead of
 			// explicitWidth/Height.
+			this.resetViewPortOffsets();
 			this.calculateViewPortOffsets(false, true);
 
 			this.refreshViewPortBoundsForLayout();
@@ -949,10 +952,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._previousViewPortHeight = this._viewPort.height;
 	}
 
-	private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
-		// in fixed mode, if we determine that scrolling is required, we
-		// remember the offsets for later. if scrolling is not needed, then
-		// we will ignore the offsets from here forward
+	private function resetViewPortOffsets():Void {
 		this.topViewPortOffset = 0.0;
 		this.rightViewPortOffset = 0.0;
 		this.bottomViewPortOffset = 0.0;
@@ -963,6 +963,12 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.chromeMeasuredHeight = 0.0;
 		this.chromeMeasuredMinHeight = 0.0;
 		this.chromeMeasuredMaxHeight = Math.POSITIVE_INFINITY;
+	}
+
+	private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
+		// in fixed mode, if we determine that scrolling is required, we
+		// remember the offsets for later. if scrolling is not needed, then
+		// we will ignore the offsets from here forward
 		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && scrollPolicyX != OFF, useActualBounds);
 		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars && this.showScrollBars && scrollPolicyY != OFF, useActualBounds);
 		// we need to double check the horizontal scroll bar if the scroll
