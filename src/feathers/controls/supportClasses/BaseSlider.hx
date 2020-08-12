@@ -123,7 +123,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		return this._minimum;
 	}
 
-	private var _maximum:Float = 0.0;
+	private var _maximum:Float = 1.0;
 
 	/**
 		The slider's value cannot be larger than the maximum.
@@ -164,7 +164,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		return this._maximum;
 	}
 
-	private var _step:Float = 0.1;
+	private var _step:Float = 0.0;
 
 	/**
 		As the slider's thumb is dragged, the `value` is snapped to the nearest
