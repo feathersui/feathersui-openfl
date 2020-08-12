@@ -985,13 +985,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			if (!useActualBounds && !forceScrollBars && scrollerWidth == null) {
 				// even if explicitWidth is null, the view port might measure
 				// a view port width smaller than its content width
-				scrollerWidth = this._viewPort.visibleWidth + this.leftViewPortOffset + this.rightViewPortOffset;
+				scrollerWidth = this._viewPort.visibleWidth + this.leftViewPortOffset + this.rightViewPortOffset + this.paddingLeft + this.paddingRight;
 			}
 			if (!this.showScrollBars) {
 				this.showScrollBarX = false;
 				return;
 			}
-			var totalWidth = this._viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset;
+			var totalWidth = this._viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset + this.paddingLeft + this.paddingRight;
 			if (forceScrollBars
 				|| this._scrollPolicyX == ON
 				|| ((totalWidth > scrollerWidth || (this.explicitMaxWidth != null && totalWidth > this.explicitMaxWidth))
@@ -1018,13 +1018,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			if (!useActualBounds && !forceScrollBars && scrollerHeight == null) {
 				// even if explicitHeight is null, the view port might measure
 				// a view port height smaller than its content height
-				scrollerHeight = this._viewPort.visibleHeight + this.topViewPortOffset + this.bottomViewPortOffset;
+				scrollerHeight = this._viewPort.visibleHeight + this.topViewPortOffset + this.bottomViewPortOffset + this.paddingTop + this.paddingBottom;
 			}
 			if (!this.showScrollBars) {
 				this.showScrollBarY = false;
 				return;
 			}
-			var totalHeight = this._viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset;
+			var totalHeight = this._viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset + this.paddingTop + this.paddingBottom;
 			if (forceScrollBars
 				|| this._scrollPolicyY == ON
 				|| ((totalHeight > scrollerHeight || (this.explicitMaxHeight != null && totalHeight > this.explicitMaxHeight))
