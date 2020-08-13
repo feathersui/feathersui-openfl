@@ -70,8 +70,8 @@ import openfl.ui.Multitouch;
 		])
 	]);
 
-	groupListView.itemToText = (item:Dynamic) -> {
-		return item.text;
+	groupListView.itemToText = (item:TreeNode<Dynamic>) -> {
+		return item.data.text;
 	};
 
 	groupListView.addEventListener(Event.CHANGE, (event:Event) -> {
@@ -1175,6 +1175,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function groupListView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -1193,6 +1196,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function groupListView_itemRenderer_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}

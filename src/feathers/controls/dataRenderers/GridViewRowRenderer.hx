@@ -443,6 +443,9 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	}
 
 	private function cellRenderer_touchTapHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (!this.selectable) {
 			return;
 		}
@@ -455,6 +458,9 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	}
 
 	private function cellRenderer_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (!this.selectable) {
 			return;
 		}

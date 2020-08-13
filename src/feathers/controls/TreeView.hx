@@ -80,8 +80,8 @@ import openfl.ui.Multitouch;
 		])
 	]);
 
-	treeView.itemToText = (item:Dynamic) -> {
-		return item.text;
+	treeView.itemToText = (item:TreeNode<Dynamic>) -> {
+		return item.data.text;
 	};
 
 	treeView.addEventListener(Event.CHANGE, (event:Event) -> {
@@ -1189,6 +1189,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var data = this.itemRendererToData.get(itemRenderer);
 		this.dispatchItemTriggerEvent(data);
@@ -1209,6 +1212,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function treeView_itemRenderer_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var data = this.itemRendererToData.get(itemRenderer);
 		this.dispatchItemTriggerEvent(data);

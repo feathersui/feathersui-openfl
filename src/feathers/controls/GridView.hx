@@ -813,6 +813,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			rowRenderer.selected = false;
 			rowRenderer.data = null;
 			rowRenderer.rowIndex = -1;
+			rowRenderer.enabled = true;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -917,6 +918,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.selected = index == this._selectedIndex;
 		rowRenderer.cellRendererRecycler = this._cellRendererRecycler;
 		rowRenderer.columns = this._columns;
+		rowRenderer.enabled = this._enabled;
 	}
 
 	private function createHeaderRenderer(column:GridViewColumn, columnIndex:Int):DisplayObject {
