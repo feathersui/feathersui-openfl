@@ -441,7 +441,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._previousBorder != null) {
 			return this._previousBorder;
 		}
-		return getCurrentBorderWithoutCache();
+		return this.getCurrentBorderWithoutCache();
 	}
 
 	private function getCurrentBorderWithoutCache():LineStyle {
@@ -484,7 +484,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._previousFill != null) {
 			return this._previousFill;
 		}
-		return getCurrentFillWithoutCache();
+		return this.getCurrentFillWithoutCache();
 	}
 
 	private function getCurrentFillWithoutCache() {
@@ -514,11 +514,11 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 	override private function needsStateUpdate():Bool {
 		var updated = false;
-		if (this._previousBorder != getCurrentBorderWithoutCache()) {
+		if (this._previousBorder != this.getCurrentBorderWithoutCache()) {
 			this._previousBorder = null;
 			updated = true;
 		}
-		if (this._previousFill != getCurrentFillWithoutCache()) {
+		if (this._previousFill != this.getCurrentFillWithoutCache()) {
 			this._previousFill = null;
 			updated = true;
 		}
