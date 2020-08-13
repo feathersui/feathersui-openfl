@@ -75,6 +75,8 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, tabNavigator_dataProvider_removeAllHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, tabNavigator_dataProvider_resetHandler);
 			for (item in this._dataProvider) {
 				this.removeItemInternal(item.internalID);
 			}
@@ -87,6 +89,8 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this._dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler, false, 0, true);
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler, false, 0, true);
 			this._dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler, false, 0, true);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, tabNavigator_dataProvider_removeAllHandler, false, 0, true);
+			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, tabNavigator_dataProvider_resetHandler, false, 0, true);
 		}
 		this.setInvalid(InvalidationFlag.DATA);
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
@@ -270,11 +274,30 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	private function tabNavigator_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
 		var item = cast(event.addedItem, TabItem);
 		this.addItemInternal(item.internalID, item);
+
+		if (this._selectedIndex >= event.index) {
+			// use the setter
+			this.selectedIndex++;
+		} else if (this._selectedIndex == -1) {
+			// if the data provider was previously empty, automatically select
+			// the new item
+
+			// use the setter
+			this.selectedIndex = 0;
+		}
 	}
 
 	private function tabNavigator_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
 		var item = cast(event.removedItem, TabItem);
 		this.removeItemInternal(item.internalID);
+
+		if (this._dataProvider.length == 0) {
+			// use the setter
+			this.selectedIndex = -1;
+		} else if (this._selectedIndex >= event.index) {
+			// use the setter
+			this.selectedIndex--;
+		}
 	}
 
 	private function tabNavigator_dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
@@ -282,5 +305,19 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		var removedItem = cast(event.removedItem, TabItem);
 		this.removeItemInternal(removedItem.internalID);
 		this.addItemInternal(addedItem.internalID, addedItem);
+
+		if (this._selectedIndex == event.index) {
+			this.selectedItem = this._dataProvider.get(this._selectedIndex);
+		}
+	}
+
+	private function tabNavigator_dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
+		// use the setter
+		this.selectedIndex = -1;
+	}
+
+	private function tabNavigator_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
+		// use the setter
+		this.selectedIndex = -1;
 	}
 }
