@@ -155,6 +155,11 @@ class BaseNavigator extends FeathersControl {
 		return this._autoSizeMode;
 	}
 
+	private var topContentOffset:Float = 0.0;
+	private var rightContentOffset:Float = 0.0;
+	private var bottomContentOffset:Float = 0.0;
+	private var leftContentOffset:Float = 0.0;
+
 	/**
 		Removes all items that were added with `addItem()`.
 
@@ -203,6 +208,11 @@ class BaseNavigator extends FeathersControl {
 
 	override private function update():Void {
 		var sizeInvalid = this.isInvalid(SIZE);
+
+		this.topContentOffset = 0.0;
+		this.rightContentOffset = 0.0;
+		this.bottomContentOffset = 0.0;
+		this.leftContentOffset = 0.0;
 		sizeInvalid = this.measure() || sizeInvalid;
 		this.layoutContent();
 	}
@@ -264,6 +274,7 @@ class BaseNavigator extends FeathersControl {
 				} else {
 					newWidth = 0.0;
 				}
+				newWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
 				newWidth = stageWidth;
 			}
@@ -277,6 +288,7 @@ class BaseNavigator extends FeathersControl {
 				} else {
 					newHeight = 0.0;
 				}
+				newHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {
 				newHeight = stageHeight;
 			}
@@ -292,6 +304,7 @@ class BaseNavigator extends FeathersControl {
 				} else {
 					newMinWidth = 0.0;
 				}
+				newMinWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
 				newMinWidth = stageWidth;
 			}
@@ -307,6 +320,7 @@ class BaseNavigator extends FeathersControl {
 				} else {
 					newMinHeight = 0.0;
 				}
+				newMinHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {
 				newMinHeight = stageHeight;
 			}
@@ -322,6 +336,7 @@ class BaseNavigator extends FeathersControl {
 				} else {
 					newMaxWidth = Math.POSITIVE_INFINITY;
 				}
+				newMaxWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
 				newMaxWidth = stageWidth;
 			}
@@ -337,6 +352,7 @@ class BaseNavigator extends FeathersControl {
 				} else {
 					newMaxHeight = Math.POSITIVE_INFINITY;
 				}
+				newMaxHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {
 				newMaxHeight = stageHeight;
 			}
