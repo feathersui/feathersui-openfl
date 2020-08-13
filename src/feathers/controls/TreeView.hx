@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IUIControl;
 import openfl.errors.ArgumentError;
 import feathers.layout.ILayoutIndexObject;
 import feathers.events.TreeViewEvent;
@@ -764,6 +765,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._currentItemState.location = null;
 			this._currentItemState.layoutIndex = -1;
 			this._currentItemState.selected = false;
+			this._currentItemState.enabled = true;
 			this._currentItemState.text = null;
 			this._currentItemState.branch = false;
 			this._currentItemState.opened = false;
@@ -774,25 +776,29 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			if (recycler != null && recycler.reset != null) {
 				recycler.reset(itemRenderer, this._currentItemState);
 			}
+			if (Std.is(itemRenderer, IUIControl)) {
+				var uiControl = cast(itemRenderer, IUIControl);
+				uiControl.enabled = this._currentItemState.enabled;
+			}
 			if (Std.is(itemRenderer, IToggle)) {
 				var toggle = cast(itemRenderer, IToggle);
-				toggle.selected = false;
+				toggle.selected = this._currentItemState.selected;
 			}
 			if (Std.is(itemRenderer, IOpenCloseToggle)) {
 				var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
-				openCloseItem.opened = false;
+				openCloseItem.opened = this._currentItemState.opened;
 			}
 			if (Std.is(itemRenderer, ITreeViewItemRenderer)) {
 				var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
-				treeItem.branch = false;
+				treeItem.branch = this._currentItemState.branch;
 			}
 			if (Std.is(itemRenderer, ILayoutIndexObject)) {
 				var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
-				layoutIndexObject.layoutIndex = -1;
+				layoutIndexObject.layoutIndex = this._currentItemState.layoutIndex;
 			}
 			if (Std.is(itemRenderer, IDataRenderer)) {
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
-				dataRenderer.data = null;
+				dataRenderer.data = this._currentItemState.data;
 			}
 			this._ignoreOpenedChange = oldIgnoreOpenedChange;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
@@ -915,7 +921,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
+	private function populateCurrentItemState(item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
 		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
@@ -923,13 +929,22 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._currentItemState.branch = this._dataProvider != null && this._dataProvider.isBranch(item);
 		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(item) != -1;
 		this._currentItemState.selected = item == this._selectedItem;
+		this._currentItemState.enabled = this._enabled;
 		this._currentItemState.text = itemToText(item);
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
+		this.populateCurrentItemState(item, location, layoutIndex);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
 		this._ignoreOpenedChange = true;
 		if (this._itemRendererRecycler.update != null) {
 			this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		}
+		if (Std.is(itemRenderer, IUIControl)) {
+			var uiControl = cast(itemRenderer, IUIControl);
+			uiControl.enabled = this._currentItemState.enabled;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
@@ -969,14 +984,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {
 		var location = this._dataProvider.locationOf(data);
-		this._currentItemState.owner = this;
-		this._currentItemState.data = data;
-		this._currentItemState.location = location;
-		this._currentItemState.layoutIndex = this.dataToLayoutIndex.get(data);
-		this._currentItemState.branch = this._dataProvider != null && this._dataProvider.isBranch(data);
-		this._currentItemState.opened = this._currentItemState.branch && this.openBranches.indexOf(data) != -1;
-		this._currentItemState.selected = data == this._selectedItem;
-		this._currentItemState.text = itemToText(data);
+		var layoutIndex = this.dataToLayoutIndex.get(data);
+		this.populateCurrentItemState(data, location, layoutIndex);
 		TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_TRIGGER, this._currentItemState);
 	}
 

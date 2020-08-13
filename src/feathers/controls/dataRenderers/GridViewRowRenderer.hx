@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IUIControl;
 import feathers.layout.ILayoutIndexObject;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
@@ -323,27 +324,32 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			this._currentCellState.columnIndex = -1;
 			this._currentCellState.column = column;
 			this._currentCellState.selected = false;
+			this._currentCellState.enabled = true;
 			this._currentCellState.text = null;
 			var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 			if (cellRendererRecycler != null && cellRendererRecycler.reset != null) {
 				cellRendererRecycler.reset(cellRenderer, this._currentCellState);
 			}
+			if (Std.is(cellRenderer, IUIControl)) {
+				var uiControl = cast(cellRenderer, IUIControl);
+				uiControl.enabled = this._currentCellState.enabled;
+			}
 			if (Std.is(cellRenderer, IToggle)) {
 				var toggle = cast(cellRenderer, IToggle);
-				toggle.selected = false;
+				toggle.selected = this._currentCellState.selected;
 			}
 			if (Std.is(cellRenderer, IDataRenderer)) {
 				var dataRenderer = cast(cellRenderer, IDataRenderer);
-				dataRenderer.data = null;
+				dataRenderer.data = this._currentCellState.data;
 			}
 			if (Std.is(cellRenderer, IGridViewCellRenderer)) {
 				var gridCell = cast(cellRenderer, IGridViewCellRenderer);
-				gridCell.column = null;
-				gridCell.columnIndex = -1;
+				gridCell.column = this._currentCellState.column;
+				gridCell.columnIndex = this._currentCellState.columnIndex;
 			}
 			if (Std.is(cellRenderer, ILayoutIndexObject)) {
 				var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
-				layoutIndexObject.layoutIndex = -1;
+				layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
 			}
 			cellRenderer.removeEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
@@ -394,17 +400,26 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		}
 	}
 
-	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
-		var storage = this._defaultStorage;
+	private function populateCurrentItemState(columnIndex:Int, column:GridViewColumn):Void {
 		this._currentCellState.owner = this._gridView;
 		this._currentCellState.data = this._data;
 		this._currentCellState.rowIndex = this._rowIndex;
 		this._currentCellState.columnIndex = columnIndex;
 		this._currentCellState.column = column;
 		this._currentCellState.selected = this._selected;
+		this._currentCellState.enabled = this._enabled;
 		this._currentCellState.text = column.itemToText(this._data);
+	}
+
+	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
+		var storage = this._defaultStorage;
+		this.populateCurrentItemState(columnIndex, column);
 		if (storage.cellRendererRecycler.update != null) {
 			storage.cellRendererRecycler.update(cellRenderer, this._currentCellState);
+		}
+		if (Std.is(cellRenderer, IUIControl)) {
+			var uiControl = cast(cellRenderer, IUIControl);
+			uiControl.enabled = this._currentCellState.enabled;
 		}
 		if (Std.is(cellRenderer, IDataRenderer)) {
 			var dataRenderer = cast(cellRenderer, IDataRenderer);

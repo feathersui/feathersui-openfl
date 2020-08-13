@@ -360,12 +360,14 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			this._currentItemState.owner = this;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
+			this._currentItemState.enabled = true;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
 			if (this.toggleButtonRecycler.reset != null) {
 				this.toggleButtonRecycler.reset(button, this._currentItemState);
 			}
 			button.selected = this._currentItemState.selected;
+			button.enabled = this._currentItemState.enabled;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -479,16 +481,22 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		}
 	}
 
-	private function refreshToggleButtonProperties(button:ToggleButton, index:Int):Void {
+	private function populateCurrentItemState(index:Int):Void {
 		this._currentItemState.owner = this;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = index == this._selectedIndex;
+		this._currentItemState.enabled = this._enabled;
+	}
+
+	private function refreshToggleButtonProperties(button:ToggleButton, index:Int):Void {
+		this.populateCurrentItemState(index);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this.toggleButtonRecycler.update != null) {
 			this.toggleButtonRecycler.update(button, this._currentItemState);
 		}
 		button.selected = this._currentItemState.selected;
+		button.enabled = this._currentItemState.enabled;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 

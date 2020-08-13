@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IUIControl;
 import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
@@ -672,27 +673,32 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
+			this._currentItemState.enabled = true;
 			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
 			if (recycler != null && recycler.reset != null) {
 				recycler.reset(itemRenderer, this._currentItemState);
 			}
+			if (Std.is(itemRenderer, IUIControl)) {
+				var uiControl = cast(itemRenderer, IToggle);
+				uiControl.enabled = this._currentItemState.enabled;
+			}
 			if (Std.is(itemRenderer, IToggle)) {
 				var toggle = cast(itemRenderer, IToggle);
-				toggle.selected = false;
+				toggle.selected = this._currentItemState.selected;
 			}
 			if (Std.is(itemRenderer, IDataRenderer)) {
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
-				dataRenderer.data = null;
+				dataRenderer.data = this._currentItemState.data;
 			}
 			if (Std.is(itemRenderer, ILayoutIndexObject)) {
 				var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
-				layoutIndexObject.layoutIndex = -1;
+				layoutIndexObject.layoutIndex = this._currentItemState.index;
 			}
 			if (Std.is(itemRenderer, IListViewItemRenderer)) {
 				var listRenderer = cast(itemRenderer, IListViewItemRenderer);
-				listRenderer.index = -1;
+				listRenderer.index = this._currentItemState.index;
 			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
@@ -750,16 +756,25 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, index:Int):Void {
+	private function populateCurrentItemState(item:Dynamic, index:Int):Void {
 		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = item == this._selectedItem;
+		this._currentItemState.enabled = this._enabled;
 		this._currentItemState.text = itemToText(item);
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, index:Int):Void {
+		this.populateCurrentItemState(item, index);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this._itemRendererRecycler.update != null) {
 			this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		}
+		if (Std.is(itemRenderer, IUIControl)) {
+			var uiControl = cast(itemRenderer, IToggle);
+			uiControl.enabled = this._currentItemState.enabled;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
@@ -832,11 +847,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {
 		var index = this._dataProvider.indexOf(data);
-		this._currentItemState.owner = this;
-		this._currentItemState.data = data;
-		this._currentItemState.index = index;
-		this._currentItemState.text = this.itemToText(data);
-		this._currentItemState.selected = this._selectedIndex == index;
+		this.populateCurrentItemState(data, index);
 		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, this._currentItemState);
 	}
 

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IUIControl;
 import openfl.errors.ArgumentError;
 import feathers.style.IVariantStyleObject;
 import feathers.data.GroupListViewItemType;
@@ -800,18 +801,23 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._currentItemState.layoutIndex = -1;
 			this._currentItemState.selected = false;
 			this._currentItemState.text = null;
+			this._currentItemState.enabled = true;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
 			if (recycler != null && recycler.reset != null) {
 				recycler.reset(itemRenderer, this._currentItemState);
 			}
+			if (Std.is(itemRenderer, IUIControl)) {
+				var uiControl = cast(itemRenderer, IUIControl);
+				uiControl.enabled = this._currentItemState.enabled;
+			}
 			if (Std.is(itemRenderer, IToggle)) {
 				var toggle = cast(itemRenderer, IToggle);
-				toggle.selected = false;
+				toggle.selected = this._currentItemState.selected;
 			}
 			if (Std.is(itemRenderer, IDataRenderer)) {
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
-				dataRenderer.data = null;
+				dataRenderer.data = this._currentItemState.data;
 			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
@@ -940,15 +946,20 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return itemRenderer;
 	}
 
-	private function refreshItemRendererProperties(itemRenderer:DisplayObject, type:GroupListViewItemType, item:Dynamic, location:Array<Int>,
-			layoutIndex:Int):Void {
+	private function populateCurrentItemState(item:Dynamic, type:GroupListViewItemType, location:Array<Int>, layoutIndex:Int):Void {
 		this._currentItemState.owner = this;
 		this._currentItemState.type = type;
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
 		this._currentItemState.selected = location.length > 1 && item == this._selectedItem;
+		this._currentItemState.enabled = this._enabled;
 		this._currentItemState.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, type:GroupListViewItemType, item:Dynamic, location:Array<Int>,
+			layoutIndex:Int):Void {
+		this.populateCurrentItemState(item, type, location, layoutIndex);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (type == HEADER) {
@@ -959,6 +970,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if (this._itemRendererRecycler.update != null) {
 				this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
 			}
+		}
+		if (Std.is(itemRenderer, IUIControl)) {
+			var uiControl = cast(itemRenderer, IUIControl);
+			uiControl.enabled = this._currentItemState.enabled;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);

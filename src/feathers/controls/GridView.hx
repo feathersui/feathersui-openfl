@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IUIControl;
 import feathers.style.IVariantStyleObject;
 import feathers.data.ArrayCollection;
 import openfl.ui.Keyboard;
@@ -740,8 +741,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._currentHeaderState.column = column;
 			this._currentHeaderState.columnIndex = -1;
 			this._currentHeaderState.text = null;
+			this._currentHeaderState.enabled = true;
 			if (recycler != null && recycler.reset != null) {
 				recycler.reset(headerRenderer, this._currentHeaderState);
+			}
+			if (Std.is(headerRenderer, IUIControl)) {
+				var uiControl = cast(headerRenderer, IUIControl);
+				uiControl.enabled = this._currentHeaderState.enabled;
 			}
 			if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
 				var header = cast(headerRenderer, IGridViewHeaderRenderer);
@@ -938,13 +944,22 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, column:GridViewColumn, columnIndex:Int):Void {
+	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int):Void {
 		this._currentHeaderState.owner = this;
 		this._currentHeaderState.column = column;
 		this._currentHeaderState.columnIndex = columnIndex;
 		this._currentHeaderState.text = column.headerText;
+		this._currentHeaderState.enabled = this._enabled;
+	}
+
+	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, column:GridViewColumn, columnIndex:Int):Void {
+		this.populateCurrentItemState(column, columnIndex);
 		if (this._headerRendererRecycler.update != null) {
 			this._headerRendererRecycler.update(headerRenderer, this._currentHeaderState);
+		}
+		if (Std.is(headerRenderer, IUIControl)) {
+			var uiControl = cast(headerRenderer, IUIControl);
+			uiControl.enabled = this._currentHeaderState.enabled;
 		}
 		if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
 			var header = cast(headerRenderer, IGridViewHeaderRenderer);

@@ -458,6 +458,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
+			this._currentItemState.enabled = true;
 			this._currentItemState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
@@ -469,6 +470,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 				dataRenderer.data = null;
 			}
 			tab.selected = this._currentItemState.selected;
+			tab.enabled = this._currentItemState.enabled;
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -557,23 +559,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			var item = this._dataProvider.get(i);
 			var tab = this.dataToTab.get(item);
 			if (tab != null) {
-				this._currentItemState.owner = this;
-				this._currentItemState.data = item;
-				this._currentItemState.index = i;
-				this._currentItemState.selected = item == this._selectedItem;
-				this._currentItemState.text = itemToText(item);
-				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-				this._ignoreSelectionChange = true;
-				if (this.tabRecycler.update != null) {
-					this.tabRecycler.update(tab, this._currentItemState);
-				}
-				if (Std.is(tab, IDataRenderer)) {
-					var dataRenderer = cast(tab, IDataRenderer);
-					// if the tab is an IDataRenderer, this cannot be overridden
-					dataRenderer.data = this._currentItemState.data;
-				}
-				tab.selected = this._currentItemState.selected;
-				this._ignoreSelectionChange = oldIgnoreSelectionChange;
+				this.refreshTabProperties(tab, item, i);
 				this.addChildAt(tab, i + depthOffset);
 				var removed = this.inactiveTabs.remove(tab);
 				if (!removed) {
@@ -624,18 +610,33 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		}
 	}
 
-	private function refreshTabProperties(tab:ToggleButton, item:Dynamic, index:Int):Void {
+	private function populateCurrentItemState(item:Dynamic, index:Int):Void {
 		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = item == this._selectedItem;
+		this._currentItemState.enabled = this._enabled;
 		this._currentItemState.text = itemToText(item);
+	}
+
+	private function refreshTabProperties(tab:ToggleButton, item:Dynamic, index:Int):Void {
+		this.populateCurrentItemState(item, index);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this.tabRecycler.update != null) {
 			this.tabRecycler.update(tab, this._currentItemState);
 		}
+		if (Std.is(tab, IUIControl)) {
+			var uiControl = cast(tab, IToggle);
+			uiControl.enabled = this._currentItemState.enabled;
+		}
+		if (Std.is(tab, IDataRenderer)) {
+			var dataRenderer = cast(tab, IDataRenderer);
+			// if the tab is an IDataRenderer, this cannot be overridden
+			dataRenderer.data = this._currentItemState.data;
+		}
 		tab.selected = this._currentItemState.selected;
+		tab.enabled = this._currentItemState.enabled;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
