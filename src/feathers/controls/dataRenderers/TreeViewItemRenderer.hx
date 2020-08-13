@@ -59,7 +59,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			return this._location;
 		}
 		this._location = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._location;
 	}
 
@@ -80,7 +80,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			return this._branch;
 		}
 		this._branch = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._branch;
 	}
 
@@ -101,7 +101,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			return this._opened;
 		}
 		this._opened = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		if (this._opened) {
 			FeathersEvent.dispatch(this, Event.OPEN);
 		} else {

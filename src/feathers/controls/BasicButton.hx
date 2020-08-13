@@ -184,7 +184,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		} else {
 			this._stateToSkin.set(state, skin);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	override private function initialize():Void {
@@ -204,8 +204,8 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 	}
 
 	override private function update():Void {
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
+		var stateInvalid = this.isInvalid(STATE);
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
@@ -389,7 +389,7 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 			return;
 		}
 		this._currentState = state;
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 

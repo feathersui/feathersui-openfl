@@ -138,7 +138,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			return this._text;
 		}
 		this._text = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._text;
 	}
 
@@ -172,7 +172,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			return this._htmlText;
 		}
 		this._htmlText = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._htmlText;
 	}
 
@@ -235,7 +235,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			return this._selectable;
 		}
 		this._selectable = value;
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		return this._selectable;
 	}
 
@@ -462,11 +462,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var sizeInvalid = this.isInvalid(SIZE);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		this._updatedTextStyles = false;
 

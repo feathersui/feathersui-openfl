@@ -141,8 +141,8 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 			return this._selected;
 		}
 		this._selected = value;
-		this.setInvalid(InvalidationFlag.SELECTION);
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(SELECTION);
+		this.setInvalid(STATE);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		this.changeState(this.currentState);
 		return this._selected;
@@ -300,7 +300,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		} else {
 			this._stateToSkin.set(state, skin);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	override private function initialize():Void {
@@ -320,9 +320,9 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 	}
 
 	override private function update():Void {
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var stylesInvalid = this.isInvalid(STYLES);
+		var stateInvalid = this.isInvalid(STATE);
 
 		if (selectionInvalid || stateInvalid || stylesInvalid) {
 			this.refreshBackgroundSkin();
@@ -528,7 +528,7 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 			return;
 		}
 		this._currentState = toggleState;
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 

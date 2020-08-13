@@ -113,7 +113,7 @@ class AssetLoader extends FeathersControl {
 						this._contentMeasurements.save(bitmap);
 						this.addChild(bitmap);
 						this.content = bitmap;
-						this.setInvalid(InvalidationFlag.DATA);
+						this.setInvalid(DATA);
 						this.dispatchEvent(new Event(Event.COMPLETE));
 					}).onError((event:Dynamic) -> {
 						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
@@ -132,7 +132,7 @@ class AssetLoader extends FeathersControl {
 						this._contentMeasurements.save(movieClip);
 						this.addChild(movieClip);
 						this.content = movieClip;
-						this.setInvalid(InvalidationFlag.DATA);
+						this.setInvalid(DATA);
 						this.dispatchEvent(new Event(Event.COMPLETE));
 					}).onError((event:Dynamic) -> {
 						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
@@ -157,7 +157,7 @@ class AssetLoader extends FeathersControl {
 				}
 			}
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._source;
 	}
 
@@ -193,13 +193,13 @@ class AssetLoader extends FeathersControl {
 			return this._scaleMode;
 		}
 		this._scaleMode = value;
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._scaleMode;
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
+		var dataInvalid = this.isInvalid(DATA);
+		var layoutInvalid = this.isInvalid(LAYOUT);
 
 		this.measure();
 		this.layoutChildren();
@@ -371,7 +371,7 @@ class AssetLoader extends FeathersControl {
 	private function loader_contentLoaderInfo_completeHandler(event:Event):Void {
 		this.content = this.loader;
 		this._contentMeasurements.save(this.content);
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		this.dispatchEvent(event);
 	}
 }

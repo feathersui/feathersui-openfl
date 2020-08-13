@@ -42,7 +42,7 @@ import openfl.ui.Keyboard;
 	@since 1.0.0
 **/
 class BaseScrollContainer extends FeathersControl implements IFocusObject {
-	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = "scrollBarFactory";
+	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = InvalidationFlag.CUSTOM("scrollBarFactory");
 
 	private static function defaultScrollBarXFactory():IScrollBar {
 		return new HScrollBar();
@@ -567,7 +567,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return this._scrollStepX;
 		}
 		this._scrollStepX = value;
-		this.setInvalid(InvalidationFlag.SCROLL);
+		this.setInvalid(SCROLL);
 		return this._scrollStepX;
 	}
 
@@ -598,7 +598,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return this._scrollStepY;
 		}
 		this._scrollStepY = value;
-		this.setInvalid(InvalidationFlag.SCROLL);
+		this.setInvalid(SCROLL);
 		return this._scrollStepY;
 	}
 
@@ -630,7 +630,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return this._scrollPolicyX;
 		}
 		this._scrollPolicyX = value;
-		this.setInvalid(InvalidationFlag.SCROLL);
+		this.setInvalid(SCROLL);
 		return this._scrollPolicyX;
 	}
 
@@ -662,7 +662,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return this._scrollPolicyY;
 		}
 		this._scrollPolicyY = value;
-		this.setInvalid(InvalidationFlag.SCROLL);
+		this.setInvalid(SCROLL);
 		return this._scrollPolicyY;
 	}
 
@@ -798,9 +798,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	override private function update():Void {
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
+		var sizeInvalid = this.isInvalid(SIZE);
+		var stateInvalid = this.isInvalid(STATE);
 		var scrollBarFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
 
 		var oldIgnoreScrollerChanges = this._ignoreScrollerChanges;
@@ -827,13 +827,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function needsMeasurement():Bool {
-		return (this.isInvalid(InvalidationFlag.SCROLL) && this._viewPort.requiresMeasurementOnScroll)
-			|| this.isInvalid(InvalidationFlag.DATA)
-			|| this.isInvalid(InvalidationFlag.SIZE)
-			|| this.isInvalid(InvalidationFlag.STYLES)
+		return (this.isInvalid(SCROLL) && this._viewPort.requiresMeasurementOnScroll)
+			|| this.isInvalid(DATA)
+			|| this.isInvalid(SIZE)
+			|| this.isInvalid(STYLES)
 			|| this.isInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY)
-			|| this.isInvalid(InvalidationFlag.STATE)
-			|| this.isInvalid(InvalidationFlag.LAYOUT);
+			|| this.isInvalid(STATE)
+			|| this.isInvalid(LAYOUT);
 	}
 
 	private function createScrollBars():Void {
@@ -1590,7 +1590,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 		this.checkForRevealScrollBars();
 		if (this._viewPort.requiresMeasurementOnScroll) {
-			this.setInvalid(InvalidationFlag.SCROLL);
+			this.setInvalid(SCROLL);
 		} else {
 			this.refreshScrollRect();
 			this.refreshScrollBarValues();
@@ -1697,7 +1697,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this._validating) {
 			this._viewPortBoundsChanged = true;
 		} else {
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 	}
 }

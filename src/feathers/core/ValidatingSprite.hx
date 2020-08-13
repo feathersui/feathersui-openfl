@@ -31,8 +31,8 @@ class ValidatingSprite extends Sprite implements IValidating {
 	private var _validating:Bool = false;
 	private var _allInvalid:Bool = false;
 	private var _allInvalidDelayed:Bool = false;
-	private var _invalidationFlags:Map<String, Bool> = new Map();
-	private var _delayedInvalidationFlags:Map<String, Bool> = new Map();
+	private var _invalidationFlags:Map<InvalidationFlag, Bool> = new Map();
+	private var _delayedInvalidationFlags:Map<InvalidationFlag, Bool> = new Map();
 	private var _setInvalidCount:Int = 0;
 	private var _validationQueue:ValidationQueue = null;
 
@@ -64,7 +64,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 
 		@since 1.0.0
 	**/
-	public function isInvalid(flag:String = null):Bool {
+	public function isInvalid(?flag:InvalidationFlag):Bool {
 		if (this._allInvalid) {
 			return true;
 		}
@@ -113,7 +113,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 
 		@since 1.0.0
 	**/
-	public function setInvalid(flag:String = null):Void {
+	public function setInvalid(?flag:InvalidationFlag):Void {
 		if (this._ignoreInvalidationFlags) {
 			return;
 		}
@@ -212,7 +212,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 		@since 1.0.0
 	**/
 	@:dox(show)
-	private function setInvalidationFlag(flag:String):Void {
+	private function setInvalidationFlag(flag:InvalidationFlag):Void {
 		if (this._ignoreInvalidationFlags) {
 			return;
 		}

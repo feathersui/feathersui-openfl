@@ -66,7 +66,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			this._focusExtrasBefore.push(this._header);
 			this.addRawChild(this._header);
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._header;
 	}
 
@@ -97,7 +97,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			this._focusExtrasAfter.push(this._footer);
 			this.addRawChild(this._footer);
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._footer;
 	}
 

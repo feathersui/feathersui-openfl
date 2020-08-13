@@ -74,8 +74,8 @@ import openfl.ui.Multitouch;
 **/
 @:styleContext
 class PopUpListView extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
-	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
-	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = "listViewFactory";
+	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");
+	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = InvalidationFlag.CUSTOM("listViewFactory");
 
 	/**
 		The variant used to style the `Button` child component in a theme.
@@ -172,10 +172,10 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		// this ensures that Event.CHANGE will dispatch for selectedItem
 		// changing, even if selectedIndex has not changed.
 		if (this._selectedIndex == oldSelectedIndex && this._selectedItem != oldSelectedItem) {
-			this.setInvalid(InvalidationFlag.SELECTION);
+			this.setInvalid(SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
 
@@ -208,7 +208,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -276,7 +276,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			return this._itemRendererRecycler;
 		}
 		this._itemRendererRecycler = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._itemRendererRecycler;
 	}
 
@@ -495,9 +495,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	override private function update():Void {
 		var buttonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
 		var listViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var dataInvalid = this.isInvalid(DATA);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var stateInvalid = this.isInvalid(STATE);
 
 		if (buttonFactoryInvalid) {
 			this.createButton();

@@ -133,7 +133,7 @@ class BaseNavigator extends FeathersControl {
 			return this._autoSizeMode;
 		}
 		this._autoSizeMode = value;
-		this.setInvalid(InvalidationFlag.SIZE);
+		this.setInvalid(SIZE);
 		if (this._activeItemView != null) {
 			if (this._autoSizeMode == STAGE) {
 				this._activeItemView.removeEventListener(Event.RESIZE, activeItemView_resizeHandler);
@@ -202,7 +202,7 @@ class BaseNavigator extends FeathersControl {
 	}
 
 	override private function update():Void {
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
+		var sizeInvalid = this.isInvalid(SIZE);
 		sizeInvalid = this.measure() || sizeInvalid;
 		this.layoutContent();
 	}
@@ -440,7 +440,7 @@ class BaseNavigator extends FeathersControl {
 		}
 		this._activeViewMeasurements.save(this._activeItemView);
 
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		if (this._validationQueue != null && this._validationQueue.validating) {
 			// force a completion validation of everything on the stage, but
 			// only if we're not already doing that.
@@ -485,7 +485,7 @@ class BaseNavigator extends FeathersControl {
 		this._activeItemView = null;
 		this._activeItemID = null;
 
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 
 		this.startTransition(transition);
 	}
@@ -537,7 +537,7 @@ class BaseNavigator extends FeathersControl {
 			// if we validated before being added to the stage, or if we've
 			// been removed from stage and added again, we need to be sure
 			// that the new stage dimensions are accounted for.
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 			this.stage.addEventListener(Event.RESIZE, baseNavigator_stage_resizeHandler);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, baseNavigator_removedFromStageHandler);
 		}
@@ -562,14 +562,14 @@ class BaseNavigator extends FeathersControl {
 	}
 
 	private function baseNavigator_stage_resizeHandler(event:Event):Void {
-		this.setInvalid(InvalidationFlag.SIZE);
+		this.setInvalid(SIZE);
 	}
 
 	private function activeItemView_resizeHandler(event:Event):Void {
 		if (this._validating || this._autoSizeMode != CONTENT) {
 			return;
 		}
-		this.setInvalid(InvalidationFlag.SIZE);
+		this.setInvalid(SIZE);
 	}
 
 	private function transition_completeHandler(event:Event):Void {

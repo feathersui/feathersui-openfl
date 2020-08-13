@@ -67,7 +67,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			return this._value;
 		}
 		this._value = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._value;
 	}
@@ -108,7 +108,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			// use the setter
 			this.value = this._minimum;
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._minimum;
 	}
 
@@ -148,7 +148,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			// use the setter
 			this.value = this._maximum;
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._maximum;
 	}
 
@@ -328,8 +328,8 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	public var paddingLeft:Float = 0.0;
 
 	override private function update():Void {
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
+		var stateInvalid = this.isInvalid(STATE);
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();

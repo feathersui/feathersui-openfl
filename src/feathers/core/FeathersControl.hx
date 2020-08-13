@@ -120,7 +120,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._enabled;
 		}
 		this._enabled = value;
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 		return this._enabled;
 	}
 
@@ -149,7 +149,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		} else {
 			this._waitingToApplyStyles = true;
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._themeEnabled;
 	}
 
@@ -201,7 +201,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		} else {
 			this._waitingToApplyStyles = true;
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._customStyleProvider;
 	}
 
@@ -418,7 +418,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		} else {
 			this._waitingToApplyStyles = true;
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._variant;
 	}
 

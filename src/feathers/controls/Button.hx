@@ -102,7 +102,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			return this._text;
 		}
 		this._text = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._text;
 	}
 
@@ -389,7 +389,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		} else {
 			this._stateToTextFormat.set(state, textFormat);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	/**
@@ -438,7 +438,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		} else {
 			this._stateToIcon.set(state, icon);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	private function initializeButtonTheme():Void {
@@ -456,9 +456,9 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		this._updatedTextStyles = false;
 

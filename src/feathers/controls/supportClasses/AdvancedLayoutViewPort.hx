@@ -60,12 +60,12 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this._explicitMinVisibleWidth = value;
 		if (value == null) {
 			this._actualMinVisibleWidth = 0.0;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			this._actualMinVisibleWidth = value;
 			if (this._explicitVisibleWidth == null && (this._actualVisibleWidth < value || this._actualVisibleWidth == oldValue)) {
 				// only invalidate if this change might affect the visibleWidth
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMinVisibleWidth;
@@ -94,7 +94,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this._maxVisibleWidth = value;
 		if (this._explicitVisibleWidth == null && (this._actualVisibleWidth > value || this._actualVisibleWidth == oldValue)) {
 			// only invalidate if this change might affect the visibleWidth
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._maxVisibleWidth;
 	}
@@ -121,7 +121,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		}
 		this._explicitVisibleWidth = value;
 		if (this._actualVisibleWidth != value) {
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._explicitVisibleWidth;
 	}
@@ -150,12 +150,12 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this._explicitMinVisibleHeight = value;
 		if (value == null) {
 			this._actualMinVisibleHeight = 0.0;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			this._actualMinVisibleHeight = value;
 			if (this._explicitVisibleHeight == null && (this._actualVisibleHeight < value || this._actualVisibleHeight == oldValue)) {
 				// only invalidate if this change might affect the visibleHeight
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMinVisibleHeight;
@@ -184,7 +184,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this._maxVisibleHeight = value;
 		if (this._explicitVisibleHeight == null && (this._actualVisibleHeight > value || this._actualVisibleHeight == oldValue)) {
 			// only invalidate if this change might affect the visibleHeight
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._maxVisibleHeight;
 	}
@@ -211,7 +211,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		}
 		this._explicitVisibleHeight = value;
 		if (this._actualVisibleHeight != value) {
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._explicitVisibleWidth;
 	}
@@ -236,7 +236,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		if (this._layout != null) {
 			this._layout.addEventListener(Event.CHANGE, layout_changeHandler);
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._layout;
 	}
 
@@ -276,7 +276,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 			return this._scrollX;
 		}
 		this._scrollX = value;
-		this.setInvalid(InvalidationFlag.SCROLL);
+		this.setInvalid(SCROLL);
 		return this._scrollX;
 	}
 
@@ -297,7 +297,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 			return this._scrollY;
 		}
 		this._scrollY = value;
-		this.setInvalid(InvalidationFlag.SCROLL);
+		this.setInvalid(SCROLL);
 		return this._scrollY;
 	}
 
@@ -374,6 +374,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		if (this._ignoreLayoutChanges) {
 			return;
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 	}
 }

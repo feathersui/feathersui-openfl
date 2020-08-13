@@ -69,7 +69,7 @@ import openfl.events.Event;
 @:access(feathers.data.TabBarItemState)
 @:styleContext
 class TabBar extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
-	private static final INVALIDATION_FLAG_TAB_FACTORY = "tabFactory";
+	private static final INVALIDATION_FLAG_TAB_FACTORY = InvalidationFlag.CUSTOM("tabFactory");
 
 	/**
 		The variant used to style the tab child components in a theme.
@@ -166,7 +166,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			// use the setter
 			this.selectedIndex = -1;
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
 
@@ -197,7 +197,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -358,11 +358,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 		var tabsInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_FACTORY);
 
 		if (stylesInvalid || stateInvalid) {
@@ -715,7 +715,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function tabBar_dataProvider_changeHandler(event:Event):Void {
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 	}
 
 	private function tabBar_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {

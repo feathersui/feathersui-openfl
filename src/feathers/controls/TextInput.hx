@@ -96,7 +96,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return this._editable;
 		}
 		this._editable = value;
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 		return this._editable;
 	}
 
@@ -206,7 +206,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return this._text;
 		}
 		this._text = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._text;
 	}
@@ -241,7 +241,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return this._prompt;
 		}
 		this._prompt = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._prompt;
 	}
 
@@ -276,7 +276,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return this.__restrict;
 		}
 		this.__restrict = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this.__restrict;
 	}
 
@@ -310,7 +310,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return this._displayAsPassword;
 		}
 		this._displayAsPassword = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._displayAsPassword;
 	}
 
@@ -483,7 +483,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return this._scrollX;
 		}
 		this._scrollX = value;
-		this.setInvalid(InvalidationFlag.SCROLL);
+		this.setInvalid(SCROLL);
 		FeathersEvent.dispatch(this, Event.SCROLL);
 		return this._scrollX;
 	}
@@ -539,7 +539,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			this._stateToSkin.set(state, skin);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	/**
@@ -583,7 +583,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			this._stateToTextFormat.set(state, textFormat);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	private function initializeTextInputTheme():Void {
@@ -605,10 +605,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var scrollInvalid = this.isInvalid(InvalidationFlag.SCROLL);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var scrollInvalid = this.isInvalid(SCROLL);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		this._updatedTextStyles = false;
 		this._updatedPromptStyles = false;
@@ -974,7 +974,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return;
 		}
 		this._currentState = state;
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
@@ -993,7 +993,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var hasOldText = oldText != null && oldText.length > 0;
 		var hasPrompt = this._prompt != null && this._prompt.length > 0;
 		if (hasPrompt && ((!hasText && hasOldText) || (hasText && !hasOldText))) {
-			this.setInvalid(InvalidationFlag.DATA);
+			this.setInvalid(DATA);
 		}
 		// either way, the event still needs to be dispatched
 		FeathersEvent.dispatch(this, Event.CHANGE);

@@ -192,7 +192,7 @@ class LayoutGroup extends FeathersControl {
 			return this._autoSizeMode;
 		}
 		this._autoSizeMode = value;
-		this.setInvalid(InvalidationFlag.SIZE);
+		this.setInvalid(SIZE);
 		if (this.stage != null) {
 			if (this._autoSizeMode == STAGE) {
 				this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler);
@@ -235,7 +235,7 @@ class LayoutGroup extends FeathersControl {
 		// Event.ADDED listener
 		this.items.insert(index, child);
 		var result = this._addChildAt(child, index);
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return result;
 	}
 
@@ -262,7 +262,7 @@ class LayoutGroup extends FeathersControl {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
 		}
 		this.items.remove(child);
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._removeChild(child);
 	}
 
@@ -298,7 +298,7 @@ class LayoutGroup extends FeathersControl {
 		this._setChildIndex(child, this.getPrivateIndexForPublicIndex(index));
 		this.items.remove(child);
 		this.items.insert(index, child);
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function _setChildIndex(child:DisplayObject, index:Int):Void {
@@ -352,7 +352,7 @@ class LayoutGroup extends FeathersControl {
 				this.addChild(child);
 			}
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._xmlContent;
 	}
 
@@ -373,10 +373,10 @@ class LayoutGroup extends FeathersControl {
 		// until it calls super.update().
 		this._ignoreChildChangesButSetFlags = false;
 
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var sizeInvalid = this.isInvalid(SIZE);
+		var stylesInvalid = this.isInvalid(STYLES);
+		var stateInvalid = this.isInvalid(STATE);
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
@@ -649,7 +649,7 @@ class LayoutGroup extends FeathersControl {
 			// if we validated before being added to the stage, or if we've
 			// been removed from stage and added again, we need to be sure
 			// that the new stage dimensions are accounted for.
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 
 			this.addEventListener(Event.REMOVED_FROM_STAGE, layoutGroup_removedFromStageHandler);
 			this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler);
@@ -662,7 +662,7 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function layoutGroup_stage_resizeHandler(event:Event):Void {
-		this.setInvalid(InvalidationFlag.SIZE);
+		this.setInvalid(SIZE);
 	}
 
 	private function layoutGroup_child_resizeHandler(event:Event):Void {
@@ -670,10 +670,10 @@ class LayoutGroup extends FeathersControl {
 			return;
 		}
 		if (this._ignoreChildChangesButSetFlags) {
-			this.setInvalidationFlag(InvalidationFlag.LAYOUT);
+			this.setInvalidationFlag(LAYOUT);
 			return;
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function layoutGroup_child_layoutDataChangeHandler(event:Event):Void {
@@ -681,16 +681,16 @@ class LayoutGroup extends FeathersControl {
 			return;
 		}
 		if (this._ignoreChildChangesButSetFlags) {
-			this.setInvalidationFlag(InvalidationFlag.LAYOUT);
+			this.setInvalidationFlag(LAYOUT);
 			return;
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function layoutGroup_layout_changeHandler(event:Event):Void {
 		if (this._ignoreLayoutChanges) {
 			return;
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 	}
 }

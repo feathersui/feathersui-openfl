@@ -117,12 +117,12 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			if (this.actualWidth != 0.0) {
 				this.actualWidth = 0.0;
 				this.scaledActualWidth = 0.0;
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		} else {
 			var result = this.saveMeasurements(value, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 			if (result) {
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitWidth;
@@ -149,12 +149,12 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			if (this.actualHeight != 0.0) {
 				this.actualHeight = 0.0;
 				this.scaledActualHeight = 0.0;
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		} else {
 			var result = this.saveMeasurements(this.actualWidth, value, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 			if (result) {
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitHeight;
@@ -181,7 +181,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (value == null) {
 			this.actualMinWidth = 0.0;
 			this.scaledActualMinWidth = 0.0;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			// saveMeasurements() might change actualWidth, so keep the old
 			// value for the comparisons below
@@ -190,7 +190,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			if (this._explicitWidth == null && (actualWidth < value || actualWidth == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMinWidth;
@@ -217,7 +217,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (value == null) {
 			this.actualMinHeight = 0.0;
 			this.scaledActualMinHeight = 0.0;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			// saveMeasurements() might change actualHeight, so keep the old
 			// value for the comparisons below
@@ -226,7 +226,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			if (this._explicitHeight == null && (actualHeight < value || actualHeight == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMinHeight;
@@ -291,7 +291,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (value == null) {
 			this.actualMaxWidth = Math.POSITIVE_INFINITY;
 			this.scaledActualMaxWidth = Math.POSITIVE_INFINITY;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			// saveMeasurements() might change actualWidth, so keep the old
 			// value for the comparisons below
@@ -300,7 +300,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			if (this._explicitWidth == null && (actualWidth > value || actualWidth == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMaxWidth;
@@ -327,7 +327,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		if (value == null) {
 			this.actualMaxHeight = Math.POSITIVE_INFINITY;
 			this.scaledActualMaxHeight = Math.POSITIVE_INFINITY;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			// saveMeasurements() might change actualWidth, so keep the old
 			// value for the comparisons below
@@ -336,7 +336,7 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			if (this._explicitHeight == null && (actualHeight > value || actualHeight == oldValue)) {
 				// only invalidate if this change might affect the width
 				// because everything else was handled in saveMeasurements()
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMaxHeight;

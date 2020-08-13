@@ -62,7 +62,7 @@ class ProgrammaticSkin extends MeasureSprite implements IStateObserver {
 				this._stateContext.addEventListener(Event.CHANGE, stateContextToggle_changeHandler);
 			}
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._stateContext;
 	}
 
@@ -92,7 +92,7 @@ class ProgrammaticSkin extends MeasureSprite implements IStateObserver {
 		if (!this.needsStateUpdate()) {
 			return;
 		}
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 	}
 
 	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {

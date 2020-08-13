@@ -77,7 +77,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return this._value;
 		}
 		this._value = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		if (this.liveDragging || !this._dragging) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
@@ -121,7 +121,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			// use the setter
 			this.value = this._minimum;
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._minimum;
 	}
 
@@ -162,7 +162,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			// use the setter
 			this.value = this._maximum;
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._maximum;
 	}
 
@@ -203,7 +203,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return this._step;
 		}
 		this._step = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._step;
 	}
 
@@ -247,7 +247,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return this._page;
 		}
 		this._page = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._page;
 	}
 
@@ -464,9 +464,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	override private function update():Void {
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var sizeInvalid = this.isInvalid(SIZE);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (stylesInvalid) {
 			this.refreshThumb();

@@ -94,7 +94,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			return this._editable;
 		}
 		this._editable = value;
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 		return this._editable;
 	}
 
@@ -168,7 +168,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			return this._text;
 		}
 		this._text = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._text;
 	}
@@ -203,7 +203,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			return this._prompt;
 		}
 		this._prompt = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._prompt;
 	}
 
@@ -238,7 +238,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			return this.__restrict;
 		}
 		this.__restrict = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this.__restrict;
 	}
 
@@ -442,7 +442,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		} else {
 			this._stateToSkin.set(state, skin);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	/**
@@ -486,7 +486,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		} else {
 			this._stateToTextFormat.set(state, textFormat);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	private function initializeTextAreaTheme():Void {
@@ -494,9 +494,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		this._updatedPromptStyles = false;
 
@@ -650,7 +650,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			return;
 		}
 		this._currentState = state;
-		this.setInvalid(InvalidationFlag.STATE);
+		this.setInvalid(STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 

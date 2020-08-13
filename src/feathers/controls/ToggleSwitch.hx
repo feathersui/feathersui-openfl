@@ -115,7 +115,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 		this._selected = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		return this._selected;
 	}
 
@@ -288,10 +288,10 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	override private function update():Void {
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var sizeInvalid = this.isInvalid(SIZE);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (stylesInvalid) {
 			this.refreshThumb();

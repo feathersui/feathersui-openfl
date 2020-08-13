@@ -92,7 +92,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, pageNavigator_dataProvider_removeAllHandler, false, 0, true);
 			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, pageNavigator_dataProvider_resetHandler, false, 0, true);
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			// use the setter
 			this.selectedIndex = -1;
@@ -130,7 +130,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -196,8 +196,8 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
+		var dataInvalid = this.isInvalid(DATA);
+		var selectionInvalid = this.isInvalid(SELECTION);
 
 		if (dataInvalid) {
 			this.pageIndicator.maxSelectedIndex = this._dataProvider.length - 1;

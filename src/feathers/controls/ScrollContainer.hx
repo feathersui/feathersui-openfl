@@ -121,7 +121,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 				this.addChild(child);
 			}
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._xmlContent;
 	}
 
@@ -190,7 +190,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		// Event.ADDED listener
 		this.items.insert(index, child);
 		var result = this.layoutViewPort.addChildAt(child, index);
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return result;
 	}
 
@@ -207,7 +207,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		}
 		this.items.remove(child);
 		var result = this.layoutViewPort.removeChild(child);
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return result;
 	}
 
@@ -324,8 +324,8 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		// until it calls super.update().
 		this._ignoreChildChangesButSetFlags = false;
 
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (layoutInvalid || stylesInvalid) {
 			this.layoutViewPort.layout = this.layout;
@@ -361,10 +361,10 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			return;
 		}
 		if (this._ignoreChildChangesButSetFlags) {
-			this.setInvalidationFlag(InvalidationFlag.LAYOUT);
+			this.setInvalidationFlag(LAYOUT);
 			return;
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function scrollContainer_child_resizeHandler(event:Event):Void {
@@ -372,9 +372,9 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			return;
 		}
 		if (this._ignoreChildChangesButSetFlags) {
-			this.setInvalidationFlag(InvalidationFlag.LAYOUT);
+			this.setInvalidationFlag(LAYOUT);
 			return;
 		}
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 	}
 }

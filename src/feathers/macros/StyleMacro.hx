@@ -108,7 +108,7 @@ class StyleMacro {
 							// otherwise, it would be removed by dce/closure
 							this._previousClearStyle = $i{clearStyleName};
 							$i{backingVarName} = value;
-							this.setInvalid(feathers.core.InvalidationFlag.STYLES);
+							this.setInvalid(STYLES);
 							return $i{backingVarName};
 						},
 						ret: type,

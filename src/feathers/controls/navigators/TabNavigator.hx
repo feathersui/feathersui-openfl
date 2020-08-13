@@ -92,7 +92,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, tabNavigator_dataProvider_removeAllHandler, false, 0, true);
 			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, tabNavigator_dataProvider_resetHandler, false, 0, true);
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			// use the setter
 			this.selectedIndex = -1;
@@ -130,7 +130,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -200,8 +200,8 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
+		var dataInvalid = this.isInvalid(DATA);
+		var selectionInvalid = this.isInvalid(SELECTION);
 
 		if (dataInvalid) {
 			this.tabBar.itemToText = this.itemToText;

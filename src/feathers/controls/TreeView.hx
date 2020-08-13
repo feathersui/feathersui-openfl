@@ -133,7 +133,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	**/
 	public static final VARIANT_BORDER = "border";
 
-	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
+	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
@@ -263,7 +263,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		// clear the selection for the same reason
 		this.selectedLocation = null;
 
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
 
@@ -324,7 +324,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedLocation);
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedLocation;
 	}
@@ -482,7 +482,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return this._virtualLayout;
 		}
 		this._virtualLayout = value;
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._virtualLayout;
 	}
 
@@ -574,7 +574,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			removeChildrenFromVirtualCache(location, layoutIndex);
 			FeathersEvent.dispatch(this, Event.CLOSE);
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 	}
 
 	/**
@@ -661,8 +661,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var _layoutItems:Array<DisplayObject> = [];
 
 	override private function update():Void {
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
@@ -1257,7 +1257,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			var newSize = this.calculateTotalLayoutCount([]);
 			this._virtualCache.resize(newSize);
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 	}
 
 	private function treeView_dataProvider_addItemHandler(event:HierarchicalCollectionEvent):Void {

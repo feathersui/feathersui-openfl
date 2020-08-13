@@ -48,7 +48,7 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 			return this._cornerRadius;
 		}
 		this._cornerRadius = value;
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._cornerRadius;
 	}
 

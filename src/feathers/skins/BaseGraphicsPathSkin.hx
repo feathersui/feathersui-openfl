@@ -61,7 +61,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return this._fill;
 		}
 		this._fill = value;
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._fill;
 	}
 
@@ -88,7 +88,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return this._disabledFill;
 		}
 		this._disabledFill = value;
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._disabledFill;
 	}
 
@@ -114,7 +114,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return this._selectedFill;
 		}
 		this._selectedFill = value;
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._selectedFill;
 	}
 
@@ -139,7 +139,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return this._border;
 		}
 		this._border = value;
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._border;
 	}
 
@@ -166,7 +166,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return this._disabledBorder;
 		}
 		this._disabledBorder = value;
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._disabledBorder;
 	}
 
@@ -192,7 +192,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return this._selectedBorder;
 		}
 		this._selectedBorder = value;
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 		return this._selectedBorder;
 	}
 
@@ -238,7 +238,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return;
 		}
 		this._stateToFill.set(state, fill);
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	/**
@@ -283,7 +283,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return;
 		}
 		this._stateToBorder.set(state, border);
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	override private function update():Void {

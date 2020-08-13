@@ -61,7 +61,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			return this._data;
 		}
 		this._data = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._data;
 	}
 
@@ -100,7 +100,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			return this._secondaryText;
 		}
 		this._secondaryText = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._secondaryText;
 	}
 
@@ -121,8 +121,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			return this._layoutIndex;
 		}
 		this._layoutIndex = value;
-		this.setInvalid(InvalidationFlag.DATA);
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(DATA);
+		this.setInvalid(STYLES);
 		return this._layoutIndex;
 	}
 
@@ -272,7 +272,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		} else {
 			this._stateToSecondaryTextFormat.set(state, textFormat);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	private function initializeItemRendererTheme():Void {
@@ -286,9 +286,9 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		this._updatedSecondaryTextStyles = false;
 

@@ -20,7 +20,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
-class InvalidationFlag {
+enum InvalidationFlag {
 	/**
 		Indicate that the state has changed. Used when the `enabled` property of
 		a Feathers UI component changes, but may be used for other component
@@ -32,61 +32,68 @@ class InvalidationFlag {
 
 		@since 1.0.0
 	**/
-	public static inline var STATE = "state";
+	STATE;
 
 	/**
 		Indicates that the dimensions of the UI control have changed.
 
 		@since 1.0.0
 	**/
-	public static inline var SIZE = "size";
+	SIZE;
 
 	/**
 		Indicates that the styles or visual appearance of the UI control has changed.
 
 		@since 1.0.0
 	**/
-	public static inline var STYLES = "styles";
+	STYLES;
 
 	/**
 		Indicates that the skin of the UI control has changed.
 
 		@since 1.0.0
 	**/
-	public static inline var SKIN = "skin";
+	SKIN;
 
 	/**
 		Indicates that the layout of the UI control has changed.
 
 		@since 1.0.0
 	**/
-	public static inline var LAYOUT = "layout";
+	LAYOUT;
 
 	/**
 		Indicates that the primary data displayed by the UI control has changed.
 
 		@since 1.0.0
 	**/
-	public static inline var DATA = "data";
+	DATA;
 
 	/**
 		Indicate that the scroll position of the UI control has changed.
 
 		@since 1.0.0
 	**/
-	public static inline var SCROLL = "scroll";
+	SCROLL;
 
 	/**
 		Indicates that the selection of the UI control has changed.
 
 		@since 1.0.0
 	**/
-	public static inline var SELECTION = "selection";
+	SELECTION;
 
 	/**
 		Indicate that the focused state of the UI control has changed.
 
 		@since 1.0.0
 	**/
-	public static inline var FOCUS = "focus";
+	FOCUS;
+
+	/**
+		Add a custom flag based on a string value.
+
+		@since 1.0.0
+	**/
+	CUSTOM(value:String);
 }

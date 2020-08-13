@@ -37,7 +37,7 @@ import openfl.ui.Multitouch;
 @:dox(hide)
 @:access(feathers.data.GridViewCellState)
 class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDataRenderer {
-	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = "cellRendererFactory";
+	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
 		if (Std.is(cellRenderer, ITextControl)) {
@@ -90,7 +90,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			return this._gridView;
 		}
 		this._gridView = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._gridView;
 	}
 
@@ -116,7 +116,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			return this._selected;
 		}
 		this._selected = value;
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selected;
 	}
@@ -145,7 +145,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			return this._rowIndex;
 		}
 		this._rowIndex = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._rowIndex;
 	}
 
@@ -171,7 +171,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			return this._data;
 		}
 		this._data = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._data;
 	}
 
@@ -197,7 +197,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			return this._columns;
 		}
 		this._columns = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._columns;
 	}
 

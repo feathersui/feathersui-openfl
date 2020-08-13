@@ -121,7 +121,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public static final VARIANT_BORDER = "border";
 
-	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = "itemRendererFactory";
+	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
@@ -241,7 +241,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		// clear the selection for the same reason
 		this.selectedIndex = -1; // use the setter
 
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
 
@@ -272,7 +272,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -441,7 +441,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return this._virtualLayout;
 		}
 		this._virtualLayout = value;
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._virtualLayout;
 	}
 
@@ -572,8 +572,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _layoutItems:Array<DisplayObject> = [];
 
 	override private function update():Void {
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
@@ -905,7 +905,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function listView_dataProvider_changeHandler(event:Event):Void {
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 	}
 
 	private function listView_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {

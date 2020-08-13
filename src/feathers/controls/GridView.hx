@@ -125,7 +125,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public static final CHILD_VARIANT_HEADER = "gridView_header";
 
-	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = "headerRendererFactory";
+	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
 
 	private static function defaultUpdateHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
 		if (Std.is(headerRenderer, ITextControl)) {
@@ -243,7 +243,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		// clear the selection for the same reason
 		this.selectedIndex = -1;
 
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
 
@@ -297,7 +297,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._columns != null) {
 			this._columns.addEventListener(Event.CHANGE, gridView_columns_changeHandler);
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._columns;
 	}
 
@@ -368,7 +368,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -437,7 +437,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return this._virtualLayout;
 		}
 		this._virtualLayout = value;
-		this.setInvalid(InvalidationFlag.LAYOUT);
+		this.setInvalid(LAYOUT);
 		return this._virtualLayout;
 	}
 
@@ -468,7 +468,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return this._cellRendererRecycler;
 		}
 		this._cellRendererRecycler = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._cellRendererRecycler;
 	}
 
@@ -622,11 +622,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 
 		this.validateColumns();
@@ -1031,7 +1031,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_dataProvider_changeHandler(event:Event):Void {
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 	}
 
 	private function gridView_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
@@ -1108,6 +1108,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_columns_changeHandler(event:Event):Void {
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 	}
 }

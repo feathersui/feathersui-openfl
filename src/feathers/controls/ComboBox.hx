@@ -74,9 +74,9 @@ import openfl.ui.Multitouch;
 **/
 @:styleContext
 class ComboBox extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
-	private static final INVALIDATION_FLAG_BUTTON_FACTORY = "buttonFactory";
-	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = "textInputFactory";
-	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = "listViewFactory";
+	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");
+	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = InvalidationFlag.CUSTOM("textInputFactory");
+	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = InvalidationFlag.CUSTOM("listViewFactory");
 
 	/**
 		The variant used to style the `Button` child component in a theme.
@@ -189,13 +189,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		// this ensures that Event.CHANGE will dispatch for selectedItem
 		// changing, even if selectedIndex has not changed.
 		if (this._selectedIndex == oldSelectedIndex && this._selectedItem != oldSelectedItem) {
-			this.setInvalid(InvalidationFlag.SELECTION);
+			this.setInvalid(SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 		if (this._dataProvider != null) {
 			this._dataProvider.filterFunction = this.comboBoxFilterFunction;
 		}
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
 
@@ -233,7 +233,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.pendingSelectedIndex = value;
 			this.pendingSelectedItem = this._selectedItem;
 		}
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -301,7 +301,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return this._itemRendererRecycler;
 		}
 		this._itemRendererRecycler = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._itemRendererRecycler;
 	}
 
@@ -552,9 +552,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		var buttonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
 		var textInputFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_TEXT_INPUT_FACTORY);
 		var listViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
+		var dataInvalid = this.isInvalid(DATA);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var stateInvalid = this.isInvalid(STATE);
 
 		if (buttonFactoryInvalid) {
 			this.createButton();
@@ -933,6 +933,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.selectedItem = newSelectedItem;
 		// even if the selected item has not changed, invalidate because the
 		// displayed text may need to be updated
-		this.setInvalid(InvalidationFlag.SELECTION);
+		this.setInvalid(SELECTION);
 	}
 }

@@ -100,7 +100,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			return this._text;
 		}
 		this._text = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		return this._text;
 	}
 
@@ -525,7 +525,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		} else {
 			this._stateToTextFormat.set(state, textFormat);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	/**
@@ -574,7 +574,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		} else {
 			this._stateToIcon.set(state, icon);
 		}
-		this.setInvalid(InvalidationFlag.STYLES);
+		this.setInvalid(STYLES);
 	}
 
 	private function initializeToggleButtonTheme():Void {
@@ -592,9 +592,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		this._updatedTextStyles = false;
 

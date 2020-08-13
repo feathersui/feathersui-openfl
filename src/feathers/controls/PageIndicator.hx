@@ -65,7 +65,7 @@ import openfl.ui.Multitouch;
 @:access(feathers.data.PageIndicatorItemState)
 @:styleContext
 class PageIndicator extends FeathersControl implements IIndexSelector implements IFocusObject {
-	private static final INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY = "toggleButtonFactory";
+	private static final INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY = InvalidationFlag.CUSTOM("toggleButtonFactory");
 
 	/**
 		The variant used to style the toggle button child components in a theme.
@@ -115,7 +115,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		}
 
 		this._selectedIndex = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
 	}
@@ -137,7 +137,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			return this._maxSelectedIndex;
 		}
 		this._maxSelectedIndex = value;
-		this.setInvalid(InvalidationFlag.DATA);
+		this.setInvalid(DATA);
 		if (this._maxSelectedIndex >= 0 && this._selectedIndex < 0) {
 			// use the setter
 			this.selectedIndex = 0;
@@ -273,12 +273,12 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
-		var layoutInvalid = this.isInvalid(InvalidationFlag.LAYOUT);
-		var selectionInvalid = this.isInvalid(InvalidationFlag.SELECTION);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var dataInvalid = this.isInvalid(DATA);
+		var dataInvalid = this.isInvalid(DATA);
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var selectionInvalid = this.isInvalid(SELECTION);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 		var buttonsInvalid = this.isInvalid(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
 
 		if (stylesInvalid || stateInvalid) {

@@ -62,12 +62,12 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._explicitMinVisibleWidth = value;
 		if (value == null) {
 			this._actualMinVisibleWidth = 0.0;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			this._actualMinVisibleWidth = value;
 			if (this._explicitVisibleWidth == null && (this._actualVisibleWidth < value || this._actualVisibleWidth == oldValue)) {
 				// only invalidate if this change might affect the visibleWidth
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMinVisibleWidth;
@@ -96,7 +96,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._maxVisibleWidth = value;
 		if (this._explicitVisibleWidth == null && (this._actualVisibleWidth > value || this._actualVisibleWidth == oldValue)) {
 			// only invalidate if this change might affect the visibleWidth
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._maxVisibleWidth;
 	}
@@ -123,7 +123,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		}
 		this._explicitVisibleWidth = value;
 		if (this._actualVisibleWidth != value) {
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._explicitVisibleWidth;
 	}
@@ -152,12 +152,12 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._explicitMinVisibleHeight = value;
 		if (value == null) {
 			this._actualMinVisibleHeight = 0.0;
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		} else {
 			this._actualMinVisibleHeight = value;
 			if (this._explicitVisibleHeight == null && (this._actualVisibleHeight < value || this._actualVisibleHeight == oldValue)) {
 				// only invalidate if this change might affect the visibleHeight
-				this.setInvalid(InvalidationFlag.SIZE);
+				this.setInvalid(SIZE);
 			}
 		}
 		return this._explicitMinVisibleHeight;
@@ -186,7 +186,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._maxVisibleHeight = value;
 		if (this._explicitVisibleHeight == null && (this._actualVisibleHeight > value || this._actualVisibleHeight == oldValue)) {
 			// only invalidate if this change might affect the visibleHeight
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._maxVisibleHeight;
 	}
@@ -213,7 +213,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		}
 		this._explicitVisibleHeight = value;
 		if (this._actualVisibleHeight != value) {
-			this.setInvalid(InvalidationFlag.SIZE);
+			this.setInvalid(SIZE);
 		}
 		return this._explicitVisibleWidth;
 	}

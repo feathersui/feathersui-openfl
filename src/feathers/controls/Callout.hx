@@ -63,7 +63,7 @@ import openfl.ui.Multitouch;
 **/
 @:styleContext
 class Callout extends FeathersControl {
-	private static final INVALIDATION_FLAG_ORIGIN:String = "origin";
+	private static final INVALIDATION_FLAG_ORIGIN = InvalidationFlag.CUSTOM("origin");
 
 	/**
 		Creates a callout, and then positions and sizes it automatically based
@@ -319,8 +319,8 @@ class Callout extends FeathersControl {
 				this._contentMeasurements.save(this._content);
 			}
 		}
-		this.setInvalid(InvalidationFlag.DATA);
-		this.setInvalid(InvalidationFlag.SIZE);
+		this.setInvalid(DATA);
+		this.setInvalid(SIZE);
 		return this._content;
 	}
 
@@ -588,11 +588,11 @@ class Callout extends FeathersControl {
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(InvalidationFlag.DATA);
+		var dataInvalid = this.isInvalid(DATA);
 		var originInvalid = this.isInvalid(INVALIDATION_FLAG_ORIGIN);
-		var sizeInvalid = this.isInvalid(InvalidationFlag.SIZE);
-		var stateInvalid = this.isInvalid(InvalidationFlag.STATE);
-		var stylesInvalid = this.isInvalid(InvalidationFlag.STYLES);
+		var sizeInvalid = this.isInvalid(SIZE);
+		var stateInvalid = this.isInvalid(STATE);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (sizeInvalid) {
 			this._lastPopUpOriginBounds = null;
@@ -961,7 +961,7 @@ class Callout extends FeathersControl {
 		if (this._ignoreContentResize) {
 			return;
 		}
-		this.setInvalid(InvalidationFlag.SIZE);
+		this.setInvalid(SIZE);
 	}
 
 	private function callout_stage_mouseDownHandler(event:MouseEvent):Void {
