@@ -668,6 +668,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
+			this._currentItemState.owner = this;
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
@@ -750,6 +751,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, index:Int):Void {
+		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = item == this._selectedItem;
@@ -830,6 +832,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {
 		var index = this._dataProvider.indexOf(data);
+		this._currentItemState.owner = this;
 		this._currentItemState.data = data;
 		this._currentItemState.index = index;
 		this._currentItemState.text = this.itemToText(data);

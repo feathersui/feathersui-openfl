@@ -8,6 +8,7 @@
 
 package feathers.data;
 
+import feathers.controls.GridView;
 import feathers.controls.GridViewColumn;
 
 /**
@@ -31,6 +32,13 @@ class GridViewHeaderState {
 		this.columnIndex = columnIndex;
 		this.text = text;
 	}
+
+	/**
+		Returns a reference to the `GridView` that contains this header.
+
+		@since 1.0.0
+	**/
+	public var owner:GridView;
 
 	/**
 		An item from the collection displayed by the `GridView`.

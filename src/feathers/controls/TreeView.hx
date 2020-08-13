@@ -759,6 +759,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
 				itemRenderer.removeEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 			}
+			this._currentItemState.owner = this;
 			this._currentItemState.data = item;
 			this._currentItemState.location = null;
 			this._currentItemState.layoutIndex = -1;
@@ -915,6 +916,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
+		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = layoutIndex;
@@ -967,6 +969,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {
 		var location = this._dataProvider.locationOf(data);
+		this._currentItemState.owner = this;
 		this._currentItemState.data = data;
 		this._currentItemState.location = location;
 		this._currentItemState.layoutIndex = this.dataToLayoutIndex.get(data);

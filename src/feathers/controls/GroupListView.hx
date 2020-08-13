@@ -793,6 +793,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if (Std.is(itemRenderer, IToggle)) {
 				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
+			this._currentItemState.owner = this;
 			this._currentItemState.type = inactive == this.inactiveHeaderRenderers ? HEADER : STANDARD;
 			this._currentItemState.data = item;
 			this._currentItemState.location = null;
@@ -941,6 +942,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, type:GroupListViewItemType, item:Dynamic, location:Array<Int>,
 			layoutIndex:Int):Void {
+		this._currentItemState.owner = this;
 		this._currentItemState.type = type;
 		this._currentItemState.data = item;
 		this._currentItemState.location = location;

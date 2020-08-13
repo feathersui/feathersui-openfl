@@ -736,6 +736,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.headerRendererToData.remove(headerRenderer);
 			this.dataToHeaderRenderer.remove(header);
 
+			this._currentHeaderState.owner = this;
 			this._currentHeaderState.column = null;
 			this._currentHeaderState.columnIndex = -1;
 			this._currentHeaderState.text = null;
@@ -903,6 +904,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, item:Dynamic, index:Int):Void {
+		rowRenderer.gridView = this;
 		rowRenderer.data = item;
 		rowRenderer.rowIndex = index;
 		rowRenderer.selectable = this._selectable;
@@ -937,6 +939,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, column:GridViewColumn, columnIndex:Int):Void {
+		this._currentHeaderState.owner = this;
 		this._currentHeaderState.column = column;
 		this._currentHeaderState.columnIndex = columnIndex;
 		this._currentHeaderState.text = column.headerText;

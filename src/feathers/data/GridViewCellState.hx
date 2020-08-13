@@ -8,6 +8,7 @@
 
 package feathers.data;
 
+import feathers.controls.GridView;
 import feathers.controls.GridViewColumn;
 
 /**
@@ -33,6 +34,13 @@ class GridViewCellState {
 		this.selected = false;
 		this.text = text;
 	}
+
+	/**
+		Returns a reference to the `GridView` that contains this cell.
+
+		@since 1.0.0
+	**/
+	public var owner:GridView;
 
 	/**
 		An row from the collection displayed by the `GridView`.

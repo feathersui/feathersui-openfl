@@ -8,6 +8,8 @@
 
 package feathers.data;
 
+import feathers.controls.ListView;
+
 /**
 	Represents the current state of a `ListView` item renderer.
 
@@ -28,6 +30,13 @@ class ListViewItemState {
 		this.selected = false;
 		this.text = text;
 	}
+
+	/**
+		Returns a reference to the `ListView` that contains this item.
+
+		@since 1.0.0
+	**/
+	public var owner:ListView;
 
 	/**
 		An item from the collection used as the `ListView` data provider.

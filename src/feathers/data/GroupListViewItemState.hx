@@ -8,6 +8,8 @@
 
 package feathers.data;
 
+import feathers.controls.GroupListView;
+
 /**
 	Represents the current state of a `GroupListView` item renderer.
 
@@ -31,6 +33,13 @@ class GroupListViewItemState {
 		this.selected = false;
 		this.text = text;
 	}
+
+	/**
+		Returns a reference to the `GroupListView` that contains this item.
+
+		@since 1.0.0
+	**/
+	public var owner:GroupListView;
 
 	/**
 		The type of item that this state represents.

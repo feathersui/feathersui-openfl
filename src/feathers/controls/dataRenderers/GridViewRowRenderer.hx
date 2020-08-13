@@ -68,6 +68,32 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	private var _columnToCellRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
 	private var _cellRendererToColumn = new ObjectMap<DisplayObject, GridViewColumn>();
 
+	private var _gridView:GridView;
+
+	/**
+		The `GridView` component that contains this row.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var gridView(get, set):GridView;
+
+	private function get_gridView():GridView {
+		return this._gridView;
+	}
+
+	private function set_gridView(value:GridView):GridView {
+		if (this._gridView == value) {
+			return this._gridView;
+		}
+		this._gridView = value;
+		this.setInvalid(InvalidationFlag.DATA);
+		return this._gridView;
+	}
+
 	private var _selected:Bool = false;
 
 	/**
@@ -291,6 +317,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			}
 			this._cellRendererToColumn.remove(cellRenderer);
 			this._columnToCellRenderer.remove(column);
+			this._currentCellState.owner = this._gridView;
 			this._currentCellState.data = null;
 			this._currentCellState.rowIndex = -1;
 			this._currentCellState.columnIndex = -1;
@@ -369,6 +396,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 
 	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
 		var storage = this._defaultStorage;
+		this._currentCellState.owner = this._gridView;
 		this._currentCellState.data = this._data;
 		this._currentCellState.rowIndex = this._rowIndex;
 		this._currentCellState.columnIndex = columnIndex;

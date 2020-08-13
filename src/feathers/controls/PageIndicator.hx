@@ -358,6 +358,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 				continue;
 			}
 			button.removeEventListener(Event.CHANGE, pageIndicator_toggleButton_changeHandler);
+			this._currentItemState.owner = this;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
@@ -466,6 +467,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			// if the factory set a variant already, don't use the default
 			button.variant = PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON;
 		}
+		this._currentItemState.owner = this;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = index == this._selectedIndex;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;

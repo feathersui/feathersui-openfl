@@ -451,6 +451,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this.dataToTab.remove(item);
 			tab.removeEventListener(TriggerEvent.TRIGGER, tab_triggerHandler);
 			tab.removeEventListener(Event.CHANGE, tab_changeHandler);
+			this._currentItemState.owner = this;
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
 			this._currentItemState.selected = false;
@@ -553,6 +554,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			var item = this._dataProvider.get(i);
 			var tab = this.dataToTab.get(item);
 			if (tab != null) {
+				this._currentItemState.owner = this;
 				this._currentItemState.data = item;
 				this._currentItemState.index = i;
 				this._currentItemState.selected = item == this._selectedItem;
@@ -604,6 +606,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			// if the factory set a variant already, don't use the default
 			tab.variant = TabBar.CHILD_VARIANT_TAB;
 		}
+		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
 		this._currentItemState.selected = item == this._selectedItem;

@@ -8,6 +8,8 @@
 
 package feathers.data;
 
+import feathers.controls.TreeView;
+
 /**
 	Represents the current state of a `TreeView` item renderer.
 
@@ -31,6 +33,13 @@ class TreeViewItemState {
 		this.selected = false;
 		this.text = text;
 	}
+
+	/**
+		Returns a reference to the `TreeView` that contains this item.
+
+		@since 1.0.0
+	**/
+	public var owner:TreeView;
 
 	/**
 		An item from the collection used as the `TreeView` data provider.

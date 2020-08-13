@@ -8,6 +8,8 @@
 
 package feathers.data;
 
+import feathers.controls.PageIndicator;
+
 /**
 	Represents the current state of a `PageIndicator` toggle button.
 
@@ -26,6 +28,13 @@ class PageIndicatorItemState {
 		this.index = index;
 		this.selected = false;
 	}
+
+	/**
+		Returns a reference to the `PageIndicator` that contains this item.
+
+		@since 1.0.0
+	**/
+	public var owner:PageIndicator;
 
 	/**
 		The page index.
