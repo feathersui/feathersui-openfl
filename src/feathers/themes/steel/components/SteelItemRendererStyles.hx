@@ -8,12 +8,12 @@
 
 package feathers.themes.steel.components;
 
-import feathers.layout.HorizontalAlign;
 import feathers.controls.ToggleButtonState;
-import feathers.skins.UnderlineSkin;
 import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.skins.UnderlineSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `ItemRenderer` component.
@@ -34,16 +34,25 @@ class SteelItemRendererStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(ItemRenderer, null) == null) {
 			styleProvider.setStyleFunction(ItemRenderer, null, function(itemRenderer:ItemRenderer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
 				if (itemRenderer.backgroundSkin == null) {
 					var skin = new UnderlineSkin();
 					skin.fill = theme.getContainerFill();
 					skin.border = theme.getDividerBorder();
 					skin.selectedFill = theme.getActiveThemeFill();
 					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getActiveThemeFill());
-					skin.width = 44.0;
-					skin.height = 44.0;
-					skin.minWidth = 44.0;
-					skin.minHeight = 44.0;
+					if (isDesktop) {
+						skin.width = 32.0;
+						skin.height = 32.0;
+						skin.minWidth = 32.0;
+						skin.minHeight = 32.0;
+					} else {
+						skin.width = 44.0;
+						skin.height = 44.0;
+						skin.minWidth = 44.0;
+						skin.minHeight = 44.0;
+					}
 					itemRenderer.backgroundSkin = skin;
 				}
 
