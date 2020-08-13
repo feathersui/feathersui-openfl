@@ -318,10 +318,10 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			this._cellRendererToColumn.remove(cellRenderer);
 			this._columnToCellRenderer.remove(column);
 			this._currentCellState.owner = this._gridView;
-			this._currentCellState.data = null;
+			this._currentCellState.data = this._data;
 			this._currentCellState.rowIndex = -1;
 			this._currentCellState.columnIndex = -1;
-			this._currentCellState.column = null;
+			this._currentCellState.column = column;
 			this._currentCellState.selected = false;
 			this._currentCellState.text = null;
 			var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;

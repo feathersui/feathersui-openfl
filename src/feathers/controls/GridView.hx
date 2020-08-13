@@ -732,12 +732,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var recycler = this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this._headerRendererRecycler;
 		for (headerRenderer in this.activeHeaderRenderers) {
-			var header = this.headerRendererToData.get(headerRenderer);
+			var column = this.headerRendererToData.get(headerRenderer);
 			this.headerRendererToData.remove(headerRenderer);
-			this.dataToHeaderRenderer.remove(header);
+			this.dataToHeaderRenderer.remove(column);
 
 			this._currentHeaderState.owner = this;
-			this._currentHeaderState.column = null;
+			this._currentHeaderState.column = column;
 			this._currentHeaderState.columnIndex = -1;
 			this._currentHeaderState.text = null;
 			if (recycler != null && recycler.reset != null) {
