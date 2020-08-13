@@ -139,25 +139,25 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return this._dataProvider;
 		}
 		if (this._dataProvider != null) {
-			this._dataProvider.removeEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this._dataProvider.removeEventListener(Event.CHANGE, tabBar_dataProvider_changeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, tabBar_dataProvider_addItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, tabBar_dataProvider_removeItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, tabBar_dataProvider_replaceItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, tabBar_dataProvider_removeAllHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, tabBar_dataProvider_resetHandler);
-			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, tabBar_dataProvider_sortChangeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, tabBar_dataProvider_filterChangeHandler);
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
-			this._dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
-			this._dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
-			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
-			this._dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this._dataProvider.addEventListener(Event.CHANGE, tabBar_dataProvider_changeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, tabBar_dataProvider_addItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, tabBar_dataProvider_removeItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, tabBar_dataProvider_replaceItemHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, tabBar_dataProvider_removeAllHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, tabBar_dataProvider_resetHandler);
-			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
-			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, tabBar_dataProvider_sortChangeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, tabBar_dataProvider_filterChangeHandler);
 		}
 		if (this._selectedIndex == -1 && this._dataProvider != null && this._dataProvider.length > 0) {
 			// use the setter
@@ -453,8 +453,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			}
 			this.tabToData.remove(tab);
 			this.dataToTab.remove(item);
-			tab.removeEventListener(TriggerEvent.TRIGGER, tab_triggerHandler);
-			tab.removeEventListener(Event.CHANGE, tab_changeHandler);
+			tab.removeEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);
+			tab.removeEventListener(Event.CHANGE, tabBar_tab_changeHandler);
 			this._currentItemState.owner = this;
 			this._currentItemState.data = item;
 			this._currentItemState.index = -1;
@@ -622,8 +622,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		}
 		tab.selected = this._currentItemState.selected;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
-		tab.addEventListener(TriggerEvent.TRIGGER, tab_triggerHandler);
-		tab.addEventListener(Event.CHANGE, tab_changeHandler);
+		tab.addEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);
+		tab.addEventListener(Event.CHANGE, tabBar_tab_changeHandler);
 		this.tabToData.set(tab, item);
 		this.dataToTab.set(item, tab);
 		return tab;
@@ -688,14 +688,14 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		this.navigateWithKeyboard(event);
 	}
 
-	private function tab_triggerHandler(event:TriggerEvent):Void {
+	private function tabBar_tab_triggerHandler(event:TriggerEvent):Void {
 		var tab = cast(event.currentTarget, ToggleButton);
 		var item = this.tabToData.get(tab);
 		// trigger before change
 		this.dispatchEvent(event);
 	}
 
-	private function tab_changeHandler(event:Event):Void {
+	private function tabBar_tab_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
@@ -710,11 +710,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		this.selectedItem = item;
 	}
 
-	private function dataProvider_changeHandler(event:Event):Void {
+	private function tabBar_dataProvider_changeHandler(event:Event):Void {
 		this.setInvalid(InvalidationFlag.DATA);
 	}
 
-	private function dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
+	private function tabBar_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
 		if (this._selectedIndex == -1) {
 			return;
 		}
@@ -723,7 +723,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		}
 	}
 
-	private function dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
+	private function tabBar_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
 		if (this._selectedIndex == -1) {
 			return;
 		}
@@ -732,7 +732,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		}
 	}
 
-	private function dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
+	private function tabBar_dataProvider_replaceItemHandler(event:FlatCollectionEvent):Void {
 		if (this._selectedIndex == -1) {
 			return;
 		}
@@ -751,11 +751,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		this.selectedIndex = -1;
 	}
 
-	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
+	private function tabBar_dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
-	private function dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
+	private function tabBar_dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 }
