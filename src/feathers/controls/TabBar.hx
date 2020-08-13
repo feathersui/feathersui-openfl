@@ -143,6 +143,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, tabBar_dataProvider_removeAllHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, tabBar_dataProvider_resetHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
@@ -152,6 +154,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._dataProvider.addEventListener(FlatCollectionEvent.ADD_ITEM, dataProvider_addItemHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ITEM, dataProvider_removeItemHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.REPLACE_ITEM, dataProvider_replaceItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, tabBar_dataProvider_removeAllHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, tabBar_dataProvider_resetHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, dataProvider_sortChangeHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, dataProvider_filterChangeHandler);
 		}
@@ -735,6 +739,16 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this._selectedIndex == event.index) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
+	}
+
+	private function tabBar_dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
+		// use the setter
+		this.selectedIndex = -1;
+	}
+
+	private function tabBar_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
+		// use the setter
+		this.selectedIndex = -1;
 	}
 
 	private function dataProvider_sortChangeHandler(event:FlatCollectionEvent):Void {
