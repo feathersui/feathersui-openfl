@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.TabSkin;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.skins.CircleSkin;
@@ -59,10 +60,11 @@ class SteelVSliderStyles {
 				}
 
 				if (slider.trackSkin == null) {
-					var trackSkin = new RectangleSkin();
+					var trackSkin = new TabSkin();
 					trackSkin.fill = theme.getActiveThemeFill();
 					trackSkin.border = theme.getActiveFillBorder();
 					trackSkin.cornerRadius = 6.0;
+					trackSkin.cornerRadiusPosition = BOTTOM;
 					trackSkin.width = 8.0;
 					trackSkin.height = 100.0;
 					slider.trackSkin = trackSkin;
@@ -70,10 +72,11 @@ class SteelVSliderStyles {
 					// if the track skin is already styled, don't style the secondary
 					// track skin with its default either
 					if (slider.secondaryTrackSkin == null) {
-						var secondaryTrackSkin = new RectangleSkin();
+						var secondaryTrackSkin = new TabSkin();
 						secondaryTrackSkin.fill = theme.getInsetFill();
 						secondaryTrackSkin.border = theme.getInsetBorder();
 						secondaryTrackSkin.cornerRadius = 6.0;
+						secondaryTrackSkin.cornerRadiusPosition = TOP;
 						secondaryTrackSkin.width = 8.0;
 						secondaryTrackSkin.height = 100.0;
 						slider.secondaryTrackSkin = secondaryTrackSkin;
