@@ -45,6 +45,8 @@ class SteelToggleSwitchStyles {
 					trackSkin.border = theme.getInsetBorder();
 					trackSkin.selectedFill = theme.getReversedActiveThemeFill();
 					trackSkin.selectedBorder = theme.getActiveFillBorder();
+					trackSkin.disabledFill = theme.getDisabledInsetFill();
+					trackSkin.disabledBorder = theme.getInsetBorder();
 
 					var track = new BasicToggleButton();
 					track.toggleable = false;
@@ -61,6 +63,8 @@ class SteelToggleSwitchStyles {
 					thumbSkin.fill = theme.getButtonFill();
 					thumbSkin.border = theme.getBorder();
 					thumbSkin.selectedBorder = theme.getActiveFillBorder();
+					thumbSkin.disabledFill = theme.getButtonDisabledFill();
+					thumbSkin.disabledBorder = theme.getBorder();
 
 					var thumb = new BasicToggleButton();
 					thumb.toggleable = false;
