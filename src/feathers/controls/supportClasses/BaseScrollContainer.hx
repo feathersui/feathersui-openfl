@@ -11,14 +11,12 @@ package feathers.controls.supportClasses;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
-import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.events.ScrollEvent;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
+import feathers.skins.IProgrammaticSkin;
 import feathers.utils.MathUtil;
 import feathers.utils.MeasurementsUtil;
 import feathers.utils.Scroller;
@@ -1304,8 +1302,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -1321,8 +1319,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {

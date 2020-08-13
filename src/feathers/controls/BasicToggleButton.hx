@@ -8,23 +8,21 @@
 
 package feathers.controls;
 
+import feathers.core.FeathersControl;
+import feathers.core.IMeasureObject;
+import feathers.core.IStateContext;
+import feathers.core.IUIControl;
+import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
+import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
 import feathers.utils.KeyToState;
 import feathers.utils.MeasurementsUtil;
-import feathers.events.TriggerEvent;
+import feathers.utils.PointerToState;
 import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
-import openfl.events.MouseEvent;
-import feathers.core.FeathersControl;
-import feathers.core.IMeasureObject;
-import feathers.core.IUIControl;
-import feathers.core.InvalidationFlag;
-import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
-import feathers.core.IValidating;
-import feathers.events.FeathersEvent;
-import feathers.layout.Measurements;
-import feathers.utils.PointerToState;
 
 /**
 	A simple toggle button control with selection, pointer states, but no
@@ -359,8 +357,8 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = this;
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -380,8 +378,8 @@ class BasicToggleButton extends FeathersControl implements IToggle implements IS
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {

@@ -8,32 +8,31 @@
 
 package feathers.controls;
 
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import feathers.core.IFocusObject;
-import feathers.core.IIndexSelector;
-import feathers.core.IUIControl;
-import feathers.core.IStateContext;
-import feathers.core.IValidating;
-import feathers.core.IStateObserver;
-import openfl.display.DisplayObject;
-import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
+import feathers.core.IFocusObject;
+import feathers.core.IIndexSelector;
+import feathers.core.IUIControl;
+import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.data.TabBarItemState;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.ILayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelTabBarStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
+import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
+import openfl.ui.Keyboard;
 
 /**
 	A line of tabs, where one may be selected at a time.
@@ -503,8 +502,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -520,8 +519,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {

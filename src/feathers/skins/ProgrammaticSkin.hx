@@ -11,7 +11,7 @@ package feathers.skins;
 import feathers.controls.IToggle;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
-import feathers.core.InvalidationFlag;
+import feathers.core.IUIControl;
 import feathers.core.MeasureSprite;
 import feathers.events.FeathersEvent;
 import openfl.events.Event;
@@ -21,7 +21,7 @@ import openfl.events.Event;
 
 	@since 1.0.0
 **/
-class ProgrammaticSkin extends MeasureSprite implements IStateObserver {
+class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implements IStateObserver {
 	private function new() {
 		super();
 
@@ -30,11 +30,50 @@ class ProgrammaticSkin extends MeasureSprite implements IStateObserver {
 		this.tabChildren = false;
 	}
 
-	private var _stateContext:IStateContext<Dynamic>;
+	private var _uiContext:IUIControl;
 
 	/**
 		An optional `IStateContext` that is used to change the styles of the
 		skin when its state changes.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var uiContext(get, set):IUIControl;
+
+	private function get_uiContext():IUIControl {
+		return this._uiContext;
+	}
+
+	private function set_uiContext(value:IUIControl):IUIControl {
+		if (this._uiContext == value) {
+			return this._uiContext;
+		}
+		if (this._uiContext != null) {
+			this._uiContext.removeEventListener(FeathersEvent.STATE_CHANGE, uiContext_stateChangeHandler);
+			if (Std.is(this._uiContext, IToggle)) {
+				this._uiContext.removeEventListener(Event.CHANGE, uiContextToggle_changeHandler);
+			}
+		}
+		this._uiContext = value;
+		if (this._uiContext != null) {
+			this._uiContext.addEventListener(FeathersEvent.STATE_CHANGE, uiContext_stateChangeHandler, false, 0, true);
+			if (Std.is(this._uiContext, IToggle)) {
+				this._uiContext.addEventListener(Event.CHANGE, uiContextToggle_changeHandler);
+			}
+		}
+		this.setInvalid(DATA);
+		return this._uiContext;
+	}
+
+	private var _stateContext:IStateContext<Dynamic>;
+
+	/**
+		An optional `IStateContext` that is used to change the styles of the
+		skin when its state changes. May be different than `uiContext`.
+
+		If `null`, this skin may use `uiContext` instead, as long as `uiContext`
+		implements the `IStateContext` interface.
 
 		@since 1.0.0
 	**/
@@ -51,16 +90,10 @@ class ProgrammaticSkin extends MeasureSprite implements IStateObserver {
 		}
 		if (this._stateContext != null) {
 			this._stateContext.removeEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler);
-			if (Std.is(this._stateContext, IToggle)) {
-				this._stateContext.removeEventListener(Event.CHANGE, stateContextToggle_changeHandler);
-			}
 		}
 		this._stateContext = value;
 		if (this._stateContext != null) {
 			this._stateContext.addEventListener(FeathersEvent.STATE_CHANGE, stateContext_stateChangeHandler, false, 0, true);
-			if (Std.is(this._stateContext, IToggle)) {
-				this._stateContext.addEventListener(Event.CHANGE, stateContextToggle_changeHandler);
-			}
 		}
 		this.setInvalid(DATA);
 		return this._stateContext;
@@ -93,6 +126,14 @@ class ProgrammaticSkin extends MeasureSprite implements IStateObserver {
 			return;
 		}
 		this.setInvalid(STATE);
+	}
+
+	private function uiContext_stateChangeHandler(event:FeathersEvent):Void {
+		this.checkForStateChange();
+	}
+
+	private function uiContextToggle_changeHandler(event:Event):Void {
+		this.checkForStateChange();
 	}
 
 	private function stateContext_stateChangeHandler(event:FeathersEvent):Void {

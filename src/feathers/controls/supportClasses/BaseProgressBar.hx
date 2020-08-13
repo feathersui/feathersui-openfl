@@ -8,14 +8,14 @@
 
 package feathers.controls.supportClasses;
 
-import openfl.events.Event;
-import feathers.events.FeathersEvent;
-import openfl.errors.TypeError;
-import feathers.core.IUIControl;
-import feathers.core.InvalidationFlag;
-import feathers.layout.Measurements;
-import openfl.display.DisplayObject;
 import feathers.core.FeathersControl;
+import feathers.core.IUIControl;
+import feathers.events.FeathersEvent;
+import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
+import openfl.display.DisplayObject;
+import openfl.errors.TypeError;
+import openfl.events.Event;
 
 /**
 	Base class for progress bar components.
@@ -363,6 +363,9 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
+		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
 
@@ -376,6 +379,9 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
 		if (skin == null) {
 			return;
+		}
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {
@@ -404,6 +410,9 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		} else {
 			this._fillSkinMeasurements.save(this._currentFillSkin);
 		}
+		if (Std.is(this._currentFillSkin, IProgrammaticSkin)) {
+			cast(this._currentFillSkin, IProgrammaticSkin).uiContext = this;
+		}
 		this.addChild(this._currentFillSkin);
 	}
 
@@ -417,6 +426,9 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	private function removeCurrentFillSkin(skin:DisplayObject):Void {
 		if (skin == null) {
 			return;
+		}
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			// we need to restore these values so that they won't be lost the

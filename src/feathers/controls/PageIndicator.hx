@@ -8,32 +8,31 @@
 
 package feathers.controls;
 
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import feathers.core.IFocusObject;
-import openfl.errors.ArgumentError;
-import feathers.layout.HorizontalLayout;
-import feathers.layout.VerticalLayout;
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
-import feathers.data.PageIndicatorItemState;
-import feathers.utils.DisplayObjectRecycler;
-import openfl.errors.IllegalOperationError;
-import feathers.core.IStateContext;
-import feathers.core.IUIControl;
-import feathers.core.IStateObserver;
-import feathers.core.IValidating;
-import feathers.layout.LayoutBoundsResult;
-import feathers.layout.ILayout;
-import feathers.layout.Measurements;
-import openfl.display.DisplayObject;
-import openfl.events.Event;
-import openfl.errors.RangeError;
-import feathers.events.FeathersEvent;
-import feathers.core.InvalidationFlag;
 import feathers.core.FeathersControl;
+import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
+import feathers.core.IUIControl;
+import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
+import feathers.data.PageIndicatorItemState;
+import feathers.events.FeathersEvent;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.ILayout;
+import feathers.layout.LayoutBoundsResult;
+import feathers.layout.Measurements;
+import feathers.layout.VerticalLayout;
+import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelPageIndicatorStyles;
+import feathers.utils.DisplayObjectRecycler;
+import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
+import openfl.errors.IllegalOperationError;
+import openfl.errors.RangeError;
+import openfl.events.Event;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -400,8 +399,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -417,8 +416,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {

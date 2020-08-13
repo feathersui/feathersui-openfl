@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.skins.IProgrammaticSkin;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import feathers.core.IFocusObject;
@@ -661,8 +662,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = this;
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -679,8 +680,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {

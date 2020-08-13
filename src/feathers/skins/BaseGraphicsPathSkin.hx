@@ -8,20 +8,14 @@
 
 package feathers.skins;
 
-import feathers.core.IUIControl;
-import openfl.events.Event;
-import openfl.display.LineScaleMode;
-import openfl.display.InterpolationMethod;
-import openfl.display.SpreadMethod;
 import feathers.controls.IToggle;
-import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
-import feathers.core.MeasureSprite;
-import feathers.events.FeathersEvent;
-import openfl.geom.Matrix;
 import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
+import openfl.display.InterpolationMethod;
+import openfl.display.LineScaleMode;
+import openfl.display.SpreadMethod;
+import openfl.geom.Matrix;
 
 /**
 	A base class for Feathers UI skins that draw a path with a fill and border
@@ -445,23 +439,26 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 	}
 
 	private function getCurrentBorderWithoutCache():LineStyle {
-		if (this._stateContext == null) {
-			return this._border;
+		var stateContext = this._stateContext;
+		if (stateContext == null && Std.is(this._uiContext, IStateContext)) {
+			stateContext = cast(this._uiContext, IStateContext<Dynamic>);
 		}
-		if (this._stateToBorder != null) {
-			var result = this._stateToBorder.get(this._stateContext.currentState);
+		if (this._stateToBorder != null && stateContext != null) {
+			var result = this._stateToBorder.get(stateContext.currentState);
 			if (result != null) {
 				return result;
 			}
 		}
-		if (this._disabledBorder != null && Std.is(this._stateContext, IUIControl)) {
-			var control = cast(this._stateContext, IUIControl);
-			if (!control.enabled) {
+		if (this._uiContext == null) {
+			return this._border;
+		}
+		if (this._disabledBorder != null) {
+			if (!this._uiContext.enabled) {
 				return this._disabledBorder;
 			}
 		}
-		if (this._selectedBorder != null && Std.is(this._stateContext, IToggle)) {
-			var toggle = cast(this._stateContext, IToggle);
+		if (this._selectedBorder != null && Std.is(this._uiContext, IToggle)) {
+			var toggle = cast(this._uiContext, IToggle);
 			if (toggle.selected) {
 				return this._selectedBorder;
 			}
@@ -488,23 +485,26 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 	}
 
 	private function getCurrentFillWithoutCache() {
-		if (this._stateContext == null) {
-			return this._fill;
+		var stateContext = this._stateContext;
+		if (stateContext == null && Std.is(this._uiContext, IStateContext)) {
+			stateContext = cast(this._uiContext, IStateContext<Dynamic>);
 		}
-		if (this._stateToFill != null) {
-			var result = this._stateToFill.get(this._stateContext.currentState);
+		if (this._stateToFill != null && stateContext != null) {
+			var result = this._stateToFill.get(stateContext.currentState);
 			if (result != null) {
 				return result;
 			}
 		}
-		if (this._disabledFill != null && Std.is(this._stateContext, IUIControl)) {
-			var control = cast(this._stateContext, IUIControl);
-			if (!control.enabled) {
+		if (this._uiContext == null) {
+			return this._fill;
+		}
+		if (this._disabledFill != null) {
+			if (!this._uiContext.enabled) {
 				return this._disabledFill;
 			}
 		}
-		if (this._selectedFill != null && Std.is(this._stateContext, IToggle)) {
-			var toggle = cast(this._stateContext, IToggle);
+		if (this._selectedFill != null && Std.is(this._uiContext, IToggle)) {
+			var toggle = cast(this._uiContext, IToggle);
 			if (toggle.selected) {
 				return this._selectedFill;
 			}

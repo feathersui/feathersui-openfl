@@ -8,19 +8,19 @@
 
 package feathers.controls.supportClasses;
 
-import feathers.events.ScrollEvent;
-import openfl.errors.TypeError;
-import openfl.geom.Point;
-import openfl.display.Sprite;
-import openfl.display.InteractiveObject;
-import feathers.layout.Measurements;
-import feathers.core.IUIControl;
-import openfl.events.MouseEvent;
-import openfl.display.DisplayObject;
-import openfl.events.Event;
-import feathers.events.FeathersEvent;
-import feathers.core.InvalidationFlag;
 import feathers.core.FeathersControl;
+import feathers.core.IUIControl;
+import feathers.events.FeathersEvent;
+import feathers.events.ScrollEvent;
+import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
+import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
+import openfl.display.Sprite;
+import openfl.errors.TypeError;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
 
 /**
 	Base class for scroll bar components.
@@ -494,6 +494,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return;
 		}
 		if (oldSkin != null) {
+			if (Std.is(oldSkin, IProgrammaticSkin)) {
+				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+			}
 			if (this.thumbContainer != null) {
 				this.thumbContainer.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
 				this.thumbContainer.removeChild(oldSkin);
@@ -525,6 +528,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 				this.addChild(this._currentThumbSkin);
 				this._currentThumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
 			}
+			if (Std.is(this._currentThumbSkin, IProgrammaticSkin)) {
+				cast(this._currentThumbSkin, IProgrammaticSkin).uiContext = this;
+			}
 		} else {
 			this._thumbSkinMeasurements = null;
 		}
@@ -537,6 +543,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return;
 		}
 		if (oldSkin != null) {
+			if (Std.is(oldSkin, IProgrammaticSkin)) {
+				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+			}
 			if (this.trackContainer != null) {
 				this.trackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 				this.trackContainer.removeChild(oldSkin);
@@ -568,6 +577,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 				this.addChildAt(this._currentTrackSkin, 0);
 				this._currentTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 			}
+			if (Std.is(this._currentTrackSkin, IProgrammaticSkin)) {
+				cast(this._currentTrackSkin, IProgrammaticSkin).uiContext = this;
+			}
 		} else {
 			this._trackSkinMeasurements = null;
 		}
@@ -580,6 +592,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return;
 		}
 		if (oldSkin != null) {
+			if (Std.is(oldSkin, IProgrammaticSkin)) {
+				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+			}
 			if (this.secondaryTrackContainer != null) {
 				this.secondaryTrackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 				this.secondaryTrackContainer.removeChild(oldSkin);
@@ -613,6 +628,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			} else {
 				this.addChildAt(this._currentSecondaryTrackSkin, index);
 				this._currentSecondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
+			}
+			if (Std.is(this._currentSecondaryTrackSkin, IProgrammaticSkin)) {
+				cast(this._currentSecondaryTrackSkin, IProgrammaticSkin).uiContext = this;
 			}
 		} else {
 			this._secondaryTrackSkinMeasurements = null;

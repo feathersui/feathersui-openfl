@@ -8,12 +8,7 @@
 
 package feathers.controls;
 
-import feathers.utils.MeasurementsUtil;
-import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.core.FeathersControl;
-import feathers.core.InvalidationFlag;
-import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
@@ -22,6 +17,9 @@ import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
+import feathers.themes.steel.components.SteelLayoutGroupStyles;
+import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.geom.Point;
@@ -434,8 +432,8 @@ class LayoutGroup extends FeathersControl {
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this._addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -451,8 +449,8 @@ class LayoutGroup extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {

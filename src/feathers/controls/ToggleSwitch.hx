@@ -12,9 +12,9 @@ import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelToggleSwitchStyles;
 import motion.Actuate;
 import motion.actuators.SimpleActuator;
@@ -377,6 +377,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			return;
 		}
 		if (oldSkin != null && oldSkin.parent == this) {
+			if (Std.is(oldSkin, IProgrammaticSkin)) {
+				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+			}
 			this.removeChild(oldSkin);
 		}
 		if (this._currentThumbSkin != null) {
@@ -387,6 +390,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this._thumbSkinMeasurements = new Measurements(this._currentThumbSkin);
 			} else {
 				this._thumbSkinMeasurements.save(this._currentThumbSkin);
+			}
+			if (Std.is(this._currentThumbSkin, IProgrammaticSkin)) {
+				cast(this._currentThumbSkin, IProgrammaticSkin).uiContext = this;
 			}
 			// add it above the trackSkin and secondaryTrackSkin
 			this.addChild(this._currentThumbSkin);
@@ -402,6 +408,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			return;
 		}
 		if (oldSkin != null && oldSkin.parent == this) {
+			if (Std.is(oldSkin, IProgrammaticSkin)) {
+				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+			}
 			this.removeChild(oldSkin);
 		}
 		if (this._currentTrackSkin != null) {
@@ -412,6 +421,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this._trackSkinMeasurements = new Measurements(this._currentTrackSkin);
 			} else {
 				this._trackSkinMeasurements.save(this._currentTrackSkin);
+			}
+			if (Std.is(this._currentTrackSkin, IProgrammaticSkin)) {
+				cast(this._currentTrackSkin, IProgrammaticSkin).uiContext = this;
 			}
 			// always on the bottom
 			this.addChildAt(this._currentTrackSkin, 0);
@@ -427,6 +439,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			return;
 		}
 		if (oldSkin != null && oldSkin.parent == this) {
+			if (Std.is(oldSkin, IProgrammaticSkin)) {
+				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+			}
 			this.removeChild(oldSkin);
 		}
 		if (this._currentSecondaryTrackSkin != null) {
@@ -437,6 +452,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this._secondaryTrackSkinMeasurements = new Measurements(this._currentSecondaryTrackSkin);
 			} else {
 				this._secondaryTrackSkinMeasurements.save(this._currentSecondaryTrackSkin);
+			}
+			if (Std.is(this._currentSecondaryTrackSkin, IProgrammaticSkin)) {
+				cast(this._currentSecondaryTrackSkin, IProgrammaticSkin).uiContext = this;
 			}
 
 			// on the bottom or above the trackSkin

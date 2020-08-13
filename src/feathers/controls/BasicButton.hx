@@ -8,23 +8,20 @@
 
 package feathers.controls;
 
-import feathers.utils.KeyToState;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
+import feathers.utils.KeyToState;
 import feathers.utils.MeasurementsUtil;
 import feathers.utils.PointerToState;
 import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
-import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
-import openfl.ui.Keyboard;
 
 /**
 	A simple button control with states, but no content, that is useful for
@@ -242,8 +239,8 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = this;
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -260,8 +257,8 @@ class BasicButton extends FeathersControl implements IStateContext<ButtonState> 
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {

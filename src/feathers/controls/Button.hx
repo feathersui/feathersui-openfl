@@ -10,15 +10,14 @@ package feathers.controls;
 
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
-import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
+import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelButtonStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
@@ -892,8 +891,8 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		} else {
 			this._iconMeasurements.save(this._currentIcon);
 		}
-		if (Std.is(this._currentIcon, IStateObserver)) {
-			cast(this._currentIcon, IStateObserver).stateContext = this;
+		if (Std.is(this._currentIcon, IProgrammaticSkin)) {
+			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
 		}
 		var index = this.getChildIndex(this.textField);
 		// the icon should be below the text
@@ -912,8 +911,8 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (icon == null) {
 			return;
 		}
-		if (Std.is(icon, IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = null;
+		if (Std.is(icon, IProgrammaticSkin)) {
+			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
 		this._iconMeasurements.restore(icon);
 		if (icon.parent == this) {

@@ -8,30 +8,28 @@
 
 package feathers.controls;
 
-import feathers.utils.MeasurementsUtil;
-import feathers.layout.RelativePositions;
-import feathers.core.IStateObserver;
-import feathers.core.IStateContext;
-import feathers.themes.steel.components.SteelCalloutStyles;
-import openfl.display.Sprite;
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
-import feathers.layout.Measurements;
+import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
-import feathers.layout.RelativePosition;
-import feathers.events.FeathersEvent;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
-import feathers.layout.VerticalAlign;
-import openfl.events.Event;
-import openfl.geom.Point;
-import feathers.layout.HorizontalAlign;
-import openfl.geom.Rectangle;
 import feathers.core.PopUpManager;
-import openfl.errors.ArgumentError;
+import feathers.events.FeathersEvent;
+import feathers.layout.HorizontalAlign;
+import feathers.layout.Measurements;
+import feathers.layout.RelativePosition;
+import feathers.layout.RelativePositions;
+import feathers.layout.VerticalAlign;
+import feathers.skins.IProgrammaticSkin;
+import feathers.themes.steel.components.SteelCalloutStyles;
+import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
-import feathers.core.FeathersControl;
+import openfl.display.Sprite;
+import openfl.errors.ArgumentError;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -798,8 +796,8 @@ class Callout extends FeathersControl {
 		} else {
 			this._backgroundSkinMeasurements.save(this._currentBackgroundSkin);
 		}
-		if (Std.is(this, IStateContext) && Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = cast(this, IStateContext<Dynamic>);
+		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
+			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
@@ -808,8 +806,8 @@ class Callout extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {
