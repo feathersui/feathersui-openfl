@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.RangeError;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.core.IFocusContainer;
@@ -300,6 +301,39 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		var oldBypass = this._displayListBypassEnabled;
 		this._displayListBypassEnabled = false;
 		this.setChildIndex(child, index);
+		this._displayListBypassEnabled = oldBypass;
+	}
+
+	override public function removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
+		if (!this._displayListBypassEnabled) {
+			return super.removeChildren(beginIndex, endIndex);
+		}
+
+		if (endIndex == 0x7FFFFFFF) {
+			endIndex = this.items.length - 1;
+
+			if (endIndex < 0) {
+				return;
+			}
+		}
+
+		if (beginIndex > this.items.length - 1) {
+			return;
+		} else if (endIndex < beginIndex || beginIndex < 0 || endIndex > this.items.length) {
+			throw new RangeError("The supplied index is out of bounds.");
+		}
+
+		var numRemovals = endIndex - beginIndex;
+		while (numRemovals >= 0) {
+			this.removeChildAt(beginIndex);
+			numRemovals--;
+		}
+	}
+
+	private function removeRawChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
+		var oldBypass = this._displayListBypassEnabled;
+		this._displayListBypassEnabled = false;
+		this.removeRawChildren(beginIndex, endIndex);
 		this._displayListBypassEnabled = oldBypass;
 	}
 

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.RangeError;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -285,6 +286,32 @@ class LayoutGroup extends FeathersControl {
 
 	private function _getChildIndex(child:DisplayObject):Int {
 		return super.getChildIndex(child);
+	}
+
+	override public function removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
+		if (endIndex == 0x7FFFFFFF) {
+			endIndex = this.items.length - 1;
+
+			if (endIndex < 0) {
+				return;
+			}
+		}
+
+		if (beginIndex > this.items.length - 1) {
+			return;
+		} else if (endIndex < beginIndex || beginIndex < 0 || endIndex > this.items.length) {
+			throw new RangeError("The supplied index is out of bounds.");
+		}
+
+		var numRemovals = endIndex - beginIndex;
+		while (numRemovals >= 0) {
+			this.removeChildAt(beginIndex);
+			numRemovals--;
+		}
+	}
+
+	private function _removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
+		super.removeChildren(beginIndex, endIndex);
 	}
 
 	override public function setChildIndex(child:DisplayObject, index:Int):Void {
