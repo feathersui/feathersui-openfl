@@ -467,16 +467,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			// if the factory set a variant already, don't use the default
 			button.variant = PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON;
 		}
-		this._currentItemState.owner = this;
-		this._currentItemState.index = index;
-		this._currentItemState.selected = index == this._selectedIndex;
-		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-		this._ignoreSelectionChange = true;
-		if (this.toggleButtonRecycler.update != null) {
-			this.toggleButtonRecycler.update(button, this._currentItemState);
-		}
-		button.selected = this._currentItemState.selected;
-		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshToggleButtonProperties(button, index);
 		button.addEventListener(Event.CHANGE, pageIndicator_toggleButton_changeHandler);
 		this.activeToggleButtons.push(button);
 		return button;
@@ -487,6 +478,19 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		if (this.toggleButtonRecycler.destroy != null) {
 			this.toggleButtonRecycler.destroy(button);
 		}
+	}
+
+	private function refreshToggleButtonProperties(button:ToggleButton, index:Int):Void {
+		this._currentItemState.owner = this;
+		this._currentItemState.index = index;
+		this._currentItemState.selected = index == this._selectedIndex;
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this.toggleButtonRecycler.update != null) {
+			this.toggleButtonRecycler.update(button, this._currentItemState);
+		}
+		button.selected = this._currentItemState.selected;
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {

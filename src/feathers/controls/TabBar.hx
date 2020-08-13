@@ -610,18 +610,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			// if the factory set a variant already, don't use the default
 			tab.variant = TabBar.CHILD_VARIANT_TAB;
 		}
-		this._currentItemState.owner = this;
-		this._currentItemState.data = item;
-		this._currentItemState.index = index;
-		this._currentItemState.selected = item == this._selectedItem;
-		this._currentItemState.text = itemToText(item);
-		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-		this._ignoreSelectionChange = true;
-		if (this.tabRecycler.update != null) {
-			this.tabRecycler.update(tab, this._currentItemState);
-		}
-		tab.selected = this._currentItemState.selected;
-		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshTabProperties(tab, item, index);
 		tab.addEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);
 		tab.addEventListener(Event.CHANGE, tabBar_tab_changeHandler);
 		this.tabToData.set(tab, item);
@@ -634,6 +623,21 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this.tabRecycler.destroy != null) {
 			this.tabRecycler.destroy(tab);
 		}
+	}
+
+	private function refreshTabProperties(tab:ToggleButton, item:Dynamic, index:Int):Void {
+		this._currentItemState.owner = this;
+		this._currentItemState.data = item;
+		this._currentItemState.index = index;
+		this._currentItemState.selected = item == this._selectedItem;
+		this._currentItemState.text = itemToText(item);
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this.tabRecycler.update != null) {
+			this.tabRecycler.update(tab, this._currentItemState);
+		}
+		tab.selected = this._currentItemState.selected;
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
 	private function refreshSelectedIndicesAfterFilterOrSort():Void {
