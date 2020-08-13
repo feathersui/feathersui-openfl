@@ -225,6 +225,38 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		super.update();
 	}
 
+	override private function measure():Bool {
+		var needsWidth = this.explicitWidth == null;
+		var needsHeight = this.explicitHeight == null;
+		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinHeight = this.explicitMinHeight == null;
+		var needsMaxWidth = this.explicitMaxWidth == null;
+		var needsMaxHeight = this.explicitMaxHeight == null;
+		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
+			return false;
+		}
+
+		var needsToMeasureContent = this._autoSizeMode == CONTENT || this.stage == null;
+
+		if (needsToMeasureContent) {
+			if (this.explicitWidth != null) {
+				this.tabBar.width = this.explicitWidth;
+			} else {
+				this.tabBar.resetWidth();
+			}
+			this.tabBar.validateNow();
+			switch (this.tabBarPosition) {
+				case TOP:
+					this.topContentOffset = this.tabBar.height;
+				case BOTTOM:
+					this.bottomContentOffset = this.tabBar.height;
+				default:
+					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
+			}
+		}
+		return super.measure();
+	}
+
 	override private function layoutContent():Void {
 		this.tabBar.x = 0.0;
 		this.tabBar.width = this.actualWidth;

@@ -220,6 +220,38 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		super.update();
 	}
 
+	override private function measure():Bool {
+		var needsWidth = this.explicitWidth == null;
+		var needsHeight = this.explicitHeight == null;
+		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinHeight = this.explicitMinHeight == null;
+		var needsMaxWidth = this.explicitMaxWidth == null;
+		var needsMaxHeight = this.explicitMaxHeight == null;
+		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
+			return false;
+		}
+
+		var needsToMeasureContent = this._autoSizeMode == CONTENT || this.stage == null;
+
+		if (needsToMeasureContent) {
+			if (this.explicitWidth != null) {
+				this.pageIndicator.width = this.explicitWidth;
+			} else {
+				this.pageIndicator.resetWidth();
+			}
+			this.pageIndicator.validateNow();
+			switch (this.pageIndicatorPosition) {
+				case TOP:
+					this.topContentOffset = this.pageIndicator.height;
+				case BOTTOM:
+					this.bottomContentOffset = this.pageIndicator.height;
+				default:
+					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
+			}
+		}
+		return super.measure();
+	}
+
 	override private function layoutContent():Void {
 		this.pageIndicator.x = 0.0;
 		this.pageIndicator.width = this.actualWidth;
