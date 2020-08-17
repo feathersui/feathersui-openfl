@@ -681,7 +681,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				recycler.reset(itemRenderer, this._currentItemState);
 			}
 			if (Std.is(itemRenderer, IUIControl)) {
-				var uiControl = cast(itemRenderer, IToggle);
+				var uiControl = cast(itemRenderer, IUIControl);
 				uiControl.enabled = this._currentItemState.enabled;
 			}
 			if (Std.is(itemRenderer, IToggle)) {
@@ -773,7 +773,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
 		}
 		if (Std.is(itemRenderer, IUIControl)) {
-			var uiControl = cast(itemRenderer, IToggle);
+			var uiControl = cast(itemRenderer, IUIControl);
 			uiControl.enabled = this._currentItemState.enabled;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
