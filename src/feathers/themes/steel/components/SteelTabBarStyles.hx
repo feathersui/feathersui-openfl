@@ -100,13 +100,6 @@ class SteelTabBarStyles {
 				if (button.disabledTextFormat == null) {
 					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}
-				if (button.selectedTextFormat == null) {
-					button.selectedTextFormat = theme.getActiveTextFormat();
-				}
-
-				if (button.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
-					button.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
-				}
 
 				button.paddingTop = 4.0;
 				button.paddingRight = 10.0;

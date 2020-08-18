@@ -127,17 +127,11 @@ class SteelGroupListViewStyles {
 				if (itemRenderer.disabledTextFormat == null) {
 					itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 				}
-				if (itemRenderer.selectedTextFormat == null) {
-					itemRenderer.selectedTextFormat = theme.getActiveTextFormat();
-				}
 				if (itemRenderer.secondaryTextFormat == null) {
 					itemRenderer.secondaryTextFormat = theme.getDetailTextFormat();
 				}
 				if (itemRenderer.disabledSecondaryTextFormat == null) {
 					itemRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
-				}
-				if (itemRenderer.selectedSecondaryTextFormat == null) {
-					itemRenderer.selectedSecondaryTextFormat = theme.getActiveDetailTextFormat();
 				}
 
 				itemRenderer.paddingTop = 4.0;

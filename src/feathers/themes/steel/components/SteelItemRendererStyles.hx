@@ -62,23 +62,11 @@ class SteelItemRendererStyles {
 				if (itemRenderer.disabledTextFormat == null) {
 					itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 				}
-				if (itemRenderer.selectedTextFormat == null) {
-					itemRenderer.selectedTextFormat = theme.getActiveTextFormat();
-				}
-				if (itemRenderer.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
-					itemRenderer.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
-				}
 				if (itemRenderer.secondaryTextFormat == null) {
 					itemRenderer.secondaryTextFormat = theme.getDetailTextFormat();
 				}
 				if (itemRenderer.disabledSecondaryTextFormat == null) {
 					itemRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
-				}
-				if (itemRenderer.selectedSecondaryTextFormat == null) {
-					itemRenderer.selectedSecondaryTextFormat = theme.getActiveDetailTextFormat();
-				}
-				if (itemRenderer.getSecondaryTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
-					itemRenderer.setSecondaryTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveDetailTextFormat());
 				}
 
 				itemRenderer.paddingTop = 4.0;

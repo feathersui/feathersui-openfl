@@ -88,7 +88,9 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var insetFillColor:Int;
 	private var disabledInsetFillColor:Int;
 	private var insetBorderColor:Int;
+	private var disabledInsetBorderColor:Int;
 	private var activeFillBorderColor:Int;
+	private var selectedBorderColor:Int;
 	private var focusBorderColor:Int;
 	private var containerFillColor:Int;
 	private var headerFillColor:Int;
@@ -123,9 +125,9 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			} else if (this.customThemeColor != null) {
 				this.themeColor = this.customThemeColor;
 			} else {
-				this.themeColor = 0x3f6fff;
+				this.themeColor = 0x4f6f9f;
 			}
-			this.offsetThemeColor = this.darken(this.themeColor, 0x282828);
+			this.offsetThemeColor = this.darken(this.themeColor, 0x0f0f0f);
 			this.rootFillColor = 0x383838;
 			this.controlFillColor1 = 0x5f5f5f;
 			this.controlFillColor2 = 0x4c4c4c;
@@ -133,8 +135,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.insetFillColor = 0x181818;
 			this.disabledInsetFillColor = 0x383838;
 			this.insetBorderColor = 0x484848;
-			this.activeFillBorderColor = 0x080808;
-			this.focusBorderColor = this.themeColor;
+			this.disabledInsetBorderColor = 0x686868;
+			this.activeFillBorderColor = this.darken(this.themeColor, 0x2f2f2f);
+			this.selectedBorderColor = this.lighten(this.themeColor, 0x0f0f0f);
+			this.focusBorderColor = this.lighten(this.themeColor, 0x0f0f0f);
 			this.containerFillColor = 0x383838;
 			this.headerFillColor = 0x3f3f3f;
 			this.overlayFillColor = 0x6f6f6f;
@@ -150,18 +154,20 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			if (this.customThemeColor != null) {
 				this.themeColor = this.customThemeColor;
 			} else {
-				this.themeColor = 0x3f6fff;
+				this.themeColor = 0xa0c0f0;
 			}
-			this.offsetThemeColor = this.lighten(this.themeColor, 0x1f1f1f);
+			this.offsetThemeColor = this.darken(this.themeColor, 0x0f0f0f);
 			this.rootFillColor = 0xf8f8f8;
 			this.controlFillColor1 = 0xffffff;
 			this.controlFillColor2 = 0xe8e8e8;
 			this.controlDisabledFillColor = 0xefefef;
 			this.insetFillColor = 0xfcfcfc;
 			this.disabledInsetFillColor = 0xf8f8f8;
-			this.insetBorderColor = 0xcccccc;
+			this.insetBorderColor = 0xacacac;
+			this.disabledInsetBorderColor = 0xcccccc;
 			this.activeFillBorderColor = this.darken(this.themeColor, 0x2f2f2f);
-			this.focusBorderColor = this.darken(this.themeColor, 0x1f1f1f);
+			this.selectedBorderColor = this.darken(this.themeColor, 0x2f2f2f);
+			this.focusBorderColor = this.darken(this.themeColor, 0x2f2f2f);
 			this.containerFillColor = 0xf8f8f8;
 			this.headerFillColor = 0xececec;
 			this.overlayFillColor = 0x8f8f8f;
@@ -222,8 +228,16 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		return SolidColor(thickness, this.insetBorderColor);
 	}
 
+	private function getDisabledInsetBorder(thickness:Float = 1.0):LineStyle {
+		return SolidColor(thickness, this.disabledInsetBorderColor);
+	}
+
 	private function getThemeBorder(thickness:Float = 1.0):LineStyle {
 		return SolidColor(thickness, this.themeColor);
+	}
+
+	private function getSelectedBorder(thickness:Float = 1.0):LineStyle {
+		return SolidColor(thickness, this.selectedBorderColor);
 	}
 
 	private function getActiveFillBorder(thickness:Float = 1.0):LineStyle {
@@ -252,17 +266,11 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getActiveThemeFill():FillStyle {
 		var colors = [this.themeColor, this.offsetThemeColor];
-		if (!this._darkMode) {
-			colors.reverse();
-		}
 		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
 	private function getReversedActiveThemeFill():FillStyle {
-		var colors = [this.themeColor, this.offsetThemeColor];
-		if (this._darkMode) {
-			colors.reverse();
-		}
+		var colors = [this.offsetThemeColor, this.themeColor];
 		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
@@ -294,10 +302,6 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		return new TextFormat(this.fontName, this.fontSize, this.secondaryTextColor);
 	}
 
-	private function getActiveTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.activeTextColor);
-	}
-
 	private function getHeaderTextFormat():TextFormat {
 		return new TextFormat(this.fontName, this.headerFontSize, this.textColor);
 	}
@@ -312,10 +316,6 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getDisabledDetailTextFormat():TextFormat {
 		return new TextFormat(this.fontName, this.detailFontSize, this.disabledTextColor);
-	}
-
-	private function getActiveDetailTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.detailFontSize, this.activeTextColor);
 	}
 
 	private function getHeaderFill():FillStyle {

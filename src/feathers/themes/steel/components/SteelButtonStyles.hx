@@ -55,9 +55,6 @@ class SteelButtonStyles {
 				if (button.textFormat == null) {
 					button.textFormat = theme.getTextFormat();
 				}
-				if (button.getTextFormatForState(DOWN) == null) {
-					button.setTextFormatForState(DOWN, theme.getActiveTextFormat());
-				}
 				if (button.disabledTextFormat == null) {
 					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}

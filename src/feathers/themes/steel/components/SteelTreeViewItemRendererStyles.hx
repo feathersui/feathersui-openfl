@@ -66,12 +66,6 @@ class SteelTreeViewItemRendererStyles {
 				if (itemRenderer.disabledTextFormat == null) {
 					itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 				}
-				if (itemRenderer.selectedTextFormat == null) {
-					itemRenderer.selectedTextFormat = theme.getActiveTextFormat();
-				}
-				if (itemRenderer.getTextFormatForState(ToggleButtonState.DOWN(false)) == null) {
-					itemRenderer.setTextFormatForState(ToggleButtonState.DOWN(false), theme.getActiveTextFormat());
-				}
 
 				itemRenderer.paddingTop = 4.0;
 				itemRenderer.paddingRight = 10.0;

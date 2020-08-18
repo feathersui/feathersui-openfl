@@ -50,45 +50,47 @@ class SteelRadioStyles {
 				}
 
 				var icon = new CircleSkin();
-				icon.width = 24.0;
-				icon.height = 24.0;
-				icon.minWidth = 24.0;
-				icon.minHeight = 24.0;
+				icon.width = 20.0;
+				icon.height = 20.0;
+				icon.minWidth = 20.0;
+				icon.minHeight = 20.0;
 				icon.border = theme.getInsetBorder(2.0);
-				icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getThemeBorder(2.0));
+				icon.disabledBorder = theme.getDisabledInsetBorder(2.0);
+				icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getSelectedBorder(2.0));
 				icon.fill = theme.getInsetFill();
 				icon.disabledFill = theme.getDisabledInsetFill();
 				radio.icon = icon;
 
 				var selectedIcon = new CircleSkin();
-				selectedIcon.width = 24.0;
-				selectedIcon.height = 24.0;
-				selectedIcon.minWidth = 24.0;
-				selectedIcon.minHeight = 24.0;
-				selectedIcon.border = theme.getInsetBorder(2.0);
-				selectedIcon.setBorderForState(ToggleButtonState.DOWN(true), theme.getThemeBorder(2.0));
+				selectedIcon.width = 20.0;
+				selectedIcon.height = 20.0;
+				selectedIcon.minWidth = 20.0;
+				selectedIcon.minHeight = 20.0;
+				selectedIcon.border = theme.getSelectedBorder(2.0);
+				selectedIcon.disabledBorder = theme.getDisabledInsetBorder(2.0);
+				selectedIcon.setBorderForState(ToggleButtonState.DOWN(true), theme.getSelectedBorder(2.0));
 				selectedIcon.fill = theme.getInsetFill();
 				selectedIcon.disabledFill = theme.getDisabledInsetFill();
 
 				var symbol = new Shape();
-				symbol.graphics.beginFill(theme.themeColor);
-				symbol.graphics.drawCircle(12.0, 12.0, 6.0);
+				symbol.graphics.beginFill(theme.textColor);
+				symbol.graphics.drawCircle(10.0, 10.0, 4.0);
 				symbol.graphics.endFill();
 				selectedIcon.addChild(symbol);
 
 				radio.selectedIcon = selectedIcon;
 
 				var disabledAndSelectedIcon = new CircleSkin();
-				disabledAndSelectedIcon.width = 24.0;
-				disabledAndSelectedIcon.height = 24.0;
-				disabledAndSelectedIcon.minWidth = 24.0;
-				disabledAndSelectedIcon.minHeight = 24.0;
-				disabledAndSelectedIcon.border = theme.getInsetBorder(2.0);
+				disabledAndSelectedIcon.width = 20.0;
+				disabledAndSelectedIcon.height = 20.0;
+				disabledAndSelectedIcon.minWidth = 20.0;
+				disabledAndSelectedIcon.minHeight = 20.0;
+				disabledAndSelectedIcon.border = theme.getDisabledInsetBorder(2.0);
 				disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
 
 				var disabledSymbol = new Shape();
 				disabledSymbol.graphics.beginFill(theme.disabledTextColor);
-				disabledSymbol.graphics.drawCircle(12.0, 12.0, 6.0);
+				disabledSymbol.graphics.drawCircle(10.0, 10.0, 4.0);
 				disabledSymbol.graphics.endFill();
 				disabledAndSelectedIcon.addChild(disabledSymbol);
 
