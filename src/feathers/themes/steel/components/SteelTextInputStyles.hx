@@ -47,8 +47,8 @@ class SteelTextInputStyles {
 				if (input.textFormat == null) {
 					input.textFormat = theme.getTextFormat();
 				}
-				if (input.getTextFormatForState(DISABLED) == null) {
-					input.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+				if (input.disabledTextFormat == null) {
+					input.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 				if (input.promptTextFormat == null) {
 					input.promptTextFormat = theme.getSecondaryTextFormat();

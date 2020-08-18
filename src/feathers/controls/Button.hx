@@ -125,6 +125,25 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	public var textFormat:TextFormat = null;
 
 	/**
+		The font styles used to render the button's text when the button is
+		disabled.
+
+		In the following example, the button's disabled text formatting is
+		customized:
+
+		```hx
+		button.enabled = false;
+		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		```
+
+		@see `Button.textFormat`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var disabledTextFormat:TextFormat = null;
+
+	/**
 		Determines if an embedded font is used or not.
 
 		In the following example, the button uses embedded fonts:
@@ -702,6 +721,9 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		var result = this._stateToTextFormat.get(this._currentState);
 		if (result != null) {
 			return result;
+		}
+		if (!this._enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
 		}
 		return this.textFormat;
 	}

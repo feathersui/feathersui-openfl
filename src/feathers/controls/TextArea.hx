@@ -278,6 +278,25 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	public var textFormat:TextFormat = null;
 
 	/**
+		The font styles used to render the text area's text when the text area
+		is disabled.
+
+		In the following example, the text area's disabled text formatting is
+		customized:
+
+		```hx
+		textArea.enabled = false;
+		textArea.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		```
+
+		@see `TextArea.textFormat`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var disabledTextFormat:TextFormat = null;
+
+	/**
 		The font styles used to render the text area's prompt text.
 
 		In the following example, the text area's prompt formatting is customized:
@@ -638,6 +657,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		var result = this._stateToTextFormat.get(this._currentState);
 		if (result != null) {
 			return result;
+		}
+		if (!this._enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
 		}
 		return this.textFormat;
 	}

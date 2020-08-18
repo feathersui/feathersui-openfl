@@ -335,6 +335,25 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	public var textFormat:TextFormat = null;
 
 	/**
+		The font styles used to render the text input's text when the text input
+		is disabled.
+
+		In the following example, the text input's disabled text formatting is
+		customized:
+
+		```hx
+		input.enabled = false;
+		input.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		```
+
+		@see `TextInput.textFormat`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var disabledTextFormat:TextFormat = null;
+
+	/**
 		The font styles used to render the text input's prompt text.
 
 		In the following example, the text input's prompt formatting is customized:
@@ -897,6 +916,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var result = this._stateToTextFormat.get(this._currentState);
 		if (result != null) {
 			return result;
+		}
+		if (!this._enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
 		}
 		return this.textFormat;
 	}

@@ -58,8 +58,8 @@ class SteelButtonStyles {
 				if (button.getTextFormatForState(DOWN) == null) {
 					button.setTextFormatForState(DOWN, theme.getActiveTextFormat());
 				}
-				if (button.getTextFormatForState(DISABLED) == null) {
-					button.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+				if (button.disabledTextFormat == null) {
+					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
 				button.paddingTop = 4.0;

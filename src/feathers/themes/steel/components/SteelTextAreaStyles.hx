@@ -53,8 +53,8 @@ class SteelTextAreaStyles {
 				if (textArea.textFormat == null) {
 					textArea.textFormat = theme.getTextFormat();
 				}
-				if (textArea.getTextFormatForState(DISABLED) == null) {
-					textArea.setTextFormatForState(DISABLED, theme.getDisabledTextFormat());
+				if (textArea.disabledTextFormat == null) {
+					textArea.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 				if (textArea.promptTextFormat == null) {
 					textArea.promptTextFormat = theme.getSecondaryTextFormat();
