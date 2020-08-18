@@ -53,9 +53,9 @@ class SteelCheckStyles {
 				icon.height = 20.0;
 				icon.minWidth = 20.0;
 				icon.minHeight = 20.0;
-				icon.border = theme.getInsetBorder(2.0);
-				icon.disabledBorder = theme.getDisabledInsetBorder(2.0);
-				icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getSelectedBorder(2.0));
+				icon.border = theme.getInsetBorder();
+				icon.disabledBorder = theme.getDisabledInsetBorder();
+				icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getSelectedInsetBorder());
 				icon.fill = theme.getInsetFill();
 				icon.disabledFill = theme.getDisabledInsetFill();
 				check.icon = icon;
@@ -65,10 +65,10 @@ class SteelCheckStyles {
 				selectedIcon.height = 20.0;
 				selectedIcon.minWidth = 20.0;
 				selectedIcon.minHeight = 20.0;
-				selectedIcon.border = theme.getSelectedBorder(2.0);
-				selectedIcon.disabledBorder = theme.getDisabledInsetBorder(2.0);
-				selectedIcon.setBorderForState(DOWN(true), theme.getSelectedBorder(2.0));
-				selectedIcon.fill = theme.getInsetFill();
+				selectedIcon.border = theme.getSelectedInsetBorder();
+				selectedIcon.disabledBorder = theme.getDisabledInsetBorder();
+				selectedIcon.setBorderForState(DOWN(true), theme.getSelectedInsetBorder());
+				selectedIcon.fill = theme.getReversedActiveThemeFill();
 				selectedIcon.disabledFill = theme.getDisabledInsetFill();
 
 				var checkMark = new Shape();
@@ -88,7 +88,7 @@ class SteelCheckStyles {
 				disabledAndSelectedIcon.height = 20.0;
 				disabledAndSelectedIcon.minWidth = 20.0;
 				disabledAndSelectedIcon.minHeight = 20.0;
-				disabledAndSelectedIcon.border = theme.getDisabledInsetBorder(2.0);
+				disabledAndSelectedIcon.border = theme.getDisabledInsetBorder();
 				disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
 
 				var disabledCheckMark = new Shape();

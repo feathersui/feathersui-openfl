@@ -68,7 +68,7 @@ class SteelPageIndicatorStyles {
 					skin.setFillForState(ToggleButtonState.DISABLED(false), theme.getButtonDisabledFill());
 					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
 					skin.border = theme.getButtonBorder();
-					skin.selectedBorder = theme.getActiveFillBorder();
+					skin.selectedBorder = theme.getSelectedInsetBorder();
 					skin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
 					skin.minWidth = 10.0;
 					skin.minHeight = 10.0;

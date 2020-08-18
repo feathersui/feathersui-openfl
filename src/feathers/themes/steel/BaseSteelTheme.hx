@@ -89,6 +89,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var disabledInsetFillColor:Int;
 	private var insetBorderColor:Int;
 	private var disabledInsetBorderColor:Int;
+	private var selectedInsetBorderColor:Int;
 	private var activeFillBorderColor:Int;
 	private var selectedBorderColor:Int;
 	private var focusBorderColor:Int;
@@ -131,11 +132,12 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.rootFillColor = 0x383838;
 			this.controlFillColor1 = 0x5f5f5f;
 			this.controlFillColor2 = 0x4c4c4c;
-			this.controlDisabledFillColor = 0x101010;
+			this.controlDisabledFillColor = 0x303030;
 			this.insetFillColor = 0x181818;
-			this.disabledInsetFillColor = 0x383838;
+			this.disabledInsetFillColor = 0x282828;
 			this.insetBorderColor = 0x484848;
-			this.disabledInsetBorderColor = 0x686868;
+			this.disabledInsetBorderColor = 0x383838;
+			this.selectedInsetBorderColor = this.themeColor;
 			this.activeFillBorderColor = this.darken(this.themeColor, 0x2f2f2f);
 			this.selectedBorderColor = this.lighten(this.themeColor, 0x0f0f0f);
 			this.focusBorderColor = this.lighten(this.themeColor, 0x0f0f0f);
@@ -162,9 +164,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.controlFillColor2 = 0xe8e8e8;
 			this.controlDisabledFillColor = 0xefefef;
 			this.insetFillColor = 0xfcfcfc;
-			this.disabledInsetFillColor = 0xf8f8f8;
+			this.disabledInsetFillColor = 0xf1f1f1;
 			this.insetBorderColor = 0xacacac;
 			this.disabledInsetBorderColor = 0xcccccc;
+			this.selectedInsetBorderColor = this.darken(this.themeColor, 0x2f2f2f);
 			this.activeFillBorderColor = this.darken(this.themeColor, 0x2f2f2f);
 			this.selectedBorderColor = this.darken(this.themeColor, 0x2f2f2f);
 			this.focusBorderColor = this.darken(this.themeColor, 0x2f2f2f);
@@ -230,6 +233,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getDisabledInsetBorder(thickness:Float = 1.0):LineStyle {
 		return SolidColor(thickness, this.disabledInsetBorderColor);
+	}
+
+	private function getSelectedInsetBorder(thickness:Float = 1.0):LineStyle {
+		return SolidColor(thickness, this.selectedInsetBorderColor);
 	}
 
 	private function getThemeBorder(thickness:Float = 1.0):LineStyle {
