@@ -527,7 +527,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	public var selectionAnchorIndex(get, never):Int;
 
 	private function get_selectionAnchorIndex():Int {
-		if (this.textField != null && this._pendingSelectionAnchorIndex != -1) {
+		if (this.textField != null && this._pendingSelectionAnchorIndex == -1) {
 			// return the opposite of the caret index
 			if (this.textField.caretIndex == this.textField.selectionBeginIndex) {
 				return this.textField.selectionEndIndex;
@@ -556,7 +556,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	public var selectionActiveIndex(get, never):Int;
 
 	private function get_selectionActiveIndex():Int {
-		if (this.textField != null && this._pendingSelectionActiveIndex != -1) {
+		if (this.textField != null && this._pendingSelectionActiveIndex == -1) {
 			// always the same as caret index
 			return this.textField.caretIndex;
 		}
@@ -677,15 +677,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	public function selectRange(anchorIndex:Int, activeIndex:Int):Void {
-		if (this.textField != null) {
-			this._pendingSelectionAnchorIndex = -1;
-			this._pendingSelectionActiveIndex = -1;
-			this.textField.setSelection(anchorIndex, activeIndex);
-		} else {
-			this._pendingSelectionAnchorIndex = anchorIndex;
-			this._pendingSelectionActiveIndex = activeIndex;
-			this.setInvalid(SELECTION);
-		}
+		// we can't call textField.setSelection() directly here because the
+		// TextField may not have been updated yet
+		this._pendingSelectionAnchorIndex = anchorIndex;
+		this._pendingSelectionActiveIndex = activeIndex;
+		this.setInvalid(SELECTION);
 	}
 
 	/**
