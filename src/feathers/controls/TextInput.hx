@@ -508,6 +508,61 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._scrollX;
 	}
 
+	private var _pendingSelectionAnchorIndex:Int = -1;
+
+	/**
+		The character position of the anchor part of the selection. If the
+		selection is changed with the arrow keys, the active index changes and
+		the anchor index stays fixed. If both the active index and the anchor
+		index are equal, then no text is selected and both values represent the
+		position of the caret.
+
+		@see `TextInput.selectionActiveIndex`
+		@see `TextInput.selectRange()`
+		@see `TextInput.selectAll()`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectionAnchorIndex(get, never):Int;
+
+	private function get_selectionAnchorIndex():Int {
+		if (this.textField != null && this._pendingSelectionAnchorIndex != -1) {
+			// return the opposite of the caret index
+			if (this.textField.caretIndex == this.textField.selectionBeginIndex) {
+				return this.textField.selectionEndIndex;
+			}
+			return this.textField.selectionBeginIndex;
+		}
+		return this._pendingSelectionAnchorIndex;
+	}
+
+	private var _pendingSelectionActiveIndex:Int = -1;
+
+	/**
+		The character position of the active part of the selection. If the
+		selection is changed with the arrow keys, the active index changes and
+		the anchor index stays fixed. If both the active index and the anchor
+		index are equal, then no text is selected and both values represent the
+		position of the caret.
+
+		@see `TextInput.selectionAnchorIndex`
+		@see `TextInput.selectRange()`
+		@see `TextInput.selectAll()`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectionActiveIndex(get, never):Int;
+
+	private function get_selectionActiveIndex():Int {
+		if (this.textField != null && this._pendingSelectionActiveIndex != -1) {
+			// always the same as caret index
+			return this.textField.caretIndex;
+		}
+		return this._pendingSelectionActiveIndex;
+	}
+
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 	private var _promptTextMeasuredWidth:Float;
@@ -606,6 +661,46 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.setInvalid(STYLES);
 	}
 
+	/**
+		Selects the specified range of characters.
+
+		The following example selects the first three characters:
+
+		```hx
+		input.selectRange(0, 3);
+		```
+
+		@see `TextInput.selectAll()`
+		@see `TextInput.selectionAnchorIndex`
+		@see `TextInput.selectionActiveIndex`
+
+		@since 1.0.0
+	**/
+	public function selectRange(anchorIndex:Int, activeIndex:Int):Void {
+		if (this.textField != null) {
+			this._pendingSelectionAnchorIndex = -1;
+			this._pendingSelectionActiveIndex = -1;
+			this.textField.setSelection(anchorIndex, activeIndex);
+		} else {
+			this._pendingSelectionAnchorIndex = anchorIndex;
+			this._pendingSelectionActiveIndex = activeIndex;
+			this.setInvalid(SELECTION);
+		}
+	}
+
+	/**
+		Selects all of the text displayed by the text input.
+
+		@see `TextInput.selectRange()`
+		@see `TextInput.selectionAnchorIndex`
+		@see `TextInput.selectionActiveIndex`
+
+		@since 1.0.0
+	**/
+	public function selectAll():Void {
+		this.selectRange(0, this._text.length);
+	}
+
 	private function initializeTextInputTheme():Void {
 		SteelTextInputStyles.initialize();
 	}
@@ -627,6 +722,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var scrollInvalid = this.isInvalid(SCROLL);
+		var selectionInvalid = this.isInvalid(SELECTION);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
@@ -652,6 +748,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		if (dataInvalid || stylesInvalid) {
 			this.refreshPromptText();
+		}
+
+		if (selectionInvalid) {
+			this.refreshSelection();
 		}
 
 		if (scrollInvalid) {
@@ -906,6 +1006,17 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.textField.text = "";
 		}
 		this._previousText = this._text;
+	}
+
+	private function refreshSelection():Void {
+		if (this._pendingSelectionActiveIndex == -1 && this._pendingSelectionAnchorIndex == -1) {
+			return;
+		}
+		var anchorIndex = this._pendingSelectionAnchorIndex;
+		var activeIndex = this._pendingSelectionActiveIndex;
+		this._pendingSelectionAnchorIndex = -1;
+		this._pendingSelectionActiveIndex = -1;
+		this.textField.setSelection(anchorIndex, activeIndex);
 	}
 
 	private function refreshScrollPosition():Void {

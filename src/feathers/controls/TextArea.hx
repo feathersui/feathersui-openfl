@@ -407,6 +407,46 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	@:style
 	public var textPaddingLeft:Float = 0.0;
 
+	/**
+		The character position of the anchor part of the selection. If the
+		selection is changed with the arrow keys, the active index changes and
+		the anchor index stays fixed. If both the active index and the anchor
+		index are equal, then no text is selected and both values represent the
+		position of the caret.
+
+		@see `TextArea.selectionActiveIndex`
+		@see `TextArea.selectRange()`
+		@see `TextArea.selectAll()`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectionAnchorIndex(get, never):Int;
+
+	private function get_selectionAnchorIndex():Int {
+		return this.textFieldViewPort.selectionAnchorIndex;
+	}
+
+	/**
+		The character position of the active part of the selection. If the
+		selection is changed with the arrow keys, the active index changes and
+		the anchor index stays fixed. If both the active index and the anchor
+		index are equal, then no text is selected and both values represent the
+		position of the caret.
+
+		@see `TextArea.selectionAnchorIndex`
+		@see `TextArea.selectRange()`
+		@see `TextArea.selectAll()`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectionActiveIndex(get, never):Int;
+
+	private function get_selectionActiveIndex():Int {
+		return this.textFieldViewPort.selectionActiveIndex;
+	}
+
 	private var _ignoreViewPortTextChange = false;
 
 	override private function get_measureViewPort():Bool {
@@ -506,6 +546,38 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this._stateToTextFormat.set(state, textFormat);
 		}
 		this.setInvalid(STYLES);
+	}
+
+	/**
+		Selects the specified range of characters.
+
+		The following example selects the first three characters:
+
+		```hx
+		input.selectRange(0, 3);
+		```
+
+		@see `TextArea.selectAll()`
+		@see `TextArea.selectionAnchorIndex`
+		@see `TextArea.selectionActiveIndex`
+
+		@since 1.0.0
+	**/
+	public function selectRange(anchorIndex:Int, activeIndex:Int):Void {
+		this.textFieldViewPort.selectRange(anchorIndex, activeIndex);
+	}
+
+	/**
+		Selects all of the text displayed by the text area.
+
+		@see `TextArea.selectRange()`
+		@see `TextArea.selectionAnchorIndex`
+		@see `TextArea.selectionActiveIndex`
+
+		@since 1.0.0
+	**/
+	public function selectAll():Void {
+		this.textFieldViewPort.selectRange(0, this._text.length);
 	}
 
 	private function initializeTextAreaTheme():Void {

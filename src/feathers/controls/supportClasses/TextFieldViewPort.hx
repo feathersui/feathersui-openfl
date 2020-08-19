@@ -561,9 +561,59 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this._scrollY;
 	}
 
+	private var _pendingSelectionAnchorIndex:Int = -1;
+
+	/**
+		@see `feathers.controls.TextArea.selectionAnchorIndex`
+	**/
+	@:flash.property
+	public var selectionAnchorIndex(get, never):Int;
+
+	private function get_selectionAnchorIndex():Int {
+		if (this.textField != null && this._pendingSelectionAnchorIndex != -1) {
+			// return the opposite of the caret index
+			if (this.textField.caretIndex == this.textField.selectionBeginIndex) {
+				return this.textField.selectionEndIndex;
+			}
+			return this.textField.selectionBeginIndex;
+		}
+		return this._pendingSelectionAnchorIndex;
+	}
+
+	private var _pendingSelectionActiveIndex:Int = -1;
+
+	/**
+		@see `feathers.controls.TextArea.selectionActiveIndex`
+	**/
+	@:flash.property
+	public var selectionActiveIndex(get, never):Int;
+
+	private function get_selectionActiveIndex():Int {
+		if (this.textField != null && this._pendingSelectionActiveIndex != -1) {
+			// always the same as caret index
+			return this.textField.caretIndex;
+		}
+		return this._pendingSelectionActiveIndex;
+	}
+
 	private var _textFieldHasFocus:Bool = false;
 
 	private var _ignoreTextFieldScroll:Bool = false;
+
+	/**
+		@see `feathers.controls.TextArea.selectRange()`
+	**/
+	public function selectRange(anchorIndex:Int, activeIndex:Int):Void {
+		if (this.textField != null) {
+			this._pendingSelectionAnchorIndex = -1;
+			this._pendingSelectionActiveIndex = -1;
+			this.textField.setSelection(anchorIndex, activeIndex);
+		} else {
+			this._pendingSelectionAnchorIndex = anchorIndex;
+			this._pendingSelectionActiveIndex = activeIndex;
+			this.setInvalid(SELECTION);
+		}
+	}
 
 	override private function initialize():Void {
 		super.initialize();
@@ -584,6 +634,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
+		var selectionInvalid = this.isInvalid(SELECTION);
 		var sizeInvalid = this.isInvalid(SIZE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
@@ -601,6 +652,10 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		}
 
 		this.measure();
+
+		if (selectionInvalid) {
+			this.refreshSelection();
+		}
 
 		this.layoutTextField();
 
@@ -741,6 +796,17 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		}
 		this._previousText = this._text;
 		this._previousWidth = calculatedWidth;
+	}
+
+	private function refreshSelection():Void {
+		if (this._pendingSelectionActiveIndex == -1 && this._pendingSelectionAnchorIndex == -1) {
+			return;
+		}
+		var anchorIndex = this._pendingSelectionAnchorIndex;
+		var activeIndex = this._pendingSelectionActiveIndex;
+		this._pendingSelectionAnchorIndex = -1;
+		this._pendingSelectionActiveIndex = -1;
+		this.textField.setSelection(anchorIndex, activeIndex);
 	}
 
 	private function layoutTextField():Void {
