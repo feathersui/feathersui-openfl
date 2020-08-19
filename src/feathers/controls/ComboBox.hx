@@ -584,8 +584,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private function createButton():Void {
 		if (this.button != null) {
-			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
-			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
+			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_button_mouseDownHandler);
+			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_button_touchBeginHandler);
 			this.button = null;
 		}
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
@@ -593,8 +593,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.button.variant == null) {
 			this.button.variant = ComboBox.CHILD_VARIANT_BUTTON;
 		}
-		this.button.addEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
-		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
+		this.button.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_button_mouseDownHandler);
+		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, comboBox_button_touchBeginHandler);
 		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
@@ -602,9 +602,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private function createTextInput():Void {
 		if (this.textInput != null) {
-			this.textInput.removeEventListener(Event.CHANGE, textInput_changeHandler);
+			this.textInput.removeEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
-			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
+			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
 			this.textInput = null;
 		}
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
@@ -612,9 +612,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.textInput.variant == null) {
 			this.textInput.variant = ComboBox.CHILD_VARIANT_TEXT_INPUT;
 		}
-		this.textInput.addEventListener(Event.CHANGE, textInput_changeHandler);
+		this.textInput.addEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 		this.textInput.addEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
-		this.textInput.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
+		this.textInput.addEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
 		this.button.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
 		this.addChild(this.textInput);
@@ -622,7 +622,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private function createListView():Void {
 		if (this.listView != null) {
-			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
+			this.listView.removeEventListener(Event.CHANGE, comboBox_listView_changeHandler);
 			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 			this.listView = null;
 		}
@@ -631,7 +631,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.listView.variant == null) {
 			this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
 		}
-		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
+		this.listView.addEventListener(Event.CHANGE, comboBox_listView_changeHandler);
 		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 	}
 
@@ -780,7 +780,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 	}
 
-	private function textInput_changeHandler(event:Event):Void {
+	private function comboBox_textInput_changeHandler(event:Event):Void {
 		if (this._ignoreTextInputChange) {
 			return;
 		}
@@ -793,13 +793,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 	}
 
-	private function textInput_focusInHandler(event:FocusEvent):Void {
+	private function comboBox_textInput_focusInHandler(event:FocusEvent):Void {
 		if (!this.open) {
 			this.openListView();
 		}
 	}
 
-	private function button_mouseDownHandler(event:MouseEvent):Void {
+	private function comboBox_button_mouseDownHandler(event:MouseEvent):Void {
 		if (this.open) {
 			this.closeListView();
 		} else {
@@ -807,7 +807,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 	}
 
-	private function button_touchBeginHandler(event:TouchEvent):Void {
+	private function comboBox_button_touchBeginHandler(event:TouchEvent):Void {
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
@@ -825,7 +825,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 	}
 
-	private function listView_changeHandler(event:Event):Void {
+	private function comboBox_listView_changeHandler(event:Event):Void {
 		if (this._ignoreListViewChange) {
 			return;
 		}

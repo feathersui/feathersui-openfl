@@ -524,9 +524,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function createButton():Void {
 		if (this.button != null) {
-			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
-			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
-			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
+			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
+			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
+			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
 			this.button = null;
 		}
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
@@ -534,9 +534,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.button.variant == null) {
 			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
 		}
-		this.button.addEventListener(MouseEvent.MOUSE_DOWN, button_mouseDownHandler);
-		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, button_touchBeginHandler);
-		this.button.addEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
+		this.button.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
+		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
+		this.button.addEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
 		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
@@ -544,8 +544,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function createListView():Void {
 		if (this.listView != null) {
-			this.listView.removeEventListener(Event.CHANGE, listView_changeHandler);
-			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
+			this.listView.removeEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
+			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);
 			this.listView.removeEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
 			this.listView = null;
 		}
@@ -554,8 +554,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.listView.variant == null) {
 			this.listView.variant = PopUpListView.CHILD_VARIANT_LIST_VIEW;
 		}
-		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
-		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
+		this.listView.addEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
+		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);
 		this.listView.addEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
 	}
 
@@ -667,7 +667,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.selectedIndex = result;
 	}
 
-	private function button_keyDownHandler(event:KeyboardEvent):Void {
+	private function popUpListView_button_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -684,7 +684,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 	}
 
-	private function button_mouseDownHandler(event:MouseEvent):Void {
+	private function popUpListView_button_mouseDownHandler(event:MouseEvent):Void {
 		if (this.open) {
 			this.closeListView();
 		} else {
@@ -692,7 +692,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 	}
 
-	private function button_touchBeginHandler(event:TouchEvent):Void {
+	private function popUpListView_button_touchBeginHandler(event:TouchEvent):Void {
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
@@ -704,14 +704,14 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 	}
 
-	private function listView_itemTriggerHandler(event:ListViewEvent):Void {
+	private function popUpListView_listView_itemTriggerHandler(event:ListViewEvent):Void {
 		this.dispatchEvent(event);
 		if (this.popUpAdapter == null || !this.popUpAdapter.persistent) {
 			this.closeListView();
 		}
 	}
 
-	private function listView_changeHandler(event:Event):Void {
+	private function popUpListView_listView_changeHandler(event:Event):Void {
 		if (this._ignoreListViewChange) {
 			return;
 		}
