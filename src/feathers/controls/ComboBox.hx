@@ -128,6 +128,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		super();
 
 		this.addEventListener(FocusEvent.FOCUS_IN, comboBox_focusInHandler);
+		this.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_removedFromStageHandler);
 		this.addEventListener(KeyboardEvent.KEY_UP, comboBox_keyUpHandler);
 	}
 
@@ -851,6 +852,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textInput;
 		}
+	}
+
+	private function comboBox_removedFromStageHandler(event:Event):Void {
+		// if something went terribly wrong, at least make sure that the
+		// ListView isn't still visible and blocking the rest of the app
+		this.closeListView();
 	}
 
 	private function comboBox_keyUpHandler(event:KeyboardEvent):Void {

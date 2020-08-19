@@ -114,6 +114,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		super();
 
 		this.addEventListener(FocusEvent.FOCUS_IN, popUpListView_focusInHandler);
+		this.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_removedFromStageHandler);
 	}
 
 	private var button:Button;
@@ -729,6 +730,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.button;
 		}
+	}
+
+	private function popUpListView_removedFromStageHandler(event:Event):Void {
+		// if something went terribly wrong, at least make sure that the
+		// ListView isn't still visible and blocking the rest of the app
+		this.closeListView();
 	}
 
 	private function popUpListView_listView_keyUpHandler(event:KeyboardEvent):Void {
