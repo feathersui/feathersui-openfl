@@ -786,16 +786,19 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if (item == null) {
 				return;
 			}
+			var type = inactive == this.inactiveHeaderRenderers ? HEADER : STANDARD;
 			this.itemRendererToData.remove(itemRenderer);
 			this.itemRendererToLayoutIndex.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
-			itemRenderer.removeEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
-			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
-			if (Std.is(itemRenderer, IToggle)) {
-				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
+			if (type == STANDARD) {
+				itemRenderer.removeEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
+				itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
+				if (Std.is(itemRenderer, IToggle)) {
+					itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
+				}
 			}
 			this._currentItemState.owner = this;
-			this._currentItemState.type = inactive == this.inactiveHeaderRenderers ? HEADER : STANDARD;
+			this._currentItemState.type = type;
 			this._currentItemState.data = item;
 			this._currentItemState.location = null;
 			this._currentItemState.layoutIndex = -1;
@@ -932,13 +935,15 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				variantItemRenderer.variant = GroupListView.CHILD_VARIANT_HEADER;
 			}
 		}
-		this.refreshItemRendererProperties(itemRenderer, location.length == 1 ? HEADER : STANDARD, item, location, layoutIndex);
-		itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
-		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
-		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
-		if (Std.is(itemRenderer, IToggle)) {
-			itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
+		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
+		if (type == STANDARD) {
+			itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
+			// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
+			// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
+			// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
+			if (Std.is(itemRenderer, IToggle)) {
+				itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
+			}
 		}
 		this.itemRendererToData.set(itemRenderer, item);
 		this.itemRendererToLayoutIndex.set(itemRenderer, layoutIndex);
@@ -1191,8 +1196,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		var data = this.itemRendererToData.get(itemRenderer);
+		var location = this._dataProvider.locationOf(data);
+		if (location == null || location.length != 2) {
+			return;
+		}
 		// use the setter
-		this.selectedLocation = this._dataProvider.locationOf(data);
+		this.selectedLocation = location;
 	}
 
 	private function groupListView_itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -1208,8 +1217,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		var data = this.itemRendererToData.get(itemRenderer);
+		var location = this._dataProvider.locationOf(data);
+		if (location == null || location.length != 2) {
+			return;
+		}
 		// use the setter
-		this.selectedLocation = this._dataProvider.locationOf(data);
+		this.selectedLocation = location;
 	}
 
 	private function groupListView_itemRenderer_changeHandler(event:Event):Void {
