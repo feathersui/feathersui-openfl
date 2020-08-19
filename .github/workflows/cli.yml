@@ -18,6 +18,7 @@ jobs:
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
+        haxelib install hxargs --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Run CLI
       run: |
