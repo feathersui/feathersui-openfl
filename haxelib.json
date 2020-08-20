@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: GroupListView, bug fixes"
+	"releasenote": "Preview build: GroupListView, focus on stability and bug fixes"
 }
