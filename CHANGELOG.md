@@ -1,6 +1,6 @@
 # Feather UI for OpenFL and Haxe Change Log
 
-## 1.0.0-alpha.3 (2020-08-??)
+## 1.0.0-alpha.3 (2020-08-20)
 
 - GroupListView: new component
 - ArrayCollection: added some functional methods, including `find()`, `findIndex()`, `some()`, `forEach()`, and `map()`.
