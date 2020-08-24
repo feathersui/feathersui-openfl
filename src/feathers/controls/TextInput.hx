@@ -563,6 +563,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._pendingSelectionActiveIndex;
 	}
 
+	/**
+		Indicates if the text width is considered when calculating the ideal
+		size of the text input.
+
+		The following example changes the text input's auto size behavior:
+
+		```hx
+		input.autoSizeWidth = true;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var autoSizeWidth:Bool = false;
+
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 	private var _promptTextMeasuredWidth:Float;
@@ -832,10 +847,14 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			if (this._currentBackgroundSkin != null) {
-				newWidth = this._currentBackgroundSkin.width;
+			if (this.autoSizeWidth) {
+				newWidth = this._textMeasuredWidth;
 			} else {
 				newWidth = 0.0;
+			}
+			newWidth += this.paddingLeft + this.paddingRight;
+			if (this._currentBackgroundSkin != null) {
+				newWidth = Math.max(this._currentBackgroundSkin.width, newWidth);
 			}
 		}
 
@@ -849,12 +868,16 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			if (measureSkin != null) {
-				newMinWidth = measureSkin.minWidth;
-			} else if (this._backgroundSkinMeasurements != null) {
-				newMinWidth = this._backgroundSkinMeasurements.minWidth;
+			if (this.autoSizeWidth) {
+				newMinWidth = this._textMeasuredWidth;
 			} else {
 				newMinWidth = 0.0;
+			}
+			newMinWidth += this.paddingLeft + this.paddingRight;
+			if (measureSkin != null) {
+				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
+			} else if (this._backgroundSkinMeasurements != null) {
+				newMinWidth = Math.max(this._backgroundSkinMeasurements.minWidth, newMinWidth);
 			}
 		}
 
@@ -1122,7 +1145,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var hasText = this._text != null && this._text.length > 0;
 		var hasOldText = oldText != null && oldText.length > 0;
 		var hasPrompt = this._prompt != null && this._prompt.length > 0;
-		if (hasPrompt && ((!hasText && hasOldText) || (hasText && !hasOldText))) {
+		if (this.autoSizeWidth || (hasPrompt && ((!hasText && hasOldText) || (hasText && !hasOldText)))) {
 			this.setInvalid(DATA);
 		}
 		// either way, the event still needs to be dispatched
