@@ -101,7 +101,6 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var dividerColor:Int;
 	private var textColor:Int;
 	private var secondaryTextColor:Int;
-	private var activeTextColor:Int;
 	private var disabledTextColor:Int;
 	private var fontName:String;
 	private var fontSize:Int;
@@ -148,7 +147,6 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.borderColor = 0x080808;
 			this.dividerColor = 0x282828;
 			this.textColor = 0xf1f1f1;
-			this.activeTextColor = 0xf1f1f1;
 			this.disabledTextColor = 0x8f8f8f;
 			this.secondaryTextColor = 0xcfcfcf;
 		} else // light
@@ -178,7 +176,6 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.borderColor = 0xacacac;
 			this.dividerColor = 0xdfdfdf;
 			this.textColor = 0x1f1f1f;
-			this.activeTextColor = 0xefefef;
 			this.disabledTextColor = 0x9f9f9f;
 			this.secondaryTextColor = 0x6f6f6f;
 		}

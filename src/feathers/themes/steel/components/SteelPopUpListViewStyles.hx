@@ -59,13 +59,6 @@ class SteelPopUpListViewStyles {
 				icon.graphics.lineTo(8.0, 0.0);
 				button.icon = icon;
 
-				var downIcon = new Shape();
-				downIcon.graphics.beginFill(theme.activeTextColor);
-				downIcon.graphics.moveTo(0.0, 0.0);
-				downIcon.graphics.lineTo(4.0, 4.0);
-				downIcon.graphics.lineTo(8.0, 0.0);
-				button.setIconForState(ButtonState.DOWN, downIcon);
-
 				button.iconPosition = RIGHT;
 			});
 		}
