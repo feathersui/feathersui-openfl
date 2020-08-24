@@ -31,7 +31,7 @@ class SteelTreeViewStyles {
 			return;
 		}
 
-		function styleTreeViewWithWithBorderVariant(treeView:TreeView):Void {
+		function styleTreeViewWithBorderVariant(treeView:TreeView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			treeView.autoHideScrollBars = !isDesktop;
@@ -63,7 +63,7 @@ class SteelTreeViewStyles {
 			treeView.paddingLeft = 1.0;
 		}
 
-		function styleTreeViewWithWithBorderlessVariant(treeView:TreeView):Void {
+		function styleTreeViewWithBorderlessVariant(treeView:TreeView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			treeView.autoHideScrollBars = !isDesktop;
@@ -94,17 +94,17 @@ class SteelTreeViewStyles {
 			styleProvider.setStyleFunction(TreeView, null, function(treeView:TreeView):Void {
 				var isDesktop = DeviceUtil.isDesktop();
 				if (isDesktop) {
-					styleTreeViewWithWithBorderVariant(treeView);
+					styleTreeViewWithBorderVariant(treeView);
 				} else {
-					styleTreeViewWithWithBorderlessVariant(treeView);
+					styleTreeViewWithBorderlessVariant(treeView);
 				}
 			});
 		}
 		if (styleProvider.getStyleFunction(TreeView, TreeView.VARIANT_BORDER) == null) {
-			styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDER, styleTreeViewWithWithBorderVariant);
+			styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDER, styleTreeViewWithBorderVariant);
 		}
 		if (styleProvider.getStyleFunction(TreeView, TreeView.VARIANT_BORDERLESS) == null) {
-			styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDERLESS, styleTreeViewWithWithBorderlessVariant);
+			styleProvider.setStyleFunction(TreeView, TreeView.VARIANT_BORDERLESS, styleTreeViewWithBorderlessVariant);
 		}
 	}
 }

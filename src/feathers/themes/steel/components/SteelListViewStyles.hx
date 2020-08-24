@@ -31,7 +31,7 @@ class SteelListViewStyles {
 			return;
 		}
 
-		function styleListViewWithWithBorderVariant(listView:ListView):Void {
+		function styleListViewWithBorderVariant(listView:ListView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			listView.autoHideScrollBars = !isDesktop;
@@ -63,7 +63,7 @@ class SteelListViewStyles {
 			listView.paddingLeft = 1.0;
 		}
 
-		function styleListViewWithWithBorderlessVariant(listView:ListView):Void {
+		function styleListViewWithBorderlessVariant(listView:ListView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			listView.autoHideScrollBars = !isDesktop;
@@ -94,17 +94,17 @@ class SteelListViewStyles {
 			styleProvider.setStyleFunction(ListView, null, function(listView:ListView):Void {
 				var isDesktop = DeviceUtil.isDesktop();
 				if (isDesktop) {
-					styleListViewWithWithBorderVariant(listView);
+					styleListViewWithBorderVariant(listView);
 				} else {
-					styleListViewWithWithBorderlessVariant(listView);
+					styleListViewWithBorderlessVariant(listView);
 				}
 			});
 		}
 		if (styleProvider.getStyleFunction(ListView, ListView.VARIANT_BORDER) == null) {
-			styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDER, styleListViewWithWithBorderVariant);
+			styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDER, styleListViewWithBorderVariant);
 		}
 		if (styleProvider.getStyleFunction(ListView, ListView.VARIANT_BORDERLESS) == null) {
-			styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDERLESS, styleListViewWithWithBorderlessVariant);
+			styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDERLESS, styleListViewWithBorderlessVariant);
 		}
 	}
 }

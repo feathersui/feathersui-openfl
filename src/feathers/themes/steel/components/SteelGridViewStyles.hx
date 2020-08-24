@@ -31,7 +31,7 @@ class SteelGridViewStyles {
 			return;
 		}
 
-		function styleGridViewWithWithBorderVariant(gridView:GridView):Void {
+		function styleGridViewWithBorderVariant(gridView:GridView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			gridView.autoHideScrollBars = !isDesktop;
@@ -59,7 +59,7 @@ class SteelGridViewStyles {
 			gridView.paddingLeft = 1.0;
 		}
 
-		function styleGridViewWithWithBorderlessVariant(gridView:GridView):Void {
+		function styleGridViewWithBorderlessVariant(gridView:GridView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			gridView.autoHideScrollBars = !isDesktop;
@@ -86,17 +86,17 @@ class SteelGridViewStyles {
 			styleProvider.setStyleFunction(GridView, null, function(gridView:GridView):Void {
 				var isDesktop = DeviceUtil.isDesktop();
 				if (isDesktop) {
-					styleGridViewWithWithBorderVariant(gridView);
+					styleGridViewWithBorderVariant(gridView);
 				} else {
-					styleGridViewWithWithBorderlessVariant(gridView);
+					styleGridViewWithBorderlessVariant(gridView);
 				}
 			});
 		}
 		if (styleProvider.getStyleFunction(GridView, GridView.VARIANT_BORDER) == null) {
-			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDER, styleGridViewWithWithBorderVariant);
+			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDER, styleGridViewWithBorderVariant);
 		}
 		if (styleProvider.getStyleFunction(GridView, GridView.VARIANT_BORDERLESS) == null) {
-			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithWithBorderlessVariant);
+			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithBorderlessVariant);
 		}
 
 		if (styleProvider.getStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER) == null) {

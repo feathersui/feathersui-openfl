@@ -33,7 +33,7 @@ class SteelGroupListViewStyles {
 			return;
 		}
 
-		function styleGroupListViewWithWithBorderVariant(listView:GroupListView):Void {
+		function styleGroupListViewWithBorderVariant(listView:GroupListView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			listView.autoHideScrollBars = !isDesktop;
@@ -65,7 +65,7 @@ class SteelGroupListViewStyles {
 			listView.paddingLeft = 1.0;
 		}
 
-		function styleGroupListViewWithWithBorderlessVariant(listView:GroupListView):Void {
+		function styleGroupListViewWithBorderlessVariant(listView:GroupListView):Void {
 			var isDesktop = DeviceUtil.isDesktop();
 
 			listView.autoHideScrollBars = !isDesktop;
@@ -96,17 +96,17 @@ class SteelGroupListViewStyles {
 			styleProvider.setStyleFunction(GroupListView, null, function(listView:GroupListView):Void {
 				var isDesktop = DeviceUtil.isDesktop();
 				if (isDesktop) {
-					styleGroupListViewWithWithBorderVariant(listView);
+					styleGroupListViewWithBorderVariant(listView);
 				} else {
-					styleGroupListViewWithWithBorderlessVariant(listView);
+					styleGroupListViewWithBorderlessVariant(listView);
 				}
 			});
 		}
 		if (styleProvider.getStyleFunction(GroupListView, GroupListView.VARIANT_BORDER) == null) {
-			styleProvider.setStyleFunction(GroupListView, GroupListView.VARIANT_BORDER, styleGroupListViewWithWithBorderVariant);
+			styleProvider.setStyleFunction(GroupListView, GroupListView.VARIANT_BORDER, styleGroupListViewWithBorderVariant);
 		}
 		if (styleProvider.getStyleFunction(GroupListView, GroupListView.VARIANT_BORDERLESS) == null) {
-			styleProvider.setStyleFunction(GroupListView, GroupListView.VARIANT_BORDERLESS, styleGroupListViewWithWithBorderlessVariant);
+			styleProvider.setStyleFunction(GroupListView, GroupListView.VARIANT_BORDERLESS, styleGroupListViewWithBorderlessVariant);
 		}
 
 		if (styleProvider.getStyleFunction(ItemRenderer, GroupListView.CHILD_VARIANT_HEADER) == null) {
