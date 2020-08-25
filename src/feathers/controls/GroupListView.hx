@@ -758,10 +758,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._oldHeaderRendererRecycler = null;
 		}
 
-		if (this._dataProvider == null) {
-			return;
-		}
-
 		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this.inactiveItemRenderers, this._itemRendererRecycler);
 		this.recoverInactiveItemRenderers(this.inactiveHeaderRenderers, this._headerRendererRecycler);

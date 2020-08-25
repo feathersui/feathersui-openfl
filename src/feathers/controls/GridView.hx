@@ -770,10 +770,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._layoutItems = items;
 
 		this.refreshInactiveRowRenderers();
-		if (this._dataProvider == null) {
-			return;
-		}
-
 		this.findUnrenderedData();
 		this.recoverInactiveRowRenderers();
 		this.renderUnrenderedData();

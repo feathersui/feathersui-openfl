@@ -263,14 +263,13 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		}
 
 		this.refreshInactiveCellRenderers(this._defaultStorage, false);
-		if (this._data == null) {
-			return;
-		}
-
 		this.findUnrenderedData();
 		this.recoverInactiveCellRenderers(this._defaultStorage);
 		this.renderUnrenderedData();
 		this.freeInactiveCellRenderers(this._defaultStorage);
+		if (this._defaultStorage.inactiveCellRenderers.length > 0) {
+			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive cell renderers should be empty after updating.");
+		}
 	}
 
 	private function refreshInactiveCellRenderers(storage:CellRendererStorage, forceCleanup:Bool):Void {

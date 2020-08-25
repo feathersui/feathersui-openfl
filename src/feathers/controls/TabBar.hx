@@ -415,10 +415,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		var tabsInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_FACTORY);
 		this.refreshInactiveTabs(tabsInvalid);
-		if (this._dataProvider == null) {
-			return;
-		}
-
 		this.findUnrenderedData();
 		this.recoverInactiveTabs();
 		this.renderUnrenderedData();
@@ -554,6 +550,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function findUnrenderedData():Void {
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
+			return;
+		}
 		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		for (i in 0...this._dataProvider.length) {
 			var item = this._dataProvider.get(i);

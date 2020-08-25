@@ -628,10 +628,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(itemRendererInvalid);
-		if (this._dataProvider == null) {
-			return;
-		}
-
 		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this._itemRendererRecycler);
 		this.renderUnrenderedData();
