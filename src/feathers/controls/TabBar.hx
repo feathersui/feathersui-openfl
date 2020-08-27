@@ -146,6 +146,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, tabBar_dataProvider_resetHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, tabBar_dataProvider_sortChangeHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, tabBar_dataProvider_filterChangeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ITEM, tabBar_dataProvider_updateItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ALL, tabBar_dataProvider_updateAllHandler);
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
@@ -157,6 +159,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, tabBar_dataProvider_resetHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, tabBar_dataProvider_sortChangeHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, tabBar_dataProvider_filterChangeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ITEM, tabBar_dataProvider_updateItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ALL, tabBar_dataProvider_updateAllHandler);
 		}
 		if (this._selectedIndex == -1 && this._dataProvider != null && this._dataProvider.length > 0) {
 			// use the setter
@@ -760,5 +764,26 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 	private function tabBar_dataProvider_filterChangeHandler(event:FlatCollectionEvent):Void {
 		this.refreshSelectedIndicesAfterFilterOrSort();
+	}
+
+	private function updateTabForIndex(index:Int):Void {
+		var item = this._dataProvider.get(index);
+		var tab = this.dataToTab.get(item);
+		if (tab == null) {
+			// doesn't exist yet, so we need to do a full invalidation
+			this.setInvalid(DATA);
+			return;
+		}
+		this.refreshTabProperties(tab, item, index);
+	}
+
+	private function tabBar_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
+		this.updateTabForIndex(event.index);
+	}
+
+	private function tabBar_dataProvider_updateAllHandler(event:FlatCollectionEvent):Void {
+		for (i in 0...this._dataProvider.length) {
+			this.updateTabForIndex(i);
+		}
 	}
 }

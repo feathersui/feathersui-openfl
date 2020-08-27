@@ -232,6 +232,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, groupListView_dataProvider_replaceItemHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, groupListView_dataProvider_removeAllHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, groupListView_dataProvider_resetHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, groupListView_dataProvider_updateItemHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ALL, groupListView_dataProvider_updateAllHandler);
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
@@ -243,6 +245,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, groupListView_dataProvider_replaceItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, groupListView_dataProvider_removeAllHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, groupListView_dataProvider_resetHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, groupListView_dataProvider_updateItemHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ALL, groupListView_dataProvider_updateAllHandler);
 		}
 
 		// reset the scroll position because this is a drastic change and
@@ -1300,5 +1304,43 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private function groupListView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
 		// use the setter
 		this.selectedLocation = null;
+	}
+
+	private function updateItemRendererForLocation(location:Array<Int>):Void {
+		var item = this._dataProvider.get(location);
+		var itemRenderer = this.dataToItemRenderer.get(item);
+		if (itemRenderer == null) {
+			// doesn't exist yet, so we need to do a full invalidation
+			this.setInvalid(DATA);
+			return;
+		}
+		// in order to display the same item with modified properties, this
+		// hack tricks the item renderer into thinking that it has been given
+		// a different item to render.
+		if (Std.is(itemRenderer, IDataRenderer)) {
+			cast(itemRenderer, IDataRenderer).data = null;
+		}
+		var type = location.length == 1 ? HEADER : STANDARD;
+		var layoutIndex = this.locationToDisplayIndex(location);
+		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
+		if (type == HEADER) {
+			for (i in 0...this._dataProvider.getLength(location)) {
+				location.push(i);
+				this.updateItemRendererForLocation(location);
+				location.pop();
+			}
+		}
+	}
+
+	private function groupListView_dataProvider_updateItemHandler(event:HierarchicalCollectionEvent):Void {
+		this.updateItemRendererForLocation(event.location);
+	}
+
+	private function groupListView_dataProvider_updateAllHandler(event:HierarchicalCollectionEvent):Void {
+		var location:Array<Int> = [];
+		for (i in 0...this._dataProvider.getLength()) {
+			location[0] = i;
+			this.updateItemRendererForLocation(location);
+		}
 	}
 }

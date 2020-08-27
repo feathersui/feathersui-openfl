@@ -222,6 +222,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, gridView_dataProvider_resetHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.SORT_CHANGE, gridView_dataProvider_sortChangeHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.FILTER_CHANGE, gridView_dataProvider_filterChangeHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ITEM, gridView_dataProvider_updateItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ALL, gridView_dataProvider_updateAllHandler);
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
@@ -234,6 +236,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, gridView_dataProvider_resetHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.SORT_CHANGE, gridView_dataProvider_sortChangeHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.FILTER_CHANGE, gridView_dataProvider_filterChangeHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ITEM, gridView_dataProvider_updateItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ALL, gridView_dataProvider_updateAllHandler);
 		}
 
 		// reset the scroll position because this is a drastic change and
@@ -1118,6 +1122,31 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._virtualCache.resize(this._dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
+	}
+
+	private function updateRowRendererForIndex(index:Int):Void {
+		var item = this._dataProvider.get(index);
+		var rowRenderer = this.dataToRowRenderer.get(item);
+		if (rowRenderer == null) {
+			// doesn't exist yet, so we need to do a full invalidation
+			this.setInvalid(DATA);
+			return;
+		}
+		// in order to display the same item with modified properties, this
+		// hack tricks the item renderer into thinking that it has been given
+		// a different item to render.
+		rowRenderer.data = null;
+		this.refreshRowRendererProperties(rowRenderer, item, index);
+	}
+
+	private function gridView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
+		this.updateRowRendererForIndex(event.index);
+	}
+
+	private function gridView_dataProvider_updateAllHandler(event:FlatCollectionEvent):Void {
+		for (i in 0...this._dataProvider.length) {
+			this.updateRowRendererForIndex(i);
+		}
 	}
 
 	private function gridView_columns_changeHandler(event:Event):Void {
