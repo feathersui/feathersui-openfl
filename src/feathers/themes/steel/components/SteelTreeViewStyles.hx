@@ -51,10 +51,10 @@ class SteelTreeViewStyles {
 			}
 
 			if (treeView.focusRectSkin == null) {
-				var skin = new RectangleSkin();
-				skin.fill = null;
-				skin.border = theme.getFocusBorder();
-				treeView.focusRectSkin = skin;
+				var focusRectSkin = new RectangleSkin();
+				focusRectSkin.fill = null;
+				focusRectSkin.border = theme.getFocusBorder();
+				treeView.focusRectSkin = focusRectSkin;
 			}
 
 			treeView.paddingTop = 1.0;

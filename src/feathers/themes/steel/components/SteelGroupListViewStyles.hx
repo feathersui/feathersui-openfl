@@ -53,10 +53,10 @@ class SteelGroupListViewStyles {
 			}
 
 			if (listView.focusRectSkin == null) {
-				var skin = new RectangleSkin();
-				skin.fill = null;
-				skin.border = theme.getFocusBorder();
-				listView.focusRectSkin = skin;
+				var focusRectSkin = new RectangleSkin();
+				focusRectSkin.fill = null;
+				focusRectSkin.border = theme.getFocusBorder();
+				listView.focusRectSkin = focusRectSkin;
 			}
 
 			listView.paddingTop = 1.0;

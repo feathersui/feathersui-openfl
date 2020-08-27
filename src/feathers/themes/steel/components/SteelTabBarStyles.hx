@@ -48,11 +48,11 @@ class SteelTabBarStyles {
 					tabBar.backgroundSkin = skin;
 				}
 				if (tabBar.focusRectSkin == null) {
-					var skin = new RectangleSkin();
-					skin.fill = null;
-					skin.border = theme.getFocusBorder();
-					skin.cornerRadius = 6.0;
-					tabBar.focusRectSkin = skin;
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 6.0;
+					tabBar.focusRectSkin = focusRectSkin;
 				}
 				if (tabBar.layout == null) {
 					var layout = new HorizontalLayout();

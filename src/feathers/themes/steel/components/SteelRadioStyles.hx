@@ -97,11 +97,16 @@ class SteelRadioStyles {
 				radio.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
 
 				if (radio.focusRectSkin == null) {
-					var skin = new RectangleSkin();
-					skin.fill = null;
-					skin.border = theme.getFocusBorder();
-					skin.cornerRadius = 6.0;
-					radio.focusRectSkin = skin;
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 6.0;
+					radio.focusRectSkin = focusRectSkin;
+
+					radio.focusPaddingTop = 3.0;
+					radio.focusPaddingRight = 3.0;
+					radio.focusPaddingBottom = 3.0;
+					radio.focusPaddingLeft = 3.0;
 				}
 
 				radio.horizontalAlign = LEFT;

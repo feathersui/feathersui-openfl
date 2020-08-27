@@ -47,10 +47,10 @@ class SteelGridViewStyles {
 			}
 
 			if (gridView.focusRectSkin == null) {
-				var skin = new RectangleSkin();
-				skin.fill = null;
-				skin.border = theme.getFocusBorder();
-				gridView.focusRectSkin = skin;
+				var focusRectSkin = new RectangleSkin();
+				focusRectSkin.fill = null;
+				focusRectSkin.border = theme.getFocusBorder();
+				gridView.focusRectSkin = focusRectSkin;
 			}
 
 			gridView.paddingTop = 1.0;

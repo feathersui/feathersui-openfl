@@ -45,10 +45,10 @@ class SteelScrollContainerStyles {
 				}
 
 				if (container.focusRectSkin == null) {
-					var skin = new RectangleSkin();
-					skin.fill = null;
-					skin.border = theme.getFocusBorder();
-					container.focusRectSkin = skin;
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					container.focusRectSkin = focusRectSkin;
 				}
 			});
 		}

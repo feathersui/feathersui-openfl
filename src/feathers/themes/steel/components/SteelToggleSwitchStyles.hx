@@ -72,11 +72,11 @@ class SteelToggleSwitchStyles {
 					toggle.thumbSkin = thumb;
 				}
 				if (toggle.focusRectSkin == null) {
-					var skin = new RectangleSkin();
-					skin.fill = null;
-					skin.border = theme.getFocusBorder();
-					skin.cornerRadius = 32.0;
-					toggle.focusRectSkin = skin;
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 32.0;
+					toggle.focusRectSkin = focusRectSkin;
 				}
 			});
 		}

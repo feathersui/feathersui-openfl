@@ -104,11 +104,16 @@ class SteelCheckStyles {
 				check.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
 
 				if (check.focusRectSkin == null) {
-					var skin = new RectangleSkin();
-					skin.fill = null;
-					skin.border = theme.getFocusBorder();
-					skin.cornerRadius = 6.0;
-					check.focusRectSkin = skin;
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 6.0;
+					check.focusRectSkin = focusRectSkin;
+
+					check.focusPaddingTop = 3.0;
+					check.focusPaddingRight = 3.0;
+					check.focusPaddingBottom = 3.0;
+					check.focusPaddingLeft = 3.0;
 				}
 
 				check.horizontalAlign = LEFT;

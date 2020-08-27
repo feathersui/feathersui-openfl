@@ -45,11 +45,11 @@ class SteelButtonStyles {
 				}
 
 				if (button.focusRectSkin == null) {
-					var skin = new RectangleSkin();
-					skin.fill = null;
-					skin.border = theme.getFocusBorder();
-					skin.cornerRadius = 6.0;
-					button.focusRectSkin = skin;
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 6.0;
+					button.focusRectSkin = focusRectSkin;
 				}
 
 				if (button.textFormat == null) {
