@@ -337,6 +337,118 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._focusRectSkin;
 	}
 
+	private var _focusPaddingTop:Float = 0.0;
+
+	/**
+		Optional padding outside the top edge of this UI component when the
+		`focusRectSkin` is visible.
+
+		@since 1.0.0
+	**/
+	@style
+	@:flash.property
+	public var focusPaddingTop(get, set):Float;
+
+	private function get_focusPaddingTop():Float {
+		return this._focusPaddingTop;
+	}
+
+	private function set_focusPaddingTop(value:Float):Float {
+		if (!this.setStyle("focusPaddingTop")) {
+			return this._focusPaddingTop;
+		}
+		// in a -final build, this forces the clearStyle
+		// function to be kept if the property is kept
+		// otherwise, it would be removed by dce
+		this._previousClearStyle = this.clearStyle_focusPaddingTop;
+		this._focusPaddingTop = value;
+		return this._focusPaddingTop;
+	}
+
+	private var _focusPaddingRight:Float = 0.0;
+
+	/**
+		Optional padding outside the right edge of this UI component when the
+		`focusRectSkin` is visible.
+
+		@since 1.0.0
+	**/
+	@style
+	@:flash.property
+	public var focusPaddingRight(get, set):Float;
+
+	private function get_focusPaddingRight():Float {
+		return this._focusPaddingRight;
+	}
+
+	private function set_focusPaddingRight(value:Float):Float {
+		if (!this.setStyle("focusPaddingRight")) {
+			return this._focusPaddingRight;
+		}
+		// in a -final build, this forces the clearStyle
+		// function to be kept if the property is kept
+		// otherwise, it would be removed by dce
+		this._previousClearStyle = this.clearStyle_focusPaddingRight;
+		this._focusPaddingRight = value;
+		return this._focusPaddingRight;
+	}
+
+	private var _focusPaddingBottom:Float = 0.0;
+
+	/**
+		Optional padding outside the bottom edge of this UI component when the
+		`focusRectSkin` is visible.
+
+		@since 1.0.0
+	**/
+	@style
+	@:flash.property
+	public var focusPaddingBottom(get, set):Float;
+
+	private function get_focusPaddingBottom():Float {
+		return this._focusPaddingBottom;
+	}
+
+	private function set_focusPaddingBottom(value:Float):Float {
+		if (!this.setStyle("focusPaddingBottom")) {
+			return this._focusPaddingBottom;
+		}
+		// in a -final build, this forces the clearStyle
+		// function to be kept if the property is kept
+		// otherwise, it would be removed by dce
+		this._previousClearStyle = this.clearStyle_focusPaddingBottom;
+		this._focusPaddingBottom = value;
+		return this._focusPaddingBottom;
+	}
+
+	private var _focusPaddingLeft:Float = 0.0;
+
+	/**
+		Optional padding outside the left edge of this UI component when the
+		`focusRectSkin` is visible.
+
+		@since 1.0.0
+	**/
+	@style
+	@:flash.property
+	public var focusPaddingLeft(get, set):Float;
+
+	private function get_focusPaddingLeft():Float {
+		return this._focusPaddingLeft;
+	}
+
+	private function set_focusPaddingLeft(value:Float):Float {
+		if (!this.setStyle("focusPaddingLeft")) {
+			return this._focusPaddingLeft;
+		}
+		// in a -final build, this forces the clearStyle
+		// function to be kept if the property is kept
+		// otherwise, it would be removed by dce
+		this._previousClearStyle = this.clearStyle_focusPaddingLeft;
+		this._focusPaddingLeft = value;
+		return this._focusPaddingLeft;
+	}
+
 	/**
 		@see `feathers.core.IFocusObject.showFocus()`
 	**/
@@ -365,14 +477,38 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._focusRectSkin;
 	}
 
+	@:noCompletion
+	private function clearStyle_focusPaddingTop():Float {
+		this._focusPaddingTop = 0.0;
+		return this._focusPaddingTop;
+	}
+
+	@:noCompletion
+	private function clearStyle_focusPaddingRight():Float {
+		this._focusPaddingRight = 0.0;
+		return this._focusPaddingRight;
+	}
+
+	@:noCompletion
+	private function clearStyle_focusPaddingBottom():Float {
+		this._focusPaddingBottom = 0.0;
+		return this._focusPaddingBottom;
+	}
+
+	@:noCompletion
+	private function clearStyle_focusPaddingLeft():Float {
+		this._focusPaddingLeft = 0.0;
+		return this._focusPaddingLeft;
+	}
+
 	private function positionFocusRect():Void {
-		var point = new Point(0, 0);
+		var point = new Point(-this._focusPaddingLeft, -this._focusPaddingTop);
 		point = this.localToGlobal(point);
 		point = this._focusManager.focusPane.globalToLocal(point);
 		this._focusRectSkin.x = point.x;
 		this._focusRectSkin.y = point.y;
-		this._focusRectSkin.width = this.actualWidth;
-		this._focusRectSkin.height = this.actualHeight;
+		this._focusRectSkin.width = this.actualWidth + this._focusPaddingLeft + this._focusPaddingRight;
+		this._focusRectSkin.height = this.actualHeight + this._focusPaddingTop + this._focusPaddingBottom;
 	}
 
 	private function setLayoutDataInternal(value:ILayoutData):ILayoutData {
