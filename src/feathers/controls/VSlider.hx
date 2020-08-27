@@ -221,6 +221,11 @@ class VSlider extends BaseSlider {
 			default:
 				return;
 		}
+		if (newValue < this._minimum) {
+			newValue = this._minimum;
+		} else if (newValue > this._maximum) {
+			newValue = this._maximum;
+		}
 		event.stopPropagation();
 		// use the setter
 		this.value = newValue;
