@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.utils.MathUtil;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
 import feathers.events.FeathersEvent;
@@ -73,6 +74,14 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function set_value(value:Float):Float {
+		if (this._snapInterval != 0.0 && value != this._minimum && value != this._maximum) {
+			value = MathUtil.roundToNearest(value, this._snapInterval);
+		}
+		if (value < this._minimum) {
+			value = this._minimum;
+		} else if (value > this._maximum) {
+			value = this._maximum;
+		}
 		if (this._value == value) {
 			return this._value;
 		}
@@ -166,12 +175,11 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		return this._maximum;
 	}
 
-	private var _step:Float = 0.0;
+	private var _step:Float = 0.01;
 
 	/**
-		As the scroll bar's thumb is dragged, the `value` is snapped to the
-		nearest multiple of `step`. If `step` is `0.0`, the `value` is not
-		snapped.
+		When the scroll bar's increment/decrement buttons are triggered, the
+		`value` is modified by adding or subtracting `step`.
 
 		In the following example, the step is changed to `1.0`:
 
@@ -205,6 +213,45 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this._step = value;
 		this.setInvalid(DATA);
 		return this._step;
+	}
+
+	private var _snapInterval:Float = 0.0;
+
+	/**
+		When the scroll bar's `value` changes, it may be "snapped" to the
+		nearest multiple of `snapInterval`. If `snapInterval` is `0.0`, the
+		`value` is not snapped.
+
+		In the following example, the snap inverval is changed to `1.0`:
+
+		```hx
+		slider.minimum = 0.0;
+		slider.maximum = 100.0;
+		slider.step = 1.0;
+		slider.snapInterval = 1.0;
+		slider.value = 10.0;
+		```
+
+		@default 0.0
+
+		@see `BaseScrollBar.step`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var snapInterval(get, set):Float;
+
+	private function get_snapInterval():Float {
+		return this._snapInterval;
+	}
+
+	private function set_snapInterval(value:Float):Float {
+		if (this._snapInterval == value) {
+			return this._snapInterval;
+		}
+		this._snapInterval = value;
+		this.setInvalid(DATA);
+		return this._snapInterval;
 	}
 
 	private var _page:Float = 0.0;

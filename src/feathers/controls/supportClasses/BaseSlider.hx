@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.utils.MathUtil;
 import feathers.controls.IRange;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
@@ -71,6 +72,14 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	}
 
 	private function set_value(value:Float):Float {
+		if (this._snapInterval != 0.0 && value != this._minimum && value != this._maximum) {
+			value = MathUtil.roundToNearest(value, this._snapInterval);
+		}
+		if (value < this._minimum) {
+			value = this._minimum;
+		} else if (value > this._maximum) {
+			value = this._maximum;
+		}
 		if (this._value == value) {
 			return this._value;
 		}
@@ -164,12 +173,12 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		return this._maximum;
 	}
 
-	// this should not be 0.0 by default because it needs to support keyboard
+	// this should not be 0.0 by default because 0.0 breaks keyboard events
 	private var _step:Float = 0.01;
 
 	/**
-		As the slider's thumb is dragged, the `value` is snapped to the nearest
-		multiple of `step`. If `step` is `0.0`, the `value` is not snapped.
+		Indicates the amount that `value` is changed when the slider has focus
+		and one of the arrow keys is pressed.
 
 		In the following example, the step is changed to `1.0`:
 
@@ -180,11 +189,12 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		slider.value = 10.0;
 		```
 
-		@default 0.0
+		@default 0.01
 
 		@see `BaseSlider.value`
 		@see `BaseSlider.minimum`
 		@see `BaseSlider.maximum`
+		@see `BaseSlider.snapInterval`
 
 		@since 1.0.0
 	**/
@@ -202,6 +212,45 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		this._step = value;
 		this.setInvalid(DATA);
 		return this._step;
+	}
+
+	private var _snapInterval:Float = 0.0;
+
+	/**
+		When the slider's `value` changes, it may be "snapped" to the nearest
+		multiple of `snapInterval`. If `snapInterval` is `0.0`, the `value` is
+		not snapped.
+
+		In the following example, the snap inverval is changed to `1.0`:
+
+		```hx
+		slider.minimum = 0.0;
+		slider.maximum = 100.0;
+		slider.step = 1.0;
+		slider.snapInterval = 1.0;
+		slider.value = 10.0;
+		```
+
+		@default 0.0
+
+		@see `BaseSlider.step`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var snapInterval(get, set):Float;
+
+	private function get_snapInterval():Float {
+		return this._snapInterval;
+	}
+
+	private function set_snapInterval(value:Float):Float {
+		if (this._snapInterval == value) {
+			return this._snapInterval;
+		}
+		this._snapInterval = value;
+		this.setInvalid(DATA);
+		return this._snapInterval;
 	}
 
 	/**
