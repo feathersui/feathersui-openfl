@@ -998,6 +998,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var item = this._dataProvider.get(index);
 		var itemRenderer = this.dataToItemRenderer.get(item);
 		if (itemRenderer == null) {
+			// doesn't exist yet, so we need to do a full invalidation
+			this.setInvalid(DATA);
 			return;
 		}
 		// in order to display the same item with modified properties, this
