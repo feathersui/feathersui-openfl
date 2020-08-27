@@ -38,6 +38,14 @@ class GridViewTest {
 	}
 
 	@Test
+	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.validateNow();
+		this._gridView.dataProvider = null;
+		this._gridView.validateNow();
+	}
+
+	@Test
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.validateNow();

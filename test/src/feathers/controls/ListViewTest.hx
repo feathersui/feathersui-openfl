@@ -38,6 +38,14 @@ class ListViewTest {
 	}
 
 	@Test
+	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.validateNow();
+		this._listView.dataProvider = null;
+		this._listView.validateNow();
+	}
+
+	@Test
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.validateNow();

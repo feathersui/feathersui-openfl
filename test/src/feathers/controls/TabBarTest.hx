@@ -32,6 +32,19 @@ class TabBarTest {
 	}
 
 	@Test
+	public function testValidateWithNullDataProvider():Void {
+		this._tabBar.validateNow();
+	}
+
+	@Test
+	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.validateNow();
+		this._tabBar.dataProvider = null;
+		this._tabBar.validateNow();
+	}
+
+	@Test
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._tabBar.validateNow();
