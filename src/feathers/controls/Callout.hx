@@ -141,7 +141,7 @@ class Callout extends FeathersControl {
 			xPosition = maxX;
 		}
 		callout.x = xPosition;
-		callout.y = originBounds.y + originBounds.height;
+		callout.y = originBounds.y + originBounds.height + callout.gap;
 	}
 
 	private static function positionAboveOrigin(callout:Callout, originBounds:Rectangle):Void {
@@ -176,7 +176,7 @@ class Callout extends FeathersControl {
 			xPosition = maxX;
 		}
 		callout.x = xPosition;
-		callout.y = originBounds.y - callout.height;
+		callout.y = originBounds.y - callout.height - callout.gap;
 	}
 
 	private static function positionLeftOfOrigin(callout:Callout, originBounds:Rectangle):Void {
@@ -210,7 +210,7 @@ class Callout extends FeathersControl {
 		} else if (yPosition > maxY) {
 			yPosition = maxY;
 		}
-		callout.x = originBounds.x - callout.width;
+		callout.x = originBounds.x - callout.width - callout.gap;
 		callout.y = yPosition;
 	}
 
@@ -245,7 +245,7 @@ class Callout extends FeathersControl {
 		} else if (yPosition > maxY) {
 			yPosition = maxY;
 		}
-		callout.x = originBounds.x + originBounds.width;
+		callout.x = originBounds.x + originBounds.width + callout.gap;
 		callout.y = yPosition;
 	}
 
@@ -352,6 +352,20 @@ class Callout extends FeathersControl {
 		this.setInvalid(INVALIDATION_FLAG_ORIGIN);
 		return this._origin;
 	}
+
+	/**
+		The space, in pixels, between the callout and its origin.
+
+		In the following example, the callout's gap is set to 20 pixels:
+
+		```hx
+		callout.gap = 20.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var gap:Float = 0.0;
 
 	/**
 		The minimum space, in pixels, between the callout and the stage's top edge.
