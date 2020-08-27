@@ -164,7 +164,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		return this._maximum;
 	}
 
-	private var _step:Float = 0.0;
+	// this should not be 0.0 by default because it needs to support keyboard
+	private var _step:Float = 0.01;
 
 	/**
 		As the slider's thumb is dragged, the `value` is snapped to the nearest
