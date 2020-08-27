@@ -31,7 +31,7 @@ class PackageHaxelib {
 		var packageName = Std.string(json.name);
 		var packageVersion = Std.string(json.version);
 		var releaseNote = Std.string(json.releasenote);
-		var packageFileName = '${packageName}-${packageVersion}.zip';
+		var packageFileName = '${packageName}-${packageVersion}-haxelib.zip';
 		var zipFilePath = FileSystem.absolutePath(Path.join(["../build/", packageFileName]));
 		Sys.println('haxelib: ${packageName}');
 		Sys.println('version: ${packageVersion}');
