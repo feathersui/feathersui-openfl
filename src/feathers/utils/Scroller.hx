@@ -778,6 +778,26 @@ class Scroller extends EventDispatcher {
 		if (oldMaxScrollY != this._maxScrollY) {
 			this.refreshAnimateScrollYEndRatio();
 		}
+		if (!this._scrolling) {
+			var scrollChanged = false;
+			if (this._scrollX < this._minScrollX) {
+				this._scrollX = this._minScrollX;
+				scrollChanged = true;
+			} else if (this._scrollX > this._maxScrollX) {
+				this._scrollX = this._maxScrollX;
+				scrollChanged = true;
+			}
+			if (this._scrollY < this._minScrollY) {
+				this._scrollY = this._minScrollY;
+				scrollChanged = true;
+			} else if (this._scrollY > this._maxScrollY) {
+				this._scrollY = this._maxScrollY;
+				scrollChanged = true;
+			}
+			if (scrollChanged) {
+				ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			}
+		}
 	}
 
 	private function startScroll():Void {
