@@ -1,3 +1,4 @@
+import feathers.skins.MultiSkin;
 import feathers.controls.Application;
 import feathers.style.IDarkModeTheme;
 import feathers.style.IStyleProvider;
@@ -67,12 +68,8 @@ class CalculatorTheme implements ITheme {
 		if (button.backgroundSkin == null) {
 			var skin = new RectangleSkin();
 			skin.fill = SolidColor(this.controlColor);
+			skin.setFillForState(DOWN, SolidColor(this.activeColor));
 			button.backgroundSkin = skin;
-		}
-		if (button.getSkinForState(ButtonState.DOWN) == null) {
-			var skin = new RectangleSkin();
-			skin.fill = SolidColor(this.activeColor);
-			button.setSkinForState(ButtonState.DOWN, skin);
 		}
 
 		if (button.textFormat == null) {
@@ -90,12 +87,8 @@ class CalculatorTheme implements ITheme {
 		if (button.backgroundSkin == null) {
 			var skin = new RectangleSkin();
 			skin.fill = SolidColor(this.operationColor);
+			skin.setFillForState(DOWN, SolidColor(this.activeColor));
 			button.backgroundSkin = skin;
-		}
-		if (button.getSkinForState(ButtonState.DOWN) == null) {
-			var skin = new RectangleSkin();
-			skin.fill = SolidColor(this.activeColor);
-			button.setSkinForState(ButtonState.DOWN, skin);
 		}
 
 		if (button.textFormat == null) {

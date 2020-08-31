@@ -1,3 +1,4 @@
+import feathers.controls.ButtonState;
 import feathers.themes.ClassVariantTheme;
 import openfl.text.TextFormat;
 import openfl.display.GradientType;
@@ -20,15 +21,11 @@ class CustomTheme extends ClassVariantTheme {
 	private function setButtonStyles(button:Button):Void {
 		var backgroundSkin = new RectangleSkin();
 		backgroundSkin.border = SolidColor(1.0, 0xff0000);
+		backgroundSkin.setBorderForState(DOWN, SolidColor(1.0, 0xcc0000));
 		backgroundSkin.fill = SolidColor(0xffffff);
+		backgroundSkin.setFillForState(DOWN, SolidColor(0xffeeee));
 		backgroundSkin.cornerRadius = 10.0;
 		button.backgroundSkin = backgroundSkin;
-
-		var downSkin = new RectangleSkin();
-		downSkin.border = SolidColor(1.0, 0xcc0000);
-		downSkin.fill = SolidColor(0xffeeee);
-		downSkin.cornerRadius = 10.0;
-		button.setSkinForState(DOWN, downSkin);
 
 		var format = new TextFormat("_sans", 16, 0xff0000);
 		button.textFormat = format;
@@ -45,15 +42,11 @@ class CustomTheme extends ClassVariantTheme {
 	private function setFancyButtonStyles(button:Button):Void {
 		var backgroundSkin = new RectangleSkin();
 		backgroundSkin.cornerRadius = 10.0;
-		backgroundSkin.border = Gradient(2, GradientType.LINEAR, [0xff9999, 0xcc0000], [1.0, 1.0], [0, 255], 90 * Math.PI / 180);
-		backgroundSkin.fill = Gradient(GradientType.LINEAR, [0xff9999, 0xff0000], [1.0, 1.0], [0, 255], 90 * Math.PI / 180);
+		backgroundSkin.border = Gradient(2, LINEAR, [0xff9999, 0xcc0000], [1.0, 1.0], [0, 255], 90 * Math.PI / 180);
+		backgroundSkin.setBorderForState(DOWN, Gradient(2, LINEAR, [0xff0000, 0xcc0000], [1.0, 1.0], [0, 255], 90 * Math.PI / 180));
+		backgroundSkin.fill = Gradient(LINEAR, [0xff9999, 0xff0000], [1.0, 1.0], [0, 255], 90 * Math.PI / 180);
+		backgroundSkin.setFillForState(DOWN, Gradient(LINEAR, [0xff9999, 0xff0000], [1.0, 1.0], [0, 255], 270 * Math.PI / 180));
 		button.backgroundSkin = backgroundSkin;
-
-		var downSkin = new RectangleSkin();
-		downSkin.cornerRadius = 10.0;
-		downSkin.border = Gradient(2, GradientType.LINEAR, [0xff0000, 0xcc0000], [1.0, 1.0], [0, 255], 90 * Math.PI / 180);
-		downSkin.fill = Gradient(GradientType.LINEAR, [0xff9999, 0xff0000], [1.0, 1.0], [0, 255], 270 * Math.PI / 180);
-		button.setSkinForState(DOWN, downSkin);
 
 		var format = new TextFormat("_sans", 20, 0xffeeee, true, true);
 		button.textFormat = format;
