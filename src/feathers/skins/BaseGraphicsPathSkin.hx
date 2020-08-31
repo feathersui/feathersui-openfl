@@ -196,7 +196,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		If a fill is not defined for a specific state, returns `null`.
 
-		@see `BaseGraphicsPathSkin.stateContext`
+		@see `ProgrammaticSkin.stateContext`
 		@see `BaseGraphicsPathSkin.fill`
 		@see `BaseGraphicsPathSkin.setFillForState`
 
@@ -218,7 +218,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		To clear a state's fill, pass in `null`.
 
-		@see `BaseGraphicsPathSkin.stateContext`
+		@see `ProgrammaticSkin.stateContext`
 		@see `BaseGraphicsPathSkin.fill`
 		@see `BaseGraphicsPathSkin.getFillForState`
 
@@ -241,7 +241,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		If a border is not defined for a specific state, returns `null`.
 
-		@see `BaseGraphicsPathSkin.stateContext`
+		@see `ProgrammaticSkin.stateContext`
 		@see `BaseGraphicsPathSkin.border`
 		@see `BaseGraphicsPathSkin.setBorderForState`
 
@@ -263,7 +263,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		To clear a state's border, pass in `null`.
 
-		@see `BaseGraphicsPathSkin.stateContext`
+		@see `ProgrammaticSkin.stateContext`
 		@see `BaseGraphicsPathSkin.border`
 		@see `BaseGraphicsPathSkin.getBorderForState`
 
@@ -426,7 +426,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		@see `BaseGraphicsPathSkin.border`
 		@see `BaseGraphicsPathSkin.getBorderForState`
 		@see `BaseGraphicsPathSkin.setBorderForState`
-		@see `BaseGraphicsPathSkin.stateContext`
+		@see `ProgrammaticSkin.stateContext`
 
 		@since 1.0.0
 	**/
@@ -472,7 +472,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		@see `BaseGraphicsPathSkin.fill`
 		@see `BaseGraphicsPathSkin.getFillForState`
 		@see `BaseGraphicsPathSkin.setFillForState`
-		@see `BaseGraphicsPathSkin.stateContext`
+		@see `ProgrammaticSkin.stateContext`
 
 		@since 1.0.0
 	**/
