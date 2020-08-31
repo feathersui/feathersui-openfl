@@ -571,9 +571,9 @@ class Scroller extends EventDispatcher {
 			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler, false, 0, true);
 			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginCaptureHandler, true, 0, true);
 			this._target.addEventListener(MouseEvent.CLICK, target_clickCaptureHandler, true, 0, true);
-			// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
-			// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-			// this._target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true, 0, true);
+			#if (openfl >= "9.0.0")
+			this._target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapCaptureHandler, true, 0, true);
+			#end
 		}
 		return this._target;
 	}

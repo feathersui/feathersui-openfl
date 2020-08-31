@@ -938,9 +938,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
 		if (type == STANDARD) {
 			itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
-			// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
-			// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-			// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
+			#if (openfl >= "9.0.0")
+			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
+			#end
 			if (Std.is(itemRenderer, IToggle)) {
 				itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
@@ -1183,11 +1183,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (!this._enabled) {
 			return;
 		}
-		if (!this._selectable || !this.pointerSelectionEnabled) {
-			return;
-		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);

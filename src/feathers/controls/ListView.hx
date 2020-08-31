@@ -814,9 +814,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this.refreshItemRendererProperties(itemRenderer, item, index);
 		itemRenderer.addEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
-		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
-		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-		// itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, itemRenderer_touchTapHandler);
+		#if (openfl >= "9.0.0")
+		itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
+		#end
 		if (Std.is(itemRenderer, IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 		}
@@ -851,16 +851,16 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (!this._enabled) {
 			return;
 		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var data = this.itemRendererToData.get(itemRenderer);
 		this.dispatchItemTriggerEvent(data);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
-			return;
-		}
-		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
-			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);

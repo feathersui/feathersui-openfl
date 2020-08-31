@@ -87,9 +87,9 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		this.mouseChildren = this._interactionMode == PRECISE;
 		this.addEventListener(MouseEvent.CLICK, pageIndicator_clickHandler);
-		// TODO: temporarily disabled until isPrimaryTouchPoint bug is fixed
-		// See commit: 43d659b6afa822873ded523395e2a2a1a4567a50
-		// this.addEventListener(TouchEvent.TOUCH_TAP, pageIndicator_touchTapHandler);
+		#if (openfl >= "9.0.0")
+		this.addEventListener(TouchEvent.TOUCH_TAP, pageIndicator_touchTapHandler);
+		#end
 		this.addEventListener(KeyboardEvent.KEY_DOWN, pageIndicator_keyDownHandler);
 	}
 

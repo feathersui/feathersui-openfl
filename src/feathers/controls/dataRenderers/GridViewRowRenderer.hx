@@ -445,11 +445,11 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		if (!this._enabled) {
 			return;
 		}
-		if (!this.selectable) {
-			return;
-		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+		if (!this.selectable) {
 			return;
 		}
 		// use the setter
