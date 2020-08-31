@@ -51,15 +51,15 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					// optimization: if width and height are known, set them before
 					// validation because measurement could be expensive
 					if (measurements.width != null) {
-						var leftAnchor:Anchor = layoutData.left;
-						var rightAnchor:Anchor = layoutData.right;
+						var leftAnchor = layoutData.left;
+						var rightAnchor = layoutData.right;
 						if (leftAnchor != null && rightAnchor != null && leftAnchor.relativeTo == null && rightAnchor.relativeTo == null) {
 							item.width = measurements.width - leftAnchor.value - rightAnchor.value;
 						}
 					}
 					if (measurements.height != null) {
-						var topAnchor:Anchor = layoutData.top;
-						var bottomAnchor:Anchor = layoutData.bottom;
+						var topAnchor = layoutData.top;
+						var bottomAnchor = layoutData.bottom;
 						if (topAnchor != null && bottomAnchor != null && topAnchor.relativeTo == null && bottomAnchor.relativeTo == null) {
 							item.height = measurements.height - topAnchor.value - bottomAnchor.value;
 						}
@@ -109,7 +109,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 				} else // has AnchorLayoutData
 				{
 					if (layoutData.top != null) {
-						var top:Anchor = layoutData.top;
+						var top = layoutData.top;
 						var value = top.value;
 						var relativeTo = top.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
@@ -121,7 +121,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						}
 					}
 					if (layoutData.left != null) {
-						var left:Anchor = layoutData.left;
+						var left = layoutData.left;
 						var value = left.value;
 						var relativeTo = left.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
@@ -135,7 +135,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					if (layoutData.verticalCenter == null) {
 						var itemMaxY = item.y + item.height;
 						if (layoutData.bottom != null) {
-							var bottom:Anchor = layoutData.bottom;
+							var bottom = layoutData.bottom;
 							var value = bottom.value;
 							itemMaxY += value;
 						}
@@ -151,7 +151,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					if (layoutData.horizontalCenter == null) {
 						var itemMaxX = item.x + item.width;
 						if (layoutData.right != null) {
-							var right:Anchor = layoutData.right;
+							var right = layoutData.right;
 							var value = right.value;
 							itemMaxX += value;
 						}
@@ -218,7 +218,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 				if (layoutData.top != null) {
-					var top:Anchor = layoutData.top;
+					var top = layoutData.top;
 					var relativeTo = top.relativeTo;
 					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
 						continue;
@@ -230,7 +230,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					item.y = y;
 				}
 				if (layoutData.left != null) {
-					var left:Anchor = layoutData.left;
+					var left = layoutData.left;
 					var relativeTo = left.relativeTo;
 					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
 						continue;
@@ -242,7 +242,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					item.x = x;
 				}
 				if (layoutData.bottom != null) {
-					var bottom:Anchor = layoutData.bottom;
+					var bottom = layoutData.bottom;
 					var relativeTo = bottom.relativeTo;
 					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
 						continue;
@@ -269,7 +269,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					item.y = layoutData.verticalCenter + (viewPortHeight - item.height) / 2.0;
 				}
 				if (layoutData.right != null) {
-					var right:Anchor = layoutData.right;
+					var right = layoutData.right;
 					var relativeTo = right.relativeTo;
 					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
 						continue;
@@ -322,6 +322,7 @@ class Anchor {
 	public var relativeTo:Null<DisplayObject>;
 }
 
+@:forward(value, relativeTo)
 abstract AbstractAnchor(Anchor) from Anchor to Anchor {
 	/**
 		Converts a `Float` value, measured in pixels, to an `Anchor`.
