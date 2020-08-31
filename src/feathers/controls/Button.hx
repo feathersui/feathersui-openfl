@@ -936,10 +936,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (Std.is(icon, IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
+		// we need to restore these values so that they won't be lost the
+		// next time that this icon is used for measurement
 		this._iconMeasurements.restore(icon);
 		if (icon.parent == this) {
-			// we need to restore these values so that they won't be lost the
-			// next time that this icon is used for measurement
 			this.removeChild(icon);
 		}
 	}
