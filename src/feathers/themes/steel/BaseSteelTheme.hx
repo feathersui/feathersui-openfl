@@ -9,21 +9,17 @@
 package feathers.themes.steel;
 
 import feathers.events.StyleProviderEvent;
-import feathers.style.IStyleProvider;
-import feathers.style.IStyleObject;
-import openfl.display.GradientType;
-import feathers.events.FeathersEvent;
-import openfl.events.Event;
-import feathers.style.ClassVariantStyleProvider;
-import openfl.text.TextFormat;
-import feathers.graphics.LineStyle;
 import feathers.graphics.FillStyle;
+import feathers.graphics.LineStyle;
+import feathers.style.ClassVariantStyleProvider;
 import feathers.style.IDarkModeTheme;
+import feathers.text.TextFormat;
+import openfl.display.GradientType;
 #if html5
 import js.Lib;
-import js.html.Window;
-import js.html.MediaQueryListEvent;
 import js.html.MediaQueryList;
+import js.html.MediaQueryListEvent;
+import js.html.Window;
 #end
 
 /**
