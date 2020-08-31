@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.MultiSkin;
 import feathers.utils.DeviceUtil;
 import openfl.display.Shape;
 import feathers.skins.RectangleSkin;
@@ -81,19 +82,21 @@ class SteelTreeViewItemRendererStyles {
 		if (styleProvider.getStyleFunction(ToggleButton, TreeViewItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON) == null) {
 			styleProvider.setStyleFunction(ToggleButton, TreeViewItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON, function(button:ToggleButton):Void {
 				if (button.icon == null) {
-					var icon = new Shape();
-					icon.graphics.beginFill(0xff00ff, 0.0);
-					icon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
-					icon.graphics.endFill();
-					icon.graphics.beginFill(theme.textColor);
-					icon.graphics.moveTo(4.0, 4.0);
-					icon.graphics.lineTo(16.0, 10.0);
-					icon.graphics.lineTo(4.0, 16.0);
-					icon.graphics.lineTo(4.0, 4.0);
-					icon.graphics.endFill();
+					var icon = new MultiSkin();
 					button.icon = icon;
-				}
-				if (button.selectedIcon == null) {
+
+					var defaultIcon = new Shape();
+					defaultIcon.graphics.beginFill(0xff00ff, 0.0);
+					defaultIcon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+					defaultIcon.graphics.endFill();
+					defaultIcon.graphics.beginFill(theme.textColor);
+					defaultIcon.graphics.moveTo(4.0, 4.0);
+					defaultIcon.graphics.lineTo(16.0, 10.0);
+					defaultIcon.graphics.lineTo(4.0, 16.0);
+					defaultIcon.graphics.lineTo(4.0, 4.0);
+					defaultIcon.graphics.endFill();
+					icon.defaultView = defaultIcon;
+
 					var selectedIcon = new Shape();
 					selectedIcon.graphics.beginFill(0xff00ff, 0.0);
 					selectedIcon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
@@ -104,7 +107,7 @@ class SteelTreeViewItemRendererStyles {
 					selectedIcon.graphics.lineTo(10.0, 16.0);
 					selectedIcon.graphics.lineTo(4.0, 4.0);
 					selectedIcon.graphics.endFill();
-					button.selectedIcon = selectedIcon;
+					icon.selectedView = selectedIcon;
 				}
 			});
 		}

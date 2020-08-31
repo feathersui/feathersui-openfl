@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.MultiSkin;
 import feathers.controls.Radio;
 import feathers.controls.ToggleButtonState;
 import feathers.skins.CircleSkin;
@@ -49,52 +50,53 @@ class SteelRadioStyles {
 					radio.backgroundSkin = backgroundSkin;
 				}
 
-				var icon = new CircleSkin();
-				icon.width = 20.0;
-				icon.height = 20.0;
-				icon.minWidth = 20.0;
-				icon.minHeight = 20.0;
-				icon.border = theme.getInsetBorder();
-				icon.disabledBorder = theme.getDisabledInsetBorder();
-				icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getSelectedInsetBorder());
-				icon.fill = theme.getInsetFill();
-				icon.disabledFill = theme.getDisabledInsetFill();
-				radio.icon = icon;
+				if (radio.icon == null) {
+					var icon = new MultiSkin();
+					radio.icon = icon;
 
-				var selectedIcon = new CircleSkin();
-				selectedIcon.width = 20.0;
-				selectedIcon.height = 20.0;
-				selectedIcon.minWidth = 20.0;
-				selectedIcon.minHeight = 20.0;
-				selectedIcon.border = theme.getSelectedInsetBorder();
-				selectedIcon.disabledBorder = theme.getDisabledInsetBorder();
-				selectedIcon.setBorderForState(DOWN(true), theme.getSelectedInsetBorder());
-				selectedIcon.fill = theme.getReversedActiveThemeFill();
-				selectedIcon.disabledFill = theme.getDisabledInsetFill();
+					var defaultIcon = new CircleSkin();
+					defaultIcon.width = 20.0;
+					defaultIcon.height = 20.0;
+					defaultIcon.minWidth = 20.0;
+					defaultIcon.minHeight = 20.0;
+					defaultIcon.border = theme.getInsetBorder();
+					defaultIcon.disabledBorder = theme.getDisabledInsetBorder();
+					defaultIcon.setBorderForState(DOWN(false), theme.getSelectedInsetBorder());
+					defaultIcon.fill = theme.getInsetFill();
+					defaultIcon.disabledFill = theme.getDisabledInsetFill();
+					icon.defaultView = defaultIcon;
 
-				var symbol = new Shape();
-				symbol.graphics.beginFill(theme.textColor);
-				symbol.graphics.drawCircle(10.0, 10.0, 4.0);
-				symbol.graphics.endFill();
-				selectedIcon.addChild(symbol);
+					var selectedIcon = new CircleSkin();
+					selectedIcon.width = 20.0;
+					selectedIcon.height = 20.0;
+					selectedIcon.minWidth = 20.0;
+					selectedIcon.minHeight = 20.0;
+					selectedIcon.border = theme.getSelectedInsetBorder();
+					selectedIcon.disabledBorder = theme.getDisabledInsetBorder();
+					selectedIcon.setBorderForState(DOWN(true), theme.getSelectedInsetBorder());
+					selectedIcon.fill = theme.getReversedActiveThemeFill();
+					selectedIcon.disabledFill = theme.getDisabledInsetFill();
+					var symbol = new Shape();
+					symbol.graphics.beginFill(theme.textColor);
+					symbol.graphics.drawCircle(10.0, 10.0, 4.0);
+					symbol.graphics.endFill();
+					selectedIcon.addChild(symbol);
+					icon.selectedView = selectedIcon;
 
-				radio.selectedIcon = selectedIcon;
-
-				var disabledAndSelectedIcon = new CircleSkin();
-				disabledAndSelectedIcon.width = 20.0;
-				disabledAndSelectedIcon.height = 20.0;
-				disabledAndSelectedIcon.minWidth = 20.0;
-				disabledAndSelectedIcon.minHeight = 20.0;
-				disabledAndSelectedIcon.border = theme.getDisabledInsetBorder(2.0);
-				disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
-
-				var disabledSymbol = new Shape();
-				disabledSymbol.graphics.beginFill(theme.disabledTextColor);
-				disabledSymbol.graphics.drawCircle(10.0, 10.0, 4.0);
-				disabledSymbol.graphics.endFill();
-				disabledAndSelectedIcon.addChild(disabledSymbol);
-
-				radio.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
+					var disabledAndSelectedIcon = new CircleSkin();
+					disabledAndSelectedIcon.width = 20.0;
+					disabledAndSelectedIcon.height = 20.0;
+					disabledAndSelectedIcon.minWidth = 20.0;
+					disabledAndSelectedIcon.minHeight = 20.0;
+					disabledAndSelectedIcon.border = theme.getDisabledInsetBorder(2.0);
+					disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
+					var disabledSymbol = new Shape();
+					disabledSymbol.graphics.beginFill(theme.disabledTextColor);
+					disabledSymbol.graphics.drawCircle(10.0, 10.0, 4.0);
+					disabledSymbol.graphics.endFill();
+					disabledAndSelectedIcon.addChild(disabledSymbol);
+					icon.setViewForState(DISABLED(true), disabledAndSelectedIcon);
+				}
 
 				if (radio.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();

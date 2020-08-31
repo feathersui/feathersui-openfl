@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.MultiSkin;
 import openfl.display.Shape;
 import feathers.controls.ToggleButtonState;
 import feathers.skins.RectangleSkin;
@@ -48,60 +49,61 @@ class SteelCheckStyles {
 					check.backgroundSkin = backgroundSkin;
 				}
 
-				var icon = new RectangleSkin();
-				icon.width = 20.0;
-				icon.height = 20.0;
-				icon.minWidth = 20.0;
-				icon.minHeight = 20.0;
-				icon.border = theme.getInsetBorder();
-				icon.disabledBorder = theme.getDisabledInsetBorder();
-				icon.setBorderForState(ToggleButtonState.DOWN(false), theme.getSelectedInsetBorder());
-				icon.fill = theme.getInsetFill();
-				icon.disabledFill = theme.getDisabledInsetFill();
-				check.icon = icon;
+				if (check.icon == null) {
+					var icon = new MultiSkin();
+					check.icon = icon;
 
-				var selectedIcon = new RectangleSkin();
-				selectedIcon.width = 20.0;
-				selectedIcon.height = 20.0;
-				selectedIcon.minWidth = 20.0;
-				selectedIcon.minHeight = 20.0;
-				selectedIcon.border = theme.getSelectedInsetBorder();
-				selectedIcon.disabledBorder = theme.getDisabledInsetBorder();
-				selectedIcon.setBorderForState(DOWN(true), theme.getSelectedInsetBorder());
-				selectedIcon.fill = theme.getReversedActiveThemeFill();
-				selectedIcon.disabledFill = theme.getDisabledInsetFill();
+					var defaultIcon = new RectangleSkin();
+					defaultIcon.width = 20.0;
+					defaultIcon.height = 20.0;
+					defaultIcon.minWidth = 20.0;
+					defaultIcon.minHeight = 20.0;
+					defaultIcon.border = theme.getInsetBorder();
+					defaultIcon.disabledBorder = theme.getDisabledInsetBorder();
+					defaultIcon.setBorderForState(DOWN(false), theme.getSelectedInsetBorder());
+					defaultIcon.fill = theme.getInsetFill();
+					defaultIcon.disabledFill = theme.getDisabledInsetFill();
+					icon.defaultView = defaultIcon;
 
-				var checkMark = new Shape();
-				checkMark.graphics.beginFill(theme.textColor);
-				checkMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
-				checkMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
-				checkMark.graphics.endFill();
-				checkMark.rotation = 45.0;
-				checkMark.x = 10.0;
-				checkMark.y = 10.0;
-				selectedIcon.addChild(checkMark);
+					var selectedIcon = new RectangleSkin();
+					selectedIcon.width = 20.0;
+					selectedIcon.height = 20.0;
+					selectedIcon.minWidth = 20.0;
+					selectedIcon.minHeight = 20.0;
+					selectedIcon.border = theme.getSelectedInsetBorder();
+					selectedIcon.disabledBorder = theme.getDisabledInsetBorder();
+					selectedIcon.setBorderForState(DOWN(true), theme.getSelectedInsetBorder());
+					selectedIcon.fill = theme.getReversedActiveThemeFill();
+					selectedIcon.disabledFill = theme.getDisabledInsetFill();
+					var checkMark = new Shape();
+					checkMark.graphics.beginFill(theme.textColor);
+					checkMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
+					checkMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
+					checkMark.graphics.endFill();
+					checkMark.rotation = 45.0;
+					checkMark.x = 10.0;
+					checkMark.y = 10.0;
+					selectedIcon.addChild(checkMark);
+					icon.selectedView = selectedIcon;
 
-				check.selectedIcon = selectedIcon;
-
-				var disabledAndSelectedIcon = new RectangleSkin();
-				disabledAndSelectedIcon.width = 20.0;
-				disabledAndSelectedIcon.height = 20.0;
-				disabledAndSelectedIcon.minWidth = 20.0;
-				disabledAndSelectedIcon.minHeight = 20.0;
-				disabledAndSelectedIcon.border = theme.getDisabledInsetBorder();
-				disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
-
-				var disabledCheckMark = new Shape();
-				disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
-				disabledCheckMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
-				disabledCheckMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
-				disabledCheckMark.graphics.endFill();
-				disabledCheckMark.rotation = 45.0;
-				disabledCheckMark.x = 10.0;
-				disabledCheckMark.y = 10.0;
-				disabledAndSelectedIcon.addChild(disabledCheckMark);
-
-				check.setIconForState(ToggleButtonState.DISABLED(true), disabledAndSelectedIcon);
+					var disabledAndSelectedIcon = new RectangleSkin();
+					disabledAndSelectedIcon.width = 20.0;
+					disabledAndSelectedIcon.height = 20.0;
+					disabledAndSelectedIcon.minWidth = 20.0;
+					disabledAndSelectedIcon.minHeight = 20.0;
+					disabledAndSelectedIcon.border = theme.getDisabledInsetBorder();
+					disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
+					var disabledCheckMark = new Shape();
+					disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
+					disabledCheckMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
+					disabledCheckMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
+					disabledCheckMark.graphics.endFill();
+					disabledCheckMark.rotation = 45.0;
+					disabledCheckMark.x = 10.0;
+					disabledCheckMark.y = 10.0;
+					disabledAndSelectedIcon.addChild(disabledCheckMark);
+					icon.setViewForState(DISABLED(true), disabledAndSelectedIcon);
+				}
 
 				if (check.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
