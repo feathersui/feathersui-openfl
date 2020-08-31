@@ -930,7 +930,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
-		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
 			// nothing to refresh
 			return;
@@ -995,7 +995,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this._updatedPromptStyles = true;
 		}
 		var textFormat = this.getCurrentPromptTextFormat();
-		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousPromptSimpleTextFormat) {
 			// nothing to refresh
 			return;

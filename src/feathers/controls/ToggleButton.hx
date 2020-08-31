@@ -801,7 +801,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
-		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
 			// nothing to refresh
 			return;

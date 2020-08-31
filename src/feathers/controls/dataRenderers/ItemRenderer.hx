@@ -337,7 +337,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			this._updatedSecondaryTextStyles = true;
 		}
 		var textFormat = this.getCurrentSecondaryTextFormat();
-		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSecondarySimpleTextFormat) {
 			// nothing to refresh
 			return;

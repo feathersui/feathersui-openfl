@@ -639,7 +639,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	private function refreshTextStyles():Void {
 		var textFormat = this.getCurrentTextFormat();
-		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
 			// nothing to refresh
 			return;
@@ -703,7 +703,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this._updatedPromptStyles = true;
 		}
 		var textFormat = this.getCurrentPromptTextFormat();
-		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimplePromptTextFormat) {
 			// nothing to refresh
 			return;

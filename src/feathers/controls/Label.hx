@@ -587,7 +587,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
-		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
 			// nothing to refresh
 			return;
