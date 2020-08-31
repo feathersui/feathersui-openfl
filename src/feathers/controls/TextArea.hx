@@ -12,8 +12,8 @@ import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
 import feathers.core.IStateContext;
 import feathers.core.ITextControl;
-import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
+import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelTextAreaStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -21,7 +21,6 @@ import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
-import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
 
 /**
@@ -59,8 +58,11 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	private var textFieldViewPort:TextFieldViewPort;
 	private var promptTextField:TextField;
 
+	private var _previousTextFormat:TextFormat = null;
+	private var _previousSimpleTextFormat:openfl.text.TextFormat = null;
 	private var _previousPrompt:String = null;
 	private var _previousPromptTextFormat:TextFormat = null;
+	private var _previousSimplePromptTextFormat:openfl.text.TextFormat = null;
 	private var _updatedPromptStyles = false;
 	private var _promptTextMeasuredWidth:Float;
 	private var _promptTextMeasuredHeight:Float;
@@ -256,7 +258,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	@:style
 	public var smoothScrolling:Bool = false;
 
-	private var _stateToTextFormat:Map<TextInputState, TextFormat> = new Map();
+	private var _stateToTextFormat:Map<TextInputState, AbstractTextFormat> = new Map();
 
 	/**
 		The font styles used to render the text area's text.
@@ -275,7 +277,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	@:style
-	public var textFormat:TextFormat = null;
+	public var textFormat:AbstractTextFormat = null;
 
 	/**
 		The font styles used to render the text area's text when the text area
@@ -294,7 +296,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	@:style
-	public var disabledTextFormat:TextFormat = null;
+	public var disabledTextFormat:AbstractTextFormat = null;
 
 	/**
 		The font styles used to render the text area's prompt text.
@@ -310,7 +312,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	@:style
-	public var promptTextFormat:TextFormat = null;
+	public var promptTextFormat:AbstractTextFormat = null;
 
 	/**
 		Determines if an embedded font is used or not.
@@ -517,7 +519,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	public function getTextFormatForState(state:TextInputState):TextFormat {
+	public function getTextFormatForState(state:TextInputState):AbstractTextFormat {
 		return this._stateToTextFormat.get(state);
 	}
 
@@ -536,7 +538,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	@style
-	public function setTextFormatForState(state:TextInputState, textFormat:TextFormat):Void {
+	public function setTextFormatForState(state:TextInputState, textFormat:AbstractTextFormat):Void {
 		if (!this.setStyle("setTextFormatForState", state)) {
 			return;
 		}
@@ -604,7 +606,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 
 		if (stylesInvalid) {
-			this.textFieldViewPort.textFormat = this.getCurrentTextFormat();
+			this.refreshTextStyles();
 			this.textFieldViewPort.embedFonts = this.embedFonts;
 			this.textFieldViewPort.wordWrap = this.wordWrap;
 			this.textFieldViewPort.paddingTop = this.textPaddingTop;
@@ -633,6 +635,24 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	override private function layoutChildren():Void {
 		super.layoutChildren();
 		this.layoutPrompt();
+	}
+
+	private function refreshTextStyles():Void {
+		var textFormat = this.getCurrentTextFormat();
+		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		if (simpleTextFormat == this._previousSimpleTextFormat) {
+			// nothing to refresh
+			return;
+		}
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, textArea_textFormat_changeHandler);
+		}
+		if (textFormat != null) {
+			textFormat.addEventListener(Event.CHANGE, textArea_textFormat_changeHandler, false, 0, true);
+			this.textFieldViewPort.textFormat = simpleTextFormat;
+		}
+		this._previousTextFormat = textFormat;
+		this._previousSimpleTextFormat = simpleTextFormat;
 	}
 
 	private function refreshPrompt():Void {
@@ -682,19 +702,30 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.promptTextField.embedFonts = this.embedFonts;
 			this._updatedPromptStyles = true;
 		}
+		var textFormat = this.getCurrentPromptTextFormat();
+		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		if (simpleTextFormat == this._previousSimplePromptTextFormat) {
+			// nothing to refresh
+			return;
+		}
+		if (this._previousPromptTextFormat != null) {
+			this._previousPromptTextFormat.removeEventListener(Event.CHANGE, textArea_promptTextFormat_changeHandler);
+		}
+		if (textFormat != null) {
+			textFormat.addEventListener(Event.CHANGE, textArea_promptTextFormat_changeHandler, false, 0, true);
+			this.promptTextField.defaultTextFormat = simpleTextFormat;
+			this._updatedPromptStyles = true;
+		}
+		this._previousPromptTextFormat = textFormat;
+		this._previousSimplePromptTextFormat = simpleTextFormat;
+	}
+
+	private function getCurrentPromptTextFormat():TextFormat {
 		var textFormat = this.promptTextFormat;
 		if (textFormat == null) {
 			textFormat = this.textFormat;
 		}
-		if (textFormat == this._previousPromptTextFormat) {
-			// nothing to refresh
-			return;
-		}
-		if (textFormat != null) {
-			this.promptTextField.defaultTextFormat = textFormat;
-			this._updatedPromptStyles = true;
-			this._previousPromptTextFormat = textFormat;
-		}
+		return textFormat;
 	}
 
 	private function layoutPrompt():Void {
@@ -788,5 +819,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	private function textArea_viewPort_focusOutHandler(event:FocusEvent):Void {
 		this.changeState(ENABLED);
+	}
+
+	private function textArea_textFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
+	}
+
+	private function textArea_promptTextFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
 	}
 }

@@ -8,14 +8,10 @@
 
 package feathers.controls;
 
-import feathers.layout.RelativePositions;
-import feathers.layout.RelativePosition;
-import feathers.themes.steel.components.SteelTextCalloutStyles;
-import openfl.text.TextFormat;
-import openfl.text.TextFieldAutoSize;
-import openfl.text.TextField;
-import feathers.core.InvalidationFlag;
 import feathers.core.ITextControl;
+import feathers.layout.RelativePositions;
+import feathers.text.TextFormat;
+import feathers.themes.steel.components.SteelTextCalloutStyles;
 import openfl.display.DisplayObject;
 
 /**

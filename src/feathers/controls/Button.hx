@@ -18,14 +18,15 @@ import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
+import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelButtonStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
-import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
 
 /**
@@ -70,6 +71,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private var _previousText:String = null;
 	private var _previousTextFormat:TextFormat = null;
+	private var _previousSimpleTextFormat:openfl.text.TextFormat = null;
 	private var _updatedTextStyles = false;
 
 	private var _text:String;
@@ -122,7 +124,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		@since 1.0.0
 	**/
 	@:style
-	public var textFormat:TextFormat = null;
+	public var textFormat:AbstractTextFormat = null;
 
 	/**
 		The font styles used to render the button's text when the button is
@@ -141,7 +143,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		@since 1.0.0
 	**/
 	@:style
-	public var disabledTextFormat:TextFormat = null;
+	public var disabledTextFormat:AbstractTextFormat = null;
 
 	/**
 		Determines if an embedded font is used or not.
@@ -364,7 +366,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-	private var _stateToTextFormat:Map<ButtonState, TextFormat> = new Map();
+	private var _stateToTextFormat:Map<ButtonState, AbstractTextFormat> = new Map();
 
 	/**
 		Gets the text format to be used by the button when its `currentState`
@@ -379,7 +381,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 		@since 1.0.0
 	**/
-	public function getTextFormatForState(state:ButtonState):TextFormat {
+	public function getTextFormatForState(state:ButtonState):AbstractTextFormat {
 		return this._stateToTextFormat.get(state);
 	}
 
@@ -398,7 +400,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		@since 1.0.0
 	**/
 	@style
-	public function setTextFormatForState(state:ButtonState, textFormat:TextFormat):Void {
+	public function setTextFormatForState(state:ButtonState, textFormat:AbstractTextFormat):Void {
 		if (!this.setStyle("setTextFormatForState", state)) {
 			return;
 		}
@@ -682,15 +684,21 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
-		if (textFormat == this._previousTextFormat) {
+		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		if (simpleTextFormat == this._previousSimpleTextFormat) {
 			// nothing to refresh
 			return;
 		}
-		if (textFormat != null) {
-			this.textField.defaultTextFormat = textFormat;
-			this._updatedTextStyles = true;
-			this._previousTextFormat = textFormat;
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, button_textFormat_changeHandler);
 		}
+		if (textFormat != null) {
+			textFormat.addEventListener(Event.CHANGE, button_textFormat_changeHandler, false, 0, true);
+			this.textField.defaultTextFormat = simpleTextFormat;
+			this._updatedTextStyles = true;
+		}
+		this._previousTextFormat = textFormat;
+		this._previousSimpleTextFormat = simpleTextFormat;
 	}
 
 	private function refreshText():Void {
@@ -952,5 +960,9 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			return;
 		}
 		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+	}
+
+	private function button_textFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
 	}
 }

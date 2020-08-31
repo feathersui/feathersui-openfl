@@ -17,12 +17,13 @@ import feathers.core.IValidating;
 import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
+import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
-import openfl.text.TextFormat;
 
 /**
 	Displays text with an optional background.
@@ -92,6 +93,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	private var _previousText:String = null;
 	private var _previousHTMLText:String = null;
 	private var _previousTextFormat:TextFormat = null;
+	private var _previousSimpleTextFormat:openfl.text.TextFormat = null;
 	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
@@ -190,7 +192,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		@since 1.0.0
 	**/
 	@:style
-	public var textFormat:TextFormat = null;
+	public var textFormat:AbstractTextFormat = null;
 
 	/**
 		Determines if an embedded font is used or not.
@@ -294,7 +296,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		@since 1.0.0
 	**/
 	@:style
-	public var disabledTextFormat:TextFormat = null;
+	public var disabledTextFormat:AbstractTextFormat = null;
 
 	/**
 		The minimum space, in pixels, between the button's top edge and the
@@ -585,15 +587,21 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
-		if (textFormat == this._previousTextFormat) {
+		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		if (simpleTextFormat == this._previousSimpleTextFormat) {
 			// nothing to refresh
 			return;
 		}
-		if (textFormat != null) {
-			this.textField.defaultTextFormat = textFormat;
-			this._updatedTextStyles = true;
-			this._previousTextFormat = textFormat;
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, label_textFormat_changeHandler);
 		}
+		if (textFormat != null) {
+			textFormat.addEventListener(Event.CHANGE, label_textFormat_changeHandler, false, 0, true);
+			this.textField.defaultTextFormat = simpleTextFormat;
+			this._updatedTextStyles = true;
+		}
+		this._previousTextFormat = textFormat;
+		this._previousSimpleTextFormat = simpleTextFormat;
 	}
 
 	private function refreshText(sizeInvalid:Bool):Void {
@@ -745,5 +753,9 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		if (Std.is(this._currentBackgroundSkin, IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
+	}
+
+	private function label_textFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
 	}
 }

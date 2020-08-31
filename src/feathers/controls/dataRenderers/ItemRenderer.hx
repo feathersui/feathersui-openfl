@@ -8,17 +8,17 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.layout.ILayoutIndexObject;
-import openfl.display.DisplayObject;
 import feathers.core.IFocusObject;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
 import feathers.events.TriggerEvent;
+import feathers.layout.ILayoutIndexObject;
+import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelItemRendererStyles;
+import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
-import openfl.text.TextFormat;
 
 /**
 	A generic renderer for UI components that display data collections.
@@ -70,6 +70,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	private var _secondaryTextMeasuredHeight:Float;
 	private var _previousSecondaryText:String = null;
 	private var _previousSecondaryTextFormat:TextFormat = null;
+	private var _previousSecondarySimpleTextFormat:openfl.text.TextFormat = null;
 	private var _updatedSecondaryTextStyles = false;
 	private var _secondaryText:String;
 
@@ -141,7 +142,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		@since 1.0.0
 	**/
 	@:style
-	public var secondaryTextFormat:TextFormat = null;
+	public var secondaryTextFormat:AbstractTextFormat = null;
 
 	/**
 		The font styles used to render the button's secondary text when the
@@ -174,7 +175,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		@since 1.0.0
 	**/
 	@:style
-	public var disabledSecondaryTextFormat:TextFormat = null;
+	public var disabledSecondaryTextFormat:AbstractTextFormat = null;
 
 	/**
 		The font styles used to render the button's secondary text when the
@@ -208,7 +209,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		@since 1.0.0
 	**/
 	@:style
-	public var selectedSecondaryTextFormat:TextFormat = null;
+	public var selectedSecondaryTextFormat:AbstractTextFormat = null;
 
 	/**
 		The display object to use as the background skin when the alternate
@@ -231,7 +232,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	@:style
 	public var alternateBackgroundSkin:DisplayObject = null;
 
-	private var _stateToSecondaryTextFormat:Map<ToggleButtonState, TextFormat> = new Map();
+	private var _stateToSecondaryTextFormat:Map<ToggleButtonState, AbstractTextFormat> = new Map();
 
 	/**
 		Gets the secondary text format to be used by the button when its
@@ -247,7 +248,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 		@since 1.0.0
 	**/
-	public function getSecondaryTextFormatForState(state:ToggleButtonState):TextFormat {
+	public function getSecondaryTextFormatForState(state:ToggleButtonState):AbstractTextFormat {
 		return this._stateToSecondaryTextFormat.get(state);
 	}
 
@@ -266,7 +267,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		@since 1.0.0
 	**/
 	@style
-	public function setSecondaryTextFormatForState(state:ToggleButtonState, textFormat:TextFormat):Void {
+	public function setSecondaryTextFormatForState(state:ToggleButtonState, textFormat:AbstractTextFormat):Void {
 		if (!this.setStyle("setSecondaryTextFormatForState", state)) {
 			return;
 		}
@@ -336,15 +337,21 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			this._updatedSecondaryTextStyles = true;
 		}
 		var textFormat = this.getCurrentSecondaryTextFormat();
-		if (textFormat == this._previousSecondaryTextFormat) {
+		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		if (simpleTextFormat == this._previousSecondarySimpleTextFormat) {
 			// nothing to refresh
 			return;
 		}
-		if (textFormat != null) {
-			this.secondaryTextField.defaultTextFormat = textFormat;
-			this._updatedSecondaryTextStyles = true;
-			this._previousSecondaryTextFormat = textFormat;
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, itemRenderer_secondaryTextFormat_changeHandler);
 		}
+		if (textFormat != null) {
+			textFormat.addEventListener(Event.CHANGE, itemRenderer_secondaryTextFormat_changeHandler, false, 0, true);
+			this.secondaryTextField.defaultTextFormat = simpleTextFormat;
+			this._updatedSecondaryTextStyles = true;
+		}
+		this._previousSecondaryTextFormat = textFormat;
+		this._previousSecondarySimpleTextFormat = simpleTextFormat;
 	}
 
 	private function refreshSecondaryText():Void {
@@ -622,5 +629,9 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			return;
 		}
 		this.selected = !this._selected;
+	}
+
+	private function itemRenderer_secondaryTextFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
 	}
 }

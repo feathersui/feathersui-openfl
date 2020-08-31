@@ -8,30 +8,28 @@
 
 package feathers.controls;
 
-import feathers.skins.IProgrammaticSkin;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import feathers.core.IFocusObject;
-import feathers.utils.MeasurementsUtil;
-import feathers.themes.steel.components.SteelTextInputStyles;
-import feathers.core.ITextControl;
 import feathers.core.FeathersControl;
+import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
-import feathers.core.InvalidationFlag;
 import feathers.core.IStateContext;
-import feathers.core.IStateObserver;
+import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
-import feathers.layout.VerticalAlign;
 import feathers.layout.Measurements;
+import feathers.layout.VerticalAlign;
+import feathers.skins.IProgrammaticSkin;
+import feathers.text.TextFormat;
+import feathers.themes.steel.components.SteelTextInputStyles;
+import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFieldType;
-import openfl.text.TextFormat;
+import openfl.ui.Keyboard;
 
 /**
 	A text entry control that allows users to enter and edit a single line of
@@ -162,7 +160,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var _previousText:String = null;
 	private var _previousPrompt:String = null;
 	private var _previousTextFormat:TextFormat = null;
+	private var _previousSimpleTextFormat:openfl.text.TextFormat;
 	private var _previousPromptTextFormat:TextFormat = null;
+	private var _previousPromptSimpleTextFormat:openfl.text.TextFormat;
 	private var _updatedTextStyles = false;
 	private var _updatedPromptStyles = false;
 
@@ -332,7 +332,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:style
-	public var textFormat:TextFormat = null;
+	public var textFormat:AbstractTextFormat = null;
 
 	/**
 		The font styles used to render the text input's text when the text input
@@ -351,7 +351,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:style
-	public var disabledTextFormat:TextFormat = null;
+	public var disabledTextFormat:AbstractTextFormat = null;
 
 	/**
 		The font styles used to render the text input's prompt text.
@@ -367,7 +367,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@:style
-	public var promptTextFormat:TextFormat = null;
+	public var promptTextFormat:AbstractTextFormat = null;
 
 	/**
 		Determines if an embedded font is used or not.
@@ -385,7 +385,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	@:style
 	public var embedFonts:Bool = false;
 
-	private var _stateToTextFormat:Map<TextInputState, TextFormat> = new Map();
+	private var _stateToTextFormat:Map<TextInputState, AbstractTextFormat> = new Map();
 
 	/**
 		The minimum space, in pixels, between the text input's top edge and the
@@ -645,7 +645,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public function getTextFormatForState(state:TextInputState):TextFormat {
+	public function getTextFormatForState(state:TextInputState):AbstractTextFormat {
 		return this._stateToTextFormat.get(state);
 	}
 
@@ -664,7 +664,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	@style
-	public function setTextFormatForState(state:TextInputState, textFormat:TextFormat):Void {
+	public function setTextFormatForState(state:TextInputState, textFormat:AbstractTextFormat):Void {
 		if (!this.setStyle("setTextFormatForState", state)) {
 			return;
 		}
@@ -930,15 +930,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this._updatedTextStyles = true;
 		}
 		var textFormat = this.getCurrentTextFormat();
-		if (textFormat == this._previousTextFormat) {
+		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		if (simpleTextFormat == this._previousSimpleTextFormat) {
 			// nothing to refresh
 			return;
 		}
-		if (textFormat != null) {
-			this.textField.defaultTextFormat = textFormat;
-			this._updatedTextStyles = true;
-			this._previousTextFormat = textFormat;
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, textInput_textFormat_changeHandler);
 		}
+		if (textFormat != null) {
+			textFormat.addEventListener(Event.CHANGE, textInput_textFormat_changeHandler, false, 0, true);
+			this.textField.defaultTextFormat = simpleTextFormat;
+			this._updatedTextStyles = true;
+		}
+		this._previousTextFormat = textFormat;
+		this._previousSimpleTextFormat = simpleTextFormat;
 	}
 
 	private function refreshPrompt():Void {
@@ -988,19 +994,30 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.promptTextField.embedFonts = this.embedFonts;
 			this._updatedPromptStyles = true;
 		}
+		var textFormat = this.getCurrentPromptTextFormat();
+		var simpleTextFormat = textFormat.toSimpleTextFormat();
+		if (simpleTextFormat == this._previousPromptSimpleTextFormat) {
+			// nothing to refresh
+			return;
+		}
+		if (this._previousPromptTextFormat != null) {
+			this._previousPromptTextFormat.removeEventListener(Event.CHANGE, textInput_promptTextFormat_changeHandler);
+		}
+		if (textFormat != null) {
+			textFormat.addEventListener(Event.CHANGE, textInput_textFormat_changeHandler, false, 0, true);
+			this.promptTextField.defaultTextFormat = simpleTextFormat;
+			this._updatedPromptStyles = true;
+		}
+		this._previousPromptTextFormat = textFormat;
+		this._previousPromptSimpleTextFormat = simpleTextFormat;
+	}
+
+	private function getCurrentPromptTextFormat():TextFormat {
 		var textFormat = this.promptTextFormat;
 		if (textFormat == null) {
 			textFormat = this.textFormat;
 		}
-		if (textFormat == this._previousPromptTextFormat) {
-			// nothing to refresh
-			return;
-		}
-		if (textFormat != null) {
-			this.promptTextField.defaultTextFormat = textFormat;
-			this._updatedPromptStyles = true;
-			this._previousPromptTextFormat = textFormat;
-		}
+		return textFormat;
 	}
 
 	private function refreshText():Void {
@@ -1190,5 +1207,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private function textField_focusOutHandler(event:FocusEvent):Void {
 		this.changeState(ENABLED);
+	}
+
+	private function textInput_textFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
+	}
+
+	private function textInput_promptTextFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
 	}
 }
