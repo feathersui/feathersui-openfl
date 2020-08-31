@@ -1,5 +1,6 @@
 package com.feathersui.components.views;
 
+import feathers.events.ListViewEvent;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
@@ -32,6 +33,7 @@ class ListViewScreen extends Panel {
 		};
 		this.listView.layoutData = AnchorLayoutData.fill();
 		this.listView.addEventListener(Event.CHANGE, listView_changeHandler);
+		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
 		this.addChild(this.listView);
 	}
 
@@ -56,6 +58,10 @@ class ListViewScreen extends Panel {
 
 	private function listView_changeHandler(event:Event):Void {
 		trace("ListView selectedIndex change: " + this.listView.selectedIndex);
+	}
+
+	private function listView_itemTriggerHandler(event:ListViewEvent):Void {
+		trace("ListView item trigger: " + event.state.text);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {

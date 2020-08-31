@@ -1,5 +1,6 @@
 package com.feathersui.components.views;
 
+import feathers.events.TreeViewEvent;
 import feathers.controls.Button;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
@@ -54,6 +55,7 @@ class TreeViewScreen extends Panel {
 		};
 		this.treeView.layoutData = AnchorLayoutData.fill();
 		this.treeView.addEventListener(Event.CHANGE, treeView_changeHandler);
+		this.treeView.addEventListener(TreeViewEvent.ITEM_TRIGGER, treeView_itemTriggerHandler);
 		this.addChild(this.treeView);
 	}
 
@@ -79,6 +81,10 @@ class TreeViewScreen extends Panel {
 	private function treeView_changeHandler(event:Event):Void {
 		var selectedItem = this.treeView.selectedItem;
 		trace("TreeView selectedItem change: " + this.treeView.itemToText(selectedItem));
+	}
+
+	private function treeView_itemTriggerHandler(event:TreeViewEvent):Void {
+		trace("TreeView item trigger: " + event.state.text);
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
