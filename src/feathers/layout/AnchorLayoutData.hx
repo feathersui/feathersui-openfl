@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.layout.AnchorLayout.Anchor;
 import feathers.events.FeathersEvent;
 import feathers.layout.AnchorLayout.AbstractAnchor;
 import openfl.events.Event;
@@ -336,7 +337,15 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		if (this._top == value) {
 			return this._top;
 		}
+		if (this._top != null) {
+			var top:Anchor = this._top;
+			top.removeEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler);
+		}
 		this._top = value;
+		if (this._top != null) {
+			var top:Anchor = this._top;
+			top.addEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler, false, 0, true);
+		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._top;
 	}
@@ -377,7 +386,15 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		if (this._right == value) {
 			return this._right;
 		}
+		if (this._right != null) {
+			var anchor:Anchor = this._right;
+			anchor.removeEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler);
+		}
 		this._right = value;
+		if (this._right != null) {
+			var anchor:Anchor = this._right;
+			anchor.addEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler, false, 0, true);
+		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._right;
 	}
@@ -418,7 +435,15 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		if (this._bottom == value) {
 			return this._bottom;
 		}
+		if (this._bottom != null) {
+			var anchor:Anchor = this._bottom;
+			anchor.removeEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler);
+		}
 		this._bottom = value;
+		if (this._bottom != null) {
+			var anchor:Anchor = this._bottom;
+			anchor.addEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler, false, 0, true);
+		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._bottom;
 	}
@@ -459,7 +484,15 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		if (this._left == value) {
 			return this._left;
 		}
+		if (this._left != null) {
+			var anchor:Anchor = this._left;
+			anchor.removeEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler);
+		}
 		this._left = value;
+		if (this._left != null) {
+			var anchor:Anchor = this._left;
+			anchor.addEventListener(Event.CHANGE, anchorLayoutData_anchor_changeHandler, false, 0, true);
+		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._left;
 	}
@@ -546,5 +579,9 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		this._verticalCenter = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._verticalCenter;
+	}
+
+	private function anchorLayoutData_anchor_changeHandler(event:Event):Void {
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 }

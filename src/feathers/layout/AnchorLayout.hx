@@ -8,6 +8,8 @@
 
 package feathers.layout;
 
+import openfl.events.Event;
+import feathers.events.FeathersEvent;
 import feathers.core.IValidating;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
@@ -312,14 +314,48 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 	}
 }
 
-class Anchor {
+class Anchor extends EventDispatcher {
 	public function new(value:Float, ?relativeTo:DisplayObject) {
-		this.value = value;
-		this.relativeTo = relativeTo;
+		super();
+		this._value = value;
+		this._relativeTo = relativeTo;
 	}
 
-	public var value:Float;
-	public var relativeTo:Null<DisplayObject>;
+	private var _value:Float;
+
+	@:flash.property
+	public var value(get, set):Float;
+
+	private function get_value():Float {
+		return this._value;
+	}
+
+	private function set_value(newValue:Float):Float {
+		if (this._value == newValue) {
+			return this._value;
+		}
+		this._value = newValue;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._value;
+	}
+
+	private var _relativeTo:Null<DisplayObject>;
+
+	@:flash.property
+	public var relativeTo(get, set):Null<DisplayObject>;
+
+	private function get_relativeTo():Null<DisplayObject> {
+		return this._relativeTo;
+	}
+
+	private function set_relativeTo(value:Null<DisplayObject>):Null<DisplayObject> {
+		if (this._relativeTo == value) {
+			return this._relativeTo;
+		}
+		this._relativeTo = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._relativeTo;
+	}
 }
 
 @:forward(value, relativeTo)
