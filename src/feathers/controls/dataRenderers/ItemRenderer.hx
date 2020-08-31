@@ -144,29 +144,30 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	public var secondaryTextFormat:TextFormat = null;
 
 	/**
-		The font styles used to render the button's text when the button is
-		disabled.
+		The font styles used to render the button's secondary text when the
+		button is disabled.
 
-		In the following example, the button's disabled text formatting is
-		customized:
+		In the following example, the button's secondary disabled text
+		formatting is customized:
 
 		```hx
 		button.enabled = false;
-		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		button.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
 
-		The next example sets a disabled text format, but also provides a text
-		format for the `ToggleButtonState.DISABLED(true)` state that will be
-		used instead of the disabled text format:
+		The next example sets a disabled secondary text format, but also
+		provides a text format for the `ToggleButtonState.DISABLED(true)` state
+		that will be used instead of the disabled secondary text format:
 
 		```hx
-		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
-		button.setTextFormatForState(ToggleButtonState.DISABLED(true), new TextFormat("Helvetica", 20, 0xff0000));
+		button.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		button.setSecondaryTextFormatForState(ToggleButtonState.DISABLED(true), new TextFormat("Helvetica", 20, 0xff0000));
 		```
 
 		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
-		both the `disabledTextFormat` and `selectedTextFormat` are set, the
-		`disabledTextFormat` takes precedence over the `selectedTextFormat`.
+		both the `disabledSecondaryTextFormat` and `selectedSecondaryTextFormat`
+		are set, the `disabledSecondaryTextFormat` takes precedence over the
+		`selectedSecondaryTextFormat`.
 
 		@see `ItemRenderer.secondaryTextFormat`
 
@@ -176,29 +177,30 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	public var disabledSecondaryTextFormat:TextFormat = null;
 
 	/**
-		The font styles used to render the button's text when the button is
-		selected.
+		The font styles used to render the button's secondary text when the
+		button is selected.
 
-		In the following example, the button's selected text formatting is
-		customized:
+		In the following example, the button's selected secondary text
+		formatting is customized:
 
 		```hx
 		button.selected = true;
-		button.selectedTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
+		button.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
 		```
 
-		The next example sets a selected text format, but also provides a text
-		format for the `ToggleButtonState.DOWN(true)` state that will be used
-		instead of the selected text format:
+		The next example sets a selected secondary text format, but also
+		provides a text format for the `ToggleButtonState.DOWN(true)` state that
+		will be used instead of the selected secondary text format:
 
 		```hx
-		button.selectedTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
-		button.setTextFormatForState(ToggleButtonState.DOWN(true), new TextFormat("Helvetica", 20, 0xcc0000));
+		button.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
+		button.setSecondaryTextFormatForState(ToggleButtonState.DOWN(true), new TextFormat("Helvetica", 20, 0xcc0000));
 		```
 
 		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
-		both the `disabledTextFormat` and `selectedTextFormat` are set, the
-		`disabledTextFormat` takes precedence over the `selectedTextFormat`.
+		both the `disabledSecondaryTextFormat` and `selectedSecondaryTextFormat`
+		are set, the `disabledSecondaryTextFormat` takes precedence over the
+		`selectedSecondaryTextFormat`.
 
 		@see `ItemRenderer.secondaryTextFormat`
 		@see `BasicToggleButton.selected`
@@ -232,13 +234,14 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	private var _stateToSecondaryTextFormat:Map<ToggleButtonState, TextFormat> = new Map();
 
 	/**
-		Gets the text format to be used by the button when its `currentState`
-		property matches the specified state value.
+		Gets the secondary text format to be used by the button when its
+		`currentState` property matches the specified state value.
 
-		If a text format is not defined for a specific state, returns `null`.
+		If a secondary text format is not defined for a specific state, returns
+		`null`.
 
-		@see `ToggleButton.setTextFormatForState()`
-		@see `ToggleButton.textFormat`
+		@see `ToggleButton.setSecondaryTextFormatForState()`
+		@see `ToggleButton.secondaryTextFormat`
 		@see `ToggleButton.currentState`
 		@see `feathers.controls.ToggleButtonState`
 
@@ -249,11 +252,11 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	}
 
 	/**
-		Set the text format to be used by the button when its `currentState`
-		property matches the specified state value.
+		Set the secondary text format to be used by the button when its
+		`currentState` property matches the specified state value.
 
-		If a text format is not defined for a specific state, the value of the
-		`textFormat` property will be used instead.
+		If a secondary text format is not defined for a specific state, the
+		value of the `secondaryTextFormat` property will be used instead.
 
 		@see `ItemRenderer.getSecondaryTextFormatForState()`
 		@see `ItemRenderer.secondaryextFormat`
