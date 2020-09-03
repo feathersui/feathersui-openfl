@@ -74,6 +74,7 @@ class SteelTabBarStyles {
 						var desktopSkin = new TabSkin();
 						desktopSkin.cornerRadius = 6.0;
 						desktopSkin.cornerRadiusPosition = TOP;
+						desktopSkin.drawBaseBorder = false;
 						desktopSkin.maxWidth = 100.0;
 						desktopSkin.minWidth = 20.0;
 						skin = desktopSkin;
