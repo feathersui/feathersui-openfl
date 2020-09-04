@@ -53,6 +53,24 @@ import openfl.ui.Keyboard;
 @:styleContext
 class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl implements IFocusObject {
 	/**
+		A variant used to style the text input as a search box. Variants allow
+		themes to provide an assortment of different appearances for the same
+		type of UI component.
+
+		The following example uses this variant:
+
+		```hx
+		var input = new TextInput();
+		input.variant = Label.VARIANT_SEARCH;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_SEARCH = "search";
+
+	/**
 		Creates a new `TextInput` object.
 
 		@since 1.0.0
