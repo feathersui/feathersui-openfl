@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.core.IUIControl;
 import openfl.errors.ArgumentError;
 import feathers.style.IVariantStyleObject;
@@ -822,6 +823,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				var dataRenderer = cast(itemRenderer, IDataRenderer);
 				dataRenderer.data = this._currentItemState.data;
 			}
+			if (Std.is(itemRenderer, IGroupListViewItemRenderer)) {
+				var groupListRenderer = cast(itemRenderer, IGroupListViewItemRenderer);
+				groupListRenderer.location = this._currentItemState.location;
+			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -984,6 +989,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = this._currentItemState.data;
+		}
+		if (Std.is(itemRenderer, IGroupListViewItemRenderer)) {
+			var groupListRenderer = cast(itemRenderer, IGroupListViewItemRenderer);
+			groupListRenderer.location = this._currentItemState.location;
 		}
 		if (Std.is(itemRenderer, IToggle)) {
 			var toggle = cast(itemRenderer, IToggle);
