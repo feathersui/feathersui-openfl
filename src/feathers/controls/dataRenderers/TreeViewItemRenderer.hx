@@ -84,6 +84,27 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		return this._branch;
 	}
 
+	private var _treeViewOwner:TreeView;
+
+	/**
+		@see `feathers.controls.dataRenderers.ITreeViewItemRenderer.treeViewOwner`
+	**/
+	@:flash.property
+	public var treeViewOwner(get, set):TreeView;
+
+	private function get_treeViewOwner():TreeView {
+		return this._treeViewOwner;
+	}
+
+	private function set_treeViewOwner(value:TreeView):TreeView {
+		if (this._treeViewOwner == value) {
+			return this._treeViewOwner;
+		}
+		this._treeViewOwner = value;
+		this.setInvalid(DATA);
+		return this._treeViewOwner;
+	}
+
 	private var _opened:Bool = false;
 
 	/**

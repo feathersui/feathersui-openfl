@@ -33,4 +33,12 @@ interface ITreeViewItemRenderer extends IUIControl {
 	**/
 	@:flash.property
 	public var branch(get, set):Bool;
+
+	/**
+		The `TreeView` that contains this header renderer.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var treeViewOwner(get, set):TreeView;
 }

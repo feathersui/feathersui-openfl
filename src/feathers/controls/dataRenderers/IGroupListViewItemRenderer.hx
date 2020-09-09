@@ -23,4 +23,12 @@ interface IGroupListViewItemRenderer extends IUIControl {
 	**/
 	@:flash.property
 	public var location(get, set):Array<Int>;
+
+	/**
+		The `GroupListView` that contains this item renderer.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var groupListViewOwner(get, set):GroupListView;
 }
