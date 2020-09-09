@@ -481,6 +481,88 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
+	/**
+		Offsets the x position of the icon by a certain number of pixels.
+		This does not affect the measurement of the button. The button's width
+		will not get smaller or larger when the icon is offset from its default
+		x position.
+
+		The following example offsets the x position of the button's icon by
+		20 pixels:
+
+		```hx
+		button.iconOffsetX = 20.0;
+		```
+
+		@see `ToggleButton.iconOffsetY`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var iconOffsetX:Float = 0.0;
+
+	/**
+		Offsets the y position of the icon by a certain number of pixels.
+		This does not affect the measurement of the button. The button's height
+		will not get smaller or larger when the icon is offset from its default
+		y position.
+
+		The following example offsets the y position of the button's icon by
+		20 pixels:
+
+		```hx
+		button.iconOffsetY = 20.0;
+		```
+
+		@see `ToggleButton.iconOffsetX`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var iconOffsetY:Float = 0.0;
+
+	/**
+		Offsets the x position of the text by a certain number of pixels.
+		This does not affect the measurement of the button. The button's width
+		will not get smaller or larger when the text is offset from its default
+		x position. Nor does it change the size of the text, so the text may
+		appear outside of the button's bounds if the offset is large enough.
+
+		The following example offsets the x position of the button's text by
+		20 pixels:
+
+		```hx
+		button.textOffsetX = 20.0;
+		```
+
+		@see `ToggleButton.textOffsetY`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var textOffsetX:Float = 0.0;
+
+	/**
+		Offsets the y position of the text by a certain number of pixels.
+		This does not affect the measurement of the button. The button's height
+		will not get smaller or larger when the text is offset from its default
+		y position. Nor does it change the size of the text, so the text may
+		appear outside of the button's bounds if the offset is large enough.
+
+		The following example offsets the y position of the button's text by
+		20 pixels:
+
+		```hx
+		button.textOffsetY = 20.0;
+		```
+
+		@see `ToggleButton.textOffsetX`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var textOffsetY:Float = 0.0;
+
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 	private var _stateToTextFormat:Map<ToggleButtonState, AbstractTextFormat> = new Map();
@@ -868,6 +950,19 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			this.positionSingleChild(this.textField);
 		} else if (iconIsInLayout) {
 			this.positionSingleChild(this._currentIcon);
+		}
+
+		if (this._currentIcon != null) {
+			if (this.iconPosition == MANUAL) {
+				this._currentIcon.x = this.paddingLeft;
+				this._currentIcon.y = this.paddingTop;
+			}
+			this._currentIcon.x += this.iconOffsetX;
+			this._currentIcon.y += this.iconOffsetY;
+		}
+		if (hasText) {
+			this.textField.x += this.textOffsetX;
+			this.textField.y += this.textOffsetY;
 		}
 	}
 
