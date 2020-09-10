@@ -36,7 +36,7 @@ class SteelTextInputStyles {
 			styleProvider.setStyleFunction(TextInput, null, function(input:TextInput):Void {
 				if (input.backgroundSkin == null) {
 					var inputSkin = new RectangleSkin();
-					inputSkin.cornerRadius = 6.0;
+					inputSkin.cornerRadius = 3.0;
 					inputSkin.width = 160.0;
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();

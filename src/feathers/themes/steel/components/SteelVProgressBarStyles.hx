@@ -37,7 +37,7 @@ class SteelVProgressBarStyles {
 					fillSkin.fill = theme.getActiveThemeFill();
 					// fillSkin.disabledFill = theme.getButtonDisabledFill();
 					fillSkin.border = theme.getActiveFillBorder();
-					fillSkin.cornerRadius = 6.0;
+					fillSkin.cornerRadius = 3.0;
 					fillSkin.width = 8.0;
 					fillSkin.height = 8.0;
 					progress.fillSkin = fillSkin;
@@ -47,7 +47,7 @@ class SteelVProgressBarStyles {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getInsetFill();
 					backgroundSkin.border = theme.getInsetBorder();
-					backgroundSkin.cornerRadius = 6.0;
+					backgroundSkin.cornerRadius = 3.0;
 					backgroundSkin.width = 8.0;
 					backgroundSkin.height = 200.0;
 					progress.backgroundSkin = backgroundSkin;

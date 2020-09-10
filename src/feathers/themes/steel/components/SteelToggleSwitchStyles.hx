@@ -40,7 +40,7 @@ class SteelToggleSwitchStyles {
 					trackSkin.height = 32.0;
 					trackSkin.minWidth = 64.0;
 					trackSkin.minHeight = 32.0;
-					trackSkin.cornerRadius = 32.0;
+					trackSkin.cornerRadius = 16.0;
 					trackSkin.border = theme.getInsetBorder();
 					trackSkin.disabledBorder = theme.getInsetBorder();
 					trackSkin.selectedBorder = theme.getSelectedInsetBorder();
@@ -75,7 +75,7 @@ class SteelToggleSwitchStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 32.0;
+					focusRectSkin.cornerRadius = 16.0;
 					toggle.focusRectSkin = focusRectSkin;
 				}
 			});

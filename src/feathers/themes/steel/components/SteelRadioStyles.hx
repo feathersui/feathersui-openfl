@@ -102,7 +102,7 @@ class SteelRadioStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 6.0;
+					focusRectSkin.cornerRadius = 3.0;
 					radio.focusRectSkin = focusRectSkin;
 
 					radio.focusPaddingTop = 3.0;

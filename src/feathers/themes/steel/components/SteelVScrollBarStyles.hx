@@ -44,7 +44,7 @@ class SteelVScrollBarStyles {
 					thumbSkin.height = size;
 					thumbSkin.minWidth = size;
 					thumbSkin.minHeight = size;
-					thumbSkin.cornerRadius = size;
+					thumbSkin.cornerRadius = size / 2.0;
 
 					var thumb = new BasicButton();
 					thumb.keepDownStateOnRollOut = true;

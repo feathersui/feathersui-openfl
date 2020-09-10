@@ -51,7 +51,7 @@ class SteelTabBarStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 6.0;
+					focusRectSkin.cornerRadius = 3.0;
 					tabBar.focusRectSkin = focusRectSkin;
 				}
 				if (tabBar.layout == null) {
@@ -72,7 +72,7 @@ class SteelTabBarStyles {
 					var skin:BaseGraphicsPathSkin = null;
 					if (isDesktop) {
 						var desktopSkin = new TabSkin();
-						desktopSkin.cornerRadius = 6.0;
+						desktopSkin.cornerRadius = 3.0;
 						desktopSkin.cornerRadiusPosition = TOP;
 						desktopSkin.drawBaseBorder = false;
 						desktopSkin.maxWidth = 100.0;

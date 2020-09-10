@@ -41,7 +41,7 @@ class SteelPageIndicatorStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 6.0;
+					focusRectSkin.cornerRadius = 3.0;
 					pages.focusRectSkin = focusRectSkin;
 				}
 				if (pages.layout == null) {

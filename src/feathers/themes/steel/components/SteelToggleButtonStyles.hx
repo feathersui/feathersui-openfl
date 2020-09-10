@@ -44,7 +44,7 @@ class SteelToggleButtonStyles {
 					skin.selectedBorder = theme.getSelectedBorder();
 					skin.setBorderForState(DOWN(false), theme.getActiveFillBorder());
 					skin.setBorderForState(DOWN(true), theme.getActiveFillBorder());
-					skin.cornerRadius = 6.0;
+					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
 				}
 
@@ -52,7 +52,7 @@ class SteelToggleButtonStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 6.0;
+					focusRectSkin.cornerRadius = 3.0;
 					button.focusRectSkin = focusRectSkin;
 				}
 

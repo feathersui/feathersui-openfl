@@ -40,7 +40,7 @@ class SteelButtonStyles {
 					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
-					skin.cornerRadius = 6.0;
+					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
 				}
 
@@ -48,7 +48,7 @@ class SteelButtonStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 6.0;
+					focusRectSkin.cornerRadius = 3.0;
 					button.focusRectSkin = focusRectSkin;
 				}
 

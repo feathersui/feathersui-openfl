@@ -41,7 +41,7 @@ class SteelTextAreaStyles {
 
 				if (textArea.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
-					backgroundSkin.cornerRadius = 6.0;
+					backgroundSkin.cornerRadius = 3.0;
 					backgroundSkin.width = 160.0;
 					backgroundSkin.height = 120.0;
 					backgroundSkin.fill = theme.getInsetFill();

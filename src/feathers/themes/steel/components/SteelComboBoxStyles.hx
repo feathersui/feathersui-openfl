@@ -48,7 +48,7 @@ class SteelComboBoxStyles {
 					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
-					skin.cornerRadius = 6.0;
+					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
 				}
 
@@ -72,7 +72,7 @@ class SteelComboBoxStyles {
 				if (input.backgroundSkin == null) {
 					var inputSkin = new TabSkin();
 					inputSkin.cornerRadiusPosition = LEFT;
-					inputSkin.cornerRadius = 6.0;
+					inputSkin.cornerRadius = 3.0;
 					inputSkin.width = 160.0;
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();
