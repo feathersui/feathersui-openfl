@@ -76,30 +76,6 @@ class TriangleSkin extends BaseGraphicsPathSkin {
 		return this._drawBaseBorder;
 	}
 
-	private var _cornerRadius:Float = 0.0;
-
-	/**
-		The rectangle may optionally have rounded corners, and this sets their
-		radius, measured in pixels.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	public var cornerRadius(get, set):Float;
-
-	private function get_cornerRadius():Float {
-		return this._cornerRadius;
-	}
-
-	private function set_cornerRadius(value:Float):Float {
-		if (this._cornerRadius == value) {
-			return this._cornerRadius;
-		}
-		this._cornerRadius = value;
-		this.setInvalid(STYLES);
-		return this._cornerRadius;
-	}
-
 	override private function drawPath():Void {
 		var currentBorder = this.getCurrentBorder();
 		var thicknessOffset = getLineThickness(currentBorder) / 2.0;
