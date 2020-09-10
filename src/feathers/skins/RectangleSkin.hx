@@ -60,8 +60,8 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 		if (this._cornerRadius == 0.0) {
 			this.graphics.drawRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness);
 		} else {
-			this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, this._cornerRadius,
-				this._cornerRadius);
+			var ellipseSize = this._cornerRadius * 2.0;
+			this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, ellipseSize);
 		}
 	}
 }
