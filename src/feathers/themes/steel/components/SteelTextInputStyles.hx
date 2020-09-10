@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.PillSkin;
 import feathers.controls.TextInputState;
 import feathers.controls.TextInput;
 import feathers.skins.RectangleSkin;
@@ -36,6 +37,35 @@ class SteelTextInputStyles {
 				if (input.backgroundSkin == null) {
 					var inputSkin = new RectangleSkin();
 					inputSkin.cornerRadius = 6.0;
+					inputSkin.width = 160.0;
+					inputSkin.fill = theme.getInsetFill();
+					inputSkin.border = theme.getInsetBorder();
+					inputSkin.disabledFill = theme.getDisabledInsetFill();
+					inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
+					input.backgroundSkin = inputSkin;
+				}
+
+				if (input.textFormat == null) {
+					input.textFormat = theme.getTextFormat();
+				}
+				if (input.disabledTextFormat == null) {
+					input.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+				if (input.promptTextFormat == null) {
+					input.promptTextFormat = theme.getSecondaryTextFormat();
+				}
+
+				input.paddingTop = 6.0;
+				input.paddingRight = 10.0;
+				input.paddingBottom = 6.0;
+				input.paddingLeft = 10.0;
+			});
+		}
+		if (styleProvider.getStyleFunction(TextInput, TextInput.VARIANT_SEARCH) == null) {
+			styleProvider.setStyleFunction(TextInput, TextInput.VARIANT_SEARCH, function(input:TextInput):Void {
+				if (input.backgroundSkin == null) {
+					var inputSkin = new PillSkin();
+					inputSkin.capDirection = HORIZONTAL;
 					inputSkin.width = 160.0;
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();

@@ -14,6 +14,7 @@ import openfl.events.Event;
 class TextInputScreen extends Panel {
 	private var textInput:TextInput;
 	private var textInputWithPrompt:TextInput;
+	private var searchTextInput:TextInput;
 	private var disabledTextInput:TextInput;
 
 	override private function initialize():Void {
@@ -33,6 +34,11 @@ class TextInputScreen extends Panel {
 		this.textInputWithPrompt = new TextInput();
 		this.textInputWithPrompt.prompt = "An optional prompt";
 		this.addChild(this.textInputWithPrompt);
+
+		this.searchTextInput = new TextInput();
+		this.searchTextInput.variant = TextInput.VARIANT_SEARCH;
+		this.searchTextInput.prompt = "Search";
+		this.addChild(this.searchTextInput);
 
 		this.disabledTextInput = new TextInput();
 		this.disabledTextInput.enabled = false;
