@@ -47,6 +47,7 @@ class MainMenu extends Panel {
 			new MenuItem("Tab Bar", ViewPaths.TAB_BAR),
 			new MenuItem("Tab Navigator", ViewPaths.TAB_NAVIGATOR),
 			new MenuItem("Text Area", ViewPaths.TEXT_AREA),
+			new MenuItem("Text Callout", ViewPaths.TEXT_CALLOUT),
 			new MenuItem("Text Input", ViewPaths.TEXT_INPUT),
 			new MenuItem("Toggle Switch", ViewPaths.TOGGLE_SWITCH),
 			new MenuItem("Tree View", ViewPaths.TREE_VIEW),

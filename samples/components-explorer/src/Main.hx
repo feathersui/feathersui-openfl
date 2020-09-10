@@ -20,6 +20,7 @@ import com.feathersui.components.views.SliderScreen;
 import com.feathersui.components.views.TabBarScreen;
 import com.feathersui.components.views.TabNavigatorScreen;
 import com.feathersui.components.views.TextAreaScreen;
+import com.feathersui.components.views.TextCalloutScreen;
 import com.feathersui.components.views.TextInputScreen;
 import com.feathersui.components.views.ToggleSwitchScreen;
 import com.feathersui.components.views.TreeViewScreen;
@@ -111,6 +112,9 @@ class Main extends Application {
 
 		var textArea = Route.withClass(ViewPaths.TEXT_AREA, TextAreaScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(textArea);
+
+		var textCallout = Route.withClass(ViewPaths.TEXT_CALLOUT, TextCalloutScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(textCallout);
 
 		var textInput = Route.withClass(ViewPaths.TEXT_INPUT, TextInputScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(textInput);

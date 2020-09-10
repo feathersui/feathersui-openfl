@@ -11,7 +11,6 @@ import feathers.layout.AnchorLayoutData;
 import openfl.events.Event;
 
 class CalloutScreen extends Panel {
-	private var callout:Callout;
 	private var content:Panel;
 	private var belowButton:Button;
 	private var aboveButton:Button;

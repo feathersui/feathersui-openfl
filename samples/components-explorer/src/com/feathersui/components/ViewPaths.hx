@@ -22,6 +22,7 @@ class ViewPaths {
 	public static final TAB_BAR = "/tab-bar";
 	public static final TAB_NAVIGATOR = "/tab-navigator";
 	public static final TEXT_AREA = "/text-area";
+	public static final TEXT_CALLOUT = "/text-callout";
 	public static final TEXT_INPUT = "/text-input";
 	public static final TOGGLE_SWITCH = "/toggle-switch";
 	public static final TREE_VIEW = "/tree-view";
