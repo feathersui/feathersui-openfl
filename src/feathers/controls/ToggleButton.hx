@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IStateObserver;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
 import feathers.core.ITextControl;
@@ -1139,6 +1140,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (Std.is(this._currentIcon, IProgrammaticSkin)) {
 			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
 		}
+		if (Std.is(this._currentIcon, IStateObserver)) {
+			cast(this._currentIcon, IStateObserver).stateContext = this;
+		}
 		var index = this.getChildIndex(this.textField);
 		// the icon should be below the text
 		this.addChildAt(this._currentIcon, index);
@@ -1164,6 +1168,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 		if (Std.is(icon, IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
+		}
+		if (Std.is(icon, IStateObserver)) {
+			cast(icon, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this icon is used for measurement

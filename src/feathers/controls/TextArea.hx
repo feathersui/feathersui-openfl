@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IStateObserver;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
 import feathers.core.IStateContext;
@@ -635,6 +636,24 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	override private function layoutChildren():Void {
 		super.layoutChildren();
 		this.layoutPrompt();
+	}
+
+	override private function refreshBackgroundSkin():Void {
+		super.refreshBackgroundSkin();
+		if (Std.is(this._currentBackgroundSkin, IStateObserver)) {
+			cast(this._currentBackgroundSkin, IStateObserver).stateContext = this;
+		}
+		this.addChildAt(this._currentBackgroundSkin, 0);
+	}
+
+	override private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if (Std.is(skin, IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = null;
+		}
+		super.removeCurrentBackgroundSkin(skin);
 	}
 
 	private function refreshTextStyles():Void {

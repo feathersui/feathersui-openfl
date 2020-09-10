@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
@@ -813,6 +814,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (Std.is(this._currentBackgroundSkin, IProgrammaticSkin)) {
 			cast(this._currentBackgroundSkin, IProgrammaticSkin).uiContext = this;
 		}
+		if (Std.is(this._currentBackgroundSkin, IStateObserver)) {
+			cast(this._currentBackgroundSkin, IStateObserver).stateContext = this;
+		}
 		this.addChildAt(this._currentBackgroundSkin, 0);
 	}
 
@@ -830,6 +834,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		if (Std.is(skin, IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		if (Std.is(skin, IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement

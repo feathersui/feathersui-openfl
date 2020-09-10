@@ -8,6 +8,7 @@
 
 package feathers.skins;
 
+import feathers.core.IStateObserver;
 import feathers.core.IValidating;
 import feathers.core.IUIControl;
 import feathers.layout.Measurements;
@@ -195,6 +196,9 @@ class MultiSkin extends ProgrammaticSkin {
 		if (Std.is(this._currentView, IProgrammaticSkin)) {
 			cast(this._currentView, IProgrammaticSkin).uiContext = this._uiContext;
 		}
+		if (Std.is(this._currentView, IStateObserver)) {
+			cast(this._currentView, IStateObserver).stateContext = this._stateContext;
+		}
 		this.addChild(this._currentView);
 	}
 
@@ -204,6 +208,9 @@ class MultiSkin extends ProgrammaticSkin {
 		}
 		if (Std.is(view, IProgrammaticSkin)) {
 			cast(view, IProgrammaticSkin).uiContext = null;
+		}
+		if (Std.is(view, IStateObserver)) {
+			cast(view, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
