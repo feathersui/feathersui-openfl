@@ -59,7 +59,7 @@ class PillSkin extends BaseGraphicsPathSkin {
 		var thickness = getLineThickness(currentBorder);
 		var thicknessOffset = thickness / 2.0;
 
-		var cornerRadius = this.capDirection == VERTICAL ? this.actualWidth : this.actualHeight;
-		this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, cornerRadius, cornerRadius);
+		var ellipseSize = this.capDirection == VERTICAL ? this.actualWidth : this.actualHeight;
+		this.graphics.drawRoundRect(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness, ellipseSize, ellipseSize);
 	}
 }
