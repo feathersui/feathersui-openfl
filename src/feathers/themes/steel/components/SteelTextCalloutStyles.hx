@@ -8,8 +8,9 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.RectangleSkin;
 import feathers.controls.TextCallout;
+import feathers.skins.RectangleSkin;
+import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 
@@ -44,6 +45,51 @@ class SteelTextCalloutStyles {
 					backgroundSkin.border = theme.getContainerBorder();
 					callout.backgroundSkin = backgroundSkin;
 				}
+				if (callout.topArrowSkin == null) {
+					var topArrowSkin = new TriangleSkin();
+					topArrowSkin.pointPosition = TOP;
+					topArrowSkin.drawBaseBorder = false;
+					topArrowSkin.fill = theme.getContainerFill();
+					topArrowSkin.border = theme.getContainerBorder();
+					topArrowSkin.width = 10.0;
+					topArrowSkin.height = 6.0;
+					callout.topArrowSkin = topArrowSkin;
+				}
+				if (callout.rightArrowSkin == null) {
+					var rightArrowSkin = new TriangleSkin();
+					rightArrowSkin.pointPosition = RIGHT;
+					rightArrowSkin.drawBaseBorder = false;
+					rightArrowSkin.fill = theme.getContainerFill();
+					rightArrowSkin.border = theme.getContainerBorder();
+					rightArrowSkin.width = 6.0;
+					rightArrowSkin.height = 10.0;
+					callout.rightArrowSkin = rightArrowSkin;
+				}
+				if (callout.bottomArrowSkin == null) {
+					var bottomArrowSkin = new TriangleSkin();
+					bottomArrowSkin.pointPosition = BOTTOM;
+					bottomArrowSkin.drawBaseBorder = false;
+					bottomArrowSkin.fill = theme.getContainerFill();
+					bottomArrowSkin.border = theme.getContainerBorder();
+					bottomArrowSkin.width = 10.0;
+					bottomArrowSkin.height = 6.0;
+					callout.bottomArrowSkin = bottomArrowSkin;
+				}
+				if (callout.leftArrowSkin == null) {
+					var leftArrowSkin = new TriangleSkin();
+					leftArrowSkin.pointPosition = LEFT;
+					leftArrowSkin.drawBaseBorder = false;
+					leftArrowSkin.fill = theme.getContainerFill();
+					leftArrowSkin.border = theme.getContainerBorder();
+					leftArrowSkin.width = 6.0;
+					leftArrowSkin.height = 10.0;
+					callout.leftArrowSkin = leftArrowSkin;
+				}
+
+				callout.topArrowGap = -1.0;
+				callout.rightArrowGap = -1.0;
+				callout.bottomArrowGap = -1.0;
+				callout.leftArrowGap = -1.0;
 
 				callout.paddingTop = 1.0;
 				callout.paddingRight = 1.0;
