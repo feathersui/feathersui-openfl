@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.skins.TriangleSkin;
 import feathers.controls.TextInputState;
 import feathers.controls.TextInput;
 import feathers.skins.TabSkin;
@@ -52,12 +53,14 @@ class SteelComboBoxStyles {
 					button.backgroundSkin = skin;
 				}
 
-				var icon = new Shape();
-				icon.graphics.beginFill(theme.textColor);
-				icon.graphics.moveTo(0.0, 0.0);
-				icon.graphics.lineTo(4.0, 4.0);
-				icon.graphics.lineTo(8.0, 0.0);
-				button.icon = icon;
+				if (button.icon == null) {
+					var icon = new TriangleSkin();
+					icon.pointPosition = BOTTOM;
+					icon.fill = SolidColor(theme.textColor);
+					icon.width = 8.0;
+					icon.height = 4.0;
+					button.icon = icon;
+				}
 
 				button.paddingTop = 4.0;
 				button.paddingRight = 10.0;
