@@ -4,7 +4,7 @@ This example app demonstrates how to create a custom skin with an animated tween
 
 ## Live demo
 
-A build of the [animated-tween-skin\_ sample](https://feathersui.com/samples/haxe-openfl/animated-tween-skin/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
+A build of the [_animated-tween-skin_ sample](https://feathersui.com/samples/haxe-openfl/animated-tween-skin/) is hosted on the Feathers UI website, and it may be viewed in any modern web browser.
 
 ## Run locally
 
