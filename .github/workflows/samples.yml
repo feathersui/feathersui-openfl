@@ -42,6 +42,13 @@ jobs:
         haxelib run openfl build flash
         haxelib run openfl build hl
         haxelib run openfl build linux
+    - name: Build samples/animated-tween-skin
+      working-directory: samples/animated-tween-skin
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
     - name: Build samples/custom-programmatic-skin
       working-directory: samples/custom-programmatic-skin
       run: |
