@@ -33,8 +33,10 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 	private var _uiContext:IUIControl;
 
 	/**
-		An optional `IStateContext` that is used to change the styles of the
-		skin when its state changes.
+		The UI component that is displaying this skin.
+
+		@see `ProgrammaticSkin.onAddUIContext`
+		@see `ProgrammaticSkin.onRemoveUIContext`
 
 		@since 1.0.0
 	**/
@@ -54,6 +56,7 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 			if (Std.is(this._uiContext, IToggle)) {
 				this._uiContext.removeEventListener(Event.CHANGE, uiContextToggle_changeHandler);
 			}
+			this.onRemoveUIContext();
 		}
 		this._uiContext = value;
 		if (this._uiContext != null) {
@@ -61,6 +64,7 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 			if (Std.is(this._uiContext, IToggle)) {
 				this._uiContext.addEventListener(Event.CHANGE, uiContextToggle_changeHandler);
 			}
+			this.onAddUIContext();
 		}
 		this.setInvalid(DATA);
 		return this._uiContext;
@@ -98,6 +102,26 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 		this.setInvalid(DATA);
 		return this._stateContext;
 	}
+
+	/**
+		Called when the `uiContext` property is set to a new non-null value.
+		Subclasses may override to access the `uiContext` property to add
+		event listeners or set properties.
+
+		@since 1.0.0
+	**/
+	@:dox(show)
+	private function onAddUIContext():Void {}
+
+	/**
+		Called when the `uiContext` property is about to be cleared.
+		Subclasses may override to access the `uiContext` property to remove
+		event listeners or reset properties.
+
+		@since 1.0.0
+	**/
+	@:dox(show)
+	private function onRemoveUIContext():Void {}
 
 	/**
 		Subclasses may override `update()` to draw the skin.
