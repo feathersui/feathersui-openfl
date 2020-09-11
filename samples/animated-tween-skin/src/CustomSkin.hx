@@ -32,18 +32,12 @@ class CustomSkin extends ProgrammaticSkin {
 	private var _targetScale:Float;
 	private var _isActive:Bool = false;
 
-	override private function set_uiContext(value:IUIControl):IUIControl {
-		if (this.uiContext == value) {
-			return this.uiContext;
-		}
-		if (this.uiContext != null) {
-			this.uiContext.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-		}
-		super.uiContext = value;
-		if (this.uiContext != null) {
-			this.uiContext.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-		}
-		return this.uiContext;
+	override private function onAddUIContext():Void {
+		this.uiContext.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+	}
+
+	override private function onRemoveUIContext():Void {
+		this.uiContext.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 	}
 
 	override private function update():Void {
