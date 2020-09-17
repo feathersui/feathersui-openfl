@@ -32,6 +32,9 @@ import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFieldType;
 import openfl.ui.Keyboard;
 
+@:event("change", openfl.events.Event)
+@:event("scroll", openfl.events.Event)
+
 /**
 	A text entry control that allows users to enter and edit a single line of
 	uniformly-formatted text.

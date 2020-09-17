@@ -12,6 +12,8 @@ import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
 
+@:event("resize", openfl.events.Event)
+
 /**
 	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)
 	with extra minimum and maximum dimensions that may be used in Feathers UI

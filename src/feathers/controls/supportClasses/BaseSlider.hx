@@ -24,6 +24,8 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 
+@:event("change", openfl.events.Event)
+
 /**
 	Base class for slider components.
 

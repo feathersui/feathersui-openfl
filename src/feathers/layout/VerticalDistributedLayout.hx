@@ -15,6 +15,8 @@ import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
+@:event("change", openfl.events.Event)
+
 /**
 	Positions items from top to bottom in a single column, and all items are
 	resized to have the same width and height.

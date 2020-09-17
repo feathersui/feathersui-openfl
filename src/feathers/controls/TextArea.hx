@@ -24,6 +24,8 @@ import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.ui.Keyboard;
 
+@:event("change", openfl.events.Event)
+
 /**
 	@since 1.0.0
 **/

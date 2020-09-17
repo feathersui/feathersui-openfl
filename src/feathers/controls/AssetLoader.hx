@@ -27,6 +27,10 @@ import openfl.geom.Rectangle;
 import openfl.net.URLRequest;
 import openfl.utils.AssetType;
 
+@:event("complete", openfl.events.Event)
+@:event("ioError", openfl.events.IOErrorEvent)
+@:event("securityError", openfl.events.SecurityErrorEvent)
+
 /**
 	Loads and displays an asset using either OpenFL's asset management system or
 	from a URL.

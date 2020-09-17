@@ -25,6 +25,9 @@ import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 
+@:event("change", openfl.events.Event)
+@:event("trigger", feathers.events.TriggerEvent)
+
 /**
 	A simple toggle button control with selection, pointer states, but no
 	content, that is useful for purposes like skinning. For a more full-featured

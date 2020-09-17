@@ -17,6 +17,8 @@ import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
+@:event("change", openfl.events.Event)
+
 /**
 	Positions cell or header renderers in a `GridView` component.
 

@@ -20,6 +20,8 @@ import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import openfl.text.TextLineMetrics;
 
+@:event("change", openfl.events.Event)
+
 /**
 	An implementation of `IViewPort` for `TextArea`.
 

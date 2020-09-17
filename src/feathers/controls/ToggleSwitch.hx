@@ -26,6 +26,8 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.ui.Keyboard;
 
+@:event("change", openfl.events.Event)
+
 /**
 	Similar to a light switch, with on and off states that may be toggled.
 	An alternative to a `Check`, especially on mobile.

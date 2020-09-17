@@ -14,6 +14,17 @@ import feathers.events.HierarchicalCollectionEvent;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
+@:event("change", openfl.events.Event)
+@:event("addItem", feathers.events.HierarchicalCollectionEvent)
+@:event("removeItem", feathers.events.HierarchicalCollectionEvent)
+@:event("replaceItem", feathers.events.HierarchicalCollectionEvent)
+@:event("removeAll", feathers.events.HierarchicalCollectionEvent)
+@:event("reset", feathers.events.HierarchicalCollectionEvent)
+@:event("updateItem", feathers.events.HierarchicalCollectionEvent)
+@:event("updateAll", feathers.events.HierarchicalCollectionEvent)
+@:event("filterChange", feathers.events.HierarchicalCollectionEvent)
+@:event("sortChange", feathers.events.HierarchicalCollectionEvent)
+
 /**
 	Wraps an `Array` data source with a common API for use with UI controls that
 	support hierarchical data, such as `TreeView`.

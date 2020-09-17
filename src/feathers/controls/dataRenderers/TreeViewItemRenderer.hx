@@ -14,6 +14,9 @@ import feathers.core.InvalidationFlag;
 import feathers.core.IOpenCloseToggle;
 import feathers.themes.steel.components.SteelTreeViewItemRendererStyles;
 
+@:event("open", openfl.events.Event)
+@:event("close", openfl.events.Event)
+
 /**
 	A branch and leaf renderer for `TreeView`.
 

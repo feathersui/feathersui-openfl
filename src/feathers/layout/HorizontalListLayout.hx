@@ -16,6 +16,8 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
+@:event("change", openfl.events.Event)
+
 /**
 	A simple list layout that positions items from left to right, in a single
 	row, where every item fills the entire height of the container.

@@ -28,6 +28,8 @@ import openfl.errors.IllegalOperationError;
 import openfl.ui.Multitouch;
 #end
 
+@:event("change", openfl.events.Event)
+
 /**
 	Renders a row of data in the `GridView` component.
 

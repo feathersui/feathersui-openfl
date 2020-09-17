@@ -14,6 +14,17 @@ import feathers.events.FlatCollectionEvent;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
+@:event("change", openfl.events.Event)
+@:event("addItem", feathers.events.FlatCollectionEvent)
+@:event("removeItem", feathers.events.FlatCollectionEvent)
+@:event("replaceItem", feathers.events.FlatCollectionEvent)
+@:event("removeAll", feathers.events.FlatCollectionEvent)
+@:event("reset", feathers.events.FlatCollectionEvent)
+@:event("updateItem", feathers.events.FlatCollectionEvent)
+@:event("updateAll", feathers.events.FlatCollectionEvent)
+@:event("filterChange", feathers.events.FlatCollectionEvent)
+@:event("sortChange", feathers.events.FlatCollectionEvent)
+
 /**
 	Wraps an `Array` in the common `IFlatCollection` API used for data
 	collections by many Feathers UI controls, including `ListView` and `TabBar`

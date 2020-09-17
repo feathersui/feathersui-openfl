@@ -15,6 +15,8 @@ import motion.actuators.IGenericActuator;
 import motion.easing.IEasing;
 import openfl.events.EventDispatcher;
 
+@:event("complete", openfl.events.Event)
+
 /**
 	An abstract base class for `IEffectContext` implementations.
 

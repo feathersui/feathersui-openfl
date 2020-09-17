@@ -34,6 +34,8 @@ import openfl.geom.Rectangle;
 import openfl.ui.Multitouch;
 #end
 
+@:event("close", openfl.events.Event)
+
 /**
 	A pop-up container that points at (or calls out) a specific region of the
 	application (typically a specific control that triggered it).

@@ -41,6 +41,8 @@ import openfl.ui.Keyboard;
 import openfl.ui.Multitouch;
 #end
 
+@:event("change", openfl.events.Event)
+
 /**
 	Displays a list of items divided into groups or sections. Accepts a
 	hierarchical tree of items, similar to `TreeView`, but limits the display to

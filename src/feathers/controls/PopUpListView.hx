@@ -36,6 +36,11 @@ import feathers.core.IDataSelector;
 import openfl.ui.Multitouch;
 #end
 
+@:event("change", openfl.events.Event)
+@:event("open", openfl.events.Event)
+@:event("close", openfl.events.Event)
+@:event("itemTrigger", feathers.events.ListViewEvent)
+
 /**
 	Displays a `Button` that may be triggered to display a `ListView` as a
 	pop-up. The list view may be customized to display in different ways, such

@@ -22,6 +22,11 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.geom.Point;
 
+@:event("initialize", feathers.events.FeathersEvent)
+@:event("creationComplete", feathers.events.FeathersEvent)
+@:event("layoutDataChange", feathers.events.FeathersEvent)
+@:event("stateChange", feathers.events.FeathersEvent)
+
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed
 	properties and sets up some basic template functions for component

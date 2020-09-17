@@ -44,6 +44,8 @@ import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 
+@:event("change", openfl.events.Event)
+
 /**
 	Displays a list of items as a table. Each item is rendered as a row, divided
 	into columns for each of the item's fields. Supports scrolling, custom cell,

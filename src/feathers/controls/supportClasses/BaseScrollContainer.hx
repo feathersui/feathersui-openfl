@@ -34,6 +34,10 @@ import openfl.events.MouseEvent;
 import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 
+@:event("scroll", feathers.events.ScrollEvent)
+@:event("scrollStart", feathers.events.ScrollEvent)
+@:event("scrollComplete", feathers.events.ScrollEvent)
+
 /**
 	A base class for scrolling containers.
 

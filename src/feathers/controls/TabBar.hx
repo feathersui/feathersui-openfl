@@ -34,6 +34,8 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
+@:event("change", openfl.events.Event)
+
 /**
 	A line of tabs, where one may be selected at a time.
 

@@ -35,6 +35,10 @@ import feathers.controls.popups.DropDownPopUpAdapter;
 import openfl.ui.Multitouch;
 #end
 
+@:event("change", openfl.events.Event)
+@:event("open", openfl.events.Event)
+@:event("close", openfl.events.Event)
+
 /**
 	Displays a control consisting of a `TextInput` and `Button` that allows an
 	item from a collection to be selected. When the button is triggered, a list

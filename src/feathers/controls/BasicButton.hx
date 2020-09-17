@@ -24,6 +24,9 @@ import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.MouseEvent;
 
+@:event("stateChange", feathers.events.FeathersEvent)
+@:event("trigger", feathers.events.TriggerEvent)
+
 /**
 	A simple button control with states, but no content, that is useful for
 	purposes like skinning. For a more full-featured button, with a label and
