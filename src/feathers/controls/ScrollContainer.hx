@@ -180,17 +180,19 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		if (oldIndex == index) {
 			return child;
 		}
+		if (oldIndex >= 0) {
+			this.items.remove(child);
+		}
+		// insert into the array before adding as a child, so that display list
+		// APIs work in an Event.ADDED listener
+		this.items.insert(index, child);
+		var result = this.layoutViewPort.addChildAt(child, index);
+		// add listeners or access properties after adding a child
+		// because adding the child may result in better errors (like for null)
 		child.addEventListener(Event.RESIZE, scrollContainer_child_resizeHandler);
 		if (Std.is(child, ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler, false, 0, true);
 		}
-		if (oldIndex >= 0) {
-			this.items.remove(child);
-		}
-		// insert into the array first, so that display list APIs work in an
-		// Event.ADDED listener
-		this.items.insert(index, child);
-		var result = this.layoutViewPort.addChildAt(child, index);
 		this.setInvalid(LAYOUT);
 		return result;
 	}
@@ -202,12 +204,14 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		if (child == null || child.parent != this.layoutViewPort) {
 			return child;
 		}
+		this.items.remove(child);
+		var result = this.layoutViewPort.removeChild(child);
+		// remove listeners or access properties after removing a child
+		// because removing the child may result in better errors (like for null)
 		child.removeEventListener(Event.RESIZE, scrollContainer_child_resizeHandler);
 		if (Std.is(child, ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler);
 		}
-		this.items.remove(child);
-		var result = this.layoutViewPort.removeChild(child);
 		this.setInvalid(LAYOUT);
 		return result;
 	}
