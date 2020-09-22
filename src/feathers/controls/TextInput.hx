@@ -174,6 +174,84 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
+	private var _currentLeftView:DisplayObject;
+	private var _leftViewMeasurements:Measurements;
+	private var _ignoreLeftViewResize = false;
+
+	/**
+		An optional view displayed inside the text input, to the left of its
+		text.
+
+		The following example passes a bitmap for the text input to use as a
+		left view:
+
+		```hx
+		input.leftView = new Bitmap(bitmapData);
+		```
+
+		@see `TextInput.rightView`
+		@see `TextInput.leftViewGap`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var leftView:DisplayObject = null;
+
+	/**
+		The gap between the left view and the text.
+
+		The following example sets the left view's gap to 20 pixels:
+
+		```hx
+		input.leftViewGap = 20.0;
+		```
+
+		@see `TextInput.leftView`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var leftViewGap:Float = 0.0;
+
+	private var _currentRightView:DisplayObject;
+	private var _rightViewMeasurements:Measurements;
+	private var _ignoreRightViewResize = false;
+
+	/**
+		An optional view displayed inside the text input, to the right of its
+		text.
+
+		The following example passes a bitmap for the text input to use as a
+		right view:
+
+		```hx
+		input.rightView = new Bitmap(bitmapData);
+		```
+
+		@see `TextInput.leftView`
+		@see `TextInput.rightViewGap`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var rightView:DisplayObject = null;
+
+	/**
+		The gap between the right view and the text.
+
+		The following example sets the right view's gap to 20 pixels:
+
+		```hx
+		input.rightViewGap = 20.0;
+		```
+
+		@see `TextInput.rightView`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var rightViewGap:Float = 0.0;
+
 	private var _stateToSkin:Map<TextInputState, DisplayObject> = new Map();
 
 	private var textField:TextField;
@@ -764,6 +842,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
+			this.refreshLeftView();
+			this.refreshRightView();
 		}
 
 		if (dataInvalid) {
@@ -849,6 +929,110 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 	}
 
+	private function refreshLeftView():Void {
+		var oldView = this._currentLeftView;
+		this._currentLeftView = this.getCurrentLeftView();
+		if (this._currentLeftView == oldView) {
+			return;
+		}
+		this.removeCurrentLeftView(oldView);
+		if (this._currentLeftView == null) {
+			this._leftViewMeasurements = null;
+			return;
+		}
+		if (Std.is(this._currentLeftView, IUIControl)) {
+			cast(this._currentLeftView, IUIControl).initializeNow();
+		}
+		if (this._leftViewMeasurements == null) {
+			this._leftViewMeasurements = new Measurements(this._currentLeftView);
+		} else {
+			this._leftViewMeasurements.save(this._currentLeftView);
+		}
+		if (Std.is(this._currentLeftView, IProgrammaticSkin)) {
+			cast(this._currentLeftView, IProgrammaticSkin).uiContext = this;
+		}
+		if (Std.is(this._currentLeftView, IStateObserver)) {
+			cast(this._currentLeftView, IStateObserver).stateContext = this;
+		}
+		this._currentLeftView.addEventListener(Event.RESIZE, textInput_leftView_resizeHandler, false, 0, true);
+		this.addChild(this._currentLeftView);
+	}
+
+	private function getCurrentLeftView():DisplayObject {
+		return this.leftView;
+	}
+
+	private function removeCurrentLeftView(view:DisplayObject):Void {
+		if (view == null) {
+			return;
+		}
+		view.removeEventListener(Event.RESIZE, textInput_leftView_resizeHandler);
+		if (Std.is(view, IProgrammaticSkin)) {
+			cast(view, IProgrammaticSkin).uiContext = null;
+		}
+		if (Std.is(view, IStateObserver)) {
+			cast(view, IStateObserver).stateContext = null;
+		}
+		// we need to restore these values so that they won't be lost the
+		// next time that this skin is used for measurement
+		this._leftViewMeasurements.restore(view);
+		if (view.parent == this) {
+			this.removeChild(view);
+		}
+	}
+
+	private function refreshRightView():Void {
+		var oldView = this._currentRightView;
+		this._currentRightView = this.getCurrentRightView();
+		if (this._currentRightView == oldView) {
+			return;
+		}
+		this.removeCurrentRightView(oldView);
+		if (this._currentRightView == null) {
+			this._rightViewMeasurements = null;
+			return;
+		}
+		if (Std.is(this._currentRightView, IUIControl)) {
+			cast(this._currentRightView, IUIControl).initializeNow();
+		}
+		if (this._rightViewMeasurements == null) {
+			this._rightViewMeasurements = new Measurements(this._currentRightView);
+		} else {
+			this._rightViewMeasurements.save(this._currentRightView);
+		}
+		if (Std.is(this._currentRightView, IProgrammaticSkin)) {
+			cast(this._currentRightView, IProgrammaticSkin).uiContext = this;
+		}
+		if (Std.is(this._currentRightView, IStateObserver)) {
+			cast(this._currentRightView, IStateObserver).stateContext = this;
+		}
+		this._currentRightView.addEventListener(Event.RESIZE, textInput_rightView_resizeHandler, false, 0, true);
+		this.addChild(this._currentRightView);
+	}
+
+	private function getCurrentRightView():DisplayObject {
+		return this.rightView;
+	}
+
+	private function removeCurrentRightView(view:DisplayObject):Void {
+		if (view == null) {
+			return;
+		}
+		view.removeEventListener(Event.RESIZE, textInput_rightView_resizeHandler);
+		if (Std.is(view, IProgrammaticSkin)) {
+			cast(view, IProgrammaticSkin).uiContext = null;
+		}
+		if (Std.is(view, IStateObserver)) {
+			cast(view, IStateObserver).stateContext = null;
+		}
+		// we need to restore these values so that they won't be lost the
+		// next time that this skin is used for measurement
+		this._rightViewMeasurements.restore(view);
+		if (view.parent == this) {
+			this.removeChild(view);
+		}
+	}
+
 	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
@@ -868,10 +1052,33 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
-
 		if (Std.is(this._currentBackgroundSkin, IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
+
+		var oldIgnoreLeftViewResize = this._ignoreLeftViewResize;
+		this._ignoreLeftViewResize = true;
+		var oldIgnoreRightViewResize = this._ignoreRightViewResize;
+		this._ignoreRightViewResize = true;
+
+		var measureLeftView:IMeasureObject = null;
+		if (Std.is(this._currentLeftView, IMeasureObject)) {
+			measureLeftView = cast(this._currentLeftView, IMeasureObject);
+		}
+		if (Std.is(this._currentLeftView, IValidating)) {
+			cast(this._currentLeftView, IValidating).validateNow();
+		}
+
+		var measureRightView:IMeasureObject = null;
+		if (Std.is(this._currentRightView, IMeasureObject)) {
+			measureRightView = cast(this._currentRightView, IMeasureObject);
+		}
+		if (Std.is(this._currentRightView, IValidating)) {
+			cast(this._currentRightView, IValidating).validateNow();
+		}
+
+		this._ignoreLeftViewResize = oldIgnoreLeftViewResize;
+		this._ignoreRightViewResize = oldIgnoreRightViewResize;
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
@@ -879,6 +1086,16 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 				newWidth = this._textMeasuredWidth;
 			} else {
 				newWidth = 0.0;
+			}
+			if (measureLeftView != null) {
+				newWidth += measureLeftView.width + this.leftViewGap;
+			} else if (this._leftViewMeasurements != null) {
+				newWidth += this._leftViewMeasurements.width + this.leftViewGap;
+			}
+			if (measureRightView != null) {
+				newWidth += measureRightView.width + this.rightViewGap;
+			} else if (this._rightViewMeasurements != null) {
+				newWidth += this._rightViewMeasurements.width + this.rightViewGap;
 			}
 			newWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentBackgroundSkin != null) {
@@ -888,7 +1105,18 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newHeight = this._textMeasuredHeight;
+			if (measureLeftView != null && newHeight < measureLeftView.height) {
+				newHeight = measureLeftView.height;
+			} else if (this._leftViewMeasurements != null && newHeight < this._leftViewMeasurements.height) {
+				newHeight = this._leftViewMeasurements.height;
+			}
+			if (measureRightView != null && newHeight < measureRightView.height) {
+				newHeight = measureRightView.height;
+			} else if (this._rightViewMeasurements != null && newHeight < this._rightViewMeasurements.height) {
+				newHeight = this._rightViewMeasurements.height;
+			}
+			newHeight += this.paddingTop + this.paddingBottom;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
@@ -901,6 +1129,16 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			} else {
 				newMinWidth = 0.0;
 			}
+			if (measureLeftView != null) {
+				newMinWidth += measureLeftView.minWidth + this.leftViewGap;
+			} else if (this._leftViewMeasurements != null) {
+				newMinWidth += this._leftViewMeasurements.minWidth + this.leftViewGap;
+			}
+			if (measureRightView != null) {
+				newMinWidth += measureRightView.minWidth + this.rightViewGap;
+			} else if (this._rightViewMeasurements != null) {
+				newMinWidth += this._rightViewMeasurements.minWidth + this.rightViewGap;
+			}
 			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
@@ -911,7 +1149,18 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newMinHeight = this._textMeasuredHeight;
+			if (measureLeftView != null && newMinHeight < measureLeftView.minHeight) {
+				newMinHeight = measureLeftView.minHeight;
+			} else if (this._leftViewMeasurements != null && newMinHeight < this._leftViewMeasurements.minHeight) {
+				newMinHeight = this._leftViewMeasurements.minHeight;
+			}
+			if (measureRightView != null && newMinHeight < measureRightView.minHeight) {
+				newMinHeight = measureRightView.minHeight;
+			} else if (this._rightViewMeasurements != null && newMinHeight < this._rightViewMeasurements.minHeight) {
+				newMinHeight = this._rightViewMeasurements.minHeight;
+			}
+			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
@@ -1099,10 +1348,12 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function layoutContent():Void {
-		this.layoutBackgroundSkin();
+		var oldIgnoreLeftViewResize = this._ignoreLeftViewResize;
+		this._ignoreLeftViewResize = true;
+		var oldIgnoreRightViewResize = this._ignoreRightViewResize;
+		this._ignoreRightViewResize = true;
 
-		var textFieldWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
-		this.textField.width = textFieldWidth;
+		this.layoutBackgroundSkin();
 
 		var textFieldHeight = this._textMeasuredHeight;
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
@@ -1111,7 +1362,29 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		this.textField.height = textFieldHeight;
 
-		this.textField.x = this.paddingLeft;
+		var leftViewOffset = 0.0;
+		if (this._currentLeftView != null) {
+			if (Std.is(this._currentLeftView, IValidating)) {
+				cast(this._currentLeftView, IValidating).validateNow();
+			}
+			this._currentLeftView.x = this.paddingLeft;
+			this._currentLeftView.y = Math.max(this.paddingTop, this.paddingTop + (maxHeight - this._currentLeftView.height) / 2.0);
+			leftViewOffset = this._currentLeftView.width + this.leftViewGap;
+		}
+		var rightViewOffset = 0.0;
+		if (this._currentRightView != null) {
+			if (Std.is(this._currentRightView, IValidating)) {
+				cast(this._currentRightView, IValidating).validateNow();
+			}
+			this._currentRightView.x = this.actualWidth - this.paddingRight - this._currentRightView.width;
+			this._currentRightView.y = Math.max(this.paddingTop, this.paddingTop + (maxHeight - this._currentRightView.height) / 2.0);
+			rightViewOffset = this._currentRightView.width + this.rightViewGap;
+		}
+
+		var textFieldWidth = this.actualWidth - this.paddingLeft - this.paddingRight - leftViewOffset - rightViewOffset;
+		this.textField.width = textFieldWidth;
+
+		this.textField.x = this.paddingLeft + leftViewOffset;
 		this.alignTextField(this.textField, textFieldHeight, maxHeight);
 
 		if (this.promptTextField != null) {
@@ -1123,9 +1396,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			}
 			this.promptTextField.height = textFieldHeight;
 
-			this.promptTextField.x = this.paddingLeft;
+			this.promptTextField.x = this.paddingLeft + leftViewOffset;
 			this.alignTextField(this.promptTextField, textFieldHeight, maxHeight);
 		}
+		this._ignoreLeftViewResize = oldIgnoreLeftViewResize;
+		this._ignoreRightViewResize = oldIgnoreRightViewResize;
 	}
 
 	private inline function alignTextField(textField:TextField, textFieldHeight:Float, maxHeight:Float):Void {
@@ -1242,6 +1517,20 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function textInput_promptTextFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
+	}
+
+	private function textInput_leftView_resizeHandler(event:Event):Void {
+		if (this._ignoreLeftViewResize) {
+			return;
+		}
+		this.setInvalid(STYLES);
+	}
+
+	private function textInput_rightView_resizeHandler(event:Event):Void {
+		if (this._ignoreRightViewResize) {
+			return;
+		}
 		this.setInvalid(STYLES);
 	}
 }
