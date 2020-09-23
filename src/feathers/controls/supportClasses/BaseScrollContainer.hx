@@ -914,6 +914,15 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
 			return;
 		}
+
+		// it's possible that the view port's size from the previous update is
+		// no longer appropriate for calculating offsets (example: when the
+		// explicit size of the container is made smaller between updates).
+		// when this happens, the container may display the scroll bars when
+		// they're not actually required.
+		// calling refreshViewPortBoundsForMeasurement() before the loop will
+		// ensure that the view port size is initialized to a valid range.
+		this.refreshViewPortBoundsForMeasurement();
 		var loopCount = 0;
 		do {
 			this._viewPortBoundsChanged = false;
