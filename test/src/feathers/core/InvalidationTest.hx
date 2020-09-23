@@ -95,6 +95,19 @@ class InvalidationTest {
 	}
 
 	@Test
+	public function testIsInvalidAfterSetInvalidWithCustomFlag() {
+		this._control.validateNow();
+		this._control.setInvalid(InvalidationFlag.CUSTOM("one"));
+		Assert.isTrue(this._control.isInvalid(), "Feathers component must be invalid after setInvalid() with a flag");
+		Assert.isTrue(this._control.isInvalid(InvalidationFlag.CUSTOM("one")),
+			"Feathers component must be invalid with flag after setInvalid() with the same flag");
+		Assert.isFalse(this._control.isInvalid(InvalidationFlag.CUSTOM("two")),
+			"Feathers component must not be invalid with flag after setInvalid() with different flag");
+		Assert.isFalse(this._control.isInvalid(InvalidationFlag.STYLES),
+			"Feathers component must not be invalid with flag after setInvalid() with different flag");
+	}
+
+	@Test
 	public function testInfiniteInvalidateDuringValidation() {
 		this._control2 = new InvalidationControl();
 		TestMain.openfl_root.addChild(this._control2);
