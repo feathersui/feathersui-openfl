@@ -967,36 +967,45 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.chromeMeasuredMaxHeight = Math.POSITIVE_INFINITY;
 	}
 
-	private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
+	private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
 		// in fixed mode, if we determine that scrolling is required, we
 		// remember the offsets for later. if scrolling is not needed, then
 		// we will ignore the offsets from here forward
-		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && scrollPolicyX != OFF, useActualBounds);
-		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars && this.showScrollBars && scrollPolicyY != OFF, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && this.scrollPolicyX != OFF, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars && this.showScrollBars && this.scrollPolicyY != OFF, useActualBounds);
 		// we need to double check the horizontal scroll bar if the scroll
 		// bars are fixed because adding a vertical scroll bar may require a
 		// horizontal one too.
 		if (this.fixedScrollBars && this.showScrollBarY && !this.showScrollBarX) {
-			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && scrollPolicyX != OFF, useActualBounds);
+			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && this.scrollPolicyX != OFF, useActualBounds);
 		}
 	}
 
-	private function calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
+	private function calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars:Bool, useActualBounds:Bool):Void {
 		if (this.scrollBarX != null && (this.measureViewPort || useActualBounds)) {
-			var scrollerWidth = useActualBounds ? this.actualWidth : this.explicitWidth;
-			if (!useActualBounds && !forceScrollBars && scrollerWidth == null) {
+			var availableWidth = useActualBounds ? this.actualWidth : this.explicitWidth;
+			if (availableWidth != null) {
+				availableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
+			}
+			if (!useActualBounds && !forceScrollBars && availableWidth == null) {
 				// even if explicitWidth is null, the view port might measure
 				// a view port width smaller than its content width
-				scrollerWidth = this._viewPort.visibleWidth + this.leftViewPortOffset + this.rightViewPortOffset + this.paddingLeft + this.paddingRight;
+				availableWidth = this._viewPort.visibleWidth;
+			}
+			var maxAvailableWidth = this.explicitMaxWidth;
+			if (maxAvailableWidth != null) {
+				maxAvailableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
 			}
 			if (!this.showScrollBars) {
 				this.showScrollBarX = false;
 				return;
 			}
-			var totalWidth = this._viewPort.width + this.leftViewPortOffset + this.rightViewPortOffset + this.paddingLeft + this.paddingRight;
+			var totalContentWidth = this._viewPort.width;
 			if (forceScrollBars
 				|| this._scrollPolicyX == ON
-				|| ((totalWidth > scrollerWidth || (this.explicitMaxWidth != null && totalWidth > this.explicitMaxWidth))
+				|| (((totalContentWidth > availableWidth && !MathUtil.fuzzyEquals(totalContentWidth, availableWidth))
+					|| (maxAvailableWidth != null && totalContentWidth > maxAvailableWidth)
+					&& !MathUtil.fuzzyEquals(totalContentWidth, maxAvailableWidth))
 					&& this._scrollPolicyX != OFF)) {
 				this.showScrollBarX = true;
 				if (this.fixedScrollBars) {
@@ -1014,22 +1023,32 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 	}
 
-	private function calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
+	private function calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars:Bool, useActualBounds:Bool):Void {
 		if (this.scrollBarY != null && (this.measureViewPort || useActualBounds)) {
-			var scrollerHeight = useActualBounds ? this.actualHeight : this.explicitHeight;
-			if (!useActualBounds && !forceScrollBars && scrollerHeight == null) {
+			var availableHeight = useActualBounds ? this.actualHeight : this.explicitHeight;
+			if (availableHeight != null) {
+				availableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
+			}
+			if (!useActualBounds && !forceScrollBars && availableHeight == null) {
 				// even if explicitHeight is null, the view port might measure
 				// a view port height smaller than its content height
-				scrollerHeight = this._viewPort.visibleHeight + this.topViewPortOffset + this.bottomViewPortOffset + this.paddingTop + this.paddingBottom;
+				availableHeight = this._viewPort.visibleHeight;
+			}
+			var maxAvailableHeight = this.explicitMaxHeight;
+			if (maxAvailableHeight != null) {
+				maxAvailableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
 			}
 			if (!this.showScrollBars) {
 				this.showScrollBarY = false;
 				return;
 			}
-			var totalHeight = this._viewPort.height + this.topViewPortOffset + this.bottomViewPortOffset + this.paddingTop + this.paddingBottom;
+			var totalContentHeight = this._viewPort.height;
 			if (forceScrollBars
 				|| this._scrollPolicyY == ON
-				|| ((totalHeight > scrollerHeight || (this.explicitMaxHeight != null && totalHeight > this.explicitMaxHeight))
+				|| (((totalContentHeight > availableHeight && !MathUtil.fuzzyEquals(totalContentHeight, availableHeight))
+					|| (maxAvailableHeight != null
+						&& totalContentHeight > maxAvailableHeight
+						&& !MathUtil.fuzzyEquals(totalContentHeight, maxAvailableHeight)))
 					&& this._scrollPolicyY != OFF)) {
 				this.showScrollBarY = true;
 				if (this.fixedScrollBars) {
@@ -1184,8 +1203,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (Std.is(this._currentBackgroundSkin, IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
-
-		this._viewPort.validateNow();
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {

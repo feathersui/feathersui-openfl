@@ -135,7 +135,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		this.layoutFooter();
 	}
 
-	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
+	override private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
 		if (this._header != null) {
 			if (Std.is(this._header, IValidating)) {
 				cast(this._header, IValidating).validateNow();

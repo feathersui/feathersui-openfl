@@ -673,7 +673,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	override private function calculateViewPortOffsets(forceScrollBars:Bool = false, useActualBounds:Bool = false):Void {
+	override private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
 		if (this.fixedScrollBars && this.showScrollBars) {
 			// this extra call may be needed for the left/right offsets?
 			super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
