@@ -1333,16 +1333,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (itemRenderer == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
-			return;
+		} else {
+			// in order to display the same item with modified properties, this
+			// hack tricks the item renderer into thinking that it has been given
+			// a different item to render.
+			if (Std.is(itemRenderer, IDataRenderer)) {
+				cast(itemRenderer, IDataRenderer).data = null;
+			}
+			var layoutIndex = this.dataToLayoutIndex.get(item);
+			this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
 		}
-		// in order to display the same item with modified properties, this
-		// hack tricks the item renderer into thinking that it has been given
-		// a different item to render.
-		if (Std.is(itemRenderer, IDataRenderer)) {
-			cast(itemRenderer, IDataRenderer).data = null;
-		}
-		var layoutIndex = this.dataToLayoutIndex.get(item);
-		this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
 		if (this._dataProvider.isBranch(item)) {
 			for (i in 0...this._dataProvider.getLength(location)) {
 				location.push(i);
