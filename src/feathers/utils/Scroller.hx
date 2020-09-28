@@ -663,7 +663,7 @@ class Scroller extends EventDispatcher {
 			if (this._scrollX != scrollX) {
 				scrollChanged = true;
 				this.startScroll();
-				if (duration == 0) {
+				if (duration == 0.0) {
 					// use the setter
 					this.scrollX = scrollX;
 				} else {
@@ -692,7 +692,7 @@ class Scroller extends EventDispatcher {
 			if (this._scrollY != scrollY) {
 				scrollChanged = true;
 				this.startScroll();
-				if (duration == 0) {
+				if (duration == 0.0) {
 					// use the setter
 					this.scrollY = scrollY;
 				} else {
@@ -712,7 +712,7 @@ class Scroller extends EventDispatcher {
 				this.finishScrollY();
 			}
 		}
-		if (scrollChanged && duration == 0) {
+		if (scrollChanged && duration == 0.0) {
 			this.completeScroll();
 		}
 	}
