@@ -985,7 +985,7 @@ class Scroller extends EventDispatcher {
 		this.startTouchY = stageY;
 		this.startScrollX = this._scrollX;
 		this.startScrollY = this._scrollY;
-		this.savedScrollMoves = [];
+		this.savedScrollMoves.resize(0);
 	}
 
 	private function touchMove(touchPointID:Int, stageX:Float, stageY:Float):Void {
