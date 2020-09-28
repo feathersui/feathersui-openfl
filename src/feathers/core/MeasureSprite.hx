@@ -12,7 +12,7 @@ import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
 
-@:event("resize", openfl.events.Event)
+@:event(openfl.events.Event.RESIZE)
 
 /**
 	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)

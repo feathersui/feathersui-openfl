@@ -17,7 +17,7 @@ import feathers.style.IStyleProvider;
 import feathers.style.ClassVariantStyleProvider;
 import feathers.style.ITheme;
 
-@:event("clear", openfl.events.Event)
+@:event(openfl.events.Event.CLEAR)
 
 /**
 	A theme based on `ClassVariantStyleProvider`.

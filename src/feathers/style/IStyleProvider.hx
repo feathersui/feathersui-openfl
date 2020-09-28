@@ -10,6 +10,8 @@ package feathers.style;
 
 import openfl.events.IEventDispatcher;
 
+@:event(feathers.events.StyleProviderEvent.STYLES_CHANGE)
+
 /**
 	Sets styles on a target object. Used by themes.
 

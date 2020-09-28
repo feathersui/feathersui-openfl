@@ -44,7 +44,7 @@ import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Displays a list of items as a table. Each item is rendered as a row, divided

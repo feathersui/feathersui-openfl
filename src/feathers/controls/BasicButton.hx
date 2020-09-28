@@ -24,8 +24,8 @@ import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.MouseEvent;
 
-@:event("stateChange", feathers.events.FeathersEvent)
-@:event("trigger", feathers.events.TriggerEvent)
+@:event(feathers.events.FeathersEvent.STATE_CHANGE)
+@:event(feathers.events.TriggerEvent.TRIGGER)
 
 /**
 	A simple button control with states, but no content, that is useful for

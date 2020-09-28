@@ -22,8 +22,8 @@ import openfl.errors.ArgumentError;
 import openfl.errors.RangeError;
 import openfl.events.Event;
 
-@:event("change", openfl.events.Event)
-@:event("scroll", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.SCROLL)
 
 /**
 	Displays a calendar for a specific month.

@@ -17,7 +17,7 @@ import openfl.display.DisplayObject;
 import openfl.errors.TypeError;
 import openfl.events.Event;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Base class for progress bar components.

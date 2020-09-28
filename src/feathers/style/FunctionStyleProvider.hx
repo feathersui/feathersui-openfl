@@ -11,7 +11,7 @@ package feathers.style;
 import feathers.events.StyleProviderEvent;
 import openfl.events.EventDispatcher;
 
-@:event("stylesChange", feathers.events.StyleProviderEvent)
+@:event(feathers.events.StyleProviderEvent.STYLES_CHANGE)
 
 /**
 	Sets styles on a Feathers UI component by passing the component to a

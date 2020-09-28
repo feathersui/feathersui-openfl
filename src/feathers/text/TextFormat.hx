@@ -14,7 +14,7 @@ import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 import openfl.text.TextFormatAlign;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	A special replacement for `openfl.text.TextFormat` that dispatches

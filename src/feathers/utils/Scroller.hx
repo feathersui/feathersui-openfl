@@ -27,9 +27,9 @@ import js.html.WheelEvent;
 import openfl.ui.Multitouch;
 #end
 
-@:event("scroll", feathers.events.ScrollEvent)
-@:event("scrollStart", feathers.events.ScrollEvent)
-@:event("scrollComplete", feathers.events.ScrollEvent)
+@:event(feathers.events.ScrollEvent.SCROLL)
+@:event(feathers.events.ScrollEvent.SCROLL_START)
+@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 
 /**
 	Utility that provides touch and mouse wheel scrolling capabilities for any

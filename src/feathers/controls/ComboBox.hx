@@ -35,9 +35,9 @@ import feathers.controls.popups.DropDownPopUpAdapter;
 import openfl.ui.Multitouch;
 #end
 
-@:event("change", openfl.events.Event)
-@:event("open", openfl.events.Event)
-@:event("close", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
 
 /**
 	Displays a control consisting of a `TextInput` and `Button` that allows an

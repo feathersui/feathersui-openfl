@@ -17,7 +17,7 @@ import openfl.errors.RangeError;
 import feathers.controls.IToggle;
 import openfl.events.EventDispatcher;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Controls the selection of two or more IToggle instances where only one may

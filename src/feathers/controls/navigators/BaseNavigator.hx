@@ -27,10 +27,10 @@ import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
 import feathers.core.FeathersControl;
 
-@:event("clear", openfl.events.Event)
-@:event("change", openfl.events.Event)
-@:event("transitionStart", feathers.events.FeathersEvent)
-@:event("transitionComplete", feathers.events.FeathersEvent)
+@:event(openfl.events.Event.CLEAR)
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.FeathersEvent.TRANSITION_START)
+@:event(feathers.events.FeathersEvent.TRANSITION_COMPLETE)
 
 /**
 	Base class for navigator components.

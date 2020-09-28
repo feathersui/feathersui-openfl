@@ -13,7 +13,7 @@ import openfl.errors.RangeError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event("complete", openfl.events.Event)
+@:event(openfl.events.Event.COMPLETE)
 
 /**
 	An effect that does nothing and simply completes immediately.

@@ -17,8 +17,8 @@ import feathers.events.FeathersEvent;
 import openfl.errors.IllegalOperationError;
 import openfl.display.DisplayObject;
 
-@:event("open", openfl.events.Event)
-@:event("close", openfl.events.Event)
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
 
 /**
 	Displays a pop-up like a drop-down, either below or above the source.

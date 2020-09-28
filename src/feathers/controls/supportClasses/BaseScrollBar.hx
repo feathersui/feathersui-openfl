@@ -23,9 +23,9 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 
-@:event("change", openfl.events.Event)
-@:event("scrollStart", feathers.events.ScrollEvent)
-@:event("scrollComplete", feathers.events.ScrollEvent)
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.ScrollEvent.SCROLL_START)
+@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 
 /**
 	Base class for scroll bar components.

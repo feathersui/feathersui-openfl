@@ -15,7 +15,7 @@ import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.EventDispatcher;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Positions and sizes items by anchoring their edges (or center points) to

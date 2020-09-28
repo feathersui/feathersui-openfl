@@ -15,7 +15,7 @@ import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Positions items from left to right in a single row.

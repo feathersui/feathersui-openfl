@@ -16,7 +16,7 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	A simple list layout that positions items from top to bottom, in a single

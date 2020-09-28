@@ -22,10 +22,10 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.geom.Point;
 
-@:event("initialize", feathers.events.FeathersEvent)
-@:event("creationComplete", feathers.events.FeathersEvent)
-@:event("layoutDataChange", feathers.events.FeathersEvent)
-@:event("stateChange", feathers.events.FeathersEvent)
+@:event(feathers.events.FeathersEvent.INITIALIZE)
+@:event(feathers.events.FeathersEvent.CREATION_COMPLETE)
+@:event(feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE)
+@:event(feathers.events.FeathersEvent.STATE_CHANGE)
 
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed

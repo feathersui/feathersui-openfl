@@ -34,7 +34,7 @@ import openfl.geom.Rectangle;
 import openfl.ui.Multitouch;
 #end
 
-@:event("close", openfl.events.Event)
+@:event(openfl.events.Event.CLOSE)
 
 /**
 	A pop-up container that points at (or calls out) a specific region of the

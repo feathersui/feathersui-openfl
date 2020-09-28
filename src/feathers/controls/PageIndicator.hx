@@ -37,7 +37,7 @@ import openfl.ui.Keyboard;
 import openfl.ui.Multitouch;
 #end
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Displays a series of dots or other symbols, usually corresponding to a page

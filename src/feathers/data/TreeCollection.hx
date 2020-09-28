@@ -14,16 +14,16 @@ import feathers.events.HierarchicalCollectionEvent;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
-@:event("change", openfl.events.Event)
-@:event("addItem", feathers.events.HierarchicalCollectionEvent)
-@:event("removeItem", feathers.events.HierarchicalCollectionEvent)
-@:event("replaceItem", feathers.events.HierarchicalCollectionEvent)
-@:event("removeAll", feathers.events.HierarchicalCollectionEvent)
-@:event("reset", feathers.events.HierarchicalCollectionEvent)
-@:event("updateItem", feathers.events.HierarchicalCollectionEvent)
-@:event("updateAll", feathers.events.HierarchicalCollectionEvent)
-@:event("filterChange", feathers.events.HierarchicalCollectionEvent)
-@:event("sortChange", feathers.events.HierarchicalCollectionEvent)
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.HierarchicalCollectionEvent.ADD_ITEM)
+@:event(feathers.events.HierarchicalCollectionEvent.REMOVE_ITEM)
+@:event(feathers.events.HierarchicalCollectionEvent.REPLACE_ITEM)
+@:event(feathers.events.HierarchicalCollectionEvent.REMOVE_ALL)
+@:event(feathers.events.HierarchicalCollectionEvent.RESET)
+@:event(feathers.events.HierarchicalCollectionEvent.UPDATE_ITEM)
+@:event(feathers.events.HierarchicalCollectionEvent.UPDATE_ALL)
+@:event(feathers.events.HierarchicalCollectionEvent.FILTER_CHANGE)
+@:event(feathers.events.HierarchicalCollectionEvent.SORT_CHANGE)
 
 /**
 	Wraps an `Array` data source with a common API for use with UI controls that

@@ -25,8 +25,8 @@ import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 
-@:event("change", openfl.events.Event)
-@:event("trigger", feathers.events.TriggerEvent)
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.TriggerEvent.TRIGGER)
 
 /**
 	A simple toggle button control with selection, pointer states, but no

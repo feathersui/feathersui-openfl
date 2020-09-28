@@ -14,7 +14,7 @@ import feathers.layout.AnchorLayout.AbstractAnchor;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Sets anchors on children of containers that use `AnchorLayout`.

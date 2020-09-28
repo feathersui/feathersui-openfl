@@ -43,10 +43,10 @@ import openfl.ui.Keyboard;
 import openfl.ui.Multitouch;
 #end
 
-@:event("change", openfl.events.Event)
-@:event("open", openfl.events.Event)
-@:event("close", openfl.events.Event)
-@:event("itemTrigger", feathers.events.TreeViewEvent)
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
+@:event(feathers.events.TreeViewEvent.ITEM_TRIGGER)
 
 /**
 	Displays a hierarchical tree of items. Supports scrolling, custom item

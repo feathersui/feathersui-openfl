@@ -14,16 +14,16 @@ import feathers.events.FlatCollectionEvent;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
-@:event("change", openfl.events.Event)
-@:event("addItem", feathers.events.FlatCollectionEvent)
-@:event("removeItem", feathers.events.FlatCollectionEvent)
-@:event("replaceItem", feathers.events.FlatCollectionEvent)
-@:event("removeAll", feathers.events.FlatCollectionEvent)
-@:event("reset", feathers.events.FlatCollectionEvent)
-@:event("updateItem", feathers.events.FlatCollectionEvent)
-@:event("updateAll", feathers.events.FlatCollectionEvent)
-@:event("filterChange", feathers.events.FlatCollectionEvent)
-@:event("sortChange", feathers.events.FlatCollectionEvent)
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.FlatCollectionEvent.ADD_ITEM)
+@:event(feathers.events.FlatCollectionEvent.REMOVE_ITEM)
+@:event(feathers.events.FlatCollectionEvent.REPLACE_ITEM)
+@:event(feathers.events.FlatCollectionEvent.REMOVE_ALL)
+@:event(feathers.events.FlatCollectionEvent.RESET)
+@:event(feathers.events.FlatCollectionEvent.UPDATE_ITEM)
+@:event(feathers.events.FlatCollectionEvent.UPDATE_ALL)
+@:event(feathers.events.FlatCollectionEvent.FILTER_CHANGE)
+@:event(feathers.events.FlatCollectionEvent.SORT_CHANGE)
 
 /**
 	Wraps an `Array` in the common `IFlatCollection` API used for data

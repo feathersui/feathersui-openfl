@@ -8,6 +8,8 @@
 
 package feathers.style;
 
+@:event(openfl.events.Event.CLEAR)
+
 /**
 	An interface for Feathers UI themes.
 

@@ -12,7 +12,7 @@ import openfl.events.Event;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
-@:event("change", openfl.events.Event)
+@:event(openfl.events.Event.CHANGE)
 
 /**
 	Provides optional percentage sizing for children of containers that use
