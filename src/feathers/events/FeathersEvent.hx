@@ -100,6 +100,22 @@ class FeathersEvent extends Event {
 	**/
 	public static inline var TRANSITION_CANCEL:EventType<FeathersEvent> = "transitionCancel";
 
+	/**
+		The `FeathersEvent.OPENING` event type is dispatched when a component
+		starts to open.
+
+		@since 1.0.0
+	**/
+	public static inline var OPENING:EventType<FeathersEvent> = "opening";
+
+	/**
+		The `FeathersEvent.OPENING` event type is dispatched when a component
+		starts to close.
+
+		@since 1.0.0
+	**/
+	public static inline var CLOSING:EventType<FeathersEvent> = "closing";
+
 	#if !flash
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false), (event) -> {
 		event.target = null;
