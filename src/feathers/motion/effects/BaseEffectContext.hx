@@ -15,6 +15,7 @@ import motion.actuators.IGenericActuator;
 import motion.easing.IEasing;
 import openfl.events.EventDispatcher;
 
+@:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.COMPLETE)
 
 /**
@@ -83,6 +84,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 		}
 		this._position = value;
 		this.updateEffect();
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._position;
 	}
 

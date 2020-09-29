@@ -10,6 +10,9 @@ package feathers.motion.effects;
 
 import openfl.events.IEventDispatcher;
 
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.COMPLETE)
+
 /**
 	Gives a component the ability to control an effect.
 
