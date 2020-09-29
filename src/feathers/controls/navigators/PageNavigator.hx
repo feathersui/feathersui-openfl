@@ -10,12 +10,15 @@ package feathers.controls.navigators;
 
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
-import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.layout.RelativePosition;
+import feathers.motion.effects.EventToPositionEffectContext;
+import feathers.motion.effects.IEffectContext;
+import feathers.motion.transitions.SlideTransitions;
 import feathers.themes.steel.components.SteelPageNavigatorStyles;
+import feathers.utils.EdgePuller;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
@@ -57,6 +60,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private var pageIndicator:PageIndicator;
+
+	private var _previousEdgePuller:EdgePuller;
+	private var _nextEdgePuller:EdgePuller;
 
 	private var _dataProvider:IFlatCollection<PageItem>;
 
@@ -179,7 +185,61 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	@:style
 	public var pageIndicatorPosition:RelativePosition = BOTTOM;
 
+	private var _swipeEnabled:Bool = true;
+
+	/**
+		If `true`, a swipe left or right with touch may be used to navigate to
+		the previous or next page.
+
+		@see `PageNavigator.simulateTouch`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var swipeEnabled(get, set):Bool;
+
+	private function get_swipeEnabled():Bool {
+		return this._swipeEnabled;
+	}
+
+	private function set_swipeEnabled(value:Bool):Bool {
+		if (this._swipeEnabled == value) {
+			return this._swipeEnabled;
+		}
+		this._swipeEnabled = value;
+		this.setInvalid(DATA);
+		return this._swipeEnabled;
+	}
+
+	private var _simulateTouch:Bool = false;
+
+	/**
+		Determines if mouse events should be treated like touch events when
+		detecting a swipe.
+
+		@see `PageNavigator.swipeEnabled`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var simulateTouch(get, set):Bool;
+
+	private function get_simulateTouch():Bool {
+		return this._simulateTouch;
+	}
+
+	private function set_simulateTouch(value:Bool):Bool {
+		if (this._simulateTouch == value) {
+			return this._simulateTouch;
+		}
+		this._simulateTouch = value;
+		this.setInvalid(DATA);
+		return this._simulateTouch;
+	}
+
 	private var _ignoreSelectionChange = false;
+
+	private var _dragTransitionContext:EventToPositionEffectContext;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -189,6 +249,19 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			this.addChild(this.pageIndicator);
 		}
 		this.pageIndicator.addEventListener(Event.CHANGE, pageNavigator_pageIndicator_changeHandler);
+
+		if (this._previousEdgePuller == null) {
+			this._previousEdgePuller = new EdgePuller(this, LEFT);
+			this._previousEdgePuller.addEventListener(FeathersEvent.OPENING, pageNavigator_previousEdgePuller_openingHandler);
+			this._previousEdgePuller.addEventListener(Event.CANCEL, pageNavigator_previousEdgePuller_cancelHandler);
+			this._previousEdgePuller.addEventListener(Event.OPEN, pageNavigator_previousEdgePuller_openHandler);
+		}
+		if (this._nextEdgePuller == null) {
+			this._nextEdgePuller = new EdgePuller(this, RIGHT);
+			this._nextEdgePuller.addEventListener(FeathersEvent.OPENING, pageNavigator_nextEdgePuller_openingHandler);
+			this._nextEdgePuller.addEventListener(Event.CANCEL, pageNavigator_nextEdgePuller_cancelHandler);
+			this._nextEdgePuller.addEventListener(Event.OPEN, pageNavigator_nextEdgePuller_openHandler);
+		}
 	}
 
 	private function initializePageNavigatorTheme():Void {
@@ -201,6 +274,12 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		if (dataInvalid) {
 			this.pageIndicator.maxSelectedIndex = this._dataProvider.length - 1;
+			if (!this._previousEdgePuller.active && !this._nextEdgePuller.active) {
+				this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0;
+				this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
+			}
+			this._previousEdgePuller.simulateTouch = this._simulateTouch;
+			this._nextEdgePuller.simulateTouch = this._simulateTouch;
 		}
 
 		if (selectionInvalid) {
@@ -290,6 +369,20 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		item.returnView(view);
 	}
 
+	private function previousDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
+		this._dragTransitionContext = new EventToPositionEffectContext(SlideTransitions.right()(one, two), this._previousEdgePuller, Event.CHANGE, (event) -> {
+			this._dragTransitionContext.position = this._previousEdgePuller.pullDistance / this.actualWidth;
+		});
+		return this._dragTransitionContext;
+	}
+
+	private function nextDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
+		this._dragTransitionContext = new EventToPositionEffectContext(SlideTransitions.left()(one, two), this._nextEdgePuller, Event.CHANGE, (event) -> {
+			this._dragTransitionContext.position = this._nextEdgePuller.pullDistance / this.actualWidth;
+		});
+		return this._dragTransitionContext;
+	}
+
 	private function pageNavigator_pageIndicator_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
@@ -346,5 +439,88 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	private function pageNavigator_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
 		// use the setter
 		this.selectedIndex = -1;
+	}
+
+	private function pageNavigator_previousEdgePuller_openingHandler(event:FeathersEvent):Void {
+		var newIndex = this._selectedIndex - 1;
+		if (newIndex < 0) {
+			event.preventDefault();
+			return;
+		}
+
+		// disable the other edge until this edge's gesture is done
+		this._nextEdgePuller.enabled = false;
+
+		var item = this._dataProvider.get(newIndex);
+		this.showItemInternal(item.internalID, previousDragTransition);
+	}
+
+	private function pageNavigator_previousEdgePuller_cancelHandler(event:Event):Void {
+		this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0;
+		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
+
+		var context = this._dragTransitionContext;
+		context.dispatcher = null;
+		this._dragTransitionContext = null;
+		FeathersEvent.dispatch(context, Event.CANCEL);
+	}
+
+	private function pageNavigator_previousEdgePuller_openHandler(event:Event):Void {
+		// reset back to the closed state so that we can detect the next swipe
+		var oldSnapDuration = this._previousEdgePuller.snapDuration;
+		// temporarily disable the animation
+		this._previousEdgePuller.snapDuration = 0.0;
+		this._previousEdgePuller.opened = false;
+		this._previousEdgePuller.snapDuration = oldSnapDuration;
+
+		this.selectedIndex--;
+		this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0;
+		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
+
+		var context = this._dragTransitionContext;
+		context.dispatcher = null;
+		this._dragTransitionContext = null;
+		FeathersEvent.dispatch(context, Event.COMPLETE);
+	}
+
+	private function pageNavigator_nextEdgePuller_openingHandler(event:FeathersEvent):Void {
+		var newIndex = this._selectedIndex + 1;
+		if (newIndex > this.maxSelectedIndex) {
+			event.preventDefault();
+			return;
+		}
+		// disable the other edge until this edge's gesture is done
+		this._previousEdgePuller.enabled = false;
+
+		var item = this._dataProvider.get(newIndex);
+		this.showItemInternal(item.internalID, nextDragTransition);
+	}
+
+	private function pageNavigator_nextEdgePuller_cancelHandler(event:Event):Void {
+		this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0;
+		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
+
+		var context = this._dragTransitionContext;
+		context.dispatcher = null;
+		this._dragTransitionContext = null;
+		FeathersEvent.dispatch(context, Event.CANCEL);
+	}
+
+	private function pageNavigator_nextEdgePuller_openHandler(event:Event):Void {
+		// reset back to the closed state so that we can detect the next swipe
+		var oldSnapDuration = this._nextEdgePuller.snapDuration;
+		// temporarily disable the animation
+		this._nextEdgePuller.snapDuration = 0.0;
+		this._nextEdgePuller.opened = false;
+		this._nextEdgePuller.snapDuration = oldSnapDuration;
+
+		this.selectedIndex++;
+		this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0;
+		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
+
+		var context = this._dragTransitionContext;
+		context.dispatcher = null;
+		this._dragTransitionContext = null;
+		FeathersEvent.dispatch(context, Event.COMPLETE);
 	}
 }
