@@ -385,10 +385,10 @@ class EdgePuller extends EventDispatcher {
 		var current = this._target;
 		while (current != current.stage) {
 			var currentScale = switch (this._pullableEdge) {
-				case TOP: this._target.scaleY;
-				case RIGHT: this._target.scaleX;
-				case BOTTOM: this._target.scaleY;
-				case LEFT: this._target.scaleX;
+				case TOP: current.scaleY;
+				case RIGHT: current.scaleX;
+				case BOTTOM: current.scaleY;
+				case LEFT: current.scaleX;
 				default:
 					throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 			};
