@@ -593,8 +593,9 @@ class EdgePuller extends EventDispatcher {
 			container.mouseChildren = this._restoreMouseChildren;
 		}
 		var oldOpened = this._opened;
-		this.setOpened(this._pullDistance != 0.0);
-		if (this._opened == oldOpened) {
+		var newOpened = this._pullDistance != 0.0;
+		this.setOpened(newOpened);
+		if (newOpened == oldOpened) {
 			FeathersEvent.dispatch(this, Event.CANCEL);
 		}
 	}
