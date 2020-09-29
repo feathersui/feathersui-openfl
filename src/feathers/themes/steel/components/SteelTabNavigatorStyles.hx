@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.motion.transitions.SlideTransitions;
 import feathers.controls.navigators.TabNavigator;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -36,6 +37,9 @@ class SteelTabNavigatorStyles {
 				var isDesktop = DeviceUtil.isDesktop();
 
 				navigator.tabBarPosition = isDesktop ? TOP : BOTTOM;
+
+				navigator.previousTransition = SlideTransitions.right();
+				navigator.nextTransition = SlideTransitions.left();
 			});
 		}
 	}
