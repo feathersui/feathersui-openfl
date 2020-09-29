@@ -701,7 +701,8 @@ class EdgePuller extends EventDispatcher {
 		if (!this._opened) {
 			return;
 		}
-		if (!this.isInActiveBorder(event.stageX, event.stageY, this._maxPullDistance)) {
+		var maxPullDistance = this.getMaxPullDistance();
+		if (!this.isInActiveBorder(event.stageX, event.stageY, maxPullDistance)) {
 			this._touchPointID = event.touchPointID;
 			this._target.stage.addEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2, false, 0, true);
 			this._target.stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2, false, 0, true);
@@ -714,23 +715,24 @@ class EdgePuller extends EventDispatcher {
 		if (event.touchPointID != this._touchPointID) {
 			return;
 		}
+		var maxPullDistance = this.getMaxPullDistance();
 		var point = new Point(event.stageX, event.stageY);
 		point = this._target.globalToLocal(point);
 		switch (this._pullableEdge) {
 			case TOP:
-				if (point.y > this._maxPullDistance || point.y < 0.0) {
+				if (point.y > maxPullDistance || point.y < 0.0) {
 					return;
 				}
 			case RIGHT:
-				if (point.x < (this._target.width - this._maxPullDistance) || point.x > this._target.width) {
+				if (point.x < (this._target.width - maxPullDistance) || point.x > this._target.width) {
 					return;
 				}
 			case BOTTOM:
-				if (point.y < (this._target.height - this._maxPullDistance) || point.y > this._target.height) {
+				if (point.y < (this._target.height - maxPullDistance) || point.y > this._target.height) {
 					return;
 				}
 			case LEFT:
-				if (point.x > this._maxPullDistance || point.x < 0.0) {
+				if (point.x > maxPullDistance || point.x < 0.0) {
 					return;
 				}
 			default:
@@ -755,17 +757,8 @@ class EdgePuller extends EventDispatcher {
 		if (!this._opened || !this.simulateTouch) {
 			return;
 		}
-		var point = new Point(event.stageX, event.stageY);
-		point = this._target.globalToLocal(point);
-		var isInBounds = switch (this._pullableEdge) {
-			case TOP: point.y >= 0.0 && point.y < this._maxPullDistance;
-			case RIGHT: point.x >= (this._target.width - this._maxPullDistance) && point.x < this._target.width;
-			case BOTTOM: point.y >= (this._target.height - this._maxPullDistance) && point.y < this._target.height;
-			case LEFT: point.x >= 0.0 && point.x < this._maxPullDistance;
-			default:
-				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
-		}
-		if (!isInBounds) {
+		var maxPullDistance = this.getMaxPullDistance();
+		if (!this.isInActiveBorder(event.stageX, event.stageY, maxPullDistance)) {
 			this._touchPointID = TOUCH_ID_MOUSE;
 			this._target.stage.addEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2, false, 0, true);
 			this._target.stage.addEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2, false, 0, true);
@@ -778,23 +771,24 @@ class EdgePuller extends EventDispatcher {
 		if (TOUCH_ID_MOUSE != this._touchPointID) {
 			return;
 		}
+		var maxPullDistance = this.getMaxPullDistance();
 		var point = new Point(event.stageX, event.stageY);
 		point = this._target.globalToLocal(point);
 		switch (this._pullableEdge) {
 			case TOP:
-				if (point.y > this._maxPullDistance || point.y < 0.0) {
+				if (point.y > maxPullDistance || point.y < 0.0) {
 					return;
 				}
 			case RIGHT:
-				if (point.x < (this._target.width - this._maxPullDistance) || point.x > this._target.width) {
+				if (point.x < (this._target.width - maxPullDistance) || point.x > this._target.width) {
 					return;
 				}
 			case BOTTOM:
-				if (point.y < (this._target.height - this._maxPullDistance) || point.y > this._target.height) {
+				if (point.y < (this._target.height - maxPullDistance) || point.y > this._target.height) {
 					return;
 				}
 			case LEFT:
-				if (point.x > this._maxPullDistance || point.x < 0.0) {
+				if (point.x > maxPullDistance || point.x < 0.0) {
 					return;
 				}
 			default:
