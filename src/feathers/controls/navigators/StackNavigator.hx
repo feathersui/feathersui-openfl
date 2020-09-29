@@ -8,13 +8,13 @@
 
 package feathers.controls.navigators;
 
-import openfl.ui.Keyboard;
-import lime.ui.KeyCode;
-import openfl.events.KeyboardEvent;
-import openfl.events.Event;
-import feathers.motion.effects.IEffectContext;
+import feathers.themes.steel.components.SteelStackNavigatorStyles;
 import feathers.events.FeathersEvent;
+import feathers.motion.effects.IEffectContext;
+import lime.ui.KeyCode;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 
 /**
 	A "view stack"-like container that supports navigation between items with
@@ -51,6 +51,7 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeStackNavigatorTheme();
 		super();
 		this.addEventListener(FeathersEvent.INITIALIZE, stackNavigator_initializeHandler);
 		this.addEventListener(Event.ADDED_TO_STAGE, stackNavigator_addedToStageHandler);
@@ -67,7 +68,8 @@ class StackNavigator extends BaseNavigator {
 		@since 1.0.0
 
 	**/
-	public var pushTransition:(DisplayObject, DisplayObject) -> IEffectContext;
+	@:style
+	public var pushTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
 	/**
 		The default transition to use for pop actions, if not overridden in the
@@ -80,7 +82,8 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var popTransition:(DisplayObject, DisplayObject) -> IEffectContext;
+	@:style
+	public var popTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
 	/**
 		The default transition to use for replace actions, if not overridden in
@@ -92,7 +95,8 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var replaceTransition:(DisplayObject, DisplayObject) -> IEffectContext;
+	@:style
+	public var replaceTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
 	private var _history:Array<HistoryItem> = [];
 	private var _tempRootItemID:String;
@@ -168,6 +172,10 @@ class StackNavigator extends BaseNavigator {
 	private var savedInject:(Dynamic) -> Void;
 	private var savedReturnedObject:Dynamic;
 	private var savedIsPop:Bool = false;
+
+	private function initializeStackNavigatorTheme():Void {
+		SteelStackNavigatorStyles.initialize();
+	}
 
 	/**
 		Registers a new item. The `id` property of the item should be used to

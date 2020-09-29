@@ -8,16 +8,17 @@
 
 package feathers.controls.navigators;
 
-import openfl.ui.Keyboard;
-import feathers.events.FeathersEvent;
 import feathers.motion.effects.IEffectContext;
-import lime.ui.KeyCode;
+import feathers.themes.steel.components.SteelRouterNavigatorStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
-import openfl.events.KeyboardEvent;
 #if html5
 import js.Lib;
 import js.html.Window;
+#else
+import lime.ui.KeyCode;
+import openfl.events.KeyboardEvent;
+import openfl.ui.Keyboard;
 #end
 
 /**
@@ -45,6 +46,7 @@ class RouterNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function new() {
+		initializeRouterNavigatorTheme();
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, routerNavigator_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, routerNavigator_removedFromStageHandler);
@@ -75,7 +77,8 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var forwardTransition:(DisplayObject, DisplayObject) -> IEffectContext;
+	@:style
+	public var forwardTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
 	/**
 		The default transition to use for back navigation actions.
@@ -84,14 +87,20 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var backTransition:(DisplayObject, DisplayObject) -> IEffectContext;
+	@:style
+	public var backTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
 	/**
 		The default transition to use for replace navigation actions.
 
 		@since 1.0.0
 	**/
-	public var replaceTransition:(DisplayObject, DisplayObject) -> IEffectContext;
+	@:style
+	public var replaceTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
+
+	private function initializeRouterNavigatorTheme():Void {
+		SteelRouterNavigatorStyles.initialize();
+	}
 
 	/**
 		Adds a route to the navigator.
