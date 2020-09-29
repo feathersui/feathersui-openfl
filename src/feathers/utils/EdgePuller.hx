@@ -491,11 +491,10 @@ class EdgePuller extends EventDispatcher {
 		if (!this._dragging && this.enabled && this.checkMinDrag(touchOffset)) {
 			this._startTouch = touchPosition;
 			touchOffset = 0.0;
-			this._dragging = true;
+			this._dragging = this.startPull();
 			// don't start dragging until we've moved a minimum distance
 			// we'll also reset the start position at this point, so that there
 			// isn't a sudden jump
-			this.startPull();
 		}
 
 		if (!this._dragging) {
@@ -560,14 +559,19 @@ class EdgePuller extends EventDispatcher {
 		}
 	}
 
-	private function startPull():Void {
+	private function startPull():Bool {
 		if (this._active) {
-			return;
+			// already active, and that's fine
+			return true;
 		}
+		var result = true;
 		if (this._opened) {
-			FeathersEvent.dispatch(this, FeathersEvent.CLOSING);
+			result = FeathersEvent.dispatch(this, FeathersEvent.CLOSING, false, true);
 		} else {
-			FeathersEvent.dispatch(this, FeathersEvent.OPENING);
+			result = FeathersEvent.dispatch(this, FeathersEvent.OPENING, false, true);
+		}
+		if (!result) {
+			return false;
 		}
 		this._active = true;
 		if (Std.is(this._target, DisplayObjectContainer)) {
@@ -576,6 +580,7 @@ class EdgePuller extends EventDispatcher {
 			container.mouseChildren = false;
 		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		return true;
 	}
 
 	private function completeDrag():Void {
@@ -649,7 +654,10 @@ class EdgePuller extends EventDispatcher {
 			}
 			if (this._pullDistance != targetPosition) {
 				pullChanged = true;
-				this.startPull();
+				if (!this.startPull()) {
+					// opening/closing event was cancelled
+					return;
+				}
 				this._startPullDistance = this._pullDistance;
 				this._targetPullDistance = targetPosition;
 				var duration = (targetPosition == 0.0) ? this._closeDuration : this._openDuration;
