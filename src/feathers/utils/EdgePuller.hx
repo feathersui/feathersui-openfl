@@ -411,7 +411,31 @@ class EdgePuller extends EventDispatcher {
 		};
 	}
 
+	private function checkMinDrag(touchOffset:Float):Bool {
+		if (this._opened) {
+			return switch (this._pullableEdge) {
+				case TOP: touchOffset < -this.minDragDistance;
+				case RIGHT: touchOffset > this.minDragDistance;
+				case BOTTOM: touchOffset > this.minDragDistance;
+				case LEFT: touchOffset < -this.minDragDistance;
+				default:
+					throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
+			};
+		}
+		return switch (this._pullableEdge) {
+			case TOP: touchOffset > this.minDragDistance;
+			case RIGHT: touchOffset < -this.minDragDistance;
+			case BOTTOM: touchOffset < -this.minDragDistance;
+			case LEFT: touchOffset > this.minDragDistance;
+			default:
+				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
+		};
+	}
+
 	private function touchBegin(touchPointID:Int, stageX:Float, stageY:Float, ?simulatedTouch:Bool):Void {
+		if (!this.enabled) {
+			return;
+		}
 		if (simulatedTouch && !this.simulateTouch) {
 			return;
 		}
@@ -459,12 +483,13 @@ class EdgePuller extends EventDispatcher {
 			return;
 		}
 
-		var touchOffset = this.getTouchPosition(stageX, stageY) - this._startTouch;
+		var touchPosition = this.getTouchPosition(stageX, stageY);
+		var touchOffset = touchPosition - this._startTouch;
 		var touchScale = this.getTouchScale();
 		touchOffset *= touchScale;
 
-		if (!this._dragging && this.enabled && Math.abs(touchOffset) > this.minDragDistance) {
-			this._startTouch = this.getTouchPosition(stageX, stageY);
+		if (!this._dragging && this.enabled && this.checkMinDrag(touchOffset)) {
+			this._startTouch = touchPosition;
 			touchOffset = 0.0;
 			this._dragging = true;
 			// don't start dragging until we've moved a minimum distance
@@ -627,13 +652,18 @@ class EdgePuller extends EventDispatcher {
 				this._startPullDistance = this._pullDistance;
 				this._targetPullDistance = targetPosition;
 				var duration = (targetPosition == 0.0) ? this._closeDuration : this._openDuration;
-				var tween = Actuate.update((pullDistance : Float) -> {
-					// use the setter
-					this.setPullDistance(pullDistance);
-				}, duration, [this._startPullDistance], [this._targetPullDistance], true);
-				this._animatePull = cast(tween, SimpleActuator<Dynamic, Dynamic>);
-				this._animatePull.ease(this.ease);
-				this._animatePull.onComplete(this.animatePull_onComplete);
+				if (duration != 0.0) {
+					var tween = Actuate.update((pullDistance : Float) -> {
+						// use the setter
+						this.setPullDistance(pullDistance);
+					}, duration, [this._startPullDistance], [this._targetPullDistance], true);
+					this._animatePull = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+					this._animatePull.ease(this.ease);
+					this._animatePull.onComplete(this.animatePull_onComplete);
+				} else {
+					this.setPullDistance(this._targetPullDistance);
+					this.completeDrag();
+				}
 			} else {
 				this.completeDrag();
 			}
@@ -698,7 +728,7 @@ class EdgePuller extends EventDispatcher {
 	}
 
 	private function edgePuller_target_stage_touchBeginHandler(event:TouchEvent):Void {
-		if (!this._opened) {
+		if (!this._opened || !this.enabled || this._touchPointID != -1) {
 			return;
 		}
 		var maxPullDistance = this.getMaxPullDistance();
@@ -754,7 +784,7 @@ class EdgePuller extends EventDispatcher {
 	}
 
 	private function edgePuller_target_stage_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._opened || !this.simulateTouch) {
+		if (!this._opened || !this.enabled || this._touchPointID != -1 || !this.simulateTouch) {
 			return;
 		}
 		var maxPullDistance = this.getMaxPullDistance();
