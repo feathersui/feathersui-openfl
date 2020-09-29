@@ -47,9 +47,6 @@ class Main extends Application {
 		#end
 		this.addChild(this._navigator);
 
-		this._navigator.backTransition = SlideTransitions.right();
-		this._navigator.forwardTransition = SlideTransitions.left();
-
 		var mainMenu = Route.withClass(ViewPaths.MAIN_MENU, MainMenu, [Event.CHANGE => NewAction(createPushPathAction)]);
 		this._navigator.addRoute(mainMenu);
 
