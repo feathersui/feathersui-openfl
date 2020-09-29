@@ -15,6 +15,9 @@ import lime.ui.KeyCode;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
+#if flash
+import openfl.ui.Keyboard;
+#end
 
 /**
 	A "view stack"-like container that supports navigation between items with
