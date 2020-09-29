@@ -15,22 +15,17 @@ import openfl.events.EventDispatcher;
 @:event(openfl.events.Event.COMPLETE)
 
 /**
-	An advanced effect context that delegates to another `IEffectContext`
-	instance.
+	An abstract base class for `IEffectContext` implementations that delegate to
+	other `IEffectContext` instances.
 
 	@since 1.0.0
 **/
-class DelegateEffectContext extends EventDispatcher implements IEffectContext {
-	/**
-		Creates a new `DelegateEffectContext` object from the given arguments.
-
-		@since 1.0.0
-	**/
-	public function new(context:IEffectContext) {
+class BaseDelegateEffectContext extends EventDispatcher implements IEffectContext {
+	private function new(context:IEffectContext) {
 		super();
 		this._context = context;
-		this._context.addEventListener(Event.CHANGE, delegateEffectContext_context_changeHandler);
-		this._context.addEventListener(Event.COMPLETE, delegateEffectContext_context_completeHandler);
+		this._context.addEventListener(Event.CHANGE, baseDelegateEffectContext_context_changeHandler);
+		this._context.addEventListener(Event.COMPLETE, baseDelegateEffectContext_context_completeHandler);
 	}
 
 	private var _context:IEffectContext;
@@ -124,11 +119,11 @@ class DelegateEffectContext extends EventDispatcher implements IEffectContext {
 		this._context.interrupt();
 	}
 
-	private function delegateEffectContext_context_changeHandler(event:Event):Void {
+	private function baseDelegateEffectContext_context_changeHandler(event:Event):Void {
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
-	private function delegateEffectContext_context_completeHandler(event:Event):Void {
+	private function baseDelegateEffectContext_context_completeHandler(event:Event):Void {
 		FeathersEvent.dispatch(this, Event.COMPLETE);
 	}
 }
