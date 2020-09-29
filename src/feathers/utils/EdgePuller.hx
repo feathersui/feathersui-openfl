@@ -280,48 +280,26 @@ class EdgePuller extends EventDispatcher {
 		return this._pendingOpened;
 	}
 
-	private var _openDuration:Float = 0.5;
+	private var _snapDuration:Float = 0.5;
 
 	/**
-		The duration of the open animation, measured in seconds.
+		The duration of the snap animation, measured in seconds.
 
 		@default 0.5
 	**/
 	@:flash.property
-	public var openDuration(get, set):Float;
+	public var snapDuration(get, set):Float;
 
-	private function get_openDuration():Float {
-		return this._openDuration;
+	private function get_snapDuration():Float {
+		return this._snapDuration;
 	}
 
-	private function set_openDuration(value:Float):Float {
-		if (this._openDuration == value) {
-			return this._openDuration;
+	private function set_snapDuration(value:Float):Float {
+		if (this._snapDuration == value) {
+			return this._snapDuration;
 		}
-		this._openDuration = value;
-		return this._openDuration;
-	}
-
-	private var _closeDuration:Float = 0.5;
-
-	/**
-		The duration of the close animation, measured in seconds.
-
-		@default 0.5
-	**/
-	@:flash.property
-	public var closeDuration(get, set):Float;
-
-	private function get_closeDuration():Float {
-		return this._closeDuration;
-	}
-
-	private function set_closeDuration(value:Float):Float {
-		if (this._closeDuration == value) {
-			return this._closeDuration;
-		}
-		this._closeDuration = value;
-		return this._closeDuration;
+		this._snapDuration = value;
+		return this._snapDuration;
 	}
 
 	private var _restoreMouseChildren:Bool = false;
@@ -660,12 +638,12 @@ class EdgePuller extends EventDispatcher {
 				}
 				this._startPullDistance = this._pullDistance;
 				this._targetPullDistance = targetPosition;
-				var duration = (targetPosition == 0.0) ? this._closeDuration : this._openDuration;
-				if (duration != 0.0) {
+				if (this._snapDuration > 0.0) {
 					var tween = Actuate.update((pullDistance : Float) -> {
 						// use the setter
 						this.setPullDistance(pullDistance);
-					}, duration, [this._startPullDistance], [this._targetPullDistance], true);
+					}, this._snapDuration, [this._startPullDistance], [this._targetPullDistance],
+						true);
 					this._animatePull = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 					this._animatePull.ease(this.ease);
 					this._animatePull.onComplete(this.animatePull_onComplete);
