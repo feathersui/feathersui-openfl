@@ -59,7 +59,7 @@ class StyleMacro {
 						throw new Error("Variable '"
 							+ field.name
 							+ "' is not initialized. Variables with @:style metadata must be initialized with a default value.",
-							Context.currentPos());
+							field.pos);
 					}
 
 					var clearStyleName = "clearStyle_" + field.name;
@@ -70,11 +70,11 @@ class StyleMacro {
 						name: backingVarName,
 						access: [Access.APrivate],
 						kind: FieldType.FVar(type, e),
-						pos: Context.currentPos(),
+						pos: field.pos,
 						meta: [
 							{
 								name: ":noCompletion",
-								pos: Context.currentPos()
+								pos: field.pos
 							}
 						]
 					});
@@ -91,7 +91,7 @@ class StyleMacro {
 						name: "get_" + field.name,
 						access: [Access.APrivate],
 						kind: FieldType.FFun(getter),
-						pos: Context.currentPos()
+						pos: field.pos
 					});
 
 					// generate a setter
@@ -118,7 +118,7 @@ class StyleMacro {
 						name: "set_" + field.name,
 						access: [Access.APrivate],
 						kind: FieldType.FFun(setter),
-						pos: Context.currentPos()
+						pos: field.pos
 					});
 
 					var clearFunction:Function = {
@@ -133,21 +133,21 @@ class StyleMacro {
 						name: clearStyleName,
 						access: [Access.APublic],
 						kind: FieldType.FFun(clearFunction),
-						pos: Context.currentPos(),
+						pos: field.pos,
 						meta: [
 							{
 								name: ":noCompletion",
-								pos: Context.currentPos()
+								pos: field.pos
 							},
 							{
 								name: ":dox",
 								params: [
 									{
 										expr: EConst(CIdent("hide")),
-										pos: Context.currentPos()
+										pos: field.pos
 									}
 								],
-								pos: Context.currentPos()
+								pos: field.pos
 							}
 						]
 					});
@@ -162,14 +162,14 @@ class StyleMacro {
 						meta: field.meta.concat([
 							{
 								name: ":flash.property",
-								pos: Context.currentPos()
+								pos: field.pos
 							}
 						])
 					};
 					return propField;
 				default:
 					throw new Error("@:style metadata not allowed on '" + field.name + "'. Field must be a variable, and no getter or setter may be defined.",
-						Context.currentPos());
+						field.pos);
 			}
 		});
 		if (extraFields.length > 0) {
