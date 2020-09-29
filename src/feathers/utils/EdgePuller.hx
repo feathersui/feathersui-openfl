@@ -549,6 +549,8 @@ class EdgePuller extends EventDispatcher {
 			result = FeathersEvent.dispatch(this, FeathersEvent.OPENING, false, true);
 		}
 		if (!result) {
+			this._dragging = false;
+			this.cleanupAfterDrag();
 			return false;
 		}
 		this._active = true;
