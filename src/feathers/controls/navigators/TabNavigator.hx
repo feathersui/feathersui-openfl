@@ -8,9 +8,6 @@
 
 package feathers.controls.navigators;
 
-import feathers.motion.transitions.SlideTransitions;
-import feathers.motion.effects.IEffectContext;
-import feathers.utils.EdgePuller;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
 import feathers.data.IFlatCollection;
@@ -18,7 +15,9 @@ import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.layout.RelativePosition;
 import feathers.motion.effects.EventToPositionEffectContext;
+import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelTabNavigatorStyles;
+import feathers.utils.EdgePuller;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
@@ -239,6 +238,22 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		return this._simulateTouch;
 	}
 
+	/**
+		The default transition to use for navigating to the previous tab.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var previousTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
+
+	/**
+		The default transition to use for navigating to the next tab.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var nextTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
+
 	private var _ignoreSelectionChange = false;
 
 	override private function initialize():Void {
@@ -280,12 +295,16 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this.tabBar.itemToText = this.itemToText;
 			this.tabBar.dataProvider = this._dataProvider;
 
-			if (!this._previousEdgePuller.active && !this._nextEdgePuller.active) {
-				this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0;
-				this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
-			}
 			this._previousEdgePuller.simulateTouch = this._simulateTouch;
 			this._nextEdgePuller.simulateTouch = this._simulateTouch;
+		}
+
+		if (dataInvalid || selectionInvalid) {
+			this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0 && !this._nextEdgePuller.active;
+			this._nextEdgePuller.enabled = this._enabled
+				&& this._swipeEnabled
+				&& this._selectedIndex < this.maxSelectedIndex
+				&& !this._previousEdgePuller.active;
 		}
 
 		if (selectionInvalid) {
@@ -375,15 +394,19 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		item.returnView(view);
 	}
 
-	private function previousDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
-		this._dragTransitionContext = new EventToPositionEffectContext(SlideTransitions.right()(one, two), this._previousEdgePuller, Event.CHANGE, (event) -> {
+	private function startPreviousDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
+		var effectContext = this.previousTransition(one, two);
+		this._previousEdgePuller.snapDuration = effectContext.duration;
+		this._dragTransitionContext = new EventToPositionEffectContext(effectContext, this._previousEdgePuller, Event.CHANGE, (event) -> {
 			this._dragTransitionContext.position = this._previousEdgePuller.pullDistance / this.actualWidth;
 		});
 		return this._dragTransitionContext;
 	}
 
-	private function nextDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
-		this._dragTransitionContext = new EventToPositionEffectContext(SlideTransitions.left()(one, two), this._nextEdgePuller, Event.CHANGE, (event) -> {
+	private function startNextDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
+		var effectContext = this.nextTransition(one, two);
+		this._nextEdgePuller.snapDuration = effectContext.duration;
+		this._dragTransitionContext = new EventToPositionEffectContext(effectContext, this._nextEdgePuller, Event.CHANGE, (event) -> {
 			this._dragTransitionContext.position = this._nextEdgePuller.pullDistance / this.actualWidth;
 		});
 		return this._dragTransitionContext;
@@ -454,11 +477,16 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			return;
 		}
 
-		// disable the other edge until this edge's gesture is done
-		this._nextEdgePuller.enabled = false;
+		if (this.previousTransition != null) {
+			// disable the other edge until this edge's gesture is done
+			this._nextEdgePuller.enabled = false;
 
-		var item = this._dataProvider.get(newIndex);
-		this.showItemInternal(item.internalID, previousDragTransition);
+			var item = this._dataProvider.get(newIndex);
+			this.showItemInternal(item.internalID, this.startPreviousDragTransition);
+		} else {
+			event.preventDefault();
+			this.selectedIndex = newIndex;
+		}
 	}
 
 	private function tabNavigator_previousEdgePuller_cancelHandler(event:Event):Void {
@@ -495,11 +523,17 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			event.preventDefault();
 			return;
 		}
-		// disable the other edge until this edge's gesture is done
-		this._previousEdgePuller.enabled = false;
 
-		var item = this._dataProvider.get(newIndex);
-		this.showItemInternal(item.internalID, nextDragTransition);
+		if (this.nextTransition != null) {
+			// disable the other edge until this edge's gesture is done
+			this._previousEdgePuller.enabled = false;
+
+			var item = this._dataProvider.get(newIndex);
+			this.showItemInternal(item.internalID, this.startNextDragTransition);
+		} else {
+			event.preventDefault();
+			this.selectedIndex = newIndex;
+		}
 	}
 
 	private function tabNavigator_nextEdgePuller_cancelHandler(event:Event):Void {
