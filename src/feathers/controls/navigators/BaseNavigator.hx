@@ -369,6 +369,8 @@ class BaseNavigator extends FeathersControl {
 		if (this._activeItemView == null) {
 			return;
 		}
+		this._activeItemView.x = 0.0;
+		this._activeItemView.y = 0.0;
 		// don't set the width or height explicitly unless necessary because if
 		// our explicit dimensions are cleared later, the measurement may not be
 		// accurate anymore
