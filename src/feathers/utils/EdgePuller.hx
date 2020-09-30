@@ -542,6 +542,7 @@ class EdgePuller extends EventDispatcher {
 			// already active, and that's fine
 			return true;
 		}
+		this._active = true;
 		var result = true;
 		if (this._opened) {
 			result = FeathersEvent.dispatch(this, FeathersEvent.CLOSING, false, true);
@@ -549,11 +550,11 @@ class EdgePuller extends EventDispatcher {
 			result = FeathersEvent.dispatch(this, FeathersEvent.OPENING, false, true);
 		}
 		if (!result) {
+			this._active = false;
 			this._dragging = false;
 			this.cleanupAfterDrag();
 			return false;
 		}
-		this._active = true;
 		if (Std.is(this._target, DisplayObjectContainer)) {
 			var container = cast(this._target, DisplayObjectContainer);
 			this._restoreMouseChildren = container.mouseChildren;
