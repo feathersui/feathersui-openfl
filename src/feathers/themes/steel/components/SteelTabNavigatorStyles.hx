@@ -38,8 +38,10 @@ class SteelTabNavigatorStyles {
 
 				navigator.tabBarPosition = isDesktop ? TOP : BOTTOM;
 
-				navigator.previousTransition = SlideTransitions.right();
-				navigator.nextTransition = SlideTransitions.left();
+				if (!isDesktop) {
+					navigator.previousTransition = SlideTransitions.right();
+					navigator.nextTransition = SlideTransitions.left();
+				}
 			});
 		}
 	}
