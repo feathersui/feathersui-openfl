@@ -622,6 +622,8 @@ class BaseNavigator extends FeathersControl {
 			this.disposeView(previousItemID, previousView);
 		}
 
+		this.setInvalid(LAYOUT);
+
 		if (this.stage.focus == null || this.stage.focus.stage == null) {
 			if (Std.is(activeItemView, InteractiveObject)) {
 				this.stage.focus = cast(activeItemView, InteractiveObject);
@@ -659,6 +661,8 @@ class BaseNavigator extends FeathersControl {
 		this._activeViewMeasurements.save(this._activeItemView);
 		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_CANCEL);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+
+		this.setInvalid(LAYOUT);
 
 		if (this.stage.focus == null || this.stage.focus.stage == null) {
 			if (Std.is(this._activeItemView, InteractiveObject)) {
