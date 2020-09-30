@@ -229,6 +229,32 @@ class StackNavigator extends BaseNavigator {
 		return this._simulateTouch;
 	}
 
+	private var _popSwipeActiveEdgeSize:Float = 30.0;
+
+	/**
+		The size, measured in pixels, of the region where a pop swipe gesture
+		may begin.
+
+		@see `StackNavigator.popSwipeEnabled`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var popSwipeActiveEdgeSize(get, set):Float;
+
+	private function get_popSwipeActiveEdgeSize():Float {
+		return this._popSwipeActiveEdgeSize;
+	}
+
+	private function set_popSwipeActiveEdgeSize(value:Float):Float {
+		if (this._popSwipeActiveEdgeSize == value) {
+			return this._popSwipeActiveEdgeSize;
+		}
+		this._popSwipeActiveEdgeSize = value;
+		this.setInvalid(DATA);
+		return this._popSwipeActiveEdgeSize;
+	}
+
 	private var savedInject:(Dynamic) -> Void;
 	private var savedReturnedObject:Dynamic;
 	private var savedIsPop:Bool = false;
@@ -499,6 +525,7 @@ class StackNavigator extends BaseNavigator {
 
 		if (dataInvalid || selectionInvalid) {
 			this._backEdgePuller.enabled = this._enabled && this._popSwipeEnabled && this.stackSize > 1;
+			this._backEdgePuller.activeBorderSize = this._popSwipeActiveEdgeSize;
 			this._backEdgePuller.simulateTouch = this._simulateTouch;
 		}
 
