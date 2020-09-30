@@ -8,9 +8,11 @@
 
 package feathers.controls.navigators;
 
-import feathers.themes.steel.components.SteelStackNavigatorStyles;
 import feathers.events.FeathersEvent;
+import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
+import feathers.themes.steel.components.SteelStackNavigatorStyles;
+import feathers.utils.EdgePuller;
 import lime.ui.KeyCode;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -60,6 +62,10 @@ class StackNavigator extends BaseNavigator {
 		this.addEventListener(Event.ADDED_TO_STAGE, stackNavigator_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, stackNavigator_removedFromStageHandler);
 	}
+
+	private var _backEdgePuller:EdgePuller;
+
+	private var _dragTransitionContext:EventToPositionEffectContext;
 
 	/**
 		The default transition to use for push actions, if not overridden in the
@@ -172,9 +178,62 @@ class StackNavigator extends BaseNavigator {
 		return value;
 	}
 
+	private var _popSwipeEnabled:Bool = false;
+
+	/**
+		If `true`, a swipe left with touch may be used to pop the current view.
+
+		@see `StackNavigator.simulateTouch`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var popSwipeEnabled(get, set):Bool;
+
+	private function get_popSwipeEnabled():Bool {
+		return this._popSwipeEnabled;
+	}
+
+	private function set_popSwipeEnabled(value:Bool):Bool {
+		if (this._popSwipeEnabled == value) {
+			return this._popSwipeEnabled;
+		}
+		this._popSwipeEnabled = value;
+		this.setInvalid(DATA);
+		return this._popSwipeEnabled;
+	}
+
+	private var _simulateTouch:Bool = false;
+
+	/**
+		Determines if mouse events should be treated like touch events when
+		detecting a pop swipe.
+
+		@see `StackNavigator.popSwipeEnabled`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var simulateTouch(get, set):Bool;
+
+	private function get_simulateTouch():Bool {
+		return this._simulateTouch;
+	}
+
+	private function set_simulateTouch(value:Bool):Bool {
+		if (this._simulateTouch == value) {
+			return this._simulateTouch;
+		}
+		this._simulateTouch = value;
+		this.setInvalid(DATA);
+		return this._simulateTouch;
+	}
+
 	private var savedInject:(Dynamic) -> Void;
 	private var savedReturnedObject:Dynamic;
 	private var savedIsPop:Bool = false;
+
+	private var _poppedHistoryItems:Array<HistoryItem> = null;
 
 	private function initializeStackNavigatorTheme():Void {
 		SteelStackNavigatorStyles.initialize();
@@ -304,7 +363,7 @@ class StackNavigator extends BaseNavigator {
 				transition = this.popTransition;
 			}
 		}
-		this._history.pop();
+		this._poppedHistoryItems = [this._history.pop()];
 		var item = this._history[this._history.length - 1];
 		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, true);
 	}
@@ -337,6 +396,7 @@ class StackNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = this.popTransition;
 		}
+		this._poppedHistoryItems = this._history.slice(1);
 		this._history.resize(1);
 		var item = this._history[0];
 		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, true);
@@ -362,6 +422,7 @@ class StackNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = this.popTransition;
 		}
+		this._poppedHistoryItems = this._history.copy();
 		this._history.resize(0);
 		this.clearActiveItemInternal(transition);
 	}
@@ -421,6 +482,29 @@ class StackNavigator extends BaseNavigator {
 		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, false);
 	}
 
+	override private function initialize():Void {
+		super.initialize();
+
+		if (this._backEdgePuller == null) {
+			this._backEdgePuller = new EdgePuller(this, LEFT);
+			this._backEdgePuller.addEventListener(FeathersEvent.OPENING, stackNavigator_backEdgePuller_openingHandler);
+			this._backEdgePuller.addEventListener(Event.CANCEL, stackNavigator_backEdgePuller_cancelHandler);
+			this._backEdgePuller.addEventListener(Event.OPEN, stackNavigator_backEdgePuller_openHandler);
+		}
+	}
+
+	override private function update():Void {
+		var dataInvalid = this.isInvalid(DATA);
+		var selectionInvalid = this.isInvalid(SELECTION);
+
+		if (dataInvalid || selectionInvalid) {
+			this._backEdgePuller.enabled = this._enabled && this._popSwipeEnabled && this.stackSize > 1;
+			this._backEdgePuller.simulateTouch = this._simulateTouch;
+		}
+
+		super.update();
+	}
+
 	override private function getView(id:String):DisplayObject {
 		var item = cast(this._addedItems.get(id), StackItem);
 		var view = item.getView(this);
@@ -441,6 +525,21 @@ class StackNavigator extends BaseNavigator {
 		item.returnView(view);
 	}
 
+	override private function transitionComplete():Void {
+		// the transition completed successfully, so this is no longer needed
+		this._poppedHistoryItems = null;
+	}
+
+	override private function transitionCancel():Void {
+		if (this._poppedHistoryItems != null) {
+			for (item in this._poppedHistoryItems) {
+				// put it back into the history
+				this._history.push(item);
+			}
+			this._poppedHistoryItems = null;
+		}
+	}
+
 	private function showItemWithInjectAndReturnedObject(id:String, ?transition:(DisplayObject, DisplayObject) -> IEffectContext, ?inject:(Dynamic) -> Void,
 			returnedObject:Dynamic, isPop:Bool):DisplayObject {
 		this.savedInject = inject;
@@ -451,6 +550,15 @@ class StackNavigator extends BaseNavigator {
 		this.savedReturnedObject = null;
 		this.savedIsPop = false;
 		return result;
+	}
+
+	private function startBackDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
+		var effectContext = this.popTransition(one, two);
+		this._backEdgePuller.snapDuration = effectContext.duration;
+		this._dragTransitionContext = new EventToPositionEffectContext(effectContext, this._backEdgePuller, Event.CHANGE, (event) -> {
+			this._dragTransitionContext.position = this._backEdgePuller.pullDistance / this.actualWidth;
+		});
+		return this._dragTransitionContext;
 	}
 
 	private function stackNavigator_initializeHandler(event:FeathersEvent):Void {
@@ -497,6 +605,45 @@ class StackNavigator extends BaseNavigator {
 			case KeyCode.APP_CONTROL_BACK:
 				this.stackNavigator_stage_backKeyUpHandler(event);
 		}
+	}
+
+	private function stackNavigator_backEdgePuller_openingHandler(event:FeathersEvent):Void {
+		if (this.stackSize <= 1) {
+			event.preventDefault();
+			return;
+		}
+
+		if (this.popTransition != null) {
+			this.popItem(null, this.startBackDragTransition);
+		} else {
+			event.preventDefault();
+			this.popItem();
+		}
+	}
+
+	private function stackNavigator_backEdgePuller_cancelHandler(event:Event):Void {
+		var context = this._dragTransitionContext;
+		context.dispatcher = null;
+		this._dragTransitionContext = null;
+		FeathersEvent.dispatch(context, Event.CANCEL);
+
+		this._backEdgePuller.enabled = this._enabled && this._popSwipeEnabled && this.stackSize > 1;
+	}
+
+	private function stackNavigator_backEdgePuller_openHandler(event:Event):Void {
+		var context = this._dragTransitionContext;
+		context.dispatcher = null;
+		this._dragTransitionContext = null;
+		FeathersEvent.dispatch(context, Event.COMPLETE);
+
+		// reset back to the closed state so that we can detect the next swipe
+		var oldSnapDuration = this._backEdgePuller.snapDuration;
+		// temporarily disable the animation
+		this._backEdgePuller.snapDuration = 0.0;
+		this._backEdgePuller.opened = false;
+		this._backEdgePuller.snapDuration = oldSnapDuration;
+
+		this._backEdgePuller.enabled = this._enabled && this._popSwipeEnabled && this.stackSize > 1;
 	}
 }
 
