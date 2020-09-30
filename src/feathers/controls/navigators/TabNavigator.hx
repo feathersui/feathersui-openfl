@@ -108,6 +108,8 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		return this._dataProvider;
 	}
 
+	private var _activeItemIndex:Int = -1;
+
 	private var _selectedIndex:Int = -1;
 
 	/**
@@ -300,25 +302,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 
 		if (dataInvalid || selectionInvalid) {
-			this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0 && !this._nextEdgePuller.active;
-			this._nextEdgePuller.enabled = this._enabled
-				&& this._swipeEnabled
-				&& this._selectedIndex < this.maxSelectedIndex
-				&& !this._previousEdgePuller.active;
-		}
-
-		if (selectionInvalid) {
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			this.tabBar.selectedIndex = this._selectedIndex;
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-
-			if (this._selectedItem == null && this.activeItemID != null) {
-				this.clearActiveItemInternal();
-			}
-			if (this._selectedItem != null && this.activeItemID != this._selectedItem.internalID) {
-				this.showItemInternal(this._selectedItem.internalID, null);
-			}
+			this.refreshSelection();
 		}
 
 		super.update();
@@ -392,6 +376,36 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	override private function disposeView(id:String, view:DisplayObject):Void {
 		var item = cast(this._addedItems.get(id), TabItem);
 		item.returnView(view);
+	}
+
+	private function refreshSelection():Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		this.tabBar.selectedIndex = this._selectedIndex;
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+
+		if (this._selectedItem == null) {
+			this._activeItemIndex = -1;
+			if (this.activeItemID != null) {
+				this.clearActiveItemInternal();
+			}
+		} else if (this._selectedItem != null) {
+			var oldIndex = this._activeItemIndex;
+			this._activeItemIndex = this._selectedIndex;
+			if (!this._previousEdgePuller.active && !this._nextEdgePuller.active && this._activeItemID != this._selectedItem.internalID) {
+				var transition:(DisplayObject, DisplayObject) -> IEffectContext = null;
+				if (oldIndex != -1 && oldIndex != this._selectedIndex) {
+					transition = (oldIndex < this._selectedIndex) ? this.nextTransition : this.previousTransition;
+				}
+				this.showItemInternal(this._selectedItem.internalID, transition);
+			}
+		}
+
+		this._previousEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex > 0 && !this._nextEdgePuller.active;
+		this._nextEdgePuller.enabled = this._enabled
+			&& this._swipeEnabled
+			&& this._selectedIndex < this.maxSelectedIndex
+			&& !this._previousEdgePuller.active;
 	}
 
 	private function startPreviousDragTransition(one:DisplayObject, two:DisplayObject):IEffectContext {
