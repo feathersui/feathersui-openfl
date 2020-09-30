@@ -405,6 +405,24 @@ class BaseNavigator extends FeathersControl {
 		throw new IllegalOperationError("Missing override of BaseNavigator.disposeView()");
 	}
 
+	/**
+		To be optionally overridden by subclasses to handle a completed
+		transition.
+
+		@since 1.0.0
+	**/
+	@:dox(show)
+	private function transitionComplete():Void {}
+
+	/**
+		To be optionally overridden by subclasses to handle a completed
+		transition.
+
+		@since 1.0.0
+	**/
+	@:dox(show)
+	private function transitionCancel():Void {}
+
 	private function addItemInternal(id:String, item:Dynamic):Void {
 		if (this._addedItems.exists(id)) {
 			throw new ArgumentError('Item with id \'$id\' already defined. Cannot add two items with the same id.');
@@ -610,6 +628,7 @@ class BaseNavigator extends FeathersControl {
 		this._previousViewInTransition = null;
 		this._previousViewInTransitionID = null;
 
+		this.transitionComplete();
 		// we need to dispatch this event before the previous view's
 		// owner property is set to null because legacy code that was
 		// written before TRANSITION_OUT_COMPLETE existed may be using
@@ -660,6 +679,7 @@ class BaseNavigator extends FeathersControl {
 		this._previousViewInTransitionID = null;
 		this._activeViewMeasurements.save(this._activeItemView);
 		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_CANCEL);
+		this.transitionCancel();
 		FeathersEvent.dispatch(this, Event.CHANGE);
 
 		this.setInvalid(LAYOUT);
