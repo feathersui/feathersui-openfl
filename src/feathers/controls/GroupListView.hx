@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.GroupListViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.core.IUIControl;
@@ -1147,6 +1148,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return -1;
 	}
 
+	private function dispatchItemTriggerEvent(data:Dynamic):Void {
+		var location = this._dataProvider.locationOf(data);
+		var type = location.length == 1 ? HEADER : STANDARD;
+		var layoutIndex = this.locationToDisplayIndex(location);
+		this.populateCurrentItemState(data, type, location, layoutIndex);
+		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, this._currentItemState);
+	}
+
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
 		if (this._layoutItems.length == 0) {
 			return;
@@ -1203,6 +1212,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(item);
+
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -1221,6 +1234,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(item);
+
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
@@ -1238,6 +1255,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (!this._enabled) {
 			return;
 		}
+
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(item);
 
 		if (!this._selectable) {
 			return;
