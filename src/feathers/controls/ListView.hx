@@ -8,8 +8,6 @@
 
 package feathers.controls;
 
-import feathers.core.IUIControl;
-import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -18,14 +16,15 @@ import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
 import feathers.core.ITextControl;
-import feathers.core.InvalidationFlag;
+import feathers.core.IUIControl;
 import feathers.data.IFlatCollection;
 import feathers.data.ListViewItemState;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.ListViewEvent;
-import feathers.layout.Direction;
+import feathers.events.TriggerEvent;
 import feathers.layout.ILayout;
+import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.themes.steel.components.SteelListViewStyles;
@@ -265,17 +264,26 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (!this._selectable || this._dataProvider == null) {
 			value = -1;
 		}
-		if (this._selectedIndex == value) {
+		if (this._selectedIndex == value && this._selectedIndices.length <= 1) {
+			return this._selectedIndex;
+		}
+		if (value == -1) {
+			this._selectionAnchorIndex = -1;
+			this._selectedIndex = -1;
+			this._selectedItem = null;
+			this._selectedIndices.resize(0);
+			this._selectedItems.resize(0);
+			this.setInvalid(SELECTION);
+			FeathersEvent.dispatch(this, Event.CHANGE);
 			return this._selectedIndex;
 		}
 		this._selectedIndex = value;
-		// using variable because if we were to call the selectedItem setter,
-		// then this change wouldn't be saved properly
-		if (this._selectedIndex == -1) {
-			this._selectedItem = null;
-		} else {
-			this._selectedItem = this._dataProvider.get(this._selectedIndex);
-		}
+		this._selectedItem = this._dataProvider.get(this._selectedIndex);
+		this._selectedIndices.resize(1);
+		this._selectedIndices[0] = this._selectedIndex;
+		this._selectedItems.resize(1);
+		this._selectedItems[0] = this._selectedItem;
+		this._selectionAnchorIndex = this._selectedIndex;
 		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
@@ -307,14 +315,163 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (!this._selectable || this._dataProvider == null) {
+		if (value == null || !this._selectable || this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
-		// use the setter
-		this.selectedIndex = this._dataProvider.indexOf(value);
-		return this._selectedItem;
+		var index = this._dataProvider.indexOf(value);
+		if (index == -1) {
+			// use the setter
+			this.selectedIndex = -1;
+			return this._selectedItem;
+		}
+		if (this._selectedIndex == index && this._selectedIndices.length <= 0) {
+			return this._selectedItem;
+		}
+		this._selectedIndex = index;
+		this._selectedItem = value;
+		this._selectedIndices.resize(1);
+		this._selectedIndices[0] = this._selectedIndex;
+		this._selectedItems.resize(1);
+		this._selectedItems[0] = this._selectedItem;
+		this._selectionAnchorIndex = this._selectedIndex;
+		this.setInvalid(SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._selectedIndex;
+	}
+
+	private var _allowMultipleSelection:Bool = false;
+
+	/**
+		Determines if multiple items may be selected at the same time. Has no
+		effect if `selectable` is `false`.
+
+		In the following example, multiple selection is enabled:
+
+		```hx
+		listView.allowMultipleSelection = true;
+		```
+
+		@see `ListView.selectable`
+		@see `ListView.selectedIndices`
+		@see `ListView.selectedItems`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var allowMultipleSelection(get, set):Bool;
+
+	private function get_allowMultipleSelection():Bool {
+		return this._allowMultipleSelection;
+	}
+
+	private function set_allowMultipleSelection(value:Bool):Bool {
+		if (this._allowMultipleSelection == value) {
+			return this._allowMultipleSelection;
+		}
+		this._allowMultipleSelection = value;
+		this.setInvalid(SELECTION);
+		return this._allowMultipleSelection;
+	}
+
+	private var _selectionAnchorIndex:Int = -1;
+
+	private var _selectedIndices:Array<Int> = [];
+
+	/**
+
+		@see `ListView.allowMultipleSelection`
+		@see `ListView.selectedItems`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectedIndices(get, set):Array<Int>;
+
+	private function get_selectedIndices():Array<Int> {
+		return this._selectedIndices;
+	}
+
+	private function set_selectedIndices(value:Array<Int>):Array<Int> {
+		if (value == null || value.length == 0 || !this._selectable || this._dataProvider == null) {
+			// use the setter
+			this.selectedIndex = -1;
+			return this._selectedIndices;
+		}
+		if (this._selectedIndices == value) {
+			return this._selectedIndices;
+		}
+		if (!this._allowMultipleSelection && value.length > 1) {
+			value.resize(1);
+		}
+		this._selectedIndices = value;
+		this._selectedIndex = this._selectedIndices[0];
+		this._selectedItems.resize(this._selectedIndices.length);
+		for (i in 0...this._selectedIndices.length) {
+			var index = this._selectedIndices[i];
+			this._selectedItems[i] = this._dataProvider.get(index);
+		}
+		this._selectedItem = this._selectedItems[0];
+		this._selectionAnchorIndex = this._selectedIndex;
+		this.setInvalid(SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._selectedIndices;
+	}
+
+	private var _selectedItems:Array<Dynamic> = [];
+
+	/**
+
+		@see `ListView.allowMultipleSelection`
+		@see `ListView.selectedIndices`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectedItems(get, set):Array<Dynamic>;
+
+	private function get_selectedItems():Array<Dynamic> {
+		return this._selectedItems;
+	}
+
+	private function set_selectedItems(value:Array<Dynamic>):Array<Dynamic> {
+		if (value == null || value.length == 0 || !this._selectable || this._dataProvider == null) {
+			// use the setter
+			this.selectedIndex = -1;
+			return this._selectedItems;
+		}
+		if (this._selectedItems == value) {
+			return this._selectedItems;
+		}
+		if (!this._allowMultipleSelection && value.length > 1) {
+			value.resize(1);
+		}
+		var indices:Array<Int> = [];
+		var i = 0;
+		while (i < value.length) {
+			var item = value[i];
+			var index = this._dataProvider.indexOf(item);
+			if (index == -1) {
+				value.splice(i, 1);
+				continue;
+			}
+			indices.push(index);
+			i++;
+		}
+		this._selectedIndices = indices;
+		this._selectedItems = value;
+		if (value.length == 0) {
+			this._selectedIndex = -1;
+			this._selectedItem = null;
+		} else {
+			this._selectedIndex = this._selectedIndices[0];
+			this._selectedItem = this._selectedItems[0];
+		}
+		this._selectionAnchorIndex = this._selectedIndex;
+		this.setInvalid(SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._selectedIndices;
 	}
 
 	private var _previousLayout:ILayout;
@@ -665,6 +822,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this.itemRendererToData.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
+			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, listView_itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
@@ -759,7 +917,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
-		this._currentItemState.selected = item == this._selectedItem;
+		this._currentItemState.selected = this._selectedIndices.contains(index);
 		this._currentItemState.enabled = this._enabled;
 		this._currentItemState.text = itemToText(item);
 	}
@@ -816,10 +974,16 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer = this.inactiveItemRenderers.shift();
 		}
 		this.refreshItemRendererProperties(itemRenderer, item, index);
-		itemRenderer.addEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
-		#if (openfl >= "9.0.0")
-		itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
-		#end
+		if (Std.is(itemRenderer, ITriggerView)) {
+			// prefer TriggerEvent.TRIGGER
+			itemRenderer.addEventListener(TriggerEvent.TRIGGER, listView_itemRenderer_triggerHandler);
+		} else {
+			// fall back to these events if TriggerEvent.TRIGGER isn't available
+			itemRenderer.addEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
+			#if (openfl >= "9.0.0")
+			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
+			#end
+		}
 		if (Std.is(itemRenderer, IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 		}
@@ -850,6 +1014,49 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, this._currentItemState);
 	}
 
+	private function handleSelectionChange(item:Dynamic, index:Int, ctrlKey:Bool, shiftKey:Bool):Void {
+		if (index == -1 || !this._selectable) {
+			// use the setter
+			this.selectedItem = null;
+			return;
+		}
+		var selectionIndex = this._selectedItems.indexOf(item);
+		if (this._allowMultipleSelection && (ctrlKey || shiftKey)) {
+			if (shiftKey) {
+				var anchorIndex = this._selectionAnchorIndex;
+				if (anchorIndex == -1) {
+					anchorIndex = 0;
+				}
+				var selectedIndices:Array<Int> = [];
+				var startIndex = Std.int(Math.min(anchorIndex, index));
+				var endIndex = Std.int(Math.max(anchorIndex, index));
+				for (i in startIndex...(endIndex + 1)) {
+					selectedIndices.push(i);
+				}
+				this.selectedIndices = selectedIndices;
+				// make sure the anchor remains the same as before
+				this._selectionAnchorIndex = anchorIndex;
+			} else {
+				if (selectionIndex == -1) {
+					var selectedItems = this._selectedItems.copy();
+					selectedItems.push(item);
+					// use the setter
+					this.selectedItems = selectedItems;
+				} else {
+					var selectedItems = this._selectedItems.copy();
+					selectedItems.splice(selectionIndex, 1);
+					// use the setter
+					this.selectedItems = selectedItems;
+				}
+				// even if deselecting, this is the new anchor
+				this._selectionAnchorIndex = index;
+			}
+		} else {
+			// use the setter
+			this.selectedItem = item;
+		}
+	}
+
 	private function listView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			return;
@@ -860,19 +1067,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var data = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(data);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(item);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (Std.is(itemRenderer, IToggle)) {
-			// handled by Event.CHANGE listener instead
-			return;
-		}
-		// use the setter
-		this.selectedIndex = this._dataProvider.indexOf(data);
+		var index = this._dataProvider.indexOf(item);
+		this.handleSelectionChange(item, index, event.ctrlKey, event.shiftKey);
 	}
 
 	private function listView_itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -881,37 +1083,39 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var data = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(data);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(item);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (Std.is(itemRenderer, IToggle)) {
-			// handled by Event.CHANGE listener instead
+		var index = this._dataProvider.indexOf(item);
+		this.handleSelectionChange(item, index, event.ctrlKey, event.shiftKey);
+	}
+
+	private function listView_itemRenderer_triggerHandler(event:TriggerEvent):Void {
+		if (!this._enabled) {
 			return;
 		}
-		// use the setter
-		this.selectedItem = data;
+
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var item = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(item);
+
+		if (!this._selectable) {
+			return;
+		}
+		var index = this._dataProvider.indexOf(item);
+		this.handleSelectionChange(item, index, event.ctrlKey, event.shiftKey);
 	}
 
 	private function listView_itemRenderer_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (!this._selectable) {
-			var toggle = cast(itemRenderer, IToggle);
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			toggle.selected = false;
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			return;
-		}
-		var item = this.itemRendererToData.get(itemRenderer);
-		// use the setter
-		this.selectedItem = item;
+		// if we get here, the selected property of the renderer changed
+		// unexpectedly, and we need to restore its proper state
+		this.setInvalid(SELECTION);
 	}
 
 	private function listView_dataProvider_changeHandler(event:Event):Void {

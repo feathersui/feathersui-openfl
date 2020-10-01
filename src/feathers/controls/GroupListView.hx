@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.core.IUIControl;
 import openfl.errors.ArgumentError;
@@ -794,11 +795,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this.itemRendererToLayoutIndex.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
 			if (type == STANDARD) {
+				itemRenderer.removeEventListener(TriggerEvent.TRIGGER, groupListView_itemRenderer_triggerHandler);
 				itemRenderer.removeEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
 				itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
-				if (Std.is(itemRenderer, IToggle)) {
-					itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
-				}
+				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
 			this._currentItemState.owner = this;
 			this._currentItemState.type = type;
@@ -944,10 +944,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
 		if (type == STANDARD) {
-			itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
-			#if (openfl >= "9.0.0")
-			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
-			#end
+			if (Std.is(itemRenderer, ITriggerView)) {
+				itemRenderer.addEventListener(TriggerEvent.TRIGGER, groupListView_itemRenderer_triggerHandler);
+			} else {
+				itemRenderer.addEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
+				#if (openfl >= "9.0.0")
+				itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
+				#end
+			}
 			if (Std.is(itemRenderer, IToggle)) {
 				itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
@@ -1198,14 +1202,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
+
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (Std.is(itemRenderer, IToggle)) {
-			// handled by Event.CHANGE listener instead
-			return;
-		}
 		var data = this.itemRendererToData.get(itemRenderer);
 		var location = this._dataProvider.locationOf(data);
 		if (location == null || location.length != 2) {
@@ -1219,14 +1220,29 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (!this._enabled) {
 			return;
 		}
+
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (Std.is(itemRenderer, IToggle)) {
-			// handled by Event.CHANGE listener instead
+		var data = this.itemRendererToData.get(itemRenderer);
+		var location = this._dataProvider.locationOf(data);
+		if (location == null || location.length != 2) {
 			return;
 		}
+		// use the setter
+		this.selectedLocation = location;
+	}
+
+	private function groupListView_itemRenderer_triggerHandler(event:TriggerEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		if (!this._selectable) {
+			return;
+		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var data = this.itemRendererToData.get(itemRenderer);
 		var location = this._dataProvider.locationOf(data);
 		if (location == null || location.length != 2) {
@@ -1240,27 +1256,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._ignoreSelectionChange) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (!this._selectable) {
-			var toggle = cast(itemRenderer, IToggle);
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			toggle.selected = false;
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			return;
-		}
-		var item = this.itemRendererToData.get(itemRenderer);
-		var location = this._dataProvider.locationOf(item);
-		if (location.length == 1) {
-			var toggle = cast(itemRenderer, IToggle);
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			toggle.selected = false;
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			return;
-		}
-		// use the setter
-		this.selectedItem = item;
+		// if we get here, the selected property of the renderer changed
+		// unexpectedly, and we need to restore its proper state
+		this.setInvalid(SELECTION);
 	}
 
 	private function groupListView_dataProvider_changeHandler(event:Event):Void {

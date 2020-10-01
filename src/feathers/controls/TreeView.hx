@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
 import feathers.core.IUIControl;
 import openfl.errors.ArgumentError;
 import feathers.layout.ILayoutIndexObject;
@@ -756,15 +757,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.itemRendererToData.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
 			this.dataToLayoutIndex.remove(item);
+			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, treeView_itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
-			if (Std.is(itemRenderer, IToggle)) {
-				itemRenderer.removeEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
-			}
-			if (Std.is(itemRenderer, IOpenCloseToggle)) {
-				itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
-				itemRenderer.removeEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
-			}
+			itemRenderer.removeEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
+			itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
+			itemRenderer.removeEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 			this._currentItemState.owner = this;
 			this._currentItemState.data = item;
 			this._currentItemState.location = null;
@@ -902,10 +900,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			itemRenderer = this.inactiveItemRenderers.shift();
 		}
 		this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
-		itemRenderer.addEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
-		#if (openfl >= "9.0.0")
-		itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
-		#end
+		if (Std.is(itemRenderer, ITriggerView)) {
+			// prefer TriggerEvent.TRIGGER
+			itemRenderer.addEventListener(TriggerEvent.TRIGGER, treeView_itemRenderer_triggerHandler);
+		} else {
+			// fall back to these events if TriggerEvent.TRIGGER isn't available
+			itemRenderer.addEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
+			#if (openfl >= "9.0.0")
+			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
+			#end
+		}
 		if (Std.is(itemRenderer, IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
 		}
@@ -1209,10 +1213,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		if (Std.is(itemRenderer, IToggle)) {
-			// handled by Event.CHANGE listener instead
-			return;
-		}
 		// use the setter
 		this.selectedLocation = this._dataProvider.locationOf(data);
 	}
@@ -1228,8 +1228,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		if (Std.is(itemRenderer, IToggle)) {
-			// handled by Event.CHANGE listener instead
+		// use the setter
+		this.selectedLocation = this._dataProvider.locationOf(data);
+	}
+
+	private function treeView_itemRenderer_triggerHandler(event:TriggerEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var data = this.itemRendererToData.get(itemRenderer);
+		this.dispatchItemTriggerEvent(data);
+
+		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
 		// use the setter
@@ -1240,18 +1251,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		if (!this._selectable) {
-			var toggle = cast(itemRenderer, IToggle);
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			toggle.selected = false;
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			return;
-		}
-		var item = this.itemRendererToData.get(itemRenderer);
-		// use the setter
-		this.selectedItem = item;
+		// if we get here, the selected property of the renderer changed
+		// unexpectedly, and we need to restore its proper state
+		this.setInvalid(SELECTION);
 	}
 
 	private function treeView_itemRenderer_openHandler(event:Event):Void {

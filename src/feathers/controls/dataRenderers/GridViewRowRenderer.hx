@@ -8,27 +8,25 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IUIControl;
-import feathers.layout.ILayoutIndexObject;
-import openfl.events.Event;
-import feathers.events.FeathersEvent;
-import openfl.events.MouseEvent;
-import openfl.events.TouchEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.ITextControl;
-import feathers.core.InvalidationFlag;
+import feathers.core.IUIControl;
 import feathers.data.GridViewCellState;
 import feathers.data.IFlatCollection;
+import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
+import feathers.layout.ILayoutIndexObject;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 #if air
 import openfl.ui.Multitouch;
 #end
-
-@:event(openfl.events.Event.CHANGE)
 
 /**
 	Renders a row of data in the `GridView` component.
@@ -39,7 +37,7 @@ import openfl.ui.Multitouch;
 **/
 @:dox(hide)
 @:access(feathers.data.GridViewCellState)
-class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDataRenderer {
+class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
@@ -123,6 +121,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selected;
 	}
+
+	private var _ignoreSelectionChange = false;
 
 	public var selectable:Bool = true;
 
@@ -319,6 +319,10 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			}
 			this._cellRendererToColumn.remove(cellRenderer);
 			this._columnToCellRenderer.remove(column);
+			cellRenderer.removeEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
+			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
+			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, cellRenderer_triggerHandler);
+			cellRenderer.removeEventListener(Event.CHANGE, cellRenderer_changeHandler);
 			this._currentCellState.owner = this._gridView;
 			this._currentCellState.data = this._data;
 			this._currentCellState.rowIndex = -1;
@@ -327,6 +331,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			this._currentCellState.selected = false;
 			this._currentCellState.enabled = true;
 			this._currentCellState.text = null;
+			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+			this._ignoreSelectionChange = true;
 			var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 			if (cellRendererRecycler != null && cellRendererRecycler.reset != null) {
 				cellRendererRecycler.reset(cellRenderer, this._currentCellState);
@@ -352,8 +358,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 				var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
 				layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
 			}
-			cellRenderer.removeEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
-			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
 
@@ -385,8 +390,19 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			cellRenderer = storage.inactiveCellRenderers.shift();
 		}
 		this.refreshCellRendererProperties(cellRenderer, columnIndex, column);
-		cellRenderer.addEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
-		cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
+		if (Std.is(cellRenderer, ITriggerView)) {
+			// prefer TriggerEvent.TRIGGER
+			cellRenderer.addEventListener(TriggerEvent.TRIGGER, cellRenderer_triggerHandler);
+		} else {
+			// fall back to these events if TriggerEvent.TRIGGER isn't available
+			cellRenderer.addEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
+			#if (openfl >= "9.0.0")
+			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
+			#end
+		}
+		if (Std.is(cellRenderer, IToggle)) {
+			cellRenderer.addEventListener(Event.CHANGE, cellRenderer_changeHandler);
+		}
 		this._cellRendererToColumn.set(cellRenderer, column);
 		this._columnToCellRenderer.set(column, cellRenderer);
 		storage.activeCellRenderers.push(cellRenderer);
@@ -415,6 +431,8 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
 		var storage = this._defaultStorage;
 		this.populateCurrentItemState(columnIndex, column);
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
 		if (storage.cellRendererRecycler.update != null) {
 			storage.cellRendererRecycler.update(cellRenderer, this._currentCellState);
 		}
@@ -441,6 +459,7 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
 			layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
 		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
 	private function cellRenderer_touchTapHandler(event:TouchEvent):Void {
@@ -451,22 +470,30 @@ class GridViewRowRenderer extends LayoutGroup implements IToggle implements IDat
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
-		if (!this.selectable) {
-			return;
-		}
-		// use the setter
-		this.selected = true;
+		TriggerEvent.dispatchFromTouchEvent(this, event);
 	}
 
 	private function cellRenderer_clickHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
-		if (!this.selectable) {
+		TriggerEvent.dispatchFromMouseEvent(this, event);
+	}
+
+	private function cellRenderer_triggerHandler(event:TriggerEvent):Void {
+		if (!this._enabled) {
 			return;
 		}
-		// use the setter
-		this.selected = true;
+		this.dispatchEvent(event.clone());
+	}
+
+	private function cellRenderer_changeHandler(event:Event):Void {
+		if (this._ignoreSelectionChange) {
+			return;
+		}
+		// if we get here, the selected property of the renderer changed
+		// unexpectedly, and we need to restore its proper state
+		this.setInvalid(SELECTION);
 	}
 }
 
