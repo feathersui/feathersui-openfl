@@ -10,7 +10,6 @@ package feathers.controls.dataRenderers;
 
 import feathers.core.IFocusObject;
 import feathers.core.IValidating;
-import feathers.events.TriggerEvent;
 import feathers.layout.ILayoutIndexObject;
 import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelItemRendererStyles;
@@ -42,6 +41,9 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		// for some reason, useHandCursor = false is not always respected
 		// so buttonMode needs to be false
 		this.buttonMode = false;
+
+		// toggling is handled by the owner component, like ListView
+		this.toggleable = false;
 	}
 
 	private var _data:Dynamic;
@@ -618,17 +620,6 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			this.secondaryTextField.y = this.textField.y + this._textMeasuredHeight + this.gap;
 			this.secondaryTextField.width = this._secondaryTextMeasuredWidth < availableTextWidth ? this._secondaryTextMeasuredWidth : availableTextWidth;
 		}
-	}
-
-	override private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
-		if (!this._enabled) {
-			event.stopImmediatePropagation();
-			return;
-		}
-		if (!this.toggleable || this._selected) {
-			return;
-		}
-		this.selected = !this._selected;
 	}
 
 	private function itemRenderer_secondaryTextFormat_changeHandler(event:Event):Void {
