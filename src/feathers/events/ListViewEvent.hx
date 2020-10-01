@@ -47,7 +47,7 @@ class ListViewEvent extends Event {
 		Dispatches a pooled event with the specified properties.
 
 		```hx
-		ListViewEvent.dispatch(component, Event.ADD_ITEM, state);
+		ListViewEvent.dispatch(component, ListViewEvent.ITEM_TRIGGER, state);
 		```
 
 		@since 1.0.0
