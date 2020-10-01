@@ -32,6 +32,22 @@ class TreeViewEvent extends Event {
 	**/
 	public static inline var ITEM_TRIGGER:EventType<TreeViewEvent> = "itemTrigger";
 
+	/**
+		The `TreeViewEvent.BRANCH_OPEN` event type is dispatched when a branch
+		is opened.
+
+		@since 1.0.0
+	**/
+	public static inline var BRANCH_OPEN:EventType<TreeViewEvent> = "branchOpen";
+
+	/**
+		The `TreeViewEvent.BRANCH_CLOSE` event type is dispatched when a branch
+		is closed.
+
+		@since 1.0.0
+	**/
+	public static inline var BRANCH_CLOSE:EventType<TreeViewEvent> = "branchClose";
+
 	#if !flash
 	private static var _pool = new ObjectPool<TreeViewEvent>(() -> return new TreeViewEvent(null, null), (event) -> {
 		event.target = null;

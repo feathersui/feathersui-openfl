@@ -45,9 +45,9 @@ import openfl.ui.Multitouch;
 #end
 
 @:event(openfl.events.Event.CHANGE)
-@:event(openfl.events.Event.OPEN)
-@:event(openfl.events.Event.CLOSE)
 @:event(feathers.events.TreeViewEvent.ITEM_TRIGGER)
+@:event(feathers.events.TreeViewEvent.BRANCH_OPEN)
+@:event(feathers.events.TreeViewEvent.BRANCH_CLOSE)
 
 /**
 	Displays a hierarchical tree of items. Supports scrolling, custom item
@@ -576,14 +576,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.openBranches.push(branch);
 			var layoutIndex = this.dataToLayoutIndex.get(branch);
 			var location = this._dataProvider.locationOf(branch);
+			this.populateCurrentItemState(branch, location, layoutIndex);
 			insertChildrenIntoVirtualCache(location, layoutIndex);
-			FeathersEvent.dispatch(this, Event.OPEN);
+			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, this._currentItemState);
 		} else {
 			this.openBranches.remove(branch);
 			var layoutIndex = this.dataToLayoutIndex.get(branch);
 			var location = this._dataProvider.locationOf(branch);
+			this.populateCurrentItemState(branch, location, layoutIndex);
 			removeChildrenFromVirtualCache(location, layoutIndex);
-			FeathersEvent.dispatch(this, Event.CLOSE);
+			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, this._currentItemState);
 		}
 		this.setInvalid(DATA);
 	}
