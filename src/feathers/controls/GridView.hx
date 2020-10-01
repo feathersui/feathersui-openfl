@@ -477,6 +477,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _selectedIndices:Array<Int> = [];
 
 	/**
+		Contains all of the indices that are currently selected. The most
+		recently selected index will appear at the beginning of the array. In
+		other words, the indices are in the reverse order that they were
+		selected by the user.
+
+		When the `selectedIndices` array contains multiple items, the
+		`selectedIndex` property will return the first item from
+		`selectedIndices`.
 
 		@see `GridView.allowMultipleSelection`
 		@see `GridView.selectedItems`
@@ -519,6 +527,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _selectedItems:Array<Dynamic> = [];
 
 	/**
+		Contains all of the items that are currently selected. The most
+		recently selected item will appear at the beginning of the array. In
+		other words, the items are in the reverse order that they were
+		selected by the user.
+
+		When the `selectedItems` array contains multiple items, the
+		`selectedItem` property will return the first item from `selectedItems`.
 
 		@see `GridView.allowMultipleSelection`
 		@see `GridView.selectedIndices`
@@ -1194,10 +1209,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 					anchorIndex = 0;
 				}
 				var selectedIndices:Array<Int> = [];
-				var startIndex = Std.int(Math.min(anchorIndex, index));
-				var endIndex = Std.int(Math.max(anchorIndex, index));
-				for (i in startIndex...(endIndex + 1)) {
-					selectedIndices.push(i);
+				if (index == anchorIndex) {
+					selectedIndices.unshift(anchorIndex);
+				} else {
+					var i = anchorIndex;
+					do {
+						selectedIndices.unshift(i);
+						i += (anchorIndex > index) ? -1 : 1;
+					} while (i != index);
+					if (index != anchorIndex) {
+						selectedIndices.unshift(index);
+					}
 				}
 				this.selectedIndices = selectedIndices;
 				// make sure the anchor remains the same as before
@@ -1205,7 +1227,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			} else {
 				if (selectionIndex == -1) {
 					var selectedItems = this._selectedItems.copy();
-					selectedItems.push(item);
+					selectedItems.unshift(item);
 					// use the setter
 					this.selectedItems = selectedItems;
 				} else {
