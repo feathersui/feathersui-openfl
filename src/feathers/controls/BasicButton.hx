@@ -36,7 +36,7 @@ import openfl.events.MouseEvent;
 
 	@see `feathers.controls.Button`
 **/
-class BasicButton extends FeathersControl implements IStateContext<ButtonState> {
+class BasicButton extends FeathersControl implements ITriggerView implements IStateContext<ButtonState> {
 	/**
 		Creates a new `BasicButton` object.
 

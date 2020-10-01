@@ -38,7 +38,7 @@ import openfl.events.Event;
 
 	@see `feathers.controls.ToggleButton`
 **/
-class BasicToggleButton extends FeathersControl implements IToggle implements IStateContext<ToggleButtonState> {
+class BasicToggleButton extends FeathersControl implements ITriggerView implements IToggle implements IStateContext<ToggleButtonState> {
 	/**
 		Creates a new `BasicToggleButton` object.
 
