@@ -932,7 +932,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
 		this._currentItemState.index = index;
-		this._currentItemState.selected = this._selectedIndices.contains(index);
+		this._currentItemState.selected = this._selectedIndices.indexOf(index) != -1;
 		this._currentItemState.enabled = this._enabled;
 		this._currentItemState.text = itemToText(item);
 	}

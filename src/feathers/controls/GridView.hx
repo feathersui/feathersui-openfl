@@ -1085,7 +1085,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.data = item;
 		rowRenderer.rowIndex = index;
 		rowRenderer.selectable = this._selectable;
-		rowRenderer.selected = this._selectedIndices.contains(index);
+		rowRenderer.selected = this._selectedIndices.indexOf(index) != -1;
 		rowRenderer.cellRendererRecycler = this._cellRendererRecycler;
 		rowRenderer.columns = this._columns;
 		rowRenderer.enabled = this._enabled;
