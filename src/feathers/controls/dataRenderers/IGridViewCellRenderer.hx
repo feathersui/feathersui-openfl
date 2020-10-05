@@ -35,6 +35,14 @@ interface IGridViewCellRenderer extends IUIControl {
 	public var columnIndex(get, set):Int;
 
 	/**
+		The index of the row.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var rowIndex(get, set):Int;
+
+	/**
 		The `GridView` that contains this cell renderer.
 
 		@since 1.0.0

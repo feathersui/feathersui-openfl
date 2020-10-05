@@ -353,6 +353,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				var gridCell = cast(cellRenderer, IGridViewCellRenderer);
 				gridCell.column = this._currentCellState.column;
 				gridCell.columnIndex = this._currentCellState.columnIndex;
+				gridCell.rowIndex = this._currentCellState.rowIndex;
 			}
 			if (Std.is(cellRenderer, ILayoutIndexObject)) {
 				var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
@@ -454,6 +455,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			var gridCell = cast(cellRenderer, IGridViewCellRenderer);
 			gridCell.column = this._currentCellState.column;
 			gridCell.columnIndex = this._currentCellState.columnIndex;
+			gridCell.rowIndex = this._currentCellState.rowIndex;
 		}
 		if (Std.is(cellRenderer, ILayoutIndexObject)) {
 			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
