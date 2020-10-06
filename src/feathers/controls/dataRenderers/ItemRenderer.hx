@@ -262,7 +262,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		value of the `secondaryTextFormat` property will be used instead.
 
 		@see `ItemRenderer.getSecondaryTextFormatForState()`
-		@see `ItemRenderer.secondaryextFormat`
+		@see `ItemRenderer.secondaryTextFormat`
 		@see `ItemRenderer.currentState`
 		@see `feathers.controls.ToggleButtonState`
 
