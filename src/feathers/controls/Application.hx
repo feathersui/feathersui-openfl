@@ -8,17 +8,15 @@
 
 package feathers.controls;
 
-import feathers.core.DefaultFocusManager;
-import feathers.core.IFocusManager;
+import feathers.core.FocusManager;
+import feathers.core.IFocusObject;
 import feathers.core.PopUpManager;
 import feathers.themes.steel.components.SteelApplicationStyles;
-import feathers.utils.DeviceUtil;
 import feathers.utils.MathUtil;
 import feathers.utils.ScreenDensityScaleCalculator;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import openfl.system.Capabilities;
 
 /**
 	An optional root class for Feathers UI applications that will automatically
@@ -29,7 +27,7 @@ import openfl.system.Capabilities;
 	@since 1.0.0
 **/
 @:styleContext
-class Application extends LayoutGroup {
+class Application extends LayoutGroup implements IFocusObject {
 	private static function defaultPopUpContainerFactory():DisplayObjectContainer {
 		return new Sprite();
 	}
@@ -44,9 +42,9 @@ class Application extends LayoutGroup {
 
 		super();
 
-		#if !disable_focus_manager
-		this.focusManager = new DefaultFocusManager(this);
-		#end
+		// we just want a reference to the focus manager, and not to actually
+		// receive focus
+		this.focusEnabled = false;
 
 		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler, false, 100);
 	}
@@ -174,7 +172,7 @@ class Application extends LayoutGroup {
 		this._popUpContainer.scaleY = this._scaleFactor;
 	}
 
-	private function preparePopUpContainer():Void {
+	private function preparePopUpManager():Void {
 		if (this._popUpContainer == null) {
 			var factory = this.popUpContainerFactory;
 			if (factory == null) {
@@ -185,15 +183,33 @@ class Application extends LayoutGroup {
 		this.stage.addChild(this._popUpContainer);
 		var popUpManager = PopUpManager.forStage(this.stage);
 		popUpManager.root = this._popUpContainer;
+		popUpManager.focusManager = this._focusManager;
 	}
 
-	private function cleanupPopUpContainer():Void {
+	private function cleanupPopUpManager():Void {
 		var popUpManager = PopUpManager.forStage(this.stage);
 		if (popUpManager.root == this._popUpContainer) {
 			popUpManager.root = this.stage;
 		}
+		if (popUpManager.focusManager == this._focusManager) {
+			popUpManager.focusManager = null;
+		}
 		this.stage.removeChild(this._popUpContainer);
 		this._popUpContainer = null;
+	}
+
+	private function prepareFocusManager():Void {
+		#if !disable_focus_manager
+		FocusManager.addRoot(this);
+		#end
+	}
+
+	private function cleanupFocusManager():Void {
+		#if !disable_focus_manager
+		if (FocusManager.hasRoot(this)) {
+			FocusManager.removeRoot(this);
+		}
+		#end
 	}
 
 	private function application_addedToStageHandler(event:Event):Void {
@@ -204,14 +220,16 @@ class Application extends LayoutGroup {
 		#end
 		this.addEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
 		this.stage.addEventListener(Event.RESIZE, application_stage_resizeHandler, false, 0, true);
-		this.preparePopUpContainer();
+		this.prepareFocusManager();
+		this.preparePopUpManager();
 		this.refreshDimensions();
 	}
 
 	private function application_removedFromStageHandler(event:Event):Void {
 		this.removeEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
 		this.stage.removeEventListener(Event.RESIZE, application_stage_resizeHandler);
-		this.cleanupPopUpContainer();
+		this.cleanupPopUpManager();
+		this.cleanupFocusManager();
 	}
 
 	private function application_stage_resizeHandler(event:Event):Void {
