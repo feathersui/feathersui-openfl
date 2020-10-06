@@ -8,7 +8,6 @@
 
 package feathers.core;
 
-import openfl.errors.IllegalOperationError;
 import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusManager;
@@ -18,6 +17,7 @@ import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
+import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
@@ -38,7 +38,7 @@ class DefaultFocusManager implements IFocusManager {
 
 		@since 1.0.0
 	**/
-	public function new(root:DisplayObjectContainer) {
+	public function new(root:DisplayObject) {
 		this.root = root;
 	}
 
@@ -65,16 +65,16 @@ class DefaultFocusManager implements IFocusManager {
 		return this._enabled;
 	}
 
-	private var _root:DisplayObjectContainer = null;
+	private var _root:DisplayObject = null;
 
 	@:flash.property
-	public var root(get, set):DisplayObjectContainer;
+	public var root(get, set):DisplayObject;
 
-	private function get_root():DisplayObjectContainer {
+	private function get_root():DisplayObject {
 		return this._root;
 	}
 
-	private function set_root(value:DisplayObjectContainer):DisplayObjectContainer {
+	private function set_root(value:DisplayObject):DisplayObject {
 		if (this._root == value) {
 			return this._root;
 		}
@@ -162,8 +162,9 @@ class DefaultFocusManager implements IFocusManager {
 			if (currentFocus != null && currentFocus.parent != null) {
 				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 			}
-			if (newFocus == null) {
-				newFocus = this.findPreviousContainerFocus(this._root, null, false);
+			if (newFocus == null && Std.is(this._root, DisplayObjectContainer)) {
+				var rootContainer = cast(this._root, DisplayObjectContainer);
+				newFocus = this.findPreviousContainerFocus(rootContainer, null, false);
 			}
 		} else {
 			if (currentFocus != null) {
@@ -173,8 +174,9 @@ class DefaultFocusManager implements IFocusManager {
 					newFocus = this.findNextContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 				}
 			}
-			if (newFocus == null) {
-				newFocus = this.findNextContainerFocus(this._root, null, false);
+			if (newFocus == null && Std.is(this._root, DisplayObjectContainer)) {
+				var rootContainer = cast(this._root, DisplayObjectContainer);
+				newFocus = this.findNextContainerFocus(rootContainer, null, false);
 			}
 		}
 		return newFocus;
@@ -470,7 +472,7 @@ class DefaultFocusManager implements IFocusManager {
 		return null;
 	}
 
-	private function handleRootAddedToStage(root:DisplayObjectContainer):Void {
+	private function handleRootAddedToStage(root:DisplayObject):Void {
 		var stage = this.root.stage;
 		if (stage == null) {
 			return;
@@ -488,7 +490,7 @@ class DefaultFocusManager implements IFocusManager {
 		#end
 	}
 
-	private function handleRootRemovedFromStage(root:DisplayObjectContainer):Void {
+	private function handleRootRemovedFromStage(root:DisplayObject):Void {
 		this.focus = null;
 		var stage = this.root.stage;
 		if (stage == null) {

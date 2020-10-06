@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 
 /**
@@ -18,6 +19,13 @@ import openfl.display.DisplayObjectContainer;
 	@since 1.0.0
 **/
 interface IFocusManager {
+	/**
+		The root of the focus manager.
+
+		@since 1.0.0
+	**/
+	public var root(get, never):DisplayObject;
+
 	/**
 		The object that currently has focus.
 
