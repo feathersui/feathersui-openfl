@@ -88,4 +88,8 @@ class TreeViewEvent extends Event {
 	}
 
 	public var state:TreeViewItemState;
+
+	override public function clone():Event {
+		return new TreeViewEvent(this.type, this.state);
+	}
 }

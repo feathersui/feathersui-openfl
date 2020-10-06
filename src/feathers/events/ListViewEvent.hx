@@ -72,4 +72,8 @@ class ListViewEvent extends Event {
 	}
 
 	public var state:ListViewItemState;
+
+	override public function clone():Event {
+		return new ListViewEvent(this.type, this.state);
+	}
 }

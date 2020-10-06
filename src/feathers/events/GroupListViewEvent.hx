@@ -72,4 +72,8 @@ class GroupListViewEvent extends Event {
 	}
 
 	public var state:GroupListViewItemState;
+
+	override public function clone():Event {
+		return new GroupListViewEvent(this.type, this.state);
+	}
 }
