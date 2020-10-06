@@ -8,9 +8,9 @@
 
 package feathers.controls;
 
-import feathers.core.IStateObserver;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -24,6 +24,7 @@ import feathers.themes.steel.components.SteelButtonStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
@@ -66,6 +67,8 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		this.focusRect = false;
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
+		this.addEventListener(FocusEvent.FOCUS_IN, button_focusInHandler);
+		this.addEventListener(FocusEvent.FOCUS_OUT, button_focusOutHandler);
 	}
 
 	private var textField:TextField;
@@ -1061,6 +1064,14 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			return;
 		}
 		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+	}
+
+	private function button_focusInHandler(event:FocusEvent):Void {
+		this._keyToState.enabled = this._enabled;
+	}
+
+	private function button_focusOutHandler(event:FocusEvent):Void {
+		this._keyToState.enabled = false;
 	}
 
 	private function button_textFormat_changeHandler(event:Event):Void {

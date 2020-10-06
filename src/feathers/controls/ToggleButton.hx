@@ -8,9 +8,9 @@
 
 package feathers.controls;
 
-import feathers.core.IStateObserver;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -24,6 +24,7 @@ import feathers.themes.steel.components.SteelToggleButtonStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
@@ -64,6 +65,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		super();
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, toggleButton_keyDownHandler);
+		this.addEventListener(FocusEvent.FOCUS_IN, toggleButton_focusInHandler);
+		this.addEventListener(FocusEvent.FOCUS_OUT, toggleButton_focusOutHandler);
 	}
 
 	private var textField:TextField;
@@ -1188,6 +1191,14 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			return;
 		}
 		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+	}
+
+	private function toggleButton_focusInHandler(event:FocusEvent):Void {
+		this._keyToState.enabled = this._enabled;
+	}
+
+	private function toggleButton_focusOutHandler(event:FocusEvent):Void {
+		this._keyToState.enabled = false;
 	}
 
 	private function toggleButton_textFormat_changeHandler(event:Event):Void {
