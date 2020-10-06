@@ -14,6 +14,7 @@ import feathers.core.IUIControl;
 import feathers.data.GridViewCellState;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
+import feathers.events.GridViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayoutIndexObject;
@@ -418,7 +419,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
-	private function populateCurrentItemState(columnIndex:Int, column:GridViewColumn):Void {
+	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int):Void {
 		this._currentCellState.owner = this._gridView;
 		this._currentCellState.data = this._data;
 		this._currentCellState.rowIndex = this._rowIndex;
@@ -431,7 +432,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
 		var storage = this._defaultStorage;
-		this.populateCurrentItemState(columnIndex, column);
+		this.populateCurrentItemState(column, columnIndex);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (storage.cellRendererRecycler.update != null) {
@@ -464,6 +465,12 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
+	private function dispatchCellTriggerEvent(column:GridViewColumn):Void {
+		var columnIndex = this._columns.indexOf(column);
+		this.populateCurrentItemState(column, columnIndex);
+		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, this._currentCellState);
+	}
+
 	private function cellRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			return;
@@ -473,6 +480,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return;
 		}
 		TriggerEvent.dispatchFromTouchEvent(this, event);
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		var column = this._cellRendererToColumn.get(cellRenderer);
+		this.dispatchCellTriggerEvent(column);
 	}
 
 	private function cellRenderer_clickHandler(event:MouseEvent):Void {
@@ -480,6 +490,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return;
 		}
 		TriggerEvent.dispatchFromMouseEvent(this, event);
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		var column = this._cellRendererToColumn.get(cellRenderer);
+		this.dispatchCellTriggerEvent(column);
 	}
 
 	private function cellRenderer_triggerHandler(event:TriggerEvent):Void {
@@ -487,6 +500,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return;
 		}
 		this.dispatchEvent(event.clone());
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		var column = this._cellRendererToColumn.get(cellRenderer);
+		this.dispatchCellTriggerEvent(column);
 	}
 
 	private function cellRenderer_changeHandler(event:Event):Void {

@@ -25,6 +25,7 @@ import feathers.data.GridViewHeaderState;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
+import feathers.events.GridViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayout;
@@ -39,6 +40,8 @@ import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import openfl.ui.Keyboard;
 
 @:event(openfl.events.Event.CHANGE)
@@ -912,6 +915,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var column = this.headerRendererToData.get(headerRenderer);
 			this.headerRendererToData.remove(headerRenderer);
 			this.dataToHeaderRenderer.remove(column);
+			headerRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
+			headerRenderer.removeEventListener(MouseEvent.CLICK, gridView_headerRenderer_clickHandler);
+			headerRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridView_headerRenderer_touchTapHandler);
 
 			this._currentHeaderState.owner = this;
 			this._currentHeaderState.column = column;
@@ -975,6 +981,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this.rowRendererToData.remove(rowRenderer);
 			this.dataToRowRenderer.remove(item);
+			rowRenderer.removeEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
@@ -1067,6 +1074,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._rowRendererRecycler.update(rowRenderer, item);
 		}
 		this.refreshRowRendererProperties(rowRenderer, item, index);
+		rowRenderer.addEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
 		this.rowRendererToData.set(rowRenderer, item);
 		this.dataToRowRenderer.set(item, rowRenderer);
@@ -1104,6 +1112,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			variantHeaderRenderer.variant = GridView.CHILD_VARIANT_HEADER;
 		}
 		this.refreshHeaderRendererProperties(headerRenderer, column, columnIndex);
+		if (Std.is(headerRenderer, ITriggerView)) {
+			// prefer TriggerEvent.TRIGGER
+			headerRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
+		} else {
+			// fall back to these events if TriggerEvent.TRIGGER isn't available
+			headerRenderer.addEventListener(MouseEvent.CLICK, gridView_headerRenderer_clickHandler);
+			#if (openfl >= "9.0.0")
+			headerRenderer.addEventListener(TouchEvent.TOUCH_TAP, gridView_headerRenderer_touchTapHandler);
+			#end
+		}
 		this.headerRendererToData.set(headerRenderer, column);
 		this.dataToHeaderRenderer.set(column, headerRenderer);
 		return headerRenderer;
@@ -1195,6 +1213,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.navigateWithKeyboard(event);
 	}
 
+	private function dispatchHeaderTriggerEvent(column:GridViewColumn):Void {
+		var columnIndex = this._columns.indexOf(column);
+		this.populateCurrentItemState(column, columnIndex);
+		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, this._currentHeaderState);
+	}
+
 	private function handleSelectionChange(item:Dynamic, index:Int, ctrlKey:Bool, shiftKey:Bool):Void {
 		if (index == -1 || !this._selectable) {
 			// use the setter
@@ -1248,10 +1272,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private function gridView_rowRenderer_triggerHandler(event:TriggerEvent):Void {
 		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
 		var item = this.rowRendererToData.get(rowRenderer);
-		// trigger before change
-		this.dispatchEvent(event);
-
 		this.handleSelectionChange(item, rowRenderer.rowIndex, event.ctrlKey, event.shiftKey);
+	}
+
+	private function gridView_rowRenderer_cellTriggerHandler(event:GridViewEvent<GridViewCellState>):Void {
+		this.dispatchEvent(event.clone());
 	}
 
 	private function gridView_dataProvider_changeHandler(event:Event):Void {
@@ -1358,5 +1383,39 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_columns_changeHandler(event:Event):Void {
 		this.setInvalid(DATA);
+	}
+
+	private function gridView_headerRenderer_touchTapHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+
+		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		var column = this.headerRendererToData.get(headerRenderer);
+		this.dispatchHeaderTriggerEvent(column);
+	}
+
+	private function gridView_headerRenderer_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		var column = this.headerRendererToData.get(headerRenderer);
+		this.dispatchHeaderTriggerEvent(column);
+	}
+
+	private function gridView_headerRenderer_triggerHandler(event:TriggerEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		var column = this.headerRendererToData.get(headerRenderer);
+		this.dispatchHeaderTriggerEvent(column);
 	}
 }
