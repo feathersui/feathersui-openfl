@@ -66,7 +66,7 @@ class DefaultFocusManager implements IFocusManager {
 			} else {
 				this._focus.showFocus(false);
 				if (this._root.stage.focus == cast(this._focus, InteractiveObject)) {
-					this._root.stage.focus = this._root.stage;
+					this._root.stage.focus = null;
 				}
 			}
 		}
@@ -140,7 +140,7 @@ class DefaultFocusManager implements IFocusManager {
 
 	private function set_focus(value:IFocusObject):IFocusObject {
 		if (this._focus == value) {
-			if (this._root.stage != null) {
+			if (this._enabled && this._root.stage != null) {
 				// in some cases, the stage focus seems to get cleared, so even
 				// though our focus hasn't changed, we should still pass it to the
 				// stage
@@ -152,7 +152,7 @@ class DefaultFocusManager implements IFocusManager {
 			this._focus.showFocus(false);
 		}
 		this._focus = value;
-		if (this._root.stage != null) {
+		if (this._enabled && this._root.stage != null) {
 			this._root.stage.focus = cast(value, InteractiveObject);
 		}
 		return this._focus;
@@ -486,7 +486,7 @@ class DefaultFocusManager implements IFocusManager {
 			return;
 		}
 		stage.stageFocusRect = false;
-		if (stage.focus == null) {
+		if (this._enabled && stage.focus == null) {
 			// needed for some targets, like Neko
 			stage.focus = stage;
 		}
