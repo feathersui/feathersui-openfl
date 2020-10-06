@@ -59,8 +59,16 @@ class DefaultFocusManager implements IFocusManager {
 			throw new IllegalOperationError("Cannot enable focus manager without a root container.");
 		}
 		this._enabled = value;
-		if (this._enabled && this._focus != null && this._root.stage != null) {
-			this._root.stage.focus = cast(this._focus, InteractiveObject);
+		if (this._focus != null && this._root.stage != null) {
+			if (this._enabled) {
+				this._focus.showFocus(true);
+				this._root.stage.focus = cast(this._focus, InteractiveObject);
+			} else {
+				this._focus.showFocus(false);
+				if (this._root.stage.focus == cast(this._focus, InteractiveObject)) {
+					this._root.stage.focus = this._root.stage;
+				}
+			}
 		}
 		return this._enabled;
 	}
