@@ -179,7 +179,13 @@ class KeyToState<T> {
 	}
 
 	private function set_enabled(value:Bool):Bool {
+		if (this._enabled == value) {
+			return this._enabled;
+		}
 		this._enabled = value;
+		if (!this._enabled) {
+			this.resetKeyState();
+		}
 		return this._enabled;
 	}
 
