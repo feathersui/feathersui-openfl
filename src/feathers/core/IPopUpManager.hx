@@ -39,6 +39,14 @@ interface IPopUpManager {
 	public var root(get, set):DisplayObjectContainer;
 
 	/**
+		The root focus manager for pop-ups.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var focusManager(get, set):IFocusManager;
+
+	/**
 		The current number of pop-ups.
 
 		@since 1.0.0

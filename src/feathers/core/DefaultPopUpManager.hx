@@ -22,6 +22,7 @@ import openfl.display.DisplayObject;
 
 	@since 1.0.0
 **/
+@:access(feathers.core.FocusManager)
 class DefaultPopUpManager implements IPopUpManager {
 	private static function defaultOverlayFactory():DisplayObject {
 		var overlay = new Sprite();
@@ -88,6 +89,8 @@ class DefaultPopUpManager implements IPopUpManager {
 
 	private var _popUpToOverlay:Map<DisplayObject, DisplayObject> = [];
 
+	private var _popUpToFocusManager:Map<DisplayObject, IFocusManager> = [];
+
 	private var _overlayFactory:() -> DisplayObject;
 
 	/**
@@ -106,6 +109,26 @@ class DefaultPopUpManager implements IPopUpManager {
 		}
 		this._overlayFactory = value;
 		return this._overlayFactory;
+	}
+
+	private var _focusManager:IFocusManager;
+
+	/**
+		@see `feathers.core.IPopUpManager.focusManager`
+	**/
+	@:flash.property
+	public var focusManager(get, set):IFocusManager;
+
+	private function get_focusManager():IFocusManager {
+		return this._focusManager;
+	}
+
+	private function set_focusManager(value:IFocusManager):IFocusManager {
+		if (this._focusManager == value) {
+			return this._focusManager;
+		}
+		this._focusManager = value;
+		return this._focusManager;
 	}
 
 	/**
@@ -185,6 +208,10 @@ class DefaultPopUpManager implements IPopUpManager {
 		if (this.popUps.length == 1) {
 			this._root.stage.addEventListener(Event.RESIZE, stage_resizeHandler, false, 0, true);
 		}
+		if (isModal && this._focusManager != null) {
+			var focusManager = FocusManager.push(this._focusManager, popUp);
+			this._popUpToFocusManager.set(popUp, focusManager);
+		}
 		if (isCentered) {
 			if (Std.is(popUp, IMeasureObject)) {
 				var measurePopUp = cast(popUp, IMeasureObject);
@@ -252,6 +279,11 @@ class DefaultPopUpManager implements IPopUpManager {
 		if (overlay != null) {
 			this._root.removeChild(overlay);
 			this._popUpToOverlay.remove(popUp);
+		}
+		var focusManager = this._popUpToFocusManager.get(popUp);
+		if (focusManager != null) {
+			this._popUpToFocusManager.remove(popUp);
+			FocusManager.remove(this._focusManager, focusManager);
 		}
 
 		if (this.popUps.length == 0) {
