@@ -164,7 +164,13 @@ class DefaultFocusManager implements IFocusManager {
 		@since 1.0.0
 	**/
 	public function findNextFocus(backward:Bool = false):IFocusObject {
+		var result = this.findNextFocusInternal(backward);
+		return result.newFocus;
+	}
+
+	private function findNextFocusInternal(backward:Bool = false):FocusResult {
 		var newFocus:IFocusObject = null;
+		var wrapped = false;
 		var currentFocus = this._focus;
 		if (backward) {
 			if (currentFocus != null && currentFocus.parent != null) {
@@ -173,6 +179,7 @@ class DefaultFocusManager implements IFocusManager {
 			if (newFocus == null && Std.is(this._root, DisplayObjectContainer)) {
 				var rootContainer = cast(this._root, DisplayObjectContainer);
 				newFocus = this.findPreviousContainerFocus(rootContainer, null, false);
+				wrapped = currentFocus != null;
 			}
 		} else {
 			if (currentFocus != null) {
@@ -185,9 +192,10 @@ class DefaultFocusManager implements IFocusManager {
 			if (newFocus == null && Std.is(this._root, DisplayObjectContainer)) {
 				var rootContainer = cast(this._root, DisplayObjectContainer);
 				newFocus = this.findNextContainerFocus(rootContainer, null, false);
+				wrapped = currentFocus != null;
 			}
 		}
-		return newFocus;
+		return new FocusResult(newFocus, wrapped);
 	}
 
 	private function isValidFocus(target:IFocusObject):Bool {
@@ -603,13 +611,13 @@ class DefaultFocusManager implements IFocusManager {
 		event.preventDefault();
 	}
 
-	private function handleKeyboardFocusChange(event:Event, shiftKey:Bool):IFocusObject {
-		var newFocus = this.findNextFocus(shiftKey);
-		this.focus = newFocus;
+	private function handleKeyboardFocusChange(event:Event, shiftKey:Bool):FocusResult {
+		var result = this.findNextFocusInternal(shiftKey);
+		this.focus = result.newFocus;
 		if (this._focus != null) {
 			this._focus.showFocus(true);
 		}
-		return newFocus;
+		return result;
 	}
 
 	#if html5
@@ -620,8 +628,8 @@ class DefaultFocusManager implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB) {
 			return;
 		}
-		var newFocus = this.handleKeyboardFocusChange(event, event.shiftKey);
-		if (newFocus != null) {
+		var result = this.handleKeyboardFocusChange(event, event.shiftKey);
+		if (result.newFocus != null) {
 			event.preventDefault();
 		}
 	}
@@ -639,8 +647,10 @@ class DefaultFocusManager implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
 			return;
 		}
-		event.preventDefault();
-		this.handleKeyboardFocusChange(event, event.shiftKey);
+		var result = this.handleKeyboardFocusChange(event, event.shiftKey);
+		if (result.newFocus != null) {
+			event.preventDefault();
+		}
 	}
 	#end
 
@@ -674,4 +684,14 @@ class DefaultFocusManager implements IFocusManager {
 			this._root.stage.focus = cast(this._focus, InteractiveObject);
 		}
 	}
+}
+
+private class FocusResult {
+	public function new(newFocus:IFocusObject, wrapped:Bool) {
+		this.newFocus = newFocus;
+		this.wrapped = wrapped;
+	}
+
+	public var newFocus:IFocusObject;
+	public var wrapped:Bool;
 }
