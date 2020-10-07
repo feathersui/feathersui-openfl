@@ -94,6 +94,7 @@ class DefaultFocusManager implements IFocusManager {
 			this._root.removeEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler);
 			this._root.removeEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler);
 			this._root.removeEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler);
+			this._root.removeEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler);
 			this.handleRootRemovedFromStage(this._root.stage);
 		}
 		this._root = value;
@@ -106,6 +107,7 @@ class DefaultFocusManager implements IFocusManager {
 			this._root.addEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler, false, 0, true);
 			this._root.addEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler, false, 0, true);
 			this._root.addEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler, false, 0, true);
+			this._root.addEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler, false, 0, true);
 		}
 		return this._root;
 	}
@@ -640,6 +642,11 @@ class DefaultFocusManager implements IFocusManager {
 		}
 		var result = this.findNextFocusInternal(event.shiftKey);
 		this.focus = result.newFocus;
+		#if web
+		if (result.wrapped) {
+			return;
+		}
+		#end
 		if (this._focus != null) {
 			this._focus.showFocus(true);
 			event.preventDefault();
@@ -675,6 +682,16 @@ class DefaultFocusManager implements IFocusManager {
 		}
 		if (this._focus != null && this._root.stage != null) {
 			this._root.stage.focus = cast(this._focus, InteractiveObject);
+			this._focus.showFocus(true);
+		}
+	}
+
+	private function defaultFocusManager_root_deactivateHandler(event:Event):Void {
+		if (!this._enabled) {
+			return;
+		}
+		if (this._focus != null) {
+			this._focus.showFocus(false);
 		}
 	}
 }
