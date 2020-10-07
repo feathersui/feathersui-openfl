@@ -15,15 +15,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
-interface IFocusObject extends IDisplayObject {
-	/**
-		The object's current focus manager. May be `null`.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	public var focusManager(get, set):IFocusManager;
-
+interface IFocusObject extends IFocusManagerAware extends IDisplayObject {
 	/**
 		Indicates if the object may receive focus or not.
 
