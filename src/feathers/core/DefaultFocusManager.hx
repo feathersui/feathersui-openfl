@@ -499,7 +499,7 @@ class DefaultFocusManager implements IFocusManager {
 			stage.focus = stage;
 		}
 		stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler, false, 0, true);
-		#if html5
+		#if (html5 && openfl < "9.0.0")
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler, false, 0, true);
 		#else
 		stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler, false, 0, true);
@@ -513,7 +513,7 @@ class DefaultFocusManager implements IFocusManager {
 			return;
 		}
 		stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler);
-		#if html5
+		#if (html5 && openfl < "9.0.0")
 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler);
 		#else
 		stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler);
@@ -611,16 +611,7 @@ class DefaultFocusManager implements IFocusManager {
 		event.preventDefault();
 	}
 
-	private function handleKeyboardFocusChange(event:Event, shiftKey:Bool):FocusResult {
-		var result = this.findNextFocusInternal(shiftKey);
-		this.focus = result.newFocus;
-		if (this._focus != null) {
-			this._focus.showFocus(true);
-		}
-		return result;
-	}
-
-	#if html5
+	#if (html5 && openfl < "9.0.0")
 	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled) {
 			return;
@@ -628,14 +619,14 @@ class DefaultFocusManager implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB) {
 			return;
 		}
-		var result = this.handleKeyboardFocusChange(event, event.shiftKey);
-		if (result.newFocus != null) {
+		var result = this.findNextFocusInternal(event.shiftKey);
+		this.focus = result.newFocus;
+		if (this._focus != null) {
+			this._focus.showFocus(true);
 			event.preventDefault();
 		}
 	}
-	#end
-
-	#if !html5
+	#else
 	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
 		if (!this._enabled) {
 			return;
@@ -647,8 +638,10 @@ class DefaultFocusManager implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
 			return;
 		}
-		var result = this.handleKeyboardFocusChange(event, event.shiftKey);
-		if (result.newFocus != null) {
+		var result = this.findNextFocusInternal(event.shiftKey);
+		this.focus = result.newFocus;
+		if (this._focus != null) {
+			this._focus.showFocus(true);
 			event.preventDefault();
 		}
 	}
