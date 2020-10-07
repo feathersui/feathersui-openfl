@@ -860,9 +860,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 					this._headerContainerLayout.paddingRight = this.rightViewPortOffset;
 			};
 
-			if (Std.is(this._headerContainer, IValidating)) {
-				cast(this._headerContainer, IValidating).validateNow();
-			}
+			this._headerContainer.validateNow();
 			this.topViewPortOffset += this._headerContainer.height;
 			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._headerContainer.width);
 			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, this._headerContainer.width);
@@ -895,9 +893,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerContainer.x = this.paddingLeft;
 		this._headerContainer.y = this.paddingTop;
 		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
-		if (Std.is(this._headerContainer, IValidating)) {
-			cast(this._headerContainer, IValidating).validateNow();
-		}
+		this._headerContainer.validateNow();
 	}
 
 	private function refreshHeaderRenderers():Void {
