@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.system.Capabilities;
 import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusManager;
@@ -642,11 +643,12 @@ class DefaultFocusManager implements IFocusManager {
 		}
 		var result = this.findNextFocusInternal(event.shiftKey);
 		this.focus = result.newFocus;
-		#if web
 		if (result.wrapped) {
-			return;
+			var skipWrap = Capabilities.playerType != "StandAlone" && Capabilities.playerType != "Desktop";
+			if (skipWrap) {
+				return;
+			}
 		}
-		#end
 		if (this._focus != null) {
 			this._focus.showFocus(true);
 			event.preventDefault();
