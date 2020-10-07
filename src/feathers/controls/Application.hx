@@ -9,7 +9,7 @@
 package feathers.controls;
 
 import feathers.core.FocusManager;
-import feathers.core.IFocusObject;
+import feathers.core.IFocusManagerAware;
 import feathers.core.PopUpManager;
 import feathers.themes.steel.components.SteelApplicationStyles;
 import feathers.utils.MathUtil;
@@ -31,7 +31,7 @@ import openfl.system.Capabilities;
 	@since 1.0.0
 **/
 @:styleContext
-class Application extends LayoutGroup implements IFocusObject {
+class Application extends LayoutGroup implements IFocusManagerAware {
 	private static function defaultPopUpContainerFactory():DisplayObjectContainer {
 		return new Sprite();
 	}
@@ -45,10 +45,6 @@ class Application extends LayoutGroup implements IFocusObject {
 		initializeApplicationTheme();
 
 		super();
-
-		// we just want a reference to the focus manager, and not to actually
-		// receive focus
-		this.focusEnabled = false;
 
 		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler, false, 100);
 	}
