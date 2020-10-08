@@ -46,6 +46,15 @@ class SteelGridViewStyles {
 				gridView.backgroundSkin = backgroundSkin;
 			}
 
+			if (gridView.columnResizeSkin == null) {
+				var columnResizeSkin = new RectangleSkin();
+				columnResizeSkin.fill = theme.getThemeFill();
+				columnResizeSkin.border = null;
+				columnResizeSkin.width = 2.0;
+				columnResizeSkin.height = 2.0;
+				gridView.columnResizeSkin = columnResizeSkin;
+			}
+
 			if (gridView.focusRectSkin == null) {
 				var focusRectSkin = new RectangleSkin();
 				focusRectSkin.fill = null;

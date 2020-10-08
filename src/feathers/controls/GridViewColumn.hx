@@ -71,7 +71,7 @@ class GridViewColumn extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public var minWidth:Null<Float> = null;
+	public var minWidth:Float = 0.0;
 
 	/**
 		Converts an item to text to display within a grid view cell. By default,

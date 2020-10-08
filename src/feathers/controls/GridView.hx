@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.display.InteractiveObject;
+import openfl.display.DisplayObjectContainer;
 import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
@@ -18,7 +20,6 @@ import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
-import feathers.core.IValidating;
 import feathers.data.ArrayCollection;
 import feathers.data.GridViewCellState;
 import feathers.data.GridViewHeaderState;
@@ -32,11 +33,13 @@ import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.VerticalListFixedRowLayout;
+import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
+import openfl.display.Sprite;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
@@ -166,6 +169,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _headerContainer:LayoutGroup;
 	private var _headerContainerLayout:GridViewRowLayout;
+	private var _headerResizeContainer:Sprite;
+	private var _activeHeaderDividers:Array<DisplayObject> = [];
+	private var _resizingHeaderIndex:Int = -1;
+	private var _resizingHeaderStartStageX:Float;
+	private var _customColumnWidths:Array<Float>;
 
 	override private function get_focusEnabled():Bool {
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
@@ -652,6 +660,49 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._cellRendererRecycler;
 	}
 
+	private var _resizableColumns:Bool = false;
+
+	/**
+		Determines if the grid view's columns may be resized by mouse/touch.
+
+		The following example enables column resizing:
+
+		```hx
+		gridView.resizableColumns = true;
+		```
+
+		@see `GridView.columnResizeSkin`
+
+		@default false
+	**/
+	@:flash.property
+	public var resizableColumns(get, set):Bool;
+
+	private function get_resizableColumns():Bool {
+		return this._resizableColumns;
+	}
+
+	private function set_resizableColumns(value:Bool):Bool {
+		if (this._resizableColumns == value) {
+			return this._resizableColumns;
+		}
+		this._resizableColumns = value;
+		this.setInvalid(LAYOUT);
+		return this._resizableColumns;
+	}
+
+	private var _currentColumnResizeSkin:DisplayObject;
+
+	/**
+		The skin to display when a column is being resized.
+
+		@see `GridView.resizableColumns`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var columnResizeSkin:DisplayObject = null;
+
 	private var activeHeaderRenderers:Array<DisplayObject> = [];
 	private var dataToHeaderRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
 	private var headerRendererToData = new ObjectMap<DisplayObject, GridViewColumn>();
@@ -796,6 +847,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.addChild(this._headerContainer);
 		}
 
+		if (this._headerResizeContainer == null) {
+			this._headerResizeContainer = new Sprite();
+			this.addChild(this._headerResizeContainer);
+		}
+
 		if (this._layout == null) {
 			this._layout = new VerticalListFixedRowLayout();
 		}
@@ -810,9 +866,19 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 
 		this.validateColumns();
+		this.validateCustomColumnWidths();
+
+		if (stylesInvalid || layoutInvalid) {
+			this.refreshColumnResizeSkin();
+		}
 
 		if (headerRendererInvalid || stateInvalid || dataInvalid) {
 			this.refreshHeaderRenderers();
+		}
+
+		if (layoutInvalid) {
+			this._headerResizeContainer.mouseEnabled = this._resizableColumns;
+			this._headerResizeContainer.mouseChildren = this._resizableColumns;
 		}
 
 		if (layoutInvalid || stylesInvalid) {
@@ -890,10 +956,63 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._headerContainer == null) {
 			return;
 		}
+		this._headerContainerLayout.customColumnWidths = this._customColumnWidths;
 		this._headerContainer.x = this.paddingLeft;
 		this._headerContainer.y = this.paddingTop;
 		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 		this._headerContainer.validateNow();
+
+		this._headerResizeContainer.x = this._headerContainer.x;
+		this._headerResizeContainer.y = this._headerContainer.y;
+		for (i in 0...this._activeHeaderDividers.length) {
+			var divider = this._activeHeaderDividers[i];
+			var header = this.activeHeaderRenderers[i];
+			divider.x = header.x + header.width - (divider.width / 2.0);
+			divider.y = header.y;
+			divider.height = header.height;
+		}
+	}
+
+	private function refreshColumnResizeSkin():Void {
+		var oldSkin = this._currentColumnResizeSkin;
+		this._currentColumnResizeSkin = this.getCurrentColumnResizeSkin();
+		if (this._currentColumnResizeSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentColumnResizeSkin(oldSkin);
+		if (this._currentColumnResizeSkin == null) {
+			return;
+		}
+		if (Std.is(this._currentColumnResizeSkin, IUIControl)) {
+			cast(this._currentColumnResizeSkin, IUIControl).initializeNow();
+		}
+		if (Std.is(this._currentColumnResizeSkin, IProgrammaticSkin)) {
+			cast(this._currentColumnResizeSkin, IProgrammaticSkin).uiContext = this;
+		}
+		this._currentColumnResizeSkin.visible = false;
+		if (Std.is(this._currentColumnResizeSkin, InteractiveObject)) {
+			cast(this._currentColumnResizeSkin, InteractiveObject).mouseEnabled = false;
+		}
+		if (Std.is(this._currentColumnResizeSkin, DisplayObjectContainer)) {
+			cast(this._currentColumnResizeSkin, DisplayObjectContainer).mouseChildren = false;
+		}
+		this.addChildAt(this._currentColumnResizeSkin, 0);
+	}
+
+	private function getCurrentColumnResizeSkin():DisplayObject {
+		return this.columnResizeSkin;
+	}
+
+	private function removeCurrentColumnResizeSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if (Std.is(skin, IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		if (skin.parent == this) {
+			this.removeChild(skin);
+		}
 	}
 
 	private function refreshHeaderRenderers():Void {
@@ -941,6 +1060,23 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var headerRenderer = this.createHeaderRenderer(column, i);
 			this.activeHeaderRenderers.insert(i, headerRenderer);
 			this._headerContainer.addChildAt(headerRenderer, i);
+		}
+
+		for (divider in this._activeHeaderDividers) {
+			divider.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
+			this._headerResizeContainer.removeChild(divider);
+		}
+		this._activeHeaderDividers.resize(0);
+
+		for (i in 0...this._columns.length - 1) {
+			var divider = new Sprite();
+			divider.graphics.clear();
+			divider.graphics.beginFill(0xff00ff, 0.0);
+			divider.graphics.drawRect(0.0, 0.0, 6.0, 1.0);
+			divider.graphics.endFill();
+			divider.addEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
+			this._activeHeaderDividers.insert(i, divider);
+			this._headerResizeContainer.addChildAt(divider, i);
 		}
 	}
 
@@ -1092,6 +1228,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.selected = this._selectedIndices.indexOf(index) != -1;
 		rowRenderer.cellRendererRecycler = this._cellRendererRecycler;
 		rowRenderer.columns = this._columns;
+		rowRenderer.customColumnWidths = this._customColumnWidths;
 		rowRenderer.enabled = this._enabled;
 	}
 
@@ -1367,6 +1504,147 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.refreshRowRendererProperties(rowRenderer, item, index);
 	}
 
+	private function validateCustomColumnWidths():Void {
+		if (this._customColumnWidths == null || this._customColumnWidths.length < this._columns.length) {
+			return;
+		}
+
+		var availableWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset;
+		var totalWidth = 0.0;
+		var indices:Array<Int> = [];
+		for (i in 0...this._customColumnWidths.length) {
+			var column = this._columns.get(i);
+			if (column.width != null) {
+				// if the width is set explicitly, skip it!
+				availableWidth -= column.width;
+				continue;
+			}
+			var size = this._customColumnWidths[i];
+			totalWidth += size;
+			indices[i] = i;
+		}
+		if (totalWidth == availableWidth) {
+			return;
+		}
+
+		// make a copy so that this is detected as a change
+		this._customColumnWidths = this._customColumnWidths.copy();
+
+		var widthToDistribute = availableWidth - totalWidth;
+		this.distributeWidthToIndices(widthToDistribute, indices, totalWidth);
+	}
+
+	private function calculateResizedColumnWidth():Void {
+		var columnCount = this._columns.length;
+		if (this._customColumnWidths == null) {
+			this._customColumnWidths = [];
+			this._customColumnWidths.resize(columnCount);
+		} else {
+			// make a copy so that it will be detected as a change
+			this._customColumnWidths = this._customColumnWidths.copy();
+			// try to keep any column widths we already saved
+			this._customColumnWidths.resize(columnCount);
+		}
+		var column = this._columns.get(this._resizingHeaderIndex);
+		// clear the explicit width because the user resized it
+		column.width = null;
+		var headerRenderer = this.activeHeaderRenderers[this._resizingHeaderIndex];
+		var preferredWidth = Math.fround(this._currentColumnResizeSkin.x + (this._currentColumnResizeSkin.width / 2.0) - headerRenderer.x);
+		var totalMinWidth = 0.0;
+		var originalWidth = headerRenderer.width;
+		var totalWidthAfter = 0.0;
+		var indicesAfter:Array<Int> = [];
+		for (i in 0...columnCount) {
+			var currentColumn = this._columns.get(i);
+			if (i == this._resizingHeaderIndex) {
+				continue;
+			} else if (i < this._resizingHeaderIndex) {
+				// we want these columns to maintain their width so that the
+				// resized one will start at the same x position
+				// however, we're not setting the width property on the
+				// DataGridColumn because we want them to be able to resize
+				// later if the whole DataGrid resizes.
+				headerRenderer = this.activeHeaderRenderers[i];
+				this._customColumnWidths[i] = headerRenderer.width;
+				totalMinWidth += headerRenderer.width;
+			} else {
+				if (currentColumn.width != null) {
+					totalMinWidth += currentColumn.width;
+					continue;
+				}
+				totalMinWidth += currentColumn.minWidth;
+				headerRenderer = this.activeHeaderRenderers[i];
+				var columnWidth = headerRenderer.width;
+				totalWidthAfter += columnWidth;
+				this._customColumnWidths[i] = columnWidth;
+				indicesAfter[indicesAfter.length] = i;
+			}
+		}
+		if (indicesAfter.length == 0) {
+			// if all of the columns after the resizing one have explicit
+			// widths, we need to force one to be resized
+			var index = this._resizingHeaderIndex + 1;
+			indicesAfter[0] = index;
+			column = this._columns.get(index);
+			totalWidthAfter = column.width;
+			totalMinWidth -= totalWidthAfter;
+			totalMinWidth += column.minWidth;
+			this._customColumnWidths[index] = totalWidthAfter;
+			column.width = null;
+		}
+		var newWidth = preferredWidth;
+		var maxWidth = this._headerContainer.width - totalMinWidth;
+		if (newWidth > maxWidth) {
+			newWidth = maxWidth;
+		}
+		if (newWidth < column.minWidth) {
+			newWidth = column.minWidth;
+		}
+		this._customColumnWidths[this._resizingHeaderIndex] = newWidth;
+
+		// the width to distribute may be positive or negative, depending on
+		// whether the resized column was made smaller or larger
+		var widthToDistribute = originalWidth - newWidth;
+		this.distributeWidthToIndices(widthToDistribute, indicesAfter, totalWidthAfter);
+		this.setInvalid(LAYOUT);
+	}
+
+	private function distributeWidthToIndices(widthToDistribute:Float, indices:Array<Int>, totalWidthOfIndices:Float):Void {
+		while (Math.abs(widthToDistribute) > 1.0) {
+			// this will be the store value if we need to loop again
+			var nextWidthToDistribute = widthToDistribute;
+			var i = indices.length - 1;
+			while (i >= 0) {
+				var index = indices[i];
+				var headerRenderer = this.activeHeaderRenderers[index];
+				var columnWidth = headerRenderer.width;
+				var column = this._columns.get(index);
+				var percent = columnWidth / totalWidthOfIndices;
+				var offset = widthToDistribute * percent;
+				var newWidth = this._customColumnWidths[index] + offset;
+				if (newWidth < column.minWidth) {
+					offset += (column.minWidth - newWidth);
+					newWidth = column.minWidth;
+					// we've hit the minimum, so skip it if we loop again
+					indices.splice(i, 1);
+					// also readjust the total to exclude this column
+					// so that the percentages still add up to 100%
+					totalWidthOfIndices -= columnWidth;
+				}
+				this._customColumnWidths[index] = newWidth;
+				nextWidthToDistribute -= offset;
+				i--;
+			}
+			widthToDistribute = nextWidthToDistribute;
+		}
+
+		if (widthToDistribute != 0) {
+			// if we have less than a pixel left, just add it to the
+			// final column and exit the loop
+			this._customColumnWidths[this._customColumnWidths.length - 1] += widthToDistribute;
+		}
+	}
+
 	private function gridView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
 		this.updateRowRendererForIndex(event.index);
 	}
@@ -1413,5 +1691,52 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
 		var column = this.headerRendererToData.get(headerRenderer);
 		this.dispatchHeaderTriggerEvent(column);
+	}
+
+	private function gridView_headerDivider_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled || !this._resizableColumns || this._resizingHeaderIndex != -1) {
+			return;
+		}
+
+		var divider = cast(event.currentTarget, DisplayObject);
+		this._resizingHeaderIndex = this._activeHeaderDividers.indexOf(divider);
+		this._resizingHeaderStartStageX = event.stageX;
+		this.layoutColumnResizeSkin(0.0);
+		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, gridView_headerDivider_stage_mouseMoveHandler, false, 0, true);
+		this.stage.addEventListener(MouseEvent.MOUSE_UP, gridView_headerDivider_stage_mouseUpHandler, false, 0, true);
+	}
+
+	private function gridView_headerDivider_stage_mouseMoveHandler(event:MouseEvent):Void {
+		var offset = event.stageX - this._resizingHeaderStartStageX;
+		this.layoutColumnResizeSkin(offset);
+	}
+
+	private function layoutColumnResizeSkin(offset:Float):Void {
+		if (this._currentColumnResizeSkin == null) {
+			return;
+		}
+		var headerRenderer = this.activeHeaderRenderers[this._resizingHeaderIndex];
+		var column = this._columns.get(this._resizingHeaderIndex);
+		var minX = this._headerContainer.x + headerRenderer.x + column.minWidth;
+		var maxX = this.actualWidth - this.rightViewPortOffset;
+		var originalX = this._headerContainer.x + headerRenderer.x + headerRenderer.width;
+		var newX = Math.min(Math.max(originalX + offset, minX), maxX) - (this._currentColumnResizeSkin.width / 2.0);
+		this._currentColumnResizeSkin.visible = true;
+		this._currentColumnResizeSkin.x = newX;
+		this._currentColumnResizeSkin.y = this.paddingTop;
+		this._currentColumnResizeSkin.height = this.actualHeight - this.paddingTop - this.bottomViewPortOffset;
+		this.setChildIndex(this._currentColumnResizeSkin, this.numChildren - 1);
+	}
+
+	private function gridView_headerDivider_stage_mouseUpHandler(event:MouseEvent):Void {
+		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, gridView_headerDivider_stage_mouseMoveHandler);
+		this.stage.removeEventListener(MouseEvent.MOUSE_UP, gridView_headerDivider_stage_mouseUpHandler);
+		if (this._currentColumnResizeSkin != null) {
+			this._currentColumnResizeSkin.visible = false;
+		}
+
+		this.calculateResizedColumnWidth();
+
+		this._resizingHeaderIndex = -1;
 	}
 }

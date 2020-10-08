@@ -93,6 +93,24 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		return this._columns;
 	}
 
+	private var _customColumnWidths:Array<Float>;
+
+	@:flash.property
+	public var customColumnWidths(get, set):Array<Float>;
+
+	private function get_customColumnWidths():Array<Float> {
+		return this._customColumnWidths;
+	}
+
+	private function set_customColumnWidths(value:Array<Float>):Array<Float> {
+		if (this._customColumnWidths == value) {
+			return this._customColumnWidths;
+		}
+		this._customColumnWidths = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this._customColumnWidths;
+	}
+
 	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
@@ -160,6 +178,8 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			var columnWidth = column.width;
 			if (columnWidth != null) {
 				item.width = columnWidth;
+			} else if (this._customColumnWidths != null && i < this._customColumnWidths.length) {
+				item.width = this._customColumnWidths[i];
 			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
@@ -191,18 +211,24 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 					// needed for measurement.
 					cast(item, IValidating).validateNow();
 				}
+			} else if (this._customColumnWidths != null && i < this._customColumnWidths.length) {
+				item.width = this._customColumnWidths[i];
+				if (Std.is(item, IValidating)) {
+					// changing the width of the item may cause its height
+					// to change, so we need to validate. the height is
+					// needed for measurement.
+					cast(item, IValidating).validateNow();
+				}
 			} else {
 				var percentWidth = 100.0;
-				var columnMinWidth = column.minWidth;
-				if (columnMinWidth != null) {
-					totalMinWidth += columnMinWidth;
-				}
+				totalMinWidth += column.minWidth;
 				totalPercentWidth += percentWidth;
 				pendingIndices.push(i);
 				continue;
 			}
 			totalMeasuredWidth += item.width;
 		}
+
 		totalMeasuredWidth += this._paddingLeft + this._paddingRight;
 		var remainingWidth = 0.0;
 		if (explicitWidth != null) {
@@ -231,7 +257,8 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 				// between items. we'll append the remainder at the end.
 				var itemWidth = Math.ffloor(percentToPixels * percentWidth);
 				var columnMinWidth = column.minWidth;
-				if (columnMinWidth != null && columnMinWidth > remainingWidth) {
+
+				if (columnMinWidth > remainingWidth) {
 					// we try to respect the item's minimum width, but if
 					// it's larger than the remaining space, we need to
 					// force it to fit
@@ -259,7 +286,6 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 				remainingWidth -= widthSum;
 			}
 		} while (needsAnotherPass);
-
 		if (remainingWidth > 0.0 && pendingIndices.length > 0) {
 			// minimize the impact of a non-integer width by adding the
 			// remainder to the final item

@@ -231,6 +231,24 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		return this._defaultStorage.cellRendererRecycler;
 	}
 
+	private var _customColumnWidths:Array<Float>;
+
+	@:flash.property
+	public var customColumnWidths(get, set):Array<Float>;
+
+	private function get_customColumnWidths():Array<Float> {
+		return this._customColumnWidths;
+	}
+
+	private function set_customColumnWidths(value:Array<Float>):Array<Float> {
+		if (this._customColumnWidths == value) {
+			return this._customColumnWidths;
+		}
+		this._customColumnWidths = value;
+		this.setInvalid(DATA);
+		return this._customColumnWidths;
+	}
+
 	private var _rowLayout:GridViewRowLayout;
 
 	override private function initialize():Void {
@@ -257,6 +275,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private function preLayout():Void {
 		this._rowLayout.columns = this._columns;
+		this._rowLayout.customColumnWidths = this._customColumnWidths;
 
 		if (this._defaultStorage.cellRendererRecycler.update == null) {
 			this._defaultStorage.cellRendererRecycler.update = defaultUpdateCellRenderer;
