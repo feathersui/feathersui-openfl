@@ -1534,7 +1534,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.distributeWidthToIndices(widthToDistribute, indices, totalWidth);
 	}
 
-	private function calculateResizedColumnWidth():Void {
+	private function calculateResizedColumnWidth(offset:Float):Void {
 		var columnCount = this._columns.length;
 		if (this._customColumnWidths == null) {
 			this._customColumnWidths = [];
@@ -1549,7 +1549,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		// clear the explicit width because the user resized it
 		column.width = null;
 		var headerRenderer = this.activeHeaderRenderers[this._resizingHeaderIndex];
-		var preferredWidth = Math.fround(this._currentColumnResizeSkin.x + (this._currentColumnResizeSkin.width / 2.0) - headerRenderer.x);
+		var column = this._columns.get(this._resizingHeaderIndex);
+		var minX = this._headerContainer.x + headerRenderer.x + column.minWidth;
+		var maxX = this.actualWidth - this.rightViewPortOffset;
+		var originalX = this._headerContainer.x + headerRenderer.x + headerRenderer.width;
+		var newX = Math.min(Math.max(originalX + offset, minX), maxX);
+
+		var preferredWidth = newX - headerRenderer.x;
 		var totalMinWidth = 0.0;
 		var originalWidth = headerRenderer.width;
 		var totalWidthAfter = 0.0;
@@ -1735,7 +1741,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._currentColumnResizeSkin.visible = false;
 		}
 
-		this.calculateResizedColumnWidth();
+		var offset = event.stageX - this._resizingHeaderStartStageX;
+		this.calculateResizedColumnWidth(offset);
 
 		this._resizingHeaderIndex = -1;
 	}
