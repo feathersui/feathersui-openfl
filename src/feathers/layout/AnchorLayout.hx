@@ -316,6 +316,15 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 	}
 }
 
+/**
+	Specifies how to position an object added to a container using
+	`AnchorLayout`.
+
+	@see `feathers.layout.AnchorLayout`
+	@see `feathers.layout.AnchorLayoutData`
+
+	@since 1.0.0
+**/
 class Anchor extends EventDispatcher {
 	public function new(value:Float, ?relativeTo:DisplayObject) {
 		super();
@@ -325,6 +334,12 @@ class Anchor extends EventDispatcher {
 
 	private var _value:Float;
 
+	/**
+		The number of pixels away from the edge of the parent container (or
+		from the `relativeTo` display object) to position the target.
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var value(get, set):Float;
 
@@ -343,6 +358,12 @@ class Anchor extends EventDispatcher {
 
 	private var _relativeTo:Null<DisplayObject>;
 
+	/**
+		The target may be optionally positioned relative to another display
+		object, instead of the edges of the parent container.
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var relativeTo(get, set):Null<DisplayObject>;
 
@@ -360,6 +381,14 @@ class Anchor extends EventDispatcher {
 	}
 }
 
+/**
+	Converts a `Float` or `DisplayObject` value to an `Anchor` used by
+	`AnchorLayoutData`.
+
+	@see `feathers.layout.AnchorLayoutData`
+
+	@since 1.0.0
+**/
 @:forward(value, relativeTo)
 abstract AbstractAnchor(Anchor) from Anchor to Anchor {
 	/**
