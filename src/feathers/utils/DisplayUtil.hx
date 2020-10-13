@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import openfl.geom.Point;
 import openfl.errors.ArgumentError;
 import openfl.display.DisplayObject;
 
@@ -74,6 +75,31 @@ class DisplayUtil {
 			result /= current.scaleY;
 			current = current.parent;
 		} while (current != null && current != current.stage);
+		return result;
+	}
+
+	/**
+		Calculates the concatenated scaleX and scaleY from the target display
+		object to the stage.
+
+		@since 1.0.0
+	**/
+	public static function getConcatenatedScale(target:DisplayObject, ?result:Point):Point {
+		if (target == null) {
+			throw new ArgumentError("getConcatenatedScale target must not be null");
+		}
+		var resultX = 1.0;
+		var resultY = 1.0;
+		var current = target;
+		do {
+			resultX /= current.scaleX;
+			resultY /= current.scaleY;
+			current = current.parent;
+		} while (current != null && current != current.stage);
+		if (result == null) {
+			return new Point(resultX, resultY);
+		}
+		result.setTo(resultX, resultY);
 		return result;
 	}
 }
