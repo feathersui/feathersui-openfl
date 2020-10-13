@@ -8,7 +8,9 @@
 
 package feathers.core;
 
-import feathers.style.IStyleObject;
+@:event(feathers.events.FeathersEvent.INITIALIZE)
+@:event(feathers.events.FeathersEvent.ENABLE)
+@:event(feathers.events.FeathersEvent.DISABLE)
 
 /**
 	A user interface control.
