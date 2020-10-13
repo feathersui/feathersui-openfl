@@ -35,6 +35,7 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.utils.DisplayObjectRecycler;
+import feathers.utils.DisplayUtil;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -1745,6 +1746,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_headerDivider_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var offset = event.stageX - this._resizingHeaderStartStageX;
+		offset *= DisplayUtil.getConcatenatedScale(this);
 		this.layoutColumnResizeSkin(offset);
 	}
 
@@ -1773,6 +1775,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var offset = event.stageX - this._resizingHeaderStartStageX;
+		offset *= DisplayUtil.getConcatenatedScale(this);
 		this.calculateResizedColumnWidth(offset);
 
 		this._resizingHeaderIndex = -1;
