@@ -40,23 +40,38 @@ class DisplayUtil {
 	}
 
 	/**
-		Calculates the concatenated scale from the target display object to
+		Calculates the concatenated scaleX from the target display object to
 		the stage.
 
 		@since 1.0.0
 	**/
-	public static function getConcatenatedScale(target:DisplayObject, useY:Bool = false):Float {
-		var result = 1.0;
+	public static function getConcatenatedScaleX(target:DisplayObject):Float {
 		if (target == null) {
-			throw new ArgumentError("getConcatenatedScale target must not be null");
+			throw new ArgumentError("getConcatenatedScaleX target must not be null");
 		}
+		var result = 1.0;
 		var current = target;
 		do {
-			if (useY) {
-				result /= current.scaleY;
-			} else {
-				result /= current.scaleX;
-			}
+			result /= current.scaleX;
+			current = current.parent;
+		} while (current != null && current != current.stage);
+		return result;
+	}
+
+	/**
+		Calculates the concatenated scaleY from the target display object to
+		the stage.
+
+		@since 1.0.0
+	**/
+	public static function getConcatenatedScaleY(target:DisplayObject):Float {
+		if (target == null) {
+			throw new ArgumentError("getConcatenatedScaleY target must not be null");
+		}
+		var result = 1.0;
+		var current = target;
+		do {
+			result /= current.scaleY;
 			current = current.parent;
 		} while (current != null && current != current.stage);
 		return result;

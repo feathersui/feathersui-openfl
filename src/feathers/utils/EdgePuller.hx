@@ -359,15 +359,14 @@ class EdgePuller extends EventDispatcher {
 	}
 
 	private function getTouchScale():Float {
-		var useY = switch (this._pullableEdge) {
-			case TOP: true;
-			case RIGHT: false;
-			case BOTTOM: true;
-			case LEFT: false;
+		return switch (this._pullableEdge) {
+			case TOP: DisplayUtil.getConcatenatedScaleY(this._target);
+			case RIGHT: DisplayUtil.getConcatenatedScaleX(this._target);
+			case BOTTOM: DisplayUtil.getConcatenatedScaleY(this._target);
+			case LEFT: DisplayUtil.getConcatenatedScaleX(this._target);
 			default:
 				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 		};
-		return DisplayUtil.getConcatenatedScale(this._target, useY);
 	}
 
 	private function isInActiveBorder(stageX:Float, stageY:Float, activeBorderSize:Float):Bool {
