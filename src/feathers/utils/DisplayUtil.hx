@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import openfl.errors.ArgumentError;
 import openfl.display.DisplayObject;
 
 /**
@@ -36,5 +37,28 @@ class DisplayUtil {
 			count++;
 		}
 		return count;
+	}
+
+	/**
+		Calculates the concatenated scale from the target display object to
+		the stage.
+
+		@since 1.0.0
+	**/
+	public static function getConcatenatedScale(target:DisplayObject, useY:Bool = false):Float {
+		var result = 1.0;
+		if (target == null) {
+			throw new ArgumentError("getConcatenatedScale target must not be null");
+		}
+		var current = target;
+		do {
+			if (useY) {
+				result /= current.scaleY;
+			} else {
+				result /= current.scaleX;
+			}
+			current = current.parent;
+		} while (current != null && current != current.stage);
+		return result;
 	}
 }
