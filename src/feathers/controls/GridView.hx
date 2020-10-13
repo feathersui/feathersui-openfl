@@ -28,6 +28,7 @@ import feathers.events.GridViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayout;
+import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.VerticalListFixedRowLayout;
@@ -1300,6 +1301,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var header = cast(headerRenderer, IGridViewHeaderRenderer);
 			header.column = this._currentHeaderState.column;
 			header.columnIndex = this._currentHeaderState.columnIndex;
+		}
+		if (Std.is(headerRenderer, ILayoutIndexObject)) {
+			var layoutObject = cast(headerRenderer, ILayoutIndexObject);
+			layoutObject.layoutIndex = this._currentHeaderState.columnIndex;
 		}
 	}
 
