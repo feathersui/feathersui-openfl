@@ -8,8 +8,6 @@
 
 package feathers.controls;
 
-import openfl.display.InteractiveObject;
-import openfl.display.DisplayObjectContainer;
 import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
@@ -39,6 +37,8 @@ import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
@@ -46,6 +46,11 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 import openfl.ui.Keyboard;
+import openfl.ui.Mouse;
+import openfl.ui.MouseCursor;
+#if (lime && !flash)
+import lime.ui.MouseCursor as LimeMouseCursor;
+#end
 
 @:event(openfl.events.Event.CHANGE)
 
@@ -174,6 +179,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _resizingHeaderIndex:Int = -1;
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
+
+	private var _oldHeaderDividerMouseCursor:MouseCursor;
 
 	override private function get_focusEnabled():Bool {
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
@@ -1063,6 +1070,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		for (divider in this._activeHeaderDividers) {
+			divider.removeEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
+			divider.removeEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
 			divider.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
 			this._headerResizeContainer.removeChild(divider);
 		}
@@ -1074,6 +1083,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			divider.graphics.beginFill(0xff00ff, 0.0);
 			divider.graphics.drawRect(0.0, 0.0, 6.0, 1.0);
 			divider.graphics.endFill();
+			divider.addEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
+			divider.addEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
 			divider.addEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
 			this._activeHeaderDividers.insert(i, divider);
 			this._headerResizeContainer.addChildAt(divider, i);
@@ -1712,6 +1723,26 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, gridView_headerDivider_stage_mouseUpHandler, false, 0, true);
 	}
 
+	private function gridView_headerDivider_rollOverHandler(event:MouseEvent):Void {
+		if (!this._resizableColumns || this._resizingHeaderIndex != -1 || Mouse.cursor != MouseCursor.AUTO) {
+			// already has the resize cursor
+			return;
+		}
+		#if (lime && !flash)
+		this._oldHeaderDividerMouseCursor = Mouse.cursor;
+		Mouse.cursor = LimeMouseCursor.RESIZE_WE;
+		#end
+	}
+
+	private function gridView_headerDivider_rollOutHandler(event:MouseEvent):Void {
+		if (!this._resizableColumns || this._resizingHeaderIndex != -1 || this._oldHeaderDividerMouseCursor == null) {
+			// keep the cursor until mouse up
+			return;
+		}
+		Mouse.cursor = this._oldHeaderDividerMouseCursor;
+		this._oldHeaderDividerMouseCursor = null;
+	}
+
 	private function gridView_headerDivider_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var offset = event.stageX - this._resizingHeaderStartStageX;
 		this.layoutColumnResizeSkin(offset);
@@ -1745,5 +1776,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.calculateResizedColumnWidth(offset);
 
 		this._resizingHeaderIndex = -1;
+
+		if (this._oldHeaderDividerMouseCursor != null) {
+			Mouse.cursor = this._oldHeaderDividerMouseCursor;
+			this._oldHeaderDividerMouseCursor = null;
+		}
 	}
 }
