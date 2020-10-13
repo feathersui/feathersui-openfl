@@ -24,6 +24,8 @@ import openfl.geom.Point;
 
 @:event(feathers.events.FeathersEvent.INITIALIZE)
 @:event(feathers.events.FeathersEvent.CREATION_COMPLETE)
+@:event(feathers.events.FeathersEvent.ENABLE)
+@:event(feathers.events.FeathersEvent.DISABLE)
 @:event(feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE)
 @:event(feathers.events.FeathersEvent.STATE_CHANGE)
 
@@ -126,6 +128,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 		this._enabled = value;
 		this.setInvalid(STATE);
+		if (this._enabled) {
+			FeathersEvent.dispatch(this, FeathersEvent.ENABLE);
+		} else {
+			FeathersEvent.dispatch(this, FeathersEvent.DISABLE);
+		}
 		return this._enabled;
 	}
 
