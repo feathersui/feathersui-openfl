@@ -8,12 +8,12 @@
 
 package feathers.core;
 
-import openfl.system.Capabilities;
 import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusManager;
 import feathers.core.IFocusObject;
 import feathers.core.IUIControl;
+import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
@@ -22,10 +22,11 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
+import openfl.system.Capabilities;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
+
 #if html5
-import openfl.events.KeyboardEvent;
 #end
 
 /**
@@ -152,9 +153,17 @@ class DefaultFocusManager implements IFocusManager {
 			return this._focus;
 		}
 		if (this._focus != null) {
+			if (Std.is(this._focus, IUIControl)) {
+				this._focus.removeEventListener(FeathersEvent.DISABLE, defaultFocusManager_focus_disableHandler);
+			}
 			this._focus.showFocus(false);
 		}
 		this._focus = value;
+		if (this._focus != null) {
+			if (Std.is(this._focus, IUIControl)) {
+				this._focus.addEventListener(FeathersEvent.DISABLE, defaultFocusManager_focus_disableHandler, false, 0, true);
+			}
+		}
 		if (this._enabled && this._root.stage != null) {
 			this._root.stage.focus = cast(value, InteractiveObject);
 		}
@@ -681,8 +690,13 @@ class DefaultFocusManager implements IFocusManager {
 			return;
 		}
 		if (this._focus != null && this._root.stage != null) {
-			this._root.stage.focus = cast(this._focus, InteractiveObject);
-			this._focus.showFocus(true);
+			if (this.isValidFocus(this._focus)) {
+				this._root.stage.focus = cast(this._focus, InteractiveObject);
+				this._focus.showFocus(true);
+			} else {
+				// if it's no longer valid focus, for some reason, clear it
+				this.focus = null;
+			}
 		}
 	}
 
@@ -693,6 +707,11 @@ class DefaultFocusManager implements IFocusManager {
 		if (this._focus != null) {
 			this._focus.showFocus(false);
 		}
+	}
+
+	private function defaultFocusManager_focus_disableHandler(event:Event):Void {
+		// clear the focus, if it becomes disabled
+		this.focus = null;
 	}
 }
 
