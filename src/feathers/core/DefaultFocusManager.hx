@@ -162,9 +162,7 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	/**
-		Finds the next or previous focus.
-
-		@since 1.0.0
+		@see `feathers.core.IFocusManager.findNextFocus()`
 	**/
 	public function findNextFocus(backward:Bool = false):IFocusObject {
 		var result = this.findNextFocusInternal(backward);

@@ -49,4 +49,11 @@ interface IFocusManager {
 	**/
 	@:flash.property
 	public var enabled(get, set):Bool;
+
+	/**
+		Finds the next focus in the specified direction (forward or backward).
+
+		@since 1.0.0
+	**/
+	public function findNextFocus(backward:Bool = false):IFocusObject;
 }
