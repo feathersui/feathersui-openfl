@@ -106,14 +106,14 @@ class AssetLoader extends FeathersControl {
 				this.cleanupLoader();
 				if (Assets.isLocal(this._source, AssetType.IMAGE)) {
 					var bitmapData = Assets.getBitmapData(this._source);
-					var bitmap = new Bitmap(bitmapData);
+					var bitmap = this.createBitmap(bitmapData);
 					this._contentMeasurements.save(bitmap);
 					this.addChild(bitmap);
 					this.content = bitmap;
 				} else // async
 				{
 					var future = Assets.loadBitmapData(this._source).onComplete((bitmapData:BitmapData) -> {
-						var bitmap = new Bitmap(bitmapData);
+						var bitmap = this.createBitmap(bitmapData);
 						this._contentMeasurements.save(bitmap);
 						this.addChild(bitmap);
 						this.content = bitmap;
@@ -352,6 +352,10 @@ class AssetLoader extends FeathersControl {
 				this.content.width = into.width;
 				this.content.height = into.height;
 		}
+	}
+
+	private function createBitmap(bitmapData:BitmapData):Bitmap {
+		return new Bitmap(bitmapData);
 	}
 
 	private function cleanupLoader():Void {
