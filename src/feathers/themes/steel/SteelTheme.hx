@@ -14,6 +14,7 @@ import feathers.themes.steel.components.SteelCalendarGridStyles;
 import feathers.themes.steel.components.SteelCalloutStyles;
 import feathers.themes.steel.components.SteelCheckStyles;
 import feathers.themes.steel.components.SteelComboBoxStyles;
+import feathers.themes.steel.components.SteelDrawerStyles;
 import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.themes.steel.components.SteelGroupListViewStyles;
 import feathers.themes.steel.components.SteelHProgressBarStyles;
@@ -66,6 +67,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelCalloutStyles.initialize(this);
 		SteelCheckStyles.initialize(this);
 		SteelComboBoxStyles.initialize(this);
+		SteelDrawerStyles.initialize(this);
 		SteelGridViewStyles.initialize(this);
 		SteelGroupListViewStyles.initialize(this);
 		SteelHProgressBarStyles.initialize(this);
