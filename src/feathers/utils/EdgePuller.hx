@@ -25,6 +25,8 @@ import openfl.geom.Point;
 
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
+@:event(feathers.events.FeathersEvent.OPENING)
+@:event(feathers.events.FeathersEvent.CLOSING)
 @:event(openfl.events.Event.CANCEL)
 @:event(openfl.events.Event.CHANGE)
 
