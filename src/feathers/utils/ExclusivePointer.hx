@@ -24,6 +24,11 @@ import openfl.events.TouchEvent;
 	@since 1.0.0
 **/
 class ExclusivePointer {
+	/**
+		A special pointer ID for the mouse.
+
+		@since 1.0.0
+	**/
 	public static final POINTER_ID_MOUSE = -1000;
 
 	private static final stageToObject:Map<Stage, ExclusivePointer> = [];

@@ -40,7 +40,13 @@ import openfl.ui.Multitouch;
 @:access(motion.actuators.SimpleActuator)
 class Scroller extends EventDispatcher {
 	private static final MINIMUM_VELOCITY = 0.02;
-	private static final TOUCH_ID_MOUSE = -1000;
+
+	/**
+		A special pointer ID for the mouse.
+
+		@since 1.0.0
+	**/
+	public static final POINTER_ID_MOUSE = -1000;
 
 	/**
 		Creates a new `Scroller` object with the given arguments.
@@ -1218,7 +1224,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function scroller_target_mouseDownHandler(event:MouseEvent):Void {
-		this.touchBegin(TOUCH_ID_MOUSE, event.stageX, event.stageY, true);
+		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
 	}
 
 	private function scroller_target_stage_touchMoveHandler(event:TouchEvent):Void {
@@ -1226,7 +1232,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function scroller_target_stage_mouseMoveHandler(event:MouseEvent):Void {
-		this.touchMove(TOUCH_ID_MOUSE, event.stageX, event.stageY);
+		this.touchMove(POINTER_ID_MOUSE, event.stageX, event.stageY);
 	}
 
 	private function scroller_target_stage_touchEndHandler(event:TouchEvent):Void {
@@ -1247,7 +1253,7 @@ class Scroller extends EventDispatcher {
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.CLICK will catch it
-			this._previousPointerID = TOUCH_ID_MOUSE;
+			this._previousPointerID = POINTER_ID_MOUSE;
 			return;
 		}
 		this._previousPointerID = -1;
@@ -1255,7 +1261,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function scroller_target_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.touchEnd(TOUCH_ID_MOUSE);
+		this.touchEnd(POINTER_ID_MOUSE);
 	}
 
 	#if html5

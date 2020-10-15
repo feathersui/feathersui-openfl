@@ -40,7 +40,13 @@ import openfl.ui.Multitouch;
 **/
 class EdgePuller extends EventDispatcher {
 	private static final MINIMUM_VELOCITY = 0.02;
-	private static final TOUCH_ID_MOUSE = -1000;
+
+	/**
+		A special pointer ID for the mouse.
+
+		@since 1.0.0
+	**/
+	public static final POINTER_ID_MOUSE = -1000;
 
 	/**
 		Creates a new `EdgePuller` object with the given arguments.
@@ -712,7 +718,7 @@ class EdgePuller extends EventDispatcher {
 		if (this._opened) {
 			return;
 		}
-		this.touchBegin(TOUCH_ID_MOUSE, event.stageX, event.stageY, true);
+		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
 	}
 
 	private function edgePuller_target_stage_touchMoveHandler(event:TouchEvent):Void {
@@ -720,7 +726,7 @@ class EdgePuller extends EventDispatcher {
 	}
 
 	private function edgePuller_target_stage_mouseMoveHandler(event:MouseEvent):Void {
-		this.touchMove(TOUCH_ID_MOUSE, event.stageX, event.stageY);
+		this.touchMove(POINTER_ID_MOUSE, event.stageX, event.stageY);
 	}
 
 	private function edgePuller_target_stage_touchEndHandler(event:TouchEvent):Void {
@@ -728,7 +734,7 @@ class EdgePuller extends EventDispatcher {
 	}
 
 	private function edgePuller_target_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.touchEnd(TOUCH_ID_MOUSE);
+		this.touchEnd(POINTER_ID_MOUSE);
 	}
 
 	private function edgePuller_target_stage_touchBeginHandler(event:TouchEvent):Void {
@@ -742,7 +748,7 @@ class EdgePuller extends EventDispatcher {
 			this._target.stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2, false, 0, true);
 			return;
 		}
-		this.touchBegin(TOUCH_ID_MOUSE, event.stageX, event.stageY, true);
+		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
 	}
 
 	private function edgePuller_target_stage_touchMoveHandler2(event:TouchEvent):Void {
@@ -793,16 +799,16 @@ class EdgePuller extends EventDispatcher {
 		}
 		var maxPullDistance = this.getMaxPullDistance();
 		if (!this.isInActiveBorder(event.stageX, event.stageY, maxPullDistance)) {
-			this._pointerID = TOUCH_ID_MOUSE;
+			this._pointerID = POINTER_ID_MOUSE;
 			this._target.stage.addEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2, false, 0, true);
 			this._target.stage.addEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2, false, 0, true);
 			return;
 		}
-		this.touchBegin(TOUCH_ID_MOUSE, event.stageX, event.stageY, true);
+		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
 	}
 
 	private function edgePuller_target_stage_mouseMoveHandler2(event:MouseEvent):Void {
-		if (TOUCH_ID_MOUSE != this._pointerID) {
+		if (POINTER_ID_MOUSE != this._pointerID) {
 			return;
 		}
 		var maxPullDistance = this.getMaxPullDistance();
@@ -831,11 +837,11 @@ class EdgePuller extends EventDispatcher {
 		this._target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
 		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2);
 		this._pointerID = -1;
-		this.touchBegin(TOUCH_ID_MOUSE, event.stageX, event.stageY, true);
+		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
 	}
 
 	private function edgePuller_target_stage_mouseUpHandler2(event:MouseEvent):Void {
-		if (TOUCH_ID_MOUSE != this._pointerID) {
+		if (POINTER_ID_MOUSE != this._pointerID) {
 			return;
 		}
 		this._target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
