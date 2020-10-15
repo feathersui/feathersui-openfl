@@ -8,7 +8,6 @@
 
 package feathers.controls.supportClasses;
 
-import feathers.utils.MathUtil;
 import feathers.controls.IRange;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
@@ -16,6 +15,8 @@ import feathers.core.IUIControl;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
+import feathers.utils.ExclusivePointer;
+import feathers.utils.MathUtil;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
@@ -645,6 +646,16 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	}
 
 	private function thumbSkin_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		if (!result) {
+			return;
+		}
+
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler, false, 0, true);
 
@@ -675,6 +686,16 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	}
 
 	private function trackSkin_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		if (!result) {
+			return;
+		}
+
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, trackSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, trackSkin_stage_mouseUpHandler, false, 0, true);
 
