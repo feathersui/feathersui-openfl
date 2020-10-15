@@ -513,8 +513,6 @@ class Scroller extends EventDispatcher {
 	private var _logDecelerationRate:Float = -0.0020020026706730793;
 	private var _fixedThrowDuration:Float = 2.996998998998728;
 	private var restoreMouseChildren:Bool = false;
-	private var touchPointID:Int = -1;
-	private var previousTouchPointID:Int = -1;
 	private var startTouchX:Float = 0.0;
 	private var startTouchY:Float = 0.0;
 	private var startScrollX:Float = 0.0;
@@ -580,6 +578,20 @@ class Scroller extends EventDispatcher {
 			#end
 		}
 		return this._target;
+	}
+
+	private var _previousPointerID:Int = -1;
+	private var _pointerID:Int = -1;
+
+	/**
+		The pointer that is currently dragging the scroll target. Returns `-1`
+		if no pointer is currently associated with the drag.
+	**/
+	@:flash.property
+	public var pointerID(get, never):Int;
+
+	private function get_pointerID():Int {
+		return this._pointerID;
 	}
 
 	/**
@@ -928,11 +940,11 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function cleanupAfterDrag():Void {
-		if (this.touchPointID == -1) {
+		if (this._pointerID == -1) {
 			return;
 		}
-		this.previousTouchPointID = this._scrolling ? this.touchPointID : -1;
-		this.touchPointID = -1;
+		this._previousPointerID = this._scrolling ? this._pointerID : -1;
+		this._pointerID = -1;
 		this._target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
 		if (this._target.stage != null) {
 			this._target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
@@ -950,7 +962,7 @@ class Scroller extends EventDispatcher {
 		if (simulatedTouch && !this.simulateTouch) {
 			return;
 		}
-		if (this.touchPointID != -1) {
+		if (this._pointerID != -1) {
 			// we already have an active touch, and we can only accept one
 			return;
 		}
@@ -979,8 +991,8 @@ class Scroller extends EventDispatcher {
 				container.mouseChildren = false;
 			}
 		}
-		this.previousTouchPointID = -1;
-		this.touchPointID = touchPointID;
+		this._previousPointerID = -1;
+		this._pointerID = touchPointID;
 		this.startTouchX = stageX;
 		this.startTouchY = stageY;
 		this.startScrollX = this._scrollX;
@@ -989,7 +1001,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function touchMove(touchPointID:Int, stageX:Float, stageY:Float):Void {
-		if (this.touchPointID != touchPointID) {
+		if (this._pointerID != touchPointID) {
 			return;
 		}
 
@@ -1096,7 +1108,7 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function touchEnd(touchPointID:Int):Void {
-		if (this.touchPointID != touchPointID) {
+		if (this._pointerID != touchPointID) {
 			return;
 		}
 
@@ -1210,23 +1222,23 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function target_clickCaptureHandler(event:MouseEvent):Void {
-		if (this.previousTouchPointID == -1) {
+		if (this._previousPointerID == -1) {
 			return;
 		}
-		this.previousTouchPointID = -1;
+		this._previousPointerID = -1;
 		event.stopImmediatePropagation();
 	}
 
 	private function target_touchTapCaptureHandler(event:TouchEvent):Void {
-		if (this.previousTouchPointID != event.touchPointID) {
+		if (this._previousPointerID != event.touchPointID) {
 			return;
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.CLICK will catch it
-			this.previousTouchPointID = TOUCH_ID_MOUSE;
+			this._previousPointerID = TOUCH_ID_MOUSE;
 			return;
 		}
-		this.previousTouchPointID = -1;
+		this._previousPointerID = -1;
 		event.stopImmediatePropagation();
 	}
 
