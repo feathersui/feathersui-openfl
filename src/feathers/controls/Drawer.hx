@@ -40,12 +40,20 @@ import openfl.ui.Multitouch;
 @:event(feathers.events.FeathersEvent.CLOSING)
 
 /**
+	A container that displays primary `content` in the center with a `drawer`
+	that opens and closes from one of the four edges of the container.
+
 	@since 1.0.0
 **/
 @:styleContext
 class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private static final MAX_CLICK_DISTANCE_FOR_CLOSE = 6.0;
 
+	/**
+		Creates a new `Drawer` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(?content:InteractiveObject, ?drawer:DisplayObject) {
 		initializeDrawerTheme();
 		super();
@@ -60,7 +68,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private var _drawer:DisplayObject;
 
 	/**
-		The drawer used for detecting pull gestures.
+		The drawer that may be opened and closed.
 
 		@since 1.0.0
 	**/
@@ -147,9 +155,14 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private var _pullableEdge:RelativePosition = RelativePosition.LEFT;
 
 	/**
-		The edge of the target where the pull originates.
+		The edge of the container where the drawer is attached.
 
 		@default `feathers.layout.RelativePosition.LEFT`
+
+		@see `feathers.layout.RelativePosition.TOP`
+		@see `feathers.layout.RelativePosition.RIGHT`
+		@see `feathers.layout.RelativePosition.BOTTOM`
+		@see `feathers.layout.RelativePosition.LEFT`
 
 		@since 1.0.0
 	**/
@@ -205,8 +218,10 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		the stage:
 
 		```hx
-		group.autoSizeMode = STAGE;
+		drawer.autoSizeMode = STAGE;
 		```
+
+		@default feathers.layout.AutoSizeMode.STAGE`
 
 		@see `feathers.layout.AutoSizeMode.STAGE`
 		@see `feathers.layout.AutoSizeMode.CONTENT`
@@ -242,7 +257,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 
 	/**
 		Determines if mouse events should be treated like touch events when
-		detecting a swipe.
+		detecting a pull gesture that opens or closes a drawer.
 
 		@since 1.0.0
 	**/
@@ -268,6 +283,10 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private var _fallbackOverlaySkin:Sprite;
 
 	/**
+		A display object to display below the drawer and above the primary
+		content when the drawer is opened. Blocks mouse and touch events from
+		reaching the primary content.
+
 		@since 1.0.0
 	**/
 	@:style
