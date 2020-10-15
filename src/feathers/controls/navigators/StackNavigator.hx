@@ -13,6 +13,7 @@ import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelStackNavigatorStyles;
 import feathers.utils.EdgePuller;
+import feathers.utils.ExclusivePointer;
 import lime.ui.KeyCode;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -639,6 +640,15 @@ class StackNavigator extends BaseNavigator {
 			event.preventDefault();
 			return;
 		}
+		var pointerID = this._backEdgePuller.pointerID;
+		if (pointerID != -1) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimPointer(pointerID, this);
+			if (!result) {
+				event.preventDefault();
+				return;
+			}
+		}
 
 		if (this.popTransition != null) {
 			this.popItem(null, this.startBackDragTransition);
@@ -650,18 +660,23 @@ class StackNavigator extends BaseNavigator {
 
 	private function stackNavigator_backEdgePuller_cancelHandler(event:Event):Void {
 		var context = this._dragTransitionContext;
-		context.dispatcher = null;
 		this._dragTransitionContext = null;
-		FeathersEvent.dispatch(context, Event.CANCEL);
+		// can be null if cancelled before the transition starts
+		if (context != null) {
+			context.dispatcher = null;
+			FeathersEvent.dispatch(context, Event.CANCEL);
+		}
 
 		this._backEdgePuller.enabled = this._enabled && this._popSwipeEnabled && this.stackSize > 1;
 	}
 
 	private function stackNavigator_backEdgePuller_openHandler(event:Event):Void {
 		var context = this._dragTransitionContext;
-		context.dispatcher = null;
 		this._dragTransitionContext = null;
-		FeathersEvent.dispatch(context, Event.COMPLETE);
+		if (context != null) {
+			context.dispatcher = null;
+			FeathersEvent.dispatch(context, Event.COMPLETE);
+		}
 
 		// reset back to the closed state so that we can detect the next swipe
 		var oldSnapDuration = this._backEdgePuller.snapDuration;

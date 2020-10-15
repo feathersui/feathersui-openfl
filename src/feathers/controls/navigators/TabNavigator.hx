@@ -18,6 +18,7 @@ import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelTabNavigatorStyles;
 import feathers.utils.EdgePuller;
+import feathers.utils.ExclusivePointer;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
@@ -491,6 +492,16 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			return;
 		}
 
+		var pointerID = this._previousEdgePuller.pointerID;
+		if (pointerID != -1) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimPointer(pointerID, this);
+			if (!result) {
+				event.preventDefault();
+				return;
+			}
+		}
+
 		if (this.previousTransition != null) {
 			// disable the other edge until this edge's gesture is done
 			this._nextEdgePuller.enabled = false;
@@ -508,9 +519,12 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
 
 		var context = this._dragTransitionContext;
-		context.dispatcher = null;
 		this._dragTransitionContext = null;
-		FeathersEvent.dispatch(context, Event.CANCEL);
+		// can be null if cancelled before the transition starts
+		if (context != null) {
+			context.dispatcher = null;
+			FeathersEvent.dispatch(context, Event.CANCEL);
+		}
 	}
 
 	private function tabNavigator_previousEdgePuller_openHandler(event:Event):Void {
@@ -526,9 +540,11 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
 
 		var context = this._dragTransitionContext;
-		context.dispatcher = null;
 		this._dragTransitionContext = null;
-		FeathersEvent.dispatch(context, Event.COMPLETE);
+		if (context != null) {
+			context.dispatcher = null;
+			FeathersEvent.dispatch(context, Event.COMPLETE);
+		}
 	}
 
 	private function tabNavigator_nextEdgePuller_openingHandler(event:FeathersEvent):Void {
@@ -536,6 +552,16 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		if (newIndex > this.maxSelectedIndex) {
 			event.preventDefault();
 			return;
+		}
+
+		var pointerID = this._nextEdgePuller.pointerID;
+		if (pointerID != -1) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimPointer(pointerID, this);
+			if (!result) {
+				event.preventDefault();
+				return;
+			}
 		}
 
 		if (this.nextTransition != null) {
@@ -555,9 +581,12 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
 
 		var context = this._dragTransitionContext;
-		context.dispatcher = null;
 		this._dragTransitionContext = null;
-		FeathersEvent.dispatch(context, Event.CANCEL);
+		// can be null if cancelled before the transition starts
+		if (context != null) {
+			context.dispatcher = null;
+			FeathersEvent.dispatch(context, Event.CANCEL);
+		}
 	}
 
 	private function tabNavigator_nextEdgePuller_openHandler(event:Event):Void {
@@ -573,8 +602,10 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		this._nextEdgePuller.enabled = this._enabled && this._swipeEnabled && this._selectedIndex < this.maxSelectedIndex;
 
 		var context = this._dragTransitionContext;
-		context.dispatcher = null;
 		this._dragTransitionContext = null;
-		FeathersEvent.dispatch(context, Event.COMPLETE);
+		if (context != null) {
+			context.dispatcher = null;
+			FeathersEvent.dispatch(context, Event.COMPLETE);
+		}
 	}
 }
