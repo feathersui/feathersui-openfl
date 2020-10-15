@@ -770,7 +770,7 @@ class Callout extends FeathersControl {
 			measureContent = cast(this._content, IMeasureObject);
 		}
 		if (this._content != null) {
-			var oldIgnoreContentReize = this._ignoreContentResize;
+			var oldIgnoreContentResize = this._ignoreContentResize;
 			this._ignoreContentResize = true;
 			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this._content,
 				this.explicitWidth != null ? this.explicitWidth
@@ -800,7 +800,7 @@ class Callout extends FeathersControl {
 			if (Std.is(this._content, IValidating)) {
 				cast(this._content, IValidating).validateNow();
 			}
-			this._ignoreContentResize = oldIgnoreContentReize;
+			this._ignoreContentResize = oldIgnoreContentResize;
 		}
 
 		var newWidth = this.explicitWidth;
