@@ -42,6 +42,8 @@ import openfl.ui.Multitouch;
 **/
 @:styleContext
 class Drawer extends FeathersControl implements IOpenCloseToggle {
+	private static final MAX_CLICK_DISTANCE_FOR_CLOSE = 6.0;
+
 	public function new(?target:InteractiveObject, ?content:DisplayObject) {
 		initializeDrawerTheme();
 		super();
@@ -239,6 +241,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	@:style
 	public var overlaySkin:DisplayObject = null;
 
+	private var _clickStartX = 0.0;
+	private var _clickStartY = 0.0;
+
 	private function initializeDrawerTheme():Void {
 		SteelDrawerStyles.initialize();
 	}
@@ -350,7 +355,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		if (Std.is(this._currentOverlaySkin, IProgrammaticSkin)) {
 			cast(this._currentOverlaySkin, IProgrammaticSkin).uiContext = this;
 		}
+		this._currentOverlaySkin.addEventListener(MouseEvent.MOUSE_DOWN, drawer_overlaySkin_mouseDownHandler, false, 0, true);
 		this._currentOverlaySkin.addEventListener(MouseEvent.CLICK, drawer_overlaySkin_clickHandler, false, 0, true);
+		this._currentOverlaySkin.addEventListener(TouchEvent.TOUCH_BEGIN, drawer_overlaySkin_touchBeginHandler, false, 0, true);
 		this._currentOverlaySkin.addEventListener(TouchEvent.TOUCH_TAP, drawer_overlaySkin_touchTapHandler, false, 0, true);
 		this._currentOverlaySkin.visible = false;
 		var index = this.getChildIndex(this._content);
@@ -377,7 +384,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		if (skin == null) {
 			return;
 		}
+		skin.removeEventListener(MouseEvent.MOUSE_DOWN, drawer_overlaySkin_mouseDownHandler);
 		skin.removeEventListener(MouseEvent.CLICK, drawer_overlaySkin_clickHandler);
+		skin.removeEventListener(TouchEvent.TOUCH_BEGIN, drawer_overlaySkin_touchBeginHandler);
 		skin.removeEventListener(TouchEvent.TOUCH_TAP, drawer_overlaySkin_touchTapHandler);
 		if (Std.is(skin, IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
@@ -532,11 +541,36 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		this.setInvalid(SIZE);
 	}
 
+	private function drawer_overlaySkin_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		this._clickStartX = event.localX;
+		this._clickStartY = event.localY;
+	}
+
 	private function drawer_overlaySkin_clickHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
+		var movementX = Math.abs(event.localX - this._clickStartX);
+		var movementY = Math.abs(event.localY - this._clickStartY);
+		if (movementX > MAX_CLICK_DISTANCE_FOR_CLOSE || movementY > MAX_CLICK_DISTANCE_FOR_CLOSE) {
+			return;
+		}
 		this.opened = false;
+	}
+
+	private function drawer_overlaySkin_touchBeginHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+		this._clickStartX = event.localX;
+		this._clickStartY = event.localY;
 	}
 
 	private function drawer_overlaySkin_touchTapHandler(event:TouchEvent):Void {
@@ -545,6 +579,11 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+		var movementX = Math.abs(event.localX - this._clickStartX);
+		var movementY = Math.abs(event.localY - this._clickStartY);
+		if (movementX > MAX_CLICK_DISTANCE_FOR_CLOSE || movementY > MAX_CLICK_DISTANCE_FOR_CLOSE) {
 			return;
 		}
 		this.opened = false;
