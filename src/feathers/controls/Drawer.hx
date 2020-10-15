@@ -43,6 +43,8 @@ import openfl.ui.Multitouch;
 	A container that displays primary `content` in the center with a `drawer`
 	that opens and closes from one of the four edges of the container.
 
+	@see [Tutorial: How to use the Drawer component](https://feathersui.com/learn/haxe-openfl/drawer/)
+
 	@since 1.0.0
 **/
 @:styleContext
