@@ -22,6 +22,9 @@ import openfl.events.EventDispatcher;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 import openfl.geom.Point;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
@@ -690,6 +693,10 @@ class EdgePuller extends EventDispatcher {
 	}
 
 	private function edgePuller_target_touchBeginHandler(event:TouchEvent):Void {
+		if (this.simulateTouch && event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
 		this.touchBegin(event.touchPointID, event.stageX, event.stageY);
 	}
 

@@ -1194,6 +1194,10 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function target_touchBeginHandler(event:TouchEvent):Void {
+		if (this.simulateTouch && event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
 		this.touchBegin(event.touchPointID, event.stageX, event.stageY);
 	}
 
