@@ -8,9 +8,8 @@
 
 package feathers.controls;
 
-import feathers.utils.ExclusivePointer;
-import feathers.themes.steel.components.SteelDrawerStyles;
 import feathers.core.FeathersControl;
+import feathers.core.IMeasureObject;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -19,7 +18,10 @@ import feathers.layout.AutoSizeMode;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.skins.IProgrammaticSkin;
+import feathers.themes.steel.components.SteelDrawerStyles;
 import feathers.utils.EdgePuller;
+import feathers.utils.ExclusivePointer;
+import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
@@ -44,69 +46,99 @@ import openfl.ui.Multitouch;
 class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private static final MAX_CLICK_DISTANCE_FOR_CLOSE = 6.0;
 
-	public function new(?target:InteractiveObject, ?content:DisplayObject) {
+	public function new(?content:InteractiveObject, ?drawer:DisplayObject) {
 		initializeDrawerTheme();
 		super();
-		this.target = target;
 		this.content = content;
+		this.drawer = drawer;
 	}
 
 	private var _edgePuller:EdgePuller;
 
-	private var _target:InteractiveObject;
+	private var _drawerMeasurements:Measurements;
+	private var _ignoreDrawerResize = false;
+	private var _drawer:DisplayObject;
 
 	/**
-		The target used for detecting pull gestures.
+		The drawer used for detecting pull gestures.
 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var target(get, set):InteractiveObject;
+	public var drawer(get, set):DisplayObject;
 
-	private function get_target():InteractiveObject {
-		return this._target;
+	private function get_drawer():DisplayObject {
+		return this._drawer;
 	}
 
-	private function set_target(value:InteractiveObject):InteractiveObject {
-		if (this._target == value) {
-			return this._target;
+	private function set_drawer(value:DisplayObject):DisplayObject {
+		if (this._drawer == value) {
+			return this._drawer;
 		}
-		if (this._target != null && this._target.parent == this) {
-			this.removeChild(this._target);
+		if (this._drawer != null) {
+			this._drawer.removeEventListener(Event.RESIZE, drawer_drawer_resizeHandler);
+			this._drawerMeasurements.restore(this._drawer);
+			if (this._drawer.parent == this) {
+				this.removeChild(this._drawer);
+			}
 		}
-		this._target = value;
-		if (this._target != null) {
-			this.addChild(this._target);
+		this._drawer = value;
+		if (this._drawer != null) {
+			this._drawer.visible = false;
+			this.addChild(this._drawer);
+			if (Std.is(this._drawer, IUIControl)) {
+				cast(this._drawer, IUIControl).initializeNow();
+			}
+			if (this._drawerMeasurements == null) {
+				this._drawerMeasurements = new Measurements(this._drawer);
+			} else {
+				this._drawerMeasurements.save(this._drawer);
+			}
+			this._drawer.addEventListener(Event.RESIZE, drawer_drawer_resizeHandler, false, 0, true);
 		}
 		this.setInvalid(DATA);
-		return this._target;
+		return this._drawer;
 	}
 
-	private var _content:DisplayObject;
+	private var _contentMeasurements:Measurements;
+	private var _ignoreContentResize = false;
+	private var _content:InteractiveObject;
 
 	/**
-		The content to display in the drawer.
+		The primary content to display in the container.
 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var content(get, set):DisplayObject;
+	public var content(get, set):InteractiveObject;
 
-	private function get_content():DisplayObject {
+	private function get_content():InteractiveObject {
 		return this._content;
 	}
 
-	private function set_content(value:DisplayObject):DisplayObject {
+	private function set_content(value:InteractiveObject):InteractiveObject {
 		if (this._content == value) {
 			return this._content;
 		}
-		if (this._content != null && this._target.parent == this) {
-			this.removeChild(this._content);
+		if (this._content != null) {
+			this._content.removeEventListener(Event.RESIZE, drawer_content_resizeHandler);
+			this._contentMeasurements.restore(this._content);
+			if (this._content.parent == this) {
+				this.removeChild(this._content);
+			}
 		}
 		this._content = value;
 		if (this._content != null) {
-			this._content.visible = false;
 			this.addChild(this._content);
+			if (Std.is(this._content, IUIControl)) {
+				cast(this._content, IUIControl).initializeNow();
+			}
+			if (this._contentMeasurements == null) {
+				this._contentMeasurements = new Measurements(this._content);
+			} else {
+				this._contentMeasurements.save(this._content);
+			}
+			this._content.addEventListener(Event.RESIZE, drawer_content_resizeHandler, false, 0, true);
 		}
 		this.setInvalid(DATA);
 		return this._content;
@@ -252,7 +284,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		super.initialize();
 
 		if (this._edgePuller == null) {
-			this._edgePuller = new EdgePuller(this._target);
+			this._edgePuller = new EdgePuller(this._content);
 		}
 		this._edgePuller.addEventListener(FeathersEvent.OPENING, drawer_edgePuller_openingHandler);
 		this._edgePuller.addEventListener(FeathersEvent.CLOSING, drawer_edgePuller_closingHandler);
@@ -267,7 +299,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (dataInvalid) {
-			this._edgePuller.target = this._target;
+			this._edgePuller.target = this._content;
 			this._edgePuller.pullableEdge = this._pullableEdge;
 			if (this._pendingOpened != null) {
 				this._edgePuller.opened = this._pendingOpened;
@@ -288,7 +320,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 
 		this.measure();
 
-		this.layoutContent();
+		this.layoutChildren();
 	}
 
 	private function measure():Bool {
@@ -314,21 +346,78 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			return this.saveMeasurements(stageWidth, stageHeight, stageWidth, stageHeight, Math.POSITIVE_INFINITY, Math.POSITIVE_INFINITY);
 		}
 
-		// TODO: measure content
-		var newWidth = 0.0;
-		var newHeight = 0.0;
-		var newMinWidth = 0.0;
-		var newMinHeight = 0.0;
-		var newMaxWidth = Math.POSITIVE_INFINITY;
-		var newMaxHeight = Math.POSITIVE_INFINITY;
+		var measureContent:IMeasureObject = null;
+		if (Std.is(this._content, IMeasureObject)) {
+			measureContent = cast(this._content, IMeasureObject);
+		}
+		if (this._content != null) {
+			var oldIgnoreContentResize = this._ignoreContentResize;
+			this._ignoreContentResize = true;
+			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this._content, this.explicitWidth, this.explicitHeight,
+				this.explicitMinWidth, this.explicitMinHeight, this.explicitMaxWidth, this.explicitMaxHeight);
+			if (Std.is(this._content, IValidating)) {
+				cast(this._content, IValidating).validateNow();
+			}
+			this._ignoreContentResize = oldIgnoreContentResize;
+		}
+
+		var newWidth = this.explicitWidth;
+		if (needsWidth) {
+			newWidth = 0.0;
+			if (this._content != null) {
+				newWidth = this._content.width;
+			}
+		}
+		var newHeight = this.explicitHeight;
+		if (needsHeight) {
+			newHeight = 0.0;
+			if (this._content != null) {
+				newHeight = this._content.height;
+			}
+		}
+		var newMinWidth = this.explicitMinWidth;
+		if (needsMinWidth) {
+			if (measureContent != null) {
+				newMinWidth = measureContent.minWidth;
+			} else if (this._contentMeasurements != null) {
+				newMinWidth = this._contentMeasurements.minWidth;
+			}
+		}
+		var newMinHeight = this.explicitMinHeight;
+		if (needsMinHeight) {
+			if (measureContent != null) {
+				newMinHeight = measureContent.minHeight;
+			} else if (this._contentMeasurements != null) {
+				newMinHeight = this._contentMeasurements.minHeight;
+			}
+		}
+		var newMaxWidth = this.explicitMaxWidth;
+		if (needsMaxWidth) {
+			if (measureContent != null) {
+				newMaxWidth = measureContent.maxWidth;
+			} else if (this._contentMeasurements != null) {
+				newMaxWidth = this._contentMeasurements.maxWidth;
+			}
+		}
+		var newMaxHeight = this.explicitMaxHeight;
+		if (needsMaxHeight) {
+			if (measureContent != null) {
+				newMaxHeight = measureContent.maxHeight;
+			} else if (this._contentMeasurements != null) {
+				newMaxHeight = this._contentMeasurements.maxHeight;
+			}
+		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
 	private function refreshEnabled():Void {
-		this._edgePuller.enabled = this._enabled;
-		if (Std.is(this._target, IUIControl)) {
-			cast(this._target, IUIControl).enabled = this._enabled;
+		this._edgePuller.enabled = this._enabled && this._drawer != null;
+		if (Std.is(this._content, IUIControl)) {
+			cast(this._content, IUIControl).enabled = this._enabled;
+		}
+		if (Std.is(this._drawer, IUIControl)) {
+			cast(this._drawer, IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -360,7 +449,10 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		this._currentOverlaySkin.addEventListener(TouchEvent.TOUCH_BEGIN, drawer_overlaySkin_touchBeginHandler, false, 0, true);
 		this._currentOverlaySkin.addEventListener(TouchEvent.TOUCH_TAP, drawer_overlaySkin_touchTapHandler, false, 0, true);
 		this._currentOverlaySkin.visible = false;
-		var index = this.getChildIndex(this._content);
+		var index = -1;
+		if (this._drawer != null) {
+			index = this.getChildIndex(this._drawer);
+		}
 		if (index == -1) {
 			index = this.numChildren;
 		}
@@ -400,61 +492,76 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		}
 	}
 
-	private function layoutContent():Void {
-		if (this._target != null) {
-			this._target.x = 0.0;
-			this._target.y = 0.0;
-			this._target.width = this.actualWidth;
-			this._target.height = this.actualHeight;
+	private function layoutChildren():Void {
+		var oldIgnoreContentResize = this._ignoreContentResize;
+		this._ignoreContentResize = true;
+		if (this._content != null) {
+			this._content.x = 0.0;
+			this._content.y = 0.0;
+			this._content.width = this.actualWidth;
+			this._content.height = this.actualHeight;
+			if (Std.is(this._content, IValidating)) {
+				cast(this._content, IValidating).validateNow();
+			}
 		}
+		this._ignoreContentResize = oldIgnoreContentResize;
+
 		if (this._currentOverlaySkin != null) {
 			this._currentOverlaySkin.x = 0.0;
 			this._currentOverlaySkin.y = 0.0;
 			this._currentOverlaySkin.width = this.actualWidth;
 			this._currentOverlaySkin.height = this.actualHeight;
 		}
-		if (this._content != null) {
+		var oldIgnoreDrawerResize = this._ignoreDrawerResize;
+		this._ignoreDrawerResize = true;
+		if (this._drawer != null) {
 			switch (this._pullableEdge) {
 				case TOP:
-					this._content.x = 0.0;
-					this._content.width = this.actualWidth;
+					this._drawer.x = 0.0;
+					this._drawer.width = this.actualWidth;
 				case RIGHT:
-					this._content.y = 0.0;
-					this._content.height = this.actualHeight;
+					this._drawer.y = 0.0;
+					this._drawer.height = this.actualHeight;
 				case BOTTOM:
-					this._content.x = 0.0;
-					this._content.width = this.actualWidth;
+					this._drawer.x = 0.0;
+					this._drawer.width = this.actualWidth;
 				case LEFT:
-					this._content.y = 0.0;
-					this._content.height = this.actualHeight;
+					this._drawer.y = 0.0;
+					this._drawer.height = this.actualHeight;
 				default:
 					throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 			}
-			if (Std.is(this._content, IValidating)) {
-				cast(this._content, IValidating).validateNow();
+			if (Std.is(this._drawer, IValidating)) {
+				cast(this._drawer, IValidating).validateNow();
 			}
-			this._edgePuller.maxPullDistance = switch (this._pullableEdge) {
-				case TOP: this._content.height;
-				case RIGHT: this._content.width;
-				case BOTTOM: this._content.height;
-				case LEFT: this._content.width;
-				default:
-					throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
+			var maxPullDistance = 0.0;
+			if (this._drawer != null) {
+				maxPullDistance = switch (this._pullableEdge) {
+					case TOP: this._drawer.height;
+					case RIGHT: this._drawer.width;
+					case BOTTOM: this._drawer.height;
+					case LEFT: this._drawer.width;
+					default:
+						throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
+				}
 			}
+
+			this._edgePuller.maxPullDistance = maxPullDistance;
 		}
+		this._ignoreDrawerResize = oldIgnoreDrawerResize;
 	}
 
 	private function updateWithPullDistance():Void {
 		switch (this._pullableEdge) {
 			case TOP:
-				this._content.y = -this._content.height + this._edgePuller.pullDistance
+				this._drawer.y = -this._drawer.height + this._edgePuller.pullDistance
 					;
 			case RIGHT:
-				this._content.x = this.actualWidth - this._edgePuller.pullDistance;
+				this._drawer.x = this.actualWidth - this._edgePuller.pullDistance;
 			case BOTTOM:
-				this._content.y = this.actualHeight - this._edgePuller.pullDistance;
+				this._drawer.y = this.actualHeight - this._edgePuller.pullDistance;
 			case LEFT:
-				this._content.x = -this._content.width + this._edgePuller.pullDistance
+				this._drawer.x = -this._drawer.width + this._edgePuller.pullDistance
 					;
 			default:
 				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
@@ -468,11 +575,14 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		if (this._edgePuller.maxPullDistance != null) {
 			return this._edgePuller.maxPullDistance;
 		}
+		if (this._content == null) {
+			return 0.0;
+		}
 		return switch (this._pullableEdge) {
-			case TOP: this._target.height;
-			case RIGHT: this._target.width;
-			case BOTTOM: this._target.height;
-			case LEFT: this._target.width;
+			case TOP: this._content.height;
+			case RIGHT: this._content.width;
+			case BOTTOM: this._content.height;
+			case LEFT: this._content.width;
 			default:
 				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 		};
@@ -494,7 +604,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			return;
 		}
 		this.updateWithPullDistance();
-		this._content.visible = true;
+		this._drawer.visible = true;
 		if (this._currentOverlaySkin != null) {
 			this._currentOverlaySkin.visible = true;
 		}
@@ -507,7 +617,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			return;
 		}
 		this.updateWithPullDistance();
-		this._content.visible = true;
+		this._drawer.visible = true;
 		if (this._currentOverlaySkin != null) {
 			this._currentOverlaySkin.visible = true;
 		}
@@ -519,7 +629,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	}
 
 	private function drawer_edgePuller_closeHandler(event:Event):Void {
-		this._content.visible = false;
+		this._drawer.visible = false;
 		if (this._currentOverlaySkin != null) {
 			this._currentOverlaySkin.alpha = this._overlaySkinAlpha;
 			this._currentOverlaySkin.visible = false;
@@ -587,5 +697,19 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			return;
 		}
 		this.opened = false;
+	}
+
+	private function drawer_drawer_resizeHandler(event:Event):Void {
+		if (this._ignoreDrawerResize) {
+			return;
+		}
+		this.setInvalid(SIZE);
+	}
+
+	private function drawer_content_resizeHandler(event:Event):Void {
+		if (this._ignoreContentResize) {
+			return;
+		}
+		this.setInvalid(SIZE);
 	}
 }
