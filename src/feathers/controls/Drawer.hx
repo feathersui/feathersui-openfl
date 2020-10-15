@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.ExclusivePointer;
 import feathers.themes.steel.components.SteelDrawerStyles;
 import feathers.core.FeathersControl;
 import feathers.core.IOpenCloseToggle;
@@ -469,6 +470,15 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	}
 
 	private function drawer_edgePuller_openingHandler(event:FeathersEvent):Void {
+		var pointerID = this._edgePuller.pointerID;
+		if (pointerID != -1) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimPointer(pointerID, this);
+			if (!result) {
+				event.preventDefault();
+				return;
+			}
+		}
 		var result = FeathersEvent.dispatch(this, FeathersEvent.OPENING);
 		if (!result) {
 			event.preventDefault();

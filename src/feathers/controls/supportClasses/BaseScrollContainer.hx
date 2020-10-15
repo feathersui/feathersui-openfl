@@ -8,6 +8,8 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.events.TouchEvent;
+import feathers.utils.ExclusivePointer;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
@@ -794,9 +796,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 		this.scroller.scrollX = this._temporaryScrollX;
 		this.scroller.scrollY = this._temporaryScrollY;
-		this.scroller.addEventListener(Event.SCROLL, scroller_scrollHandler);
-		this.scroller.addEventListener(ScrollEvent.SCROLL_START, scroller_scrollStartHandler);
-		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, scroller_scrollCompleteHandler);
+		this.scroller.addEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
+		this.scroller.addEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
+		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
 	}
 
 	override private function update():Void {
@@ -1605,14 +1607,25 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.scrollWithKeyboard(event);
 	}
 
-	private function scroller_scrollStartHandler(event:ScrollEvent):Void {
+	private function baseScrollContainer_scroller_scrollStartHandler(event:ScrollEvent):Void {
+		var pointerID = this.scroller.pointerID;
+		if (pointerID != -1) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimPointer(pointerID, this);
+			if (!result) {
+				this.scroller.stop();
+				return;
+			}
+			this._viewPort.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollContainer_viewPort_mouseDownHandler);
+			this._viewPort.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollContainer_viewPort_touchBeginHandler);
+		}
 		this._scrollerDraggingX = false;
 		this._scrollerDraggingY = false;
 		this.checkForRevealScrollBars();
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 	}
 
-	private function scroller_scrollHandler(event:Event):Void {
+	private function baseScrollContainer_scroller_scrollHandler(event:Event):Void {
 		if (this._ignoreScrollerChanges) {
 			return;
 		}
@@ -1626,7 +1639,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 	}
 
-	private function scroller_scrollCompleteHandler(event:ScrollEvent):Void {
+	private function baseScrollContainer_scroller_scrollCompleteHandler(event:ScrollEvent):Void {
+		this._viewPort.removeEventListener(MouseEvent.MOUSE_DOWN, baseScrollContainer_viewPort_mouseDownHandler);
+		this._viewPort.removeEventListener(TouchEvent.TOUCH_BEGIN, baseScrollContainer_viewPort_touchBeginHandler);
 		this._scrollerDraggingX = false;
 		this._scrollerDraggingY = false;
 		if (!this._scrollBarXHover && !this.fixedScrollBars && this.autoHideScrollBars) {
@@ -1636,6 +1651,29 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.hideScrollBarY();
 		}
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
+	}
+
+	private function reclaimPointer(pointerID:Int):Void {
+		if (this.scroller.pointerID != pointerID) {
+			return;
+		}
+		if (pointerID == -1) {
+			return;
+		}
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var claim = exclusivePointer.getClaim(pointerID);
+		if (claim != null) {
+			return;
+		}
+		exclusivePointer.claimPointer(pointerID, this);
+	}
+
+	private function baseScrollContainer_viewPort_mouseDownHandler(event:MouseEvent):Void {
+		this.reclaimPointer(Scroller.POINTER_ID_MOUSE);
+	}
+
+	private function baseScrollContainer_viewPort_touchBeginHandler(event:TouchEvent):Void {
+		this.reclaimPointer(event.touchPointID);
 	}
 
 	private function scrollBarX_changeHandler(event:Event):Void {
