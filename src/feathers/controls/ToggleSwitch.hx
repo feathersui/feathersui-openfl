@@ -16,6 +16,7 @@ import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelToggleSwitchStyles;
+import feathers.utils.ExclusivePointer;
 import motion.Actuate;
 import motion.actuators.SimpleActuator;
 import motion.easing.IEasing;
@@ -578,6 +579,11 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 	private function toggleSwitch_mouseDownHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
+			return;
+		}
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		if (!result) {
 			return;
 		}
 		this._dragStartX = this.mouseX;
