@@ -53,6 +53,9 @@ import openfl.ui.MouseCursor;
 #if (lime && !flash)
 import lime.ui.MouseCursor as LimeMouseCursor;
 #end
+#if air
+import openfl.ui.Multitouch;
+#end
 
 @:event(openfl.events.Event.CHANGE)
 
