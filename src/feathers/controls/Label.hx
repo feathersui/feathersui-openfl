@@ -36,7 +36,7 @@ import openfl.text.TextFieldAutoSize;
 	this.addChild(label);
 	```
 
-	@see [Tutorial: How to use the Label component](https://feathersui.com/learn/haxe-openfl/help/label/)
+	@see [Tutorial: How to use the Label component](https://feathersui.com/learn/haxe-openfl/label/)
 
 	@since 1.0.0
 **/
