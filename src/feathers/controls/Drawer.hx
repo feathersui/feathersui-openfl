@@ -61,6 +61,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		super();
 		this.content = content;
 		this.drawer = drawer;
+		this.addEventListener(Event.ADDED_TO_STAGE, drawer_addedToStageHandler);
 	}
 
 	private var _edgePuller:EdgePuller;
@@ -661,6 +662,18 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 
 	private function drawer_edgePuller_changeHandler(event:Event):Void {
 		this.updateWithPullDistance();
+	}
+
+	private function drawer_addedToStageHandler(event:Event):Void {
+		if (this._autoSizeMode == STAGE) {
+			// if we validated before being added to the stage, or if we've
+			// been removed from stage and added again, we need to be sure
+			// that the new stage dimensions are accounted for.
+			this.setInvalid(SIZE);
+
+			this.addEventListener(Event.REMOVED_FROM_STAGE, drawer_removedFromStageHandler);
+			this.stage.addEventListener(Event.RESIZE, drawer_stage_resizeHandler);
+		}
 	}
 
 	private function drawer_removedFromStageHandler(event:Event):Void {
