@@ -274,8 +274,11 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function preLayout():Void {
+		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
+		this._ignoreLayoutChanges = true;
 		this._rowLayout.columns = this._columns;
 		this._rowLayout.customColumnWidths = this._customColumnWidths;
+		this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 
 		if (this._defaultStorage.cellRendererRecycler.update == null) {
 			this._defaultStorage.cellRendererRecycler.update = defaultUpdateCellRenderer;

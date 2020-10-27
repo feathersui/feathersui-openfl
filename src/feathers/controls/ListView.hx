@@ -552,6 +552,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
 	private var _virtualCache:Array<Dynamic> = [];
+	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
+
+	private var _currentItemState = new ListViewItemState();
 
 	private var _selectable:Bool = true;
 
@@ -638,6 +641,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	public var pointerSelectionEnabled:Bool = true;
 
 	private var _ignoreSelectionChange = false;
+	private var _ignoreLayoutChanges = false;
 
 	/**
 		Converts an item to text to display within list view. By default, the
@@ -886,9 +890,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.inactiveItemRenderers.resize(0);
 	}
 
-	private var _currentItemState = new ListViewItemState();
-	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
-
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
 		this._layoutItems.resize(0);
@@ -901,7 +902,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
+			this._ignoreLayoutChanges = true;
 			virtualLayout.virtualCache = this._virtualCache;
+			this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 			virtualLayout.getVisibleIndices(this._dataProvider.length, this.listViewPort.visibleWidth, this.listViewPort.visibleHeight, this._visibleIndices);
 		} else {
 			this._visibleIndices.start = 0;

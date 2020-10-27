@@ -428,6 +428,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private var _unrenderedLocations:Array<Array<Int>> = [];
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _virtualCache:Array<Dynamic> = [];
+	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
+	private var _currentItemState = new TreeViewItemState();
 
 	private var _selectable:Bool = true;
 
@@ -515,6 +517,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private var _ignoreSelectionChange = false;
 	private var _ignoreOpenedChange = false;
+	private var _ignoreLayoutChanges = false;
 
 	/**
 		Converts an item to text to display within tree view. By default, the
@@ -820,9 +823,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.inactiveItemRenderers.resize(0);
 	}
 
-	private var _currentItemState = new TreeViewItemState();
-	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
-
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
 		this._layoutItems.resize(0);
@@ -831,7 +831,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
+			this._ignoreLayoutChanges = true;
 			virtualLayout.virtualCache = this._virtualCache;
+			this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 			virtualLayout.getVisibleIndices(this._layoutItems.length, this.treeViewPort.visibleWidth, this.treeViewPort.visibleHeight, this._visibleIndices);
 		} else {
 			this._visibleIndices.start = 0;

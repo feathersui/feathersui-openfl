@@ -768,6 +768,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private var _ignoreSelectionChange = false;
+	private var _ignoreLayoutChanges = false;
+	private var _ignoreHeaderLayoutChanges = false;
 
 	/**
 		Scrolls the grid view so that the specified row is completely visible.
@@ -931,12 +933,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		if (this._headerContainer != null) {
+			var oldIgnoreHeaderLayoutChanges = this._ignoreHeaderLayoutChanges;
+			this._ignoreHeaderLayoutChanges = true;
 			switch (this.scrollBarYPosition) {
 				case LEFT:
 					this._headerContainerLayout.paddingLeft = this.leftViewPortOffset;
 				default:
 					this._headerContainerLayout.paddingRight = this.rightViewPortOffset;
 			};
+			this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
 
 			this._headerContainer.validateNow();
 			this.topViewPortOffset += this._headerContainer.height;
@@ -968,7 +973,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._headerContainer == null) {
 			return;
 		}
+		var oldIgnoreHeaderLayoutChanges = this._ignoreHeaderLayoutChanges;
+		this._ignoreHeaderLayoutChanges = true;
 		this._headerContainerLayout.customColumnWidths = this._customColumnWidths;
+		this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
+
 		this._headerContainer.x = this.paddingLeft;
 		this._headerContainer.y = this.paddingTop;
 		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
@@ -1028,7 +1037,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshHeaderRenderers():Void {
+		var oldIgnoreHeaderLayoutChanges = this._ignoreHeaderLayoutChanges;
+		this._ignoreHeaderLayoutChanges = true;
 		this._headerContainerLayout.columns = this._columns;
+		this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
 
 		if (this._headerRendererRecycler.update == null) {
 			this._headerRendererRecycler.update = defaultUpdateHeaderRenderer;
@@ -1166,7 +1178,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		if (this._virtualLayout && Std.is(this._layout, IVirtualLayout)) {
 			var virtualLayout = cast(this._layout, IVirtualLayout);
+			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
+			this._ignoreLayoutChanges = true;
 			virtualLayout.virtualCache = this._virtualCache;
+			this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 			virtualLayout.getVisibleIndices(this._dataProvider.length, this.gridViewPort.visibleWidth, this.gridViewPort.visibleHeight, this._visibleIndices);
 		} else {
 			this._visibleIndices.start = 0;
