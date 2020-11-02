@@ -6,6 +6,7 @@ import com.feathersui.components.views.CheckScreen;
 import com.feathersui.components.views.ComboBoxScreen;
 import com.feathersui.components.views.GridViewScreen;
 import com.feathersui.components.views.GroupListViewScreen;
+import com.feathersui.components.views.HDividedBoxScreen;
 import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
@@ -24,11 +25,11 @@ import com.feathersui.components.views.TextCalloutScreen;
 import com.feathersui.components.views.TextInputScreen;
 import com.feathersui.components.views.ToggleSwitchScreen;
 import com.feathersui.components.views.TreeViewScreen;
+import com.feathersui.components.views.VDividedBoxScreen;
 import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterAction;
 import feathers.controls.navigators.RouterNavigator;
-import feathers.motion.transitions.SlideTransitions;
 import openfl.events.Event;
 
 class Main extends Application {
@@ -64,6 +65,12 @@ class Main extends Application {
 
 		var comboBox = Route.withClass(ViewPaths.COMBO_BOX, ComboBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(comboBox);
+
+		var hDividedBox = Route.withClass(ViewPaths.HORIZONTAL_DIVIDED_BOX, HDividedBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(hDividedBox);
+
+		var vDividedBox = Route.withClass(ViewPaths.VERTICAL_DIVIDED_BOX, VDividedBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(vDividedBox);
 
 		var gridView = Route.withClass(ViewPaths.GRID_VIEW, GridViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(gridView);
