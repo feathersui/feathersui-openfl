@@ -207,6 +207,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			return this._pendingOpened;
 		}
 		this._pendingOpened = value;
+		if (value && this._drawer == null) {
+			throw new ArgumentError("Cannot set opened property to true because drawer property is null");
+		}
 		this.setInvalid(DATA);
 		return this._pendingOpened;
 	}
