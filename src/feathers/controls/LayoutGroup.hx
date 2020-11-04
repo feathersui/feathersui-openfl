@@ -137,9 +137,9 @@ class LayoutGroup extends FeathersControl {
 	public var backgroundSkin:DisplayObject = null;
 
 	/**
-		The default background skin to display behind all content added to the
-		group. The background skin is resized to fill the complete width and
-		height of the group.
+		The background skin to display behind all content added to the group when
+		the group is disabled. The background skin is resized to fill the
+		complete width and height of the group.
 
 		The following example gives the group a disabled background skin:
 
