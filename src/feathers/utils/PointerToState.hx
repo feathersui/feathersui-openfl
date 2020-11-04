@@ -79,6 +79,28 @@ class PointerToState<T> {
 		return this._target;
 	}
 
+	private var _stateContext:IStateContext<T> = null;
+
+	/**
+		An optional `IStateContext` that may be used instead of `target`.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var stateContext(get, set):IStateContext<T>;
+
+	private function get_stateContext():IStateContext<T> {
+		return this._stateContext;
+	}
+
+	private function set_stateContext(value:IStateContext<T>):IStateContext<T> {
+		if (this._stateContext == value) {
+			return this._stateContext;
+		}
+		this._stateContext = value;
+		return this._stateContext;
+	}
+
 	private var _callback:(T) -> Void = null;
 
 	/**
@@ -260,8 +282,12 @@ class PointerToState<T> {
 
 	private function changeState(value:T):Void {
 		var oldState = this._currentState;
-		if (Std.is(this._target, IStateContext)) {
-			oldState = cast(this._target, IStateContext<Dynamic>).currentState;
+		var targetStateContext:IStateContext<T> = this._stateContext;
+		if (targetStateContext == null && Std.is(this._target, IStateContext)) {
+			targetStateContext = cast this._target;
+		}
+		if (targetStateContext != null) {
+			oldState = targetStateContext.currentState;
 		}
 		this._currentState = value;
 		if (oldState == value) {
