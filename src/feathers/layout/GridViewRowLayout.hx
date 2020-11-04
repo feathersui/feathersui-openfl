@@ -8,14 +8,13 @@
 
 package feathers.layout;
 
-import feathers.events.FeathersEvent;
 import feathers.controls.GridViewColumn;
-import feathers.data.IFlatCollection;
-import feathers.core.IMeasureObject;
-import openfl.events.Event;
-import openfl.display.DisplayObject;
-import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
+import feathers.data.IFlatCollection;
+import feathers.events.FeathersEvent;
+import openfl.display.DisplayObject;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
 
 @:event(openfl.events.Event.CHANGE)
 
@@ -247,6 +246,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		}
 		var needsAnotherPass = false;
 		do {
+			needsAnotherPass = false;
 			var widthSum = 0.0;
 			var percentToPixels = remainingWidth / totalPercentWidth;
 			for (index in pendingIndices) {
