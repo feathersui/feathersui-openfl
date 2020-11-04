@@ -9,6 +9,7 @@
 package feathers.controls.dataRenderers;
 
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.core.IPointerDelegate;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.data.GridViewCellState;
@@ -483,6 +484,10 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (Std.is(cellRenderer, ILayoutIndexObject)) {
 			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
 			layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
+		}
+		if (Std.is(cellRenderer, IPointerDelegate)) {
+			var pointerDelgate = cast(cellRenderer, IPointerDelegate);
+			pointerDelgate.pointerTarget = this;
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}

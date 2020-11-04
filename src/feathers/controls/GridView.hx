@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.controls.dataRenderers.CellRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -641,7 +640,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._virtualLayout;
 	}
 
-	private var _cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = DisplayObjectRecycler.withClass(CellRenderer);
+	private var _cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
 
 	/**
 		Manages cell renderers used by the grid view.

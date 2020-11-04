@@ -8,7 +8,9 @@
 
 package feathers.controls.dataRenderers;
 
+import openfl.display.InteractiveObject;
 import feathers.core.IFocusObject;
+import feathers.core.IPointerDelegate;
 import feathers.core.IValidating;
 import feathers.layout.ILayoutIndexObject;
 import feathers.text.TextFormat;
@@ -25,7 +27,7 @@ import openfl.text.TextFieldAutoSize;
 	@since 1.0.0
 **/
 @:styleContext
-class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements IDataRenderer {
+class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements IDataRenderer implements IPointerDelegate {
 	/**
 		Creates a new `ItemRenderer` object.
 
@@ -127,6 +129,27 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		this.setInvalid(DATA);
 		this.setInvalid(STYLES);
 		return this._layoutIndex;
+	}
+
+	private var _pointerTarget:InteractiveObject;
+
+	/**
+		@see `feathers.core.IPointerDelegate.pointerTarget`
+	**/
+	@:flash.property
+	public var pointerTarget(get, set):InteractiveObject;
+
+	private function get_pointerTarget():InteractiveObject {
+		return this._pointerTarget;
+	}
+
+	private function set_pointerTarget(value:InteractiveObject):InteractiveObject {
+		if (this._pointerTarget == value) {
+			return this._pointerTarget;
+		}
+		this._pointerTarget = value;
+		this.setInvalid(DATA);
+		return this._pointerTarget;
 	}
 
 	/**
@@ -299,6 +322,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		this._updatedSecondaryTextStyles = false;
 
 		if (dataInvalid) {
+			this._pointerToState.target = (this._pointerTarget != null) ? this._pointerTarget : this;
 			this.refreshSecondaryTextField();
 		}
 
