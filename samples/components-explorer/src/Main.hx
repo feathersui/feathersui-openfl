@@ -4,6 +4,7 @@ import com.feathersui.components.views.ButtonScreen;
 import com.feathersui.components.views.CalloutScreen;
 import com.feathersui.components.views.CheckScreen;
 import com.feathersui.components.views.ComboBoxScreen;
+import com.feathersui.components.views.DrawerScreen;
 import com.feathersui.components.views.GridViewScreen;
 import com.feathersui.components.views.GroupListViewScreen;
 import com.feathersui.components.views.HDividedBoxScreen;
@@ -71,6 +72,9 @@ class Main extends Application {
 
 		var vDividedBox = Route.withClass(ViewPaths.VERTICAL_DIVIDED_BOX, VDividedBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(vDividedBox);
+
+		var drawer = Route.withClass(ViewPaths.DRAWER, DrawerScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(drawer);
 
 		var gridView = Route.withClass(ViewPaths.GRID_VIEW, GridViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(gridView);

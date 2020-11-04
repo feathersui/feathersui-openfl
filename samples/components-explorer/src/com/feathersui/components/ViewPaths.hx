@@ -7,6 +7,7 @@ class ViewPaths {
 	public static final CALLOUT = "/callout";
 	public static final CHECK = "/check";
 	public static final COMBO_BOX = "/combo-box";
+	public static final DRAWER = "/drawer";
 	public static final GRID_VIEW = "/grid-view";
 	public static final GROUP_LIST_VIEW = "/group-list-view";
 	public static final HORIZONTAL_DIVIDED_BOX = "/horizontal-divided-box";

@@ -34,6 +34,7 @@ class MainMenu extends Panel {
 			new MenuItem("Combo Box", ViewPaths.COMBO_BOX),
 			new MenuItem("Divided Box (Horizontal)", ViewPaths.HORIZONTAL_DIVIDED_BOX),
 			new MenuItem("Divided Box (Vertical)", ViewPaths.VERTICAL_DIVIDED_BOX),
+			new MenuItem("Drawer", ViewPaths.DRAWER),
 			new MenuItem("Grid View", ViewPaths.GRID_VIEW),
 			new MenuItem("Group List View", ViewPaths.GROUP_LIST_VIEW),
 			new MenuItem("Label", ViewPaths.LABEL),
