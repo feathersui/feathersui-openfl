@@ -278,21 +278,11 @@ class BaseDividedBox extends FeathersControl {
 			return child;
 		}
 		if (oldIndex >= 0) {
-			this.items.remove(child);
+			this.removeItem(child);
 		}
 		// insert into the array before adding as a child, so that display list
 		// APIs work in an Event.ADDED listener
-		this.items.insert(index, child);
-		var layoutIndex = index * 2;
-		var childIndex = layoutIndex + ((this._currentBackgroundSkin != null) ? 1 : 0);
-		if (index != 0) {
-			var divider = this.createDivider();
-			super.addChildAt(divider, childIndex - 1);
-			this.dividers.insert(index - 1, divider);
-			this._layoutItems.insert(layoutIndex - 1, divider);
-		}
-		this._layoutItems.insert(layoutIndex, child);
-		var result = super.addChildAt(child, childIndex);
+		var result = this.addItemAt(child, index);
 		// add listeners or access properties after adding a child
 		// because adding the child may result in better errors (like for null)
 		child.addEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
@@ -307,16 +297,7 @@ class BaseDividedBox extends FeathersControl {
 		if (child == null || child.parent != this) {
 			return child;
 		}
-		this.items.remove(child);
-		var index = this.getRawChildIndex(child);
-		if (index != 0) {
-			var divider = super.getChildAt(index - 1);
-			this.dividers.splice(index - 1, 1);
-			this._layoutItems.remove(divider);
-			this.destroyDivider(cast(divider, InteractiveObject));
-		}
-		this._layoutItems.remove(child);
-		var result = super.removeChild(child);
+		var result = this.removeItem(child);
 		// remove listeners or access properties after removing a child
 		// because removing the child may result in better errors (like for null)
 		child.removeEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
@@ -447,6 +428,33 @@ class BaseDividedBox extends FeathersControl {
 		this._displayListBypassEnabled = false;
 		this.removeRawChildren(beginIndex, endIndex);
 		this._displayListBypassEnabled = oldBypass;
+	}
+
+	private function addItemAt(child:DisplayObject, index:Int):DisplayObject {
+		this.items.insert(index, child);
+		var layoutIndex = index * 2;
+		var childIndex = layoutIndex + ((this._currentBackgroundSkin != null) ? 1 : 0);
+		if (index != 0) {
+			var divider = this.createDivider();
+			super.addChildAt(divider, childIndex - 1);
+			this.dividers.insert(index - 1, divider);
+			this._layoutItems.insert(layoutIndex - 1, divider);
+		}
+		this._layoutItems.insert(layoutIndex, child);
+		return super.addChildAt(child, childIndex);
+	}
+
+	private function removeItem(child:DisplayObject):DisplayObject {
+		this.items.remove(child);
+		var index = this.getRawChildIndex(child);
+		if (index != 0) {
+			var divider = super.getChildAt(index - 1);
+			this.dividers.splice(index - 1, 1);
+			this._layoutItems.remove(divider);
+			this.destroyDivider(cast(divider, InteractiveObject));
+		}
+		this._layoutItems.remove(child);
+		return super.removeChild(child);
 	}
 
 	override private function update():Void {

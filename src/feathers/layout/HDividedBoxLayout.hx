@@ -34,8 +34,6 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
-	private var _fluidItemIndex:Int = -1;
-
 	private var _paddingTop:Float = 0.0;
 
 	/**
@@ -201,6 +199,52 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		return this._verticalAlign;
 	}
 
+	private var _customItemWidths:Array<Null<Float>>;
+
+	/**
+		Set automatically by `HDividedBox`. Do not set this manually.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var customItemWidths(get, set):Array<Null<Float>>;
+
+	private function get_customItemWidths():Array<Null<Float>> {
+		return this._customItemWidths;
+	}
+
+	private function set_customItemWidths(value:Array<Null<Float>>):Array<Null<Float>> {
+		if (this._customItemWidths == value) {
+			return this._customItemWidths;
+		}
+		this._customItemWidths = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this._customItemWidths;
+	}
+
+	private var _fallbackFluidIndex:Int = -1;
+
+	/**
+		Set automatically by `HDividedBox`. Do not set this manually.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var fallbackFluidIndex(get, set):Int;
+
+	private function get_fallbackFluidIndex():Int {
+		return this._fallbackFluidIndex;
+	}
+
+	private function set_fallbackFluidIndex(value:Int):Int {
+		if (this._fallbackFluidIndex == value) {
+			return this._fallbackFluidIndex;
+		}
+		this._fallbackFluidIndex = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this._fallbackFluidIndex;
+	}
+
 	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
@@ -266,7 +310,17 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function validateItems(items:Array<DisplayObject>) {
-		for (item in items) {
+		for (i in 0...items.length) {
+			var item = items[i];
+			var isDivider = i % 2 == 1;
+			if (!isDivider) {
+				if (this._customItemWidths != null && i < this._customItemWidths.length) {
+					var itemWidth = this._customItemWidths[i];
+					if (itemWidth != null) {
+						item.width = itemWidth;
+					}
+				}
+			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -296,39 +350,51 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 
 	private function applyPercentWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
 			explicitMaxWidth:Null<Float>):Void {
+		var totalCustomWidth = 0.0;
+		var customWidthIndices:Array<Int> = [];
+		var pendingIndices:Array<Int> = [];
 		var totalMeasuredWidth = 0.0;
 		var totalMinWidth = 0.0;
-		var fluidItemIndex = this._fluidItemIndex;
-		if (fluidItemIndex >= items.length) {
-			fluidItemIndex = -1;
-		}
-		var needsNewFluidItem = fluidItemIndex == -1;
+		var totalPercentWidth = 0.0;
 		for (i in 0...items.length) {
-			var isDivider = i % 2 == 1;
 			var item = items[i];
-			if (needsNewFluidItem && !isDivider && Std.is(item, IMeasureObject)) {
-				var measureItem = cast(item, IMeasureObject);
-				if (measureItem.explicitWidth == null) {
-					fluidItemIndex = i;
+			var isDivider = i % 2 == 1;
+			if (!isDivider) {
+				var nonDividerIndex = Math.floor(i / 2);
+				var needsPercentWidth = true;
+				if (this._customItemWidths != null && nonDividerIndex < this._customItemWidths.length) {
+					var itemWidth = this._customItemWidths[nonDividerIndex];
+					if (itemWidth != null) {
+						needsPercentWidth = false;
+						item.width = itemWidth;
+						totalCustomWidth += itemWidth;
+						customWidthIndices.push(i);
+						if (Std.is(item, IValidating)) {
+							// changing the width of the item may cause its height
+							// to change, so we need to validate. the height is
+							// needed for measurement.
+							cast(item, IValidating).validateNow();
+						}
+					}
+				}
+				if (needsPercentWidth) {
+					var percentWidth = 100.0;
+					if (Std.is(item, IMeasureObject)) {
+						var measureItem = cast(item, IMeasureObject);
+						var columnExplicitMinWidth = measureItem.explicitMinWidth;
+						if (columnExplicitMinWidth != null) {
+							totalMinWidth += columnExplicitMinWidth;
+						}
+					}
+					totalPercentWidth += percentWidth;
+					pendingIndices.push(i);
+					continue;
 				}
 			}
 			totalMeasuredWidth += item.width;
 		}
-		totalMeasuredWidth += this._paddingLeft + this._paddingRight;
-		if (fluidItemIndex == -1 && items.length > 0) {
-			fluidItemIndex = items.length - 1;
-		}
-		if (fluidItemIndex == -1) {
-			return;
-		}
-		this._fluidItemIndex = fluidItemIndex;
-		var fluidItem = items[fluidItemIndex];
-		totalMeasuredWidth -= fluidItem.width;
-		if (Std.is(fluidItem, IMeasureObject)) {
-			var measureItem = cast(fluidItem, IMeasureObject);
-			totalMinWidth += measureItem.minWidth;
-		}
 
+		totalMeasuredWidth += this._paddingLeft + this._paddingRight;
 		var remainingWidth = 0.0;
 		if (explicitWidth != null) {
 			remainingWidth = explicitWidth;
@@ -341,10 +407,95 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 			}
 		}
 		remainingWidth -= totalMeasuredWidth;
-		if (remainingWidth <= 0.0) {
+		var needsAnotherPass = false;
+		do {
+			needsAnotherPass = false;
+			var widthSum = 0.0;
+			var percentToPixels = remainingWidth / totalPercentWidth;
+			if (percentToPixels < 0.0) {
+				percentToPixels = 0.0;
+			}
+			for (index in pendingIndices) {
+				var item = items[index];
+				var percentWidth = 100.0;
+				// round to nearest pixel so that there aren't any visual gaps
+				// between items. we'll append the remainder at the end.
+				var itemWidth = Math.ffloor(percentToPixels * percentWidth);
+				var columnMinWidth:Null<Float> = null;
+				if (Std.is(item, IMeasureObject)) {
+					var measureItem = cast(item, IMeasureObject);
+					columnMinWidth = measureItem.explicitMinWidth;
+				}
+
+				if (columnMinWidth != null) {
+					if (columnMinWidth > remainingWidth) {
+						// we try to respect the item's minimum width, but if
+						// it's larger than the remaining space, we need to
+						// force it to fit
+						columnMinWidth = remainingWidth;
+					}
+					if (itemWidth < columnMinWidth) {
+						itemWidth = columnMinWidth;
+						remainingWidth -= itemWidth;
+						totalPercentWidth -= percentWidth;
+						pendingIndices.remove(index);
+						needsAnotherPass = true;
+					}
+				}
+				item.width = itemWidth;
+				if (Std.is(item, IValidating)) {
+					// changing the width of the item may cause its height
+					// to change, so we need to validate. the height is
+					// needed for measurement.
+					cast(item, IValidating).validateNow();
+				}
+				widthSum += itemWidth;
+			}
+			if (needsAnotherPass) {
+				widthSum = 0.0;
+			} else {
+				remainingWidth -= widthSum;
+			}
+		} while (needsAnotherPass);
+		if (remainingWidth > 0.0 && pendingIndices.length > 0) {
+			// minimize the impact of a non-integer width by adding the
+			// remainder to the final item
+			var index = pendingIndices[pendingIndices.length - 1];
+			var finalItem = items[index];
+			finalItem.width += remainingWidth;
 			return;
 		}
-		fluidItem.width = remainingWidth;
+
+		if (remainingWidth == 0.0) {
+			return;
+		}
+
+		var index = this._fallbackFluidIndex;
+		if (index == -1) {
+			index = items.length - 1;
+		}
+		if (index != -1) {
+			var fallbackItem = items[index];
+			var itemWidth = fallbackItem.width + remainingWidth;
+			if (itemWidth < 0.0) {
+				remainingWidth = itemWidth;
+				itemWidth = 0.0;
+				customWidthIndices.remove(index);
+			} else {
+				remainingWidth = 0.0;
+			}
+			fallbackItem.width = itemWidth;
+		}
+
+		if (remainingWidth == 0.0) {
+			return;
+		}
+
+		var offset = remainingWidth / customWidthIndices.length;
+		for (index in customWidthIndices) {
+			var item = items[index];
+			item.width = item.width + offset;
+		}
 	}
 
 	private function applyPercentHeight(items:Array<DisplayObject>, viewPortHeight:Float):Void {

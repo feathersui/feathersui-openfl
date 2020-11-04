@@ -1,10 +1,12 @@
 package feathers.controls;
 
 import feathers.controls.supportClasses.BaseDividedBox;
+import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.layout.HDividedBoxLayout;
 import feathers.themes.steel.components.SteelHDividedBoxStyles;
 import feathers.utils.DisplayUtil;
+import openfl.display.DisplayObject;
 #if (lime && !flash)
 import lime.ui.MouseCursor as LimeMouseCursor;
 #end
@@ -20,6 +22,9 @@ class HDividedBox extends BaseDividedBox {
 		#end
 	}
 
+	private var _hDividedBoxLayout:HDividedBoxLayout;
+	private var _customItemWidths:Array<Null<Float>> = [];
+	private var _fallbackFluidIndex:Int = -1;
 	private var _resizeStartStageX:Float;
 	private var _resizeStartWidth1:Float;
 	private var _resizeStartWidth2:Float;
@@ -28,12 +33,52 @@ class HDividedBox extends BaseDividedBox {
 		SteelHDividedBoxStyles.initialize();
 	}
 
+	override private function addItemAt(child:DisplayObject, index:Int):DisplayObject {
+		var result = super.addItemAt(child, index);
+		var explicitWidth:Null<Float> = null;
+		if (Std.is(child, IMeasureObject)) {
+			var measureChild = cast(child, IMeasureObject);
+			explicitWidth = measureChild.explicitWidth;
+		}
+		this._customItemWidths.insert(index, explicitWidth);
+		var layoutIndex = this._layoutItems.indexOf(child);
+		if (explicitWidth == null) {
+			if (this._fallbackFluidIndex == -1 || layoutIndex > this._fallbackFluidIndex) {
+				this._fallbackFluidIndex = layoutIndex;
+			}
+		}
+		return result;
+	}
+
+	override private function removeItem(child:DisplayObject):DisplayObject {
+		var index = this.items.indexOf(child);
+		var layoutIndex = this._layoutItems.indexOf(child);
+		if (this._fallbackFluidIndex == layoutIndex) {
+			this._fallbackFluidIndex = -1;
+		}
+		var result = super.removeItem(child);
+		if (index != -1) {
+			this._customItemWidths.splice(index, 1);
+		}
+		return result;
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 
-		if (this.layout == null) {
-			this.layout = new HDividedBoxLayout();
+		if (this._hDividedBoxLayout == null) {
+			this._hDividedBoxLayout = new HDividedBoxLayout();
 		}
+		this._hDividedBoxLayout.customItemWidths = this._customItemWidths;
+		this.layout = this._hDividedBoxLayout;
+	}
+
+	override private function handleLayout():Void {
+		var oldIgnoreChildChanges = this._ignoreChildChanges;
+		this._ignoreChildChanges = true;
+		this._hDividedBoxLayout.fallbackFluidIndex = this._fallbackFluidIndex;
+		this._ignoreChildChanges = oldIgnoreChildChanges;
+		super.handleLayout();
 	}
 
 	override private function prepareResize(dividerIndex:Int, stageX:Float, stageY:Float):Void {
@@ -79,9 +124,8 @@ class HDividedBox extends BaseDividedBox {
 		} else if (firstItemWidth > totalWidth) {
 			firstItemWidth = totalWidth;
 		}
-		var firstItem = this.items[dividerIndex];
-		var secondItem = this.items[dividerIndex + 1];
-		firstItem.width = firstItemWidth;
-		secondItem.width = totalWidth - firstItemWidth;
+		this._customItemWidths[dividerIndex] = firstItemWidth;
+		this._customItemWidths[dividerIndex + 1] = totalWidth - firstItemWidth;
+		this.setInvalid(LAYOUT);
 	}
 }

@@ -201,6 +201,52 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 		return this._horizontalAlign;
 	}
 
+	private var _customItemHeights:Array<Null<Float>>;
+
+	/**
+		Set automatically by `VDividedBox`. Do not set this manually.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var customItemHeights(get, set):Array<Null<Float>>;
+
+	private function get_customItemHeights():Array<Null<Float>> {
+		return this._customItemHeights;
+	}
+
+	private function set_customItemHeights(value:Array<Null<Float>>):Array<Null<Float>> {
+		if (this._customItemHeights == value) {
+			return this._customItemHeights;
+		}
+		this._customItemHeights = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this._customItemHeights;
+	}
+
+	private var _fallbackFluidIndex:Int = -1;
+
+	/**
+		Set automatically by `VDividedBox`. Do not set this manually.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var fallbackFluidIndex(get, set):Int;
+
+	private function get_fallbackFluidIndex():Int {
+		return this._fallbackFluidIndex;
+	}
+
+	private function set_fallbackFluidIndex(value:Int):Int {
+		if (this._fallbackFluidIndex == value) {
+			return this._fallbackFluidIndex;
+		}
+		this._fallbackFluidIndex = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this._fallbackFluidIndex;
+	}
+
 	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
@@ -266,7 +312,17 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function validateItems(items:Array<DisplayObject>) {
-		for (item in items) {
+		for (i in 0...items.length) {
+			var item = items[i];
+			var isDivider = i % 2 == 1;
+			if (!isDivider) {
+				if (this._customItemHeights != null && i < this._customItemHeights.length) {
+					var itemHeight = this._customItemHeights[i];
+					if (itemHeight != null) {
+						item.height = itemHeight;
+					}
+				}
+			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -327,39 +383,45 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 	private function applyPercentHeight(items:Array<DisplayObject>, explicitHeight:Null<Float>, explicitMinHeight:Null<Float>,
 			explicitMaxHeight:Null<Float>):Void {
+		var pendingIndices:Array<Int> = [];
+		var customHeightIndices:Array<Int> = [];
 		var totalMeasuredHeight = 0.0;
 		var totalMinHeight = 0.0;
-		var fluidItemIndex = this._fluidItemIndex;
-		if (fluidItemIndex >= items.length) {
-			fluidItemIndex = -1;
-		}
-		var needsNewFluidItem = fluidItemIndex == -1;
+		var totalPercentHeight = 0.0;
 		for (i in 0...items.length) {
-			var isDivider = i % 2 == 1;
 			var item = items[i];
-			if (needsNewFluidItem && !isDivider && Std.is(item, IMeasureObject)) {
-				var measureItem = cast(item, IMeasureObject);
-				if (measureItem.explicitHeight == null) {
-					fluidItemIndex = i;
+			var isDivider = i % 2 == 1;
+			if (!isDivider) {
+				var nonDividerIndex = Math.floor(i / 2);
+				var needsPercentHeight = true;
+				if (this._customItemHeights != null && nonDividerIndex < this._customItemHeights.length) {
+					var itemHeight = this._customItemHeights[nonDividerIndex];
+					if (itemHeight != null) {
+						needsPercentHeight = false;
+						item.height = itemHeight;
+						customHeightIndices.push(i);
+						if (Std.is(item, IValidating)) {
+							// changing the height of the item may cause its width
+							// to change, so we need to validate. the width is
+							// needed for measurement.
+							cast(item, IValidating).validateNow();
+						}
+					}
+				}
+				if (needsPercentHeight) {
+					var percentHeight = 100.0;
+					if (Std.is(item, IMeasureObject)) {
+						totalMinHeight += cast(item, IMeasureObject).minHeight;
+					}
+					totalPercentHeight += percentHeight;
+					pendingIndices.push(i);
+					continue;
 				}
 			}
 			totalMeasuredHeight += item.height;
 		}
-		totalMeasuredHeight += this._paddingTop + this._paddingBottom;
-		if (fluidItemIndex == -1 && items.length > 0) {
-			fluidItemIndex = items.length - 1;
-		}
-		if (fluidItemIndex == -1) {
-			return;
-		}
-		this._fluidItemIndex = fluidItemIndex;
-		var fluidItem = items[fluidItemIndex];
-		totalMeasuredHeight -= fluidItem.height;
-		if (Std.is(fluidItem, IMeasureObject)) {
-			var measureItem = cast(fluidItem, IMeasureObject);
-			totalMinHeight += measureItem.minHeight;
-		}
 
+		totalMeasuredHeight += this._paddingTop + this._paddingBottom;
 		var remainingHeight = 0.0;
 		if (explicitHeight != null) {
 			remainingHeight = explicitHeight;
@@ -372,9 +434,93 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			}
 		}
 		remainingHeight -= totalMeasuredHeight;
-		if (remainingHeight <= 0.0) {
+		var needsAnotherPass = false;
+		do {
+			needsAnotherPass = false;
+			var heightSum = 0.0;
+			var percentToPixels = remainingHeight / totalPercentHeight;
+			if (percentToPixels < 0.0) {
+				percentToPixels = 0.0;
+			}
+			for (index in pendingIndices) {
+				var item = items[index];
+				var percentHeight = 100.0;
+				// round to nearest pixel so that there aren't any visual gaps
+				// between items. we'll append the remainder at the end.
+				var itemHeight = Math.ffloor(percentToPixels * percentHeight);
+				var columnMinHeight:Null<Float> = null;
+				if (Std.is(item, IMeasureObject)) {
+					var measureItem = cast(item, IMeasureObject);
+					columnMinHeight = measureItem.explicitMinHeight;
+				}
+
+				if (columnMinHeight != null) {
+					if (columnMinHeight > remainingHeight) {
+						// we try to respect the item's minimum height, but if
+						// it's larger than the remaining space, we need to
+						// force it to fit
+						columnMinHeight = remainingHeight;
+					}
+					if (itemHeight > columnMinHeight) {
+						itemHeight = columnMinHeight;
+						remainingHeight -= itemHeight;
+						totalPercentHeight -= percentHeight;
+						pendingIndices.remove(index);
+						needsAnotherPass = true;
+					}
+				}
+				item.height = itemHeight;
+				if (Std.is(item, IValidating)) {
+					// changing the height of the item may cause its width
+					// to change, so we need to validate. the width is
+					// needed for measurement.
+					cast(item, IValidating).validateNow();
+				}
+				heightSum += itemHeight;
+			}
+			if (needsAnotherPass) {
+				heightSum = 0.0;
+			} else {
+				remainingHeight -= heightSum;
+			}
+		} while (needsAnotherPass);
+		if (remainingHeight > 0.0 && pendingIndices.length > 0) {
+			// minimize the impact of a non-integer width by adding the
+			// remainder to the final item
+			var index = pendingIndices[pendingIndices.length - 1];
+			var finalItem = items[index];
+			finalItem.height += remainingHeight;
 			return;
 		}
-		fluidItem.height = remainingHeight;
+
+		if (remainingHeight == 0.0) {
+			return;
+		}
+
+		var index = this._fallbackFluidIndex;
+		if (index == -1) {
+			index = items.length - 1;
+		}
+		if (index != -1) {
+			var item = items[index];
+			var itemHeight = item.height + remainingHeight;
+			if (itemHeight < 0.0) {
+				remainingHeight = itemHeight;
+				itemHeight = 0.0;
+			} else {
+				remainingHeight = 0.0;
+			}
+			item.height += itemHeight;
+		}
+
+		if (remainingHeight == 0.0) {
+			return;
+		}
+
+		var offset = remainingHeight / customHeightIndices.length;
+		for (index in customHeightIndices) {
+			var item = items[index];
+			item.height += offset;
+		}
 	}
 }
