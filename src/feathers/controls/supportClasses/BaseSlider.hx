@@ -17,9 +17,7 @@ import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
-import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
-import openfl.display.Sprite;
 import openfl.errors.TypeError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
@@ -273,8 +271,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	**/
 	public var liveDragging:Bool = true;
 
-	private var thumbContainer:Sprite;
-	private var _currentThumbSkin:DisplayObject = null;
+	private var _currentThumbSkin:InteractiveObject = null;
 	private var _thumbSkinMeasurements:Measurements = null;
 
 	/**
@@ -293,10 +290,9 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		@since 1.0.0
 	**/
 	@:style
-	public var thumbSkin:DisplayObject = null;
+	public var thumbSkin:InteractiveObject = null;
 
-	private var trackContainer:Sprite;
-	private var _currentTrackSkin:DisplayObject = null;
+	private var _currentTrackSkin:InteractiveObject = null;
 	private var _trackSkinMeasurements:Measurements = null;
 
 	/**
@@ -316,10 +312,9 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		@since 1.0.0
 	**/
 	@:style
-	public var trackSkin:DisplayObject = null;
+	public var trackSkin:InteractiveObject = null;
 
-	private var secondaryTrackContainer:Sprite;
-	private var _currentSecondaryTrackSkin:DisplayObject = null;
+	private var _currentSecondaryTrackSkin:InteractiveObject = null;
 	private var _secondaryTrackSkinMeasurements:Measurements = null;
 
 	/**
@@ -348,7 +343,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		@since 1.0.0
 	**/
 	@:style
-	public var secondaryTrackSkin:DisplayObject = null;
+	public var secondaryTrackSkin:InteractiveObject = null;
 
 	/**
 		The space, measured in pixels, between the minimum position of the thumb
@@ -447,15 +442,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			if (Std.is(oldSkin, IProgrammaticSkin)) {
 				cast(oldSkin, IProgrammaticSkin).uiContext = null;
 			}
-			if (this.thumbContainer != null) {
-				this.thumbContainer.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-				this.thumbContainer.removeChild(oldSkin);
-				this.removeChild(this.thumbContainer);
-				this.thumbContainer = null;
-			} else {
-				oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-				this.removeChild(oldSkin);
-			}
+			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
+			this.removeChild(oldSkin);
 		}
 		if (this._currentThumbSkin != null) {
 			if (Std.is(this._currentThumbSkin, IUIControl)) {
@@ -466,18 +454,9 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			} else {
 				this._thumbSkinMeasurements.save(this._currentThumbSkin);
 			}
-			if (!Std.is(this._currentThumbSkin, InteractiveObject)) {
-				// if the skin isn't interactive, we need to add it to something
-				// that is interactive
-				this.thumbContainer = new Sprite();
-				this.thumbContainer.addChild(this._currentThumbSkin);
-				this.addChild(this.thumbContainer);
-				this.thumbContainer.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-			} else {
-				// add it above the trackSkin and secondaryTrackSkin
-				this.addChild(this._currentThumbSkin);
-				this._currentThumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
-			}
+			// add it above the trackSkin and secondaryTrackSkin
+			this.addChild(this._currentThumbSkin);
+			this._currentThumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
 			if (Std.is(this._currentThumbSkin, IProgrammaticSkin)) {
 				cast(this._currentThumbSkin, IProgrammaticSkin).uiContext = this;
 			}
@@ -496,15 +475,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			if (Std.is(oldSkin, IProgrammaticSkin)) {
 				cast(oldSkin, IProgrammaticSkin).uiContext = null;
 			}
-			if (this.trackContainer != null) {
-				this.trackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-				this.trackContainer.removeChild(oldSkin);
-				this.removeChild(this.trackContainer);
-				this.trackContainer = null;
-			} else {
-				this.removeChild(oldSkin);
-				oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
+			this.removeChild(oldSkin);
+			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentTrackSkin != null) {
 			if (Std.is(this._currentTrackSkin, IUIControl)) {
@@ -515,18 +487,9 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			} else {
 				this._trackSkinMeasurements.save(this._currentTrackSkin);
 			}
-			if (!Std.is(this._currentTrackSkin, InteractiveObject)) {
-				// if the skin isn't interactive, we need to add it to something
-				// that is interactive
-				this.trackContainer = new Sprite();
-				this.trackContainer.addChild(this._currentTrackSkin);
-				this.addChildAt(this.trackContainer, 0);
-				this.trackContainer.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			} else {
-				// always on the bottom
-				this.addChildAt(this._currentTrackSkin, 0);
-				this._currentTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
+			// always on the bottom
+			this.addChildAt(this._currentTrackSkin, 0);
+			this._currentTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 			if (Std.is(this._currentTrackSkin, IProgrammaticSkin)) {
 				cast(this._currentTrackSkin, IProgrammaticSkin).uiContext = this;
 			}
@@ -545,15 +508,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			if (Std.is(oldSkin, IProgrammaticSkin)) {
 				cast(oldSkin, IProgrammaticSkin).uiContext = null;
 			}
-			if (this.secondaryTrackContainer != null) {
-				this.secondaryTrackContainer.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-				this.secondaryTrackContainer.removeChild(oldSkin);
-				this.removeChild(this.secondaryTrackContainer);
-				this.secondaryTrackContainer = null;
-			} else {
-				this.removeChild(oldSkin);
-				oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
+			this.removeChild(oldSkin);
+			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentSecondaryTrackSkin != null) {
 			if (Std.is(this._currentSecondaryTrackSkin, IUIControl)) {
@@ -564,21 +520,10 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			} else {
 				this._secondaryTrackSkinMeasurements.save(this._currentSecondaryTrackSkin);
 			}
-
 			// on the bottom or above the trackSkin
 			var index = this._currentTrackSkin != null ? 1 : 0;
-
-			if (!Std.is(this._currentSecondaryTrackSkin, InteractiveObject)) {
-				// if the skin isn't interactive, we need to add it to something
-				// that is interactive
-				this.secondaryTrackContainer = new Sprite();
-				this.secondaryTrackContainer.addChild(this._currentSecondaryTrackSkin);
-				this.addChildAt(this.secondaryTrackContainer, index);
-				this.secondaryTrackContainer.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			} else {
-				this.addChildAt(this._currentSecondaryTrackSkin, index);
-				this._currentSecondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
-			}
+			this.addChildAt(this._currentSecondaryTrackSkin, index);
+			this._currentSecondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 			if (Std.is(this._currentSecondaryTrackSkin, IProgrammaticSkin)) {
 				cast(this._currentSecondaryTrackSkin, IProgrammaticSkin).uiContext = this;
 			}
