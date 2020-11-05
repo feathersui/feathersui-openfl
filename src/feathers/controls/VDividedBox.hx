@@ -1,3 +1,11 @@
+/*
+	Feathers UI
+	Copyright 2020 Bowler Hat LLC. All Rights Reserved.
+
+	This program is free software. You can redistribute and/or modify it in
+	accordance with the terms of the accompanying license agreement.
+ */
+
 package feathers.controls;
 
 import feathers.controls.supportClasses.BaseDividedBox;
@@ -11,7 +19,21 @@ import openfl.display.DisplayObject;
 import lime.ui.MouseCursor as LimeMouseCursor;
 #end
 
+/**
+	A container that displays draggable dividers between each of its children,
+	which are positioned from top to bottom in a single column.
+
+	@see [Tutorial: How to use the HDividedBox and VDividedBox components](https://feathersui.com/learn/haxe-openfl/divided-box/)
+	@see `feathers.controls.VDividedBox`
+
+	@since 1.0.0
+**/
 class VDividedBox extends BaseDividedBox {
+	/**
+		Creates a new `VDividedBox` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		this.initializeVDividedBoxTheme();
 

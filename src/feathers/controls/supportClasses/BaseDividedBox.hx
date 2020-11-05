@@ -23,8 +23,16 @@ import openfl.geom.Point;
 import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
 
+/**
+	Base class for divided box components.
+
+	@see `feathers.controls.HDividedBox`
+	@see `feathers.controls.VDividedBox`
+
+	@since 1.0.0
+**/
 class BaseDividedBox extends FeathersControl {
-	public function new() {
+	private function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, baseDividedBox_addedToStageHandler);
 	}
