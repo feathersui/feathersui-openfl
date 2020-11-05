@@ -23,6 +23,8 @@ import openfl.display.InteractiveObject;
 	children. Designed to be used by UI components that display data
 	collections, such as `ListView`.
 
+	@see [Tutorial: How to use the LayoutGroupItemRenderer component](https://feathersui.com/learn/haxe-openfl/layout-group-item-renderer/)
+
 	@since 1.0.0
 **/
 @:styleContext

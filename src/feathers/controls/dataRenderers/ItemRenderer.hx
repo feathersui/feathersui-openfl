@@ -24,6 +24,8 @@ import openfl.text.TextFieldAutoSize;
 /**
 	A generic renderer for UI components that display data collections.
 
+	@see [Tutorial: How to use the ItemRenderer component](https://feathersui.com/learn/haxe-openfl/item-renderer/)
+
 	@since 1.0.0
 **/
 @:styleContext
