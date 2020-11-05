@@ -326,7 +326,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
-		if (this._selectedIndex == index && this._selectedIndices.length <= 0) {
+		if (this._selectedIndex == index && this._selectedIndices.length == 1) {
 			return this._selectedItem;
 		}
 		this._selectedIndex = index;
