@@ -30,6 +30,9 @@ import openfl.events.TouchEvent;
 import openfl.geom.Point;
 import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Base class for divided box components.
@@ -854,6 +857,10 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function baseDividedBox_divider_touchBeginHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
 		var divider = cast(event.currentTarget, InteractiveObject);
 		this.resizeTouchBegin(event.touchPointID, divider, event.stageX, event.stageY);
 	}
