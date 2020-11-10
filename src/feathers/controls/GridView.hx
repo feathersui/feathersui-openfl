@@ -36,6 +36,7 @@ import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.utils.DisplayUtil;
+import feathers.utils.ExclusivePointer;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -179,8 +180,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _headerContainer:LayoutGroup;
 	private var _headerContainerLayout:GridViewRowLayout;
 	private var _headerResizeContainer:Sprite;
-	private var _activeHeaderDividers:Array<DisplayObject> = [];
+	private var _activeHeaderDividers:Array<InteractiveObject> = [];
 	private var _resizingHeaderIndex:Int = -1;
+	private var _resizingHeaderTouchID:Int = -1;
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
 
@@ -1089,6 +1091,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			divider.removeEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
 			divider.removeEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
 			divider.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
+			divider.removeEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
 			this._headerResizeContainer.removeChild(divider);
 		}
 		this._activeHeaderDividers.resize(0);
@@ -1102,6 +1105,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			divider.addEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
 			divider.addEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
 			divider.addEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
+			divider.addEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
 			this._activeHeaderDividers.insert(i, divider);
 			this._headerResizeContainer.addChildAt(divider, i);
 		}
@@ -1685,6 +1689,87 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
+	private function layoutColumnResizeSkin(offset:Float):Void {
+		if (this._currentColumnResizeSkin == null) {
+			return;
+		}
+		var headerRenderer = this.activeHeaderRenderers[this._resizingHeaderIndex];
+		var column = this._columns.get(this._resizingHeaderIndex);
+		var minX = this._headerContainer.x + headerRenderer.x + column.minWidth;
+		var maxX = this.actualWidth - this.rightViewPortOffset;
+		var originalX = this._headerContainer.x + headerRenderer.x + headerRenderer.width;
+		var newX = Math.min(Math.max(originalX + offset, minX), maxX) - (this._currentColumnResizeSkin.width / 2.0);
+		this._currentColumnResizeSkin.visible = true;
+		this._currentColumnResizeSkin.x = newX;
+		this._currentColumnResizeSkin.y = this.paddingTop;
+		this._currentColumnResizeSkin.height = this.actualHeight - this.paddingTop - this.bottomViewPortOffset;
+		this.setChildIndex(this._currentColumnResizeSkin, this.numChildren - 1);
+	}
+
+	private function headerResizeTouchBegin(touchID:Int, divider:InteractiveObject, stageX:Float):Void {
+		if (!this._enabled || !this._resizableColumns || this._resizingHeaderIndex != -1) {
+			return;
+		}
+
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimPointer(touchID, divider);
+		if (!result) {
+			return;
+		}
+
+		this._resizingHeaderTouchID = touchID;
+		this._resizingHeaderIndex = this._activeHeaderDividers.indexOf(divider);
+		this._resizingHeaderStartStageX = stageX;
+		this.layoutColumnResizeSkin(0.0);
+		if (touchID == ExclusivePointer.POINTER_ID_MOUSE) {
+			this.stage.addEventListener(MouseEvent.MOUSE_MOVE, gridView_headerDivider_stage_mouseMoveHandler, false, 0, true);
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, gridView_headerDivider_stage_mouseUpHandler, false, 0, true);
+		} else {
+			this.stage.addEventListener(TouchEvent.TOUCH_MOVE, gridView_headerDivider_stage_touchMoveHandler, false, 0, true);
+			this.stage.addEventListener(TouchEvent.TOUCH_END, gridView_headerDivider_stage_touchEndHandler, false, 0, true);
+		}
+	}
+
+	private function headerResizeTouchMove(touchID:Int, stageX:Float):Void {
+		if (this._resizingHeaderTouchID != touchID) {
+			return;
+		}
+
+		var offset = stageX - this._resizingHeaderStartStageX;
+		offset *= DisplayUtil.getConcatenatedScaleX(this);
+		this.layoutColumnResizeSkin(offset);
+	}
+
+	private function headerResizeTouchEnd(touchID:Int, stageX:Float):Void {
+		if (this._resizingHeaderTouchID != touchID) {
+			return;
+		}
+
+		if (touchID == ExclusivePointer.POINTER_ID_MOUSE) {
+			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, gridView_headerDivider_stage_mouseMoveHandler);
+			this.stage.removeEventListener(MouseEvent.MOUSE_UP, gridView_headerDivider_stage_mouseUpHandler);
+		} else {
+			this.stage.removeEventListener(TouchEvent.TOUCH_MOVE, gridView_headerDivider_stage_touchMoveHandler);
+			this.stage.removeEventListener(TouchEvent.TOUCH_END, gridView_headerDivider_stage_touchEndHandler);
+		}
+
+		if (this._currentColumnResizeSkin != null) {
+			this._currentColumnResizeSkin.visible = false;
+		}
+
+		var offset = stageX - this._resizingHeaderStartStageX;
+		offset *= DisplayUtil.getConcatenatedScaleX(this);
+		this.calculateResizedColumnWidth(offset);
+
+		this._resizingHeaderTouchID = -1;
+		this._resizingHeaderIndex = -1;
+
+		if (this._oldHeaderDividerMouseCursor != null) {
+			Mouse.cursor = this._oldHeaderDividerMouseCursor;
+			this._oldHeaderDividerMouseCursor = null;
+		}
+	}
+
 	private function gridView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
 		this.updateRowRendererForIndex(event.index);
 	}
@@ -1734,16 +1819,34 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_headerDivider_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled || !this._resizableColumns || this._resizingHeaderIndex != -1) {
+		var divider = cast(event.currentTarget, InteractiveObject);
+		this.headerResizeTouchBegin(ExclusivePointer.POINTER_ID_MOUSE, divider, event.stageX);
+	}
+
+	private function gridView_headerDivider_stage_mouseMoveHandler(event:MouseEvent):Void {
+		this.headerResizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, event.stageX);
+	}
+
+	private function gridView_headerDivider_stage_mouseUpHandler(event:MouseEvent):Void {
+		this.headerResizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, event.stageX);
+	}
+
+	private function gridView_headerDivider_touchBeginHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
 
-		var divider = cast(event.currentTarget, DisplayObject);
-		this._resizingHeaderIndex = this._activeHeaderDividers.indexOf(divider);
-		this._resizingHeaderStartStageX = event.stageX;
-		this.layoutColumnResizeSkin(0.0);
-		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, gridView_headerDivider_stage_mouseMoveHandler, false, 0, true);
-		this.stage.addEventListener(MouseEvent.MOUSE_UP, gridView_headerDivider_stage_mouseUpHandler, false, 0, true);
+		var divider = cast(event.currentTarget, InteractiveObject);
+		this.headerResizeTouchBegin(event.touchPointID, divider, event.stageX);
+	}
+
+	private function gridView_headerDivider_stage_touchMoveHandler(event:TouchEvent):Void {
+		this.headerResizeTouchMove(event.touchPointID, event.stageX);
+	}
+
+	private function gridView_headerDivider_stage_touchEndHandler(event:TouchEvent):Void {
+		this.headerResizeTouchEnd(event.touchPointID, event.stageX);
 	}
 
 	private function gridView_headerDivider_rollOverHandler(event:MouseEvent):Void {
@@ -1764,47 +1867,5 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		Mouse.cursor = this._oldHeaderDividerMouseCursor;
 		this._oldHeaderDividerMouseCursor = null;
-	}
-
-	private function gridView_headerDivider_stage_mouseMoveHandler(event:MouseEvent):Void {
-		var offset = event.stageX - this._resizingHeaderStartStageX;
-		offset *= DisplayUtil.getConcatenatedScaleX(this);
-		this.layoutColumnResizeSkin(offset);
-	}
-
-	private function layoutColumnResizeSkin(offset:Float):Void {
-		if (this._currentColumnResizeSkin == null) {
-			return;
-		}
-		var headerRenderer = this.activeHeaderRenderers[this._resizingHeaderIndex];
-		var column = this._columns.get(this._resizingHeaderIndex);
-		var minX = this._headerContainer.x + headerRenderer.x + column.minWidth;
-		var maxX = this.actualWidth - this.rightViewPortOffset;
-		var originalX = this._headerContainer.x + headerRenderer.x + headerRenderer.width;
-		var newX = Math.min(Math.max(originalX + offset, minX), maxX) - (this._currentColumnResizeSkin.width / 2.0);
-		this._currentColumnResizeSkin.visible = true;
-		this._currentColumnResizeSkin.x = newX;
-		this._currentColumnResizeSkin.y = this.paddingTop;
-		this._currentColumnResizeSkin.height = this.actualHeight - this.paddingTop - this.bottomViewPortOffset;
-		this.setChildIndex(this._currentColumnResizeSkin, this.numChildren - 1);
-	}
-
-	private function gridView_headerDivider_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, gridView_headerDivider_stage_mouseMoveHandler);
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, gridView_headerDivider_stage_mouseUpHandler);
-		if (this._currentColumnResizeSkin != null) {
-			this._currentColumnResizeSkin.visible = false;
-		}
-
-		var offset = event.stageX - this._resizingHeaderStartStageX;
-		offset *= DisplayUtil.getConcatenatedScaleX(this);
-		this.calculateResizedColumnWidth(offset);
-
-		this._resizingHeaderIndex = -1;
-
-		if (this._oldHeaderDividerMouseCursor != null) {
-			Mouse.cursor = this._oldHeaderDividerMouseCursor;
-			this._oldHeaderDividerMouseCursor = null;
-		}
 	}
 }
