@@ -29,6 +29,7 @@
     "haxe": "^5.2.1",
     "hxgenjs": "kevinresol/hxgenjs",
     "lime": "openfl/lime#develop",
+    "move-file-cli": "^2.0.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^5.0.8"
@@ -43,6 +44,8 @@
     "build-lib-esm": "cd npm-scripts && node generate-modules gen-esm",
     "build-dist": "npm run build-dist:dev && npm run build-dist:prod",
     "build-dist:dev": "webpack --config webpack.dev.js",
-    "build-dist:prod": "webpack --config webpack.prod.js"
+    "build-dist:prod": "webpack --config webpack.prod.js",
+    "prepack": "move-file README.md TEMP-README.haxelib.md && move-file README.npm.md README.md",
+    "postpack": "move-file README.md README.npm.md && move-file TEMP-README.haxelib.md README.md"
   }
 }
