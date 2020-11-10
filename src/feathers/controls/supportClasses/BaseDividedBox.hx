@@ -342,6 +342,18 @@ class BaseDividedBox extends FeathersControl {
 		this.items.insert(index, child);
 	}
 
+	override public function getChildByName(name:String):DisplayObject {
+		if (!this._displayListBypassEnabled) {
+			return super.getChildByName(name);
+		}
+		for (child in this.items) {
+			if (child.name == name) {
+				return child;
+			}
+		}
+		return null;
+	}
+
 	override public function removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
 		if (!this._displayListBypassEnabled) {
 			return super.removeChildren(beginIndex, endIndex);

@@ -245,6 +245,18 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		this.items.insert(index, child);
 	}
 
+	override public function getChildByName(name:String):DisplayObject {
+		if (!this._displayListBypassEnabled) {
+			return super.getChildByName(name);
+		}
+		for (child in this.items) {
+			if (child.name == name) {
+				return child;
+			}
+		}
+		return null;
+	}
+
 	private function addRawChild(child:DisplayObject):DisplayObject {
 		var oldBypass = this._displayListBypassEnabled;
 		this._displayListBypassEnabled = false;

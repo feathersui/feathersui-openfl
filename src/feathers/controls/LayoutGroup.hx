@@ -293,6 +293,19 @@ class LayoutGroup extends FeathersControl {
 		return super.getChildIndex(child);
 	}
 
+	override public function getChildByName(name:String):DisplayObject {
+		for (child in this.items) {
+			if (child.name == name) {
+				return child;
+			}
+		}
+		return null;
+	}
+
+	private function _getChildByName(name:String):DisplayObject {
+		return super.getChildByName(name);
+	}
+
 	override public function removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
 		if (endIndex == 0x7FFFFFFF) {
 			endIndex = this.items.length - 1;
