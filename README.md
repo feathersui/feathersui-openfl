@@ -1,4 +1,4 @@
-# Feathers UI 1.0.0-alpha.3 for OpenFL and Haxe
+# Feathers UI 1.0.0-beta.1 for OpenFL and Haxe
 
 [Feathers UI](https://feathersui.com/) is a cross-platform framework of user interface components for creative frontend projects. It is especially well-suited for games, interactive data visualizations, and other rich, multimedia experiences. With Feathers UI, you can create native apps for a wide range of devices and platforms — including phones, tablets, desktop computers, game consoles… and you can even deploy to web browsers.
 
@@ -6,7 +6,7 @@ Built using the [Haxe](https://haxe.org/) programming language and [OpenFL](http
 
 ---
 
-🚨 **Warning:** This is an **alpha** version of [Feathers UI for Haxe/OpenFL](https://feathersui.com/openfl/). Many components and features are missing, and there will be bugs. This library is not currently recommended for production use.
+🚨 **Notice:** This is a **beta** version of Feathers UI for Haxe/OpenFL. Some components and features may still be missing, and occasional bugs should be expected.
 
 ---
 
@@ -28,15 +28,16 @@ haxelib install feathersui
 
 This will also automatically install any additional required dependencies, like [OpenFL](https://openfl.org/), if necessary.
 
-### Choose an editor or IDE
+### Choose a development envirionment
 
-The following tutorials explain how to create Feathers UI projects in popular development environments:
+The following tutorials explain how to create a new Feathers UI project:
 
+- [Command line terminal](https://feathersui.com/learn/haxe-openfl/terminal-new-project)
 - [HaxeDevelop](https://feathersui.com/learn/haxe-openfl/haxedevelop)
 - [Moonshine IDE](https://feathersui.com/learn/haxe-openfl/moonshine-ide)
 - [Visual Studio Code](https://feathersui.com/learn/haxe-openfl/visual-studio-code)
 
-Haxe is supported by [more editors and IDEs](https://haxe.org/documentation/introduction/editors-and-ides.html), and it may be possible to configure them to use Feathers UI too.
+The Haxe programming language is supported by [more editors and IDEs](https://haxe.org/documentation/introduction/editors-and-ides.html), and it may be possible to configure them to use Feathers UI too.
 
 ## Help & Support
 

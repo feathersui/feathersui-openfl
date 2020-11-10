@@ -14,7 +14,7 @@
 		"layout"
 	],
 	"description": "Cross-platform user interface components for creative frontend projects built with Haxe and OpenFL",
-	"version": "1.0.0-alpha.3",
+	"version": "1.0.0-beta.1",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: GroupListView, focus on stability and bug fixes"
+	"releasenote": "Preview build: Drawer, H/VDividedBox, ResponsiveGridLayout, stability and bug fixes"
 }

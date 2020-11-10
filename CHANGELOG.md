@@ -1,5 +1,49 @@
 # Feather UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.1 (2020-11-??)
+
+- animated-tween-skin: new sample project that demonstrates how to create a skin with animations.
+- Button: added `textOffsetX`, `textOffsetY`, `iconOffsetX`, and `iconOffsetY` properties.
+- BaseScrollContainer: allow multiple nested containers, where the deepest container gets precedence for touch gestures.
+- Callout: added support for "arrow" skins.
+- CellRenderer: removed because it is no longer needed. Use `ItemRenderer` for `GridView` cell renderers instead.
+- custom-programmatic-skin: new sample project that demonstrates how to create a custom skin with programmatically drawn graphics.
+- custom-programmatic-skin-with-states: new sample project that demonstrates how to create a custom skin that handles state changes from a UI component, like a button.
+- Drawer: new component that supports opening a drawer modally above other content.
+- EdgePuller: new utility used for "pullable" component edges, used by `Drawer` and navigators.
+- FeathersControl: dispatches `FeathersEvent.ENABLED` and `DISABLED` when the `enabled` property changes.
+- FocusManager: optionally supports multiple root containers.
+- FocusManager: disables focus management under the overlay when the `PopUpManager` has a modal popup.
+- FocusManager: added `findNextFocus()` method.
+- FocusManager: can pass focus to web browser when reaching beginning or end of all focusable objects.
+- LayoutGroupItemRenderer: new component to use as base type for custom item renderers.
+- ListView: added `allowMultipleSelection`, `selectedIndices`, and `selectedItems` properties.
+- General: Added `@:event` metadata to all UI components, so that a list of events is available to macros.
+- GridView: added `resizableColumns` and `columnResizeSkin` properties.
+- GridView: added `GridViewEvent.CELL_TRIGGER` and `HEADER_TRIGGER` events.
+- GridView: added `allowMultipleSelection`, `selectedIndices`, and `selectedItems` properties.
+- GroupListView: added `GroupListView.ITEM_TRIGGER` event.
+- HDividedBox and VDividedBox: new containers that add resizing dividers between children.
+- HScrollBar/VScrollBar: added `snapInterval` and changed `step` to apply to increment/decrement buttons only.
+- HSlider/VSlider: added `snapInterval` and changed `step` to apply to keyboard events only.
+- HSlider/VSlider: `step` defaults to `0.01` because it is needed for keyboard events.
+- MultiSkin: a skin for UI components that switches between different display objects when the UI component's state changes. Useful for ensuring that `MouseEvent.CLICK` and `TouchEvent.TOUCH_TAP` are correctly dispatched when the target below the pointer change.
+- PageNavigator: added a touch swipe gesture to go back and forward.
+- PageNavigator: added `previousTransition` and `nextTransition` properties.
+- PillSkin: a skin for UI components shaped like a "pill".
+- ProgrammaticSkin: new base class for custom programmatic skins.
+- RectangleSkin: fixed issue where `cornerRadius` was incorrectly drawn at half size. Developers may need to update code to use smaller values than before.
+- ResponsiveGridLayout: new layout
+- StackNavigator: added `popSwipeEnabled` and `popSwipeActiveEdgeSize` properties to enable a touch swipe to go back gesture.
+- TabNavigator: added `swipeEnabled` property to enable a touch swipe gesture to go back and forward.
+- TabNavigator: added `previousTransition` and `nextTransition` properties.
+- TabSkin: a skin for UI components shaped like a rectangle with two rounded corners on one side.
+- TextInput: added `leftView` and `rightView` properties to display icons or other UI components inside the input.
+- TextInput: added `VARIANT_SEARCH` for use in themes.
+- TextInput: added `autoSizeWidth` property to resize based on the entered text.
+- TreeView: instead of dispatching `Event.OPEN` and `CLOSE`, dispatches `TreeViewEvent.BRANCH_OPEN` and `BRANCH_CLOSE`.
+- TriangleSkin: a skin for UI components shaped like a triangle.
+
 ## 1.0.0-alpha.3 (2020-08-20)
 
 - GroupListView: new component
