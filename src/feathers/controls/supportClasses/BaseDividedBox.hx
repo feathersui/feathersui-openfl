@@ -801,6 +801,7 @@ class BaseDividedBox extends FeathersControl {
 			this._currentResizeDraggingSkin.visible = false;
 		}
 
+		this._resizingTouchID = -1;
 		this._resizingDividerIndex = -1;
 
 		if (this._oldDividerMouseCursor != null) {
