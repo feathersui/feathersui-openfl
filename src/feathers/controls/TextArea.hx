@@ -25,6 +25,22 @@ import openfl.text.TextFieldAutoSize;
 import openfl.ui.Keyboard;
 
 /**
+	A text entry control that allows users to enter and edit multiple lines of
+	uniformly-formatted text with the ability to scroll.
+
+	The following example sets the text in a text area, selects the text, and
+	listens for when the text value changes:
+
+	```hx
+	var textArea = new TextArea();
+	textArea.text = "Hello\nWorld"; //it's multiline!
+	textArea.selectRange(0, textArea.text.length);
+	textArea.addEventListener(Event.CHANGE, textArea_changeHandler);
+	this.addChild( textArea );
+	```
+
+	@see [Tutorial: How to use the TextArea component](https://feathersui.com/learn/haxe-openfl/text-area/)
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
