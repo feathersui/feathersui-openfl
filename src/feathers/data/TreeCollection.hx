@@ -14,6 +14,14 @@ import feathers.events.HierarchicalCollectionEvent;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
+/**
+	Wraps an `Array` data source with a common API for use with UI controls that
+	support hierarchical data, such as `TreeView`.
+
+	@see `feathers.controls.TreeView`
+
+	@since 1.0.0
+**/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.HierarchicalCollectionEvent.ADD_ITEM)
 @:event(feathers.events.HierarchicalCollectionEvent.REMOVE_ITEM)
@@ -24,15 +32,6 @@ import openfl.events.EventDispatcher;
 @:event(feathers.events.HierarchicalCollectionEvent.UPDATE_ALL)
 @:event(feathers.events.HierarchicalCollectionEvent.FILTER_CHANGE)
 @:event(feathers.events.HierarchicalCollectionEvent.SORT_CHANGE)
-
-/**
-	Wraps an `Array` data source with a common API for use with UI controls that
-	support hierarchical data, such as `TreeView`.
-
-	@see `feathers.controls.TreeView`
-
-	@since 1.0.0
-**/
 @defaultXmlProperty("array")
 class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollection<TreeNode<T>> {
 	/**

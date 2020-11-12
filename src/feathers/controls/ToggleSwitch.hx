@@ -27,8 +27,6 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.ui.Keyboard;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Similar to a light switch, with on and off states that may be toggled.
 	An alternative to a `Check`, especially on mobile.
@@ -51,6 +49,7 @@ import openfl.ui.Keyboard;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 @:styleContext
 class ToggleSwitch extends FeathersControl implements IToggle implements IFocusObject {
 	/**

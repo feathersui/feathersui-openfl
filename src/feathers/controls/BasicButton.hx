@@ -24,9 +24,6 @@ import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.MouseEvent;
 
-@:event(feathers.events.FeathersEvent.STATE_CHANGE)
-@:event(feathers.events.TriggerEvent.TRIGGER)
-
 /**
 	A simple button control with states, but no content, that is useful for
 	purposes like skinning. For a more full-featured button, with a label and
@@ -36,6 +33,8 @@ import openfl.events.MouseEvent;
 
 	@see `feathers.controls.Button`
 **/
+@:event(feathers.events.FeathersEvent.STATE_CHANGE)
+@:event(feathers.events.TriggerEvent.TRIGGER)
 class BasicButton extends FeathersControl implements ITriggerView implements IStateContext<ButtonState> {
 	/**
 		Creates a new `BasicButton` object.

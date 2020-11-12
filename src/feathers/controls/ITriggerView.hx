@@ -10,8 +10,6 @@ package feathers.controls;
 
 import feathers.core.IUIControl;
 
-@:event(feathers.events.TriggerEvent.TRIGGER)
-
 /**
 	A UI component that dispatches `TriggerEvent.TRIGGER`. Some components may
 	prefer to listen for `TriggerEvent.TRIGGER` instead of `MouseEvent.CLICK` or
@@ -19,4 +17,5 @@ import feathers.core.IUIControl;
 
 	@since 1.0.0
 **/
+@:event(feathers.events.TriggerEvent.TRIGGER)
 interface ITriggerView extends IUIControl {}

@@ -15,8 +15,6 @@ import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Positions items from top to bottom in a single column, and all items are
 	resized to have the same width and height.
@@ -25,6 +23,7 @@ import feathers.core.IValidating;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 	/**
 		Creates a new `VerticalDistributedLayout` object.

@@ -13,13 +13,12 @@ import openfl.errors.RangeError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.COMPLETE)
-
 /**
 	An effect that does nothing and simply completes immediately.
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.COMPLETE)
 class NoOpEffectContext extends EventDispatcher implements IEffectContext {
 	/**
 		Creates a new `NoOpEffectContext` object from the given arguments.

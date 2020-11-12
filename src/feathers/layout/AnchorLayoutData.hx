@@ -14,8 +14,6 @@ import feathers.layout.AnchorLayout.AbstractAnchor;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Sets anchors on children of containers that use `AnchorLayout`.
 
@@ -24,6 +22,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	/**
 		Creates `AnchorLayoutData` that centers the object both horizontally and

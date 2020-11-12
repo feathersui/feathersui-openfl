@@ -27,16 +27,15 @@ import js.html.WheelEvent;
 import openfl.ui.Multitouch;
 #end
 
-@:event(feathers.events.ScrollEvent.SCROLL)
-@:event(feathers.events.ScrollEvent.SCROLL_START)
-@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
-
 /**
 	Utility that provides touch and mouse wheel scrolling capabilities for any
 	interactive display object.
 
 	@since 1.0.0
 **/
+@:event(feathers.events.ScrollEvent.SCROLL)
+@:event(feathers.events.ScrollEvent.SCROLL_START)
+@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 @:access(motion.actuators.SimpleActuator)
 class Scroller extends EventDispatcher {
 	private static final MINIMUM_VELOCITY = 0.02;

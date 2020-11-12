@@ -57,8 +57,6 @@ import lime.ui.MouseCursor as LimeMouseCursor;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Displays a list of items as a table. Each item is rendered as a row, divided
 	into columns for each of the item's fields. Supports scrolling, custom cell,
@@ -95,6 +93,7 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 @:access(feathers.data.GridViewHeaderState)
 @:styleContext
 class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> {

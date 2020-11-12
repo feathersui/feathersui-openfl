@@ -22,10 +22,6 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 
-@:event(openfl.events.Event.CHANGE)
-@:event(feathers.events.ScrollEvent.SCROLL_START)
-@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
-
 /**
 	Base class for scroll bar components.
 
@@ -34,6 +30,9 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.ScrollEvent.SCROLL_START)
+@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private function new() {
 		super();

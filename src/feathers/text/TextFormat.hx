@@ -14,8 +14,6 @@ import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 import openfl.text.TextFormatAlign;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	A special replacement for `openfl.text.TextFormat` that dispatches
 	`Event.CHANGE` when any of its properties changes, and supports creating a
@@ -23,6 +21,7 @@ import openfl.text.TextFormatAlign;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class TextFormat extends EventDispatcher {
 	public function new(font:String = null, size:Null<Int> = null, color:Null<Int> = null, bold:Null<Bool> = null, italic:Null<Bool> = null,
 			underline:Null<Bool> = null, url:String = null, target:String = null, align:TextFormatAlign = null, leftMargin:Null<Int> = null,

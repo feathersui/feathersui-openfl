@@ -37,8 +37,6 @@ import openfl.ui.Keyboard;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Displays a series of dots or other symbols, usually corresponding to a page
 	index in another UI control, such as `PageNavigator`.
@@ -63,6 +61,7 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 @:access(feathers.data.PageIndicatorItemState)
 @:styleContext
 class PageIndicator extends FeathersControl implements IIndexSelector implements IFocusObject {

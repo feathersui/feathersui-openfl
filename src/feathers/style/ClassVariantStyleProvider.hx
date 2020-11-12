@@ -11,8 +11,6 @@ package feathers.style;
 import feathers.events.StyleProviderEvent;
 import openfl.events.EventDispatcher;
 
-@:event(feathers.events.StyleProviderEvent.STYLES_CHANGE)
-
 /**
 	Similar to `FunctionStyleProvider`, sets styles on a Feathers UI component
 	by passing it to a function, but also provides a way to define alternate
@@ -56,6 +54,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(feathers.events.StyleProviderEvent.STYLES_CHANGE)
 class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvider {
 	/**
 		Creates a new `ClassVariantStyleProvider` object.

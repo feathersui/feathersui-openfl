@@ -22,9 +22,6 @@ import openfl.errors.ArgumentError;
 import openfl.errors.RangeError;
 import openfl.events.Event;
 
-@:event(openfl.events.Event.CHANGE)
-@:event(openfl.events.Event.SCROLL)
-
 /**
 	Displays a calendar for a specific month.
 
@@ -50,6 +47,8 @@ import openfl.events.Event;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.SCROLL)
 class CalendarGrid extends FeathersControl implements IDateSelector {
 	// TODO: get these values from openfl.globalization.DateTimeFormatter
 	private var DEFAULT_WEEKDAY_NAMES = ["S", "M", "T", "W", "T", "F", "S"];

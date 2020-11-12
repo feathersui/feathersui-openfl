@@ -23,8 +23,6 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Base class for slider components.
 
@@ -33,6 +31,7 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class BaseSlider extends FeathersControl implements IRange implements IFocusObject {
 	private function new() {
 		super();

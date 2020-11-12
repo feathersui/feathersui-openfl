@@ -17,8 +17,6 @@ import openfl.errors.RangeError;
 import feathers.controls.IToggle;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Controls the selection of two or more IToggle instances where only one may
 	be selected at a time.
@@ -28,6 +26,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class ToggleGroup extends EventDispatcher implements IIndexSelector implements IDataSelector<IToggle> {
 	/**
 		Creates a new `ToggleGroup` object.

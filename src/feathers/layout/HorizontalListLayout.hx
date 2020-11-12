@@ -16,14 +16,13 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	A simple list layout that positions items from left to right, in a single
 	row, where every item fills the entire height of the container.
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	/**
 		Creates a new `HorizontalListLayout` object.

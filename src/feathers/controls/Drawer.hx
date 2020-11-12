@@ -34,11 +34,6 @@ import openfl.geom.Point;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.OPEN)
-@:event(openfl.events.Event.CLOSE)
-@:event(feathers.events.FeathersEvent.OPENING)
-@:event(feathers.events.FeathersEvent.CLOSING)
-
 /**
 	A container that displays primary `content` in the center with a `drawer`
 	that opens and closes from one of the four edges of the container.
@@ -47,6 +42,10 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
+@:event(feathers.events.FeathersEvent.OPENING)
+@:event(feathers.events.FeathersEvent.CLOSING)
 @:styleContext
 class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private static final MAX_CLICK_DISTANCE_FOR_CLOSE = 6.0;

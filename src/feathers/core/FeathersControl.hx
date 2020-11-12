@@ -22,13 +22,6 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.geom.Point;
 
-@:event(feathers.events.FeathersEvent.INITIALIZE)
-@:event(feathers.events.FeathersEvent.CREATION_COMPLETE)
-@:event(feathers.events.FeathersEvent.ENABLE)
-@:event(feathers.events.FeathersEvent.DISABLE)
-@:event(feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE)
-@:event(feathers.events.FeathersEvent.STATE_CHANGE)
-
 /**
 	Base class for all Feathers UI controls. Implements invalidation for changed
 	properties and sets up some basic template functions for component
@@ -44,6 +37,12 @@ import openfl.geom.Point;
 
 	@see `feathers.controls.LayoutGroup`
 **/
+@:event(feathers.events.FeathersEvent.INITIALIZE)
+@:event(feathers.events.FeathersEvent.CREATION_COMPLETE)
+@:event(feathers.events.FeathersEvent.ENABLE)
+@:event(feathers.events.FeathersEvent.DISABLE)
+@:event(feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE)
+@:event(feathers.events.FeathersEvent.STATE_CHANGE)
 @:autoBuild(feathers.macros.StyleContextMacro.build())
 @:autoBuild(feathers.macros.StyleMacro.build())
 class FeathersControl extends MeasureSprite implements IUIControl implements IVariantStyleObject implements ILayoutObject {

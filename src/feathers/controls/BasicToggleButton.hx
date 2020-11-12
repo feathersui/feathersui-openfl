@@ -25,9 +25,6 @@ import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 
-@:event(openfl.events.Event.CHANGE)
-@:event(feathers.events.TriggerEvent.TRIGGER)
-
 /**
 	A simple toggle button control with selection, pointer states, but no
 	content, that is useful for purposes like skinning. For a more full-featured
@@ -38,6 +35,8 @@ import openfl.events.Event;
 
 	@see `feathers.controls.ToggleButton`
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.TriggerEvent.TRIGGER)
 class BasicToggleButton extends FeathersControl implements ITriggerView implements IToggle implements IStateContext<ToggleButtonState> {
 	/**
 		Creates a new `BasicToggleButton` object.

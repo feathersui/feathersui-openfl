@@ -15,9 +15,6 @@ import motion.actuators.IGenericActuator;
 import motion.easing.IEasing;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-@:event(openfl.events.Event.COMPLETE)
-
 /**
 	An abstract base class for `IEffectContext` implementations.
 
@@ -25,6 +22,8 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.COMPLETE)
 class BaseEffectContext extends EventDispatcher implements IEffectContext {
 	private function new(target:Dynamic, duration:Float, ?ease:IEasing) {
 		super();

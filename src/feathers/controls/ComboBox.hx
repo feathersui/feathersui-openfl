@@ -35,10 +35,6 @@ import feathers.controls.popups.DropDownPopUpAdapter;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.CHANGE)
-@:event(openfl.events.Event.OPEN)
-@:event(openfl.events.Event.CLOSE)
-
 /**
 	Displays a control consisting of a `TextInput` and `Button` that allows an
 	item from a collection to be selected. When the button is triggered, a list
@@ -76,6 +72,9 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
 @:styleContext
 class ComboBox extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");

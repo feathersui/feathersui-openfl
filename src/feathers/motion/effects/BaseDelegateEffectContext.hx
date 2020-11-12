@@ -12,14 +12,13 @@ import feathers.events.FeathersEvent;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.COMPLETE)
-
 /**
 	An abstract base class for `IEffectContext` implementations that delegate to
 	other `IEffectContext` instances.
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.COMPLETE)
 class BaseDelegateEffectContext extends EventDispatcher implements IEffectContext {
 	private function new(context:IEffectContext) {
 		super();

@@ -34,8 +34,6 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	A line of tabs, where one may be selected at a time.
 
@@ -67,6 +65,7 @@ import openfl.ui.Keyboard;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 @:access(feathers.data.TabBarItemState)
 @:styleContext
 class TabBar extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {

@@ -27,10 +27,6 @@ import openfl.geom.Rectangle;
 import openfl.net.URLRequest;
 import openfl.utils.AssetType;
 
-@:event(openfl.events.Event.COMPLETE)
-@:event(openfl.events.IOErrorEvent.IO_ERROR)
-@:event(openfl.events.SecurityErrorEvent.SECURITY_ERROR)
-
 /**
 	Loads and displays an asset using either OpenFL's asset management system or
 	from a URL.
@@ -46,6 +42,9 @@ import openfl.utils.AssetType;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.COMPLETE)
+@:event(openfl.events.IOErrorEvent.IO_ERROR)
+@:event(openfl.events.SecurityErrorEvent.SECURITY_ERROR)
 class AssetLoader extends FeathersControl {
 	/**
 		Creates a new `AssetLoader` object.

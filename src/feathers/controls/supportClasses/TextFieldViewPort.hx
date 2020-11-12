@@ -20,8 +20,6 @@ import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import openfl.text.TextLineMetrics;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	An implementation of `IViewPort` for `TextArea`.
 
@@ -29,6 +27,7 @@ import openfl.text.TextLineMetrics;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class TextFieldViewPort extends FeathersControl implements IViewPort {
 	public function new() {
 		super();

@@ -41,9 +41,6 @@ import openfl.ui.Keyboard;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.CHANGE)
-@:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
-
 /**
 	Displays a one-dimensional list of items. Supports scrolling, custom item
 	renderers, and custom layouts.
@@ -86,6 +83,8 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
 @:access(feathers.data.ListViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext

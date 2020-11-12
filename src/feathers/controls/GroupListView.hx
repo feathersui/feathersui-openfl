@@ -43,8 +43,6 @@ import openfl.ui.Keyboard;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Displays a list of items divided into groups or sections. Accepts a
 	hierarchical tree of items, similar to `TreeView`, but limits the display to
@@ -91,6 +89,7 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 @:access(feathers.data.GroupListViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext

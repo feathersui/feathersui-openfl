@@ -15,8 +15,6 @@ import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Positions items from left to right in a single row, and all items are
 	resized to have the same width and height.
@@ -25,6 +23,7 @@ import feathers.core.IValidating;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 	/**
 		Creates a new `HorizontalDistributedLayout` object.

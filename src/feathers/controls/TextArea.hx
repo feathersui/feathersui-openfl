@@ -24,11 +24,10 @@ import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.ui.Keyboard;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl {
 	/**
 		Creates a new `TextArea` object.

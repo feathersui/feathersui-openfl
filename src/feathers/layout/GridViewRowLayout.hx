@@ -16,8 +16,6 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Positions cell or header renderers in a `GridView` component.
 
@@ -25,6 +23,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class GridViewRowLayout extends EventDispatcher implements ILayout {
 	/**
 		Creates a new `GridViewRowLayout` object.

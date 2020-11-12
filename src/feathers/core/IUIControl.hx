@@ -8,15 +8,14 @@
 
 package feathers.core;
 
-@:event(feathers.events.FeathersEvent.INITIALIZE)
-@:event(feathers.events.FeathersEvent.ENABLE)
-@:event(feathers.events.FeathersEvent.DISABLE)
-
 /**
 	A user interface control.
 
 	@since 1.0.0
 **/
+@:event(feathers.events.FeathersEvent.INITIALIZE)
+@:event(feathers.events.FeathersEvent.ENABLE)
+@:event(feathers.events.FeathersEvent.DISABLE)
 interface IUIControl extends IDisplayObject {
 	/**
 		Indicates whether the control should respond when a user attempts to

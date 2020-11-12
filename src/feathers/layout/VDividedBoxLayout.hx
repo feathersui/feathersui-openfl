@@ -15,8 +15,6 @@ import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	The layout used by the `VDividedBox` component.
 
@@ -24,6 +22,7 @@ import feathers.core.IValidating;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class VDividedBoxLayout extends EventDispatcher implements ILayout {
 	/**
 		Creates a new `VDividedBoxLayout` object.

@@ -34,8 +34,6 @@ import openfl.geom.Rectangle;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.CLOSE)
-
 /**
 	A pop-up container that points at (or calls out) a specific region of the
 	application (typically a specific control that triggered it).
@@ -61,6 +59,7 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CLOSE)
 @:styleContext
 class Callout extends FeathersControl {
 	private static final INVALIDATION_FLAG_ORIGIN = InvalidationFlag.CUSTOM("origin");

@@ -14,8 +14,6 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Positions items in a grid, with a specific number of columns (defaults to
 	twelve columns). Items may span multiple rows and may be displayed with
@@ -27,6 +25,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 @:access(feathers.layout.ResponsiveGridLayoutData)
 class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 	/**

@@ -13,6 +13,14 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import feathers.utils.DisplayUtil;
 
+/**
+	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)
+	with a validation system where multiple property changes may be queued up to
+	be processed all at once. A performance optimization for frequently changing
+	user interfaces.
+
+	@since 1.0.0
+**/
 @:event(openfl.events.Event.ACTIVATE)
 @:event(openfl.events.Event.ADDED)
 @:event(openfl.events.Event.ADDED_TO_STAGE)
@@ -73,15 +81,6 @@ import feathers.utils.DisplayUtil;
 @:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OUT)
 @:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OVER)
 #end
-
-/**
-	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)
-	with a validation system where multiple property changes may be queued up to
-	be processed all at once. A performance optimization for frequently changing
-	user interfaces.
-
-	@since 1.0.0
-**/
 class ValidatingSprite extends Sprite implements IValidating {
 	private function new() {
 		super();

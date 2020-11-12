@@ -27,16 +27,15 @@ import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
 import feathers.core.FeathersControl;
 
-@:event(openfl.events.Event.CLEAR)
-@:event(openfl.events.Event.CHANGE)
-@:event(feathers.events.FeathersEvent.TRANSITION_START)
-@:event(feathers.events.FeathersEvent.TRANSITION_COMPLETE)
-
 /**
 	Base class for navigator components.
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CLEAR)
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.FeathersEvent.TRANSITION_START)
+@:event(feathers.events.FeathersEvent.TRANSITION_COMPLETE)
 class BaseNavigator extends FeathersControl {
 	private static function defaultTransition(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 		return new NoOpEffectContext(oldView);

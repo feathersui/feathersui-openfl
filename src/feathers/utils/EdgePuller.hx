@@ -26,18 +26,17 @@ import openfl.geom.Point;
 import openfl.ui.Multitouch;
 #end
 
+/**
+	Utility that provides a pull gesture with touch events.
+
+	@since 1.0.0
+**/
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
 @:event(feathers.events.FeathersEvent.OPENING)
 @:event(feathers.events.FeathersEvent.CLOSING)
 @:event(openfl.events.Event.CANCEL)
 @:event(openfl.events.Event.CHANGE)
-
-/**
-	Utility that provides a pull gesture with touch events.
-
-	@since 1.0.0
-**/
 class EdgePuller extends EventDispatcher {
 	private static final MINIMUM_VELOCITY = 0.02;
 

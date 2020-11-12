@@ -16,8 +16,6 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	A simple list layout that positions items from top to bottom, in a single
 	column, where every item has the same width and height. The items fill the
@@ -27,6 +25,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayout {
 	/**
 		Creates a new `VerticalListFixedRowLayout` object.

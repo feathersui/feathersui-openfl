@@ -12,8 +12,6 @@ import openfl.events.Event;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Provides optional percentage sizing for children of containers that use
 	`VerticalLayout`.
@@ -23,6 +21,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 	/**
 		Creates a new `VerticalLayoutData` object from the given arguments.

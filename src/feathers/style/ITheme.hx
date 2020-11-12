@@ -8,13 +8,12 @@
 
 package feathers.style;
 
-@:event(openfl.events.Event.CLEAR)
-
 /**
 	An interface for Feathers UI themes.
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CLEAR)
 interface ITheme {
 	/**
 		Returns the style provider for the specified component.

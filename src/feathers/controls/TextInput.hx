@@ -32,9 +32,6 @@ import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFieldType;
 import openfl.ui.Keyboard;
 
-@:event(openfl.events.Event.CHANGE)
-@:event(openfl.events.Event.SCROLL)
-
 /**
 	A text entry control that allows users to enter and edit a single line of
 	uniformly-formatted text.
@@ -54,6 +51,8 @@ import openfl.ui.Keyboard;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.SCROLL)
 @:styleContext
 class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl implements IFocusObject {
 	/**

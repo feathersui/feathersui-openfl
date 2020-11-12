@@ -12,8 +12,6 @@ import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
 
-@:event(openfl.events.Event.RESIZE)
-
 /**
 	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)
 	with extra minimum and maximum dimensions that may be used in Feathers UI
@@ -21,6 +19,7 @@ import feathers.events.FeathersEvent;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.RESIZE)
 class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	private var actualWidth:Float = 0.0;
 	private var actualHeight:Float = 0.0;

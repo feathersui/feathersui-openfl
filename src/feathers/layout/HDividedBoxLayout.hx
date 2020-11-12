@@ -15,8 +15,6 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	The layout used by the `HDividedBox` component.
 
@@ -24,6 +22,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class HDividedBoxLayout extends EventDispatcher implements ILayout {
 	/**
 		Creates a new `HDividedBoxLayout` object.

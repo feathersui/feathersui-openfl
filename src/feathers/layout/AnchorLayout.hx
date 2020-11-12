@@ -15,8 +15,6 @@ import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Positions and sizes items by anchoring their edges (or center points) to
 	to their parent container or to other items in the same container.
@@ -26,6 +24,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class AnchorLayout extends EventDispatcher implements ILayout {
 	/**
 		Creates a new `AnchorLayout` object.

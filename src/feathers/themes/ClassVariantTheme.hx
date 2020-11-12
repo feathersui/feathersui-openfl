@@ -17,13 +17,12 @@ import feathers.style.IStyleProvider;
 import feathers.style.ClassVariantStyleProvider;
 import feathers.style.ITheme;
 
-@:event(openfl.events.Event.CLEAR)
-
 /**
 	A theme based on `ClassVariantStyleProvider`.
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CLEAR)
 class ClassVariantTheme implements ITheme {
 	/**
 		Creates a new `ClassVariantTheme` object.

@@ -36,11 +36,6 @@ import feathers.core.IDataSelector;
 import openfl.ui.Multitouch;
 #end
 
-@:event(openfl.events.Event.CHANGE)
-@:event(openfl.events.Event.OPEN)
-@:event(openfl.events.Event.CLOSE)
-@:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
-
 /**
 	Displays a `Button` that may be triggered to display a `ListView` as a
 	pop-up. The list view may be customized to display in different ways, such
@@ -77,6 +72,10 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
+@:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
 @:styleContext
 class PopUpListView extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");

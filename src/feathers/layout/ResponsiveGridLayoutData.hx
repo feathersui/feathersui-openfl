@@ -14,8 +14,6 @@ import openfl.events.Event;
 import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Sets the optional span and offset for an item in a `ResponsiveGridLayout`.
 
@@ -23,6 +21,7 @@ import openfl.events.EventDispatcher;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 	/**
 		Creates a new `ResponsiveGridLayoutData` object from the given arguments.

@@ -17,8 +17,6 @@ import openfl.display.DisplayObject;
 import openfl.errors.TypeError;
 import openfl.events.Event;
 
-@:event(openfl.events.Event.CHANGE)
-
 /**
 	Base class for progress bar components.
 
@@ -27,6 +25,7 @@ import openfl.events.Event;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 class BaseProgressBar extends FeathersControl implements IRange {
 	private function new() {
 		super();

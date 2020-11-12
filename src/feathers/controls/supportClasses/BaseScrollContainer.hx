@@ -36,15 +36,14 @@ import openfl.events.MouseEvent;
 import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 
-@:event(feathers.events.ScrollEvent.SCROLL)
-@:event(feathers.events.ScrollEvent.SCROLL_START)
-@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
-
 /**
 	A base class for scrolling containers.
 
 	@since 1.0.0
 **/
+@:event(feathers.events.ScrollEvent.SCROLL)
+@:event(feathers.events.ScrollEvent.SCROLL_START)
+@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = InvalidationFlag.CUSTOM("scrollBarFactory");
 

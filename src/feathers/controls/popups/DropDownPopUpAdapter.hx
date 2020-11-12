@@ -17,14 +17,13 @@ import feathers.events.FeathersEvent;
 import openfl.errors.IllegalOperationError;
 import openfl.display.DisplayObject;
 
-@:event(openfl.events.Event.OPEN)
-@:event(openfl.events.Event.CLOSE)
-
 /**
 	Displays a pop-up like a drop-down, either below or above the source.
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
 class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	/**
 		Creates a new `DropDownPopUpAdapter` object.
