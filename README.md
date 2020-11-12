@@ -26,7 +26,11 @@ Open a terminal, and then install Feathers UI using the following command:
 haxelib install feathersui
 ```
 
-This will also automatically install any additional required dependencies, like [OpenFL](https://openfl.org/), if necessary.
+This will also automatically install any additional required dependencies, like [OpenFL](https://openfl.org/), if necessary. If you are installing OpenFL for the first time, you will also need to run the following command:
+
+```sh
+haxelib run openfl setup
+```
 
 ### Choose a development envirionment
 
