@@ -1,6 +1,6 @@
 # Feather UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.1 (2020-11-??)
+## 1.0.0-beta.1 (2020-11-12)
 
 - animated-tween-skin: new sample project that demonstrates how to create a skin with animations.
 - Button: added `textOffsetX`, `textOffsetY`, `iconOffsetX`, and `iconOffsetY` properties.
