@@ -292,7 +292,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		var currentFill = this.getCurrentFill();
 		this.applyFillStyle(currentFill);
 		this.drawPath();
-		if (currentFill != null) {
+		if (currentFill != null && currentFill != None) {
 			this.graphics.endFill();
 		}
 	}
@@ -310,6 +310,10 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return;
 		}
 		switch (lineStyle) {
+			case None:
+				{
+					this.graphics.lineStyle(null);
+				}
 			case SolidColor(thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit):
 				{
 					if (color == null) {
@@ -356,6 +360,11 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 			return;
 		}
 		switch (fillStyle) {
+			case None:
+				{
+					// no fill style to apply
+					return;
+				}
 			case SolidColor(color, alpha):
 				{
 					if (alpha == null) {

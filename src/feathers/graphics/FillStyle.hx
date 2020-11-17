@@ -47,4 +47,11 @@ enum FillStyle {
 	**/
 	Gradient(type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?radians:Float, ?spreadMethod:SpreadMethod,
 		?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);
+
+	/**
+		A fill is not rendered.
+
+		@since 1.0.0
+	**/
+	None;
 }
