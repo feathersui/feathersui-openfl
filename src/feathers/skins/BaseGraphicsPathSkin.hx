@@ -352,6 +352,17 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 					this.graphics.lineGradientStyle(type, #if flash cast #end colors, alphas, ratios, matrix, spreadMethod, interpolationMethod,
 						focalPointRatio);
 				}
+			case Bitmap(thickness, bitmapData, matrix, repeat, smooth):
+				{
+					if (repeat == null) {
+						repeat = true;
+					}
+					if (smooth == null) {
+						smooth = false;
+					}
+					this.graphics.lineStyle(thickness);
+					this.graphics.lineBitmapStyle(bitmapData, matrix, repeat, smooth);
+				}
 		}
 	}
 
