@@ -22,12 +22,11 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
-import openfl.events.KeyboardEvent;
 import openfl.system.Capabilities;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
-
-#if html5
+#if (html5 && openfl < "9.0.0")
+import openfl.events.KeyboardEvent;
 #end
 
 /**
