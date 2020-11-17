@@ -45,6 +45,7 @@ import openfl.utils.AssetType;
 @:event(openfl.events.Event.COMPLETE)
 @:event(openfl.events.IOErrorEvent.IO_ERROR)
 @:event(openfl.events.SecurityErrorEvent.SECURITY_ERROR)
+@:styleContext
 class AssetLoader extends FeathersControl {
 	/**
 		Creates a new `AssetLoader` object.
