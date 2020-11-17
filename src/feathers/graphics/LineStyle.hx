@@ -49,8 +49,8 @@ enum LineStyle {
 
 		@since 1.0.0
 	**/
-	Gradient(thickness:Float, type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?radians:Float, ?spreadMethod:SpreadMethod,
-		?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);
+	Gradient(thickness:Float, type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?matrix:CreateGradientBoxMatrix, ?spreadMethod
+		:SpreadMethod, ?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);
 
 	/**
 		A line is not drawn.

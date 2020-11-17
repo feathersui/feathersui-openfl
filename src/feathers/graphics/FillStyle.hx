@@ -8,11 +8,11 @@
 
 package feathers.graphics;
 
-import openfl.geom.Matrix;
 import openfl.display.BitmapData;
 import openfl.display.GradientType;
 import openfl.display.InterpolationMethod;
 import openfl.display.SpreadMethod;
+import openfl.geom.Matrix;
 
 /**
 	Fill styles for graphics.
@@ -45,7 +45,7 @@ enum FillStyle {
 
 		@since 1.0.0
 	**/
-	Gradient(type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?radians:Float, ?spreadMethod:SpreadMethod,
+	Gradient(type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?matrix:CreateGradientBoxMatrix, ?spreadMethod:SpreadMethod,
 		?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);
 
 	/**

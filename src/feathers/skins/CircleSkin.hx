@@ -8,9 +8,8 @@
 
 package feathers.skins;
 
-import feathers.graphics.LineStyle;
 import feathers.graphics.FillStyle;
-import openfl.geom.Matrix;
+import feathers.graphics.LineStyle;
 
 /**
 	A skin for Feathers UI components that draws a circle. The circle's fill
@@ -44,10 +43,19 @@ class CircleSkin extends BaseGraphicsPathSkin {
 		return (shorterSide / 2.0) - thicknessOffset;
 	}
 
-	override private function getGradientMatrix(radians:Float):Matrix {
-		var radius = this.getRadius();
-		var matrix = new Matrix();
-		matrix.createGradientBox(radius, radius, radians, (this.actualWidth - radius) / 2.0, (this.actualHeight - radius) / 2.0);
-		return matrix;
+	override private function getDefaultGradientMatrixWidth():Float {
+		return this.getRadius();
+	}
+
+	override private function getDefaultGradientMatrixHeight():Float {
+		return this.getRadius();
+	}
+
+	override private function getDefaultGradientMatrixTx():Float {
+		return (this.actualWidth - this.getRadius()) / 2.0;
+	}
+
+	override private function getDefaultGradientMatrixTy():Float {
+		return (this.actualHeight - this.getRadius()) / 2.0;
 	}
 }
