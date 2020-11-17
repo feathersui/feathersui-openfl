@@ -53,6 +53,44 @@ import openfl.ui.Keyboard;
 @:styleContext
 class Button extends BasicButton implements ITextControl implements IFocusObject {
 	/**
+		A variant used to style the button in a more prominent style to indicate
+		its greater importance than other nearby buttons. Variants allow themes
+		to provide an assortment of different appearances for the same type of
+		UI component.
+
+		The following example uses this variant:
+
+		```hx
+		var button = new Button();
+		button.variant = Button.VARIANT_PRIMARY;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_PRIMARY = "primary";
+
+	/**
+		A variant used to style the button in a style that indicates that
+		performing the action is considered dangerous. Variants allow themes to
+		provide an assortment of different appearances for the same type of UI
+		component.
+
+		The following example uses this variant:
+
+		```hx
+		var button = new Button();
+		button.variant = Button.VARIANT_DANGER;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_DANGER = "danger";
+
+	/**
 		Creates a new `Button` object.
 
 		@since 1.0.0
