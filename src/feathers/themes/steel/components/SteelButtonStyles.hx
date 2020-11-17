@@ -66,5 +66,75 @@ class SteelButtonStyles {
 				button.gap = 4.0;
 			});
 		}
+		if (styleProvider.getStyleFunction(Button, Button.VARIANT_PRIMARY) == null) {
+			styleProvider.setStyleFunction(Button, Button.VARIANT_PRIMARY, function(button:Button):Void {
+				if (button.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = theme.getActiveThemeFill();
+					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
+					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.border = theme.getActiveFillBorder();
+					skin.disabledBorder = theme.getButtonBorder();
+					skin.cornerRadius = 3.0;
+					button.backgroundSkin = skin;
+				}
+
+				if (button.focusRectSkin == null) {
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 3.0;
+					button.focusRectSkin = focusRectSkin;
+				}
+
+				if (button.textFormat == null) {
+					button.textFormat = theme.getTextFormat();
+				}
+				if (button.disabledTextFormat == null) {
+					button.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+
+				button.paddingTop = 4.0;
+				button.paddingRight = 10.0;
+				button.paddingBottom = 4.0;
+				button.paddingLeft = 10.0;
+				button.gap = 4.0;
+			});
+		}
+		if (styleProvider.getStyleFunction(Button, Button.VARIANT_DANGER) == null) {
+			styleProvider.setStyleFunction(Button, Button.VARIANT_DANGER, function(button:Button):Void {
+				if (button.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = theme.getDangerFill();
+					skin.setFillForState(DOWN, theme.getReversedDangerFill());
+					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.border = theme.getDangerBorder();
+					skin.disabledBorder = theme.getButtonBorder();
+					skin.cornerRadius = 3.0;
+					button.backgroundSkin = skin;
+				}
+
+				if (button.focusRectSkin == null) {
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 3.0;
+					button.focusRectSkin = focusRectSkin;
+				}
+
+				if (button.textFormat == null) {
+					button.textFormat = theme.getTextFormat();
+				}
+				if (button.disabledTextFormat == null) {
+					button.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+
+				button.paddingTop = 4.0;
+				button.paddingRight = 10.0;
+				button.paddingBottom = 4.0;
+				button.paddingLeft = 10.0;
+				button.gap = 4.0;
+			});
+		}
 	}
 }

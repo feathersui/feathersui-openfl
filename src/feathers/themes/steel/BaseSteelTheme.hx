@@ -98,6 +98,9 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var textColor:Int;
 	private var secondaryTextColor:Int;
 	private var disabledTextColor:Int;
+	private var dangerColor:Int;
+	private var offsetDangerColor:Int;
+	private var dangerBorderColor:Int;
 	private var fontName:String;
 	private var fontSize:Int;
 	private var headerFontSize:Int;
@@ -140,6 +143,9 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.headerFillColor = 0x3f3f3f;
 			this.overlayFillColor = 0x6f6f6f;
 			this.subHeadingFillColor = 0x2c2c2c;
+			this.dangerColor = 0x9f4f4f;
+			this.offsetDangerColor = this.darken(this.dangerColor, 0x0f0f0f);
+			this.dangerBorderColor = this.darken(this.dangerColor, 0x2f2f2f);
 			this.borderColor = 0x080808;
 			this.dividerColor = 0x282828;
 			this.textColor = 0xf1f1f1;
@@ -169,6 +175,9 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.headerFillColor = 0xececec;
 			this.overlayFillColor = 0x8f8f8f;
 			this.subHeadingFillColor = 0xdfdfdf;
+			this.dangerColor = 0xf0a0a0;
+			this.offsetDangerColor = this.darken(this.dangerColor, 0x0f0f0f);
+			this.dangerBorderColor = this.darken(this.dangerColor, 0x2f2f2f);
 			this.borderColor = 0xacacac;
 			this.dividerColor = 0xdfdfdf;
 			this.textColor = 0x1f1f1f;
@@ -272,6 +281,20 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private function getReversedActiveThemeFill():FillStyle {
 		var colors = [this.offsetThemeColor, this.themeColor];
 		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
+	}
+
+	private function getDangerFill():FillStyle {
+		var colors = [this.dangerColor, this.offsetDangerColor];
+		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
+	}
+
+	private function getReversedDangerFill():FillStyle {
+		var colors = [this.offsetDangerColor, this.dangerColor];
+		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
+	}
+
+	private function getDangerBorder(thickness:Float = 1.0):LineStyle {
+		return SolidColor(thickness, this.dangerBorderColor);
 	}
 
 	private function getOverlayFill():FillStyle {
