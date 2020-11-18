@@ -97,6 +97,18 @@ class SteelTreeViewItemRendererStyles {
 					defaultIcon.graphics.endFill();
 					icon.defaultView = defaultIcon;
 
+					var disabledIcon = new Shape();
+					disabledIcon.graphics.beginFill(0xff00ff, 0.0);
+					disabledIcon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+					disabledIcon.graphics.endFill();
+					disabledIcon.graphics.beginFill(theme.disabledTextColor);
+					disabledIcon.graphics.moveTo(4.0, 4.0);
+					disabledIcon.graphics.lineTo(16.0, 10.0);
+					disabledIcon.graphics.lineTo(4.0, 16.0);
+					disabledIcon.graphics.lineTo(4.0, 4.0);
+					disabledIcon.graphics.endFill();
+					icon.disabledView = disabledIcon;
+
 					var selectedIcon = new Shape();
 					selectedIcon.graphics.beginFill(0xff00ff, 0.0);
 					selectedIcon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
@@ -108,6 +120,18 @@ class SteelTreeViewItemRendererStyles {
 					selectedIcon.graphics.lineTo(4.0, 4.0);
 					selectedIcon.graphics.endFill();
 					icon.selectedView = selectedIcon;
+
+					var selectedDisabledIcon = new Shape();
+					selectedDisabledIcon.graphics.beginFill(0xff00ff, 0.0);
+					selectedDisabledIcon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+					selectedDisabledIcon.graphics.endFill();
+					selectedDisabledIcon.graphics.beginFill(theme.disabledTextColor);
+					selectedDisabledIcon.graphics.moveTo(4.0, 4.0);
+					selectedDisabledIcon.graphics.lineTo(16.0, 4.0);
+					selectedDisabledIcon.graphics.lineTo(10.0, 16.0);
+					selectedDisabledIcon.graphics.lineTo(4.0, 4.0);
+					selectedDisabledIcon.graphics.endFill();
+					icon.setViewForState(DISABLED(true), selectedDisabledIcon);
 				}
 			});
 		}
