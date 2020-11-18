@@ -1153,8 +1153,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function refreshScrollerValues():Void {
-		this.scroller.enabledX = this._scrollPolicyX != OFF;
-		this.scroller.enabledY = this._scrollPolicyY != OFF;
+		this.scroller.enabledX = this._enabled && this._scrollPolicyX != OFF;
+		this.scroller.enabledY = this._enabled && this._scrollPolicyY != OFF;
 		this.scroller.elasticEdges = this.elasticEdges;
 		this.scroller.simulateTouch = this.simulateTouch;
 	}
