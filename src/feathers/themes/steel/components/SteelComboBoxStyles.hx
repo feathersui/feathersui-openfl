@@ -74,6 +74,7 @@ class SteelComboBoxStyles {
 					var inputSkin = new TabSkin();
 					inputSkin.cornerRadiusPosition = LEFT;
 					inputSkin.cornerRadius = 3.0;
+					inputSkin.drawBaseBorder = false;
 					inputSkin.width = 160.0;
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();
