@@ -798,12 +798,18 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_textInput_focusInHandler(event:FocusEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (!this.open) {
 			this.openListView();
 		}
 	}
 
 	private function comboBox_button_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (this.open) {
 			this.closeListView();
 		} else {
@@ -812,6 +818,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_button_touchBeginHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;

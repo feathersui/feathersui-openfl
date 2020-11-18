@@ -690,6 +690,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function popUpListView_button_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (this.open) {
 			this.closeListView();
 		} else {
@@ -698,6 +701,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function popUpListView_button_touchBeginHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
