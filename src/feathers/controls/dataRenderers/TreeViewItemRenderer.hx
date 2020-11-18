@@ -157,6 +157,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	}
 
 	override private function update():Void {
+		this.disclosureButton.enabled = this._enabled;
 		this.disclosureButton.visible = this._branch;
 		var oldIgnoreOpenCloseChange = this._ignoreOpenCloseChange;
 		this._ignoreOpenCloseChange = true;
