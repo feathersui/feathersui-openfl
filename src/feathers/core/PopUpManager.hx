@@ -61,7 +61,7 @@ class PopUpManager {
 	private static var stageToManager:Map<Stage, IPopUpManager> = [];
 
 	/**
-		Returns the `IPopUpManager` instanceassociated with the specified
+		Returns the `IPopUpManager` instance associated with the specified
 		`Stage` instance. If a pop-up manager hasn't been created for this stage
 		yet, one will be created automatically using
 		`PopUpManager.popUpManagerFactory`.
@@ -87,6 +87,9 @@ class PopUpManager {
 	}
 
 	/**
+		Removes all `IPopUpManager` instances created by calling
+		`PopUpManager.forStage()`.
+
 		@since 1.0.0
 	**/
 	public static function dispose():Void {
