@@ -43,6 +43,10 @@ interface IUIControl extends IDisplayObject {
 		component.toolTip = "Description of component";
 		```
 
+		Note: This property will be ignored if no tool tip manager is enabled.
+		If you are using the `Application` component, a tool tip manager will
+		be enabled automatically.
+
 		@default null
 
 		@see `feathers.core.ToolTipManager`

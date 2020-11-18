@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.core.FocusManager;
 import feathers.core.IFocusManagerAware;
 import feathers.core.PopUpManager;
 import feathers.themes.steel.components.SteelApplicationStyles;
@@ -17,6 +16,13 @@ import feathers.utils.ScreenDensityScaleCalculator;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
+#if !disable_focus_manager
+import feathers.core.FocusManager;
+#end
+#if !disable_tool_tip_manager
+import feathers.core.IToolTipManager;
+import feathers.core.ToolTipManager;
+#end
 #if !((desktop && !air) || (web && !flash))
 import feathers.utils.DeviceUtil;
 import openfl.system.Capabilities;
@@ -115,6 +121,10 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		SteelApplicationStyles.initialize();
 	}
 
+	#if !disable_tool_tip_manager
+	private var _toolTipManager:IToolTipManager;
+	#end
+
 	private function getScaleFactor():Float {
 		var result = 1.0;
 		if (this.stage == null) {
@@ -212,6 +222,23 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		#end
 	}
 
+	private function prepareToolTipManager():Void {
+		#if !disable_tool_tip_manager
+		if (!ToolTipManager.hasRoot(this.stage)) {
+			this._toolTipManager = ToolTipManager.addRoot(this.stage);
+		}
+		#end
+	}
+
+	private function cleanupToolTipManager():Void {
+		#if !disable_tool_tip_manager
+		if (this._toolTipManager != null) {
+			ToolTipManager.removeRoot(this.stage);
+			this._toolTipManager = null;
+		}
+		#end
+	}
+
 	private function application_addedToStageHandler(event:Event):Void {
 		#if flash
 		if (Reflect.hasField(this.stage, "nativeWindow")) {
@@ -222,12 +249,14 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		this.stage.addEventListener(Event.RESIZE, application_stage_resizeHandler, false, 0, true);
 		this.prepareFocusManager();
 		this.preparePopUpManager();
+		this.prepareToolTipManager();
 		this.refreshDimensions();
 	}
 
 	private function application_removedFromStageHandler(event:Event):Void {
 		this.removeEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
 		this.stage.removeEventListener(Event.RESIZE, application_stage_resizeHandler);
+		this.cleanupToolTipManager();
 		this.cleanupPopUpManager();
 		this.cleanupFocusManager();
 	}
