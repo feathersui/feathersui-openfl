@@ -21,8 +21,8 @@ jobs:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
       run: |
-        haxelib install lime --quiet
-        haxelib install openfl --quiet
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
         haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
@@ -123,8 +123,8 @@ jobs:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
       run: |
-        haxelib install lime --quiet
-        haxelib install openfl --quiet
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
         haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
@@ -145,8 +145,8 @@ jobs:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
       run: |
-        haxelib install lime --quiet
-        haxelib install openfl --quiet
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
         haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
