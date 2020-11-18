@@ -35,8 +35,9 @@ class SteelHProgressBarStyles {
 				if (progress.fillSkin == null) {
 					var fillSkin = new RectangleSkin();
 					fillSkin.fill = theme.getActiveThemeFill();
-					// fillSkin.disabledFill = theme.getButtonDisabledFill();
+					fillSkin.disabledFill = theme.getControlDisabledFill();
 					fillSkin.border = theme.getActiveFillBorder();
+					fillSkin.disabledBorder = theme.getBorder();
 					fillSkin.cornerRadius = 3.0;
 					fillSkin.width = 8.0;
 					fillSkin.height = 8.0;
@@ -46,7 +47,9 @@ class SteelHProgressBarStyles {
 				if (progress.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getInsetFill();
+					backgroundSkin.disabledFill = theme.getDisabledInsetFill();
 					backgroundSkin.border = theme.getInsetBorder();
+					backgroundSkin.disabledBorder = theme.getDisabledInsetBorder();
 					backgroundSkin.cornerRadius = 3.0;
 					backgroundSkin.width = 200.0;
 					backgroundSkin.height = 8.0;
