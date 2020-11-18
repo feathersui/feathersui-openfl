@@ -37,7 +37,7 @@ class SteelVProgressBarStyles {
 					fillSkin.fill = theme.getActiveThemeFill();
 					fillSkin.disabledFill = theme.getControlDisabledFill();
 					fillSkin.border = theme.getActiveFillBorder();
-					fillSkin.disabledBorder = theme.getBorder();
+					fillSkin.disabledBorder = theme.getDisabledInsetBorder();
 					fillSkin.cornerRadius = 3.0;
 					fillSkin.width = 8.0;
 					fillSkin.height = 8.0;
