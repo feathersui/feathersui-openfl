@@ -81,6 +81,8 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var controlFillColor1:Int;
 	private var controlFillColor2:Int;
 	private var controlDisabledFillColor:Int;
+	private var scrollBarThumbFillColor:Int;
+	private var scrollBarThumbDisabledFillColor:Int;
 	private var insetFillColor:Int;
 	private var disabledInsetFillColor:Int;
 	private var insetBorderColor:Int;
@@ -131,6 +133,8 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.controlFillColor1 = 0x5f5f5f;
 			this.controlFillColor2 = 0x4c4c4c;
 			this.controlDisabledFillColor = 0x303030;
+			this.scrollBarThumbFillColor = 0x6f6f6f;
+			this.scrollBarThumbDisabledFillColor = 0x3f3f3f;
 			this.insetFillColor = 0x181818;
 			this.disabledInsetFillColor = 0x282828;
 			this.insetBorderColor = 0x484848;
@@ -163,6 +167,8 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.controlFillColor1 = 0xffffff;
 			this.controlFillColor2 = 0xe8e8e8;
 			this.controlDisabledFillColor = 0xefefef;
+			this.scrollBarThumbFillColor = 0x8f8f8f;
+			this.scrollBarThumbDisabledFillColor = 0xcfcfcf;
 			this.insetFillColor = 0xfcfcfc;
 			this.disabledInsetFillColor = 0xf1f1f1;
 			this.insetBorderColor = 0xacacac;
@@ -219,6 +225,14 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getButtonDisabledFill():FillStyle {
 		return SolidColor(this.controlDisabledFillColor, 0.7);
+	}
+
+	private function getScrollBarThumbFill():FillStyle {
+		return SolidColor(this.scrollBarThumbFillColor);
+	}
+
+	private function getScrollBarThumbDisabledFill():FillStyle {
+		return SolidColor(this.scrollBarThumbDisabledFillColor, 0.7);
 	}
 
 	private function getBorder(thickness:Float = 1.0):LineStyle {
