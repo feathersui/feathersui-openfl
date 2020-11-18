@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.display.Stage;
 import openfl.display.DisplayObjectContainer;
 import openfl.events.IEventDispatcher;
 
@@ -70,4 +71,6 @@ interface IDisplayObject extends IEventDispatcher {
 	#end
 
 	public var parent(default, never):DisplayObjectContainer;
+
+	public var stage(default, never):Stage;
 }
