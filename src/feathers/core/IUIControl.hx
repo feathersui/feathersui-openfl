@@ -34,6 +34,25 @@ interface IUIControl extends IDisplayObject {
 	public var enabled(get, set):Bool;
 
 	/**
+		Text to display in a tool tip to when hovering the mouse over this
+		component, if the `ToolTipManager` is enabled.
+
+		The following example sets a tool tip:
+
+		```hx
+		component.toolTip = "Description of component";
+		```
+
+		@default null
+
+		@see `feathers.core.ToolTipManager`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var toolTip(get, set):String;
+
+	/**
 		If the component has not yet initialized, initializes immediately. The
 		`FeathersEvent.INITIALIZE` event will be dispatched. To both initialize
 		and validate immediately, call `validateNow()` instead.

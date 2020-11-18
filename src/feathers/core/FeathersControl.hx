@@ -135,6 +135,26 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._enabled;
 	}
 
+	private var _toolTip:String = null;
+
+	/**
+		@see `feathers.core.IUIControl.toolTip`
+	**/
+	@:flash.property
+	public var toolTip(get, set):String;
+
+	private function get_toolTip():String {
+		return this._toolTip;
+	}
+
+	private function set_toolTip(value:String):String {
+		if (this._toolTip == value) {
+			return this._toolTip;
+		}
+		this._toolTip = value;
+		return this._toolTip;
+	}
+
 	private var _themeEnabled:Bool = true;
 
 	/**
