@@ -8,16 +8,13 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.TriangleSkin;
-import feathers.controls.TextInputState;
-import feathers.controls.TextInput;
-import feathers.skins.TabSkin;
-import feathers.layout.RelativePosition;
-import feathers.controls.ButtonState;
-import openfl.display.Shape;
-import feathers.layout.HorizontalAlign;
 import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.ComboBox;
+import feathers.controls.TextInput;
+import feathers.controls.TextInputState;
+import feathers.skins.TabSkin;
+import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 
@@ -57,6 +54,7 @@ class SteelComboBoxStyles {
 					var icon = new TriangleSkin();
 					icon.pointPosition = BOTTOM;
 					icon.fill = SolidColor(theme.textColor);
+					icon.disabledFill = SolidColor(theme.disabledTextColor);
 					icon.width = 8.0;
 					icon.height = 4.0;
 					button.icon = icon;

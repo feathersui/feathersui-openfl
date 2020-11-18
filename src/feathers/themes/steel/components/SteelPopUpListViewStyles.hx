@@ -8,17 +8,13 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.TriangleSkin;
-import feathers.utils.DeviceUtil;
-import feathers.controls.popups.DropDownPopUpAdapter;
-import feathers.layout.RelativePosition;
-import feathers.controls.ButtonState;
-import openfl.display.Shape;
-import feathers.layout.HorizontalAlign;
 import feathers.controls.Button;
 import feathers.controls.PopUpListView;
+import feathers.controls.popups.DropDownPopUpAdapter;
+import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `PopUpListView` component.
@@ -57,6 +53,7 @@ class SteelPopUpListViewStyles {
 					var icon = new TriangleSkin();
 					icon.pointPosition = BOTTOM;
 					icon.fill = SolidColor(theme.textColor);
+					icon.disabledFill = SolidColor(theme.disabledTextColor);
 					icon.width = 8.0;
 					icon.height = 4.0;
 					button.icon = icon;
