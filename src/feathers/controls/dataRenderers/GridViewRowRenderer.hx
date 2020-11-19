@@ -66,6 +66,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private var _defaultStorage:CellRendererStorage = new CellRendererStorage();
+	private var _additionalStorage:Array<CellRendererStorage> = null;
 	private var _unrenderedData:Array<Int> = [];
 	private var _currentCellState:GridViewCellState = new GridViewCellState();
 	private var _columnToCellRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
@@ -287,14 +288,51 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				this._defaultStorage.cellRendererRecycler.reset = defaultResetCellRenderer;
 			}
 		}
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				if (storage.cellRendererRecycler.update == null) {
+					storage.cellRendererRecycler.update = defaultUpdateCellRenderer;
+					if (storage.cellRendererRecycler.reset == null) {
+						storage.cellRendererRecycler.reset = defaultResetCellRenderer;
+					}
+				}
+			}
+		}
 
 		this.refreshInactiveCellRenderers(this._defaultStorage, false);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveCellRenderers(storage, false);
+			}
+		}
 		this.findUnrenderedData();
 		this.recoverInactiveCellRenderers(this._defaultStorage);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.recoverInactiveCellRenderers(storage);
+			}
+		}
 		this.renderUnrenderedData();
 		this.freeInactiveCellRenderers(this._defaultStorage);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.freeInactiveCellRenderers(storage);
+			}
+		}
 		if (this._defaultStorage.inactiveCellRenderers.length > 0) {
 			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive cell renderers should be empty after updating.");
+		}
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				if (storage.inactiveCellRenderers.length > 0) {
+					throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive cell renderers should be empty after updating.");
+				}
+			}
 		}
 	}
 
@@ -317,7 +355,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			var column = this._columns.get(i);
 			var cellRenderer = this._columnToCellRenderer.get(column);
 			if (cellRenderer != null) {
-				var storage = this._defaultStorage;
+				var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 				this.refreshCellRendererProperties(cellRenderer, i, column);
 				this.setChildIndex(cellRenderer, i);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
@@ -332,7 +370,26 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
+	private function cellRendererRecyclerToStorage(recycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):CellRendererStorage {
+		if (recycler == null) {
+			return this._defaultStorage;
+		}
+		if (this._additionalStorage == null) {
+			this._additionalStorage = [];
+		}
+		for (i in 0...this._additionalStorage.length) {
+			var storage = this._additionalStorage[i];
+			if (storage.cellRendererRecycler == recycler) {
+				return storage;
+			}
+		}
+		var storage = new CellRendererStorage(recycler);
+		this._additionalStorage.push(storage);
+		return storage;
+	}
+
 	private function recoverInactiveCellRenderers(storage:CellRendererStorage):Void {
+		var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 		for (cellRenderer in storage.inactiveCellRenderers) {
 			if (cellRenderer == null) {
 				continue;
@@ -357,7 +414,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			this._currentCellState.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 			if (cellRendererRecycler != null && cellRendererRecycler.reset != null) {
 				cellRendererRecycler.reset(cellRenderer, this._currentCellState);
 			}
@@ -397,18 +453,19 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function freeInactiveCellRenderers(storage:CellRendererStorage):Void {
+		var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 		for (cellRenderer in storage.inactiveCellRenderers) {
 			if (cellRenderer == null) {
 				continue;
 			}
-			this.destroyCellRenderer(cellRenderer, storage);
+			this.destroyCellRenderer(cellRenderer, cellRendererRecycler);
 		}
 		storage.inactiveCellRenderers.resize(0);
 	}
 
 	private function createCellRenderer(columnIndex:Int, column:GridViewColumn):DisplayObject {
 		var cellRenderer:DisplayObject = null;
-		var storage = this._defaultStorage;
+		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		if (storage.inactiveCellRenderers.length == 0) {
 			cellRenderer = storage.cellRendererRecycler.create();
 		} else {
@@ -434,9 +491,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		return cellRenderer;
 	}
 
-	private function destroyCellRenderer(cellRenderer:DisplayObject, storage:CellRendererStorage):Void {
+	private function destroyCellRenderer(cellRenderer:DisplayObject,
+			cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):Void {
 		this.removeChild(cellRenderer);
-		var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 		if (cellRendererRecycler != null && cellRendererRecycler.destroy != null) {
 			cellRendererRecycler.destroy(cellRenderer);
 		}
@@ -454,7 +511,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
-		var storage = this._defaultStorage;
+		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		this.populateCurrentItemState(column, columnIndex);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
@@ -543,7 +600,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 }
 
 private class CellRendererStorage {
-	public function new(cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = null) {}
+	public function new(?recycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>) {
+		this.cellRendererRecycler = recycler;
+	}
 
 	public var oldCellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;

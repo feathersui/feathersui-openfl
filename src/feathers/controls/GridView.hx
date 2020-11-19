@@ -653,6 +653,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomCellRenderer);
 		```
 
+		@see `feathers.controls.GridViewColumn.cellRendererRecycler`
+
 		@since 1.0.0
 	**/
 	@:flash.property
