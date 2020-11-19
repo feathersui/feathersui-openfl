@@ -385,10 +385,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	@:style
 	public var layout:ILayout = null;
 
-	private var _oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = null;
-
-	private var _itemRendererRecycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(TreeViewItemRenderer);
-
 	/**
 		Manages item renderers used by the tree view.
 
@@ -405,22 +401,21 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>;
 
 	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> {
-		return this._itemRendererRecycler;
+		return this._defaultStorage.itemRendererRecycler;
 	}
 
 	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
 		TreeViewItemState, DisplayObject> {
-		if (this._itemRendererRecycler == value) {
-			return this._itemRendererRecycler;
+		if (this._defaultStorage.itemRendererRecycler == value) {
+			return this._defaultStorage.itemRendererRecycler;
 		}
-		this._oldItemRendererRecycler = this._itemRendererRecycler;
-		this._itemRendererRecycler = value;
+		this._defaultStorage.oldItemRendererRecycler = this._defaultStorage.itemRendererRecycler;
+		this._defaultStorage.itemRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		return this._itemRendererRecycler;
+		return this._defaultStorage.itemRendererRecycler;
 	}
 
-	private var inactiveItemRenderers:Array<DisplayObject> = [];
-	private var activeItemRenderers:Array<DisplayObject> = [];
+	private var _defaultStorage = new ItemRendererStorage(DisplayObjectRecycler.withClass(TreeViewItemRenderer));
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var dataToLayoutIndex = new ObjectMap<Dynamic, Int>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
@@ -717,40 +712,41 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
 		this._layoutItems = items;
 
-		if (this._itemRendererRecycler.update == null) {
-			this._itemRendererRecycler.update = defaultUpdateItemRenderer;
-			if (this._itemRendererRecycler.reset == null) {
-				this._itemRendererRecycler.reset = defaultResetItemRenderer;
+		if (this._defaultStorage.itemRendererRecycler.update == null) {
+			this._defaultStorage.itemRendererRecycler.update = defaultUpdateItemRenderer;
+			if (this._defaultStorage.itemRendererRecycler.reset == null) {
+				this._defaultStorage.itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		this.refreshInactiveItemRenderers(itemRendererInvalid);
+		this.refreshInactiveItemRenderers(this._defaultStorage, itemRendererInvalid);
 		this.findUnrenderedData();
-		this.recoverInactiveItemRenderers(this._itemRendererRecycler);
+		this.recoverInactiveItemRenderers(this._defaultStorage);
 		this.renderUnrenderedData();
-		this.freeInactiveItemRenderers(this._itemRendererRecycler);
-		if (this.inactiveItemRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
+		this.freeInactiveItemRenderers(this._defaultStorage);
+		if (this._defaultStorage.inactiveItemRenderers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers should be empty after updating.');
 		}
 	}
 
-	private function refreshInactiveItemRenderers(factoryInvalid:Bool):Void {
-		var temp = this.inactiveItemRenderers;
-		this.inactiveItemRenderers = this.activeItemRenderers;
-		this.activeItemRenderers = temp;
-		if (this.activeItemRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
+	private function refreshInactiveItemRenderers(storage:ItemRendererStorage, factoryInvalid:Bool):Void {
+		var temp = storage.inactiveItemRenderers;
+		storage.inactiveItemRenderers = storage.activeItemRenderers;
+		storage.activeItemRenderers = temp;
+		if (storage.activeItemRenderers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active item renderers should be empty before updating.');
 		}
 		if (factoryInvalid) {
-			this.recoverInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this._itemRendererRecycler);
-			this.freeInactiveItemRenderers(this._oldItemRendererRecycler != null ? this._oldItemRendererRecycler : this._itemRendererRecycler);
-			this._oldItemRendererRecycler = null;
+			this.recoverInactiveItemRenderers(storage);
+			this.freeInactiveItemRenderers(storage);
+			storage.oldItemRendererRecycler = null;
 		}
 	}
 
-	private function recoverInactiveItemRenderers(recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):Void {
-		for (itemRenderer in this.inactiveItemRenderers) {
+	private function recoverInactiveItemRenderers(storage:ItemRendererStorage):Void {
+		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
+		for (itemRenderer in storage.inactiveItemRenderers) {
 			if (itemRenderer == null) {
 				continue;
 			}
@@ -812,14 +808,15 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
-	private function freeInactiveItemRenderers(recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):Void {
-		for (itemRenderer in this.inactiveItemRenderers) {
+	private function freeInactiveItemRenderers(storage:ItemRendererStorage):Void {
+		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
+		for (itemRenderer in storage.inactiveItemRenderers) {
 			if (itemRenderer == null) {
 				continue;
 			}
 			this.destroyItemRenderer(itemRenderer, recycler);
 		}
-		this.inactiveItemRenderers.resize(0);
+		storage.inactiveItemRenderers.resize(0);
 	}
 
 	private function findUnrenderedData():Void {
@@ -870,17 +867,17 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._unrenderedLayoutIndices.push(layoutIndex);
 			return;
 		}
+		var storage = this._defaultStorage;
 		this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
 		itemRenderer.visible = true;
 		this._layoutItems[layoutIndex] = itemRenderer;
-		var removed = this.inactiveItemRenderers.remove(itemRenderer);
+		var removed = storage.inactiveItemRenderers.remove(itemRenderer);
 		if (!removed) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-				+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.');
 		}
-		this.activeItemRenderers.push(itemRenderer);
+		storage.activeItemRenderers.push(itemRenderer);
 	}
 
 	private function renderUnrenderedData():Void {
@@ -889,7 +886,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			var item = this._dataProvider.get(location);
 			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
 			itemRenderer.visible = true;
-			this.activeItemRenderers.push(itemRenderer);
 			this.treeViewPort.addChild(itemRenderer);
 			this._layoutItems[layoutIndex] = itemRenderer;
 		}
@@ -897,11 +893,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
+		var storage = this._defaultStorage;
 		var itemRenderer:DisplayObject = null;
-		if (this.inactiveItemRenderers.length == 0) {
-			itemRenderer = this._itemRendererRecycler.create();
+		if (storage.inactiveItemRenderers.length == 0) {
+			itemRenderer = storage.itemRendererRecycler.create();
 		} else {
-			itemRenderer = this.inactiveItemRenderers.shift();
+			itemRenderer = storage.inactiveItemRenderers.shift();
 		}
 		this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
 		if (Std.is(itemRenderer, ITriggerView)) {
@@ -924,6 +921,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.itemRendererToData.set(itemRenderer, item);
 		this.dataToItemRenderer.set(item, itemRenderer);
 		this.dataToLayoutIndex.set(item, layoutIndex);
+		storage.activeItemRenderers.push(itemRenderer);
 		return itemRenderer;
 	}
 
@@ -947,13 +945,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
+		var storage = this._defaultStorage;
 		this.populateCurrentItemState(item, location, layoutIndex);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
 		this._ignoreOpenedChange = true;
-		if (this._itemRendererRecycler.update != null) {
-			this._itemRendererRecycler.update(itemRenderer, this._currentItemState);
+		if (storage.itemRendererRecycler.update != null) {
+			storage.itemRendererRecycler.update(itemRenderer, this._currentItemState);
 		}
 		if (Std.is(itemRenderer, IUIControl)) {
 			var uiControl = cast(itemRenderer, IUIControl);
@@ -1369,4 +1368,15 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.updateItemRendererForLocation(location);
 		}
 	}
+}
+
+private class ItemRendererStorage {
+	public function new(?recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>) {
+		this.itemRendererRecycler = recycler;
+	}
+
+	public var oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>;
+	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>;
+	public var activeItemRenderers:Array<DisplayObject> = [];
+	public var inactiveItemRenderers:Array<DisplayObject> = [];
 }
