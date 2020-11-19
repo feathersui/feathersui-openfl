@@ -138,7 +138,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	public static final VARIANT_BORDER = "border";
 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
-	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
@@ -436,7 +435,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		this._defaultHeaderStorage.oldItemRendererRecycler = this._defaultHeaderStorage.itemRendererRecycler;
 		this._defaultHeaderStorage.itemRendererRecycler = value;
-		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this._defaultHeaderStorage.itemRendererRecycler;
 	}
 
@@ -730,17 +729,45 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this._defaultHeaderStorage.itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				if (storage.itemRendererRecycler.update == null) {
+					storage.itemRendererRecycler.update = defaultUpdateItemRenderer;
+					if (storage.itemRendererRecycler.reset == null) {
+						storage.itemRendererRecycler.reset = defaultResetItemRenderer;
+					}
+				}
+			}
+		}
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(this._defaultItemStorage, itemRendererInvalid);
-		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
-		this.refreshInactiveItemRenderers(this._defaultHeaderStorage, headerRendererInvalid || itemRendererInvalid);
+		this.refreshInactiveItemRenderers(this._defaultHeaderStorage, itemRendererInvalid);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveItemRenderers(storage, itemRendererInvalid);
+			}
+		}
 		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this._defaultItemStorage);
 		this.recoverInactiveItemRenderers(this._defaultHeaderStorage);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.recoverInactiveItemRenderers(storage);
+			}
+		}
 		this.renderUnrenderedData();
 		this.freeInactiveItemRenderers(this._defaultItemStorage);
 		this.freeInactiveItemRenderers(this._defaultHeaderStorage);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.freeInactiveItemRenderers(storage);
+			}
+		}
 		if (this._defaultItemStorage.inactiveItemRenderers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers should be empty after updating.');
 		}

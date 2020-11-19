@@ -799,13 +799,42 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				this._defaultStorage.itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				if (storage.itemRendererRecycler.update == null) {
+					storage.itemRendererRecycler.update = defaultUpdateItemRenderer;
+					if (storage.itemRendererRecycler.reset == null) {
+						storage.itemRendererRecycler.reset = defaultResetItemRenderer;
+					}
+				}
+			}
+		}
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(this._defaultStorage, itemRendererInvalid);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveItemRenderers(storage, itemRendererInvalid);
+			}
+		}
 		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this._defaultStorage);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.recoverInactiveItemRenderers(storage);
+			}
+		}
 		this.renderUnrenderedData();
 		this.freeInactiveItemRenderers(this._defaultStorage);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.freeInactiveItemRenderers(storage);
+			}
+		}
 		if (this._defaultStorage.inactiveItemRenderers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers should be empty after updating.');
 		}
