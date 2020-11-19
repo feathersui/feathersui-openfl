@@ -81,4 +81,13 @@ class ListViewItemState {
 		@since 1.0.0
 	**/
 	public var enabled:Bool;
+
+	/**
+		Returns the item's recycler ID.
+
+		@see `feathers.controls.ListView.recyclerIDFunction`
+
+		@since 1.0.0
+	**/
+	public var recyclerID:String;
 }

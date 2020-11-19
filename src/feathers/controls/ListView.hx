@@ -37,6 +37,7 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 import openfl.ui.Keyboard;
+import openfl._internal.utils.ObjectPool;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -541,15 +542,64 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._defaultStorage.itemRendererRecycler;
 	}
 
-	private var _defaultStorage = new ItemRendererStorage(DisplayObjectRecycler.withClass(ItemRenderer));
+	private var _recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>> = null;
+
+	private var _recyclerIDFunction:(state:ListViewItemState) -> String;
+
+	/**
+		When a list view requires multiple item renderer types, this function is
+		used to determine which type of item renderer is required for a specific
+		item. Returns the ID of the item renderer recycler to use for the item,
+		or `null` if the default `itemRendererFactory` should be used.
+
+		hTe following example provides a `recyclerIDFunction`:
+
+		```hx
+		var regularItemRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
+		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
+
+		list.setItemRendererFactoryWithID("regular-item", regularItemRecycler);
+		list.setItemRendererFactoryWithID("first-item", firstItemRecycler);
+
+		list.recyclerIDFunction = function(state:ListViewItemState):String {
+			if(index == 0) {
+				return "first-item";
+			}
+			return "regular-item";
+		};
+		```
+
+		@default null
+
+		@see `ListView.registerItemRendererRecycler()`
+		@see `ListView.itemRendererRecycler
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var recyclerIDFunction(get, set):(state:ListViewItemState) -> String;
+
+	private function get_recyclerIDFunction():(state:ListViewItemState) -> String {
+		return this._recyclerIDFunction;
+	}
+
+	private function set_recyclerIDFunction(value:(state:ListViewItemState) -> String):(state:ListViewItemState) -> String {
+		if (this._recyclerIDFunction == value) {
+			return this._recyclerIDFunction;
+		}
+		this._recyclerIDFunction = value;
+		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		return this._recyclerIDFunction;
+	}
+
+	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(ItemRenderer));
 	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
-	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
+	private var itemRendererToItemState = new ObjectMap<DisplayObject, ListViewItemState>();
+	private var itemStatePool = new ObjectPool(() -> new ListViewItemState());
 	private var _unrenderedData:Array<Dynamic> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
-
-	private var _currentItemState = new ListViewItemState();
 
 	private var _selectable:Bool = true;
 
@@ -737,7 +787,52 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	public function itemRendererToItem(itemRenderer:DisplayObject):Dynamic {
-		return this.itemRendererToData.get(itemRenderer);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return null;
+		}
+		return state.data;
+	}
+
+	/**
+		Returns the item renderer recycler associated with a specific ID.
+		Returns `null` if no recycler is associated with the ID.
+
+		@see `ListView.recyclerIDFunction`
+		@see `ListView.setItemRendererRecycler()`
+
+		@since 1.0.0
+	**/
+	public function getItemRendererRecycler(id:String):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
+		if (this._recyclerMap == null) {
+			return null;
+		}
+		return this._recyclerMap.get(id);
+	}
+
+	/**
+		Associates an item renderer rercycler with an ID to allow multiple types
+		of item renderers may be displayed in the list view. A custom
+		`recyclerIDFunction` may be specified to return the ID of the recycler
+		to use for a specific item in the data provider.
+
+		To clear a recycler, pass in `null` for the ID.
+
+		@see `ListView.recyclerIDFunction`
+		@see `ListView.getItemRendererRecycler()`
+
+		@since 1.0.0
+	**/
+	public function setItemRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):Void {
+		if (this._recyclerMap == null) {
+			this._recyclerMap = [];
+		}
+		if (recycler == null) {
+			this._recyclerMap.remove(id);
+			return;
+		}
+		this._recyclerMap.set(id, recycler);
+		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 	}
 
 	private function initializeListViewTheme():Void {
@@ -860,48 +955,31 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			if (itemRenderer == null) {
 				continue;
 			}
-			var item = this.itemRendererToData.get(itemRenderer);
-			if (item == null) {
+			var state = this.itemRendererToItemState.get(itemRenderer);
+			if (state == null) {
 				return;
 			}
-			this.itemRendererToData.remove(itemRenderer);
+			var item = state.data;
+			this.itemRendererToItemState.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
 			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, listView_itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
-			this._currentItemState.owner = this;
-			this._currentItemState.data = item;
-			this._currentItemState.index = -1;
-			this._currentItemState.selected = false;
-			this._currentItemState.enabled = true;
-			this._currentItemState.text = null;
+			state.owner = this;
+			state.data = item;
+			state.index = -1;
+			state.selected = false;
+			state.enabled = true;
+			state.text = null;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
 			if (recycler != null && recycler.reset != null) {
-				recycler.reset(itemRenderer, this._currentItemState);
-			}
-			if (Std.is(itemRenderer, IUIControl)) {
-				var uiControl = cast(itemRenderer, IUIControl);
-				uiControl.enabled = this._currentItemState.enabled;
-			}
-			if (Std.is(itemRenderer, IToggle)) {
-				var toggle = cast(itemRenderer, IToggle);
-				toggle.selected = this._currentItemState.selected;
-			}
-			if (Std.is(itemRenderer, IDataRenderer)) {
-				var dataRenderer = cast(itemRenderer, IDataRenderer);
-				dataRenderer.data = this._currentItemState.data;
-			}
-			if (Std.is(itemRenderer, ILayoutIndexObject)) {
-				var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
-				layoutIndexObject.layoutIndex = this._currentItemState.index;
-			}
-			if (Std.is(itemRenderer, IListViewItemRenderer)) {
-				var listRenderer = cast(itemRenderer, IListViewItemRenderer);
-				listRenderer.index = this._currentItemState.index;
+				recycler.reset(itemRenderer, state);
 			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+			this.refreshItemRendererProperties(itemRenderer, state);
+			this.itemStatePool.release(state);
 		}
 	}
 
@@ -941,9 +1019,15 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			var item = this._dataProvider.get(i);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
-				var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
-				var storage = this.itemRendererRecyclerToStorage(recycler);
-				this.refreshItemRendererProperties(itemRenderer, item, i);
+				var state = this.itemRendererToItemState.get(itemRenderer);
+				this.populateCurrentItemState(item, i, state);
+				var oldRecyclerID = state.recyclerID;
+				var storage = this.itemStateToStorage(state);
+				if (storage.id != oldRecyclerID) {
+					this._unrenderedData.push(item);
+					continue;
+				}
+				this.updateItemRenderer(itemRenderer, state, storage);
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
@@ -959,45 +1043,50 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function populateCurrentItemState(item:Dynamic, index:Int):Void {
-		this._currentItemState.owner = this;
-		this._currentItemState.data = item;
-		this._currentItemState.index = index;
-		this._currentItemState.selected = this._selectedIndices.indexOf(index) != -1;
-		this._currentItemState.enabled = this._enabled;
-		this._currentItemState.text = itemToText(item);
+	private function populateCurrentItemState(item:Dynamic, index:Int, state:ListViewItemState):Void {
+		state.owner = this;
+		state.data = item;
+		state.index = index;
+		state.selected = this._selectedIndices.indexOf(index) != -1;
+		state.enabled = this._enabled;
+		state.text = itemToText(item);
 	}
 
-	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, index:Int):Void {
-		var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
-		var storage = this.itemRendererRecyclerToStorage(recycler);
-		this.populateCurrentItemState(item, index);
+	private function updateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState, storage:ItemRendererStorage):Void {
+		state.recyclerID = storage.id;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (storage.itemRendererRecycler.update != null) {
-			storage.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+			storage.itemRendererRecycler.update(itemRenderer, state);
 		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshItemRendererProperties(itemRenderer, state);
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, state:ListViewItemState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
 		if (Std.is(itemRenderer, IUIControl)) {
 			var uiControl = cast(itemRenderer, IUIControl);
-			uiControl.enabled = this._currentItemState.enabled;
+			uiControl.enabled = state.enabled;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
-			dataRenderer.data = this._currentItemState.data;
+			dataRenderer.data = state.data;
 		}
 		if (Std.is(itemRenderer, IListViewItemRenderer)) {
 			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
-			listRenderer.index = this._currentItemState.index;
+			listRenderer.index = state.index;
 		}
 		if (Std.is(itemRenderer, ILayoutIndexObject)) {
 			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
-			layoutIndexObject.layoutIndex = this._currentItemState.index;
+			layoutIndexObject.layoutIndex = state.index;
 		}
 		if (Std.is(itemRenderer, IToggle)) {
 			var toggle = cast(itemRenderer, IToggle);
 			// if the renderer is an IToggle, this cannot be overridden
-			toggle.selected = this._currentItemState.selected;
+			toggle.selected = state.selected;
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
@@ -1005,7 +1094,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function renderUnrenderedData():Void {
 		for (item in this._unrenderedData) {
 			var index = this._dataProvider.indexOf(item);
-			var itemRenderer = this.createItemRenderer(item, index);
+			var state = this.itemStatePool.create();
+			this.populateCurrentItemState(item, index, state);
+			var itemRenderer = this.createItemRenderer(state);
 			itemRenderer.visible = true;
 			this.listViewPort.addChild(itemRenderer);
 			this._layoutItems[index] = itemRenderer;
@@ -1013,16 +1104,15 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._unrenderedData.resize(0);
 	}
 
-	private function createItemRenderer(item:Dynamic, index:Int):DisplayObject {
-		var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
-		var storage = this.itemRendererRecyclerToStorage(recycler);
+	private function createItemRenderer(state:ListViewItemState):DisplayObject {
+		var storage = this.itemStateToStorage(state);
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}
-		this.refreshItemRendererProperties(itemRenderer, item, index);
+		this.updateItemRenderer(itemRenderer, state, storage);
 		if (Std.is(itemRenderer, ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			itemRenderer.addEventListener(TriggerEvent.TRIGGER, listView_itemRenderer_triggerHandler);
@@ -1036,8 +1126,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (Std.is(itemRenderer, IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 		}
-		this.itemRendererToData.set(itemRenderer, item);
-		this.dataToItemRenderer.set(item, itemRenderer);
+		this.itemRendererToItemState.set(itemRenderer, state);
+		this.dataToItemRenderer.set(state.data, itemRenderer);
 		storage.activeItemRenderers.push(itemRenderer);
 		return itemRenderer;
 	}
@@ -1049,7 +1139,20 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function itemRendererRecyclerToStorage(recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):ItemRendererStorage {
+	private function itemStateToStorage(state:ListViewItemState):ItemRendererStorage {
+		var recyclerID:String = null;
+		if (this._recyclerIDFunction != null) {
+			recyclerID = this._recyclerIDFunction(state);
+		}
+		var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
+		if (recyclerID != null) {
+			if (this._recyclerMap != null) {
+				recycler = this._recyclerMap.get(recyclerID);
+			}
+			if (recycler == null) {
+				throw new IllegalOperationError('Item renderer recyyler ID "${recyclerID}" is not registered.');
+			}
+		}
 		if (recycler == null) {
 			return this._defaultStorage;
 		}
@@ -1062,7 +1165,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				return storage;
 			}
 		}
-		var storage = new ItemRendererStorage(recycler);
+		var storage = new ItemRendererStorage(recyclerID, recycler);
 		this._additionalStorage.push(storage);
 		return storage;
 	}
@@ -1074,12 +1177,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		// the index may have changed, possibily even to -1, if the item was
 		// filtered out
 		this.selectedIndex = this._dataProvider.indexOf(this._selectedItem); // use the setter
-	}
-
-	private function dispatchItemTriggerEvent(data:Dynamic):Void {
-		var index = this._dataProvider.indexOf(data);
-		this.populateCurrentItemState(data, index);
-		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, this._currentItemState);
 	}
 
 	private function handleSelectionChange(item:Dynamic, index:Int, ctrlKey:Bool, shiftKey:Bool):Void {
@@ -1142,14 +1239,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var item = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(item);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		var index = this._dataProvider.indexOf(item);
-		this.handleSelectionChange(item, index, event.ctrlKey, event.shiftKey);
+		this.handleSelectionChange(state.data, state.index, event.ctrlKey, event.shiftKey);
 	}
 
 	private function listView_itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -1158,14 +1254,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var item = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(item);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		var index = this._dataProvider.indexOf(item);
-		this.handleSelectionChange(item, index, event.ctrlKey, event.shiftKey);
+		this.handleSelectionChange(state.data, state.index, event.ctrlKey, event.shiftKey);
 	}
 
 	private function listView_itemRenderer_triggerHandler(event:TriggerEvent):Void {
@@ -1174,14 +1269,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var item = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(item);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable) {
 			return;
 		}
-		var index = this._dataProvider.indexOf(item);
-		this.handleSelectionChange(item, index, event.ctrlKey, event.shiftKey);
+		this.handleSelectionChange(state.data, state.index, event.ctrlKey, event.shiftKey);
 	}
 
 	private function listView_itemRenderer_changeHandler(event:Event):Void {
@@ -1290,7 +1384,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			cast(itemRenderer, IDataRenderer).data = null;
 		}
-		this.refreshItemRendererProperties(itemRenderer, item, index);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		this.populateCurrentItemState(item, index, state);
+		var storage = this.itemStateToStorage(state);
+		this.updateItemRenderer(itemRenderer, state, storage);
 	}
 
 	private function listView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
@@ -1355,17 +1452,21 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
-				this.dispatchItemTriggerEvent(this._selectedItem);
+				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
+				var state = this.itemRendererToItemState.get(itemRenderer);
+				ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 			}
 		}
 	}
 }
 
 private class ItemRendererStorage {
-	public function new(?recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>) {
+	public function new(?id:String, ?recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>) {
+		this.id = id;
 		this.itemRendererRecycler = recycler;
 	}
 
+	public var id:String;
 	public var oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 	public var activeItemRenderers:Array<DisplayObject> = [];
