@@ -806,7 +806,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.renderUnrenderedData();
 		this.freeInactiveItemRenderers(this._defaultStorage);
 		if (this._defaultStorage.inactiveItemRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers should be empty after updating.');
 		}
 	}
 
@@ -815,7 +815,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		storage.inactiveItemRenderers = storage.activeItemRenderers;
 		storage.activeItemRenderers = temp;
 		if (storage.activeItemRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active item renderers should be empty before updating.');
 		}
 		if (factoryInvalid) {
 			this.recoverInactiveItemRenderers(storage);
@@ -919,8 +919,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				this._layoutItems[i] = itemRenderer;
 				var removed = storage.inactiveItemRenderers.remove(itemRenderer);
 				if (!removed) {
-					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-						+ ": item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				storage.activeItemRenderers.push(itemRenderer);
 			} else {

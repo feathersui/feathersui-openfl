@@ -324,13 +324,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			}
 		}
 		if (this._defaultStorage.inactiveCellRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive cell renderers should be empty after updating.");
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive cell renderers should be empty after updating.');
 		}
 		if (this._additionalStorage != null) {
 			for (i in 0...this._additionalStorage.length) {
 				var storage = this._additionalStorage[i];
 				if (storage.inactiveCellRenderers.length > 0) {
-					throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive cell renderers should be empty after updating.");
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive cell renderers should be empty after updating.');
 				}
 			}
 		}
@@ -341,7 +341,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		storage.inactiveCellRenderers = storage.activeCellRenderers;
 		storage.activeCellRenderers = temp;
 		if (storage.activeCellRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active cell renderers should be empty before updating.");
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active cell renderers should be empty before updating.');
 		}
 		if (forceCleanup) {
 			this.recoverInactiveCellRenderers(storage);
@@ -360,8 +360,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				this.setChildIndex(cellRenderer, i);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
 				if (!removed) {
-					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-						+ ": cell renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: cell renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				storage.activeCellRenderers.push(cellRenderer);
 			} else {

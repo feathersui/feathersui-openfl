@@ -1121,7 +1121,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.renderUnrenderedData();
 		this.freeInactiveRowRenderers();
 		if (this.inactiveRowRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive row renderers should be empty after updating.");
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive row renderers should be empty after updating.');
 		}
 	}
 
@@ -1130,7 +1130,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.inactiveRowRenderers = this.activeRowRenderers;
 		this.activeRowRenderers = temp;
 		if (this.activeRowRenderers.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active row renderers should be empty before updating.");
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active row renderers should be empty before updating.');
 		}
 	}
 
@@ -1208,8 +1208,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				this._layoutItems[i] = rowRenderer;
 				var removed = this.inactiveRowRenderers.remove(rowRenderer);
 				if (!removed) {
-					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-						+ ": row renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: row renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				this.activeRowRenderers.push(rowRenderer);
 			} else {
