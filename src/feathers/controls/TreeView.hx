@@ -416,6 +416,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private var _defaultStorage = new ItemRendererStorage(DisplayObjectRecycler.withClass(TreeViewItemRenderer));
+	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var dataToLayoutIndex = new ObjectMap<Dynamic, Int>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
@@ -867,7 +868,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this._unrenderedLayoutIndices.push(layoutIndex);
 			return;
 		}
-		var storage = this._defaultStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(recycler);
 		this.refreshItemRendererProperties(itemRenderer, item, location, layoutIndex);
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
@@ -893,7 +895,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
-		var storage = this._defaultStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(recycler);
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
@@ -932,6 +935,24 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 	}
 
+	private function itemRendererRecyclerToStorage(recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):ItemRendererStorage {
+		if (recycler == null) {
+			return this._defaultStorage;
+		}
+		if (this._additionalStorage == null) {
+			this._additionalStorage = [];
+		}
+		for (i in 0...this._additionalStorage.length) {
+			var storage = this._additionalStorage[i];
+			if (storage.itemRendererRecycler == recycler) {
+				return storage;
+			}
+		}
+		var storage = new ItemRendererStorage(recycler);
+		this._additionalStorage.push(storage);
+		return storage;
+	}
+
 	private function populateCurrentItemState(item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
 		this._currentItemState.owner = this;
 		this._currentItemState.data = item;
@@ -945,7 +966,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
-		var storage = this._defaultStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(recycler);
 		this.populateCurrentItemState(item, location, layoutIndex);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;

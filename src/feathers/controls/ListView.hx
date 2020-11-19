@@ -542,6 +542,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private var _defaultStorage = new ItemRendererStorage(DisplayObjectRecycler.withClass(ItemRenderer));
+	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var _unrenderedData:Array<Dynamic> = [];
@@ -911,7 +912,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			var item = this._dataProvider.get(i);
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
-				var storage = this._defaultStorage;
+				var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
+				var storage = this.itemRendererRecyclerToStorage(recycler);
 				this.refreshItemRendererProperties(itemRenderer, item, i);
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
@@ -938,7 +940,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, item:Dynamic, index:Int):Void {
-		var storage = this._defaultStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(recycler);
 		this.populateCurrentItemState(item, index);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
@@ -982,7 +985,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function createItemRenderer(item:Dynamic, index:Int):DisplayObject {
-		var storage = this._defaultStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(recycler);
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
@@ -1014,6 +1018,24 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(itemRenderer);
 		}
+	}
+
+	private function itemRendererRecyclerToStorage(recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):ItemRendererStorage {
+		if (recycler == null) {
+			return this._defaultStorage;
+		}
+		if (this._additionalStorage == null) {
+			this._additionalStorage = [];
+		}
+		for (i in 0...this._additionalStorage.length) {
+			var storage = this._additionalStorage[i];
+			if (storage.itemRendererRecycler == recycler) {
+				return storage;
+			}
+		}
+		var storage = new ItemRendererStorage(recycler);
+		this._additionalStorage.push(storage);
+		return storage;
 	}
 
 	private function refreshSelectedIndicesAfterFilterOrSort():Void {

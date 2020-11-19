@@ -442,6 +442,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private var _defaultItemStorage = new ItemRendererStorage(STANDARD, DisplayObjectRecycler.withClass(ItemRenderer));
 	private var _defaultHeaderStorage = new ItemRendererStorage(HEADER, DisplayObjectRecycler.withClass(ItemRenderer));
+	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
 	private var itemRendererToLayoutIndex = new ObjectMap<DisplayObject, Int>();
@@ -874,7 +875,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		var type = location.length == 1 ? HEADER : STANDARD;
-		var storage = type == HEADER ? this._defaultHeaderStorage : this._defaultItemStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(type, recycler);
 		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
@@ -901,7 +903,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
 		var type = location.length == 1 ? HEADER : STANDARD;
-		var storage = type == HEADER ? this._defaultHeaderStorage : this._defaultItemStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(type, recycler);
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
@@ -942,6 +945,25 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 	}
 
+	private function itemRendererRecyclerToStorage(type:GroupListViewItemType,
+			recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):ItemRendererStorage {
+		if (recycler == null) {
+			return type == HEADER ? this._defaultHeaderStorage : this._defaultItemStorage;
+		}
+		if (this._additionalStorage == null) {
+			this._additionalStorage = [];
+		}
+		for (i in 0...this._additionalStorage.length) {
+			var storage = this._additionalStorage[i];
+			if (storage.type == type && storage.itemRendererRecycler == recycler) {
+				return storage;
+			}
+		}
+		var storage = new ItemRendererStorage(type, recycler);
+		this._additionalStorage.push(storage);
+		return storage;
+	}
+
 	private function populateCurrentItemState(item:Dynamic, type:GroupListViewItemType, location:Array<Int>, layoutIndex:Int):Void {
 		this._currentItemState.owner = this;
 		this._currentItemState.type = type;
@@ -956,7 +978,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, type:GroupListViewItemType, item:Dynamic, location:Array<Int>,
 			layoutIndex:Int):Void {
 		var type = location.length == 1 ? HEADER : STANDARD;
-		var storage = type == HEADER ? this._defaultHeaderStorage : this._defaultItemStorage;
+		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
+		var storage = this.itemRendererRecyclerToStorage(type, recycler);
 		this.populateCurrentItemState(item, type, location, layoutIndex);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
