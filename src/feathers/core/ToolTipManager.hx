@@ -78,7 +78,7 @@ class ToolTipManager {
 	/**
 		Returns the `IToolTipManager` instance associated with the specified
 		`Stage` instance. If a tool tip manager hasn't been created for this
-		tage yet, one will be created automatically using
+		stage yet, one will be created automatically using
 		`ToolTipManager.toolTipManagerFactory`.
 
 		@see `ToolTipManager.toolTipManagerFactory`
