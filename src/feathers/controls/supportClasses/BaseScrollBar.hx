@@ -706,7 +706,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private function getAdjustedPage():Float {
 		var range = this._maximum - this._minimum;
 		var adjustedPage = this._page;
-		if (adjustedPage == 0) {
+		if (adjustedPage == 0.0) {
 			adjustedPage = this._step;
 		} else if (adjustedPage > range) {
 			adjustedPage = range;
