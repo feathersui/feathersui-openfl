@@ -929,8 +929,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
+		var oldTopViewPortOffset = this.topViewPortOffset;
+		var oldRightViewPortOffset = this.rightViewPortOffset;
+		var oldBottomViewPortOffset = this.bottomViewPortOffset;
+		var oldLeftViewPortOffset = this.leftViewPortOffset;
 		if (this.fixedScrollBars && this.showScrollBars) {
-			// this extra call may be needed for the left/right offsets?
+			// this extra call is needed for the left/right offsets to affect
+			// the padding below
 			super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
 		}
 
@@ -944,16 +949,23 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 					this._headerContainerLayout.paddingRight = this.rightViewPortOffset;
 			};
 			this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
+			// restore these values because we're going to calculate them again
+			// this is kind of hacky, but our change to topViewPortOffset
+			// depends on left/right offsets being known first
+			this.topViewPortOffset = oldTopViewPortOffset;
+			this.rightViewPortOffset = oldRightViewPortOffset;
+			this.bottomViewPortOffset = oldBottomViewPortOffset;
+			this.leftViewPortOffset = oldLeftViewPortOffset;
 
 			this._headerContainer.validateNow();
 			this.topViewPortOffset += this._headerContainer.height;
 			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._headerContainer.width);
 			this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, this._headerContainer.width);
-		}
 
-		// call after measuring the headers because they affect the
-		// topViewPortOffset used in
-		super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
+			// call again after measuring the headers because they are affected
+			// by the topViewPortOffset that we changed above
+			super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
+		}
 	}
 
 	private function validateColumns():Void {
