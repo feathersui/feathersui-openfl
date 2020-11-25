@@ -1094,7 +1094,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function renderUnrenderedData():Void {
 		for (item in this._unrenderedData) {
 			var index = this._dataProvider.indexOf(item);
-			var state = this.itemStatePool.create();
+			var state = this.itemStatePool.get();
 			this.populateCurrentItemState(item, index, state);
 			var itemRenderer = this.createItemRenderer(state);
 			itemRenderer.visible = true;
