@@ -769,6 +769,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._selectable;
 	}
 
+	/**
+		Determines if the vertical scroll bar will start from the top of the
+		headers, instead of starting below them.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var extendedScrollBarY:Bool = false;
+
 	private var _ignoreSelectionChange = false;
 	private var _ignoreLayoutChanges = false;
 	private var _ignoreHeaderLayoutChanges = false;
@@ -1006,6 +1015,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			divider.y = header.y;
 			divider.height = header.height;
 		}
+	}
+
+	override private function layoutScrollBars():Void {
+		if (!this.extendedScrollBarY) {
+			super.layoutScrollBars();
+			return;
+		}
+		var oldTopViewPortOffset = this.topViewPortOffset;
+		this.topViewPortOffset = 0.0;
+		super.layoutScrollBars();
+		this.topViewPortOffset = oldTopViewPortOffset;
 	}
 
 	private function refreshColumnResizeSkin():Void {
