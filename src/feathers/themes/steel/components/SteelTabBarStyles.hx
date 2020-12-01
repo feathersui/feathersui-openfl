@@ -85,9 +85,9 @@ class SteelTabBarStyles {
 						skin = mobileSkin;
 					}
 					skin.fill = theme.getButtonFill();
+					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.selectedFill = theme.getThemeFill();
 					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
-					skin.setFillForState(ToggleButtonState.DISABLED(false), theme.getButtonDisabledFill());
 					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
 					skin.border = theme.getButtonBorder();
 					skin.selectedBorder = theme.getActiveFillBorder();
