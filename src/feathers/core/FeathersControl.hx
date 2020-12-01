@@ -313,6 +313,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (this._focusManager == value) {
 			return this._focusManager;
 		}
+		if (this._focusManager != null) {
+			this.showFocus(false);
+		}
 		this._focusManager = value;
 		return this._focusManager;
 	}
@@ -533,6 +536,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function positionFocusRect():Void {
+		if (this._focusManager == null || this._focusRectSkin == null) {
+			return;
+		}
 		var point = new Point(-this._focusPaddingLeft, -this._focusPaddingTop);
 		point = this.localToGlobal(point);
 		point = this._focusManager.focusPane.globalToLocal(point);
