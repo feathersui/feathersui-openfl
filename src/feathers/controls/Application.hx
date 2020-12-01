@@ -27,6 +27,10 @@ import feathers.core.ToolTipManager;
 import feathers.utils.DeviceUtil;
 import openfl.system.Capabilities;
 #end
+#if flash
+import openfl.display.StageAlign;
+import openfl.display.StageScaleMode;
+#end
 
 /**
 	An optional root class for Feathers UI applications that will automatically
@@ -51,6 +55,13 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		initializeApplicationTheme();
 
 		super();
+
+		#if flash
+		if (this.stage != null && this.root == this) {
+			this.stage.scaleMode = StageScaleMode.NO_SCALE;
+			this.stage.align = StageAlign.TOP_LEFT;
+		}
+		#end
 
 		this.addEventListener(Event.ADDED_TO_STAGE, application_addedToStageHandler, false, 100);
 	}
