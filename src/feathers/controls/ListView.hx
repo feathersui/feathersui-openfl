@@ -552,17 +552,17 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		item. Returns the ID of the item renderer recycler to use for the item,
 		or `null` if the default `itemRendererFactory` should be used.
 
-		hTe following example provides a `recyclerIDFunction`:
+		The following example provides a `recyclerIDFunction`:
 
 		```hx
 		var regularItemRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
 		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
 
-		list.setItemRendererFactoryWithID("regular-item", regularItemRecycler);
-		list.setItemRendererFactoryWithID("first-item", firstItemRecycler);
+		listView.setItemRendererRecycler("regular-item", regularItemRecycler);
+		listView.setItemRendererRecycler("first-item", firstItemRecycler);
 
-		list.recyclerIDFunction = function(state:ListViewItemState):String {
-			if(index == 0) {
+		listView.recyclerIDFunction = function(state:ListViewItemState):String {
+			if(state.index == 0) {
 				return "first-item";
 			}
 			return "regular-item";
@@ -571,7 +571,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@default null
 
-		@see `ListView.registerItemRendererRecycler()`
+		@see `ListView.setItemRendererRecycler()`
 		@see `ListView.itemRendererRecycler
 
 		@since 1.0.0
@@ -957,7 +957,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			var state = this.itemRendererToItemState.get(itemRenderer);
 			if (state == null) {
-				return;
+				continue;
 			}
 			var item = state.data;
 			this.itemRendererToItemState.remove(itemRenderer);
