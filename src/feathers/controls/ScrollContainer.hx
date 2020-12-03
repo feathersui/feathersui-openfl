@@ -349,7 +349,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	private function removeRawChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
 		var oldBypass = this._displayListBypassEnabled;
 		this._displayListBypassEnabled = false;
-		this.removeRawChildren(beginIndex, endIndex);
+		this.removeChildren(beginIndex, endIndex);
 		this._displayListBypassEnabled = oldBypass;
 	}
 
