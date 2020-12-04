@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.core.IMeasureObject;
 import feathers.controls.GridViewColumn;
 import feathers.core.IValidating;
 import feathers.data.IFlatCollection;
@@ -219,7 +220,14 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 				}
 			} else {
 				var percentWidth = 100.0;
-				totalMinWidth += column.minWidth;
+				var itemMinWidth = 0.0;
+				if (Std.is(item, IMeasureObject)) {
+					if (Std.is(item, IValidating)) {
+						cast(item, IValidating).validateNow();
+					}
+					itemMinWidth = cast(item, IMeasureObject).minWidth;
+				}
+				totalMinWidth += Math.max(column.minWidth, itemMinWidth);
 				totalPercentWidth += percentWidth;
 				pendingIndices.push(i);
 				continue;
