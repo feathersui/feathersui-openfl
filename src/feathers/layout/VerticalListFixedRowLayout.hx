@@ -169,11 +169,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		return this._rowHeight;
 	}
 
-	private var _requestedRowCount:Null<Float> = 5.0;
+	private var _requestedRowCount:Null<Float> = null;
 
 	/**
-		The number of rows to render, if the height of the container has not
-		been set explicitly. If `null`, shows all rows.
+		The exact number of rows to render, if the height of the container has
+		not been set explicitly. If `null`, falls back to `requestedMinRowCount`
+		and `requestedMaxRowCount`.
 
 		In the following example, the layout's requested row count is set to 2 items:
 
@@ -181,7 +182,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		layout.requestedRowCount = 2.0;
 		```
 
-		@default 5.0
+		@default null
 
 		@since 1.0.0
 	**/
@@ -199,6 +200,77 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		this._requestedRowCount = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._requestedRowCount;
+	}
+
+	private var _requestedMinRowCount:Null<Float> = null;
+
+	/**
+		The minimum number of rows to render, if the height of the container has
+		not been set explicitly. If `null`, this property is ignored.
+
+		If `requestedRowCount` is also set, this property is ignored.
+
+		In the following example, the layout's requested minimum row count is
+		set to 2 complete items:
+
+		```hx
+		layout.requestedMinRowCount = 2.0;
+		```
+
+		@default null
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedMinRowCount(get, set):Null<Float>;
+
+	private function get_requestedMinRowCount():Null<Float> {
+		return this._requestedMinRowCount;
+	}
+
+	private function set_requestedMinRowCount(value:Null<Float>):Null<Float> {
+		if (this._requestedMinRowCount == value) {
+			return this._requestedMinRowCount;
+		}
+		this._requestedMinRowCount = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._requestedMinRowCount;
+	}
+
+	private var _requestedMaxRowCount:Null<Float> = null;
+
+	/**
+		The maximum number of rows to render, if the height of the container has
+		not been set explicitly. If `null`, the maximum number of rows is the
+		total number of items displayed by the layout.
+
+		If `requestedRowCount` is also set, this property is ignored.
+
+		In the following example, the layout's requested maximum row count is
+		set to 5 complete items:
+
+		```hx
+		layout.requestedMaxRowCount = 5.0;
+		```
+
+		@default null
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedMaxRowCount(get, set):Null<Float>;
+
+	private function get_requestedMaxRowCount():Null<Float> {
+		return this._requestedMaxRowCount;
+	}
+
+	private function set_requestedMaxRowCount(value:Null<Float>):Null<Float> {
+		if (this._requestedMaxRowCount == value) {
+			return this._requestedMaxRowCount;
+		}
+		this._requestedMaxRowCount = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._requestedMaxRowCount;
 	}
 
 	private var _paddingTop:Float = 0.0;
@@ -432,6 +504,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		} else {
 			if (this._requestedRowCount != null) {
 				viewPortHeight = actualRowHeight * this._requestedRowCount;
+			} else {
+				if (this._requestedMinRowCount != null && items.length < this._requestedMinRowCount) {
+					viewPortHeight = actualRowHeight * this._requestedMinRowCount;
+				} else if (this._requestedMaxRowCount != null && items.length > this._requestedMaxRowCount) {
+					viewPortHeight = actualRowHeight * this._requestedMaxRowCount;
+				}
 			}
 			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
 				viewPortHeight = measurements.minHeight;

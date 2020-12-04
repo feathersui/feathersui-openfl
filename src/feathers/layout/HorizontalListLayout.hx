@@ -137,8 +137,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 	private var _requestedColumnCount:Null<Float> = 5.0;
 
 	/**
-		The number of columns to render, if the width of the container has not
-		been set explicitly. If `null`, shows all columns.
+		The exact number of columns to render, if the width of the container has
+		not been set explicitly. If `null`, falls back to
+		`requestedMinColumnCount` and `requestedMaxColumnCount`.
 
 		In the following example, the layout's requested column count is set to
 		2 complete items:
@@ -165,6 +166,77 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		this._requestedColumnCount = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._requestedColumnCount;
+	}
+
+	private var _requestedMinColumnCount:Null<Float> = null;
+
+	/**
+		The minimum number of columns to render, if the width of the container
+		has not been set explicitly. If `null`, this property is ignored.
+
+		If `requestedColumnCount` is also set, this property is ignored.
+
+		In the following example, the layout's requested minimum coumn count is
+		set to 2 complete items:
+
+		```hx
+		layout.requestedMinColumnCount = 2.0;
+		```
+
+		@default null
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedMinColumnCount(get, set):Null<Float>;
+
+	private function get_requestedMinColumnCount():Null<Float> {
+		return this._requestedMinColumnCount;
+	}
+
+	private function set_requestedMinColumnCount(value:Null<Float>):Null<Float> {
+		if (this._requestedMinColumnCount == value) {
+			return this._requestedMinColumnCount;
+		}
+		this._requestedMinColumnCount = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._requestedMinColumnCount;
+	}
+
+	private var _requestedMaxColumnCount:Null<Float> = null;
+
+	/**
+		The maximum number of columns to render, if the width of the container
+		has not been set explicitly. If `null`, the maximum number of columns is
+		the total number of items displayed by the layout.
+
+		If `requestedColumnCount` is also set, this property is ignored.
+
+		In the following example, the layout's requested maximum column count is
+		set to 5 complete items:
+
+		```hx
+		layout.requestedMaxColumnCount = 5.0;
+		```
+
+		@default null
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedMaxColumnCount(get, set):Null<Float>;
+
+	private function get_requestedMaxColumnCount():Null<Float> {
+		return this._requestedMaxColumnCount;
+	}
+
+	private function set_requestedMaxColumnCount(value:Null<Float>):Null<Float> {
+		if (this._requestedMaxColumnCount == value) {
+			return this._requestedMaxColumnCount;
+		}
+		this._requestedMaxColumnCount = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._requestedMaxColumnCount;
 	}
 
 	private var _paddingTop:Float = 0.0;
