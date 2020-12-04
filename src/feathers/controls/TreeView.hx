@@ -1056,7 +1056,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		for (location in this._unrenderedLocations) {
 			var layoutIndex = this._unrenderedLayoutIndices.shift();
 			var item = this._dataProvider.get(location);
-			var state = this.itemStatePool.create();
+			var state = this.itemStatePool.get();
 			this.populateCurrentItemState(item, location, layoutIndex, state);
 			var itemRenderer = this.createItemRenderer(state);
 			itemRenderer.visible = true;
