@@ -609,7 +609,29 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._selectedIndices;
 	}
 
-	private var _layout:ILayout;
+	private var _previousLayout:ILayout;
+
+	/**
+		The layout algorithm used to position and size the grid view's items.
+
+		By default, if no layout is provided by the time that the grid view
+		initializes, a default layout that displays items vertically will be
+		created.
+
+		The following example tells the list view to use a horizontal layout:
+
+		```hx
+		var layout = new VerticalListLayout();
+		layout.requestedRowCount = 5.0;
+		layout.gap = 20.0;
+		layout.padding = 20.0;
+		listView.layout = layout;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var layout:ILayout = null;
 
 	private var _virtualLayout:Bool = true;
 
@@ -799,8 +821,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var targetX = this.scrollX;
 		var targetY = this.scrollY;
-		if (Std.is(this._layout, IScrollLayout)) {
-			var scrollLayout = cast(this._layout, IScrollLayout);
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
 			var result = scrollLayout.getNearestScrollPositionForIndex(rowIndex, this._dataProvider.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);
 			targetX = result.x;
@@ -876,10 +898,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._headerResizeContainer = new Sprite();
 			this.addChild(this._headerResizeContainer);
 		}
-
-		if (this._layout == null) {
-			this._layout = new VerticalListFixedRowLayout();
-		}
 	}
 
 	override private function update():Void {
@@ -907,7 +925,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		if (layoutInvalid || stylesInvalid) {
-			this.gridViewPort.layout = this._layout;
+			if (this._previousLayout != this.layout) {
+				// don't keep the old layout's cache because it may not be
+				// compatible with the new layout
+				this._virtualCache.resize(0);
+				if (this._dataProvider != null) {
+					this._virtualCache.resize(this._dataProvider.length);
+				}
+			}
+			this.gridViewPort.layout = this.layout;
+			this._previousLayout = this.layout;
 		}
 
 		this.gridViewPort.refreshChildren = this.refreshRowRenderers;
@@ -919,12 +946,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this.layoutHeaders();
+
+		this._previousLayout = this.layout;
 	}
 
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
-		if (Std.is(this._layout, IScrollLayout)) {
-			var scrollLayout = cast(this._layout, IScrollLayout);
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
 			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
@@ -1212,8 +1241,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this._layoutItems.resize(this._dataProvider.length);
 
-		if (this._virtualLayout && Std.is(this._layout, IVirtualLayout)) {
-			var virtualLayout = cast(this._layout, IVirtualLayout);
+		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
+			var virtualLayout = cast(this.layout, IVirtualLayout);
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.virtualCache = this._virtualCache;
