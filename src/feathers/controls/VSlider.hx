@@ -208,6 +208,9 @@ class VSlider extends BaseSlider {
 	}
 
 	private function vSlider_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		var newValue = this._value;
 		switch (event.keyCode) {
 			case Keyboard.DOWN:
