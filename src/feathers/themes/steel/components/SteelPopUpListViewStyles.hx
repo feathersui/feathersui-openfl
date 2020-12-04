@@ -9,8 +9,10 @@
 package feathers.themes.steel.components;
 
 import feathers.controls.Button;
+import feathers.controls.ListView;
 import feathers.controls.PopUpListView;
 import feathers.controls.popups.DropDownPopUpAdapter;
+import feathers.layout.VerticalListLayout;
 import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -60,6 +62,18 @@ class SteelPopUpListViewStyles {
 				}
 
 				button.iconPosition = RIGHT;
+			});
+		}
+		if (styleProvider.getStyleFunction(ListView, PopUpListView.CHILD_VARIANT_LIST_VIEW) == null) {
+			styleProvider.setStyleFunction(ListView, PopUpListView.CHILD_VARIANT_LIST_VIEW, function(listView:ListView):Void {
+				if (listView.layout == null) {
+					var layout = new VerticalListLayout();
+					layout.requestedMinRowCount = 1.0;
+					layout.requestedMaxRowCount = 5.0;
+					listView.layout = layout;
+				}
+
+				theme.styleProvider.getStyleFunction(ListView, ListView.VARIANT_BORDER)(listView);
 			});
 		}
 	}

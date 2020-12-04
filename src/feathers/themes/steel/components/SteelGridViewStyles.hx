@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.layout.VerticalListLayout;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.utils.DeviceUtil;
 import feathers.controls.GridView;
@@ -37,12 +38,18 @@ class SteelGridViewStyles {
 			gridView.autoHideScrollBars = !isDesktop;
 			gridView.fixedScrollBars = isDesktop;
 
+			if (gridView.layout == null) {
+				var layout = new VerticalListLayout();
+				layout.requestedRowCount = 5.0;
+				gridView.layout = layout;
+			}
+
 			if (gridView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
 				backgroundSkin.border = theme.getContainerBorder();
-				backgroundSkin.width = 160.0;
-				backgroundSkin.height = 160.0;
+				backgroundSkin.width = 10.0;
+				backgroundSkin.height = 10.0;
 				gridView.backgroundSkin = backgroundSkin;
 			}
 
@@ -74,11 +81,17 @@ class SteelGridViewStyles {
 			gridView.autoHideScrollBars = !isDesktop;
 			gridView.fixedScrollBars = isDesktop;
 
+			if (gridView.layout == null) {
+				var layout = new VerticalListLayout();
+				layout.requestedRowCount = 5.0;
+				gridView.layout = layout;
+			}
+
 			if (gridView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
-				backgroundSkin.width = 160.0;
-				backgroundSkin.height = 160.0;
+				backgroundSkin.width = 10.0;
+				backgroundSkin.height = 10.0;
 				gridView.backgroundSkin = backgroundSkin;
 			}
 

@@ -38,15 +38,17 @@ class SteelTreeViewStyles {
 			treeView.fixedScrollBars = isDesktop;
 
 			if (treeView.layout == null) {
-				treeView.layout = new VerticalListLayout();
+				var layout = new VerticalListLayout();
+				layout.requestedRowCount = 5.0;
+				treeView.layout = layout;
 			}
 
 			if (treeView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
 				backgroundSkin.border = theme.getContainerBorder();
-				backgroundSkin.width = 160.0;
-				backgroundSkin.height = 160.0;
+				backgroundSkin.width = 10.0;
+				backgroundSkin.height = 10.0;
 				treeView.backgroundSkin = backgroundSkin;
 			}
 
@@ -76,8 +78,8 @@ class SteelTreeViewStyles {
 			if (treeView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
-				backgroundSkin.width = 160.0;
-				backgroundSkin.height = 160.0;
+				backgroundSkin.width = 10.0;
+				backgroundSkin.height = 10.0;
 				treeView.backgroundSkin = backgroundSkin;
 			}
 

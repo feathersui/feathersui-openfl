@@ -8,6 +8,8 @@
 
 package feathers.themes.steel.components;
 
+import feathers.layout.VerticalListLayout;
+import feathers.controls.ListView;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.ComboBox;
@@ -97,6 +99,19 @@ class SteelComboBoxStyles {
 				input.paddingRight = 10.0;
 				input.paddingBottom = 6.0;
 				input.paddingLeft = 10.0;
+			});
+		}
+
+		if (styleProvider.getStyleFunction(ListView, ComboBox.CHILD_VARIANT_LIST_VIEW) == null) {
+			styleProvider.setStyleFunction(ListView, ComboBox.CHILD_VARIANT_LIST_VIEW, function(listView:ListView):Void {
+				if (listView.layout == null) {
+					var layout = new VerticalListLayout();
+					layout.requestedMinRowCount = 1.0;
+					layout.requestedMaxRowCount = 5.0;
+					listView.layout = layout;
+				}
+
+				theme.styleProvider.getStyleFunction(ListView, ListView.VARIANT_BORDER)(listView);
 			});
 		}
 	}

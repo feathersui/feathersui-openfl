@@ -40,15 +40,17 @@ class SteelGroupListViewStyles {
 			listView.fixedScrollBars = isDesktop;
 
 			if (listView.layout == null) {
-				listView.layout = new VerticalListLayout();
+				var layout = new VerticalListLayout();
+				layout.requestedRowCount = 5.0;
+				listView.layout = layout;
 			}
 
 			if (listView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
 				backgroundSkin.border = theme.getContainerBorder();
-				backgroundSkin.width = 160.0;
-				backgroundSkin.height = 160.0;
+				backgroundSkin.width = 10.0;
+				backgroundSkin.height = 10.0;
 				listView.backgroundSkin = backgroundSkin;
 			}
 
@@ -72,14 +74,16 @@ class SteelGroupListViewStyles {
 			listView.fixedScrollBars = isDesktop;
 
 			if (listView.layout == null) {
-				listView.layout = new VerticalListLayout();
+				var layout = new VerticalListLayout();
+				layout.requestedRowCount = 5.0;
+				listView.layout = layout;
 			}
 
 			if (listView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
-				backgroundSkin.width = 160.0;
-				backgroundSkin.height = 160.0;
+				backgroundSkin.width = 10.0;
+				backgroundSkin.height = 10.0;
 				listView.backgroundSkin = backgroundSkin;
 			}
 
