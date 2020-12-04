@@ -94,10 +94,7 @@ class DefaultToolTipManager implements IToolTipManager {
 	}
 
 	private function clearTarget():Void {
-		if (this._delayTimeoutID != null) {
-			Lib.clearTimeout(this._delayTimeoutID);
-			this._delayTimeoutID = null;
-		}
+		this.hideToolTip();
 		if (this._target != null) {
 			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, defaultToolTipManager_target_mouseDownHandler);
 			this._target.removeEventListener(MouseEvent.RIGHT_MOUSE_DOWN, defaultToolTipManager_target_rightMouseDownHandler);
@@ -105,6 +102,13 @@ class DefaultToolTipManager implements IToolTipManager {
 			this._target.removeEventListener(MouseEvent.ROLL_OUT, defaultToolTipManager_target_rollOutHandler);
 			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, defaultToolTipManager_target_removedFromStageHandler);
 			this._target = null;
+		}
+	}
+
+	private function hideToolTip():Void {
+		if (this._delayTimeoutID != null) {
+			Lib.clearTimeout(this._delayTimeoutID);
+			this._delayTimeoutID = null;
 		}
 		if (this._toolTip != null && this._toolTip.parent != null) {
 			PopUpManager.removePopUp(cast(this._toolTip, DisplayObject));
@@ -163,6 +167,10 @@ class DefaultToolTipManager implements IToolTipManager {
 	}
 
 	private function defaultToolTipManager_root_mouseMoveHandler(event:MouseEvent):Void {
+		if (event.buttonDown) {
+			// if a button is already down, don't try to show a tool tip
+			return;
+		}
 		var eventTarget = cast(event.target, DisplayObject);
 		while (eventTarget != null && !Std.is(eventTarget, IUIControl)) {
 			eventTarget = eventTarget.parent;
@@ -194,15 +202,21 @@ class DefaultToolTipManager implements IToolTipManager {
 	}
 
 	private function defaultToolTipManager_target_mouseDownHandler(event:MouseEvent):Void {
-		this.clearTarget();
+		// hide the tooltip, but keep the target so that the tool tip doesn't
+		// show for the same target twice on a single roll over
+		this.hideToolTip();
 	}
 
 	private function defaultToolTipManager_target_rightMouseDownHandler(event:MouseEvent):Void {
-		this.clearTarget();
+		// hide the tooltip, but keep the target so that the tool tip doesn't
+		// show for the same target twice on a single roll over
+		this.hideToolTip();
 	}
 
 	private function defaultToolTipManager_target_middleMouseDownHandler(event:MouseEvent):Void {
-		this.clearTarget();
+		// hide the tooltip, but keep the target so that the tool tip doesn't
+		// show for the same target twice on a single roll over
+		this.hideToolTip();
 	}
 
 	private function defaultToolTipManager_target_rollOutHandler(event:MouseEvent):Void {
