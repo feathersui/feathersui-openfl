@@ -747,7 +747,7 @@ class EdgePuller extends EventDispatcher {
 			this._target.stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2, false, 0, true);
 			return;
 		}
-		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
+		this.touchBegin(event.touchPointID, event.stageX, event.stageY, false);
 	}
 
 	private function edgePuller_target_stage_touchMoveHandler2(event:TouchEvent):Void {
@@ -780,7 +780,7 @@ class EdgePuller extends EventDispatcher {
 		this._target.stage.removeEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2);
 		this._target.stage.removeEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2);
 		this._pointerID = -1;
-		this.touchBegin(event.touchPointID, event.stageX, event.stageY, true);
+		this.touchBegin(event.touchPointID, event.stageX, event.stageY, false);
 	}
 
 	private function edgePuller_target_stage_touchEndHandler2(event:TouchEvent):Void {
