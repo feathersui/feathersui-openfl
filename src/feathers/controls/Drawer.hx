@@ -44,6 +44,7 @@ import openfl.ui.Multitouch;
 **/
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
+@:event(openfl.events.Event.CANCEL)
 @:event(feathers.events.FeathersEvent.OPENING)
 @:event(feathers.events.FeathersEvent.CLOSING)
 @:styleContext
@@ -314,6 +315,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		this._edgePuller.addEventListener(FeathersEvent.CLOSING, drawer_edgePuller_closingHandler);
 		this._edgePuller.addEventListener(Event.OPEN, drawer_edgePuller_openHandler);
 		this._edgePuller.addEventListener(Event.CLOSE, drawer_edgePuller_closeHandler);
+		this._edgePuller.addEventListener(Event.CANCEL, drawer_edgePuller_cancelHandler);
 		this._edgePuller.addEventListener(Event.CHANGE, drawer_edgePuller_changeHandler);
 	}
 
@@ -660,6 +662,17 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		}
 		this._opened = false;
 		FeathersEvent.dispatch(this, Event.CLOSE);
+	}
+
+	private function drawer_edgePuller_cancelHandler(event:Event):Void {
+		if (!this._opened) {
+			this._drawer.visible = false;
+			if (this._currentOverlaySkin != null) {
+				this._currentOverlaySkin.alpha = this._overlaySkinAlpha;
+				this._currentOverlaySkin.visible = false;
+			}
+		}
+		FeathersEvent.dispatch(this, Event.CANCEL);
 	}
 
 	private function drawer_edgePuller_changeHandler(event:Event):Void {
