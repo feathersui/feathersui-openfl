@@ -416,7 +416,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private var _recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>> = null;
 
-	private var _recyclerIDFunction:(state:TreeViewItemState) -> String;
+	private var _itemRendererRecyclerIDFunction:(state:TreeViewItemState) -> String;
 
 	/**
 		When a tree view requires multiple item renderer types, this function is
@@ -432,7 +432,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
 		treeView.setItemRendererRecycler("regular-item", regularItemRecycler);
 		treeView.setItemRendererRecycler("first-item", firstItemRecycler);
-		treeView.recyclerIDFunction = function(state:TreeViewItemState):String {
+		treeView.itemRendererRecyclerIDFunction = function(state:TreeViewItemState):String {
 			if(state.location.length == 1 && state.location[0] == 0) {
 				return "first-item";
 			}
@@ -448,19 +448,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var recyclerIDFunction(get, set):(state:TreeViewItemState) -> String;
+	public var itemRendererRecyclerIDFunction(get, set):(state:TreeViewItemState) -> String;
 
-	private function get_recyclerIDFunction():(state:TreeViewItemState) -> String {
-		return this._recyclerIDFunction;
+	private function get_itemRendererRecyclerIDFunction():(state:TreeViewItemState) -> String {
+		return this._itemRendererRecyclerIDFunction;
 	}
 
-	private function set_recyclerIDFunction(value:(state:TreeViewItemState) -> String):(state:TreeViewItemState) -> String {
-		if (this._recyclerIDFunction == value) {
-			return this._recyclerIDFunction;
+	private function set_itemRendererRecyclerIDFunction(value:(state:TreeViewItemState) -> String):(state:TreeViewItemState) -> String {
+		if (this._itemRendererRecyclerIDFunction == value) {
+			return this._itemRendererRecyclerIDFunction;
 		}
-		this._recyclerIDFunction = value;
+		this._itemRendererRecyclerIDFunction = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		return this._recyclerIDFunction;
+		return this._itemRendererRecyclerIDFunction;
 	}
 
 	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(TreeViewItemRenderer));
@@ -1107,8 +1107,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function itemStateToStorage(state:TreeViewItemState):ItemRendererStorage {
 		var recyclerID:String = null;
-		if (this._recyclerIDFunction != null) {
-			recyclerID = this._recyclerIDFunction(state);
+		if (this._itemRendererRecyclerIDFunction != null) {
+			recyclerID = this._itemRendererRecyclerIDFunction(state);
 		}
 		var recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> = null;
 		if (recyclerID != null) {

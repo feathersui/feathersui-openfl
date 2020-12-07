@@ -544,7 +544,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>> = null;
 
-	private var _recyclerIDFunction:(state:ListViewItemState) -> String;
+	private var _itemRendererRecyclerIDFunction:(state:ListViewItemState) -> String;
 
 	/**
 		When a list view requires multiple item renderer types, this function is
@@ -561,7 +561,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		listView.setItemRendererRecycler("regular-item", regularItemRecycler);
 		listView.setItemRendererRecycler("first-item", firstItemRecycler);
 
-		listView.recyclerIDFunction = function(state:ListViewItemState):String {
+		listView.itemRendererRecyclerIDFunction = function(state:ListViewItemState):String {
 			if(state.index == 0) {
 				return "first-item";
 			}
@@ -577,19 +577,19 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var recyclerIDFunction(get, set):(state:ListViewItemState) -> String;
+	public var itemRendererRecyclerIDFunction(get, set):(state:ListViewItemState) -> String;
 
-	private function get_recyclerIDFunction():(state:ListViewItemState) -> String {
-		return this._recyclerIDFunction;
+	private function get_itemRendererRecyclerIDFunction():(state:ListViewItemState) -> String {
+		return this._itemRendererRecyclerIDFunction;
 	}
 
-	private function set_recyclerIDFunction(value:(state:ListViewItemState) -> String):(state:ListViewItemState) -> String {
-		if (this._recyclerIDFunction == value) {
-			return this._recyclerIDFunction;
+	private function set_itemRendererRecyclerIDFunction(value:(state:ListViewItemState) -> String):(state:ListViewItemState) -> String {
+		if (this._itemRendererRecyclerIDFunction == value) {
+			return this._itemRendererRecyclerIDFunction;
 		}
-		this._recyclerIDFunction = value;
+		this._itemRendererRecyclerIDFunction = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		return this._recyclerIDFunction;
+		return this._itemRendererRecyclerIDFunction;
 	}
 
 	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(ItemRenderer));
@@ -1141,8 +1141,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function itemStateToStorage(state:ListViewItemState):ItemRendererStorage {
 		var recyclerID:String = null;
-		if (this._recyclerIDFunction != null) {
-			recyclerID = this._recyclerIDFunction(state);
+		if (this._itemRendererRecyclerIDFunction != null) {
+			recyclerID = this._itemRendererRecyclerIDFunction(state);
 		}
 		var recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = null;
 		if (recyclerID != null) {
