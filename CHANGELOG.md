@@ -1,5 +1,30 @@
 # Feather UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.2 (2020-12-??)
+
+- Restored support for OpenFL version 8.9.
+- Application: Enables the new `ToolTipManager` by default. May use `disable_tool_tip_manager` haxedef to disable.
+- Application: Sets stage `scaleMode` and `align` for "flash" target so that using the compiled _.swc_ in ActionScript behaves the same as compiling with Haxe.
+- AssetLoader: Added `@:styleContext` metadata.
+- FeathersControl: Added `toolTip` property.
+- FillStyle: Gradient matrix may now be specified as a `Float` for radians, a `Matrix` instance, or a function that accepts the same arguments as `createGradientBox()` and returns a `Matrix`.
+- FillStyle: Added `None` to enum.
+- GridView: May optionally define a different `cellRendererRecycler` for each column.
+- GridView: Added `layout` style.
+- GridView: Added `extendedScrollBarY` style to allow the vertical scroll bar to extend up into the headers.
+- HorizontalListLayout: Added `requestedMinColumnCount` and `requestedMaxColumnCount` properties.
+- HorizontalListLayout: The `requestedColumnCount` property now defaults to `null`, instead of `5.0`.
+- LineStyle: Gradient matrix may now be specified as a `Float` for radians, a `Matrix` instance, or a function that accepts the same arguments as `createGradientBox()` and returns a `Matrix`.
+- LineStyle: Added `Bitmap()` to enum.
+- LineStyle: Added `None` to enum.
+- ListView: May optionally define multiple item renderer recyclers with `setItemRendererRecycler()` and `itemRendererRecyclerIDFunction`.
+- ToolTipManager: listens for stage mouse events and displays tool tips for UI components with a `toolTip` property.
+- TreeView: May optionally define multiple item renderer recyclers with `setItemRendererRecycler()` and `itemRendererRecyclerIDFunction`.
+- VerticalListFixedRowLayout: Added `requestedMinRowCount` and `requestedMaxRowCount` properties.
+- VerticalListFixedRowLayout: The `requestedRowCount` property now defaults to `null`, instead of `5.0`.
+- VerticalListLayout: Added `requestedMinRowCount` and `requestedMaxRowCount` properties.
+- VerticalListLayout: The `requestedRowCount` property now defaults to `null`, instead of `5.0`.
+
 ## 1.0.0-beta.1 (2020-11-12)
 
 - animated-tween-skin: new sample project that demonstrates how to create a skin with animations.
