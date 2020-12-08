@@ -1,6 +1,6 @@
 # Feather UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.2 (2020-12-??)
+## 1.0.0-beta.2 (2020-12-08)
 
 - Restored support for OpenFL version 8.9.
 - Application: Enables the new `ToolTipManager` by default. May use `disable_tool_tip_manager` haxedef to disable.

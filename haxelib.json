@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: Drawer, H/VDividedBox, LayoutGroupItemRenderer, ResponsiveGridLayout, bug fixes"
+	"releasenote": "Preview build: Multiple item renderers, ToolTipManager, restored OpenFL 8.9 support"
 }
