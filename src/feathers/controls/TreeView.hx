@@ -619,6 +619,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var itemRenderer = this.dataToItemRenderer.get(branch);
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			// if there is no existing state, use a temporary object
+			state = new TreeViewItemState();
+			state.location = this._dataProvider.locationOf(branch);
+			state.layoutIndex = -1;
+		}
 		if (open) {
 			this.openBranches.push(branch);
 			var location = state.location;
