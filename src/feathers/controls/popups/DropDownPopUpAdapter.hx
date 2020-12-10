@@ -8,6 +8,7 @@
 
 package feathers.controls.popups;
 
+import feathers.layout.Measurements;
 import feathers.core.IValidating;
 import openfl.geom.Point;
 import feathers.core.PopUpManager;
@@ -59,6 +60,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		return false;
 	}
 
+	private var _contentMeasurements:Measurements = new Measurements();
+
 	/**
 		@see `feathers.controls.popups.IPopUpAdapter.open`
 	**/
@@ -69,6 +72,11 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.content = content;
 		this.origin = origin;
 		PopUpManager.addPopUp(this.content, this.origin, this.modal, false);
+
+		if (Std.is(this.content, IValidating)) {
+			cast(this.content, IValidating).validateNow();
+		}
+		this._contentMeasurements.save(this.content);
 
 		this.layout();
 
@@ -94,6 +102,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if (content.parent != null) {
 			content.parent.removeChild(content);
 		}
+		this._contentMeasurements.restore(content);
 		FeathersEvent.dispatch(this, Event.CLOSE);
 	}
 
@@ -114,5 +123,12 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 		this.content.x = originTopLeft.x;
 		this.content.y = originBottomRight.y;
+
+		if (Std.is(this.content, IValidating)) {
+			cast(this.content, IValidating).validateNow();
+		}
+		if (this.content.width < this.origin.width) {
+			this.content.width = this.origin.width;
+		}
 	}
 }
