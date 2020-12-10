@@ -1318,9 +1318,16 @@ class Scroller extends EventDispatcher {
 			event.stopImmediatePropagation();
 			this.stop();
 		}
+		if (newScrollX != null) {
+			this._draggingX = true;
+		}
+		if (newScrollY != null) {
+			this._draggingY = true;
+		}
 		if (this.mouseWheelDuration > 0.0) {
 			this.throwTo(newScrollX, newScrollY, this.mouseWheelDuration, this.ease);
 		} else {
+			this.startScroll();
 			// use the setters
 			if (newScrollX != null) {
 				this.scrollX = newScrollX;
@@ -1328,6 +1335,9 @@ class Scroller extends EventDispatcher {
 			if (newScrollY != null) {
 				this.scrollY = newScrollY;
 			}
+			this._draggingX = false;
+			this._draggingY = false;
+			this.completeScroll();
 		}
 	}
 }
