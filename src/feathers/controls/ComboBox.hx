@@ -481,6 +481,15 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	/**
+		Determines if the pop-up list should automatically open when the
+		combo box receives focus, or if the user is required to click the
+		open button.
+
+		@since 1.0.0
+	**/
+	public var openListViewOnFocus:Bool = false;
+
+	/**
 		Opens the pop-up list, if it is not already open.
 
 		The following example opens the pop-up list:
@@ -801,7 +810,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (!this._enabled) {
 			return;
 		}
-		if (!this.open) {
+		if (this.openListViewOnFocus && !this.open) {
 			this.openListView();
 		}
 	}
