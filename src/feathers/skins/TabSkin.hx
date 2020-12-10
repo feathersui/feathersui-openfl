@@ -22,7 +22,7 @@ import openfl.errors.ArgumentError;
 **/
 class TabSkin extends BaseGraphicsPathSkin {
 	/**
-		Creates a new `RectangleSkin` object.
+		Creates a new `TabSkin` object.
 
 		@since 1.0.0
 	**/

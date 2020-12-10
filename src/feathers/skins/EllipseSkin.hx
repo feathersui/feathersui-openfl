@@ -19,7 +19,7 @@ import feathers.graphics.FillStyle;
 **/
 class EllipseSkin extends BaseGraphicsPathSkin {
 	/**
-		Creates a new `CircleSkin` object.
+		Creates a new `EllipseSkin` object.
 
 		@since 1.0.0
 	**/

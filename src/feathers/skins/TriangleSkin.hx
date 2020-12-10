@@ -22,7 +22,7 @@ import openfl.errors.ArgumentError;
 **/
 class TriangleSkin extends BaseGraphicsPathSkin {
 	/**
-		Creates a new `RectangleSkin` object.
+		Creates a new `TriangleSkin` object.
 
 		@since 1.0.0
 	**/

@@ -21,7 +21,7 @@ import feathers.layout.Direction;
 **/
 class PillSkin extends BaseGraphicsPathSkin {
 	/**
-		Creates a new `RectangleSkin` object.
+		Creates a new `PillSkin` object.
 
 		@since 1.0.0
 	**/
