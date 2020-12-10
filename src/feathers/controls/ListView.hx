@@ -865,8 +865,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		super.update();
-
-		this._previousLayout = this.layout;
 	}
 
 	override private function refreshScrollerValues():Void {

@@ -946,8 +946,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this.layoutHeaders();
-
-		this._previousLayout = this.layout;
 	}
 
 	override private function refreshScrollerValues():Void {
