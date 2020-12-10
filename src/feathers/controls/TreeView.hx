@@ -27,6 +27,7 @@ import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
+import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelTreeViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
@@ -383,6 +384,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	**/
 	@:style
 	public var layout:ILayout = null;
+
+	private var _previousCustomItemRendererVariant:String = null;
+
+	/**
+		A custom variant to set on all item renderers.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customItemRendererVariant:String = null;
 
 	/**
 		Manages item renderers used by the tree view.
@@ -775,6 +786,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var layoutInvalid = this.isInvalid(LAYOUT);
 		var stylesInvalid = this.isInvalid(STYLES);
 
+		if (this._previousCustomItemRendererVariant != this.customItemRendererVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		}
+
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
 				this._layoutItems.resize(0);
@@ -792,6 +807,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 
 		super.update();
+
+		this._previousCustomItemRendererVariant = this.customItemRendererVariant;
 	}
 
 	override private function refreshScrollerValues():Void {
@@ -1077,6 +1094,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
+			if (this.customItemRendererVariant != null && Std.is(itemRenderer, IVariantStyleObject)) {
+				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				if (variantItemRenderer.variant == null) {
+					variantItemRenderer.variant = this.customItemRendererVariant;
+				}
+			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}

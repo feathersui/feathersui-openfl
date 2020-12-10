@@ -72,6 +72,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
+		@see `PageIndicator.customToggleButtonVariant`
+
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_TOGGLE_BUTTON = "pageIndicator_toggleButton";
@@ -147,6 +149,18 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		}
 		return this._maxSelectedIndex;
 	}
+
+	private var _previousCustomToggleButtonVariant:String = null;
+
+	/**
+		A custom variant to set on all toggle buttons.
+
+		@see `PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customToggleButtonVariant:String = null;
 
 	/**
 		Manages toggle buttons used by the page indicator.
@@ -279,6 +293,9 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomToggleButtonVariant != this.customToggleButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
+		}
 		var buttonsInvalid = this.isInvalid(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
 
 		if (stylesInvalid || stateInvalid) {
@@ -297,6 +314,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		// final invalidation to avoid juggler next frame issues
 		this.validateChildren();
+
+		this._previousCustomToggleButtonVariant = this.customToggleButtonVariant;
 	}
 
 	private function refreshViewPortBounds():Void {
@@ -460,14 +479,15 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		var button:ToggleButton = null;
 		if (this.inactiveToggleButtons.length == 0) {
 			button = this.toggleButtonRecycler.create();
+			if (button.variant == null) {
+				// if the factory set a variant already, don't use the default
+				var variant = this.customToggleButtonVariant != null ? this.customToggleButtonVariant : PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON;
+				button.variant = variant;
+			}
 			this.addChildAt(button, index + depthOffset);
 		} else {
 			button = this.inactiveToggleButtons.shift();
 			this.setChildIndex(button, index + depthOffset);
-		}
-		if (button.variant == null) {
-			// if the factory set a variant already, don't use the default
-			button.variant = PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON;
 		}
 		this.refreshToggleButtonProperties(button, index);
 		button.addEventListener(Event.CHANGE, pageIndicator_toggleButton_changeHandler);

@@ -27,9 +27,11 @@ import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
+import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelListViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
+import openfl._internal.utils.ObjectPool;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
@@ -37,7 +39,6 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 import openfl.ui.Keyboard;
-import openfl._internal.utils.ObjectPool;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -512,6 +513,16 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	@:style
 	public var layout:ILayout = null;
 
+	private var _previousCustomItemRendererVariant:String = null;
+
+	/**
+		A custom variant to set on all item renderers.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customItemRendererVariant:String = null;
+
 	/**
 		Manages item renderers used by the list view.
 
@@ -845,6 +856,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var layoutInvalid = this.isInvalid(LAYOUT);
 		var stylesInvalid = this.isInvalid(STYLES);
 
+		if (this._previousCustomItemRendererVariant != this.customItemRendererVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		}
+
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
 				// don't keep the old layout's cache because it may not be
@@ -865,6 +880,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		super.update();
+
+		this._previousCustomItemRendererVariant = this.customItemRendererVariant;
 	}
 
 	override private function refreshScrollerValues():Void {
@@ -1107,6 +1124,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
+			if (this.customItemRendererVariant != null && Std.is(itemRenderer, IVariantStyleObject)) {
+				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				if (variantItemRenderer.variant == null) {
+					variantItemRenderer.variant = this.customItemRendererVariant;
+				}
+			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}

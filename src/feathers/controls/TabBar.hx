@@ -76,6 +76,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
+		@see `TabBar.customTabVariant`
+
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_TAB = "tabBar_tab";
@@ -242,6 +244,18 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		return this._selectedItem;
 	}
 
+	private var _previousCustomTabVariant:String = null;
+
+	/**
+		A custom variant to set on all item renderers.
+
+		@see `TabBar.CHILD_VARIANT_TAB`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customTabVariant:String = null;
+
 	/**
 		Manages tabs used by the tab bar.
 
@@ -367,6 +381,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomTabVariant != this.customTabVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_TAB_FACTORY);
+		}
 		var tabsInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_FACTORY);
 
 		if (stylesInvalid || stateInvalid) {
@@ -385,6 +402,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		// final invalidation to avoid juggler next frame issues
 		this.validateChildren();
+
+		this._previousCustomTabVariant = this.customTabVariant;
 	}
 
 	private function refreshViewPortBounds():Void {
@@ -592,12 +611,13 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		var tab:ToggleButton = null;
 		if (this.inactiveTabs.length == 0) {
 			tab = this.tabRecycler.create();
+			if (tab.variant == null) {
+				// if the factory set a variant already, don't use the default
+				var variant = this.customTabVariant != null ? this.customTabVariant : TabBar.CHILD_VARIANT_TAB;
+				tab.variant = variant;
+			}
 		} else {
 			tab = this.inactiveTabs.shift();
-		}
-		if (tab.variant == null) {
-			// if the factory set a variant already, don't use the default
-			tab.variant = TabBar.CHILD_VARIANT_TAB;
 		}
 		this.refreshTabProperties(tab, item, index);
 		tab.addEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);

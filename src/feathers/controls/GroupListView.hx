@@ -8,31 +8,30 @@
 
 package feathers.controls;
 
-import feathers.events.GroupListViewEvent;
-import feathers.events.TriggerEvent;
-import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
-import feathers.core.IUIControl;
-import openfl.errors.ArgumentError;
-import feathers.style.IVariantStyleObject;
-import feathers.data.GroupListViewItemType;
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
 import feathers.core.ITextControl;
-import feathers.core.InvalidationFlag;
+import feathers.core.IUIControl;
 import feathers.data.GroupListViewItemState;
+import feathers.data.GroupListViewItemType;
 import feathers.data.IHierarchicalCollection;
 import feathers.events.FeathersEvent;
+import feathers.events.GroupListViewEvent;
 import feathers.events.HierarchicalCollectionEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
+import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGroupListViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
@@ -377,6 +376,16 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	@:style
 	public var layout:ILayout = null;
 
+	private var _previousCustomItemRendererVariant:String = null;
+
+	/**
+		A custom variant to set on all item renderers.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customItemRendererVariant:String = null;
+
 	/**
 		Manages item renderers used by the group list view.
 
@@ -679,6 +688,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var layoutInvalid = this.isInvalid(LAYOUT);
 		var stylesInvalid = this.isInvalid(STYLES);
 
+		if (this._previousCustomItemRendererVariant != this.customItemRendererVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		}
+
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
 				this._layoutItems.resize(0);
@@ -696,6 +709,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		super.update();
+
+		this._previousCustomItemRendererVariant = this.customItemRendererVariant;
 	}
 
 	override private function refreshScrollerValues():Void {
@@ -935,6 +950,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
+			if (this.customItemRendererVariant != null && Std.is(itemRenderer, IVariantStyleObject)) {
+				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				if (variantItemRenderer.variant == null) {
+					variantItemRenderer.variant = this.customItemRendererVariant;
+				}
+			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}
