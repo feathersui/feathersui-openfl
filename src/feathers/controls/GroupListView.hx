@@ -1187,35 +1187,55 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		var startIndex = this.locationToDisplayIndex(this._selectedLocation);
 		var result = startIndex;
-		switch (event.keyCode) {
-			case Keyboard.UP:
-				result = result - 1;
-			case Keyboard.DOWN:
-				result = result + 1;
-			case Keyboard.LEFT:
-				result = result - 1;
-			case Keyboard.RIGHT:
-				result = result + 1;
-			case Keyboard.PAGE_UP:
-				result = result - 1;
-			case Keyboard.PAGE_DOWN:
-				result = result + 1;
-			case Keyboard.HOME:
+		var location:Array<Int> = null;
+		var needsAnotherPass = true;
+		var nextKeyCode = event.keyCode;
+		var lastResult = -1;
+		while (needsAnotherPass) {
+			needsAnotherPass = false;
+			switch (nextKeyCode) {
+				case Keyboard.UP:
+					result = result - 1;
+				case Keyboard.DOWN:
+					result = result + 1;
+				case Keyboard.LEFT:
+					result = result - 1;
+				case Keyboard.RIGHT:
+					result = result + 1;
+				case Keyboard.PAGE_UP:
+					result = result - 1;
+				case Keyboard.PAGE_DOWN:
+					result = result + 1;
+				case Keyboard.HOME:
+					result = 0;
+					nextKeyCode = Keyboard.DOWN;
+				case Keyboard.END:
+					result = this._layoutItems.length - 1;
+					nextKeyCode = Keyboard.UP;
+				default:
+					// not keyboard navigation
+					return;
+			}
+			if (result < 0) {
 				result = 0;
-			case Keyboard.END:
+			} else if (result >= this._layoutItems.length) {
 				result = this._layoutItems.length - 1;
-			default:
-				// not keyboard navigation
-				return;
-		}
-		if (result < 0) {
-			result = 0;
-		} else if (result >= this._layoutItems.length) {
-			result = this._layoutItems.length - 1;
+			}
+			location = this.displayIndexToLocation(result);
+			if (location.length != 2) {
+				// keep going until we reach a non-branch
+				if (result == lastResult) {
+					// but don't keep trying if we got the same result more than
+					// once because it means that we got stuck
+					return;
+				}
+				needsAnotherPass = true;
+			}
+			lastResult = result;
 		}
 		event.stopPropagation();
 		// use the setter
-		this.selectedLocation = this.displayIndexToLocation(result);
+		this.selectedLocation = location;
 		if (this._selectedLocation != null) {
 			this.scrollToLocation(this._selectedLocation);
 		}
