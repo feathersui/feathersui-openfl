@@ -86,6 +86,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
+		@see `PopUpListView.customButtonVariant`
+
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_BUTTON = "popUpListView_button";
@@ -94,6 +96,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		The variant used to style the `ListView` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `PopUpListView.customListViewVariant`
 
 		@since 1.0.0
 	**/
@@ -326,6 +330,30 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	@:style
 	public var popUpAdapter:IPopUpAdapter = null;
 
+	private var _previousCustomButtonVariant:String = null;
+
+	/**
+		A custom variant to set on the button.
+
+		@see `PopUpListView.CHILD_VARIANT_BUTTON`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customButtonVariant:String = null;
+
+	private var _previousCustomListViewVariant:String = null;
+
+	/**
+		A custom variant to set on the pop-up list view.
+
+		@see `PopUpListView.CHILD_VARIANT_LIST_VIEW`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customListViewVariant:String = null;
+
 	private var _buttonFactory:() -> Button;
 
 	/**
@@ -498,11 +526,17 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	override private function update():Void {
-		var buttonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
-		var listViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
 		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var stateInvalid = this.isInvalid(STATE);
+		if (this._previousCustomButtonVariant != this.customButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_BUTTON_FACTORY);
+		}
+		if (this._previousCustomListViewVariant != this.customListViewVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
+		}
+		var buttonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+		var listViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
 
 		if (buttonFactoryInvalid) {
 			this.createButton();
@@ -525,6 +559,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		this.measure();
 		this.layoutChildren();
+
+		this._previousCustomButtonVariant = this.customButtonVariant;
+		this._previousCustomListViewVariant = this.customListViewVariant;
 	}
 
 	private function createButton():Void {
@@ -537,7 +574,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this.button = factory();
 		if (this.button.variant == null) {
-			this.button.variant = PopUpListView.CHILD_VARIANT_BUTTON;
+			this.button.variant = this.customButtonVariant != null ? this.customButtonVariant : PopUpListView.CHILD_VARIANT_BUTTON;
 		}
 		this.button.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
 		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
@@ -557,7 +594,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this.listView = factory();
 		if (this.listView.variant == null) {
-			this.listView.variant = PopUpListView.CHILD_VARIANT_LIST_VIEW;
+			this.listView.variant = this.customListViewVariant != null ? this.customListViewVariant : PopUpListView.CHILD_VARIANT_LIST_VIEW;
 		}
 		this.listView.addEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
 		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);

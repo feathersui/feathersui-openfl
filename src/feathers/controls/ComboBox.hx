@@ -86,6 +86,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
+		@see `ComboBox.customButtonVariant`
+
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_BUTTON = "comboBox_button";
@@ -95,6 +97,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
+		@see `ComboBox.customTextInputVariant`
+
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_TEXT_INPUT = "comboBox_textInput";
@@ -103,6 +107,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		The variant used to style the `ListView` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `ComboBox.customListViewVariant`
 
 		@since 1.0.0
 	**/
@@ -353,6 +359,42 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	@:style
 	public var popUpAdapter:IPopUpAdapter = new DropDownPopUpAdapter();
 
+	private var _previousCustomTextInputVariant:String = null;
+
+	/**
+		A custom variant to set on the text input.
+
+		@see `ComboBox.CHILD_VARIANT_TEXT_INPUT`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customTextInputVariant:String = null;
+
+	private var _previousCustomButtonVariant:String = null;
+
+	/**
+		A custom variant to set on the button.
+
+		@see `ComboBox.CHILD_VARIANT_BUTTON`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customButtonVariant:String = null;
+
+	private var _previousCustomListViewVariant:String = null;
+
+	/**
+		A custom variant to set on the pop-up list view.
+
+		@see `ComboBox.CHILD_VARIANT_LIST_VIEW`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customListViewVariant:String = null;
+
 	private var _buttonFactory:() -> Button;
 
 	/**
@@ -562,12 +604,21 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	override private function update():Void {
-		var buttonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
-		var textInputFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_TEXT_INPUT_FACTORY);
-		var listViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
 		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var stateInvalid = this.isInvalid(STATE);
+		if (this._previousCustomTextInputVariant != this.customTextInputVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_TEXT_INPUT_FACTORY);
+		}
+		if (this._previousCustomButtonVariant != this.customButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_BUTTON_FACTORY);
+		}
+		if (this._previousCustomListViewVariant != this.customListViewVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
+		}
+		var buttonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+		var textInputFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_TEXT_INPUT_FACTORY);
+		var listViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_LIST_VIEW_FACTORY);
 
 		if (buttonFactoryInvalid) {
 			this.createButton();
@@ -593,6 +644,10 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		this.measure();
 		this.layoutChildren();
+
+		this._previousCustomTextInputVariant = this.customTextInputVariant;
+		this._previousCustomButtonVariant = this.customButtonVariant;
+		this._previousCustomListViewVariant = this.customListViewVariant;
 	}
 
 	private function createButton():Void {
@@ -604,7 +659,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this.button = factory();
 		if (this.button.variant == null) {
-			this.button.variant = ComboBox.CHILD_VARIANT_BUTTON;
+			this.button.variant = this.customButtonVariant != null ? this.customButtonVariant : ComboBox.CHILD_VARIANT_BUTTON;
 		}
 		this.button.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_button_mouseDownHandler);
 		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, comboBox_button_touchBeginHandler);
@@ -623,7 +678,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
 		this.textInput = factory();
 		if (this.textInput.variant == null) {
-			this.textInput.variant = ComboBox.CHILD_VARIANT_TEXT_INPUT;
+			this.textInput.variant = this.customTextInputVariant != null ? this.customTextInputVariant : ComboBox.CHILD_VARIANT_TEXT_INPUT;
 		}
 		this.textInput.addEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 		this.textInput.addEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
@@ -642,7 +697,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this.listView = factory();
 		if (this.listView.variant == null) {
-			this.listView.variant = ComboBox.CHILD_VARIANT_LIST_VIEW;
+			this.listView.variant = this.customListViewVariant != null ? this.customListViewVariant : ComboBox.CHILD_VARIANT_LIST_VIEW;
 		}
 		this.listView.addEventListener(Event.CHANGE, comboBox_listView_changeHandler);
 		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
