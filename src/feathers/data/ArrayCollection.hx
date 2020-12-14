@@ -30,6 +30,7 @@ import openfl.events.EventDispatcher;
 @:event(feathers.events.FlatCollectionEvent.UPDATE_ALL)
 @:event(feathers.events.FlatCollectionEvent.FILTER_CHANGE)
 @:event(feathers.events.FlatCollectionEvent.SORT_CHANGE)
+@:meta(DefaultProperty("array"))
 @defaultXmlProperty("array")
 class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 	/**

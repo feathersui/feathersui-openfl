@@ -52,6 +52,8 @@ import openfl.ui.Keyboard;
 
 	@since 1.0.0
 **/
+@:meta(DefaultProperty("text"))
+@defaultXmlProperty("text")
 @:styleContext
 class ToggleButton extends BasicToggleButton implements ITextControl implements IFocusObject {
 	/**

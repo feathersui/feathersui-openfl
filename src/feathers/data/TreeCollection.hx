@@ -32,6 +32,7 @@ import openfl.events.EventDispatcher;
 @:event(feathers.events.HierarchicalCollectionEvent.UPDATE_ALL)
 @:event(feathers.events.HierarchicalCollectionEvent.FILTER_CHANGE)
 @:event(feathers.events.HierarchicalCollectionEvent.SORT_CHANGE)
+@:meta(DefaultProperty("array"))
 @defaultXmlProperty("array")
 class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollection<TreeNode<T>> {
 	/**

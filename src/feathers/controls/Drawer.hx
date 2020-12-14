@@ -47,6 +47,8 @@ import openfl.ui.Multitouch;
 @:event(openfl.events.Event.CANCEL)
 @:event(feathers.events.FeathersEvent.OPENING)
 @:event(feathers.events.FeathersEvent.CLOSING)
+@:meta(DefaultProperty("content"))
+@defaultXmlProperty("content")
 @:styleContext
 class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private static final MAX_CLICK_DISTANCE_FOR_CLOSE = 6.0;
@@ -580,15 +582,13 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private function updateWithPullDistance():Void {
 		switch (this._pullableEdge) {
 			case TOP:
-				this._drawer.y = -this._drawer.height + this._edgePuller.pullDistance
-					;
+				this._drawer.y = -this._drawer.height + this._edgePuller.pullDistance;
 			case RIGHT:
 				this._drawer.x = this.actualWidth - this._edgePuller.pullDistance;
 			case BOTTOM:
 				this._drawer.y = this.actualHeight - this._edgePuller.pullDistance;
 			case LEFT:
-				this._drawer.x = -this._drawer.width + this._edgePuller.pullDistance
-					;
+				this._drawer.x = -this._drawer.width + this._edgePuller.pullDistance;
 			default:
 				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 		}

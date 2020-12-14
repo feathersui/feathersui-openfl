@@ -90,6 +90,7 @@ import openfl.ui.Multitouch;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:access(feathers.data.GroupListViewItemState)
+@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic> {

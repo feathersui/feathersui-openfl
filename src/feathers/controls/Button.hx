@@ -50,6 +50,8 @@ import openfl.ui.Keyboard;
 
 	@since 1.0.0
 **/
+@:meta(DefaultProperty("text"))
+@defaultXmlProperty("text")
 @:styleContext
 class Button extends BasicButton implements ITextControl implements IFocusObject {
 	/**

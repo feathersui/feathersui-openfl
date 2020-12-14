@@ -46,6 +46,8 @@ import openfl.events.Event;
 	@since 1.0.0
 **/
 @:access(feathers.controls.navigators.PageItem)
+@:meta(DefaultProperty("dataProvider"))
+@defaultXmlProperty("dataProvider")
 @:styleContext
 class PageNavigator extends BaseNavigator implements IIndexSelector implements IDataSelector<PageItem> {
 	/**

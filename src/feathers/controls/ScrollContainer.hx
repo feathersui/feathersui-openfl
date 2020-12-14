@@ -50,6 +50,7 @@ import openfl.events.Event;
 
 	@since 1.0.0
 **/
+@:meta(DefaultProperty("xmlContent"))
 @defaultXmlProperty("xmlContent")
 @:styleContext
 class ScrollContainer extends BaseScrollContainer implements IFocusContainer {

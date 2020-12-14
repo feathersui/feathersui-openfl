@@ -42,6 +42,8 @@ import openfl.ui.Multitouch;
 
 	@since 1.0.0
 **/
+@:meta(DefaultProperty("xmlContent"))
+@defaultXmlProperty("xmlContent")
 class BaseDividedBox extends FeathersControl {
 	private function new() {
 		super();

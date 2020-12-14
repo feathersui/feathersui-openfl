@@ -34,6 +34,8 @@ import openfl.display.DisplayObject;
 
 	@since 1.0.0
 **/
+@:meta(DefaultProperty("text"))
+@defaultXmlProperty("text")
 @:styleContext
 class TextCallout extends Callout implements ITextControl {
 	/**

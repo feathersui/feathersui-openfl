@@ -46,6 +46,8 @@ import openfl.events.Event;
 	@since 1.0.0
 **/
 @:access(feathers.controls.navigators.TabItem)
+@:meta(DefaultProperty("dataProvider"))
+@defaultXmlProperty("dataProvider")
 @:styleContext
 class TabNavigator extends BaseNavigator implements IIndexSelector implements IDataSelector<TabItem> {
 	/**

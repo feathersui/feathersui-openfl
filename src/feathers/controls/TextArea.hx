@@ -44,6 +44,8 @@ import openfl.ui.Keyboard;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
+@:meta(DefaultProperty("text"))
+@defaultXmlProperty("text")
 class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl {
 	/**
 		Creates a new `TextArea` object.

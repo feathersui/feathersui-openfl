@@ -75,6 +75,8 @@ import openfl.ui.Multitouch;
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
+@:meta(DefaultProperty("dataProvider"))
+@defaultXmlProperty("dataProvider")
 @:styleContext
 class ComboBox extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");

@@ -95,6 +95,8 @@ import openfl.ui.Multitouch;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:access(feathers.data.GridViewHeaderState)
+@:meta(DefaultProperty("dataProvider"))
+@defaultXmlProperty("dataProvider")
 @:styleContext
 class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> {
 	/**

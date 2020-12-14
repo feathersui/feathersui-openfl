@@ -54,6 +54,7 @@ import openfl.geom.Point;
 
 	@since 1.0.0
 **/
+@:meta(DefaultProperty("xmlContent"))
 @defaultXmlProperty("xmlContent")
 @:styleContext
 class LayoutGroup extends FeathersControl {

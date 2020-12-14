@@ -67,6 +67,8 @@ import openfl.ui.Keyboard;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:access(feathers.data.TabBarItemState)
+@:meta(DefaultProperty("dataProvider"))
+@defaultXmlProperty("dataProvider")
 @:styleContext
 class TabBar extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
 	private static final INVALIDATION_FLAG_TAB_FACTORY = InvalidationFlag.CUSTOM("tabFactory");
