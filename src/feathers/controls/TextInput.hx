@@ -664,6 +664,32 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._pendingSelectionActiveIndex;
 	}
 
+	private var _maxChars:Int = 0;
+
+	/**
+		The maximum number of characters that may be entered into the text
+		input. If set to `0`, the length of the text is unrestricted.
+
+		@default 0
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var maxChars(get, set):Int;
+
+	private function get_maxChars():Int {
+		return this._maxChars;
+	}
+
+	private function set_maxChars(value:Int):Int {
+		if (this._maxChars == value) {
+			return this._maxChars;
+		}
+		this._maxChars = value;
+		this.setInvalid(DATA);
+		return this._maxChars;
+	}
+
 	/**
 		Indicates if the text width is considered when calculating the ideal
 		size of the text input.
@@ -1300,6 +1326,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private function refreshText():Void {
 		this.textField.restrict = this.__restrict;
+		this.textField.maxChars = this._maxChars;
 		if (this._text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
 			return;

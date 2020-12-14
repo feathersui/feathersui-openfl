@@ -157,6 +157,29 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		return this.__restrict;
 	}
 
+	private var _maxChars:Int = 0;
+
+	/**
+		Limits the set of characters that may be typed with the keyboard.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var maxChars(get, set):Int;
+
+	private function get_maxChars():Int {
+		return this._maxChars;
+	}
+
+	private function set_maxChars(value:Int):Int {
+		if (this._maxChars == value) {
+			return this._maxChars;
+		}
+		this._maxChars = value;
+		this.setInvalid(DATA);
+		return this._maxChars;
+	}
+
 	private var _smoothScrolling:Bool = false;
 
 	/**
@@ -764,6 +787,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 			this._updatedTextStyles = true;
 		}
 		this.textField.restrict = this.__restrict;
+		this.textField.maxChars = this._maxChars;
 		var calculatedWidth = this._explicitVisibleWidth;
 		if (calculatedWidth != null) {
 			calculatedWidth -= (this._paddingLeft + this._paddingRight);

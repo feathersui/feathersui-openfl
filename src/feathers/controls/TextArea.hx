@@ -470,6 +470,32 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this.textFieldViewPort.selectionActiveIndex;
 	}
 
+	private var _maxChars:Int = 0;
+
+	/**
+		The maximum number of characters that may be entered into the text
+		input. If set to `0`, the length of the text is unrestricted.
+
+		@default 0
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var maxChars(get, set):Int;
+
+	private function get_maxChars():Int {
+		return this._maxChars;
+	}
+
+	private function set_maxChars(value:Int):Int {
+		if (this._maxChars == value) {
+			return this._maxChars;
+		}
+		this._maxChars = value;
+		this.setInvalid(DATA);
+		return this._maxChars;
+	}
+
 	private var _ignoreViewPortTextChange = false;
 
 	override private function get_measureViewPort():Bool {
@@ -643,6 +669,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.textFieldViewPort.text = this._text;
 			this._ignoreViewPortTextChange = oldIgnoreViewPortTextChange;
 			this.textFieldViewPort.restrict = this.__restrict;
+			this.textFieldViewPort.maxChars = this._maxChars;
 		}
 
 		if (stateInvalid) {
