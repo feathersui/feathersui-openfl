@@ -206,14 +206,62 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		super.update();
 	}
 
+	override private function measureContentWidth():Float {
+		var contentWidth = super.measureContentWidth();
+		this.disclosureButton.validateNow();
+		if (Std.is(this._currentBranchOrLeafIcon, IValidating)) {
+			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+		}
+		var adjustedGap = this.gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = this.minGap;
+		}
+		var depth = 0;
+		if (this._location != null) {
+			depth = this._location.length - 1;
+		}
+		var indent = this.indentation * depth;
+		contentWidth += indent + this.disclosureButton.width + adjustedGap;
+		if (this._currentBranchOrLeafIcon != null) {
+			contentWidth += this._currentBranchOrLeafIcon.width + adjustedGap;
+		}
+		return contentWidth;
+	}
+
+	override private function measureContentMinWidth():Float {
+		var contentMinWidth = super.measureContentMinWidth();
+		this.disclosureButton.validateNow();
+		if (Std.is(this._currentBranchOrLeafIcon, IValidating)) {
+			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+		}
+		var adjustedGap = this.gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = this.minGap;
+		}
+		var depth = 0;
+		if (this._location != null) {
+			depth = this._location.length - 1;
+		}
+		var indent = this.indentation * depth;
+		contentMinWidth += indent + this.disclosureButton.width + adjustedGap;
+		if (this._currentBranchOrLeafIcon != null) {
+			contentMinWidth += this._currentBranchOrLeafIcon.width + adjustedGap;
+		}
+		return contentMinWidth;
+	}
+
 	override private function layoutContent():Void {
 		this.disclosureButton.validateNow();
 		if (Std.is(this._currentBranchOrLeafIcon, IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
 		var paddingLeft = this.paddingLeft;
-		var disclosureGap = this.gap;
-		var branchOrLeafIconGap = this.gap;
+		var adjustedGap = this.gap;
+		if (adjustedGap == Math.POSITIVE_INFINITY) {
+			adjustedGap = this.minGap;
+		}
+		var disclosureGap = adjustedGap;
+		var branchOrLeafIconGap = adjustedGap;
 		var depth = 0;
 		if (this._location != null) {
 			depth = this._location.length - 1;
