@@ -8,6 +8,12 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IValidating;
+import feathers.core.IUIControl;
+import feathers.layout.Measurements;
+import feathers.core.IStateObserver;
+import feathers.skins.IProgrammaticSkin;
+import openfl.display.DisplayObject;
 import feathers.events.FeathersEvent;
 import openfl.events.Event;
 import feathers.core.InvalidationFlag;
@@ -144,6 +150,33 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	@:style
 	public var indentation:Float = 0.0;
 
+	private var _currentBranchOrLeafIcon:DisplayObject;
+	private var _branchOrLeafIconMeasurements:Measurements;
+
+	/**
+		The display object to use as an icon when the item renderer's data is a
+		branch. This icon is displayed in addition to the standard `icon`
+		property.
+
+		@see `TreeViewItemRenderer.branchIcon`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var branchIcon:DisplayObject = null;
+
+	/**
+		The display object to use as an icon when the item renderer's data is a
+		leaf. This icon is displayed in addition to the standard `icon`
+		property.
+
+		@see `TreeViewItemRenderer.leafIcon`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var leafIcon:DisplayObject = null;
+
 	private var disclosureButton:ToggleButton;
 
 	override private function initialize():Void {
@@ -157,26 +190,41 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	}
 
 	override private function update():Void {
+		var stylesInvalid = this.isInvalid(STYLES);
+
+		if (stylesInvalid) {
+			this.refreshBranchOrLeafIcon();
+		}
+
 		this.disclosureButton.enabled = this._enabled;
 		this.disclosureButton.visible = this._branch;
 		var oldIgnoreOpenCloseChange = this._ignoreOpenCloseChange;
 		this._ignoreOpenCloseChange = true;
 		this.disclosureButton.selected = this._opened;
 		this._ignoreOpenCloseChange = oldIgnoreOpenCloseChange;
+
 		super.update();
 	}
 
 	override private function layoutContent():Void {
 		this.disclosureButton.validateNow();
+		if (Std.is(this._currentBranchOrLeafIcon, IValidating)) {
+			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+		}
 		var paddingLeft = this.paddingLeft;
 		var disclosureGap = this.gap;
+		var branchOrLeafIconGap = this.gap;
 		var depth = 0;
 		if (this._location != null) {
 			depth = this._location.length - 1;
 		}
 		var indent = this.indentation * depth;
 		this.runWithoutInvalidation(() -> {
-			this.paddingLeft = paddingLeft + indent + this.disclosureButton.width + disclosureGap;
+			var newPaddingLeft = paddingLeft + indent + this.disclosureButton.width + disclosureGap;
+			if (this._currentBranchOrLeafIcon != null) {
+				newPaddingLeft += this._currentBranchOrLeafIcon.width + branchOrLeafIconGap;
+			}
+			this.paddingLeft = newPaddingLeft;
 		});
 		super.layoutContent();
 		this.runWithoutInvalidation(() -> {
@@ -184,10 +232,68 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		});
 		this.disclosureButton.x = this.paddingLeft + indent;
 		this.disclosureButton.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this.disclosureButton.height) / 2.0;
+		if (this._currentBranchOrLeafIcon != null) {
+			this._currentBranchOrLeafIcon.x = this.disclosureButton.x + this.disclosureButton.width + disclosureGap;
+			this._currentBranchOrLeafIcon.y = this.paddingTop
+				+ (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentBranchOrLeafIcon.height) / 2.0;
+		}
 	}
 
 	private function initializeTreeViewItemRendererTheme():Void {
 		SteelTreeViewItemRendererStyles.initialize();
+	}
+
+	private function refreshBranchOrLeafIcon():Void {
+		var oldIcon = this._currentBranchOrLeafIcon;
+		this._currentBranchOrLeafIcon = this.getCurrentBranchOrLeafIcon();
+		if (this._currentBranchOrLeafIcon == oldIcon) {
+			return;
+		}
+		this.removeCurrentBranchOrLeafIcon(oldIcon);
+		if (this._currentBranchOrLeafIcon == null) {
+			this._branchOrLeafIconMeasurements = null;
+			return;
+		}
+		if (Std.is(this._currentBranchOrLeafIcon, IUIControl)) {
+			cast(this._currentBranchOrLeafIcon, IUIControl).initializeNow();
+		}
+		if (this._branchOrLeafIconMeasurements == null) {
+			this._branchOrLeafIconMeasurements = new Measurements(this._currentBranchOrLeafIcon);
+		} else {
+			this._branchOrLeafIconMeasurements.save(this._currentBranchOrLeafIcon);
+		}
+		if (Std.is(this._currentBranchOrLeafIcon, IProgrammaticSkin)) {
+			cast(this._currentBranchOrLeafIcon, IProgrammaticSkin).uiContext = this;
+		}
+		if (Std.is(this._currentBranchOrLeafIcon, IStateObserver)) {
+			cast(this._currentBranchOrLeafIcon, IStateObserver).stateContext = this;
+		}
+		this.addChild(this._currentBranchOrLeafIcon);
+	}
+
+	private function getCurrentBranchOrLeafIcon():DisplayObject {
+		if (this._branch) {
+			return this.branchIcon;
+		}
+		return this.leafIcon;
+	}
+
+	private function removeCurrentBranchOrLeafIcon(icon:DisplayObject):Void {
+		if (icon == null) {
+			return;
+		}
+		if (Std.is(icon, IProgrammaticSkin)) {
+			cast(icon, IProgrammaticSkin).uiContext = null;
+		}
+		if (Std.is(icon, IStateObserver)) {
+			cast(icon, IStateObserver).stateContext = null;
+		}
+		// we need to restore these values so that they won't be lost the
+		// next time that this icon is used for measurement
+		this._branchOrLeafIconMeasurements.restore(icon);
+		if (icon.parent == this) {
+			this.removeChild(icon);
+		}
 	}
 
 	private function treeViewItemRenderer_disclosureButton_changeHandler(event:Event):Void {
