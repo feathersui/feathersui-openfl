@@ -32,6 +32,25 @@ import feathers.themes.steel.components.SteelTreeViewItemRendererStyles;
 @:styleContext
 class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer implements IOpenCloseToggle {
 	/**
+		A variant used to style the item renderer to appear in a file system
+		context where branches are directories/folders and leaves and individual
+		files. Variants allow themes to provide an assortment of different
+		appearances for the same type of UI component.
+
+		The following example uses this variant:
+
+		```hx
+		var itemRenderer = new TreeViewItemRenderer();
+		itemRenderer.variant = TreeViewItemRenderer.VARIANT_FILE_SYSTEM;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_FILE_SYSTEM = "fileSystem";
+
+	/**
 		The variant used to style the `ToggleButton` child component in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
