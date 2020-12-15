@@ -158,7 +158,9 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		branch. This icon is displayed in addition to the standard `icon`
 		property.
 
-		@see `TreeViewItemRenderer.branchIcon`
+		@see `TreeViewItemRenderer.leafIcon`
+		@see `TreeViewItemRenderer.branchOpenIcon`
+		@see `TreeViewItemRenderer.branchClosedIcon`
 
 		@since 1.0.0
 	**/
@@ -167,10 +169,36 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	/**
 		The display object to use as an icon when the item renderer's data is a
+		branch, and the branch is open. If `null`, falls back to `branchIcon`
+		instead.
+
+		@see `TreeViewItemRenderer.branchClosedIcon`
+		@see `TreeViewItemRenderer.branchIcon`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var branchOpenIcon:DisplayObject = null;
+
+	/**
+		The display object to use as an icon when the item renderer's data is a
+		branch, and the branch is closed. If `null`, falls back to `branchIcon`
+		instead.
+
+		@see `TreeViewItemRenderer.branchOpenIcon`
+		@see `TreeViewItemRenderer.branchIcon`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var branchClosedIcon:DisplayObject = null;
+
+	/**
+		The display object to use as an icon when the item renderer's data is a
 		leaf. This icon is displayed in addition to the standard `icon`
 		property.
 
-		@see `TreeViewItemRenderer.leafIcon`
+		@see `TreeViewItemRenderer.branchIcon`
 
 		@since 1.0.0
 	**/
@@ -190,18 +218,25 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	}
 
 	override private function update():Void {
+		var dataInvalid = this.isInvalid(DATA);
+		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
-		if (stylesInvalid) {
+		if (stylesInvalid || stateInvalid || dataInvalid) {
 			this.refreshBranchOrLeafIcon();
 		}
 
-		this.disclosureButton.enabled = this._enabled;
-		this.disclosureButton.visible = this._branch;
-		var oldIgnoreOpenCloseChange = this._ignoreOpenCloseChange;
-		this._ignoreOpenCloseChange = true;
-		this.disclosureButton.selected = this._opened;
-		this._ignoreOpenCloseChange = oldIgnoreOpenCloseChange;
+		if (dataInvalid) {
+			this.refreshBranchOrLeafStatus();
+		}
+
+		if (stateInvalid) {
+			this.disclosureButton.enabled = this._enabled;
+		}
+
+		if (dataInvalid) {
+			this.refreshOpenedState();
+		}
 
 		super.update();
 	}
@@ -321,6 +356,12 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	private function getCurrentBranchOrLeafIcon():DisplayObject {
 		if (this._branch) {
+			if (this._opened && this.branchOpenIcon != null) {
+				return this.branchOpenIcon;
+			}
+			if (!this._opened && this.branchClosedIcon != null) {
+				return this.branchClosedIcon;
+			}
 			return this.branchIcon;
 		}
 		return this.leafIcon;
@@ -342,6 +383,17 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		if (icon.parent == this) {
 			this.removeChild(icon);
 		}
+	}
+
+	private function refreshBranchOrLeafStatus():Void {
+		this.disclosureButton.visible = this._branch;
+	}
+
+	private function refreshOpenedState():Void {
+		var oldIgnoreOpenCloseChange = this._ignoreOpenCloseChange;
+		this._ignoreOpenCloseChange = true;
+		this.disclosureButton.selected = this._opened;
+		this._ignoreOpenCloseChange = oldIgnoreOpenCloseChange;
 	}
 
 	private function treeViewItemRenderer_disclosureButton_changeHandler(event:Event):Void {
