@@ -840,7 +840,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
-			this.textField.text = "\u8203"; // zero-width space
+			this.textField.text = "\u200b"; // zero-width space
 		}
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;

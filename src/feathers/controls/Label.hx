@@ -622,7 +622,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		} else if (hasText) {
 			this.textField.text = this._text;
 		} else {
-			this.textField.text = "\u8203"; // zero-width space
+			this.textField.text = "\u200b"; // zero-width space
 		}
 		var textFieldWidth:Null<Float> = null;
 		if (this.explicitWidth != null) {

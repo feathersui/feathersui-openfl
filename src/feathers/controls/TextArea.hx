@@ -749,7 +749,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (hasText) {
 			this.promptTextField.text = this._prompt;
 		} else {
-			this.promptTextField.text = "\u8203"; // zero-width space
+			this.promptTextField.text = "\u200b"; // zero-width space
 		}
 		this._promptTextMeasuredWidth = this.promptTextField.width;
 		this._promptTextMeasuredHeight = this.promptTextField.height;

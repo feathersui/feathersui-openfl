@@ -1279,7 +1279,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (hasText) {
 			this.promptTextField.text = this._prompt;
 		} else {
-			this.promptTextField.text = "\u8203"; // zero-width space
+			this.promptTextField.text = "\u200b"; // zero-width space
 		}
 		this._promptTextMeasuredWidth = this.promptTextField.width;
 		this._promptTextMeasuredHeight = this.promptTextField.height;
@@ -1338,7 +1338,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
-			this.textField.text = "\u8203"; // zero-width space
+			this.textField.text = "\u200b"; // zero-width space
 		}
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;

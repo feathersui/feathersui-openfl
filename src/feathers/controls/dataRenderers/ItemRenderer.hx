@@ -398,7 +398,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (hasText) {
 			this.secondaryTextField.text = this._secondaryText;
 		} else {
-			this.secondaryTextField.text = "\u8203"; // zero-width space
+			this.secondaryTextField.text = "\u200b"; // zero-width space
 		}
 		this._secondaryTextMeasuredWidth = this.secondaryTextField.width;
 		this._secondaryTextMeasuredHeight = this.secondaryTextField.height;

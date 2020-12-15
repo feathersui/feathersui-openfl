@@ -806,7 +806,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
-			this.textField.text = "\u8203"; // zero-width space
+			this.textField.text = "\u200b"; // zero-width space
 		}
 		this._savedLineMetrics = this.textField.getLineMetrics(0);
 		this._textMeasuredWidth = this.textField.width;
