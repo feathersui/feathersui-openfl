@@ -27,6 +27,7 @@ import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
+import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelListViewStyles;
 import feathers.utils.DisplayObjectRecycler;
@@ -550,6 +551,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this._defaultStorage.oldItemRendererRecycler = this._defaultStorage.itemRendererRecycler;
 		this._defaultStorage.itemRendererRecycler = value;
+		this._defaultStorage.measurements = null;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this._defaultStorage.itemRendererRecycler;
 	}
@@ -995,6 +997,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 			this.refreshItemRendererProperties(itemRenderer, state);
+			if (storage.measurements != null) {
+				storage.measurements.restore(itemRenderer);
+			}
 			this.itemStatePool.release(state);
 		}
 	}
@@ -1130,6 +1135,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 				if (variantItemRenderer.variant == null) {
 					variantItemRenderer.variant = this.customItemRendererVariant;
 				}
+			}
+			if (storage.measurements == null) {
+				storage.measurements = new Measurements(itemRenderer);
 			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
@@ -1493,4 +1501,5 @@ private class ItemRendererStorage {
 	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 	public var activeItemRenderers:Array<DisplayObject> = [];
 	public var inactiveItemRenderers:Array<DisplayObject> = [];
+	public var measurements:Measurements;
 }

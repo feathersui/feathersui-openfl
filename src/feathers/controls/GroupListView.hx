@@ -26,6 +26,7 @@ import feathers.events.TriggerEvent;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
+import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGroupListViewStyles;
 import feathers.utils.DisplayObjectRecycler;
@@ -413,6 +414,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		this._defaultItemStorage.oldItemRendererRecycler = this._defaultItemStorage.itemRendererRecycler;
 		this._defaultItemStorage.itemRendererRecycler = value;
+		this._defaultItemStorage.measurements = null;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this._defaultItemStorage.itemRendererRecycler;
 	}
@@ -854,6 +856,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				var groupListRenderer = cast(itemRenderer, IGroupListViewItemRenderer);
 				groupListRenderer.location = this._currentItemState.location;
 			}
+			if (storage.measurements != null) {
+				storage.measurements.restore(itemRenderer);
+			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -956,6 +961,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				if (variantItemRenderer.variant == null) {
 					variantItemRenderer.variant = this.customItemRendererVariant;
 				}
+			}
+			if (storage.measurements == null) {
+				storage.measurements = new Measurements(itemRenderer);
 			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
@@ -1453,4 +1461,5 @@ private class ItemRendererStorage {
 	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
 	public var activeItemRenderers:Array<DisplayObject> = [];
 	public var inactiveItemRenderers:Array<DisplayObject> = [];
+	public var measurements:Measurements;
 }

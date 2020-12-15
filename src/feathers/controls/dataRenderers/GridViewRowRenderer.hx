@@ -19,6 +19,7 @@ import feathers.events.GridViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.Measurements;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
@@ -229,6 +230,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 		this._defaultStorage.oldCellRendererRecycler = this._defaultStorage.cellRendererRecycler;
 		this._defaultStorage.cellRendererRecycler = value;
+		this._defaultStorage.measurements = null;
 		this.setInvalid(INVALIDATION_FLAG_CELL_RENDERER_FACTORY);
 		return this._defaultStorage.cellRendererRecycler;
 	}
@@ -438,6 +440,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
 				layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
 			}
+			if (storage.measurements != null) {
+				storage.measurements.restore(cellRenderer);
+			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -467,6 +472,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		if (storage.inactiveCellRenderers.length == 0) {
 			cellRenderer = storage.cellRendererRecycler.create();
+			if (storage.measurements == null) {
+				storage.measurements = new Measurements(cellRenderer);
+			}
 		} else {
 			cellRenderer = storage.inactiveCellRenderers.shift();
 		}
@@ -607,4 +615,5 @@ private class CellRendererStorage {
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 	public var activeCellRenderers:Array<DisplayObject> = [];
 	public var inactiveCellRenderers:Array<DisplayObject> = [];
+	public var measurements:Measurements;
 }

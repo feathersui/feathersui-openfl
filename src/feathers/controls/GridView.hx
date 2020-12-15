@@ -30,7 +30,7 @@ import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
-import feathers.layout.VerticalListFixedRowLayout;
+import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGridViewStyles;
@@ -369,6 +369,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
+	private var _rowRendererMeasurements:Measurements;
 
 	private var _selectedIndex:Int = -1;
 
@@ -1217,6 +1218,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			rowRenderer.data = null;
 			rowRenderer.rowIndex = -1;
 			rowRenderer.enabled = true;
+			if (this._rowRendererMeasurements != null) {
+				this._rowRendererMeasurements.restore(rowRenderer);
+			}
 			this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		}
 	}
@@ -1294,6 +1298,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var rowRenderer:GridViewRowRenderer = null;
 		if (this.inactiveRowRenderers.length == 0) {
 			rowRenderer = this._rowRendererRecycler.create();
+			if (this._rowRendererMeasurements == null) {
+				this._rowRendererMeasurements = new Measurements(rowRenderer);
+			}
 		} else {
 			rowRenderer = this.inactiveRowRenderers.shift();
 		}
