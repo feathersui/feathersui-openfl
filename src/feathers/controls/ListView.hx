@@ -699,6 +699,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public var pointerSelectionEnabled:Bool = true;
 
+	private var _pendingScrollIndex:Int = -1;
+	private var _pendingScrollDuration:Null<Float> = null;
+
 	private var _ignoreSelectionChange = false;
 	private var _ignoreLayoutChanges = false;
 
@@ -736,46 +739,15 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		A custom animation duration may be specified. To update the scroll
 		position without animation, pass a value of `0.0` for the duration.
 
-		 @since 1.0.0
+		@since 1.0.0
 	**/
 	public function scrollToIndex(index:Int, ?animationDuration:Float):Void {
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
-
-		var targetX = this.scrollX;
-		var targetY = this.scrollY;
-		if (Std.is(this.layout, IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
-			var result = scrollLayout.getNearestScrollPositionForIndex(index, this._dataProvider.length, this.viewPort.visibleWidth,
-				this.viewPort.visibleHeight);
-			targetX = result.x;
-			targetY = result.y;
-		} else {
-			var item = this._dataProvider.get(index);
-			var itemRenderer = this.dataToItemRenderer.get(item);
-			if (itemRenderer == null) {
-				return;
-			}
-
-			var maxX = itemRenderer.x;
-			var minX = maxX + itemRenderer.width - this.viewPort.visibleWidth;
-			if (targetX < minX) {
-				targetX = minX;
-			} else if (targetX > maxX) {
-				targetX = maxX;
-			}
-
-			var maxY = itemRenderer.y;
-			var minY = maxY + itemRenderer.height - this.viewPort.visibleHeight;
-			if (targetY < minY) {
-				targetY = minY;
-			} else if (targetY > maxY) {
-				targetY = maxY;
-			}
-		}
-		this.scroller.scrollX = targetX;
-		this.scroller.scrollY = targetY;
+		this._pendingScrollIndex = index;
+		this._pendingScrollDuration = animationDuration;
+		this.setInvalid(SCROLL);
 	}
 
 	/**
@@ -885,6 +857,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this._previousCustomItemRendererVariant = this.customItemRendererVariant;
+
+		this.handlePendingScroll();
 	}
 
 	override private function refreshScrollerValues():Void {
@@ -1256,6 +1230,59 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			// use the setter
 			this.selectedItem = item;
+		}
+	}
+
+	private function handlePendingScroll():Void {
+		if (this._pendingScrollIndex == -1) {
+			return;
+		}
+		var index = this._pendingScrollIndex;
+		var duration = this._pendingScrollDuration != null ? this._pendingScrollDuration : 0.0;
+		this._pendingScrollIndex = -1;
+		this._pendingScrollDuration = null;
+
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
+			return;
+		}
+
+		var targetX = this.scrollX;
+		var targetY = this.scrollY;
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			var result = scrollLayout.getNearestScrollPositionForIndex(index, this._dataProvider.length, this.viewPort.visibleWidth,
+				this.viewPort.visibleHeight);
+			targetX = result.x;
+			targetY = result.y;
+		} else {
+			var item = this._dataProvider.get(index);
+			var itemRenderer = this.dataToItemRenderer.get(item);
+			if (itemRenderer == null) {
+				return;
+			}
+
+			var maxX = itemRenderer.x;
+			var minX = maxX + itemRenderer.width - this.viewPort.visibleWidth;
+			if (targetX < minX) {
+				targetX = minX;
+			} else if (targetX > maxX) {
+				targetX = maxX;
+			}
+
+			var maxY = itemRenderer.y;
+			var minY = maxY + itemRenderer.height - this.viewPort.visibleHeight;
+			if (targetY < minY) {
+				targetY = minY;
+			} else if (targetY > maxY) {
+				targetY = maxY;
+			}
+		}
+
+		if (duration == 0.0) {
+			this.scroller.scrollX = targetX;
+			this.scroller.scrollY = targetY;
+		} else {
+			this.scroller.throwTo(targetX, targetY, duration);
 		}
 	}
 

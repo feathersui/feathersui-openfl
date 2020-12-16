@@ -807,6 +807,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _ignoreLayoutChanges = false;
 	private var _ignoreHeaderLayoutChanges = false;
 
+	private var _pendingScrollRowIndex:Int = -1;
+	private var _pendingScrollDuration:Null<Float> = null;
+
 	/**
 		Scrolls the grid view so that the specified row is completely visible.
 		If the row is already completely visible, does not update the scroll
@@ -815,46 +818,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		A custom animation duration may be specified. To update the scroll
 		position without animation, pass a value of `0.0` for the duration.
 
-		 @since 1.0.0
+		@since 1.0.0
 	**/
 	public function scrollToRowIndex(rowIndex:Int, ?animationDuration:Float):Void {
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
-
-		var targetX = this.scrollX;
-		var targetY = this.scrollY;
-		if (Std.is(this.layout, IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
-			var result = scrollLayout.getNearestScrollPositionForIndex(rowIndex, this._dataProvider.length, this.viewPort.visibleWidth,
-				this.viewPort.visibleHeight);
-			targetX = result.x;
-			targetY = result.y;
-		} else {
-			var row = this._dataProvider.get(rowIndex);
-			var rowRenderer = this.dataToRowRenderer.get(row);
-			if (rowRenderer == null) {
-				return;
-			}
-
-			var maxX = rowRenderer.x;
-			var minX = maxX + rowRenderer.width - this.viewPort.visibleWidth;
-			if (targetX < minX) {
-				targetX = minX;
-			} else if (targetX > maxX) {
-				targetX = maxX;
-			}
-
-			var maxY = rowRenderer.y;
-			var minY = maxY + rowRenderer.height - this.viewPort.visibleHeight;
-			if (targetY < minY) {
-				targetY = minY;
-			} else if (targetY > maxY) {
-				targetY = maxY;
-			}
-		}
-		this.scroller.scrollX = targetX;
-		this.scroller.scrollY = targetY;
+		this._pendingScrollRowIndex = rowIndex;
+		this._pendingScrollDuration = animationDuration;
+		this.setInvalid(SCROLL);
 	}
 
 	/**
@@ -949,6 +921,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this.layoutHeaders();
+		this.handlePendingScroll();
 	}
 
 	override private function refreshScrollerValues():Void {
@@ -1445,13 +1418,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this._enabled || event.isDefaultPrevented()) {
-			return;
-		}
-		this.navigateWithKeyboard(event);
-	}
-
 	private function dispatchHeaderTriggerEvent(column:GridViewColumn):Void {
 		var columnIndex = this._columns.indexOf(column);
 		this.populateCurrentItemState(column, columnIndex);
@@ -1506,6 +1472,66 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			// use the setter
 			this.selectedItem = item;
 		}
+	}
+
+	private function handlePendingScroll():Void {
+		if (this._pendingScrollRowIndex == -1) {
+			return;
+		}
+		var rowIndex = this._pendingScrollRowIndex;
+		var duration = this._pendingScrollDuration != null ? this._pendingScrollDuration : 0.0;
+		this._pendingScrollRowIndex = -1;
+		this._pendingScrollDuration = null;
+
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
+			return;
+		}
+
+		var targetX = this.scrollX;
+		var targetY = this.scrollY;
+		if (Std.is(this.layout, IScrollLayout)) {
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			var result = scrollLayout.getNearestScrollPositionForIndex(rowIndex, this._dataProvider.length, this.viewPort.visibleWidth,
+				this.viewPort.visibleHeight);
+			targetX = result.x;
+			targetY = result.y;
+		} else {
+			var row = this._dataProvider.get(rowIndex);
+			var rowRenderer = this.dataToRowRenderer.get(row);
+			if (rowRenderer == null) {
+				return;
+			}
+
+			var maxX = rowRenderer.x;
+			var minX = maxX + rowRenderer.width - this.viewPort.visibleWidth;
+			if (targetX < minX) {
+				targetX = minX;
+			} else if (targetX > maxX) {
+				targetX = maxX;
+			}
+
+			var maxY = rowRenderer.y;
+			var minY = maxY + rowRenderer.height - this.viewPort.visibleHeight;
+			if (targetY < minY) {
+				targetY = minY;
+			} else if (targetY > maxY) {
+				targetY = maxY;
+			}
+		}
+
+		if (duration == 0.0) {
+			this.scroller.scrollX = targetX;
+			this.scroller.scrollY = targetY;
+		} else {
+			this.scroller.throwTo(targetX, targetY, duration);
+		}
+	}
+
+	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		this.navigateWithKeyboard(event);
 	}
 
 	private function gridView_rowRenderer_triggerHandler(event:TriggerEvent):Void {

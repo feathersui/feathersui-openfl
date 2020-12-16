@@ -687,6 +687,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return state.data;
 	}
 
+	private var _pendingScrollLocation:Array<Int> = null;
+	private var _pendingScrollDuration:Null<Float> = null;
+
 	/**
 		Scrolls the tree view so that the specified item renderer is completely
 		visible. If the item renderer is already completely visible, does not
@@ -695,47 +698,15 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		A custom animation duration may be specified. To update the scroll
 		position without animation, pass a value of `0.0` for the duration.
 
-		 @since 1.0.0
+		@since 1.0.0
 	**/
 	public function scrollToLocation(location:Array<Int>, ?animationDuration:Float):Void {
 		if (this._dataProvider == null || this._dataProvider.getLength() == 0) {
 			return;
 		}
-
-		var targetX = this.scrollX;
-		var targetY = this.scrollY;
-		if (Std.is(this.layout, IScrollLayout)) {
-			var displayIndex = this.locationToDisplayIndex(location, true);
-			var scrollLayout = cast(this.layout, IScrollLayout);
-			var result = scrollLayout.getNearestScrollPositionForIndex(displayIndex, this._layoutItems.length, this.viewPort.visibleWidth,
-				this.viewPort.visibleHeight);
-			targetX = result.x;
-			targetY = result.y;
-		} else {
-			var item = this._dataProvider.get(location);
-			var itemRenderer = this.dataToItemRenderer.get(item);
-			if (itemRenderer == null) {
-				return;
-			}
-
-			var maxX = itemRenderer.x;
-			var minX = maxX + itemRenderer.width - this.viewPort.visibleWidth;
-			if (targetX < minX) {
-				targetX = minX;
-			} else if (targetX > maxX) {
-				targetX = maxX;
-			}
-
-			var maxY = itemRenderer.y;
-			var minY = maxY + itemRenderer.height - this.viewPort.visibleHeight;
-			if (targetY < minY) {
-				targetY = minY;
-			} else if (targetY > maxY) {
-				targetY = maxY;
-			}
-		}
-		this.scroller.scrollX = targetX;
-		this.scroller.scrollY = targetY;
+		this._pendingScrollLocation = location;
+		this._pendingScrollDuration = animationDuration;
+		this.setInvalid(SCROLL);
 	}
 
 	/**
@@ -812,6 +783,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		super.update();
 
 		this._previousCustomItemRendererVariant = this.customItemRendererVariant;
+
+		this.handlePendingScroll();
 	}
 
 	override private function refreshScrollerValues():Void {
@@ -1358,6 +1331,60 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this.selectedLocation = this.displayIndexToLocation(result);
 		if (this._selectedLocation != null) {
 			this.scrollToLocation(this._selectedLocation);
+		}
+	}
+
+	private function handlePendingScroll():Void {
+		if (this._pendingScrollLocation == null) {
+			return;
+		}
+		var location = this._pendingScrollLocation;
+		var duration = this._pendingScrollDuration != null ? this._pendingScrollDuration : 0.0;
+		this._pendingScrollLocation = null;
+		this._pendingScrollDuration = null;
+
+		if (this._dataProvider == null || this._dataProvider.getLength() == 0) {
+			return;
+		}
+
+		var targetX = this.scrollX;
+		var targetY = this.scrollY;
+		if (Std.is(this.layout, IScrollLayout)) {
+			var displayIndex = this.locationToDisplayIndex(location, true);
+			var scrollLayout = cast(this.layout, IScrollLayout);
+			var result = scrollLayout.getNearestScrollPositionForIndex(displayIndex, this._layoutItems.length, this.viewPort.visibleWidth,
+				this.viewPort.visibleHeight);
+			targetX = result.x;
+			targetY = result.y;
+		} else {
+			var item = this._dataProvider.get(location);
+			var itemRenderer = this.dataToItemRenderer.get(item);
+			if (itemRenderer == null) {
+				return;
+			}
+
+			var maxX = itemRenderer.x;
+			var minX = maxX + itemRenderer.width - this.viewPort.visibleWidth;
+			if (targetX < minX) {
+				targetX = minX;
+			} else if (targetX > maxX) {
+				targetX = maxX;
+			}
+
+			var maxY = itemRenderer.y;
+			var minY = maxY + itemRenderer.height - this.viewPort.visibleHeight;
+			if (targetY < minY) {
+				targetY = minY;
+			} else if (targetY > maxY) {
+				targetY = maxY;
+			}
+		}
+
+		if (duration == 0.0) {
+			this.scroller.scrollX = targetX;
+			this.scroller.scrollY = targetY;
+		} else {
+			this.scroller.throwTo(targetX, targetY, duration);
 		}
 	}
 
