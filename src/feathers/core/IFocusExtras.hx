@@ -27,7 +27,7 @@ interface IFocusExtras extends IFocusObject {
 
 		May return `null` if there are no extra children.
 
-		 @since 1.0.0
+		@since 1.0.0
 	**/
 	var focusExtrasBefore(get, never):Array<DisplayObject>;
 

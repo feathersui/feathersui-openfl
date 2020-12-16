@@ -15,9 +15,9 @@ import feathers.themes.steel.BaseSteelTheme;
 import feathers.utils.DeviceUtil;
 
 /**
-		 Initialize "steel" styles for the `StackNavigator` component.
+	Initialize "steel" styles for the `StackNavigator` component.
 
-		 @since 1.0.0
+	@since 1.0.0
 **/
 @:dox(hide)
 @:access(feathers.themes.steel.BaseSteelTheme)
