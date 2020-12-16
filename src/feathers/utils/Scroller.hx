@@ -634,36 +634,14 @@ class Scroller extends EventDispatcher {
 		this.completeScroll();
 	}
 
-	private function throwWithVelocity(velocityX:Null<Float>, velocityY:Null<Float>):Void {
-		var targetX:Null<Float> = null;
-		var targetY:Null<Float> = null;
-		if (velocityX != null) {
-			if (Math.abs(velocityX) <= MINIMUM_VELOCITY) {
-				this.finishScrollX();
-			} else {
-				targetX = this._scrollX + this.calculateDistanceFromVelocity(velocityX);
-			}
-		}
-		if (velocityY != null) {
-			if (Math.abs(velocityY) <= MINIMUM_VELOCITY) {
-				this.finishScrollY();
-			} else {
-				targetY = this._scrollY + this.calculateDistanceFromVelocity(velocityY);
-			}
-		}
-		this.throwTo(targetX, targetY, this._fixedThrowDuration);
-	}
-
-	private function calculateDistanceFromVelocity(velocity:Float):Float {
-		return (velocity - MINIMUM_VELOCITY) / this._logDecelerationRate;
-	}
-
 	/**
 		Immediately throws the scroller to the specified position, with optional
 		animation. If you want to throw in only one direction, pass in `null`
 		for the value that you do not want to change.
+
+		@since 1.0.0
 	**/
-	private function throwTo(scrollX:Null<Float>, scrollY:Null<Float>, duration:Null<Float> = null, ease:IEasing = null):Void {
+	public function throwTo(scrollX:Null<Float>, scrollY:Null<Float>, duration:Null<Float> = null, ease:IEasing = null):Void {
 		if (duration == null) {
 			duration = this._fixedThrowDuration;
 		}
@@ -687,7 +665,7 @@ class Scroller extends EventDispatcher {
 					this.startScrollX = this._scrollX;
 					this.targetScrollX = scrollX;
 					this._animateScrollXEase = ease;
-					var tween = Actuate.update((scrollX : Float) -> {
+					var tween = Actuate.update((scrollX:Float) -> {
 						// use the setter
 						this.scrollX = scrollX;
 					}, duration, [this._scrollX], [this.targetScrollX], true);
@@ -716,7 +694,7 @@ class Scroller extends EventDispatcher {
 					this.startScrollY = this._scrollY;
 					this.targetScrollY = scrollY;
 					this._animateScrollYEase = ease;
-					var tween = Actuate.update((scrollY : Float) -> {
+					var tween = Actuate.update((scrollY:Float) -> {
 						// use the setter
 						this.scrollY = scrollY;
 					}, duration, [this._scrollY], [this.targetScrollY], true);
@@ -732,6 +710,30 @@ class Scroller extends EventDispatcher {
 		if (scrollChanged && duration == 0.0) {
 			this.completeScroll();
 		}
+	}
+
+	private function throwWithVelocity(velocityX:Null<Float>, velocityY:Null<Float>):Void {
+		var targetX:Null<Float> = null;
+		var targetY:Null<Float> = null;
+		if (velocityX != null) {
+			if (Math.abs(velocityX) <= MINIMUM_VELOCITY) {
+				this.finishScrollX();
+			} else {
+				targetX = this._scrollX + this.calculateDistanceFromVelocity(velocityX);
+			}
+		}
+		if (velocityY != null) {
+			if (Math.abs(velocityY) <= MINIMUM_VELOCITY) {
+				this.finishScrollY();
+			} else {
+				targetY = this._scrollY + this.calculateDistanceFromVelocity(velocityY);
+			}
+		}
+		this.throwTo(targetX, targetY, this._fixedThrowDuration);
+	}
+
+	private function calculateDistanceFromVelocity(velocity:Float):Float {
+		return (velocity - MINIMUM_VELOCITY) / this._logDecelerationRate;
 	}
 
 	private function refreshAnimateScrollXEndRatio():Void {
