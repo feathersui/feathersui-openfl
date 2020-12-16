@@ -359,11 +359,15 @@ class Callout extends FeathersControl {
 			throw new ArgumentError("origin must be added to the stage.");
 		}
 		if (this._origin != null) {
+			this._origin.removeEventListener(Event.REMOVED_FROM_STAGE, callout_origin_removedFromStageHandler);
 			this.removeEventListener(Event.ENTER_FRAME, callout_enterFrameHandler);
 		}
 		this._origin = value;
-		if (this._origin != null && this.stage != null) {
-			this.addEventListener(Event.ENTER_FRAME, callout_enterFrameHandler);
+		if (this._origin != null) {
+			this._origin.addEventListener(Event.REMOVED_FROM_STAGE, callout_origin_removedFromStageHandler);
+			if (this.stage != null) {
+				this.addEventListener(Event.ENTER_FRAME, callout_enterFrameHandler);
+			}
 		}
 		this._lastPopUpOriginBounds = null;
 		this.setInvalid(INVALIDATION_FLAG_ORIGIN);
@@ -1220,6 +1224,10 @@ class Callout extends FeathersControl {
 
 	private function callout_enterFrameHandler(event:Event):Void {
 		this.positionRelativeToOrigin();
+	}
+
+	private function callout_origin_removedFromStageHandler(event:Event):Void {
+		this.close();
 	}
 
 	private function callout_content_resizeHandler(event:Event):Void {
