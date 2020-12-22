@@ -32,7 +32,6 @@ import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelTreeViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
-import openfl._internal.utils.ObjectPool;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
@@ -43,6 +42,11 @@ import openfl.events.TouchEvent;
 import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
+#end
+#if (openfl >= "9.1.0")
+import openfl.utils.ObjectPool;
+#else
+import openfl._internal.utils.ObjectPool;
 #end
 
 /**

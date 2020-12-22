@@ -16,7 +16,11 @@ import openfl.events.IEventDispatcher;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 #if !flash
+#if (openfl >= "9.1.0")
+import openfl.utils.ObjectPool;
+#else
 import openfl._internal.utils.ObjectPool;
+#end
 #end
 
 /**

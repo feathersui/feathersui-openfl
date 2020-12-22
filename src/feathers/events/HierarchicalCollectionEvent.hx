@@ -12,7 +12,11 @@ import openfl.events.EventType;
 import openfl.events.Event;
 import openfl.events.IEventDispatcher;
 #if !flash
+#if (openfl >= "9.1.0")
+import openfl.utils.ObjectPool;
+#else
 import openfl._internal.utils.ObjectPool;
+#end
 #end
 
 /**
