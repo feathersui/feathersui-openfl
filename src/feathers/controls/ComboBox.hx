@@ -75,6 +75,7 @@ import openfl.ui.Multitouch;
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
+@:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
@@ -899,6 +900,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_listView_itemTriggerHandler(event:ListViewEvent):Void {
+		this.dispatchEvent(event);
 		if (!this.popUpAdapter.persistent) {
 			this.closeListView();
 		}
