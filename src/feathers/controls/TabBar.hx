@@ -666,7 +666,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (Std.is(tab, IUIControl)) {
-			var uiControl = cast(tab, IToggle);
+			var uiControl = cast(tab, IUIControl);
 			uiControl.enabled = state.enabled;
 		}
 		if (Std.is(tab, IDataRenderer)) {
