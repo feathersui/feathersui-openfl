@@ -256,7 +256,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	private var _previousCustomTabVariant:String = null;
 
 	/**
-		A custom variant to set on all item renderers.
+		A custom variant to set on all tabs.
 
 		@see `TabBar.CHILD_VARIANT_TAB`
 
