@@ -8,6 +8,7 @@
 
 package feathers.themes.steel;
 
+import feathers.themes.steel.components.SteelButtonBarStyles;
 import feathers.themes.steel.components.SteelApplicationStyles;
 import feathers.themes.steel.components.SteelButtonStyles;
 import feathers.themes.steel.components.SteelCalendarGridStyles;
@@ -67,6 +68,7 @@ class SteelTheme extends BaseSteelTheme {
 
 		SteelApplicationStyles.initialize(this);
 		SteelButtonStyles.initialize(this);
+		SteelButtonBarStyles.initialize(this);
 		SteelCalendarGridStyles.initialize(this);
 		SteelCalloutStyles.initialize(this);
 		SteelCheckStyles.initialize(this);

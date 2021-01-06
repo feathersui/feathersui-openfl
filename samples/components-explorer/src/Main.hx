@@ -1,5 +1,6 @@
 import com.feathersui.components.ViewPaths;
 import com.feathersui.components.views.AssetLoaderScreen;
+import com.feathersui.components.views.ButtonBarScreen;
 import com.feathersui.components.views.ButtonScreen;
 import com.feathersui.components.views.CalloutScreen;
 import com.feathersui.components.views.CheckScreen;
@@ -57,6 +58,9 @@ class Main extends Application {
 
 		var button = Route.withClass(ViewPaths.BUTTON, ButtonScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(button);
+
+		var buttonBar = Route.withClass(ViewPaths.BUTTON_BAR, ButtonBarScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(buttonBar);
 
 		var callout = Route.withClass(ViewPaths.CALLOUT, CalloutScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(callout);

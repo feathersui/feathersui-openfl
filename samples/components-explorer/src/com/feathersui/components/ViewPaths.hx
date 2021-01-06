@@ -4,6 +4,7 @@ class ViewPaths {
 	public static final MAIN_MENU = "/";
 	public static final ASSET_LOADER = "/asset-loader";
 	public static final BUTTON = "/button";
+	public static final BUTTON_BAR = "/button-bar";
 	public static final CALLOUT = "/callout";
 	public static final CHECK = "/check";
 	public static final COMBO_BOX = "/combo-box";

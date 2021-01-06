@@ -29,6 +29,7 @@ class MainMenu extends Panel {
 			// @formatter:off
 			new MenuItem("Asset Loader", ViewPaths.ASSET_LOADER),
 			new MenuItem("Button", ViewPaths.BUTTON),
+			new MenuItem("Button Bar", ViewPaths.BUTTON_BAR),
 			new MenuItem("Callout", ViewPaths.CALLOUT),
 			new MenuItem("Check", ViewPaths.CHECK),
 			new MenuItem("Combo Box", ViewPaths.COMBO_BOX),
