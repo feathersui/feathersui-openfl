@@ -375,6 +375,23 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	@:style
 	public var wordWrap:Bool = false;
 
+	private var _customTextWidth:Null<Float> = null;
+
+	private var customTextWidth(get, set):Null<Float>;
+
+	private function get_customTextWidth():Null<Float> {
+		return this._customTextWidth;
+	}
+
+	private function set_customTextWidth(value:Null<Float>):Null<Float> {
+		if (this._customTextWidth == value) {
+			return this._customTextWidth;
+		}
+		this._customTextWidth = value;
+		this.setInvalid(SIZE);
+		return this._customTextWidth;
+	}
+
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 
@@ -434,6 +451,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	**/
 	@:style
 	public var textPosition:RelativePosition = TOP;
+
+	public function getTextMeasuredWidth():Float {
+		return this._textMeasuredWidth;
+	}
 
 	private function initializeFormItemTheme():Void {
 		SteelFormItemStyles.initialize();
@@ -518,7 +539,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			newWidth = this._textMeasuredWidth;
+			if (this._customTextWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+				newWidth = this._customTextWidth;
+			}
+			newWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentContent != null) {
 				if (this.textPosition == LEFT || this.textPosition == RIGHT) {
 					newWidth += this.gap + this._currentContent.width;
@@ -549,7 +574,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = this._textMeasuredWidth + this.paddingLeft + this.paddingRight;
+			newMinWidth = this._textMeasuredWidth;
+			if (this._customTextWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+				newMinWidth = this._customTextWidth;
+			}
+			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentContent != null) {
 				if (this.textPosition == LEFT || this.textPosition == RIGHT) {
 					if (measureContent != null) {
@@ -788,6 +817,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		var maxBaseline = Math.max(contentBaseline, textFieldBaseline);
 
 		var textFieldWidth = this._textMeasuredWidth;
+		if (this._customTextWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+			textFieldWidth = this._customTextWidth;
+		}
 		var textFieldHeight = this._textMeasuredHeight;
 		var maxWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		if (this.textPosition == LEFT || this.textPosition == RIGHT) {
@@ -839,7 +871,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 					this._currentContent.x = this.paddingLeft;
 					this._currentContent.y = this.paddingTop;
 				case LEFT:
-					this._currentContent.x = this.textField.x + this._textMeasuredWidth + this.gap;
+					this._currentContent.x = this.textField.x + textFieldWidth + this.gap;
 					this._currentContent.y = this.paddingTop + (maxBaseline - contentBaseline);
 					var remainingWidth = maxWidth - textFieldWidth;
 					if (this._currentContent.width > remainingWidth) {
