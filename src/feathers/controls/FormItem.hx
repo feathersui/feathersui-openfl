@@ -15,8 +15,10 @@ import feathers.core.IMeasureObject;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
+import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelFormItemStyles;
@@ -358,6 +360,46 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	**/
 	@:style
 	public var gap:Float = 0.0;
+
+	/**
+		How the `content` is positioned horizontally (along the x-axis) within
+		the available space next to the form item's text.
+
+		The following example aligns the form item's content to the right:
+
+		```hx
+		formItem.verticalAlign = RIGHT;
+		```
+
+		@see `feathers.layout.HorizontalAlign.LEFT`
+		@see `feathers.layout.HorizontalAlign.CENTER`
+		@see `feathers.layout.HorizontalAlign.RIGHT`
+		@see `feathers.layout.HorizontalAlign.JUSTIFY`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var horizontalAlign:HorizontalAlign = LEFT;
+
+	/**
+		How the `content` is positioned vertically (along the y-axis) within the
+		available space next to the form item's text.
+
+		The following example aligns the form item's content to the bottom:
+
+		```hx
+		formItem.verticalAlign = BOTTOM;
+		```
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+		@see `feathers.layout.VerticalAlign.JUSTIFY`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var verticalAlign:VerticalAlign = TOP;
 
 	/**
 		Determines if the text is displayed on a single line, or if it wraps.
@@ -809,46 +851,41 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	private function layoutContent():Void {
 		this.layoutBackgroundSkin();
 
-		var textFieldBaseline = this.textField.getLineMetrics(0).ascent;
-		var contentBaseline = textFieldBaseline;
-		if (Std.is(this._currentContent, ITextControl)) {
-			contentBaseline = cast(this._content, ITextControl).baseline;
-		}
-		var maxBaseline = Math.max(contentBaseline, textFieldBaseline);
-
 		var textFieldWidth = this._textMeasuredWidth;
 		if (this._customTextWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
 			textFieldWidth = this._customTextWidth;
 		}
 		var textFieldHeight = this._textMeasuredHeight;
-		var maxWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		var remainingWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		if (this.textPosition == LEFT || this.textPosition == RIGHT) {
-			maxWidth -= this.gap;
+			remainingWidth -= this.gap;
 		}
-		if (textFieldWidth > maxWidth) {
-			textFieldWidth = maxWidth;
+		if (textFieldWidth > remainingWidth) {
+			textFieldWidth = remainingWidth;
 		}
-		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		var remainingHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 		if (this.textPosition != LEFT && this.textPosition != RIGHT) {
-			maxHeight -= this.gap;
+			remainingHeight -= this.gap;
 		}
-		if (textFieldHeight > maxHeight) {
-			textFieldHeight = maxHeight;
+		if (textFieldHeight > remainingHeight) {
+			textFieldHeight = remainingHeight;
 		}
 
 		switch (this.textPosition) {
 			case TOP:
 				this.textField.x = this.paddingLeft;
 				this.textField.y = this.paddingTop;
+				remainingHeight -= textFieldHeight;
+			case RIGHT:
+				this.textField.x = this.actualWidth - textFieldWidth - this.paddingRight;
+				remainingWidth -= textFieldWidth;
 			case BOTTOM:
 				this.textField.x = this.paddingLeft;
 				this.textField.y = this.actualHeight - textFieldHeight - this.paddingBottom;
-			case RIGHT:
-				this.textField.x = this.actualWidth - textFieldWidth - this.paddingRight;
-				this.textField.y = this.paddingTop + (maxBaseline - textFieldBaseline);
+				remainingHeight -= textFieldHeight;
 			case LEFT:
 				this.textField.x = this.paddingLeft;
-				this.textField.y = this.paddingTop + (maxBaseline - textFieldBaseline);
+				remainingWidth -= textFieldWidth;
 			default:
 				throw new ArgumentError("Unknown text position: " + this.textPosition);
 		}
@@ -856,29 +893,65 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		this.textField.height = textFieldHeight;
 
 		if (this._currentContent != null) {
+			var contentStartX = this.paddingLeft;
+			var contentStartY = this.paddingRight;
 			switch (this.textPosition) {
 				case TOP:
-					this._currentContent.x = this.paddingLeft;
-					this._currentContent.y = this.textField.y + textFieldHeight + this.gap;
+					contentStartY = this.textField.y + textFieldHeight + this.gap;
 				case RIGHT:
-					this._currentContent.x = this.paddingLeft;
-					this._currentContent.y = this.paddingTop + (maxBaseline - contentBaseline);
-					var remainingWidth = maxWidth - textFieldWidth;
-					if (this._currentContent.width > remainingWidth) {
-						this._currentContent.width = remainingWidth;
-					}
 				case BOTTOM:
-					this._currentContent.x = this.paddingLeft;
-					this._currentContent.y = this.paddingTop;
 				case LEFT:
-					this._currentContent.x = this.textField.x + textFieldWidth + this.gap;
-					this._currentContent.y = this.paddingTop + (maxBaseline - contentBaseline);
-					var remainingWidth = maxWidth - textFieldWidth;
-					if (this._currentContent.width > remainingWidth) {
-						this._currentContent.width = remainingWidth;
-					}
+					contentStartX = this.textField.x + textFieldWidth + this.gap;
 				default:
 					throw new ArgumentError("Unknown text position: " + this.textPosition);
+			}
+			if (this._currentContent.width > remainingWidth) {
+				this._currentContent.width = remainingWidth;
+			}
+			if (this._currentContent.height > remainingHeight) {
+				this._currentContent.height = remainingHeight;
+			}
+			switch (this.horizontalAlign) {
+				case LEFT:
+					this._currentContent.x = contentStartX;
+				case CENTER:
+					this._currentContent.x = contentStartX + (remainingWidth - this._currentContent.width) / 2.0;
+				case RIGHT:
+					this._currentContent.x = contentStartX + remainingWidth - this._currentContent.width;
+				case JUSTIFY:
+					this._currentContent.x = contentStartX;
+					this._currentContent.width = remainingWidth;
+				default:
+					throw new ArgumentError("Unknown horizontal align: " + this.horizontalAlign);
+			}
+			switch (this.verticalAlign) {
+				case TOP:
+					this._currentContent.y = contentStartY;
+				case MIDDLE:
+					this._currentContent.y = contentStartY + (remainingHeight - this._currentContent.height) / 2.0;
+				case BOTTOM:
+					this._currentContent.y = contentStartY + remainingHeight - this._currentContent.height;
+				case JUSTIFY:
+					this._currentContent.y = contentStartY;
+					this._currentContent.height = remainingHeight;
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+			}
+		}
+
+		if (this.textPosition == LEFT || this.textPosition == RIGHT) {
+			var textFieldBaseline = this.textField.getLineMetrics(0).ascent;
+			var contentBaseline = textFieldBaseline;
+			if (Std.is(this._currentContent, ITextControl)) {
+				contentBaseline = cast(this._currentContent, ITextControl).baseline;
+			}
+			var maxBaseline = Math.max(contentBaseline, textFieldBaseline);
+
+			var startY = (this._currentContent != null) ? this._currentContent.y : this.paddingTop;
+
+			this.textField.y = startY + (maxBaseline - textFieldBaseline);
+			if (this._currentContent != null) {
+				this._currentContent.y = startY + (maxBaseline - contentBaseline);
 			}
 		}
 	}
