@@ -161,7 +161,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		is customized:
 
 		```hx
-		button.secondaryTextFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		itemRenderer.secondaryTextFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
 		@see `ToggleButton.secondaryText`
@@ -172,15 +172,15 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	public var secondaryTextFormat:AbstractTextFormat = null;
 
 	/**
-		The font styles used to render the button's secondary text when the
-		button is disabled.
+		The font styles used to render the item renderer's secondary text when
+		the item renderer is disabled.
 
-		In the following example, the button's secondary disabled text
+		In the following example, the item renderer's secondary disabled text
 		formatting is customized:
 
 		```hx
-		button.enabled = false;
-		button.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		itemRenderer.enabled = false;
+		itemRenderer.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
 
 		The next example sets a disabled secondary text format, but also
@@ -188,8 +188,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		that will be used instead of the disabled secondary text format:
 
 		```hx
-		button.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
-		button.setSecondaryTextFormatForState(ToggleButtonState.DISABLED(true), new TextFormat("Helvetica", 20, 0xff0000));
+		itemRenderer.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		itemRenderer.setSecondaryTextFormatForState(ToggleButtonState.DISABLED(true), new TextFormat("Helvetica", 20, 0xff0000));
 		```
 
 		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
@@ -205,15 +205,15 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	public var disabledSecondaryTextFormat:AbstractTextFormat = null;
 
 	/**
-		The font styles used to render the button's secondary text when the
-		button is selected.
+		The font styles used to render the item renderer's secondary text when
+		the item renderer is selected.
 
-		In the following example, the button's selected secondary text
+		In the following example, the item renderer's selected secondary text
 		formatting is customized:
 
 		```hx
-		button.selected = true;
-		button.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
+		itemRenderer.selected = true;
+		itemRenderer.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
 		```
 
 		The next example sets a selected secondary text format, but also
@@ -221,8 +221,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		will be used instead of the selected secondary text format:
 
 		```hx
-		button.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
-		button.setSecondaryTextFormatForState(ToggleButtonState.DOWN(true), new TextFormat("Helvetica", 20, 0xcc0000));
+		itemRenderer.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
+		itemRenderer.setSecondaryTextFormatForState(ToggleButtonState.DOWN(true), new TextFormat("Helvetica", 20, 0xcc0000));
 		```
 
 		Note: If the current state is `ToggleButtonState.DISABLED(true)`, and
@@ -262,7 +262,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	private var _stateToSecondaryTextFormat:Map<ToggleButtonState, AbstractTextFormat> = new Map();
 
 	/**
-		Gets the secondary text format to be used by the button when its
+		Gets the secondary text format to be used by the item renderer when its
 		`currentState` property matches the specified state value.
 
 		If a secondary text format is not defined for a specific state, returns
@@ -280,7 +280,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	}
 
 	/**
-		Set the secondary text format to be used by the button when its
+		Set the secondary text format to be used by the item renderer when its
 		`currentState` property matches the specified state value.
 
 		If a secondary text format is not defined for a specific state, the
