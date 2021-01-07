@@ -111,6 +111,19 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		return this._text;
 	}
 
+	/**
+		@see `feathers.controls.ITextControl.baseline`
+	**/
+	@:flash.property
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.textField == null) {
+			return 0.0;
+		}
+		return this.textField.y + this.textField.getLineMetrics(0).ascent;
+	}
+
 	private var _stateToIcon:Map<ToggleButtonState, DisplayObject> = new Map();
 	private var _iconMeasurements:Measurements = null;
 	private var _currentIcon:DisplayObject = null;

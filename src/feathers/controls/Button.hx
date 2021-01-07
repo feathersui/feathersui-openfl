@@ -152,6 +152,19 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	/**
+		@see `feathers.controls.ITextControl.baseline`
+	**/
+	@:flash.property
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.textField == null) {
+			return 0.0;
+		}
+		return this.textField.y + this.textField.getLineMetrics(0).ascent;
+	}
+
+	/**
 		The font styles used to render the button's text.
 
 		In the following example, the button's text formatting is customized:

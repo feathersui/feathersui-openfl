@@ -196,6 +196,19 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._text;
 	}
 
+	/**
+		@see `feathers.controls.ITextControl.baseline`
+	**/
+	@:flash.property
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.textFieldViewPort == null) {
+			return 0.0;
+		}
+		return this.paddingTop + this.textFieldViewPort.baseline;
+	}
+
 	private var _prompt:String;
 
 	/**

@@ -114,6 +114,19 @@ class TextCallout extends Callout implements ITextControl {
 	}
 
 	/**
+		@see `feathers.controls.ITextControl.baseline`
+	**/
+	@:flash.property
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.label == null) {
+			return 0.0;
+		}
+		return this.label.y + this.label.baseline;
+	}
+
+	/**
 		The font styles used to render the text callout's text.
 
 		In the following example, the text callout's formatting is customized:

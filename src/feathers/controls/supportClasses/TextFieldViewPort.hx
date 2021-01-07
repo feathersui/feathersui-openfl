@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.core.ITextControl;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
@@ -28,7 +29,7 @@ import openfl.text.TextLineMetrics;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class TextFieldViewPort extends FeathersControl implements IViewPort {
+class TextFieldViewPort extends FeathersControl implements IViewPort implements ITextControl {
 	public function new() {
 		super();
 
@@ -84,6 +85,19 @@ class TextFieldViewPort extends FeathersControl implements IViewPort {
 		this.setInvalid(DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._text;
+	}
+
+	/**
+		@see `feathers.controls.ITextControl.baseline`
+	**/
+	@:flash.property
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.textField == null) {
+			return 0.0;
+		}
+		return this.textField.y + this.textField.getLineMetrics(0).ascent;
 	}
 
 	private var _wordWrap:Bool = false;
