@@ -8,15 +8,17 @@
 
 package feathers.controls;
 
-import feathers.core.IStateObserver;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.TextFieldViewPort;
+import feathers.core.IStageFocusDelegate;
 import feathers.core.IStateContext;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.events.FeathersEvent;
 import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelTextAreaStyles;
 import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -47,7 +49,7 @@ import openfl.ui.Keyboard;
 @:meta(DefaultProperty("text"))
 @defaultXmlProperty("text")
 @:styleContext
-class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl {
+class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl implements IStageFocusDelegate {
 	/**
 		Creates a new `TextArea` object.
 
@@ -513,6 +515,16 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	override private function get_measureViewPort():Bool {
 		return false;
+	}
+
+	@:flash.property
+	public var stageFocusTarget(get, never):InteractiveObject;
+
+	private function get_stageFocusTarget():InteractiveObject {
+		if (this.textFieldViewPort == null) {
+			return null;
+		}
+		return this.textFieldViewPort.stageFocusTarget;
 	}
 
 	private var _stateToSkin:Map<TextInputState, DisplayObject> = new Map();

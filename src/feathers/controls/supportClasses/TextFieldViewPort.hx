@@ -8,11 +8,10 @@
 
 package feathers.controls.supportClasses;
 
-import feathers.core.ITextControl;
 import feathers.core.FeathersControl;
-import feathers.core.InvalidationFlag;
+import feathers.core.ITextControl;
 import feathers.events.FeathersEvent;
-import feathers.utils.MathUtil;
+import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
@@ -365,6 +364,13 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		this._paddingLeft = value;
 		this.setInvalid(STYLES);
 		return this._paddingLeft;
+	}
+
+	@:flash.property
+	public var stageFocusTarget(get, never):InteractiveObject;
+
+	private function get_stageFocusTarget():InteractiveObject {
+		return this.textField;
 	}
 
 	private var _actualMinVisibleWidth:Float = 0.0;

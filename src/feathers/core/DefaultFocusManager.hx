@@ -22,11 +22,12 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
-import openfl.system.Capabilities;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
 #if (html5 && openfl < "9.0.0")
 import openfl.events.KeyboardEvent;
+#else
+import flash.system.Capabilities;
 #end
 
 /**
@@ -64,7 +65,7 @@ class DefaultFocusManager implements IFocusManager {
 		if (this._focus != null && this._root.stage != null) {
 			if (this._enabled) {
 				this._focus.showFocus(true);
-				this._root.stage.focus = cast(this._focus, InteractiveObject);
+				this.setStageFocus(cast(this._focus, InteractiveObject));
 			} else {
 				this._focus.showFocus(false);
 				if (this._root.stage.focus == cast(this._focus, InteractiveObject)) {
@@ -148,7 +149,7 @@ class DefaultFocusManager implements IFocusManager {
 				// in some cases, the stage focus seems to get cleared, so even
 				// though our focus hasn't changed, we should still pass it to the
 				// stage
-				this._root.stage.focus = cast(value, InteractiveObject);
+				this.setStageFocus(cast(value, InteractiveObject));
 			}
 			return this._focus;
 		}
@@ -165,7 +166,7 @@ class DefaultFocusManager implements IFocusManager {
 			}
 		}
 		if (this._enabled && this._root.stage != null) {
-			this._root.stage.focus = cast(value, InteractiveObject);
+			this.setStageFocus(cast(value, InteractiveObject));
 		}
 		return this._focus;
 	}
@@ -498,6 +499,16 @@ class DefaultFocusManager implements IFocusManager {
 		return null;
 	}
 
+	private function setStageFocus(value:InteractiveObject):Void {
+		if (Std.is(value, IStageFocusDelegate)) {
+			var newFocusTarget = cast(value, IStageFocusDelegate).stageFocusTarget;
+			if (newFocusTarget != null) {
+				value = newFocusTarget;
+			}
+		}
+		this._root.stage.focus = value;
+	}
+
 	private function handleRootAddedToStage(root:DisplayObject):Void {
 		var stage = this.root.stage;
 		if (stage == null) {
@@ -691,7 +702,7 @@ class DefaultFocusManager implements IFocusManager {
 		}
 		if (this._focus != null && this._root.stage != null) {
 			if (this.isValidFocus(this._focus)) {
-				this._root.stage.focus = cast(this._focus, InteractiveObject);
+				this.setStageFocus(cast(this._focus, InteractiveObject));
 				this._focus.showFocus(true);
 			} else {
 				// if it's no longer valid focus, for some reason, clear it

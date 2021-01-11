@@ -8,11 +8,11 @@
 
 package feathers.controls;
 
-import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
-import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
+import feathers.core.IStageFocusDelegate;
 import feathers.core.IStateContext;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -24,6 +24,7 @@ import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelTextInputStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -56,7 +57,7 @@ import openfl.ui.Keyboard;
 @:meta(DefaultProperty("text"))
 @defaultXmlProperty("text")
 @:styleContext
-class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl implements IFocusObject {
+class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl implements IStageFocusDelegate {
 	/**
 		A variant used to style the text input as a search box. Variants allow
 		themes to provide an assortment of different appearances for the same
@@ -120,6 +121,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._editable = value;
 		this.setInvalid(STATE);
 		return this._editable;
+	}
+
+	@:flash.property
+	public var stageFocusTarget(get, never):InteractiveObject;
+
+	private function get_stageFocusTarget():InteractiveObject {
+		return this.textField;
 	}
 
 	private var _currentState:TextInputState = ENABLED;
