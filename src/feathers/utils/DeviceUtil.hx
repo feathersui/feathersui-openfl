@@ -13,7 +13,7 @@ import js.html.Window;
 import js.Lib;
 #end
 #if flash
-import flash.ui.Mouse;
+import openfl.ui.Mouse;
 #end
 
 /**

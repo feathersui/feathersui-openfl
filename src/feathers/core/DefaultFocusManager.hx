@@ -27,7 +27,7 @@ import openfl.ui.Keyboard;
 #if (html5 && openfl < "9.0.0")
 import openfl.events.KeyboardEvent;
 #else
-import flash.system.Capabilities;
+import openfl.system.Capabilities;
 #end
 
 /**
