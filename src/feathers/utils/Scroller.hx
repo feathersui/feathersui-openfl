@@ -789,7 +789,9 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function calculateMinAndMax():Void {
+		var oldMinScrollX = this._minScrollX;
 		var oldMaxScrollX = this._maxScrollX;
+		var oldMinScrollY = this._minScrollY;
 		var oldMaxScrollY = this._maxScrollY;
 		this._minScrollX = 0.0;
 		this._minScrollY = 0.0;
@@ -803,17 +805,19 @@ class Scroller extends EventDispatcher {
 		}
 		if (!this._scrolling) {
 			var scrollChanged = false;
-			if (this._scrollX < this._minScrollX) {
+			// by checking for the minimum or maximum changing, ensures that
+			// scrollX/Y can be set out of range on purpose
+			if (oldMinScrollX != this._minScrollX && this._scrollX < this._minScrollX) {
 				this._scrollX = this._minScrollX;
 				scrollChanged = true;
-			} else if (this._scrollX > this._maxScrollX) {
+			} else if (oldMaxScrollX != this._maxScrollX && this._scrollX > this._maxScrollX) {
 				this._scrollX = this._maxScrollX;
 				scrollChanged = true;
 			}
-			if (this._scrollY < this._minScrollY) {
+			if (oldMinScrollY != this._minScrollY && this._scrollY < this._minScrollY) {
 				this._scrollY = this._minScrollY;
 				scrollChanged = true;
-			} else if (this._scrollY > this._maxScrollY) {
+			} else if (oldMaxScrollY != this._maxScrollY && this._scrollY > this._maxScrollY) {
 				this._scrollY = this._maxScrollY;
 				scrollChanged = true;
 			}
