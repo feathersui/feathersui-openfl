@@ -797,10 +797,10 @@ class Scroller extends EventDispatcher {
 		this._minScrollY = 0.0;
 		this._maxScrollX = Math.max(this._contentWidth, this._visibleWidth) - this._visibleWidth;
 		this._maxScrollY = Math.max(this._contentHeight, this._visibleHeight) - this._visibleHeight;
-		if (oldMaxScrollX != this._maxScrollX) {
+		if (oldMinScrollX != this._minScrollX || oldMaxScrollX != this._maxScrollX) {
 			this.refreshAnimateScrollXEndRatio();
 		}
-		if (oldMaxScrollY != this._maxScrollY) {
+		if (oldMinScrollY != this._minScrollY || oldMaxScrollY != this._maxScrollY) {
 			this.refreshAnimateScrollYEndRatio();
 		}
 		if (!this._scrolling) {
