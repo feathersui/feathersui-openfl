@@ -230,6 +230,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var scrollBarX:IScrollBar;
 	private var scrollBarY:IScrollBar;
 
+	private var _ignoreScrollBarXChange:Bool = false;
+	private var _ignoreScrollBarYChange:Bool = false;
+
 	/**
 		Determines if the scroll bars are fixed to the edges of the container,
 		without overlapping the container's content, or if the scroll bars are
@@ -1220,6 +1223,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function refreshScrollBarValues():Void {
 		if (this.scrollBarX != null) {
+			// ignore change events that we cause because it could affect how
+			// elasticity works in the scroller
+			var oldIgnoreScrollBarXChange = this._ignoreScrollBarXChange;
+			this._ignoreScrollBarXChange = true;
 			this.scrollBarX.minimum = this.scroller.minScrollX;
 			this.scrollBarX.maximum = this.scroller.maxScrollX;
 			this.scrollBarX.value = this.scroller.scrollX;
@@ -1232,8 +1239,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 				// have been hidden, and we need to show them again
 				this.scrollBarX.alpha = 1.0;
 			}
+			this._ignoreScrollBarXChange = oldIgnoreScrollBarXChange;
 		}
 		if (this.scrollBarY != null) {
+			// ignore change events that we cause because it could affect how
+			// elasticity works in the scroller
+			var oldIgnoreScrollBarYChange = this._ignoreScrollBarYChange;
+			this._ignoreScrollBarYChange = true;
 			this.scrollBarY.minimum = this.scroller.minScrollY;
 			this.scrollBarY.maximum = this.scroller.maxScrollY;
 			this.scrollBarY.value = this.scroller.scrollY;
@@ -1246,6 +1258,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 				// have been hidden, and we need to show them again
 				this.scrollBarY.alpha = 1.0;
 			}
+			this._ignoreScrollBarYChange = oldIgnoreScrollBarYChange;
 		}
 	}
 
@@ -1564,7 +1577,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarX.alpha = 0.0;
 			return;
 		}
-		var tween = Actuate.update((alpha : Float) -> {
+		var tween = Actuate.update((alpha:Float) -> {
 			this.scrollBarX.alpha = alpha;
 		}, this.hideScrollBarDuration, [this.scrollBarX.alpha], [0.0], true);
 		this._hideScrollBarX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
@@ -1585,7 +1598,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarY.alpha = 0.0;
 			return;
 		}
-		var tween = Actuate.update((alpha : Float) -> {
+		var tween = Actuate.update((alpha:Float) -> {
 			this.scrollBarY.alpha = alpha;
 		}, this.hideScrollBarDuration, [this.scrollBarY.alpha], [0.0], true);
 		this._hideScrollBarY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
@@ -1747,10 +1760,16 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function scrollBarX_changeHandler(event:Event):Void {
+		if (this._ignoreScrollBarXChange) {
+			return;
+		}
 		this.scroller.scrollX = this.scrollBarX.value;
 	}
 
 	private function scrollBarY_changeHandler(event:Event):Void {
+		if (this._ignoreScrollBarYChange) {
+			return;
+		}
 		this.scroller.scrollY = this.scrollBarY.value;
 	}
 
