@@ -1067,20 +1067,31 @@ class Scroller extends EventDispatcher {
 		if (canDragX) {
 			scrollX -= touchOffsetX;
 			if (this.elasticEdges) {
+				var minElasticScrollX = this._minScrollX;
+				if (minElasticScrollX > this.startScrollX) {
+					minElasticScrollX = this.startScrollX;
+				}
+				var maxElasticScrollX = this._maxScrollX;
+				if (maxElasticScrollX < this.startScrollX) {
+					maxElasticScrollX = this.startScrollX;
+				}
 				if (scrollX < this._minScrollX) {
 					if (this._maxScrollX > this._minScrollX || this.forceElasticLeft) {
-						scrollX = scrollX - (scrollX - this._minScrollX) * (1.0 - this.elasticity);
+						scrollX = scrollX - (scrollX - minElasticScrollX) * (1.0 - this.elasticity);
 					} else {
+						// not elastic
 						scrollX = this._minScrollX;
 					}
 				} else if (scrollX > this._maxScrollX) {
 					if (this._maxScrollX > this._minScrollX || this.forceElasticRight) {
-						scrollX = scrollX - (scrollX - this._maxScrollX) * (1.0 - this.elasticity);
+						scrollX = scrollX - (scrollX - maxElasticScrollX) * (1.0 - this.elasticity);
 					} else {
+						// not elastic
 						scrollX = this._maxScrollX;
 					}
 				}
 			} else {
+				// not elastic
 				if (scrollX < this._minScrollX) {
 					scrollX = this._minScrollX;
 				} else if (scrollX > this._maxScrollX) {
@@ -1092,20 +1103,31 @@ class Scroller extends EventDispatcher {
 		if (canDragY) {
 			scrollY -= touchOffsetY;
 			if (this.elasticEdges) {
+				var minElasticScrollY = this._minScrollY;
+				if (minElasticScrollY > this.startScrollY) {
+					minElasticScrollY = this.startScrollY;
+				}
+				var maxElasticScrollY = this._maxScrollY;
+				if (maxElasticScrollY < this.startScrollY) {
+					maxElasticScrollY = this.startScrollY;
+				}
 				if (scrollY < this._minScrollY) {
 					if (this._maxScrollY > this._minScrollY || this.forceElasticTop) {
-						scrollY = scrollY - (scrollY - this._minScrollY) * (1.0 - this.elasticity);
+						scrollY = scrollY - (scrollY - minElasticScrollY) * (1.0 - this.elasticity);
 					} else {
+						// not elastic
 						scrollY = this._minScrollY;
 					}
 				} else if (scrollY > this._maxScrollY) {
 					if (this._maxScrollY > this._minScrollY || this.forceElasticBottom) {
-						scrollY = scrollY - (scrollY - this._maxScrollY) * (1.0 - this.elasticity);
+						scrollY = scrollY - (scrollY - maxElasticScrollY) * (1.0 - this.elasticity);
 					} else {
+						// not elastic
 						scrollY = this._maxScrollY;
 					}
 				}
 			} else {
+				// not elastic
 				if (scrollY < this._minScrollY) {
 					scrollY = this._minScrollY;
 				} else if (scrollY > this._maxScrollY) {
