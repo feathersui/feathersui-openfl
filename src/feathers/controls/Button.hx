@@ -1116,6 +1116,8 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
 			return;
 		}
+		// ensure that other components cannot use this key event
+		event.preventDefault();
 		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 	}
 

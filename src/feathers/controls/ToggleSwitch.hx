@@ -517,7 +517,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 
 		if (this._animateSelectionChange) {
-			var tween = Actuate.update((x : Float) -> {
+			var tween = Actuate.update((x:Float) -> {
 				this.thumbSkin.x = x;
 			}, this.toggleDuration, [this.thumbSkin.x], [xPosition], true);
 			this._toggleTween = cast(tween, SimpleActuator<Dynamic, Dynamic>);
@@ -573,6 +573,8 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
 			return;
 		}
+		// ensure that other components cannot use this key event
+		event.preventDefault();
 		this.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 	}
 
