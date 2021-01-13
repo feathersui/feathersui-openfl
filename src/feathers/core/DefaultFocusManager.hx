@@ -126,6 +126,10 @@ class DefaultFocusManager implements IFocusManager {
 	private function get_focusPane():DisplayObjectContainer {
 		if (this._focusPane == null) {
 			this._focusPane = new Sprite();
+			this._focusPane.mouseEnabled = false;
+			this._focusPane.mouseChildren = false;
+			this._focusPane.tabEnabled = false;
+			this._focusPane.tabChildren = false;
 			PopUpManager.forStage(this._root.stage).addPopUp(this._focusPane, false, false);
 		}
 		return this._focusPane;
