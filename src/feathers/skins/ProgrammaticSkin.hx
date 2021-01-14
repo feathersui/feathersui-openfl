@@ -74,10 +74,14 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 
 	/**
 		An optional `IStateContext` that is used to change the styles of the
-		skin when its state changes. May be different than `uiContext`.
+		skin when its state changes. Often refers to the same object as
+		`uiContext`, but that is not a requirement (they are allowed to be
+		different objects).
 
-		If `null`, this skin may use `uiContext` instead, as long as `uiContext`
-		implements the `IStateContext` interface.
+		If `stateContext` is `null`, the skin may attempt to use `uiContext`
+		instead, if `uiContext` implements `IStateContext`. If `stateContext`
+		is `null`, and `uiContext` does not implement `IStateContext`, then
+		this skin will not be able to watch for state changes.
 
 		@since 1.0.0
 	**/
