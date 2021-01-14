@@ -420,7 +420,7 @@ class ButtonBar extends FeathersControl {
 			return;
 		}
 		this.removeCurrentBackgroundSkin(oldSkin);
-		this.addCurrentBackgroundSkin(this._currentBackgroundSkin)
+		this.addCurrentBackgroundSkin(this._currentBackgroundSkin);
 	}
 
 	private function getCurrentBackgroundSkin():DisplayObject {
