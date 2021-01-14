@@ -8,12 +8,12 @@
 
 package feathers.controls;
 
-import feathers.events.TriggerEvent;
-import feathers.themes.steel.components.SteelFormStyles;
-import openfl.ui.Keyboard;
 import feathers.events.FormEvent;
-import openfl.events.KeyboardEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.FormLayout;
+import feathers.themes.steel.components.SteelFormStyles;
+import openfl.events.KeyboardEvent;
+import openfl.ui.Keyboard;
 
 /**
 	Displays a collection of form controls.
@@ -43,6 +43,7 @@ class Form extends LayoutGroup {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var submitButton(get, set):Button;
 
 	private function get_submitButton():Button {
