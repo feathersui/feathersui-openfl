@@ -528,6 +528,9 @@ class ButtonBar extends FeathersControl {
 				var variant = this.customButtonVariant != null ? this.customButtonVariant : ButtonBar.CHILD_VARIANT_BUTTON;
 				button.variant = variant;
 			}
+			// for consistency, initialize before passing to the recycler's
+			// update function
+			button.initializeNow();
 		} else {
 			button = this.inactiveButtons.shift();
 		}

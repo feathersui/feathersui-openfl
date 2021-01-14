@@ -625,6 +625,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 				var variant = this.customTabVariant != null ? this.customTabVariant : TabBar.CHILD_VARIANT_TAB;
 				tab.variant = variant;
 			}
+			// for consistency, initialize before passing to the recycler's
+			// update function
+			tab.initializeNow();
 		} else {
 			tab = this.inactiveTabs.shift();
 		}

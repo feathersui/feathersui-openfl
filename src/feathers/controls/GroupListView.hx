@@ -938,6 +938,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if (storage.measurements == null) {
 				storage.measurements = new Measurements(itemRenderer);
 			}
+			// for consistency, initialize before passing to the recycler's
+			// update function. plus, this ensures that custom item renderers
+			// correctly handle property changes in update() instead of trying
+			// to access them too early in initialize().
+			if (Std.is(itemRenderer, IUIControl)) {
+				cast(itemRenderer, IUIControl).initializeNow();
+			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}

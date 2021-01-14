@@ -1274,6 +1274,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			if (this._rowRendererMeasurements == null) {
 				this._rowRendererMeasurements = new Measurements(rowRenderer);
 			}
+			// for consistency, initialize before passing to the recycler's
+			// update function
+			rowRenderer.initializeNow();
 		} else {
 			rowRenderer = this.inactiveRowRenderers.shift();
 		}
@@ -1311,13 +1314,20 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var headerRenderer:DisplayObject = null;
 		headerRenderer = this._headerRendererRecycler.create();
 		/*if (this.inactiveHeaderRenderers.length == 0) {
-				rowRenderer = this._headerRendererRecycler.create();
+				headerRenderer = this._headerRendererRecycler.create();
 			} else {
-				rowRenderer = this.inactiveHeaderRenderers.shift();
+				headerRenderer = this.inactiveHeaderRenderers.shift();
 		}*/
 		var variantHeaderRenderer = cast(headerRenderer, IVariantStyleObject);
 		if (variantHeaderRenderer.variant == null) {
 			variantHeaderRenderer.variant = GridView.CHILD_VARIANT_HEADER;
+		}
+		// for consistency, initialize before passing to the recycler's
+		// update function. plus, this ensures that custom header renderers
+		// correctly handle property changes in update() instead of trying
+		// to access them too early in initialize().
+		if (Std.is(headerRenderer, IUIControl)) {
+			cast(headerRenderer, IUIControl).initializeNow();
 		}
 		this.refreshHeaderRendererProperties(headerRenderer, column, columnIndex);
 		if (Std.is(headerRenderer, ITriggerView)) {

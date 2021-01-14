@@ -484,6 +484,9 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 				var variant = this.customToggleButtonVariant != null ? this.customToggleButtonVariant : PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON;
 				button.variant = variant;
 			}
+			// for consistency, initialize before passing to the recycler's
+			// update function
+			button.initializeNow();
 			this.addChildAt(button, index + depthOffset);
 		} else {
 			button = this.inactiveToggleButtons.shift();

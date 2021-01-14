@@ -475,6 +475,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			if (storage.measurements == null) {
 				storage.measurements = new Measurements(cellRenderer);
 			}
+			// for consistency, initialize before passing to the recycler's
+			// update function. plus, this ensures that custom item renderers
+			// correctly handle property changes in update() instead of trying
+			// to access them too early in initialize().
+			if (Std.is(cellRenderer, IUIControl)) {
+				cast(cellRenderer, IUIControl).initializeNow();
+			}
 		} else {
 			cellRenderer = storage.inactiveCellRenderers.shift();
 		}
