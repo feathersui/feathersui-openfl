@@ -289,4 +289,22 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 		}
 		return this.backgroundSkin;
 	}
+
+	override private function addCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin != null) {
+			if (Std.is(skin, IStateObserver)) {
+				cast(skin, IStateObserver).stateContext = this;
+			}
+		}
+		super.addCurrentBackgroundSkin(skin);
+	}
+
+	override private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin != null) {
+			if (Std.is(skin, IStateObserver)) {
+				cast(skin, IStateObserver).stateContext = null;
+			}
+		}
+		super.removeCurrentBackgroundSkin(skin);
+	}
 }
