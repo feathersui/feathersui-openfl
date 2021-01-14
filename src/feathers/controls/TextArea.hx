@@ -710,12 +710,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.layoutPrompt();
 	}
 
-	override private function refreshBackgroundSkin():Void {
-		super.refreshBackgroundSkin();
-		if (Std.is(this._currentBackgroundSkin, IStateObserver)) {
-			cast(this._currentBackgroundSkin, IStateObserver).stateContext = this;
+	override private function addCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin != null) {
+			if (Std.is(skin, IStateObserver)) {
+				cast(skin, IStateObserver).stateContext = this;
+			}
 		}
-		this.addChildAt(this._currentBackgroundSkin, 0);
+		super.addCurrentBackgroundSkin(skin);
 	}
 
 	override private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
