@@ -1,49 +1,64 @@
-import feathers.controls.Label;
 import feathers.controls.Application;
 import feathers.controls.Button;
+import feathers.controls.Form;
+import feathers.controls.FormItem;
 import feathers.controls.TextInput;
-import feathers.events.TriggerEvent;
-import feathers.layout.VerticalLayout;
+import feathers.events.FormEvent;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
 
 class Main extends Application {
 	public function new() {
 		super();
 
-		var layout = new VerticalLayout();
-		layout.paddingTop = 20.0;
-		layout.paddingRight = 20.0;
-		layout.paddingBottom = 20.0;
-		layout.paddingLeft = 20.0;
-		layout.gap = 10.0;
-		this.layout = layout;
+		this.layout = new AnchorLayout();
 
-		var usernameLabel = new Label();
-		usernameLabel.text = "User Name";
-		this.addChild(usernameLabel);
+		var form = new Form();
+		// the SUBMIT event is dispatched when the submit button is triggered,
+		// or when the user presses Enter/Return when a component is the form
+		// has focus.
+		form.addEventListener(FormEvent.SUBMIT, form_submitHandler);
+		form.layoutData = AnchorLayoutData.center();
+		this.addChild(form);
 
-		this.usernameInput = new TextInput();
-		this.addChild(this.usernameInput);
+		var emailItem = new FormItem();
+		// position the text on any of the four sides
+		emailItem.textPosition = LEFT;
+		emailItem.text = "Email";
+		this.emailInput = new TextInput();
+		emailItem.content = this.emailInput;
+		form.addChild(emailItem);
 
-		var passwordLabel = new Label();
-		passwordLabel.text = "Password";
-		this.addChild(passwordLabel);
-
+		var passwordItem = new FormItem();
+		passwordItem.textPosition = LEFT;
+		passwordItem.text = "Password";
 		this.passwordInput = new TextInput();
 		this.passwordInput.displayAsPassword = true;
-		this.addChild(this.passwordInput);
+		passwordItem.content = this.passwordInput;
+		form.addChild(passwordItem);
 
-		this.submitButton = new Button();
-		this.submitButton.text = "Login";
-		this.submitButton.addEventListener(TriggerEvent.TRIGGER, submitButton_triggerHandler);
-		this.addChild(this.submitButton);
+		this.loginButton = new Button();
+		this.loginButton.text = "Login";
+		// one button may be designated to submit the form
+		// all other buttons can be triggered without submitting
+		form.submitButton = loginButton;
+		form.addChild(this.loginButton);
 	}
 
-	private var usernameInput:TextInput;
+	private var emailInput:TextInput;
 	private var passwordInput:TextInput;
-	private var submitButton:Button;
+	private var loginButton:Button;
 
-	private function submitButton_triggerHandler(event:TriggerEvent):Void {
-		this.usernameInput.text = "";
+	private function resetForm():Void {
+		this.emailInput.text = "";
 		this.passwordInput.text = "";
+	}
+
+	private function form_submitHandler(event:FormEvent):Void {
+		var email = this.emailInput.text;
+		var password = this.passwordInput.text;
+		trace('submit! email: ${email}, password: ${password}');
+
+		this.resetForm();
 	}
 }
