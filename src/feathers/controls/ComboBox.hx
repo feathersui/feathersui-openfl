@@ -18,7 +18,6 @@ import feathers.data.ListViewItemState;
 import openfl.display.DisplayObject;
 import feathers.themes.steel.components.SteelComboBoxStyles;
 import openfl.events.TouchEvent;
-import lime.ui.KeyCode;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
@@ -33,6 +32,9 @@ import feathers.core.IDataSelector;
 import feathers.controls.popups.DropDownPopUpAdapter;
 #if air
 import openfl.ui.Multitouch;
+#end
+#if lime
+import lime.ui.KeyCode;
 #end
 
 /**
@@ -954,6 +956,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 				}
 				event.preventDefault();
 				this.closeListView();
+			#if lime
 			case KeyCode.APP_CONTROL_BACK:
 				if (event.isDefaultPrevented()) {
 					return;
@@ -963,6 +966,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 				}
 				event.preventDefault();
 				this.closeListView();
+			#end
 		}
 	}
 

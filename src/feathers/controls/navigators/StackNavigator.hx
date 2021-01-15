@@ -14,12 +14,14 @@ import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelStackNavigatorStyles;
 import feathers.utils.EdgePuller;
 import feathers.utils.ExclusivePointer;
-import lime.ui.KeyCode;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 #if flash
 import openfl.ui.Keyboard;
+#end
+#if lime
+import lime.ui.KeyCode;
 #end
 
 /**
@@ -630,8 +632,10 @@ class StackNavigator extends BaseNavigator {
 			case Keyboard.BACK:
 				this.stackNavigator_stage_backKeyUpHandler(event);
 			#end
+			#if lime
 			case KeyCode.APP_CONTROL_BACK:
 				this.stackNavigator_stage_backKeyUpHandler(event);
+			#end
 		}
 	}
 

@@ -19,7 +19,6 @@ import feathers.data.ListViewItemState;
 import openfl.display.DisplayObject;
 import feathers.themes.steel.components.SteelPopUpListViewStyles;
 import openfl.events.TouchEvent;
-import lime.ui.KeyCode;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import feathers.events.FeathersEvent;
@@ -34,6 +33,9 @@ import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
 #if air
 import openfl.ui.Multitouch;
+#end
+#if lime
+import lime.ui.KeyCode;
 #end
 
 /**
@@ -801,6 +803,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 				}
 				event.preventDefault();
 				this.closeListView();
+			#if lime
 			case KeyCode.APP_CONTROL_BACK:
 				if (event.isDefaultPrevented()) {
 					return;
@@ -810,6 +813,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 				}
 				event.preventDefault();
 				this.closeListView();
+			#end
 		}
 	}
 

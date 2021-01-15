@@ -16,7 +16,9 @@ import openfl.events.Event;
 import js.Lib;
 import js.html.Window;
 #else
+#if lime
 import lime.ui.KeyCode;
+#end
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 #end
@@ -369,10 +371,12 @@ class RouterNavigator extends BaseNavigator {
 					this.routerNavigator_stage_backKeyUpHandler(event);
 				}
 			#end
+			#if lime
 			case KeyCode.APP_CONTROL_BACK:
 				{
 					this.routerNavigator_stage_backKeyUpHandler(event);
 				}
+			#end
 		}
 	}
 
