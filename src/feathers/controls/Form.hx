@@ -77,14 +77,6 @@ class Form extends LayoutGroup {
 		SteelFormStyles.initialize();
 	}
 
-	override private function initialize():Void {
-		super.initialize();
-
-		if (this.layout == null) {
-			this.layout = new FormLayout();
-		}
-	}
-
 	private function form_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled) {
 			return;
