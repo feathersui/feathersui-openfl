@@ -35,6 +35,7 @@ class SteelButtonBarStyles {
 			styleProvider.setStyleFunction(ButtonBar, null, function(tabBar:ButtonBar):Void {
 				if (tabBar.layout == null) {
 					var layout = new HorizontalLayout();
+					layout.gap = 6.0;
 					tabBar.layout = layout;
 				}
 			});
