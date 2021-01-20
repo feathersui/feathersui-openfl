@@ -14,7 +14,6 @@ import feathers.themes.steel.components.SteelRadioStyles;
 import openfl.display.InteractiveObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
-import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
@@ -74,7 +73,6 @@ class Radio extends ToggleButton implements IGroupedToggle {
 		super.toggleable = true;
 		this.addEventListener(Event.ADDED_TO_STAGE, radio_addedToStageHandler);
 		this.addEventListener(KeyboardEvent.KEY_DOWN, radio_keyDownHandler);
-		this.addEventListener(FocusEvent.FOCUS_IN, radio_focusInHandler);
 	}
 
 	override private function set_toggleable(value:Bool):Bool {
@@ -202,20 +200,5 @@ class Radio extends ToggleButton implements IGroupedToggle {
 			return;
 		}
 		this.navigateWithKeyboard(event);
-	}
-
-	private function radio_focusInHandler(event:FocusEvent):Void {
-		if (this._selected) {
-			return;
-		}
-		var nextFocus = cast(this._toggleGroup.selectedItem, IFocusObject);
-		if (nextFocus == null || nextFocus == this) {
-			return;
-		}
-		if (this._focusManager != null) {
-			this._focusManager.focus = nextFocus;
-		} else {
-			this.stage.focus = cast(nextFocus, InteractiveObject);
-		}
 	}
 }

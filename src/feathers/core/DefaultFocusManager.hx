@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import feathers.controls.IGroupedToggle;
 import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusManager;
@@ -473,7 +474,20 @@ class DefaultFocusManager implements IFocusManager {
 		if (Std.is(child, IFocusObject)) {
 			var childWithFocus = cast(child, IFocusObject);
 			if (this.isValidFocus(childWithFocus)) {
-				return childWithFocus;
+				if (!Std.is(childWithFocus, IGroupedToggle)) {
+					return childWithFocus;
+				}
+				var toggleGroup = cast(childWithFocus, IGroupedToggle).toggleGroup;
+				if (toggleGroup == null) {
+					return childWithFocus;
+				}
+				if (Std.is(toggleGroup.selectedItem, IFocusObject)) {
+					var selectedItem = cast(toggleGroup.selectedItem, IFocusObject);
+					if (this._focus != selectedItem) {
+						// don't let it keep the same focus
+						return selectedItem;
+					}
+				}
 			}
 		}
 		return null;
@@ -483,9 +497,23 @@ class DefaultFocusManager implements IFocusManager {
 		if (Std.is(child, IFocusObject)) {
 			var childWithFocus = cast(child, IFocusObject);
 			if (this.isValidFocus(childWithFocus)) {
-				return childWithFocus;
+				if (!Std.is(childWithFocus, IGroupedToggle)) {
+					return childWithFocus;
+				}
+				var toggleGroup = cast(childWithFocus, IGroupedToggle).toggleGroup;
+				if (toggleGroup == null) {
+					return childWithFocus;
+				}
+				if (Std.is(toggleGroup.selectedItem, IFocusObject)) {
+					var selectedItem = cast(toggleGroup.selectedItem, IFocusObject);
+					if (this._focus != selectedItem) {
+						// don't let it keep the same focus
+						return selectedItem;
+					}
+				}
 			}
 		}
+
 		var childContainer = Std.downcast(child, DisplayObjectContainer);
 		if (childContainer != null) {
 			var findNextChildContainer = !Std.is(childContainer, IFocusObject);
