@@ -208,6 +208,9 @@ class HSlider extends BaseSlider {
 		if (!this._enabled) {
 			return;
 		}
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		var newValue = this._value;
 		switch (event.keyCode) {
 			case Keyboard.LEFT:
@@ -226,7 +229,7 @@ class HSlider extends BaseSlider {
 		} else if (newValue > this._maximum) {
 			newValue = this._maximum;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.value = newValue;
 	}

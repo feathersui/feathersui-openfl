@@ -678,6 +678,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
@@ -708,7 +711,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		} else if (result >= this._dataProvider.length) {
 			result = this._dataProvider.length - 1;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.selectedIndex = result;
 	}
@@ -724,8 +727,10 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			return;
 		}
 		if (this.open) {
+			event.preventDefault();
 			this.closeListView();
 		} else {
+			event.preventDefault();
 			this.openListView();
 		}
 	}

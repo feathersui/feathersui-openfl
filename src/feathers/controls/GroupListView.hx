@@ -1192,6 +1192,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (this._layoutItems.length == 0) {
 			return;
 		}
@@ -1243,7 +1246,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			}
 			lastResult = result;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.selectedLocation = location;
 		if (this._selectedLocation != null) {

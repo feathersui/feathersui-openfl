@@ -208,6 +208,9 @@ class VSlider extends BaseSlider {
 	}
 
 	private function vSlider_keyDownHandler(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (!this._enabled) {
 			return;
 		}
@@ -229,7 +232,7 @@ class VSlider extends BaseSlider {
 		} else if (newValue > this._maximum) {
 			newValue = this._maximum;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.value = newValue;
 	}

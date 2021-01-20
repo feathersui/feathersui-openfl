@@ -1669,12 +1669,17 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			newScrollX = this.maxScrollX;
 		}
 
-		event.stopPropagation();
+		var scrolled = false;
 		if (this.scrollY != newScrollY && this._scrollPolicyY != OFF) {
+			scrolled = true;
 			this.scrollY = newScrollY;
 		}
 		if (this.scrollX != newScrollX && this._scrollPolicyX != OFF) {
+			scrolled = true;
 			this.scrollX = newScrollX;
+		}
+		if (scrolled) {
+			event.preventDefault();
 		}
 	}
 

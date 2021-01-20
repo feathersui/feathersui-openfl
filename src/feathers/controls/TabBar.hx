@@ -696,6 +696,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
@@ -726,7 +729,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		} else if (result >= this._dataProvider.length) {
 			result = this._dataProvider.length - 1;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.selectedIndex = result;
 	}

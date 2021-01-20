@@ -880,22 +880,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this._enabled || event.isDefaultPrevented()) {
-			return;
-		}
-		switch (event.keyCode) {
-			case Keyboard.UP:
-			case Keyboard.DOWN:
-			case Keyboard.LEFT:
-			case Keyboard.RIGHT:
-			case Keyboard.PAGE_UP:
-			case Keyboard.PAGE_DOWN:
-			case Keyboard.HOME:
-			case Keyboard.END:
-			default:
-				return;
-		}
-		event.stopPropagation();
+		// ignore default scrolling behavior because TextField will handle it
 	}
 
 	private function textArea_viewPort_changeHandler(event:Event):Void {

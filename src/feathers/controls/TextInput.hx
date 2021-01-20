@@ -91,7 +91,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.focusRect = null;
 
 		this.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
-		this.addEventListener(KeyboardEvent.KEY_DOWN, textInput_keyDownHandler);
 	}
 
 	private var _editable:Bool = true;
@@ -1538,25 +1537,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textField;
 		}
-	}
-
-	private function textInput_keyDownHandler(event:KeyboardEvent):Void {
-		if (!this._enabled || event.isDefaultPrevented()) {
-			return;
-		}
-		switch (event.keyCode) {
-			case Keyboard.UP:
-			case Keyboard.DOWN:
-			case Keyboard.LEFT:
-			case Keyboard.RIGHT:
-			case Keyboard.PAGE_UP:
-			case Keyboard.PAGE_DOWN:
-			case Keyboard.HOME:
-			case Keyboard.END:
-			default:
-				return;
-		}
-		event.stopPropagation();
 	}
 
 	private function textField_focusInHandler(event:FocusEvent):Void {

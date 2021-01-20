@@ -1390,6 +1390,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
@@ -1420,7 +1423,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		} else if (result >= this._dataProvider.length) {
 			result = this._dataProvider.length - 1;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.selectedIndex = result;
 		if (this._selectedIndex != -1) {

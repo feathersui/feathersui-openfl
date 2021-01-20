@@ -805,6 +805,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
@@ -835,7 +838,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else if (result >= this._dataProvider.length) {
 			result = this._dataProvider.length - 1;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.selectedIndex = result;
 		if (this.open) {
@@ -849,6 +852,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		this.navigateWithKeyboard(event);
 		if (event.keyCode == Keyboard.ENTER) {
+			event.preventDefault();
 			this.closeListView();
 		}
 	}

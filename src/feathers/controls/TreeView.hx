@@ -1306,6 +1306,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (this._layoutItems.length == 0) {
 			return;
 		}
@@ -1337,7 +1340,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		} else if (result >= this._layoutItems.length) {
 			result = this._layoutItems.length - 1;
 		}
-		event.stopPropagation();
+		event.preventDefault();
 		// use the setter
 		this.selectedLocation = this.displayIndexToLocation(result);
 		if (this._selectedLocation != null) {
@@ -1413,8 +1416,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 
 		if (this._selectedLocation != null && event.keyCode == Keyboard.SPACE) {
-			event.stopPropagation();
 			if (this._dataProvider.isBranch(this._selectedItem)) {
+				event.preventDefault();
 				this.toggleBranch(this._selectedItem, this.openBranches.indexOf(this._selectedItem) == -1);
 			}
 			return;
