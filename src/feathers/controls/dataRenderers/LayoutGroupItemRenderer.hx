@@ -125,6 +125,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 		this.setInvalid(DATA);
 		this.setInvalid(STYLES);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		this.changeState(this.currentState);
 		return this._selected;
 	}
 
