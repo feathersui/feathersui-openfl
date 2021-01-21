@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.Lib;
 import openfl.events.TouchEvent;
 import feathers.utils.ExclusivePointer;
 import feathers.core.FeathersControl;
@@ -742,6 +743,26 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	@:style
 	public var scrollBarYPosition:RelativePosition = RIGHT;
 
+	/**
+		The minimum time, in seconds, that the scroll bars will be shown, if
+		`autoHideScrollBars` is enabled.
+
+		In the following example, the minimum duration to show scroll bars is
+		increased:
+
+		```hx
+		container.showScrollBarMinimumDuration = 1.0;
+		```
+
+		@see `BaseScrollContainer.autoHideScrollBars`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var showScrollBarMinimumDuration:Float = 0.5;
+
+	private var _scrollBarXRevealTime:Int;
+	private var _scrollBarYRevealTime:Int;
 	private var _hideScrollBarX:SimpleActuator<Dynamic, Dynamic> = null;
 	private var _hideScrollBarY:SimpleActuator<Dynamic, Dynamic> = null;
 
@@ -1561,6 +1582,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			Actuate.stop(this._hideScrollBarX);
 		}
 		this.scrollBarX.alpha = 1.0;
+		this._scrollBarXRevealTime = Lib.getTimer();
 	}
 
 	private function revealScrollBarY():Void {
@@ -1571,6 +1593,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			Actuate.stop(this._hideScrollBarY);
 		}
 		this.scrollBarY.alpha = 1.0;
+		this._scrollBarYRevealTime = Lib.getTimer();
 	}
 
 	private function hideScrollBarX():Void {
@@ -1591,6 +1614,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._hideScrollBarX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarX.ease(this.hideScrollBarEase);
 		this._hideScrollBarX.autoVisible(false);
+		var visibleTime = (Lib.getTimer() - this._scrollBarXRevealTime) / 1000.0;
+		if (visibleTime < this.showScrollBarMinimumDuration) {
+			this._hideScrollBarX.delay(this.showScrollBarMinimumDuration - visibleTime);
+		}
 		this._hideScrollBarX.onComplete(this.hideScrollBarX_onComplete);
 	}
 
@@ -1612,6 +1639,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._hideScrollBarY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 		this._hideScrollBarY.ease(this.hideScrollBarEase);
 		this._hideScrollBarY.autoVisible(false);
+		var visibleTime = (Lib.getTimer() - this._scrollBarYRevealTime) / 1000.0;
+		if (visibleTime < this.showScrollBarMinimumDuration) {
+			this._hideScrollBarY.delay(this.showScrollBarMinimumDuration - visibleTime);
+		}
 		this._hideScrollBarY.onComplete(this.hideScrollBarY_onComplete);
 	}
 
