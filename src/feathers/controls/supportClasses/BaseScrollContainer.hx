@@ -781,6 +781,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var _scrollRect2:Rectangle = new Rectangle();
 
 	private var _ignoreScrollerChanges = false;
+	private var _settingScrollerDimensions = false;
 	private var _viewPortBoundsChanged = false;
 	private var _ignoreViewPortResizing = false;
 	private var _previousViewPortWidth = 0.0;
@@ -949,7 +950,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.calculateViewPortOffsets(false, true);
 
 			this.refreshViewPortBoundsForLayout();
-			this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
 
 			loopCount++;
 			if (loopCount >= 10) {
@@ -1211,7 +1211,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._ignoreViewPortResizing = oldIgnoreViewPortResizing;
 
 		this._viewPort.validateNow();
+
+		var oldSettingScrollerDimensions = this._settingScrollerDimensions;
+		this._settingScrollerDimensions = true;
 		this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
+		this._settingScrollerDimensions = oldSettingScrollerDimensions;
 	}
 
 	private function refreshScrollerValues():Void {
@@ -1719,6 +1723,12 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function baseScrollContainer_scroller_scrollHandler(event:Event):Void {
 		if (this._ignoreScrollerChanges) {
+			if (this._settingScrollerDimensions && this.viewPort.requiresMeasurementOnScroll) {
+				// the scroller changed its position while we were updating its
+				// dimensions. if it will affect the layout, we have no choice
+				// but to validate again later.
+				this.setInvalid(SCROLL);
+			}
 			return;
 		}
 		this.checkForRevealScrollBars();
