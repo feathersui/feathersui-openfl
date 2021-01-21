@@ -173,6 +173,9 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	}
 
 	private function refreshDimensions():Void {
+		if (this.stage == null) {
+			return;
+		}
 		this._scaleFactor = this.getScaleFactor();
 		this.scaleX = this._scaleFactor;
 		this.scaleY = this._scaleFactor;
@@ -189,8 +192,10 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		}
 		this.height = appHeight;
 
-		this._popUpContainer.scaleX = this._scaleFactor;
-		this._popUpContainer.scaleY = this._scaleFactor;
+		if (this._popUpContainer != null) {
+			this._popUpContainer.scaleX = this._scaleFactor;
+			this._popUpContainer.scaleY = this._scaleFactor;
+		}
 	}
 
 	private function preparePopUpManager():Void {
