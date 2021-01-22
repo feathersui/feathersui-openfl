@@ -634,6 +634,12 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 				}
 			}
 		}
+		if (startIndex == -1 && this._verticalAlign != TOP) {
+			// if we're not aligned to the top, scrolling beyond the end might
+			// make some items disappear prematurely, so back-fill from here
+			startIndex = itemCount - 1;
+			endIndex = startIndex;
+		}
 		// if we reached the end with extra space, try back-filling so that the
 		// number of visible items remains mostly stable
 		if ((positionY < maxY || (endIndex - startIndex + 1) < minItems) && startIndex > 0) {
