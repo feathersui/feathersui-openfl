@@ -34,6 +34,8 @@ import openfl.text.TextField;
 
 	@since 1.0.0
 **/
+@:meta(DefaultProperty("content"))
+@defaultXmlProperty("content")
 @:styleContext
 class FormItem extends FeathersControl implements ITextControl implements IFocusManagerAware {
 	/**
