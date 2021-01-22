@@ -814,6 +814,23 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return true;
 	}
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `BaseScrollContainer.paddingTop`
+		@see `BaseScrollContainer.paddingRight`
+		@see `BaseScrollContainer.paddingBottom`
+		@see `BaseScrollContainer.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	override private function initialize():Void {
 		if (this.scroller == null) {
 			this.scroller = new Scroller();

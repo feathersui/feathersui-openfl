@@ -442,6 +442,23 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 	}
 
 	/**
+		Sets all four padding properties to the same value.
+
+		@see `VerticalListLayout.paddingTop`
+		@see `VerticalListLayout.paddingRight`
+		@see `VerticalListLayout.paddingBottom`
+		@see `VerticalListLayout.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {

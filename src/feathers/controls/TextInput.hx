@@ -859,6 +859,23 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.selectRange(0, this._text.length);
 	}
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `TextInput.paddingTop`
+		@see `TextInput.paddingRight`
+		@see `TextInput.paddingBottom`
+		@see `TextInput.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	private function initializeTextInputTheme():Void {
 		SteelTextInputStyles.initialize();
 	}

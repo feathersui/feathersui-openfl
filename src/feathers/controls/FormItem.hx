@@ -498,6 +498,23 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		return this._textMeasuredWidth;
 	}
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `FormItem.paddingTop`
+		@see `FormItem.paddingRight`
+		@see `FormItem.paddingBottom`
+		@see `FormItem.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	private function initializeFormItemTheme():Void {
 		SteelFormItemStyles.initialize();
 	}

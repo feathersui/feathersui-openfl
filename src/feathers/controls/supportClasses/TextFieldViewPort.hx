@@ -645,6 +645,23 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	private var _ignoreTextFieldScroll:Bool = false;
 
 	/**
+		Sets all four padding properties to the same value.
+
+		@see `TextFieldViewPort.paddingTop`
+		@see `TextFieldViewPort.paddingRight`
+		@see `TextFieldViewPort.paddingBottom`
+		@see `TextFieldViewPort.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
+	/**
 		@see `feathers.controls.TextArea.selectRange()`
 	**/
 	public function selectRange(anchorIndex:Int, activeIndex:Int):Void {

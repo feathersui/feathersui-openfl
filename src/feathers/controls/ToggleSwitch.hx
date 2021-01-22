@@ -285,6 +285,19 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		return this._selected;
 	}
 
+	/**
+		Sets all padding properties to the same value.
+
+		@see `ToggleSwitch.paddingRight`
+		@see `ToggleSwitch.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingRight = value;
+		this.paddingLeft = value;
+	}
+
 	private function initializeToggleSwitchTheme():Void {
 		SteelToggleSwitchStyles.initialize();
 	}

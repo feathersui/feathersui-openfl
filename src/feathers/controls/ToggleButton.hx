@@ -679,6 +679,23 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		this.setInvalid(STYLES);
 	}
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `ToggleButton.paddingTop`
+		@see `ToggleButton.paddingRight`
+		@see `ToggleButton.paddingBottom`
+		@see `ToggleButton.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	private function initializeToggleButtonTheme():Void {
 		SteelToggleButtonStyles.initialize();
 	}

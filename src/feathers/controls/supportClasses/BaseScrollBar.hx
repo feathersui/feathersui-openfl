@@ -498,6 +498,23 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	private var _previousFallbackTrackWidth:Float = 0.0;
 	private var _previousFallbackTrackHeight:Float = 0.0;
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `BaseScrollBar.paddingTop`
+		@see `BaseScrollBar.paddingRight`
+		@see `BaseScrollBar.paddingBottom`
+		@see `BaseScrollBar.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 		if (this._value < this._minimum) {

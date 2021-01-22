@@ -328,6 +328,23 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	@:style
 	public var paddingLeft:Float = 0.0;
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `BaseProgressBar.paddingTop`
+		@see `BaseProgressBar.paddingRight`
+		@see `BaseProgressBar.paddingBottom`
+		@see `BaseProgressBar.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	override private function update():Void {
 		var stylesInvalid = this.isInvalid(STYLES);
 		var stateInvalid = this.isInvalid(STATE);

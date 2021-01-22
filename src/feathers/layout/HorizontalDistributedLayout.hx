@@ -254,6 +254,23 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		Sets all four padding properties to the same value.
+
+		@see `HorizontalDistributedLayout.paddingTop`
+		@see `HorizontalDistributedLayout.paddingRight`
+		@see `HorizontalDistributedLayout.paddingBottom`
+		@see `HorizontalDistributedLayout.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {

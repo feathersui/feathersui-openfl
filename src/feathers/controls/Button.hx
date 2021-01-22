@@ -600,6 +600,23 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		this.setInvalid(STYLES);
 	}
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `Button.paddingTop`
+		@see `Button.paddingRight`
+		@see `Button.paddingBottom`
+		@see `Button.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	private function initializeButtonTheme():Void {
 		SteelButtonStyles.initialize();
 	}

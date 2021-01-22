@@ -463,6 +463,23 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `Label.paddingTop`
+		@see `Label.paddingRight`
+		@see `Label.paddingBottom`
+		@see `Label.paddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	private function initializeLabelTheme():Void {
 		SteelLabelStyles.initialize();
 	}
