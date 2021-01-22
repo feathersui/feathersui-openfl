@@ -42,6 +42,22 @@ import openfl.display.StageScaleMode;
 **/
 @:styleContext
 class Application extends LayoutGroup implements IFocusManagerAware {
+	private static var _topLevelApplication:Application;
+
+	/**
+		The first `Application` instance created is the top-level application.
+
+		Feathers UI does not require developers to use the `Application`
+		component, so this value may be `null` in some projects.
+
+		@since 1.0.0
+	**/
+	public static var topLevelApplication(get, never):Application;
+
+	private static function get_topLevelApplication():Application {
+		return _topLevelApplication;
+	}
+
 	private static function defaultPopUpContainerFactory():DisplayObjectContainer {
 		return new Sprite();
 	}
@@ -52,6 +68,9 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		@since 1.0.0
 	**/
 	public function new() {
+		if (Application._topLevelApplication == null) {
+			Application._topLevelApplication = this;
+		}
 		initializeApplicationTheme();
 
 		super();
