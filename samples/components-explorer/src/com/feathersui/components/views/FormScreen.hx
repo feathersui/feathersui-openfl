@@ -37,6 +37,7 @@ class FormScreen extends Panel {
 		this.layout = layout;
 
 		this.commentForm = new Form();
+		this.commentForm.addEventListener(FormEvent.SUBMIT, commentForm_submitHandler);
 		this.addChild(this.commentForm);
 
 		var title = new Label();
@@ -72,16 +73,18 @@ class FormScreen extends Panel {
 		var buttonGroup = new LayoutGroup();
 		var buttonsLayout = new HorizontalLayout();
 		buttonsLayout.gap = 10.0;
+		buttonsLayout.horizontalAlign = RIGHT;
 		buttonGroup.layout = buttonsLayout;
-		var submitButton = new Button();
-		submitButton.text = "Submit";
-		buttonGroup.addChild(submitButton);
+		var sendButton = new Button();
+		sendButton.text = "Send";
+		buttonGroup.addChild(sendButton);
 		var clearButton = new Button();
 		clearButton.text = "Clear";
 		clearButton.addEventListener(TriggerEvent.TRIGGER, clearButton_triggerHandler);
 		buttonGroup.addChild(clearButton);
+		this.commentForm.addChild(buttonGroup);
 
-		this.commentForm.submitButton = submitButton;
+		this.commentForm.submitButton = sendButton;
 	}
 
 	private function createHeader():Void {
