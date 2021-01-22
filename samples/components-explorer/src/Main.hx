@@ -8,6 +8,7 @@ import com.feathersui.components.views.ComboBoxScreen;
 import com.feathersui.components.views.DrawerScreen;
 import com.feathersui.components.views.GridViewScreen;
 import com.feathersui.components.views.GroupListViewScreen;
+import com.feathersui.components.views.FormScreen;
 import com.feathersui.components.views.HDividedBoxScreen;
 import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.ListViewScreen;
@@ -85,6 +86,9 @@ class Main extends Application {
 
 		var groupListView = Route.withClass(ViewPaths.GROUP_LIST_VIEW, GroupListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(groupListView);
+
+		var form = Route.withClass(ViewPaths.FORM, FormScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(form);
 
 		var label = Route.withClass(ViewPaths.LABEL, LabelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(label);
