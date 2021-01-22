@@ -46,6 +46,7 @@ import openfl.ui.Keyboard;
 @:event(feathers.events.ScrollEvent.SCROLL_START)
 @:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 class BaseScrollContainer extends FeathersControl implements IFocusObject {
+	private static final INVALIDATION_FLAG_SCROLLER_FACTORY = InvalidationFlag.CUSTOM("scrollerFactory");
 	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = InvalidationFlag.CUSTOM("scrollBarFactory");
 
 	private static function defaultScrollBarXFactory():IScrollBar {
@@ -92,12 +93,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scroller.target = null;
 		}
 		this._viewPort = value;
-		if (this.scroller != null && this.stage != null) {
-			this.scroller.target = cast(this._viewPort, InteractiveObject);
-		}
 		if (this._viewPort != null) {
 			this._viewPort.addEventListener(Event.RESIZE, viewPort_resizeHandler);
 		}
+		this.setInvalid(INVALIDATION_FLAG_SCROLLER_FACTORY);
 		return this._viewPort;
 	}
 
@@ -361,6 +360,42 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._scrollBarYFactory = value;
 		this.setInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
 		return this._scrollBarYFactory;
+	}
+
+	private var _scrollerFactory:() -> Scroller;
+
+	/**
+		Creates the `Scroller` utility that manages touch and mouse wheel
+		scrolling.
+
+		In the following example, a custom scroller factory is passed to the
+		container:
+
+		```hx
+		scroller.scrollBarYFactory = () ->
+		{
+			var scroller = new Scroller();
+			scroller.elasticEdges = false;
+			return scroller;
+		};
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var scrollerFactory(get, set):() -> Scroller;
+
+	private function get_scrollerFactory():() -> Scroller {
+		return this._scrollerFactory;
+	}
+
+	private function set_scrollerFactory(value:() -> Scroller):() -> Scroller {
+		if (this._scrollerFactory == value) {
+			return this._scrollerFactory;
+		}
+		this._scrollerFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_SCROLLER_FACTORY);
+		return this._scrollerFactory;
 	}
 
 	private var _temporaryScrollX = 0.0;
@@ -674,38 +709,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	/**
-		When simulating touch, mouse events are treated as if they were mouse
-		events instead, allowing the user to click and drag the container with
-		momentum scrolling using the mouse instead of touch.
-
-		Generally, this is intended for testing during development and should
-		not be used in production.
-
-		```hx
-		container.simulateTouch = true;
-		```
-
-		@since 1.0.0
-	**/
-	@:style
-	public var simulateTouch:Bool = false;
-
-	/**
-		Determines if the scrolling can go beyond the edges of the viewport when
-		dragging with a touch.
-
-		In the following example, elastic edges are disabled:
-
-		```hx
-		container.elasticEdges = false;
-		```
-
-		@since 1.0.0
-	**/
-	@:style
-	public var elasticEdges:Bool = true;
-
-	/**
 		Determines the edge of the container where the horizontal scroll bar
 		will be positioned (either on the top or the bottom).
 
@@ -831,25 +834,24 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.paddingLeft = value;
 	}
 
-	override private function initialize():Void {
-		if (this.scroller == null) {
-			this.scroller = new Scroller();
-		}
-		this.scroller.scrollX = this._temporaryScrollX;
-		this.scroller.scrollY = this._temporaryScrollY;
-		this.scroller.addEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
-		this.scroller.addEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
-		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
-	}
-
 	override private function update():Void {
 		var stylesInvalid = this.isInvalid(STYLES);
 		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
+		var scrollerInvalid = this.isInvalid(INVALIDATION_FLAG_SCROLLER_FACTORY);
 		var scrollBarFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY);
 
 		var oldIgnoreScrollerChanges = this._ignoreScrollerChanges;
 		this._ignoreScrollerChanges = true;
+
+		if (scrollerInvalid) {
+			this.destroyScroller();
+			this.createScroller();
+		}
+
+		if (stylesInvalid || stateInvalid) {
+			this.refreshBackgroundSkin();
+		}
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
@@ -879,6 +881,29 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			|| this.isInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY)
 			|| this.isInvalid(STATE)
 			|| this.isInvalid(LAYOUT);
+	}
+
+	private function createScroller():Void {
+		this.scroller = (this._scrollerFactory != null) ? this._scrollerFactory() : new Scroller();
+		this.scroller.target = cast(this._viewPort, InteractiveObject);
+		this.scroller.scrollX = this._temporaryScrollX;
+		this.scroller.scrollY = this._temporaryScrollY;
+		this.scroller.addEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
+		this.scroller.addEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
+		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
+	}
+
+	private function destroyScroller():Void {
+		if (this.scroller == null) {
+			return;
+		}
+		this._temporaryScrollX = this.scroller.scrollX;
+		this._temporaryScrollY = this.scroller.scrollY;
+		this.scroller.target = null;
+		this.scroller.removeEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
+		this.scroller.removeEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
+		this.scroller.removeEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
+		this.scroller = null;
 	}
 
 	private function createScrollBars():Void {
@@ -1259,8 +1284,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function refreshScrollerValues():Void {
 		this.scroller.enabledX = this._enabled && this._scrollPolicyX != OFF;
 		this.scroller.enabledY = this._enabled && this._scrollPolicyY != OFF;
-		this.scroller.elasticEdges = this.elasticEdges;
-		this.scroller.simulateTouch = this.simulateTouch;
 	}
 
 	private function refreshScrollBarValues():Void {
@@ -1736,11 +1759,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function baseScrollContainer_addedToStageHandler(event:Event):Void {
-		this.scroller.target = cast(this._viewPort, InteractiveObject);
+		this.setInvalid(INVALIDATION_FLAG_SCROLLER_FACTORY);
 	}
 
 	private function baseScrollContainer_removedFromStageHandler(event:Event):Void {
-		this.scroller.target = null;
+		this.destroyScroller();
 	}
 
 	private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
