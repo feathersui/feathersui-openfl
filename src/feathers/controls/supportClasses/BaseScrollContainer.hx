@@ -434,6 +434,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function set_scrollX(value:Float):Float {
 		if (this.scroller == null) {
 			this._temporaryScrollX = value;
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 			return this._temporaryScrollX;
 		}
 		this.scroller.scrollX = value;
@@ -476,6 +477,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function set_scrollY(value:Float):Float {
 		if (this.scroller == null) {
 			this._temporaryScrollY = value;
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 			return this._temporaryScrollY;
 		}
 		this.scroller.scrollY = value;
