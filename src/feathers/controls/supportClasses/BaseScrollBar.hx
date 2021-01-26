@@ -745,22 +745,20 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler, false, 0, true);
 
-		var location = new Point(event.stageX, event.stageY);
-		location = this.globalToLocal(location);
-
 		this._thumbStartX = this.thumbSkin.x;
 		this._thumbStartY = this.thumbSkin.y;
-		this._pointerStartX = location.x;
-		this._pointerStartY = location.y;
+		// use mouseX/Y here instead of the values from the event because the
+		// event values seem to be inaccurate and jumpy
+		this._pointerStartX = this.mouseX;
+		this._pointerStartY = this.mouseY;
 		this._dragging = true;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 	}
 
 	private function thumbSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
-		var location = new Point(event.stageX, event.stageY);
-		location = this.globalToLocal(location);
+		event.updateAfterEvent();
 		// use the setter
-		this.value = this.locationToValue(location.x, location.y);
+		this.value = this.locationToValue(this.mouseX, this.mouseY);
 	}
 
 	private function thumbSkin_stage_mouseUpHandler(event:MouseEvent):Void {
@@ -787,8 +785,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, trackSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, trackSkin_stage_mouseUpHandler, false, 0, true);
 
-		var location = new Point(event.stageX, event.stageY);
-		location = this.globalToLocal(location);
+		var location = new Point(this.mouseX, this.mouseY);
 
 		this.saveThumbStart(location);
 		this._pointerStartX = location.x;
@@ -801,11 +798,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function trackSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
-		var location = new Point(event.stageX, event.stageY);
-		location = this.globalToLocal(location);
-
 		// use the setter
-		this.value = this.locationToValue(location.x, location.y);
+		this.value = this.locationToValue(this.mouseX, this.mouseY);
 	}
 
 	private function trackSkin_stage_mouseUpHandler(event:MouseEvent):Void {
