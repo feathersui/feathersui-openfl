@@ -37,6 +37,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		super();
 	}
 
+	private var _isDefaultValue = true;
+
 	private var _value:Float = 0.0;
 
 	/**
@@ -72,17 +74,12 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	}
 
 	private function set_value(value:Float):Float {
-		if (this._snapInterval != 0.0 && value != this._minimum && value != this._maximum) {
-			value = MathUtil.roundToNearest(value, this._snapInterval);
-		}
-		if (value < this._minimum) {
-			value = this._minimum;
-		} else if (value > this._maximum) {
-			value = this._maximum;
-		}
+		// don't reset a value that has been passed in from an external source
+		// assume that the user knows what they are doing
 		if (this._value == value) {
 			return this._value;
 		}
+		this._isDefaultValue = false;
 		this._value = value;
 		this.setInvalid(DATA);
 		if (this.liveDragging || !this._dragging) {
@@ -124,10 +121,6 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			return this._minimum;
 		}
 		this._minimum = value;
-		if (this.initialized && this._value < this._minimum) {
-			// use the setter
-			this.value = this._minimum;
-		}
 		this.setInvalid(DATA);
 		return this._minimum;
 	}
@@ -165,10 +158,6 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			return this._maximum;
 		}
 		this._maximum = value;
-		if (this.initialized && this._value > this._maximum) {
-			// use the setter
-			this.value = this._maximum;
-		}
 		this.setInvalid(DATA);
 		return this._maximum;
 	}
@@ -398,12 +387,13 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 	override private function initialize():Void {
 		super.initialize();
-		if (this._value < this._minimum) {
+		// if the user hasn't changed the value, automatically restrict it based
+		// on things like minimum, maximum, and snapInterval
+		// if the user has changed the value, assume that they know what they're
+		// doing and don't want hand holding
+		if (this._isDefaultValue) {
 			// use the setter
-			this.value = this._minimum;
-		} else if (this._value > this._maximum) {
-			// use the setter
-			this.value = this._maximum;
+			this.value = this.restrictValue(this._value);
 		}
 	}
 
@@ -577,6 +567,18 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		return normalized;
 	}
 
+	private function restrictValue(value:Float):Float {
+		if (this._snapInterval != 0.0 && value != this._minimum && value != this._maximum) {
+			value = MathUtil.roundToNearest(value, this._snapInterval);
+		}
+		if (value < this._minimum) {
+			value = this._minimum;
+		} else if (value > this._maximum) {
+			value = this._maximum;
+		}
+		return value;
+	}
+
 	private function valueToLocation(value:Float):Float {
 		throw new TypeError("Missing override for 'valueToLocation' in type " + Type.getClassName(Type.getClass(this)));
 	}
@@ -616,8 +618,10 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	private function thumbSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
+		var newValue = this.locationToValue(location.x, location.y);
+		newValue = this.restrictValue(newValue);
 		// use the setter
-		this.value = this.locationToValue(location.x, location.y);
+		this.value = newValue;
 	}
 
 	private function thumbSkin_stage_mouseUpHandler(event:MouseEvent):Void {
@@ -650,16 +654,20 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		this._pointerStartX = location.x;
 		this._pointerStartY = location.y;
 		this._dragging = true;
+		var newValue = this.locationToValue(location.x, location.y);
+		newValue = this.restrictValue(newValue);
 		// use the setter
-		this.value = this.locationToValue(location.x, location.y);
+		this.value = newValue;
 	}
 
 	private function trackSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var location = new Point(event.stageX, event.stageY);
 		location = this.globalToLocal(location);
 
+		var newValue = this.locationToValue(location.x, location.y);
+		newValue = this.restrictValue(newValue);
 		// use the setter
-		this.value = this.locationToValue(location.x, location.y);
+		this.value = newValue;
 	}
 
 	private function trackSkin_stage_mouseUpHandler(event:MouseEvent):Void {

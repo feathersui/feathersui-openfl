@@ -41,6 +41,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.focusRect = null;
 	}
 
+	private var _isDefaultValue = true;
+
 	private var _value:Float = 0.0;
 
 	/**
@@ -76,17 +78,12 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function set_value(value:Float):Float {
-		if (this._snapInterval != 0.0 && value != this._minimum && value != this._maximum) {
-			value = MathUtil.roundToNearest(value, this._snapInterval);
-		}
-		if (value < this._minimum) {
-			value = this._minimum;
-		} else if (value > this._maximum) {
-			value = this._maximum;
-		}
+		// don't reset a value that has been passed in from an external source
+		// this allows the thumb to shrink when outside the minimum or maximum
 		if (this._value == value) {
 			return this._value;
 		}
+		this._isDefaultValue = false;
 		this._value = value;
 		this.setInvalid(DATA);
 		if (this.liveDragging || !this._dragging) {
@@ -128,10 +125,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return this._minimum;
 		}
 		this._minimum = value;
-		if (this.initialized && this._value < this._minimum) {
-			// use the setter
-			this.value = this._minimum;
-		}
 		this.setInvalid(DATA);
 		return this._minimum;
 	}
@@ -169,10 +162,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return this._maximum;
 		}
 		this._maximum = value;
-		if (this.initialized && this._value > this._maximum) {
-			// use the setter
-			this.value = this._maximum;
-		}
 		this.setInvalid(DATA);
 		return this._maximum;
 	}
@@ -517,12 +506,13 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 	override private function initialize():Void {
 		super.initialize();
-		if (this._value < this._minimum) {
+		// if the user hasn't changed the value, automatically restrict it based
+		// on things like minimum, maximum, and snapInterval
+		// if the user has changed the value, assume that they know what they're
+		// doing and don't want hand holding
+		if (this._isDefaultValue) {
 			// use the setter
-			this.value = this._minimum;
-		} else if (this._value > this._maximum) {
-			// use the setter
-			this.value = this._maximum;
+			this.value = this.restrictValue(this._value);
 		}
 	}
 
@@ -708,6 +698,18 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		return normalized;
 	}
 
+	private function restrictValue(value:Float):Float {
+		if (this._snapInterval != 0.0 && value != this._minimum && value != this._maximum) {
+			value = MathUtil.roundToNearest(value, this._snapInterval);
+		}
+		if (value < this._minimum) {
+			value = this._minimum;
+		} else if (value > this._maximum) {
+			value = this._maximum;
+		}
+		return value;
+	}
+
 	private function valueToLocation(value:Float):Float {
 		throw new TypeError("Missing override for 'valueToLocation' in type " + Type.getClassName(Type.getClass(this)));
 	}
@@ -756,9 +758,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function thumbSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
-		event.updateAfterEvent();
+		var newValue = this.locationToValue(this.mouseX, this.mouseY);
+		newValue = this.restrictValue(newValue);
 		// use the setter
-		this.value = this.locationToValue(this.mouseX, this.mouseY);
+		this.value = newValue;
 	}
 
 	private function thumbSkin_stage_mouseUpHandler(event:MouseEvent):Void {
@@ -793,13 +796,17 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this._dragging = true;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 
+		var newValue = this.locationToValue(location.x, location.y);
+		newValue = this.restrictValue(newValue);
 		// use the setter
-		this.value = this.locationToValue(location.x, location.y);
+		this.value = newValue;
 	}
 
 	private function trackSkin_stage_mouseMoveHandler(event:MouseEvent):Void {
+		var newValue = this.locationToValue(this.mouseX, this.mouseY);
+		newValue = this.restrictValue(newValue);
 		// use the setter
-		this.value = this.locationToValue(this.mouseX, this.mouseY);
+		this.value = newValue;
 	}
 
 	private function trackSkin_stage_mouseUpHandler(event:MouseEvent):Void {
