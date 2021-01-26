@@ -78,7 +78,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function set_value(value:Float):Float {
-		// don't reset a value that has been passed in from an external source
+		// don't restrict a value that has been passed in from an external
+		// source to the minimum/maximum/snapInterval
+		// assume that the user knows what they are doing
 		// this allows the thumb to shrink when outside the minimum or maximum
 		if (this._value == value) {
 			return this._value;
