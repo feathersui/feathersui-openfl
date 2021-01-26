@@ -172,9 +172,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 			}
 			#end
 			#else
-			if (DeviceUtil.isDesktop()) {
-				result = this.stage.contentsScaleFactor;
-			} else {
+			if (!DeviceUtil.isDesktop()) {
 				if (this._scaler == null) {
 					this._scaler = new ScreenDensityScaleCalculator();
 					this._scaler.addScaleForDensity(120, 0.75); // ldpi
