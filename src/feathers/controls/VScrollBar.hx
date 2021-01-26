@@ -45,7 +45,7 @@ class VScrollBar extends BaseScrollBar {
 		if (Std.is(this.thumbSkin, IValidating)) {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
-		var normalized = this.normalizeValue();
+		var normalized = this.normalizeValue(value);
 		var trackScrollableHeight = this.actualHeight - this.paddingTop - this.paddingBottom - this.thumbSkin.height;
 		return this.paddingTop + (trackScrollableHeight * normalized);
 	}

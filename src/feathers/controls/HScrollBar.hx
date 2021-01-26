@@ -45,7 +45,7 @@ class HScrollBar extends BaseScrollBar {
 		if (Std.is(this.thumbSkin, IValidating)) {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
-		var normalized = this.normalizeValue();
+		var normalized = this.normalizeValue(value);
 		var trackScrollableWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this.thumbSkin.width;
 		return this.paddingLeft + (trackScrollableWidth * normalized);
 	}

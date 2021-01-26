@@ -695,10 +695,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this._previousFallbackTrackHeight = this.actualHeight;
 	}
 
-	private function normalizeValue():Float {
+	private function normalizeValue(value:Float):Float {
 		var normalized = 0.0;
 		if (this._minimum != this._maximum) {
-			normalized = (this._value - this._minimum) / (this._maximum - this._minimum);
+			normalized = (value - this._minimum) / (this._maximum - this._minimum);
 			if (normalized < 0.0) {
 				normalized = 0.0;
 			} else if (normalized > 1.0) {

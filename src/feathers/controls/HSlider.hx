@@ -63,7 +63,7 @@ class HSlider extends BaseSlider {
 			cast(this.thumbSkin, IValidating).validateNow();
 		}
 
-		var normalized = this.normalizeValue();
+		var normalized = this.normalizeValue(value);
 
 		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
 		if (this.thumbSkin != null) {

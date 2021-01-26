@@ -564,13 +564,13 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		throw new TypeError("Missing override for 'layoutThumb' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
-	private function normalizeValue():Float {
-		var normalized = 1.0;
+	private function normalizeValue(value:Float):Float {
+		var normalized = 0.0;
 		if (this._minimum != this._maximum) {
-			normalized = (this._value - this._minimum) / (this._maximum - this._minimum);
+			normalized = (value - this._minimum) / (this._maximum - this._minimum);
 			if (normalized < 0.0) {
 				normalized = 0.0;
-			} else if (normalized > 1) {
+			} else if (normalized > 1.0) {
 				normalized = 1.0;
 			}
 		}
