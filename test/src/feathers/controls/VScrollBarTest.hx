@@ -37,16 +37,20 @@ class VScrollBarTest {
 
 		// round up
 		this._scrollBar.value = 0.2;
+		this._scrollBar.applyValueRestrictions();
 		Assert.areEqual(0.3, this._scrollBar.value);
 		// round down
 		this._scrollBar.value = 0.7;
+		this._scrollBar.applyValueRestrictions();
 		Assert.areEqual(0.6, this._scrollBar.value);
 
 		// allow maximum, even if not on interval
 		this._scrollBar.value = 1.0;
+		this._scrollBar.applyValueRestrictions();
 		Assert.areEqual(1.0, this._scrollBar.value);
 		// allow minimum, even if not on interval
 		this._scrollBar.value = -1.0;
+		this._scrollBar.applyValueRestrictions();
 		Assert.areEqual(-1.0, this._scrollBar.value);
 	}
 }

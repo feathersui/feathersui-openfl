@@ -386,6 +386,20 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		}
 	}
 
+	/**
+		Applies the `minimum`, `maximum`, and `snapInterval` restrictions to the
+		current `value`.
+
+		Because it's possible to set `value` to a numeric value that is outside
+		the allowed range, or to a value that has not been snapped to the
+		interval, this method may be called to apply the restrictions manually.
+
+		@since 1.0.0
+	**/
+	public function applyValueRestrictions():Void {
+		this.value = this.restrictValue(this._value);
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 		// if the user hasn't changed the value, automatically restrict it based

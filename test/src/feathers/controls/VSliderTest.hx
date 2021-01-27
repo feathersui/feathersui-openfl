@@ -37,16 +37,20 @@ class VSliderTest {
 
 		// round up
 		this._slider.value = 0.2;
+		this._slider.applyValueRestrictions();
 		Assert.areEqual(0.3, this._slider.value);
 		// round down
 		this._slider.value = 0.7;
+		this._slider.applyValueRestrictions();
 		Assert.areEqual(0.6, this._slider.value);
 
 		// allow maximum, even if not on interval
 		this._slider.value = 1.0;
+		this._slider.applyValueRestrictions();
 		Assert.areEqual(1.0, this._slider.value);
 		// allow minimum, even if not on interval
 		this._slider.value = -1.0;
+		this._slider.applyValueRestrictions();
 		Assert.areEqual(-1.0, this._slider.value);
 	}
 }
