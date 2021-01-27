@@ -16,7 +16,27 @@ import openfl.events.EventDispatcher;
 
 /**
 	Wraps an `Array` in the common `IFlatCollection` API used for data
-	collections by many Feathers UI controls, including `ListView` and `TabBar`
+	collections by many Feathers UI controls, including `ListView` and `TabBar`.
+
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.FlatCollectionEvent.ADD_ITEM
+
+	@event feathers.events.FlatCollectionEvent.REMOVE_ITEM
+
+	@event feathers.events.FlatCollectionEvent.REPLACE_ITEM
+
+	@event feathers.events.FlatCollectionEvent.REMOVE_ALL
+
+	@event feathers.events.FlatCollectionEvent.RESET
+
+	@event feathers.events.FlatCollectionEvent.UPDATE_ITEM
+
+	@event feathers.events.FlatCollectionEvent.UPDATE_ALL
+
+	@event feathers.events.FlatCollectionEvent.FILTER_CHANGE
+
+	@event feathers.events.FlatCollectionEvent.SORT_CHANGE
 
 	@since 1.0.0
 **/

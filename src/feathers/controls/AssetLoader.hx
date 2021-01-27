@@ -36,6 +36,16 @@ import openfl.utils.AssetType;
 	- [`AssetType.IMAGE`](https://api.openfl.org/openfl/utils/AssetType.html#IMAGE)
 	- [`AssetType.MOVIE_CLIP`](https://api.openfl.org/openfl/utils/AssetType.html#MOVIE_CLIP)
 
+	@event openfl.events.Event.COMPLETE Dispatched when `AssetLoader.source`
+	successfully completes loading asynchronously. If `AssetLoader.source` is
+	pre-loaded by `openfl.utils.Assets`, this event will not be dispatched.
+
+	@event openfl.events.IOErrorEvent.IO_ERROR Dispatched if an IO error occurs
+	while loading `AssetLoader.source`.
+
+	@event openfl.events.SecurityErrorEvent.SECURITY_ERROR Dispatched if a security error
+	occurs while loading `AssetLoader.source`.
+
 
 	@see [Tutorial: How to use the AssetLoader component](https://feathersui.com/learn/haxe-openfl/asset-loader/)
 	@see [`openfl.utils.Assets`](https://api.openfl.org/openfl/utils/Assets.html)

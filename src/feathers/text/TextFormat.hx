@@ -19,6 +19,8 @@ import openfl.text.TextFormatAlign;
 	`Event.CHANGE` when any of its properties changes, and supports creating a
 	clone with the same properties.
 
+	@event openfl.events.Event.CHANGE
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)

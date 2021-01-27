@@ -20,6 +20,8 @@ import feathers.style.ITheme;
 /**
 	A theme based on `ClassVariantStyleProvider`.
 
+	@event openfl.events.Event.CLEAR
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CLEAR)

@@ -13,8 +13,38 @@ import openfl.events.IEventDispatcher;
 /**
 	Interface for collections of flat data, such as arrays or other lists.
 
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.FlatCollectionEvent.ADD_ITEM
+
+	@event feathers.events.FlatCollectionEvent.REMOVE_ITEM
+
+	@event feathers.events.FlatCollectionEvent.REPLACE_ITEM
+
+	@event feathers.events.FlatCollectionEvent.REMOVE_ALL
+
+	@event feathers.events.FlatCollectionEvent.RESET
+
+	@event feathers.events.FlatCollectionEvent.UPDATE_ITEM
+
+	@event feathers.events.FlatCollectionEvent.UPDATE_ALL
+
+	@event feathers.events.FlatCollectionEvent.FILTER_CHANGE
+
+	@event feathers.events.FlatCollectionEvent.SORT_CHANGE
+
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.FlatCollectionEvent.ADD_ITEM)
+@:event(feathers.events.FlatCollectionEvent.REMOVE_ITEM)
+@:event(feathers.events.FlatCollectionEvent.REPLACE_ITEM)
+@:event(feathers.events.FlatCollectionEvent.REMOVE_ALL)
+@:event(feathers.events.FlatCollectionEvent.RESET)
+@:event(feathers.events.FlatCollectionEvent.UPDATE_ITEM)
+@:event(feathers.events.FlatCollectionEvent.UPDATE_ALL)
+@:event(feathers.events.FlatCollectionEvent.FILTER_CHANGE)
+@:event(feathers.events.FlatCollectionEvent.SORT_CHANGE)
 interface IFlatCollection<T> extends IEventDispatcher {
 	/**
 		The number of items in the collection.

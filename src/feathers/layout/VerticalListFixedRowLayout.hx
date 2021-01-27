@@ -23,6 +23,8 @@ import openfl.events.EventDispatcher;
 	measured height of the first item, or it may be overridden using the
 	`rowHeight` property.
 
+	@event openfl.events.Event.CHANGE
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)

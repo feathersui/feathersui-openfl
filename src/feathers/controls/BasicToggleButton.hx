@@ -31,6 +31,10 @@ import openfl.events.Event;
 	toggle button, with a label and icon, see `feathers.controls.ToggleButton`
 	instead.
 
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.TriggerEvent.TRIGGER
+
 	@since 1.0.0
 
 	@see `feathers.controls.ToggleButton`

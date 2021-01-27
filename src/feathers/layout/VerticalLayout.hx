@@ -18,6 +18,8 @@ import feathers.core.IValidating;
 /**
 	Positions items from top to bottom in a single column.
 
+	@event openfl.events.Event.CHANGE
+
 	@see [Tutorial: How to use VerticalLayout with layout containers](https://feathersui.com/learn/haxe-openfl/vertical-layout/)
 	@see `feathers.layout.VerticalLayoutData`
 

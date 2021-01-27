@@ -29,6 +29,10 @@ import openfl.events.MouseEvent;
 	purposes like skinning. For a more full-featured button, with a label and
 	icon, see `feathers.controls.Button` instead.
 
+	@event feathers.events.FeathersEvent.STATE_CHANGE
+
+	@event feathers.events.TriggerEvent.TRIGGER
+
 	@since 1.0.0
 
 	@see `feathers.controls.Button`

@@ -16,8 +16,13 @@ import openfl.events.EventDispatcher;
 /**
 	An effect that does nothing and simply completes immediately.
 
+	@event openfl.events.Event.CHANGE
+
+	@event openfl.events.Event.COMPLETE
+
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.COMPLETE)
 class NoOpEffectContext extends EventDispatcher implements IEffectContext {
 	/**

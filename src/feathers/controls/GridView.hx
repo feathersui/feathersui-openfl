@@ -89,11 +89,19 @@ import openfl.ui.Multitouch;
 	this.addChild(gridView);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.GridViewEvent.CELL_TRIGGER
+
+	@event feathers.events.GridViewEvent.HEADER_TRIGGER
+
 	@see [Tutorial: How to use the GridView component](https://feathersui.com/learn/haxe-openfl/grid-view/)
 
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.GridViewEvent.CELL_TRIGGER)
+@:event(feathers.events.GridViewEvent.HEADER_TRIGGER)
 @:access(feathers.data.GridViewHeaderState)
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")

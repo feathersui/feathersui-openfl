@@ -15,12 +15,18 @@ import openfl.display.DisplayObject;
 	Manages the layout and positioning of a pop-up displayed by a component like
 	`ComboBox` or `PopUpListView`.
 
+	@event openfl.events.Event.OPEN
+
+	@event openfl.events.Event.CLOSE
+
 	@see `feathers.core.PopUpManager`
 	@see `feathers.controls.ComboBox`
 	@see `feathers.controls.PopUpListView`
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
 interface IPopUpAdapter extends IEventDispatcher {
 	/**
 		Indicates if the pop-up is currently active or not.

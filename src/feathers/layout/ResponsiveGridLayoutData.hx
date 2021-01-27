@@ -17,6 +17,8 @@ import openfl.events.EventDispatcher;
 /**
 	Sets the optional span and offset for an item in a `ResponsiveGridLayout`.
 
+	@event openfl.events.Event.CHANGE
+
 	@see `feathers.layout.ResponsiveGridLayout`
 
 	@since 1.0.0

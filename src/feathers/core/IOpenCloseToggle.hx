@@ -11,10 +11,14 @@ package feathers.core;
 /**
 	A UI component that may be opened or closed.
 
-	Dispatches `Event.OPEN` and `Event.CLOSE` when the current state changes.
+	@event openfl.events.Event.OPEN
+
+	@event openfl.events.Event.CLOSE
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.OPEN)
+@:event(openfl.events.Event.CLOSE)
 interface IOpenCloseToggle extends IUIControl {
 	/**
 		Indicates if the toggle is opened or closed.

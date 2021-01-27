@@ -13,6 +13,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 interface IDataSelector<T> {
 	/**
 		The currently selected item. Returns `null` if no item is selected.

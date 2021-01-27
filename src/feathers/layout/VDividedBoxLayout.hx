@@ -18,6 +18,8 @@ import feathers.core.IValidating;
 /**
 	The layout used by the `VDividedBox` component.
 
+	@event openfl.events.Event.CHANGE
+
 	@see `feathers.controls.VDividedBox`
 
 	@since 1.0.0

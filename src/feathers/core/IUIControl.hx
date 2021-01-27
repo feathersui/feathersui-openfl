@@ -11,6 +11,12 @@ package feathers.core;
 /**
 	A user interface control.
 
+	@event feathers.events.FeathersEvent.INITIALIZE
+
+	@event feathers.events.FeathersEvent.ENABLE
+
+	@event feathers.events.FeathersEvent.DISABLE
+
 	@since 1.0.0
 **/
 @:event(feathers.events.FeathersEvent.INITIALIZE)

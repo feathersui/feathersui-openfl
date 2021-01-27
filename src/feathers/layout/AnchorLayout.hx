@@ -19,6 +19,8 @@ import openfl.events.EventDispatcher;
 	Positions and sizes items by anchoring their edges (or center points) to
 	to their parent container or to other items in the same container.
 
+	@event openfl.events.Event.CHANGE
+
 	@see [Tutorial: How to use AnchorLayout with layout containers](https://feathersui.com/learn/haxe-openfl/anchor-layout/)
 	@see `feathers.layout.AnchorLayoutData`
 

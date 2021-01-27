@@ -18,6 +18,8 @@ import openfl.ui.Keyboard;
 /**
 	Displays a collection of form controls.
 
+	@event feathers.events.FormEvent.SUBMIT
+
 	@see `feathers.controls.FormItem`
 
 	@since 1.0.0

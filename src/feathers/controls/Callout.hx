@@ -53,6 +53,8 @@ import openfl.ui.Multitouch;
 	button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 	```
 
+	@event openfl.events.Event.CLOSE
+
 	@see [Tutorial: How to use the Callout component](https://feathersui.com/learn/haxe-openfl/callout/)
 	@see `feathers.controls.TextCallout`
 	@see `Callout.show()`

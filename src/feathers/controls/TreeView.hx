@@ -97,6 +97,14 @@ import openfl._internal.utils.ObjectPool;
 
 	this.addChild(treeView);
 	```
+		
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.TreeViewEvent.ITEM_TRIGGER
+
+	@event feathers.events.TreeViewEvent.BRANCH_OPEN
+
+	@event feathers.events.TreeViewEvent.BRANCH_CLOSE
 
 	@see [Tutorial: How to use the TreeView component](https://feathersui.com/learn/haxe-openfl/tree-view/)
 

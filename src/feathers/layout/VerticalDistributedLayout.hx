@@ -19,6 +19,8 @@ import feathers.core.IValidating;
 	Positions items from top to bottom in a single column, and all items are
 	resized to have the same width and height.
 
+	@event openfl.events.Event.CHANGE
+
 	@see [Tutorial: How to use VerticalDistributedLayout with layout containers](https://feathersui.com/learn/haxe-openfl/vertical-distributed-layout/)
 
 	@since 1.0.0

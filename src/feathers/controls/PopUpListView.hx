@@ -69,6 +69,14 @@ import lime.ui.KeyCode;
 	this.addChild(list);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event openfl.events.Event.OPEN
+
+	@event openfl.events.Event.CLOSE
+
+	@event feathers.events.ListViewEvent.ITEM_TRIGGER
+
 	@see [Tutorial: How to use the PopUpListView component](https://feathersui.com/learn/haxe-openfl/pop-up-list-view/)
 	@see `feathers.controls.ComboBox`
 

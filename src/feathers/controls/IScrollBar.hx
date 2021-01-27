@@ -12,8 +12,14 @@ package feathers.controls;
 	Minimum requirements for a scroll bar to be usable with subclasses of the
 	`BaseScrollContainer` component.
 
+	@event feathers.events.ScrollEvent.SCROLL_START
+
+	@event feathers.events.ScrollEvent.SCROLL_COMPLETE
+
 	@since 1.0.0
 **/
+@:event(feathers.events.ScrollEvent.SCROLL_START)
+@:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 interface IScrollBar extends IRange {
 	/**
 		The amount the value must change to increment or decrement by a "step".

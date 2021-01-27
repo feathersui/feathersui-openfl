@@ -43,6 +43,10 @@ import openfl.events.Event;
 	this.addChild(calendar);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event openfl.events.Event.SCROLL
+
 	@see [Tutorial: How to use the CalendarGrid component](https://feathersui.com/learn/haxe-openfl/calendar-grid/)
 
 	@since 1.0.0

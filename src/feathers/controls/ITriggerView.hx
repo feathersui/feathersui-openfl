@@ -15,6 +15,8 @@ import feathers.core.IUIControl;
 	prefer to listen for `TriggerEvent.TRIGGER` instead of `MouseEvent.CLICK` or
 	`TouchEvent.TOUCH_TAP`.
 
+	@event feathers.events.TriggerEvent.TRIGGER
+
 	@since 1.0.0
 **/
 @:event(feathers.events.TriggerEvent.TRIGGER)

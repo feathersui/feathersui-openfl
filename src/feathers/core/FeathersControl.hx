@@ -33,6 +33,18 @@ import openfl.geom.Point;
 	(including optional support for layouts), see
 	`feathers.controls.LayoutGroup`.
 
+	@event feathers.events.FeathersEvent.INITIALIZE
+
+	@event feathers.events.FeathersEvent.ENABLE
+
+	@event feathers.events.FeathersEvent.DISABLE
+
+	@event feathers.events.FeathersEvent.CREATION_COMPLETE
+
+	@event feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE
+
+	@event feathers.events.FeathersEvent.STATE_CHANGE
+
 	@since 1.0.0
 
 	@see `feathers.controls.LayoutGroup`

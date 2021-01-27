@@ -13,8 +13,11 @@ import feathers.core.IUIControl;
 /**
 	An interface for a user interface component that may be selected.
 
+	@event openfl.events.Event.CHANGE
+
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 interface IToggle extends IUIControl {
 	/**
 		Indicates if the `IToggle` is selected or not.

@@ -84,6 +84,10 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(listView);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.ListViewEvent.ITEM_TRIGGER
+
 	@see [Tutorial: How to use the ListView component](https://feathersui.com/learn/haxe-openfl/list-view/)
 	@see `feathers.controls.PopUpListView`
 	@see `feathers.controls.ComboBox`

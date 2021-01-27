@@ -63,6 +63,10 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(buttonBar);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.ButtonBarEvent.ITEM_TRIGGER
+
 	@see [Tutorial: How to use the ButtonBar component](https://feathersui.com/learn/haxe-openfl/button-bar/)
 
 	@since 1.0.0

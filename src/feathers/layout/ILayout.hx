@@ -14,8 +14,11 @@ import openfl.events.IEventDispatcher;
 /**
 	Positions and sizes children in a container.
 
+	@event openfl.events.Event.CHANGE
+
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 interface ILayout extends IEventDispatcher {
 	/**
 		Positions and sizes an array of display objects based on their parent

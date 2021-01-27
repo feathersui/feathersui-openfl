@@ -20,6 +20,8 @@ import openfl.events.EventDispatcher;
 	A simple list layout that positions items from left to right, in a single
 	row, where every item fills the entire height of the container.
 
+	@event openfl.events.Event.CHANGE
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)

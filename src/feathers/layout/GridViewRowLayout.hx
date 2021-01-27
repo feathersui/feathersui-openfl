@@ -20,6 +20,8 @@ import openfl.events.EventDispatcher;
 /**
 	Positions cell or header renderers in a `GridView` component.
 
+	@event openfl.events.Event.CHANGE
+
 	@see `feathers.controls.GridView`
 
 	@since 1.0.0

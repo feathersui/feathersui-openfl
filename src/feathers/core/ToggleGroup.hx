@@ -21,6 +21,8 @@ import openfl.events.EventDispatcher;
 	Controls the selection of two or more IToggle instances where only one may
 	be selected at a time.
 
+	@event openfl.events.Event.CHANGE
+
 	@see `feathers.controls.IToggle`
 	@see `feathers.controls.IGroupedToggle`
 

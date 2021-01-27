@@ -50,6 +50,8 @@ import openfl.events.EventDispatcher;
 	this.addChild(alternateButton);
 	```
 
+	@event feathers.events.StyleProviderEvent.STYLES_CHANGE
+
 	@see [Styling and skinning Feathers UI components](https://feathersui.com/learn/haxe-openfl/styling-and-skinning/)
 
 	@since 1.0.0

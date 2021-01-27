@@ -48,6 +48,10 @@ import openfl.ui.Keyboard;
 	this.addChild(input);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event openfl.events.Event.SCROLL
+
 	@see [Tutorial: How to use the TextInput component](https://feathersui.com/learn/haxe-openfl/text-input/)
 
 	@since 1.0.0

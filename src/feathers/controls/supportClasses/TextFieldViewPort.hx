@@ -23,6 +23,8 @@ import openfl.text.TextLineMetrics;
 /**
 	An implementation of `IViewPort` for `TextArea`.
 
+	@event openfl.events.Event.CHANGE
+
 	@see `feathers.controls.TextArea`
 
 	@since 1.0.0

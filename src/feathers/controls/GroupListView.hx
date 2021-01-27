@@ -85,11 +85,16 @@ import openfl.ui.Multitouch;
 	this.addChild(groupListView);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.GroupListViewEvent.ITEM_TRIGGER
+
 	@see [Tutorial: How to use the GroupListView component](https://feathersui.com/learn/haxe-openfl/group-list-view/)
 
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
+@:event(feathers.events.GroupListViewEvent.ITEM_TRIGGER)
 @:access(feathers.data.GroupListViewItemState)
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")

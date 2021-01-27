@@ -12,8 +12,12 @@ package feathers.core;
 	A display object with extra measurement properties, including minimum and
 	maximum dimensions.
 
+	@event openfl.events.Event.RESIZE Dispatched when either the width or the
+	height of the component has changed.
+
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.RESIZE)
 interface IMeasureObject extends IDisplayObject {
 	/**
 		The object's explicit width value, or `null` if `width` is not set

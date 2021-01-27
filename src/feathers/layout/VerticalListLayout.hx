@@ -24,6 +24,8 @@ import openfl.events.EventDispatcher;
 	`VerticalListFixedRowLayout` instead. When a fixed height for items is
 	known, that layout offers better performance optimization.
 
+	@event openfl.events.Event.CHANGE
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)

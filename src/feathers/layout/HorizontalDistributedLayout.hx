@@ -19,6 +19,8 @@ import feathers.core.IValidating;
 	Positions items from left to right in a single row, and all items are
 	resized to have the same width and height.
 
+	@event openfl.events.Event.CHANGE
+
 	@see [Tutorial: How to use HorizontalDistributedLayout with layout containers](https://feathersui.com/learn/haxe-openfl/horizontal-distributed-layout/)
 
 	@since 1.0.0

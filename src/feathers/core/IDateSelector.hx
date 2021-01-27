@@ -13,6 +13,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 interface IDateSelector {
 	/**
 		The currently selected date. Returns `null` if no date is selected.

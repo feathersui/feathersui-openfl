@@ -11,6 +11,8 @@ package feathers.style;
 /**
 	An interface for Feathers UI themes.
 
+	@event openfl.events.Event.CLEAR
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CLEAR)

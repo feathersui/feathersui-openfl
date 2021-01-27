@@ -66,6 +66,10 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(tabs);
 	```
 
+	@event openfl.events.Event.CHANGE
+
+	@event feathers.events.TabBarEvent.ITEM_TRIGGER
+
 	@see [Tutorial: How to use the TabBar component](https://feathersui.com/learn/haxe-openfl/tab-bar/)
 	@see `feathers.controls.navigators.TabNavigator`
 

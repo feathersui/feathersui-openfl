@@ -18,6 +18,8 @@ import feathers.core.IValidating;
 /**
 	Positions items from left to right in a single row.
 
+	@event openfl.events.Event.CHANGE
+
 	@see [Tutorial: How to use HorizontalLayout with layout containers](https://feathersui.com/learn/haxe-openfl/horizontal-layout/)
 	@see `feathers.layout.HorizontalLayoutData`
 

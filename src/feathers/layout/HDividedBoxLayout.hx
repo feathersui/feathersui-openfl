@@ -18,6 +18,8 @@ import openfl.events.EventDispatcher;
 /**
 	The layout used by the `HDividedBox` component.
 
+	@event openfl.events.Event.CHANGE
+
 	@see `feathers.controls.HDividedBox`
 
 	@since 1.0.0

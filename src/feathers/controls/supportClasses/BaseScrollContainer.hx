@@ -40,6 +40,12 @@ import openfl.ui.Keyboard;
 /**
 	A base class for scrolling containers.
 
+	@event feathers.events.ScrollEvent.SCROLL
+
+	@event feathers.events.ScrollEvent.SCROLL_START
+
+	@event feathers.events.ScrollEvent.SCROLL_COMPLETE
+
 	@since 1.0.0
 **/
 @:event(feathers.events.ScrollEvent.SCROLL)

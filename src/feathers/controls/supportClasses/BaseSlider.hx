@@ -26,6 +26,8 @@ import openfl.geom.Point;
 /**
 	Base class for slider components.
 
+	@event openfl.events.Event.CHANGE
+
 	@see `feathers.controls.HSlider`
 	@see `feathers.controls.VSlider`
 

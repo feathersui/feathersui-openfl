@@ -13,6 +13,7 @@ package feathers.core;
 
 	@since 1.0.0
 **/
+@:event(openfl.events.Event.CHANGE)
 interface IIndexSelector {
 	/**
 		The currently selected index. Returns `-1` if no index is selected.

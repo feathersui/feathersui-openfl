@@ -20,6 +20,8 @@ import openfl.events.EventDispatcher;
 	offsets in between. When a row is "full", items are laid out starting on the
 	next row automatically.
 
+	@event openfl.events.Event.CHANGE
+
 	@see [Tutorial: How to use ResponsiveGridLayout with layout containers](https://feathersui.com/learn/haxe-openfl/responsive-grid-layout/)
 	@see `feathers.layout.ResponsiveGridLayoutData`
 

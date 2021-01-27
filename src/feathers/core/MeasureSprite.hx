@@ -17,6 +17,9 @@ import feathers.events.FeathersEvent;
 	with extra minimum and maximum dimensions that may be used in Feathers UI
 	layouts.
 
+	@event openfl.events.Event.RESIZE Dispatched when either the width or the
+	height of the component has changed.
+
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.RESIZE)
