@@ -475,7 +475,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		calculatedHeight -= (this.paddingTop + this.paddingBottom);
 		if (this._currentIcon != null) {
 			var adjustedGap = this.gap;
-			if (adjustedGap == Math.POSITIVE_INFINITY) {
+			// Math.POSITIVE_INFINITY bug workaround
+			if (adjustedGap == (1.0 / 0.0)) {
 				adjustedGap = this.minGap;
 			}
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
@@ -487,7 +488,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		}
 		if (this.secondaryTextField != null) {
 			var adjustedGap = this.gap;
-			if (adjustedGap == Math.POSITIVE_INFINITY) {
+			// Math.POSITIVE_INFINITY bug workaround
+			if (adjustedGap == (1.0 / 0.0)) {
 				adjustedGap = this.minGap;
 			}
 			calculatedHeight -= (this._secondaryTextMeasuredHeight + adjustedGap);
@@ -510,7 +512,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function measureContentWidth():Float {
 		var adjustedGap = this.gap;
-		if (adjustedGap == Math.POSITIVE_INFINITY) {
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
 		var contentWidth = this._text != null ? this._textMeasuredWidth : 0.0;
@@ -532,7 +535,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function measureContentHeight():Float {
 		var adjustedGap = this.gap;
-		if (adjustedGap == Math.POSITIVE_INFINITY) {
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
 
@@ -558,7 +562,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function measureContentMinWidth():Float {
 		var adjustedGap = this.gap;
-		if (adjustedGap == Math.POSITIVE_INFINITY) {
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
 		var contentMinWidth = this._text != null ? this._textMeasuredWidth : 0.0;
@@ -580,7 +585,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function measureContentMinHeight():Float {
 		var adjustedGap = this.gap;
-		if (adjustedGap == Math.POSITIVE_INFINITY) {
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
 		var contentMinHeight = this._text != null ? this._textMeasuredHeight : 0.0;

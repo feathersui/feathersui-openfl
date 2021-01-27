@@ -408,7 +408,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		return this._explicitMinVisibleWidth;
 	}
 
-	private var _maxVisibleWidth:Null<Float> = Math.POSITIVE_INFINITY;
+	private var _maxVisibleWidth:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
@@ -498,7 +498,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		return this._explicitMinVisibleHeight;
 	}
 
-	private var _maxVisibleHeight:Null<Float> = Math.POSITIVE_INFINITY;
+	private var _maxVisibleHeight:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
@@ -751,12 +751,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		}
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
-			newMaxWidth = Math.POSITIVE_INFINITY;
+			newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
-			newMaxHeight = Math.POSITIVE_INFINITY;
+			newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);

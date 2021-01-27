@@ -71,7 +71,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		return this._explicitMinVisibleWidth;
 	}
 
-	private var _maxVisibleWidth:Null<Float> = Math.POSITIVE_INFINITY;
+	private var _maxVisibleWidth:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
@@ -161,7 +161,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		return this._explicitMinVisibleHeight;
 	}
 
-	private var _maxVisibleHeight:Null<Float> = Math.POSITIVE_INFINITY;
+	private var _maxVisibleHeight:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
@@ -341,11 +341,11 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		}
 		var viewPortMaxWidth = this._maxVisibleWidth;
 		if (needsMaxWidth) {
-			viewPortMaxWidth = Math.POSITIVE_INFINITY;
+			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 		var viewPortMaxHeight = this._maxVisibleHeight;
 		if (needsMaxHeight) {
-			viewPortMaxHeight = Math.POSITIVE_INFINITY;
+			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 		this._layoutMeasurements.minWidth = viewPortMinWidth;
 		this._layoutMeasurements.minHeight = viewPortMinHeight;
@@ -356,7 +356,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	private function handleLayoutResult():Void {
 		var contentWidth = this._layoutResult.contentWidth;
 		var contentHeight = this._layoutResult.contentHeight;
-		this.saveMeasurements(contentWidth, contentHeight, contentWidth, contentHeight, Math.POSITIVE_INFINITY, Math.POSITIVE_INFINITY);
+		this.saveMeasurements(contentWidth, contentHeight, contentWidth, contentHeight);
 		var viewPortWidth = this._layoutResult.viewPortWidth;
 		var viewPortHeight = this._layoutResult.viewPortHeight;
 		this._actualVisibleWidth = viewPortWidth;

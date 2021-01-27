@@ -591,7 +591,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
-				newMaxWidth = Math.POSITIVE_INFINITY;
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 		}
 
@@ -602,7 +602,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
-				newMaxHeight = Math.POSITIVE_INFINITY;
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 		}
 

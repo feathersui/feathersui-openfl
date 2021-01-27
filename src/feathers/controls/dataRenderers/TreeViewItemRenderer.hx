@@ -267,7 +267,8 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
-		if (adjustedGap == Math.POSITIVE_INFINITY) {
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
 		var depth = 0;
@@ -289,7 +290,8 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
-		if (adjustedGap == Math.POSITIVE_INFINITY) {
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
 		var depth = 0;
@@ -311,7 +313,8 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		}
 		var paddingLeft = this.paddingLeft;
 		var adjustedGap = this.gap;
-		if (adjustedGap == Math.POSITIVE_INFINITY) {
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
 		var disclosureGap = adjustedGap;

@@ -116,10 +116,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var leftViewPortOffset:Float = 0.0;
 	private var chromeMeasuredWidth:Float = 0.0;
 	private var chromeMeasuredMinWidth:Float = 0.0;
-	private var chromeMeasuredMaxWidth:Float = Math.POSITIVE_INFINITY;
+	private var chromeMeasuredMaxWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 	private var chromeMeasuredHeight:Float = 0.0;
 	private var chromeMeasuredMinHeight:Float = 0.0;
-	private var chromeMeasuredMaxHeight:Float = Math.POSITIVE_INFINITY;
+	private var chromeMeasuredMaxHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 
 	override private function get_focusEnabled():Bool {
 		return (this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX) && super.focusEnabled;
@@ -1039,10 +1039,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.leftViewPortOffset = 0.0;
 		this.chromeMeasuredWidth = 0.0;
 		this.chromeMeasuredMinWidth = 0.0;
-		this.chromeMeasuredMaxWidth = Math.POSITIVE_INFINITY;
+		this.chromeMeasuredMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		this.chromeMeasuredHeight = 0.0;
 		this.chromeMeasuredMinHeight = 0.0;
-		this.chromeMeasuredMaxHeight = Math.POSITIVE_INFINITY;
+		this.chromeMeasuredMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 	}
 
 	private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
@@ -1203,7 +1203,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this._viewPort.minVisibleHeight = minVisibleHeight;
 		}
 		if (this.explicitMaxWidth == null) {
-			this._viewPort.maxVisibleWidth = Math.POSITIVE_INFINITY;
+			this._viewPort.maxVisibleWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		} else {
 			var maxVisibleWidth = this.explicitMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 			if (maxVisibleWidth < 0.0) {
@@ -1212,7 +1212,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this._viewPort.maxVisibleWidth = maxVisibleWidth;
 		}
 		if (this.explicitMaxHeight == null) {
-			this._viewPort.maxVisibleHeight = Math.POSITIVE_INFINITY;
+			this._viewPort.maxVisibleHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		} else {
 			var maxVisibleHeight = this.explicitMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
 			if (maxVisibleHeight < 0.0) {
@@ -1421,7 +1421,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			if (this.measureViewPort) {
 				newMaxWidth = this._viewPort.maxVisibleWidth;
 			} else {
-				newMaxWidth = Math.POSITIVE_INFINITY;
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 			newMaxWidth += this.leftViewPortOffset + this.rightViewPortOffset;
 			newMaxWidth = Math.min(newMaxWidth, this.chromeMeasuredMaxWidth);
@@ -1438,7 +1438,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			if (this.measureViewPort) {
 				newMaxHeight = this._viewPort.maxVisibleHeight;
 			} else {
-				newMaxHeight = Math.POSITIVE_INFINITY;
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 			newMaxHeight += this.topViewPortOffset + this.bottomViewPortOffset;
 			newMaxHeight = Math.min(newMaxHeight, this.chromeMeasuredMaxHeight);

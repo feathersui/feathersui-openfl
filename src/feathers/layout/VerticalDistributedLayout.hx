@@ -193,7 +193,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		return this._gap;
 	}
 
-	private var _maxItemHeight:Float = Math.POSITIVE_INFINITY;
+	private var _maxItemHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 
 	/**
 		The maximum height of an item in the layout.

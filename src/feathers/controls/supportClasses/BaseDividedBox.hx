@@ -669,11 +669,11 @@ class BaseDividedBox extends FeathersControl {
 		}
 		var viewPortMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
-			viewPortMaxWidth = Math.POSITIVE_INFINITY;
+			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 		var viewPortMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
-			viewPortMaxHeight = Math.POSITIVE_INFINITY;
+			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 		if (this._backgroundSkinMeasurements != null) {
 			// because the layout might need it, we account for the

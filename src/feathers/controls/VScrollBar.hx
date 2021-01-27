@@ -131,7 +131,7 @@ class VScrollBar extends BaseScrollBar {
 		var newMinHeight = newHeight;
 		var newMaxWidth = newWidth;
 
-		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, Math.POSITIVE_INFINITY);
+		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, null);
 	}
 
 	override private function layoutSplitTrack():Void {

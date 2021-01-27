@@ -294,7 +294,7 @@ class AssetLoader extends FeathersControl {
 			if (this.content != null) {
 				newMaxWidth = contentWidth * heightScale;
 			} else {
-				newMaxWidth = Math.POSITIVE_INFINITY;
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 		}
 
@@ -303,7 +303,7 @@ class AssetLoader extends FeathersControl {
 			if (this.content != null) {
 				newMaxHeight = contentHeight * widthScale;
 			} else {
-				newMaxHeight = Math.POSITIVE_INFINITY;
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 		}
 

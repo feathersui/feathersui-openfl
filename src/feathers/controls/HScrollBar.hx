@@ -131,7 +131,7 @@ class HScrollBar extends BaseScrollBar {
 		var newMinHeight = newHeight;
 		var newMaxHeight = newHeight;
 
-		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, Math.POSITIVE_INFINITY, newMaxHeight);
+		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, null, newMaxHeight);
 	}
 
 	override private function layoutSplitTrack():Void {

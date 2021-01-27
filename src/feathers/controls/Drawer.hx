@@ -371,7 +371,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			var bottomRight = this.globalToLocal(new Point(this.stage.stageWidth, this.stage.stageHeight));
 			stageWidth = bottomRight.x - topLeft.x;
 			stageHeight = bottomRight.y - topLeft.y;
-			return this.saveMeasurements(stageWidth, stageHeight, stageWidth, stageHeight, Math.POSITIVE_INFINITY, Math.POSITIVE_INFINITY);
+			return this.saveMeasurements(stageWidth, stageHeight, stageWidth, stageHeight);
 		}
 
 		var measureContent:IMeasureObject = null;

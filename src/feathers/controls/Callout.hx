@@ -733,7 +733,7 @@ class Callout extends FeathersControl {
 				maxWidthWithStage = stageMaxWidth;
 			}
 		} else {
-			maxWidthWithStage = Math.POSITIVE_INFINITY;
+			maxWidthWithStage = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 		var maxHeightWithStage = this.explicitMaxHeight;
 		if (this.stage != null) {
@@ -742,7 +742,7 @@ class Callout extends FeathersControl {
 				maxHeightWithStage = stageMaxHeight;
 			}
 		} else {
-			maxHeightWithStage = Math.POSITIVE_INFINITY;
+			maxHeightWithStage = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 
 		if (this.backgroundSkin != null) {

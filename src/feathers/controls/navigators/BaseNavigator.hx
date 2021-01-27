@@ -338,7 +338,7 @@ class BaseNavigator extends FeathersControl {
 				} else if (this._activeItemView != null) {
 					newMaxWidth = this._activeItemView.width;
 				} else {
-					newMaxWidth = Math.POSITIVE_INFINITY;
+					newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 				}
 				newMaxWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
@@ -354,7 +354,7 @@ class BaseNavigator extends FeathersControl {
 				} else if (this._activeItemView != null) {
 					newMaxHeight = this._activeItemView.height;
 				} else {
-					newMaxHeight = Math.POSITIVE_INFINITY;
+					newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 				}
 				newMaxHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {
