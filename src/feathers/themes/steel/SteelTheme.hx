@@ -24,6 +24,7 @@ import feathers.themes.steel.components.SteelHDividedBoxStyles;
 import feathers.themes.steel.components.SteelHProgressBarStyles;
 import feathers.themes.steel.components.SteelHScrollBarStyles;
 import feathers.themes.steel.components.SteelHSliderStyles;
+import feathers.themes.steel.components.SteelHeaderStyles;
 import feathers.themes.steel.components.SteelItemRendererStyles;
 import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.themes.steel.components.SteelLayoutGroupItemRendererStyles;
@@ -84,6 +85,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelGridViewStyles.initialize(this);
 		SteelGroupListViewStyles.initialize(this);
 		SteelHDividedBoxStyles.initialize(this);
+		SteelHeaderStyles.initialize(this);
 		SteelHProgressBarStyles.initialize(this);
 		SteelHScrollBarStyles.initialize(this);
 		SteelHSliderStyles.initialize(this);
