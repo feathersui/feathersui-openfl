@@ -142,7 +142,7 @@ class TextCallout extends Callout implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var textFormat:TextFormat = null;
+	public var textFormat:AbstractTextFormat = null;
 
 	/**
 		Determines if an embedded font is used or not.
@@ -177,7 +177,7 @@ class TextCallout extends Callout implements ITextControl {
 		@since 1.0.0
 	**/
 	@:style
-	public var disabledTextFormat:TextFormat = null;
+	public var disabledTextFormat:AbstractTextFormat = null;
 
 	private function initializeTextCalloutTheme():Void {
 		SteelTextCalloutStyles.initialize();
