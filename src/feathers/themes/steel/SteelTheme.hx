@@ -8,6 +8,7 @@
 
 package feathers.themes.steel;
 
+import feathers.themes.steel.components.SteelAlertStyles;
 import feathers.themes.steel.components.SteelApplicationStyles;
 import feathers.themes.steel.components.SteelButtonBarStyles;
 import feathers.themes.steel.components.SteelButtonStyles;
@@ -72,6 +73,7 @@ class SteelTheme extends BaseSteelTheme {
 	public function new(?themeColor:Int, ?darkThemeColor:Int) {
 		super(themeColor, darkThemeColor);
 
+		SteelAlertStyles.initialize(this);
 		SteelApplicationStyles.initialize(this);
 		SteelButtonStyles.initialize(this);
 		SteelButtonBarStyles.initialize(this);
