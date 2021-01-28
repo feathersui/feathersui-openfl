@@ -81,6 +81,58 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
+		Creates `AnchorLayoutData` that fills the width of the parent container,
+		with the ability to optionally specify a padding value to pass to
+		`left` and `right`.
+
+		In the following example, one of the container's children fills the
+		container's width:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.fillHorizontal();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.left`
+		@see `AnchorLayoutData.right`
+
+		@since 1.0.0
+	**/
+	public static function fillHorizontal(padding:Float = 0.0):AnchorLayoutData {
+		return new AnchorLayoutData(null, padding, null, padding);
+	}
+
+	/**
+		Creates `AnchorLayoutData` that height the width of the parent
+		container, with the ability to optionally specify a padding value to
+		pass to `top` and `bottom`.
+
+		In the following example, one of the container's children fills the
+		container's height:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new AnchorLayout();
+
+		var child = new Label();
+		child.layoutData = AnchorLayoutData.fillHorizontal();
+		container.addChild(child);
+		```
+
+		@see `AnchorLayoutData.top`
+		@see `AnchorLayoutData.bottom`
+
+		@since 1.0.0
+	**/
+	public static function fillVertical(padding:Float = 0.0):AnchorLayoutData {
+		return new AnchorLayoutData(padding, null, padding, null);
+	}
+
+	/**
 		Creates `AnchorLayoutData` that aligns the child to the top-left corner
 		of the parent container, with the ability to optionally specify padding
 		values to pass to `top` and `left`.
