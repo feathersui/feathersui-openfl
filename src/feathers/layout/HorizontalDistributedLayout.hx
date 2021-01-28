@@ -255,6 +255,43 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		return this._minItemWidth;
 	}
 
+	private var _verticalAlign:VerticalAlign = TOP;
+
+	/**
+		How the content is positioned vertically (along the y-axis) within the
+		container.
+
+		The following example aligns the container's content to the bottom:
+
+		```hx
+		layout.verticalAlign = BOTTOM;
+		```
+
+		@default feathers.layout.VerticalAlign.TOP
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+		@see `feathers.layout.VerticalAlign.JUSTIFY`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var verticalAlign(get, set):VerticalAlign;
+
+	private function get_verticalAlign():VerticalAlign {
+		return this._verticalAlign;
+	}
+
+	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
+		if (this._verticalAlign == value) {
+			return this._verticalAlign;
+		}
+		this._verticalAlign = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._verticalAlign;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -294,9 +331,6 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 			if (contentHeight < item.height) {
 				contentHeight = item.height;
 			}
-			if (measurements.height != null) {
-				item.height = measurements.height;
-			}
 			item.x = contentWidth;
 			contentWidth += item.width + this._gap;
 		}
@@ -326,6 +360,8 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 				viewPortHeight = measurements.maxHeight;
 			}
 		}
+
+		this.applyVerticalAlign(items, viewPortHeight);
 
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;
@@ -393,6 +429,29 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 				// to change, so we need to validate. the height is
 				// needed for measurement.
 				cast(item, IValidating).validateNow();
+			}
+		}
+	}
+
+	private inline function applyVerticalAlign(items:Array<DisplayObject>, viewPortHeight:Float):Void {
+		for (item in items) {
+			var layoutObject:ILayoutObject = null;
+			if (Std.is(item, ILayoutObject)) {
+				layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
+			switch (this._verticalAlign) {
+				case BOTTOM:
+					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - item.height);
+				case MIDDLE:
+					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom - item.height) / 2.0);
+				case JUSTIFY:
+					item.y = this._paddingTop;
+					item.height = viewPortHeight - this._paddingTop - this._paddingBottom;
+				default:
+					item.y = this._paddingTop;
 			}
 		}
 	}

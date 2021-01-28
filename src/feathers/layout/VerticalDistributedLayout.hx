@@ -255,6 +255,43 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		return this._minItemHeight;
 	}
 
+	private var _horizontalAlign:HorizontalAlign = LEFT;
+
+	/**
+		How the content is positioned horizontally (along the x-axis) within the
+		container.
+
+		The following example aligns the container's content to the right:
+
+		```hx
+		layout.horizontalAlign = RIGHT;
+		```
+
+		@default feathers.layout.HorizontalAlign.LEFT
+
+		@see `feathers.layout.HorizontalAlign.LEFT`
+		@see `feathers.layout.HorizontalAlign.CENTER`
+		@see `feathers.layout.HorizontalAlign.RIGHT`
+		@see `feathers.layout.HorizontalAlign.JUSTIFY`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var horizontalAlign(get, set):HorizontalAlign;
+
+	private function get_horizontalAlign():HorizontalAlign {
+		return this._horizontalAlign;
+	}
+
+	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
+		if (this._horizontalAlign == value) {
+			return this._horizontalAlign;
+		}
+		this._horizontalAlign = value;
+		this.dispatchEvent(new Event(Event.CHANGE));
+		return this._horizontalAlign;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -323,6 +360,8 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 				viewPortHeight = measurements.maxHeight;
 			}
 		}
+
+		this.applyHorizontalAlign(items, viewPortWidth);
 
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;
@@ -396,6 +435,29 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 				// to change, so we need to validate. the height is
 				// needed for measurement.
 				cast(item, IValidating).validateNow();
+			}
+		}
+	}
+
+	private inline function applyHorizontalAlign(items:Array<DisplayObject>, viewPortWidth:Float):Void {
+		for (item in items) {
+			var layoutObject:ILayoutObject = null;
+			if (Std.is(item, ILayoutObject)) {
+				layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
+			switch (this._horizontalAlign) {
+				case RIGHT:
+					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight) - item.width);
+				case CENTER:
+					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight - item.width) / 2.0);
+				case JUSTIFY:
+					item.x = this._paddingLeft;
+					item.width = viewPortWidth - this._paddingLeft - this._paddingRight;
+				default:
+					item.x = this._paddingLeft;
 			}
 		}
 	}
