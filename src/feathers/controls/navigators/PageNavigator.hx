@@ -141,7 +141,8 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
 		this.setInvalid(SELECTION);
-		FeathersEvent.dispatch(this, Event.CHANGE);
+		// don't dispatch Event.CHANGE here because it will be dispatched as
+		// part of the process of changing the view in BaseNavigator
 		return this._selectedIndex;
 	}
 
