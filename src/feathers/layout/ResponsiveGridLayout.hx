@@ -37,14 +37,14 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 	**/
 	public function new(columnCount:Int = 12, sm:Float = 576.0, md:Float = 768.0, lg:Float = 992.0, xl:Float = 1200.0) {
 		super();
-		this._columnCount = 12;
+		this._columnCount = columnCount;
 		this._sm = sm;
 		this._md = md;
 		this._lg = lg;
 		this._xl = xl;
 	}
 
-	private var _columnCount:Int = 12;
+	private var _columnCount:Int;
 
 	/**
 		The number of columns in the grid.
