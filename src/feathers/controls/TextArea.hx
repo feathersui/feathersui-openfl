@@ -829,16 +829,18 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			return;
 		}
 
-		this.promptTextField.x = this.paddingLeft + this.textPaddingLeft;
-		this.promptTextField.y = this.paddingTop + this.textPaddingTop;
+		this.promptTextField.x = this.leftViewPortOffset + this.textPaddingLeft;
+		this.promptTextField.y = this.topViewPortOffset + this.textPaddingTop;
 
-		if (this._promptTextMeasuredWidth > this.viewPort.visibleWidth) {
-			this.promptTextField.width = this.viewPort.visibleHeight;
+		var maxWidth = this.viewPort.visibleWidth - this.textPaddingLeft - this.textPaddingRight;
+		if (this._promptTextMeasuredWidth > maxWidth) {
+			this.promptTextField.width = maxWidth;
 		} else {
 			this.promptTextField.width = this._promptTextMeasuredWidth;
 		}
-		if (this._promptTextMeasuredHeight > this.viewPort.visibleHeight) {
-			this.promptTextField.height = this.viewPort.visibleHeight;
+		var maxHeight = this.viewPort.visibleHeight - this.textPaddingTop - this.textPaddingBottom;
+		if (this._promptTextMeasuredHeight > maxHeight) {
+			this.promptTextField.height = maxHeight;
 		} else {
 			this.promptTextField.height = this._promptTextMeasuredHeight;
 		}
