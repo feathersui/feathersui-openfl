@@ -13,6 +13,7 @@ import feathers.core.IIndexSelector;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
+import feathers.events.TabBarEvent;
 import feathers.layout.RelativePosition;
 import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
@@ -268,6 +269,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this.tabBar = new TabBar();
 			this.addChild(this.tabBar);
 		}
+		this.tabBar.addEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
 		this.tabBar.addEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
 
 		if (this._previousEdgePuller == null) {
@@ -435,6 +437,10 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 		// use the setter
 		this.selectedIndex = this.tabBar.selectedIndex;
+	}
+
+	private function tabNavigator_tabBar_itemTriggerHandler(event:TabBarEvent):Void {
+		this.dispatchEvent(event);
 	}
 
 	private function tabNavigator_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
