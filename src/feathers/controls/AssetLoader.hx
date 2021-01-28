@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.ProgressEvent;
 import feathers.core.FeathersControl;
 import feathers.core.InvalidationFlag;
 import feathers.layout.Measurements;
@@ -40,11 +41,15 @@ import openfl.utils.AssetType;
 	successfully completes loading asynchronously. If `AssetLoader.source` is
 	pre-loaded by `openfl.utils.Assets`, this event will not be dispatched.
 
+	@event openfl.events.ProgressEvent.PROGRESS Dispatched periodically as
+	`AssetLoader.source` loads asynchronously. If `AssetLoader.source` is
+	pre-loaded by `openfl.utils.Assets`, this event will not be dispatched.
+
 	@event openfl.events.IOErrorEvent.IO_ERROR Dispatched if an IO error occurs
 	while loading `AssetLoader.source`.
 
-	@event openfl.events.SecurityErrorEvent.SECURITY_ERROR Dispatched if a security error
-	occurs while loading `AssetLoader.source`.
+	@event openfl.events.SecurityErrorEvent.SECURITY_ERROR Dispatched if a
+	security error occurs while loading `AssetLoader.source`.
 
 
 	@see [Tutorial: How to use the AssetLoader component](https://feathersui.com/learn/haxe-openfl/asset-loader/)
@@ -53,6 +58,7 @@ import openfl.utils.AssetType;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.COMPLETE)
+@:event(openfl.events.ProgressEvent.PROGRESS)
 @:event(openfl.events.IOErrorEvent.IO_ERROR)
 @:event(openfl.events.SecurityErrorEvent.SECURITY_ERROR)
 @:styleContext
@@ -122,16 +128,21 @@ class AssetLoader extends FeathersControl {
 					this.content = bitmap;
 				} else // async
 				{
-					var future = Assets.loadBitmapData(this._source).onComplete((bitmapData:BitmapData) -> {
-						var bitmap = this.createBitmap(bitmapData);
-						this._contentMeasurements.save(bitmap);
-						this.addChild(bitmap);
-						this.content = bitmap;
-						this.setInvalid(DATA);
-						this.dispatchEvent(new Event(Event.COMPLETE));
-					}).onError((event:Dynamic) -> {
-						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-					});
+					var future = Assets.loadBitmapData(this._source)
+						.onProgress((progress, total) -> {
+							this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
+						})
+						.onComplete((bitmapData:BitmapData) -> {
+							var bitmap = this.createBitmap(bitmapData);
+							this._contentMeasurements.save(bitmap);
+							this.addChild(bitmap);
+							this.content = bitmap;
+							this.setInvalid(DATA);
+							this.dispatchEvent(new Event(Event.COMPLETE));
+						})
+						.onError((event:Dynamic) -> {
+							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+						});
 				}
 			} else if (Assets.exists(this._source, AssetType.MOVIE_CLIP)) {
 				this.cleanupLoader();
@@ -142,20 +153,26 @@ class AssetLoader extends FeathersControl {
 					this.content = movieClip;
 				} else // async
 				{
-					var future = Assets.loadMovieClip(this._source).onComplete((movieClip:MovieClip) -> {
-						this._contentMeasurements.save(movieClip);
-						this.addChild(movieClip);
-						this.content = movieClip;
-						this.setInvalid(DATA);
-						this.dispatchEvent(new Event(Event.COMPLETE));
-					}).onError((event:Dynamic) -> {
-						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-					});
+					var future = Assets.loadMovieClip(this._source)
+						.onProgress((progress, total) -> {
+							this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
+						})
+						.onComplete((movieClip:MovieClip) -> {
+							this._contentMeasurements.save(movieClip);
+							this.addChild(movieClip);
+							this.content = movieClip;
+							this.setInvalid(DATA);
+							this.dispatchEvent(new Event(Event.COMPLETE));
+						})
+						.onError((event:Dynamic) -> {
+							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+						});
 				}
 			} else {
 				if (this.loader == null) {
 					this.loader = new Loader();
 					this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_contentLoaderInfo_completeHandler);
+					this.loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, loader_contentLoaderInfo_progressHandler);
 					this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loader_contentLoaderInfo_ioErrorHandler);
 					this.loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loader_contentLoaderInfo_securityErrorHandler);
 					this.addChild(this.loader);
@@ -373,9 +390,14 @@ class AssetLoader extends FeathersControl {
 			return;
 		}
 		this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loader_contentLoaderInfo_completeHandler);
+		this.loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, loader_contentLoaderInfo_progressHandler);
 		this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, loader_contentLoaderInfo_ioErrorHandler);
 		this.loader.contentLoaderInfo.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, loader_contentLoaderInfo_securityErrorHandler);
 		this.loader = null;
+	}
+
+	private function loader_contentLoaderInfo_progressHandler(event:ProgressEvent):Void {
+		this.dispatchEvent(event);
 	}
 
 	private function loader_contentLoaderInfo_ioErrorHandler(event:IOErrorEvent):Void {
