@@ -66,7 +66,14 @@ class ScaleUtil {
 		return result;
 	}
 
-	private inline static function scaleToFit(originalWidth:Float, originalHeight:Float, targetWidth:Float, targetHeight:Float):Float {
+	/**
+		Calculates the scale factor to fit the original dimensions into the
+		target dimensions, while maintaining the original aspect ratio. This
+		might leave empty bars at either the top and bottom, or left and right.
+
+		@since 1.0.0
+	**/
+	public static function scaleToFit(originalWidth:Float, originalHeight:Float, targetWidth:Float, targetHeight:Float):Float {
 		var widthRatio = targetWidth / originalWidth;
 		var heightRatio = targetHeight / originalHeight;
 		if (widthRatio < heightRatio) {
@@ -75,7 +82,14 @@ class ScaleUtil {
 		return heightRatio;
 	}
 
-	private inline static function scaleToFill(originalWidth:Float, originalHeight:Float, targetWidth:Float, targetHeight:Float):Float {
+	/**
+		Calculates the scale factor to fill the specified area, without
+		distortion but possibly with some cropping, while maintaining the
+		original aspect ratio.
+
+		@since 1.0.0
+	**/
+	public static function scaleToFill(originalWidth:Float, originalHeight:Float, targetWidth:Float, targetHeight:Float):Float {
 		var widthRatio = targetWidth / originalWidth;
 		var heightRatio = targetHeight / originalHeight;
 		if (widthRatio > heightRatio) {
