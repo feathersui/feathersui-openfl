@@ -379,7 +379,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (layoutInvalid || stylesInvalid) {
-			this.layoutViewPort.layout = this.layout;
+			this.refreshLayout();
 		}
 
 		var oldBypass = this._displayListBypassEnabled;
@@ -389,6 +389,10 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		super.update();
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 		this._displayListBypassEnabled = oldBypass;
+	}
+
+	private function refreshLayout():Void {
+		this.layoutViewPort.layout = this.layout;
 	}
 
 	override private function refreshScrollerValues():Void {
