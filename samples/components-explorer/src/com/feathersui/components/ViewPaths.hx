@@ -2,6 +2,7 @@ package com.feathersui.components;
 
 class ViewPaths {
 	public static final MAIN_MENU = "/";
+	public static final ALERT = "/alert";
 	public static final ASSET_LOADER = "/asset-loader";
 	public static final BUTTON = "/button";
 	public static final BUTTON_BAR = "/button-bar";
@@ -12,6 +13,7 @@ class ViewPaths {
 	public static final FORM = "/form";
 	public static final GRID_VIEW = "/grid-view";
 	public static final GROUP_LIST_VIEW = "/group-list-view";
+	public static final HEADER = "/header";
 	public static final HORIZONTAL_DIVIDED_BOX = "/horizontal-divided-box";
 	public static final LABEL = "/label";
 	public static final LIST_VIEW = "/list-view";

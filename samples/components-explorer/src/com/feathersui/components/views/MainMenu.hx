@@ -27,6 +27,7 @@ class MainMenu extends Panel {
 		this.listView = new ListView();
 		this.listView.dataProvider = new ArrayCollection([
 			// @formatter:off
+			new MenuItem("Alert", ViewPaths.ALERT),
 			new MenuItem("Asset Loader", ViewPaths.ASSET_LOADER),
 			new MenuItem("Button", ViewPaths.BUTTON),
 			new MenuItem("Button Bar", ViewPaths.BUTTON_BAR),
@@ -39,6 +40,7 @@ class MainMenu extends Panel {
 			new MenuItem("Form", ViewPaths.FORM),
 			new MenuItem("Grid View", ViewPaths.GRID_VIEW),
 			new MenuItem("Group List View", ViewPaths.GROUP_LIST_VIEW),
+			new MenuItem("Header", ViewPaths.HEADER),
 			new MenuItem("Label", ViewPaths.LABEL),
 			new MenuItem("List View", ViewPaths.LIST_VIEW),
 			new MenuItem("Page Indicator", ViewPaths.PAGE_INDICATOR),

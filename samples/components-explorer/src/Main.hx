@@ -1,4 +1,5 @@
 import com.feathersui.components.ViewPaths;
+import com.feathersui.components.views.AlertScreen;
 import com.feathersui.components.views.AssetLoaderScreen;
 import com.feathersui.components.views.ButtonBarScreen;
 import com.feathersui.components.views.ButtonScreen;
@@ -10,6 +11,7 @@ import com.feathersui.components.views.GridViewScreen;
 import com.feathersui.components.views.GroupListViewScreen;
 import com.feathersui.components.views.FormScreen;
 import com.feathersui.components.views.HDividedBoxScreen;
+import com.feathersui.components.views.HeaderScreen;
 import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
@@ -54,6 +56,9 @@ class Main extends Application {
 		var mainMenu = Route.withClass(ViewPaths.MAIN_MENU, MainMenu, [Event.CHANGE => NewAction(createPushPathAction)]);
 		this._navigator.addRoute(mainMenu);
 
+		var alert = Route.withClass(ViewPaths.ALERT, AlertScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(alert);
+
 		var assetLoader = Route.withClass(ViewPaths.ASSET_LOADER, AssetLoaderScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(assetLoader);
 
@@ -81,14 +86,17 @@ class Main extends Application {
 		var drawer = Route.withClass(ViewPaths.DRAWER, DrawerScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(drawer);
 
+		var form = Route.withClass(ViewPaths.FORM, FormScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(form);
+
 		var gridView = Route.withClass(ViewPaths.GRID_VIEW, GridViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(gridView);
 
 		var groupListView = Route.withClass(ViewPaths.GROUP_LIST_VIEW, GroupListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(groupListView);
 
-		var form = Route.withClass(ViewPaths.FORM, FormScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
-		this._navigator.addRoute(form);
+		var header = Route.withClass(ViewPaths.HEADER, HeaderScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(header);
 
 		var label = Route.withClass(ViewPaths.LABEL, LabelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(label);
