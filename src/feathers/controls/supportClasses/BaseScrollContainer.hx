@@ -102,7 +102,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this._viewPort != null) {
 			this._viewPort.addEventListener(Event.RESIZE, viewPort_resizeHandler);
 		}
-		this.setInvalid(INVALIDATION_FLAG_SCROLLER_FACTORY);
+		this.setInvalid(SCROLL);
 		return this._viewPort;
 	}
 
@@ -853,7 +853,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._ignoreScrollerChanges = true;
 
 		if (scrollerInvalid) {
-			this.destroyScroller();
 			this.createScroller();
 		}
 
@@ -892,26 +891,22 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function createScroller():Void {
+		if (this.scroller != null) {
+			this._temporaryScrollX = this.scroller.scrollX;
+			this._temporaryScrollY = this.scroller.scrollY;
+			this.scroller.target = null;
+			this.scroller.removeEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
+			this.scroller.removeEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
+			this.scroller.removeEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
+			this.scroller = null;
+		}
+
 		this.scroller = (this._scrollerFactory != null) ? this._scrollerFactory() : new Scroller();
-		this.scroller.target = cast(this._viewPort, InteractiveObject);
 		this.scroller.scrollX = this._temporaryScrollX;
 		this.scroller.scrollY = this._temporaryScrollY;
 		this.scroller.addEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
-	}
-
-	private function destroyScroller():Void {
-		if (this.scroller == null) {
-			return;
-		}
-		this._temporaryScrollX = this.scroller.scrollX;
-		this._temporaryScrollY = this.scroller.scrollY;
-		this.scroller.target = null;
-		this.scroller.removeEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
-		this.scroller.removeEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
-		this.scroller.removeEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
-		this.scroller = null;
 	}
 
 	private function createScrollBars():Void {
@@ -1290,6 +1285,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function refreshScrollerValues():Void {
+		if (this.stage != null) {
+			this.scroller.target = cast(this._viewPort, InteractiveObject);
+		}
 		this.scroller.enabledX = this._enabled && this._scrollPolicyX != OFF;
 		this.scroller.enabledY = this._enabled && this._scrollPolicyY != OFF;
 	}
@@ -1767,11 +1765,14 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function baseScrollContainer_addedToStageHandler(event:Event):Void {
-		this.setInvalid(INVALIDATION_FLAG_SCROLLER_FACTORY);
+		// ensure that target gets set, if it hasn't been already
+		this.setInvalid(SCROLL);
 	}
 
 	private function baseScrollContainer_removedFromStageHandler(event:Event):Void {
-		this.destroyScroller();
+		if (this.scroller != null) {
+			this.scroller.target = null;
+		}
 	}
 
 	private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
