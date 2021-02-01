@@ -2,8 +2,7 @@ package views;
 
 import events.ContactEvent;
 import feathers.controls.Button;
-import feathers.controls.Label;
-import feathers.controls.LayoutGroup;
+import feathers.controls.Header;
 import feathers.controls.ListView;
 import feathers.controls.Panel;
 import feathers.core.InvalidationFlag;
@@ -50,22 +49,14 @@ class ChooseContactView extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "Contacts";
 		this.header = header;
-
-		var title = new Label();
-		title.variant = Label.VARIANT_HEADING;
-		title.text = "Contacts";
-		title.layoutData = AnchorLayoutData.center();
-		header.addChild(title);
 
 		var doneButton = new Button();
 		doneButton.addEventListener(TriggerEvent.TRIGGER, doneButton_triggerHandler);
 		doneButton.text = "Done";
-		doneButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
-		header.addChild(doneButton);
+		header.leftView = doneButton;
 
 		this.contactList = new ListView();
 		this.contactList.itemToText = (item:Contact) -> item.name;

@@ -2,13 +2,11 @@ package views;
 
 import events.ContactEvent;
 import feathers.controls.Button;
+import feathers.controls.Header;
 import feathers.controls.Label;
-import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 import feathers.core.InvalidationFlag;
 import feathers.events.TriggerEvent;
-import feathers.layout.AnchorLayout;
-import feathers.layout.AnchorLayoutData;
 import feathers.layout.VerticalLayout;
 import valueObjects.Contact;
 
@@ -40,16 +38,9 @@ class ComposeMessageView extends Panel {
 		layout.gap = 10.0;
 		this.layout = layout;
 
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "Send Private Message";
 		this.header = header;
-
-		var title = new Label();
-		title.variant = Label.VARIANT_HEADING;
-		title.text = "Send Private Message";
-		title.layoutData = AnchorLayoutData.center();
-		header.addChild(title);
 
 		this.contactNameLabel = new Label();
 		this.addChild(this.contactNameLabel);

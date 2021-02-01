@@ -1,13 +1,14 @@
-import feathers.controls.Panel;
-import feathers.controls.LayoutGroup;
-import feathers.controls.Label;
 import com.feathersui.controls.PoweredByFeathersUI;
-import feathers.layout.VerticalLayout;
-import feathers.style.Theme;
-import feathers.layout.AnchorLayoutData;
-import feathers.layout.AnchorLayout;
 import feathers.controls.Application;
 import feathers.controls.Button;
+import feathers.controls.Header;
+import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
+import feathers.controls.Panel;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
+import feathers.layout.VerticalLayout;
+import feathers.style.Theme;
 
 class Main extends Application {
 	public function new() {
@@ -50,17 +51,9 @@ class Main extends Application {
 		this.addChild(this.view);
 	}
 
-	private function createHeader():LayoutGroup {
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
-
-		var title = new Label();
-		title.variant = Label.VARIANT_HEADING;
-		title.text = "Custom Theme";
-		title.layoutData = AnchorLayoutData.center();
-		header.addChild(title);
-
+	private function createHeader():Header {
+		var header = new Header();
+		header.text = "Custom Theme";
 		return header;
 	}
 
