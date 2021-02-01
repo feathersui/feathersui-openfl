@@ -56,8 +56,6 @@ class SteelAlertStyles {
 					layout.gap = 6.0;
 					alert.layout = layout;
 				}
-
-				alert.maxWidth = 276.0;
 			});
 		}
 
