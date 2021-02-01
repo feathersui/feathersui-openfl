@@ -362,6 +362,8 @@ class Header extends FeathersControl implements ITextControl {
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
+	private var _ignoreLeftViewResize:Bool = false;
+
 	private var _leftView:DisplayObject = null;
 
 	/**
@@ -382,6 +384,7 @@ class Header extends FeathersControl implements ITextControl {
 			return this._leftView;
 		}
 		if (this._leftView != null) {
+			this._leftView.removeEventListener(Event.RESIZE, header_leftView_resizeHandler);
 			if (this._leftView.parent == this) {
 				this.removeChild(this._leftView);
 			}
@@ -389,10 +392,13 @@ class Header extends FeathersControl implements ITextControl {
 		this._leftView = value;
 		if (this._leftView != null) {
 			this.addChild(this._leftView);
+			this._leftView.addEventListener(Event.RESIZE, header_leftView_resizeHandler, false, 0, true);
 		}
 		this.setInvalid(LAYOUT);
 		return this._leftView;
 	}
+
+	private var _ignoreRightViewResize:Bool = false;
 
 	private var _rightView:DisplayObject = null;
 
@@ -414,6 +420,7 @@ class Header extends FeathersControl implements ITextControl {
 			return this._rightView;
 		}
 		if (this._rightView != null) {
+			this._rightView.removeEventListener(Event.RESIZE, header_rightView_resizeHandler);
 			if (this._rightView.parent == this) {
 				this.removeChild(this._rightView);
 			}
@@ -421,6 +428,7 @@ class Header extends FeathersControl implements ITextControl {
 		this._rightView = value;
 		if (this._rightView != null) {
 			this.addChild(this._rightView);
+			this._rightView.addEventListener(Event.RESIZE, header_rightView_resizeHandler, false, 0, true);
 		}
 		this.setInvalid(LAYOUT);
 		return this._rightView;
@@ -478,6 +486,11 @@ class Header extends FeathersControl implements ITextControl {
 		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
 			return false;
 		}
+
+		var oldIgnoreLeftViewResize = this._ignoreLeftViewResize;
+		this._ignoreLeftViewResize = true;
+		var oldIgnoreRightViewResize = this._ignoreRightViewResize;
+		this._ignoreRightViewResize = true;
 
 		if (this._currentBackgroundSkin != null) {
 			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
@@ -582,6 +595,9 @@ class Header extends FeathersControl implements ITextControl {
 				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 		}
+
+		this._ignoreLeftViewResize = oldIgnoreLeftViewResize;
+		this._ignoreRightViewResize = oldIgnoreRightViewResize;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
@@ -806,5 +822,19 @@ class Header extends FeathersControl implements ITextControl {
 
 	private function header_textFormat_changeHandler(event:Event):Void {
 		this.setInvalid(STYLES);
+	}
+
+	private function header_leftView_resizeHandler(event:Event):Void {
+		if (this._ignoreLeftViewResize) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
+	}
+
+	private function header_rightView_resizeHandler(event:Event):Void {
+		if (this._ignoreRightViewResize) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 }
