@@ -41,6 +41,7 @@ class AlertScreen extends Panel {
 	}
 
 	private function showAlertButton_triggerHandler(event:TriggerEvent):Void {
-		Alert.show("Something went wrong!", "Error", ["OK"]);
+		Alert.show("Something went very very very wrong, man! This is a long message. I am the very model of a modern Major-General. Hello, hi, howdy!",
+			"Error", ["OK"]);
 	}
 }

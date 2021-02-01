@@ -1,5 +1,6 @@
 package com.feathersui.components.views;
 
+import feathers.controls.Header;
 import feathers.controls.Button;
 import feathers.controls.Drawer;
 import feathers.controls.Label;
@@ -31,22 +32,15 @@ class DrawerScreen extends Drawer {
 		contentLayout.verticalAlign = MIDDLE;
 		content.layout = contentLayout;
 
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "Drawer";
 		content.header = header;
-
-		var headerTitle = new Label();
-		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "Drawer";
-		headerTitle.layoutData = AnchorLayoutData.center();
-		header.addChild(headerTitle);
 
 		var backButton = new Button();
 		backButton.text = "Back";
 		backButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
 		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-		header.addChild(backButton);
+		header.leftView = backButton;
 
 		var openButton = new Button();
 		openButton.text = "Open Drawer";
@@ -68,16 +62,9 @@ class DrawerScreen extends Drawer {
 		drawerLayout.verticalAlign = MIDDLE;
 		drawer.layout = drawerLayout;
 
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "I'm a drawer";
 		drawer.header = header;
-
-		var headerTitle = new Label();
-		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "I'm a drawer";
-		headerTitle.layoutData = AnchorLayoutData.center();
-		header.addChild(headerTitle);
 
 		var closeButton = new Button();
 		closeButton.text = "Close Drawer";

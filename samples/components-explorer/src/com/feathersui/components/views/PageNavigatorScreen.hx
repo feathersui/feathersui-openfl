@@ -1,19 +1,19 @@
 package com.feathersui.components.views;
 
-import openfl.text.TextFormat;
-import openfl.text.TextField;
-import feathers.skins.RectangleSkin;
-import feathers.controls.navigators.PageNavigator;
-import feathers.controls.navigators.PageItem;
 import feathers.controls.Button;
+import feathers.controls.Header;
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.controls.navigators.PageItem;
+import feathers.controls.navigators.PageNavigator;
 import feathers.data.ArrayCollection;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
+import feathers.skins.RectangleSkin;
 import openfl.events.Event;
+import openfl.text.TextFormat;
 
 class PageNavigatorScreen extends Panel {
 	private var navigator:PageNavigator;
@@ -50,22 +50,14 @@ class PageNavigatorScreen extends Panel {
 	}
 
 	private function createHeader():Void {
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "Page Navigator";
 		this.header = header;
-
-		var headerTitle = new Label();
-		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "Page Navigator";
-		headerTitle.layoutData = AnchorLayoutData.center();
-		header.addChild(headerTitle);
 
 		var backButton = new Button();
 		backButton.text = "Back";
-		backButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
 		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-		header.addChild(backButton);
+		header.leftView = backButton;
 	}
 
 	private function pageNavigator_changeHandler(event:Event):Void {

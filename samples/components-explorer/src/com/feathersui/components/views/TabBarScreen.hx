@@ -1,8 +1,7 @@
 package com.feathersui.components.views;
 
 import feathers.controls.Button;
-import feathers.controls.Label;
-import feathers.controls.LayoutGroup;
+import feathers.controls.Header;
 import feathers.controls.Panel;
 import feathers.controls.TabBar;
 import feathers.data.ArrayCollection;
@@ -36,22 +35,14 @@ class TabBarScreen extends Panel {
 	}
 
 	private function createHeader():Void {
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "Tab Bar";
 		this.header = header;
-
-		var headerTitle = new Label();
-		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "Tab Bar";
-		headerTitle.layoutData = AnchorLayoutData.center();
-		header.addChild(headerTitle);
 
 		var backButton = new Button();
 		backButton.text = "Back";
-		backButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
 		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-		header.addChild(backButton);
+		header.leftView = backButton;
 	}
 
 	private function tabBar_changeHandler(event:Event):Void {

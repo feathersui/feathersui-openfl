@@ -2,8 +2,7 @@ package com.feathersui.components.views;
 
 import com.feathersui.components.ViewPaths;
 import feathers.controls.Button;
-import feathers.controls.Label;
-import feathers.controls.LayoutGroup;
+import feathers.controls.Header;
 import feathers.controls.ListView;
 import feathers.controls.Panel;
 import feathers.data.ArrayCollection;
@@ -77,16 +76,9 @@ class MainMenu extends Panel {
 	}
 
 	private function createHeader():Void {
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "Feathers UI";
 		this.header = header;
-
-		var headerTitle = new Label();
-		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "Feathers UI";
-		headerTitle.layoutData = AnchorLayoutData.center();
-		header.addChild(headerTitle);
 
 		var themeButton = new Button();
 		themeButton.text = "Theme";
@@ -98,8 +90,7 @@ class MainMenu extends Panel {
 			var darkModeTheme = cast(theme, IDarkModeTheme);
 			darkModeTheme.darkMode = !darkModeTheme.darkMode;
 		});
-		themeButton.layoutData = AnchorLayoutData.middleRight(0.0, 10.0);
-		header.addChild(themeButton);
+		header.rightView = themeButton;
 	}
 
 	private function listView_itemTriggerHandler(event:ListViewEvent):Void {

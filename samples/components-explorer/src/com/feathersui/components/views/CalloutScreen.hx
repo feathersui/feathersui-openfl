@@ -2,8 +2,8 @@ package com.feathersui.components.views;
 
 import feathers.controls.Button;
 import feathers.controls.Callout;
+import feathers.controls.Header;
 import feathers.controls.Label;
-import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
@@ -34,14 +34,8 @@ class CalloutScreen extends Panel {
 		this.addChild(this.aboveButton);
 
 		this.content = new Panel();
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
-		var headerTitle = new Label();
-		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "Callout Content";
-		headerTitle.layoutData = AnchorLayoutData.center();
-		header.addChild(headerTitle);
+		var header = new Header();
+		header.text = "Callout Content";
 		this.content.header = header;
 
 		this.content.layout = new AnchorLayout();
@@ -53,22 +47,14 @@ class CalloutScreen extends Panel {
 	}
 
 	private function createHeader():Void {
-		var header = new LayoutGroup();
-		header.variant = LayoutGroup.VARIANT_TOOL_BAR;
-		header.layout = new AnchorLayout();
+		var header = new Header();
+		header.text = "Callout";
 		this.header = header;
-
-		var headerTitle = new Label();
-		headerTitle.variant = Label.VARIANT_HEADING;
-		headerTitle.text = "Callout";
-		headerTitle.layoutData = AnchorLayoutData.center();
-		header.addChild(headerTitle);
 
 		var backButton = new Button();
 		backButton.text = "Back";
-		backButton.layoutData = AnchorLayoutData.middleLeft(0.0, 10.0);
 		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
-		header.addChild(backButton);
+		header.leftView = backButton;
 	}
 
 	private function belowButton_triggerHandler(event:TriggerEvent):Void {
