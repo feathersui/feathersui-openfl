@@ -41,10 +41,10 @@ class SteelHeaderStyles {
 					header.backgroundSkin = backgroundSkin;
 				}
 				if (header.textFormat == null) {
-					header.textFormat = theme.getTextFormat();
+					header.textFormat = theme.getHeaderTextFormat();
 				}
 				if (header.disabledTextFormat == null) {
-					header.disabledTextFormat = theme.getDisabledTextFormat();
+					header.disabledTextFormat = theme.getDisabledHeaderTextFormat();
 				}
 
 				header.paddingTop = 10.0;
