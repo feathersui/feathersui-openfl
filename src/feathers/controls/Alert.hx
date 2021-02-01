@@ -15,15 +15,13 @@ import feathers.data.ArrayCollection;
 import feathers.data.ButtonBarItemState;
 import feathers.data.IFlatCollection;
 import feathers.events.ButtonBarEvent;
+import feathers.layout.HorizontalLayoutData;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelAlertStyles;
 import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
-import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
 
 /**
 	Displays a message in a modal pop-up dialog with a title and a set of
@@ -70,7 +68,7 @@ class Alert extends Panel {
 		@since 1.0.0
 	**/
 	public static function show(text:String, ?titleText:String, ?buttonsText:Array<String>, ?callback:(state:ButtonBarItemState) -> Void,
-			?popUpAdapter:IPopUpAdapter):Void {
+			?popUpAdapter:IPopUpAdapter):Alert {
 		var alert = new Alert();
 		alert.text = text;
 		alert.titleText = titleText;
@@ -81,15 +79,16 @@ class Alert extends Panel {
 				callback(event.state);
 			});
 		}
-		showAlert(alert, popUpAdapter);
+		return showAlert(alert, popUpAdapter);
 	}
 
-	private static function showAlert(alert:Alert, ?popUpAdapter:IPopUpAdapter):Void {
+	private static function showAlert(alert:Alert, ?popUpAdapter:IPopUpAdapter):Alert {
 		if (popUpAdapter != null) {
 			popUpAdapter.open(alert, Lib.current);
 		} else {
 			PopUpManager.addPopUp(alert, Lib.current, true, true);
 		}
+		return alert;
 	}
 
 	/**
@@ -102,14 +101,8 @@ class Alert extends Panel {
 		super();
 	}
 
-	private var textField:TextField;
-	private var _previousText:String = null;
-	private var _previousHTMLText:String = null;
-	private var _previousTextFormat:TextFormat = null;
-	private var _previousSimpleTextFormat:openfl.text.TextFormat = null;
-	private var _updatedTextStyles = false;
-	private var _textMeasuredWidth:Float;
-	private var _textMeasuredHeight:Float;
+	private var messageLabel:Label;
+
 	private var _text:String = "";
 
 	/**
@@ -236,90 +229,17 @@ class Alert extends Panel {
 	@:style
 	public var icon:DisplayObject = null;
 
-	/**
-		The space, measured in pixels, between the alert's icon and its text.
-		Applies to either horizontal or vertical spacing, depending on the value
-		of `iconPosition`.
-
-		The following example creates a gap of 20 pixels between the icon and
-		the text:
-
-		```hx
-		alert.text = "Click Me";
-		alert.icon = new Bitmap(bitmapData);
-		alert.gap = 20.0;
-		```
-
-		@since 1.0.0
-	**/
-	@:style
-	public var gap:Float = 0.0;
-
-	/**
-		The font styles used to render the alert's text.
-
-		In the following example, the alert's text formatting is customized:
-
-		```hx
-		alert.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
-		```
-
-		@see `Alert.text`
-		@see `Alert.embedFonts`
-
-		@since 1.0.0
-	**/
-	@:style
-	public var textFormat:AbstractTextFormat = null;
-
-	/**
-		The font styles used to render the alert's text when the alert is
-		disabled.
-
-		In the following example, the alert's disabled text formatting is
-		customized:
-
-		```hx
-		alert.enabled = false;
-		alert.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
-		```
-
-		@see `Alert.textFormat`
-
-		@since 1.0.0
-	**/
-	@:style
-	public var disabledTextFormat:AbstractTextFormat = null;
-
-	/**
-		Determines if an embedded font is used or not.
-
-		In the following example, the alert uses embedded fonts:
-
-		```hx
-		alert.embedFonts = true;
-		```
-
-		@see `Alert.textFormat`
-
-		@since 1.0.0
-	**/
-	@:style
-	public var embedFonts:Bool = false;
-
 	private function initializeAlertTheme():Void {
 		SteelAlertStyles.initialize();
 	}
 
 	override private function initialize():Void {
 		super.initialize();
-		if (this.textField == null) {
-			this.textField = new TextField();
-			this.textField.selectable = false;
-			this.textField.multiline = true;
-			this.textField.wordWrap = true;
-			this.textField.autoSize = TextFieldAutoSize.LEFT;
-			this.addChild(this.textField);
+		if (this.messageLabel == null) {
+			this.messageLabel = new Label();
+			this.messageLabel.wordWrap = true;
+			this.messageLabel.layoutData = new HorizontalLayoutData(100.0);
+			this.addChild(this.messageLabel);
 		}
 		if (this.alertHeader == null) {
 			this.alertHeader = new Header();
@@ -339,14 +259,8 @@ class Alert extends Panel {
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
-		this._updatedTextStyles = false;
-
 		if (stylesInvalid || stateInvalid) {
 			this.refreshIcon();
-		}
-
-		if (stylesInvalid || stateInvalid) {
-			this.refreshTextStyles();
 		}
 
 		if (dataInvalid || stylesInvalid || stateInvalid) {
@@ -368,54 +282,8 @@ class Alert extends Panel {
 		this.buttonBar.dataProvider = this._buttonsDataProvider;
 	}
 
-	private function refreshTextStyles():Void {
-		if (this.textField.embedFonts != this.embedFonts) {
-			this.textField.embedFonts = this.embedFonts;
-			this._updatedTextStyles = true;
-		}
-		var textFormat = this.getCurrentTextFormat();
-		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
-		if (simpleTextFormat == this._previousSimpleTextFormat) {
-			// nothing to refresh
-			return;
-		}
-		if (this._previousTextFormat != null) {
-			this._previousTextFormat.removeEventListener(Event.CHANGE, alert_textFormat_changeHandler);
-		}
-		if (textFormat != null) {
-			textFormat.addEventListener(Event.CHANGE, alert_textFormat_changeHandler, false, 0, true);
-			this.textField.defaultTextFormat = simpleTextFormat;
-			this._updatedTextStyles = true;
-		}
-		this._previousTextFormat = textFormat;
-		this._previousSimpleTextFormat = simpleTextFormat;
-	}
-
 	private function refreshText():Void {
-		var hasText = this._text != null && this._text.length > 0;
-		this.textField.visible = hasText;
-		if (this._text == this._previousText && !this._updatedTextStyles) {
-			// nothing to refresh
-			return;
-		}
-		if (hasText) {
-			this.textField.text = this._text;
-		} else {
-			this.textField.text = "\u200b"; // zero-width space
-		}
-		this._textMeasuredWidth = this.textField.width;
-		this._textMeasuredHeight = this.textField.height;
-		if (!hasText) {
-			this.textField.text = "";
-		}
-		this._previousText = this._text;
-	}
-
-	private function getCurrentTextFormat():TextFormat {
-		if (!this._enabled && this.disabledTextFormat != null) {
-			return this.disabledTextFormat;
-		}
-		return this.textFormat;
+		this.messageLabel.text = this._text;
 	}
 
 	private function refreshTitleText():Void {
@@ -444,7 +312,7 @@ class Alert extends Panel {
 		if (Std.is(this._currentIcon, IProgrammaticSkin)) {
 			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
 		}
-		var index = this.getChildIndex(this.textField);
+		var index = this.getChildIndex(this.messageLabel);
 		// the icon should be below the text
 		this.addChildAt(this._currentIcon, index);
 	}

@@ -11,7 +11,7 @@ package feathers.themes.steel.components;
 import feathers.controls.Alert;
 import feathers.controls.ButtonBar;
 import feathers.layout.HorizontalDistributedLayout;
-import feathers.layout.VerticalLayout;
+import feathers.layout.HorizontalLayout;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -44,24 +44,20 @@ class SteelAlertStyles {
 				if (alert.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getContainerFill();
+					backgroundSkin.maxWidth = 276.0;
 					alert.backgroundSkin = backgroundSkin;
 				}
-				if (alert.textFormat == null) {
-					alert.textFormat = theme.getTextFormat();
-				}
-				if (alert.disabledTextFormat == null) {
-					alert.disabledTextFormat = theme.getDisabledTextFormat();
-				}
 				if (alert.layout == null) {
-					var layout = new VerticalLayout();
+					var layout = new HorizontalLayout();
 					layout.paddingTop = 10.0;
 					layout.paddingRight = 10.0;
 					layout.paddingBottom = 10.0;
 					layout.paddingLeft = 10.0;
 					layout.gap = 6.0;
-					layout.horizontalAlign = JUSTIFY;
 					alert.layout = layout;
 				}
+
+				alert.maxWidth = 276.0;
 			});
 		}
 
