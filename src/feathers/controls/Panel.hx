@@ -9,13 +9,12 @@
 package feathers.controls;
 
 import feathers.core.IFocusExtras;
-import feathers.utils.MeasurementsUtil;
-import feathers.core.InvalidationFlag;
 import feathers.core.IMeasureObject;
-import feathers.themes.steel.components.SteelPanelStyles;
-import openfl.display.DisplayObject;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.layout.Measurements;
+import feathers.themes.steel.components.SteelPanelStyles;
+import openfl.display.DisplayObject;
 
 /**
 	A container with a header on top and a footer on the bottom, with a region
@@ -38,6 +37,8 @@ class Panel extends ScrollContainer implements IFocusExtras {
 
 		super();
 	}
+
+	private var _headerMeasurements:Measurements = null;
 
 	private var _header:DisplayObject = null;
 
@@ -65,10 +66,22 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		if (this._header != null) {
 			this._focusExtrasBefore.push(this._header);
 			this.addRawChild(this._header);
+			if (Std.is(this._header, IUIControl)) {
+				cast(this._header, IUIControl).initializeNow();
+			}
+			if (this._headerMeasurements == null) {
+				this._headerMeasurements = new Measurements(this._header);
+			} else {
+				this._headerMeasurements.save(this._header);
+			}
+		} else {
+			this._headerMeasurements = null;
 		}
 		this.setInvalid(LAYOUT);
 		return this._header;
 	}
+
+	private var _footerMeasurements:Measurements = null;
 
 	private var _footer:DisplayObject = null;
 
@@ -96,6 +109,16 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		if (this._footer != null) {
 			this._focusExtrasAfter.push(this._footer);
 			this.addRawChild(this._footer);
+			if (Std.is(this._footer, IUIControl)) {
+				cast(this._footer, IUIControl).initializeNow();
+			}
+			if (this._footerMeasurements == null) {
+				this._footerMeasurements = new Measurements(this._footer);
+			} else {
+				this._footerMeasurements.save(this._footer);
+			}
+		} else {
+			this._footerMeasurements = null;
 		}
 		this.setInvalid(LAYOUT);
 		return this._footer;
@@ -137,6 +160,9 @@ class Panel extends ScrollContainer implements IFocusExtras {
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
 		if (this._header != null) {
+			if (this._headerMeasurements != null) {
+				this._headerMeasurements.restore(this._header);
+			}
 			if (Std.is(this._header, IValidating)) {
 				cast(this._header, IValidating).validateNow();
 			}
@@ -148,6 +174,9 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			}
 		}
 		if (this._footer != null) {
+			if (this._footerMeasurements != null) {
+				this._footerMeasurements.restore(this._footer);
+			}
 			if (Std.is(this._footer, IValidating)) {
 				cast(this._footer, IValidating).validateNow();
 			}
