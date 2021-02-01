@@ -307,6 +307,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this.refreshLayoutMeasurements();
 		this.refreshLayoutProperties();
 		this.refreshChildren(this._layoutItems);
+		this._layoutResult.reset();
 		this._layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
 		this.handleLayoutResult();
 	}
@@ -354,15 +355,14 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function handleLayoutResult():Void {
-		var contentWidth = this._layoutResult.contentWidth;
-		var contentHeight = this._layoutResult.contentHeight;
-		this.saveMeasurements(contentWidth, contentHeight, contentWidth, contentHeight);
+		this.saveMeasurements(this._layoutResult.contentWidth, this._layoutResult.contentHeight, this._layoutResult.contentMinWidth,
+			this._layoutResult.contentMinHeight);
 		var viewPortWidth = this._layoutResult.viewPortWidth;
 		var viewPortHeight = this._layoutResult.viewPortHeight;
 		this._actualVisibleWidth = viewPortWidth;
 		this._actualVisibleHeight = viewPortHeight;
-		this._actualMinVisibleWidth = viewPortWidth;
-		this._actualMinVisibleHeight = viewPortHeight;
+		this._actualMinVisibleWidth = this._layoutResult.contentMinWidth;
+		this._actualMinVisibleHeight = this._layoutResult.contentMinHeight;
 
 		this._background.x = 0.0;
 		this._background.y = 0.0;

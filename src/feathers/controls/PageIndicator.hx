@@ -330,6 +330,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		}
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
+		this._layoutResult.reset();
 		this.layout.layout(cast this.activeToggleButtons, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}

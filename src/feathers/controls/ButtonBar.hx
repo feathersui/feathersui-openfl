@@ -330,6 +330,7 @@ class ButtonBar extends FeathersControl {
 	private function handleLayout():Void {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
+		this._layoutResult.reset();
 		this.layout.layout(cast this.activeButtons, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}

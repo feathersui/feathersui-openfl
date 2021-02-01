@@ -596,6 +596,7 @@ class LayoutGroup extends FeathersControl {
 	private function handleCustomLayout():Void {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
+		this._layoutResult.reset();
 		this._currentLayout.layout(this.items, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}

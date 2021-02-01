@@ -348,14 +348,13 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	}
 
 	override private function handleLayoutResult():Void {
-		var contentWidth = this._layoutResult.contentWidth;
-		var contentHeight = this._layoutResult.contentHeight;
-		this.saveMeasurements(contentWidth, contentHeight, contentWidth, contentHeight);
+		this.saveMeasurements(this._layoutResult.contentWidth, this._layoutResult.contentHeight, this._layoutResult.contentMinWidth,
+			this._layoutResult.contentMinHeight);
 		var viewPortWidth = this._layoutResult.viewPortWidth;
 		var viewPortHeight = this._layoutResult.viewPortHeight;
 		this._actualVisibleWidth = viewPortWidth;
 		this._actualVisibleHeight = viewPortHeight;
-		this._actualMinVisibleWidth = viewPortWidth;
-		this._actualMinVisibleHeight = viewPortHeight;
+		this._actualMinVisibleWidth = this._layoutResult.contentMinWidth;
+		this._actualMinVisibleHeight = this._layoutResult.contentMinHeight;
 	}
 }
