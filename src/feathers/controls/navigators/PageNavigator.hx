@@ -68,6 +68,15 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 	private var _dataProvider:IFlatCollection<PageItem>;
 
+	/**
+		The collection of `PageItem` data displayed by the navigator.
+
+		All `PageItem` instances in the collection must be unique. Do not add
+		the same instance to the collection more than once because a runtime
+		exception may be thrown.
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<PageItem>;
 

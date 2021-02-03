@@ -121,6 +121,14 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	/**
 		The collection of data displayed by the tab bar.
 
+		Items in the collection must be class instances or anonymous structures.
+		Do not add primitive values (such as strings, booleans, or numeric
+		values) directly to the collection.
+
+		Additionally, all items in the collection must be unique object
+		instances. Do not add the same instance to the collection more than
+		once because a runtime exception will be thrown.
+
 		The following example passes in a data provider and tells the tabs how
 		to interpret the data:
 

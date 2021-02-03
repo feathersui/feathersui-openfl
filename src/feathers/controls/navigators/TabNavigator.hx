@@ -69,6 +69,15 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 	private var _dataProvider:IFlatCollection<TabItem> = null;
 
+	/**
+		The collection of `TabItem` data displayed by the navigator.
+
+		All `TabItem` instances in the collection must be unique. Do not add
+		the same instance to the collection more than once because a runtime
+		exception may be thrown.
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<TabItem>;
 
