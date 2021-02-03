@@ -36,6 +36,7 @@ import openfl.events.Event;
 	button.addEventListener(TriggerEvent.TRIGGER, (event) -> {
 		Alert.show( "Something bad happened!", "Error", ["OK"]);
 	});
+	```
 
 	@see [Tutorial: How to use the Alert component](https://feathersui.com/learn/haxe-openfl/alert/)
 
