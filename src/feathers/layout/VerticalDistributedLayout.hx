@@ -460,9 +460,6 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 				case JUSTIFY:
 					item.x = this._paddingLeft;
 					item.width = viewPortWidth - this._paddingLeft - this._paddingRight;
-				case CONTENT_JUSTIFY:
-					item.x = this._paddingLeft;
-					item.width = Math.max(maxItemWidth, viewPortWidth - this._paddingLeft - this._paddingRight);
 				default:
 					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 			}

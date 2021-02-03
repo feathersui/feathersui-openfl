@@ -48,12 +48,4 @@ enum VerticalAlign {
 		@since 1.0.0
 	**/
 	JUSTIFY;
-
-	/**
-		The items in the layout will fill the maximum height of the items, or
-		the height of the container bounds, whichever is larger.
-
-		@since 1.0.0
-	**/
-	CONTENT_JUSTIFY;
 }

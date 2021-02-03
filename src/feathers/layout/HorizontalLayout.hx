@@ -391,9 +391,6 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				case JUSTIFY:
 					item.y = this._paddingTop;
 					item.height = viewPortHeight - this._paddingTop - this._paddingBottom;
-				case CONTENT_JUSTIFY:
-					item.y = this._paddingTop;
-					item.height = Math.max(maxItemHeight, viewPortHeight - this._paddingTop - this._paddingBottom);
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
