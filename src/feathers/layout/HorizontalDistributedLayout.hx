@@ -8,12 +8,13 @@
 
 package feathers.layout;
 
-import feathers.events.FeathersEvent;
 import feathers.core.IMeasureObject;
-import openfl.events.Event;
-import openfl.display.DisplayObject;
-import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
+import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
 
 /**
 	Positions items from left to right in a single row, and all items are
@@ -447,11 +448,13 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - item.height);
 				case MIDDLE:
 					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom - item.height) / 2.0);
+				case TOP:
+					item.y = this._paddingTop;
 				case JUSTIFY:
 					item.y = this._paddingTop;
 					item.height = viewPortHeight - this._paddingTop - this._paddingBottom;
 				default:
-					item.y = this._paddingTop;
+					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
 		}
 	}

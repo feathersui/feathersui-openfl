@@ -12,6 +12,7 @@ import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
@@ -357,11 +358,13 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - item.height);
 				case MIDDLE:
 					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom - item.height) / 2.0);
+				case TOP:
+					item.y = this._paddingTop;
 				case JUSTIFY:
 					item.y = this._paddingTop;
 					item.height = viewPortHeight - this._paddingTop - this._paddingBottom;
 				default:
-					item.y = this._paddingTop;
+					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
 		}
 	}

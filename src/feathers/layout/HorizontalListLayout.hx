@@ -439,6 +439,33 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		return this._horizontalAlign;
 	}
 
+	private var _contentJustify:Bool = false;
+
+	/**
+		When `contentJustify` is `true`, the height of the items is set to
+		either the explicit height of the container, or the maximum height of
+		all items, whichever is larger. When `false`, the height of the items
+		is set to the explicit height of the container, even if the items are
+		measured to be larger.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var contentJustify(get, set):Bool;
+
+	private function get_contentJustify():Bool {
+		return this._contentJustify;
+	}
+
+	private function set_contentJustify(value:Bool):Bool {
+		if (this._contentJustify == value) {
+			return this._contentJustify;
+		}
+		this._contentJustify = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._contentJustify;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -460,8 +487,13 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		var viewPortHeight = this.calculateViewPortHeight(items, measurements);
-		var itemHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
+		var maxItemHeight = this.calculateMaxItemHeight(items);
+		var viewPortHeight = this.calculateViewPortHeight(maxItemHeight, measurements);
+		var minItemHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
+		var itemHeight = maxItemHeight;
+		if (!this._contentJustify || itemHeight < minItemHeight) {
+			itemHeight = minItemHeight;
+		}
 		var virtualColumnWidth = this.calculateVirtualColumnWidth(items, itemHeight);
 		var positionX = this._paddingLeft;
 		for (i in 0...items.length) {
@@ -492,11 +524,12 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem == null) {
-					cacheItem = new VirtualCacheItem(itemWidth);
+					cacheItem = new VirtualCacheItem(itemWidth, itemHeight);
 					this._virtualCache[i] = cacheItem;
 					FeathersEvent.dispatch(this, Event.CHANGE);
-				} else if (cacheItem.itemWidth != itemWidth) {
+				} else if (cacheItem.itemWidth != itemWidth || cacheItem.itemHeight != itemHeight) {
 					cacheItem.itemWidth = itemWidth;
+					cacheItem.itemHeight = itemHeight;
 					this._virtualCache[i] = cacheItem;
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
@@ -534,14 +567,22 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		return result;
 	}
 
-	private function calculateViewPortHeight(items:Array<DisplayObject>, measurements:Measurements):Float {
-		if (measurements.height != null) {
-			return measurements.height;
-		}
-		var maxHeight = 0.0;
+	private function calculateMaxItemHeight(items:Array<DisplayObject>):Float {
+		var maxItemHeight = 0.0;
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
+				if (this._virtualCache == null || this._virtualCache.length <= i) {
+					continue;
+				}
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem == null) {
+					continue;
+				}
+				var itemHeight = cacheItem.itemWidth;
+				if (maxItemHeight < itemHeight) {
+					maxItemHeight = itemHeight;
+				}
 				continue;
 			}
 			if (Std.is(item, ILayoutObject)) {
@@ -553,11 +594,18 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				cast(item, IValidating).validateNow();
 			}
 			var itemHeight = item.height;
-			if (maxHeight < itemHeight) {
-				maxHeight = itemHeight;
+			if (maxItemHeight < itemHeight) {
+				maxItemHeight = itemHeight;
 			}
 		}
-		return maxHeight + this._paddingTop + this._paddingBottom;
+		return maxItemHeight;
+	}
+
+	private function calculateViewPortHeight(maxItemHeight:Float, measurements:Measurements):Float {
+		if (measurements.height != null) {
+			return measurements.height;
+		}
+		return maxItemHeight + this._paddingTop + this._paddingBottom;
 	}
 
 	private function calculateVirtualColumnWidth(items:Array<DisplayObject>, itemHeight:Float):Float {
@@ -752,9 +800,11 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 
 @:dox(hide)
 private class VirtualCacheItem {
-	public function new(itemWidth:Float) {
+	public function new(itemWidth:Float, itemHeight:Float) {
 		this.itemWidth = itemWidth;
+		this.itemHeight = itemHeight;
 	}
 
 	public var itemWidth:Float;
+	public var itemHeight:Float;
 }
