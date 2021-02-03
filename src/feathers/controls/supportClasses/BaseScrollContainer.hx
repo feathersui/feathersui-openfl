@@ -8,9 +8,6 @@
 
 package feathers.controls.supportClasses;
 
-import openfl.Lib;
-import openfl.events.TouchEvent;
-import feathers.utils.ExclusivePointer;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
@@ -20,6 +17,8 @@ import feathers.events.ScrollEvent;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.skins.IProgrammaticSkin;
+import feathers.utils.DisplayUtil;
+import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
 import feathers.utils.MeasurementsUtil;
 import feathers.utils.Scroller;
@@ -27,6 +26,7 @@ import motion.Actuate;
 import motion.actuators.SimpleActuator;
 import motion.easing.IEasing;
 import motion.easing.Quart;
+import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
@@ -34,6 +34,7 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 
@@ -807,6 +808,21 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	**/
 	@:style
 	public var hideScrollBarEase:IEasing = Quart.easeOut;
+
+	/**
+		If enabled, the scroll position will always be adjusted to the nearest
+		pixel in stage coordinates.
+
+		In the following example, the scroll position is snapped to pixels:
+
+		```hx
+		container.scrollPixelSnapping = true;
+		```
+
+		@since 1.0.0
+	**/
+	@:style
+	public var scrollPixelSnapping:Bool = false;
 
 	private var _currentScrollRect:Rectangle;
 	private var _scrollRect1:Rectangle = new Rectangle();
@@ -1615,7 +1631,16 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (scrollRectHeight < 0.0) {
 			scrollRectHeight = 0.0;
 		}
-		scrollRect.setTo(scroller.scrollX, scroller.scrollY, scrollRectWidth, scrollRectHeight);
+
+		var scrollX = scroller.scrollX;
+		var scrollY = scroller.scrollY;
+		if (this.scrollPixelSnapping) {
+			var scaleFactorX = DisplayUtil.getConcatenatedScaleX(this);
+			var scaleFactorY = DisplayUtil.getConcatenatedScaleY(this);
+			scrollX = Math.round(scrollX / scaleFactorX) * scaleFactorX;
+			scrollY = Math.round(scrollY / scaleFactorY) * scaleFactorY;
+		}
+		scrollRect.setTo(scrollX, scrollY, scrollRectWidth, scrollRectHeight);
 		var displayViewPort = cast(this._viewPort, DisplayObject);
 		displayViewPort.scrollRect = scrollRect;
 	}
