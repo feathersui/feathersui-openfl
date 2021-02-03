@@ -43,9 +43,17 @@ enum HorizontalAlign {
 	RIGHT;
 
 	/**
-		The items in the layout will fill the width of the bounds.
+		The items in the layout will fill the width of the container bounds.
 
 		@since 1.0.0
 	**/
 	JUSTIFY;
+
+	/**
+		The items in the layout will fill the maximum width of the items, or the
+		width of the container bounds, whichever is larger.
+
+		@since 1.0.0
+	**/
+	CONTENT_JUSTIFY;
 }

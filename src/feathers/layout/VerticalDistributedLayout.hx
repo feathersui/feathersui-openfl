@@ -8,12 +8,13 @@
 
 package feathers.layout;
 
-import feathers.events.FeathersEvent;
 import feathers.core.IMeasureObject;
-import openfl.events.Event;
-import openfl.display.DisplayObject;
-import openfl.events.EventDispatcher;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
+import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
 
 /**
 	Positions items from top to bottom in a single column, and all items are
@@ -334,6 +335,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 			item.y = contentHeight;
 			contentHeight += item.height + this._gap;
 		}
+		var maxItemWidth = contentWidth;
 		contentWidth += this._paddingLeft + this._paddingRight;
 		contentHeight += this._paddingBottom;
 		if (items.length > 0) {
@@ -361,7 +363,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
-		this.applyHorizontalAlign(items, viewPortWidth);
+		this.applyHorizontalAlign(items, maxItemWidth, viewPortWidth);
 
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;
@@ -439,7 +441,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		}
 	}
 
-	private inline function applyHorizontalAlign(items:Array<DisplayObject>, viewPortWidth:Float):Void {
+	private inline function applyHorizontalAlign(items:Array<DisplayObject>, maxItemWidth:Float, viewPortWidth:Float):Void {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if (Std.is(item, ILayoutObject)) {
@@ -453,11 +455,16 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight) - item.width);
 				case CENTER:
 					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight - item.width) / 2.0);
+				case LEFT:
+					item.x = this._paddingLeft;
 				case JUSTIFY:
 					item.x = this._paddingLeft;
 					item.width = viewPortWidth - this._paddingLeft - this._paddingRight;
-				default:
+				case CONTENT_JUSTIFY:
 					item.x = this._paddingLeft;
+					item.width = Math.max(maxItemWidth, viewPortWidth - this._paddingLeft - this._paddingRight);
+				default:
+					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 			}
 		}
 	}
