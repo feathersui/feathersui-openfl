@@ -585,18 +585,19 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		var maxItemWidth = 0.0;
 		for (i in 0...items.length) {
 			var item = items[i];
+			if (this._virtualCache != null && this._virtualCache.length > i) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem != null) {
+					// prefer the cached width because that's the original
+					// measured width and not the justified width
+					var itemWidth = cacheItem.itemWidth;
+					if (maxItemWidth < itemWidth) {
+						maxItemWidth = itemWidth;
+					}
+					continue;
+				}
+			}
 			if (item == null) {
-				if (this._virtualCache == null || this._virtualCache.length == 0) {
-					continue;
-				}
-				var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
-				if (cacheItem == null) {
-					continue;
-				}
-				var itemWidth = cacheItem.itemWidth;
-				if (itemWidth > maxItemWidth) {
-					maxItemWidth = itemWidth;
-				}
 				continue;
 			}
 			if (Std.is(item, ILayoutObject)) {
@@ -608,8 +609,20 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				cast(item, IValidating).validateNow();
 			}
 			var itemWidth = item.width;
-			if (itemWidth > maxItemWidth) {
+			if (maxItemWidth < itemWidth) {
 				maxItemWidth = itemWidth;
+			}
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem == null) {
+					if (Std.is(item, IValidating)) {
+						cast(item, IValidating).validateNow();
+					}
+					// save the original measured width in the cache to be used
+					// again in future calculations
+					cacheItem = new VirtualCacheItem(itemWidth, 0.0);
+					this._virtualCache[i] = cacheItem;
+				}
 			}
 		}
 		return maxItemWidth;
@@ -638,15 +651,16 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					if (cacheItem == null) {
 						continue;
 					}
+					// use the last known row height, if available
 					actualRowHeight = cacheItem.itemHeight;
 					break;
 				}
-				item.width = itemWidth;
 				if (Std.is(item, ILayoutObject)) {
 					if (!cast(item, ILayoutObject).includeInLayout) {
 						continue;
 					}
 				}
+				item.width = itemWidth;
 				if (Std.is(item, IValidating)) {
 					cast(item, IValidating).validateNow();
 				}
@@ -655,12 +669,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					// since all items are the same height, we can store just
 					// one value as an optimization
 					var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
-					if (cacheItem == null) {
-						cacheItem = new VirtualCacheItem(itemWidth, actualRowHeight);
-						this._virtualCache[0] = cacheItem;
-						FeathersEvent.dispatch(this, Event.CHANGE);
-					} else if (cacheItem.itemWidth != itemWidth || cacheItem.itemHeight != actualRowHeight) {
-						cacheItem.itemWidth = itemWidth;
+					if (cacheItem != null && cacheItem.itemHeight != actualRowHeight) {
 						cacheItem.itemHeight = actualRowHeight;
 						this._virtualCache[0] = cacheItem;
 						FeathersEvent.dispatch(this, Event.CHANGE);

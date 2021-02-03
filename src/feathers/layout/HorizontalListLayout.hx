@@ -523,13 +523,8 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			var itemWidth = item.width;
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem == null) {
-					cacheItem = new VirtualCacheItem(itemWidth, itemHeight);
-					this._virtualCache[i] = cacheItem;
-					FeathersEvent.dispatch(this, Event.CHANGE);
-				} else if (cacheItem.itemWidth != itemWidth || cacheItem.itemHeight != itemHeight) {
+				if (cacheItem != null && cacheItem.itemWidth != itemWidth) {
 					cacheItem.itemWidth = itemWidth;
-					cacheItem.itemHeight = itemHeight;
 					this._virtualCache[i] = cacheItem;
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
@@ -571,18 +566,19 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		var maxItemHeight = 0.0;
 		for (i in 0...items.length) {
 			var item = items[i];
-			if (item == null) {
-				if (this._virtualCache == null || this._virtualCache.length <= i) {
-					continue;
-				}
+			if (this._virtualCache != null && this._virtualCache.length > i) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem == null) {
+				if (cacheItem != null) {
+					// prefer the cached height because that's the original
+					// measured height and not the justified height
+					var itemHeight = cacheItem.itemHeight;
+					if (maxItemHeight < itemHeight) {
+						maxItemHeight = itemHeight;
+					}
 					continue;
 				}
-				var itemHeight = cacheItem.itemWidth;
-				if (maxItemHeight < itemHeight) {
-					maxItemHeight = itemHeight;
-				}
+			}
+			if (item == null) {
 				continue;
 			}
 			if (Std.is(item, ILayoutObject)) {
@@ -596,6 +592,18 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			var itemHeight = item.height;
 			if (maxItemHeight < itemHeight) {
 				maxItemHeight = itemHeight;
+			}
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem == null) {
+					if (Std.is(item, IValidating)) {
+						cast(item, IValidating).validateNow();
+					}
+					// save the original measured height in the cache to be used
+					// again in future calculations
+					cacheItem = new VirtualCacheItem(0.0, itemHeight);
+					this._virtualCache[i] = cacheItem;
+				}
 			}
 		}
 		return maxItemHeight;
@@ -619,14 +627,15 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				if (cacheItem == null) {
 					continue;
 				}
+				// use the last known column width, if available
 				return cacheItem.itemWidth;
 			}
-			item.height = itemHeight;
 			if (Std.is(item, ILayoutObject)) {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
+			item.height = itemHeight;
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
