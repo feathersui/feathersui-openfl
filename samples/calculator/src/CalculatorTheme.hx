@@ -68,7 +68,7 @@ class CalculatorTheme implements ITheme {
 		if (button.backgroundSkin == null) {
 			var skin = new RectangleSkin();
 			skin.fill = SolidColor(this.controlColor);
-			skin.setFillForState(DOWN, SolidColor(this.activeColor));
+			skin.setFillForState(ButtonState.DOWN, SolidColor(this.activeColor));
 			button.backgroundSkin = skin;
 		}
 
@@ -87,7 +87,7 @@ class CalculatorTheme implements ITheme {
 		if (button.backgroundSkin == null) {
 			var skin = new RectangleSkin();
 			skin.fill = SolidColor(this.operationColor);
-			skin.setFillForState(DOWN, SolidColor(this.activeColor));
+			skin.setFillForState(ButtonState.DOWN, SolidColor(this.activeColor));
 			button.backgroundSkin = skin;
 		}
 
