@@ -12,7 +12,7 @@ import openfl.display.InteractiveObject;
 
 /**
 	Used by components, like data renderers, to delegate pointer state to
-	another interactive display object. For instnace, the cell renderers in a
+	another interactive display object. For instance, the cell renderers in a
 	`GridView` component delegate pointer state to their parent row.
 
 	@since 1.0.0
