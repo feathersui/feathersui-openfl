@@ -354,6 +354,7 @@ private class StringWrapper {
 
 	private var _text:String;
 
+	@:keep
 	public function toString():String {
 		return this._text;
 	}
