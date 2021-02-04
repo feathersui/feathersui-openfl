@@ -20,6 +20,25 @@ For example, [function types](https://haxe.org/manual/types-function.html) shoul
 String -> Bool // bad
 ```
 
+### Curly Braces
+
+All conditional and loop expressions must include curly braces, even if the body contains one line only.
+
+😃 With curly braces:
+
+```hx
+// good
+if (condition) {
+	doSomething();
+}
+```
+
+😡 Without curly braces:
+
+```hx
+if (condition) doSomething(); // bad
+```
+
 ### Formatting
 
 All code must be formatted before each commit — use [Haxe Formatter](https://github.com/HaxeCheckstyle/haxe-formatter) with default settings.
@@ -58,7 +77,7 @@ private function set_property(value:Int):Int {
 }
 ```
 
-For getters and setters, use `get`, `set`, or `never`. Never use `default` or `null` because it will break compatibility with some supported workflows. This means that a `private` backing variable is always required.
+For getters and setters, use `get`, `set`, or `never`. Never use `default` or `null` because it will break compatibility with some supported workflows. Never use `@:isVar`. This means that a `private` backing variable is always required.
 
 All properties must include `@:flash.property` metadata. This metadata is used when Feathers UI is built as a _.swc_ file for ActionScript and when it is built as an npm bundle for JavaScript.
 
