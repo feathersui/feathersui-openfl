@@ -979,9 +979,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			switch (this.scrollBarYPosition) {
 				case LEFT:
 					this._headerContainerLayout.paddingLeft = this.leftViewPortOffset;
+					this._headerContainerLayout.paddingRight = 0.0;
 				default:
+					this._headerContainerLayout.paddingLeft = 0.0;
 					this._headerContainerLayout.paddingRight = this.rightViewPortOffset;
-			};
+			}
 			this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
 			// restore these values because we're going to calculate them again
 			// this is kind of hacky, but our change to topViewPortOffset
@@ -999,6 +1001,18 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			// call again after measuring the headers because they are affected
 			// by the topViewPortOffset that we changed above
 			super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
+
+			var oldIgnoreHeaderLayoutChanges = this._ignoreHeaderLayoutChanges;
+			this._ignoreHeaderLayoutChanges = true;
+			switch (this.scrollBarYPosition) {
+				case LEFT:
+					this._headerContainerLayout.paddingLeft = this.leftViewPortOffset;
+					this._headerContainerLayout.paddingRight = 0.0;
+				default:
+					this._headerContainerLayout.paddingLeft = 0.0;
+					this._headerContainerLayout.paddingRight = this.rightViewPortOffset;
+			}
+			this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
 		}
 	}
 
@@ -1030,7 +1044,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerContainer.y = this.paddingTop;
 		var minHeaderWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		// same width as the viewPort so that the columns line up
-		this._headerContainer.width = Math.max(this._viewPort.width, minHeaderWidth);
+		this._headerContainer.width = Math.max(this._viewPort.width + this._headerContainerLayout.paddingLeft + this._headerContainerLayout.paddingRight,
+			minHeaderWidth);
 		this._headerContainer.validateNow();
 
 		if (!MathUtil.fuzzyEquals(this.maxScrollY, this.minScrollX)) {
