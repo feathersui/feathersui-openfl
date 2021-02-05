@@ -1028,7 +1028,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		this._headerContainer.x = this.paddingLeft;
 		this._headerContainer.y = this.paddingTop;
-		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+		var minHeaderWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		// same width as the viewPort so that the columns line up
+		this._headerContainer.width = Math.max(this._viewPort.width, minHeaderWidth);
 		this._headerContainer.validateNow();
 
 		if (!MathUtil.fuzzyEquals(this.maxScrollY, this.minScrollX)) {
@@ -1039,7 +1041,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				scrollRect = this._scrollRect2;
 			}
 			this._currentScrollRect = scrollRect;
-			var scrollRectWidth = this._headerContainer.width;
+
+			// no larger than the full width
+			var scrollRectWidth = minHeaderWidth;
 			if (scrollRectWidth < 0.0) {
 				scrollRectWidth = 0.0;
 			}
