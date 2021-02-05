@@ -37,6 +37,7 @@ import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.utils.DisplayUtil;
 import feathers.utils.ExclusivePointer;
+import feathers.utils.MathUtil;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -47,6 +48,7 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
@@ -194,6 +196,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _resizingHeaderTouchID:Int = -1;
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
+
+	private var _currentHeaderScrollRect:Rectangle;
+	private var _headerScrollRect1:Rectangle = new Rectangle();
+	private var _headerScrollRect2:Rectangle = new Rectangle();
 
 	private var _oldHeaderDividerMouseCursor:MouseCursor;
 
@@ -1024,6 +1030,28 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerContainer.y = this.paddingTop;
 		this._headerContainer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
 		this._headerContainer.validateNow();
+
+		if (!MathUtil.fuzzyEquals(this.maxScrollY, this.minScrollX)) {
+			// instead of creating a new Rectangle every time, we're going to swap
+			// between two of them to avoid excessive garbage collection
+			var scrollRect = this._scrollRect1;
+			if (this._currentScrollRect == scrollRect) {
+				scrollRect = this._scrollRect2;
+			}
+			this._currentScrollRect = scrollRect;
+			var scrollRectWidth = this._headerContainer.width;
+			if (scrollRectWidth < 0.0) {
+				scrollRectWidth = 0.0;
+			}
+			var scrollRectHeight = this._headerContainer.height;
+			if (scrollRectHeight < 0.0) {
+				scrollRectHeight = 0.0;
+			}
+			scrollRect.setTo(this.scrollX - this.minScrollX, 0.0, scrollRectWidth, scrollRectHeight);
+			this._headerContainer.scrollRect = scrollRect;
+		} else {
+			this._headerContainer.scrollRect = null;
+		}
 
 		this._headerResizeContainer.x = this._headerContainer.x;
 		this._headerResizeContainer.y = this._headerContainer.y;
