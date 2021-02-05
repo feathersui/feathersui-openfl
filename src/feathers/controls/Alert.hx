@@ -54,6 +54,15 @@ class Alert extends Panel {
 	public static final CHILD_VARIANT_HEADER = "alert_header";
 
 	/**
+		The variant used to style the message `Label` child component.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_MESSAGE_LABEL = "alert_messageLabel";
+
+	/**
 		The variant used to style the `ButtonBar` child component.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
@@ -238,6 +247,7 @@ class Alert extends Panel {
 		super.initialize();
 		if (this.messageLabel == null) {
 			this.messageLabel = new Label();
+			this.messageLabel.variant = Alert.CHILD_VARIANT_MESSAGE_LABEL;
 			this.messageLabel.wordWrap = true;
 			this.messageLabel.layoutData = new HorizontalLayoutData(100.0);
 			this.addChild(this.messageLabel);
