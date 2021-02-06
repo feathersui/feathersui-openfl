@@ -1048,7 +1048,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			minHeaderWidth);
 		this._headerContainer.validateNow();
 
-		if (!MathUtil.fuzzyEquals(this.maxScrollY, this.minScrollX)) {
+		if (!MathUtil.fuzzyEquals(this.maxScrollX, this.minScrollX)) {
 			// instead of creating a new Rectangle every time, we're going to swap
 			// between two of them to avoid excessive garbage collection
 			var scrollRect = this._scrollRect1;
