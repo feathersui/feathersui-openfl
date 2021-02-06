@@ -40,7 +40,6 @@ class SteelGridViewStyles {
 
 			if (gridView.layout == null) {
 				var layout = new VerticalListLayout();
-				layout.contentJustify = true;
 				layout.requestedRowCount = 5.0;
 				gridView.layout = layout;
 			}
@@ -84,7 +83,6 @@ class SteelGridViewStyles {
 
 			if (gridView.layout == null) {
 				var layout = new VerticalListLayout();
-				layout.contentJustify = true;
 				layout.requestedRowCount = 5.0;
 				gridView.layout = layout;
 			}
