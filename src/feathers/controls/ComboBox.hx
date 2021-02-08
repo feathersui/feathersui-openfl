@@ -675,6 +675,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.button != null) {
 			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_button_mouseDownHandler);
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_button_touchBeginHandler);
+			this.removeChild(this.button);
 			this.button = null;
 		}
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
@@ -694,6 +695,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.removeEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
+			this.removeChild(this.textInput);
 			this.textInput = null;
 		}
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;

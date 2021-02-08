@@ -589,6 +589,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
 			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
+			this.removeChild(this.button);
 			this.button = null;
 		}
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
