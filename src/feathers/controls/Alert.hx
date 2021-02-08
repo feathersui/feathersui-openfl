@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.IllegalOperationError;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.IUIControl;
 import feathers.core.PopUpManager;
@@ -44,9 +45,14 @@ import openfl.events.Event;
 **/
 @:styleContext
 class Alert extends Panel {
+	private static final INVALIDATION_FLAG_BUTTON_BAR_FACTORY = InvalidationFlag.CUSTOM("buttonBarFactory");
+	private static final INVALIDATION_FLAG_HEADER_FACTORY = InvalidationFlag.CUSTOM("headerFactory");
+	private static final INVALIDATION_FLAG_MESSAGE_LABEL_FACTORY = InvalidationFlag.CUSTOM("messageLabelFactory");
+
 	/**
 		The variant used to style the `Header` child component.
 
+		@see `Alert.customHeaderVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -56,6 +62,7 @@ class Alert extends Panel {
 	/**
 		The variant used to style the message `Label` child component.
 
+		@see `Alert.customMessageLabelVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -65,6 +72,7 @@ class Alert extends Panel {
 	/**
 		The variant used to style the `ButtonBar` child component.
 
+		@see `Alert.customButtonBarVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -99,6 +107,18 @@ class Alert extends Panel {
 			PopUpManager.addPopUp(alert, Lib.current, true, true);
 		}
 		return alert;
+	}
+
+	private static function defaultButtonBarFactory():ButtonBar {
+		return new ButtonBar();
+	}
+
+	private static function defaultHeaderFactory():Header {
+		return new Header();
+	}
+
+	private static function defaultMessageLabelFactory():Label {
+		return new Label();
 	}
 
 	/**
@@ -185,6 +205,110 @@ class Alert extends Panel {
 		return this._titleText;
 	}
 
+	private var _messageLabelFactory:() -> Label;
+
+	/**
+		Creates the message label, which must be of type
+		`feathers.controls.Label`.
+
+		In the following example, a custom message label factory is provided:
+
+		```hx
+		alert.messageLabelFactory = () ->
+		{
+			return new Label();
+		};
+		```
+
+		@see `feathers.controls.Label`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var messageLabelFactory(get, set):() -> Label;
+
+	private function get_messageLabelFactory():() -> Label {
+		return this._messageLabelFactory;
+	}
+
+	private function set_messageLabelFactory(value:() -> Label):() -> Label {
+		if (this._messageLabelFactory == value) {
+			return this._messageLabelFactory;
+		}
+		this._messageLabelFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_MESSAGE_LABEL_FACTORY);
+		return this._messageLabelFactory;
+	}
+
+	private var _headerFactory:() -> Header;
+
+	/**
+		Creates the header, which must be of type `feathers.controls.Header`.
+
+		In the following example, a custom header factory is provided:
+
+		```hx
+		alert.headerFactory = () ->
+		{
+			return new Header();
+		};
+		```
+
+		@see `feathers.controls.Header`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var headerFactory(get, set):() -> Header;
+
+	private function get_headerFactory():() -> Header {
+		return this._headerFactory;
+	}
+
+	private function set_headerFactory(value:() -> Header):() -> Header {
+		if (this._headerFactory == value) {
+			return this._headerFactory;
+		}
+		this._headerFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_HEADER_FACTORY);
+		return this._headerFactory;
+	}
+
+	private var _buttonBarFactory:() -> ButtonBar;
+
+	/**
+		Creates the button bar, which must be of type
+		`feathers.controls.ButtonBar`.
+
+		In the following example, a custom button bar factory is provided:
+
+		```hx
+		alert.buttonBarFactory = () ->
+		{
+			return new ButtonBar();
+		};
+		```
+
+		@see `feathers.controls.ButtonBar`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var buttonBarFactory(get, set):() -> ButtonBar;
+
+	private function get_buttonBarFactory():() -> ButtonBar {
+		return this._buttonBarFactory;
+	}
+
+	private function set_buttonBarFactory(value:() -> ButtonBar):() -> ButtonBar {
+		if (this._buttonBarFactory == value) {
+			return this._buttonBarFactory;
+		}
+		this._buttonBarFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_BUTTON_BAR_FACTORY);
+		return this._buttonBarFactory;
+	}
+
 	private var buttonBar:ButtonBar;
 
 	private var _buttonsDataProvider:IFlatCollection<Dynamic> = null;
@@ -239,36 +363,67 @@ class Alert extends Panel {
 	@:style
 	public var icon:DisplayObject = null;
 
-	private function initializeAlertTheme():Void {
-		SteelAlertStyles.initialize();
+	/**
+		An optional custom variant to use for the alert's button bar.
+
+		@see `Alert.CHILD_VARIANT_BUTTON_BAR`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customButtonBarVariant:String = null;
+
+	/**
+		An optional custom variant to use for the alert's header.
+
+		@see `Alert.CHILD_VARIANT_HEADER`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customHeaderVariant:String = null;
+
+	/**
+		An optional custom variant to use for the alert's message label.
+
+		@see `Alert.CHILD_VARIANT_MESSAGE_LABEL`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customMessageLabelVariant:String = null;
+
+	override private function set_header(value:DisplayObject):DisplayObject {
+		throw new IllegalOperationError("Alert header must be created with headerFactory");
 	}
 
-	override private function initialize():Void {
-		super.initialize();
-		if (this.messageLabel == null) {
-			this.messageLabel = new Label();
-			this.messageLabel.variant = Alert.CHILD_VARIANT_MESSAGE_LABEL;
-			this.messageLabel.wordWrap = true;
-			this.messageLabel.layoutData = new HorizontalLayoutData(100.0);
-			this.addChild(this.messageLabel);
-		}
-		if (this.alertHeader == null) {
-			this.alertHeader = new Header();
-			this.alertHeader.variant = Alert.CHILD_VARIANT_HEADER;
-			this.header = this.alertHeader;
-		}
-		if (this.buttonBar == null) {
-			this.buttonBar = new ButtonBar();
-			this.buttonBar.variant = Alert.CHILD_VARIANT_BUTTON_BAR;
-			this.footer = this.buttonBar;
-		}
-		this.buttonBar.addEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
+	override private function set_footer(value:DisplayObject):DisplayObject {
+		throw new IllegalOperationError("Alert footer must be created with buttonBarFactory");
+	}
+
+	private function initializeAlertTheme():Void {
+		SteelAlertStyles.initialize();
 	}
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		var buttonBarInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_BAR_FACTORY);
+		var headerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_FACTORY);
+		var messageLabelInvalid = this.isInvalid(INVALIDATION_FLAG_MESSAGE_LABEL_FACTORY);
+
+		if (headerInvalid) {
+			this.createHeader();
+		}
+
+		if (buttonBarInvalid) {
+			this.createButtonBar();
+		}
+
+		if (messageLabelInvalid) {
+			this.createMessageLabel();
+		}
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshIcon();
@@ -287,6 +442,47 @@ class Alert extends Panel {
 		}
 
 		super.update();
+	}
+
+	private function createButtonBar():Void {
+		if (this.buttonBar != null) {
+			this.buttonBar.removeEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
+			this.buttonBar = null;
+			super.footer = null;
+		}
+		var factory = this._buttonBarFactory != null ? this._buttonBarFactory : defaultButtonBarFactory;
+		this.buttonBar = factory();
+		if (this.buttonBar.variant == null) {
+			this.buttonBar.variant = this.customButtonBarVariant != null ? this.customButtonBarVariant : Alert.CHILD_VARIANT_BUTTON_BAR;
+		}
+		this.buttonBar.addEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
+		super.footer = this.buttonBar;
+	}
+
+	private function createHeader():Void {
+		if (this.alertHeader != null) {
+			this.alertHeader = null;
+			super.header = null;
+		}
+		var factory = this._headerFactory != null ? this._headerFactory : defaultHeaderFactory;
+		this.alertHeader = factory();
+		if (this.alertHeader.variant == null) {
+			this.alertHeader.variant = this.customHeaderVariant != null ? this.customHeaderVariant : Alert.CHILD_VARIANT_HEADER;
+		}
+		super.header = this.alertHeader;
+	}
+
+	private function createMessageLabel():Void {
+		if (this.messageLabel != null) {
+			this.removeChild(this.messageLabel);
+			this.messageLabel = null;
+		}
+		var factory = this._messageLabelFactory != null ? this._messageLabelFactory : defaultMessageLabelFactory;
+		this.messageLabel = factory();
+		if (this.messageLabel.variant == null) {
+			this.messageLabel.variant = this.customMessageLabelVariant != null ? this.customMessageLabelVariant : Alert.CHILD_VARIANT_MESSAGE_LABEL;
+		}
+		this.addChild(this.messageLabel);
 	}
 
 	private function refreshButtons():Void {
