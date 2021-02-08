@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.core.InvalidationFlag;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
 import feathers.data.IFlatCollection;
@@ -51,6 +52,25 @@ import openfl.events.Event;
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class TabNavigator extends BaseNavigator implements IIndexSelector implements IDataSelector<TabItem> {
+	private static final INVALIDATION_FLAG_TAB_BAR_FACTORY = InvalidationFlag.CUSTOM("tabBarFactory");
+
+	/**
+		The variant used to style the `TabBar` child component.
+
+		To override this default variant, set the
+		`TabNavigator.customTabBarVariant` property.
+
+		@see `TabNavigator.customTabBarVariant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_TAB_BAR = "tabNavigator_tabBar";
+
+	private static function defaultTabBarFactory():TabBar {
+		return new TabBar();
+	}
+
 	/**
 		Creates a new `TabNavigator` object.
 
@@ -279,17 +299,58 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	@:style
 	public var gap:Float = 0.0;
 
+	/**
+		An optional custom variant to use for the tab bar sub-component,
+		instead of `TabNavigator.CHILD_VARIANT_TAB_BAR`.
+
+		The `customTabBarVariant` will be not be used if the result of
+		`tabBarFactory` already has a variant set.
+
+		@see `TabNavigator.CHILD_VARIANT_TAB_BAR`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customTabBarVariant:String = null;
+
+	private var _tabBarFactory:() -> TabBar;
+
+	/**
+		Creates the tab bar, which must be of type `feathers.controls.TabBar`.
+
+		In the following example, a custom tab bar factory is provided:
+
+		```hx
+		navigator.tabBarFactory = () ->
+		{
+			return new TabBar();
+		};
+		```
+
+		@see `feathers.controls.TabBar`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var tabBarFactory(get, set):() -> TabBar;
+
+	private function get_tabBarFactory():() -> TabBar {
+		return this._tabBarFactory;
+	}
+
+	private function set_tabBarFactory(value:() -> TabBar):() -> TabBar {
+		if (this._tabBarFactory == value) {
+			return this._tabBarFactory;
+		}
+		this._tabBarFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_TAB_BAR_FACTORY);
+		return this._tabBarFactory;
+	}
+
 	private var _ignoreSelectionChange = false;
 
 	override private function initialize():Void {
 		super.initialize();
-
-		if (this.tabBar == null) {
-			this.tabBar = new TabBar();
-			this.addChild(this.tabBar);
-		}
-		this.tabBar.addEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
-		this.tabBar.addEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
 
 		if (this._previousEdgePuller == null) {
 			this._previousEdgePuller = new EdgePuller(this, LEFT);
@@ -316,8 +377,13 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
+		var tabBarInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_BAR_FACTORY);
 
-		if (dataInvalid) {
+		if (tabBarInvalid) {
+			this.createTabBar();
+		}
+
+		if (dataInvalid || tabBarInvalid) {
 			this.tabBar.itemToText = this.itemToText;
 			this.tabBar.dataProvider = this._dataProvider;
 
@@ -325,7 +391,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this._nextEdgePuller.simulateTouch = this._simulateTouch;
 		}
 
-		if (dataInvalid || selectionInvalid) {
+		if (dataInvalid || selectionInvalid || tabBarInvalid) {
 			this.refreshSelection();
 		}
 
@@ -362,6 +428,23 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			}
 		}
 		return super.measure();
+	}
+
+	private function createTabBar():Void {
+		if (this.tabBar != null) {
+			this.tabBar.removeEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
+			this.tabBar.removeEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
+			this.removeChild(this.tabBar);
+			this.tabBar = null;
+		}
+		var factory = this._tabBarFactory != null ? this._tabBarFactory : defaultTabBarFactory;
+		this.tabBar = factory();
+		if (this.tabBar.variant == null) {
+			this.tabBar.variant = this.customTabBarVariant != null ? this.customTabBarVariant : TabNavigator.CHILD_VARIANT_TAB_BAR;
+		}
+		this.tabBar.addEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
+		this.tabBar.addEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
+		this.addChild(this.tabBar);
 	}
 
 	override private function layoutContent():Void {
