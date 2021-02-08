@@ -8,18 +8,17 @@
 
 package feathers.controls;
 
-import openfl.errors.RangeError;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.controls.supportClasses.LayoutViewPort;
 import feathers.core.IFocusContainer;
-import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
-import feathers.layout.Direction;
+import feathers.layout.AutoSizeMode;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
 import feathers.layout.IScrollLayout;
 import feathers.themes.steel.components.SteelScrollContainerStyles;
 import openfl.display.DisplayObject;
+import openfl.errors.RangeError;
 import openfl.events.Event;
 
 /**
@@ -69,6 +68,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			this.addRawChild(this.layoutViewPort);
 			this.viewPort = this.layoutViewPort;
 		}
+		this.addEventListener(Event.ADDED_TO_STAGE, scrollContainer_addedToStageHandler);
 	}
 
 	private var layoutViewPort:LayoutViewPort;
@@ -145,6 +145,49 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		}
 		this._childFocusEnabled = value;
 		return this._childFocusEnabled;
+	}
+
+	private var _autoSizeMode:AutoSizeMode = CONTENT;
+
+	/**
+		Determines how the container will set its own size when its dimensions
+		(width and height) aren't set explicitly.
+
+		In the following example, the container will be sized to match the
+		stage:
+
+		```hx
+		container.autoSizeMode = STAGE;
+		```
+
+		@see `feathers.layout.AutoSizeMode.STAGE`
+		@see `feathers.layout.AutoSizeMode.CONTENT`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var autoSizeMode(get, set):AutoSizeMode;
+
+	private function get_autoSizeMode():AutoSizeMode {
+		return this._autoSizeMode;
+	}
+
+	private function set_autoSizeMode(value:AutoSizeMode):AutoSizeMode {
+		if (this._autoSizeMode == value) {
+			return this._autoSizeMode;
+		}
+		this._autoSizeMode = value;
+		this.setInvalid(SIZE);
+		if (this.stage != null) {
+			if (this._autoSizeMode == STAGE) {
+				this.stage.addEventListener(Event.RESIZE, scrollContainer_stage_resizeHandler, false, 0, true);
+				this.addEventListener(Event.REMOVED_FROM_STAGE, scrollContainer_removedFromStageHandler);
+			} else {
+				this.stage.removeEventListener(Event.RESIZE, scrollContainer_stage_resizeHandler);
+				this.removeEventListener(Event.REMOVED_FROM_STAGE, scrollContainer_removedFromStageHandler);
+			}
+		}
+		return this._autoSizeMode;
 	}
 
 	@:flash.property
@@ -391,6 +434,24 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		this._displayListBypassEnabled = oldBypass;
 	}
 
+	override private function measure():Bool {
+		var needsWidth = this.explicitWidth == null;
+		var needsHeight = this.explicitHeight == null;
+		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinHeight = this.explicitMinHeight == null;
+		var needsMaxWidth = this.explicitMaxWidth == null;
+		var needsMaxHeight = this.explicitMaxHeight == null;
+		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
+			return false;
+		}
+		if (this._autoSizeMode == STAGE && this.stage != null) {
+			var newWidth = this.stage.stageWidth;
+			var newHeight = this.stage.stageHeight;
+			return this.saveMeasurements(newWidth, newHeight, newWidth, newHeight);
+		}
+		return super.measure();
+	}
+
 	private function refreshLayout():Void {
 		this.layoutViewPort.layout = this.layout;
 	}
@@ -409,6 +470,27 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			this.scroller.forceElasticBottom = false;
 			this.scroller.forceElasticLeft = false;
 		}
+	}
+
+	private function scrollContainer_addedToStageHandler(event:Event):Void {
+		if (this._autoSizeMode == STAGE) {
+			// if we validated before being added to the stage, or if we've
+			// been removed from stage and added again, we need to be sure
+			// that the new stage dimensions are accounted for.
+			this.setInvalid(SIZE);
+
+			this.addEventListener(Event.REMOVED_FROM_STAGE, scrollContainer_removedFromStageHandler);
+			this.stage.addEventListener(Event.RESIZE, scrollContainer_stage_resizeHandler, false, 0, true);
+		}
+	}
+
+	private function scrollContainer_removedFromStageHandler(event:Event):Void {
+		this.removeEventListener(Event.REMOVED_FROM_STAGE, scrollContainer_removedFromStageHandler);
+		this.stage.removeEventListener(Event.RESIZE, scrollContainer_stage_resizeHandler);
+	}
+
+	private function scrollContainer_stage_resizeHandler(event:Event):Void {
+		this.setInvalid(SIZE);
 	}
 
 	private function scrollContainer_child_layoutDataChangeHandler(event:FeathersEvent):Void {
