@@ -450,15 +450,15 @@ class Alert extends Panel {
 			this.refreshIcon();
 		}
 
-		if (dataInvalid || stylesInvalid || stateInvalid) {
+		if (dataInvalid || stylesInvalid || stateInvalid || messageLabelInvalid) {
 			this.refreshText();
 		}
 
-		if (dataInvalid || stylesInvalid || stateInvalid) {
+		if (dataInvalid || stylesInvalid || stateInvalid || headerInvalid) {
 			this.refreshTitleText();
 		}
 
-		if (dataInvalid) {
+		if (dataInvalid || buttonBarInvalid) {
 			this.refreshButtons();
 		}
 
