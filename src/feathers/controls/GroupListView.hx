@@ -396,6 +396,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	/**
 		A custom variant to set on all item renderers.
 
+		The `customItemRendererVariant` will be not be used if the result of
+		`itemRendererRecycler.create()` already has a variant set.
+
 		@since 1.0.0
 	**/
 	@:style

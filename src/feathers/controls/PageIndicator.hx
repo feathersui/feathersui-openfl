@@ -72,6 +72,9 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	/**
 		The variant used to style the toggle button child components in a theme.
 
+		To override this default variant, set the
+		`PageIndicator.customToggleButtonVariant` property.
+
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@see `PageIndicator.customToggleButtonVariant`
@@ -155,7 +158,11 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	private var _previousCustomToggleButtonVariant:String = null;
 
 	/**
-		A custom variant to set on all toggle buttons.
+		A custom variant to set on all toggle buttons, instead of
+		`PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON`.
+
+		The `customToggleButtonVariant` will be not be used if the result of
+		`toggleButtonRecycler.create()` already has a variant set.
 
 		@see `PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON`
 

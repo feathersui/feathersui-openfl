@@ -52,6 +52,9 @@ class Alert extends Panel {
 	/**
 		The variant used to style the `Header` child component.
 
+		To override this default variant, set the
+		`Alert.customHeaderVariant` property.
+
 		@see `Alert.customHeaderVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
@@ -62,6 +65,9 @@ class Alert extends Panel {
 	/**
 		The variant used to style the message `Label` child component.
 
+		To override this default variant, set the
+		`Alert.customMessageLabelVariant` property.
+
 		@see `Alert.customMessageLabelVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
@@ -71,6 +77,9 @@ class Alert extends Panel {
 
 	/**
 		The variant used to style the `ButtonBar` child component.
+
+		To override this default variant, set the
+		`Alert.customButtonBarVariant` property.
 
 		@see `Alert.customButtonBarVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
@@ -364,7 +373,11 @@ class Alert extends Panel {
 	public var icon:DisplayObject = null;
 
 	/**
-		An optional custom variant to use for the alert's button bar.
+		An optional custom variant to use for the alert's button bar, instead of
+		`Alert.CHILD_VARIANT_BUTTON_BAR`.
+
+		The `customButtonBarVariant` will be not be used if the result of
+		`buttonBarFactory` already has a variant set.
 
 		@see `Alert.CHILD_VARIANT_BUTTON_BAR`
 
@@ -374,7 +387,11 @@ class Alert extends Panel {
 	public var customButtonBarVariant:String = null;
 
 	/**
-		An optional custom variant to use for the alert's header.
+		An optional custom variant to use for the alert's header, instead of
+		`Alert.CHILD_VARIANT_HEADER`.
+
+		The `customHeaderVariant` will be not be used if the result of
+		`headerFactory` already has a variant set.
 
 		@see `Alert.CHILD_VARIANT_HEADER`
 
@@ -384,7 +401,11 @@ class Alert extends Panel {
 	public var customHeaderVariant:String = null;
 
 	/**
-		An optional custom variant to use for the alert's message label.
+		An optional custom variant to use for the alert's message label, instead
+		of `Alert.CHILD_VARIANT_MESSAGE_LABEL`.
+
+		The `customMessageLabelVariant` will be not be used if the result of
+		`messageLabelFactory` already has a variant set.
 
 		@see `Alert.CHILD_VARIANT_MESSAGE_LABEL`
 

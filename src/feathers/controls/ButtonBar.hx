@@ -83,6 +83,9 @@ class ButtonBar extends FeathersControl {
 	/**
 		The variant used to style the button child components in a theme.
 
+		To override this default variant, set the
+		`ButtonBar.customButtonVariant` property.
+
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@see `ButtonBar.customButtonVariant`
@@ -173,7 +176,11 @@ class ButtonBar extends FeathersControl {
 	private var _previousCustomButtonVariant:String = null;
 
 	/**
-		A custom variant to set on all buttons.
+		A custom variant to set on all buttons, instead of
+		`ButtonBar.CHILD_VARIANT_BUTTON`.
+
+		The `customButtonVariant` will be not be used if the result of
+		`buttonRecycler.create()` already has a variant set.
 
 		@see `ButtonBar.CHILD_VARIANT_BUTTON`
 

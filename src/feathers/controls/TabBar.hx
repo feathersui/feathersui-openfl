@@ -87,6 +87,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	/**
 		The variant used to style the tab child components in a theme.
 
+		To override this default variant, set the
+		`TabBar.customTabVariant` property.
+
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@see `TabBar.customTabVariant`
@@ -268,7 +271,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	private var _previousCustomTabVariant:String = null;
 
 	/**
-		A custom variant to set on all tabs.
+		A custom variant to set on all tabs, instead of
+		`TabBar.CHILD_VARIANT_TAB`.
+
+		The `customTabVariant` will be not be used if the result of
+		`tabRecycler.create()` already has a variant set.
 
 		@see `TabBar.CHILD_VARIANT_TAB`
 

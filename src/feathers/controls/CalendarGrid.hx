@@ -63,6 +63,10 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		The variant used to style the `ToggleButton` child components from the
 		current month in a theme.
 
+		To override this default variant, set the
+		`CalendarGrid.customToggleButtonVariant` property.
+
+		@see `CalendarGrid.customToggleButtonVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -73,6 +77,10 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		The variant used to style the `ToggleButton` child components that are
 		not from the current month in a theme.
 
+		To override this default variant, set the
+		`CalendarGrid.customMutedToggleButtonVariant` property.
+
+		@see `CalendarGrid.customMutedToggleButtonVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -83,6 +91,10 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		The variant used to style the `Label` child components that display the
 		names of weekdays.
 
+		To override this default variant, set the
+		`CalendarGrid.customWeekdayLabel` property.
+
+		@see `CalendarGrid.customWeekdayLabel`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -256,7 +268,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	/**
 		An optional custom variant to use for the toggle buttons that represent
-		dates in the current month.
+		dates in the current month, instead of
+		`CalendarGrid.CHILD_VARIANT_DATE_TOGGLE_BUTTON`.
 
 		@see `CalendarGrid.CHILD_VARIANT_DATE_TOGGLE_BUTTON`
 
@@ -267,7 +280,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	/**
 		An optional custom variant to use for the toggle buttons that represent
-		dates in the adjacent months.
+		dates in the adjacent months, instead of
+		`CalendarGrid.CHILD_VARIANT_MUTED_DATE_TOGGLE_BUTTON`.
 
 		@see `CalendarGrid.CHILD_VARIANT_MUTED_DATE_TOGGLE_BUTTON`
 
@@ -278,7 +292,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	/**
 		An optional custom variant to use for the labels that display the names
-		of weekdays.
+		of weekdays, instead of `CalendarGrid.CHILD_VARIANT_WEEKDAY_LABEL`.
 
 		@see `CalendarGrid.CHILD_VARIANT_WEEKDAY_LABEL`
 

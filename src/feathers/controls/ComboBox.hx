@@ -97,6 +97,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	/**
 		The variant used to style the `Button` child component in a theme.
 
+		To override this default variant, set the
+		`ComboBox.customButtonVariant` property.
+
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@see `ComboBox.customButtonVariant`
@@ -108,6 +111,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	/**
 		The variant used to style the `TextInput` child component in a theme.
 
+		To override this default variant, set the
+		`ComboBox.customTextInputVariant` property.
+
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@see `ComboBox.customTextInputVariant`
@@ -118,6 +124,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	/**
 		The variant used to style the `ListView` child component in a theme.
+
+		To override this default variant, set the
+		`ComboBox.customListViewVariant` property.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
@@ -383,7 +392,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var _previousCustomTextInputVariant:String = null;
 
 	/**
-		A custom variant to set on the text input.
+		A custom variant to set on the text input, instead of
+		`ComboBox.CHILD_VARIANT_TEXT_INPUT`.
+
+		The `customTextInputVariant` will be not be used if the result of
+		`textInputFactory` already has a variant set.
 
 		@see `ComboBox.CHILD_VARIANT_TEXT_INPUT`
 
@@ -395,7 +408,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var _previousCustomButtonVariant:String = null;
 
 	/**
-		A custom variant to set on the button.
+		A custom variant to set on the button, instead of
+		`ComboBox.CHILD_VARIANT_BUTTON`.
+
+		The `customButtonVariant` will be not be used if the result of
+		`buttonFactory` already has a variant set.
 
 		@see `ComboBox.CHILD_VARIANT_BUTTON`
 
@@ -407,7 +424,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var _previousCustomListViewVariant:String = null;
 
 	/**
-		A custom variant to set on the pop-up list view.
+		A custom variant to set on the pop-up list view, instead of
+		`ComboBox.CHILD_VARIANT_LIST_VIEW`.
+
+		The `customListViewVariant` will be not be used if the result of
+		`listViewFactory` already has a variant set.
 
 		@see `ComboBox.CHILD_VARIANT_LIST_VIEW`
 
