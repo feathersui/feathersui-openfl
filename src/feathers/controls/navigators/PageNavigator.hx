@@ -267,6 +267,15 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	@:style
 	public var nextTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
+	/**
+		The space, measured in pixels, between the navigator's active view and
+		its page indicator.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var gap:Float = 0.0;
+
 	private var _ignoreSelectionChange = false;
 
 	private var _dragTransitionContext:EventToPositionEffectContext;
@@ -337,9 +346,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			this.pageIndicator.validateNow();
 			switch (this.pageIndicatorPosition) {
 				case TOP:
-					this.topContentOffset = this.pageIndicator.height;
+					this.topContentOffset = this.pageIndicator.height + this.gap;
 				case BOTTOM:
-					this.bottomContentOffset = this.pageIndicator.height;
+					this.bottomContentOffset = this.pageIndicator.height + this.gap;
 				default:
 					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
 			}
@@ -364,14 +373,14 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			this.activeItemView.x = 0.0;
 			switch (this.pageIndicatorPosition) {
 				case TOP:
-					this.activeItemView.y = this.pageIndicator.height;
+					this.activeItemView.y = this.pageIndicator.height + this.gap;
 				case BOTTOM:
 					this.activeItemView.y = 0.0;
 				default:
 					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
 			}
 			this.activeItemView.width = this.actualWidth;
-			this.activeItemView.height = this.actualHeight - this.pageIndicator.height;
+			this.activeItemView.height = this.actualHeight - this.pageIndicator.height - this.gap;
 		}
 	}
 

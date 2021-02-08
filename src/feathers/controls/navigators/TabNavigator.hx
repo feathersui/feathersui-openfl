@@ -270,6 +270,15 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	@:style
 	public var nextTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
+	/**
+		The space, measured in pixels, between the navigator's active view and
+		its tab bar.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var gap:Float = 0.0;
+
 	private var _ignoreSelectionChange = false;
 
 	override private function initialize():Void {
@@ -345,9 +354,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this.tabBar.validateNow();
 			switch (this.tabBarPosition) {
 				case TOP:
-					this.topContentOffset = this.tabBar.height;
+					this.topContentOffset = this.tabBar.height + this.gap;
 				case BOTTOM:
-					this.bottomContentOffset = this.tabBar.height;
+					this.bottomContentOffset = this.tabBar.height + this.gap;
 				default:
 					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
 			}
@@ -372,14 +381,14 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this.activeItemView.x = 0.0;
 			switch (this.tabBarPosition) {
 				case TOP:
-					this.activeItemView.y = this.tabBar.height;
+					this.activeItemView.y = this.tabBar.height + this.gap;
 				case BOTTOM:
 					this.activeItemView.y = 0.0;
 				default:
 					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
 			}
 			this.activeItemView.width = this.actualWidth;
-			this.activeItemView.height = this.actualHeight - this.tabBar.height;
+			this.activeItemView.height = this.actualHeight - this.tabBar.height - this.gap;
 		}
 	}
 
