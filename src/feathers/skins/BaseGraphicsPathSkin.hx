@@ -312,7 +312,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		switch (lineStyle) {
 			case None:
 				{
-					this.graphics.lineStyle(null);
+					this.graphics.lineStyle(null, null, 0.0);
 				}
 			case SolidColor(thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit):
 				{
