@@ -171,10 +171,6 @@ class LayoutGroup extends FeathersControl {
 		group.autoSizeMode = STAGE;
 		```
 
-		Usually defaults to `AutoSizeMode.CONTENT`. However, if this component
-		is the root of the OpenFL display list, defaults to `AutoSizeMode.STAGE`
-		instead.
-
 		@see `feathers.layout.AutoSizeMode.STAGE`
 		@see `feathers.layout.AutoSizeMode.CONTENT`
 
