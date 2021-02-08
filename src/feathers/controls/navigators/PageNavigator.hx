@@ -444,6 +444,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	private function pageNavigator_dataProvider_addItemHandler(event:FlatCollectionEvent):Void {
 		var item = cast(event.addedItem, PageItem);
 		this.addItemInternal(item.internalID, item);
+		this.setInvalid(DATA);
 
 		if (this._selectedIndex >= event.index) {
 			// use the setter
@@ -460,6 +461,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	private function pageNavigator_dataProvider_removeItemHandler(event:FlatCollectionEvent):Void {
 		var item = cast(event.removedItem, PageItem);
 		this.removeItemInternal(item.internalID);
+		this.setInvalid(DATA);
 
 		if (this._dataProvider.length == 0) {
 			// use the setter
@@ -475,6 +477,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		var removedItem = cast(event.removedItem, PageItem);
 		this.removeItemInternal(removedItem.internalID);
 		this.addItemInternal(addedItem.internalID, addedItem);
+		this.setInvalid(DATA);
 
 		if (this._selectedIndex == event.index) {
 			this.selectedItem = this._dataProvider.get(this._selectedIndex);
