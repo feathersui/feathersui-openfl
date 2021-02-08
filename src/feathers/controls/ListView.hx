@@ -135,6 +135,20 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public static final VARIANT_BORDER = "border";
 
+	/**
+		The variant used to style the list view's item renderers in a theme.
+
+		To override this default variant, set the
+		`ListView.customItemRendererVariant` property.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `ListView.customItemRendererVariant`
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_ITEM_RENDERER = "listView_itemRenderer";
+
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
@@ -534,10 +548,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _previousCustomItemRendererVariant:String = null;
 
 	/**
-		A custom variant to set on all item renderers.
+		A custom variant to set on all item renderers, instead of
+		`ListView.CHILD_VARIANT_ITEM_RENDERER`.
 
 		The `customItemRendererVariant` will be not be used if the result of
 		`itemRendererRecycler.create()` already has a variant set.
+
+		@see `ListView.CHILD_VARIANT_ITEM_RENDERER`
 
 		@since 1.0.0
 	**/
@@ -1125,8 +1142,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer = storage.itemRendererRecycler.create();
 			if (this.customItemRendererVariant != null && Std.is(itemRenderer, IVariantStyleObject)) {
 				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				var variant = this.customItemRendererVariant != null ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 				if (variantItemRenderer.variant == null) {
-					variantItemRenderer.variant = this.customItemRendererVariant;
+					variantItemRenderer.variant = variant;
 				}
 			}
 			if (storage.measurements == null) {
