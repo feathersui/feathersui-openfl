@@ -195,7 +195,7 @@ class LayoutGroup extends FeathersControl {
 		this.setInvalid(SIZE);
 		if (this.stage != null) {
 			if (this._autoSizeMode == STAGE) {
-				this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler);
+				this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler, false, 0, true);
 				this.addEventListener(Event.REMOVED_FROM_STAGE, layoutGroup_removedFromStageHandler);
 			} else {
 				this.stage.removeEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler);
@@ -701,7 +701,7 @@ class LayoutGroup extends FeathersControl {
 			this.setInvalid(SIZE);
 
 			this.addEventListener(Event.REMOVED_FROM_STAGE, layoutGroup_removedFromStageHandler);
-			this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler);
+			this.stage.addEventListener(Event.RESIZE, layoutGroup_stage_resizeHandler, false, 0, true);
 		}
 	}
 
