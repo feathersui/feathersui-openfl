@@ -662,6 +662,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
+		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
@@ -675,8 +676,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.refreshPromptStyles();
 		}
 
-		if (dataInvalid || stylesInvalid) {
-			this.refreshPromptText();
+		if (dataInvalid || stylesInvalid || sizeInvalid) {
+			this.refreshPromptText(sizeInvalid);
 		}
 
 		if (stylesInvalid) {
@@ -759,18 +760,17 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 		if (this.promptTextField == null) {
 			this.promptTextField = new TextField();
+			this.promptTextField.selectable = false;
+			this.promptTextField.mouseWheelEnabled = false;
+			this.promptTextField.mouseEnabled = false;
+			this.promptTextField.multiline = true;
 			this.addChild(this.promptTextField);
 		}
-		this.promptTextField.selectable = false;
-		this.promptTextField.mouseWheelEnabled = false;
-		this.promptTextField.mouseEnabled = false;
-		this.promptTextField.multiline = true;
-		this.promptTextField.wordWrap = true;
 		this.promptTextField.visible = this._text.length == 0;
 	}
 
-	private function refreshPromptText():Void {
-		if (this._prompt == null || this._prompt == this._previousPrompt && !this._updatedPromptStyles) {
+	private function refreshPromptText(sizeInvalid:Bool):Void {
+		if (this._prompt == null || this._prompt == this._previousPrompt && !this._updatedPromptStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
@@ -783,9 +783,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		} else {
 			this.promptTextField.text = "\u200b"; // zero-width space
 		}
+		// to get an accurate measurement, we need to temporarily disable
+		// wrapping to multiple lines
+		this.promptTextField.wordWrap = false;
 		this._promptTextMeasuredWidth = this.promptTextField.width;
 		this._promptTextMeasuredHeight = this.promptTextField.height;
 		this.promptTextField.autoSize = TextFieldAutoSize.NONE;
+		this.promptTextField.wordWrap = true;
 		if (!hasText) {
 			this.promptTextField.text = "";
 		}
@@ -834,18 +838,24 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.promptTextField.x = this.leftViewPortOffset + this.textPaddingLeft;
 		this.promptTextField.y = this.topViewPortOffset + this.textPaddingTop;
 
-		var maxWidth = this.viewPort.visibleWidth - this.textPaddingLeft - this.textPaddingRight;
-		if (this._promptTextMeasuredWidth > maxWidth) {
-			this.promptTextField.width = maxWidth;
+		var maxPromptWidth = this.viewPort.visibleWidth - this.textPaddingLeft - this.textPaddingRight;
+		if (this._promptTextMeasuredWidth > maxPromptWidth) {
+			#if flash
+			this.promptTextField.autoSize = NONE;
+			this.promptTextField.wordWrap = true;
+			#end
+			this.promptTextField.width = maxPromptWidth;
 		} else {
+			#if flash
+			// this is workaround for a weird flash text measurement bug
+			// sometimes, TextField width is wrong when autoSize is enabled,
+			// and that causes the last word to wrap to the next line
+			this.promptTextField.autoSize = LEFT;
+			this.promptTextField.wordWrap = false;
+			#end
 			this.promptTextField.width = this._promptTextMeasuredWidth;
 		}
-		var maxHeight = this.viewPort.visibleHeight - this.textPaddingTop - this.textPaddingBottom;
-		if (this._promptTextMeasuredHeight > maxHeight) {
-			this.promptTextField.height = maxHeight;
-		} else {
-			this.promptTextField.height = this._promptTextMeasuredHeight;
-		}
+		this.promptTextField.height = this.viewPort.visibleHeight - this.textPaddingTop - this.textPaddingBottom;
 	}
 
 	override private function getCurrentBackgroundSkin():DisplayObject {

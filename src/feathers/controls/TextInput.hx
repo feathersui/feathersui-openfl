@@ -902,6 +902,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var dataInvalid = this.isInvalid(DATA);
 		var scrollInvalid = this.isInvalid(SCROLL);
 		var selectionInvalid = this.isInvalid(SELECTION);
+		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
@@ -923,12 +924,12 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.refreshPromptStyles();
 		}
 
-		if (dataInvalid || stylesInvalid || stateInvalid) {
-			this.refreshText();
+		if (dataInvalid || stylesInvalid || stateInvalid || sizeInvalid) {
+			this.refreshText(sizeInvalid);
 		}
 
-		if (dataInvalid || stylesInvalid) {
-			this.refreshPromptText();
+		if (dataInvalid || stylesInvalid || sizeInvalid) {
+			this.refreshPromptText(sizeInvalid);
 		}
 
 		if (selectionInvalid) {
@@ -1314,8 +1315,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.promptTextField.visible = this._text.length == 0;
 	}
 
-	private function refreshPromptText():Void {
-		if (this._prompt == null || this._prompt == this._previousPrompt && !this._updatedPromptStyles) {
+	private function refreshPromptText(sizeInvalid:Bool):Void {
+		if (this._prompt == null || this._prompt == this._previousPrompt && !this._updatedPromptStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
@@ -1371,10 +1372,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return textFormat;
 	}
 
-	private function refreshText():Void {
+	private function refreshText(sizeInvalid:Bool):Void {
 		this.textField.restrict = this.__restrict;
 		this.textField.maxChars = this._maxChars;
-		if (this._text == this._previousText && !this._updatedTextStyles) {
+		if (this._text == this._previousText && !this._updatedTextStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
