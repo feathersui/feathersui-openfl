@@ -263,7 +263,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		@since 1.0.0
 	**/
 	@:style
-	public var toggleButtonVariant:String = null;
+	public var customToggleButtonVariant:String = null;
 
 	/**
 		An optional custom variant to use for the toggle buttons that represent
@@ -274,7 +274,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		@since 1.0.0
 	**/
 	@:style
-	public var mutedToggleButtonVariant:String = null;
+	public var customMutedToggleButtonVariant:String = null;
 
 	/**
 		An optional custom variant to use for the labels that display the names
@@ -285,7 +285,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		@since 1.0.0
 	**/
 	@:style
-	public var weekdayLabelVariant:String = null;
+	public var customWeekdayLabelVariant:String = null;
 
 	/**
 		Determines if the weekday labels are visible or not.
@@ -407,7 +407,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	private function refreshWeekdayLabels():Void {
 		var weekdayNames = this._customWeekdayNames != null ? this._customWeekdayNames : DEFAULT_WEEKDAY_NAMES;
-		var weekdayLabelVariant = this.weekdayLabelVariant != null ? this.weekdayLabelVariant : CHILD_VARIANT_WEEKDAY_LABEL;
+		var weekdayLabelVariant = this.customWeekdayLabelVariant != null ? this.customWeekdayLabelVariant : CHILD_VARIANT_WEEKDAY_LABEL;
 		var startOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : DEFAULT_START_OF_WEEK;
 		for (i in 0...this._dayNameLabels.length) {
 			var nameIndex = (i + startOfWeek) % this._dayNameLabels.length;
@@ -520,8 +520,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		var numDaysLastMonth = DateUtil.getDaysInMonth(lastMonth, lastMonthYear);
 		var currentDate = numDaysLastMonth - dayIndexOfFirst + 1;
 		var inCurrentMonth = currentDate == 1;
-		var toggleButtonVariant = this.toggleButtonVariant != null ? this.toggleButtonVariant : CHILD_VARIANT_DATE_TOGGLE_BUTTON;
-		var mutedToggleButtonVariant = this.mutedToggleButtonVariant != null ? this.mutedToggleButtonVariant : CHILD_VARIANT_MUTED_DATE_TOGGLE_BUTTON;
+		var toggleButtonVariant = this.customToggleButtonVariant != null ? this.customToggleButtonVariant : CHILD_VARIANT_DATE_TOGGLE_BUTTON;
+		var mutedToggleButtonVariant = this.customMutedToggleButtonVariant != null ? this.customMutedToggleButtonVariant : CHILD_VARIANT_MUTED_DATE_TOGGLE_BUTTON;
 		for (i in 0...this._dateButtons.length) {
 			var dateButton = this._dateButtons[i];
 			dateButton.selected = inCurrentMonth
