@@ -549,7 +549,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			this.refreshSecondaryTrack();
 		}
 
-		if (stateInvalid) {
+		if (stateInvalid || stylesInvalid) {
 			this.refreshEnabled();
 		}
 

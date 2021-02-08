@@ -676,11 +676,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.refreshData();
 		}
 
-		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
+		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
 			this.refreshSelection();
 		}
 
-		if (stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
+		if (stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
 			this.refreshEnabled();
 		}
 

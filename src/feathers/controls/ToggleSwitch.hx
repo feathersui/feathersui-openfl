@@ -316,11 +316,11 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			this.refreshSecondaryTrack();
 		}
 
-		if (selectionInvalid) {
+		if (selectionInvalid || stylesInvalid) {
 			this.refreshSelection();
 		}
 
-		if (stateInvalid) {
+		if (stateInvalid || stylesInvalid) {
 			this.refreshEnabled();
 		}
 

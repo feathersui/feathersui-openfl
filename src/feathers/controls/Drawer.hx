@@ -352,7 +352,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			this.refreshOverlaySkin();
 		}
 
-		if (stateInvalid) {
+		if (stateInvalid || dataInvalid) {
 			this.refreshEnabled();
 		}
 

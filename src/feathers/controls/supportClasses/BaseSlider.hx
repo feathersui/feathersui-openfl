@@ -425,7 +425,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			this.refreshSecondaryTrack();
 		}
 
-		if (stateInvalid) {
+		if (stateInvalid || stylesInvalid) {
 			this.refreshEnabled();
 		}
 
