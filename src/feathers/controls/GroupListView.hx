@@ -103,11 +103,31 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	/**
 		The variant used to style the group headers in a theme.
 
+		To override this default variant, set the
+		`GroupListView.customHeaderRendererVariant` property.
+
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `GroupListView.customHeaderRendererVariant`
 
 		@since 1.0.0
 	**/
-	public static final CHILD_VARIANT_HEADER = "groupListView_header";
+	public static final CHILD_VARIANT_HEADER_RENDERER = "groupListView_headerRenderer";
+
+	/**
+		The variant used to style the group list view's item renderers in a
+		theme.
+
+		To override this default variant, set the
+		`GroupListView.customItemRendererVariant` property.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `GroupListView.customItemRendererVariant`
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_ITEM_RENDERER = "groupListView_itemRenderer";
 
 	/**
 		A variant used to style the group list view without a border. The
@@ -144,6 +164,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	public static final VARIANT_BORDER = "border";
 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
+	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		if (Std.is(itemRenderer, ITextControl)) {
@@ -391,13 +412,32 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	@:style
 	public var layout:ILayout = null;
 
+	private var _previousCustomHeaderRendererVariant:String = null;
+
+	/**
+		A custom variant to set on all header renderers, instead of
+		`GroupListView.CHILD_VARIANT_HEADER_RENDERER`.
+
+		The `customHeaderRendererVariant` will be not be used if the result of
+		`headerRendererRecycler.create()` already has a variant set.
+
+		@see `GroupListView.CHILD_VARIANT_HEADER_RENDERER`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customHeaderRendererVariant:String = null;
+
 	private var _previousCustomItemRendererVariant:String = null;
 
 	/**
-		A custom variant to set on all item renderers.
+		A custom variant to set on all item renderers, instead of
+		`GroupListView.CHILD_VARIANT_ITEM_RENDERER`.
 
 		The `customItemRendererVariant` will be not be used if the result of
 		`itemRendererRecycler.create()` already has a variant set.
+
+		@see `GroupListView.CHILD_VARIANT_ITEM_RENDERER`
 
 		@since 1.0.0
 	**/
@@ -463,7 +503,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		this._defaultHeaderStorage.oldItemRendererRecycler = this._defaultHeaderStorage.itemRendererRecycler;
 		this._defaultHeaderStorage.itemRendererRecycler = value;
-		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		return this._defaultHeaderStorage.itemRendererRecycler;
 	}
 
@@ -678,6 +718,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var layoutInvalid = this.isInvalid(LAYOUT);
 		var stylesInvalid = this.isInvalid(STYLES);
 
+		if (this._previousCustomHeaderRendererVariant != this.customHeaderRendererVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+		}
 		if (this._previousCustomItemRendererVariant != this.customItemRendererVariant) {
 			this.setInvalidationFlag(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		}
@@ -749,14 +792,15 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(this._defaultItemStorage, itemRendererInvalid);
-		this.refreshInactiveItemRenderers(this._defaultHeaderStorage, itemRendererInvalid);
 		if (this._additionalStorage != null) {
 			for (i in 0...this._additionalStorage.length) {
 				var storage = this._additionalStorage[i];
 				this.refreshInactiveItemRenderers(storage, itemRendererInvalid);
 			}
 		}
+		this.refreshInactiveItemRenderers(this._defaultHeaderStorage, headerRendererInvalid);
 		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this._defaultItemStorage);
 		this.recoverInactiveItemRenderers(this._defaultHeaderStorage);
@@ -947,8 +991,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			itemRenderer = storage.itemRendererRecycler.create();
 			if (this.customItemRendererVariant != null && Std.is(itemRenderer, IVariantStyleObject)) {
 				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				var variant = this.customItemRendererVariant != null ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 				if (variantItemRenderer.variant == null) {
-					variantItemRenderer.variant = this.customItemRendererVariant;
+					variantItemRenderer.variant = variant;
 				}
 			}
 			if (storage.measurements == null) {
@@ -966,8 +1011,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		if (type == HEADER && Std.is(itemRenderer, IVariantStyleObject)) {
 			var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+			var variant = this.customHeaderRendererVariant != null ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER_RENDERER;
 			if (variantItemRenderer.variant == null) {
-				variantItemRenderer.variant = GroupListView.CHILD_VARIANT_HEADER;
+				variantItemRenderer.variant = variant;
 			}
 		}
 		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);

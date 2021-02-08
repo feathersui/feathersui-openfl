@@ -113,8 +113,8 @@ class SteelGroupListViewStyles {
 			styleProvider.setStyleFunction(GroupListView, GroupListView.VARIANT_BORDERLESS, styleGroupListViewWithBorderlessVariant);
 		}
 
-		if (styleProvider.getStyleFunction(ItemRenderer, GroupListView.CHILD_VARIANT_HEADER) == null) {
-			styleProvider.setStyleFunction(ItemRenderer, GroupListView.CHILD_VARIANT_HEADER, function(itemRenderer:ItemRenderer):Void {
+		if (styleProvider.getStyleFunction(ItemRenderer, GroupListView.CHILD_VARIANT_HEADER_RENDERER) == null) {
+			styleProvider.setStyleFunction(ItemRenderer, GroupListView.CHILD_VARIANT_HEADER_RENDERER, function(itemRenderer:ItemRenderer):Void {
 				if (itemRenderer.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getSubHeadingFill();
