@@ -858,6 +858,21 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.paddingLeft = value;
 	}
 
+	/**
+		Returns the visible bounds of the view port within the container's local
+		coordinate system.
+
+		@since 1.0.0
+	**/
+	public function getViewPortVisibleBounds(result:Rectangle = null):Rectangle {
+		if (result == null) {
+			result = new Rectangle(this._viewPort.x, this._viewPort.y, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
+		} else {
+			result.setTo(this._viewPort.x, this._viewPort.y, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
+		}
+		return result;
+	}
+
 	override private function update():Void {
 		var stylesInvalid = this.isInvalid(STYLES);
 		var sizeInvalid = this.isInvalid(SIZE);
