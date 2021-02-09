@@ -481,7 +481,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		```hx
 		comboBox.textInputFactory = () ->
 		{
-			return new Button();
+			return new TextInput();
 		};
 		```
 
