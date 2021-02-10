@@ -92,6 +92,10 @@ class Alert extends Panel {
 		Creates an alert, sets a few common properties, and adds it to the
 		`PopUpManager`.
 
+		Note: If no text is provided for the buttons, no buttons will be
+		displayed, and the Alert will need to be closed manually with
+		`PopUpManager.removePopUp()`.
+
 		@since 1.0.0
 	**/
 	public static function show(text:String, ?titleText:String, ?buttonsText:Array<String>, ?callback:(state:ButtonBarItemState) -> Void,
@@ -99,7 +103,7 @@ class Alert extends Panel {
 		var alert = new Alert();
 		alert.text = text;
 		alert.titleText = titleText;
-		var buttonsData = buttonsText.map(text -> new StringWrapper(text));
+		var buttonsData = (buttonsText != null) ? buttonsText.map(text -> new StringWrapper(text)) : [];
 		alert.buttonsDataProvider = new ArrayCollection(buttonsData);
 		if (callback != null) {
 			alert.addEventListener(ButtonBarEvent.ITEM_TRIGGER, event -> {
