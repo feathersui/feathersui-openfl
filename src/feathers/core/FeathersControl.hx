@@ -60,6 +60,7 @@ import openfl.geom.Point;
 class FeathersControl extends MeasureSprite implements IUIControl implements IVariantStyleObject implements ILayoutObject {
 	private function new() {
 		super();
+		super.tabEnabled = Std.is(this, IFocusObject);
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, feathersControl_removedFromStageHandler);
 	}
@@ -341,7 +342,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	public var focusEnabled(get, set):Bool;
 
 	private function get_focusEnabled():Bool {
-		return this._focusEnabled;
+		return this._enabled && this._focusEnabled;
 	}
 
 	private function set_focusEnabled(value:Bool):Bool {
@@ -350,6 +351,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 		this._focusEnabled = value;
 		return this._focusEnabled;
+	}
+
+	@:getter(tabEnabled)
+	#if !flash override #end private function get_tabEnabled():Bool {
+		return this._enabled && super.tabEnabled;
 	}
 
 	private var _focusRectSkin:DisplayObject = null;
