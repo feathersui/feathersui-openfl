@@ -740,7 +740,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		throw new TypeError("Missing override for 'locationToValue' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
-	private function saveThumbStart(location:Point):Void {
+	private function saveThumbStart(x:Float, y:Float):Void {
 		throw new TypeError("Missing override for 'saveThumbStart' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
@@ -810,15 +810,13 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, trackSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, trackSkin_stage_mouseUpHandler, false, 0, true);
 
-		var location = new Point(this.mouseX, this.mouseY);
-
-		this.saveThumbStart(location);
-		this._pointerStartX = location.x;
-		this._pointerStartY = location.y;
+		this.saveThumbStart(this.mouseX, this.mouseY);
+		this._pointerStartX = this.mouseX;
+		this._pointerStartY = this.mouseY;
 		this._dragging = true;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
 
-		var newValue = this.locationToValue(location.x, location.y);
+		var newValue = this.locationToValue(this.mouseX, this.mouseY);
 		newValue = this.restrictValue(newValue);
 		// use the setter
 		this.value = newValue;

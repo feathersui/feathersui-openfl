@@ -59,14 +59,14 @@ class VScrollBar extends BaseScrollBar {
 		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
 
-	override private function saveThumbStart(location:Point):Void {
+	override private function saveThumbStart(x:Float, y:Float):Void {
 		var trackHeightMinusThumbHeight = this.actualHeight;
-		var locationMinusHalfThumbHeight = location.y;
+		var locationMinusHalfThumbHeight = y;
 		if (this.thumbSkin != null) {
 			trackHeightMinusThumbHeight -= this.thumbSkin.height;
 			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2.0;
 		}
-		this._thumbStartX = location.x;
+		this._thumbStartX = x;
 		this._thumbStartY = Math.min(trackHeightMinusThumbHeight, locationMinusHalfThumbHeight);
 	}
 

@@ -59,15 +59,15 @@ class HScrollBar extends BaseScrollBar {
 		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
 
-	override private function saveThumbStart(location:Point):Void {
+	override private function saveThumbStart(x:Float, y:Float):Void {
 		var trackWidthMinusThumbWidth = this.actualWidth;
-		var locationMinusHalfThumbWidth = location.x;
+		var locationMinusHalfThumbWidth = x;
 		if (this.thumbSkin != null) {
 			trackWidthMinusThumbWidth -= this.thumbSkin.width;
 			locationMinusHalfThumbWidth -= this.thumbSkin.width / 2.0;
 		}
 		this._thumbStartX = Math.min(trackWidthMinusThumbWidth, locationMinusHalfThumbWidth);
-		this._thumbStartY = location.y;
+		this._thumbStartY = y;
 	}
 
 	override function measure():Bool {
