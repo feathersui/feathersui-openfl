@@ -146,14 +146,14 @@ class VSlider extends BaseSlider {
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
-	override private function saveThumbStart(location:Point):Void {
+	override private function saveThumbStart(x:Float, y:Float):Void {
 		var trackHeightMinusThumbHeight = this.actualHeight;
-		var locationMinusHalfThumbHeight = location.y;
+		var locationMinusHalfThumbHeight = y;
 		if (this.thumbSkin != null) {
 			trackHeightMinusThumbHeight -= this.thumbSkin.height;
 			locationMinusHalfThumbHeight -= this.thumbSkin.height / 2.0;
 		}
-		this._thumbStartX = location.x;
+		this._thumbStartX = x;
 		this._thumbStartY = Math.min(trackHeightMinusThumbHeight - this.maximumPadding, Math.max(this.minimumPadding, locationMinusHalfThumbHeight));
 	}
 
