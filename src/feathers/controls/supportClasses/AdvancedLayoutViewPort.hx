@@ -366,8 +366,8 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 		this._background.x = 0.0;
 		this._background.y = 0.0;
-		this._background.width = this.actualWidth;
-		this._background.height = this.actualHeight;
+		this._background.width = Math.max(this.actualWidth, this._actualVisibleWidth);
+		this._background.height = Math.max(this.actualHeight, this._actualVisibleHeight);
 	}
 
 	private function layout_changeHandler(event:Event):Void {
