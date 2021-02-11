@@ -8,10 +8,9 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.layout.IScrollLayout;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.Sprite;
-import feathers.layout.IScrollLayout;
-import feathers.core.InvalidationFlag;
 import openfl.errors.ArgumentError;
 import openfl.geom.Point;
 
@@ -31,12 +30,17 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 
 		// an invisible background that makes the entire width and height of the
 		// viewport interactive for touch scrolling
-		var backgroundSkin = new Sprite();
-		backgroundSkin.graphics.beginFill(0xff00ff, 0.0);
-		backgroundSkin.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
-		backgroundSkin.graphics.endFill();
-		this.backgroundSkin = backgroundSkin;
+		this._viewPortBackground = new Sprite();
+		this._viewPortBackground.graphics.beginFill(0xff00ff, 0.0);
+		this._viewPortBackground.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
+		this._viewPortBackground.graphics.endFill();
+		// we're not using the backgroundSkin property because it is not sized
+		// to fill the entire view port visible size when the content size is
+		// smaller than the view port size
+		this._addChildAt(this._viewPortBackground, 0);
 	}
+
+	private var _viewPortBackground:Sprite;
 
 	private var _actualMinVisibleWidth:Float = 0.0;
 	private var _explicitMinVisibleWidth:Null<Float> = null;
@@ -356,5 +360,10 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._actualVisibleHeight = viewPortHeight;
 		this._actualMinVisibleWidth = this._layoutResult.contentMinWidth;
 		this._actualMinVisibleHeight = this._layoutResult.contentMinHeight;
+
+		this._viewPortBackground.x = 0.0;
+		this._viewPortBackground.y = 0.0;
+		this._viewPortBackground.width = Math.max(this.actualWidth, this._actualVisibleWidth);
+		this._viewPortBackground.height = Math.max(this.actualHeight, this._actualVisibleHeight);
 	}
 }
