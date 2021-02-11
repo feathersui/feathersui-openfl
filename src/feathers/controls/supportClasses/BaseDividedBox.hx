@@ -870,27 +870,27 @@ class BaseDividedBox extends FeathersControl {
 			return;
 		}
 		var divider = cast(event.currentTarget, InteractiveObject);
-		this.resizeTouchBegin(event.touchPointID, divider, event.stageX, event.stageY);
+		this.resizeTouchBegin(event.touchPointID, divider, this.stage.mouseX, this.stage.mouseY);
 	}
 
 	private function baseDividedBox_divider_mouseDownHandler(event:MouseEvent):Void {
 		var divider = cast(event.currentTarget, InteractiveObject);
-		this.resizeTouchBegin(ExclusivePointer.POINTER_ID_MOUSE, divider, event.stageX, event.stageY);
+		this.resizeTouchBegin(ExclusivePointer.POINTER_ID_MOUSE, divider, this.stage.mouseX, this.stage.mouseY);
 	}
 
 	private function baseDividedBox_divider_stage_mouseMoveHandler(event:MouseEvent):Void {
-		this.resizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, event.stageX, event.stageY);
+		this.resizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, this.stage.mouseX, this.stage.mouseY);
 	}
 
 	private function baseDividedBox_divider_stage_touchMoveHandler(event:TouchEvent):Void {
-		this.resizeTouchMove(event.touchPointID, event.stageX, event.stageY);
+		this.resizeTouchMove(event.touchPointID, this.stage.mouseX, this.stage.mouseY);
 	}
 
 	private function baseDividedBox_divider_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.resizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, event.stageX, event.stageY);
+		this.resizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, this.stage.mouseX, this.stage.mouseY);
 	}
 
 	private function baseDividedBox_divider_stage_touchEndHandler(event:TouchEvent):Void {
-		this.resizeTouchEnd(event.touchPointID, event.stageX, event.stageY);
+		this.resizeTouchEnd(event.touchPointID, this.stage.mouseX, this.stage.mouseY);
 	}
 }
