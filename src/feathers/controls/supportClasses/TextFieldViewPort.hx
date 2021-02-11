@@ -722,9 +722,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	}
 
 	private function measureSelf():Bool {
-		var needsWidth = this.explicitWidth == null;
+		var needsWidth = this._explicitVisibleWidth == null;
 		var needsHeight = this.explicitHeight == null;
-		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinWidth = this._explicitMinVisibleWidth == null;
 		var needsMinHeight = this.explicitMinHeight == null;
 		var needsMaxWidth = this.explicitMaxWidth == null;
 		var needsMaxHeight = this.explicitMaxHeight == null;
@@ -732,9 +732,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			return false;
 		}
 
-		var newWidth = this.explicitWidth;
+		var newWidth = this._explicitVisibleWidth;
 		if (needsWidth) {
-			newWidth = this._textMeasuredWidth + this._paddingLeft + this._paddingRight;
+			// don't use _textMeasuredWidth because it can't be handled by
+			// BaseScrollContainer's layout algorithm, which assumes that the
+			// size won't get smaller between measurement and layout
+			newWidth = this._paddingLeft + this._paddingRight;
 		}
 
 		var newHeight = this.explicitHeight;
@@ -742,9 +745,10 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			newHeight = this._textMeasuredHeight + this._paddingTop + this._paddingBottom;
 		}
 
-		var newMinWidth = this.explicitMinWidth;
+		var newMinWidth = this._explicitMinVisibleWidth;
 		if (needsMinWidth) {
-			newMinWidth = this._textMeasuredWidth + this._paddingLeft + this._paddingRight;
+			// don't use _textMeasuredWidth here, as explained above
+			newMinWidth = this._paddingLeft + this._paddingRight;
 		}
 
 		var newMinHeight = this.explicitMinHeight;
