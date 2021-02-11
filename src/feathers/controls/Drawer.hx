@@ -332,6 +332,56 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		return this._clickOverlayToClose;
 	}
 
+	private var _swipeCloseEnabled:Bool = true;
+
+	/**
+		Determines if the drawer may be closed by swiping it.
+
+		@see `Drawer.swipeOpenEnabled`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var swipeCloseEnabled(get, set):Bool;
+
+	private function get_swipeCloseEnabled():Bool {
+		return this._swipeCloseEnabled;
+	}
+
+	private function set_swipeCloseEnabled(value:Bool):Bool {
+		if (this._swipeCloseEnabled == value) {
+			return this._swipeCloseEnabled;
+		}
+		this._swipeCloseEnabled = value;
+		this.setInvalid(STATE);
+		return this._swipeCloseEnabled;
+	}
+
+	private var _swipeOpenEnabled:Bool = true;
+
+	/**
+		Determines if the drawer may be opened by swiping it.
+
+		@see `Drawer.swipeCloseEnabled`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var swipeOpenEnabled(get, set):Bool;
+
+	private function get_swipeOpenEnabled():Bool {
+		return this._swipeOpenEnabled;
+	}
+
+	private function set_swipeOpenEnabled(value:Bool):Bool {
+		if (this._swipeOpenEnabled == value) {
+			return this._swipeOpenEnabled;
+		}
+		this._swipeOpenEnabled = value;
+		this.setInvalid(STATE);
+		return this._swipeOpenEnabled;
+	}
+
 	private function initializeDrawerTheme():Void {
 		SteelDrawerStyles.initialize();
 	}
@@ -469,7 +519,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	}
 
 	private function refreshEnabled():Void {
-		this._edgePuller.enabled = this._enabled && this._drawer != null;
+		this._edgePuller.enabled = this._enabled
+			&& this._drawer != null
+			&& ((this._opened && this._swipeCloseEnabled) || (!this._opened && this._swipeOpenEnabled));
 		if (Std.is(this._content, IUIControl)) {
 			cast(this._content, IUIControl).enabled = this._enabled;
 		}
@@ -681,6 +733,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private function drawer_edgePuller_openHandler(event:Event):Void {
 		this._opened = true;
 		FeathersEvent.dispatch(this, Event.OPEN);
+		this.setInvalid(STATE);
 	}
 
 	private function drawer_edgePuller_closeHandler(event:Event):Void {
@@ -691,6 +744,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		}
 		this._opened = false;
 		FeathersEvent.dispatch(this, Event.CLOSE);
+		this.setInvalid(STATE);
 	}
 
 	private function drawer_edgePuller_cancelHandler(event:Event):Void {
@@ -702,6 +756,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			}
 		}
 		FeathersEvent.dispatch(this, Event.CANCEL);
+		this.setInvalid(STATE);
 	}
 
 	private function drawer_edgePuller_changeHandler(event:Event):Void {
