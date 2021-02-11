@@ -313,6 +313,25 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	private var _clickStartX = 0.0;
 	private var _clickStartY = 0.0;
 
+	private var _clickOverlayToClose:Bool = true;
+
+	/**
+		Determines if the drawer may be closed by clicking the modal overlay.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var clickOverlayToClose(get, set):Bool;
+
+	private function get_clickOverlayToClose():Bool {
+		return this._clickOverlayToClose;
+	}
+
+	private function set_clickOverlayToClose(value:Bool):Bool {
+		this._clickOverlayToClose = value;
+		return this._clickOverlayToClose;
+	}
+
 	private function initializeDrawerTheme():Void {
 		SteelDrawerStyles.initialize();
 	}
@@ -719,7 +738,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	}
 
 	private function drawer_overlaySkin_clickHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || !this._clickOverlayToClose) {
 			return;
 		}
 		var movementX = Math.abs(event.localX - this._clickStartX);
