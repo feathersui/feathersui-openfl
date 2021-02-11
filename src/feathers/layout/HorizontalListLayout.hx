@@ -556,7 +556,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			result = new LayoutBoundsResult();
 		}
 		result.contentWidth = positionX;
-		result.contentHeight = viewPortHeight;
+		result.contentHeight = itemHeight + this._paddingTop + this._paddingBottom;
 		result.viewPortHeight = viewPortHeight;
 		result.viewPortWidth = viewPortWidth;
 		return result;
