@@ -870,7 +870,7 @@ class BaseDividedBox extends FeathersControl {
 			return;
 		}
 		var divider = cast(event.currentTarget, InteractiveObject);
-		this.resizeTouchBegin(event.touchPointID, divider, this.stage.mouseX, this.stage.mouseY);
+		this.resizeTouchBegin(event.touchPointID, divider, event.stageX, event.stageY);
 	}
 
 	private function baseDividedBox_divider_mouseDownHandler(event:MouseEvent):Void {
@@ -883,7 +883,7 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function baseDividedBox_divider_stage_touchMoveHandler(event:TouchEvent):Void {
-		this.resizeTouchMove(event.touchPointID, this.stage.mouseX, this.stage.mouseY);
+		this.resizeTouchMove(event.touchPointID, event.stageX, event.stageY);
 	}
 
 	private function baseDividedBox_divider_stage_mouseUpHandler(event:MouseEvent):Void {
@@ -891,6 +891,6 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function baseDividedBox_divider_stage_touchEndHandler(event:TouchEvent):Void {
-		this.resizeTouchEnd(event.touchPointID, this.stage.mouseX, this.stage.mouseY);
+		this.resizeTouchEnd(event.touchPointID, event.stageX, event.stageY);
 	}
 }
