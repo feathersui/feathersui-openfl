@@ -69,7 +69,8 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		this._header = value;
 		if (this._header != null) {
 			this._focusExtrasBefore.push(this._header);
-			this.addRawChild(this._header);
+			var index = (this._currentBackgroundSkin != null) ? (this.getRawChildIndex(this._currentBackgroundSkin) + 1) : 0;
+			this.addRawChildAt(this._header, index);
 			if (Std.is(this._header, IUIControl)) {
 				cast(this._header, IUIControl).initializeNow();
 			}
