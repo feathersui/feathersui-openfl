@@ -99,8 +99,8 @@ class Alert extends Panel {
 		@since 1.0.0
 	**/
 	public static function show(text:String, ?titleText:String, ?buttonsText:Array<String>, ?callback:(state:ButtonBarItemState) -> Void,
-			?popUpAdapter:IPopUpAdapter):Alert {
-		var alert = new Alert();
+			?alertFactory:() -> Alert, ?popUpAdapter:IPopUpAdapter):Alert {
+		var alert = (alertFactory != null) ? alertFactory() : new Alert();
 		alert.text = text;
 		alert.titleText = titleText;
 		var buttonsData = (buttonsText != null) ? buttonsText.map(text -> new StringWrapper(text)) : [];
