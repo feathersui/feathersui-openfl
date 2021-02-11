@@ -99,7 +99,7 @@ class SteelCheckStyles {
 					disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
 					disabledCheckMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
 					disabledCheckMark.graphics.endFill();
-					disabledCheckMark.graphics.beginFill(theme.textColor);
+					disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
 					disabledCheckMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
 					disabledCheckMark.graphics.endFill();
 					disabledCheckMark.rotation = 45.0;
