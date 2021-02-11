@@ -41,6 +41,8 @@ class AlertScreen extends Panel {
 	}
 
 	private function showAlertButton_triggerHandler(event:TriggerEvent):Void {
-		Alert.show("Something went wrong.", "Error", ["OK"]);
+		Alert.show("Something went wrong.", "Error", ["OK", "Cancel"], (buttonState) -> {
+			trace("Triggered alert button: " + buttonState.text);
+		});
 	}
 }
