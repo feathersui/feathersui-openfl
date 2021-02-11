@@ -3,14 +3,15 @@ package com.feathersui.components.views;
 import feathers.controls.Button;
 import feathers.controls.Header;
 import feathers.controls.Label;
-import feathers.controls.LayoutGroup;
 import feathers.controls.Panel;
+import feathers.controls.ScrollContainer;
 import feathers.controls.VDividedBox;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.skins.RectangleSkin;
 import feathers.text.TextFormat;
+import openfl.display.DisplayObject;
 import openfl.events.Event;
 
 class VDividedBoxScreen extends Panel {
@@ -33,8 +34,8 @@ class VDividedBoxScreen extends Panel {
 		dividedBox.addChild(bottomContainer);
 	}
 
-	private function createContainer(text:String, color:UInt):LayoutGroup {
-		var content = new LayoutGroup();
+	private function createContainer(text:String, color:UInt):DisplayObject {
+		var content = new ScrollContainer();
 		content.layout = new AnchorLayout();
 		var backgroundSkin = new RectangleSkin();
 		backgroundSkin.fill = SolidColor(color);
