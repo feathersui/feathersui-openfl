@@ -653,7 +653,7 @@ class BaseNavigator extends FeathersControl {
 
 		this.setInvalid(LAYOUT);
 
-		if (this.stage.focus == null || this.stage.focus.stage == null) {
+		if (this.stage != null && (this.stage.focus == null || this.stage.focus.stage == null)) {
 			if (Std.is(activeItemView, InteractiveObject)) {
 				this.stage.focus = cast(activeItemView, InteractiveObject);
 			}
@@ -694,7 +694,7 @@ class BaseNavigator extends FeathersControl {
 
 		this.setInvalid(LAYOUT);
 
-		if (this.stage.focus == null || this.stage.focus.stage == null) {
+		if (this.stage != null && (this.stage.focus == null || this.stage.focus.stage == null)) {
 			if (Std.is(this._activeItemView, InteractiveObject)) {
 				this.stage.focus = cast(this._activeItemView, InteractiveObject);
 			}
