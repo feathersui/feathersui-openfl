@@ -49,3 +49,11 @@ To run CPP tests on Linux, use the following command:
 ```sh
 openfl test linux
 ```
+
+## Run HTML/JS tests
+
+To run tests with HTML/JS, run the following command:
+
+```sh
+openfl test html5
+```
