@@ -10,10 +10,11 @@ package feathers.layout;
 
 import openfl.display.Shape;
 import feathers.layout.Measurements;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class AnchorLayoutTest {
+class AnchorLayoutTest extends Test {
 	private static final PADDING_TOP = 6.0;
 	private static final PADDING_RIGHT = 8.0;
 	private static final PADDING_BOTTOM = 2.0;
@@ -33,8 +34,11 @@ class AnchorLayoutTest {
 	private var _child1:Shape;
 	private var _child2:Shape;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._layout = new AnchorLayout();
 		this._measurements = new Measurements();
 
@@ -49,72 +53,66 @@ class AnchorLayoutTest {
 		this._child2.graphics.endFill();
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		this._measurements = null;
 		this._layout = null;
 		this._child1 = null;
 		this._child1 = null;
 	}
 
-	@Test
 	public function testZeroItemsWithNullMeasurements():Void {
 		var result = this._layout.layout([], this._measurements);
-		Assert.areEqual(0.0, result.viewPortWidth);
-		Assert.areEqual(0.0, result.viewPortHeight);
-		Assert.areEqual(0.0, result.contentWidth);
-		Assert.areEqual(0.0, result.contentHeight);
-		Assert.areEqual(0.0, result.contentX);
-		Assert.areEqual(0.0, result.contentY);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentX);
+		Assert.equals(0.0, result.contentY);
 	}
 
-	@Test
 	public function testOneItemWithNullMeasurements():Void {
 		var result = this._layout.layout([this._child1], this._measurements);
-		Assert.areEqual(CHILD1_WIDTH, result.viewPortWidth);
-		Assert.areEqual(CHILD1_HEIGHT, result.viewPortHeight);
-		Assert.areEqual(CHILD1_WIDTH, result.contentWidth);
-		Assert.areEqual(CHILD1_HEIGHT, result.contentHeight);
-		Assert.areEqual(0.0, result.contentX);
-		Assert.areEqual(0.0, result.contentY);
+		Assert.equals(CHILD1_WIDTH, result.viewPortWidth);
+		Assert.equals(CHILD1_HEIGHT, result.viewPortHeight);
+		Assert.equals(CHILD1_WIDTH, result.contentWidth);
+		Assert.equals(CHILD1_HEIGHT, result.contentHeight);
+		Assert.equals(0.0, result.contentX);
+		Assert.equals(0.0, result.contentY);
 	}
 
-	@Test
 	public function testOneItemWithXYAndNullMeasurements():Void {
 		this._child1.x = CHILD1_X;
 		this._child1.y = CHILD1_Y;
 		var result = this._layout.layout([this._child1], this._measurements);
-		Assert.areEqual(CHILD1_X + CHILD1_WIDTH, result.viewPortWidth);
-		Assert.areEqual(CHILD1_Y + CHILD1_HEIGHT, result.viewPortHeight);
-		Assert.areEqual(CHILD1_X + CHILD1_WIDTH, result.contentWidth);
-		Assert.areEqual(CHILD1_Y + CHILD1_HEIGHT, result.contentHeight);
-		Assert.areEqual(0.0, result.contentX);
-		Assert.areEqual(0.0, result.contentY);
+		Assert.equals(CHILD1_X + CHILD1_WIDTH, result.viewPortWidth);
+		Assert.equals(CHILD1_Y + CHILD1_HEIGHT, result.viewPortHeight);
+		Assert.equals(CHILD1_X + CHILD1_WIDTH, result.contentWidth);
+		Assert.equals(CHILD1_Y + CHILD1_HEIGHT, result.contentHeight);
+		Assert.equals(0.0, result.contentX);
+		Assert.equals(0.0, result.contentY);
 	}
 
-	@Test
 	public function testTwoItemsWithNullMeasurements():Void {
 		var result = this._layout.layout([this._child1, this._child2], this._measurements);
-		Assert.areEqual(Math.max(CHILD1_WIDTH, CHILD2_WIDTH), result.viewPortWidth);
-		Assert.areEqual(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), result.viewPortHeight);
-		Assert.areEqual(Math.max(CHILD1_WIDTH, CHILD2_WIDTH), result.contentWidth);
-		Assert.areEqual(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), result.contentHeight);
-		Assert.areEqual(0.0, result.contentX);
-		Assert.areEqual(0.0, result.contentY);
+		Assert.equals(Math.max(CHILD1_WIDTH, CHILD2_WIDTH), result.viewPortWidth);
+		Assert.equals(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), result.viewPortHeight);
+		Assert.equals(Math.max(CHILD1_WIDTH, CHILD2_WIDTH), result.contentWidth);
+		Assert.equals(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), result.contentHeight);
+		Assert.equals(0.0, result.contentX);
+		Assert.equals(0.0, result.contentY);
 	}
 
-	@Test
 	public function testTwoItemsWithXYAndNullMeasurements():Void {
 		this._child1.x = CHILD1_X;
 		this._child1.y = CHILD1_Y;
 		this._child2.x = CHILD2_X;
 		this._child2.y = CHILD2_Y;
 		var result = this._layout.layout([this._child1, this._child2], this._measurements);
-		Assert.areEqual(Math.max(CHILD1_X + CHILD1_WIDTH, CHILD2_X + CHILD2_WIDTH), result.viewPortWidth);
-		Assert.areEqual(Math.max(CHILD1_Y + CHILD1_HEIGHT, CHILD2_Y + CHILD2_HEIGHT), result.viewPortHeight);
-		Assert.areEqual(Math.max(CHILD1_X + CHILD1_WIDTH, CHILD2_X + CHILD2_WIDTH), result.contentWidth);
-		Assert.areEqual(Math.max(CHILD1_Y + CHILD1_HEIGHT, CHILD2_Y + CHILD2_HEIGHT), result.contentHeight);
-		Assert.areEqual(0.0, result.contentX);
-		Assert.areEqual(0.0, result.contentY);
+		Assert.equals(Math.max(CHILD1_X + CHILD1_WIDTH, CHILD2_X + CHILD2_WIDTH), result.viewPortWidth);
+		Assert.equals(Math.max(CHILD1_Y + CHILD1_HEIGHT, CHILD2_Y + CHILD2_HEIGHT), result.viewPortHeight);
+		Assert.equals(Math.max(CHILD1_X + CHILD1_WIDTH, CHILD2_X + CHILD2_WIDTH), result.contentWidth);
+		Assert.equals(Math.max(CHILD1_Y + CHILD1_HEIGHT, CHILD2_Y + CHILD2_HEIGHT), result.contentHeight);
+		Assert.equals(0.0, result.contentX);
+		Assert.equals(0.0, result.contentY);
 	}
 }

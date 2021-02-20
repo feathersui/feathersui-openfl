@@ -11,28 +11,30 @@ package feathers.controls;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
 import feathers.controls.ToggleSwitch;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class ToggleSwitchTest {
+class ToggleSwitchTest extends Test {
 	private var _toggle:ToggleSwitch;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._toggle = new ToggleSwitch();
 		TestMain.openfl_root.addChild(this._toggle);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._toggle.parent != null) {
 			this._toggle.parent.removeChild(this._toggle);
 		}
 		this._toggle = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testProgrammaticSelectionChange():Void {
 		this._toggle.selected = false;
 		var changed = false;
@@ -43,7 +45,6 @@ class ToggleSwitchTest {
 		Assert.isTrue(changed, "Event.CHANGE must be dispatched when changing selected property");
 	}
 
-	@Test
 	public function testInteractiveSelectionChangeOnClick():Void {
 		this._toggle.selected = false;
 		var changed = false;
@@ -55,7 +56,6 @@ class ToggleSwitchTest {
 		Assert.isTrue(changed, "Event.CHANGE must be dispatched on click");
 	}
 
-	@Test
 	public function testNoInteractiveSelectionChangeOnClickWhenDisabled():Void {
 		this._toggle.selected = false;
 		this._toggle.enabled = false;
@@ -68,7 +68,6 @@ class ToggleSwitchTest {
 		Assert.isFalse(changed, "Event.CHANGE must not be dispatched on click when disabled");
 	}
 
-	@Test
 	public function testInteractiveSelectionChangeOnDrag():Void {
 		this._toggle.selected = false;
 		var changed = false;

@@ -14,10 +14,11 @@ import openfl.events.MouseEvent;
 import openfl.events.Event;
 import feathers.controls.BasicButton;
 import feathers.events.FeathersEvent;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class BasicButtonMeasurementTest {
+class BasicButtonMeasurementTest extends Test {
 	private static final SHAPE_WIDTH = 10.0;
 	private static final SHAPE_HEIGHT = 12.0;
 	private static final BACKGROUND_WIDTH = 30.0;
@@ -29,19 +30,21 @@ class BasicButtonMeasurementTest {
 
 	private var _button:BasicButton;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._button = new BasicButton();
 		TestMain.openfl_root.addChild(this._button);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._button.parent != null) {
 			this._button.parent.removeChild(this._button);
 		}
 		this._button = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	private function addShapeBackground():Void {
@@ -63,41 +66,38 @@ class BasicButtonMeasurementTest {
 		this._button.backgroundSkin = skin;
 	}
 
-	@Test
 	public function testMeasurementsWithNoBackgroundSkin():Void {
 		this._button.validateNow();
 
-		Assert.areEqual(0.0, this._button.width);
-		Assert.areEqual(0.0, this._button.height);
-		Assert.areEqual(0.0, this._button.minWidth);
-		Assert.areEqual(0.0, this._button.minHeight);
-		Assert.areEqual(Math.POSITIVE_INFINITY, this._button.maxWidth);
-		Assert.areEqual(Math.POSITIVE_INFINITY, this._button.maxHeight);
+		Assert.equals(0.0, this._button.width);
+		Assert.equals(0.0, this._button.height);
+		Assert.equals(0.0, this._button.minWidth);
+		Assert.equals(0.0, this._button.minHeight);
+		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
+		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
 	}
 
-	@Test
 	public function testMeasurementsWithShapeBackgroundSkin():Void {
 		this.addShapeBackground();
 		this._button.validateNow();
 
-		Assert.areEqual(SHAPE_WIDTH, this._button.width);
-		Assert.areEqual(SHAPE_HEIGHT, this._button.height);
-		Assert.areEqual(SHAPE_WIDTH, this._button.minWidth);
-		Assert.areEqual(SHAPE_HEIGHT, this._button.minHeight);
-		Assert.areEqual(SHAPE_WIDTH, this._button.maxWidth);
-		Assert.areEqual(SHAPE_HEIGHT, this._button.maxHeight);
+		Assert.equals(SHAPE_WIDTH, this._button.width);
+		Assert.equals(SHAPE_HEIGHT, this._button.height);
+		Assert.equals(SHAPE_WIDTH, this._button.minWidth);
+		Assert.equals(SHAPE_HEIGHT, this._button.minHeight);
+		Assert.equals(SHAPE_WIDTH, this._button.maxWidth);
+		Assert.equals(SHAPE_HEIGHT, this._button.maxHeight);
 	}
 
-	@Test
 	public function testMeasurementsWithRectangleSkinBackgroundSkin():Void {
 		this.addRectangleSkinBackground();
 		this._button.validateNow();
 
-		Assert.areEqual(BACKGROUND_WIDTH, this._button.width);
-		Assert.areEqual(BACKGROUND_HEIGHT, this._button.height);
-		Assert.areEqual(BACKGROUND_MIN_WIDTH, this._button.minWidth);
-		Assert.areEqual(BACKGROUND_MIN_HEIGHT, this._button.minHeight);
-		Assert.areEqual(BACKGROUND_MAX_WIDTH, this._button.maxWidth);
-		Assert.areEqual(BACKGROUND_MAX_HEIGHT, this._button.maxHeight);
+		Assert.equals(BACKGROUND_WIDTH, this._button.width);
+		Assert.equals(BACKGROUND_HEIGHT, this._button.height);
+		Assert.equals(BACKGROUND_MIN_WIDTH, this._button.minWidth);
+		Assert.equals(BACKGROUND_MIN_HEIGHT, this._button.minHeight);
+		Assert.equals(BACKGROUND_MAX_WIDTH, this._button.maxWidth);
+		Assert.equals(BACKGROUND_MAX_HEIGHT, this._button.maxHeight);
 	}
 }

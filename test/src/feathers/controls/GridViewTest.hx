@@ -11,33 +11,34 @@ package feathers.controls;
 import feathers.events.ScrollEvent;
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class GridViewTest {
+class GridViewTest extends Test {
 	private var _gridView:GridView;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._gridView = new GridView();
 		TestMain.openfl_root.addChild(this._gridView);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._gridView.parent != null) {
 			this._gridView.parent.removeChild(this._gridView);
 		}
 		this._gridView = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testValidateWithNullDataProvider():Void {
 		this._gridView.validateNow();
 	}
 
-	@Test
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.validateNow();
@@ -45,7 +46,6 @@ class GridViewTest {
 		this._gridView.validateNow();
 	}
 
-	@Test
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.validateNow();
@@ -58,7 +58,6 @@ class GridViewTest {
 		Assert.isTrue(changed);
 	}
 
-	@Test
 	public function testDispatchChangeEventAfterSetSelectedItem():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.validateNow();
@@ -71,23 +70,20 @@ class GridViewTest {
 		Assert.isTrue(changed);
 	}
 
-	@Test
 	public function testSelectedItemAfterSetSelectedIndex():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		Assert.isNull(this._gridView.selectedItem);
 		this._gridView.selectedIndex = 1;
-		Assert.areEqual(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
 	}
 
-	@Test
 	public function testSelectedIndexAfterSetSelectedItem():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
-		Assert.areEqual(-1, this._gridView.selectedIndex);
+		Assert.equals(-1, this._gridView.selectedIndex);
 		this._gridView.selectedItem = this._gridView.dataProvider.get(1);
-		Assert.areEqual(1, this._gridView.selectedIndex);
+		Assert.equals(1, this._gridView.selectedIndex);
 	}
 
-	@Test
 	public function testDeselectAllOnNullDataProvider():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.selectedIndex = 1;
@@ -98,11 +94,10 @@ class GridViewTest {
 		Assert.isFalse(changed);
 		this._gridView.dataProvider = null;
 		Assert.isTrue(changed);
-		Assert.areEqual(-1, this._gridView.selectedIndex);
-		Assert.areEqual(null, this._gridView.selectedItem);
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.equals(null, this._gridView.selectedItem);
 	}
 
-	@Test
 	public function testResetScrollOnNullDataProvider():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.scrollX = 10.0;
@@ -114,11 +109,10 @@ class GridViewTest {
 		Assert.isFalse(scrolled);
 		this._gridView.dataProvider = null;
 		Assert.isTrue(scrolled);
-		Assert.areEqual(0.0, this._gridView.scrollX);
-		Assert.areEqual(0.0, this._gridView.scrollY);
+		Assert.equals(0.0, this._gridView.scrollX);
+		Assert.equals(0.0, this._gridView.scrollY);
 	}
 
-	@Test
 	public function testDeselectAllOnDataProviderRemoveAll():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.selectedIndex = 1;
@@ -129,7 +123,7 @@ class GridViewTest {
 		Assert.isFalse(changed);
 		this._gridView.dataProvider.removeAll();
 		Assert.isTrue(changed);
-		Assert.areEqual(-1, this._gridView.selectedIndex);
-		Assert.areEqual(null, this._gridView.selectedItem);
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.equals(null, this._gridView.selectedItem);
 	}
 }

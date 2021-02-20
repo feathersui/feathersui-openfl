@@ -8,26 +8,28 @@
 
 package feathers.themes;
 
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 import feathers.controls.Button;
 
 @:keep
-class DefaultThemeTest {
+class DefaultThemeTest extends Test {
 	private var _control:Button;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._control = new Button();
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		this._control = null;
 	}
 
-	@Test
 	public function testDefaultThemeStyles():Void {
 		this._control.validateNow();
-		Assert.isNotNull(this._control.backgroundSkin, "Must have a default style");
+		Assert.notNull(this._control.backgroundSkin, "Must have a default style");
 	}
 }

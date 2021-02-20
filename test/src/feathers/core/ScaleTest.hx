@@ -10,10 +10,11 @@ package feathers.core;
 
 import openfl.display.Shape;
 import feathers.controls.LayoutGroup;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class ScaleTest {
+class ScaleTest extends Test {
 	private static final BASE_WIDTH = 100.0;
 	private static final BASE_HEIGHT = 140.0;
 	private static final LARGER_WIDTH = 280.0;
@@ -26,8 +27,11 @@ class ScaleTest {
 
 	private var _control:LayoutGroup;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		var child = new Shape();
 		child.graphics.beginFill(0xff00ff);
 		child.graphics.drawRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
@@ -38,38 +42,34 @@ class ScaleTest {
 		TestMain.openfl_root.addChild(this._control);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._control.parent != null) {
 			this._control.parent.removeChild(this._control);
 		}
 		this._control = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testInitialDimensions():Void {
 		this._control.validateNow();
-		Assert.areEqual(BASE_WIDTH, this._control.width, "Component initial width incorrect.");
-		Assert.areEqual(BASE_HEIGHT, this._control.height, "Component initial height incorrect.");
-		Assert.areEqual(BASE_WIDTH, this._control.minWidth, "Component initial minWidth incorrect.");
-		Assert.areEqual(BASE_HEIGHT, this._control.minHeight, "Component initial minHeight incorrect.");
-		Assert.areEqual(Math.POSITIVE_INFINITY, this._control.maxWidth, "Component initial maxWidth incorrect.");
-		Assert.areEqual(Math.POSITIVE_INFINITY, this._control.maxHeight, "Component initial maxHeight incorrect.");
+		Assert.equals(BASE_WIDTH, this._control.width, "Component initial width incorrect.");
+		Assert.equals(BASE_HEIGHT, this._control.height, "Component initial height incorrect.");
+		Assert.equals(BASE_WIDTH, this._control.minWidth, "Component initial minWidth incorrect.");
+		Assert.equals(BASE_HEIGHT, this._control.minHeight, "Component initial minHeight incorrect.");
+		Assert.equals(Math.POSITIVE_INFINITY, this._control.maxWidth, "Component initial maxWidth incorrect.");
+		Assert.equals(Math.POSITIVE_INFINITY, this._control.maxHeight, "Component initial maxHeight incorrect.");
 	}
 
-	@Test
 	public function testSetScaleXAndScaleY():Void {
 		this._control.scaleX = LARGER_SCALEX;
 		this._control.scaleY = SMALLER_SCALEY;
 		this._control.validateNow();
-		Assert.areEqual(BASE_WIDTH * LARGER_SCALEX, this._control.width, "Component calculated width incorrect after setting scaleX.");
-		Assert.areEqual(BASE_HEIGHT * SMALLER_SCALEY, this._control.height, "Component calculated height incorrect after setting scaleY.");
-		Assert.areEqual(BASE_WIDTH * LARGER_SCALEX, this._control.minWidth, "Component calculated minWidth incorrect after setting scaleX.");
-		Assert.areEqual(BASE_HEIGHT * SMALLER_SCALEY, this._control.minHeight, "Component calculated minHeight incorrect after setting scaleY.");
+		Assert.equals(BASE_WIDTH * LARGER_SCALEX, this._control.width, "Component calculated width incorrect after setting scaleX.");
+		Assert.equals(BASE_HEIGHT * SMALLER_SCALEY, this._control.height, "Component calculated height incorrect after setting scaleY.");
+		Assert.equals(BASE_WIDTH * LARGER_SCALEX, this._control.minWidth, "Component calculated minWidth incorrect after setting scaleX.");
+		Assert.equals(BASE_HEIGHT * SMALLER_SCALEY, this._control.minHeight, "Component calculated minHeight incorrect after setting scaleY.");
 	}
 
-	@Test
 	public function testSetScaleXAndScaleYThenWidthAndHeight():Void {
 		this._control.scaleX = LARGER_SCALEX;
 		this._control.scaleY = SMALLER_SCALEY;
@@ -78,13 +78,12 @@ class ScaleTest {
 		this._control.minWidth = LARGER_MIN_WIDTH;
 		this._control.minHeight = LARGER_MIN_HEIGHT;
 		this._control.validateNow();
-		Assert.areEqual(LARGER_WIDTH, this._control.width, "Component width incorrect after setting scaleX then width.");
-		Assert.areEqual(LARGER_HEIGHT, this._control.height, "Component height incorrect after setting scaleY then height.");
-		Assert.areEqual(LARGER_MIN_WIDTH, this._control.minWidth, "Component minWidth incorrect after setting scaleX then minWidth.");
-		Assert.areEqual(LARGER_MIN_HEIGHT, this._control.minHeight, "Component minHeight incorrect after setting scaleY then minHeight.");
+		Assert.equals(LARGER_WIDTH, this._control.width, "Component width incorrect after setting scaleX then width.");
+		Assert.equals(LARGER_HEIGHT, this._control.height, "Component height incorrect after setting scaleY then height.");
+		Assert.equals(LARGER_MIN_WIDTH, this._control.minWidth, "Component minWidth incorrect after setting scaleX then minWidth.");
+		Assert.equals(LARGER_MIN_HEIGHT, this._control.minHeight, "Component minHeight incorrect after setting scaleY then minHeight.");
 	}
 
-	@Test
 	public function testSetWidthAndHeightThenScaleXAndScaleY():Void {
 		this._control.width = LARGER_WIDTH;
 		this._control.height = LARGER_HEIGHT;
@@ -93,13 +92,12 @@ class ScaleTest {
 		this._control.scaleX = LARGER_SCALEX;
 		this._control.scaleY = SMALLER_SCALEY;
 		this._control.validateNow();
-		Assert.areEqual(LARGER_WIDTH * LARGER_SCALEX, this._control.width, "Component width incorrect after setting width then scaleX.");
-		Assert.areEqual(LARGER_HEIGHT * SMALLER_SCALEY, this._control.height, "Component height incorrect after setting height then scaleY.");
-		Assert.areEqual(LARGER_MIN_WIDTH * LARGER_SCALEX, this._control.minWidth, "Component minWidth incorrect after setting minWidth then scaleX.");
-		Assert.areEqual(LARGER_MIN_HEIGHT * SMALLER_SCALEY, this._control.minHeight, "Component minHeight incorrect after setting minHeight then scaleY.");
+		Assert.equals(LARGER_WIDTH * LARGER_SCALEX, this._control.width, "Component width incorrect after setting width then scaleX.");
+		Assert.equals(LARGER_HEIGHT * SMALLER_SCALEY, this._control.height, "Component height incorrect after setting height then scaleY.");
+		Assert.equals(LARGER_MIN_WIDTH * LARGER_SCALEX, this._control.minWidth, "Component minWidth incorrect after setting minWidth then scaleX.");
+		Assert.equals(LARGER_MIN_HEIGHT * SMALLER_SCALEY, this._control.minHeight, "Component minHeight incorrect after setting minHeight then scaleY.");
 	}
 
-	@Test
 	public function testSetWidthAndHeightThenScaleXAndScaleYThenWidthAndHeightBackToOriginal():Void {
 		this._control.width = LARGER_WIDTH;
 		this._control.height = LARGER_HEIGHT;
@@ -112,11 +110,11 @@ class ScaleTest {
 		this._control.minWidth = LARGER_MIN_WIDTH;
 		this._control.minHeight = LARGER_MIN_HEIGHT;
 		this._control.validateNow();
-		Assert.areEqual(LARGER_WIDTH, this._control.width, "Component width incorrect after setting width then scaleX then width back to original.");
-		Assert.areEqual(LARGER_HEIGHT, this._control.height, "Component height incorrect after setting height then scaleY then height back to original.");
-		Assert.areEqual(LARGER_MIN_WIDTH, this._control.minWidth,
+		Assert.equals(LARGER_WIDTH, this._control.width, "Component width incorrect after setting width then scaleX then width back to original.");
+		Assert.equals(LARGER_HEIGHT, this._control.height, "Component height incorrect after setting height then scaleY then height back to original.");
+		Assert.equals(LARGER_MIN_WIDTH, this._control.minWidth,
 			"Component minWidth incorrect after setting minWidth then scaleX then minWidth back to original.");
-		Assert.areEqual(LARGER_MIN_HEIGHT, this._control.minHeight,
+		Assert.equals(LARGER_MIN_HEIGHT, this._control.minHeight,
 			"Component minHeight incorrect after setting minHeight then scaleY then minHeight back to original.");
 	}
 }

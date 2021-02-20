@@ -1,50 +1,51 @@
 # feathersui-openfl tests
 
-Automated tests created with [munit](https://github.com/massiveinteractive/MassiveUnit).
-
-## Run HTML/JS tests
-
-To run HTML/JS tests in a web browser, run the following command:
-
-
-```sh
-haxelib run munit test -js
-```
-
-To choose a specific web browser, add the `-browser` option:
-
-```sh
-haxelib run munit test -js -browser chrome
-```
-
-## Run SWF tests
-
-To run tests with the Adobe Flash Player plugin in a web browser, use the following command:
-
-```sh
-haxelib run munit test -swf
-```
-
-**Warning:** You may need to click to activate the plugin before the tests will run.
-
-To choose a specific web browser that has the plugin installed, add the `-browser` option:
-
-```sh
-haxelib run munit test -swf -browser chrome
-```
-
-## Run Windows/macOS tests
-
-To run CPP tests on Windows or macOS desktop, use the following command:
-
-```sh
-haxelib run openfl test cpp -final
-```
+Automated tests created with [utest](https://lib.haxe.org/p/utest).
 
 ## Run Neko tests
 
-To run tests in Neko, use the following command:
+To run tests with Neko, run the following command:
 
 ```sh
-haxelib run openfl test neko -final
+openfl test neko
+```
+
+## Run HashLink tests
+
+To run tests with Neko, run the following command:
+
+```sh
+openfl test neko
+```
+
+## Run Adobe AIR tests
+
+To run tests with Adobe AIR, use the following command:
+
+```sh
+openfl test air
+```
+
+## Run Windows tests
+
+To run CPP tests on Windows, use the following command:
+
+```sh
+openfl test windows
+```
+
+## Run macOS tests
+
+To run CPP tests on macOS, use the following command:
+
+```sh
+openfl test mac
+```
+
+## Run Linux tests
+
+To run CPP tests on Linux, use the following command:
+
+```sh
+openfl test linux
 ```

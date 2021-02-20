@@ -11,32 +11,34 @@ package feathers.controls.navigators;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import feathers.events.FeathersEvent;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
 @:access(feathers.controls.BasicButton)
-class StackNavigatorTest {
+class StackNavigatorTest extends Test {
 	private static final ID_1 = "one";
 	private static final ID_2 = "two";
 
 	private var _navigator:StackNavigator;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._navigator = new StackNavigator();
 		TestMain.openfl_root.addChild(this._navigator);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._navigator.parent != null) {
 			this._navigator.parent.removeChild(this._navigator);
 		}
 		this._navigator = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testInject_withPushItemMethod():Void {
 		var injected = false;
 		var inject = (view:View1) -> {
@@ -49,7 +51,6 @@ class StackNavigatorTest {
 		Assert.isTrue(injected, "inject must be called with pushItem() method");
 	}
 
-	@Test
 	public function testInject_withReplaceItemMethod():Void {
 		var injected = false;
 		var inject = (view:View2) -> {
@@ -66,7 +67,6 @@ class StackNavigatorTest {
 		Assert.isTrue(injected, "inject must be called with replaceItem() method");
 	}
 
-	@Test
 	public function testInject_withPushStackAction():Void {
 		var injected = false;
 		var inject = (view:View2) -> {
@@ -83,7 +83,6 @@ class StackNavigatorTest {
 		Assert.isTrue(injected, "inject must be called with StackAction.Push");
 	}
 
-	@Test
 	public function testInject_withReplaceStackAction():Void {
 		var injected = false;
 		var inject = (view:View2) -> {

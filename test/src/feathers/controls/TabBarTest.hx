@@ -10,33 +10,34 @@ package feathers.controls;
 
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class TabBarTest {
+class TabBarTest extends Test {
 	private var _tabBar:TabBar;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._tabBar = new TabBar();
 		TestMain.openfl_root.addChild(this._tabBar);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._tabBar.parent != null) {
 			this._tabBar.parent.removeChild(this._tabBar);
 		}
 		this._tabBar = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testValidateWithNullDataProvider():Void {
 		this._tabBar.validateNow();
 	}
 
-	@Test
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._tabBar.validateNow();
@@ -44,7 +45,6 @@ class TabBarTest {
 		this._tabBar.validateNow();
 	}
 
-	@Test
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._tabBar.validateNow();
@@ -57,7 +57,6 @@ class TabBarTest {
 		Assert.isTrue(changed);
 	}
 
-	@Test
 	public function testDispatchChangeEventAfterSetSelectedItem():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._tabBar.validateNow();
@@ -70,19 +69,17 @@ class TabBarTest {
 		Assert.isTrue(changed);
 	}
 
-	@Test
 	public function testSelectedItemAfterSetSelectedIndex():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
-		Assert.areEqual(this._tabBar.dataProvider.get(0), this._tabBar.selectedItem);
+		Assert.equals(this._tabBar.dataProvider.get(0), this._tabBar.selectedItem);
 		this._tabBar.selectedIndex = 1;
-		Assert.areEqual(this._tabBar.dataProvider.get(1), this._tabBar.selectedItem);
+		Assert.equals(this._tabBar.dataProvider.get(1), this._tabBar.selectedItem);
 	}
 
-	@Test
 	public function testSelectedIndexAfterSetSelectedItem():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
-		Assert.areEqual(0, this._tabBar.selectedIndex);
+		Assert.equals(0, this._tabBar.selectedIndex);
 		this._tabBar.selectedItem = this._tabBar.dataProvider.get(1);
-		Assert.areEqual(1, this._tabBar.selectedIndex);
+		Assert.equals(1, this._tabBar.selectedIndex);
 	}
 }

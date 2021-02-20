@@ -8,39 +8,41 @@
 
 package feathers.controls;
 
+import haxe.Timer;
+import utest.Async;
 import openfl.display.StageScaleMode;
 import openfl.events.SecurityErrorEvent;
 import openfl.events.IOErrorEvent;
-import massive.munit.util.Timer;
-import massive.munit.async.AsyncFactory;
 import openfl.events.Event;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class AssetLoaderTest {
-	private static final BLUE100x50 = "blue100x50.png";
-	private static final RED200x300 = "red200x300.png";
+class AssetLoaderTest extends Test {
+	private static final BLUE100x50 = "assets/fixtures/blue100x50.png";
+	private static final RED200x300 = "assets/fixtures/red200x300.png";
 
 	private var _loader:AssetLoader;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._loader = new AssetLoader();
 		TestMain.openfl_root.addChild(this._loader);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._loader.parent != null) {
 			this._loader.parent.removeChild(this._loader);
 		}
 		this._loader = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	#if (js || flash)
-	@AsyncTest
-	public function testCompleteEvent(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testCompleteEvent(async:Async):Void {
 		var complete = false;
 		var ioError = false;
 		var securityError = false;
@@ -55,16 +57,16 @@ class AssetLoaderTest {
 		});
 		this._loader.source = BLUE100x50;
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			Assert.isTrue(complete);
 			Assert.isFalse(ioError);
 			Assert.isFalse(securityError);
-		}, 1000);
-		Timer.delay(handler, 800);
+			async.done();
+		}, 800);
 	}
 
-	@AsyncTest
-	public function testIOErrorEvent(factory:AsyncFactory):Void {
+	@:timeout(3200)
+	public function testIOErrorEvent(async:Async):Void {
 		var complete = false;
 		var ioError = false;
 		var securityError = false;
@@ -79,36 +81,36 @@ class AssetLoaderTest {
 		});
 		this._loader.source = "fake.png";
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		// chrome needs a really long delay, for some reason!
+		Timer.delay(() -> {
 			Assert.isFalse(complete);
 			Assert.isTrue(ioError);
 			Assert.isFalse(securityError);
-		}, 3200);
-		// chrome needs a really long delay, for some reason!
-		Timer.delay(handler, 3000);
+			async.done();
+		}, 3000);
 	}
 
-	@AsyncTest
-	public function testResize(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testResize(async:Async):Void {
 		this._loader.source = BLUE100x50;
 		this._loader.validateNow();
 		var resize = false;
 		this._loader.addEventListener(Event.RESIZE, function(event:Event):Void {
 			resize = true;
 		});
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			this._loader.validateNow();
 			Assert.isTrue(resize);
-			Assert.areEqual(100, this._loader.width);
-			Assert.areEqual(50, this._loader.height);
-			Assert.areEqual(100, this._loader.minWidth);
-			Assert.areEqual(50, this._loader.minHeight);
-		}, 1000);
-		Timer.delay(handler, 800);
+			Assert.equals(100, this._loader.width);
+			Assert.equals(50, this._loader.height);
+			Assert.equals(100, this._loader.minWidth);
+			Assert.equals(50, this._loader.minHeight);
+			async.done();
+		}, 800);
 	}
 
-	@AsyncTest
-	public function testResizeWithNewSource(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testResizeWithNewSource(async:Async):Void {
 		var resize = false;
 		this._loader.addEventListener(Event.COMPLETE, function(event:Event):Void {
 			if (this._loader.source == BLUE100x50) {
@@ -122,77 +124,77 @@ class AssetLoaderTest {
 		});
 		this._loader.source = BLUE100x50;
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			this._loader.validateNow();
 			Assert.isTrue(resize);
-			Assert.areEqual(200, this._loader.width);
-			Assert.areEqual(300, this._loader.height);
-			Assert.areEqual(200, this._loader.minWidth);
-			Assert.areEqual(300, this._loader.minHeight);
-		}, 1000);
-		Timer.delay(handler, 800);
+			Assert.equals(200, this._loader.width);
+			Assert.equals(300, this._loader.height);
+			Assert.equals(200, this._loader.minWidth);
+			Assert.equals(300, this._loader.minHeight);
+			async.done();
+		}, 800);
 	}
 
-	@AsyncTest
-	public function testAutoSizeWidthWithScaleModeNoScale(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testAutoSizeWidthWithScaleModeNoScale(async:Async):Void {
 		this._loader.source = BLUE100x50;
 		this._loader.height = 200;
 		this._loader.scaleMode = StageScaleMode.NO_SCALE;
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			this._loader.validateNow();
-			Assert.areEqual(100, this._loader.width);
-			Assert.areEqual(100, this._loader.minWidth);
-		}, 1000);
-		Timer.delay(handler, 800);
+			Assert.equals(100, this._loader.width);
+			Assert.equals(100, this._loader.minWidth);
+			async.done();
+		}, 800);
 	}
 
-	@AsyncTest
-	public function testAutoSizeHeightWithScaleModeNoScale(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testAutoSizeHeightWithScaleModeNoScale(async:Async):Void {
 		this._loader.source = BLUE100x50;
 		this._loader.width = 200;
 		this._loader.scaleMode = StageScaleMode.NO_SCALE;
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			this._loader.validateNow();
-			Assert.areEqual(50, this._loader.height);
-			Assert.areEqual(50, this._loader.minHeight);
-		}, 1000);
-		Timer.delay(handler, 800);
+			Assert.equals(50, this._loader.height);
+			Assert.equals(50, this._loader.minHeight);
+			async.done();
+		}, 800);
 	}
 
-	@AsyncTest
-	public function testAutoSizeWidthWithScaleModeShowAll(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testAutoSizeWidthWithScaleModeShowAll(async:Async):Void {
 		this._loader.source = BLUE100x50;
 		this._loader.height = 200;
 		this._loader.scaleMode = StageScaleMode.SHOW_ALL;
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			this._loader.validateNow();
-			Assert.areEqual(400, this._loader.width);
-			Assert.areEqual(400, this._loader.minWidth);
-		}, 1000);
-		Timer.delay(handler, 800);
+			Assert.equals(400, this._loader.width);
+			Assert.equals(400, this._loader.minWidth);
+			async.done();
+		}, 800);
 	}
 
-	@AsyncTest
-	public function testAutoSizeHeightWithScaleModeShowAll(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testAutoSizeHeightWithScaleModeShowAll(async:Async):Void {
 		this._loader.source = BLUE100x50;
 		this._loader.width = 200;
 		this._loader.scaleMode = StageScaleMode.SHOW_ALL;
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			this._loader.validateNow();
-			Assert.areEqual(100, this._loader.height);
-			Assert.areEqual(100, this._loader.minHeight);
-		}, 1000);
-		Timer.delay(handler, 800);
+			Assert.equals(100, this._loader.height);
+			Assert.equals(100, this._loader.minHeight);
+			async.done();
+		}, 800);
 	}
 
 	// BowlerHatLLC/feathersui-starling#1541
 
-	@AsyncTest
-	public function testEpxlicitMaxSizeWithLargerMinSize(factory:AsyncFactory):Void {
+	@:timeout(1000)
+	public function testEpxlicitMaxSizeWithLargerMinSize(async:Async):Void {
 		var maxWidth = 50.0;
 		var maxHeight = 75.0;
 		this._loader.source = BLUE100x50;
@@ -200,12 +202,11 @@ class AssetLoaderTest {
 		this._loader.maxHeight = maxHeight;
 		this._loader.scaleMode = StageScaleMode.SHOW_ALL;
 		this._loader.validateNow();
-		var handler = factory.createHandler(this, function():Void {
+		Timer.delay(() -> {
 			this._loader.validateNow();
-			Assert.areEqual(maxWidth, this._loader.width);
-			Assert.areEqual(maxHeight, this._loader.height);
-		}, 1000);
-		Timer.delay(handler, 800);
+			Assert.equals(maxWidth, this._loader.width);
+			Assert.equals(maxHeight, this._loader.height);
+			async.done();
+		}, 800);
 	}
-	#end
 }

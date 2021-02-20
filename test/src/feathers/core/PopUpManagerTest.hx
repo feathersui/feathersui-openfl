@@ -12,10 +12,11 @@ import openfl.events.Event;
 import openfl.display.Sprite;
 import openfl.display.Shape;
 import feathers.core.PopUpManager;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class PopUpManagerTest {
+class PopUpManagerTest extends Test {
 	private static final POPUP1_WIDTH = 10.0;
 	private static final POPUP1_HEIGHT = 20.0;
 	private static final POPUP2_WIDTH = 30.0;
@@ -25,8 +26,11 @@ class PopUpManagerTest {
 	private var _popUp2:Shape;
 	private var _customRoot:Sprite;
 
-	@After
-	public function cleanup():Void {
+	public function new() {
+		super();
+	}
+
+	public function teardown():Void {
 		if (this._popUp1 != null) {
 			if (this._popUp1.parent != null) {
 				this._popUp1.parent.removeChild(this._popUp1);
@@ -47,8 +51,8 @@ class PopUpManagerTest {
 		}
 		PopUpManager.dispose();
 
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
-		Assert.areEqual(1, TestMain.openfl_root.stage.numChildren, "Test cleanup failed to remove all children from the stage");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, TestMain.openfl_root.stage.numChildren, "Test cleanup failed to remove all children from the stage");
 	}
 
 	private function createPopUp1():Void {
@@ -65,57 +69,52 @@ class PopUpManagerTest {
 		this._popUp2.graphics.endFill();
 	}
 
-	@Test
 	public function testDefaults():Void {
 		this.createPopUp1();
-		Assert.areEqual(0, PopUpManager.popUpCount);
+		Assert.equals(0, PopUpManager.popUpCount);
 		Assert.isFalse(PopUpManager.isModal(this._popUp1));
 		Assert.isFalse(PopUpManager.isPopUp(this._popUp1));
 		Assert.isFalse(PopUpManager.isTopLevelPopUp(this._popUp1));
 		Assert.isFalse(PopUpManager.isModal(this._popUp1));
 		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
-		Assert.isNotNull(popUpManager);
-		Assert.areEqual(TestMain.openfl_root.stage, popUpManager.root);
+		Assert.notNull(popUpManager);
+		Assert.equals(TestMain.openfl_root.stage, popUpManager.root);
 	}
 
-	@Test
 	public function testIsFunctionsWithNull():Void {
 		Assert.isFalse(PopUpManager.isPopUp(null));
 		Assert.isFalse(PopUpManager.isTopLevelPopUp(null));
 		Assert.isFalse(PopUpManager.isModal(null));
 	}
 
-	@Test
 	public function testPopUpCount():Void {
 		this.createPopUp1();
 		this.createPopUp2();
-		Assert.areEqual(0, PopUpManager.popUpCount);
+		Assert.equals(0, PopUpManager.popUpCount);
 		PopUpManager.addPopUp(this._popUp1, TestMain.openfl_root);
-		Assert.areEqual(1, PopUpManager.popUpCount);
+		Assert.equals(1, PopUpManager.popUpCount);
 		PopUpManager.addPopUp(this._popUp2, TestMain.openfl_root);
-		Assert.areEqual(2, PopUpManager.popUpCount);
+		Assert.equals(2, PopUpManager.popUpCount);
 		PopUpManager.removePopUp(this._popUp1);
-		Assert.areEqual(1, PopUpManager.popUpCount);
+		Assert.equals(1, PopUpManager.popUpCount);
 		PopUpManager.removePopUp(this._popUp2);
-		Assert.areEqual(0, PopUpManager.popUpCount);
+		Assert.equals(0, PopUpManager.popUpCount);
 	}
 
-	@Test
 	public function testPopUpCountWithRemoveChild():Void {
 		this.createPopUp1();
 		this.createPopUp2();
-		Assert.areEqual(0, PopUpManager.popUpCount);
+		Assert.equals(0, PopUpManager.popUpCount);
 		PopUpManager.addPopUp(this._popUp1, TestMain.openfl_root);
-		Assert.areEqual(1, PopUpManager.popUpCount);
+		Assert.equals(1, PopUpManager.popUpCount);
 		PopUpManager.addPopUp(this._popUp2, TestMain.openfl_root);
-		Assert.areEqual(2, PopUpManager.popUpCount);
+		Assert.equals(2, PopUpManager.popUpCount);
 		this._popUp1.parent.removeChild(this._popUp1);
-		Assert.areEqual(1, PopUpManager.popUpCount);
+		Assert.equals(1, PopUpManager.popUpCount);
 		this._popUp2.parent.removeChild(this._popUp2);
-		Assert.areEqual(0, PopUpManager.popUpCount);
+		Assert.equals(0, PopUpManager.popUpCount);
 	}
 
-	@Test
 	public function testIsPopUp():Void {
 		this.createPopUp1();
 		this.createPopUp2();
@@ -135,29 +134,27 @@ class PopUpManagerTest {
 		Assert.isFalse(PopUpManager.isPopUp(this._popUp2));
 	}
 
-	@Test
 	public function testPopUpParent():Void {
 		this.createPopUp1();
 		this.createPopUp2();
 		Assert.isNull(this._popUp1.parent);
 		Assert.isNull(this._popUp2.parent);
 		PopUpManager.addPopUp(this._popUp1, TestMain.openfl_root);
-		Assert.isNotNull(this._popUp1.parent);
-		Assert.areEqual(TestMain.openfl_root.stage, this._popUp1.parent);
+		Assert.notNull(this._popUp1.parent);
+		Assert.equals(TestMain.openfl_root.stage, this._popUp1.parent);
 		Assert.isNull(this._popUp2.parent);
 		PopUpManager.addPopUp(this._popUp2, TestMain.openfl_root);
-		Assert.isNotNull(this._popUp1.parent);
-		Assert.isNotNull(this._popUp2.parent);
-		Assert.areEqual(TestMain.openfl_root.stage, this._popUp2.parent);
+		Assert.notNull(this._popUp1.parent);
+		Assert.notNull(this._popUp2.parent);
+		Assert.equals(TestMain.openfl_root.stage, this._popUp2.parent);
 		PopUpManager.removePopUp(this._popUp1);
 		Assert.isNull(this._popUp1.parent);
-		Assert.isNotNull(this._popUp2.parent);
+		Assert.notNull(this._popUp2.parent);
 		PopUpManager.removePopUp(this._popUp2);
 		Assert.isNull(this._popUp1.parent);
 		Assert.isNull(this._popUp2.parent);
 	}
 
-	@Test
 	public function testIsTopLevelPopUpWithModals():Void {
 		this.createPopUp1();
 		this.createPopUp2();
@@ -171,7 +168,6 @@ class PopUpManagerTest {
 		Assert.isTrue(PopUpManager.isTopLevelPopUp(this._popUp2));
 	}
 
-	@Test
 	public function testAddPopUpAndIsTopLevelPopUpWithModalAndNonModal():Void {
 		this.createPopUp1();
 		this.createPopUp2();
@@ -185,7 +181,6 @@ class PopUpManagerTest {
 		Assert.isTrue(PopUpManager.isTopLevelPopUp(this._popUp2));
 	}
 
-	@Test
 	public function testAddPopUpAndIsTopLevelPopUpWithNonModalAndModal():Void {
 		this.createPopUp1();
 		this.createPopUp2();
@@ -199,7 +194,6 @@ class PopUpManagerTest {
 		Assert.isTrue(PopUpManager.isTopLevelPopUp(this._popUp2));
 	}
 
-	@Test
 	public function testAddPopUpAndIsTopLevelPopUpWithNonModals():Void {
 		this.createPopUp1();
 		this.createPopUp2();
@@ -213,20 +207,18 @@ class PopUpManagerTest {
 		Assert.isTrue(PopUpManager.isTopLevelPopUp(this._popUp2));
 	}
 
-	@Test
 	public function testRemoveAllPopUps():Void {
 		this.createPopUp1();
 		this.createPopUp2();
 		PopUpManager.addPopUp(this._popUp1, TestMain.openfl_root);
 		PopUpManager.addPopUp(this._popUp2, TestMain.openfl_root);
-		Assert.areEqual(2, PopUpManager.popUpCount);
+		Assert.equals(2, PopUpManager.popUpCount);
 		PopUpManager.removeAllPopUps();
-		Assert.areEqual(0, PopUpManager.popUpCount);
+		Assert.equals(0, PopUpManager.popUpCount);
 		Assert.isNull(this._popUp1.parent);
 		Assert.isNull(this._popUp2.parent);
 	}
 
-	@Test
 	public function testCenterPopUp():Void {
 		this.createPopUp1();
 		this.createPopUp2();
@@ -238,15 +230,14 @@ class PopUpManagerTest {
 		this._popUp2.y = y;
 		PopUpManager.addPopUp(this._popUp1, TestMain.openfl_root, false, true);
 		PopUpManager.addPopUp(this._popUp2, TestMain.openfl_root, false, false);
-		Assert.areNotEqual(x, this._popUp1.x);
-		Assert.areNotEqual(y, this._popUp1.y);
-		Assert.areEqual((TestMain.openfl_root.stage.stageWidth - POPUP1_WIDTH) / 2.0, this._popUp1.x);
-		Assert.areEqual((TestMain.openfl_root.stage.stageHeight - POPUP1_HEIGHT) / 2.0, this._popUp1.y);
-		Assert.areEqual(x, this._popUp2.x);
-		Assert.areEqual(y, this._popUp2.y);
+		Assert.notEquals(x, this._popUp1.x);
+		Assert.notEquals(y, this._popUp1.y);
+		Assert.equals((TestMain.openfl_root.stage.stageWidth - POPUP1_WIDTH) / 2.0, this._popUp1.x);
+		Assert.equals((TestMain.openfl_root.stage.stageHeight - POPUP1_HEIGHT) / 2.0, this._popUp1.y);
+		Assert.equals(x, this._popUp2.x);
+		Assert.equals(y, this._popUp2.y);
 	}
 
-	@Test
 	public function testRemovePopUpFromRemovedEventForOtherPopUp():Void {
 		this.createPopUp1();
 		this.createPopUp2();
@@ -256,25 +247,23 @@ class PopUpManagerTest {
 			this._popUp2.parent.removeChild(this._popUp2);
 		});
 		PopUpManager.removeAllPopUps();
-		Assert.areEqual(0, PopUpManager.popUpCount);
+		Assert.equals(0, PopUpManager.popUpCount);
 	}
 
-	@Test
 	public function testCustomRoot():Void {
 		this._customRoot = new Sprite();
 		TestMain.openfl_root.addChild(this._customRoot);
-		Assert.areEqual(TestMain.openfl_root.stage, PopUpManager.forStage(TestMain.openfl_root.stage).root);
+		Assert.equals(TestMain.openfl_root.stage, PopUpManager.forStage(TestMain.openfl_root.stage).root);
 		PopUpManager.root = this._customRoot;
-		Assert.areNotEqual(TestMain.openfl_root.stage, PopUpManager.forStage(TestMain.openfl_root.stage).root);
+		Assert.notEquals(TestMain.openfl_root.stage, PopUpManager.forStage(TestMain.openfl_root.stage).root);
 		this.createPopUp1();
 		this.createPopUp2();
 		PopUpManager.addPopUp(this._popUp1, TestMain.openfl_root);
 		PopUpManager.addPopUp(this._popUp2, TestMain.openfl_root);
-		Assert.areEqual(this._customRoot, this._popUp1.parent);
-		Assert.areEqual(this._customRoot, this._popUp2.parent);
+		Assert.equals(this._customRoot, this._popUp1.parent);
+		Assert.equals(this._customRoot, this._popUp2.parent);
 	}
 
-	@Test
 	public function testCustomRootAfterAddPopUp():Void {
 		this._customRoot = new Sprite();
 		TestMain.openfl_root.addChild(this._customRoot);
@@ -282,10 +271,10 @@ class PopUpManagerTest {
 		this.createPopUp2();
 		PopUpManager.addPopUp(this._popUp1, TestMain.openfl_root);
 		PopUpManager.addPopUp(this._popUp2, TestMain.openfl_root);
-		Assert.areNotEqual(this._customRoot, this._popUp1.parent);
-		Assert.areNotEqual(this._customRoot, this._popUp2.parent);
+		Assert.notEquals(this._customRoot, this._popUp1.parent);
+		Assert.notEquals(this._customRoot, this._popUp2.parent);
 		PopUpManager.root = this._customRoot;
-		Assert.areEqual(this._customRoot, this._popUp1.parent);
-		Assert.areEqual(this._customRoot, this._popUp2.parent);
+		Assert.equals(this._customRoot, this._popUp1.parent);
+		Assert.equals(this._customRoot, this._popUp2.parent);
 	}
 }

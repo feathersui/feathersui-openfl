@@ -11,33 +11,34 @@ package feathers.controls;
 import feathers.events.ScrollEvent;
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class ListViewTest {
+class ListViewTest extends Test {
 	private var _listView:ListView;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._listView = new ListView();
 		TestMain.openfl_root.addChild(this._listView);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._listView.parent != null) {
 			this._listView.parent.removeChild(this._listView);
 		}
 		this._listView = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testValidateWithNullDataProvider():Void {
 		this._listView.validateNow();
 	}
 
-	@Test
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.validateNow();
@@ -45,7 +46,6 @@ class ListViewTest {
 		this._listView.validateNow();
 	}
 
-	@Test
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.validateNow();
@@ -58,7 +58,6 @@ class ListViewTest {
 		Assert.isTrue(changed);
 	}
 
-	@Test
 	public function testDispatchChangeEventAfterSetSelectedItem():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.validateNow();
@@ -71,23 +70,20 @@ class ListViewTest {
 		Assert.isTrue(changed);
 	}
 
-	@Test
 	public function testSelectedItemAfterSetSelectedIndex():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		Assert.isNull(this._listView.selectedItem);
 		this._listView.selectedIndex = 1;
-		Assert.areEqual(this._listView.dataProvider.get(1), this._listView.selectedItem);
+		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItem);
 	}
 
-	@Test
 	public function testSelectedIndexAfterSetSelectedItem():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
-		Assert.areEqual(-1, this._listView.selectedIndex);
+		Assert.equals(-1, this._listView.selectedIndex);
 		this._listView.selectedItem = this._listView.dataProvider.get(1);
-		Assert.areEqual(1, this._listView.selectedIndex);
+		Assert.equals(1, this._listView.selectedIndex);
 	}
 
-	@Test
 	public function testDeselectAllOnNullDataProvider():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.selectedIndex = 1;
@@ -98,11 +94,10 @@ class ListViewTest {
 		Assert.isFalse(changed);
 		this._listView.dataProvider = null;
 		Assert.isTrue(changed);
-		Assert.areEqual(-1, this._listView.selectedIndex);
-		Assert.areEqual(null, this._listView.selectedItem);
+		Assert.equals(-1, this._listView.selectedIndex);
+		Assert.equals(null, this._listView.selectedItem);
 	}
 
-	@Test
 	public function testResetScrollOnNullDataProvider():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.scrollX = 10.0;
@@ -114,11 +109,10 @@ class ListViewTest {
 		Assert.isFalse(scrolled);
 		this._listView.dataProvider = null;
 		Assert.isTrue(scrolled);
-		Assert.areEqual(0.0, this._listView.scrollX);
-		Assert.areEqual(0.0, this._listView.scrollY);
+		Assert.equals(0.0, this._listView.scrollX);
+		Assert.equals(0.0, this._listView.scrollY);
 	}
 
-	@Test
 	public function testDeselectAllOnDataProviderRemoveAll():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.selectedIndex = 1;
@@ -129,7 +123,7 @@ class ListViewTest {
 		Assert.isFalse(changed);
 		this._listView.dataProvider.removeAll();
 		Assert.isTrue(changed);
-		Assert.areEqual(-1, this._listView.selectedIndex);
-		Assert.areEqual(null, this._listView.selectedItem);
+		Assert.equals(-1, this._listView.selectedIndex);
+		Assert.equals(null, this._listView.selectedItem);
 	}
 }

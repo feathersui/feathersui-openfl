@@ -2,14 +2,19 @@
 <project>
 	
 	<meta title="Feathers UI Tests" package="com.feathersui.tests" version="1.0.0" company="Bowler Hat LLC" />
-	<app file="TestMain" main="TestMain" path="build" />
-	
+	<app main="TestMain" file="FeathersTests" />
+
 	<source path="src" />
 	<source path="../src" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
-	<haxelib name="munit" />
-	<!-- this gets removed by dce for some reason -->
-	<haxeflag name="--macro" value="keep('TestSuite')" />
+	<haxelib name="utest" />
+
+	<assets id="blue100x50" path="assets/fixtures/blue100x50.png" embed="false"/>
+	<assets id="red200x300" path="assets/fixtures/red200x300.png" embed="false"/>
+
+	<icon path="assets/icons/feathersui-icon.svg"/>
+
+	<template path="templates" if="html5"/>
 </project>

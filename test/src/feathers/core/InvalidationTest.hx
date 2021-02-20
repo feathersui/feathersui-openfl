@@ -10,21 +10,24 @@ package feathers.core;
 
 import openfl.errors.Error;
 import feathers.controls.LayoutGroup;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class InvalidationTest {
+class InvalidationTest extends Test {
 	private var _control:LayoutGroup;
 	private var _control2:InvalidationControl;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._control = new LayoutGroup();
 		TestMain.openfl_root.addChild(this._control);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._control.parent != null) {
 			this._control.parent.removeChild(this._control);
 		}
@@ -33,17 +36,15 @@ class InvalidationTest {
 			this._control2.parent.removeChild(this._control2);
 		}
 		this._control2 = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testNotInvalidAfterConstructor() {
 		var control = new LayoutGroup();
 		Assert.isFalse(control.isInvalid(), "Feathers component must not be invalid before initialize");
 		Assert.isFalse(control.isInvalid(InvalidationFlag.DATA), "Feathers component must not be invalid before initialize");
 	}
 
-	@Test
 	public function testIsInvalidAfterForcedInitialize() {
 		var control = new LayoutGroup();
 		control.initializeNow();
@@ -51,20 +52,17 @@ class InvalidationTest {
 		Assert.isTrue(control.isInvalid(InvalidationFlag.DATA), "Feathers component must be invalid with all flags after forced initialize");
 	}
 
-	@Test
 	public function testIsInvalidAfterAutomaticInitialize() {
 		Assert.isTrue(this._control.isInvalid(), "Feathers component must be invalid after automatic initialize");
 		Assert.isTrue(this._control.isInvalid(InvalidationFlag.DATA), "Feathers component must be invalid with all flags after automatic initialize");
 	}
 
-	@Test
 	public function testNotInvalidAfterValidate() {
 		this._control.validateNow();
 		Assert.isFalse(this._control.isInvalid(), "Feathers component must not be invalid after validate");
 		Assert.isFalse(this._control.isInvalid(InvalidationFlag.DATA), "Feathers component must not be invalid with flags after validate");
 	}
 
-	@Test
 	public function testIsInvalidAfterSetInvalid() {
 		this._control.validateNow();
 		this._control.setInvalid();
@@ -72,7 +70,6 @@ class InvalidationTest {
 		Assert.isTrue(this._control.isInvalid(InvalidationFlag.DATA), "Feathers component must be invalid with any flag after setInvalid() with no flags");
 	}
 
-	@Test
 	public function testIsInvalidAfterSetInvalidWithFlag() {
 		this._control.validateNow();
 		this._control.setInvalid(InvalidationFlag.DATA);
@@ -82,7 +79,6 @@ class InvalidationTest {
 			"Feathers component must not be invalid with flag after setInvalid() with different flag");
 	}
 
-	@Test
 	public function testIsInvalidAfterSetInvalidWithMultipleFlags() {
 		this._control.validateNow();
 		this._control.setInvalid(InvalidationFlag.DATA);
@@ -94,7 +90,6 @@ class InvalidationTest {
 			"Feathers component must not be invalid with flag after setInvalid() with different flag");
 	}
 
-	@Test
 	public function testIsInvalidAfterSetInvalidWithCustomFlag() {
 		this._control.validateNow();
 		this._control.setInvalid(InvalidationFlag.CUSTOM("one"));
@@ -107,14 +102,13 @@ class InvalidationTest {
 			"Feathers component must not be invalid with flag after setInvalid() with different flag");
 	}
 
-	@Test
 	public function testInfiniteInvalidateDuringValidation() {
 		this._control2 = new InvalidationControl();
 		TestMain.openfl_root.addChild(this._control2);
 
-		Assert.throws(Error, () -> {
+		Assert.raises(() -> {
 			ValidationQueue.forStage(this._control2.stage).validateNow();
-		});
+		}, Error);
 	}
 }
 

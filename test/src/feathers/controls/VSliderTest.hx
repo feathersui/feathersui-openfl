@@ -8,28 +8,30 @@
 
 package feathers.controls;
 
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class VSliderTest {
+class VSliderTest extends Test {
 	private var _slider:VSlider;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._slider = new VSlider();
 		TestMain.openfl_root.addChild(this._slider);
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		if (this._slider.parent != null) {
 			this._slider.parent.removeChild(this._slider);
 		}
 		this._slider = null;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@Test
 	public function testSnapInterval():Void {
 		this._slider.minimum = -1.0;
 		this._slider.maximum = 1.0;
@@ -38,19 +40,19 @@ class VSliderTest {
 		// round up
 		this._slider.value = 0.2;
 		this._slider.applyValueRestrictions();
-		Assert.areEqual(0.3, this._slider.value);
+		Assert.equals(0.3, this._slider.value);
 		// round down
 		this._slider.value = 0.7;
 		this._slider.applyValueRestrictions();
-		Assert.areEqual(0.6, this._slider.value);
+		Assert.equals(0.6, this._slider.value);
 
 		// allow maximum, even if not on interval
 		this._slider.value = 1.0;
 		this._slider.applyValueRestrictions();
-		Assert.areEqual(1.0, this._slider.value);
+		Assert.equals(1.0, this._slider.value);
 		// allow minimum, even if not on interval
 		this._slider.value = -1.0;
 		this._slider.applyValueRestrictions();
-		Assert.areEqual(-1.0, this._slider.value);
+		Assert.equals(-1.0, this._slider.value);
 	}
 }

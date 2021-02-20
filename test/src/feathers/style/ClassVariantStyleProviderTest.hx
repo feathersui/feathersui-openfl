@@ -9,10 +9,11 @@
 package feathers.style;
 
 import feathers.controls.LayoutGroup;
-import massive.munit.Assert;
+import utest.Assert;
+import utest.Test;
 
 @:keep
-class ClassVariantStyleProviderTest {
+class ClassVariantStyleProviderTest extends Test {
 	private static final VARIANT_ONE = "one";
 	private static final VARIANT_TWO = "two";
 
@@ -22,8 +23,11 @@ class ClassVariantStyleProviderTest {
 	private var _oneCalled:Bool;
 	private var _twoCalled:Bool;
 
-	@Before
-	public function prepare():Void {
+	public function new() {
+		super();
+	}
+
+	public function setup():Void {
 		this._defaultCalled = false;
 		this._oneCalled = false;
 		this._twoCalled = false;
@@ -32,14 +36,13 @@ class ClassVariantStyleProviderTest {
 		this._control = new LayoutGroup();
 	}
 
-	@After
-	public function cleanup():Void {
+	public function teardown():Void {
 		this._control = null;
 		this._styleProvider = null;
 		this._defaultCalled = false;
 		this._oneCalled = false;
 		this._twoCalled = false;
-		Assert.areEqual(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	private function defaultFunction(target:LayoutGroup):Void {
@@ -54,13 +57,11 @@ class ClassVariantStyleProviderTest {
 		this._twoCalled = true;
 	}
 
-	@Test
 	public function testNoErrorWithNullDefaultFunction():Void {
 		this._styleProvider.applyStyles(this._control);
 		Assert.isFalse(this._defaultCalled, "Default function must not be called when not used");
 	}
 
-	@Test
 	public function testDefaultFunctionCalled_VariantNotSet_VariantNotRegistered():Void {
 		this._styleProvider.setStyleFunction(LayoutGroup, null, defaultFunction);
 		this._styleProvider.applyStyles(this._control);
@@ -69,7 +70,6 @@ class ClassVariantStyleProviderTest {
 		Assert.isFalse(this._twoCalled, "Variant function two must not be called when it is not registered");
 	}
 
-	@Test
 	public function testDefaultFunctionCalled_VariantSet_VariantNotRegistered():Void {
 		this._styleProvider.setStyleFunction(LayoutGroup, null, defaultFunction);
 		this._control.variant = VARIANT_ONE;
@@ -79,7 +79,6 @@ class ClassVariantStyleProviderTest {
 		Assert.isFalse(this._twoCalled, "Variant function two must not be called when it is not registered");
 	}
 
-	@Test
 	public function testDefaultFunctionCalled_VariantNotSet_VariantRegistered():Void {
 		this._styleProvider.setStyleFunction(LayoutGroup, null, defaultFunction);
 		this._styleProvider.setStyleFunction(LayoutGroup, VARIANT_ONE, oneFunction);
@@ -90,7 +89,6 @@ class ClassVariantStyleProviderTest {
 		Assert.isFalse(this._twoCalled, "Variant function two must not be called when target has no variant");
 	}
 
-	@Test
 	public function testVariantOneFunctionCalled_VariantSet_VariantRegistered():Void {
 		this._styleProvider.setStyleFunction(LayoutGroup, null, defaultFunction);
 		this._styleProvider.setStyleFunction(LayoutGroup, VARIANT_ONE, oneFunction);
@@ -102,7 +100,6 @@ class ClassVariantStyleProviderTest {
 		Assert.isFalse(this._twoCalled, "Variant function two must not be called when variant one matchs");
 	}
 
-	@Test
 	public function testVariantTwoFunctionCalled_VariantSet_VariantRegistered():Void {
 		this._styleProvider.setStyleFunction(LayoutGroup, null, defaultFunction);
 		this._styleProvider.setStyleFunction(LayoutGroup, VARIANT_ONE, oneFunction);
