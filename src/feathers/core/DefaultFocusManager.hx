@@ -574,11 +574,11 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function defaultFocusManager_root_addedToStageHandler(event:Event):Void {
-		this.handleRootAddedToStage(cast(event.currentTarget, DisplayObjectContainer));
+		this.handleRootAddedToStage(cast(event.currentTarget, DisplayObject));
 	}
 
 	private function defaultFocusManager_root_removedFromStageHandler(event:Event):Void {
-		this.handleRootRemovedFromStage(cast(event.currentTarget, DisplayObjectContainer));
+		this.handleRootRemovedFromStage(cast(event.currentTarget, DisplayObject));
 	}
 
 	private function shouldBeManaged(target:DisplayObject):Bool {
