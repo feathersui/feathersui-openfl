@@ -62,7 +62,7 @@ class TestMain extends Sprite {
 
 	private function aggregator_onComplete(result:PackageResult):Void {
 		var stats = result.stats;
-		var exitCode = stats.isOk ? 0 : 1;
+		var exitCode = (stats.hasFailures || stats.hasErrors) ? 1 : 0;
 		var message = 'Successes: ${stats.successes}, Failures: ${stats.failures}, Errors: ${stats.errors}, Skipped: ${stats.ignores}, Warnings: ${stats.warnings}';
 		#if html5
 		if (exitCode == 0) {
@@ -75,14 +75,14 @@ class TestMain extends Sprite {
 		#end
 
 		#if sys
-		Sys.exit(stats.isOk ? 0 : 1);
+		Sys.exit(exitCode);
 		#elseif html5
 		// cast(js.Lib.global, js.html.Window).close();
 		#elseif air
-		flash.desktop.NativeApplication.nativeApplication.exit(stats.isOk ? 0 : 1);
+		flash.desktop.NativeApplication.nativeApplication.exit(exitCode);
 		#elseif flash
 		if (flash.system.Security.sandboxType == "localTrusted") {
-			flash.system.System.exit(stats.isOk ? 0 : 1);
+			flash.system.System.exit(exitCode);
 		} else {
 			flash.Lib.fscommand("quit");
 		}
