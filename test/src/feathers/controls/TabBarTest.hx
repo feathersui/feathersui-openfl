@@ -36,6 +36,7 @@ class TabBarTest extends Test {
 
 	public function testValidateWithNullDataProvider():Void {
 		this._tabBar.validateNow();
+		Assert.pass();
 	}
 
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
@@ -43,6 +44,7 @@ class TabBarTest extends Test {
 		this._tabBar.validateNow();
 		this._tabBar.dataProvider = null;
 		this._tabBar.validateNow();
+		Assert.pass();
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {

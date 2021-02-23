@@ -36,6 +36,7 @@ class GroupListViewTest extends Test {
 
 	public function testValidateWithNullDataProvider():Void {
 		this._listView.validateNow();
+		Assert.pass();
 	}
 
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
@@ -52,5 +53,6 @@ class GroupListViewTest extends Test {
 		this._listView.validateNow();
 		this._listView.dataProvider = null;
 		this._listView.validateNow();
+		Assert.pass();
 	}
 }

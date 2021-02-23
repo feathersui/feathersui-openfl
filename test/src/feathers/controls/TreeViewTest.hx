@@ -36,6 +36,7 @@ class TreeViewTest extends Test {
 
 	public function testValidateWithNullDataProvider():Void {
 		this._treeView.validateNow();
+		Assert.pass();
 	}
 
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
@@ -58,5 +59,6 @@ class TreeViewTest extends Test {
 		this._treeView.validateNow();
 		this._treeView.dataProvider = null;
 		this._treeView.validateNow();
+		Assert.pass();
 	}
 }

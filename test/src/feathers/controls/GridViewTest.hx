@@ -37,6 +37,7 @@ class GridViewTest extends Test {
 
 	public function testValidateWithNullDataProvider():Void {
 		this._gridView.validateNow();
+		Assert.pass();
 	}
 
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
@@ -44,6 +45,7 @@ class GridViewTest extends Test {
 		this._gridView.validateNow();
 		this._gridView.dataProvider = null;
 		this._gridView.validateNow();
+		Assert.pass();
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {

@@ -70,8 +70,8 @@ class TestMain extends Sprite {
 
 	private function aggregator_onComplete(result:PackageResult):Void {
 		var stats = result.stats;
-		var exitCode = (stats.hasFailures || stats.hasErrors) ? 1 : 0;
-		var message = 'Successes: ${stats.successes}, Failures: ${stats.failures}, Errors: ${stats.errors}, Skipped: ${stats.ignores}, Warnings: ${stats.warnings}';
+		var exitCode = stats.isOk ? 0 : 1;
+		var message = 'Successes: ${stats.successes}, Failures: ${stats.failures}, Errors: ${stats.errors}, Warnings: ${stats.warnings}, Skipped: ${stats.ignores}';
 		#if html5
 		if (exitCode == 0) {
 			js.html.Console.info(message);
