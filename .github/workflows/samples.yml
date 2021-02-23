@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  build-linux:
+  build-misc:
 
     runs-on: ubuntu-latest
 
@@ -24,7 +24,6 @@ jobs:
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
-        haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Build samples/hello-world
       working-directory: samples/hello-world
@@ -47,7 +46,6 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
-        haxelib run openfl build linux
     - name: Build samples/animated-tween-skin
       working-directory: samples/animated-tween-skin
       run: |
@@ -112,6 +110,27 @@ jobs:
         haxelib run openfl build flash
         haxelib run openfl build hl
 
+  build-linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.0.5
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
+        haxelib install actuate --quiet
+        haxelib install hxcpp --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Build samples/components-explorer
+      working-directory: samples/components-explorer
+      run: |
+        haxelib run openfl build linux
+
   build-macos:
 
     runs-on: macos-latest
@@ -139,7 +158,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: joshtynjala/setup-adobe-air-action@v1
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
@@ -149,6 +167,27 @@ jobs:
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
         haxelib install hxcpp --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Build samples/components-explorer
+      working-directory: samples/components-explorer
+      run: |
+        haxelib run openfl build windows
+
+  build-air:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: joshtynjala/setup-adobe-air-action@v1
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.0.5
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
+        haxelib install actuate --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
     - name: Build samples/hello-world
@@ -163,7 +202,6 @@ jobs:
       working-directory: samples/components-explorer
       run: |
         haxelib run openfl build air
-        haxelib run openfl build windows
     - name: Build samples/custom-theme
       working-directory: samples/custom-theme
       run: |
