@@ -1,8 +1,8 @@
 import openfl.display.Sprite;
 import utest.Runner;
-import utest.ui.Report;
 import utest.ui.common.PackageResult;
 import utest.ui.common.ResultAggregator;
+import utest.ui.text.HtmlReport;
 
 class TestMain extends Sprite {
 	public static var openfl_root:Sprite;
@@ -54,7 +54,15 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.StyleProviderRestrictedStyleTest());
 		runner.addCase(new feathers.style.ThemeTest());
 		runner.addCase(new feathers.themes.DefaultThemeTest());
-		Report.create(runner);
+		#if js
+		if(#if (haxe_ver >= 4.0) js.Syntax.code #else untyped __js__ #end("typeof window != 'undefined'")) {
+			new HtmlReport(runner, true);
+		} else {
+			new NoExitPrintReport(runner);
+		}
+		#else
+		new NoExitPrintReport(runner);
+		#end
 		var aggregator = new ResultAggregator(runner, true);
 		aggregator.onComplete.add(aggregator_onComplete);
 		runner.run();
