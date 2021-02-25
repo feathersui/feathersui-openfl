@@ -619,15 +619,16 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newHeight = this._textMeasuredHeight;
 			if (this._currentContent != null) {
 				if (this.textPosition == LEFT || this.textPosition == RIGHT) {
-					newHeight = Math.max(newHeight, this._currentContent.height + this.paddingTop + this.paddingBottom);
+					newHeight = Math.max(newHeight, this._currentContent.height);
 				} else // TOP or BOTTOM
 				{
 					newHeight += this.gap + this._currentContent.height;
 				}
 			}
+			newHeight += this.paddingTop + this.paddingBottom;
 			if (this._currentBackgroundSkin != null) {
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
@@ -666,7 +667,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this._textMeasuredHeight + this.paddingTop + this.paddingBottom;
+			newMinHeight = this._textMeasuredHeight;
 			if (this._currentContent != null) {
 				if (this.textPosition == LEFT || this.textPosition == RIGHT) {
 					if (measureContent != null) {
@@ -684,6 +685,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 					newMinHeight += this.gap;
 				}
 			}
+			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
 			} else if (this._backgroundSkinMeasurements != null) {
