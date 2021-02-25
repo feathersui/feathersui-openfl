@@ -401,7 +401,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		@since 1.0.0
 	**/
 	@:style
-	public var verticalAlign:VerticalAlign = TOP;
+	public var verticalAlign:VerticalAlign = MIDDLE;
 
 	/**
 		Determines if the text is displayed on a single line, or if it wraps.
@@ -962,21 +962,32 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
 			}
-		}
 
-		if (this.textPosition == LEFT || this.textPosition == RIGHT) {
-			var textFieldBaseline = this.textField.getLineMetrics(0).ascent;
-			var contentBaseline = textFieldBaseline;
-			if (Std.is(this._currentContent, ITextControl)) {
-				contentBaseline = cast(this._currentContent, ITextControl).baseline;
-			}
-			var maxBaseline = Math.max(contentBaseline, textFieldBaseline);
-
-			var startY = (this._currentContent != null) ? this._currentContent.y : this.paddingTop;
-
-			this.textField.y = startY + (maxBaseline - textFieldBaseline);
-			if (this._currentContent != null) {
-				this._currentContent.y = startY + (maxBaseline - contentBaseline);
+			if (this.textPosition == LEFT || this.textPosition == RIGHT) {
+				if (Std.is(this._currentContent, ITextControl)) {
+					var textFieldLineMetrics = this.textField.getLineMetrics(0);
+					var textFieldBaseline = textFieldLineMetrics.ascent + 2.0; // extra 2 pixels for gutter
+					var contentBaseline = cast(this._currentContent, ITextControl).baseline;
+					var maxBaseline = Math.max(contentBaseline, textFieldBaseline);
+					var startY = this._currentContent.y;
+					this.textField.y = startY + (maxBaseline - textFieldBaseline);
+					if (this._currentContent != null) {
+						this._currentContent.y = startY + (maxBaseline - contentBaseline);
+					}
+				} else {
+					switch (this.verticalAlign) {
+						case TOP:
+							this.textField.y = this._currentContent.y;
+						case MIDDLE:
+							this.textField.y = this._currentContent.y + (this._currentContent.height - this.textField.height) / 2.0;
+						case BOTTOM:
+							this.textField.y = this._currentContent.y + this._currentContent.height - this.textField.height;
+						case JUSTIFY:
+							this.textField.y = this._currentContent.y;
+						default:
+							throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+					}
+				}
 			}
 		}
 	}
