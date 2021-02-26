@@ -180,7 +180,7 @@ class HScrollBar extends BaseScrollBar {
 		}
 
 		var range = this._maximum - this._minimum;
-		this._currentThumbSkin.visible = range > 0.0;
+		this._currentThumbSkin.visible = (!this.hideThumbWhenDisabled || this._enabled) && range > 0.0;
 		if (!this._currentThumbSkin.visible) {
 			return;
 		}

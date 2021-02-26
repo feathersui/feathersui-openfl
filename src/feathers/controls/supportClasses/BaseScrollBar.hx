@@ -486,6 +486,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	@:style
 	public var paddingLeft:Float = 0.0;
 
+	@:style
+	public var hideThumbWhenDisabled:Bool = false;
+
 	private var _dragging:Bool = false;
 	private var _pointerStartX:Float = 0.0;
 	private var _pointerStartY:Float = 0.0;
