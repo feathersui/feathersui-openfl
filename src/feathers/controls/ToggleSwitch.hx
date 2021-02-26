@@ -340,41 +340,41 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			return false;
 		}
 
-		if (this.thumbSkin != null) {
-			this._thumbSkinMeasurements.restore(this.thumbSkin);
-			if (Std.is(this.thumbSkin, IValidating)) {
-				cast(this.thumbSkin, IValidating).validateNow();
+		if (this._currentThumbSkin != null) {
+			this._thumbSkinMeasurements.restore(this._currentThumbSkin);
+			if (Std.is(this._currentThumbSkin, IValidating)) {
+				cast(this._currentThumbSkin, IValidating).validateNow();
 			}
 		}
-		if (this.trackSkin != null) {
-			this._trackSkinMeasurements.restore(this.trackSkin);
-			if (Std.is(this.trackSkin, IValidating)) {
-				cast(this.trackSkin, IValidating).validateNow();
+		if (this._currentTrackSkin != null) {
+			this._trackSkinMeasurements.restore(this._currentTrackSkin);
+			if (Std.is(this._currentTrackSkin, IValidating)) {
+				cast(this._currentTrackSkin, IValidating).validateNow();
 			}
 		}
-		if (this.secondaryTrackSkin != null) {
-			this._secondaryTrackSkinMeasurements.restore(this.secondaryTrackSkin);
-			if (Std.is(this.secondaryTrackSkin, IValidating)) {
-				cast(this.secondaryTrackSkin, IValidating).validateNow();
+		if (this._currentSecondaryTrackSkin != null) {
+			this._secondaryTrackSkinMeasurements.restore(this._currentSecondaryTrackSkin);
+			if (Std.is(this._currentSecondaryTrackSkin, IValidating)) {
+				cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
 			}
 		}
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this.trackSkin.width;
-			if (this.secondaryTrackSkin != null) {
-				newWidth += this.secondaryTrackSkin.width;
+			newWidth = this._currentTrackSkin.width;
+			if (this._currentSecondaryTrackSkin != null) {
+				newWidth += this._currentSecondaryTrackSkin.width;
 			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this.thumbSkin.height;
-			if (newHeight < this.trackSkin.height) {
-				newHeight = this.trackSkin.height;
+			newHeight = this._currentThumbSkin.height;
+			if (newHeight < this._currentTrackSkin.height) {
+				newHeight = this._currentTrackSkin.height;
 			}
-			if (this.secondaryTrackSkin != null && newHeight < this.secondaryTrackSkin.height) {
-				newHeight = this.secondaryTrackSkin.height;
+			if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
+				newHeight = this._currentSecondaryTrackSkin.height;
 			}
 		}
 
@@ -483,14 +483,14 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function refreshSelection():Void {
-		if (Std.is(this.thumbSkin, IToggle)) {
-			cast(this.thumbSkin, IToggle).selected = this._selected;
+		if (Std.is(this._currentThumbSkin, IToggle)) {
+			cast(this._currentThumbSkin, IToggle).selected = this._selected;
 		}
-		if (Std.is(this.trackSkin, IToggle)) {
-			cast(this.trackSkin, IToggle).selected = this._selected;
+		if (Std.is(this._currentTrackSkin, IToggle)) {
+			cast(this._currentTrackSkin, IToggle).selected = this._selected;
 		}
-		if (Std.is(this.secondaryTrackSkin, IToggle)) {
-			cast(this.secondaryTrackSkin, IToggle).selected = this._selected;
+		if (Std.is(this._currentSecondaryTrackSkin, IToggle)) {
+			cast(this._currentSecondaryTrackSkin, IToggle).selected = this._selected;
 		}
 
 		// stop the tween, no matter what
@@ -501,20 +501,20 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function refreshEnabled():Void {
-		if (Std.is(this.thumbSkin, IUIControl)) {
-			cast(this.thumbSkin, IUIControl).enabled = this._enabled;
+		if (Std.is(this._currentThumbSkin, IUIControl)) {
+			cast(this._currentThumbSkin, IUIControl).enabled = this._enabled;
 		}
-		if (Std.is(this.trackSkin, IUIControl)) {
-			cast(this.trackSkin, IUIControl).enabled = this._enabled;
+		if (Std.is(this._currentTrackSkin, IUIControl)) {
+			cast(this._currentTrackSkin, IUIControl).enabled = this._enabled;
 		}
-		if (Std.is(this.secondaryTrackSkin, IUIControl)) {
-			cast(this.secondaryTrackSkin, IUIControl).enabled = this._enabled;
+		if (Std.is(this._currentSecondaryTrackSkin, IUIControl)) {
+			cast(this._currentSecondaryTrackSkin, IUIControl).enabled = this._enabled;
 		}
 	}
 
 	private function layoutContent():Void {
 		this.layoutThumb();
-		if (this.trackSkin != null && this.secondaryTrackSkin != null) {
+		if (this._currentTrackSkin != null && this._currentSecondaryTrackSkin != null) {
 			this.layoutSplitTrack();
 		} else {
 			this.layoutSingleTrack();
@@ -522,63 +522,63 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function layoutThumb():Void {
-		if (Std.is(this.thumbSkin, IValidating)) {
-			cast(this.thumbSkin, IValidating).validateNow();
+		if (Std.is(this._currentThumbSkin, IValidating)) {
+			cast(this._currentThumbSkin, IValidating).validateNow();
 		}
 
 		var xPosition = this.paddingLeft;
 		if (this._selected) {
-			xPosition = this.actualWidth - this.thumbSkin.width - this.paddingRight;
+			xPosition = this.actualWidth - this._currentThumbSkin.width - this.paddingRight;
 		}
 
 		if (this._animateSelectionChange) {
 			var tween = Actuate.update((x:Float) -> {
-				this.thumbSkin.x = x;
-			}, this.toggleDuration, [this.thumbSkin.x], [xPosition], true);
+				this._currentThumbSkin.x = x;
+			}, this.toggleDuration, [this._currentThumbSkin.x], [xPosition], true);
 			this._toggleTween = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 			this._toggleTween.ease(this.toggleEase);
 			this._toggleTween.onUpdate(this.toggleTween_onUpdate);
 			this._toggleTween.onComplete(this.toggleTween_onComplete);
 		} else if (this._toggleTween == null) {
-			this.thumbSkin.x = xPosition;
+			this._currentThumbSkin.x = xPosition;
 		}
-		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2.0);
+		this._currentThumbSkin.y = (this.actualHeight - this._currentThumbSkin.height) / 2.0;
 
 		this._animateSelectionChange = false;
 	}
 
 	private function layoutSplitTrack():Void {
-		var location = this.thumbSkin.x + this.thumbSkin.width / 2.0;
+		var location = this._currentThumbSkin.x + this._currentThumbSkin.width / 2.0;
 
-		this.trackSkin.x = 0.0;
-		this.trackSkin.width = location;
+		this._currentTrackSkin.x = 0.0;
+		this._currentTrackSkin.width = location;
 
-		this.secondaryTrackSkin.x = location;
-		this.secondaryTrackSkin.width = this.actualWidth - location;
+		this._currentSecondaryTrackSkin.x = location;
+		this._currentSecondaryTrackSkin.width = this.actualWidth - location;
 
-		if (Std.is(this.trackSkin, IValidating)) {
-			cast(this.trackSkin, IValidating).validateNow();
+		if (Std.is(this._currentTrackSkin, IValidating)) {
+			cast(this._currentTrackSkin, IValidating).validateNow();
 		}
-		if (Std.is(this.secondaryTrackSkin, IValidating)) {
-			cast(this.secondaryTrackSkin, IValidating).validateNow();
+		if (Std.is(this._currentSecondaryTrackSkin, IValidating)) {
+			cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2.0;
-		this.secondaryTrackSkin.y = (this.actualHeight - this.secondaryTrackSkin.height) / 2.0;
+		this._currentTrackSkin.y = (this.actualHeight - this._currentTrackSkin.height) / 2.0;
+		this._currentSecondaryTrackSkin.y = (this.actualHeight - this._currentSecondaryTrackSkin.height) / 2.0;
 	}
 
 	private function layoutSingleTrack():Void {
-		if (this.trackSkin == null) {
+		if (this._currentTrackSkin == null) {
 			return;
 		}
-		this.trackSkin.x = 0.0;
-		this.trackSkin.width = this.actualWidth;
+		this._currentTrackSkin.x = 0.0;
+		this._currentTrackSkin.width = this.actualWidth;
 
-		if (Std.is(this.trackSkin, IValidating)) {
-			cast(this.trackSkin, IValidating).validateNow();
+		if (Std.is(this._currentTrackSkin, IValidating)) {
+			cast(this._currentTrackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2.0;
+		this._currentTrackSkin.y = (this.actualHeight - this._currentTrackSkin.height) / 2.0;
 	}
 
 	private function toggleSwitch_keyDownHandler(event:KeyboardEvent):Void {
