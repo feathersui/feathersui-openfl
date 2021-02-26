@@ -380,8 +380,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 	override public function showFocus(show:Bool):Void {
 		super.showFocus(show);
-		if (Std.is(this.thumbSkin, IFocusObject)) {
-			var focusThumb = cast(this.thumbSkin, IFocusObject);
+		if (Std.is(this._currentThumbSkin, IFocusObject)) {
+			var focusThumb = cast(this._currentThumbSkin, IFocusObject);
 			if (focusThumb.focusEnabled) {
 				focusThumb.showFocus(show);
 			}
@@ -539,19 +539,19 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	}
 
 	private function refreshEnabled():Void {
-		if (Std.is(this.thumbSkin, IUIControl)) {
-			cast(this.thumbSkin, IUIControl).enabled = this._enabled;
+		if (Std.is(this._currentThumbSkin, IUIControl)) {
+			cast(this._currentThumbSkin, IUIControl).enabled = this._enabled;
 		}
-		if (Std.is(this.trackSkin, IUIControl)) {
-			cast(this.trackSkin, IUIControl).enabled = this._enabled;
+		if (Std.is(this._currentTrackSkin, IUIControl)) {
+			cast(this._currentTrackSkin, IUIControl).enabled = this._enabled;
 		}
-		if (Std.is(this.secondaryTrackSkin, IUIControl)) {
-			cast(this.secondaryTrackSkin, IUIControl).enabled = this._enabled;
+		if (Std.is(this._currentSecondaryTrackSkin, IUIControl)) {
+			cast(this._currentSecondaryTrackSkin, IUIControl).enabled = this._enabled;
 		}
 	}
 
 	private function layoutContent():Void {
-		if (this.trackSkin != null && this.secondaryTrackSkin != null) {
+		if (this._currentTrackSkin != null && this._currentSecondaryTrackSkin != null) {
 			this.layoutSplitTrack();
 		} else {
 			this.layoutSingleTrack();
@@ -622,8 +622,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler, false, 0, true);
 
-		this._thumbStartX = this.thumbSkin.x;
-		this._thumbStartY = this.thumbSkin.y;
+		this._thumbStartX = this._currentThumbSkin.x;
+		this._thumbStartY = this._currentThumbSkin.y;
 		this._pointerStartX = this.mouseX;
 		this._pointerStartY = this.mouseY;
 		this._dragging = true;

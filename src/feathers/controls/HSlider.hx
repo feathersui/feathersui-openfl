@@ -59,15 +59,15 @@ class HSlider extends BaseSlider {
 
 	override private function valueToLocation(value:Float):Float {
 		// this will auto-size the thumb, if needed
-		if (Std.is(this.thumbSkin, IValidating)) {
-			cast(this.thumbSkin, IValidating).validateNow();
+		if (Std.is(this._currentThumbSkin, IValidating)) {
+			cast(this._currentThumbSkin, IValidating).validateNow();
 		}
 
 		var normalized = this.normalizeValue(value);
 
 		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
-		if (this.thumbSkin != null) {
-			trackScrollableWidth -= this.thumbSkin.width;
+		if (this._currentThumbSkin != null) {
+			trackScrollableWidth -= this._currentThumbSkin.width;
 		}
 		// minimum is at the left, so we need to start the x position of
 		// the thumb from the minimum padding
@@ -77,8 +77,8 @@ class HSlider extends BaseSlider {
 	override private function locationToValue(x:Float, y:Float):Float {
 		var percentage = 0.0;
 		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
-		if (this.thumbSkin != null) {
-			trackScrollableWidth -= this.thumbSkin.width;
+		if (this._currentThumbSkin != null) {
+			trackScrollableWidth -= this._currentThumbSkin.width;
 		}
 		var xOffset = x - this._pointerStartX - this.minimumPadding;
 		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
@@ -97,41 +97,41 @@ class HSlider extends BaseSlider {
 			return false;
 		}
 
-		if (this.thumbSkin != null) {
-			this._thumbSkinMeasurements.restore(this.thumbSkin);
-			if (Std.is(this.thumbSkin, IValidating)) {
-				cast(this.thumbSkin, IValidating).validateNow();
+		if (this._currentThumbSkin != null) {
+			this._thumbSkinMeasurements.restore(this._currentThumbSkin);
+			if (Std.is(this._currentThumbSkin, IValidating)) {
+				cast(this._currentThumbSkin, IValidating).validateNow();
 			}
 		}
-		if (this.trackSkin != null) {
-			this._trackSkinMeasurements.restore(this.trackSkin);
-			if (Std.is(this.trackSkin, IValidating)) {
-				cast(this.trackSkin, IValidating).validateNow();
+		if (this._currentTrackSkin != null) {
+			this._trackSkinMeasurements.restore(this._currentTrackSkin);
+			if (Std.is(this._currentTrackSkin, IValidating)) {
+				cast(this._currentTrackSkin, IValidating).validateNow();
 			}
 		}
-		if (this.secondaryTrackSkin != null) {
-			this._secondaryTrackSkinMeasurements.restore(this.secondaryTrackSkin);
-			if (Std.is(this.secondaryTrackSkin, IValidating)) {
-				cast(this.secondaryTrackSkin, IValidating).validateNow();
+		if (this._currentSecondaryTrackSkin != null) {
+			this._secondaryTrackSkinMeasurements.restore(this._currentSecondaryTrackSkin);
+			if (Std.is(this._currentSecondaryTrackSkin, IValidating)) {
+				cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
 			}
 		}
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this.trackSkin.width;
-			if (this.secondaryTrackSkin != null) {
-				newWidth += this.secondaryTrackSkin.width;
+			newWidth = this._currentTrackSkin.width;
+			if (this._currentSecondaryTrackSkin != null) {
+				newWidth += this._currentSecondaryTrackSkin.width;
 			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this.thumbSkin.height;
-			if (newHeight < this.trackSkin.height) {
-				newHeight = this.trackSkin.height;
+			newHeight = this._currentThumbSkin.height;
+			if (newHeight < this._currentTrackSkin.height) {
+				newHeight = this._currentTrackSkin.height;
 			}
-			if (this.secondaryTrackSkin != null && newHeight < this.secondaryTrackSkin.height) {
-				newHeight = this.secondaryTrackSkin.height;
+			if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
+				newHeight = this._currentSecondaryTrackSkin.height;
 			}
 		}
 
@@ -147,9 +147,9 @@ class HSlider extends BaseSlider {
 	override private function saveThumbStart(x:Float, y:Float):Void {
 		var trackWidthMinusThumbWidth = this.actualWidth;
 		var locationMinusHalfThumbWidth = x;
-		if (this.thumbSkin != null) {
-			trackWidthMinusThumbWidth -= this.thumbSkin.width;
-			locationMinusHalfThumbWidth -= this.thumbSkin.width / 2.0;
+		if (this._currentThumbSkin != null) {
+			trackWidthMinusThumbWidth -= this._currentThumbSkin.width;
+			locationMinusHalfThumbWidth -= this._currentThumbSkin.width / 2.0;
 		}
 		this._thumbStartX = Math.min(trackWidthMinusThumbWidth - this.maximumPadding, Math.max(this.minimumPadding, locationMinusHalfThumbWidth));
 		this._thumbStartY = y;
@@ -157,51 +157,51 @@ class HSlider extends BaseSlider {
 
 	override private function layoutSplitTrack():Void {
 		var location = this.valueToLocation(value);
-		if (this.thumbSkin != null) {
-			if (Std.is(this.thumbSkin, IValidating)) {
-				cast(this.thumbSkin, IValidating).validateNow();
+		if (this._currentThumbSkin != null) {
+			if (Std.is(this._currentThumbSkin, IValidating)) {
+				cast(this._currentThumbSkin, IValidating).validateNow();
 			}
-			location += Math.round(this.thumbSkin.width / 2.0);
+			location += Math.round(this._currentThumbSkin.width / 2.0);
 		}
 
-		this.trackSkin.x = 0.0;
-		this.trackSkin.width = location;
+		this._currentTrackSkin.x = 0.0;
+		this._currentTrackSkin.width = location;
 
-		this.secondaryTrackSkin.x = location;
-		this.secondaryTrackSkin.width = this.actualWidth - location;
+		this._currentSecondaryTrackSkin.x = location;
+		this._currentSecondaryTrackSkin.width = this.actualWidth - location;
 
-		if (Std.is(this.trackSkin, IValidating)) {
-			cast(this.trackSkin, IValidating).validateNow();
+		if (Std.is(this._currentTrackSkin, IValidating)) {
+			cast(this._currentTrackSkin, IValidating).validateNow();
 		}
-		if (Std.is(this.secondaryTrackSkin, IValidating)) {
-			cast(this.secondaryTrackSkin, IValidating).validateNow();
+		if (Std.is(this._currentSecondaryTrackSkin, IValidating)) {
+			cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2.0;
-		this.secondaryTrackSkin.y = (this.actualHeight - this.secondaryTrackSkin.height) / 2.0;
+		this._currentTrackSkin.y = (this.actualHeight - this._currentTrackSkin.height) / 2.0;
+		this._currentSecondaryTrackSkin.y = (this.actualHeight - this._currentSecondaryTrackSkin.height) / 2.0;
 	}
 
 	override private function layoutSingleTrack():Void {
-		if (this.trackSkin == null) {
+		if (this._currentTrackSkin == null) {
 			return;
 		}
-		this.trackSkin.x = 0.0;
-		this.trackSkin.width = this.actualWidth;
+		this._currentTrackSkin.x = 0.0;
+		this._currentTrackSkin.width = this.actualWidth;
 
-		if (Std.is(this.trackSkin, IValidating)) {
-			cast(this.trackSkin, IValidating).validateNow();
+		if (Std.is(this._currentTrackSkin, IValidating)) {
+			cast(this._currentTrackSkin, IValidating).validateNow();
 		}
 
-		this.trackSkin.y = (this.actualHeight - this.trackSkin.height) / 2.0;
+		this._currentTrackSkin.y = (this.actualHeight - this._currentTrackSkin.height) / 2.0;
 	}
 
 	override private function layoutThumb():Void {
-		if (this.thumbSkin == null) {
+		if (this._currentThumbSkin == null) {
 			return;
 		}
 		var thumbLocation = this.valueToLocation(this._value);
-		this.thumbSkin.x = thumbLocation;
-		this.thumbSkin.y = Math.round((this.actualHeight - this.thumbSkin.height) / 2.0);
+		this._currentThumbSkin.x = thumbLocation;
+		this._currentThumbSkin.y = (this.actualHeight - this.thumbSkin.height) / 2.0;
 	}
 
 	private function hSlider_keyDownHandler(event:KeyboardEvent):Void {
