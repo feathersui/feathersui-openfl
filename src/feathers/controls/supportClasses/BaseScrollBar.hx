@@ -664,16 +664,16 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function refreshEnabled():Void {
-		if (Std.is(this.thumbSkin, IUIControl)) {
-			cast(this.thumbSkin, IUIControl).enabled = this._enabled;
+		if (Std.is(this._currentThumbSkin, IUIControl)) {
+			cast(this._currentThumbSkin, IUIControl).enabled = this._enabled;
 		}
 	}
 
 	private function layoutContent():Void {
-		if (this.trackSkin != null && this.secondaryTrackSkin != null) {
+		if (this._currentTrackSkin != null && this._currentSecondaryTrackSkin != null) {
 			this.graphics.clear();
 			this.layoutSplitTrack();
-		} else if (this.trackSkin != null) {
+		} else if (this._currentTrackSkin != null) {
 			this.graphics.clear();
 			this.layoutSingleTrack();
 		} else {
@@ -769,8 +769,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler, false, 0, true);
 
-		this._thumbStartX = this.thumbSkin.x;
-		this._thumbStartY = this.thumbSkin.y;
+		this._thumbStartX = this._currentThumbSkin.x;
+		this._thumbStartY = this._currentThumbSkin.y;
 		// use mouseX/Y here instead of the values from the event because the
 		// event values seem to be inaccurate and jumpy
 		this._pointerStartX = this.mouseX;
