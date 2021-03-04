@@ -29,3 +29,11 @@ jobs:
     - name: Build API reference
       working-directory: docs
       run: haxe docs.hxml
+    - name: Deploy to unstable
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: build/api
+        remote: api.feathersui.com/unstable
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASS }}
