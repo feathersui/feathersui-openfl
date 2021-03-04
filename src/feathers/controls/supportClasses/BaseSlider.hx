@@ -26,7 +26,8 @@ import openfl.geom.Point;
 /**
 	Base class for slider components.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `BaseSlider.value`
+	changes.
 
 	@see `feathers.controls.HSlider`
 	@see `feathers.controls.VSlider`

@@ -84,9 +84,13 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(listView);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when either
+	`ListView.selectedItem` or `ListView.selectedIndex` changes.
 
-	@event feathers.events.ListViewEvent.ITEM_TRIGGER
+	@event feathers.events.ListViewEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks an item renderer in the list view. The pointer must remain
+	within the bounds of the item renderer on release, and the list view cannot
+	scroll before release, or the gesture will be ignored.
 
 	@see [Tutorial: How to use the ListView component](https://feathersui.com/learn/haxe-openfl/list-view/)
 	@see `feathers.controls.PopUpListView`

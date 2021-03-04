@@ -91,11 +91,18 @@ import openfl.ui.Multitouch;
 	this.addChild(gridView);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when either
+	`GridView.selectedItem` or `GridView.selectedIndex` changes.
 
-	@event feathers.events.GridViewEvent.CELL_TRIGGER
+	@event feathers.events.GridViewEvent.CELL_TRIGGER Dispatched when the user
+	taps or clicks a cell renderer in the grid view. The pointer must remain
+	within the bounds of the cell renderer on release, and the grid view cannot
+	scroll before release, or the gesture will be ignored.
 
-	@event feathers.events.GridViewEvent.HEADER_TRIGGER
+	@event feathers.events.GridViewEvent.HEADER_TRIGGER Dispatched when the user
+	taps or clicks a header renderer in the grid view. The pointer must remain
+	within the bounds of the header renderer on release, and the grid view cannot
+	scroll before release, or the gesture will be ignored.
 
 	@see [Tutorial: How to use the GridView component](https://feathersui.com/learn/haxe-openfl/grid-view/)
 

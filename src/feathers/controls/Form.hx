@@ -18,7 +18,10 @@ import openfl.ui.Keyboard;
 /**
 	Displays a collection of form controls.
 
-	@event feathers.events.FormEvent.SUBMIT
+	@event feathers.events.FormEvent.SUBMIT Dispatched when the form is
+	submitted. This event may be dispatched when the `Form.submitButton` is
+	triggered, or when `Keyboard.ENTER` is pressed while a UI control inside the
+	form has focus.
 
 	@see `feathers.controls.FormItem`
 

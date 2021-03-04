@@ -13,7 +13,7 @@ import feathers.core.IUIControl;
 /**
 	A UI component that displays a range of values from a minimum to a maximum.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `IRange.value` changes.
 
 	@since 1.0.0
 **/

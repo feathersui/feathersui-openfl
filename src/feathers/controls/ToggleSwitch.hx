@@ -44,7 +44,8 @@ import openfl.ui.Keyboard;
 	this.addChild(toggleSwitch);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `ToggleSwitch.selected`
+	changes.
 
 	@see [Tutorial: How to use the ToggleSwitch component](https://feathersui.com/learn/haxe-openfl/toggle-switch/)
 	@see `feathers.controls.Check`

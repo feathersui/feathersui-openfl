@@ -25,7 +25,8 @@ import openfl.geom.Point;
 /**
 	Base class for scroll bar components.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `BaseScrollBar.value`
+	changes.
 
 	@event feathers.events.ScrollEvent.SCROLL_START
 

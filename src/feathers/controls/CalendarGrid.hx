@@ -43,9 +43,11 @@ import openfl.events.Event;
 	this.addChild(calendar);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when
+	`CalendarGrid.selectedDate` changes.
 
-	@event openfl.events.Event.SCROLL
+	@event openfl.events.Event.SCROLL Dispatched when
+	`CalendarGrid.displayedMonth` or `CalendarGrid.displayedFullYear` changes.
 
 	@see [Tutorial: How to use the CalendarGrid component](https://feathersui.com/learn/haxe-openfl/calendar-grid/)
 

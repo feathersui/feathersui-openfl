@@ -41,7 +41,7 @@ import openfl.ui.Keyboard;
 	this.addChild( textArea );
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `TextArea.text` changes.
 
 	@see [Tutorial: How to use the TextArea component](https://feathersui.com/learn/haxe-openfl/text-area/)
 

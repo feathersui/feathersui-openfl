@@ -23,9 +23,11 @@ import feathers.themes.steel.components.SteelTreeViewItemRendererStyles;
 /**
 	A branch and leaf renderer for `TreeView`.
 
-	@event openfl.events.Event.OPEN
+	@event openfl.events.Event.OPEN Dispatched when a branch item renderer
+	opens. Does not get dispatched for leaf item renderers.
 
-	@event openfl.events.Event.CLOSE
+	@event openfl.events.Event.CLOSE Dispatched when a branch item renderer
+	closes. Does not get dispatched for leaf item renderers.
 
 	@see `feathers.controls.TreeView`
 

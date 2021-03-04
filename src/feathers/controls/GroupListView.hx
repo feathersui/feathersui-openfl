@@ -85,9 +85,13 @@ import openfl.ui.Multitouch;
 	this.addChild(groupListView);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when either
+	`GroupListView.selectedItem` or `GroupListView.selectedLocation` changes.
 
-	@event feathers.events.GroupListViewEvent.ITEM_TRIGGER
+	@event feathers.events.GroupListViewEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks an item renderer in the list view. The pointer must remain
+	within the bounds of the item renderer on release, and the list view cannot
+	scroll before release, or the gesture will be ignored.
 
 	@see [Tutorial: How to use the GroupListView component](https://feathersui.com/learn/haxe-openfl/group-list-view/)
 

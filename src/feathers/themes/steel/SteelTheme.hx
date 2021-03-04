@@ -58,12 +58,9 @@ import feathers.themes.steel.components.SteelVSliderStyles;
 	"Steel" theme. Unlike the default version, this version references all
 	Feathers UI components, even if some are not used in the app.
 
-	@event openfl.events.Event.CLEAR
-
 	@since 1.0.0
 **/
 @:dox(hide)
-@:event(openfl.events.Event.CLEAR)
 class SteelTheme extends BaseSteelTheme {
 	/**
 		Creates a new `SteelTheme` object with the given arguments.

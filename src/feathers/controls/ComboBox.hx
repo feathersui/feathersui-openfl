@@ -69,13 +69,19 @@ import lime.ui.KeyCode;
 	this.addChild(comboBox);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when either
+	`ComboBox.selectedItem` or `ComboBox.selectedIndex` changes.
 
-	@event openfl.events.Event.OPEN
+	@event openfl.events.Event.OPEN Dispatched when the pop-up list view is
+	opened.
 
-	@event openfl.events.Event.CLOSE
+	@event openfl.events.Event.CLOSE Dispatched when the pop-up list view is
+	closed.
 
-	@event feathers.events.ListViewEvent.ITEM_TRIGGER
+	@event feathers.events.ListViewEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks an item renderer in the pop-up list view. The pointer must
+	remain within the bounds of the item renderer on release, and the list
+	view cannot scroll before release, or the gesture will be ignored.
 
 	@see [Tutorial: How to use the ComboBox component](https://feathersui.com/learn/haxe-openfl/combo-box/)
 	@see `feathers.controls.PopUpListView`

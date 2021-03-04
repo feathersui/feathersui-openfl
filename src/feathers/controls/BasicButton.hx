@@ -29,9 +29,14 @@ import openfl.events.MouseEvent;
 	purposes like skinning. For a more full-featured button, with a label and
 	icon, see `feathers.controls.Button` instead.
 
-	@event feathers.events.FeathersEvent.STATE_CHANGE
+	@event feathers.events.FeathersEvent.STATE_CHANGE Dispatched when
+	`BasicButton.currentState` changes.
 
-	@event feathers.events.TriggerEvent.TRIGGER
+	@event feathers.events.TriggerEvent.TRIGGER Dispatched when the the user
+	taps or clicks the button. The pointer must remain within the bounds of the
+	button on release to register as a tap or a click. If focus management is
+	enabled, the button may also be triggered by pressing the spacebar while the
+	button has focus.
 
 	@since 1.0.0
 

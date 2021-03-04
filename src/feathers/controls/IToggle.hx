@@ -13,7 +13,7 @@ import feathers.core.IUIControl;
 /**
 	An interface for a user interface component that may be selected.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `IToggle.selected` changes.
 
 	@since 1.0.0
 **/

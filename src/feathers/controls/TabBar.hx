@@ -66,9 +66,12 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(tabs);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when either
+	`TabBar.selectedItem` or `TabBar.selectedIndex` changes.
 
-	@event feathers.events.TabBarEvent.ITEM_TRIGGER
+	@event feathers.events.TabBarEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks a tab. The pointer must remain within the bounds of the tab
+	on release, or the gesture will be ignored.
 
 	@see [Tutorial: How to use the TabBar component](https://feathersui.com/learn/haxe-openfl/tab-bar/)
 	@see `feathers.controls.navigators.TabNavigator`

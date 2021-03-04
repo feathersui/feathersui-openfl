@@ -12,9 +12,11 @@ package feathers.controls;
 	Minimum requirements for a scroll bar to be usable with subclasses of the
 	`BaseScrollContainer` component.
 
-	@event feathers.events.ScrollEvent.SCROLL_START
+	@event feathers.events.ScrollEvent.SCROLL_START Dispatched when scrolling
+	starts.
 
-	@event feathers.events.ScrollEvent.SCROLL_COMPLETE
+	@event feathers.events.ScrollEvent.SCROLL_COMPLETE Dispatched when scrolling
+	completes.
 
 	@since 1.0.0
 **/

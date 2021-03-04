@@ -63,15 +63,14 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(buttonBar);
 	```
 
-	@event openfl.events.Event.CHANGE
-
-	@event feathers.events.ButtonBarEvent.ITEM_TRIGGER
+	@event feathers.events.ButtonBarEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks a button. The pointer must remain within the bounds of the tab
+	on release, or the gesture will be ignored.
 
 	@see [Tutorial: How to use the ButtonBar component](https://feathersui.com/learn/haxe-openfl/button-bar/)
 
 	@since 1.0.0
 **/
-@:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.ButtonBarEvent.ITEM_TRIGGER)
 @:access(feathers.data.ButtonBarItemState)
 @:meta(DefaultProperty("dataProvider"))

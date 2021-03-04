@@ -29,7 +29,9 @@ import openfl.events.EventDispatcher;
 	this.addChild(button);
 	```
 
-	@event feathers.events.StyleProviderEvent.STYLES_CHANGE
+	@event feathers.events.StyleProviderEvent.STYLES_CHANGE Dispatched when the
+	styles have changed, and style objects should request for their styles to be
+	re-applied.
 
 	@see [Styling and skinning Feathers UI components](https://feathersui.com/learn/haxe-openfl/styling-and-skinning/)
 

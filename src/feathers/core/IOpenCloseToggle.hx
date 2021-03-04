@@ -11,9 +11,11 @@ package feathers.core;
 /**
 	A UI component that may be opened or closed.
 
-	@event openfl.events.Event.OPEN
+	@event openfl.events.Event.OPEN Dispatched when the `opened` property is
+	changed to `true`.
 
-	@event openfl.events.Event.CLOSE
+	@event openfl.events.Event.CLOSE Dispatched when the `opened` property is
+	changed to `false`.
 
 	@since 1.0.0
 **/

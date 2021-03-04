@@ -15,7 +15,8 @@ import feathers.core.IUIControl;
 	prefer to listen for `TriggerEvent.TRIGGER` instead of `MouseEvent.CLICK` or
 	`TouchEvent.TOUCH_TAP`.
 
-	@event feathers.events.TriggerEvent.TRIGGER
+	@event feathers.events.TriggerEvent.TRIGGER Dispatched when the the user
+	triggers the view.
 
 	@since 1.0.0
 **/

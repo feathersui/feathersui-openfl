@@ -21,9 +21,11 @@ import openfl.display.DisplayObject;
 /**
 	Displays a pop-up like a drop-down, either below or above the source.
 
-	@event openfl.events.Event.OPEN
+	@event openfl.events.Event.OPEN Dispatched when the pop-up adapter opens,
+	and `DropDownPopUpAdapter.active` changes to `true`.
 
-	@event openfl.events.Event.CLOSE
+	@event openfl.events.Event.CLOSE Dispatched when the pop-up adapter closes,
+	and `DropDownPopUpAdapter.active` changes to `false`.
 
 	@since 1.0.0
 **/

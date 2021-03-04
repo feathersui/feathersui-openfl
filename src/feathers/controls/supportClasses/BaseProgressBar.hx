@@ -20,7 +20,8 @@ import openfl.events.Event;
 /**
 	Base class for progress bar components.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `BaseProgressBar.value`
+	changes.
 
 	@see `feathers.controls.HProgressBar`
 	@see `feathers.controls.VProgressBar`

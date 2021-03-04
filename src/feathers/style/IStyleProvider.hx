@@ -13,7 +13,9 @@ import openfl.events.IEventDispatcher;
 /**
 	Sets styles on a target object. Used by themes.
 
-	@event feathers.events.StyleProviderEvent.STYLES_CHANGE
+	@event feathers.events.StyleProviderEvent.STYLES_CHANGE Dispatched when the
+	styles have changed, and style objects should request for their styles to be
+	re-applied.
 
 	@see `feathers.style.ITheme`
 **/

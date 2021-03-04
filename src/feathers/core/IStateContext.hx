@@ -13,7 +13,8 @@ import openfl.events.IEventDispatcher;
 /**
 	An object with multiple states.
 
-	@event feathers.events.FeathersEvent.STATE_CHANGE Dispatched when `IStateContext.currentState` changes
+	@event feathers.events.FeathersEvent.STATE_CHANGE Dispatched when
+	`IStateContext.currentState` changes
 
 	@since 1.0.0
 **/

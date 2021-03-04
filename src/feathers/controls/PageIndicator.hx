@@ -56,7 +56,8 @@ import openfl.ui.Multitouch;
 	});
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when
+	`PageIndicator.selectedIndex` changes.
 
 	@see [Tutorial: How to use the PageIndicator component](https://feathersui.com/learn/haxe-openfl/page-indicator/)
 	@see `feathers.controls.navigators.PageNavigator`

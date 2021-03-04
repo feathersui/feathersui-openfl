@@ -98,13 +98,19 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(treeView);
 	```
 		
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when either
+	`TreeView.selectedItem` or `TreeView.selectedLocation` changes.
 
-	@event feathers.events.TreeViewEvent.ITEM_TRIGGER
+	@event feathers.events.TreeViewEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks an item renderer in the tree view. The pointer must remain
+	within the bounds of the item renderer on release, and the tree view cannot
+	scroll before release, or the gesture will be ignored.
 
-	@event feathers.events.TreeViewEvent.BRANCH_OPEN
+	@event feathers.events.TreeViewEvent.BRANCH_OPEN Dispatched when a branch
+	is opened.
 
-	@event feathers.events.TreeViewEvent.BRANCH_CLOSE
+	@event feathers.events.TreeViewEvent.BRANCH_CLOSE Dispatched when a branch
+	is closed.
 
 	@see [Tutorial: How to use the TreeView component](https://feathersui.com/learn/haxe-openfl/tree-view/)
 

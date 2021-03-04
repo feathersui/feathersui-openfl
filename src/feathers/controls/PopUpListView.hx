@@ -69,13 +69,19 @@ import lime.ui.KeyCode;
 	this.addChild(list);
 	```
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when either
+	`PopUpListView.selectedItem` or `PopUpListView.selectedIndex` changes.
 
-	@event openfl.events.Event.OPEN
+	@event openfl.events.Event.OPEN Dispatched when the pop-up list view is
+	opened.
 
-	@event openfl.events.Event.CLOSE
+	@event openfl.events.Event.CLOSE Dispatched when the pop-up list view is
+	closed.
 
-	@event feathers.events.ListViewEvent.ITEM_TRIGGER
+	@event feathers.events.ListViewEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks an item renderer in the pop-up list view. The pointer must
+	remain within the bounds of the item renderer on release, and the list
+	view cannot scroll before release, or the gesture will be ignored.
 
 	@see [Tutorial: How to use the PopUpListView component](https://feathersui.com/learn/haxe-openfl/pop-up-list-view/)
 	@see `feathers.controls.ComboBox`

@@ -31,9 +31,18 @@ import openfl.events.Event;
 	toggle button, with a label and icon, see `feathers.controls.ToggleButton`
 	instead.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the
+	`BasicToggleButton.selected` property changes. This event is dispatched
+	both when the `selected` property changes programmatically or as a result of
+	a click or tap user interaction. User interaction may only change selection
+	when the `toggleable` property is set to `true`, but the `selected` property
+	may be changed programmatically even if `toggleable` is `false`.
 
-	@event feathers.events.TriggerEvent.TRIGGER
+	@event feathers.events.TriggerEvent.TRIGGER Dispatched when the the user
+	taps or clicks the button. The pointer must remain within the bounds of the
+	button on release to register as a tap or a click. If focus management is
+	enabled, the button may also be triggered by pressing the spacebar while the
+	button has focus.
 
 	@since 1.0.0
 
