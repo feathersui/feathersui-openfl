@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
@@ -462,6 +463,9 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		item.x = this._paddingLeft + ((offset != 0) ? ((columnWidth + this._columnGap) * offset) : 0.0);
 		item.y = yPosition;
 		item.width = (span != 0) ? ((columnWidth + this._columnGap) * span) - this._columnGap : columnWidth;
+		if (Std.is(item, IValidating)) {
+			cast(item, IValidating).validateNow();
+		}
 	}
 
 	private function getBreakpoint(viewPortWidth:Float):Breakpoint {
