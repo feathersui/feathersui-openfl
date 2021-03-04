@@ -562,8 +562,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		point = this._focusManager.focusPane.globalToLocal(point);
 		this._focusRectSkin.x = point.x;
 		this._focusRectSkin.y = point.y;
-		this._focusRectSkin.width = this.actualWidth + this._focusPaddingLeft + this._focusPaddingRight;
-		this._focusRectSkin.height = this.actualHeight + this._focusPaddingTop + this._focusPaddingBottom;
+		point.setTo(this.actualWidth + this._focusPaddingRight, this.actualHeight + this._focusPaddingBottom);
+		point = this.localToGlobal(point);
+		point = this._focusManager.focusPane.globalToLocal(point);
+		this._focusRectSkin.width = point.x - this._focusRectSkin.x;
+		this._focusRectSkin.height = point.y - this._focusRectSkin.y;
 	}
 
 	private function setLayoutDataInternal(value:ILayoutData):ILayoutData {
