@@ -30,6 +30,7 @@ jobs:
       working-directory: docs
       run: haxe docs.hxml
     - name: Deploy to unstable
+      if: ${{ github.event_name != 'pull_request' }}
       uses: garygrossgarten/github-action-scp@release
       with:
         local: build/api
