@@ -9,6 +9,7 @@
 package feathers.controls.dataRenderers;
 
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.core.InvalidationFlag;
 import feathers.core.IPointerDelegate;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
