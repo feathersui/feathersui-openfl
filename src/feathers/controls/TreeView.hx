@@ -14,6 +14,7 @@ import feathers.controls.dataRenderers.TreeViewItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
+import feathers.core.InvalidationFlag;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;

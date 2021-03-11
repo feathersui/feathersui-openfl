@@ -11,6 +11,7 @@ package feathers.controls.supportClasses;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
+import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.ScrollEvent;

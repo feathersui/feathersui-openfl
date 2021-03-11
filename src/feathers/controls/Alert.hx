@@ -10,6 +10,7 @@ package feathers.controls;
 
 import openfl.errors.IllegalOperationError;
 import feathers.controls.popups.IPopUpAdapter;
+import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
 import feathers.core.PopUpManager;
 import feathers.data.ArrayCollection;

@@ -10,6 +10,7 @@ package feathers.controls;
 
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
+import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.core.PopUpManager;
