@@ -704,7 +704,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		@since 1.0.0
 	**/
 	public function locationToItemRenderer(location:Array<Int>):DisplayObject {
-		if (this._dataProvider == null) {
+		if (this._dataProvider == null || !this.isValidLocation(location)) {
 			return null;
 		}
 		var item = this._dataProvider.get(location);
@@ -1268,6 +1268,20 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		// location was not found!
 		return -1;
+	}
+
+	private function isValidLocation(location:Array<Int>):Bool {
+		var locationOfBranch:Array<Int> = [];
+		for (index in location) {
+			if (index < 0) {
+				return false;
+			}
+			if (index >= this._dataProvider.getLength(locationOfBranch)) {
+				return false;
+			}
+			locationOfBranch.push(index);
+		}
+		return true;
 	}
 
 	private function dispatchItemTriggerEvent(data:Dynamic):Void {

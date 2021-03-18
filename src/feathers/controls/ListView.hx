@@ -834,7 +834,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	public function indexToItemRenderer(index:Int):DisplayObject {
-		if (this._dataProvider == null) {
+		if (this._dataProvider == null || index < 0 || index >= this._dataProvider.length) {
 			return null;
 		}
 		var item = this._dataProvider.get(index);
