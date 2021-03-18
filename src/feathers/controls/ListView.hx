@@ -822,6 +822,26 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	/**
+		Returns the current item renderer used to render the item at the
+		specified index in the data provider. May return `null` if an item
+		doesn't currently have an item renderer.
+
+		**Note:** Most list views use "virtual" layouts, which means that only
+		the currently-visible subset of items will have an item renderer. As the
+		list view scrolls, the items with item renderers will change, and item
+		renderers may even be re-used to display different items.
+
+		@since 1.0.0
+	**/
+	public function indexToItemRenderer(index:Int):DisplayObject {
+		if (this._dataProvider == null) {
+			return null;
+		}
+		var item = this._dataProvider.get(index);
+		return this.dataToItemRenderer.get(item);
+	}
+
+	/**
 		Returns the item renderer recycler associated with a specific ID.
 		Returns `null` if no recycler is associated with the ID.
 

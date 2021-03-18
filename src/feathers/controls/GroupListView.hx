@@ -691,6 +691,26 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return this.itemRendererToData.get(itemRenderer);
 	}
 
+	/**
+		Returns the current item renderer used to render the item at the
+		specified location in the data provider. May return `null` if an item
+		doesn't currently have an item renderer.
+
+		**Note:** Most list views use "virtual" layouts, which means that only
+		the currently-visible subset of items will have an item renderer. As the
+		list view scrolls, the items with item renderers will change, and item
+		renderers may even be re-used to display different items.
+
+		@since 1.0.0
+	**/
+	public function locationToItemRenderer(location:Array<Int>):DisplayObject {
+		if (this._dataProvider == null) {
+			return null;
+		}
+		var item = this._dataProvider.get(location);
+		return this.dataToItemRenderer.get(item);
+	}
+
 	private var _pendingScrollLocation:Array<Int> = null;
 	private var _pendingScrollDuration:Null<Float> = null;
 
