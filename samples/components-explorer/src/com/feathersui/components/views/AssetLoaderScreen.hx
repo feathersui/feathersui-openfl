@@ -12,7 +12,7 @@ import openfl.events.Event;
 class AssetLoaderScreen extends Panel {
 	private var syncAssetLoader:AssetLoader;
 	private var asyncAssetLoader:AssetLoader;
-	private var urlLoader:AssetLoader;
+	private var urlAssetLoader:AssetLoader;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -41,15 +41,17 @@ class AssetLoaderScreen extends Panel {
 		// uses openfl.Assets.loadBitmap() to get a non-embedded asset by ID
 		// <assets id="openfl" path="assets/img/openfl.png" embed="false"/>
 		this.asyncAssetLoader.source = "openfl";
+		this.asyncAssetLoader.addEventListener(Event.COMPLETE, asyncAssetLoader_completeHandler);
 		this.addChild(this.asyncAssetLoader);
 		var asyncLabel = new Label();
 		asyncLabel.text = "Asset (Async)";
 		this.addChild(asyncLabel);
 
-		this.urlLoader = new AssetLoader();
+		this.urlAssetLoader = new AssetLoader();
 		// uses openfl.display.Loader to load an image from the web
-		this.urlLoader.source = "https://feathersui.com/samples/haxe-openfl/components-explorer/images/feathersui-icon.png";
-		this.addChild(this.urlLoader);
+		this.urlAssetLoader.source = "https://feathersui.com/samples/haxe-openfl/components-explorer/images/feathersui-icon.png";
+		this.urlAssetLoader.addEventListener(Event.COMPLETE, urlAssetLoader_completeHandler);
+		this.addChild(this.urlAssetLoader);
 		var urlLabel = new Label();
 		urlLabel.text = "URL (Async)";
 		this.addChild(urlLabel);
@@ -68,5 +70,13 @@ class AssetLoaderScreen extends Panel {
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
+	}
+
+	private function asyncAssetLoader_completeHandler(event:Event):Void {
+		trace("async asset complete: " + this.asyncAssetLoader.source);
+	}
+
+	private function urlAssetLoader_completeHandler(event:Event):Void {
+		trace("URL asset complete: " + this.urlAssetLoader.source);
 	}
 }
