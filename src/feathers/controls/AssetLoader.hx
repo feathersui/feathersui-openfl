@@ -8,9 +8,7 @@
 
 package feathers.controls;
 
-import openfl.events.ProgressEvent;
 import feathers.core.FeathersControl;
-import feathers.core.InvalidationFlag;
 import feathers.layout.Measurements;
 import feathers.utils.ScaleUtil;
 import openfl.Assets;
@@ -23,10 +21,12 @@ import openfl.display.StageScaleMode;
 import openfl.errors.SecurityError;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
+import openfl.events.ProgressEvent;
 import openfl.events.SecurityErrorEvent;
 import openfl.geom.Rectangle;
 import openfl.net.URLRequest;
 import openfl.utils.AssetType;
+import openfl.utils.Future;
 
 /**
 	Loads and displays an asset using either OpenFL's asset management system or
@@ -76,6 +76,8 @@ class AssetLoader extends FeathersControl {
 	private var loader:Loader;
 	private var _contentMeasurements:Measurements = new Measurements();
 
+	private var _pendingFuture:Future<Dynamic>;
+
 	private var _source:String;
 
 	/**
@@ -116,11 +118,13 @@ class AssetLoader extends FeathersControl {
 		}
 		this._source = value;
 		if (this._source == null) {
+			this._pendingFuture = null;
 			this.cleanupLoader();
 		} else {
 			if (Assets.exists(this._source, AssetType.IMAGE)) {
 				this.cleanupLoader();
 				if (Assets.isLocal(this._source, AssetType.IMAGE)) {
+					this._pendingFuture = null;
 					var bitmapData = Assets.getBitmapData(this._source);
 					var bitmap = this.createBitmap(bitmapData);
 					this._contentMeasurements.save(bitmap);
@@ -128,54 +132,61 @@ class AssetLoader extends FeathersControl {
 					this.content = bitmap;
 				} else // async
 				{
-					var future = Assets.loadBitmapData(this._source)
-						.onProgress((progress, total) -> {
-							this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
-						})
-						.onComplete((bitmapData:BitmapData) -> {
-							var bitmap = this.createBitmap(bitmapData);
-							this._contentMeasurements.save(bitmap);
-							this.addChild(bitmap);
-							this.content = bitmap;
-							this.setInvalid(DATA);
-							this.dispatchEvent(new Event(Event.COMPLETE));
-						})
-						.onError((event:Dynamic) -> {
-							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-						});
+					var future = Assets.loadBitmapData(this._source);
+					future.onProgress((progress, total) -> {
+						this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
+					}).onComplete((bitmapData:BitmapData) -> {
+						if (future != this._pendingFuture) {
+							// cancelled
+							return;
+						}
+						var bitmap = this.createBitmap(bitmapData);
+						this._contentMeasurements.save(bitmap);
+						this.addChild(bitmap);
+						this.content = bitmap;
+						this.setInvalid(DATA);
+						this.dispatchEvent(new Event(Event.COMPLETE));
+					}).onError((event:Dynamic) -> {
+						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+					});
+					this._pendingFuture = future;
 				}
 			} else if (Assets.exists(this._source, AssetType.MOVIE_CLIP)) {
 				this.cleanupLoader();
 				if (Assets.isLocal(this._source, AssetType.MOVIE_CLIP)) {
+					this._pendingFuture = null;
 					var movieClip = Assets.getMovieClip(this._source);
 					this._contentMeasurements.save(movieClip);
 					this.addChild(movieClip);
 					this.content = movieClip;
 				} else // async
 				{
-					var future = Assets.loadMovieClip(this._source)
-						.onProgress((progress, total) -> {
-							this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
-						})
-						.onComplete((movieClip:MovieClip) -> {
-							this._contentMeasurements.save(movieClip);
-							this.addChild(movieClip);
-							this.content = movieClip;
-							this.setInvalid(DATA);
-							this.dispatchEvent(new Event(Event.COMPLETE));
-						})
-						.onError((event:Dynamic) -> {
-							this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-						});
+					var future = Assets.loadMovieClip(this._source);
+					future.onProgress((progress, total) -> {
+						this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
+					}).onComplete((movieClip:MovieClip) -> {
+						if (future != this._pendingFuture) {
+							// cancelled
+							return;
+						}
+						this._contentMeasurements.save(movieClip);
+						this.addChild(movieClip);
+						this.content = movieClip;
+						this.setInvalid(DATA);
+						this.dispatchEvent(new Event(Event.COMPLETE));
+					}).onError((event:Dynamic) -> {
+						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
+					});
+					this._pendingFuture = future;
 				}
 			} else {
+				this._pendingFuture = null;
 				if (this.loader == null) {
 					this.loader = new Loader();
 					this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_contentLoaderInfo_completeHandler);
 					this.loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, loader_contentLoaderInfo_progressHandler);
 					this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loader_contentLoaderInfo_ioErrorHandler);
 					this.loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loader_contentLoaderInfo_securityErrorHandler);
-					this.addChild(this.loader);
 				}
 				try {
 					this.loader.load(new URLRequest(this._source));
@@ -409,6 +420,7 @@ class AssetLoader extends FeathersControl {
 	}
 
 	private function loader_contentLoaderInfo_completeHandler(event:Event):Void {
+		this.addChild(this.loader);
 		this.content = this.loader;
 		this._contentMeasurements.save(this.content);
 		this.setInvalid(LAYOUT);
