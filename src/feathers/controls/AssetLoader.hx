@@ -135,7 +135,7 @@ class AssetLoader extends FeathersControl {
 					var future = Assets.loadBitmapData(this._source);
 					future.onProgress((progress, total) -> {
 						this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
-					}).onComplete((bitmapData:BitmapData) -> {
+					}).onComplete(function(bitmapData:BitmapData):Void {
 						if (future != this._pendingFuture) {
 							// cancelled
 							return;
@@ -164,7 +164,7 @@ class AssetLoader extends FeathersControl {
 					var future = Assets.loadMovieClip(this._source);
 					future.onProgress((progress, total) -> {
 						this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
-					}).onComplete((movieClip:MovieClip) -> {
+					}).onComplete(function(movieClip:MovieClip):Void {
 						if (future != this._pendingFuture) {
 							// cancelled
 							return;
