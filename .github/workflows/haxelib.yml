@@ -1,0 +1,30 @@
+name: Haxelib
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/upload-artifact@v2
+      with:
+        name: feathersui-haxelib
+        path: |
+          src/
+          tools/
+          haxelib.json
+          README.md
+          LICENSE.md
+          CHANGELOG.md
+          CONTRIBUTING.md
+        if-no-files-found: error
