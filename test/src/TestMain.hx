@@ -43,6 +43,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.core.RestrictedStyleTest());
 		runner.addCase(new feathers.core.ScaleTest());
 		runner.addCase(new feathers.data.ArrayCollectionTest());
+		runner.addCase(new feathers.data.ArrayHierarchicalCollectionTest());
 		runner.addCase(new feathers.data.TreeCollectionTest());
 		runner.addCase(new feathers.layout.AnchorLayoutTest());
 		runner.addCase(new feathers.layout.HorizontalLayoutTest());
