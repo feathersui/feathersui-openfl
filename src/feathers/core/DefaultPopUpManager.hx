@@ -184,6 +184,12 @@ class DefaultPopUpManager implements IPopUpManager {
 		@see `feathers.core.IPopUpManager.addPopUp`
 	**/
 	public function addPopUp(popUp:DisplayObject, isModal:Bool = true, isCentered:Bool = true, ?customOverlayFactory:() -> DisplayObject):DisplayObject {
+		var index = this.popUps.indexOf(popUp);
+		if (index != -1) {
+			this.cleanupOverlay(popUp);
+			this.cleanupFocus(popUp);
+			this.popUps.splice(index, 1);
+		}
 		if (isModal) {
 			if (customOverlayFactory == null) {
 				customOverlayFactory = this._overlayFactory;
@@ -268,6 +274,24 @@ class DefaultPopUpManager implements IPopUpManager {
 		popUp.y = topLeft.y + (bottomRight.y - topLeft.y - popUp.height) / 2.0;
 	}
 
+	private function cleanupOverlay(popUp:DisplayObject):Void {
+		var overlay = this._popUpToOverlay.get(popUp);
+		if (overlay == null) {
+			return;
+		}
+		this._root.removeChild(overlay);
+		this._popUpToOverlay.remove(popUp);
+	}
+
+	private function cleanupFocus(popUp:DisplayObject):Void {
+		var focusManager = this._popUpToFocusManager.get(popUp);
+		if (focusManager == null) {
+			return;
+		}
+		this._popUpToFocusManager.remove(popUp);
+		FocusManager.remove(this._focusManager, focusManager);
+	}
+
 	private function popUp_removedFromStageHandler(event:Event):Void {
 		if (this._ignoreRemoval) {
 			return;
@@ -275,16 +299,8 @@ class DefaultPopUpManager implements IPopUpManager {
 		var popUp = cast(event.currentTarget, DisplayObject);
 		popUp.removeEventListener(Event.REMOVED_FROM_STAGE, popUp_removedFromStageHandler);
 		this.popUps.remove(popUp);
-		var overlay = this._popUpToOverlay.get(popUp);
-		if (overlay != null) {
-			this._root.removeChild(overlay);
-			this._popUpToOverlay.remove(popUp);
-		}
-		var focusManager = this._popUpToFocusManager.get(popUp);
-		if (focusManager != null) {
-			this._popUpToFocusManager.remove(popUp);
-			FocusManager.remove(this._focusManager, focusManager);
-		}
+		this.cleanupOverlay(popUp);
+		this.cleanupFocus(popUp);
 
 		if (this.popUps.length == 0) {
 			this._root.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);
