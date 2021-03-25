@@ -1410,6 +1410,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._selectable) {
+			super.baseScrollContainer_keyDownHandler(event);
+			return;
+		}
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}

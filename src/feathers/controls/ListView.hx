@@ -1569,6 +1569,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._selectable) {
+			super.baseScrollContainer_keyDownHandler(event);
+			return;
+		}
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
