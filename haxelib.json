@@ -14,7 +14,7 @@
 		"layout"
 	],
 	"description": "Cross-platform user interface components for creative frontend projects built with Haxe and OpenFL",
-	"version": "1.0.0-beta.2",
+	"version": "1.0.0-beta.3",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: Multiple item renderers, ToolTipManager, restored OpenFL 8.9 support"
+	"releasenote": "Preview build: Alert, ButtonBar, Form, FormItem, and Header"
 }
