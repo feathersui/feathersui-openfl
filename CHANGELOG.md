@@ -1,5 +1,51 @@
 # Feather UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.3 (2021-??-??)
+
+- Alert: New component to display a pop-up dialog with a message, a title, and an optional icon.
+- AnchorLayoutData: New `fillHorizontal()` and `fillVertical()` static methods.
+- Application: Added `topLevelApplication` static property to easily access the root `Application` globally.
+- ArrayHierarchicalCollection: New collection type for hierarchical data containers, like `GroupListView` and `TreeView`.
+- AssetLoader: Added missing `ProgressEvent.PROGRESS` dispatch when asset is loaded asynchronously.
+- BaseScrollContainer: New `getViewPortVisibleBounds()` utility method.
+- BaseScrollContainer: New `scrollPixelSnapping` property to allow snapping the scroll position to the nearest pixel.
+- BaseScrollContainer: New `scrollerFactory` property to customize the `Scroller` behavior.
+- BaseScrollContainer: New `showScrollBarMinimumDuration` style to ensure that scroll bars don't flicker when revealed by the mouse wheel.
+- ButtonBar: New component to display a set of buttons based on an `IFlatCollection` data provider.
+- Callout: Now automatically closes itself when its origin is removed from the stage.
+- ComboBox: New `customButtonVariant`, `customListViewVariant` and `customTextInputVariant` styles to allow sub-component customization in themes.
+- ComboBox: New `openListViewOnFocus` property allows the pop-up list view to automatically open when the `ComboBox` receives focus.
+- ComboBox: Exposes `ListViewEvent.ITEM_TRIGGER` from the pop-up list view.
+- Drawer: New `clickOverlayToClose`, `swipeOpenEnabled` and `swipeCloseEnabled` properties.
+- DropDownPopUpAdapter: Forces the width of the pop-up to be at least as wide as the origin.
+- Form: New component for displaying a group of fields to be submitted.
+- FormItem: New component designed for use with `Form` to display a label next to each item.
+- General: Added new `setPadding()` convenience functions to allow setting `paddingTop`, `paddingRight`, `paddingBottom`, and `paddingLeft` to the same value in a single call.
+- GridView/GroupListView/ListView/TreeView: Methods like `scrollToIndex()` and `scrollToLocation()` now accept an optional animation duration.
+- GridView: Added support for horizontal scrolling if the total width of the columns is larger than the width of the `GridView`.
+- GroupListView: New `customHeaderRendererVariant` property to allow sub-component customization in themes.
+- GroupListView/TreeView: New `locationToItemRenderer()` utilty method, similar to `itemToItemRenderer()`.
+- Header: New component that displays a title in the center, plus optional views on the left and right sides.
+- HScrollBar/VScrollBar: During touch interaction, if dragged out of range, the thumb will shrink like native scroll bars.
+- HScrollBar/VScrollBar: New `hideThumbWhenDisabled` style that affects the thumb visiblility when `enabled` is `false`.
+- IStageFocusDelegate: New interface that allows a component to specify one of its children to receive focus directly, when focus is passed by the `FocusManager`.
+- ITextControl: New `baseline` property, which may be used for alignment of multiple `ITextControl` instances together.
+- LeftAndRightBorderSkin: New skin class that is similar to `RectangleSkin`, but renders its border on the left and right sides only.
+- ListView: New `indexToItemRenderer()` utilty method, similar to `itemToItemRenderer()`.
+- OverlineAndUnderlineSkin: Deprecated. Replaced by `TopAndBottomBorderSkin`.
+- PageNavigator: New `pageIndicatorFactory` and `customPageIndicatorVariant`, and `gap` properties.
+- PopUpListView: New `customButtonVariant` and `customListViewVariant` styles to allow sub-component customization in themes.
+- Radio: Selection may now be changed with keyboard arrow keys when a radio in the group has focus.
+- ScrollContainer: New `autoSizeMode` property, similar to the same property on `LayoutGroup`.
+- TabBar: Dispatches `TabBarEvent.ITEM_TRIGGER` when a tab is triggered.
+- TabNavigator: New `tabBarFactory` and `customTabBarVariant` styles to to allow sub-component customization.
+- TabNavigator: New `gap` style to add spacing between the active view and the `TabBar` sub-component.
+- TabNavigator: Exposes `TabBarEvent.ITEM_TRIGGER` from the tab bar.
+- TextArea: If the `prompt` is too long to fit horizontally, it will now wrap to multiple lines.
+- TextArea/TextInput: New `maxChars` property to limit the number of allowed characters entered by the user.
+- TopAndBottomBorderSkin: New skin class that is similar to `RectangleSkin`, but renders its border on the top and bottom sides only.
+- TreeViewItemRenderer: New `branchIcon`, `branchOpenIcon`, `branchClosedIcon`, and `leafIcon` styles.
+
 ## 1.0.0-beta.2 (2020-12-08)
 
 - Restored support for OpenFL version 8.9.
