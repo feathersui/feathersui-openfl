@@ -60,10 +60,12 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(selected:Bool = false) {
 		initializeToggleSwitchTheme();
 
 		super();
+
+		this.selected = selected;
 
 		// MouseEvent.CLICK is dispatched only if the same object is under the
 		// pointer for both MouseEvent.MOUSE_DOWN and MouseEvent.MOUSE_UP. The

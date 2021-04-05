@@ -190,10 +190,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IHierarchicalCollection<Dynamic>) {
 		initializeGroupListViewTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 
 		this.tabEnabled = true;
 		this.focusRect = null;
@@ -213,7 +215,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			&& this._focusEnabled;
 	}
 
-	private var _dataProvider:IHierarchicalCollection<Dynamic> = null;
+	private var _dataProvider:IHierarchicalCollection<Dynamic>;
 
 	/**
 		The collection of data displayed by the group list view.

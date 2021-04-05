@@ -43,11 +43,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	public function new(text:String = "") {
+	public function new(text:String = "", ?content:DisplayObject) {
 		initializeFormItemTheme();
 		super();
 
 		this.text = text;
+		this.content = content;
 	}
 
 	private var textField:TextField;
@@ -119,7 +120,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	private var _contentMeasurements:Measurements = null;
 	private var _currentContent:DisplayObject = null;
 
-	private var _content:DisplayObject = null;
+	private var _content:DisplayObject;
 
 	/**
 		The content displayed by the form item.

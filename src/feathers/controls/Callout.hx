@@ -274,9 +274,13 @@ class Callout extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?content:DisplayObject) {
 		initializeCalloutTheme();
+
 		super();
+
+		this.content = content;
+
 		this.addEventListener(Event.ADDED_TO_STAGE, callout_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, callout_removedFromStageHandler);
 	}

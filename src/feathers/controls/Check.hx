@@ -37,10 +37,10 @@ class Check extends ToggleButton {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?text:String, selected:Bool = false) {
 		initializeCheckTheme();
 
-		super();
+		super(text, selected);
 	}
 
 	private function initializeCheckTheme():Void {

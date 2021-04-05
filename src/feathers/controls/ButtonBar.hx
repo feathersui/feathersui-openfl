@@ -106,13 +106,15 @@ class ButtonBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IFlatCollection<Dynamic>) {
 		initializeButtonBarTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 	}
 
-	private var _dataProvider:IFlatCollection<Dynamic> = null;
+	private var _dataProvider:IFlatCollection<Dynamic>;
 
 	/**
 		The collection of data displayed by the button bar.

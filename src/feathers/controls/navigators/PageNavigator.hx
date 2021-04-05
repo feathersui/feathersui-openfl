@@ -75,8 +75,10 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IFlatCollection<PageItem>) {
 		initializePageNavigatorTheme();
+
+		this.dataProvider = dataProvider;
 
 		super();
 	}

@@ -61,12 +61,13 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		@since 1.0.0
 	**/
-	public function new(?text:String) {
+	public function new(?text:String, selected:Bool = false) {
 		initializeToggleButtonTheme();
 
 		super();
 
 		this.text = text;
+		this.selected = selected;
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, toggleButton_keyDownHandler);
 		this.addEventListener(FocusEvent.FOCUS_IN, toggleButton_focusInHandler);

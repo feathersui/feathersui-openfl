@@ -114,10 +114,12 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IFlatCollection<Dynamic>) {
 		initializeTabBarTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, tabBar_keyDownHandler);
 	}

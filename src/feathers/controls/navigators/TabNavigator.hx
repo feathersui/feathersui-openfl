@@ -76,10 +76,12 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IFlatCollection<TabItem>) {
 		initializeTabNavigatorTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 	}
 
 	private var tabBar:TabBar;
@@ -87,7 +89,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	private var _previousEdgePuller:EdgePuller;
 	private var _nextEdgePuller:EdgePuller;
 
-	private var _dataProvider:IFlatCollection<TabItem> = null;
+	private var _dataProvider:IFlatCollection<TabItem>;
 
 	/**
 		The collection of `TabItem` data displayed by the navigator.

@@ -68,8 +68,10 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?source:String) {
 		super();
+
+		this.source = source;
 	}
 
 	private var content:DisplayObject;

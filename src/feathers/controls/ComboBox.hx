@@ -159,10 +159,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IFlatCollection<Dynamic>) {
 		initializeComboBoxTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 
 		this.addEventListener(FocusEvent.FOCUS_IN, comboBox_focusInHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_removedFromStageHandler);
@@ -176,7 +178,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var buttonMeasurements = new Measurements();
 	private var textInputMeasurements = new Measurements();
 
-	private var _dataProvider:IFlatCollection<Dynamic> = null;
+	private var _dataProvider:IFlatCollection<Dynamic>;
 
 	/**
 		The collection of data displayed by the list.

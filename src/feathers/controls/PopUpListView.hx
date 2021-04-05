@@ -140,10 +140,12 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IFlatCollection<Dynamic>) {
 		initializePopUpListViewTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 
 		this.addEventListener(FocusEvent.FOCUS_IN, popUpListView_focusInHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_removedFromStageHandler);
@@ -154,7 +156,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private var buttonMeasurements:Measurements = new Measurements();
 
-	private var _dataProvider:IFlatCollection<Dynamic> = null;
+	private var _dataProvider:IFlatCollection<Dynamic>;
 
 	/**
 		The collection of data displayed by the list view.

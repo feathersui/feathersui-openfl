@@ -66,11 +66,13 @@ class Radio extends ToggleButton implements IGroupedToggle {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?text:String, selected:Bool = false) {
 		initializeRadioTheme();
 
-		super();
+		super(text, selected);
+
 		super.toggleable = true;
+
 		this.addEventListener(Event.ADDED_TO_STAGE, radio_addedToStageHandler);
 		this.addEventListener(KeyboardEvent.KEY_DOWN, radio_keyDownHandler);
 	}

@@ -181,10 +181,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IFlatCollection<Dynamic>) {
 		initializeGridViewTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 
 		this.tabEnabled = true;
 		this.focusRect = null;
@@ -219,7 +221,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var gridViewPort:AdvancedLayoutViewPort;
 
-	private var _dataProvider:IFlatCollection<Dynamic> = null;
+	private var _dataProvider:IFlatCollection<Dynamic>;
 
 	/**
 		The collection of data displayed by the grid view.

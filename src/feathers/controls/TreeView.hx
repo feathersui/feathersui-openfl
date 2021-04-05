@@ -195,10 +195,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?dataProvider:IHierarchicalCollection<Dynamic>) {
 		initializeTreeViewTheme();
 
 		super();
+
+		this.dataProvider = dataProvider;
 
 		this.tabEnabled = true;
 		this.focusRect = null;
@@ -220,7 +222,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private var openBranches:Array<Dynamic> = [];
 
-	private var _dataProvider:IHierarchicalCollection<Dynamic> = null;
+	private var _dataProvider:IHierarchicalCollection<Dynamic>;
 
 	/**
 		The collection of data displayed by the tree view.
