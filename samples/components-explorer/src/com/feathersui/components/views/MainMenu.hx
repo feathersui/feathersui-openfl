@@ -6,7 +6,7 @@ import feathers.controls.GroupListView;
 import feathers.controls.Header;
 import feathers.controls.Panel;
 import feathers.data.ArrayHierarchicalCollection;
-import feathers.events.ListViewEvent;
+import feathers.events.GroupListViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
@@ -84,7 +84,7 @@ class MainMenu extends Panel {
 		this.listView = new GroupListView();
 		this.listView.dataProvider = menuItems;
 		this.listView.layoutData = AnchorLayoutData.fill();
-		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
+		this.listView.addEventListener(GroupListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
 		this.addChild(this.listView);
 	}
 
@@ -117,7 +117,7 @@ class MainMenu extends Panel {
 		header.rightView = themeButton;
 	}
 
-	private function listView_itemTriggerHandler(event:ListViewEvent):Void {
+	private function listView_itemTriggerHandler(event:GroupListViewEvent):Void {
 		var triggeredItem = event.state.data;
 		if (triggeredItem.screenID == null) {
 			return;
