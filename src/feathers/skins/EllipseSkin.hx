@@ -32,6 +32,9 @@ class EllipseSkin extends BaseGraphicsPathSkin {
 		var thickness = getLineThickness(currentBorder);
 		var thicknessOffset = thickness / 2.0;
 
-		this.graphics.drawEllipse(thicknessOffset, thicknessOffset, this.actualWidth - thickness, this.actualHeight - thickness);
+		var drawWidth = Math.max(0.0, this.actualWidth - thickness);
+		var drawHeight = Math.max(0.0, this.actualHeight - thickness);
+
+		this.graphics.drawEllipse(thicknessOffset, thicknessOffset, drawWidth, drawHeight);
 	}
 }

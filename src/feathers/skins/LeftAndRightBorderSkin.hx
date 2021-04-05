@@ -35,15 +35,21 @@ class LeftAndRightBorderSkin extends BaseGraphicsPathSkin {
 		var currentFill = this.getCurrentFill();
 		if (currentFill != null) {
 			this.applyFillStyle(currentFill);
-			this.graphics.drawRect(0.0, thicknessOffset, this.actualWidth, this.actualHeight - thickness);
+			this.graphics.drawRect(thicknessOffset, 0.0, Math.max(0.0, this.actualWidth - thickness), this.actualHeight);
 			this.graphics.endFill();
 		}
+
+		var minLineX = Math.min(this.actualWidth, thicknessOffset);
+		var minLineY = Math.min(this.actualHeight, thicknessOffset);
+		var maxLineX = Math.max(minLineX, this.actualWidth - thicknessOffset);
+		var maxLineY = Math.max(minLineY, this.actualHeight - thicknessOffset);
+
 		this.applyLineStyle(currentBorder);
 		// left
-		this.graphics.moveTo(thicknessOffset, thicknessOffset);
-		this.graphics.lineTo(thicknessOffset, this.actualHeight - thicknessOffset);
+		this.graphics.moveTo(minLineX, minLineY);
+		this.graphics.lineTo(minLineX, maxLineY);
 		// right
-		this.graphics.moveTo(this.actualWidth - thicknessOffset, thicknessOffset);
-		this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset);
+		this.graphics.moveTo(maxLineX, minLineY);
+		this.graphics.lineTo(maxLineX, maxLineY);
 	}
 }

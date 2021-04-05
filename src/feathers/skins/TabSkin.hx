@@ -105,69 +105,54 @@ class TabSkin extends BaseGraphicsPathSkin {
 		var currentBorder = this.getCurrentBorder();
 		var thicknessOffset = getLineThickness(currentBorder) / 2.0;
 
+		var drawWidth = Math.max(0.0, this.actualWidth - thicknessOffset);
+		var drawHeight = Math.max(0.0, this.actualHeight - thicknessOffset);
+
 		var adjustedCornerRadius = Math.min(this._cornerRadius, Math.min(this.actualWidth / 2.0, this.actualHeight / 2.0));
 
 		if (adjustedCornerRadius == 0.0 && this._drawBaseBorder) {
-			this.graphics.drawRect(thicknessOffset, thicknessOffset, this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset);
+			this.graphics.drawRect(thicknessOffset, thicknessOffset, drawWidth, drawHeight);
 		} else {
 			switch (this._cornerRadiusPosition) {
 				case LEFT:
 					this.graphics.moveTo(thicknessOffset + adjustedCornerRadius, thicknessOffset);
 					if (this._drawBaseBorder) {
-						this.graphics.lineTo(this.actualWidth - thicknessOffset, thicknessOffset);
-						this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset);
+						this.graphics.lineTo(drawWidth, thicknessOffset);
+						this.graphics.lineTo(drawWidth, drawHeight);
 					} else {
 						this.graphics.lineTo(this.actualWidth, thicknessOffset);
 						this.graphics.lineStyle(0.0, 0.0, 0.0);
-						this.graphics.lineTo(this.actualWidth, this.actualHeight - thicknessOffset);
+						this.graphics.lineTo(this.actualWidth, drawHeight);
 						this.applyLineStyle(currentBorder);
 					}
-					this.graphics.lineTo(thicknessOffset + adjustedCornerRadius, this.actualHeight - thicknessOffset);
-					this.graphics.curveTo(thicknessOffset, this.actualHeight
-						- thicknessOffset, thicknessOffset,
-						this.actualHeight
-						- thicknessOffset
-						- adjustedCornerRadius);
+					this.graphics.lineTo(thicknessOffset + adjustedCornerRadius, drawHeight);
+					this.graphics.curveTo(thicknessOffset, drawHeight, thicknessOffset, drawHeight - adjustedCornerRadius);
 					this.graphics.lineTo(thicknessOffset, thicknessOffset + adjustedCornerRadius);
 					this.graphics.curveTo(thicknessOffset, thicknessOffset, thicknessOffset + adjustedCornerRadius, thicknessOffset);
 				case RIGHT:
 					this.graphics.moveTo(thicknessOffset, thicknessOffset);
-					this.graphics.lineTo(this.actualWidth - thicknessOffset - adjustedCornerRadius, thicknessOffset);
-					this.graphics.curveTo(this.actualWidth
-						- thicknessOffset, thicknessOffset, this.actualWidth
-						- thicknessOffset,
-						thicknessOffset
-						+ adjustedCornerRadius);
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset - adjustedCornerRadius);
-					this.graphics.curveTo(this.actualWidth
-						- thicknessOffset, this.actualHeight
-						- thicknessOffset,
-						this.actualWidth
-						- thicknessOffset
-						- adjustedCornerRadius, this.actualHeight
-						- thicknessOffset);
+					this.graphics.lineTo(drawWidth - adjustedCornerRadius, thicknessOffset);
+					this.graphics.curveTo(drawWidth, thicknessOffset, drawWidth, thicknessOffset + adjustedCornerRadius);
+					this.graphics.lineTo(drawWidth, drawHeight - adjustedCornerRadius);
+					this.graphics.curveTo(drawWidth, drawHeight, drawWidth - adjustedCornerRadius, drawHeight);
 					if (this._drawBaseBorder) {
-						this.graphics.lineTo(thicknessOffset, this.actualHeight - thicknessOffset);
+						this.graphics.lineTo(thicknessOffset, drawHeight);
 						this.graphics.lineTo(thicknessOffset, thicknessOffset);
 					} else {
-						this.graphics.lineTo(0.0, this.actualHeight - thicknessOffset);
+						this.graphics.lineTo(0.0, drawHeight);
 						this.graphics.lineStyle(0.0, 0.0, 0.0);
 						this.graphics.lineTo(0.0, thicknessOffset);
 						this.applyLineStyle(currentBorder);
 					}
 				case TOP:
 					this.graphics.moveTo(thicknessOffset + adjustedCornerRadius, thicknessOffset);
-					this.graphics.lineTo(this.actualWidth - thicknessOffset - adjustedCornerRadius, thicknessOffset);
-					this.graphics.curveTo(this.actualWidth
-						- thicknessOffset, thicknessOffset, this.actualWidth
-						- thicknessOffset,
-						thicknessOffset
-						+ adjustedCornerRadius);
+					this.graphics.lineTo(drawWidth - adjustedCornerRadius, thicknessOffset);
+					this.graphics.curveTo(drawWidth, thicknessOffset, drawWidth, thicknessOffset + adjustedCornerRadius);
 					if (this._drawBaseBorder) {
-						this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset);
-						this.graphics.lineTo(thicknessOffset, this.actualHeight - thicknessOffset);
+						this.graphics.lineTo(drawWidth, drawHeight);
+						this.graphics.lineTo(thicknessOffset, drawHeight);
 					} else {
-						this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight);
+						this.graphics.lineTo(drawWidth, this.actualHeight);
 						this.graphics.lineStyle(0.0, 0.0, 0.0);
 						this.graphics.lineTo(thicknessOffset, this.actualHeight);
 						this.applyLineStyle(currentBorder);
@@ -177,27 +162,17 @@ class TabSkin extends BaseGraphicsPathSkin {
 				case BOTTOM:
 					if (this._drawBaseBorder) {
 						this.graphics.moveTo(thicknessOffset, thicknessOffset);
-						this.graphics.lineTo(this.actualWidth - thicknessOffset, thicknessOffset);
+						this.graphics.lineTo(drawWidth, thicknessOffset);
 					} else {
 						this.graphics.lineStyle(0.0, 0.0, 0.0);
 						this.graphics.moveTo(thicknessOffset, 0.0);
-						this.graphics.lineTo(this.actualWidth - thicknessOffset, 0.0);
+						this.graphics.lineTo(drawWidth, 0.0);
 						this.applyLineStyle(currentBorder);
 					}
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset - adjustedCornerRadius);
-					this.graphics.curveTo(this.actualWidth
-						- thicknessOffset, this.actualHeight
-						- thicknessOffset,
-						this.actualWidth
-						- thicknessOffset
-						- adjustedCornerRadius, this.actualHeight
-						- thicknessOffset);
-					this.graphics.lineTo(thicknessOffset + adjustedCornerRadius, this.actualHeight - thicknessOffset);
-					this.graphics.curveTo(thicknessOffset, this.actualHeight
-						- thicknessOffset, thicknessOffset,
-						this.actualHeight
-						- thicknessOffset
-						- adjustedCornerRadius);
+					this.graphics.lineTo(drawWidth, drawHeight - adjustedCornerRadius);
+					this.graphics.curveTo(drawWidth, drawHeight, drawWidth - adjustedCornerRadius, drawHeight);
+					this.graphics.lineTo(thicknessOffset + adjustedCornerRadius, drawHeight);
+					this.graphics.curveTo(thicknessOffset, drawHeight, thicknessOffset, drawHeight - adjustedCornerRadius);
 					this.graphics.lineTo(thicknessOffset, thicknessOffset);
 				default:
 					throw new ArgumentError("Tab cornerRadiusPosition not supported: " + this._cornerRadiusPosition);

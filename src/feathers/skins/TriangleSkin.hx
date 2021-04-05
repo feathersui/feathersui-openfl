@@ -80,20 +80,23 @@ class TriangleSkin extends BaseGraphicsPathSkin {
 		var currentBorder = this.getCurrentBorder();
 		var thicknessOffset = getLineThickness(currentBorder) / 2.0;
 
+		var maxX = Math.max(0.0, this.actualWidth - thicknessOffset);
+		var maxY = Math.max(0.0, this.actualHeight - thicknessOffset);
+
 		switch (this._pointPosition) {
 			case LEFT:
 				if (this._drawBaseBorder) {
-					this.graphics.moveTo(this.actualWidth - thicknessOffset, thicknessOffset);
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset);
+					this.graphics.moveTo(maxX, thicknessOffset);
+					this.graphics.lineTo(maxX, maxY);
 				} else {
 					this.graphics.moveTo(this.actualWidth, thicknessOffset);
 					this.graphics.lineStyle(0.0, 0.0, 0.0);
-					this.graphics.lineTo(this.actualWidth, this.actualHeight - thicknessOffset);
+					this.graphics.lineTo(this.actualWidth, maxY);
 					this.applyLineStyle(currentBorder);
 				}
 				this.graphics.lineTo(thicknessOffset, this.actualHeight / 2.0);
 				if (this._drawBaseBorder) {
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, thicknessOffset);
+					this.graphics.lineTo(maxX, thicknessOffset);
 				} else {
 					this.graphics.lineTo(this.actualWidth, thicknessOffset);
 				}
@@ -103,12 +106,12 @@ class TriangleSkin extends BaseGraphicsPathSkin {
 				} else {
 					this.graphics.moveTo(0.0, thicknessOffset);
 				}
-				this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight / 2.0);
+				this.graphics.lineTo(maxX, this.actualHeight / 2.0);
 				if (this._drawBaseBorder) {
-					this.graphics.lineTo(thicknessOffset, this.actualHeight - thicknessOffset);
+					this.graphics.lineTo(thicknessOffset, maxY);
 					this.graphics.lineTo(thicknessOffset, thicknessOffset);
 				} else {
-					this.graphics.lineTo(0.0, this.actualHeight - thicknessOffset);
+					this.graphics.lineTo(0.0, maxY);
 					this.graphics.lineStyle(0.0, 0.0, 0.0);
 					this.graphics.lineTo(0.0, thicknessOffset);
 					this.applyLineStyle(currentBorder);
@@ -116,10 +119,10 @@ class TriangleSkin extends BaseGraphicsPathSkin {
 			case TOP:
 				this.graphics.moveTo(this.actualWidth / 2.0, thicknessOffset);
 				if (this._drawBaseBorder) {
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset);
-					this.graphics.lineTo(thicknessOffset, this.actualHeight - thicknessOffset);
+					this.graphics.lineTo(maxX, maxY);
+					this.graphics.lineTo(thicknessOffset, maxY);
 				} else {
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight);
+					this.graphics.lineTo(maxX, this.actualHeight);
 					this.graphics.lineStyle(0.0, 0.0, 0.0);
 					this.graphics.lineTo(thicknessOffset, this.actualHeight);
 					this.applyLineStyle(currentBorder);
@@ -128,14 +131,14 @@ class TriangleSkin extends BaseGraphicsPathSkin {
 			case BOTTOM:
 				if (this._drawBaseBorder) {
 					this.graphics.moveTo(thicknessOffset, thicknessOffset);
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, thicknessOffset);
+					this.graphics.lineTo(maxX, thicknessOffset);
 				} else {
 					this.graphics.lineStyle(0.0, 0.0, 0.0);
 					this.graphics.moveTo(thicknessOffset, 0.0);
-					this.graphics.lineTo(this.actualWidth - thicknessOffset, 0.0);
+					this.graphics.lineTo(maxX, 0.0);
 					this.applyLineStyle(currentBorder);
 				}
-				this.graphics.lineTo(this.actualWidth / 2.0, this.actualHeight - thicknessOffset);
+				this.graphics.lineTo(this.actualWidth / 2.0, maxY);
 				if (this._drawBaseBorder) {
 					this.graphics.lineTo(thicknessOffset, thicknessOffset);
 				} else {

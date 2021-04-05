@@ -40,7 +40,8 @@ class CircleSkin extends BaseGraphicsPathSkin {
 		if (shorterSide > this.actualHeight) {
 			shorterSide = this.actualHeight;
 		}
-		return (shorterSide / 2.0) - thicknessOffset;
+		var radius = (shorterSide / 2.0) - thicknessOffset;
+		return Math.max(0.0, radius);
 	}
 
 	override private function getDefaultGradientMatrixWidth():Float {
@@ -52,10 +53,12 @@ class CircleSkin extends BaseGraphicsPathSkin {
 	}
 
 	override private function getDefaultGradientMatrixTx():Float {
-		return (this.actualWidth - this.getRadius()) / 2.0;
+		var drawWidth = Math.max(0.0, this.actualWidth - this.getRadius());
+		return drawWidth / 2.0;
 	}
 
 	override private function getDefaultGradientMatrixTy():Float {
-		return (this.actualHeight - this.getRadius()) / 2.0;
+		var drawHeight = Math.max(0.0, this.actualHeight - this.getRadius());
+		return drawHeight / 2.0;
 	}
 }

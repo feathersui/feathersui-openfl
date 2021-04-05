@@ -33,11 +33,17 @@ class UnderlineSkin extends BaseGraphicsPathSkin {
 		var currentFill = this.getCurrentFill();
 		if (currentFill != null) {
 			this.applyFillStyle(currentFill);
-			this.graphics.drawRect(0.0, 0.0, this.actualWidth, this.actualHeight - thicknessOffset);
+			this.graphics.drawRect(0.0, 0.0, this.actualWidth, Math.max(0.0, this.actualHeight - thicknessOffset));
 			this.graphics.endFill();
 		}
+
+		var minLineX = Math.min(this.actualWidth, thicknessOffset);
+		var minLineY = Math.min(this.actualHeight, thicknessOffset);
+		var maxLineX = Math.max(minLineX, this.actualWidth - thicknessOffset);
+		var maxLineY = Math.max(minLineY, this.actualHeight - thicknessOffset);
+
 		this.applyLineStyle(currentBorder);
-		this.graphics.moveTo(thicknessOffset, this.actualHeight - thicknessOffset);
-		this.graphics.lineTo(this.actualWidth - thicknessOffset, this.actualHeight - thicknessOffset);
+		this.graphics.moveTo(minLineX, maxLineY);
+		this.graphics.lineTo(maxLineX, maxLineY);
 	}
 }
