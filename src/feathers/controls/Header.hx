@@ -54,10 +54,12 @@ class Header extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(text:String = "") {
 		initializeHeaderTheme();
 
 		super();
+
+		this.text = text;
 	}
 
 	private var textField:TextField;
@@ -68,7 +70,7 @@ class Header extends FeathersControl implements ITextControl {
 	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-	private var _text:String = "";
+	private var _text:String;
 
 	/**
 		The text displayed by the header.

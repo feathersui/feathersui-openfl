@@ -57,8 +57,7 @@ class TextCallout extends Callout implements ITextControl {
 		@since 1.0.0
 	**/
 	public static function show(text:String, origin:DisplayObject, ?supportedPositions:RelativePositions, modal:Bool = true):TextCallout {
-		var callout = new TextCallout();
-		callout.text = text;
+		var callout = new TextCallout(text);
 		return cast(Callout.showCallout(callout, origin, supportedPositions, modal), TextCallout);
 	}
 
@@ -74,9 +73,11 @@ class TextCallout extends Callout implements ITextControl {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(text:String = "") {
 		initializeTextCalloutTheme();
 		super();
+
+		this.text = text;
 	}
 
 	private var label:Label;

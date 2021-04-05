@@ -97,10 +97,12 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?text:String) {
 		initializeButtonTheme();
 
 		super();
+
+		this.text = text;
 
 		this.tabEnabled = true;
 		this.tabChildren = false;

@@ -85,10 +85,12 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(text:String = "") {
 		initializeLabelTheme();
 
 		super();
+
+		this.text = text;
 	}
 
 	private var textField:TextField;
@@ -99,7 +101,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-	private var _text:String = "";
+	private var _text:String;
 
 	/**
 		The text displayed by the label.
