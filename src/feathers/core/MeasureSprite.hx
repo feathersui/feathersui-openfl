@@ -8,9 +8,12 @@
 
 package feathers.core;
 
-import openfl.errors.ArgumentError;
-import openfl.events.Event;
 import feathers.events.FeathersEvent;
+import openfl.display.DisplayObject;
+import openfl.events.Event;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
 	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)
@@ -430,6 +433,46 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	public function resetMaxHeight():Void {
 		// use the setter here
 		this.explicitMaxHeight = null;
+	}
+
+	@:noCompletion private var __getBoundsHelperMatrix1:Matrix;
+	@:noCompletion private var __getBoundsHelperMatrix2:Matrix;
+
+	override public function getBounds(targetCoordinateSpace:DisplayObject):Rectangle {
+		if (__getBoundsHelperMatrix1 == null) {
+			__getBoundsHelperMatrix1 = new Matrix();
+		} else {
+			__getBoundsHelperMatrix1.identity();
+		}
+
+		if (targetCoordinateSpace != null && targetCoordinateSpace != this) {
+			if (__getBoundsHelperMatrix2 == null) {
+				__getBoundsHelperMatrix2 = new Matrix();
+			}
+
+			__getBoundsHelperMatrix1.copyFrom(__getWorldTransform());
+
+			__getBoundsHelperMatrix2.copyFrom(targetCoordinateSpace.__getWorldTransform());
+			__getBoundsHelperMatrix2.invert();
+
+			__getBoundsHelperMatrix1.concat(__getBoundsHelperMatrix2);
+
+			__getBoundsHelperMatrix2.identity();
+		}
+
+		var x = __getBoundsHelperMatrix1.tx;
+		var y = __getBoundsHelperMatrix1.ty;
+		var w = this.actualWidth * __getBoundsHelperMatrix1.a
+			+ this.actualHeight * __getBoundsHelperMatrix1.c
+			+ __getBoundsHelperMatrix1.tx
+			- x;
+		var h = this.actualWidth * __getBoundsHelperMatrix1.b
+			+ this.actualHeight * __getBoundsHelperMatrix1.d
+			+ __getBoundsHelperMatrix1.ty
+			- y;
+
+		__getBoundsHelperMatrix1.identity();
+		return new Rectangle(x, y, w, h);
 	}
 
 	/**
