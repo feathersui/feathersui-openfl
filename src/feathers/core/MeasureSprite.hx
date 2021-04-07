@@ -450,9 +450,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 				__getBoundsHelperMatrix2 = new Matrix();
 			}
 
-			__getBoundsHelperMatrix1.copyFrom(transform.concatenatedMatrix);
+			// it would be better to use transform.concatenatedMatrix, but that
+			// creates an unnecessary clone
+			__getBoundsHelperMatrix1.copyFrom(__getWorldTransform());
 
-			__getBoundsHelperMatrix2.copyFrom(targetCoordinateSpace.transform.concatenatedMatrix);
+			__getBoundsHelperMatrix2.copyFrom(targetCoordinateSpace.__getWorldTransform());
 			__getBoundsHelperMatrix2.invert();
 
 			__getBoundsHelperMatrix1.concat(__getBoundsHelperMatrix2);
