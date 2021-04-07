@@ -452,9 +452,11 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 
 			// it would be better to use transform.concatenatedMatrix, but that
 			// creates an unnecessary clone
-			__getBoundsHelperMatrix1.copyFrom(__getWorldTransform());
+			var worldTransform1 = #if flash transform.concatenatedMatrix #else __getWorldTransform() #end;
+			__getBoundsHelperMatrix1.copyFrom(worldTransform1);
 
-			__getBoundsHelperMatrix2.copyFrom(targetCoordinateSpace.__getWorldTransform());
+			var worldTransform2 = #if flash targetCoordinateSpace.transform.concatenatedMatrix #else targetCoordinateSpace.__getWorldTransform() #end;
+			__getBoundsHelperMatrix2.copyFrom(worldTransform2);
 			__getBoundsHelperMatrix2.invert();
 
 			__getBoundsHelperMatrix1.concat(__getBoundsHelperMatrix2);
