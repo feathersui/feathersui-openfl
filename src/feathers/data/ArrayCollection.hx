@@ -192,24 +192,37 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			throw new RangeError('Failed to set item at index ${index}. Expected a value between 0 and ${this.length}.');
 		}
 		if (this._filterAndSortData != null) {
-			var oldItem = this._filterAndSortData[index];
-			var unfilteredIndex = this._array.indexOf(oldItem);
+			// fall back to placing the new item at the end of the array
+			var unfilteredIndex = this._array.length;
+			var oldItem = null;
+			if (index < this._filterAndSortData.length) {
+				oldItem = this._filterAndSortData[index];
+				// to determine where the item is placed in the unfiltered array
+				// find the unfiltered index of the item being replaced
+				unfilteredIndex = this._array.indexOf(oldItem);
+			}
 			this._array[unfilteredIndex] = item;
 			if (this._filterFunction != null) {
 				var includeItem = this._filterFunction(item);
-				if (includeItem) {
-					this._filterAndSortData[index] = item;
-					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
+				if (index < this._filterAndSortData.length) {
+					if (includeItem) {
+						// replace the old item
+						this._filterAndSortData[index] = item;
+						FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
+						FeathersEvent.dispatch(this, Event.CHANGE);
+					} else {
+						// if the new item is excluded, the old item at this index
+						// is removed instead of being replaced by the new item
+						this._filterAndSortData.splice(index, 1);
+						FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index, null, oldItem);
+						FeathersEvent.dispatch(this, Event.CHANGE);
+					}
+				} else if (includeItem) {
+					this._filterAndSortData[this._filterAndSortData.length] = item;
+					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.ADD_ITEM, index, item);
 					FeathersEvent.dispatch(this, Event.CHANGE);
-					return;
-				} else {
-					// if the item is excluded, the item at this index is
-					// removed instead of being replaced by the new item
-					this._filterAndSortData.remove(oldItem);
-					FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ITEM, index, null, oldItem);
-					FeathersEvent.dispatch(this, Event.CHANGE);
-					return;
 				}
+				return;
 			} else if (this._sortCompareFunction != null) {
 				// remove the old item first!
 				this._filterAndSortData.remove(oldItem);
@@ -221,10 +234,16 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 				return;
 			}
 		}
+
 		// no filter or sort
-		var oldItem = (index < this._array.length) ? this._array[index] : null;
-		this._array[index] = item;
-		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
+		if (index < this._array.length) {
+			var oldItem = this._array[index];
+			this._array[index] = item;
+			FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REPLACE_ITEM, index, item, oldItem);
+		} else {
+			this._array[index] = item;
+			FlatCollectionEvent.dispatch(this, FlatCollectionEvent.ADD_ITEM, index, item);
+		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
