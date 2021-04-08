@@ -350,7 +350,7 @@ class ArrayCollectionTest extends Test {
 		Assert.equals(this._collection.array.length, this._collection.length, "Collection length must match source length if unfiltered");
 		this._collection.filterFunction = filterFunction;
 		Assert.notEquals(this._collection.array.length, this._collection.length, "Collection length must not match source length if items are filtered");
-		Assert.equals(this._collection.array.length - 1, this._collection.length, "Collection length must account for filterFunction");
+		Assert.equals(this._collection.array.length - 2, this._collection.length, "Collection length must account for filterFunction");
 		Assert.equals(this._b, this._collection.get(0), "Collection with filterFunction must filter items");
 		Assert.equals(this._d, this._collection.get(1), "Collection with filterFunction must filter items");
 		Assert.raises(function():Void {
