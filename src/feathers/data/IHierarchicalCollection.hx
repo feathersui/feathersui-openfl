@@ -47,6 +47,28 @@ import openfl.events.IEventDispatcher;
 @:event(feathers.events.HierarchicalCollectionEvent.SORT_CHANGE)
 interface IHierarchicalCollection<T> extends IEventDispatcher {
 	/**
+		A function to determine if each item in the collection should be
+		included or excluded from visibility through APIs like `length` and
+		`get()`.
+
+		The following example filters a collection of strings by searching for
+		a substring at the beginning:
+
+		```hx
+		collection.filterFunction = (a:String) =>
+		{
+			return StringTools.startsWith(a.toLowerCase(), "john");
+		};
+		```
+
+		@see `feathers.data.HierarchicalCollectionEvent.FILTER_CHANGE`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var filterFunction(get, set):(T) -> Bool;
+
+	/**
 		Returns the item at the specified location within the collection.
 
 		The following example gets an item from a specific location:

@@ -405,7 +405,7 @@ import openfl.events.Event;
 			this._collection.get([0, 2]);
 		}, RangeError);
 		Assert.raises(function():Void {
-			this._collection.get([3, 1]);
+			this._collection.get([3, 0]);
 		}, RangeError);
 	}
 
@@ -426,6 +426,7 @@ import openfl.events.Event;
 		Assert.equals(this._3, this._collection.get([2]), "Collection order is incorrect after setting filterFunction to null");
 		Assert.equals(this._4, this._collection.get([3]), "Collection order is incorrect after setting filterFunction to null");
 		Assert.equals(this._4a, this._collection.get([3, 0]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._4b, this._collection.get([3, 1]), "Collection order is incorrect after setting filterFunction to null");
 		Assert.equals(this._5, this._collection.get([4]), "Collection order is incorrect after setting filterFunction to null");
 	}
 
@@ -439,7 +440,8 @@ import openfl.events.Event;
 		Assert.isTrue(this._collection.contains(this._2a), "Collection with filterFunction must contain unfiltered item");
 		Assert.isTrue(this._collection.contains(this._3), "Collection with filterFunction must contain unfiltered item");
 		Assert.isFalse(this._collection.contains(this._4), "Collection with filterFunction must not contain filtered item");
-		Assert.isFalse(this._collection.contains(this._4a), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._4a), "Collection with filterFunction must not contain filtered item");
+		Assert.isFalse(this._collection.contains(this._4b), "Collection with filterFunction must not contain filtered item");
 		Assert.isTrue(this._collection.contains(this._5), "Collection with filterFunction must contain unfiltered item");
 	}
 
@@ -454,6 +456,7 @@ import openfl.events.Event;
 		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._3)), "Collection with filterFunction must contain unfiltered item");
 		Assert.isNull(this._collection.locationOf(this._4), "Collection with filterFunction must not contain filtered item");
 		Assert.isNull(this._collection.locationOf(this._4a), "Collection with filterFunction must not contain filtered item");
+		Assert.isNull(this._collection.locationOf(this._4b), "Collection with filterFunction must not contain filtered item");
 		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._5)), "Collection with filterFunction must contain unfiltered item");
 	}
 }

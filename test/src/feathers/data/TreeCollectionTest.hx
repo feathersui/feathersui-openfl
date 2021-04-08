@@ -4,8 +4,11 @@
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
- */ package feathers.data;
+ */
 
+package feathers.data;
+
+import feathers.data.TreeNode;
 import openfl.errors.RangeError;
 import haxe.io.Error;
 import utest.Assert;
@@ -14,6 +17,8 @@ import feathers.events.HierarchicalCollectionEvent;
 import openfl.events.Event;
 
 @:keep class TreeCollectionTest extends Test {
+	private static final TEXT_FILTER_ME = "__FILTER_ME__";
+
 	private var _collection:TreeCollection<MockItem>;
 	private var _1:TreeNode<MockItem>;
 	private var _2:TreeNode<MockItem>;
@@ -23,6 +28,9 @@ import openfl.events.Event;
 	private var _1a:TreeNode<MockItem>;
 	private var _1b:TreeNode<MockItem>;
 	private var _1c:TreeNode<MockItem>;
+	private var _2a:TreeNode<MockItem>;
+	private var _4a:TreeNode<MockItem>;
+	private var _4b:TreeNode<MockItem>;
 
 	public function new() {
 		super();
@@ -33,15 +41,39 @@ import openfl.events.Event;
 		this._1b = new TreeNode(new MockItem("1-B"), [new TreeNode(new MockItem("1-B-I"))]);
 		this._1c = new TreeNode(new MockItem("1-C"));
 		this._1 = new TreeNode(new MockItem("1"), [this._1a, this._1b, this._1c]);
-		this._2 = new TreeNode(new MockItem("2"), [new TreeNode(new MockItem("2-A"))]);
+		this._2a = new TreeNode(new MockItem("2-A"));
+		this._2 = new TreeNode(new MockItem("2"), [this._2a]);
 		this._3 = new TreeNode(new MockItem("3"));
-		this._4 = new TreeNode(new MockItem("4"), [new TreeNode(new MockItem("4-A")), new TreeNode(new MockItem("4-B"))]);
+		this._4a = new TreeNode(new MockItem("4-A"));
+		this._4b = new TreeNode(new MockItem("4-B"));
+		this._4 = new TreeNode(new MockItem("4"), [this._4a, this._4b]);
 		this._5 = new TreeNode(new MockItem("5"), []);
 		this._collection = new TreeCollection([this._1, this._2, this._3, this._4, this._5]);
 	}
 
 	public function teardown():Void {
 		this._collection = null;
+	}
+
+	private function locationsMatch(location1:Array<Int>, location2:Array<Int>):Bool {
+		if (location1.length != location2.length) {
+			return false;
+		}
+		for (i in 0...location1.length) {
+			var item1 = location1[i];
+			var item2 = location2[i];
+			if (item1 != item2) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private function filterFunction(item:TreeNode<MockItem>):Bool {
+		if (item == this._4 || item == this._1b || item.data.text == TEXT_FILTER_ME) {
+			return false;
+		}
+		return true;
 	}
 
 	public function testLength():Void {
@@ -379,6 +411,86 @@ import openfl.events.Event;
 		});
 		this._collection.updateAll();
 		Assert.isTrue(updateAllEvent, "HierarchicalCollectionEvent.UPDATE_ALL must be dispatched after calling updateAll()");
+	}
+
+	//--- filterFunction
+
+	public function testFilterFunction():Void {
+		Assert.equals(this._collection.array.length, this._collection.getLength(), "Collection length must match source length if unfiltered");
+		Assert.equals(this._collection.array[3].children.length, this._collection.getLength([3]), "Collection length must match source length if unfiltered");
+		this._collection.filterFunction = filterFunction;
+		trace(this._collection.array.length, this._collection.getLength());
+		Assert.notEquals(this._collection.array.length, this._collection.getLength(), "Collection length must not match source length if items are filtered");
+		Assert.equals(this._collection.array.length - 1, this._collection.getLength(), "Collection length must account for filterFunction");
+		Assert.equals(this._1, this._collection.get([0]), "Collection with filterFunction must filter items");
+		Assert.equals(this._1a, this._collection.get([0, 0]), "Collection with filterFunction must filter items");
+		Assert.equals(this._1c, this._collection.get([0, 1]), "Collection with filterFunction must filter items");
+		Assert.equals(this._2, this._collection.get([1]), "Collection with filterFunction must filter items");
+		Assert.equals(this._2a, this._collection.get([1, 0]), "Collection with filterFunction must filter items");
+		Assert.equals(this._3, this._collection.get([2]), "Collection with filterFunction must filter items");
+		Assert.equals(this._5, this._collection.get([3]), "Collection with filterFunction must filter items");
+		Assert.notEquals(this._collection.array[3].children.length, this._collection.getLength([3]),
+			"Collection length must not match source length if items are filtered");
+		Assert.raises(function():Void {
+			this._collection.get([4]);
+		}, RangeError);
+		Assert.raises(function():Void {
+			this._collection.get([0, 2]);
+		}, RangeError);
+		Assert.raises(function():Void {
+			this._collection.get([3, 0]);
+		}, RangeError);
+	}
+
+	public function testSetFilterFunctionToNull():Void {
+		this._collection.filterFunction = filterFunction;
+		// get an item so that we know the filtering was applied
+		Assert.equals(this._5, this._collection.get([3]), "Collection with filterFunction must filter items");
+
+		this._collection.filterFunction = null;
+		Assert.equals(this._collection.array.length, this._collection.getLength(),
+			"Collection length must match source length after setting filterFunction to null");
+		Assert.equals(this._1, this._collection.get([0]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._1a, this._collection.get([0, 0]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._1b, this._collection.get([0, 1]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._1c, this._collection.get([0, 2]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._2, this._collection.get([1]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._2a, this._collection.get([1, 0]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._3, this._collection.get([2]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._4, this._collection.get([3]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._4a, this._collection.get([3, 0]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._4b, this._collection.get([3, 1]), "Collection order is incorrect after setting filterFunction to null");
+		Assert.equals(this._5, this._collection.get([4]), "Collection order is incorrect after setting filterFunction to null");
+	}
+
+	public function testContainsWithFilterFunction():Void {
+		this._collection.filterFunction = filterFunction;
+		Assert.isTrue(this._collection.contains(this._1), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(this._collection.contains(this._1a), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._1b), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._1c), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(this._collection.contains(this._2), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(this._collection.contains(this._2a), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(this._collection.contains(this._3), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._4), "Collection with filterFunction must not contain filtered item");
+		Assert.isFalse(this._collection.contains(this._4a), "Collection with filterFunction must not contain filtered item");
+		Assert.isFalse(this._collection.contains(this._4b), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._5), "Collection with filterFunction must contain unfiltered item");
+	}
+
+	public function testLocationOfWithFilterFunction():Void {
+		this._collection.filterFunction = filterFunction;
+		Assert.isTrue(locationsMatch([0], this._collection.locationOf(this._1)), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1a)), "Collection with filterFunction must contain unfiltered item");
+		Assert.isNull(this._collection.locationOf(this._1b), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1c)), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._2)), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._2a)), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._3)), "Collection with filterFunction must contain unfiltered item");
+		Assert.isNull(this._collection.locationOf(this._4), "Collection with filterFunction must not contain filtered item");
+		Assert.isNull(this._collection.locationOf(this._4a), "Collection with filterFunction must not contain filtered item");
+		Assert.isNull(this._collection.locationOf(this._4b), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._5)), "Collection with filterFunction must contain unfiltered item");
 	}
 }
 

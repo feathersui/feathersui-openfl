@@ -134,7 +134,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	private var _filterFunction:(T) -> Bool = null;
 
 	/**
-		@see `feathers.data.IFlatCollection.filterFunction`
+		@see `feathers.data.IHierarchicalCollection.filterFunction`
 	**/
 	@:flash.property
 	public var filterFunction(get, set):(T) -> Bool;
