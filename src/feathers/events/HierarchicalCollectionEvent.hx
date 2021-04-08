@@ -97,6 +97,16 @@ class HierarchicalCollectionEvent extends Event {
 	**/
 	public static inline var REMOVE_ALL:EventType<HierarchicalCollectionEvent> = "removeAll";
 
+	/**
+		The `HierarchicalCollectionEvent.FILTER_CHANGE` event type is dispatched
+		when a filter function has been applied to or removed from a collection.
+
+		@see `feathers.data.IHierarchicalCollection.filterFunction`
+
+		@since 1.0.0
+	**/
+	public static inline var FILTER_CHANGE:EventType<FlatCollectionEvent> = "filterChange";
+
 	#if !flash
 	private static var _pool = new ObjectPool<HierarchicalCollectionEvent>(() -> return new HierarchicalCollectionEvent(null, null, false, false), (event) -> {
 		event.target = null;
