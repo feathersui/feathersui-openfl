@@ -350,7 +350,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	/**
 		@see `feathers.data.IHierarchicalCollection.removeAt`
 	**/
-	public function removeAt(location:Array<Int>):Void {
+	public function removeAt(location:Array<Int>):T {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();
 		}
@@ -365,7 +365,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			branchChildren.remove(removedItem);
 			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ITEM, location, null, removedItem);
 			FeathersEvent.dispatch(this, Event.CHANGE);
-			return;
+			return removedItem;
 		}
 		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
 		var index = location[location.length - 1];
@@ -376,6 +376,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		branchChildren.remove(removedItem);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ITEM, location, null, removedItem);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		return removedItem;
 	}
 
 	/**

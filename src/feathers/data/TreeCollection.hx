@@ -237,7 +237,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.removeAt`
 	**/
-	public function removeAt(location:Array<Int>):Void {
+	public function removeAt(location:Array<Int>):TreeNode<T> {
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
@@ -261,6 +261,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		branchChildren.remove(removedItem);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ITEM, location, null, removedItem);
 		FeathersEvent.dispatch(this, Event.CHANGE);
+		return removedItem;
 	}
 
 	/**

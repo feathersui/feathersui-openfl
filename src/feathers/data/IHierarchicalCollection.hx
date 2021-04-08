@@ -205,7 +205,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	function removeAt(location:Array<Int>):Void;
+	function removeAt(location:Array<Int>):T;
 
 	/**
 		Removes all items from the collection, decreasing the length of the root
