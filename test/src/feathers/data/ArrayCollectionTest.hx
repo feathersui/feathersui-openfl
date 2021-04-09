@@ -506,7 +506,7 @@ class ArrayCollectionTest extends Test {
 
 		Assert.equals(preFilteredLength, this._collection.length,
 			"Collection length must not change after setting item that is filtered (and filter is removed)");
-		Assert.equals(expectedUnfilteredIndex, this._collection.indexOf(itemToAdd), "Setting item after end of collection returns incorrect index");
+		Assert.equals(expectedUnfilteredIndex, this._collection.indexOf(itemToAdd), "Setting item that is filtered returns incorrect index");
 	}
 
 	//--- sortCompareFunction
@@ -582,30 +582,30 @@ class ArrayCollectionTest extends Test {
 		this._collection.sortCompareFunction = sortCompareFunction;
 		this._collection.remove(this._b);
 
-		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and removeat() did not return correct item for sorted index");
-		Assert.equals(this._d, this._collection.get(1), "Collection with sortCompareFunction and removeat() did not return correct item for sorted index");
-		Assert.equals(this._c, this._collection.get(2), "Collection with sortCompareFunction and removeat() did not return correct item for sorted index");
+		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and remove() did not return correct item for sorted index");
+		Assert.equals(this._d, this._collection.get(1), "Collection with sortCompareFunction and remove() did not return correct item for sorted index");
+		Assert.equals(this._c, this._collection.get(2), "Collection with sortCompareFunction and remove() did not return correct item for sorted index");
 
 		this._collection.sortCompareFunction = null;
 
-		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and removeat() did not return correct item for unsorted index");
-		Assert.equals(this._c, this._collection.get(1), "Collection with sortCompareFunction and removeat() did not return correct item for unsorted index");
-		Assert.equals(this._d, this._collection.get(2), "Collection with sortCompareFunction and removeat() did not return correct item for unsorted index");
+		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and remove() did not return correct item for unsorted index");
+		Assert.equals(this._c, this._collection.get(1), "Collection with sortCompareFunction and remove() did not return correct item for unsorted index");
+		Assert.equals(this._d, this._collection.get(2), "Collection with sortCompareFunction and remove() did not return correct item for unsorted index");
 	}
 
 	public function testRemoveAtWithSortCompareFunction():Void {
 		this._collection.sortCompareFunction = sortCompareFunction;
 		this._collection.removeAt(2);
 
-		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and removeat() did not return correct item for sorted index");
-		Assert.equals(this._d, this._collection.get(1), "Collection with sortCompareFunction and removeat() did not return correct item for sorted index");
-		Assert.equals(this._c, this._collection.get(2), "Collection with sortCompareFunction and removeat() did not return correct item for sorted index");
+		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and removeAt() did not return correct item for sorted index");
+		Assert.equals(this._d, this._collection.get(1), "Collection with sortCompareFunction and removeAt() did not return correct item for sorted index");
+		Assert.equals(this._c, this._collection.get(2), "Collection with sortCompareFunction and removeAt() did not return correct item for sorted index");
 
 		this._collection.sortCompareFunction = null;
 
-		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and removeat() did not return correct item for unsorted index");
-		Assert.equals(this._c, this._collection.get(1), "Collection with sortCompareFunction and removeat() did not return correct item for unsorted index");
-		Assert.equals(this._d, this._collection.get(2), "Collection with sortCompareFunction and removeat() did not return correct item for unsorted index");
+		Assert.equals(this._a, this._collection.get(0), "Collection with sortCompareFunction and removeAt() did not return correct item for unsorted index");
+		Assert.equals(this._c, this._collection.get(1), "Collection with sortCompareFunction and removeAt() did not return correct item for unsorted index");
+		Assert.equals(this._d, this._collection.get(2), "Collection with sortCompareFunction and removeAt() did not return correct item for unsorted index");
 	}
 
 	public function testSetWithSortCompareFunction():Void {
@@ -621,7 +621,7 @@ class ArrayCollectionTest extends Test {
 
 		// and it might not even be the same while unsorted!
 		// that's because, in the unsorted data, it will replace the item in the
-		// the sorted data that was at the index passed to addAt().
+		// the sorted data that was at the index passed to set().
 		// it may be confusing, but it's consistent with set() on filtered
 		// collections
 		Assert.equals(newItem, this._collection.get(3), "Collection with sortCompareFunction and add() did not return correct item for unsorted index");
@@ -675,7 +675,7 @@ class ArrayCollectionTest extends Test {
 	}
 }
 
-class MockItem {
+private class MockItem {
 	public function new(text:String, value:Float) {
 		this.text = text;
 		this.value = value;
