@@ -128,6 +128,29 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		return this._filterFunction;
 	}
 
+	private var _sortCompareFunction:(TreeNode<T>, TreeNode<T>) -> Int = null;
+
+	/**
+		@see `feathers.data.IHierarchicalCollection.sortCompareFunction`
+	**/
+	@:flash.property
+	public var sortCompareFunction(get, set):(TreeNode<T>, TreeNode<T>) -> Int;
+
+	private function get_sortCompareFunction():(TreeNode<T>, TreeNode<T>) -> Int {
+		return this._sortCompareFunction;
+	}
+
+	private function set_sortCompareFunction(value:(TreeNode<T>, TreeNode<T>) -> Int):(TreeNode<T>, TreeNode<T>) -> Int {
+		if (this._sortCompareFunction == value) {
+			return this._sortCompareFunction;
+		}
+		this._sortCompareFunction = value;
+		this._pendingRefresh = true;
+		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.FILTER_CHANGE, null);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._sortCompareFunction;
+	}
+
 	/**
 		@see `feathers.data.IHierarchicalCollection.getLength`
 	**/
@@ -236,6 +259,16 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 					HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.ADD_ITEM, location, value);
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
+			} else if (this._sortCompareFunction != null) {
+				// remove the old item first!
+				filteredOrSortedBranchChildren.splice(lastLocationIndex, 1);
+				// then try to figure out where the new item goes when inserted
+				var wrappedItem = this.createFilterAndSortItem(value);
+				var sortedIndex = this.getSortedInsertionIndex(filteredOrSortedBranchChildren, wrappedItem);
+				filteredOrSortedBranchChildren[sortedIndex] = wrappedItem;
+				HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REPLACE_ITEM, location, value, oldItem);
+				FeathersEvent.dispatch(this, Event.CHANGE);
+				return;
 			}
 			return;
 		}
@@ -315,7 +348,12 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 				includeItem = this._filterFunction(itemToAdd);
 			}
 			if (includeItem) {
-				branchChildren.insert(lastLocationIndex, itemToAdd);
+				var sortedIndex = lastLocationIndex;
+				var wrappedItem = this.createFilterAndSortItem(itemToAdd);
+				if (this._sortCompareFunction != null) {
+					sortedIndex = this.getSortedInsertionIndex(filteredOrSortedBranchChildren, wrappedItem);
+				}
+				filteredOrSortedBranchChildren.insert(sortedIndex, wrappedItem);
 				// don't dispatch these events if the item is filtered!
 				HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.ADD_ITEM, location, itemToAdd);
 				FeathersEvent.dispatch(this, Event.CHANGE);
@@ -428,12 +466,15 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		@see `feathers.data.IHierarchicalCollection.refresh`
 	**/
 	public function refresh():Void {
-		if (this._filterFunction == null) {
+		if (this._filterFunction == null && this._sortCompareFunction == null) {
 			return;
 		}
 		this._pendingRefresh = true;
 		if (this._filterFunction != null) {
 			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.FILTER_CHANGE, null);
+		}
+		if (this._sortCompareFunction != null) {
+			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.SORT_CHANGE, null);
 		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
@@ -479,7 +520,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 
 	private function refreshFilterAndSort():Void {
 		this._pendingRefresh = false;
-		if (this._filterFunction != null) {
+		if (this._filterFunction != null || this._sortCompareFunction != null) {
 			var result = this._filterAndSortData;
 			if (result != null) {
 				// reuse the old array to avoid garbage collection
@@ -492,6 +533,33 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 		} else // no filter or sort
 		{
 			this._filterAndSortData = null;
+		}
+		if (this._sortCompareFunction != null) {
+			this.refreshSort(this._filterAndSortData);
+		}
+	}
+
+	private function getSortedInsertionIndex(branchChildren:Array<FilterAndSortItem<TreeNode<T>>>, item:FilterAndSortItem<TreeNode<T>>):Int {
+		if (this._sortCompareFunction == null) {
+			return branchChildren.length;
+		}
+		for (i in 0...branchChildren.length) {
+			var otherItem = branchChildren[i];
+			var result = this.sortCompareFunctionInternal(item, otherItem);
+			if (result < 1) {
+				return i;
+			}
+		}
+		return branchChildren.length;
+	}
+
+	private function refreshSort(array:Array<FilterAndSortItem<TreeNode<T>>>):Void {
+		array.sort(sortCompareFunctionInternal);
+		for (item in array) {
+			if (item.children == null) {
+				continue;
+			}
+			this.refreshSort(item.children);
 		}
 	}
 
@@ -507,7 +575,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 
 	private function createFilterAndSortItem(item:TreeNode<T>):FilterAndSortItem<TreeNode<T>> {
 		var result:FilterAndSortItem<TreeNode<T>> = null;
-		if (this._filterFunction(item)) {
+		if (this._filterFunction == null || this._filterFunction(item)) {
 			result = new FilterAndSortItem(item);
 		}
 		if (result != null) {
@@ -534,6 +602,10 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 			}
 		}
 		return branchChildren;
+	}
+
+	private function sortCompareFunctionInternal(item1:FilterAndSortItem<TreeNode<T>>, item2:FilterAndSortItem<TreeNode<T>>):Int {
+		return this._sortCompareFunction(item1.item, item2.item);
 	}
 }
 

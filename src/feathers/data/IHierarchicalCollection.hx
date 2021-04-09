@@ -69,6 +69,37 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 	public var filterFunction(get, set):(T) -> Bool;
 
 	/**
+		A function to compare each item in the collection to determine the order
+		when sorted.
+
+		The return value should be `-1` if the first item should appear before
+		the second item when the collection is sorted. The return value should
+		be `1` if the first item should appear after the second item when the
+		collection is sorted. Finally, the return value should be `0` if both
+		items have the same sort order.
+
+		The following example sorts a collection of `Float` values:
+
+		```hx
+		collection.sortCompareFunction = (a:Float, b:Float) =>
+		{
+			if (a > b) {
+				return 1;
+			} else if (a < b) {
+				return -1;
+			}
+			return 0;
+		};
+		```
+
+		@see `feathers.data.HierarchicalCollectionEvent.SORT_CHANGE`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var sortCompareFunction(get, set):(T, T) -> Int;
+
+	/**
 		Returns the item at the specified location within the collection.
 
 		The following example gets an item from a specific location:
