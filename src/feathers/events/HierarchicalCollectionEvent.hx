@@ -105,7 +105,17 @@ class HierarchicalCollectionEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static inline var FILTER_CHANGE:EventType<FlatCollectionEvent> = "filterChange";
+	public static inline var FILTER_CHANGE:EventType<HierarchicalCollectionEvent> = "filterChange";
+
+	/**
+		The `HierarchicalCollectionEvent.SORT_CHANGE` event type is dispatched when a
+		sort compare function has been applied to or removed from a collection.
+
+		@see `feathers.data.IHierarchicalCollection.sortCompareFunction`
+
+		@since 1.0.0
+	**/
+	public static inline var SORT_CHANGE:EventType<HierarchicalCollectionEvent> = "sortChange";
 
 	#if !flash
 	private static var _pool = new ObjectPool<HierarchicalCollectionEvent>(() -> return new HierarchicalCollectionEvent(null, null, false, false), (event) -> {

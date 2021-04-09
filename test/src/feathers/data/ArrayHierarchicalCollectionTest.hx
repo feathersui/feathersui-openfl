@@ -36,17 +36,17 @@ import openfl.events.Event;
 	}
 
 	public function setup():Void {
-		this._1a = new MockItem("1-A");
-		this._1b = new MockItem("1-B", [new MockItem("1-B-I")]);
-		this._1c = new MockItem("1-C");
-		this._1 = new MockItem("1", [this._1a, this._1b, this._1c]);
-		this._2a = new MockItem("2-A");
-		this._2 = new MockItem("2", [this._2a]);
-		this._3 = new MockItem("3");
-		this._4a = new MockItem("4-A");
-		this._4b = new MockItem("4-B");
-		this._4 = new MockItem("4", [this._4a, this._4b]);
-		this._5 = new MockItem("5", []);
+		this._1a = new MockItem("1-A", 2);
+		this._1b = new MockItem("1-B", 1, [new MockItem("1-B-I", 1)]);
+		this._1c = new MockItem("1-C", 3);
+		this._1 = new MockItem("1", 0, [this._1a, this._1b, this._1c]);
+		this._2a = new MockItem("2-A", 2);
+		this._2 = new MockItem("2", 2, [this._2a]);
+		this._3 = new MockItem("3", 3);
+		this._4a = new MockItem("4-A", 1);
+		this._4b = new MockItem("4-B", 0);
+		this._4 = new MockItem("4", 1, [this._4a, this._4b]);
+		this._5 = new MockItem("5", 4, []);
 		this._collection = new ArrayHierarchicalCollection([this._1, this._2, this._3, this._4, this._5], (item:MockItem) -> item.children);
 	}
 
@@ -55,6 +55,12 @@ import openfl.events.Event;
 	}
 
 	private function locationsMatch(location1:Array<Int>, location2:Array<Int>):Bool {
+		if (location1 == null && location2 == null) {
+			return true;
+		}
+		if (location1 == null || location2 == null) {
+			return false;
+		}
 		if (location1.length != location2.length) {
 			return false;
 		}
@@ -69,10 +75,22 @@ import openfl.events.Event;
 	}
 
 	private function filterFunction(item:MockItem):Bool {
-		if (item == this._4 || item == this._1b || item.text == TEXT_FILTER_ME) {
+		if (item == this._2 || item == this._1b || item.text == TEXT_FILTER_ME) {
 			return false;
 		}
 		return true;
+	}
+
+	private function sortCompareFunction(a:MockItem, b:MockItem):Int {
+		var valueA = a.value;
+		var valueB = b.value;
+		if (valueA < valueB) {
+			return -1;
+		}
+		if (valueA > valueB) {
+			return 1;
+		}
+		return 0;
 	}
 
 	public function testLength():Void {
@@ -93,7 +111,11 @@ import openfl.events.Event;
 		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1a)), "Collection locationOf() returns wrong location");
 		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1b)), "Collection locationOf() returns wrong location");
 		Assert.isTrue(locationsMatch([0, 2], this._collection.locationOf(this._1c)), "Collection locationOf() returns wrong location");
-		Assert.isNull(this._collection.locationOf(new MockItem("Not in collection")), "Collection locationOf() must return null for items not in collection");
+		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._2a)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([3, 0], this._collection.locationOf(this._4a)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([3, 1], this._collection.locationOf(this._4b)), "Collection locationOf() returns wrong location");
+		Assert.isNull(this._collection.locationOf(new MockItem("Not in collection", -1)),
+			"Collection locationOf() must return null for items not in collection");
 	}
 
 	public function testContains():Void {
@@ -102,9 +124,13 @@ import openfl.events.Event;
 		Assert.isTrue(this._collection.contains(this._1b), "Collection contains() returns wrong result for item in collection");
 		Assert.isTrue(this._collection.contains(this._1c), "Collection contains() returns wrong result for item in collection");
 		Assert.isTrue(this._collection.contains(this._2), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._2a), "Collection contains() returns wrong result for item in collection");
 		Assert.isTrue(this._collection.contains(this._3), "Collection contains() returns wrong result for item in collection");
 		Assert.isTrue(this._collection.contains(this._4), "Collection contains() returns wrong result for item in collection");
-		Assert.isFalse(this._collection.contains(new MockItem("Not in collection")), "Collection contains() returns wrong result for item not in collection");
+		Assert.isTrue(this._collection.contains(this._4a), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._4b), "Collection contains() returns wrong result for item in collection");
+		Assert.isFalse(this._collection.contains(new MockItem("Not in collection", -1)),
+			"Collection contains() returns wrong result for item not in collection");
 	}
 
 	public function testGet():Void {
@@ -128,7 +154,7 @@ import openfl.events.Event;
 	}
 
 	public function testAddAt():Void {
-		var itemToAdd = new MockItem("New Item");
+		var itemToAdd = new MockItem("New Item", 100);
 		var originalLength = this._collection.getLength([0]);
 		var changeEvent = false;
 		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
@@ -159,7 +185,7 @@ import openfl.events.Event;
 	}
 
 	public function testAddAtEndOfBranch():Void {
-		var itemToAdd = new MockItem("New Item");
+		var itemToAdd = new MockItem("New Item", 100);
 		var originalLength = this._collection.getLength([0]);
 		var changeEvent = false;
 		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
@@ -179,8 +205,8 @@ import openfl.events.Event;
 		Assert.isTrue(locationsMatch([0, originalLength], locationFromEvent), "Adding item to collection returns incorrect location in event");
 	}
 
-	public function testSet():Void {
-		var itemToAdd = new MockItem("New Item");
+	public function testSetReplace():Void {
+		var itemToAdd = new MockItem("New Item", 100);
 		var originalLength = this._collection.getLength([0]);
 		var changeEvent = false;
 		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
@@ -211,7 +237,7 @@ import openfl.events.Event;
 	}
 
 	public function testSetAfterEndOfBranch():Void {
-		var itemToAdd = new MockItem("New Item");
+		var itemToAdd = new MockItem("New Item", 100);
 		var originalLength = this._collection.getLength([0]);
 		var changeEvent = false;
 		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
@@ -249,7 +275,7 @@ import openfl.events.Event;
 		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after removing from collection");
 		Assert.isTrue(removeItemEvent, "HierarchicalCollectionEvent.REMOVE_ITEM must be dispatched after removing from collection");
 		Assert.equals(originalLength - 1, this._collection.getLength([0]), "Collection length must change after removing from collection");
-		Assert.equals(null, this._collection.locationOf(itemToRemove), "Removing item from collection returns incorrect location");
+		Assert.isNull(this._collection.locationOf(itemToRemove), "Removing item from collection returns incorrect location");
 		Assert.isTrue(locationsMatch([0, 1], locationFromEvent), "Removing item from collection returns incorrect location in event");
 	}
 
@@ -270,7 +296,7 @@ import openfl.events.Event;
 		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after removing from collection");
 		Assert.isTrue(removeItemEvent, "HierarchicalCollectionEvent.REMOVE_ITEM must be dispatched after removing from collection");
 		Assert.equals(originalLength - 1, this._collection.getLength([0]), "Collection length must change after removing from collection");
-		Assert.equals(null, this._collection.locationOf(itemToRemove), "Removing item from collection returns incorrect location");
+		Assert.isNull(this._collection.locationOf(itemToRemove), "Removing item from collection returns incorrect location");
 		Assert.isTrue(locationsMatch([0, 1], locationFromEvent), "Removing item from collection returns incorrect location in event");
 
 		Assert.raises(function() {
@@ -386,15 +412,15 @@ import openfl.events.Event;
 		Assert.equals(this._collection.array.length, this._collection.getLength(), "Collection length must match source length if unfiltered");
 		Assert.equals(this._collection.array[3].children.length, this._collection.getLength([3]), "Collection length must match source length if unfiltered");
 		this._collection.filterFunction = filterFunction;
-		trace(this._collection.array.length, this._collection.getLength());
 		Assert.notEquals(this._collection.array.length, this._collection.getLength(), "Collection length must not match source length if items are filtered");
 		Assert.equals(this._collection.array.length - 1, this._collection.getLength(), "Collection length must account for filterFunction");
 		Assert.equals(this._1, this._collection.get([0]), "Collection with filterFunction must filter items");
 		Assert.equals(this._1a, this._collection.get([0, 0]), "Collection with filterFunction must filter items");
 		Assert.equals(this._1c, this._collection.get([0, 1]), "Collection with filterFunction must filter items");
-		Assert.equals(this._2, this._collection.get([1]), "Collection with filterFunction must filter items");
-		Assert.equals(this._2a, this._collection.get([1, 0]), "Collection with filterFunction must filter items");
-		Assert.equals(this._3, this._collection.get([2]), "Collection with filterFunction must filter items");
+		Assert.equals(this._3, this._collection.get([1]), "Collection with filterFunction must filter items");
+		Assert.equals(this._4, this._collection.get([2]), "Collection with filterFunction must filter items");
+		Assert.equals(this._4a, this._collection.get([2, 0]), "Collection with filterFunction must filter items");
+		Assert.equals(this._4b, this._collection.get([2, 1]), "Collection with filterFunction must filter items");
 		Assert.equals(this._5, this._collection.get([3]), "Collection with filterFunction must filter items");
 		Assert.notEquals(this._collection.array[3].children.length, this._collection.getLength([3]),
 			"Collection length must not match source length if items are filtered");
@@ -436,12 +462,12 @@ import openfl.events.Event;
 		Assert.isTrue(this._collection.contains(this._1a), "Collection with filterFunction must contain unfiltered item");
 		Assert.isFalse(this._collection.contains(this._1b), "Collection with filterFunction must not contain filtered item");
 		Assert.isTrue(this._collection.contains(this._1c), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(this._collection.contains(this._2), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(this._collection.contains(this._2a), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._2), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._2a), "Collection with filterFunction must contain unfiltered item");
 		Assert.isTrue(this._collection.contains(this._3), "Collection with filterFunction must contain unfiltered item");
-		Assert.isFalse(this._collection.contains(this._4), "Collection with filterFunction must not contain filtered item");
-		Assert.isFalse(this._collection.contains(this._4a), "Collection with filterFunction must not contain filtered item");
-		Assert.isFalse(this._collection.contains(this._4b), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._4), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._4a), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._4b), "Collection with filterFunction must not contain filtered item");
 		Assert.isTrue(this._collection.contains(this._5), "Collection with filterFunction must contain unfiltered item");
 	}
 
@@ -451,22 +477,358 @@ import openfl.events.Event;
 		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1a)), "Collection with filterFunction must contain unfiltered item");
 		Assert.isNull(this._collection.locationOf(this._1b), "Collection with filterFunction must not contain filtered item");
 		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1c)), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._2)), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._2a)), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._3)), "Collection with filterFunction must contain unfiltered item");
-		Assert.isNull(this._collection.locationOf(this._4), "Collection with filterFunction must not contain filtered item");
-		Assert.isNull(this._collection.locationOf(this._4a), "Collection with filterFunction must not contain filtered item");
-		Assert.isNull(this._collection.locationOf(this._4b), "Collection with filterFunction must not contain filtered item");
+		Assert.isNull(this._collection.locationOf(this._2), "Collection with filterFunction must contain unfiltered item");
+		Assert.isNull(this._collection.locationOf(this._2a), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._3)), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._4)), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(locationsMatch([2, 0], this._collection.locationOf(this._4a)), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(locationsMatch([2, 1], this._collection.locationOf(this._4b)), "Collection with filterFunction must not contain filtered item");
 		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._5)), "Collection with filterFunction must contain unfiltered item");
+	}
+
+	public function testSetReplaceWithFilterFunction():Void {
+		var preFilteredLength = this._collection.getLength();
+
+		this._collection.filterFunction = filterFunction;
+
+		var itemToAdd = new MockItem("New Item", 100);
+		var originalFilteredLength = this._collection.getLength();
+		var expectedIndex = 3;
+		var expectedUnfilteredIndex = 4;
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var addItemEvent = false;
+		var replaceItemEvent = false;
+		var locationFromEvent:Array<Int> = null;
+		this._collection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			addItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			replaceItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		var replacedItem = this._collection.get([expectedIndex]);
+		this._collection.set([expectedIndex], itemToAdd);
+		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after replacing in collection");
+		Assert.isFalse(addItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must not be dispatched after replacing in collection");
+		Assert.isTrue(replaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must be dispatched after replacing in collection");
+		Assert.equals(originalFilteredLength, this._collection.getLength(), "Collection length must not change after replacing in collection");
+		Assert.isTrue(locationsMatch([expectedIndex], this._collection.locationOf(itemToAdd)), "Replacing item in collection returns incorrect location");
+		Assert.isTrue(locationsMatch([expectedIndex], locationFromEvent), "Replacing item in collection returns incorrect location in event");
+
+		this._collection.filterFunction = null;
+
+		Assert.equals(preFilteredLength, this._collection.getLength(), "Collection length must change after replacing item");
+		Assert.isTrue(locationsMatch([expectedUnfilteredIndex], this._collection.locationOf(itemToAdd)),
+			"Replacing item returns incorrect location of new item");
+	}
+
+	public function testSetAfterEndWithFilterFunction():Void {
+		var preFilteredLength = this._collection.getLength();
+
+		this._collection.filterFunction = filterFunction;
+
+		var itemToAdd = new MockItem("New Item", 100);
+		var originalFilteredLength = this._collection.getLength();
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var addItemEvent = false;
+		var replaceItemEvent = false;
+		var locationFromEvent:Array<Int> = null;
+		this._collection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			addItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			replaceItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.set([originalFilteredLength], itemToAdd);
+		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after setting item after end of collection");
+		Assert.isTrue(addItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must be dispatched after setting item after end of collection");
+		Assert.isFalse(replaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must not be dispatched after setting item after end of collection");
+		Assert.equals(originalFilteredLength + 1, this._collection.getLength(), "Collection length must change after setting item after end of collection");
+		Assert.isTrue(locationsMatch([originalFilteredLength], this._collection.locationOf(itemToAdd)),
+			"Setting item after end of collection returns incorrect location");
+		Assert.isTrue(locationsMatch([originalFilteredLength], locationFromEvent), "Setting item after end of collection returns incorrect location in event");
+
+		this._collection.filterFunction = null;
+
+		Assert.equals(preFilteredLength + 1, this._collection.getLength(),
+			"Collection length must change after setting item after end of collection (and filter is removed)");
+		Assert.isTrue(locationsMatch([preFilteredLength], this._collection.locationOf(itemToAdd)),
+			"Setting item after end of collection returns incorrect location");
+	}
+
+	public function testSetWithFilterFunctionAndNoMatch():Void {
+		var preFilteredLength = this._collection.getLength();
+
+		this._collection.filterFunction = filterFunction;
+
+		var itemToAdd = new MockItem(TEXT_FILTER_ME, 100);
+		var originalFilteredLength = this._collection.getLength();
+		var expectedIndex = 3;
+		var expectedUnfilteredIndex = 4;
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var addItemEvent = false;
+		var replaceItemEvent = false;
+		var removeItemEvent = false;
+		var locationFromEvent:Array<Int> = null;
+		this._collection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			addItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			replaceItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			removeItemEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.set([expectedIndex], itemToAdd);
+		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after setting item that is filtered");
+		Assert.isFalse(addItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must not be dispatched after setting item that is filtered");
+		Assert.isFalse(replaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must not be dispatched after setting item after end of collection");
+		Assert.isTrue(removeItemEvent, "HierarchicalCollectionEvent.REMOVE_ITEM must be dispatched after setting item that is filtered");
+		Assert.equals(originalFilteredLength - 1, this._collection.getLength(), "Collection length must change after setting item that is filtered");
+		Assert.isNull(this._collection.locationOf(itemToAdd), "Setting item that is filtered returns incorrect location");
+		Assert.isTrue(locationsMatch([expectedIndex], locationFromEvent), "Setting item that is filtered returns incorrect location in event");
+
+		this._collection.filterFunction = null;
+
+		Assert.equals(preFilteredLength, this._collection.getLength(),
+			"Collection length must not change after setting item that is filtered (and filter is removed)");
+		Assert.isTrue(locationsMatch([expectedUnfilteredIndex], this._collection.locationOf(itemToAdd)),
+			"Setting item after end of collection returns incorrect location");
+	}
+
+	//--- sortCompareFunction
+
+	public function testSortCompareFunction():Void {
+		this._collection.sortCompareFunction = sortCompareFunction;
+		Assert.equals(this._collection.array.length, this._collection.getLength(), "Collection length must not change if sorted");
+		Assert.equals(this._1, this._collection.get([0]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._1b, this._collection.get([0, 0]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._1a, this._collection.get([0, 1]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._1c, this._collection.get([0, 2]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._4, this._collection.get([1]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._4b, this._collection.get([1, 0]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._4a, this._collection.get([1, 1]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._2, this._collection.get([2]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._2a, this._collection.get([2, 0]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._3, this._collection.get([3]), "Collection order is incorrect with sortCompareFunction");
+		Assert.equals(this._5, this._collection.get([4]), "Collection order is incorrect with sortCompareFunction");
+	}
+
+	public function testSetSortCompareFunctionToNull():Void {
+		this._collection.sortCompareFunction = sortCompareFunction;
+		// get an item so that we know the sorting was applied
+		Assert.equals(this._4, this._collection.get([1]), "Collection order is incorrect with sortCompareFunction");
+
+		this._collection.sortCompareFunction = null;
+		Assert.equals(this._1, this._collection.get([0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._1a, this._collection.get([0, 0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._1b, this._collection.get([0, 1]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._1c, this._collection.get([0, 2]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._2, this._collection.get([1]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._2a, this._collection.get([1, 0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._3, this._collection.get([2]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._4, this._collection.get([3]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._4a, this._collection.get([3, 0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._4b, this._collection.get([3, 1]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._5, this._collection.get([4]), "Collection order is incorrect after setting sortCompareFunction to null");
+	}
+
+	public function testLocationOfWithSortCompareFunction():Void {
+		this._collection.sortCompareFunction = sortCompareFunction;
+		Assert.isTrue(locationsMatch([0], this._collection.locationOf(this._1)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._4)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._2)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._3)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([4], this._collection.locationOf(this._5)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1b)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1a)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([0, 2], this._collection.locationOf(this._1c)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([2, 0], this._collection.locationOf(this._2a)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._4b)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([1, 1], this._collection.locationOf(this._4a)), "Collection locationOf() returns wrong location");
+		Assert.isNull(this._collection.locationOf(new MockItem("Not in collection", -1)),
+			"Collection locationOf() must return null for items not in collection");
+	}
+
+	public function testContainsWithSortCompareFunction():Void {
+		this._collection.sortCompareFunction = sortCompareFunction;
+		Assert.isTrue(this._collection.contains(this._1), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._1a), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._1b), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._1c), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._2), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._2a), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._3), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._4), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._4a), "Collection contains() returns wrong result for item in collection");
+		Assert.isTrue(this._collection.contains(this._4b), "Collection contains() returns wrong result for item in collection");
+		Assert.isFalse(this._collection.contains(new MockItem("Not in collection", -1)),
+			"Collection contains() returns wrong result for item not in collection");
+	}
+
+	public function testAddAtWithSortCompareFunction():Void {
+		var newItem = new MockItem("New Item", 1.5);
+		this._collection.sortCompareFunction = sortCompareFunction;
+		this._collection.addAt(newItem, [1]);
+
+		// the index we passed in isn't necessarily the same while sorted
+		Assert.equals(newItem, this._collection.get([2]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index");
+
+		this._collection.sortCompareFunction = null;
+
+		// and it might not even be the same while unsorted!
+		// that's because, in the unsorted data, it will be placed relative to
+		// the item in the sorted data that was at the index passed to addAt().
+		// it may be confusing, but it's consistent with set() on filtered
+		// collections
+		Assert.equals(newItem, this._collection.get([3]), "Collection with sortCompareFunction and addAt() did not return correct item for unsorted index");
+	}
+
+	public function testRemoveWithSortCompareFunction():Void {
+		this._collection.sortCompareFunction = sortCompareFunction;
+		this._collection.remove(this._2);
+
+		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and remove() did not return correct item for sorted index");
+		Assert.equals(this._4, this._collection.get([1]), "Collection with sortCompareFunction and remove() did not return correct item for sorted index");
+		Assert.equals(this._3, this._collection.get([2]), "Collection with sortCompareFunction and remove() did not return correct item for sorted index");
+
+		this._collection.sortCompareFunction = null;
+
+		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and remove() did not return correct item for unsorted index");
+		Assert.equals(this._3, this._collection.get([1]), "Collection with sortCompareFunction and remove() did not return correct item for unsorted index");
+		Assert.equals(this._4, this._collection.get([2]), "Collection with sortCompareFunction and remove() did not return correct item for unsorted index");
+	}
+
+	public function testRemoveAtWithSortCompareFunction():Void {
+		this._collection.sortCompareFunction = sortCompareFunction;
+		this._collection.removeAt([2]);
+
+		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and removeAt() did not return correct item for sorted index");
+		Assert.equals(this._4, this._collection.get([1]), "Collection with sortCompareFunction and removeAt() did not return correct item for sorted index");
+		Assert.equals(this._3, this._collection.get([2]), "Collection with sortCompareFunction and removeAt() did not return correct item for sorted index");
+
+		this._collection.sortCompareFunction = null;
+
+		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and removeAt() did not return correct item for unsorted index");
+		Assert.equals(this._3, this._collection.get([1]), "Collection with sortCompareFunction and removeAt() did not return correct item for unsorted index");
+		Assert.equals(this._4, this._collection.get([2]), "Collection with sortCompareFunction and removeAt() did not return correct item for unsorted index");
+	}
+
+	public function testSetWithSortCompareFunction():Void {
+		var newItem = new MockItem("New Item", 1.5);
+		this._collection.sortCompareFunction = sortCompareFunction;
+		this._collection.set([1], newItem);
+
+		// the index we passed in isn't necessarily the same while sorted
+		Assert.equals(newItem, this._collection.get([1]), "Collection with sortCompareFunction and set() did not return correct item for sorted index");
+		Assert.isFalse(this._collection.contains(this._4), "Collection with sortCompareFunction and set() did not remove correct item for sorted index");
+
+		this._collection.sortCompareFunction = null;
+
+		// and it might not even be the same while unsorted!
+		// that's because, in the unsorted data, it will replace the item in the
+		// the sorted data that was at the index passed to set().
+		// it may be confusing, but it's consistent with set() on filtered
+		// collections
+		Assert.equals(newItem, this._collection.get([3]), "Collection with sortCompareFunction and add() did not return correct item for unsorted index");
+	}
+
+	//--- sortCompareFunction AND filterFunction
+
+	public function testSortCompareFunctionAndFilterFunction():Void {
+		this._collection.filterFunction = filterFunction;
+		this._collection.sortCompareFunction = sortCompareFunction;
+		Assert.notEquals(this._collection.array.length, this._collection.getLength(), "Collection length must not match source length if items are filtered");
+		Assert.equals(4, this._collection.getLength(), "Collection length must account for filterFunction");
+		Assert.equals(this._1, this._collection.get([0]), "Items must be filtered and sorted");
+		Assert.equals(this._1a, this._collection.get([0, 0]), "Items must be filtered and sorted");
+		Assert.equals(this._1c, this._collection.get([0, 1]), "Items must be filtered and sorted");
+		Assert.equals(this._4, this._collection.get([1]), "Items must be filtered and sorted");
+		Assert.equals(this._4b, this._collection.get([1, 0]), "Items must be filtered and sorted");
+		Assert.equals(this._4a, this._collection.get([1, 1]), "Items must be filtered and sorted");
+		Assert.equals(this._3, this._collection.get([2]), "Items must be filtered and sorted");
+		Assert.equals(this._5, this._collection.get([3]), "Items must be filtered and sorted");
+	}
+
+	public function testSetSortCompareFunctionAndFilterFunctionToNull():Void {
+		this._collection.filterFunction = filterFunction;
+		this._collection.sortCompareFunction = sortCompareFunction;
+		// get an item so that we know the sorting was applied
+		Assert.equals(this._4, this._collection.get([1]), "Collection order is incorrect with sortCompareFunction");
+
+		this._collection.filterFunction = null;
+		this._collection.sortCompareFunction = null;
+		Assert.equals(this._1, this._collection.get([0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._1a, this._collection.get([0, 0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._1b, this._collection.get([0, 1]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._1c, this._collection.get([0, 2]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._2, this._collection.get([1]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._2a, this._collection.get([1, 0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._3, this._collection.get([2]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._4, this._collection.get([3]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._4a, this._collection.get([3, 0]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._4b, this._collection.get([3, 1]), "Collection order is incorrect after setting sortCompareFunction to null");
+		Assert.equals(this._5, this._collection.get([4]), "Collection order is incorrect after setting sortCompareFunction to null");
+	}
+
+	public function testContainsWithSortCompareFunctionAndFilterFunction():Void {
+		this._collection.filterFunction = filterFunction;
+		this._collection.sortCompareFunction = sortCompareFunction;
+		Assert.isTrue(this._collection.contains(this._1), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(this._collection.contains(this._1a), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._1b), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._1c), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._2), "Collection with filterFunction must contain unfiltered item");
+		Assert.isFalse(this._collection.contains(this._2a), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(this._collection.contains(this._3), "Collection with filterFunction must contain unfiltered item");
+		Assert.isTrue(this._collection.contains(this._4), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._4a), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._4b), "Collection with filterFunction must not contain filtered item");
+		Assert.isTrue(this._collection.contains(this._5), "Collection with filterFunction must contain unfiltered item");
+	}
+
+	public function testLocationOfWithSortCompareFunctionAndFilterFunction():Void {
+		this._collection.filterFunction = filterFunction;
+		this._collection.sortCompareFunction = sortCompareFunction;
+		Assert.isTrue(locationsMatch([0], this._collection.locationOf(this._1)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._4)), "Collection locationOf() returns wrong location");
+		Assert.isNull(this._collection.locationOf(this._2), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._3)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._5)), "Collection locationOf() returns wrong location");
+		Assert.isNull(this._collection.locationOf(this._1b), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1a)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1c)), "Collection locationOf() returns wrong location");
+		Assert.isNull(this._collection.locationOf(this._2a), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._4b)), "Collection locationOf() returns wrong location");
+		Assert.isTrue(locationsMatch([1, 1], this._collection.locationOf(this._4a)), "Collection locationOf() returns wrong location");
+		Assert.isNull(this._collection.locationOf(new MockItem("Not in collection", -1)),
+			"Collection locationOf() must return null for items not in collection");
 	}
 }
 
 private class MockItem {
-	public function new(text:String, ?children:Array<MockItem>) {
+	public function new(text:String, value:Float, ?children:Array<MockItem>) {
 		this.text = text;
+		this.value = value;
 		this.children = children;
 	}
 
 	public var text:String;
 	public var children:Array<MockItem>;
+	public var value:Float;
 }
