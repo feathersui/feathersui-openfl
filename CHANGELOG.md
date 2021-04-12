@@ -1,6 +1,6 @@
 # Feather UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.3 (2021-??-??)
+## 1.0.0-beta.3 (2021-04-12)
 
 - Alert: New component to display a pop-up dialog with a message, a title, and an optional icon.
 - AnchorLayoutData: New `fillHorizontal()` and `fillVertical()` static methods.
