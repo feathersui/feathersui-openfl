@@ -28,6 +28,7 @@
 - Header: New component that displays a title in the center, plus optional views on the left and right sides.
 - HScrollBar/VScrollBar: During touch interaction, if dragged out of range, the thumb will shrink like native scroll bars.
 - HScrollBar/VScrollBar: New `hideThumbWhenDisabled` style that affects the thumb visiblility when `enabled` is `false`.
+- IHierarchicalCollection: Added `filterFunction` and `sortCompareFunction`, similar to `IFlatCollection`.
 - IStageFocusDelegate: New interface that allows a component to specify one of its children to receive focus directly, when focus is passed by the `FocusManager`.
 - ITextControl: New `baseline` property, which may be used for alignment of multiple `ITextControl` instances together.
 - LeftAndRightBorderSkin: New skin class that is similar to `RectangleSkin`, but renders its border on the left and right sides only.
