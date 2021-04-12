@@ -205,6 +205,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this.addChild(this.groupViewPort);
 			this.viewPort = this.groupViewPort;
 		}
+
+		this.addEventListener(KeyboardEvent.KEY_DOWN, groupListView_keyDownHandler);
 	}
 
 	private var groupViewPort:AdvancedLayoutViewPort;
@@ -1420,6 +1422,20 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		this.navigateWithKeyboard(event);
+	}
+
+	private function groupListView_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
+			if (this._selectedItem != null) {
+				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
+				this.populateCurrentItemState(this._selectedItem, STANDARD, this._dataProvider.locationOf(this._selectedItem),
+					this._layoutItems.indexOf(itemRenderer));
+				GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, this._currentItemState);
+			}
+		}
 	}
 
 	private function groupListView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
