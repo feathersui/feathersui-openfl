@@ -469,7 +469,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 			return this._verticalAlign;
 		}
 		this._verticalAlign = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._verticalAlign;
 	}
 

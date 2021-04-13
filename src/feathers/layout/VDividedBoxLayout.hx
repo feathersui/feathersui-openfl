@@ -199,7 +199,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			return this._horizontalAlign;
 		}
 		this._horizontalAlign = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._horizontalAlign;
 	}
 
@@ -222,7 +222,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			return this._customItemHeights;
 		}
 		this._customItemHeights = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._customItemHeights;
 	}
 
@@ -245,7 +245,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			return this._fallbackFluidIndex;
 		}
 		this._fallbackFluidIndex = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._fallbackFluidIndex;
 	}
 

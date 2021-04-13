@@ -220,7 +220,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 			return this._customItemWidths;
 		}
 		this._customItemWidths = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._customItemWidths;
 	}
 
@@ -243,7 +243,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 			return this._fallbackFluidIndex;
 		}
 		this._fallbackFluidIndex = value;
-		this.dispatchEvent(new Event(Event.CHANGE));
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._fallbackFluidIndex;
 	}
 
