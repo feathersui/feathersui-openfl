@@ -272,6 +272,33 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		return this._verticalAlign;
 	}
 
+	private var _justifyResetEnabled:Bool = false;
+
+	/**
+		Indicates if the width of items should be reset if the `horizontalAlign`
+		property is set to `HorizontalAlign.JUSTIFY` and the explicit width of
+		the parent container is not set.
+
+		@see `VerticalLayout.horizontalAlign`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var justifyResetEnabled(get, set):Bool;
+
+	private function get_justifyResetEnabled():Bool {
+		return this._justifyResetEnabled;
+	}
+
+	private function set_justifyResetEnabled(value:Bool):Bool {
+		if (this._justifyResetEnabled == value) {
+			return this._justifyResetEnabled;
+		}
+		this._justifyResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._justifyResetEnabled;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -371,8 +398,12 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			justifyWidth -= (this._paddingLeft + this._paddingRight);
 		}
 		for (item in items) {
-			if (isJustified && justifyWidth != null) {
-				item.width = justifyWidth;
+			if (isJustified) {
+				if (justifyWidth != null) {
+					item.width = justifyWidth;
+				} else if (this._justifyResetEnabled && (item is IMeasureObject)) {
+					cast(item, IMeasureObject).resetWidth();
+				}
 			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();

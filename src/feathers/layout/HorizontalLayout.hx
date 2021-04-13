@@ -272,6 +272,33 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		return this._verticalAlign;
 	}
 
+	private var _justifyResetEnabled:Bool = false;
+
+	/**
+		Indicates if the height of items should be reset if the `verticalAlign`
+		property is set to `VerticalAlign.JUSTIFY` and the explicit height of
+		the parent container is not set.
+
+		@see `HorizontalLayout.verticalAlign`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var justifyResetEnabled(get, set):Bool;
+
+	private function get_justifyResetEnabled():Bool {
+		return this._justifyResetEnabled;
+	}
+
+	private function set_justifyResetEnabled(value:Bool):Bool {
+		if (this._justifyResetEnabled == value) {
+			return this._justifyResetEnabled;
+		}
+		this._justifyResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._justifyResetEnabled;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -371,8 +398,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			justifyHeight -= (this._paddingTop + this._paddingBottom);
 		}
 		for (item in items) {
-			if (isJustified && justifyHeight != null) {
-				item.height = justifyHeight;
+			if (isJustified) {
+				if (justifyHeight != null) {
+					item.height = justifyHeight;
+				} else if (this._justifyResetEnabled && (item is IMeasureObject)) {
+					cast(item, IMeasureObject).resetHeight();
+				}
 			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
