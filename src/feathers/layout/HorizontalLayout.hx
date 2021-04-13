@@ -293,7 +293,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		this.validateItems(items);
+		this.validateItems(items, measurements);
 		this.applyPercentWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);
 
 		var contentWidth = this._paddingLeft;
@@ -364,8 +364,16 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		return result;
 	}
 
-	private inline function validateItems(items:Array<DisplayObject>) {
+	private inline function validateItems(items:Array<DisplayObject>, measurements:Measurements) {
+		var isJustified = this._verticalAlign == JUSTIFY;
+		var justifyHeight = measurements.height;
+		if (justifyHeight != null) {
+			justifyHeight -= (this._paddingTop + this._paddingBottom);
+		}
 		for (item in items) {
+			if (isJustified && justifyHeight != null) {
+				item.height = justifyHeight;
+			}
 			if (Std.is(item, IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
