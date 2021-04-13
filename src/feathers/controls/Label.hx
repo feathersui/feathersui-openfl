@@ -656,23 +656,24 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		} else {
 			this.textField.text = "\u200b"; // zero-width space
 		}
-		var textFieldWidth:Null<Float> = null;
+		var textFieldExplicitWidth:Null<Float> = null;
 		if (this.explicitWidth != null) {
-			textFieldWidth = this.explicitWidth;
+			textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
 		} else if (this.explicitMaxWidth != null) {
-			textFieldWidth = this.explicitMaxWidth;
+			textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
 		}
-		if (textFieldWidth == null && this.wordWrap) {
+		if (textFieldExplicitWidth == null && this.wordWrap) {
 			// to get an accurate measurement, we need to temporarily disable
 			// wrapping to multiple lines
+			// it can be inaccurate with the flash target sometimes
 			this.textField.wordWrap = false;
-		} else if (textFieldWidth != null) {
-			this.textField.width = textFieldWidth;
+		} else if (textFieldExplicitWidth != null) {
+			this.textField.width = textFieldExplicitWidth;
 		}
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;
-		if (textFieldWidth == null && this.wordWrap) {
+		if (textFieldExplicitWidth == null && this.wordWrap) {
 			this.textField.wordWrap = true;
 		}
 		if (!hasText && !hasHTMLText) {
@@ -750,8 +751,28 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	private function layoutContent() {
 		this.layoutBackgroundSkin();
 
+		var textFieldLayoutWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		this.textField.x = this.paddingLeft;
-		this.textField.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+		this.textField.width = textFieldLayoutWidth;
+		var wordWrap = this.wordWrap;
+		if (wordWrap && textFieldLayoutWidth == this._textMeasuredWidth) {
+			var textFieldExplicitWidth:Null<Float> = null;
+			if (this.explicitWidth != null) {
+				textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
+			} else if (this.explicitMaxWidth != null) {
+				textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
+			}
+			if (textFieldExplicitWidth == null) {
+				// sometimes, using the width measured with wrapping disabled
+				// will still cause the final rendered result to wrap, but we
+				// can skip wrapping forcefully as a workaround
+				// this happens with the flash target sometimes
+				wordWrap = false;
+			}
+		}
+		if (this.textField.wordWrap != wordWrap) {
+			this.textField.wordWrap = wordWrap;
+		}
 
 		var textFieldHeight = this._textMeasuredHeight;
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
