@@ -42,7 +42,7 @@ class ValidationQueue {
 	**/
 	public function new(stage:Stage) {
 		this._stage = stage;
-		this._stage.addEventListener(Event.ENTER_FRAME, stage_enterFrameHandler, false, -1000, true);
+		this._stage.addEventListener(Event.RENDER, stage_renderHandler, false, -1000, true);
 	}
 
 	private var _stage:Stage = null;
@@ -71,7 +71,7 @@ class ValidationQueue {
 		if (this._stage == null) {
 			return;
 		}
-		this._stage.removeEventListener(Event.ENTER_FRAME, stage_enterFrameHandler);
+		this._stage.removeEventListener(Event.RENDER, stage_renderHandler);
 		this._stage = null;
 	}
 
@@ -114,6 +114,7 @@ class ValidationQueue {
 			// faster than push() because push() creates a temporary rest
 			// Array that needs to be garbage collected
 			this._queue[queueLength] = control;
+			this._stage.invalidate(); // ensure that Event.RENDER is called
 		}
 	}
 
@@ -158,7 +159,7 @@ class ValidationQueue {
 		this._validating = false;
 	}
 
-	private function stage_enterFrameHandler(event:Event):Void {
+	private function stage_renderHandler(event:Event):Void {
 		this.validateNow();
 	}
 }
