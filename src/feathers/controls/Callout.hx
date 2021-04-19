@@ -752,14 +752,14 @@ class Callout extends FeathersControl {
 			maxHeightWithStage = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 
-		if (this.backgroundSkin != null) {
-			MeasurementsUtil.resetFluidlyWithParentValues(this._backgroundSkinMeasurements, this.backgroundSkin, this.explicitWidth, this.explicitHeight,
-				this.explicitMinWidth, this.explicitMinHeight, maxWidthWithStage, maxHeightWithStage);
+		if (this._currentBackgroundSkin != null) {
+			MeasurementsUtil.resetFluidlyWithParentValues(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this.explicitWidth,
+				this.explicitHeight, this.explicitMinWidth, this.explicitMinHeight, maxWidthWithStage, maxHeightWithStage);
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this.backgroundSkin, IMeasureObject)) {
-			measureSkin = cast(this.backgroundSkin, IMeasureObject);
+		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
 		if (Std.is(this._currentBackgroundSkin, IValidating)) {
@@ -848,8 +848,8 @@ class Callout extends FeathersControl {
 				contentWidth = topOrBottomArrowWidth;
 			}
 			newWidth = contentWidth + this.paddingLeft + this.paddingRight;
-			if (this.backgroundSkin != null) {
-				var backgroundWidth = this.backgroundSkin.width;
+			if (this._currentBackgroundSkin != null) {
+				var backgroundWidth = this._currentBackgroundSkin.width;
 				if (newWidth < backgroundWidth) {
 					newWidth = backgroundWidth;
 				}
@@ -866,8 +866,8 @@ class Callout extends FeathersControl {
 				contentHeight = leftOrRightArrowHeight;
 			}
 			newHeight = contentHeight + this.paddingTop + this.paddingBottom;
-			if (this.backgroundSkin != null) {
-				var backgroundHeight = this.backgroundSkin.height;
+			if (this._currentBackgroundSkin != null) {
+				var backgroundHeight = this._currentBackgroundSkin.height;
 				if (newHeight < backgroundHeight) {
 					newHeight = backgroundHeight;
 				}
@@ -1042,11 +1042,11 @@ class Callout extends FeathersControl {
 		}
 		var backgroundWidth = this.actualWidth - xPosition - widthOffset;
 		var backgroundHeight = this.actualHeight - yPosition - heightOffset;
-		if (this.backgroundSkin != null) {
-			this.backgroundSkin.x = xPosition;
-			this.backgroundSkin.y = yPosition;
-			this.backgroundSkin.width = backgroundWidth;
-			this.backgroundSkin.height = backgroundHeight;
+		if (this._currentBackgroundSkin != null) {
+			this._currentBackgroundSkin.x = xPosition;
+			this._currentBackgroundSkin.y = yPosition;
+			this._currentBackgroundSkin.width = backgroundWidth;
+			this._currentBackgroundSkin.height = backgroundHeight;
 		}
 
 		if (this._currentArrowSkin != null) {
