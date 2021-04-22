@@ -8,13 +8,13 @@ on:
     branches:
       - master
 
-strategy:
-  matrix:
-    haxe-version: [4.0.5, 4.1.5, 4.2.1]
-
 jobs:
 
   test-neko:
+
+    strategy:
+      matrix:
+        haxe-version: [4.0.5, 4.1.5, 4.2.1]
 
     runs-on: ubuntu-latest
 
