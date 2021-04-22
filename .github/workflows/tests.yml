@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: joshtynjala/setup-adobe-air-action@v1
-      if: ${{ lime-target == 'air' }}
+      if: ${{ matrix.lime-target == 'air' }}
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: ${{ matrix.haxe-version }}
@@ -35,7 +35,7 @@ jobs:
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Run Tests
       working-directory: test
-      run: haxelib run openfl test neko
+      run: haxelib run openfl test ${{ matrix.lime-target }
 
   test:
     runs-on: macos-latest
@@ -48,7 +48,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: joshtynjala/setup-adobe-air-action@v1
-      if: ${{ lime-target == 'air' }}
+      if: ${{ matrix.lime-target == 'air' }}
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: ${{ matrix.haxe-version }}
