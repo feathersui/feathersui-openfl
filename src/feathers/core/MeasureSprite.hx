@@ -455,7 +455,19 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			var worldTransform1 = #if flash transform.concatenatedMatrix #else __getWorldTransform() #end;
 			__getBoundsHelperMatrix1.copyFrom(worldTransform1);
 
-			var worldTransform2 = #if flash targetCoordinateSpace.transform.concatenatedMatrix #else targetCoordinateSpace.__getWorldTransform() #end;
+			#if flash
+			var worldTransform2:Matrix = null;
+			if (targetCoordinateSpace == stage) {
+				// special case for stage because the stage's concatenatedMatrix
+				// works differently than that of other display objects
+				__getBoundsHelperMatrix2.identity();
+				worldTransform2 = __getBoundsHelperMatrix2;
+			} else {
+				worldTransform2 = targetCoordinateSpace.transform.concatenatedMatrix;
+			}
+			#else
+			var worldTransform2 = targetCoordinateSpace.__getWorldTransform();
+			#end
 			__getBoundsHelperMatrix2.copyFrom(worldTransform2);
 			__getBoundsHelperMatrix2.invert();
 
