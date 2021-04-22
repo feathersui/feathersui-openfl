@@ -979,14 +979,17 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this.renderUnrenderedData();
 		this.freeInactiveItemRenderers(this._defaultStorage);
+		if (this._defaultStorage.inactiveItemRenderers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers should be empty after updating.');
+		}
 		if (this._additionalStorage != null) {
 			for (i in 0...this._additionalStorage.length) {
 				var storage = this._additionalStorage[i];
 				this.freeInactiveItemRenderers(storage);
+				if (storage.inactiveItemRenderers.length > 0) {
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers ${storage.id} should be empty after updating.');
+				}
 			}
-		}
-		if (this._defaultStorage.inactiveItemRenderers.length > 0) {
-			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers should be empty after updating.');
 		}
 	}
 
