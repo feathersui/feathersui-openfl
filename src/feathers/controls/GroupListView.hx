@@ -40,6 +40,11 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 import openfl.ui.Keyboard;
+#if (openfl >= "9.1.0")
+import openfl.utils.ObjectPool;
+#else
+import openfl._internal.utils.ObjectPool;
+#end
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -520,14 +525,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private var _defaultHeaderStorage = new ItemRendererStorage(HEADER, DisplayObjectRecycler.withClass(ItemRenderer));
 	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
-	private var itemRendererToData = new ObjectMap<DisplayObject, Dynamic>();
-	private var itemRendererToLayoutIndex = new ObjectMap<DisplayObject, Int>();
+	private var itemRendererToItemState = new ObjectMap<DisplayObject, GroupListViewItemState>();
+	private var itemStatePool = new ObjectPool(() -> new GroupListViewItemState());
 	private var _unrenderedLocations:Array<Array<Int>> = [];
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
-
-	private var _currentItemState = new GroupListViewItemState();
 
 	private var _selectable:Bool = true;
 
@@ -692,7 +695,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		@since 1.0.0
 	**/
 	public function itemRendererToItem(itemRenderer:DisplayObject):Dynamic {
-		return this.itemRendererToData.get(itemRenderer);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return null;
+		}
+		return state.data;
 	}
 
 	/**
@@ -876,12 +883,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if (itemRenderer == null) {
 				continue;
 			}
-			var item = this.itemRendererToData.get(itemRenderer);
-			if (item == null) {
+			var state = this.itemRendererToItemState.get(itemRenderer);
+			if (state == null) {
 				return;
 			}
-			this.itemRendererToData.remove(itemRenderer);
-			this.itemRendererToLayoutIndex.remove(itemRenderer);
+			var item = state.data;
+			this.itemRendererToItemState.remove(itemRenderer);
 			this.dataToItemRenderer.remove(item);
 			if (storage.type == STANDARD) {
 				itemRenderer.removeEventListener(TriggerEvent.TRIGGER, groupListView_itemRenderer_triggerHandler);
@@ -889,39 +896,25 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
 				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
-			this._currentItemState.owner = this;
-			this._currentItemState.type = storage.type;
-			this._currentItemState.data = item;
-			this._currentItemState.location = null;
-			this._currentItemState.layoutIndex = -1;
-			this._currentItemState.selected = false;
-			this._currentItemState.text = null;
-			this._currentItemState.enabled = true;
+			state.owner = this;
+			state.type = storage.type;
+			state.data = item;
+			state.location = null;
+			state.layoutIndex = -1;
+			state.selected = false;
+			state.text = null;
+			state.enabled = true;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
 			if (recycler != null && recycler.reset != null) {
-				recycler.reset(itemRenderer, this._currentItemState);
+				recycler.reset(itemRenderer, state);
 			}
-			if (Std.is(itemRenderer, IUIControl)) {
-				var uiControl = cast(itemRenderer, IUIControl);
-				uiControl.enabled = this._currentItemState.enabled;
-			}
-			if (Std.is(itemRenderer, IToggle)) {
-				var toggle = cast(itemRenderer, IToggle);
-				toggle.selected = this._currentItemState.selected;
-			}
-			if (Std.is(itemRenderer, IDataRenderer)) {
-				var dataRenderer = cast(itemRenderer, IDataRenderer);
-				dataRenderer.data = this._currentItemState.data;
-			}
-			if (Std.is(itemRenderer, IGroupListViewItemRenderer)) {
-				var groupListRenderer = cast(itemRenderer, IGroupListViewItemRenderer);
-				groupListRenderer.location = this._currentItemState.location;
-			}
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+			this.refreshItemRendererProperties(itemRenderer, state);
 			if (storage.measurements != null) {
 				storage.measurements.restore(itemRenderer);
 			}
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+			this.itemStatePool.release(state);
 		}
 	}
 
@@ -985,9 +978,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		var type = location.length == 1 ? HEADER : STANDARD;
-		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
-		var storage = this.itemRendererRecyclerToStorage(type, recycler);
-		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		this.populateCurrentItemState(item, type, location, layoutIndex, state);
+		var storage = this.itemStateToStorage(state);
+		this.updateItemRenderer(itemRenderer, state, storage);
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
 		itemRenderer.visible = true;
@@ -1001,9 +995,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private function renderUnrenderedData():Void {
 		for (location in this._unrenderedLocations) {
-			var layoutIndex = this._unrenderedLayoutIndices.shift();
 			var item = this._dataProvider.get(location);
-			var itemRenderer = this.createItemRenderer(item, location, layoutIndex);
+			var type = location.length == 1 ? HEADER : STANDARD;
+			var layoutIndex = this._unrenderedLayoutIndices.shift();
+			var state = this.itemStatePool.get();
+			this.populateCurrentItemState(item, type, location, layoutIndex, state);
+			var itemRenderer = this.createItemRenderer(state);
 			itemRenderer.visible = true;
 			this.groupViewPort.addChild(itemRenderer);
 			this._layoutItems[layoutIndex] = itemRenderer;
@@ -1011,10 +1008,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this._unrenderedLocations.resize(0);
 	}
 
-	private function createItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):DisplayObject {
-		var type = location.length == 1 ? HEADER : STANDARD;
-		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
-		var storage = this.itemRendererRecyclerToStorage(type, recycler);
+	private function createItemRenderer(state:GroupListViewItemState):DisplayObject {
+		var storage = this.itemStateToStorage(state);
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
@@ -1038,15 +1033,15 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}
-		if (type == HEADER && Std.is(itemRenderer, IVariantStyleObject)) {
+		if (state.type == HEADER && Std.is(itemRenderer, IVariantStyleObject)) {
 			var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
 			var variant = this.customHeaderRendererVariant != null ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER_RENDERER;
 			if (variantItemRenderer.variant == null) {
 				variantItemRenderer.variant = variant;
 			}
 		}
-		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
-		if (type == STANDARD) {
+		this.updateItemRenderer(itemRenderer, state, storage);
+		if (state.type == STANDARD) {
 			if (Std.is(itemRenderer, ITriggerView)) {
 				itemRenderer.addEventListener(TriggerEvent.TRIGGER, groupListView_itemRenderer_triggerHandler);
 			} else {
@@ -1059,9 +1054,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
 		}
-		this.itemRendererToData.set(itemRenderer, item);
-		this.itemRendererToLayoutIndex.set(itemRenderer, layoutIndex);
-		this.dataToItemRenderer.set(item, itemRenderer);
+		this.itemRendererToItemState.set(itemRenderer, state);
+		this.dataToItemRenderer.set(state.data, itemRenderer);
 		storage.activeItemRenderers.push(itemRenderer);
 		return itemRenderer;
 	}
@@ -1073,64 +1067,70 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 	}
 
-	private function itemRendererRecyclerToStorage(type:GroupListViewItemType,
-			recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):ItemRendererStorage {
+	private function itemStateToStorage(state:GroupListViewItemState):ItemRendererStorage {
+		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
 		if (recycler == null) {
-			return type == HEADER ? this._defaultHeaderStorage : this._defaultItemStorage;
+			if (state.type == HEADER) {
+				return this._defaultHeaderStorage;
+			}
+			return this._defaultItemStorage;
 		}
 		if (this._additionalStorage == null) {
 			this._additionalStorage = [];
 		}
 		for (i in 0...this._additionalStorage.length) {
 			var storage = this._additionalStorage[i];
-			if (storage.type == type && storage.itemRendererRecycler == recycler) {
+			if (storage.itemRendererRecycler == recycler) {
 				return storage;
 			}
 		}
-		var storage = new ItemRendererStorage(type, recycler);
+		var storage = new ItemRendererStorage(state.type, recycler);
 		this._additionalStorage.push(storage);
 		return storage;
 	}
 
-	private function populateCurrentItemState(item:Dynamic, type:GroupListViewItemType, location:Array<Int>, layoutIndex:Int):Void {
-		this._currentItemState.owner = this;
-		this._currentItemState.type = type;
-		this._currentItemState.data = item;
-		this._currentItemState.location = location;
-		this._currentItemState.layoutIndex = layoutIndex;
-		this._currentItemState.selected = location.length > 1 && item == this._selectedItem;
-		this._currentItemState.enabled = this._enabled;
-		this._currentItemState.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
+	private function populateCurrentItemState(item:Dynamic, type:GroupListViewItemType, location:Array<Int>, layoutIndex:Int,
+			state:GroupListViewItemState):Void {
+		state.owner = this;
+		state.type = type;
+		state.data = item;
+		state.location = location;
+		state.layoutIndex = layoutIndex;
+		state.selected = location.length > 1 && item == this._selectedItem;
+		state.enabled = this._enabled;
+		state.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
 	}
 
-	private function refreshItemRendererProperties(itemRenderer:DisplayObject, type:GroupListViewItemType, item:Dynamic, location:Array<Int>,
-			layoutIndex:Int):Void {
-		var type = location.length == 1 ? HEADER : STANDARD;
-		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
-		var storage = this.itemRendererRecyclerToStorage(type, recycler);
-		this.populateCurrentItemState(item, type, location, layoutIndex);
+	private function updateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState, storage:ItemRendererStorage):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (storage.itemRendererRecycler.update != null) {
-			storage.itemRendererRecycler.update(itemRenderer, this._currentItemState);
+			storage.itemRendererRecycler.update(itemRenderer, state);
 		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshItemRendererProperties(itemRenderer, state);
+	}
+
+	private function refreshItemRendererProperties(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
 		if (Std.is(itemRenderer, IUIControl)) {
 			var uiControl = cast(itemRenderer, IUIControl);
-			uiControl.enabled = this._currentItemState.enabled;
+			uiControl.enabled = state.enabled;
 		}
 		if (Std.is(itemRenderer, IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
-			dataRenderer.data = this._currentItemState.data;
+			dataRenderer.data = state.data;
 		}
 		if (Std.is(itemRenderer, IGroupListViewItemRenderer)) {
 			var groupListRenderer = cast(itemRenderer, IGroupListViewItemRenderer);
-			groupListRenderer.location = this._currentItemState.location;
+			groupListRenderer.location = state.location;
 		}
 		if (Std.is(itemRenderer, IToggle)) {
 			var toggle = cast(itemRenderer, IToggle);
 			// if the renderer is an IToggle, this cannot be overridden
-			toggle.selected = this._currentItemState.selected;
+			toggle.selected = state.selected;
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
@@ -1288,14 +1288,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return true;
 	}
 
-	private function dispatchItemTriggerEvent(data:Dynamic):Void {
-		var location = this._dataProvider.locationOf(data);
-		var type = location.length == 1 ? HEADER : STANDARD;
-		var layoutIndex = this.locationToDisplayIndex(location);
-		this.populateCurrentItemState(data, type, location, layoutIndex);
-		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, this._currentItemState);
-	}
-
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {
 		if (event.isDefaultPrevented()) {
 			return;
@@ -1357,6 +1349,16 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._selectedLocation != null) {
 			this.scrollToLocation(this._selectedLocation);
 		}
+	}
+
+	private function handleSelectionChange(item:Dynamic, location:Array<Int>, ctrlKey:Bool, shiftKey:Bool):Void {
+		if (location == null || location.length != 2 || !this._selectable) {
+			// use the setter
+			this.selectedItem = null;
+			return;
+		}
+		// use the setter
+		this.selectedLocation = location;
 	}
 
 	private function handlePendingScroll():Void {
@@ -1431,9 +1433,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
 				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
-				this.populateCurrentItemState(this._selectedItem, STANDARD, this._dataProvider.locationOf(this._selectedItem),
-					this._layoutItems.indexOf(itemRenderer));
-				GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, this._currentItemState);
+				var state = this.itemRendererToItemState.get(itemRenderer);
+				GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 			}
 		}
 	}
@@ -1448,20 +1449,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var item = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(item);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var data = this.itemRendererToData.get(itemRenderer);
-		var location = this._dataProvider.locationOf(data);
-		if (location == null || location.length != 2) {
-			return;
-		}
-		// use the setter
-		this.selectedLocation = location;
+		this.handleSelectionChange(state.data, state.location, event.ctrlKey, event.shiftKey);
 	}
 
 	private function groupListView_itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -1470,20 +1464,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var item = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(item);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var data = this.itemRendererToData.get(itemRenderer);
-		var location = this._dataProvider.locationOf(data);
-		if (location == null || location.length != 2) {
-			return;
-		}
-		// use the setter
-		this.selectedLocation = location;
+		this.handleSelectionChange(state.data, state.location, event.ctrlKey, event.shiftKey);
 	}
 
 	private function groupListView_itemRenderer_triggerHandler(event:TriggerEvent):Void {
@@ -1492,20 +1479,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var item = this.itemRendererToData.get(itemRenderer);
-		this.dispatchItemTriggerEvent(item);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable) {
 			return;
 		}
-		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var data = this.itemRendererToData.get(itemRenderer);
-		var location = this._dataProvider.locationOf(data);
-		if (location == null || location.length != 2) {
-			return;
-		}
-		// use the setter
-		this.selectedLocation = location;
+		this.handleSelectionChange(state.data, state.location, event.ctrlKey, event.shiftKey);
 	}
 
 	private function groupListView_itemRenderer_changeHandler(event:Event):Void {
@@ -1586,8 +1566,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			cast(itemRenderer, IDataRenderer).data = null;
 		}
 		var type = location.length == 1 ? HEADER : STANDARD;
+		var state = this.itemRendererToItemState.get(itemRenderer);
 		var layoutIndex = this.locationToDisplayIndex(location);
-		this.refreshItemRendererProperties(itemRenderer, type, item, location, layoutIndex);
+		this.populateCurrentItemState(item, type, location, layoutIndex, state);
+		var storage = this.itemStateToStorage(state);
+		this.updateItemRenderer(itemRenderer, state, storage);
 		if (type == HEADER) {
 			for (i in 0...this._dataProvider.getLength(location)) {
 				location.push(i);
