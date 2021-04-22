@@ -8,21 +8,18 @@
 
 package feathers.controls;
 
-import feathers.events.ButtonBarEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
-import feathers.core.IDataSelector;
-import feathers.core.IFocusObject;
-import feathers.core.IIndexSelector;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
 import feathers.data.ButtonBarItemState;
-import feathers.events.FeathersEvent;
+import feathers.data.IFlatCollection;
+import feathers.events.ButtonBarEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.ILayout;
+import feathers.layout.ILayoutIndexObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
@@ -32,8 +29,6 @@ import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
-import openfl.events.KeyboardEvent;
-import openfl.ui.Keyboard;
 #if (openfl >= "9.1.0")
 import openfl.utils.ObjectPool;
 #else
@@ -602,6 +597,10 @@ class ButtonBar extends FeathersControl {
 			var dataRenderer = cast(button, IDataRenderer);
 			// if the button is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
+		}
+		if ((button is ILayoutIndexObject)) {
+			var layoutObject = cast(button, ILayoutIndexObject);
+			layoutObject.layoutIndex = state.index;
 		}
 		button.enabled = state.enabled;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;

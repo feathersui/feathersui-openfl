@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.events.TabBarEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
@@ -21,8 +20,10 @@ import feathers.data.IFlatCollection;
 import feathers.data.TabBarItemState;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
+import feathers.events.TabBarEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.ILayout;
+import feathers.layout.ILayoutIndexObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
@@ -705,6 +706,10 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			var dataRenderer = cast(tab, IDataRenderer);
 			// if the tab is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
+		}
+		if ((tab is ILayoutIndexObject)) {
+			var layoutObject = cast(tab, ILayoutIndexObject);
+			layoutObject.layoutIndex = state.index;
 		}
 		tab.selected = state.selected;
 		tab.enabled = state.enabled;
