@@ -402,10 +402,10 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			}
 			this._cellRendererToColumn.remove(cellRenderer);
 			this._columnToCellRenderer.remove(column);
-			cellRenderer.removeEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
-			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
-			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, cellRenderer_triggerHandler);
-			cellRenderer.removeEventListener(Event.CHANGE, cellRenderer_changeHandler);
+			cellRenderer.removeEventListener(MouseEvent.CLICK, gridViewRowRenderer_cellRenderer_clickHandler);
+			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
+			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
+			cellRenderer.removeEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
 			this._currentCellState.owner = this._gridView;
 			this._currentCellState.data = this._data;
 			this._currentCellState.rowIndex = -1;
@@ -489,16 +489,16 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.refreshCellRendererProperties(cellRenderer, columnIndex, column);
 		if (Std.is(cellRenderer, ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
-			cellRenderer.addEventListener(TriggerEvent.TRIGGER, cellRenderer_triggerHandler);
+			cellRenderer.addEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
 		} else {
 			// fall back to these events if TriggerEvent.TRIGGER isn't available
-			cellRenderer.addEventListener(MouseEvent.CLICK, cellRenderer_clickHandler);
+			cellRenderer.addEventListener(MouseEvent.CLICK, gridViewRowRenderer_cellRenderer_clickHandler);
 			#if (openfl >= "9.0.0")
-			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, cellRenderer_touchTapHandler);
+			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
 			#end
 		}
 		if (Std.is(cellRenderer, IToggle)) {
-			cellRenderer.addEventListener(Event.CHANGE, cellRenderer_changeHandler);
+			cellRenderer.addEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
 		}
 		this._cellRendererToColumn.set(cellRenderer, column);
 		this._columnToCellRenderer.set(column, cellRenderer);
@@ -570,7 +570,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, this._currentCellState);
 	}
 
-	private function cellRenderer_touchTapHandler(event:TouchEvent):Void {
+	private function gridViewRowRenderer_cellRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -584,7 +584,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.dispatchCellTriggerEvent(column);
 	}
 
-	private function cellRenderer_clickHandler(event:MouseEvent):Void {
+	private function gridViewRowRenderer_cellRenderer_clickHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -594,7 +594,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.dispatchCellTriggerEvent(column);
 	}
 
-	private function cellRenderer_triggerHandler(event:TriggerEvent):Void {
+	private function gridViewRowRenderer_cellRenderer_triggerHandler(event:TriggerEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -604,7 +604,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.dispatchCellTriggerEvent(column);
 	}
 
-	private function cellRenderer_changeHandler(event:Event):Void {
+	private function gridViewRowRenderer_cellRenderer_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
