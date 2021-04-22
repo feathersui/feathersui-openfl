@@ -47,6 +47,8 @@ class SteelToolTipStyles {
 					label.disabledTextFormat = theme.getDisabledDetailTextFormat();
 				}
 
+				label.wordWrap = true;
+
 				label.paddingTop = 2.0;
 				label.paddingRight = 2.0;
 				label.paddingBottom = 2.0;
