@@ -521,7 +521,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return this._defaultHeaderStorage.itemRendererRecycler;
 	}
 
-	private var _recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>> = null;
+	private var _itemRendererRecyclerMap:Map<String, DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>> = null;
+
+	private var _headerRendererRecyclerMap:Map<String, DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>> = null;
 
 	private var _itemRendererRecyclerIDFunction:(state:GroupListViewItemState) -> String;
 
@@ -529,7 +531,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		When a list view requires multiple item renderer types, this function is
 		used to determine which type of item renderer is required for a specific
 		item. Returns the ID of the item renderer recycler to use for the item,
-		or `null` if the default `itemRendererFactory` should be used.
+		or `null` if the default `itemRendererRecycler` should be used.
 
 		The following example provides an `itemRendererRecyclerIDFunction`:
 
@@ -537,10 +539,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var regularItemRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
 		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
 
-		listView.setItemRendererRecycler("regular-item", regularItemRecycler);
-		listView.setItemRendererRecycler("first-item", firstItemRecycler);
+		groupListView.setItemRendererRecycler("regular-item", regularItemRecycler);
+		groupListView.setItemRendererRecycler("first-item", firstItemRecycler);
 
-		listView.itemRendererRecyclerIDFunction = function(state:ListViewItemState):String {
+		groupListView.itemRendererRecyclerIDFunction = function(state:ListViewItemState):String {
 			if(state.index == 0) {
 				return "first-item";
 			}
@@ -567,13 +569,69 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return this._itemRendererRecyclerIDFunction;
 		}
 		this._itemRendererRecyclerIDFunction = value;
+		if (this._itemRendererRecyclerIDFunction != null && this._additionalItemStorage == null) {
+			this._additionalItemStorage = [];
+		}
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this._itemRendererRecyclerIDFunction;
 	}
 
+	private var _headerRendererRecyclerIDFunction:(state:GroupListViewItemState) -> String;
+
+	/**
+		When a list view requires multiple header renderer types, this function
+		is used to determine which type of header renderer is required for a
+		specific header. Returns the ID of the header renderer recycler to use
+		for the header, or `null` if the default `headerRendererRecycler` should
+		be used.
+
+		The following example provides an `headerRendererRecyclerIDFunction`:
+
+		```hx
+		var regularHeaderRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
+		var firstHeaderRecycler = DisplayObjectRecycler.withClass(MyCustomHeaderRenderer);
+
+		groupListView.setHeaderRendererRecycler("regular-header", regularHeaderRecycler);
+		groupListView.setHeaderRendererRecycler("first-header", firstHeaderRecycler);
+
+		groupListView.headerRendererRecyclerIDFunction = function(state:GroupListViewItemState):String {
+			if(state.location[0] == 0) {
+				return "first-header";
+			}
+			return "regular-header";
+		};
+		```
+
+		@default null
+
+		@see `GroupListView.setHeaderRendererRecycler()`
+		@see `GroupListView.headerRendererRecycler
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var headerRendererRecyclerIDFunction(get, set):(state:GroupListViewItemState) -> String;
+
+	private function get_headerRendererRecyclerIDFunction():(state:GroupListViewItemState) -> String {
+		return this._headerRendererRecyclerIDFunction;
+	}
+
+	private function set_headerRendererRecyclerIDFunction(value:(state:GroupListViewItemState) -> String):(state:GroupListViewItemState) -> String {
+		if (this._headerRendererRecyclerIDFunction == value) {
+			return this._headerRendererRecyclerIDFunction;
+		}
+		this._headerRendererRecyclerIDFunction = value;
+		if (this._headerRendererRecyclerIDFunction != null && this._additionalHeaderStorage == null) {
+			this._additionalHeaderStorage = [];
+		}
+		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+		return this._headerRendererRecyclerIDFunction;
+	}
+
 	private var _defaultItemStorage = new ItemRendererStorage(STANDARD, null, DisplayObjectRecycler.withClass(ItemRenderer));
 	private var _defaultHeaderStorage = new ItemRendererStorage(HEADER, null, DisplayObjectRecycler.withClass(ItemRenderer));
-	private var _additionalStorage:Array<ItemRendererStorage> = null;
+	private var _additionalItemStorage:Array<ItemRendererStorage> = null;
+	private var _additionalHeaderStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToItemState = new ObjectMap<DisplayObject, GroupListViewItemState>();
 	private var itemStatePool = new ObjectPool(() -> new GroupListViewItemState());
@@ -782,14 +840,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		@since 1.0.0
 	**/
 	public function getItemRendererRecycler(id:String):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
-		if (this._recyclerMap == null) {
+		if (this._itemRendererRecyclerMap == null) {
 			return null;
 		}
-		return this._recyclerMap.get(id);
+		return this._itemRendererRecyclerMap.get(id);
 	}
 
 	/**
-		Associates an item renderer rercycler with an ID to allow multiple types
+		Associates an item renderer recycler with an ID to allow multiple types
 		of item renderers may be displayed in the list view. A custom
 		`itemRendererRecyclerIDFunction` may be specified to return the ID of
 		the recycler to use for a specific item in the data provider.
@@ -802,15 +860,56 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		@since 1.0.0
 	**/
 	public function setItemRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
-		if (this._recyclerMap == null) {
-			this._recyclerMap = [];
+		if (this._itemRendererRecyclerMap == null) {
+			this._itemRendererRecyclerMap = [];
 		}
 		if (recycler == null) {
-			this._recyclerMap.remove(id);
+			this._itemRendererRecyclerMap.remove(id);
 			return;
 		}
-		this._recyclerMap.set(id, recycler);
+		this._itemRendererRecyclerMap.set(id, recycler);
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+	}
+
+	/**
+		Returns the header renderer recycler associated with a specific ID.
+		Returns `null` if no recycler is associated with the ID.
+
+		@see `GroupListView.headerRendererRecyclerIDFunction`
+		@see `GroupListView.setHeaderRendererRecycler()`
+
+		@since 1.0.0
+	**/
+	public function getHeaderRendererRecycler(id:String):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
+		if (this._headerRendererRecyclerMap == null) {
+			return null;
+		}
+		return this._headerRendererRecyclerMap.get(id);
+	}
+
+	/**
+		Associates an header renderer recycler with an ID to allow multiple types
+		of header renderers may be displayed in the group list view. A custom
+		`headerRendererRecyclerIDFunction` may be specified to return the ID of
+		the recycler to use for a specific header in the data provider.
+
+		To clear a recycler, pass in `null` for the ID.
+
+		@see `GroupListView.headerRendererRecyclerIDFunction`
+		@see `GroupListView.getHeaderRendererRecycler()`
+
+		@since 1.0.0
+	**/
+	public function setHeaderRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
+		if (this._headerRendererRecyclerMap == null) {
+			this._headerRendererRecyclerMap = [];
+		}
+		if (recycler == null) {
+			this._headerRendererRecyclerMap.remove(id);
+			return;
+		}
+		this._headerRendererRecyclerMap.set(id, recycler);
+		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 	}
 
 	private var _pendingScrollLocation:Array<Int> = null;
@@ -906,9 +1005,20 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this._defaultHeaderStorage.itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
-		if (this._additionalStorage != null) {
-			for (i in 0...this._additionalStorage.length) {
-				var storage = this._additionalStorage[i];
+		if (this._additionalItemStorage != null) {
+			for (i in 0...this._additionalItemStorage.length) {
+				var storage = this._additionalItemStorage[i];
+				if (storage.itemRendererRecycler.update == null) {
+					storage.itemRendererRecycler.update = defaultUpdateItemRenderer;
+					if (storage.itemRendererRecycler.reset == null) {
+						storage.itemRendererRecycler.reset = defaultResetItemRenderer;
+					}
+				}
+			}
+		}
+		if (this._additionalHeaderStorage != null) {
+			for (i in 0...this._additionalHeaderStorage.length) {
+				var storage = this._additionalHeaderStorage[i];
 				if (storage.itemRendererRecycler.update == null) {
 					storage.itemRendererRecycler.update = defaultUpdateItemRenderer;
 					if (storage.itemRendererRecycler.reset == null) {
@@ -921,36 +1031,60 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(this._defaultItemStorage, itemRendererInvalid);
-		if (this._additionalStorage != null) {
-			for (i in 0...this._additionalStorage.length) {
-				var storage = this._additionalStorage[i];
+		if (this._additionalItemStorage != null) {
+			for (i in 0...this._additionalItemStorage.length) {
+				var storage = this._additionalItemStorage[i];
 				this.refreshInactiveItemRenderers(storage, itemRendererInvalid);
 			}
 		}
 		this.refreshInactiveItemRenderers(this._defaultHeaderStorage, headerRendererInvalid);
+		if (this._additionalHeaderStorage != null) {
+			for (i in 0...this._additionalHeaderStorage.length) {
+				var storage = this._additionalHeaderStorage[i];
+				this.refreshInactiveItemRenderers(storage, headerRendererInvalid);
+			}
+		}
 		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this._defaultItemStorage);
+		if (this._additionalItemStorage != null) {
+			for (i in 0...this._additionalItemStorage.length) {
+				var storage = this._additionalItemStorage[i];
+				this.recoverInactiveItemRenderers(storage);
+			}
+		}
 		this.recoverInactiveItemRenderers(this._defaultHeaderStorage);
-		if (this._additionalStorage != null) {
-			for (i in 0...this._additionalStorage.length) {
-				var storage = this._additionalStorage[i];
+		if (this._additionalHeaderStorage != null) {
+			for (i in 0...this._additionalHeaderStorage.length) {
+				var storage = this._additionalHeaderStorage[i];
 				this.recoverInactiveItemRenderers(storage);
 			}
 		}
 		this.renderUnrenderedData();
 		this.freeInactiveItemRenderers(this._defaultItemStorage);
-		this.freeInactiveItemRenderers(this._defaultHeaderStorage);
-		if (this._additionalStorage != null) {
-			for (i in 0...this._additionalStorage.length) {
-				var storage = this._additionalStorage[i];
-				this.freeInactiveItemRenderers(storage);
-			}
-		}
 		if (this._defaultItemStorage.inactiveItemRenderers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers should be empty after updating.');
 		}
+		if (this._additionalItemStorage != null) {
+			for (i in 0...this._additionalItemStorage.length) {
+				var storage = this._additionalItemStorage[i];
+				this.freeInactiveItemRenderers(storage);
+				if (storage.inactiveItemRenderers.length > 0) {
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive item renderers ${storage.id} should be empty after updating.');
+				}
+			}
+		}
+		this.freeInactiveItemRenderers(this._defaultHeaderStorage);
 		if (this._defaultHeaderStorage.inactiveItemRenderers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive header renderers should be empty after updating.');
+		}
+		if (this._additionalHeaderStorage != null) {
+			for (i in 0...this._additionalHeaderStorage.length) {
+				var storage = this._additionalHeaderStorage[i];
+				this.freeInactiveItemRenderers(storage);
+				if (storage.inactiveItemRenderers.length > 0) {
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive header renderers ${storage.id} should be empty after updating.');
+				}
+			}
 		}
 	}
 
@@ -1164,40 +1298,46 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 	}
 
-	private function itemStateToStorage(state:GroupListViewItemState):ItemRendererStorage {
+	private function itemOrHeaderStateToStorage(state:GroupListViewItemState, recyclerIDFunction:(GroupListViewItemState) -> String,
+			recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>>, defaultStorage:ItemRendererStorage,
+			additionalStorage:Array<ItemRendererStorage>):ItemRendererStorage {
 		var recyclerID:String = null;
-		if (state.type != HEADER) {
-			if (this._itemRendererRecyclerIDFunction != null) {
-				recyclerID = this._itemRendererRecyclerIDFunction(state);
-			}
+
+		if (recyclerIDFunction != null) {
+			recyclerID = recyclerIDFunction(state);
 		}
+
 		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
 		if (recyclerID != null) {
-			if (this._recyclerMap != null) {
-				recycler = this._recyclerMap.get(recyclerID);
+			if (recyclerMap != null) {
+				recycler = recyclerMap.get(recyclerID);
 			}
 			if (recycler == null) {
 				throw new IllegalOperationError('Item renderer recycler ID "${recyclerID}" is not registered.');
 			}
 		}
 		if (recycler == null) {
-			if (state.type == HEADER) {
-				return this._defaultHeaderStorage;
-			}
-			return this._defaultItemStorage;
+			return defaultStorage;
 		}
-		if (this._additionalStorage == null) {
-			this._additionalStorage = [];
-		}
-		for (i in 0...this._additionalStorage.length) {
-			var storage = this._additionalStorage[i];
+
+		for (i in 0...additionalStorage.length) {
+			var storage = additionalStorage[i];
 			if (storage.itemRendererRecycler == recycler) {
 				return storage;
 			}
 		}
 		var storage = new ItemRendererStorage(state.type, recyclerID, recycler);
-		this._additionalStorage.push(storage);
+		additionalStorage.push(storage);
 		return storage;
+	}
+
+	private function itemStateToStorage(state:GroupListViewItemState):ItemRendererStorage {
+		if (state.type == HEADER) {
+			return this.itemOrHeaderStateToStorage(state, this._headerRendererRecyclerIDFunction, this._headerRendererRecyclerMap, this._defaultHeaderStorage,
+				this._additionalHeaderStorage);
+		}
+		return this.itemOrHeaderStateToStorage(state, this._itemRendererRecyclerIDFunction, this._itemRendererRecyclerMap, this._defaultItemStorage,
+			this._additionalItemStorage);
 	}
 
 	private function populateCurrentItemState(item:Dynamic, type:GroupListViewItemType, location:Array<Int>, layoutIndex:Int,
