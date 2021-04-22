@@ -521,8 +521,58 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return this._defaultHeaderStorage.itemRendererRecycler;
 	}
 
-	private var _defaultItemStorage = new ItemRendererStorage(STANDARD, DisplayObjectRecycler.withClass(ItemRenderer));
-	private var _defaultHeaderStorage = new ItemRendererStorage(HEADER, DisplayObjectRecycler.withClass(ItemRenderer));
+	private var _recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>> = null;
+
+	private var _itemRendererRecyclerIDFunction:(state:GroupListViewItemState) -> String;
+
+	/**
+		When a list view requires multiple item renderer types, this function is
+		used to determine which type of item renderer is required for a specific
+		item. Returns the ID of the item renderer recycler to use for the item,
+		or `null` if the default `itemRendererFactory` should be used.
+
+		The following example provides an `itemRendererRecyclerIDFunction`:
+
+		```hx
+		var regularItemRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
+		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
+
+		listView.setItemRendererRecycler("regular-item", regularItemRecycler);
+		listView.setItemRendererRecycler("first-item", firstItemRecycler);
+
+		listView.itemRendererRecyclerIDFunction = function(state:ListViewItemState):String {
+			if(state.index == 0) {
+				return "first-item";
+			}
+			return "regular-item";
+		};
+		```
+
+		@default null
+
+		@see `GroupListView.setItemRendererRecycler()`
+		@see `GroupListView.itemRendererRecycler
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var itemRendererRecyclerIDFunction(get, set):(state:GroupListViewItemState) -> String;
+
+	private function get_itemRendererRecyclerIDFunction():(state:GroupListViewItemState) -> String {
+		return this._itemRendererRecyclerIDFunction;
+	}
+
+	private function set_itemRendererRecyclerIDFunction(value:(state:GroupListViewItemState) -> String):(state:GroupListViewItemState) -> String {
+		if (this._itemRendererRecyclerIDFunction == value) {
+			return this._itemRendererRecyclerIDFunction;
+		}
+		this._itemRendererRecyclerIDFunction = value;
+		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		return this._itemRendererRecyclerIDFunction;
+	}
+
+	private var _defaultItemStorage = new ItemRendererStorage(STANDARD, null, DisplayObjectRecycler.withClass(ItemRenderer));
+	private var _defaultHeaderStorage = new ItemRendererStorage(HEADER, null, DisplayObjectRecycler.withClass(ItemRenderer));
 	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToItemState = new ObjectMap<DisplayObject, GroupListViewItemState>();
@@ -720,6 +770,47 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		var item = this._dataProvider.get(location);
 		return this.dataToItemRenderer.get(item);
+	}
+
+	/**
+		Returns the item renderer recycler associated with a specific ID.
+		Returns `null` if no recycler is associated with the ID.
+
+		@see `GroupListView.itemRendererRecyclerIDFunction`
+		@see `GroupListView.setItemRendererRecycler()`
+
+		@since 1.0.0
+	**/
+	public function getItemRendererRecycler(id:String):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
+		if (this._recyclerMap == null) {
+			return null;
+		}
+		return this._recyclerMap.get(id);
+	}
+
+	/**
+		Associates an item renderer rercycler with an ID to allow multiple types
+		of item renderers may be displayed in the list view. A custom
+		`itemRendererRecyclerIDFunction` may be specified to return the ID of
+		the recycler to use for a specific item in the data provider.
+
+		To clear a recycler, pass in `null` for the ID.
+
+		@see `GroupListView.itemRendererRecyclerIDFunction`
+		@see `GroupListView.getItemRendererRecycler()`
+
+		@since 1.0.0
+	**/
+	public function setItemRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
+		if (this._recyclerMap == null) {
+			this._recyclerMap = [];
+		}
+		if (recycler == null) {
+			this._recyclerMap.remove(id);
+			return;
+		}
+		this._recyclerMap.set(id, recycler);
+		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 	}
 
 	private var _pendingScrollLocation:Array<Int> = null;
@@ -980,7 +1071,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var type = location.length == 1 ? HEADER : STANDARD;
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		this.populateCurrentItemState(item, type, location, layoutIndex, state);
+		var oldRecyclerID = state.recyclerID;
 		var storage = this.itemStateToStorage(state);
+		if (storage.id != oldRecyclerID) {
+			this._unrenderedLocations.push(location);
+			this._unrenderedLayoutIndices.push(layoutIndex);
+			return;
+		}
 		this.updateItemRenderer(itemRenderer, state, storage);
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
@@ -1068,7 +1165,21 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function itemStateToStorage(state:GroupListViewItemState):ItemRendererStorage {
+		var recyclerID:String = null;
+		if (state.type != HEADER) {
+			if (this._itemRendererRecyclerIDFunction != null) {
+				recyclerID = this._itemRendererRecyclerIDFunction(state);
+			}
+		}
 		var recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> = null;
+		if (recyclerID != null) {
+			if (this._recyclerMap != null) {
+				recycler = this._recyclerMap.get(recyclerID);
+			}
+			if (recycler == null) {
+				throw new IllegalOperationError('Item renderer recycler ID "${recyclerID}" is not registered.');
+			}
+		}
 		if (recycler == null) {
 			if (state.type == HEADER) {
 				return this._defaultHeaderStorage;
@@ -1084,7 +1195,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				return storage;
 			}
 		}
-		var storage = new ItemRendererStorage(state.type, recycler);
+		var storage = new ItemRendererStorage(state.type, recyclerID, recycler);
 		this._additionalStorage.push(storage);
 		return storage;
 	}
@@ -1102,6 +1213,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function updateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState, storage:ItemRendererStorage):Void {
+		state.recyclerID = storage.id;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (storage.itemRendererRecycler.update != null) {
@@ -1594,12 +1706,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 }
 
 private class ItemRendererStorage {
-	public function new(type:GroupListViewItemType, ?recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>) {
+	public function new(type:GroupListViewItemType, ?id:String, ?recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>) {
 		this.type = type;
+		this.id = id;
 		this.itemRendererRecycler = recycler;
 	}
 
 	public var type:GroupListViewItemType;
+	public var id:String;
 	public var oldItemRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
 	public var itemRendererRecycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
 	public var activeItemRenderers:Array<DisplayObject> = [];
