@@ -9,10 +9,10 @@
 package feathers.controls.dataRenderers;
 
 import feathers.controls.dataRenderers.IDataRenderer;
-import feathers.core.InvalidationFlag;
 import feathers.core.IPointerDelegate;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
+import feathers.core.InvalidationFlag;
 import feathers.data.GridViewCellState;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
@@ -26,8 +26,10 @@ import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -95,7 +97,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (this._gridView == value) {
 			return this._gridView;
 		}
+		if (this._gridView != null) {
+			this._gridView.removeEventListener(KeyboardEvent.KEY_DOWN, gridViewRowRenderer_gridView_keyDownHandler);
+		}
 		this._gridView = value;
+		if (this._gridView != null) {
+			this._gridView.addEventListener(KeyboardEvent.KEY_DOWN, gridViewRowRenderer_gridView_keyDownHandler, false, 0, true);
+		}
 		this.setInvalid(DATA);
 		return this._gridView;
 	}
@@ -611,6 +619,18 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		// if we get here, the selected property of the renderer changed
 		// unexpectedly, and we need to restore its proper state
 		this.setInvalid(SELECTION);
+	}
+
+	private function gridViewRowRenderer_gridView_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
+			if (this._selected) {
+				var column = this._columns.get(0);
+				this.dispatchCellTriggerEvent(column);
+			}
+		}
 	}
 }
 
