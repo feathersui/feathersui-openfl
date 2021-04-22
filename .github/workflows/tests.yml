@@ -35,7 +35,7 @@ jobs:
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Run Tests
       working-directory: test
-      run: haxelib run openfl test ${{ matrix.lime-target }
+      run: haxelib run openfl test ${{ matrix.lime-target }}
 
   test:
     runs-on: macos-latest
@@ -61,4 +61,4 @@ jobs:
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Run Tests
       working-directory: test
-      run: haxelib run openfl test ${{ matrix.lime-target }
+      run: haxelib run openfl test ${{ matrix.lime-target }}
