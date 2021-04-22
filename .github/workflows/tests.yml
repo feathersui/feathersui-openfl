@@ -10,19 +10,16 @@ on:
 
 jobs:
 
-  test-legacy:
+  test-neko-legacy:
 
     strategy:
       matrix:
         haxe-version: [4.0.5, 4.1.5]
-        lime-target: [neko, air]
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - uses: joshtynjala/setup-adobe-air-action@v1
-      if: ${{ matrix.lime-target == 'air' }}
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: ${{ matrix.haxe-version }}
@@ -35,20 +32,18 @@ jobs:
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Run Tests
       working-directory: test
-      run: haxelib run openfl test ${{ matrix.lime-target }}
+      run: haxelib run openfl test neko
 
-  test:
-    runs-on: macos-latest
+  test-neko:
 
     strategy:
       matrix:
         haxe-version: [4.2.1]
-        lime-target: [neko, air]
+
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - uses: joshtynjala/setup-adobe-air-action@v1
-      if: ${{ matrix.lime-target == 'air' }}
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: ${{ matrix.haxe-version }}
@@ -61,4 +56,30 @@ jobs:
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Run Tests
       working-directory: test
-      run: haxelib run openfl test ${{ matrix.lime-target }}
+      run: haxelib run openfl test neko
+
+  test-air:
+
+    strategy:
+      matrix:
+        haxe-version: [4.2.1]
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: joshtynjala/setup-adobe-air-action@v1
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: ${{ matrix.haxe-version }}
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.9.0 --quiet
+        haxelib install openfl 9.1.0 --quiet
+        haxelib install actuate --quiet
+        haxelib install utest --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
+    - name: Run Tests
+      working-directory: test
+      run: haxelib run openfl test air
