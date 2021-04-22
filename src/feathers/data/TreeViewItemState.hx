@@ -106,7 +106,7 @@ class TreeViewItemState {
 	/**
 		Returns the item's recycler ID.
 
-		@see `feathers.controls.TreeView.recyclerIDFunction`
+		@see `feathers.controls.TreeView.itemRendererRecyclerIDFunction`
 
 		@since 1.0.0
 	**/

@@ -85,7 +85,7 @@ class ListViewItemState {
 	/**
 		Returns the item's recycler ID.
 
-		@see `feathers.controls.ListView.recyclerIDFunction`
+		@see `feathers.controls.ListView.itemRendererRecyclerIDFunction`
 
 		@since 1.0.0
 	**/

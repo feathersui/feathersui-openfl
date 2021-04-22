@@ -488,7 +488,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		or `null` if the default `itemRendererFactory` should be used.
 
 
-		The following example provides a `recyclerIDFunction`:
+		The following example provides an `itemRendererRecyclerIDFunction`:
 
 		```hx
 		var regularItemRecycler = DisplayObjectRecycler.withClass(TreeViewItemRenderer);
@@ -782,7 +782,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		Returns the item renderer recycler associated with a specific ID.
 		Returns `null` if no recycler is associated with the ID.
 
-		@see `TreeView.recyclerIDFunction`
+		@see `TreeView.itemRendererRecyclerIDFunction`
 		@see `TreeView.setItemRendererRecycler()`
 
 		@since 1.0.0
@@ -797,12 +797,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	/**
 		Associates an item renderer rercycler with an ID to allow multiple types
 		of item renderers may be displayed in the tree view. A custom
-		`recyclerIDFunction` may be specified to return the ID of the recycler
-		to use for a specific item in the data provider.
+		`itemRendererRecyclerIDFunction` may be specified to return the ID of
+		the recycler to use for a specific item in the data provider.
 
 		To clear a recycler, pass in `null` for the ID.
 
-		@see `TreeView.recyclerIDFunction`
+		@see `TreeView.itemRendererRecyclerIDFunction`
 		@see `TreeView.getItemRendererRecycler()`
 
 		@since 1.0.0
@@ -1204,7 +1204,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				recycler = this._recyclerMap.get(recyclerID);
 			}
 			if (recycler == null) {
-				throw new IllegalOperationError('Item renderer recyyler ID "${recyclerID}" is not registered.');
+				throw new IllegalOperationError('Item renderer recycler ID "${recyclerID}" is not registered.');
 			}
 		}
 		if (recycler == null) {
