@@ -157,14 +157,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
-		if (Std.is(itemRenderer, ITextControl)) {
+		if ((itemRenderer is ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
-		if (Std.is(itemRenderer, ITextControl)) {
+		if ((itemRenderer is ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = null;
 		}
@@ -926,7 +926,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
@@ -1065,7 +1065,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this._layoutItems.resize(this._dataProvider.length);
 
-		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
+		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
@@ -1127,24 +1127,24 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (Std.is(itemRenderer, IUIControl)) {
+		if ((itemRenderer is IUIControl)) {
 			var uiControl = cast(itemRenderer, IUIControl);
 			uiControl.enabled = state.enabled;
 		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
+		if ((itemRenderer is IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
-		if (Std.is(itemRenderer, IListViewItemRenderer)) {
+		if ((itemRenderer is IListViewItemRenderer)) {
 			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
 			listRenderer.index = state.index;
 		}
-		if (Std.is(itemRenderer, ILayoutIndexObject)) {
+		if ((itemRenderer is ILayoutIndexObject)) {
 			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
 			layoutIndexObject.layoutIndex = state.index;
 		}
-		if (Std.is(itemRenderer, IToggle)) {
+		if ((itemRenderer is IToggle)) {
 			var toggle = cast(itemRenderer, IToggle);
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
@@ -1170,7 +1170,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
-			if (this.customItemRendererVariant != null && Std.is(itemRenderer, IVariantStyleObject)) {
+			if (this.customItemRendererVariant != null && (itemRenderer is IVariantStyleObject)) {
 				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
 				var variant = this.customItemRendererVariant != null ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 				if (variantItemRenderer.variant == null) {
@@ -1184,14 +1184,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// update function. plus, this ensures that custom item renderers
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
-			if (Std.is(itemRenderer, IUIControl)) {
+			if ((itemRenderer is IUIControl)) {
 				cast(itemRenderer, IUIControl).initializeNow();
 			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}
 		this.updateItemRenderer(itemRenderer, state, storage);
-		if (Std.is(itemRenderer, ITriggerView)) {
+		if ((itemRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			itemRenderer.addEventListener(TriggerEvent.TRIGGER, listView_itemRenderer_triggerHandler);
 		} else {
@@ -1201,7 +1201,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
 			#end
 		}
-		if (Std.is(itemRenderer, IToggle)) {
+		if ((itemRenderer is IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 		}
 		this.itemRendererToItemState.set(itemRenderer, state);
@@ -1322,7 +1322,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var targetX = this.scrollX;
 		var targetY = this.scrollY;
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			var result = scrollLayout.getNearestScrollPositionForIndex(index, this._dataProvider.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);
@@ -1512,7 +1512,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
-		if (Std.is(itemRenderer, IDataRenderer)) {
+		if ((itemRenderer is IDataRenderer)) {
 			cast(itemRenderer, IDataRenderer).data = null;
 		}
 		var state = this.itemRendererToItemState.get(itemRenderer);

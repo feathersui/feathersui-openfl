@@ -54,7 +54,7 @@ class VDividedBox extends BaseDividedBox {
 	override private function addItemAt(child:DisplayObject, index:Int):DisplayObject {
 		var result = super.addItemAt(child, index);
 		var explicitHeight:Null<Float> = null;
-		if (Std.is(child, IMeasureObject)) {
+		if ((child is IMeasureObject)) {
 			var measureChild = cast(child, IMeasureObject);
 			explicitHeight = measureChild.explicitHeight;
 		}
@@ -115,7 +115,7 @@ class VDividedBox extends BaseDividedBox {
 			var divider = this.dividers[dividerIndex];
 			this._currentResizeDraggingSkin.x = divider.x;
 			this._currentResizeDraggingSkin.width = divider.width;
-			if (Std.is(this._currentResizeDraggingSkin, IValidating)) {
+			if ((this._currentResizeDraggingSkin is IValidating)) {
 				cast(this._currentResizeDraggingSkin, IValidating).validateNow();
 			}
 			this._currentResizeDraggingSkin.y = divider.y + (divider.height - this._currentResizeDraggingSkin.height) / 2.0;
@@ -131,7 +131,7 @@ class VDividedBox extends BaseDividedBox {
 				var divider = this.dividers[dividerIndex];
 				this._currentResizeDraggingSkin.x = divider.x;
 				this._currentResizeDraggingSkin.width = divider.width;
-				if (Std.is(this._currentResizeDraggingSkin, IValidating)) {
+				if ((this._currentResizeDraggingSkin is IValidating)) {
 					cast(this._currentResizeDraggingSkin, IValidating).validateNow();
 				}
 				this._currentResizeDraggingSkin.y = divider.y + offsetY + (divider.height - this._currentResizeDraggingSkin.height) / 2.0;

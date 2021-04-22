@@ -499,19 +499,19 @@ class Header extends FeathersControl implements ITextControl {
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
-		if (Std.is(this._leftView, IValidating)) {
+		if ((this._leftView is IValidating)) {
 			cast(this._leftView, IValidating).validateNow();
 		}
 
-		if (Std.is(this._rightView, IValidating)) {
+		if ((this._rightView is IValidating)) {
 			cast(this._rightView, IValidating).validateNow();
 		}
 
@@ -693,7 +693,7 @@ class Header extends FeathersControl implements ITextControl {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -701,7 +701,7 @@ class Header extends FeathersControl implements ITextControl {
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -711,7 +711,7 @@ class Header extends FeathersControl implements ITextControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -732,7 +732,7 @@ class Header extends FeathersControl implements ITextControl {
 		var textFieldMaxWidth = maxContentWidth;
 
 		if (this._leftView != null) {
-			if (Std.is(this._leftView, IValidating)) {
+			if ((this._leftView is IValidating)) {
 				cast(this._leftView, IValidating).validateNow();
 			}
 			this._leftView.x = this.paddingLeft;
@@ -749,7 +749,7 @@ class Header extends FeathersControl implements ITextControl {
 		}
 
 		if (this._rightView != null) {
-			if (Std.is(this._rightView, IValidating)) {
+			if ((this._rightView is IValidating)) {
 				cast(this._rightView, IValidating).validateNow();
 			}
 			this._rightView.x = this.actualWidth - this.paddingRight - this._rightView.width;
@@ -817,7 +817,7 @@ class Header extends FeathersControl implements ITextControl {
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}

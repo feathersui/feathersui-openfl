@@ -968,7 +968,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -976,10 +976,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
-		if (Std.is(skin, IStateObserver)) {
+		if ((skin is IStateObserver)) {
 			cast(skin, IStateObserver).stateContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -989,10 +989,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
-		if (Std.is(skin, IStateObserver)) {
+		if ((skin is IStateObserver)) {
 			cast(skin, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -1014,7 +1014,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this._leftViewMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentLeftView, IUIControl)) {
+		if ((this._currentLeftView is IUIControl)) {
 			cast(this._currentLeftView, IUIControl).initializeNow();
 		}
 		if (this._leftViewMeasurements == null) {
@@ -1022,10 +1022,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			this._leftViewMeasurements.save(this._currentLeftView);
 		}
-		if (Std.is(this._currentLeftView, IProgrammaticSkin)) {
+		if ((this._currentLeftView is IProgrammaticSkin)) {
 			cast(this._currentLeftView, IProgrammaticSkin).uiContext = this;
 		}
-		if (Std.is(this._currentLeftView, IStateObserver)) {
+		if ((this._currentLeftView is IStateObserver)) {
 			cast(this._currentLeftView, IStateObserver).stateContext = this;
 		}
 		this._currentLeftView.addEventListener(Event.RESIZE, textInput_leftView_resizeHandler, false, 0, true);
@@ -1041,10 +1041,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return;
 		}
 		view.removeEventListener(Event.RESIZE, textInput_leftView_resizeHandler);
-		if (Std.is(view, IProgrammaticSkin)) {
+		if ((view is IProgrammaticSkin)) {
 			cast(view, IProgrammaticSkin).uiContext = null;
 		}
-		if (Std.is(view, IStateObserver)) {
+		if ((view is IStateObserver)) {
 			cast(view, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -1066,7 +1066,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this._rightViewMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentRightView, IUIControl)) {
+		if ((this._currentRightView is IUIControl)) {
 			cast(this._currentRightView, IUIControl).initializeNow();
 		}
 		if (this._rightViewMeasurements == null) {
@@ -1074,10 +1074,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			this._rightViewMeasurements.save(this._currentRightView);
 		}
-		if (Std.is(this._currentRightView, IProgrammaticSkin)) {
+		if ((this._currentRightView is IProgrammaticSkin)) {
 			cast(this._currentRightView, IProgrammaticSkin).uiContext = this;
 		}
-		if (Std.is(this._currentRightView, IStateObserver)) {
+		if ((this._currentRightView is IStateObserver)) {
 			cast(this._currentRightView, IStateObserver).stateContext = this;
 		}
 		this._currentRightView.addEventListener(Event.RESIZE, textInput_rightView_resizeHandler, false, 0, true);
@@ -1093,10 +1093,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return;
 		}
 		view.removeEventListener(Event.RESIZE, textInput_rightView_resizeHandler);
-		if (Std.is(view, IProgrammaticSkin)) {
+		if ((view is IProgrammaticSkin)) {
 			cast(view, IProgrammaticSkin).uiContext = null;
 		}
-		if (Std.is(view, IStateObserver)) {
+		if ((view is IStateObserver)) {
 			cast(view, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -1123,10 +1123,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
@@ -1136,18 +1136,18 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._ignoreRightViewResize = true;
 
 		var measureLeftView:IMeasureObject = null;
-		if (Std.is(this._currentLeftView, IMeasureObject)) {
+		if ((this._currentLeftView is IMeasureObject)) {
 			measureLeftView = cast(this._currentLeftView, IMeasureObject);
 		}
-		if (Std.is(this._currentLeftView, IValidating)) {
+		if ((this._currentLeftView is IValidating)) {
 			cast(this._currentLeftView, IValidating).validateNow();
 		}
 
 		var measureRightView:IMeasureObject = null;
-		if (Std.is(this._currentRightView, IMeasureObject)) {
+		if ((this._currentRightView is IMeasureObject)) {
 			measureRightView = cast(this._currentRightView, IMeasureObject);
 		}
-		if (Std.is(this._currentRightView, IValidating)) {
+		if ((this._currentRightView is IValidating)) {
 			cast(this._currentRightView, IValidating).validateNow();
 		}
 
@@ -1441,7 +1441,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var leftViewOffset = 0.0;
 		if (this._currentLeftView != null) {
-			if (Std.is(this._currentLeftView, IValidating)) {
+			if ((this._currentLeftView is IValidating)) {
 				cast(this._currentLeftView, IValidating).validateNow();
 			}
 			this._currentLeftView.x = this.paddingLeft;
@@ -1450,7 +1450,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		var rightViewOffset = 0.0;
 		if (this._currentRightView != null) {
-			if (Std.is(this._currentRightView, IValidating)) {
+			if ((this._currentRightView is IValidating)) {
 				cast(this._currentRightView, IValidating).validateNow();
 			}
 			this._currentRightView.x = this.actualWidth - this.paddingRight - this._currentRightView.width;
@@ -1511,7 +1511,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}

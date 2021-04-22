@@ -127,21 +127,21 @@ class DefaultToolTipManager implements IToolTipManager {
 			toolTip.variant = CHILD_VARIANT_TOOL_TIP;
 			this._toolTip = toolTip;
 		}
-		if (Std.is(this._toolTip, InteractiveObject)) {
+		if ((this._toolTip is InteractiveObject)) {
 			cast(this._toolTip, InteractiveObject).mouseEnabled = false;
 			cast(this._toolTip, InteractiveObject).tabEnabled = false;
 		}
-		if (Std.is(this._toolTip, DisplayObjectContainer)) {
+		if ((this._toolTip is DisplayObjectContainer)) {
 			cast(this._toolTip, DisplayObjectContainer).mouseChildren = false;
 		}
-		if (Std.is(this._toolTip, IVariantStyleObject)) {
+		if ((this._toolTip is IVariantStyleObject)) {
 			var variantToolTip = cast(this._toolTip, IVariantStyleObject);
 			if (variantToolTip.variant == null) {
 				variantToolTip.variant = CHILD_VARIANT_TOOL_TIP;
 			}
 		}
 		this._toolTip.text = this._target.toolTip;
-		if (Std.is(this._toolTip, IValidating)) {
+		if ((this._toolTip is IValidating)) {
 			cast(this._toolTip, IValidating).validateNow();
 		}
 
@@ -172,10 +172,10 @@ class DefaultToolTipManager implements IToolTipManager {
 			return;
 		}
 		var eventTarget = cast(event.target, DisplayObject);
-		while (eventTarget != null && !Std.is(eventTarget, IUIControl)) {
+		while (eventTarget != null && !(eventTarget is IUIControl)) {
 			eventTarget = eventTarget.parent;
 		}
-		if (!Std.is(eventTarget, IUIControl)) {
+		if (!(eventTarget is IUIControl)) {
 			this.clearTarget();
 			return;
 		}

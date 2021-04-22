@@ -428,7 +428,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (objects.length > 0) {
 			var lastObject = objects[objects.length - 1];
 			while (lastObject != null && lastObject != this) {
-				if (Std.is(lastObject, IFocusObject)) {
+				if ((lastObject is IFocusObject)) {
 					var focusable = cast(lastObject, IFocusObject);
 					if (focusable.focusEnabled) {
 						return false;
@@ -443,7 +443,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	override private function refreshTextFieldDimensions(forMeasurement:Bool):Void {
 		var oldIgnoreIconResizes = this._ignoreIconResizes;
 		this._ignoreIconResizes = true;
-		if (Std.is(this._currentIcon, IValidating)) {
+		if ((this._currentIcon is IValidating)) {
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
@@ -625,7 +625,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		var availableTextWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var currentX = this.paddingLeft;
 		if (this._currentIcon != null) {
-			if (Std.is(this._currentIcon, IValidating)) {
+			if ((this._currentIcon is IValidating)) {
 				cast(this._currentIcon, IValidating).validateNow();
 			}
 			this._currentIcon.x = currentX;

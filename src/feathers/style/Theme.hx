@@ -80,10 +80,10 @@ final class Theme {
 		@since 1.0.0
 	**/
 	public static function getTheme(?object:IStyleObject):ITheme {
-		if (Std.is(object, DisplayObject)) {
+		if ((object is DisplayObject)) {
 			var current = cast(object, DisplayObject);
 			while (current != null) {
-				if (Std.is(current, IStyleObject)) {
+				if ((current is IStyleObject)) {
 					var currentStylable = cast(current, IStyleObject);
 					if (!currentStylable.themeEnabled) {
 						return null;

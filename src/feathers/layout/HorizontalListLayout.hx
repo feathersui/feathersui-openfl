@@ -509,7 +509,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				positionX += itemWidth + this._gap;
 				continue;
 			}
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
 				}
@@ -517,7 +517,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			item.x = positionX;
 			item.y = this._paddingTop;
 			item.height = itemHeight;
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			var itemWidth = item.width;
@@ -581,12 +581,12 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			if (item == null) {
 				continue;
 			}
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			var itemHeight = item.height;
@@ -596,7 +596,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem == null) {
-					if (Std.is(item, IValidating)) {
+					if ((item is IValidating)) {
 						cast(item, IValidating).validateNow();
 					}
 					// save the original measured height in the cache to be used
@@ -630,13 +630,13 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				// use the last known column width, if available
 				return cacheItem.itemWidth;
 			}
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
 			item.height = itemHeight;
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			return item.width;
@@ -796,7 +796,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				continue;
 			}
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;

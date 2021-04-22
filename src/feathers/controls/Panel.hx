@@ -71,7 +71,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			this._focusExtrasBefore.push(this._header);
 			var index = (this._currentBackgroundSkin != null) ? (this.getRawChildIndex(this._currentBackgroundSkin) + 1) : 0;
 			this.addRawChildAt(this._header, index);
-			if (Std.is(this._header, IUIControl)) {
+			if ((this._header is IUIControl)) {
 				cast(this._header, IUIControl).initializeNow();
 			}
 			if (this._headerMeasurements == null) {
@@ -118,7 +118,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		if (this._footer != null) {
 			this._focusExtrasAfter.push(this._footer);
 			this.addRawChild(this._footer);
-			if (Std.is(this._footer, IUIControl)) {
+			if ((this._footer is IUIControl)) {
 				cast(this._footer, IUIControl).initializeNow();
 			}
 			if (this._footerMeasurements == null) {
@@ -183,12 +183,12 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			if (this._headerMeasurements != null) {
 				this._headerMeasurements.restore(this._header);
 			}
-			if (Std.is(this._header, IValidating)) {
+			if ((this._header is IValidating)) {
 				cast(this._header, IValidating).validateNow();
 			}
 			this.topViewPortOffset += this._header.height;
 			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._header.width);
-			if (Std.is(this._header, IMeasureObject)) {
+			if ((this._header is IMeasureObject)) {
 				var measureHeader = cast(this._header, IMeasureObject);
 				this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, measureHeader.minWidth);
 			}
@@ -200,12 +200,12 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			if (this._footerMeasurements != null) {
 				this._footerMeasurements.restore(this._footer);
 			}
-			if (Std.is(this._footer, IValidating)) {
+			if ((this._footer is IValidating)) {
 				cast(this._footer, IValidating).validateNow();
 			}
 			this.bottomViewPortOffset += this._footer.height;
 			this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this._footer.width);
-			if (Std.is(this._footer, IMeasureObject)) {
+			if ((this._footer is IMeasureObject)) {
 				var measureFooter = cast(this._footer, IMeasureObject);
 				this.chromeMeasuredMinWidth = Math.max(this.chromeMeasuredMinWidth, measureFooter.minWidth);
 			}
@@ -221,7 +221,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		this._header.x = this.paddingLeft;
 		this._header.y = this.paddingTop;
 		this._header.width = this.actualWidth - this.paddingLeft - this.paddingRight;
-		if (Std.is(this._header, IValidating)) {
+		if ((this._header is IValidating)) {
 			cast(this._header, IValidating).validateNow();
 		}
 	}
@@ -232,7 +232,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		}
 		this._footer.x = this.paddingLeft;
 		this._footer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
-		if (Std.is(this._footer, IValidating)) {
+		if ((this._footer is IValidating)) {
 			cast(this._footer, IValidating).validateNow();
 		}
 		this._footer.y = this.actualHeight - this._footer.height - this.paddingBottom;

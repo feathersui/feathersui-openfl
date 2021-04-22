@@ -73,7 +73,7 @@ class FocusManager {
 			throw new ArgumentError("Focus manager root already exists");
 		}
 		for (otherRoot in _rootToData.keys()) {
-			if (Std.is(otherRoot, DisplayObjectContainer)) {
+			if ((otherRoot is DisplayObjectContainer)) {
 				var rootContainer = cast(otherRoot, DisplayObjectContainer);
 				if (rootContainer.contains(root)) {
 					throw new ArgumentError("Cannot nest focus manager roots");

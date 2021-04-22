@@ -159,14 +159,14 @@ class DefaultFocusManager implements IFocusManager {
 			return this._focus;
 		}
 		if (this._focus != null) {
-			if (Std.is(this._focus, IUIControl)) {
+			if ((this._focus is IUIControl)) {
 				this._focus.removeEventListener(FeathersEvent.DISABLE, defaultFocusManager_focus_disableHandler);
 			}
 			this._focus.showFocus(false);
 		}
 		this._focus = value;
 		if (this._focus != null) {
-			if (Std.is(this._focus, IUIControl)) {
+			if ((this._focus is IUIControl)) {
 				this._focus.addEventListener(FeathersEvent.DISABLE, defaultFocusManager_focus_disableHandler, false, 0, true);
 			}
 		}
@@ -192,20 +192,20 @@ class DefaultFocusManager implements IFocusManager {
 			if (currentFocus != null && currentFocus.parent != null) {
 				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 			}
-			if (newFocus == null && Std.is(this._root, DisplayObjectContainer)) {
+			if (newFocus == null && (this._root is DisplayObjectContainer)) {
 				var rootContainer = cast(this._root, DisplayObjectContainer);
 				newFocus = this.findPreviousContainerFocus(rootContainer, null, false);
 				wrapped = currentFocus != null;
 			}
 		} else {
 			if (currentFocus != null) {
-				if (Std.is(currentFocus, IFocusContainer) && cast(currentFocus, IFocusContainer).childFocusEnabled) {
+				if ((currentFocus is IFocusContainer) && cast(currentFocus, IFocusContainer).childFocusEnabled) {
 					newFocus = this.findNextContainerFocus(cast(currentFocus, DisplayObjectContainer), null, true);
 				} else if (currentFocus.parent != null) {
 					newFocus = this.findNextContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 				}
 			}
-			if (newFocus == null && Std.is(this._root, DisplayObjectContainer)) {
+			if (newFocus == null && (this._root is DisplayObjectContainer)) {
 				var rootContainer = cast(this._root, DisplayObjectContainer);
 				newFocus = this.findNextContainerFocus(rootContainer, null, false);
 				wrapped = currentFocus != null;
@@ -224,7 +224,7 @@ class DefaultFocusManager implements IFocusManager {
 				return false;
 			}*/
 		}
-		if (Std.is(target, IUIControl)) {
+		if ((target is IUIControl)) {
 			var uiTarget = cast(target, IUIControl);
 			if (!uiTarget.enabled) {
 				return false;
@@ -234,14 +234,14 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function setFocusManager(target:DisplayObject):Void {
-		if (Std.is(target, IFocusManagerAware)) {
+		if ((target is IFocusManagerAware)) {
 			var targetWithFocus = cast(target, IFocusManagerAware);
 			targetWithFocus.focusManager = this;
 		}
 		var container = Std.downcast(target, DisplayObjectContainer);
 		if (container != null) {
-			var setChildrenFocusManager = !Std.is(target, IFocusObject);
-			if (!setChildrenFocusManager && Std.is(target, IFocusContainer)) {
+			var setChildrenFocusManager = !(target is IFocusObject);
+			if (!setChildrenFocusManager && (target is IFocusContainer)) {
 				var focusContainer = cast(target, IFocusContainer);
 				setChildrenFocusManager = focusContainer.childFocusEnabled;
 			}
@@ -250,7 +250,7 @@ class DefaultFocusManager implements IFocusManager {
 					var child = container.getChildAt(i);
 					this.setFocusManager(child);
 				}
-				if (Std.is(container, IFocusExtras)) {
+				if ((container is IFocusExtras)) {
 					var containerWithExtras = cast(container, IFocusExtras);
 					var extras = containerWithExtras.focusExtrasBefore;
 					if (extras != null) {
@@ -270,7 +270,7 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function clearFocusManager(target:DisplayObject):Void {
-		if (Std.is(target, IFocusObject)) {
+		if ((target is IFocusObject)) {
 			var targetWithFocus = cast(target, IFocusObject);
 			if (targetWithFocus.focusManager == this) {
 				if (this._focus == targetWithFocus) {
@@ -285,7 +285,7 @@ class DefaultFocusManager implements IFocusManager {
 				var child = container.getChildAt(i);
 				this.clearFocusManager(child);
 			}
-			if (Std.is(container, IFocusExtras)) {
+			if ((container is IFocusExtras)) {
 				var containerWithExtras = cast(container, IFocusExtras);
 				var extras = containerWithExtras.focusExtrasBefore;
 				if (extras != null) {
@@ -304,11 +304,11 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function findPreviousContainerFocus(container:DisplayObjectContainer, beforeChild:DisplayObject, fallbackToGlobal:Bool):IFocusObject {
-		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
+		if ((container is IViewPort) && !(container is IFocusContainer)) {
 			container = container.parent;
 		}
 		var hasProcessedBeforeChild = beforeChild == null;
-		if (Std.is(container, IFocusExtras)) {
+		if ((container is IFocusExtras)) {
 			var focusWithExtras = cast(container, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasAfter;
 			if (extras != null) {
@@ -347,7 +347,7 @@ class DefaultFocusManager implements IFocusManager {
 			}
 			i--;
 		}
-		if (Std.is(container, IFocusExtras)) {
+		if ((container is IFocusExtras)) {
 			var focusWithExtras = cast(container, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasBefore;
 			if (extras != null) {
@@ -374,7 +374,7 @@ class DefaultFocusManager implements IFocusManager {
 
 		if (fallbackToGlobal && container != this._root) {
 			// try the container itself before moving backwards
-			if (Std.is(container, IFocusObject)) {
+			if ((container is IFocusObject)) {
 				var focusContainer = cast(container, IFocusObject);
 				if (this.isValidFocus(focusContainer)) {
 					return focusContainer;
@@ -386,11 +386,11 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function findNextContainerFocus(container:DisplayObjectContainer, afterChild:DisplayObject, fallbackToGlobal:Bool):IFocusObject {
-		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
+		if ((container is IViewPort) && !(container is IFocusContainer)) {
 			container = container.parent;
 		}
 		var hasProcessedAfterChild = afterChild == null;
-		if (Std.is(container, IFocusExtras)) {
+		if ((container is IFocusExtras)) {
 			var focusWithExtras = cast(container, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasBefore;
 			if (extras != null) {
@@ -424,7 +424,7 @@ class DefaultFocusManager implements IFocusManager {
 				return foundChild;
 			}
 		}
-		if (Std.is(container, IFocusExtras)) {
+		if ((container is IFocusExtras)) {
 			var focusWithExtras = cast(container, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasAfter;
 			if (extras != null) {
@@ -459,8 +459,8 @@ class DefaultFocusManager implements IFocusManager {
 	private function findPreviousChildFocus(child:DisplayObject):IFocusObject {
 		var childContainer = Std.downcast(child, DisplayObjectContainer);
 		if (childContainer != null) {
-			var findPrevChildContainer = !Std.is(childContainer, IFocusObject);
-			if (!findPrevChildContainer && Std.is(childContainer, IFocusContainer)) {
+			var findPrevChildContainer = !(childContainer is IFocusObject);
+			if (!findPrevChildContainer && (childContainer is IFocusContainer)) {
 				var focusContainer = cast(childContainer, IFocusContainer);
 				findPrevChildContainer = focusContainer.childFocusEnabled;
 			}
@@ -471,17 +471,17 @@ class DefaultFocusManager implements IFocusManager {
 				}
 			}
 		}
-		if (Std.is(child, IFocusObject)) {
+		if ((child is IFocusObject)) {
 			var childWithFocus = cast(child, IFocusObject);
 			if (this.isValidFocus(childWithFocus)) {
-				if (!Std.is(childWithFocus, IGroupedToggle)) {
+				if (!(childWithFocus is IGroupedToggle)) {
 					return childWithFocus;
 				}
 				var toggleGroup = cast(childWithFocus, IGroupedToggle).toggleGroup;
 				if (toggleGroup == null) {
 					return childWithFocus;
 				}
-				if (Std.is(toggleGroup.selectedItem, IFocusObject)) {
+				if ((toggleGroup.selectedItem is IFocusObject)) {
 					var selectedItem = cast(toggleGroup.selectedItem, IFocusObject);
 					if (this._focus != selectedItem) {
 						// don't let it keep the same focus
@@ -494,17 +494,17 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function findNextChildFocus(child:DisplayObject):IFocusObject {
-		if (Std.is(child, IFocusObject)) {
+		if ((child is IFocusObject)) {
 			var childWithFocus = cast(child, IFocusObject);
 			if (this.isValidFocus(childWithFocus)) {
-				if (!Std.is(childWithFocus, IGroupedToggle)) {
+				if (!(childWithFocus is IGroupedToggle)) {
 					return childWithFocus;
 				}
 				var toggleGroup = cast(childWithFocus, IGroupedToggle).toggleGroup;
 				if (toggleGroup == null) {
 					return childWithFocus;
 				}
-				if (Std.is(toggleGroup.selectedItem, IFocusObject)) {
+				if ((toggleGroup.selectedItem is IFocusObject)) {
 					var selectedItem = cast(toggleGroup.selectedItem, IFocusObject);
 					if (this._focus != selectedItem) {
 						// don't let it keep the same focus
@@ -516,8 +516,8 @@ class DefaultFocusManager implements IFocusManager {
 
 		var childContainer = Std.downcast(child, DisplayObjectContainer);
 		if (childContainer != null) {
-			var findNextChildContainer = !Std.is(childContainer, IFocusObject);
-			if (!findNextChildContainer && Std.is(childContainer, IFocusContainer)) {
+			var findNextChildContainer = !(childContainer is IFocusObject);
+			if (!findNextChildContainer && (childContainer is IFocusContainer)) {
 				var focusContainer = cast(childContainer, IFocusContainer);
 				findNextChildContainer = focusContainer.childFocusEnabled;
 			}
@@ -532,7 +532,7 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function setStageFocus(value:InteractiveObject):Void {
-		if (Std.is(value, IStageFocusDelegate)) {
+		if ((value is IStageFocusDelegate)) {
 			var newFocusTarget = cast(value, IStageFocusDelegate).stageFocusTarget;
 			if (newFocusTarget != null) {
 				value = newFocusTarget;
@@ -586,7 +586,7 @@ class DefaultFocusManager implements IFocusManager {
 			return true;
 		}
 		var container = target.parent;
-		if (Std.is(container, IViewPort) && !Std.is(container, IFocusContainer)) {
+		if ((container is IViewPort) && !(container is IFocusContainer)) {
 			container = container.parent;
 		}
 		var valid = false;
@@ -595,7 +595,7 @@ class DefaultFocusManager implements IFocusManager {
 		} catch (e:Dynamic) {
 			// throws on some targets
 		}
-		if (!valid && Std.is(container, IFocusExtras)) {
+		if (!valid && (container is IFocusExtras)) {
 			var container = cast(container, IFocusExtras);
 			if (container.focusExtrasBefore != null) {
 				for (child in container.focusExtrasBefore) {
@@ -603,7 +603,7 @@ class DefaultFocusManager implements IFocusManager {
 						valid = true;
 						break;
 					}
-					if (Std.is(child, DisplayObjectContainer)) {
+					if ((child is DisplayObjectContainer)) {
 						valid = cast(child, DisplayObjectContainer).contains(child);
 						if (valid) {
 							break;
@@ -617,7 +617,7 @@ class DefaultFocusManager implements IFocusManager {
 						valid = true;
 						break;
 					}
-					if (Std.is(child, DisplayObjectContainer)) {
+					if ((child is DisplayObjectContainer)) {
 						valid = cast(child, DisplayObjectContainer).contains(child);
 						if (valid) {
 							break;
@@ -713,11 +713,11 @@ class DefaultFocusManager implements IFocusManager {
 		var focusTarget:IFocusObject = null;
 		var target = cast(event.target, DisplayObject);
 		do {
-			if (Std.is(target, IFocusObject)) {
+			if ((target is IFocusObject)) {
 				var tempFocusTarget = cast(target, IFocusObject);
 				if (this.isValidFocus(tempFocusTarget)) {
 					if (focusTarget == null
-						|| !Std.is(tempFocusTarget, IFocusContainer)
+						|| !(tempFocusTarget is IFocusContainer)
 						|| !cast(tempFocusTarget, IFocusContainer).childFocusEnabled) {
 						focusTarget = tempFocusTarget;
 					}

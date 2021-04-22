@@ -230,7 +230,7 @@ class LayoutGroup extends FeathersControl {
 		// add listeners or access properties after adding a child
 		// because adding the child may result in better errors (like for null)
 		child.addEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
-		if (Std.is(child, ILayoutObject)) {
+		if ((child is ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler, false, 0, true);
 		}
 		this.setInvalid(LAYOUT);
@@ -260,7 +260,7 @@ class LayoutGroup extends FeathersControl {
 		// remove listeners or access properties after removing a child
 		// because removing the child may result in better errors (like for null)
 		child.removeEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
-		if (Std.is(child, ILayoutObject)) {
+		if ((child is ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
 		}
 		this.setInvalid(LAYOUT);
@@ -477,7 +477,7 @@ class LayoutGroup extends FeathersControl {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -485,7 +485,7 @@ class LayoutGroup extends FeathersControl {
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this._addChildAt(skin, 0);
@@ -495,7 +495,7 @@ class LayoutGroup extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -516,7 +516,7 @@ class LayoutGroup extends FeathersControl {
 
 		if (this._currentBackgroundSkin != null) {
 			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
-			if (Std.is(this._currentBackgroundSkin, IValidating)) {
+			if ((this._currentBackgroundSkin is IValidating)) {
 				cast(this._currentBackgroundSkin, IValidating).validateNow();
 			}
 		}
@@ -609,10 +609,10 @@ class LayoutGroup extends FeathersControl {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		for (item in this.items) {
-			if (Std.is(item, ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+			if ((item is ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
 				continue;
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			var itemMaxX = item.x + item.width;
@@ -673,17 +673,17 @@ class LayoutGroup extends FeathersControl {
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}
 
 	private function validateChildren():Void {
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 		for (item in this.items) {
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 		}

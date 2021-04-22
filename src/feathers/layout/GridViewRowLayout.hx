@@ -134,7 +134,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
 		for (item in items) {
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			if (contentHeight < item.height) {
@@ -195,7 +195,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			} else if (this._customColumnWidths != null && i < this._customColumnWidths.length) {
 				item.width = this._customColumnWidths[i];
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 		}
@@ -219,7 +219,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			var item = items[i];
 			if (columnWidth != null) {
 				item.width = columnWidth;
-				if (Std.is(item, IValidating)) {
+				if ((item is IValidating)) {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
@@ -227,7 +227,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 				}
 			} else if (this._customColumnWidths != null && i < this._customColumnWidths.length) {
 				item.width = this._customColumnWidths[i];
-				if (Std.is(item, IValidating)) {
+				if ((item is IValidating)) {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
@@ -236,8 +236,8 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 			} else {
 				var percentWidth = 100.0;
 				var itemMinWidth = 0.0;
-				if (Std.is(item, IMeasureObject)) {
-					if (Std.is(item, IValidating)) {
+				if ((item is IMeasureObject)) {
+					if ((item is IValidating)) {
 						cast(item, IValidating).validateNow();
 					}
 					itemMinWidth = cast(item, IMeasureObject).minWidth;
@@ -299,7 +299,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 					needsAnotherPass = true;
 				}
 				item.width = itemWidth;
-				if (Std.is(item, IValidating)) {
+				if ((item is IValidating)) {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.

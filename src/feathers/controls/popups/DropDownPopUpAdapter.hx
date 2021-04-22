@@ -79,7 +79,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.origin = origin;
 		PopUpManager.addPopUp(this.content, this.origin, this.modal, false);
 
-		if (Std.is(this.content, IValidating)) {
+		if ((this.content is IValidating)) {
 			cast(this.content, IValidating).validateNow();
 		}
 		this._contentMeasurements.save(this.content);
@@ -113,7 +113,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	}
 
 	private function layout():Void {
-		if (Std.is(this.origin, IValidating)) {
+		if ((this.origin is IValidating)) {
 			cast(this.origin, IValidating).validateNow();
 		}
 
@@ -130,7 +130,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.content.x = originTopLeft.x;
 		this.content.y = originBottomRight.y;
 
-		if (Std.is(this.content, IValidating)) {
+		if ((this.content is IValidating)) {
 			cast(this.content, IValidating).validateNow();
 		}
 		if (this.content.width < this.origin.width) {

@@ -533,7 +533,7 @@ class BaseDividedBox extends FeathersControl {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -541,7 +541,7 @@ class BaseDividedBox extends FeathersControl {
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addRawChildAt(skin, 0);
@@ -551,7 +551,7 @@ class BaseDividedBox extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -572,17 +572,17 @@ class BaseDividedBox extends FeathersControl {
 		if (this._currentResizeDraggingSkin == null) {
 			return;
 		}
-		if (Std.is(this._currentResizeDraggingSkin, IUIControl)) {
+		if ((this._currentResizeDraggingSkin is IUIControl)) {
 			cast(this._currentResizeDraggingSkin, IUIControl).initializeNow();
 		}
-		if (Std.is(this._currentResizeDraggingSkin, IProgrammaticSkin)) {
+		if ((this._currentResizeDraggingSkin is IProgrammaticSkin)) {
 			cast(this._currentResizeDraggingSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this._currentResizeDraggingSkin.visible = false;
-		if (Std.is(this._currentResizeDraggingSkin, InteractiveObject)) {
+		if ((this._currentResizeDraggingSkin is InteractiveObject)) {
 			cast(this._currentResizeDraggingSkin, InteractiveObject).mouseEnabled = false;
 		}
-		if (Std.is(this._currentResizeDraggingSkin, DisplayObjectContainer)) {
+		if ((this._currentResizeDraggingSkin is DisplayObjectContainer)) {
 			cast(this._currentResizeDraggingSkin, DisplayObjectContainer).mouseChildren = false;
 		}
 		this.addRawChild(this._currentResizeDraggingSkin);
@@ -596,7 +596,7 @@ class BaseDividedBox extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
@@ -631,7 +631,7 @@ class BaseDividedBox extends FeathersControl {
 
 		if (this._currentBackgroundSkin != null) {
 			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
-			if (Std.is(this._currentBackgroundSkin, IValidating)) {
+			if ((this._currentBackgroundSkin is IValidating)) {
 				cast(this._currentBackgroundSkin, IValidating).validateNow();
 			}
 		}
@@ -734,14 +734,14 @@ class BaseDividedBox extends FeathersControl {
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}
 
 	private function validateChildren():Void {
 		for (layoutItem in this._layoutItems) {
-			if (Std.is(layoutItem, IValidating)) {
+			if ((layoutItem is IValidating)) {
 				cast(layoutItem, IValidating).validateNow();
 			}
 		}

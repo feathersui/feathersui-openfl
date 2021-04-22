@@ -320,13 +320,13 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		var contentHeight = 0.0;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			if (contentHeight < item.height) {
@@ -386,11 +386,11 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		var maxMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
 		for (item in items) {
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			var itemMinWidth = 0.0;
-			if (Std.is(item, IMeasureObject)) {
+			if ((item is IMeasureObject)) {
 				var measureItem = cast(item, IMeasureObject);
 				itemMinWidth = measureItem.minWidth;
 			} else {
@@ -425,7 +425,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 				itemWidth = this._maxItemWidth;
 			}
 			item.width = itemWidth;
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				// changing the width of the item may cause its height
 				// to change, so we need to validate. the height is
 				// needed for measurement.
@@ -437,7 +437,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, viewPortHeight:Float):Void {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;

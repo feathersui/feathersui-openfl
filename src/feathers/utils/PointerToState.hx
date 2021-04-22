@@ -283,7 +283,7 @@ class PointerToState<T> {
 	private function changeState(value:T):Void {
 		var oldState = this._currentState;
 		var targetStateContext:IStateContext<T> = this._stateContext;
-		if (targetStateContext == null && Std.is(this._target, IStateContext)) {
+		if (targetStateContext == null && (this._target is IStateContext)) {
 			targetStateContext = cast this._target;
 		}
 		if (targetStateContext != null) {

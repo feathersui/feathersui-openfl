@@ -229,7 +229,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			return scrollLayout.requiresLayoutOnScroll;
 		}
@@ -342,7 +342,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	override private function handleCustomLayout():Void {
 		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 		this._ignoreLayoutChanges = true;
-		if (Std.is(this._currentLayout, IScrollLayout)) {
+		if ((this._currentLayout is IScrollLayout)) {
 			var scrollLayout = cast(this._currentLayout, IScrollLayout);
 			scrollLayout.scrollX = this._scrollX;
 			scrollLayout.scrollY = this._scrollY;

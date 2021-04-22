@@ -42,7 +42,7 @@ class Measurements {
 			this.maxHeight = null;
 			return;
 		}
-		if (Std.is(target, IMeasureObject)) {
+		if ((target is IMeasureObject)) {
 			var measureTarget = cast(target, IMeasureObject);
 			this.width = measureTarget.explicitWidth;
 			this.height = measureTarget.explicitHeight;
@@ -66,7 +66,7 @@ class Measurements {
 		@since 1.0.0
 	**/
 	public function restore(target:DisplayObject):Void {
-		if (Std.is(target, IMeasureObject)) {
+		if ((target is IMeasureObject)) {
 			var measureTarget = cast(target, IMeasureObject);
 			if (this.width == null) {
 				measureTarget.resetWidth();

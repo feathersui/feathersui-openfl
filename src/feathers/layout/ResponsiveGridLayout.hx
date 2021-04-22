@@ -435,7 +435,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		var yPosition = this._paddingTop;
 		var maxRowHeight = 0.0;
 		for (item in items) {
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				var layoutItem = cast(item, ILayoutObject);
 				if (!layoutItem.includeInLayout) {
 					continue;
@@ -463,7 +463,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		item.x = this._paddingLeft + ((offset != 0) ? ((columnWidth + this._columnGap) * offset) : 0.0);
 		item.y = yPosition;
 		item.width = (span != 0) ? ((columnWidth + this._columnGap) * span) - this._columnGap : columnWidth;
-		if (Std.is(item, IValidating)) {
+		if ((item is IValidating)) {
 			cast(item, IValidating).validateNow();
 		}
 	}
@@ -485,7 +485,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function getSpan(item:DisplayObject, breakpoint:Breakpoint):Int {
-		if (!Std.is(item, ILayoutObject)) {
+		if (!(item is ILayoutObject)) {
 			return 1;
 		}
 		var layoutItem = cast(item, ILayoutObject);
@@ -505,7 +505,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function getOffset(item:DisplayObject, span:Int, breakpoint:Breakpoint):Int {
-		if (!Std.is(item, ILayoutObject)) {
+		if (!(item is ILayoutObject)) {
 			return 0;
 		}
 		var layoutItem = cast(item, ILayoutObject);

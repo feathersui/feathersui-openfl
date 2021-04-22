@@ -456,7 +456,7 @@ class ButtonBar extends FeathersControl {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -464,7 +464,7 @@ class ButtonBar extends FeathersControl {
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -474,7 +474,7 @@ class ButtonBar extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -501,7 +501,7 @@ class ButtonBar extends FeathersControl {
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}
@@ -594,11 +594,11 @@ class ButtonBar extends FeathersControl {
 	private function refreshButtonProperties(button:Button, state:ButtonBarItemState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (Std.is(button, IUIControl)) {
+		if ((button is IUIControl)) {
 			var uiControl = cast(button, IUIControl);
 			uiControl.enabled = state.enabled;
 		}
-		if (Std.is(button, IDataRenderer)) {
+		if ((button is IDataRenderer)) {
 			var dataRenderer = cast(button, IDataRenderer);
 			// if the button is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;

@@ -114,7 +114,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		if (this._drawer != null) {
 			this._drawer.visible = false;
 			this.addChild(this._drawer);
-			if (Std.is(this._drawer, IUIControl)) {
+			if ((this._drawer is IUIControl)) {
 				cast(this._drawer, IUIControl).initializeNow();
 			}
 			if (this._drawerMeasurements == null) {
@@ -158,7 +158,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		this._content = value;
 		if (this._content != null) {
 			this.addChild(this._content);
-			if (Std.is(this._content, IUIControl)) {
+			if ((this._content is IUIControl)) {
 				cast(this._content, IUIControl).initializeNow();
 			}
 			if (this._contentMeasurements == null) {
@@ -459,7 +459,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		}
 
 		var measureContent:IMeasureObject = null;
-		if (Std.is(this._content, IMeasureObject)) {
+		if ((this._content is IMeasureObject)) {
 			measureContent = cast(this._content, IMeasureObject);
 		}
 		if (this._content != null) {
@@ -467,7 +467,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			this._ignoreContentResize = true;
 			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this._content, this.explicitWidth, this.explicitHeight,
 				this.explicitMinWidth, this.explicitMinHeight, this.explicitMaxWidth, this.explicitMaxHeight);
-			if (Std.is(this._content, IValidating)) {
+			if ((this._content is IValidating)) {
 				cast(this._content, IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;
@@ -527,10 +527,10 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		this._edgePuller.enabled = this._enabled
 			&& this._drawer != null
 			&& ((this._opened && this._swipeCloseEnabled) || (!this._opened && this._swipeOpenEnabled));
-		if (Std.is(this._content, IUIControl)) {
+		if ((this._content is IUIControl)) {
 			cast(this._content, IUIControl).enabled = this._enabled;
 		}
-		if (Std.is(this._drawer, IUIControl)) {
+		if ((this._drawer is IUIControl)) {
 			cast(this._drawer, IUIControl).enabled = this._enabled;
 		}
 	}
@@ -546,7 +546,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			this._overlaySkinMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentOverlaySkin, IUIControl)) {
+		if ((this._currentOverlaySkin is IUIControl)) {
 			cast(this._currentOverlaySkin, IUIControl).initializeNow();
 		}
 		if (this._overlaySkinMeasurements == null) {
@@ -555,7 +555,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			this._overlaySkinMeasurements.save(this._currentOverlaySkin);
 		}
 		this._overlaySkinAlpha = this._currentOverlaySkin.alpha;
-		if (Std.is(this._currentOverlaySkin, IProgrammaticSkin)) {
+		if ((this._currentOverlaySkin is IProgrammaticSkin)) {
 			cast(this._currentOverlaySkin, IProgrammaticSkin).uiContext = this;
 		}
 		this._currentOverlaySkin.addEventListener(MouseEvent.MOUSE_DOWN, drawer_overlaySkin_mouseDownHandler, false, 0, true);
@@ -594,7 +594,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		skin.removeEventListener(MouseEvent.CLICK, drawer_overlaySkin_clickHandler);
 		skin.removeEventListener(TouchEvent.TOUCH_BEGIN, drawer_overlaySkin_touchBeginHandler);
 		skin.removeEventListener(TouchEvent.TOUCH_TAP, drawer_overlaySkin_touchTapHandler);
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -614,7 +614,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			this._content.y = 0.0;
 			this._content.width = this.actualWidth;
 			this._content.height = this.actualHeight;
-			if (Std.is(this._content, IValidating)) {
+			if ((this._content is IValidating)) {
 				cast(this._content, IValidating).validateNow();
 			}
 		}
@@ -645,7 +645,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 				default:
 					throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 			}
-			if (Std.is(this._drawer, IValidating)) {
+			if ((this._drawer is IValidating)) {
 				cast(this._drawer, IValidating).validateNow();
 			}
 			var maxPullDistance = 0.0;

@@ -484,7 +484,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 	private function getCurrentBorderWithoutCache():LineStyle {
 		var stateContext = this._stateContext;
-		if (stateContext == null && Std.is(this._uiContext, IStateContext)) {
+		if (stateContext == null && (this._uiContext is IStateContext)) {
 			stateContext = cast(this._uiContext, IStateContext<Dynamic>);
 		}
 		if (this._stateToBorder != null && stateContext != null) {
@@ -501,7 +501,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 				return this._disabledBorder;
 			}
 		}
-		if (this._selectedBorder != null && Std.is(this._uiContext, IToggle)) {
+		if (this._selectedBorder != null && (this._uiContext is IToggle)) {
 			var toggle = cast(this._uiContext, IToggle);
 			if (toggle.selected) {
 				return this._selectedBorder;
@@ -530,7 +530,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 	private function getCurrentFillWithoutCache() {
 		var stateContext = this._stateContext;
-		if (stateContext == null && Std.is(this._uiContext, IStateContext)) {
+		if (stateContext == null && (this._uiContext is IStateContext)) {
 			stateContext = cast(this._uiContext, IStateContext<Dynamic>);
 		}
 		if (this._stateToFill != null && stateContext != null) {
@@ -547,7 +547,7 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 				return this._disabledFill;
 			}
 		}
-		if (this._selectedFill != null && Std.is(this._uiContext, IToggle)) {
+		if (this._selectedFill != null && (this._uiContext is IToggle)) {
 			var toggle = cast(this._uiContext, IToggle);
 			if (toggle.selected) {
 				return this._selectedFill;

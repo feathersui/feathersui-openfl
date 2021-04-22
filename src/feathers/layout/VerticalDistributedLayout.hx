@@ -320,13 +320,13 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		var contentHeight = this._paddingTop;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			if (contentWidth < item.width) {
@@ -384,7 +384,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 	private inline function validateItems(items:Array<DisplayObject>) {
 		for (item in items) {
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 		}
@@ -395,11 +395,11 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		var maxMinHeight = 0.0;
 		var totalPercentHeight = 0.0;
 		for (item in items) {
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			var itemMinHeight = 0.0;
-			if (Std.is(item, IMeasureObject)) {
+			if ((item is IMeasureObject)) {
 				var measureItem = cast(item, IMeasureObject);
 				itemMinHeight = measureItem.minHeight;
 			}
@@ -432,7 +432,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 				itemHeight = this._maxItemHeight;
 			}
 			item.height = itemHeight;
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				// changing the width of the item may cause its height
 				// to change, so we need to validate. the height is
 				// needed for measurement.
@@ -444,7 +444,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, maxItemWidth:Float, viewPortWidth:Float):Void {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;

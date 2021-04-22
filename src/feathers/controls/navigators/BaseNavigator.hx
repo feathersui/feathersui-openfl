@@ -255,7 +255,7 @@ class BaseNavigator extends FeathersControl {
 		}
 
 		var measureView:IMeasureObject = null;
-		if (Std.is(this._activeItemView, IMeasureObject)) {
+		if ((this._activeItemView is IMeasureObject)) {
 			measureView = cast(this._activeItemView, IMeasureObject);
 		}
 
@@ -277,7 +277,7 @@ class BaseNavigator extends FeathersControl {
 			}
 		}
 
-		if (Std.is(this._activeItemView, IValidating)) {
+		if ((this._activeItemView is IValidating)) {
 			cast(this._activeItemView, IValidating).validateNow();
 		}
 
@@ -390,7 +390,7 @@ class BaseNavigator extends FeathersControl {
 		if (this._activeItemView.height != this.actualHeight) {
 			this._activeItemView.height = this.actualHeight;
 		}
-		if (Std.is(this._activeItemView, IValidating)) {
+		if ((this._activeItemView is IValidating)) {
 			cast(this._activeItemView, IValidating).validateNow();
 		}
 	}
@@ -485,7 +485,7 @@ class BaseNavigator extends FeathersControl {
 		}
 		var sameInstance = this._previousViewInTransition == this._activeItemView;
 		this._viewsContainer.addChild(this._activeItemView);
-		if (Std.is(this._activeItemView, IUIControl)) {
+		if ((this._activeItemView is IUIControl)) {
 			// initialize so that we can save the measurements
 			cast(this._activeItemView, IUIControl).initializeNow();
 		}
@@ -654,7 +654,7 @@ class BaseNavigator extends FeathersControl {
 		this.setInvalid(LAYOUT);
 
 		if (this.stage != null && (this.stage.focus == null || this.stage.focus.stage == null)) {
-			if (Std.is(activeItemView, InteractiveObject)) {
+			if ((activeItemView is InteractiveObject)) {
 				this.stage.focus = cast(activeItemView, InteractiveObject);
 			}
 		}
@@ -695,7 +695,7 @@ class BaseNavigator extends FeathersControl {
 		this.setInvalid(LAYOUT);
 
 		if (this.stage != null && (this.stage.focus == null || this.stage.focus.stage == null)) {
-			if (Std.is(this._activeItemView, InteractiveObject)) {
+			if ((this._activeItemView is InteractiveObject)) {
 				this.stage.focus = cast(this._activeItemView, InteractiveObject);
 			}
 		}

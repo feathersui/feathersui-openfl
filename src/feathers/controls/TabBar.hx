@@ -557,7 +557,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -565,7 +565,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -575,7 +575,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -602,7 +602,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}
@@ -697,11 +697,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	private function refreshTabProperties(tab:ToggleButton, state:TabBarItemState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (Std.is(tab, IUIControl)) {
+		if ((tab is IUIControl)) {
 			var uiControl = cast(tab, IUIControl);
 			uiControl.enabled = state.enabled;
 		}
-		if (Std.is(tab, IDataRenderer)) {
+		if ((tab is IDataRenderer)) {
 			var dataRenderer = cast(tab, IDataRenderer);
 			// if the tab is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;

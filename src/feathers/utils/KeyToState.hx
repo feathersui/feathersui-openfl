@@ -193,7 +193,7 @@ class KeyToState<T> {
 
 	private function changeState(value:T):Void {
 		var oldState = this._currentState;
-		if (Std.is(this._target, IStateContext)) {
+		if ((this._target is IStateContext)) {
 			oldState = cast(this._target, IStateContext<Dynamic>).currentState;
 		}
 		this._currentState = value;

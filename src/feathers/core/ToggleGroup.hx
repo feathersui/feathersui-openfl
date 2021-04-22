@@ -228,7 +228,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		}
 		item.addEventListener(Event.CHANGE, item_changeHandler, false, 0, true);
 
-		if (Std.is(item, IGroupedToggle)) {
+		if ((item is IGroupedToggle)) {
 			cast(item, IGroupedToggle).toggleGroup = this;
 		}
 	}
@@ -256,7 +256,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		}
 		this._items.remove(item);
 		item.removeEventListener(Event.CHANGE, item_changeHandler);
-		if (Std.is(item, IGroupedToggle)) {
+		if ((item is IGroupedToggle)) {
 			cast(item, IGroupedToggle).toggleGroup = null;
 		}
 		if (this._selectedIndex > index) {
@@ -298,7 +298,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 	public function removeAllItems():Void {
 		for (item in this._items) {
 			item.removeEventListener(Event.CHANGE, item_changeHandler);
-			if (Std.is(item, IGroupedToggle)) {
+			if ((item is IGroupedToggle)) {
 				cast(item, IGroupedToggle).toggleGroup = null;
 			}
 		}

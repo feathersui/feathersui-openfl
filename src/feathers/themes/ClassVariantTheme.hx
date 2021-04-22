@@ -39,7 +39,7 @@ class ClassVariantTheme implements ITheme {
 	public function getStyleProvider(target:IStyleObject):IStyleProvider {
 		var styleContext:Class<IStyleObject> = null;
 		var variant:String = null;
-		if (Std.is(target, IVariantStyleObject)) {
+		if ((target is IVariantStyleObject)) {
 			var variantObject = cast(target, IVariantStyleObject);
 			styleContext = variantObject.styleContext;
 			variant = variantObject.variant;
@@ -60,7 +60,7 @@ class ClassVariantTheme implements ITheme {
 		// next, check if the fallback theme has an exact match for the variant
 		// in that case, we'll defer to the fallback theme
 		var fallbackTheme = Theme.fallbackTheme;
-		if (fallbackTheme != null && fallbackTheme != this && Std.is(fallbackTheme, ClassVariantTheme)) {
+		if (fallbackTheme != null && fallbackTheme != this && (fallbackTheme is ClassVariantTheme)) {
 			// but only do that if the fallback theme is a ClassVariantTheme
 			// if someone replaces the fallback theme with another type, there's
 			// no way for us to know if it should be allowed to take precedence

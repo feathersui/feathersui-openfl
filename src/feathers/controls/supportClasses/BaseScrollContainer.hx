@@ -1002,10 +1002,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function refreshViewPort():Void {
-		if (Std.is(this.scrollBarX, IValidating)) {
+		if ((this.scrollBarX is IValidating)) {
 			cast(this.scrollBarX, IValidating).validateNow();
 		}
-		if (Std.is(this.scrollBarY, IValidating)) {
+		if ((this.scrollBarY is IValidating)) {
 			cast(this.scrollBarY, IValidating).validateNow();
 		}
 
@@ -1381,11 +1381,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
@@ -1511,7 +1511,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -1519,7 +1519,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -1529,7 +1529,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -1561,7 +1561,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}
@@ -1576,10 +1576,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			visibleHeight = 0.0;
 		}
 
-		if (this.scrollBarX != null && Std.is(this.scrollBarX, IValidating)) {
+		if (this.scrollBarX != null && (this.scrollBarX is IValidating)) {
 			cast(this.scrollBarX, IValidating).validateNow();
 		}
-		if (this.scrollBarY != null && Std.is(this.scrollBarY, IValidating)) {
+		if (this.scrollBarY != null && (this.scrollBarY is IValidating)) {
 			cast(this.scrollBarY, IValidating).validateNow();
 		}
 

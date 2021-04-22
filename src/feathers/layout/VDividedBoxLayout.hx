@@ -276,7 +276,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 		var contentWidth = 0.0;
 		var contentHeight = this._paddingTop;
 		for (item in items) {
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				// the height might have changed after the initial validation
 				cast(item, IValidating).validateNow();
 			}
@@ -342,7 +342,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 					}
 				}
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 		}
@@ -380,7 +380,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			}
 			var item = items[i];
 			var itemWidth = availableWidth;
-			if (Std.is(item, IMeasureObject)) {
+			if ((item is IMeasureObject)) {
 				var measureItem = cast(item, IMeasureObject);
 				var itemMinWidth = measureItem.explicitMinWidth;
 				if (itemMinWidth != null) {
@@ -421,7 +421,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 						needsPercentHeight = false;
 						item.height = itemHeight;
 						customHeightIndices.push(i);
-						if (Std.is(item, IValidating)) {
+						if ((item is IValidating)) {
 							// changing the height of the item may cause its width
 							// to change, so we need to validate. the width is
 							// needed for measurement.
@@ -431,7 +431,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 				}
 				if (needsPercentHeight) {
 					var percentHeight = 100.0;
-					if (Std.is(item, IMeasureObject)) {
+					if ((item is IMeasureObject)) {
 						totalMinHeight += cast(item, IMeasureObject).minHeight;
 					}
 					totalPercentHeight += percentHeight;
@@ -470,7 +470,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 				// between items. we'll append the remainder at the end.
 				var itemHeight = Math.ffloor(percentToPixels * percentHeight);
 				var columnMinHeight:Null<Float> = null;
-				if (Std.is(item, IMeasureObject)) {
+				if ((item is IMeasureObject)) {
 					var measureItem = cast(item, IMeasureObject);
 					columnMinHeight = measureItem.explicitMinHeight;
 				}
@@ -491,7 +491,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 					}
 				}
 				item.height = itemHeight;
-				if (Std.is(item, IValidating)) {
+				if ((item is IValidating)) {
 					// changing the height of the item may cause its width
 					// to change, so we need to validate. the width is
 					// needed for measurement.

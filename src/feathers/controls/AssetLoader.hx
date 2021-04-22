@@ -193,7 +193,7 @@ class AssetLoader extends FeathersControl {
 				try {
 					this.loader.load(new URLRequest(this._source));
 				} catch (e:Dynamic) {
-					if (Std.is(e, SecurityError)) {
+					if ((e is SecurityError)) {
 						var securityError = cast(e, SecurityError);
 						this.dispatchEvent(new SecurityErrorEvent(SecurityErrorEvent.SECURITY_ERROR, false, false, securityError.message,
 							securityError.errorID));

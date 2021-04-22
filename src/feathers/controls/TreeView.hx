@@ -177,14 +177,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
-		if (Std.is(itemRenderer, ITextControl)) {
+		if ((itemRenderer is ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
-		if (Std.is(itemRenderer, ITextControl)) {
+		if ((itemRenderer is ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
 			textControl.text = null;
 		}
@@ -857,7 +857,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
@@ -1000,7 +1000,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var newSize = this.calculateTotalLayoutCount([]);
 		this._layoutItems.resize(newSize);
 
-		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
+		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
@@ -1094,30 +1094,30 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
 		this._ignoreOpenedChange = true;
-		if (Std.is(itemRenderer, IUIControl)) {
+		if ((itemRenderer is IUIControl)) {
 			var uiControl = cast(itemRenderer, IUIControl);
 			uiControl.enabled = state.enabled;
 		}
-		if (Std.is(itemRenderer, IDataRenderer)) {
+		if ((itemRenderer is IDataRenderer)) {
 			var dataRenderer = cast(itemRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
-		if (Std.is(itemRenderer, IToggle)) {
+		if ((itemRenderer is IToggle)) {
 			var toggle = cast(itemRenderer, IToggle);
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
-		if (Std.is(itemRenderer, ITreeViewItemRenderer)) {
+		if ((itemRenderer is ITreeViewItemRenderer)) {
 			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
 			treeItem.location = state.location;
 			treeItem.branch = state.branch;
 		}
-		if (Std.is(itemRenderer, ILayoutIndexObject)) {
+		if ((itemRenderer is ILayoutIndexObject)) {
 			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
 			layoutIndexObject.layoutIndex = state.layoutIndex;
 		}
-		if (Std.is(itemRenderer, IOpenCloseToggle)) {
+		if ((itemRenderer is IOpenCloseToggle)) {
 			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
 			openCloseItem.opened = state.opened;
 		}
@@ -1144,7 +1144,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
-			if (this.customItemRendererVariant != null && Std.is(itemRenderer, IVariantStyleObject)) {
+			if (this.customItemRendererVariant != null && (itemRenderer is IVariantStyleObject)) {
 				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
 				var variant = this.customItemRendererVariant != null ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 				if (variantItemRenderer.variant == null) {
@@ -1158,14 +1158,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// update function. plus, this ensures that custom item renderers
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
-			if (Std.is(itemRenderer, IUIControl)) {
+			if ((itemRenderer is IUIControl)) {
 				cast(itemRenderer, IUIControl).initializeNow();
 			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
 		}
 		this.updateItemRenderer(itemRenderer, state, storage);
-		if (Std.is(itemRenderer, ITriggerView)) {
+		if ((itemRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			itemRenderer.addEventListener(TriggerEvent.TRIGGER, treeView_itemRenderer_triggerHandler);
 		} else {
@@ -1175,10 +1175,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
 			#end
 		}
-		if (Std.is(itemRenderer, IToggle)) {
+		if ((itemRenderer is IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
 		}
-		if (Std.is(itemRenderer, IOpenCloseToggle)) {
+		if ((itemRenderer is IOpenCloseToggle)) {
 			itemRenderer.addEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
 			itemRenderer.addEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 		}
@@ -1431,7 +1431,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 		var targetX = this.scrollX;
 		var targetY = this.scrollY;
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var displayIndex = this.locationToDisplayIndex(location, true);
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			var result = scrollLayout.getNearestScrollPositionForIndex(displayIndex, this._layoutItems.length, this.viewPort.visibleWidth,
@@ -1653,7 +1653,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// in order to display the same item with modified properties, this
 			// hack tricks the item renderer into thinking that it has been given
 			// a different item to render.
-			if (Std.is(itemRenderer, IDataRenderer)) {
+			if ((itemRenderer is IDataRenderer)) {
 				cast(itemRenderer, IDataRenderer).data = null;
 			}
 			var state = this.itemRendererToItemState.get(itemRenderer);

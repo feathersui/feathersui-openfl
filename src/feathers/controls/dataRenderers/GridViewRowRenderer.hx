@@ -47,14 +47,14 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
-		if (Std.is(cellRenderer, ITextControl)) {
+		if ((cellRenderer is ITextControl)) {
 			var textControl = cast(cellRenderer, ITextControl);
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
-		if (Std.is(cellRenderer, ITextControl)) {
+		if ((cellRenderer is ITextControl)) {
 			var textControl = cast(cellRenderer, ITextControl);
 			textControl.text = null;
 		}
@@ -427,25 +427,25 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			if (cellRendererRecycler != null && cellRendererRecycler.reset != null) {
 				cellRendererRecycler.reset(cellRenderer, this._currentCellState);
 			}
-			if (Std.is(cellRenderer, IUIControl)) {
+			if ((cellRenderer is IUIControl)) {
 				var uiControl = cast(cellRenderer, IUIControl);
 				uiControl.enabled = this._currentCellState.enabled;
 			}
-			if (Std.is(cellRenderer, IToggle)) {
+			if ((cellRenderer is IToggle)) {
 				var toggle = cast(cellRenderer, IToggle);
 				toggle.selected = this._currentCellState.selected;
 			}
-			if (Std.is(cellRenderer, IDataRenderer)) {
+			if ((cellRenderer is IDataRenderer)) {
 				var dataRenderer = cast(cellRenderer, IDataRenderer);
 				dataRenderer.data = this._currentCellState.data;
 			}
-			if (Std.is(cellRenderer, IGridViewCellRenderer)) {
+			if ((cellRenderer is IGridViewCellRenderer)) {
 				var gridCell = cast(cellRenderer, IGridViewCellRenderer);
 				gridCell.column = this._currentCellState.column;
 				gridCell.columnIndex = this._currentCellState.columnIndex;
 				gridCell.rowIndex = this._currentCellState.rowIndex;
 			}
-			if (Std.is(cellRenderer, ILayoutIndexObject)) {
+			if ((cellRenderer is ILayoutIndexObject)) {
 				var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
 				layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
 			}
@@ -488,14 +488,14 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			// update function. plus, this ensures that custom item renderers
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
-			if (Std.is(cellRenderer, IUIControl)) {
+			if ((cellRenderer is IUIControl)) {
 				cast(cellRenderer, IUIControl).initializeNow();
 			}
 		} else {
 			cellRenderer = storage.inactiveCellRenderers.shift();
 		}
 		this.refreshCellRendererProperties(cellRenderer, columnIndex, column);
-		if (Std.is(cellRenderer, ITriggerView)) {
+		if ((cellRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			cellRenderer.addEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
 		} else {
@@ -505,7 +505,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
 			#end
 		}
-		if (Std.is(cellRenderer, IToggle)) {
+		if ((cellRenderer is IToggle)) {
 			cellRenderer.addEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
 		}
 		this._cellRendererToColumn.set(cellRenderer, column);
@@ -541,31 +541,31 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (storage.cellRendererRecycler.update != null) {
 			storage.cellRendererRecycler.update(cellRenderer, this._currentCellState);
 		}
-		if (Std.is(cellRenderer, IUIControl)) {
+		if ((cellRenderer is IUIControl)) {
 			var uiControl = cast(cellRenderer, IUIControl);
 			uiControl.enabled = this._currentCellState.enabled;
 		}
-		if (Std.is(cellRenderer, IDataRenderer)) {
+		if ((cellRenderer is IDataRenderer)) {
 			var dataRenderer = cast(cellRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = this._data;
 		}
-		if (Std.is(cellRenderer, IToggle)) {
+		if ((cellRenderer is IToggle)) {
 			var toggle = cast(cellRenderer, IToggle);
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = this._currentCellState.selected;
 		}
-		if (Std.is(cellRenderer, IGridViewCellRenderer)) {
+		if ((cellRenderer is IGridViewCellRenderer)) {
 			var gridCell = cast(cellRenderer, IGridViewCellRenderer);
 			gridCell.column = this._currentCellState.column;
 			gridCell.columnIndex = this._currentCellState.columnIndex;
 			gridCell.rowIndex = this._currentCellState.rowIndex;
 		}
-		if (Std.is(cellRenderer, ILayoutIndexObject)) {
+		if ((cellRenderer is ILayoutIndexObject)) {
 			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
 			layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
 		}
-		if (Std.is(cellRenderer, IPointerDelegate)) {
+		if ((cellRenderer is IPointerDelegate)) {
 			var pointerDelgate = cast(cellRenderer, IPointerDelegate);
 			pointerDelgate.pointerTarget = this;
 		}

@@ -30,7 +30,7 @@ final class MeasurementsUtil {
 		if (target == null) {
 			return;
 		}
-		if (Std.is(target, IMeasureObject)) {
+		if ((target is IMeasureObject)) {
 			var measureTarget = cast(target, IMeasureObject);
 
 			var width = parentExplicitWidth;

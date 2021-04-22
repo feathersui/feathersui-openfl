@@ -326,7 +326,7 @@ class Callout extends FeathersControl {
 		if (this._content != null) {
 			this._content.addEventListener(Event.RESIZE, callout_content_resizeHandler, false, 0, true);
 			this.addChild(this._content);
-			if (Std.is(this._content, IUIControl)) {
+			if ((this._content is IUIControl)) {
 				cast(this._content, IUIControl).initializeNow();
 			}
 			if (this._contentMeasurements == null) {
@@ -758,24 +758,24 @@ class Callout extends FeathersControl {
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
-		if (Std.is(this.topArrowSkin, IValidating)) {
+		if ((this.topArrowSkin is IValidating)) {
 			cast(this.topArrowSkin, IValidating).validateNow();
 		}
-		if (Std.is(this.rightArrowSkin, IValidating)) {
+		if ((this.rightArrowSkin is IValidating)) {
 			cast(this.rightArrowSkin, IValidating).validateNow();
 		}
-		if (Std.is(this.bottomArrowSkin, IValidating)) {
+		if ((this.bottomArrowSkin is IValidating)) {
 			cast(this.bottomArrowSkin, IValidating).validateNow();
 		}
-		if (Std.is(this.leftArrowSkin, IValidating)) {
+		if ((this.leftArrowSkin is IValidating)) {
 			cast(this.leftArrowSkin, IValidating).validateNow();
 		}
 
@@ -801,7 +801,7 @@ class Callout extends FeathersControl {
 		}
 
 		var measureContent:IMeasureObject = null;
-		if (Std.is(this._content, IMeasureObject)) {
+		if ((this._content is IMeasureObject)) {
 			measureContent = cast(this._content, IMeasureObject);
 		}
 		if (this._content != null) {
@@ -832,7 +832,7 @@ class Callout extends FeathersControl {
 				- topOrBottomArrowHeight
 				- this.paddingLeft
 				- this.paddingRight : null);
-			if (Std.is(this._content, IValidating)) {
+			if ((this._content is IValidating)) {
 				cast(this._content, IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;
@@ -951,7 +951,7 @@ class Callout extends FeathersControl {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -959,7 +959,7 @@ class Callout extends FeathersControl {
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -969,7 +969,7 @@ class Callout extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -987,7 +987,7 @@ class Callout extends FeathersControl {
 			return;
 		}
 		this.removeCurrentArrowSkin(oldArrowSkin);
-		if (Std.is(this._currentArrowSkin, IProgrammaticSkin)) {
+		if ((this._currentArrowSkin is IProgrammaticSkin)) {
 			cast(this._currentArrowSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(this._currentArrowSkin);
@@ -1006,7 +1006,7 @@ class Callout extends FeathersControl {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
@@ -1015,13 +1015,13 @@ class Callout extends FeathersControl {
 	}
 
 	private function refreshEnabled():Void {
-		if (Std.is(this._content, IUIControl)) {
+		if ((this._content is IUIControl)) {
 			cast(this._content, IUIControl).enabled = this._enabled;
 		}
 	}
 
 	private function layoutChildren():Void {
-		if (Std.is(this._currentArrowSkin, IValidating)) {
+		if ((this._currentArrowSkin is IValidating)) {
 			cast(this._currentArrowSkin, IValidating).validateNow();
 		}
 		var xPosition = 0.0;
@@ -1135,7 +1135,7 @@ class Callout extends FeathersControl {
 			this._ignoreContentResize = true;
 			this._content.width = backgroundWidth - this.paddingLeft - this.paddingRight;
 			this._content.height = backgroundHeight - this.paddingTop - this.paddingBottom;
-			if (Std.is(this._content, IValidating)) {
+			if ((this._content is IValidating)) {
 				cast(this._content, IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;

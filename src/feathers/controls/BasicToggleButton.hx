@@ -380,7 +380,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -388,10 +388,10 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
-		if (Std.is(skin, IStateObserver)) {
+		if ((skin is IStateObserver)) {
 			cast(skin, IStateObserver).stateContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -401,10 +401,10 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
-		if (Std.is(skin, IStateObserver)) {
+		if ((skin is IStateObserver)) {
 			cast(skin, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -431,11 +431,11 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
@@ -519,7 +519,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}

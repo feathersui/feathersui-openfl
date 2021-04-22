@@ -135,8 +135,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 
 	private function getStyleContext(target:IStyleObject):Class<IStyleObject> {
 		var styleContext:Class<IStyleObject> = null;
-		var variant:String = null;
-		if (Std.is(target, IVariantStyleObject)) {
+		if ((target is IVariantStyleObject)) {
 			var variantObject = cast(target, IVariantStyleObject);
 			styleContext = variantObject.styleContext;
 		}
@@ -148,7 +147,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 
 	private function getVariant(target:IStyleObject):String {
 		var variant:String = null;
-		if (Std.is(target, IVariantStyleObject)) {
+		if ((target is IVariantStyleObject)) {
 			var variantObject = cast(target, IVariantStyleObject);
 			variant = variantObject.variant;
 		}

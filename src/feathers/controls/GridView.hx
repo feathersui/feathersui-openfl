@@ -163,14 +163,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
 
 	private static function defaultUpdateHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
-		if (Std.is(headerRenderer, ITextControl)) {
+		if ((headerRenderer is ITextControl)) {
 			var textControl = cast(headerRenderer, ITextControl);
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
-		if (Std.is(headerRenderer, ITextControl)) {
+		if ((headerRenderer is ITextControl)) {
 			var textControl = cast(headerRenderer, ITextControl);
 			textControl.text = null;
 		}
@@ -958,7 +958,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
@@ -1114,17 +1114,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._currentColumnResizeSkin == null) {
 			return;
 		}
-		if (Std.is(this._currentColumnResizeSkin, IUIControl)) {
+		if ((this._currentColumnResizeSkin is IUIControl)) {
 			cast(this._currentColumnResizeSkin, IUIControl).initializeNow();
 		}
-		if (Std.is(this._currentColumnResizeSkin, IProgrammaticSkin)) {
+		if ((this._currentColumnResizeSkin is IProgrammaticSkin)) {
 			cast(this._currentColumnResizeSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this._currentColumnResizeSkin.visible = false;
-		if (Std.is(this._currentColumnResizeSkin, InteractiveObject)) {
+		if ((this._currentColumnResizeSkin is InteractiveObject)) {
 			cast(this._currentColumnResizeSkin, InteractiveObject).mouseEnabled = false;
 		}
-		if (Std.is(this._currentColumnResizeSkin, DisplayObjectContainer)) {
+		if ((this._currentColumnResizeSkin is DisplayObjectContainer)) {
 			cast(this._currentColumnResizeSkin, DisplayObjectContainer).mouseChildren = false;
 		}
 		this.addChildAt(this._currentColumnResizeSkin, 0);
@@ -1138,7 +1138,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
@@ -1176,11 +1176,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			if (recycler != null && recycler.reset != null) {
 				recycler.reset(headerRenderer, this._currentHeaderState);
 			}
-			if (Std.is(headerRenderer, IUIControl)) {
+			if ((headerRenderer is IUIControl)) {
 				var uiControl = cast(headerRenderer, IUIControl);
 				uiControl.enabled = this._currentHeaderState.enabled;
 			}
-			if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
+			if ((headerRenderer is IGridViewHeaderRenderer)) {
 				var header = cast(headerRenderer, IGridViewHeaderRenderer);
 				header.column = null;
 				header.columnIndex = -1;
@@ -1291,7 +1291,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this._layoutItems.resize(this._dataProvider.length);
 
-		if (this._virtualLayout && Std.is(this.layout, IVirtualLayout)) {
+		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
@@ -1399,11 +1399,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		// update function. plus, this ensures that custom header renderers
 		// correctly handle property changes in update() instead of trying
 		// to access them too early in initialize().
-		if (Std.is(headerRenderer, IUIControl)) {
+		if ((headerRenderer is IUIControl)) {
 			cast(headerRenderer, IUIControl).initializeNow();
 		}
 		this.refreshHeaderRendererProperties(headerRenderer, column, columnIndex);
-		if (Std.is(headerRenderer, ITriggerView)) {
+		if ((headerRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			headerRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
 		} else {
@@ -1438,16 +1438,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._headerRendererRecycler.update != null) {
 			this._headerRendererRecycler.update(headerRenderer, this._currentHeaderState);
 		}
-		if (Std.is(headerRenderer, IUIControl)) {
+		if ((headerRenderer is IUIControl)) {
 			var uiControl = cast(headerRenderer, IUIControl);
 			uiControl.enabled = this._currentHeaderState.enabled;
 		}
-		if (Std.is(headerRenderer, IGridViewHeaderRenderer)) {
+		if ((headerRenderer is IGridViewHeaderRenderer)) {
 			var header = cast(headerRenderer, IGridViewHeaderRenderer);
 			header.column = this._currentHeaderState.column;
 			header.columnIndex = this._currentHeaderState.columnIndex;
 		}
-		if (Std.is(headerRenderer, ILayoutIndexObject)) {
+		if ((headerRenderer is ILayoutIndexObject)) {
 			var layoutObject = cast(headerRenderer, ILayoutIndexObject);
 			layoutObject.layoutIndex = this._currentHeaderState.columnIndex;
 		}
@@ -1575,7 +1575,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var targetX = this.scrollX;
 		var targetY = this.scrollY;
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			var result = scrollLayout.getNearestScrollPositionForIndex(rowIndex, this._dataProvider.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);

@@ -249,7 +249,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	public var requiresMeasurementOnScroll(get, never):Bool;
 
 	private function get_requiresMeasurementOnScroll():Bool {
-		if (!Std.is(this._layout, IScrollLayout)) {
+		if (!(this._layout is IScrollLayout)) {
 			return false;
 		}
 		return cast(this._layout, IScrollLayout).requiresLayoutOnScroll;
@@ -315,7 +315,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	private function refreshLayoutProperties():Void {
 		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 		this._ignoreLayoutChanges = true;
-		if (Std.is(this._layout, IScrollLayout)) {
+		if ((this._layout is IScrollLayout)) {
 			var scrollLayout = cast(this._layout, IScrollLayout);
 			scrollLayout.scrollX = this._scrollX;
 			scrollLayout.scrollY = this._scrollY;

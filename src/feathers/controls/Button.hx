@@ -678,15 +678,15 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
-		if (Std.is(this._currentIcon, IValidating)) {
+		if ((this._currentIcon is IValidating)) {
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 
@@ -924,7 +924,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	private function refreshTextFieldDimensions(forMeasurement:Bool):Void {
 		var oldIgnoreIconResizes = this._ignoreIconResizes;
 		this._ignoreIconResizes = true;
-		if (Std.is(this._currentIcon, IValidating)) {
+		if ((this._currentIcon is IValidating)) {
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
@@ -1087,7 +1087,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			this._iconMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentIcon, IUIControl)) {
+		if ((this._currentIcon is IUIControl)) {
 			cast(this._currentIcon, IUIControl).initializeNow();
 		}
 		if (this._iconMeasurements == null) {
@@ -1095,10 +1095,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		} else {
 			this._iconMeasurements.save(this._currentIcon);
 		}
-		if (Std.is(this._currentIcon, IProgrammaticSkin)) {
+		if ((this._currentIcon is IProgrammaticSkin)) {
 			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
 		}
-		if (Std.is(this._currentIcon, IStateObserver)) {
+		if ((this._currentIcon is IStateObserver)) {
 			cast(this._currentIcon, IStateObserver).stateContext = this;
 		}
 		var index = this.getChildIndex(this.textField);
@@ -1118,10 +1118,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (icon == null) {
 			return;
 		}
-		if (Std.is(icon, IProgrammaticSkin)) {
+		if ((icon is IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
-		if (Std.is(icon, IStateObserver)) {
+		if ((icon is IStateObserver)) {
 			cast(icon, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the

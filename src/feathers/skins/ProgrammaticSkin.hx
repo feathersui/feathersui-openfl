@@ -53,7 +53,7 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 		}
 		if (this._uiContext != null) {
 			this._uiContext.removeEventListener(FeathersEvent.STATE_CHANGE, uiContext_stateChangeHandler);
-			if (Std.is(this._uiContext, IToggle)) {
+			if ((this._uiContext is IToggle)) {
 				this._uiContext.removeEventListener(Event.CHANGE, uiContextToggle_changeHandler);
 			}
 			this.onRemoveUIContext();
@@ -61,7 +61,7 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 		this._uiContext = value;
 		if (this._uiContext != null) {
 			this._uiContext.addEventListener(FeathersEvent.STATE_CHANGE, uiContext_stateChangeHandler, false, 0, true);
-			if (Std.is(this._uiContext, IToggle)) {
+			if ((this._uiContext is IToggle)) {
 				this._uiContext.addEventListener(Event.CHANGE, uiContextToggle_changeHandler);
 			}
 			this.onAddUIContext();

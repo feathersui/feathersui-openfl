@@ -234,7 +234,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		// add listeners or access properties after adding a child
 		// because adding the child may result in better errors (like for null)
 		child.addEventListener(Event.RESIZE, scrollContainer_child_resizeHandler);
-		if (Std.is(child, ILayoutObject)) {
+		if ((child is ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler, false, 0, true);
 		}
 		this.setInvalid(LAYOUT);
@@ -253,7 +253,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		// remove listeners or access properties after removing a child
 		// because removing the child may result in better errors (like for null)
 		child.removeEventListener(Event.RESIZE, scrollContainer_child_resizeHandler);
-		if (Std.is(child, ILayoutObject)) {
+		if ((child is ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler);
 		}
 		this.setInvalid(LAYOUT);
@@ -458,7 +458,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
-		if (Std.is(this.layout, IScrollLayout)) {
+		if ((this.layout is IScrollLayout)) {
 			var scrollLayout = cast(this.layout, IScrollLayout);
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;

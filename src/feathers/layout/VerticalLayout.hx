@@ -327,13 +327,13 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		var contentHeight = this._paddingTop;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 			if (contentWidth < item.width) {
@@ -405,7 +405,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					cast(item, IMeasureObject).resetWidth();
 				}
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 		}
@@ -414,7 +414,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, maxItemWidth:Float, viewPortWidth:Float):Void {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
@@ -452,7 +452,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		}
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
@@ -465,7 +465,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	private function applyPercentWidth(items:Array<DisplayObject>, viewPortWidth:Float):Void {
 		var availableWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
 		for (item in items) {
-			if (!Std.is(item, ILayoutObject)) {
+			if (!(item is ILayoutObject)) {
 				continue;
 			}
 			var layoutItem = cast(item, ILayoutObject);
@@ -486,7 +486,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 				percentWidth = 100.0;
 			}
 			var itemWidth = availableWidth * percentWidth / 100.0;
-			if (Std.is(item, IMeasureObject)) {
+			if ((item is IMeasureObject)) {
 				var measureItem = cast(item, IMeasureObject);
 				var itemMinWidth = measureItem.explicitMinWidth;
 				if (itemMinWidth != null) {
@@ -515,7 +515,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		var totalMinHeight = 0.0;
 		var totalPercentHeight = 0.0;
 		for (item in items) {
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				var layoutItem = cast(item, ILayoutObject);
 				if (!layoutItem.includeInLayout) {
 					continue;
@@ -527,7 +527,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 						if (percentHeight < 0.0) {
 							percentHeight = 0.0;
 						}
-						if (Std.is(layoutItem, IMeasureObject)) {
+						if ((layoutItem is IMeasureObject)) {
 							var measureItem = cast(layoutItem, IMeasureObject);
 							totalMinHeight += measureItem.minHeight;
 						}
@@ -571,7 +571,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					percentHeight = 0.0;
 				}
 				var itemHeight = percentToPixels * percentHeight;
-				if (Std.is(layoutItem, IMeasureObject)) {
+				if ((layoutItem is IMeasureObject)) {
 					var measureItem = cast(layoutItem, IMeasureObject);
 					var itemMinHeight = measureItem.explicitMinHeight;
 					if (itemMinHeight != null && itemMinHeight > remainingHeight) {
@@ -592,7 +592,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					// isn't a real maximum
 				}
 				cast(layoutItem, DisplayObject).height = itemHeight;
-				if (Std.is(layoutItem, IValidating)) {
+				if ((layoutItem is IValidating)) {
 					// changing the height of the item may cause its width
 					// to change, so we need to validate. the width is needed
 					// for measurement.

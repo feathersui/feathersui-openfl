@@ -534,7 +534,7 @@ class Alert extends Panel {
 			this._iconMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentIcon, IUIControl)) {
+		if ((this._currentIcon is IUIControl)) {
 			cast(this._currentIcon, IUIControl).initializeNow();
 		}
 		if (this._iconMeasurements == null) {
@@ -542,7 +542,7 @@ class Alert extends Panel {
 		} else {
 			this._iconMeasurements.save(this._currentIcon);
 		}
-		if (Std.is(this._currentIcon, IProgrammaticSkin)) {
+		if ((this._currentIcon is IProgrammaticSkin)) {
 			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
 		}
 		var index = this.getChildIndex(this.messageLabel);
@@ -558,7 +558,7 @@ class Alert extends Panel {
 		if (icon == null) {
 			return;
 		}
-		if (Std.is(icon, IProgrammaticSkin)) {
+		if ((icon is IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the

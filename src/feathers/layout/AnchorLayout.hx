@@ -43,13 +43,13 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
-			if (Std.is(item, ILayoutObject)) {
+			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 				var layoutData:AnchorLayoutData = null;
-				if (layoutObject != null && Std.is(layoutObject.layoutData, AnchorLayoutData)) {
+				if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
 					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
 				}
 				if (layoutData != null) {
@@ -71,7 +71,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					}
 				}
 			}
-			if (Std.is(item, IValidating)) {
+			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
 		}
@@ -86,7 +86,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 				var layoutObject:ILayoutObject = null;
-				if (Std.is(item, ILayoutObject)) {
+				if ((item is ILayoutObject)) {
 					layoutObject = cast(item, ILayoutObject);
 					if (!layoutObject.includeInLayout) {
 						doneItems.push(item);
@@ -94,11 +94,11 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					}
 				}
 				var layoutData:AnchorLayoutData = null;
-				if (layoutObject != null && Std.is(layoutObject.layoutData, AnchorLayoutData)) {
+				if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
 					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
 				}
 
-				if (Std.is(item, IValidating)) {
+				if ((item is IValidating)) {
 					cast(item, IValidating).validateNow();
 				}
 
@@ -207,7 +207,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 				var layoutObject:ILayoutObject = null;
-				if (Std.is(item, ILayoutObject)) {
+				if ((item is ILayoutObject)) {
 					layoutObject = cast(item, ILayoutObject);
 					if (!layoutObject.includeInLayout) {
 						doneItems.push(item);
@@ -215,7 +215,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					}
 				}
 				var layoutData:AnchorLayoutData = null;
-				if (layoutObject != null && Std.is(layoutObject.layoutData, AnchorLayoutData)) {
+				if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
 					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
 				}
 				if (layoutData == null) {

@@ -465,7 +465,7 @@ class EdgePuller extends EventDispatcher {
 		this._target.stage.addEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler, false, 0, true);
 		this._target.stage.addEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler, false, 0, true);
 		this._target.stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler, false, 0, true);
-		if (Std.is(this._target, DisplayObjectContainer)) {
+		if ((this._target is DisplayObjectContainer)) {
 			var container = cast(this._target, DisplayObjectContainer);
 			// if we were already scrolling, disable the pointer immediately.
 			// otherwise, wait until dragging starts
@@ -582,7 +582,7 @@ class EdgePuller extends EventDispatcher {
 			this.cleanupAfterDrag();
 			return false;
 		}
-		if (Std.is(this._target, DisplayObjectContainer)) {
+		if ((this._target is DisplayObjectContainer)) {
 			var container = cast(this._target, DisplayObjectContainer);
 			this._restoreMouseChildren = container.mouseChildren;
 			container.mouseChildren = false;
@@ -601,7 +601,7 @@ class EdgePuller extends EventDispatcher {
 			return;
 		}
 		this._active = false;
-		if (Std.is(this._target, DisplayObjectContainer)) {
+		if ((this._target is DisplayObjectContainer)) {
 			var container = cast(this._target, DisplayObjectContainer);
 			container.mouseChildren = this._restoreMouseChildren;
 		}

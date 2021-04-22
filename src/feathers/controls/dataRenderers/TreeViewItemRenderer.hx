@@ -269,7 +269,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	override private function measureContentWidth():Float {
 		var contentWidth = super.measureContentWidth();
 		this.disclosureButton.validateNow();
-		if (Std.is(this._currentBranchOrLeafIcon, IValidating)) {
+		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
@@ -292,7 +292,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	override private function measureContentMinWidth():Float {
 		var contentMinWidth = super.measureContentMinWidth();
 		this.disclosureButton.validateNow();
-		if (Std.is(this._currentBranchOrLeafIcon, IValidating)) {
+		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
@@ -314,7 +314,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	override private function layoutContent():Void {
 		this.disclosureButton.validateNow();
-		if (Std.is(this._currentBranchOrLeafIcon, IValidating)) {
+		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
 		var paddingLeft = this.paddingLeft;
@@ -365,7 +365,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			this._branchOrLeafIconMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentBranchOrLeafIcon, IUIControl)) {
+		if ((this._currentBranchOrLeafIcon is IUIControl)) {
 			cast(this._currentBranchOrLeafIcon, IUIControl).initializeNow();
 		}
 		if (this._branchOrLeafIconMeasurements == null) {
@@ -373,10 +373,10 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		} else {
 			this._branchOrLeafIconMeasurements.save(this._currentBranchOrLeafIcon);
 		}
-		if (Std.is(this._currentBranchOrLeafIcon, IProgrammaticSkin)) {
+		if ((this._currentBranchOrLeafIcon is IProgrammaticSkin)) {
 			cast(this._currentBranchOrLeafIcon, IProgrammaticSkin).uiContext = this;
 		}
-		if (Std.is(this._currentBranchOrLeafIcon, IStateObserver)) {
+		if ((this._currentBranchOrLeafIcon is IStateObserver)) {
 			cast(this._currentBranchOrLeafIcon, IStateObserver).stateContext = this;
 		}
 		this.addChild(this._currentBranchOrLeafIcon);
@@ -399,10 +399,10 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		if (icon == null) {
 			return;
 		}
-		if (Std.is(icon, IProgrammaticSkin)) {
+		if ((icon is IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
-		if (Std.is(icon, IStateObserver)) {
+		if ((icon is IStateObserver)) {
 			cast(icon, IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the

@@ -387,7 +387,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -395,7 +395,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -405,7 +405,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -427,7 +427,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			this._fillSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentFillSkin, IUIControl)) {
+		if ((this._currentFillSkin is IUIControl)) {
 			cast(this._currentFillSkin, IUIControl).initializeNow();
 		}
 		if (this._fillSkinMeasurements == null) {
@@ -435,7 +435,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		} else {
 			this._fillSkinMeasurements.save(this._currentFillSkin);
 		}
-		if (Std.is(this._currentFillSkin, IProgrammaticSkin)) {
+		if ((this._currentFillSkin is IProgrammaticSkin)) {
 			cast(this._currentFillSkin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(this._currentFillSkin);
@@ -452,7 +452,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the

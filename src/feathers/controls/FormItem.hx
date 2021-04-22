@@ -111,7 +111,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 		var textFieldBaseline = this.textField.y + this.textField.getLineMetrics(0).ascent;
 		var contentBaseline = 0.0;
-		if (Std.is(this._currentContent, ITextControl)) {
+		if ((this._currentContent is ITextControl)) {
 			contentBaseline = this._currentContent.y + cast(this._currentContent, ITextControl).baseline;
 		}
 		return Math.max(textFieldBaseline, contentBaseline);
@@ -584,20 +584,20 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 
 		var measureSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
 		var measureContent:IMeasureObject = null;
-		if (Std.is(this._currentContent, IMeasureObject)) {
+		if ((this._currentContent is IMeasureObject)) {
 			measureContent = cast(this._currentContent, IMeasureObject);
 		}
 
-		if (Std.is(this._currentContent, IValidating)) {
+		if ((this._currentContent is IValidating)) {
 			cast(this._currentContent, IValidating).validateNow();
 		}
 
@@ -823,7 +823,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this._backgroundSkinMeasurements = null;
 			return;
 		}
-		if (Std.is(skin, IUIControl)) {
+		if ((skin is IUIControl)) {
 			cast(skin, IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
@@ -831,7 +831,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		} else {
 			this._backgroundSkinMeasurements.save(skin);
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
@@ -841,7 +841,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (skin == null) {
 			return;
 		}
-		if (Std.is(skin, IProgrammaticSkin)) {
+		if ((skin is IProgrammaticSkin)) {
 			cast(skin, IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
@@ -865,7 +865,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this._contentMeasurements = null;
 			return;
 		}
-		if (Std.is(this._currentContent, IUIControl)) {
+		if ((this._currentContent is IUIControl)) {
 			cast(this._currentContent, IUIControl).initializeNow();
 		}
 		if (this._contentMeasurements == null) {
@@ -967,7 +967,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			}
 
 			if (this.textPosition == LEFT || this.textPosition == RIGHT) {
-				if (Std.is(this._currentContent, ITextControl)) {
+				if ((this._currentContent is ITextControl)) {
 					var textFieldLineMetrics = this.textField.getLineMetrics(0);
 					var textFieldBaseline = textFieldLineMetrics.ascent + 2.0; // extra 2 pixels for gutter
 					var contentBaseline = cast(this._currentContent, ITextControl).baseline;
@@ -1011,7 +1011,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}
@@ -1025,7 +1025,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			return;
 		}
 		var newFocus:IFocusObject = null;
-		if (Std.is(this._currentContent, IFocusObject)) {
+		if ((this._currentContent is IFocusObject)) {
 			newFocus = cast(this._currentContent, IFocusObject);
 		}
 		this._focusManager.focus = newFocus;

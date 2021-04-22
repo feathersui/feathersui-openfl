@@ -108,7 +108,7 @@ class MainMenu extends Panel {
 		themeButton.text = "Theme";
 		themeButton.addEventListener(TriggerEvent.TRIGGER, function(event:TriggerEvent):Void {
 			var theme = Theme.getTheme();
-			if (!Std.is(theme, IDarkModeTheme)) {
+			if (!(theme is IDarkModeTheme)) {
 				return;
 			}
 			var darkModeTheme = cast(theme, IDarkModeTheme);

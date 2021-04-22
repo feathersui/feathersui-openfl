@@ -66,11 +66,11 @@ class HProgressBar extends BaseProgressBar {
 		}
 
 		var measureBackgroundSkin:IMeasureObject = null;
-		if (Std.is(this._currentBackgroundSkin, IMeasureObject)) {
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
 			measureBackgroundSkin = cast(this._currentBackgroundSkin, IMeasureObject);
 		}
 
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
@@ -122,7 +122,7 @@ class HProgressBar extends BaseProgressBar {
 		if (this._currentBackgroundSkin.height != this.actualHeight) {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
-		if (Std.is(this._currentBackgroundSkin, IValidating)) {
+		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 	}
@@ -156,7 +156,7 @@ class HProgressBar extends BaseProgressBar {
 		this._currentFillSkin.width = calculatedWidth;
 		this._currentFillSkin.height = this.actualHeight - this.paddingTop - this.paddingBottom;
 
-		if (Std.is(this._currentFillSkin, IValidating)) {
+		if ((this._currentFillSkin is IValidating)) {
 			cast(this._currentFillSkin, IValidating).validateNow();
 		}
 	}

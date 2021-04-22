@@ -838,7 +838,7 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 		this._scrolling = true;
-		if (Std.is(this._target, DisplayObjectContainer)) {
+		if ((this._target is DisplayObjectContainer)) {
 			var container = cast(this._target, DisplayObjectContainer);
 			this.restoreMouseChildren = container.mouseChildren;
 			container.mouseChildren = false;
@@ -851,7 +851,7 @@ class Scroller extends EventDispatcher {
 			return;
 		}
 		this._scrolling = false;
-		if (Std.is(this._target, DisplayObjectContainer)) {
+		if ((this._target is DisplayObjectContainer)) {
 			var container = cast(this._target, DisplayObjectContainer);
 			container.mouseChildren = this.restoreMouseChildren;
 		}
@@ -1000,7 +1000,7 @@ class Scroller extends EventDispatcher {
 		this._target.stage.addEventListener(MouseEvent.MOUSE_UP, scroller_target_stage_mouseUpHandler, false, 0, true);
 		this._target.stage.addEventListener(TouchEvent.TOUCH_MOVE, scroller_target_stage_touchMoveHandler, false, 0, true);
 		this._target.stage.addEventListener(TouchEvent.TOUCH_END, scroller_target_stage_touchEndHandler, false, 0, true);
-		if (Std.is(this._target, DisplayObjectContainer)) {
+		if ((this._target is DisplayObjectContainer)) {
 			var container = cast(this._target, DisplayObjectContainer);
 			// if we were already scrolling, disable the pointer immediately.
 			// otherwise, wait until dragging starts
