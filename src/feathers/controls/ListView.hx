@@ -607,7 +607,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		When a list view requires multiple item renderer types, this function is
 		used to determine which type of item renderer is required for a specific
 		item. Returns the ID of the item renderer recycler to use for the item,
-		or `null` if the default `itemRendererFactory` should be used.
+		or `null` if the default `itemRendererRecycler` should be used.
 
 		The following example provides an `itemRendererRecyclerIDFunction`:
 
@@ -860,7 +860,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	/**
-		Associates an item renderer rercycler with an ID to allow multiple types
+		Associates an item renderer recycler with an ID to allow multiple types
 		of item renderers may be displayed in the list view. A custom
 		`itemRendererRecyclerIDFunction` may be specified to return the ID of
 		the recycler to use for a specific item in the data provider.
