@@ -1,3 +1,5 @@
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.controls.Application;
 import feathers.controls.Button;
 import feathers.controls.Label;
@@ -15,6 +17,8 @@ class Main extends Application {
 
 		super();
 
+		this.tabChildren = false;
+
 		var layout = new VerticalLayout();
 		layout.gap = 4.0;
 		this.layout = layout;
@@ -22,6 +26,8 @@ class Main extends Application {
 		this.createRows();
 		this.createDisplay();
 		this.createButtons();
+
+		this.stage.addEventListener(KeyboardEvent.KEY_DOWN, state_keyDownHandler);
 
 		this.clear();
 	}
@@ -40,36 +46,6 @@ class Main extends Application {
 	private var previousNumber:Int = 0;
 	private var currentNumber:Int = 0;
 	private var pendingOperation:Operation = null;
-
-	private function clear():Void {
-		this.pendingNewInput = true;
-		this.pendingOperation = null;
-		this.previousNumber = 0;
-		this.currentNumber = 0;
-		this.refreshDisplay();
-	}
-
-	private function equals():Void {
-		if (this.pendingOperation == null) {
-			return;
-		}
-		var result = 0;
-		switch (this.pendingOperation) {
-			case Add:
-				result = this.previousNumber + this.currentNumber;
-			case Subtract:
-				result = this.previousNumber - this.currentNumber;
-			case Multiply:
-				result = this.previousNumber * this.currentNumber;
-			case Divide:
-				result = Math.floor(this.previousNumber / this.currentNumber);
-		}
-		this.currentNumber = result;
-		this.previousNumber = result;
-		this.pendingOperation = null;
-		this.pendingNewInput = true;
-		this.refreshDisplay();
-	}
 
 	private function refreshDisplay():Void {
 		this.inputDisplay.text = Std.string(this.currentNumber);
@@ -99,6 +75,7 @@ class Main extends Application {
 		this.clearButton = new Button();
 		this.clearButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.clearButton.text = "C";
+		this.clearButton.toolTip = "Clear (Esc)";
 		this.clearButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.clearButton.addEventListener(TriggerEvent.TRIGGER, clearButton_triggerHandler);
 		this.rows[4].addChild(this.clearButton);
@@ -123,6 +100,7 @@ class Main extends Application {
 		this.equalsButton = new Button();
 		this.equalsButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.equalsButton.text = "=";
+		this.equalsButton.toolTip = "Equal (or press Enter/Return)";
 		this.equalsButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.equalsButton.addEventListener(TriggerEvent.TRIGGER, equalsButton_triggerHandler);
 		this.rows[4].addChild(this.equalsButton);
@@ -131,6 +109,7 @@ class Main extends Application {
 		this.divideButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		// not all fonts support ÷
 		this.divideButton.text = "/";
+		this.divideButton.toolTip = "Divide (or press /)";
 		this.divideButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.divideButton.addEventListener(TriggerEvent.TRIGGER, divideButton_triggerHandler);
 		this.rows[1].addChild(this.divideButton);
@@ -139,6 +118,7 @@ class Main extends Application {
 		this.multiplyButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		// not all fonts support ×
 		this.multiplyButton.text = "x";
+		this.multiplyButton.toolTip = "Multiply (or press *)";
 		this.multiplyButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.multiplyButton.addEventListener(TriggerEvent.TRIGGER, multiplyButton_triggerHandler);
 		this.rows[2].addChild(this.multiplyButton);
@@ -147,6 +127,7 @@ class Main extends Application {
 		this.subtractButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		// not all fonts support −
 		this.subtractButton.text = "-";
+		this.subtractButton.toolTip = "Subtract (or press -)";
 		this.subtractButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.subtractButton.addEventListener(TriggerEvent.TRIGGER, subtractButton_triggerHandler);
 		this.rows[3].addChild(this.subtractButton);
@@ -154,12 +135,13 @@ class Main extends Application {
 		this.addButton = new Button();
 		this.addButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.addButton.text = "+";
+		this.addButton.toolTip = "Add (or press +)";
 		this.addButton.layoutData = new HorizontalLayoutData(25, 100);
 		this.addButton.addEventListener(TriggerEvent.TRIGGER, addButton_triggerHandler);
 		this.rows[4].addChild(this.addButton);
 	}
 
-	private function numberButton_triggerHandler(event:TriggerEvent):Void {
+	private function insertNumber(index:Int):Void {
 		if (this.pendingNewInput) {
 			this.previousNumber = this.currentNumber;
 		}
@@ -167,7 +149,6 @@ class Main extends Application {
 		var newText = (this.pendingNewInput || this.currentNumber == 0) ? "" : Std.string(this.currentNumber);
 		this.pendingNewInput = false;
 
-		var index = this.numberButtons.indexOf(event.currentTarget);
 		if (index == 0 && this.currentNumber == 0) {
 			// the user pressed 0, but the value is already 0, so don't append
 			return;
@@ -184,48 +165,145 @@ class Main extends Application {
 		this.refreshDisplay();
 	}
 
-	private function clearButton_triggerHandler(event:TriggerEvent):Void {
-		this.clear();
+	private function clear():Void {
+		this.pendingNewInput = true;
+		this.pendingOperation = null;
+		this.previousNumber = 0;
+		this.currentNumber = 0;
+		this.refreshDisplay();
 	}
 
-	private function addButton_triggerHandler(event:TriggerEvent):Void {
+	private function equalsInternal():Void {
+		if (this.pendingOperation == null) {
+			return;
+		}
+		var result = 0;
+		switch (this.pendingOperation) {
+			case Add:
+				result = this.previousNumber + this.currentNumber;
+			case Subtract:
+				result = this.previousNumber - this.currentNumber;
+			case Multiply:
+				result = this.previousNumber * this.currentNumber;
+			case Divide:
+				result = Math.floor(this.previousNumber / this.currentNumber);
+		}
+		this.currentNumber = result;
+		this.previousNumber = result;
+		this.pendingOperation = null;
+		this.pendingNewInput = true;
+		this.refreshDisplay();
+	}
+
+	private function equals():Void {
+		if (this.pendingNewInput) {
+			this.pendingOperation = null;
+			return;
+		}
+		this.equalsInternal();
+	}
+
+	private function add():Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
-			this.equals();
+			this.equalsInternal();
 		}
 		this.pendingOperation = Add;
 		this.pendingNewInput = true;
 	}
 
-	private function subtractButton_triggerHandler(event:TriggerEvent):Void {
+	private function subtract():Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
-			this.equals();
+			this.equalsInternal();
 		}
 		this.pendingOperation = Subtract;
 		this.pendingNewInput = true;
 	}
 
-	private function multiplyButton_triggerHandler(event:TriggerEvent):Void {
+	private function multiply():Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
-			this.equals();
+			this.equalsInternal();
 		}
 		this.pendingOperation = Multiply;
 		this.pendingNewInput = true;
 	}
 
-	private function divideButton_triggerHandler(event:TriggerEvent):Void {
+	private function divide():Void {
 		if (this.pendingOperation != null && !this.pendingNewInput) {
-			this.equals();
+			this.equalsInternal();
 		}
 		this.pendingOperation = Divide;
 		this.pendingNewInput = true;
 	}
 
+	private function numberButton_triggerHandler(event:TriggerEvent):Void {
+		var index = this.numberButtons.indexOf(event.currentTarget);
+		this.insertNumber(index);
+	}
+
+	private function clearButton_triggerHandler(event:TriggerEvent):Void {
+		this.clear();
+	}
+
+	private function addButton_triggerHandler(event:TriggerEvent):Void {
+		this.add();
+	}
+
+	private function subtractButton_triggerHandler(event:TriggerEvent):Void {
+		this.subtract();
+	}
+
+	private function multiplyButton_triggerHandler(event:TriggerEvent):Void {
+		this.multiply();
+	}
+
+	private function divideButton_triggerHandler(event:TriggerEvent):Void {
+		this.divide();
+	}
+
 	private function equalsButton_triggerHandler(event:TriggerEvent):Void {
-		if (this.pendingNewInput) {
-			this.pendingOperation = null;
+		this.equals();
+	}
+
+	private function state_keyDownHandler(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
 			return;
 		}
-		this.equals();
+		if (event.keyCode == Keyboard.ENTER) {
+			event.preventDefault();
+			this.equals();
+			return;
+		}
+		if (event.keyCode == Keyboard.ESCAPE) {
+			event.preventDefault();
+			this.clear();
+			return;
+		}
+		var char = String.fromCharCode(event.charCode);
+		if (~/^[0-9]$/.match(char)) {
+			event.preventDefault();
+			this.insertNumber(Std.parseInt(char));
+			return;
+		}
+		switch (char) {
+			case "+":
+				event.preventDefault();
+				this.add();
+			case "-":
+				event.preventDefault();
+				this.subtract();
+			case "*":
+				event.preventDefault();
+				this.multiply();
+			case "/":
+				event.preventDefault();
+				this.divide();
+			case "=":
+				event.preventDefault();
+				this.equals();
+			case "c":
+				event.preventDefault();
+				this.clear();
+		}
 	}
 }
 

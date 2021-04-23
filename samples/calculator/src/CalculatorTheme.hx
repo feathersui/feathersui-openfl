@@ -1,3 +1,4 @@
+import feathers.core.DefaultToolTipManager;
 import feathers.skins.MultiSkin;
 import feathers.controls.Application;
 import feathers.style.IDarkModeTheme;
@@ -24,6 +25,7 @@ class CalculatorTheme implements ITheme {
 		this.styleProvider = new ClassVariantStyleProvider();
 		this.styleProvider.setStyleFunction(Application, null, setApplicationStyles);
 		this.styleProvider.setStyleFunction(Button, null, setButtonStyles);
+		this.styleProvider.setStyleFunction(Label, DefaultToolTipManager.CHILD_VARIANT_TOOL_TIP, setToolTipStyles);
 		this.styleProvider.setStyleFunction(Button, VARIANT_OPERATION_BUTTON, setOperationButtonStyles);
 		this.styleProvider.setStyleFunction(Label, VARIANT_INPUT_DISPLAY_LABEL, setInputDisplayLabelStyles);
 	}
@@ -35,6 +37,7 @@ class CalculatorTheme implements ITheme {
 	private var activeColor = 0x000000;
 	private var controlColor = 0x5f5f5f;
 	private var operationColor = 0xff9500;
+	private var toolTipBackgroundColor = 0x000000;
 	private var padding = 6.0;
 
 	private var styleProvider:ClassVariantStyleProvider;
@@ -76,10 +79,7 @@ class CalculatorTheme implements ITheme {
 			button.textFormat = this.getTextFormat();
 		}
 
-		button.paddingTop = this.padding;
-		button.paddingRight = this.padding;
-		button.paddingBottom = this.padding;
-		button.paddingLeft = this.padding;
+		button.setPadding(this.padding);
 		button.gap = this.padding;
 	}
 
@@ -95,10 +95,7 @@ class CalculatorTheme implements ITheme {
 			button.textFormat = this.getTextFormat();
 		}
 
-		button.paddingTop = this.padding;
-		button.paddingRight = this.padding;
-		button.paddingBottom = this.padding;
-		button.paddingLeft = this.padding;
+		button.setPadding(this.padding);
 		button.gap = this.padding;
 	}
 
@@ -107,9 +104,20 @@ class CalculatorTheme implements ITheme {
 			label.textFormat = this.getInputDisplayLabelTextFormat();
 		}
 
-		label.paddingTop = this.padding;
-		label.paddingRight = this.padding;
-		label.paddingBottom = this.padding;
-		label.paddingLeft = this.padding;
+		label.setPadding(this.padding);
+	}
+
+	private function setToolTipStyles(toolTip:Label):Void {
+		if (toolTip.backgroundSkin == null) {
+			var skin = new RectangleSkin();
+			skin.fill = SolidColor(this.toolTipBackgroundColor);
+			toolTip.backgroundSkin = skin;
+		}
+
+		if (toolTip.textFormat == null) {
+			toolTip.textFormat = this.getTextFormat();
+		}
+
+		toolTip.setPadding(this.padding);
 	}
 }
