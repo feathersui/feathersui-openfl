@@ -141,6 +141,22 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	public static final VARIANT_BORDER = "border";
 
 	/**
+		A variant used to style the list view as a pop-up.
+
+		The following example uses this variant:
+
+		```hx
+		var listView = new ListView();
+		listView.variant = ListView.VARIANT_POP_UP;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_POP_UP = "popUp";
+
+	/**
 		The variant used to style the list view's item renderers in a theme.
 
 		To override this default variant, set the

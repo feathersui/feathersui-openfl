@@ -110,5 +110,17 @@ class SteelListViewStyles {
 		if (styleProvider.getStyleFunction(ListView, ListView.VARIANT_BORDERLESS) == null) {
 			styleProvider.setStyleFunction(ListView, ListView.VARIANT_BORDERLESS, styleListViewWithBorderlessVariant);
 		}
+		if (styleProvider.getStyleFunction(ListView, ListView.VARIANT_POP_UP) == null) {
+			styleProvider.setStyleFunction(ListView, ListView.VARIANT_POP_UP, function(listView:ListView):Void {
+				if (listView.layout == null) {
+					var layout = new VerticalListLayout();
+					layout.requestedMinRowCount = 1.0;
+					layout.requestedMaxRowCount = 5.0;
+					listView.layout = layout;
+				}
+
+				styleListViewWithBorderVariant(listView);
+			});
+		}
 	}
 }
