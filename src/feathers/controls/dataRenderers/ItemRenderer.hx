@@ -8,14 +8,18 @@
 
 package feathers.controls.dataRenderers;
 
-import openfl.display.InteractiveObject;
 import feathers.core.IFocusObject;
 import feathers.core.IPointerDelegate;
+import feathers.core.IStateObserver;
+import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelItemRendererStyles;
 import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.text.TextField;
@@ -259,6 +263,22 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	@:style
 	public var alternateBackgroundSkin:DisplayObject = null;
 
+	private var _accessoryViewMeasurements:Measurements;
+	private var _currentAccessoryView:DisplayObject;
+
+	/**
+		An optional display object positioned on the right side of the item
+		renderer.
+
+		The following example passes a button to use as the accessory view:
+
+		```hx
+		itemRenderer.accessoryView = new Button("Info");
+		```
+	**/
+	@:style
+	public var accessoryView:DisplayObject = null;
+
 	private var _stateToSecondaryTextFormat:Map<ToggleButtonState, AbstractTextFormat> = new Map();
 
 	/**
@@ -330,6 +350,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshSecondaryTextStyles();
+			this.refreshAccessoryView();
 		}
 
 		if (dataInvalid || stylesInvalid || stateInvalid) {
@@ -421,6 +442,60 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			return this.selectedSecondaryTextFormat;
 		}
 		return this.secondaryTextFormat;
+	}
+
+	private function refreshAccessoryView():Void {
+		var oldView = this._currentAccessoryView;
+		this._currentAccessoryView = this.getCurrentAccessoryView();
+		if (this._currentAccessoryView == oldView) {
+			return;
+		}
+		this.removeCurrentAccessoryView(oldView);
+		this.addCurrentAccessoryView(this._currentAccessoryView);
+	}
+
+	private function getCurrentAccessoryView():DisplayObject {
+		return this.accessoryView;
+	}
+
+	private function removeCurrentAccessoryView(view:DisplayObject):Void {
+		if (view == null) {
+			return;
+		}
+		if ((view is IProgrammaticSkin)) {
+			cast(view, IProgrammaticSkin).uiContext = null;
+		}
+		if ((view is IStateObserver)) {
+			cast(view, IStateObserver).stateContext = null;
+		}
+		// we need to restore these values so that they won't be lost the
+		// next time that this skin is used for measurement
+		this._accessoryViewMeasurements.restore(view);
+		if (view.parent == this) {
+			this.removeChild(view);
+		}
+	}
+
+	private function addCurrentAccessoryView(view:DisplayObject):Void {
+		if (view == null) {
+			this._accessoryViewMeasurements = null;
+			return;
+		}
+		if ((view is IUIControl)) {
+			cast(view, IUIControl).initializeNow();
+		}
+		if (this._accessoryViewMeasurements == null) {
+			this._accessoryViewMeasurements = new Measurements(view);
+		} else {
+			this._accessoryViewMeasurements.save(view);
+		}
+		if ((view is IProgrammaticSkin)) {
+			cast(view, IProgrammaticSkin).uiContext = this;
+		}
+		if ((view is IStateObserver)) {
+			cast(view, IStateObserver).stateContext = this;
+		}
+		this.addChild(view);
 	}
 
 	private function customHitTest(stageX:Float, stageY:Float):Bool {
@@ -520,6 +595,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (this._secondaryText != null) {
 			contentWidth = Math.max(contentWidth, this._secondaryTextMeasuredWidth);
 		}
+		if (this._currentAccessoryView != null) {
+			if ((this._currentAccessoryView is IValidating)) {
+				cast(this._currentAccessoryView, IValidating).validateNow();
+			}
+			contentWidth += this._currentAccessoryView.width + adjustedGap;
+		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if (this._text != null) {
@@ -546,6 +627,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			if (this._text != null) {
 				contentHeight += adjustedGap;
 			}
+		}
+		if (this._currentAccessoryView != null) {
+			if ((this._currentAccessoryView is IValidating)) {
+				cast(this._currentAccessoryView, IValidating).validateNow();
+			}
+			contentHeight += Math.max(contentHeight, this._currentAccessoryView.height);
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
@@ -622,6 +709,10 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function layoutContent():Void {
 		this.refreshTextFieldDimensions(false);
+		if ((this._currentAccessoryView is IValidating)) {
+			cast(this._currentAccessoryView, IValidating).validateNow();
+		}
+
 		var availableTextWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var currentX = this.paddingLeft;
 		if (this._currentIcon != null) {
@@ -632,6 +723,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			currentX += this._currentIcon.width + this.gap;
 			this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
 			availableTextWidth -= this._currentIcon.width - this.gap;
+		}
+		if (this._currentAccessoryView != null) {
+			this._currentAccessoryView.x = this.actualWidth - this.paddingRight - this._currentAccessoryView.width;
+			this._currentAccessoryView.y = this.paddingTop
+				+ (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentAccessoryView.height) / 2.0;
+			availableTextWidth -= this._currentAccessoryView.width - this.gap;
 		}
 
 		var totalTextHeight = this._textMeasuredHeight;
