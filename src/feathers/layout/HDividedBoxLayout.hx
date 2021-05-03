@@ -371,7 +371,6 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 
 	private function applyPercentWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
 			explicitMaxWidth:Null<Float>):Void {
-		var totalCustomWidth = 0.0;
 		var customWidthIndices:Array<Int> = [];
 		var pendingIndices:Array<Int> = [];
 		var totalMeasuredWidth = 0.0;
@@ -388,7 +387,6 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 					if (itemWidth != null) {
 						needsPercentWidth = false;
 						item.width = itemWidth;
-						totalCustomWidth += itemWidth;
 						customWidthIndices.push(i);
 						if ((item is IValidating)) {
 							// changing the width of the item may cause its height
@@ -515,7 +513,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		var offset = remainingWidth / customWidthIndices.length;
 		for (index in customWidthIndices) {
 			var item = items[index];
-			item.width = item.width + offset;
+			item.width += offset;
 		}
 	}
 
