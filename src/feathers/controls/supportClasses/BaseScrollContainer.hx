@@ -406,11 +406,17 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return this._scrollerFactory;
 	}
 
-	private var _temporaryScrollX = 0.0;
+	private var _temporaryScrollX:Null<Float> = null;
+	private var _temporaryUnrestrictedScrollX:Null<Float> = null;
 
 	/**
 		The number of pixels the container has been scrolled horizontally (on
 		the x-axis).
+
+		When setting `scrollX`, the new value will be automatically clamped to
+		the range between `minScrollX` and `maxScrollX`. To programmatically set
+		a `scrollX` to a value outside of that range, set `unrestrictedScrollX`
+		instead.
 
 		When the value of `scrollX` changes, the container dispatches an event
 		of type `ScrollEvent.SCROLL`. This event is dispatched when other
@@ -434,7 +440,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function get_scrollX():Float {
 		if (this.scroller == null) {
-			return this._temporaryScrollX;
+			if (this._temporaryUnrestrictedScrollX != null) {
+				return this._temporaryUnrestrictedScrollX;
+			}
+			if (this._temporaryScrollX != null) {
+				return this._temporaryScrollX;
+			}
+			return 0.0;
 		}
 		return this.scroller.scrollX;
 	}
@@ -442,6 +454,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function set_scrollX(value:Float):Float {
 		if (this.scroller == null) {
 			this._temporaryScrollX = value;
+			this._temporaryUnrestrictedScrollX = null;
 			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 			return this._temporaryScrollX;
 		}
@@ -449,11 +462,46 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return this.scroller.scrollX;
 	}
 
-	private var _temporaryScrollY = 0.0;
+	/**
+		Setting `scrollX` will clamp the value between `minScrollX` and
+		`maxScrollX`, but setting `unrestrictedScrollX` will allow values
+		outside of that range.
+
+		@see `BaseScrollContainer.scrollX`
+
+		@since 1.0.0
+	**/
+	public var unrestrictedScrollX(get, set):Float;
+
+	private function get_unrestrictedScrollX():Float {
+		if (this.scroller == null) {
+			return this.scrollX;
+		}
+		return this.scroller.unrestrictedScrollX;
+	}
+
+	private function set_unrestrictedScrollX(value:Float):Float {
+		if (this.scroller == null) {
+			this._temporaryUnrestrictedScrollX = value;
+			this._temporaryScrollX = null;
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			return this._temporaryUnrestrictedScrollX;
+		}
+		this.scroller.unrestrictedScrollX = value;
+		return this.scroller.unrestrictedScrollX;
+	}
+
+	private var _temporaryScrollY:Null<Float> = null;
+	private var _temporaryUnrestrictedScrollY:Null<Float> = null;
 
 	/**
 		The number of pixels the container has been scrolled vertically (on the
 		y-axis).
+
+		When setting `scrollY`, the new value will be automatically clamped to
+		the range between `minScrollY` and `maxScrollY`. To programmatically set
+		a `scrollY` to a value outside of that range, set `unrestrictedScrollY`
+		instead.
 
 		When the value of `scrollY` changes, the container dispatches an event
 		of type `ScrollEvent.SCROLL`. This event is dispatched when other
@@ -477,7 +525,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function get_scrollY():Float {
 		if (this.scroller == null) {
-			return this._temporaryScrollY;
+			if (this._temporaryUnrestrictedScrollY != null) {
+				return this._temporaryUnrestrictedScrollY;
+			}
+			if (this._temporaryScrollY != null) {
+				return this._temporaryScrollY;
+			}
+			return 0.0;
 		}
 		return this.scroller.scrollY;
 	}
@@ -485,11 +539,41 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function set_scrollY(value:Float):Float {
 		if (this.scroller == null) {
 			this._temporaryScrollY = value;
+			this._temporaryUnrestrictedScrollY = null;
 			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 			return this._temporaryScrollY;
 		}
 		this.scroller.scrollY = value;
 		return this.scroller.scrollY;
+	}
+
+	/**
+		Setting `scrollY` will clamp the value between `minScrollY` and
+		`maxScrollY`, but setting `unrestrictedScrollY` will allow values
+		outside of that range.
+
+		@see `BaseScrollContainer.scrollY`
+
+		@since 1.0.0
+	**/
+	public var unrestrictedScrollY(get, set):Float;
+
+	private function get_unrestrictedScrollY():Float {
+		if (this.scroller == null) {
+			this.scrollY;
+		}
+		return this.scroller.unrestrictedScrollY;
+	}
+
+	private function set_unrestrictedScrollY(value:Float):Float {
+		if (this.scroller == null) {
+			this._temporaryUnrestrictedScrollY = value;
+			this._temporaryScrollY = null;
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			return this._temporaryUnrestrictedScrollY;
+		}
+		this.scroller.unrestrictedScrollY = value;
+		return this.scroller.unrestrictedScrollY;
 	}
 
 	/**
@@ -905,10 +989,32 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		this.refreshViewPort();
 
+		this.applyTemporaryScrollPositions();
+
 		this.refreshScrollRect();
 		this.refreshScrollBarValues();
 		this.layoutChildren();
 
+		this._ignoreScrollerChanges = oldIgnoreScrollerChanges;
+	}
+
+	private function applyTemporaryScrollPositions():Void {
+		var oldIgnoreScrollerChanges = this._ignoreScrollerChanges;
+		this._ignoreScrollerChanges = true;
+		if (this._temporaryUnrestrictedScrollX != null) {
+			this.scroller.unrestrictedScrollX = this._temporaryUnrestrictedScrollX;
+		} else if (this._temporaryScrollX != null) {
+			this.scroller.scrollX = this._temporaryScrollX;
+		}
+		if (this._temporaryUnrestrictedScrollY != null) {
+			this.scroller.unrestrictedScrollY = this._temporaryUnrestrictedScrollY;
+		} else if (this._temporaryScrollY != null) {
+			this.scroller.scrollY = this._temporaryScrollY;
+		}
+		this._temporaryScrollX = null;
+		this._temporaryScrollY = null;
+		this._temporaryUnrestrictedScrollX = null;
+		this._temporaryUnrestrictedScrollY = null;
 		this._ignoreScrollerChanges = oldIgnoreScrollerChanges;
 	}
 
@@ -924,8 +1030,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function createScroller():Void {
 		if (this.scroller != null) {
-			this._temporaryScrollX = this.scroller.scrollX;
-			this._temporaryScrollY = this.scroller.scrollY;
+			this._temporaryUnrestrictedScrollX = this.scroller.unrestrictedScrollX;
+			this._temporaryUnrestrictedScrollY = this.scroller.unrestrictedScrollY;
+			this._temporaryScrollX = null;
+			this._temporaryScrollY = null;
 			this.scroller.target = null;
 			this.scroller.removeEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
 			this.scroller.removeEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
@@ -934,8 +1042,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 
 		this.scroller = (this._scrollerFactory != null) ? this._scrollerFactory() : new Scroller();
-		this.scroller.scrollX = this._temporaryScrollX;
-		this.scroller.scrollY = this._temporaryScrollY;
 		this.scroller.addEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);

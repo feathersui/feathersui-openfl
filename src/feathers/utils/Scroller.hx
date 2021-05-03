@@ -82,6 +82,11 @@ class Scroller extends EventDispatcher {
 	/**
 		The current horizontal scroll position.
 
+		When setting `scrollX`, the new value will be automatically clamped to
+		the range between `minScrollX` and `maxScrollX`. To programmatically set
+		a `scrollX` to a value outside of that range, set `unrestrictedScrollX`
+		instead.
+
 		When the value of the `scrollX` property changes, the scroller will
 		dispatch an event of type `ScrollEvent.SCROLL`. This event is dispatched
 		when other scroll position properties change too.
@@ -101,6 +106,11 @@ class Scroller extends EventDispatcher {
 		if (this._scrollX == value) {
 			return this._scrollX;
 		}
+		if (value < this._minScrollX) {
+			value = this._minScrollX;
+		} else if (value > this._maxScrollX) {
+			value = this._maxScrollX;
+		}
 		this._scrollX = value;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
 		return this._scrollX;
@@ -110,6 +120,11 @@ class Scroller extends EventDispatcher {
 
 	/**
 		The current vertical scroll position.
+
+		When setting `scrollY`, the new value will be automatically clamped to
+		the range between `minScrollY` and `maxScrollY`. To programmatically set
+		a `scrollY` to a value outside of that range, set `unrestrictedScrollY`
+		instead.
 
 		When the value of the `scrollY` property changes, the scroller will
 		dispatch an event of type `ScrollEvent.SCROLL`. This event is dispatched
@@ -127,6 +142,55 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function set_scrollY(value:Float):Float {
+		if (this._scrollY == value) {
+			return this._scrollY;
+		}
+		if (value < this._minScrollY) {
+			value = this._minScrollY;
+		} else if (value > this._maxScrollY) {
+			value = this._maxScrollY;
+		}
+		this._scrollY = value;
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		return this._scrollY;
+	}
+
+	/**
+		Setting `scrollX` will clamp the value between `minScrollX` and
+		`maxScrollX`, but setting `unrestrictedScrollX` will allow values
+		outside of that range.
+
+		@since 1.0.0
+	**/
+	public var unrestrictedScrollX(get, set):Float;
+
+	private function get_unrestrictedScrollX():Float {
+		return this._scrollX;
+	}
+
+	private function set_unrestrictedScrollX(value:Float):Float {
+		if (this._scrollX == value) {
+			return this._scrollX;
+		}
+		this._scrollX = value;
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		return this._scrollX;
+	}
+
+	/**
+		Setting `scrollY` will clamp the value between `minScrollY` and
+		`maxScrollY`, but setting `unrestrictedScrollY` will allow values
+		outside of that range.
+
+		@since 1.0.0
+	**/
+	public var unrestrictedScrollY(get, set):Float;
+
+	private function get_unrestrictedScrollY():Float {
+		return this._scrollY;
+	}
+
+	private function set_unrestrictedScrollY(value:Float):Float {
 		if (this._scrollY == value) {
 			return this._scrollY;
 		}
@@ -666,14 +730,14 @@ class Scroller extends EventDispatcher {
 				this.startScroll();
 				if (duration == 0.0) {
 					// use the setter
-					this.scrollX = scrollX;
+					this.unrestrictedScrollX = scrollX;
 				} else {
 					this.startScrollX = this._scrollX;
 					this.targetScrollX = scrollX;
 					this._animateScrollXEase = ease;
 					var tween = Actuate.update((scrollX:Float) -> {
 						// use the setter
-						this.scrollX = scrollX;
+						this.unrestrictedScrollX = scrollX;
 					}, duration, [this._scrollX], [this.targetScrollX], true);
 					this.animateScrollX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 					this.animateScrollX.ease(this._animateScrollXEase);
@@ -695,14 +759,14 @@ class Scroller extends EventDispatcher {
 				this.startScroll();
 				if (duration == 0.0) {
 					// use the setter
-					this.scrollY = scrollY;
+					this.unrestrictedScrollY = scrollY;
 				} else {
 					this.startScrollY = this._scrollY;
 					this.targetScrollY = scrollY;
 					this._animateScrollYEase = ease;
 					var tween = Actuate.update((scrollY:Float) -> {
 						// use the setter
-						this.scrollY = scrollY;
+						this.unrestrictedScrollY = scrollY;
 					}, duration, [this._scrollY], [this.targetScrollY], true);
 					this.animateScrollY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
 					this.animateScrollY.ease(this._animateScrollYEase);
@@ -904,10 +968,10 @@ class Scroller extends EventDispatcher {
 			if (!this.elasticEdges) {
 				if (this._scrollX < this._minScrollX) {
 					// use the setter
-					this.scrollX = this._minScrollX;
+					this.unrestrictedScrollX = this._minScrollX;
 				} else if (this._scrollX > this._maxScrollX) {
 					// use the setter
-					this.scrollX = this._maxScrollX;
+					this.unrestrictedScrollX = this._maxScrollX;
 				}
 			}
 			Actuate.stop(this.animateScrollX, null, false, false);
@@ -936,10 +1000,10 @@ class Scroller extends EventDispatcher {
 			if (!this.elasticEdges) {
 				if (this._scrollY < this._minScrollY) {
 					// use the setter
-					this.scrollY = this._minScrollY;
+					this.unrestrictedScrollY = this._minScrollY;
 				} else if (this._scrollY > this._maxScrollY) {
 					// use the setter
-					this.scrollY = this._maxScrollY;
+					this.unrestrictedScrollY = this._maxScrollY;
 				}
 			}
 			Actuate.stop(this.animateScrollY, null, false, false);
@@ -1142,8 +1206,8 @@ class Scroller extends EventDispatcher {
 			}
 		}
 
-		this.scrollX = scrollX;
-		this.scrollY = scrollY;
+		this.unrestrictedScrollX = scrollX;
+		this.unrestrictedScrollY = scrollY;
 
 		if (this.savedScrollMoves.length > 60) {
 			this.savedScrollMoves.resize(30);
@@ -1364,10 +1428,10 @@ class Scroller extends EventDispatcher {
 			this.startScroll();
 			// use the setters
 			if (newScrollX != null) {
-				this.scrollX = newScrollX;
+				this.unrestrictedScrollX = newScrollX;
 			}
 			if (newScrollY != null) {
-				this.scrollY = newScrollY;
+				this.unrestrictedScrollY = newScrollY;
 			}
 			this._draggingX = false;
 			this._draggingY = false;
