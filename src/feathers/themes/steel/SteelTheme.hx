@@ -31,6 +31,7 @@ import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.themes.steel.components.SteelLayoutGroupItemRendererStyles;
 import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.themes.steel.components.SteelListViewStyles;
+import feathers.themes.steel.components.SteelNumericStepperStyles;
 import feathers.themes.steel.components.SteelPageIndicatorStyles;
 import feathers.themes.steel.components.SteelPageNavigatorStyles;
 import feathers.themes.steel.components.SteelPanelStyles;
@@ -93,6 +94,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelLayoutGroupStyles.initialize(this);
 		SteelLayoutGroupItemRendererStyles.initialize(this);
 		SteelListViewStyles.initialize(this);
+		SteelNumericStepperStyles.initialize(this);
 		SteelPageIndicatorStyles.initialize(this);
 		SteelPageNavigatorStyles.initialize(this);
 		SteelPanelStyles.initialize(this);
