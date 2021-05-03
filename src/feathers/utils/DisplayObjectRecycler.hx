@@ -8,7 +8,6 @@
 
 package feathers.utils;
 
-import haxe.Constraints.Constructible;
 import openfl.display.DisplayObject;
 
 /**
@@ -20,7 +19,7 @@ import openfl.display.DisplayObject;
 
 	@since 1.0.0
 **/
-class DisplayObjectRecycler<T:B, S, B:DisplayObject> {
+class DisplayObjectRecycler<T:B, S, B:DisplayObject> extends DisplayObjectFactory<T, B> {
 	/**
 		Creates a `DisplayObjectRecycler` that instantiates a display object by
 		instantiating the specified class. The class must have a constructor
@@ -55,7 +54,9 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> {
 		return item;
 	}
 
-	private function new() {}
+	private function new() {
+		super();
+	}
 
 	/**
 		Updates the properties an existing display object. It may be a display
@@ -75,20 +76,4 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> {
 		@since 1.0.0
 	**/
 	public dynamic function reset(target:T, state:S):Void {}
-
-	/**
-		Creates a new display object.
-
-		@since 1.0.0
-	**/
-	public dynamic function create():T {
-		return null;
-	}
-
-	/**
-		Destroys/disposes a display object when it will no longer be used.
-
-		@since 1.0.0
-	**/
-	public dynamic function destroy(target:T):Void {}
 }
