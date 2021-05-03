@@ -139,15 +139,46 @@ class VDividedBox extends BaseDividedBox {
 			return;
 		}
 
+		var firstItem = this.items[dividerIndex];
+		var secondItem = this.items[dividerIndex + 1];
+
 		var totalHeight = this._resizeStartHeight1 + this._resizeStartHeight2;
-		var firstItemHeight = this._resizeStartHeight1 + offsetY;
+
+		var secondItemHeight = this._resizeStartHeight2 - offsetY;
+		if ((secondItem is IMeasureObject)) {
+			var secondMeasureItem = cast(secondItem, IMeasureObject);
+			if (secondItemHeight < secondMeasureItem.minHeight) {
+				secondItemHeight = secondMeasureItem.minHeight;
+			} else if (secondItemHeight > secondMeasureItem.maxHeight) {
+				secondItemHeight = secondMeasureItem.maxHeight;
+			}
+		}
+		if (secondItemHeight < 0.0) {
+			secondItemHeight = 0.0;
+		} else if (secondItemHeight > totalHeight) {
+			secondItemHeight = totalHeight;
+		}
+
+		// prefer the first item's restrictions by applying them last
+		var firstItemHeight = totalHeight - secondItemHeight;
+		if ((firstItem is IMeasureObject)) {
+			var firstMeasureItem = cast(firstItem, IMeasureObject);
+			if (firstItemHeight < firstMeasureItem.minHeight) {
+				firstItemHeight = firstMeasureItem.minHeight;
+			} else if (firstItemHeight > firstMeasureItem.maxHeight) {
+				firstItemHeight = firstMeasureItem.maxHeight;
+			}
+		}
 		if (firstItemHeight < 0.0) {
 			firstItemHeight = 0.0;
 		} else if (firstItemHeight > totalHeight) {
 			firstItemHeight = totalHeight;
 		}
+
+		secondItemHeight = totalHeight - firstItemHeight;
+
 		this._customItemHeights[dividerIndex] = firstItemHeight;
-		this._customItemHeights[dividerIndex + 1] = totalHeight - firstItemHeight;
+		this._customItemHeights[dividerIndex + 1] = secondItemHeight;
 		this.setInvalid(LAYOUT);
 	}
 }

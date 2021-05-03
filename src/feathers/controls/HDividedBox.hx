@@ -139,15 +139,46 @@ class HDividedBox extends BaseDividedBox {
 			return;
 		}
 
+		var firstItem = this.items[dividerIndex];
+		var secondItem = this.items[dividerIndex + 1];
+
 		var totalWidth = this._resizeStartWidth1 + this._resizeStartWidth2;
-		var firstItemWidth = this._resizeStartWidth1 + offsetX;
+
+		var secondItemWidth = this._resizeStartWidth2 - offsetX;
+		if ((secondItem is IMeasureObject)) {
+			var secondMeasureItem = cast(secondItem, IMeasureObject);
+			if (secondItemWidth < secondMeasureItem.minWidth) {
+				secondItemWidth = secondMeasureItem.minWidth;
+			} else if (secondItemWidth > secondMeasureItem.maxWidth) {
+				secondItemWidth = secondMeasureItem.maxWidth;
+			}
+		}
+		if (secondItemWidth < 0.0) {
+			secondItemWidth = 0.0;
+		} else if (secondItemWidth > totalWidth) {
+			secondItemWidth = totalWidth;
+		}
+
+		// prefer the first item's restrictions by applying them last
+		var firstItemWidth = totalWidth - secondItemWidth;
+		if ((firstItem is IMeasureObject)) {
+			var firstMeasureItem = cast(firstItem, IMeasureObject);
+			if (firstItemWidth < firstMeasureItem.minWidth) {
+				firstItemWidth = firstMeasureItem.minWidth;
+			} else if (firstItemWidth > firstMeasureItem.maxWidth) {
+				firstItemWidth = firstMeasureItem.maxWidth;
+			}
+		}
 		if (firstItemWidth < 0.0) {
 			firstItemWidth = 0.0;
 		} else if (firstItemWidth > totalWidth) {
 			firstItemWidth = totalWidth;
 		}
+
+		secondItemWidth = totalWidth - firstItemWidth;
+
 		this._customItemWidths[dividerIndex] = firstItemWidth;
-		this._customItemWidths[dividerIndex + 1] = totalWidth - firstItemWidth;
+		this._customItemWidths[dividerIndex + 1] = secondItemWidth;
 		this.setInvalid(LAYOUT);
 	}
 }
