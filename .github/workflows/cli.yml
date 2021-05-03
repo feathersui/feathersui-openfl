@@ -31,3 +31,8 @@ jobs:
         haxelib run feathersui new-project MyProject
         cd MyProject
         haxelib run openfl build html5
+    - name: Run CLI (--vscode)
+      run: |
+        haxelib run feathersui new-project MyVSCodeProject --vsode
+        cd MyVSCodeProject
+        haxelib run openfl build html5
