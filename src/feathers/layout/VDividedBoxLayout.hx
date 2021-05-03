@@ -36,8 +36,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
-	private var _fluidItemIndex:Int = -1;
-
 	private var _paddingTop:Float = 0.0;
 
 	/**
@@ -371,41 +369,10 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 		}
 	}
 
-	private function applyPercentWidth(items:Array<DisplayObject>, viewPortWidth:Float):Void {
-		var availableWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
-		for (i in 0...items.length) {
-			var isDivider = i % 2 == 1;
-			if (isDivider) {
-				continue;
-			}
-			var item = items[i];
-			var itemWidth = availableWidth;
-			if ((item is IMeasureObject)) {
-				var measureItem = cast(item, IMeasureObject);
-				var itemMinWidth = measureItem.explicitMinWidth;
-				if (itemMinWidth != null) {
-					// we try to respect the minWidth, but not
-					// when it's larger than 100%
-					if (itemMinWidth > availableWidth) {
-						itemMinWidth = availableWidth;
-					}
-					if (itemWidth < itemMinWidth) {
-						itemWidth = itemMinWidth;
-					}
-				}
-				var itemMaxWidth = measureItem.explicitMaxWidth;
-				if (itemMaxWidth != null && itemWidth > itemMaxWidth) {
-					itemWidth = itemMaxWidth;
-				}
-			}
-			item.width = itemWidth;
-		}
-	}
-
 	private function applyPercentHeight(items:Array<DisplayObject>, explicitHeight:Null<Float>, explicitMinHeight:Null<Float>,
 			explicitMaxHeight:Null<Float>):Void {
-		var pendingIndices:Array<Int> = [];
 		var customHeightIndices:Array<Int> = [];
+		var pendingIndices:Array<Int> = [];
 		var totalMeasuredHeight = 0.0;
 		var totalMinHeight = 0.0;
 		var totalPercentHeight = 0.0;
@@ -432,7 +399,11 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 				if (needsPercentHeight) {
 					var percentHeight = 100.0;
 					if ((item is IMeasureObject)) {
-						totalMinHeight += cast(item, IMeasureObject).minHeight;
+						var measureItem = cast(item, IMeasureObject);
+						var columnExplicitMinHeight = measureItem.explicitMinHeight;
+						if (columnExplicitMinHeight != null) {
+							totalMinHeight += columnExplicitMinHeight;
+						}
 					}
 					totalPercentHeight += percentHeight;
 					pendingIndices.push(i);
@@ -482,7 +453,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 						// force it to fit
 						columnMinHeight = remainingHeight;
 					}
-					if (itemHeight > columnMinHeight) {
+					if (itemHeight < columnMinHeight) {
 						itemHeight = columnMinHeight;
 						remainingHeight -= itemHeight;
 						totalPercentHeight -= percentHeight;
@@ -523,15 +494,16 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			index = items.length - 1;
 		}
 		if (index != -1) {
-			var item = items[index];
-			var itemHeight = item.height + remainingHeight;
+			var fallbackItem = items[index];
+			var itemHeight = fallbackItem.height + remainingHeight;
 			if (itemHeight < 0.0) {
 				remainingHeight = itemHeight;
 				itemHeight = 0.0;
+				customHeightIndices.remove(index);
 			} else {
 				remainingHeight = 0.0;
 			}
-			item.height += itemHeight;
+			fallbackItem.height += itemHeight;
 		}
 
 		if (remainingHeight == 0.0) {
@@ -542,6 +514,37 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 		for (index in customHeightIndices) {
 			var item = items[index];
 			item.height += offset;
+		}
+	}
+
+	private function applyPercentWidth(items:Array<DisplayObject>, viewPortWidth:Float):Void {
+		var availableWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
+		for (i in 0...items.length) {
+			var isDivider = i % 2 == 1;
+			if (isDivider) {
+				continue;
+			}
+			var item = items[i];
+			var itemWidth = availableWidth;
+			if ((item is IMeasureObject)) {
+				var measureItem = cast(item, IMeasureObject);
+				var itemMinWidth = measureItem.explicitMinWidth;
+				if (itemMinWidth != null) {
+					// we try to respect the minWidth, but not
+					// when it's larger than 100%
+					if (itemMinWidth > availableWidth) {
+						itemMinWidth = availableWidth;
+					}
+					if (itemWidth < itemMinWidth) {
+						itemWidth = itemMinWidth;
+					}
+				}
+				var itemMaxWidth = measureItem.explicitMaxWidth;
+				if (itemMaxWidth != null && itemWidth > itemMaxWidth) {
+					itemWidth = itemMaxWidth;
+				}
+			}
+			item.width = itemWidth;
 		}
 	}
 }
