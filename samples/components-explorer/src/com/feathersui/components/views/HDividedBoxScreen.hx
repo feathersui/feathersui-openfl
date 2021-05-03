@@ -28,13 +28,15 @@ class HDividedBoxScreen extends Panel {
 		this.addChild(this.dividedBox);
 
 		var leftContainer = this.createContainer("Left", 0x993333);
+		leftContainer.minWidth = 50.0;
 		this.dividedBox.addChild(leftContainer);
 
 		var rightContainer = this.createContainer("Right", 0x333399);
+		rightContainer.minWidth = 50.0;
 		dividedBox.addChild(rightContainer);
 	}
 
-	private function createContainer(text:String, color:UInt):DisplayObject {
+	private function createContainer(text:String, color:UInt):ScrollContainer {
 		var content = new ScrollContainer();
 		content.layout = new AnchorLayout();
 		var backgroundSkin = new RectangleSkin();

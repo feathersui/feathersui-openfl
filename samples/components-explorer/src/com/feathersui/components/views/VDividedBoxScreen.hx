@@ -28,13 +28,15 @@ class VDividedBoxScreen extends Panel {
 		this.addChild(this.dividedBox);
 
 		var topContainer = this.createContainer("Top", 0x993333);
+		topContainer.minHeight = 50.0;
 		this.dividedBox.addChild(topContainer);
 
 		var bottomContainer = this.createContainer("Bottom", 0x333399);
+		bottomContainer.minHeight = 50.0;
 		dividedBox.addChild(bottomContainer);
 	}
 
-	private function createContainer(text:String, color:UInt):DisplayObject {
+	private function createContainer(text:String, color:UInt):ScrollContainer {
 		var content = new ScrollContainer();
 		content.layout = new AnchorLayout();
 		var backgroundSkin = new RectangleSkin();
