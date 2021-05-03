@@ -75,6 +75,10 @@ class PackageHaxelib {
 					addDirectoryInternal(filePath, relativeTo, true, result);
 				}
 			} else {
+				// extra files on macOS that should be skipped
+				if (fileName == ".DS_Store") {
+					continue;
+				}
 				addFileInternal(filePath, relativeTo, result);
 			}
 		}
