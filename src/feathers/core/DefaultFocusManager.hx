@@ -532,11 +532,12 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function setStageFocus(value:InteractiveObject):Void {
-		if ((value is IStageFocusDelegate)) {
+		while ((value is IStageFocusDelegate)) {
 			var newFocusTarget = cast(value, IStageFocusDelegate).stageFocusTarget;
-			if (newFocusTarget != null) {
-				value = newFocusTarget;
+			if (newFocusTarget == null) {
+				break;
 			}
+			value = newFocusTarget;
 		}
 		this._root.stage.focus = value;
 	}
