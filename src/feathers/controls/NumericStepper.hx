@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import openfl.errors.ArgumentError;
 import feathers.layout.Direction;
 import feathers.layout.HorizontalAlign;
@@ -115,6 +117,7 @@ class NumericStepper extends FeathersControl implements IRange {
 		super();
 
 		this.addEventListener(FocusEvent.FOCUS_IN, numericStepper_focusInHandler);
+		this.addEventListener(KeyboardEvent.KEY_DOWN, numericStepper_keyDownHandler);
 	}
 
 	private var decrementButton:Button;
@@ -887,6 +890,39 @@ class NumericStepper extends FeathersControl implements IRange {
 		if (Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textInput;
 		}
+	}
+
+	private function numericStepper_keyDownHandler(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
+		if (!this._enabled) {
+			return;
+		}
+		var newValue = this._value;
+		switch (event.keyCode) {
+			case Keyboard.DOWN:
+				newValue -= this._step;
+			case Keyboard.UP:
+				newValue += this._step;
+			case Keyboard.HOME:
+				newValue = this._minimum;
+			case Keyboard.END:
+				newValue = this._maximum;
+			default:
+				return;
+		}
+		if (newValue < this._minimum) {
+			newValue = this._minimum;
+		} else if (newValue > this._maximum) {
+			newValue = this._maximum;
+		}
+		event.preventDefault();
+		// use the setter
+		this.value = newValue;
+
+		this.validateNow();
+		this.textInput.selectRange(0, this.textInput.text.length);
 	}
 
 	private function numericStepper_decrementButton_mouseDownHandler(event:MouseEvent):Void {
