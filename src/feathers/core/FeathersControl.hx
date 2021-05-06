@@ -333,6 +333,26 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._focusManager;
 	}
 
+	private var _focusOwner:IFocusObject;
+
+	/**
+		@see `feathers.layout.IFocusObject.focusOwner`
+	**/
+	@:flash.property
+	public var focusOwner(get, set):IFocusObject;
+
+	private function get_focusOwner():IFocusObject {
+		return this._focusOwner;
+	}
+
+	private function set_focusOwner(value:IFocusObject):IFocusObject {
+		if (this._focusOwner == value) {
+			return this._focusOwner;
+		}
+		this._focusOwner = value;
+		return this._focusOwner;
+	}
+
 	private var _focusEnabled:Bool = true;
 
 	/**

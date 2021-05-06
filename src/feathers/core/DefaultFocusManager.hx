@@ -188,7 +188,9 @@ class DefaultFocusManager implements IFocusManager {
 		var newFocus:IFocusObject = null;
 		var wrapped = false;
 		var currentFocus = this._focus;
-		if (backward) {
+		if (currentFocus != null && currentFocus.focusOwner != null) {
+			newFocus = currentFocus.focusOwner;
+		} else if (backward) {
 			if (currentFocus != null && currentFocus.parent != null) {
 				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 			}
@@ -219,10 +221,9 @@ class DefaultFocusManager implements IFocusManager {
 			return false;
 		}
 		if (!target.focusEnabled) {
-			return false;
-			/*if (child.focusOwner == null || !this.isValidFocus(child.focusOwner)) {
+			if (target.focusOwner == null || !this.isValidFocus(target.focusOwner)) {
 				return false;
-			}*/
+			}
 		}
 		if ((target is IUIControl)) {
 			var uiTarget = cast(target, IUIControl);
@@ -274,7 +275,8 @@ class DefaultFocusManager implements IFocusManager {
 			var targetWithFocus = cast(target, IFocusObject);
 			if (targetWithFocus.focusManager == this) {
 				if (this._focus == targetWithFocus) {
-					this.focus = null;
+					// change to focus owner, which falls back to null
+					this.focus = targetWithFocus.focusOwner;
 				}
 				targetWithFocus.focusManager = null;
 			}
@@ -447,7 +449,7 @@ class DefaultFocusManager implements IFocusManager {
 			}
 		}
 
-		if (fallbackToGlobal && container != this._root) {
+		if (fallbackToGlobal && container != this._root && container.parent != null) {
 			var foundChild = this.findNextContainerFocus(container.parent, container, true);
 			if (foundChild != null) {
 				return foundChild;
@@ -726,6 +728,38 @@ class DefaultFocusManager implements IFocusManager {
 			}
 			target = target.parent;
 		} while (target != null);
+		if (this._focus != null && focusTarget != null) {
+			// ignore touches on focusOwner because we consider the
+			// focusOwner to indirectly have focus already
+			var focusOwner = this._focus.focusOwner;
+			if (focusOwner == focusTarget) {
+				return;
+			}
+			// similarly, ignore touches on display objects that have a
+			// focusOwner and that owner is the currently focused object
+			var result:DisplayObject = cast(focusTarget, DisplayObject);
+			while (result != null) {
+				if ((result is IFocusObject)) {
+					var focusResult = cast(result, IFocusObject);
+					focusOwner = focusResult.focusOwner;
+					if (focusOwner != null) {
+						if (focusOwner == this._focus) {
+							// the current focus is the touch target's owner,
+							// so we don't need to clear focus
+							focusTarget = focusOwner;
+						}
+						// if we've found a display object with a focus owner,
+						// then we've gone far enough up the display list
+						break;
+					} else if (focusResult.focusEnabled) {
+						// if focus in enabled, then we've gone far enough up
+						// the display list
+						break;
+					}
+				}
+				result = result.parent;
+			}
+		}
 		this.focus = focusTarget;
 	}
 

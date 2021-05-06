@@ -25,6 +25,16 @@ interface IFocusObject extends IFocusManagerAware extends IDisplayObject {
 	public var focusEnabled(get, set):Bool;
 
 	/**
+		Used for associating focusable display objects that are not direct
+		children with an "owner" focusable display object, such as pop-ups. A
+		focus manager may use this property to influence the tab order.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var focusOwner(get, set):IFocusObject;
+
+	/**
 		Shows a focus indicator.
 
 		@since 1.0.0
