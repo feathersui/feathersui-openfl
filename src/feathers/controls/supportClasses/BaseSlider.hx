@@ -610,7 +610,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	}
 
 	private function thumbSkin_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || this.stage == null) {
 			return;
 		}
 
@@ -647,7 +647,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	}
 
 	private function trackSkin_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || this.stage == null) {
 			return;
 		}
 

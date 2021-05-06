@@ -597,7 +597,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function toggleSwitch_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || this.stage == null) {
 			return;
 		}
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);

@@ -1891,7 +1891,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function headerResizeTouchBegin(touchID:Int, divider:InteractiveObject, stageX:Float):Void {
-		if (!this._enabled || !this._resizableColumns || this._resizingHeaderIndex != -1) {
+		if (!this._enabled || !this._resizableColumns || this._resizingHeaderIndex != -1 || this.stage == null) {
 			return;
 		}
 

@@ -760,7 +760,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function thumbSkin_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || this.stage == null) {
 			return;
 		}
 
@@ -801,7 +801,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function trackSkin_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || this.stage == null) {
 			return;
 		}
 

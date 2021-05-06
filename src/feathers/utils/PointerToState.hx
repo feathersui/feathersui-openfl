@@ -336,7 +336,7 @@ class PointerToState<T> {
 	}
 
 	private function target_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || this._target.stage == null) {
 			return;
 		}
 		if (this._customHitTest != null && !this._customHitTest(event.stageX, event.stageY)) {

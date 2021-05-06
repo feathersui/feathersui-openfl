@@ -756,7 +756,7 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function resizeTouchBegin(touchID:Int, divider:InteractiveObject, stageX:Float, stageY:Float):Void {
-		if (!this._enabled || this._resizingDividerIndex != -1) {
+		if (!this._enabled || this._resizingDividerIndex != -1 || this.stage == null) {
 			return;
 		}
 
