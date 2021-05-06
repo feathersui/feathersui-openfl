@@ -18,6 +18,7 @@ import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.LayoutGroupScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
+import com.feathersui.components.views.NumericStepperScreen;
 import com.feathersui.components.views.PageIndicatorScreen;
 import com.feathersui.components.views.PageNavigatorScreen;
 import com.feathersui.components.views.PanelScreen;
@@ -121,6 +122,9 @@ class Main extends Application {
 
 		var listView = Route.withClass(ViewPaths.LIST_VIEW, ListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(listView);
+
+		var numericStepper = Route.withClass(ViewPaths.NUMERIC_STEPPER, NumericStepperScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(numericStepper);
 
 		var pageIndicator = Route.withClass(ViewPaths.PAGE_INDICATOR, PageIndicatorScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(pageIndicator);

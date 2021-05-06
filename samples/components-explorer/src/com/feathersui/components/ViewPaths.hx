@@ -10,6 +10,7 @@ class ViewPaths {
 	public static final FORM = "/form";
 	public static final HEADER = "/header";
 	public static final LABEL = "/label";
+	public static final NUMERIC_STEPPER = "/numeric-stepper";
 	public static final PAGE_INDICATOR = "/page-indicator";
 	public static final PROGRESS_BAR = "/progress-bar";
 	public static final RADIO = "/radio";

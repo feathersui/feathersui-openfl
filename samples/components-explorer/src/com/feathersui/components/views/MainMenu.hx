@@ -31,6 +31,7 @@ class MainMenu extends Panel {
 				new MenuItem("Check", ViewPaths.CHECK),
 				new MenuItem("Header", ViewPaths.HEADER),
 				new MenuItem("Label", ViewPaths.LABEL),
+				new MenuItem("Numeric Stepper", ViewPaths.NUMERIC_STEPPER),
 				new MenuItem("Page Indicator", ViewPaths.PAGE_INDICATOR),
 				new MenuItem("Progress Bar", ViewPaths.PROGRESS_BAR),
 				new MenuItem("Radio", ViewPaths.RADIO),
