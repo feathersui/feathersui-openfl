@@ -881,6 +881,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.paddingLeft = value;
 	}
 
+	override public function showFocus(show:Bool):Void {
+		super.showFocus(show);
+		if (show) {
+			this.selectRange(this._text.length, 0);
+		}
+	}
+
 	private function initializeTextInputTheme():Void {
 		SteelTextInputStyles.initialize();
 	}

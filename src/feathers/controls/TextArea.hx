@@ -653,6 +653,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.textFieldViewPort.selectRange(0, this._text.length);
 	}
 
+	override public function showFocus(show:Bool):Void {
+		super.showFocus(show);
+		if (show) {
+			this.selectRange(this._text.length, 0);
+		}
+	}
+
 	private function initializeTextAreaTheme():Void {
 		SteelTextAreaStyles.initialize();
 	}
