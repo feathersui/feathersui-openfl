@@ -1564,8 +1564,12 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function textInput_focusInHandler(event:FocusEvent):Void {
-		if (this._focusManager == null && Reflect.compare(event.target, this) == 0) {
-			this.stage.focus = this.textField;
+		if (Reflect.compare(event.target, this) == 0) {
+			if (this._focusManager == null) {
+				this.stage.focus = this.textField;
+			} else {
+				this._focusManager.focus = this;
+			}
 		}
 	}
 

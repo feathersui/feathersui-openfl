@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.display.InteractiveObject;
+import feathers.core.IStageFocusDelegate;
 import feathers.events.ListViewEvent;
 import openfl.events.FocusEvent;
 import feathers.core.IFocusObject;
@@ -95,7 +97,7 @@ import lime.ui.KeyCode;
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class PopUpListView extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
+class PopUpListView extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IStageFocusDelegate {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");
 	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = InvalidationFlag.CUSTOM("listViewFactory");
 
@@ -155,6 +157,13 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	private var listView:ListView;
 
 	private var buttonMeasurements:Measurements = new Measurements();
+
+	@:flash.property
+	public var stageFocusTarget(get, never):InteractiveObject;
+
+	private function get_stageFocusTarget():InteractiveObject {
+		return this.button;
+	}
 
 	private var _dataProvider:IFlatCollection<Dynamic>;
 
@@ -823,7 +832,11 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function popUpListView_focusInHandler(event:FocusEvent):Void {
 		if (Reflect.compare(event.target, this) == 0) {
-			this.stage.focus = this.button;
+			if (this._focusManager == null) {
+				this.stage.focus = this.button;
+			} else {
+				this._focusManager.focus = this;
+			}
 		}
 	}
 

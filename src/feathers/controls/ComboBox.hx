@@ -991,8 +991,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_focusInHandler(event:FocusEvent):Void {
-		if (this._focusManager == null && Reflect.compare(event.target, this) == 0) {
-			this.stage.focus = this.textInput;
+		if (Reflect.compare(event.target, this) == 0) {
+			if (this._focusManager == null) {
+				this.stage.focus = this.textInput;
+			} else {
+				this._focusManager.focus = this;
+			}
 		}
 	}
 
