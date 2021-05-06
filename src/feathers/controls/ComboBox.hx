@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.display.InteractiveObject;
+import feathers.core.IStageFocusDelegate;
 import feathers.events.ListViewEvent;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
@@ -95,7 +97,7 @@ import lime.ui.KeyCode;
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class ComboBox extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {
+class ComboBox extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IStageFocusDelegate {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");
 	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = InvalidationFlag.CUSTOM("textInputFactory");
 	private static final INVALIDATION_FLAG_LIST_VIEW_FACTORY = InvalidationFlag.CUSTOM("listViewFactory");
@@ -177,6 +179,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private var buttonMeasurements = new Measurements();
 	private var textInputMeasurements = new Measurements();
+
+	@:flash.property
+	public var stageFocusTarget(get, never):InteractiveObject;
+
+	private function get_stageFocusTarget():InteractiveObject {
+		return this.textInput;
+	}
 
 	private var _dataProvider:IFlatCollection<Dynamic>;
 
@@ -982,7 +991,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
+		if (this._focusManager == null && Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textInput;
 		}
 	}

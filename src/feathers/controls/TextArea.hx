@@ -523,10 +523,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
-		if (this.textFieldViewPort == null) {
-			return null;
-		}
-		return this.textFieldViewPort.stageFocusTarget;
+		return this.textFieldViewPort;
 	}
 
 	private var _stateToSkin:Map<TextInputState, DisplayObject> = new Map();
@@ -890,7 +887,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function textArea_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
+		if (this._focusManager == null && Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textFieldViewPort;
 		}
 	}

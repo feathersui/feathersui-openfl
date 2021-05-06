@@ -8,6 +8,9 @@
 
 package feathers.controls;
 
+import openfl.display.InteractiveObject;
+import feathers.core.IStageFocusDelegate;
+import feathers.core.IFocusObject;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import openfl.errors.ArgumentError;
@@ -52,7 +55,7 @@ import openfl.ui.Multitouch;
 	@see [How to use the NumericStepper component](https://feathersui.com/learn/haxe-openfl/numeric-stepper/)
 **/
 @:event(openfl.events.Event.CHANGE)
-class NumericStepper extends FeathersControl implements IRange {
+class NumericStepper extends FeathersControl implements IRange implements IStageFocusDelegate {
 	private static final INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY = InvalidationFlag.CUSTOM("decrementButtonFactory");
 	private static final INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY = InvalidationFlag.CUSTOM("incrementButtonFactory");
 	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = InvalidationFlag.CUSTOM("textInputFactory");
@@ -360,6 +363,13 @@ class NumericStepper extends FeathersControl implements IRange {
 		return this._editable;
 	}
 
+	@:flash.property
+	public var stageFocusTarget(get, never):InteractiveObject;
+
+	private function get_stageFocusTarget():InteractiveObject {
+		return this.textInput;
+	}
+
 	private var _decrementButtonFactory:() -> Button;
 
 	public var decrementButtonFactory(get, set):() -> Button;
@@ -481,6 +491,13 @@ class NumericStepper extends FeathersControl implements IRange {
 	**/
 	@:style
 	public var buttonDirection:Direction = HORIZONTAL;
+
+	override public function showFocus(show:Bool):Void {
+		super.showFocus(show);
+		if (this.textInput != null) {
+			this.textInput.showFocus(show);
+		}
+	}
 
 	/**
 		Applies the `minimum`, `maximum`, and `snapInterval` restrictions to the
@@ -810,9 +827,6 @@ class NumericStepper extends FeathersControl implements IRange {
 			this.decrementButton.variant = this.customDecrementButtonVariant != null ? this.customDecrementButtonVariant : NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON;
 		}
 		this.decrementButton.text = "-";
-		this.decrementButton.focusEnabled = false;
-		this.decrementButton.tabEnabled = false;
-		this.decrementButton.tabChildren = false;
 		this.decrementButton.addEventListener(MouseEvent.MOUSE_DOWN, numericStepper_decrementButton_mouseDownHandler);
 		this.decrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_decrementButton_touchBeginHandler);
 		this.decrementButton.initializeNow();
@@ -833,9 +847,6 @@ class NumericStepper extends FeathersControl implements IRange {
 			this.incrementButton.variant = this.customIncrementButtonVariant != null ? this.customIncrementButtonVariant : NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON;
 		}
 		this.incrementButton.text = "+";
-		this.incrementButton.focusEnabled = false;
-		this.incrementButton.tabEnabled = false;
-		this.incrementButton.tabChildren = false;
 		this.incrementButton.addEventListener(MouseEvent.MOUSE_DOWN, numericStepper_incrementButton_mouseDownHandler);
 		this.incrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_incrementButton_touchBeginHandler);
 		this.incrementButton.initializeNow();
@@ -874,20 +885,16 @@ class NumericStepper extends FeathersControl implements IRange {
 		var newValue = this._value - this._step;
 		newValue = this.restrictValue(newValue);
 		this.value = newValue;
-		this.validateNow();
-		this.textInput.selectRange(0, this.textInput.text.length);
 	}
 
 	private function increment():Void {
 		var newValue = this._value + this._step;
 		newValue = this.restrictValue(newValue);
 		this.value = newValue;
-		this.validateNow();
-		this.textInput.selectRange(0, this.textInput.text.length);
 	}
 
 	private function numericStepper_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
+		if (this._focusManager == null && Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textInput;
 		}
 	}
@@ -920,9 +927,6 @@ class NumericStepper extends FeathersControl implements IRange {
 		event.preventDefault();
 		// use the setter
 		this.value = newValue;
-
-		this.validateNow();
-		this.textInput.selectRange(0, this.textInput.text.length);
 	}
 
 	private function numericStepper_decrementButton_mouseDownHandler(event:MouseEvent):Void {

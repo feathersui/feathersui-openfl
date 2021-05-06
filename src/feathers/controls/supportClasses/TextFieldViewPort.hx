@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.core.IFocusManagerAware;
 import feathers.core.FeathersControl;
 import feathers.core.ITextControl;
 import feathers.events.FeathersEvent;
@@ -30,7 +31,7 @@ import openfl.text.TextLineMetrics;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class TextFieldViewPort extends FeathersControl implements IViewPort implements ITextControl {
+class TextFieldViewPort extends FeathersControl implements IViewPort implements ITextControl implements IFocusManagerAware {
 	public function new() {
 		super();
 
@@ -983,7 +984,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	}
 
 	private function textFieldViewPort_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
+		if (this._focusManager == null && Reflect.compare(event.target, this) == 0) {
 			this.stage.focus = this.textField;
 		}
 	}
