@@ -573,53 +573,57 @@ class NumericStepper extends FeathersControl implements IRange {
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
+			var buttonWidth = Math.max(this.decrementButton.width, this.incrementButton.width);
 			if (this.buttonDirection == VERTICAL) {
 				if (this.textInputPosition == CENTER) {
-					newWidth = Math.max(this.textInput.width, Math.max(this.incrementButton.width, this.decrementButton.width));
+					newWidth = Math.max(this.textInput.width, buttonWidth);
 				} else {
-					newWidth = this.textInput.width + Math.max(this.incrementButton.width, this.decrementButton.width);
+					newWidth = this.textInput.width + buttonWidth;
 				}
 			} else { // HORIZONTAL
-				newWidth = this.decrementButton.width + this.incrementButton.width + this.textInput.width;
+				newWidth = (2.0 * buttonWidth) + this.textInput.width;
 			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
+			var buttonHeight = Math.max(this.decrementButton.height, this.incrementButton.height);
 			if (this.buttonDirection == VERTICAL) {
 				if (this.textInputPosition == CENTER) {
-					newHeight = this.decrementButton.height + this.incrementButton.height + this.textInput.height;
+					newHeight = (2.0 * buttonHeight) + this.textInput.height;
 				} else {
-					newHeight = Math.max(this.textInput.height, this.incrementButton.height + this.decrementButton.height);
+					newHeight = Math.max(this.textInput.height, 2.0 * buttonHeight);
 				}
 			} else { // HORIZONTAL
-				newHeight = Math.max(this.textInput.height, Math.max(this.decrementButton.height, this.incrementButton.height));
+				newHeight = Math.max(this.textInput.height, buttonHeight);
 			}
 		}
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
+			var buttonWidth = Math.max(this.decrementButton.width, this.incrementButton.width);
 			if (this.buttonDirection == VERTICAL) {
 				if (this.textInputPosition == CENTER) {
-					newMinWidth = Math.max(this.textInput.minWidth, Math.max(this.incrementButton.minWidth, this.decrementButton.minWidth));
+					newMinWidth = Math.max(this.textInput.minWidth, buttonWidth);
 				} else {
-					newMinWidth = this.textInput.minWidth + Math.max(this.incrementButton.minWidth, this.decrementButton.minWidth);
+					newMinWidth = this.textInput.minWidth + buttonWidth;
 				}
 			} else { // HORIZONTAL
-				newMinWidth = this.decrementButton.minWidth + this.incrementButton.minWidth + this.textInput.minWidth;
+				newMinWidth = (2.0 * buttonWidth) + this.textInput.minWidth;
 			}
 		}
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
+			var buttonHeight = Math.max(this.decrementButton.height, this.incrementButton.height);
 			if (this.buttonDirection == VERTICAL) {
 				if (this.textInputPosition == CENTER) {
-					newMinHeight = this.decrementButton.minHeight + this.incrementButton.minHeight + this.textInput.minHeight;
+					newMinHeight = this.decrementButton.minHeight + (2.0 * buttonHeight);
 				} else {
-					newMinHeight = Math.max(this.textInput.minHeight, this.incrementButton.minHeight + this.decrementButton.minHeight);
+					newMinHeight = Math.max(this.textInput.minHeight, 2.0 * buttonHeight);
 				}
 			} else { // HORIZONTAL
-				newMinHeight = Math.max(this.textInput.minHeight, Math.max(this.decrementButton.minHeight, this.incrementButton.minHeight));
+				newMinHeight = Math.max(this.textInput.minHeight, buttonHeight);
 			}
 		}
 
@@ -653,32 +657,48 @@ class NumericStepper extends FeathersControl implements IRange {
 	}
 
 	private function layoutContentWithHorizontalButtons():Void {
-		var textInputWidth = this.actualWidth - this.incrementButton.width - this.decrementButton.width;
+		var buttonWidth = Math.max(this.decrementButton.width, this.incrementButton.width);
+		var textInputWidth = Math.max(0.0, this.actualWidth - (2.0 * buttonWidth));
 		if (this.textInput.width != textInputWidth) {
 			this.textInput.width = textInputWidth;
+		}
+		if (this.textInput.height != this.actualHeight) {
+			this.textInput.height = this.actualHeight;
+		}
+		if (this.decrementButton.width != buttonWidth) {
+			this.decrementButton.width = buttonWidth;
+		}
+		if (this.decrementButton.height != this.actualHeight) {
+			this.decrementButton.height = this.actualHeight;
+		}
+		if (this.incrementButton.width != buttonWidth) {
+			this.incrementButton.width = buttonWidth;
+		}
+		if (this.incrementButton.height != this.actualHeight) {
+			this.incrementButton.height = this.actualHeight;
 		}
 		switch (this.textInputPosition) {
 			case LEFT:
 				this.textInput.x = 0.0;
-				this.textInput.y = (this.actualHeight - this.textInput.height) / 2.0;
-				this.decrementButton.x = this.textInput.width;
-				this.decrementButton.y = (this.actualHeight - this.decrementButton.height) / 2.0;
-				this.incrementButton.x = this.decrementButton.x + this.decrementButton.width;
-				this.incrementButton.y = (this.actualHeight - this.incrementButton.height) / 2.0;
+				this.textInput.y = 0.0;
+				this.incrementButton.x = this.actualWidth - buttonWidth;
+				this.incrementButton.y = 0.0;
+				this.decrementButton.x = this.actualWidth - (2.0 * buttonWidth);
+				this.decrementButton.y = 0.0;
 			case RIGHT:
 				this.decrementButton.x = 0.0;
-				this.decrementButton.y = (this.actualHeight - this.decrementButton.height) / 2.0;
-				this.incrementButton.x = this.decrementButton.width;
-				this.incrementButton.y = (this.actualHeight - this.incrementButton.height) / 2.0;
-				this.textInput.x = this.incrementButton.x + this.incrementButton.width;
-				this.textInput.y = (this.actualHeight - this.textInput.height) / 2.0;
+				this.decrementButton.y = 0.0;
+				this.incrementButton.x = buttonWidth;
+				this.incrementButton.y = 0.0;
+				this.textInput.x = this.actualWidth - textInputWidth;
+				this.textInput.y = 0.0;
 			case CENTER:
 				this.decrementButton.x = 0.0;
-				this.decrementButton.y = (this.actualHeight - this.decrementButton.height) / 2.0;
-				this.incrementButton.x = this.actualWidth - this.incrementButton.width;
-				this.incrementButton.y = (this.actualHeight - this.incrementButton.height) / 2.0;
-				this.textInput.x = this.decrementButton.width;
-				this.textInput.y = (this.actualHeight - this.textInput.height) / 2.0;
+				this.decrementButton.y = 0.0;
+				this.incrementButton.x = this.actualWidth - buttonWidth;
+				this.incrementButton.y = 0.0;
+				this.textInput.x = buttonWidth;
+				this.textInput.y = 0.0;
 			default:
 				throw new ArgumentError("Invalid text input position: " + this.textInputPosition);
 		}
@@ -687,28 +707,88 @@ class NumericStepper extends FeathersControl implements IRange {
 	private function layoutContentWithVerticalButtons():Void {
 		switch (this.textInputPosition) {
 			case LEFT:
+				var buttonWidth = Math.max(this.incrementButton.width, this.decrementButton.width);
+				var buttonHeight = this.actualHeight / 2.0;
+				var textInputWidth = Math.max(0.0, this.actualWidth - buttonWidth);
+				if (this.textInput.width != textInputWidth) {
+					this.textInput.width = textInputWidth;
+				}
+				if (this.textInput.height != this.actualHeight) {
+					this.textInput.height = this.actualHeight;
+				}
 				this.textInput.x = 0.0;
-				this.textInput.y = (this.actualHeight - this.textInput.height) / 2.0;
-				var totalButtonHeight = this.incrementButton.height + this.decrementButton.height;
-				this.incrementButton.x = this.textInput.width;
-				this.incrementButton.y = (this.actualHeight - totalButtonHeight) / 2.0;
-				this.decrementButton.x = this.textInput.width;
-				this.decrementButton.y = this.incrementButton.y + this.incrementButton.height;
-			case RIGHT:
-				this.textInput.x = this.actualWidth - this.textInput.width;
-				this.textInput.y = (this.actualHeight - this.textInput.height) / 2.0;
-				var totalButtonHeight = this.incrementButton.height + this.decrementButton.height;
-				this.incrementButton.x = 0.0;
-				this.incrementButton.y = (this.actualHeight - totalButtonHeight) / 2.0;
-				this.decrementButton.x = 0.0;
-				this.decrementButton.y = this.incrementButton.y + this.incrementButton.height;
-			case CENTER:
-				this.incrementButton.x = (this.actualWidth - this.incrementButton.width) / 2.0;
+				this.textInput.y = 0.0;
+				this.incrementButton.x = this.actualWidth - buttonWidth;
 				this.incrementButton.y = 0.0;
-				this.textInput.x = (this.actualWidth - this.textInput.width) / 2.0;
-				this.textInput.y = this.incrementButton.height;
-				this.decrementButton.x = (this.actualWidth - this.decrementButton.width) / 2.0;
-				this.decrementButton.y = this.textInput.y + this.textInput.height;
+				if (this.incrementButton.width != buttonWidth) {
+					this.incrementButton.width = buttonWidth;
+				}
+				if (this.incrementButton.height != buttonHeight) {
+					this.incrementButton.height = buttonHeight;
+				}
+				this.decrementButton.x = this.actualWidth - buttonWidth;
+				this.decrementButton.y = this.actualHeight = buttonHeight;
+				if (this.decrementButton.width != buttonWidth) {
+					this.decrementButton.width = buttonWidth;
+				}
+				if (this.decrementButton.height != buttonHeight) {
+					this.decrementButton.height = buttonHeight;
+				}
+			case RIGHT:
+				var buttonWidth = Math.max(this.incrementButton.width, this.decrementButton.width);
+				var buttonHeight = this.actualHeight / 2.0;
+				var textInputWidth = Math.max(0.0, this.actualWidth - buttonWidth);
+				if (this.textInput.width != textInputWidth) {
+					this.textInput.width = textInputWidth;
+				}
+				if (this.textInput.height != this.actualHeight) {
+					this.textInput.height = this.actualHeight;
+				}
+				this.textInput.x = buttonWidth;
+				this.textInput.y = 0.0;
+				this.incrementButton.x = 0.0;
+				this.incrementButton.y = 0.0;
+				if (this.incrementButton.width != buttonWidth) {
+					this.incrementButton.width = buttonWidth;
+				}
+				if (this.incrementButton.height != buttonHeight) {
+					this.incrementButton.height = buttonHeight;
+				}
+				this.decrementButton.x = 0.0;
+				this.decrementButton.y = this.actualHeight - buttonHeight;
+				if (this.decrementButton.width != buttonWidth) {
+					this.decrementButton.width = buttonWidth;
+				}
+				if (this.decrementButton.height != buttonHeight) {
+					this.decrementButton.height = buttonHeight;
+				}
+			case CENTER:
+				var buttonHeight = Math.max(this.decrementButton.height, this.incrementButton.height);
+				var textInputHeight = Math.max(0.0, this.actualHeight - (2.0 * buttonHeight));
+				this.incrementButton.x = 0.0;
+				this.incrementButton.y = 0.0;
+				if (this.incrementButton.width != this.actualWidth) {
+					this.incrementButton.width = this.actualWidth;
+				}
+				if (this.incrementButton.height != buttonHeight) {
+					this.incrementButton.height = buttonHeight;
+				}
+				this.textInput.x = 0.0;
+				this.textInput.y = buttonHeight;
+				if (this.textInput.width != this.actualWidth) {
+					this.textInput.width = this.actualWidth;
+				}
+				if (this.textInput.height != textInputHeight) {
+					this.textInput.height = textInputHeight;
+				}
+				this.decrementButton.x = 0.0;
+				this.decrementButton.y = this.actualHeight - buttonHeight;
+				if (this.decrementButton.width != this.actualWidth) {
+					this.decrementButton.width = this.actualWidth;
+				}
+				if (this.decrementButton.height != buttonHeight) {
+					this.decrementButton.height = buttonHeight;
+				}
 			default:
 				throw new ArgumentError("Invalid text input position: " + this.textInputPosition);
 		}
@@ -727,6 +807,9 @@ class NumericStepper extends FeathersControl implements IRange {
 			this.decrementButton.variant = this.customDecrementButtonVariant != null ? this.customDecrementButtonVariant : NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON;
 		}
 		this.decrementButton.text = "-";
+		this.decrementButton.focusEnabled = false;
+		this.decrementButton.tabEnabled = false;
+		this.decrementButton.tabChildren = false;
 		this.decrementButton.addEventListener(MouseEvent.MOUSE_DOWN, numericStepper_decrementButton_mouseDownHandler);
 		this.decrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_decrementButton_touchBeginHandler);
 		this.decrementButton.initializeNow();
@@ -747,6 +830,9 @@ class NumericStepper extends FeathersControl implements IRange {
 			this.incrementButton.variant = this.customIncrementButtonVariant != null ? this.customIncrementButtonVariant : NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON;
 		}
 		this.incrementButton.text = "+";
+		this.incrementButton.focusEnabled = false;
+		this.incrementButton.tabEnabled = false;
+		this.incrementButton.tabChildren = false;
 		this.incrementButton.addEventListener(MouseEvent.MOUSE_DOWN, numericStepper_incrementButton_mouseDownHandler);
 		this.incrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_incrementButton_touchBeginHandler);
 		this.incrementButton.initializeNow();
