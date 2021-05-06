@@ -585,6 +585,15 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	@:style
 	public var textOffsetY:Float = 0.0;
 
+	/**
+		Shows or hides the button text. If the text is hidden, it will not
+		affect the layout of other children, such as the icon.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var showText:Bool = true;
+
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 	private var _stateToTextFormat:Map<ToggleButtonState, AbstractTextFormat> = new Map();
@@ -748,7 +757,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			return false;
 		}
 
-		var hasText = this._text != null && this._text.length > 0;
+		var hasText = this.showText && this._text != null;
 		if (hasText) {
 			this.refreshTextFieldDimensions(true);
 		}
@@ -840,10 +849,11 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var contentWidth = this._text != null ? this._textMeasuredWidth : 0.0;
+		var hasText = this.showText && this._text != null;
+		var contentWidth = hasText ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this._text != null) {
+				if (hasText) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -861,10 +871,11 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			adjustedGap = this.minGap;
 		}
 
-		var contentHeight = this._text != null ? this._textMeasuredHeight : 0.0;
+		var hasText = this.showText && this._text != null;
+		var contentHeight = hasText ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this._text != null) {
+				if (hasText) {
 					contentHeight += adjustedGap;
 				}
 				contentHeight += this._currentIcon.height;
@@ -881,10 +892,11 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinWidth = this._text != null ? this._textMeasuredWidth : 0.0;
+		var hasText = this.showText && this._text != null;
+		var contentMinWidth = hasText ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this._text != null) {
+				if (hasText) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -901,10 +913,11 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinHeight = this._text != null ? this._textMeasuredHeight : 0.0;
+		var hasText = this.showText && this._text != null;
+		var contentMinHeight = hasText ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this._text != null) {
+				if (hasText) {
 					contentMinHeight += adjustedGap;
 				}
 				contentMinHeight += this._currentIcon.height;
@@ -939,7 +952,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function refreshText():Void {
-		var hasText = this._text != null && this._text.length > 0;
+		// this is the only place where hasText also checks the length
+		// because TextField height may not be accurate with an empty string
+		var hasText = this.showText && this._text != null && this._text.length > 0;
 		this.textField.visible = hasText;
 		if (this._text == this._previousText && !this._updatedTextStyles) {
 			// nothing to refresh
@@ -979,7 +994,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	private function layoutContent():Void {
 		this.refreshTextFieldDimensions(false);
 
-		var hasText = this._text != null && this._text.length > 0;
+		var hasText = this.showText && this._text != null;
 		var iconIsInLayout = this._currentIcon != null && this.iconPosition != MANUAL;
 		if (hasText && iconIsInLayout) {
 			this.positionSingleChild(this.textField);
@@ -1011,7 +1026,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
-		if (this._text == null || this._text.length == 0) {
+		var hasText = this.showText && this._text != null;
+		if (!hasText) {
 			return;
 		}
 
