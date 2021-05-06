@@ -41,6 +41,7 @@ class SteelNumericStepperStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new TabSkin();
 					skin.cornerRadiusPosition = LEFT;
+					skin.drawBaseBorder = false;
 					skin.fill = theme.getButtonFill();
 					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
 					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
@@ -70,6 +71,7 @@ class SteelNumericStepperStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new TabSkin();
 					skin.cornerRadiusPosition = RIGHT;
+					skin.drawBaseBorder = false;
 					skin.fill = theme.getButtonFill();
 					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
 					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
