@@ -213,6 +213,12 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 	}
 
 	override private function update():Void {
+		this.commitChanges();
+		this.measure();
+		this.layoutContent();
+	}
+
+	private function commitChanges():Void {
 		var stylesInvalid = this.isInvalid(STYLES);
 		var stateInvalid = this.isInvalid(STATE);
 
@@ -223,8 +229,9 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		if (stylesInvalid) {
 			this.refreshInteractivity();
 		}
+	}
 
-		this.measure();
+	private function layoutContent():Void {
 		this.layoutBackgroundSkin();
 	}
 

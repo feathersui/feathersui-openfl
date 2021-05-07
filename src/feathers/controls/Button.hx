@@ -220,6 +220,23 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	@:style
 	public var embedFonts:Bool = false;
 
+	/**
+		Determines if the text is displayed on a single line, or if it wraps.
+
+		In the following example, the button's text wraps at 150 pixels:
+
+		```hx
+		button.width = 150.0;
+		button.wordWrap = true;
+		```
+
+		@default false
+
+		@since 1.0.0
+	**/
+	@:style
+	public var wordWrap:Bool = false;
+
 	private var _stateToIcon:Map<ButtonState, DisplayObject> = new Map();
 	private var _iconMeasurements:Measurements = null;
 	private var _currentIcon:DisplayObject = null;
@@ -642,7 +659,9 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		}
 	}
 
-	override private function update():Void {
+	override private function commitChanges():Void {
+		super.commitChanges();
+
 		var dataInvalid = this.isInvalid(DATA);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
@@ -660,10 +679,6 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (dataInvalid || stylesInvalid || stateInvalid) {
 			this.refreshText();
 		}
-
-		super.update();
-
-		this.layoutContent();
 	}
 
 	override private function measure():Bool {
@@ -850,6 +865,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	private function refreshTextStyles():Void {
+		if (this.textField.wordWrap != this.wordWrap) {
+			this.textField.wordWrap = this.wordWrap;
+			this._updatedTextStyles = true;
+		}
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
@@ -889,9 +908,28 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		} else {
 			this.textField.text = "\u200b"; // zero-width space
 		}
+		var textFieldExplicitWidth:Null<Float> = null;
+		if (this.explicitWidth != null) {
+			textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
+		} else if (this.explicitMaxWidth != null) {
+			textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
+		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
+			textFieldExplicitWidth = this._backgroundSkinMeasurements.maxWidth - this.paddingLeft - this.paddingRight;
+		}
+		if (textFieldExplicitWidth == null && this.wordWrap) {
+			// to get an accurate measurement, we need to temporarily disable
+			// wrapping to multiple lines
+			// it can be inaccurate with the flash target sometimes
+			this.textField.wordWrap = false;
+		} else if (textFieldExplicitWidth != null) {
+			this.textField.width = textFieldExplicitWidth;
+		}
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;
+		if (textFieldExplicitWidth == null && this.wordWrap) {
+			this.textField.wordWrap = true;
+		}
 		if (!hasText) {
 			this.textField.text = "";
 		}
@@ -909,7 +947,9 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		return this.textFormat;
 	}
 
-	private function layoutContent():Void {
+	override private function layoutContent():Void {
+		super.layoutContent();
+
 		this.refreshTextFieldDimensions(false);
 
 		var hasText = this.showText && this._text != null;
@@ -995,6 +1035,27 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			calculatedHeight = this._textMeasuredHeight;
 		}
 		this.textField.width = calculatedWidth;
+		var wordWrap = this.wordWrap;
+		if (wordWrap && calculatedWidth == this._textMeasuredWidth) {
+			var textFieldExplicitWidth:Null<Float> = null;
+			if (this.explicitWidth != null) {
+				textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
+			} else if (this.explicitMaxWidth != null) {
+				textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
+			} else if (this.actualMaxWidth < (1.0 / 0.0)) {
+				textFieldExplicitWidth = this.actualMaxWidth - this.paddingLeft - this.paddingRight;
+			}
+			if (textFieldExplicitWidth == null) {
+				// sometimes, using the width measured with wrapping disabled
+				// will still cause the final rendered result to wrap, but we
+				// can skip wrapping forcefully as a workaround
+				// this happens with the flash target sometimes
+				wordWrap = false;
+			}
+		}
+		if (this.textField.wordWrap != wordWrap) {
+			this.textField.wordWrap = wordWrap;
+		}
 		this.textField.height = calculatedHeight;
 	}
 

@@ -334,6 +334,12 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 	}
 
 	override private function update():Void {
+		this.commitChanges();
+		this.measure();
+		this.layoutContent();
+	}
+
+	private function commitChanges():Void {
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var stylesInvalid = this.isInvalid(STYLES);
 		var stateInvalid = this.isInvalid(STATE);
@@ -345,9 +351,6 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		if (stylesInvalid) {
 			this.refreshInteractivity();
 		}
-
-		this.measure();
-		this.layoutBackgroundSkin();
 	}
 
 	private function refreshInteractivity():Void {
@@ -501,6 +504,10 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+	}
+
+	private function layoutContent():Void {
+		this.layoutBackgroundSkin();
 	}
 
 	private function layoutBackgroundSkin():Void {
