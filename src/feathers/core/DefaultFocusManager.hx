@@ -188,8 +188,14 @@ class DefaultFocusManager implements IFocusManager {
 		var newFocus:IFocusObject = null;
 		var wrapped = false;
 		var currentFocus = this._focus;
-		if (currentFocus != null && currentFocus.focusOwner != null) {
-			newFocus = currentFocus.focusOwner;
+		if (currentFocus != null) {
+			var focusOwner = currentFocus.focusOwner;
+			if (focusOwner != null && focusOwner.focusManager != this) {
+				focusOwner = null;
+			}
+			if (focusOwner != null) {
+				newFocus = focusOwner;
+			}
 		} else if (backward) {
 			if (currentFocus != null && currentFocus.parent != null) {
 				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
@@ -221,7 +227,8 @@ class DefaultFocusManager implements IFocusManager {
 			return false;
 		}
 		if (!target.focusEnabled) {
-			if (target.focusOwner == null || !this.isValidFocus(target.focusOwner)) {
+			var focusOwner = target.focusOwner;
+			if (focusOwner == null || !this.isValidFocus(focusOwner)) {
 				return false;
 			}
 		}
@@ -279,7 +286,11 @@ class DefaultFocusManager implements IFocusManager {
 			if (targetWithFocus.focusManager == this) {
 				if (this._focus == targetWithFocus) {
 					// change to focus owner, which falls back to null
-					this.focus = targetWithFocus.focusOwner;
+					var focusOwner = targetWithFocus.focusOwner;
+					if (focusOwner != null && focusOwner.focusManager != this) {
+						focusOwner = null;
+					}
+					this.focus = focusOwner;
 				}
 				targetWithFocus.focusManager = null;
 			}
@@ -745,6 +756,9 @@ class DefaultFocusManager implements IFocusManager {
 				if ((result is IFocusObject)) {
 					var focusResult = cast(result, IFocusObject);
 					focusOwner = focusResult.focusOwner;
+					if (focusOwner != null && focusOwner.focusManager != this) {
+						focusOwner = null;
+					}
 					if (focusOwner != null) {
 						if (focusOwner == this._focus) {
 							// the current focus is the touch target's owner,
