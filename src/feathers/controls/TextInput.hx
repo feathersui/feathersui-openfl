@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.PopUpManager;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IStageFocusDelegate;
@@ -153,13 +154,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
-		if (this._enabled) {
-			if (this._currentState == DISABLED) {
-				this.changeState(ENABLED);
-			}
-		} else {
-			this.changeState(DISABLED);
-		}
+		this.refreshState();
 		return this._enabled;
 	}
 
@@ -269,6 +264,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private var textField:TextField;
 	private var promptTextField:TextField;
+	private var errorStringCallout:TextCallout;
 
 	private var _previousText:String = null;
 	private var _previousPrompt:String = null;
@@ -439,6 +435,45 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._displayAsPassword = value;
 		this.setInvalid(DATA);
 		return this._displayAsPassword;
+	}
+
+	private var _errorString:String = null;
+
+	/**
+		Error text to display in a `TextCallout` when the text input has focus.
+		When this value is not `null` the text input's `currentState` is
+		changed to `TextInputState.ERROR`.
+
+		An empty string will change the background, but no `TextCallout` will
+		appear on focus.
+
+		To clear an error, the `errorString` property must be set to `null`.
+
+		The following example displays an error string:
+
+		```hx
+		input.errorString = "Something is wrong";
+		```
+
+		@see `TextInput.currentState`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var errorString(get, set):String;
+
+	private function get_errorString():String {
+		return this._errorString;
+	}
+
+	private function set_errorString(value:String):String {
+		if (this._errorString == value) {
+			return this._errorString;
+		}
+		this._errorString = value;
+		this.refreshState();
+		this.setInvalid(DATA);
+		return this._text;
 	}
 
 	/**
@@ -950,6 +985,12 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		this.measure();
 		this.layoutContent();
+
+		// the state might not change if the text input has focus when
+		// the error string changes, so check for data too!
+		if (stateInvalid || dataInvalid) {
+			this.refreshErrorString();
+		}
 	}
 
 	private function refreshBackgroundSkin():Void {
@@ -1523,6 +1564,36 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 	}
 
+	private function refreshErrorString():Void {
+		if (this._currentState == FOCUSED && this.errorStringCallout == null && this._errorString != null && this._errorString.length > 0) {
+			this.createErrorStringCallout();
+		} else if (this.errorStringCallout != null
+			&& (this._currentState != FOCUSED || this._errorString == null || this._errorString.length == 0)) {
+			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+			this.errorStringCallout = null;
+		}
+		if (this.errorStringCallout != null) {
+			this.errorStringCallout.text = this._errorString;
+		}
+	}
+
+	private function createErrorStringCallout():Void {
+		if (this.errorStringCallout != null) {
+			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+			this.errorStringCallout = null;
+		}
+
+		if (this._errorString == null) {
+			return;
+		}
+		this.errorStringCallout = new TextCallout();
+		// var errorCalloutStyleName:String = this._customErrorCalloutStyleName != null ? this._customErrorCalloutStyleName : this.errorCalloutStyleName;
+		// this.errorStringCallout.styleNameList.add(errorCalloutStyleName);
+		this.errorStringCallout.origin = this;
+		this.errorStringCallout.closeOnPointerOutside = false;
+		PopUpManager.addPopUp(this.errorStringCallout, this, false, false);
+	}
+
 	private function changeState(state:TextInputState):Void {
 		if (!this._enabled) {
 			state = DISABLED;
@@ -1533,6 +1604,30 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._currentState = state;
 		this.setInvalid(STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
+	private function refreshState():Void {
+		if (this._enabled) {
+			// this component can have focus while its text editor does not
+			// have focus. StageText, in particular, can't receive focus
+			// when its enabled property is false, but we still want to show
+			// that the input is focused.
+			var focused = false;
+			if (this._focusManager != null) {
+				focused = this._focusManager.focus == this;
+			} else if (this.stage != null) {
+				focused = this.stage.focus == this.textField;
+			}
+			if (focused) {
+				this.changeState(FOCUSED);
+			} else if (this._errorString != null) {
+				this.changeState(ERROR);
+			} else {
+				this.changeState(ENABLED);
+			}
+		} else {
+			this.changeState(TextInputState.DISABLED);
+		}
 	}
 
 	private function textField_changeHandler(event:Event):Void {
@@ -1571,14 +1666,17 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 				this._focusManager.focus = this;
 			}
 		}
+		this.refreshState();
 	}
 
 	private function textField_focusInHandler(event:FocusEvent):Void {
-		this.changeState(FOCUSED);
+		if (this._focusManager != null) {
+			this._focusManager.focus = this;
+		}
 	}
 
 	private function textField_focusOutHandler(event:FocusEvent):Void {
-		this.changeState(ENABLED);
+		this.refreshState();
 	}
 
 	private function textInput_textFormat_changeHandler(event:Event):Void {
