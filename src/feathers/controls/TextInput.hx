@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.InvalidationFlag;
 import feathers.core.PopUpManager;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
@@ -64,6 +65,8 @@ import openfl.ui.Keyboard;
 @defaultXmlProperty("text")
 @:styleContext
 class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl implements IStageFocusDelegate {
+	private static final INVALIDATION_FLAG_ERROR_CALLOUT_FACTORY = InvalidationFlag.CUSTOM("errorCalloutFactory");
+
 	/**
 		A variant used to style the text input as a search box. Variants allow
 		themes to provide an assortment of different appearances for the same
@@ -81,6 +84,21 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@since 1.0.0
 	**/
 	public static final VARIANT_SEARCH = "search";
+
+	/**
+		The variant used to style the error string `TextCallout` child component
+		in a theme.
+
+		To override this default variant, set the
+		`TextInput.customErrorCalloutVariant` property.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `TextInput.customErrorCalloutVariant`
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_ERROR_CALLOUT = "textInput_errorCallout";
 
 	/**
 		Creates a new `TextInput` object.
@@ -765,6 +783,22 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	@:style
 	public var autoSizeWidth:Bool = false;
 
+	private var _previousCustomErrorCalloutVariant:String = null;
+
+	/**
+		A custom variant to set on the error callout, instead of
+		`TextInput.CHILD_VARIANT_ERROR_CALLOUT`.
+
+		The `customErrorCalloutVariant` will be not be used if the `TextCallout`
+		already has a variant set.
+
+		@see `TextInput.CHILD_VARIANT_ERROR_CALLOUT`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customErrorCalloutVariant:String = null;
+
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
 	private var _promptTextMeasuredWidth:Float;
@@ -948,9 +982,19 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomErrorCalloutVariant != this.customErrorCalloutVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_ERROR_CALLOUT_FACTORY);
+		}
+		var errorCalloutFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_ERROR_CALLOUT_FACTORY);
 
 		this._updatedTextStyles = false;
 		this._updatedPromptStyles = false;
+
+		// the state might not change if the text input has focus when
+		// the error string changes, so check for data too!
+		if (errorCalloutFactoryInvalid || dataInvalid) {
+			this.createErrorCallout();
+		}
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
@@ -988,7 +1032,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		// the state might not change if the text input has focus when
 		// the error string changes, so check for data too!
-		if (stateInvalid || dataInvalid) {
+		if (errorCalloutFactoryInvalid || stateInvalid || dataInvalid) {
 			this.refreshErrorString();
 		}
 	}
@@ -1565,33 +1609,35 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshErrorString():Void {
-		if (this._currentState == FOCUSED && this.errorStringCallout == null && this._errorString != null && this._errorString.length > 0) {
-			this.createErrorStringCallout();
-		} else if (this.errorStringCallout != null
-			&& (this._currentState != FOCUSED || this._errorString == null || this._errorString.length == 0)) {
-			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
-			this.errorStringCallout = null;
+		if (this.errorStringCallout == null) {
+			return;
 		}
-		if (this.errorStringCallout != null) {
-			this.errorStringCallout.text = this._errorString;
+
+		this.errorStringCallout.text = this._errorString;
+		if (this._currentState == FOCUSED && this.errorStringCallout.parent == null) {
+			PopUpManager.addPopUp(this.errorStringCallout, this, false, false);
+		} else if (this._currentState != FOCUSED && this.errorStringCallout.parent != null) {
+			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
 		}
 	}
 
-	private function createErrorStringCallout():Void {
+	private function createErrorCallout():Void {
 		if (this.errorStringCallout != null) {
-			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+			if (this.errorStringCallout.parent != null) {
+				this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+			}
 			this.errorStringCallout = null;
 		}
 
-		if (this._errorString == null) {
+		if (this._errorString == null || this._errorString.length == 0) {
 			return;
 		}
 		this.errorStringCallout = new TextCallout();
-		// var errorCalloutStyleName:String = this._customErrorCalloutStyleName != null ? this._customErrorCalloutStyleName : this.errorCalloutStyleName;
-		// this.errorStringCallout.styleNameList.add(errorCalloutStyleName);
+		if (this.errorStringCallout.variant == null) {
+			this.errorStringCallout.variant = this.customErrorCalloutVariant != null ? this.customErrorCalloutVariant : TextInput.CHILD_VARIANT_ERROR_CALLOUT;
+		}
 		this.errorStringCallout.origin = this;
 		this.errorStringCallout.closeOnPointerOutside = false;
-		PopUpManager.addPopUp(this.errorStringCallout, this, false, false);
 	}
 
 	private function changeState(state:TextInputState):Void {

@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.controls.TextCallout;
 import feathers.skins.PillSkin;
 import feathers.controls.TextInputState;
 import feathers.controls.TextInput;
@@ -89,6 +90,11 @@ class SteelTextInputStyles {
 				input.paddingRight = 10.0;
 				input.paddingBottom = 6.0;
 				input.paddingLeft = 10.0;
+			});
+		}
+		if (styleProvider.getStyleFunction(TextCallout, TextInput.CHILD_VARIANT_ERROR_CALLOUT) == null) {
+			styleProvider.setStyleFunction(TextCallout, TextInput.CHILD_VARIANT_ERROR_CALLOUT, function(callout:TextCallout):Void {
+				theme.styleProvider.getStyleFunction(TextCallout, TextCallout.VARIANT_DANGER)(callout);
 			});
 		}
 	}
