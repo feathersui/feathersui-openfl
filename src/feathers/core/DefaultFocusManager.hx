@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.errors.ArgumentError;
 import feathers.controls.IGroupedToggle;
 import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
@@ -157,6 +158,9 @@ class DefaultFocusManager implements IFocusManager {
 				this.setStageFocus(cast(value, InteractiveObject));
 			}
 			return this._focus;
+		}
+		if (value != null && value.focusManager != this) {
+			throw new ArgumentError("Failed to change focus. Object is not managed by this focus manager: " + value);
 		}
 		if (this._focus != null) {
 			if ((this._focus is IUIControl)) {
