@@ -8,13 +8,10 @@
 
 package feathers.controls;
 
-import feathers.core.ScreenDensityScaleManager;
 import feathers.core.IFocusManagerAware;
+import feathers.core.IScaleManager;
 import feathers.core.PopUpManager;
 import feathers.themes.steel.components.SteelApplicationStyles;
-import feathers.core.IScaleManager;
-import feathers.utils.MathUtil;
-import feathers.utils.ScreenDensityScaleCalculator;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -24,10 +21,6 @@ import feathers.core.FocusManager;
 #if !disable_tool_tip_manager
 import feathers.core.IToolTipManager;
 import feathers.core.ToolTipManager;
-#end
-#if !((desktop && !air) || (web && !flash))
-import feathers.utils.DeviceUtil;
-import openfl.system.Capabilities;
 #end
 #if flash
 import openfl.display.StageAlign;

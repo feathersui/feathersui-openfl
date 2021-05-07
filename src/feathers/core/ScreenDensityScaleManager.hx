@@ -9,12 +9,16 @@
 package feathers.core;
 
 import feathers.events.FeathersEvent;
-import openfl.events.Event;
 import feathers.utils.MathUtil;
 import feathers.utils.ScreenDensityScaleCalculator;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.geom.Rectangle;
+#if !((desktop && !air) || (web && !flash))
+import feathers.utils.DeviceUtil;
+import openfl.system.Capabilities;
+#end
 
 /**
 
