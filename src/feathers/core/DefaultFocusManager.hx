@@ -274,7 +274,7 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	private function clearFocusManager(target:DisplayObject):Void {
-		if ((target is IFocusObject)) {
+		if ((target is IFocusManagerAware)) {
 			var targetWithFocus = cast(target, IFocusObject);
 			if (targetWithFocus.focusManager == this) {
 				if (this._focus == targetWithFocus) {
