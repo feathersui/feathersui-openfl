@@ -9,6 +9,7 @@
 package feathers.themes.steel.components;
 
 import feathers.controls.Application;
+import feathers.core.ScreenDensityScaleManager;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -36,6 +37,9 @@ class SteelApplicationStyles {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getRootFill();
 					app.backgroundSkin = skin;
+				}
+				if (app.scaleManager == null) {
+					app.scaleManager = new ScreenDensityScaleManager();
 				}
 			});
 		}
