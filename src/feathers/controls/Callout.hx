@@ -636,6 +636,11 @@ class Callout extends FeathersControl {
 	private var _ignoreContentResize:Bool = false;
 
 	/**
+		@since 1.0.0
+	**/
+	public var closeOnPointerOutside:Bool = true;
+
+	/**
 		Closes the callout, if opened.
 
 		When the callout closes, it will dispatch an event of type
@@ -1266,6 +1271,9 @@ class Callout extends FeathersControl {
 	}
 
 	private function callout_stage_mouseDownHandler(event:MouseEvent):Void {
+		if (!this.closeOnPointerOutside) {
+			return;
+		}
 		if (this.hitTestPoint(event.stageX, event.stageY)) {
 			return;
 		}
@@ -1275,6 +1283,9 @@ class Callout extends FeathersControl {
 	private function callout_stage_touchBeginHandler(event:TouchEvent):Void {
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
+		if (!this.closeOnPointerOutside) {
 			return;
 		}
 		if (this.hitTestPoint(event.stageX, event.stageY)) {
