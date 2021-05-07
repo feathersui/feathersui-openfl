@@ -841,7 +841,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function popUpListView_listView_focusOutHandler(event:FocusEvent):Void {
-		#if (openfl > "9.1.0")
+		#if (flash || openfl > "9.1.0")
 		this.closeListView();
 		#end
 	}

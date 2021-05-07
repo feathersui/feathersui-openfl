@@ -940,7 +940,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_textInput_focusOutHandler(event:FocusEvent):Void {
-		#if (openfl > "9.1.0")
+		#if (flash || openfl > "9.1.0")
 		this.closeListView();
 		#end
 	}
