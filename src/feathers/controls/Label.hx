@@ -661,6 +661,8 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
 		} else if (this.explicitMaxWidth != null) {
 			textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
+		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
+			textFieldExplicitWidth = this._backgroundSkinMeasurements.maxWidth - this.paddingLeft - this.paddingRight;
 		}
 		if (textFieldExplicitWidth == null && this.wordWrap) {
 			// to get an accurate measurement, we need to temporarily disable
@@ -761,6 +763,8 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 				textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
 			} else if (this.explicitMaxWidth != null) {
 				textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
+			} else if (this.actualMaxWidth < (1.0 / 0.0)) {
+				textFieldExplicitWidth = this.actualMaxWidth - this.paddingLeft - this.paddingRight;
 			}
 			if (textFieldExplicitWidth == null) {
 				// sometimes, using the width measured with wrapping disabled
