@@ -39,6 +39,24 @@ import openfl.display.DisplayObject;
 @:styleContext
 class TextCallout extends Callout implements ITextControl {
 	/**
+		A variant used to style the callout in a style that indicates that
+		something related to the origin is considered dangerous or in error.
+		Variants allow themes to provide an assortment of different appearances
+		for the same type of UI component.
+
+		The following example uses this variant:
+
+		```hx
+		callout.variant = TextCallout.VARIANT_DANGER;
+		```
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final VARIANT_DANGER = "danger";
+
+	/**
 		Creates a text callout, and then positions and sizes it automatically
 		based based on an origin component and an optional set of positions.
 
