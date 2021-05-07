@@ -38,6 +38,7 @@ class SteelToolTipStyles {
 					backgroundSkin.border = theme.getBorder();
 					backgroundSkin.fill = theme.getContainerFill();
 					backgroundSkin.cornerRadius = 2.0;
+					backgroundSkin.maxWidth = 276.0;
 					label.backgroundSkin = backgroundSkin;
 				}
 				if (label.textFormat == null) {
