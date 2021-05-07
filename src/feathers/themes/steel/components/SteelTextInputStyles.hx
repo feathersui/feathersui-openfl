@@ -42,6 +42,7 @@ class SteelTextInputStyles {
 					inputSkin.border = theme.getInsetBorder();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
 					inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
+					inputSkin.setBorderForState(ERROR, theme.getDangerBorder());
 					input.backgroundSkin = inputSkin;
 				}
 
