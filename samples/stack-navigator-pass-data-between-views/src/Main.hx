@@ -1,16 +1,24 @@
-import valueObjects.Contact;
-import feathers.data.ArrayCollection;
+import events.ContactEvent;
 import feathers.controls.Application;
 import feathers.controls.navigators.StackItem;
 import feathers.controls.navigators.StackNavigator;
+import feathers.data.ArrayCollection;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
 import openfl.events.Event;
-import views.ComposeMessageView;
+import valueObjects.Contact;
 import views.ChooseContactView;
-import events.ContactEvent;
+import views.ComposeMessageView;
 
 class Main extends Application {
 	public function new() {
 		super();
+	}
+
+	override private function initialize():Void {
+		super.initialize();
+
+		this.layout = new AnchorLayout();
 
 		// the full list of contacts
 		var contacts = new ArrayCollection([
@@ -20,6 +28,7 @@ class Main extends Application {
 		]);
 
 		var navigator = new StackNavigator();
+		navigator.layoutData = AnchorLayoutData.fill();
 
 		navigator.addItem(StackItem.withClass(ComposeMessageView.ID, ComposeMessageView, [
 			ContactEvent.REQUEST_CONTACT => NewAction((event:ContactEvent) -> {
@@ -33,26 +42,26 @@ class Main extends Application {
 				});
 			})
 		], [
-				// when ChooseContactView is popped, we need to handle its
-				// returned object
-				ChooseContactView.ID => (composeView:ComposeMessageView, result:Contact) -> {
-					// return the new recipient to the compose message view
-					composeView.recipient = result;
-				}
-			]));
+			// when ChooseContactView is popped, we need to handle its
+			// returned object
+			ChooseContactView.ID => (composeView:ComposeMessageView, result:Contact) -> {
+				// return the new recipient to the compose message view
+				composeView.recipient = result;
+			}
+		]));
 
 		navigator.addItem(StackItem.withFunction(ChooseContactView.ID, () -> {
 			var picker = new ChooseContactView();
 			picker.contacts = contacts;
 			return picker;
 		}, [
-				ContactEvent.CHOOSE_CONTACT => NewAction((event:ContactEvent) -> {
-					var contact = event.contact;
+			ContactEvent.CHOOSE_CONTACT => NewAction((event:ContactEvent) -> {
+				var contact = event.contact;
 
-					// return the selected contact to the previous screen
-					return Pop(contact);
-				})
-			]));
+				// return the selected contact to the previous screen
+				return Pop(contact);
+			})
+		]));
 
 		this.addChild(navigator);
 

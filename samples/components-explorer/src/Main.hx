@@ -1,3 +1,5 @@
+import feathers.layout.AnchorLayoutData;
+import feathers.layout.AnchorLayout;
 import com.feathersui.components.ViewPaths;
 import com.feathersui.components.views.AlertScreen;
 import com.feathersui.components.views.AssetLoaderScreen;
@@ -55,12 +57,15 @@ class Main extends Application {
 	private var _navigator:RouterNavigator;
 
 	override private function initialize():Void {
+		this.layout = new AnchorLayout();
+
 		this._navigator = new RouterNavigator();
 		#if feathersui.com
 		// to build for the feathersui.com website, run the following command:
 		// haxelib run openfl build html5 -final --haxedef=feathersui.com
 		this._navigator.basePath = "/samples/haxe-openfl/components-explorer";
 		#end
+		this._navigator.layoutData = AnchorLayoutData.fill();
 		this.addChild(this._navigator);
 
 		var mainMenu = Route.withClass(ViewPaths.MAIN_MENU, MainMenu, [Event.CHANGE => NewAction(createPushPathAction)]);
