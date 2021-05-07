@@ -8,30 +8,29 @@
 
 package feathers.controls;
 
-import openfl.display.InteractiveObject;
-import feathers.core.IStageFocusDelegate;
-import feathers.events.ListViewEvent;
-import feathers.core.IFocusObject;
-import feathers.core.IIndexSelector;
-import openfl.events.FocusEvent;
 import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.data.ListViewItemState;
-import openfl.display.DisplayObject;
-import feathers.themes.steel.components.SteelComboBoxStyles;
-import openfl.events.TouchEvent;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
-import feathers.events.FeathersEvent;
-import openfl.events.Event;
-import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
-import feathers.layout.Measurements;
+import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
-import feathers.controls.popups.DropDownPopUpAdapter;
+import feathers.core.IIndexSelector;
+import feathers.core.IStageFocusDelegate;
+import feathers.core.InvalidationFlag;
+import feathers.data.IFlatCollection;
+import feathers.data.ListViewItemState;
+import feathers.events.FeathersEvent;
+import feathers.events.ListViewEvent;
+import feathers.layout.Measurements;
+import feathers.themes.steel.components.SteelComboBoxStyles;
+import feathers.utils.DisplayObjectRecycler;
+import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
+import openfl.events.Event;
+import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -615,6 +614,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.open || this.stage == null) {
 			return;
 		}
+		this.listView.focusManager = this._focusManager;
 		this._filterText = "";
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
@@ -721,6 +721,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.button.variant == null) {
 			this.button.variant = this.customButtonVariant != null ? this.customButtonVariant : ComboBox.CHILD_VARIANT_BUTTON;
 		}
+		this.button.focusEnabled = false;
 		this.button.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_button_mouseDownHandler);
 		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, comboBox_button_touchBeginHandler);
 		this.button.initializeNow();
@@ -733,6 +734,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.removeEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
+			this.textInput.removeEventListener(FocusEvent.FOCUS_OUT, comboBox_textInput_focusOutHandler);
 			this.removeChild(this.textInput);
 			this.textInput = null;
 		}
@@ -744,6 +746,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.textInput.addEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 		this.textInput.addEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 		this.textInput.addEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
+		this.textInput.addEventListener(FocusEvent.FOCUS_OUT, comboBox_textInput_focusOutHandler);
 		this.textInput.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
 		this.addChild(this.textInput);
@@ -757,6 +760,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this.listView = factory();
+		this.listView.focusEnabled = false;
 		if (this.listView.variant == null) {
 			this.listView.variant = this.customListViewVariant != null ? this.customListViewVariant : ComboBox.CHILD_VARIANT_LIST_VIEW;
 		}
@@ -935,6 +939,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 	}
 
+	private function comboBox_textInput_focusOutHandler(event:FocusEvent):Void {
+		#if (openfl > "9.1.0")
+		this.closeListView();
+		#end
+	}
+
 	private function comboBox_button_mouseDownHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
@@ -987,7 +997,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, comboBox_listView_removedFromStageHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_stage_touchBeginHandler);
-		this.closeListView();
 	}
 
 	private function comboBox_focusInHandler(event:FocusEvent):Void {

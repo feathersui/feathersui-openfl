@@ -8,31 +8,30 @@
 
 package feathers.controls;
 
-import openfl.display.InteractiveObject;
-import feathers.core.IStageFocusDelegate;
-import feathers.events.ListViewEvent;
-import openfl.events.FocusEvent;
-import feathers.core.IFocusObject;
-import feathers.core.IIndexSelector;
-import feathers.utils.MeasurementsUtil;
 import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.data.ListViewItemState;
-import openfl.display.DisplayObject;
-import feathers.themes.steel.components.SteelPopUpListViewStyles;
-import openfl.events.TouchEvent;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import feathers.events.FeathersEvent;
-import openfl.events.Event;
-import feathers.core.InvalidationFlag;
-import feathers.data.IFlatCollection;
-import feathers.layout.Measurements;
-import feathers.core.PopUpManager;
-import openfl.events.MouseEvent;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
+import feathers.core.IIndexSelector;
+import feathers.core.IStageFocusDelegate;
+import feathers.core.InvalidationFlag;
+import feathers.core.PopUpManager;
+import feathers.data.IFlatCollection;
+import feathers.data.ListViewItemState;
+import feathers.events.FeathersEvent;
+import feathers.events.ListViewEvent;
+import feathers.layout.Measurements;
+import feathers.themes.steel.components.SteelPopUpListViewStyles;
+import feathers.utils.DisplayObjectRecycler;
+import feathers.utils.MeasurementsUtil;
+import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
+import openfl.events.Event;
+import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -521,6 +520,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.open || this.stage == null) {
 			return;
 		}
+		this.listView.focusManager = this._focusManager;
 		if (this.popUpAdapter != null) {
 			this.popUpAdapter.addEventListener(Event.OPEN, popUpListView_popUpAdapter_openHandler);
 			this.popUpAdapter.addEventListener(Event.CLOSE, popUpListView_popUpAdapter_closeHandler);
@@ -530,11 +530,16 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			FeathersEvent.dispatch(this, Event.OPEN);
 		}
 		this.listView.validateNow();
-		this.stage.focus = this.listView;
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
+		this.listView.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
 		this.listView.scrollToIndex(this._selectedIndex);
+		if (this._focusManager != null) {
+			this._focusManager.focus = this.listView;
+		} else {
+			this.stage.focus = this.listView;
+		}
 	}
 
 	/**
@@ -562,8 +567,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (!this.open) {
 			return;
 		}
-		// TODO: fix this when focus manager is implemented
-		this.stage.focus = this;
+		if (this._focusManager == null) {
+			this.stage.focus = this;
+		}
 		if (this.popUpAdapter != null) {
 			this.popUpAdapter.close();
 		} else {
@@ -617,6 +623,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function createButton():Void {
 		if (this.button != null) {
+			this.button.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
 			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
@@ -628,6 +635,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.button.variant == null) {
 			this.button.variant = this.customButtonVariant != null ? this.customButtonVariant : PopUpListView.CHILD_VARIANT_BUTTON;
 		}
+		this.button.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 		this.button.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
 		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
 		this.button.addEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
@@ -648,6 +656,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.listView.variant == null) {
 			this.listView.variant = this.customListViewVariant != null ? this.customListViewVariant : PopUpListView.CHILD_VARIANT_LIST_VIEW;
 		}
+		this.listView.focusOwner = this;
 		this.listView.addEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
 		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);
 		this.listView.addEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
@@ -826,8 +835,15 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function popUpListView_listView_removedFromStageHandler(event:Event):Void {
 		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
+		this.listView.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler);
+	}
+
+	private function popUpListView_listView_focusOutHandler(event:FocusEvent):Void {
+		#if (openfl > "9.1.0")
+		this.closeListView();
+		#end
 	}
 
 	private function popUpListView_focusInHandler(event:FocusEvent):Void {
@@ -838,6 +854,15 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 				this._focusManager.focus = this;
 			}
 		}
+	}
+
+	private function popUpListView_button_focusOutHandler(event:FocusEvent):Void {
+		if (event.relatedObject != null && (event.relatedObject == this.listView || this.listView.contains(event.relatedObject))) {
+			return;
+		}
+		// when the ListView loses focus, it's supposed to close. however, some
+		// versions of OpenFL had some focus bugs that would prevent this
+		this.closeListView();
 	}
 
 	private function popUpListView_removedFromStageHandler(event:Event):Void {
