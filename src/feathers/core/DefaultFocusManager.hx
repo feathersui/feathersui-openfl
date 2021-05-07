@@ -192,7 +192,7 @@ class DefaultFocusManager implements IFocusManager {
 		var newFocus:IFocusObject = null;
 		var wrapped = false;
 		var currentFocus = this._focus;
-		if (currentFocus != null) {
+		if (currentFocus != null && currentFocus.focusOwner != null) {
 			var focusOwner = currentFocus.focusOwner;
 			if (focusOwner != null && focusOwner.focusManager != this) {
 				focusOwner = null;
