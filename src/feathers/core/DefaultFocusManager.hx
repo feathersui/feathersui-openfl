@@ -255,29 +255,22 @@ class DefaultFocusManager implements IFocusManager {
 		}
 		var container = Std.downcast(target, DisplayObjectContainer);
 		if (container != null) {
-			var setChildrenFocusManager = !(target is IFocusObject);
-			if (!setChildrenFocusManager && (target is IFocusContainer)) {
-				var focusContainer = cast(target, IFocusContainer);
-				setChildrenFocusManager = focusContainer.childFocusEnabled;
+			for (i in 0...container.numChildren) {
+				var child = container.getChildAt(i);
+				this.setFocusManager(child);
 			}
-			if (setChildrenFocusManager) {
-				for (i in 0...container.numChildren) {
-					var child = container.getChildAt(i);
-					this.setFocusManager(child);
-				}
-				if ((container is IFocusExtras)) {
-					var containerWithExtras = cast(container, IFocusExtras);
-					var extras = containerWithExtras.focusExtrasBefore;
-					if (extras != null) {
-						for (child in extras) {
-							this.setFocusManager(child);
-						}
+			if ((container is IFocusExtras)) {
+				var containerWithExtras = cast(container, IFocusExtras);
+				var extras = containerWithExtras.focusExtrasBefore;
+				if (extras != null) {
+					for (child in extras) {
+						this.setFocusManager(child);
 					}
-					extras = containerWithExtras.focusExtrasAfter;
-					if (extras != null) {
-						for (child in extras) {
-							this.setFocusManager(child);
-						}
+				}
+				extras = containerWithExtras.focusExtrasAfter;
+				if (extras != null) {
+					for (child in extras) {
+						this.setFocusManager(child);
 					}
 				}
 			}
