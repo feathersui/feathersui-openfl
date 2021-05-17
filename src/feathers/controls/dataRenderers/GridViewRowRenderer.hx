@@ -33,6 +33,11 @@ import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
+#if (openfl >= "9.1.0")
+import openfl.utils.ObjectPool;
+#else
+import openfl._internal.utils.ObjectPool;
+#end
 
 /**
 	Renders a row of data in the `GridView` component.
@@ -45,6 +50,8 @@ import openfl.ui.Multitouch;
 @:access(feathers.data.GridViewCellState)
 class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
+
+	private static final RESET_CELL_STATE = new GridViewCellState();
 
 	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
 		if ((cellRenderer is ITextControl)) {
@@ -72,9 +79,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	private var _defaultStorage:CellRendererStorage = new CellRendererStorage();
 	private var _additionalStorage:Array<CellRendererStorage> = null;
 	private var _unrenderedData:Array<Int> = [];
-	private var _currentCellState:GridViewCellState = new GridViewCellState();
 	private var _columnToCellRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
-	private var _cellRendererToColumn = new ObjectMap<DisplayObject, GridViewColumn>();
+	private var _cellRendererToCellState = new ObjectMap<DisplayObject, GridViewCellState>();
+	private var cellStatePool = new ObjectPool(() -> new GridViewCellState());
 
 	private var _gridView:GridView;
 
@@ -273,6 +280,16 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
+	public function columnToCellRenderer(column:GridViewColumn):DisplayObject {
+		return this._columnToCellRenderer.get(column);
+	}
+
+	private function updateCells():Void {
+		for (i in 0...this._columns.length) {
+			this.updateCellRendererForColumnIndex(i);
+		}
+	}
+
 	override private function update():Void {
 		// children are allowed to change during update() in a subclass up
 		// until it calls super.update().
@@ -367,7 +384,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			var cellRenderer = this._columnToCellRenderer.get(column);
 			if (cellRenderer != null) {
 				var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
-				this.refreshCellRendererProperties(cellRenderer, i, column);
+				var state = this._cellRendererToCellState.get(cellRenderer);
+				this.populateCurrentItemState(column, i, state);
+				this.updateCellRenderer(cellRenderer, state, storage);
 				this.setChildIndex(cellRenderer, i);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
 				if (!removed) {
@@ -399,67 +418,35 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function recoverInactiveCellRenderers(storage:CellRendererStorage):Void {
-		var cellRendererRecycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 		for (cellRenderer in storage.inactiveCellRenderers) {
 			if (cellRenderer == null) {
 				continue;
 			}
-			var column = this._cellRendererToColumn.get(cellRenderer);
-			if (column == null) {
-				return;
+			var state = this._cellRendererToCellState.get(cellRenderer);
+			if (state == null) {
+				continue;
 			}
-			this._cellRendererToColumn.remove(cellRenderer);
+			var column = state.column;
+			this._cellRendererToCellState.remove(cellRenderer);
 			this._columnToCellRenderer.remove(column);
 			cellRenderer.removeEventListener(MouseEvent.CLICK, gridViewRowRenderer_cellRenderer_clickHandler);
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
 			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
 			cellRenderer.removeEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
-			this._currentCellState.owner = this._gridView;
-			this._currentCellState.data = this._data;
-			this._currentCellState.rowIndex = -1;
-			this._currentCellState.columnIndex = -1;
-			this._currentCellState.column = column;
-			this._currentCellState.selected = false;
-			this._currentCellState.enabled = true;
-			this._currentCellState.text = null;
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			if (cellRendererRecycler != null && cellRendererRecycler.reset != null) {
-				cellRendererRecycler.reset(cellRenderer, this._currentCellState);
-			}
-			if ((cellRenderer is IUIControl)) {
-				var uiControl = cast(cellRenderer, IUIControl);
-				uiControl.enabled = this._currentCellState.enabled;
-			}
-			if ((cellRenderer is IToggle)) {
-				var toggle = cast(cellRenderer, IToggle);
-				toggle.selected = this._currentCellState.selected;
-			}
-			if ((cellRenderer is IDataRenderer)) {
-				var dataRenderer = cast(cellRenderer, IDataRenderer);
-				dataRenderer.data = this._currentCellState.data;
-			}
-			if ((cellRenderer is IGridViewCellRenderer)) {
-				var gridCell = cast(cellRenderer, IGridViewCellRenderer);
-				gridCell.column = this._currentCellState.column;
-				gridCell.columnIndex = this._currentCellState.columnIndex;
-				gridCell.rowIndex = this._currentCellState.rowIndex;
-			}
-			if ((cellRenderer is ILayoutIndexObject)) {
-				var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
-				layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
-			}
+			this.resetCellRenderer(cellRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(cellRenderer);
 			}
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+			this.cellStatePool.release(state);
 		}
 	}
 
 	private function renderUnrenderedData():Void {
 		for (columnIndex in this._unrenderedData) {
 			var column = this._columns.get(columnIndex);
-			var cellRenderer = this.createCellRenderer(columnIndex, column);
+			var state = this.cellStatePool.get();
+			this.populateCurrentItemState(column, columnIndex, state);
+			var cellRenderer = this.createCellRenderer(state);
 			this.addChild(cellRenderer);
 		}
 		this._unrenderedData.resize(0);
@@ -476,7 +463,8 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		storage.inactiveCellRenderers.resize(0);
 	}
 
-	private function createCellRenderer(columnIndex:Int, column:GridViewColumn):DisplayObject {
+	private function createCellRenderer(state:GridViewCellState):DisplayObject {
+		var column = state.column;
 		var cellRenderer:DisplayObject = null;
 		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		if (storage.inactiveCellRenderers.length == 0) {
@@ -494,7 +482,8 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		} else {
 			cellRenderer = storage.inactiveCellRenderers.shift();
 		}
-		this.refreshCellRendererProperties(cellRenderer, columnIndex, column);
+		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
+		this.updateCellRenderer(cellRenderer, state, storage);
 		if ((cellRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			cellRenderer.addEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
@@ -508,7 +497,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if ((cellRenderer is IToggle)) {
 			cellRenderer.addEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
 		}
-		this._cellRendererToColumn.set(cellRenderer, column);
+		this._cellRendererToCellState.set(cellRenderer, state);
 		this._columnToCellRenderer.set(column, cellRenderer);
 		storage.activeCellRenderers.push(cellRenderer);
 		return cellRenderer;
@@ -522,60 +511,89 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
-	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int):Void {
-		this._currentCellState.owner = this._gridView;
-		this._currentCellState.data = this._data;
-		this._currentCellState.rowIndex = this._rowIndex;
-		this._currentCellState.columnIndex = columnIndex;
-		this._currentCellState.column = column;
-		this._currentCellState.selected = this._selected;
-		this._currentCellState.enabled = this._enabled;
-		this._currentCellState.text = column.itemToText(this._data);
+	private function updateCellRendererForColumnIndex(columnIndex:Int):Void {
+		var column = this._columns.get(columnIndex);
+		var cellRenderer = this._columnToCellRenderer.get(column);
+		if (cellRenderer == null) {
+			// doesn't exist yet, so we need to do a full invalidation
+			this.setInvalid(DATA);
+			return;
+		}
+		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		this.populateCurrentItemState(column, columnIndex, state);
+		// in order to display the same item with modified properties, this
+		// hack tricks the item renderer into thinking that it has been given
+		// a different item to render.
+		this.resetCellRenderer(cellRenderer, state, storage);
+		this.updateCellRenderer(cellRenderer, state, storage);
 	}
 
-	private function refreshCellRendererProperties(cellRenderer:DisplayObject, columnIndex:Int, column:GridViewColumn):Void {
-		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
-		this.populateCurrentItemState(column, columnIndex);
+	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int, state:GridViewCellState):Void {
+		state.owner = this._gridView;
+		state.data = this._data;
+		state.rowIndex = this._rowIndex;
+		state.columnIndex = columnIndex;
+		state.column = column;
+		state.selected = this._selected;
+		state.enabled = this._enabled;
+		state.text = (this._rowIndex != -1) ? column.itemToText(this._data) : null;
+	}
+
+	private function updateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState, storage:CellRendererStorage):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (storage.cellRendererRecycler.update != null) {
-			storage.cellRendererRecycler.update(cellRenderer, this._currentCellState);
+			storage.cellRendererRecycler.update(cellRenderer, state);
 		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshCellRendererProperties(cellRenderer, state);
+	}
+
+	private function resetCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState, storage:CellRendererStorage):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		var recycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(cellRenderer, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshCellRendererProperties(cellRenderer, RESET_CELL_STATE);
+	}
+
+	private function refreshCellRendererProperties(cellRenderer:DisplayObject, state:GridViewCellState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
 		if ((cellRenderer is IUIControl)) {
 			var uiControl = cast(cellRenderer, IUIControl);
-			uiControl.enabled = this._currentCellState.enabled;
+			uiControl.enabled = state.enabled;
 		}
 		if ((cellRenderer is IDataRenderer)) {
 			var dataRenderer = cast(cellRenderer, IDataRenderer);
 			// if the renderer is an IDataRenderer, this cannot be overridden
-			dataRenderer.data = this._data;
+			dataRenderer.data = state.data;
 		}
 		if ((cellRenderer is IToggle)) {
 			var toggle = cast(cellRenderer, IToggle);
 			// if the renderer is an IToggle, this cannot be overridden
-			toggle.selected = this._currentCellState.selected;
+			toggle.selected = state.selected;
 		}
 		if ((cellRenderer is IGridViewCellRenderer)) {
 			var gridCell = cast(cellRenderer, IGridViewCellRenderer);
-			gridCell.column = this._currentCellState.column;
-			gridCell.columnIndex = this._currentCellState.columnIndex;
-			gridCell.rowIndex = this._currentCellState.rowIndex;
+			gridCell.column = state.column;
+			gridCell.columnIndex = state.columnIndex;
+			gridCell.rowIndex = state.rowIndex;
+			gridCell.gridViewOwner = state.owner;
 		}
 		if ((cellRenderer is ILayoutIndexObject)) {
 			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
-			layoutIndexObject.layoutIndex = this._currentCellState.rowIndex;
+			layoutIndexObject.layoutIndex = state.rowIndex;
 		}
 		if ((cellRenderer is IPointerDelegate)) {
 			var pointerDelgate = cast(cellRenderer, IPointerDelegate);
-			pointerDelgate.pointerTarget = this;
+			pointerDelgate.pointerTarget = state.rowIndex == -1 ? null : this;
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
-	}
-
-	private function dispatchCellTriggerEvent(column:GridViewColumn):Void {
-		var columnIndex = this._columns.indexOf(column);
-		this.populateCurrentItemState(column, columnIndex);
-		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, this._currentCellState);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_touchTapHandler(event:TouchEvent):Void {
@@ -588,8 +606,8 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 		TriggerEvent.dispatchFromTouchEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
-		var column = this._cellRendererToColumn.get(cellRenderer);
-		this.dispatchCellTriggerEvent(column);
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_clickHandler(event:MouseEvent):Void {
@@ -598,8 +616,8 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 		TriggerEvent.dispatchFromMouseEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
-		var column = this._cellRendererToColumn.get(cellRenderer);
-		this.dispatchCellTriggerEvent(column);
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_triggerHandler(event:TriggerEvent):Void {
@@ -608,8 +626,8 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 		this.dispatchEvent(event.clone());
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
-		var column = this._cellRendererToColumn.get(cellRenderer);
-		this.dispatchCellTriggerEvent(column);
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_changeHandler(event:Event):Void {
@@ -628,7 +646,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
 			if (this._selected) {
 				var column = this._columns.get(0);
-				this.dispatchCellTriggerEvent(column);
+				var cellRenderer = this.columnToCellRenderer(column);
+				var state = this._cellRendererToCellState.get(cellRenderer);
+				GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 			}
 		}
 	}

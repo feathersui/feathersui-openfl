@@ -13,27 +13,27 @@ class TestMain extends Sprite {
 		openfl_root = this;
 
 		var runner = new Runner();
-		runner.addCase(new feathers.controls.AssetLoaderTest());
+		/*runner.addCase(new feathers.controls.AssetLoaderTest());
 		runner.addCase(new feathers.controls.BasicButtonMeasurementTest());
 		runner.addCase(new feathers.controls.BasicButtonTest());
 		runner.addCase(new feathers.controls.BasicToggleButtonTest());
-		runner.addCase(new feathers.controls.ButtonTest());
+		runner.addCase(new feathers.controls.ButtonTest());*/
 		runner.addCase(new feathers.controls.GridViewTest());
 		runner.addCase(new feathers.controls.GroupListViewTest());
-		runner.addCase(new feathers.controls.HProgressBarTest());
+		/*runner.addCase(new feathers.controls.HProgressBarTest());
 		runner.addCase(new feathers.controls.HScrollBarTest());
 		runner.addCase(new feathers.controls.HSliderTest());
 		runner.addCase(new feathers.controls.LabelTest());
-		runner.addCase(new feathers.controls.LayoutGroupTest());
+		runner.addCase(new feathers.controls.LayoutGroupTest());*/
 		runner.addCase(new feathers.controls.ListViewTest());
-		runner.addCase(new feathers.controls.navigators.StackNavigatorTest());
+		/*runner.addCase(new feathers.controls.navigators.StackNavigatorTest());
 		runner.addCase(new feathers.controls.ScrollContainerTest());
 		runner.addCase(new feathers.controls.TabBarTest());
 		runner.addCase(new feathers.controls.TextInputTest());
 		runner.addCase(new feathers.controls.ToggleButtonTest());
-		runner.addCase(new feathers.controls.ToggleSwitchTest());
+		runner.addCase(new feathers.controls.ToggleSwitchTest());*/
 		runner.addCase(new feathers.controls.TreeViewTest());
-		runner.addCase(new feathers.controls.VScrollBarTest());
+		/*runner.addCase(new feathers.controls.VScrollBarTest());
 		runner.addCase(new feathers.controls.VSliderTest());
 		runner.addCase(new feathers.core.ComponentLifecycleTest());
 		runner.addCase(new feathers.core.DefaultPopUpManagerTest());
@@ -54,7 +54,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.StyleProviderAndVariantTest());
 		runner.addCase(new feathers.style.StyleProviderRestrictedStyleTest());
 		runner.addCase(new feathers.style.ThemeTest());
-		runner.addCase(new feathers.themes.DefaultThemeTest());
+		runner.addCase(new feathers.themes.DefaultThemeTest())*/
 		#if js
 		if(#if (haxe_ver >= 4.0) js.Syntax.code #else untyped __js__ #end("typeof window != 'undefined'")) {
 			new HtmlReport(runner, true);

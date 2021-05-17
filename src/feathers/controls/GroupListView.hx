@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -175,6 +176,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
+
+	private static final RESET_ITEM_STATE = new GroupListViewItemState();
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
@@ -803,6 +806,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		@since 1.0.0
 	**/
 	public function itemRendererToItem(itemRenderer:DisplayObject):Dynamic {
+		if (itemRenderer == null) {
+			return null;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		if (state == null) {
 			return null;
@@ -1103,7 +1109,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function recoverInactiveItemRenderers(storage:ItemRendererStorage):Void {
-		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
 		for (itemRenderer in storage.inactiveItemRenderers) {
 			if (itemRenderer == null) {
 				continue;
@@ -1121,21 +1126,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
 				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
-			state.owner = this;
-			state.type = storage.type;
-			state.data = item;
-			state.location = null;
-			state.layoutIndex = -1;
-			state.selected = false;
-			state.text = null;
-			state.enabled = true;
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			if (recycler != null && recycler.reset != null) {
-				recycler.reset(itemRenderer, state);
-			}
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			this.refreshItemRendererProperties(itemRenderer, state);
+			this.resetItemRenderer(itemRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(itemRenderer);
 			}
@@ -1363,6 +1354,17 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this.refreshItemRendererProperties(itemRenderer, state);
 	}
 
+	private function resetItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState, storage:ItemRendererStorage):Void {
+		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(itemRenderer, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshItemRendererProperties(itemRenderer, RESET_ITEM_STATE);
+	}
+
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
@@ -1375,9 +1377,15 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
+		if ((itemRenderer is ILayoutIndexObject)) {
+			var layoutRenderer = cast(itemRenderer, ILayoutIndexObject);
+			// if the renderer is an ILayoutIndexObject, this cannot be overridden
+			layoutRenderer.layoutIndex = state.layoutIndex;
+		}
 		if ((itemRenderer is IGroupListViewItemRenderer)) {
 			var groupListRenderer = cast(itemRenderer, IGroupListViewItemRenderer);
 			groupListRenderer.location = state.location;
+			groupListRenderer.groupListViewOwner = state.owner;
 		}
 		if ((itemRenderer is IToggle)) {
 			var toggle = cast(itemRenderer, IToggle);
@@ -1811,17 +1819,15 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this.setInvalid(DATA);
 			return;
 		}
+		var type = location.length == 1 ? HEADER : STANDARD;
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		var storage = this.itemStateToStorage(state);
+		var layoutIndex = this.locationToDisplayIndex(location);
+		this.populateCurrentItemState(item, type, location, layoutIndex, state);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
-		if ((itemRenderer is IDataRenderer)) {
-			cast(itemRenderer, IDataRenderer).data = null;
-		}
-		var type = location.length == 1 ? HEADER : STANDARD;
-		var state = this.itemRendererToItemState.get(itemRenderer);
-		var layoutIndex = this.locationToDisplayIndex(location);
-		this.populateCurrentItemState(item, type, location, layoutIndex, state);
-		var storage = this.itemStateToStorage(state);
+		this.resetItemRenderer(itemRenderer, state, storage);
 		this.updateItemRenderer(itemRenderer, state, storage);
 		if (type == HEADER) {
 			for (i in 0...this._dataProvider.getLength(location)) {

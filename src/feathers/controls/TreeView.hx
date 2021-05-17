@@ -176,6 +176,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
+	private static final RESET_ITEM_STATE = new TreeViewItemState();
+
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
@@ -680,7 +682,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			return;
 		}
 		var itemRenderer = this.dataToItemRenderer.get(branch);
-		var state = this.itemRendererToItemState.get(itemRenderer);
+		var state:TreeViewItemState = null;
+		if (itemRenderer != null) {
+			state = this.itemRendererToItemState.get(itemRenderer);
+		}
 		if (state == null) {
 			// if there is no existing state, use a temporary object
 			state = new TreeViewItemState();
@@ -728,6 +733,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		@since 1.0.0
 	**/
 	public function itemRendererToItem(itemRenderer:DisplayObject):Dynamic {
+		if (itemRenderer == null) {
+			return null;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		if (state == null) {
 			return null;
@@ -939,7 +947,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function recoverInactiveItemRenderers(storage:ItemRendererStorage):Void {
-		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
 		for (itemRenderer in storage.inactiveItemRenderers) {
 			if (itemRenderer == null) {
 				continue;
@@ -957,25 +964,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			itemRenderer.removeEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
 			itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
 			itemRenderer.removeEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
-			state.owner = this;
-			state.data = item;
-			state.location = null;
-			state.layoutIndex = -1;
-			state.selected = false;
-			state.enabled = true;
-			state.text = null;
-			state.branch = false;
-			state.opened = false;
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			var oldIgnoreOpenedChange = this._ignoreOpenedChange;
-			this._ignoreOpenedChange = true;
-			if (recycler != null && recycler.reset != null) {
-				recycler.reset(itemRenderer, state);
-			}
-			this._ignoreOpenedChange = oldIgnoreOpenedChange;
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			this.refreshItemRendererProperties(itemRenderer, state);
+			this.resetItemRenderer(itemRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(itemRenderer);
 			}
@@ -1069,7 +1058,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		state.location = location;
 		state.layoutIndex = layoutIndex;
 		state.branch = this._dataProvider != null && this._dataProvider.isBranch(item);
-		state.opened = state.branch && this.openBranches.indexOf(item) != -1;
+		state.opened = state.branch && (this.openBranches.indexOf(item) != -1);
 		state.selected = item == this._selectedItem;
 		state.enabled = this._enabled;
 		state.text = itemToText(item);
@@ -1087,6 +1076,20 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshItemRendererProperties(itemRenderer, state);
+	}
+
+	private function resetItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState, storage:ItemRendererStorage):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
+		this._ignoreOpenedChange = true;
+		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(itemRenderer, state);
+		}
+		this._ignoreOpenedChange = oldIgnoreOpenedChange;
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshItemRendererProperties(itemRenderer, RESET_ITEM_STATE);
 	}
 
 	private function refreshItemRendererProperties(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
@@ -1112,6 +1115,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
 			treeItem.location = state.location;
 			treeItem.branch = state.branch;
+			treeItem.treeViewOwner = state.owner;
 		}
 		if ((itemRenderer is ILayoutIndexObject)) {
 			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
@@ -1650,15 +1654,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
 		} else {
+			var state = this.itemRendererToItemState.get(itemRenderer);
+			var storage = this.itemStateToStorage(state);
+			this.populateCurrentItemState(item, location, state.layoutIndex, state);
 			// in order to display the same item with modified properties, this
 			// hack tricks the item renderer into thinking that it has been given
 			// a different item to render.
-			if ((itemRenderer is IDataRenderer)) {
-				cast(itemRenderer, IDataRenderer).data = null;
-			}
-			var state = this.itemRendererToItemState.get(itemRenderer);
-			this.populateCurrentItemState(item, location, state.layoutIndex, state);
-			var storage = this.itemStateToStorage(state);
+			this.resetItemRenderer(itemRenderer, state, storage);
 			this.updateItemRenderer(itemRenderer, state, storage);
 		}
 		if (this._dataProvider.isBranch(item)) {

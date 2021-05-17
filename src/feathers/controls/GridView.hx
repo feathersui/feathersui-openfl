@@ -59,6 +59,11 @@ import lime.ui.MouseCursor as LimeMouseCursor;
 #if air
 import openfl.ui.Multitouch;
 #end
+#if (openfl >= "9.1.0")
+import openfl.utils.ObjectPool;
+#else
+import openfl._internal.utils.ObjectPool;
+#end
 
 /**
 	Displays a list of items as a table. Each item is rendered as a row, divided
@@ -161,6 +166,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	public static final CHILD_VARIANT_HEADER = "gridView_header";
 
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
+
+	private static final RESET_HEADER_STATE = new GridViewHeaderState();
+	private static final RESET_ROW_STATE = new GridViewCellState();
 
 	private static function defaultUpdateHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
 		if ((headerRenderer is ITextControl)) {
@@ -776,17 +784,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var activeHeaderRenderers:Array<DisplayObject> = [];
 	private var dataToHeaderRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
-	private var headerRendererToData = new ObjectMap<DisplayObject, GridViewColumn>();
+	private var headerRendererToHeaderState = new ObjectMap<DisplayObject, GridViewHeaderState>();
 	private var inactiveRowRenderers:Array<GridViewRowRenderer> = [];
 	private var activeRowRenderers:Array<GridViewRowRenderer> = [];
 	private var dataToRowRenderer = new ObjectMap<Dynamic, GridViewRowRenderer>();
-	private var rowRendererToData = new ObjectMap<GridViewRowRenderer, Dynamic>();
+	private var rowRendererToRowState = new ObjectMap<GridViewRowRenderer, GridViewCellState>();
+	private var headerStatePool = new ObjectPool(() -> new GridViewHeaderState());
+	private var rowStatePool = new ObjectPool(() -> new GridViewCellState());
 	private var _unrenderedData:Array<Dynamic> = [];
 	private var _layoutItems:Array<DisplayObject> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
-
-	private var _currentHeaderState:GridViewHeaderState = new GridViewHeaderState();
 
 	private var _selectable:Bool = true;
 
@@ -862,6 +870,26 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	/**
+		Returns the current cell renderer used to render a specific column from
+		an item from the data provider. May return `null` if an item and column
+		doesn't currently have a cell renderer.
+
+		**Note:** Most grid views use "virtual" layouts, which means that only
+		the currently-visible subset of items will have cell renderers. As the
+		grid view scrolls, the items with cell renderers will change, and cell
+		renderers may even be re-used to display different items.
+
+		@since 1.0.0
+	**/
+	public function itemAndColumnToCellRenderer(item:Dynamic, column:GridViewColumn):DisplayObject {
+		var rowRenderer = this.dataToRowRenderer.get(item);
+		if (rowRenderer == null) {
+			return null;
+		}
+		return rowRenderer.columnToCellRenderer(column);
+	}
+
+	/**
 		Returns the current header renderer used to render a specific column.
 
 		@see `GridView.columns`
@@ -881,7 +909,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	public function headerRendererToColumn(headerRenderer:DisplayObject):GridViewColumn {
-		return this.headerRendererToData.get(headerRenderer);
+		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return null;
+		}
+		return state.column;
 	}
 
 	private function initializeGridViewTheme():Void {
@@ -1161,37 +1193,23 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var recycler = this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this._headerRendererRecycler;
 		for (headerRenderer in this.activeHeaderRenderers) {
-			var column = this.headerRendererToData.get(headerRenderer);
-			this.headerRendererToData.remove(headerRenderer);
-			this.dataToHeaderRenderer.remove(column);
+			var state = this.headerRendererToHeaderState.get(headerRenderer);
+			this.headerRendererToHeaderState.remove(headerRenderer);
+			this.dataToHeaderRenderer.remove(state.column);
 			headerRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
 			headerRenderer.removeEventListener(MouseEvent.CLICK, gridView_headerRenderer_clickHandler);
 			headerRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridView_headerRenderer_touchTapHandler);
-
-			this._currentHeaderState.owner = this;
-			this._currentHeaderState.column = column;
-			this._currentHeaderState.columnIndex = -1;
-			this._currentHeaderState.text = null;
-			this._currentHeaderState.enabled = true;
-			if (recycler != null && recycler.reset != null) {
-				recycler.reset(headerRenderer, this._currentHeaderState);
-			}
-			if ((headerRenderer is IUIControl)) {
-				var uiControl = cast(headerRenderer, IUIControl);
-				uiControl.enabled = this._currentHeaderState.enabled;
-			}
-			if ((headerRenderer is IGridViewHeaderRenderer)) {
-				var header = cast(headerRenderer, IGridViewHeaderRenderer);
-				header.column = null;
-				header.columnIndex = -1;
-			}
+			this.resetHeaderRenderer(headerRenderer, state);
 			this.destroyHeaderRenderer(headerRenderer, recycler);
+			this.headerStatePool.release(state);
 		}
 		this._oldHeaderRendererRecycler = null;
 		this.activeHeaderRenderers.resize(0);
 		for (i in 0...this._columns.length) {
 			var column = this._columns.get(i);
-			var headerRenderer = this.createHeaderRenderer(column, i);
+			var state = this.headerStatePool.get();
+			this.populateCurrentHeaderState(column, i, state);
+			var headerRenderer = this.createHeaderRenderer(state);
 			this.activeHeaderRenderers.insert(i, headerRenderer);
 			this._headerContainer.addChildAt(headerRenderer, i);
 		}
@@ -1247,27 +1265,20 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			if (rowRenderer == null) {
 				continue;
 			}
-			var item = this.rowRendererToData.get(rowRenderer);
-			if (item == null) {
+			var state = this.rowRendererToRowState.get(rowRenderer);
+			if (state == null) {
 				return;
 			}
-			this.rowRendererToData.remove(rowRenderer);
+			var item = state.data;
+			this.rowRendererToRowState.remove(rowRenderer);
 			this.dataToRowRenderer.remove(item);
 			rowRenderer.removeEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			if (this._rowRendererRecycler.reset != null) {
-				this._rowRendererRecycler.reset(rowRenderer, null);
-			}
-			rowRenderer.selected = false;
-			rowRenderer.data = null;
-			rowRenderer.rowIndex = -1;
-			rowRenderer.enabled = true;
+			this.resetRowRenderer(rowRenderer, item);
 			if (this._rowRendererMeasurements != null) {
 				this._rowRendererMeasurements.restore(rowRenderer);
 			}
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+			this.rowStatePool.release(state);
 		}
 	}
 
@@ -1309,13 +1320,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var item = this._dataProvider.get(i);
 			var rowRenderer = this.dataToRowRenderer.get(item);
 			if (rowRenderer != null) {
-				var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-				this._ignoreSelectionChange = true;
-				if (this._rowRendererRecycler.update != null) {
-					this._rowRendererRecycler.update(rowRenderer, item);
-				}
-				this.refreshRowRendererProperties(rowRenderer, item, i);
-				this._ignoreSelectionChange = oldIgnoreSelectionChange;
+				var state = this.rowRendererToRowState.get(rowRenderer);
+				this.populateCurrentRowState(item, i, state);
+				this.updateRowRenderer(rowRenderer, state);
 				this._layoutItems[i] = rowRenderer;
 				var removed = this.inactiveRowRenderers.remove(rowRenderer);
 				if (!removed) {
@@ -1330,17 +1337,19 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function renderUnrenderedData():Void {
 		for (item in this._unrenderedData) {
-			var index = this._dataProvider.indexOf(item);
-			var rowRenderer = this.createRowRenderer(item, index);
+			var rowIndex = this._dataProvider.indexOf(item);
+			var state = this.rowStatePool.get();
+			this.populateCurrentRowState(item, rowIndex, state);
+			var rowRenderer = this.createRowRenderer(state);
 			rowRenderer.visible = true;
 			this.activeRowRenderers.push(rowRenderer);
 			this.gridViewPort.addChild(rowRenderer);
-			this._layoutItems[index] = rowRenderer;
+			this._layoutItems[rowIndex] = rowRenderer;
 		}
 		this._unrenderedData.resize(0);
 	}
 
-	private function createRowRenderer(item:Dynamic, index:Int):GridViewRowRenderer {
+	private function createRowRenderer(state:GridViewCellState):GridViewRowRenderer {
 		var rowRenderer:GridViewRowRenderer = null;
 		if (this.inactiveRowRenderers.length == 0) {
 			rowRenderer = this._rowRendererRecycler.create();
@@ -1353,14 +1362,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			rowRenderer = this.inactiveRowRenderers.shift();
 		}
-		if (this._rowRendererRecycler.update != null) {
-			this._rowRendererRecycler.update(rowRenderer, item);
-		}
-		this.refreshRowRendererProperties(rowRenderer, item, index);
+		this.updateRowRenderer(rowRenderer, state);
 		rowRenderer.addEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
-		this.rowRendererToData.set(rowRenderer, item);
-		this.dataToRowRenderer.set(item, rowRenderer);
+		this.rowRendererToRowState.set(rowRenderer, state);
+		this.dataToRowRenderer.set(state.data, rowRenderer);
 		return rowRenderer;
 	}
 
@@ -1371,19 +1377,53 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, item:Dynamic, index:Int):Void {
-		rowRenderer.gridView = this;
-		rowRenderer.data = item;
-		rowRenderer.rowIndex = index;
-		rowRenderer.selectable = this._selectable;
-		rowRenderer.selected = this._selectedIndices.indexOf(index) != -1;
-		rowRenderer.cellRendererRecycler = this._cellRendererRecycler;
-		rowRenderer.columns = this._columns;
-		rowRenderer.customColumnWidths = this._customColumnWidths;
-		rowRenderer.enabled = this._enabled;
+	private function updateRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this._rowRendererRecycler.update != null) {
+			this._rowRendererRecycler.update(rowRenderer, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshRowRendererProperties(rowRenderer, state);
 	}
 
-	private function createHeaderRenderer(column:GridViewColumn, columnIndex:Int):DisplayObject {
+	private function resetRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this._rowRendererRecycler.reset != null) {
+			this._rowRendererRecycler.reset(rowRenderer, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);
+	}
+
+	private function populateCurrentRowState(item:Dynamic, rowIndex:Int, state:GridViewCellState):Void {
+		state.owner = this;
+		state.data = item;
+		state.rowIndex = rowIndex;
+		state.columnIndex = -1;
+		state.selected = this._selectedIndices.indexOf(rowIndex) != -1;
+		state.column = null;
+		state.text = null;
+		state.enabled = this._enabled;
+	}
+
+	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		rowRenderer.gridView = state.owner;
+		rowRenderer.data = state.data;
+		rowRenderer.rowIndex = state.rowIndex;
+		rowRenderer.selected = state.selected;
+		rowRenderer.enabled = state.enabled;
+		rowRenderer.columns = this._columns;
+		rowRenderer.selectable = this._selectable;
+		rowRenderer.cellRendererRecycler = this._cellRendererRecycler;
+		rowRenderer.customColumnWidths = this._customColumnWidths;
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+	}
+
+	private function createHeaderRenderer(state:GridViewHeaderState):DisplayObject {
 		var headerRenderer:DisplayObject = null;
 		headerRenderer = this._headerRendererRecycler.create();
 		/*if (this.inactiveHeaderRenderers.length == 0) {
@@ -1402,7 +1442,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if ((headerRenderer is IUIControl)) {
 			cast(headerRenderer, IUIControl).initializeNow();
 		}
-		this.refreshHeaderRendererProperties(headerRenderer, column, columnIndex);
+		this.updateHeaderRenderer(headerRenderer, state);
 		if ((headerRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			headerRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
@@ -1413,8 +1453,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			headerRenderer.addEventListener(TouchEvent.TOUCH_TAP, gridView_headerRenderer_touchTapHandler);
 			#end
 		}
-		this.headerRendererToData.set(headerRenderer, column);
-		this.dataToHeaderRenderer.set(column, headerRenderer);
+		this.headerRendererToHeaderState.set(headerRenderer, state);
+		this.dataToHeaderRenderer.set(state.column, headerRenderer);
 		return headerRenderer;
 	}
 
@@ -1425,31 +1465,43 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int):Void {
-		this._currentHeaderState.owner = this;
-		this._currentHeaderState.column = column;
-		this._currentHeaderState.columnIndex = columnIndex;
-		this._currentHeaderState.text = column.headerText;
-		this._currentHeaderState.enabled = this._enabled;
+	private function populateCurrentHeaderState(column:GridViewColumn, columnIndex:Int, state:GridViewHeaderState):Void {
+		state.owner = this;
+		state.column = column;
+		state.columnIndex = columnIndex;
+		state.text = column.headerText;
+		state.enabled = this._enabled;
 	}
 
-	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, column:GridViewColumn, columnIndex:Int):Void {
-		this.populateCurrentItemState(column, columnIndex);
+	private function updateHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
 		if (this._headerRendererRecycler.update != null) {
-			this._headerRendererRecycler.update(headerRenderer, this._currentHeaderState);
+			this._headerRendererRecycler.update(headerRenderer, state);
 		}
+		this.refreshHeaderRendererProperties(headerRenderer, state);
+	}
+
+	private function resetHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
+		var recycler = this._oldHeaderRendererRecycler != null ? this._oldHeaderRendererRecycler : this._headerRendererRecycler;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(headerRenderer, state);
+		}
+		this.refreshHeaderRendererProperties(headerRenderer, RESET_HEADER_STATE);
+	}
+
+	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
 		if ((headerRenderer is IUIControl)) {
 			var uiControl = cast(headerRenderer, IUIControl);
-			uiControl.enabled = this._currentHeaderState.enabled;
+			uiControl.enabled = state.enabled;
 		}
 		if ((headerRenderer is IGridViewHeaderRenderer)) {
 			var header = cast(headerRenderer, IGridViewHeaderRenderer);
-			header.column = this._currentHeaderState.column;
-			header.columnIndex = this._currentHeaderState.columnIndex;
+			header.column = state.column;
+			header.columnIndex = state.columnIndex;
+			header.gridViewOwner = state.owner;
 		}
 		if ((headerRenderer is ILayoutIndexObject)) {
 			var layoutObject = cast(headerRenderer, ILayoutIndexObject);
-			layoutObject.layoutIndex = this._currentHeaderState.columnIndex;
+			layoutObject.layoutIndex = state.columnIndex;
 		}
 	}
 
@@ -1502,12 +1554,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._selectedIndex != -1) {
 			this.scrollToRowIndex(this._selectedIndex);
 		}
-	}
-
-	private function dispatchHeaderTriggerEvent(column:GridViewColumn):Void {
-		var columnIndex = this._columns.indexOf(column);
-		this.populateCurrentItemState(column, columnIndex);
-		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, this._currentHeaderState);
 	}
 
 	private function handleSelectionChange(item:Dynamic, index:Int, ctrlKey:Bool, shiftKey:Bool):Void {
@@ -1626,8 +1672,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_rowRenderer_triggerHandler(event:TriggerEvent):Void {
 		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
-		var item = this.rowRendererToData.get(rowRenderer);
-		this.handleSelectionChange(item, rowRenderer.rowIndex, event.ctrlKey, event.shiftKey);
+		var state = this.rowRendererToRowState.get(rowRenderer);
+		this.handleSelectionChange(state.data, state.rowIndex, event.ctrlKey, event.shiftKey);
 	}
 
 	private function gridView_rowRenderer_cellTriggerHandler(event:GridViewEvent<GridViewCellState>):Void {
@@ -1711,6 +1757,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.refreshSelectedIndicesAfterFilterOrSort();
 	}
 
+	@:access(feathers.controls.dataRenderers.GridViewRowRenderer)
 	private function updateRowRendererForIndex(index:Int):Void {
 		var item = this._dataProvider.get(index);
 		var rowRenderer = this.dataToRowRenderer.get(item);
@@ -1719,11 +1766,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.setInvalid(DATA);
 			return;
 		}
+		var state = this.rowRendererToRowState.get(rowRenderer);
+		this.populateCurrentRowState(item, index, state);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
-		rowRenderer.data = null;
-		this.refreshRowRendererProperties(rowRenderer, item, index);
+		this.resetRowRenderer(rowRenderer, state);
+		this.updateRowRenderer(rowRenderer, state);
+		rowRenderer.updateCells();
 	}
 
 	private function validateCustomColumnWidths():Void {
@@ -1978,8 +2028,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
-		var column = this.headerRendererToData.get(headerRenderer);
-		this.dispatchHeaderTriggerEvent(column);
+		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 
 	private function gridView_headerRenderer_clickHandler(event:MouseEvent):Void {
@@ -1988,8 +2038,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
-		var column = this.headerRendererToData.get(headerRenderer);
-		this.dispatchHeaderTriggerEvent(column);
+		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 
 	private function gridView_headerRenderer_triggerHandler(event:TriggerEvent):Void {
@@ -1998,8 +2048,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
-		var column = this.headerRendererToData.get(headerRenderer);
-		this.dispatchHeaderTriggerEvent(column);
+		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 
 	private function gridView_headerDivider_mouseDownHandler(event:MouseEvent):Void {

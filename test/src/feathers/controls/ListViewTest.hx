@@ -8,6 +8,11 @@
 
 package feathers.controls;
 
+import feathers.layout.ILayoutIndexObject;
+import feathers.data.ListViewItemState;
+import feathers.utils.DisplayObjectRecycler;
+import feathers.controls.dataRenderers.IListViewItemRenderer;
+import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.events.ScrollEvent;
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
@@ -127,5 +132,138 @@ class ListViewTest extends Test {
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.equals(null, this._listView.selectedItem);
+	}
+
+	public function testUpdateItemSetsInterfaceProperties():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var itemIndex = 1;
+		var item = this._listView.dataProvider.get(itemIndex);
+		this._listView.selectedIndex = itemIndex;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
+		this._listView.validateNow();
+		var sampleItemRenderer = cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces);
+		var setDataValues = sampleItemRenderer.setDataValues;
+		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		var setIndexValues = sampleItemRenderer.setIndexValues;
+		var setListViewOwnerValues = sampleItemRenderer.setListViewOwnerValues;
+		Assert.equals(1, setDataValues.length);
+		Assert.equals(1, setLayoutIndexValues.length);
+		Assert.equals(1, setSelectedValues.length);
+		Assert.equals(1, setIndexValues.length);
+		Assert.equals(1, setListViewOwnerValues.length);
+
+		this._listView.dataProvider.updateAt(itemIndex);
+
+		Assert.equals(3, setDataValues.length);
+		Assert.equals(item, setDataValues[0]);
+		Assert.isNull(setDataValues[1]);
+		Assert.equals(item, setDataValues[2]);
+
+		Assert.equals(3, setLayoutIndexValues.length);
+		Assert.equals(itemIndex, setLayoutIndexValues[0]);
+		Assert.equals(-1, setLayoutIndexValues[1]);
+		Assert.equals(itemIndex, setLayoutIndexValues[2]);
+
+		Assert.equals(3, setSelectedValues.length);
+		Assert.equals(true, setSelectedValues[0]);
+		Assert.equals(false, setSelectedValues[1]);
+		Assert.equals(true, setSelectedValues[2]);
+
+		Assert.equals(3, setIndexValues.length);
+		Assert.equals(itemIndex, setIndexValues[0]);
+		Assert.equals(-1, setIndexValues[1]);
+		Assert.equals(itemIndex, setIndexValues[2]);
+
+		Assert.equals(3, setListViewOwnerValues.length);
+		Assert.equals(this._listView, setListViewOwnerValues[0]);
+		Assert.isNull(setListViewOwnerValues[1]);
+		Assert.equals(this._listView, setListViewOwnerValues[2]);
+	}
+}
+
+private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject implements IListViewItemRenderer {
+	public function new() {
+		super();
+	}
+
+	public var setDataValues:Array<Dynamic> = [];
+	private var _data:Dynamic;
+	@:flash.property
+	public var data(get, set):Dynamic;
+	private function get_data():Dynamic {
+		return _data;
+	}
+	private function set_data(value:Dynamic):Dynamic {
+		if(_data == value) {
+			return _data;
+		}
+		_data = value;
+		setDataValues.push(value);
+		return _data;
+	}
+
+	public var setLayoutIndexValues:Array<Int> = [];
+	private var _layoutIndex:Int;
+	@:flash.property
+	public var layoutIndex(get, set):Int;
+	private function get_layoutIndex():Int {
+		return _layoutIndex;
+	}
+	private function set_layoutIndex(value:Int):Int {
+		if(_layoutIndex == value) {
+			return _layoutIndex;
+		}
+		_layoutIndex = value;
+		setLayoutIndexValues.push(value);
+		return _layoutIndex;
+	}
+
+	public var setSelectedValues:Array<Bool> = [];
+	private var _selected:Bool;
+	@:flash.property
+	public var selected(get, set):Bool;
+	private function get_selected():Bool {
+		return _selected;
+	}
+	private function set_selected(value:Bool):Bool {
+		if(_selected == value) {
+			return _selected;
+		}
+		_selected = value;
+		setSelectedValues.push(value);
+		return _selected;
+	}
+
+	public var setIndexValues:Array<Int> = [];
+	private var _index:Int;
+	@:flash.property
+	public var index(get, set):Int;
+	private function get_index():Int {
+		return _index;
+	}
+	private function set_index(value:Int):Int {
+		if(_index == value) {
+			return _index;
+		}
+		_index = value;
+		setIndexValues.push(value);
+		return _index;
+	}
+
+	public var setListViewOwnerValues:Array<ListView> = [];
+	private var _listViewOwner:ListView;
+	@:flash.property
+	public var listViewOwner(get, set):ListView;
+	private function get_listViewOwner():ListView {
+		return _listViewOwner;
+	}
+	private function set_listViewOwner(value:ListView):ListView {
+		if(_listViewOwner == value) {
+			return _listViewOwner;
+		}
+		_listViewOwner = value;
+		setListViewOwnerValues.push(value);
+		return _listViewOwner;
 	}
 }

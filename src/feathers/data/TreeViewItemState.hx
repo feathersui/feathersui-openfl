@@ -60,14 +60,14 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public var layoutIndex:Int;
+	public var layoutIndex:Int = -1;
 
 	/**
 		Returns whether the item is a branch or not.
 
 		@since 1.0.0
 	**/
-	public var branch:Bool;
+	public var branch:Bool = false;
 
 	/**
 		Returns whether the branch is opened or closed. If the item is a leaf,
@@ -75,14 +75,14 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public var opened:Bool;
+	public var opened:Bool = false;
 
 	/**
 		Returns whether the item is selected or not.
 
 		@since 1.0.0
 	**/
-	public var selected:Bool;
+	public var selected:Bool = false;
 
 	/**
 		Returns the text to display for the item, as returned by the function
@@ -101,7 +101,7 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public var enabled:Bool;
+	public var enabled:Bool = true;
 
 	/**
 		Returns the item's recycler ID.

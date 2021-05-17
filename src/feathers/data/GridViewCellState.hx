@@ -54,14 +54,14 @@ class GridViewCellState {
 
 		@since 1.0.0
 	**/
-	public var rowIndex:Int;
+	public var rowIndex:Int = -1;
 
 	/**
 		The horizontal position of the cell within the `GridView`.
 
 		@since 1.0.0
 	**/
-	public var columnIndex:Int;
+	public var columnIndex:Int = -1;
 
 	/**
 		The column of the cell.
@@ -78,7 +78,7 @@ class GridViewCellState {
 
 		@since 1.0.0
 	**/
-	public var selected:Bool;
+	public var selected:Bool = false;
 
 	/**
 		Returns the text to display for the cell, as returned by the function
@@ -97,5 +97,5 @@ class GridViewCellState {
 
 		@since 1.0.0
 	**/
-	public var enabled:Bool;
+	public var enabled:Bool = true;
 }

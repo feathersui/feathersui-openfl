@@ -52,7 +52,7 @@ class GridViewHeaderState {
 
 		@since 1.0.0
 	**/
-	public var columnIndex:Int;
+	public var columnIndex:Int = -1;
 
 	/**
 		Returns the text to display for the header, as returned by the function
@@ -71,5 +71,5 @@ class GridViewHeaderState {
 
 		@since 1.0.0
 	**/
-	public var enabled:Bool;
+	public var enabled:Bool = true;
 }

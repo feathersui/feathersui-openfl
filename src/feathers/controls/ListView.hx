@@ -172,6 +172,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
+	private static final RESET_ITEM_STATE = new ListViewItemState();
+
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
 			var textControl = cast(itemRenderer, ITextControl);
@@ -832,6 +834,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	public function itemRendererToItem(itemRenderer:DisplayObject):Dynamic {
+		if (itemRenderer == null) {
+			return null;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		if (state == null) {
 			return null;
@@ -1024,7 +1029,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function recoverInactiveItemRenderers(storage:ItemRendererStorage):Void {
-		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
 		for (itemRenderer in storage.inactiveItemRenderers) {
 			if (itemRenderer == null) {
 				continue;
@@ -1040,19 +1044,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
-			state.owner = this;
-			state.data = item;
-			state.index = -1;
-			state.selected = false;
-			state.enabled = true;
-			state.text = null;
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			if (recycler != null && recycler.reset != null) {
-				recycler.reset(itemRenderer, state);
-			}
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			this.refreshItemRendererProperties(itemRenderer, state);
+			this.resetItemRenderer(itemRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(itemRenderer);
 			}
@@ -1129,6 +1121,17 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		state.text = itemToText(item);
 	}
 
+	private function resetItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState, storage:ItemRendererStorage):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(itemRenderer, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshItemRendererProperties(itemRenderer, RESET_ITEM_STATE);
+	}
+
 	private function updateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState, storage:ItemRendererStorage):Void {
 		state.recyclerID = storage.id;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
@@ -1155,6 +1158,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if ((itemRenderer is IListViewItemRenderer)) {
 			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
 			listRenderer.index = state.index;
+			listRenderer.listViewOwner = state.owner;
 		}
 		if ((itemRenderer is ILayoutIndexObject)) {
 			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
@@ -1525,15 +1529,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this.setInvalid(DATA);
 			return;
 		}
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		var storage = this.itemStateToStorage(state);
+		this.populateCurrentItemState(item, index, state);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
-		if ((itemRenderer is IDataRenderer)) {
-			cast(itemRenderer, IDataRenderer).data = null;
-		}
-		var state = this.itemRendererToItemState.get(itemRenderer);
-		this.populateCurrentItemState(item, index, state);
-		var storage = this.itemStateToStorage(state);
+		this.resetItemRenderer(itemRenderer, state, storage);
 		this.updateItemRenderer(itemRenderer, state, storage);
 	}
 

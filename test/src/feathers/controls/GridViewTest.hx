@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import feathers.layout.ILayoutIndexObject;
+import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.controls.dataRenderers.IGridViewCellRenderer;
+import feathers.utils.DisplayObjectRecycler;
 import feathers.events.ScrollEvent;
 import openfl.events.Event;
 import feathers.data.ArrayCollection;
@@ -127,5 +131,190 @@ class GridViewTest extends Test {
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.equals(null, this._gridView.selectedItem);
+	}
+
+	public function testUpdateItemSetsInterfaceProperties():Void {
+		this._gridView.width = 300;
+		this._gridView.height = 300;
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.columns = new ArrayCollection([new GridViewColumn("Text", item -> item.text)]);
+		var rowIndex = 1;
+		var columnIndex = 0;
+		var item = this._gridView.dataProvider.get(rowIndex);
+		var column = this._gridView.columns.get(columnIndex);
+		this._gridView.selectedIndex = rowIndex;
+		this._gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
+		this._gridView.validateNow();
+		var sampleItemRenderer = cast(this._gridView.itemAndColumnToCellRenderer(item, column), CustomRendererWithInterfaces);
+		var setDataValues = sampleItemRenderer.setDataValues;
+		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		var setRowIndexValues = sampleItemRenderer.setRowIndexValues;
+		var setColumnIndexValues = sampleItemRenderer.setColumnIndexValues;
+		var setColumnValues = sampleItemRenderer.setColumnValues;
+		var setGridViewOwnerValues = sampleItemRenderer.setGridViewOwnerValues;
+		Assert.equals(1, setDataValues.length);
+		Assert.equals(1, setLayoutIndexValues.length);
+		Assert.equals(1, setSelectedValues.length);
+		Assert.equals(1, setRowIndexValues.length);
+		Assert.equals(1, setColumnIndexValues.length);
+		Assert.equals(1, setColumnValues.length);
+		Assert.equals(1, setGridViewOwnerValues.length);
+
+		this._gridView.dataProvider.updateAt(rowIndex);
+
+		Assert.equals(3, setDataValues.length);
+		Assert.equals(item, setDataValues[0]);
+		Assert.isNull(setDataValues[1]);
+		Assert.equals(item, setDataValues[2]);
+
+		Assert.equals(3, setLayoutIndexValues.length);
+		Assert.equals(rowIndex, setLayoutIndexValues[0]);
+		Assert.equals(-1, setLayoutIndexValues[1]);
+		Assert.equals(rowIndex, setLayoutIndexValues[2]);
+
+		Assert.equals(3, setSelectedValues.length);
+		Assert.equals(true, setSelectedValues[0]);
+		Assert.equals(false, setSelectedValues[1]);
+		Assert.equals(true, setSelectedValues[2]);
+
+		Assert.equals(3, setRowIndexValues.length);
+		Assert.equals(rowIndex, setRowIndexValues[0]);
+		Assert.equals(-1, setRowIndexValues[1]);
+		Assert.equals(rowIndex, setRowIndexValues[2]);
+
+		Assert.equals(3, setColumnIndexValues.length);
+		Assert.equals(columnIndex, setColumnIndexValues[0]);
+		Assert.equals(-1, setColumnIndexValues[1]);
+		Assert.equals(columnIndex, setColumnIndexValues[2]);
+
+		Assert.equals(3, setColumnValues.length);
+		Assert.equals(column, setColumnValues[0]);
+		Assert.isNull(setColumnValues[1]);
+		Assert.equals(column, setColumnValues[2]);
+
+		Assert.equals(3, setGridViewOwnerValues.length);
+		Assert.equals(this._gridView, setGridViewOwnerValues[0]);
+		Assert.isNull(setGridViewOwnerValues[1]);
+		Assert.equals(this._gridView, setGridViewOwnerValues[2]);
+	}
+}
+
+
+private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject implements IGridViewCellRenderer {
+	public function new() {
+		super();
+	}
+
+	public var setDataValues:Array<Dynamic> = [];
+	private var _data:Dynamic;
+	@:flash.property
+	public var data(get, set):Dynamic;
+	private function get_data():Dynamic {
+		return _data;
+	}
+	private function set_data(value:Dynamic):Dynamic {
+		if(_data == value) {
+			return _data;
+		}
+		_data = value;
+		setDataValues.push(value);
+		return _data;
+	}
+
+	public var setLayoutIndexValues:Array<Int> = [];
+	private var _layoutIndex:Int;
+	@:flash.property
+	public var layoutIndex(get, set):Int;
+	private function get_layoutIndex():Int {
+		return _layoutIndex;
+	}
+	private function set_layoutIndex(value:Int):Int {
+		if(_layoutIndex == value) {
+			return _layoutIndex;
+		}
+		_layoutIndex = value;
+		setLayoutIndexValues.push(value);
+		return _layoutIndex;
+	}
+
+	public var setSelectedValues:Array<Bool> = [];
+	private var _selected:Bool;
+	@:flash.property
+	public var selected(get, set):Bool;
+	private function get_selected():Bool {
+		return _selected;
+	}
+	private function set_selected(value:Bool):Bool {
+		if(_selected == value) {
+			return _selected;
+		}
+		_selected = value;
+		setSelectedValues.push(value);
+		return _selected;
+	}
+
+	public var setRowIndexValues:Array<Int> = [];
+	private var _rowIndex:Int;
+	@:flash.property
+	public var rowIndex(get, set):Int;
+	private function get_rowIndex():Int {
+		return _rowIndex;
+	}
+	private function set_rowIndex(value:Int):Int {
+		if(_rowIndex == value) {
+			return _rowIndex;
+		}
+		_rowIndex = value;
+		setRowIndexValues.push(value);
+		return _rowIndex;
+	}
+
+	public var setColumnIndexValues:Array<Int> = [];
+	private var _columnIndex:Int;
+	@:flash.property
+	public var columnIndex(get, set):Int;
+	private function get_columnIndex():Int {
+		return _columnIndex;
+	}
+	private function set_columnIndex(value:Int):Int {
+		if(_columnIndex == value) {
+			return _columnIndex;
+		}
+		_columnIndex = value;
+		setColumnIndexValues.push(value);
+		return _columnIndex;
+	}
+
+	public var setColumnValues:Array<GridViewColumn> = [];
+	private var _column:GridViewColumn;
+	@:flash.property
+	public var column(get, set):GridViewColumn;
+	private function get_column():GridViewColumn {
+		return _column;
+	}
+	private function set_column(value:GridViewColumn):GridViewColumn {
+		if(_column == value) {
+			return _column;
+		}
+		_column = value;
+		setColumnValues.push(value);
+		return _column;
+	}
+
+	public var setGridViewOwnerValues:Array<GridView> = [];
+	private var _gridViewOwner:GridView;
+	@:flash.property
+	public var gridViewOwner(get, set):GridView;
+	private function get_gridViewOwner():GridView {
+		return _gridViewOwner;
+	}
+	private function set_gridViewOwner(value:GridView):GridView {
+		if(_gridViewOwner == value) {
+			return _gridViewOwner;
+		}
+		_gridViewOwner = value;
+		setGridViewOwnerValues.push(value);
+		return _gridViewOwner;
 	}
 }

@@ -67,14 +67,14 @@ class GroupListViewItemState {
 
 		@since 1.0.0
 	**/
-	public var layoutIndex:Int;
+	public var layoutIndex:Int = -1;
 
 	/**
 		Returns whether the item is selected or not.
 
 		@since 1.0.0
 	**/
-	public var selected:Bool;
+	public var selected:Bool = false;
 
 	/**
 		Returns the text to display for the item, as returned by the function
@@ -93,7 +93,7 @@ class GroupListViewItemState {
 
 		@since 1.0.0
 	**/
-	public var enabled:Bool;
+	public var enabled:Bool = true;
 
 	/**
 		Returns the item's recycler ID.
