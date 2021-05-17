@@ -1609,8 +1609,21 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
 				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
-				var state = this.itemRendererToItemState.get(itemRenderer);
+				var state:ListViewItemState = null;
+				if (itemRenderer != null) {
+					state = this.itemRendererToItemState.get(itemRenderer);
+				}
+				var isTemporary = false;
+				if (state == null) {
+					// if there is no existing state, use a temporary object
+					isTemporary = true;
+					state = this.itemStatePool.get();
+				}
+				this.populateCurrentItemState(this._selectedItem, this._selectedIndex, state);
 				ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
+				if (isTemporary) {
+					this.itemStatePool.release(state);
+				}
 			}
 		}
 	}

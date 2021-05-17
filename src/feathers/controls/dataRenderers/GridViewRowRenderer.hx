@@ -647,8 +647,21 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			if (this._selected) {
 				var column = this._columns.get(0);
 				var cellRenderer = this.columnToCellRenderer(column);
-				var state = this._cellRendererToCellState.get(cellRenderer);
+				var state:GridViewCellState = null;
+				if (cellRenderer != null) {
+					state = this._cellRendererToCellState.get(cellRenderer);
+				}
+				var isTemporary = false;
+				if (state == null) {
+					// if there is no existing state, use a temporary object
+					isTemporary = true;
+					state = this.cellStatePool.get();
+				}
+				this.populateCurrentItemState(column, 0, state);
 				GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+				if (isTemporary) {
+					this.cellStatePool.release(state);
+				}
 			}
 		}
 	}

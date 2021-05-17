@@ -686,26 +686,29 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (itemRenderer != null) {
 			state = this.itemRendererToItemState.get(itemRenderer);
 		}
+		var isTemporary = false;
 		if (state == null) {
 			// if there is no existing state, use a temporary object
-			state = new TreeViewItemState();
+			isTemporary = true;
+			state = this.itemStatePool.get();
 			state.location = this._dataProvider.locationOf(branch);
 			state.layoutIndex = -1;
 		}
+		var location = state.location;
+		var layoutIndex = state.layoutIndex;
 		if (open) {
 			this.openBranches.push(branch);
-			var location = state.location;
-			var layoutIndex = state.layoutIndex;
 			this.populateCurrentItemState(branch, location, layoutIndex, state);
 			insertChildrenIntoVirtualCache(location, layoutIndex);
 			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, state);
 		} else {
 			this.openBranches.remove(branch);
-			var location = state.location;
-			var layoutIndex = state.layoutIndex;
 			this.populateCurrentItemState(branch, location, layoutIndex, state);
 			removeChildrenFromVirtualCache(location, layoutIndex);
 			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, state);
+		}
+		if (isTemporary) {
+			this.itemStatePool.release(state);
 		}
 		this.setInvalid(DATA);
 	}
@@ -1486,8 +1489,22 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if (event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
 				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
-				var state = this.itemRendererToItemState.get(itemRenderer);
+				var state:TreeViewItemState = null;
+				if (itemRenderer != null) {
+					state = this.itemRendererToItemState.get(itemRenderer);
+				}
+				var isTemporary = false;
+				if (state == null) {
+					// if there is no existing state, use a temporary object
+					isTemporary = true;
+					state = this.itemStatePool.get();
+				}
+				var layoutIndex = this.locationToDisplayIndex(this._selectedLocation, false);
+				this.populateCurrentItemState(this._selectedItem, this._selectedLocation, layoutIndex, state);
 				TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_TRIGGER, state);
+				if (isTemporary) {
+					this.itemStatePool.release(state);
+				}
 			}
 		}
 

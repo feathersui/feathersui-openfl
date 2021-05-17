@@ -1693,8 +1693,23 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
 				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
-				var state = this.itemRendererToItemState.get(itemRenderer);
+				var state:GroupListViewItemState = null;
+				if (itemRenderer != null) {
+					state = this.itemRendererToItemState.get(itemRenderer);
+				}
+				var isTemporary = false;
+				if (state == null) {
+					// if there is no existing state, use a temporary object
+					isTemporary = true;
+					state = this.itemStatePool.get();
+				}
+				var type = this._selectedLocation.length == 1 ? HEADER : STANDARD;
+				var layoutIndex = this.locationToDisplayIndex(this._selectedLocation);
+				this.populateCurrentItemState(this._selectedItem, type, this._selectedLocation, layoutIndex, state);
 				GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
+				if (isTemporary) {
+					this.itemStatePool.release(state);
+				}
 			}
 		}
 	}
