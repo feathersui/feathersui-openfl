@@ -88,6 +88,8 @@ class ButtonBar extends FeathersControl {
 	**/
 	public static final CHILD_VARIANT_BUTTON = "buttonBar_button";
 
+	private static final RESET_BUTTON_STATE = new ButtonBarItemState();
+
 	private static function defaultUpdateButton(button:Button, state:ButtonBarItemState):Void {
 		button.text = state.text;
 	}
@@ -299,6 +301,16 @@ class ButtonBar extends FeathersControl {
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
 
+	/**
+		Returns the current button used to render a specific item from the data
+		provider. May return `null` if an item doesn't currently have a button.
+
+		@since 1.0.0
+	**/
+	public function itemToButton(item:Dynamic):Button {
+		return this.dataToButton.get(item);
+	}
+
 	private function initializeButtonBarTheme():Void {
 		SteelButtonBarStyles.initialize();
 	}
@@ -403,18 +415,7 @@ class ButtonBar extends FeathersControl {
 			this.buttonToItemState.remove(button);
 			this.dataToButton.remove(item);
 			button.removeEventListener(TriggerEvent.TRIGGER, buttonBar_button_triggerHandler);
-			state.owner = this;
-			state.data = item;
-			state.index = -1;
-			state.enabled = true;
-			state.text = null;
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			if (this.buttonRecycler != null && this.buttonRecycler.reset != null) {
-				this.buttonRecycler.reset(button, state);
-			}
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			this.refreshButtonProperties(button, state);
+			this.resetButton(button, state);
 			this.itemStatePool.release(state);
 		}
 	}
@@ -586,6 +587,16 @@ class ButtonBar extends FeathersControl {
 		this.refreshButtonProperties(button, state);
 	}
 
+	private function resetButton(button:Button, state:ButtonBarItemState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this.buttonRecycler != null && this.buttonRecycler.reset != null) {
+			this.buttonRecycler.reset(button, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshButtonProperties(button, RESET_BUTTON_STATE);
+	}
+
 	private function refreshButtonProperties(button:Button, state:ButtonBarItemState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
@@ -625,6 +636,11 @@ class ButtonBar extends FeathersControl {
 			return;
 		}
 		var state = this.buttonToItemState.get(button);
+		this.populateCurrentItemState(item, index, state);
+		// in order to display the same item with modified properties, this
+		// hack tricks the item renderer into thinking that it has been given
+		// a different item to render.
+		this.resetButton(button, state);
 		this.updateButton(button, state);
 	}
 

@@ -41,7 +41,7 @@ class PageIndicatorItemState {
 
 		@since 1.0.0
 	**/
-	public var index:Int;
+	public var index:Int = -1;
 
 	/**
 		Returns whether the button is selected or not.
@@ -50,7 +50,7 @@ class PageIndicatorItemState {
 
 		@since 1.0.0
 	**/
-	public var selected:Bool;
+	public var selected:Bool = false;
 
 	/**
 		Returns whether the item is enabled or not.
@@ -59,5 +59,5 @@ class PageIndicatorItemState {
 
 		@since 1.0.0
 	**/
-	public var enabled:Bool;
+	public var enabled:Bool = true;
 }

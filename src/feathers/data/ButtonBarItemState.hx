@@ -50,7 +50,7 @@ class ButtonBarItemState {
 
 		@since 1.0.0
 	**/
-	public var index:Int;
+	public var index:Int = -1;
 
 	/**
 		Returns the text to display for the item, as returned by the function
@@ -69,5 +69,5 @@ class ButtonBarItemState {
 
 		@since 1.0.0
 	**/
-	public var enabled:Bool;
+	public var enabled:Bool = true;
 }

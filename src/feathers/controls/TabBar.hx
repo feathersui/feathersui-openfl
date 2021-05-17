@@ -102,6 +102,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	**/
 	public static final CHILD_VARIANT_TAB = "tabBar_tab";
 
+	private static final RESET_TAB_STATE = new TabBarItemState();
+
 	private static function defaultUpdateTab(tab:ToggleButton, state:TabBarItemState):Void {
 		tab.text = state.text;
 	}
@@ -404,6 +406,16 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreChildChanges = false;
 
+	/**
+		Returns the current tab used to render a specific item from the data
+		provider. May return `null` if an item doesn't currently have a tab.
+
+		@since 1.0.0
+	**/
+	public function itemToTab(item:Dynamic):ToggleButton {
+		return this.dataToTab.get(item);
+	}
+
 	private function initializeTabBarTheme():Void {
 		SteelTabBarStyles.initialize();
 	}
@@ -509,19 +521,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this.dataToTab.remove(item);
 			tab.removeEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);
 			tab.removeEventListener(Event.CHANGE, tabBar_tab_changeHandler);
-			state.owner = this;
-			state.data = item;
-			state.index = -1;
-			state.selected = false;
-			state.enabled = true;
-			state.text = null;
-			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-			this._ignoreSelectionChange = true;
-			if (this.tabRecycler != null && this.tabRecycler.reset != null) {
-				this.tabRecycler.reset(tab, state);
-			}
-			this._ignoreSelectionChange = oldIgnoreSelectionChange;
-			this.refreshTabProperties(tab, state);
+			this.resetTab(tab, state);
 			this.itemStatePool.release(state);
 		}
 	}
@@ -695,6 +695,16 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		this.refreshTabProperties(tab, state);
 	}
 
+	private function resetTab(tab:ToggleButton, state:TabBarItemState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (this.tabRecycler != null && this.tabRecycler.reset != null) {
+			this.tabRecycler.reset(tab, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshTabProperties(tab, RESET_TAB_STATE);
+	}
+
 	private function refreshTabProperties(tab:ToggleButton, state:TabBarItemState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
@@ -850,6 +860,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return;
 		}
 		var state = this.tabToItemState.get(tab);
+		this.populateCurrentItemState(item, index, state);
+		// in order to display the same item with modified properties, this
+		// hack tricks the item renderer into thinking that it has been given
+		// a different item to render.
+		this.resetTab(tab, state);
 		this.updateTab(tab, state);
 	}
 
