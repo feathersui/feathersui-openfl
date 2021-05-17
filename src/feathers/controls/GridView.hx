@@ -1274,7 +1274,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.dataToRowRenderer.remove(item);
 			rowRenderer.removeEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
-			this.resetRowRenderer(rowRenderer, item);
+			this.resetRowRenderer(rowRenderer, state);
 			if (this._rowRendererMeasurements != null) {
 				this._rowRendererMeasurements.restore(rowRenderer);
 			}
