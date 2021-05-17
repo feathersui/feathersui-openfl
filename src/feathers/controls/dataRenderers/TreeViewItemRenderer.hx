@@ -312,7 +312,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		return contentMinWidth;
 	}
 
-	override private function layoutContent():Void {
+	override private function layoutChildren():Void {
 		this.disclosureButton.validateNow();
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
@@ -337,7 +337,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			}
 			this.paddingLeft = newPaddingLeft;
 		});
-		super.layoutContent();
+		super.layoutChildren();
 		this.runWithoutInvalidation(() -> {
 			this.paddingLeft = paddingLeft;
 		});

@@ -707,7 +707,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		return this.backgroundSkin;
 	}
 
-	override private function layoutContent():Void {
+	override private function layoutChildren():Void {
 		this.refreshTextFieldDimensions(false);
 		if ((this._currentAccessoryView is IValidating)) {
 			cast(this._currentAccessoryView, IValidating).validateNow();

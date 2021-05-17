@@ -1031,7 +1031,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 	override private function layoutContent():Void {
 		super.layoutContent();
+		this.layoutChildren();
+	}
 
+	private function layoutChildren():Void {
 		this.refreshTextFieldDimensions(false);
 
 		var hasText = this.showText && this._text != null;

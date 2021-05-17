@@ -949,7 +949,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	override private function layoutContent():Void {
 		super.layoutContent();
+		this.layoutChildren();
+	}
 
+	private function layoutChildren():Void {
 		this.refreshTextFieldDimensions(false);
 
 		var hasText = this.showText && this._text != null;
