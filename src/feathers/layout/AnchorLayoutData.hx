@@ -107,7 +107,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
-		Creates `AnchorLayoutData` that height the width of the parent
+		Creates `AnchorLayoutData` that fills the height of the parent
 		container, with the ability to optionally specify a padding value to
 		pass to `top` and `bottom`.
 
