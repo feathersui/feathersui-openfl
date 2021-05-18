@@ -182,20 +182,25 @@ class ListViewTest extends Test {
 	}
 }
 
-private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject implements IListViewItemRenderer {
+private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject
+		implements IListViewItemRenderer {
 	public function new() {
 		super();
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
+
 	private var _data:Dynamic;
+
 	@:flash.property
 	public var data(get, set):Dynamic;
+
 	private function get_data():Dynamic {
 		return _data;
 	}
+
 	private function set_data(value:Dynamic):Dynamic {
-		if(_data == value) {
+		if (_data == value) {
 			return _data;
 		}
 		_data = value;
@@ -204,14 +209,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
+
 	private var _layoutIndex:Int = -1;
+
 	@:flash.property
 	public var layoutIndex(get, set):Int;
+
 	private function get_layoutIndex():Int {
 		return _layoutIndex;
 	}
+
 	private function set_layoutIndex(value:Int):Int {
-		if(_layoutIndex == value) {
+		if (_layoutIndex == value) {
 			return _layoutIndex;
 		}
 		_layoutIndex = value;
@@ -220,14 +229,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setSelectedValues:Array<Bool> = [];
+
 	private var _selected:Bool;
+
 	@:flash.property
 	public var selected(get, set):Bool;
+
 	private function get_selected():Bool {
 		return _selected;
 	}
+
 	private function set_selected(value:Bool):Bool {
-		if(_selected == value) {
+		if (_selected == value) {
 			return _selected;
 		}
 		_selected = value;
@@ -236,14 +249,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setIndexValues:Array<Int> = [];
+
 	private var _index:Int = -1;
+
 	@:flash.property
 	public var index(get, set):Int;
+
 	private function get_index():Int {
 		return _index;
 	}
+
 	private function set_index(value:Int):Int {
-		if(_index == value) {
+		if (_index == value) {
 			return _index;
 		}
 		_index = value;
@@ -252,14 +269,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setListViewOwnerValues:Array<ListView> = [];
+
 	private var _listViewOwner:ListView;
+
 	@:flash.property
 	public var listViewOwner(get, set):ListView;
+
 	private function get_listViewOwner():ListView {
 		return _listViewOwner;
 	}
+
 	private function set_listViewOwner(value:ListView):ListView {
-		if(_listViewOwner == value) {
+		if (_listViewOwner == value) {
 			return _listViewOwner;
 		}
 		_listViewOwner = value;

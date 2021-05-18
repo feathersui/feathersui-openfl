@@ -200,21 +200,25 @@ class GridViewTest extends Test {
 	}
 }
 
-
-private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject implements IGridViewCellRenderer {
+private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject
+		implements IGridViewCellRenderer {
 	public function new() {
 		super();
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
+
 	private var _data:Dynamic;
+
 	@:flash.property
 	public var data(get, set):Dynamic;
+
 	private function get_data():Dynamic {
 		return _data;
 	}
+
 	private function set_data(value:Dynamic):Dynamic {
-		if(_data == value) {
+		if (_data == value) {
 			return _data;
 		}
 		_data = value;
@@ -223,14 +227,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
+
 	private var _layoutIndex:Int = -1;
+
 	@:flash.property
 	public var layoutIndex(get, set):Int;
+
 	private function get_layoutIndex():Int {
 		return _layoutIndex;
 	}
+
 	private function set_layoutIndex(value:Int):Int {
-		if(_layoutIndex == value) {
+		if (_layoutIndex == value) {
 			return _layoutIndex;
 		}
 		_layoutIndex = value;
@@ -239,14 +247,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setSelectedValues:Array<Bool> = [];
+
 	private var _selected:Bool;
+
 	@:flash.property
 	public var selected(get, set):Bool;
+
 	private function get_selected():Bool {
 		return _selected;
 	}
+
 	private function set_selected(value:Bool):Bool {
-		if(_selected == value) {
+		if (_selected == value) {
 			return _selected;
 		}
 		_selected = value;
@@ -255,14 +267,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setRowIndexValues:Array<Int> = [];
+
 	private var _rowIndex:Int = -1;
+
 	@:flash.property
 	public var rowIndex(get, set):Int;
+
 	private function get_rowIndex():Int {
 		return _rowIndex;
 	}
+
 	private function set_rowIndex(value:Int):Int {
-		if(_rowIndex == value) {
+		if (_rowIndex == value) {
 			return _rowIndex;
 		}
 		_rowIndex = value;
@@ -271,14 +287,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setColumnIndexValues:Array<Int> = [];
+
 	private var _columnIndex:Int = -1;
+
 	@:flash.property
 	public var columnIndex(get, set):Int;
+
 	private function get_columnIndex():Int {
 		return _columnIndex;
 	}
+
 	private function set_columnIndex(value:Int):Int {
-		if(_columnIndex == value) {
+		if (_columnIndex == value) {
 			return _columnIndex;
 		}
 		_columnIndex = value;
@@ -287,14 +307,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setColumnValues:Array<GridViewColumn> = [];
+
 	private var _column:GridViewColumn;
+
 	@:flash.property
 	public var column(get, set):GridViewColumn;
+
 	private function get_column():GridViewColumn {
 		return _column;
 	}
+
 	private function set_column(value:GridViewColumn):GridViewColumn {
-		if(_column == value) {
+		if (_column == value) {
 			return _column;
 		}
 		_column = value;
@@ -303,14 +327,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setGridViewOwnerValues:Array<GridView> = [];
+
 	private var _gridViewOwner:GridView;
+
 	@:flash.property
 	public var gridViewOwner(get, set):GridView;
+
 	private function get_gridViewOwner():GridView {
 		return _gridViewOwner;
 	}
+
 	private function set_gridViewOwner(value:GridView):GridView {
-		if(_gridViewOwner == value) {
+		if (_gridViewOwner == value) {
 			return _gridViewOwner;
 		}
 		_gridViewOwner = value;

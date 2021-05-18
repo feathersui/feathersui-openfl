@@ -168,20 +168,25 @@ class TreeViewTest extends Test {
 	}
 }
 
-private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer implements ILayoutIndexObject implements ITreeViewItemRenderer {
+private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer
+		implements ILayoutIndexObject implements ITreeViewItemRenderer {
 	public function new() {
 		super();
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
+
 	private var _data:Dynamic;
+
 	@:flash.property
 	public var data(get, set):Dynamic;
+
 	private function get_data():Dynamic {
 		return _data;
 	}
+
 	private function set_data(value:Dynamic):Dynamic {
-		if(_data == value) {
+		if (_data == value) {
 			return _data;
 		}
 		_data = value;
@@ -190,14 +195,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
+
 	private var _layoutIndex:Int = -1;
+
 	@:flash.property
 	public var layoutIndex(get, set):Int;
+
 	private function get_layoutIndex():Int {
 		return _layoutIndex;
 	}
+
 	private function set_layoutIndex(value:Int):Int {
-		if(_layoutIndex == value) {
+		if (_layoutIndex == value) {
 			return _layoutIndex;
 		}
 		_layoutIndex = value;
@@ -206,14 +215,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setSelectedValues:Array<Bool> = [];
+
 	private var _selected:Bool;
+
 	@:flash.property
 	public var selected(get, set):Bool;
+
 	private function get_selected():Bool {
 		return _selected;
 	}
+
 	private function set_selected(value:Bool):Bool {
-		if(_selected == value) {
+		if (_selected == value) {
 			return _selected;
 		}
 		_selected = value;
@@ -222,14 +235,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setBranchValues:Array<Bool> = [];
+
 	private var _branch:Bool;
+
 	@:flash.property
 	public var branch(get, set):Bool;
+
 	private function get_branch():Bool {
 		return _branch;
 	}
+
 	private function set_branch(value:Bool):Bool {
-		if(_branch == value) {
+		if (_branch == value) {
 			return _branch;
 		}
 		_branch = value;
@@ -238,14 +255,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setOpenedValues:Array<Bool> = [];
+
 	private var _opened:Bool;
+
 	@:flash.property
 	public var opened(get, set):Bool;
+
 	private function get_opened():Bool {
 		return _opened;
 	}
+
 	private function set_opened(value:Bool):Bool {
-		if(_opened == value) {
+		if (_opened == value) {
 			return _opened;
 		}
 		_opened = value;
@@ -254,14 +275,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLocationValues:Array<Array<Int>> = [];
+
 	private var _location:Array<Int>;
+
 	@:flash.property
 	public var location(get, set):Array<Int>;
+
 	private function get_location():Array<Int> {
 		return _location;
 	}
+
 	private function set_location(value:Array<Int>):Array<Int> {
-		if(_location == value) {
+		if (_location == value) {
 			return _location;
 		}
 		_location = value;
@@ -270,14 +295,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setTreeViewOwnerValues:Array<TreeView> = [];
+
 	private var _treeViewOwner:TreeView;
+
 	@:flash.property
 	public var treeViewOwner(get, set):TreeView;
+
 	private function get_treeViewOwner():TreeView {
 		return _treeViewOwner;
 	}
+
 	private function set_treeViewOwner(value:TreeView):TreeView {
-		if(_treeViewOwner == value) {
+		if (_treeViewOwner == value) {
 			return _treeViewOwner;
 		}
 		_treeViewOwner = value;

@@ -96,7 +96,8 @@ class GroupListViewTest extends Test {
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
-		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}], (item:Dynamic) -> item.children);
+		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
 		var itemLocation = [0, 1];
 		var item = this._listView.dataProvider.get(itemLocation);
 		this._listView.selectedLocation = itemLocation;
@@ -143,20 +144,25 @@ class GroupListViewTest extends Test {
 	}
 }
 
-private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject implements IGroupListViewItemRenderer {
+private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject
+		implements IGroupListViewItemRenderer {
 	public function new() {
 		super();
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
+
 	private var _data:Dynamic;
+
 	@:flash.property
 	public var data(get, set):Dynamic;
+
 	private function get_data():Dynamic {
 		return _data;
 	}
+
 	private function set_data(value:Dynamic):Dynamic {
-		if(_data == value) {
+		if (_data == value) {
 			return _data;
 		}
 		_data = value;
@@ -165,14 +171,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
+
 	private var _layoutIndex:Int = -1;
+
 	@:flash.property
 	public var layoutIndex(get, set):Int;
+
 	private function get_layoutIndex():Int {
 		return _layoutIndex;
 	}
+
 	private function set_layoutIndex(value:Int):Int {
-		if(_layoutIndex == value) {
+		if (_layoutIndex == value) {
 			return _layoutIndex;
 		}
 		_layoutIndex = value;
@@ -181,14 +191,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setSelectedValues:Array<Bool> = [];
+
 	private var _selected:Bool;
+
 	@:flash.property
 	public var selected(get, set):Bool;
+
 	private function get_selected():Bool {
 		return _selected;
 	}
+
 	private function set_selected(value:Bool):Bool {
-		if(_selected == value) {
+		if (_selected == value) {
 			return _selected;
 		}
 		_selected = value;
@@ -197,14 +211,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLocationValues:Array<Array<Int>> = [];
+
 	private var _location:Array<Int>;
+
 	@:flash.property
 	public var location(get, set):Array<Int>;
+
 	private function get_location():Array<Int> {
 		return _location;
 	}
+
 	private function set_location(value:Array<Int>):Array<Int> {
-		if(_location == value) {
+		if (_location == value) {
 			return _location;
 		}
 		_location = value;
@@ -213,14 +231,18 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setGroupListViewOwnerValues:Array<GroupListView> = [];
+
 	private var _groupListViewOwner:GroupListView;
+
 	@:flash.property
 	public var groupListViewOwner(get, set):GroupListView;
+
 	private function get_groupListViewOwner():GroupListView {
 		return _groupListViewOwner;
 	}
+
 	private function set_groupListViewOwner(value:GroupListView):GroupListView {
-		if(_groupListViewOwner == value) {
+		if (_groupListViewOwner == value) {
 			return _groupListViewOwner;
 		}
 		_groupListViewOwner = value;
