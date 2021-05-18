@@ -120,6 +120,10 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		A percentage may be specified in the range from `0.0` to `100.0`. If the
 		value is set to `null`, this property is ignored.
 
+		Tip: If all children of the same container will have the `percentWidth`
+		value set to `100.0`, it's better for performance to set
+		`VerticalLayout.horizontalAlign` to `HorizontalAlign.JUSTIFY` instead.
+
 		In the following example, the width of a container's child is set to
 		50% of the container's width:
 
