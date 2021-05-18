@@ -26,6 +26,31 @@ import openfl.events.EventDispatcher;
 @:event(openfl.events.Event.CHANGE)
 class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 	/**
+		Creates `VerticalLayoutData` that fills the parent container, with the
+		`percentWidth` and `percentHeight` both set to `100.0`.
+
+		In the following example, one of the container's children fills the
+		container's bounds:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new VerticalLayout();
+
+		var child = new Label();
+		child.layoutData = VerticalLayoutData.fill();
+		container.addChild(child);
+		```
+
+		@see `VerticalLayoutData.percentWidth`
+		@see `VerticalLayoutData.percentHeight`
+
+		@since 1.0.0
+	**/
+	public static function fill():VerticalLayoutData {
+		return new VerticalLayoutData(100.0, 100.0);
+	}
+
+	/**
 		Creates a new `VerticalLayoutData` object from the given arguments.
 
 		@since 1.0.0
@@ -84,12 +109,17 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 
 	/**
 		The height of the layout object, as a percentage of the parent
-		container's height. The parent container will calculate the sum of all
-		of its children with explicit pixel heights, and then the remaining
-		space will be distributed to children with percent heights.
+		container's height.
 
 		A percentage may be specified in the range from `0.0` to `100.0`. If the
-		value is set to `null`, this property is ignored.
+		value is set to `null`, this property is ignored and the standard height
+		in pixels will be used.
+
+		The parent container will calculate the sum of all of its children with
+		explicit pixel heights, and then the remaining space will be distributed
+		to children with percent heights. Additionally, if the total sum
+		of `percentHeight` values exceeds `100.0`, all `percentHeight` values
+		will be normalized to the range from `0.0` to `100.0`.
 
 		In the following example, the height of a container's child is set to
 		50% of the container's height:

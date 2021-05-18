@@ -26,6 +26,31 @@ import openfl.events.EventDispatcher;
 @:event(openfl.events.Event.CHANGE)
 class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 	/**
+		Creates `HorizontalLayoutData` that fills the parent container, with the
+		`percentWidth` and `percentHeight` both set to `100.0`.
+
+		In the following example, one of the container's children fills the
+		container's bounds:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new HorizontalLayout();
+
+		var child = new Label();
+		child.layoutData = HorizontalLayoutData.fill();
+		container.addChild(child);
+		```
+
+		@see `HorizontalLayoutData.percentWidth`
+		@see `HorizontalLayoutData.percentHeight`
+
+		@since 1.0.0
+	**/
+	public static function fill():HorizontalLayoutData {
+		return new HorizontalLayoutData(100.0, 100.0);
+	}
+
+	/**
 		Creates a new `HorizontalLayoutData` object from the given arguments.
 
 		@since 1.0.0
@@ -40,12 +65,17 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 	/**
 		The width of the layout object, as a percentage of the parent
-		container's width. The parent container will calculate the sum of all of
-		its children with explicit pixel widths, and then the remaining space
-		will be distributed to children with percent widths.
+		container's width.
 
 		A percentage may be specified in the range from `0.0` to `100.0`. If the
-		value is set to `null`, this property is ignored.
+		value is set to `null`, this property is ignored and the standard width
+		in pixels will be used.
+
+		The parent container will calculate the sum of all of its children with
+		explicit pixel widths, and then the remaining space will be distributed
+		to children with percent widths. Additionally, if the total sum
+		of `percentWidth` values exceeds `100.0`, all `percentWidth` values will
+		be normalized to the range from `0.0` to `100.0`.
 
 		In the following example, the width of a container's child is set to
 		50% of the container's width:
