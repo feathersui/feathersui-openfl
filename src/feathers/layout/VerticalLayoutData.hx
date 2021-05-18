@@ -51,6 +51,56 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
+		Creates `VerticalLayoutData` that fills the width of the parent
+		container, with the ability to optionally specify a percentage value to
+		pass to `percentWidth`.
+
+		In the following example, one of the container's children fills the
+		container's width:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new VerticalLayout();
+
+		var child = new Label();
+		child.layoutData = VerticalLayoutData.fillHorizontal();
+		container.addChild(child);
+		```
+
+		@see `VerticalLayoutData.percentWidth`
+
+		@since 1.0.0
+	**/
+	public static function fillHorizontal(percentWidth:Float = 100.0):VerticalLayoutData {
+		return new VerticalLayoutData(percentWidth, null);
+	}
+
+	/**
+		Creates `VerticalLayoutData` that fills the height of the parent
+		container, with the ability to optionally specify a percentage value to
+		pass to `percentHeight`.
+
+		In the following example, one of the container's children fills the
+		container's height:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new VerticalLayout();
+
+		var child = new Label();
+		child.layoutData = VerticalLayoutData.fillHorizontal();
+		container.addChild(child);
+		```
+
+		@see `VerticalLayoutData.percentHeight`
+
+		@since 1.0.0
+	**/
+	public static function fillVertical(percentHeight:Float = 100.0):VerticalLayoutData {
+		return new VerticalLayoutData(null, percentHeight);
+	}
+
+	/**
 		Creates a new `VerticalLayoutData` object from the given arguments.
 
 		@since 1.0.0

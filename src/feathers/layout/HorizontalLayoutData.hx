@@ -51,6 +51,56 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 	}
 
 	/**
+		Creates `HorizontalLayoutData` that fills the width of the parent
+		container, with the ability to optionally specify a percentage value to
+		pass to `percentWidth`.
+
+		In the following example, one of the container's children fills the
+		container's width:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new HorizontalLayout();
+
+		var child = new Label();
+		child.layoutData = HorizontalLayoutData.fillHorizontal();
+		container.addChild(child);
+		```
+
+		@see `HorizontalLayoutData.percentWidth`
+
+		@since 1.0.0
+	**/
+	public static function fillHorizontal(percentWidth:Float = 100.0):HorizontalLayoutData {
+		return new HorizontalLayoutData(percentWidth, null);
+	}
+
+	/**
+		Creates `HorizontalLayoutData` that fills the height of the parent
+		container, with the ability to optionally specify a percentage value to
+		pass to `percentHeight`.
+
+		In the following example, one of the container's children fills the
+		container's height:
+
+		```hx
+		var container = new LayoutGroup();
+		container.layout = new HorizontalLayout();
+
+		var child = new Label();
+		child.layoutData = HorizontalLayoutData.fillHorizontal();
+		container.addChild(child);
+		```
+
+		@see `HorizontalLayoutData.percentHeight`
+
+		@since 1.0.0
+	**/
+	public static function fillVertical(percentHeight:Float = 100.0):HorizontalLayoutData {
+		return new HorizontalLayoutData(null, percentHeight);
+	}
+
+	/**
 		Creates a new `HorizontalLayoutData` object from the given arguments.
 
 		@since 1.0.0
