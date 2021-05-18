@@ -1248,27 +1248,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			return;
 		}
 		this.removeCurrentIcon(oldIcon);
-		if (this._currentIcon == null) {
-			this._iconMeasurements = null;
-			return;
-		}
-		if ((this._currentIcon is IUIControl)) {
-			cast(this._currentIcon, IUIControl).initializeNow();
-		}
-		if (this._iconMeasurements == null) {
-			this._iconMeasurements = new Measurements(this._currentIcon);
-		} else {
-			this._iconMeasurements.save(this._currentIcon);
-		}
-		if ((this._currentIcon is IProgrammaticSkin)) {
-			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
-		}
-		if ((this._currentIcon is IStateObserver)) {
-			cast(this._currentIcon, IStateObserver).stateContext = this;
-		}
-		var index = this.getChildIndex(this.textField);
-		// the icon should be below the text
-		this.addChildAt(this._currentIcon, index);
+		this.addCurrentIcon(this._currentIcon);
 	}
 
 	private function getCurrentIcon():DisplayObject {
@@ -1285,10 +1265,36 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		return this.icon;
 	}
 
+	private function addCurrentIcon(icon:DisplayObject):Void {
+		if (icon == null) {
+			this._iconMeasurements = null;
+			return;
+		}
+		if ((icon is IUIControl)) {
+			cast(icon, IUIControl).initializeNow();
+		}
+		if (this._iconMeasurements == null) {
+			this._iconMeasurements = new Measurements(icon);
+		} else {
+			this._iconMeasurements.save(icon);
+		}
+		if ((icon is IProgrammaticSkin)) {
+			cast(icon, IProgrammaticSkin).uiContext = this;
+		}
+		if ((icon is IStateObserver)) {
+			cast(icon, IStateObserver).stateContext = this;
+		}
+		icon.addEventListener(Event.RESIZE, toggleButton_icon_resizeHandler, false, 0, true);
+		var index = this.getChildIndex(this.textField);
+		// the icon should be below the text
+		this.addChildAt(icon, index);
+	}
+
 	private function removeCurrentIcon(icon:DisplayObject):Void {
 		if (icon == null) {
 			return;
 		}
+		icon.removeEventListener(Event.RESIZE, toggleButton_icon_resizeHandler);
 		if ((icon is IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
@@ -1324,6 +1330,13 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function toggleButton_textFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
+	}
+
+	private function toggleButton_icon_resizeHandler(event:Event):Void {
+		if (this._ignoreIconResizes) {
+			return;
+		}
 		this.setInvalid(STYLES);
 	}
 }

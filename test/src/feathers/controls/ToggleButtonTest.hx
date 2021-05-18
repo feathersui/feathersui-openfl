@@ -107,4 +107,19 @@ class ToggleButtonTest extends Test {
 		Assert.isNull(icon1.parent);
 		Assert.equals(this._button, icon2.parent);
 	}
+
+	public function testResizeAfterIconResize():Void {
+		var icon = new LayoutGroup();
+		icon.width = 100.0;
+		icon.height = 100.0;
+		this._button.icon = icon;
+		this._button.validateNow();
+		var originalWidth = this._button.width;
+		var originalHeight = this._button.height;
+		icon.width = 200.0;
+		icon.height = 150.0;
+		this._button.validateNow();
+		Assert.notEquals(originalWidth, this._button.width);
+		Assert.notEquals(originalHeight, this._button.height);
+	}
 }

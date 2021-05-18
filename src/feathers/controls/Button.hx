@@ -1163,27 +1163,32 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			return;
 		}
 		this.removeCurrentIcon(oldIcon);
-		if (this._currentIcon == null) {
+		this.addCurrentIcon(this._currentIcon);
+	}
+
+	private function addCurrentIcon(icon:DisplayObject):Void {
+		if (icon == null) {
 			this._iconMeasurements = null;
 			return;
 		}
-		if ((this._currentIcon is IUIControl)) {
-			cast(this._currentIcon, IUIControl).initializeNow();
+		if ((icon is IUIControl)) {
+			cast(icon, IUIControl).initializeNow();
 		}
 		if (this._iconMeasurements == null) {
-			this._iconMeasurements = new Measurements(this._currentIcon);
+			this._iconMeasurements = new Measurements(icon);
 		} else {
-			this._iconMeasurements.save(this._currentIcon);
+			this._iconMeasurements.save(icon);
 		}
-		if ((this._currentIcon is IProgrammaticSkin)) {
-			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
+		if ((icon is IProgrammaticSkin)) {
+			cast(icon, IProgrammaticSkin).uiContext = this;
 		}
-		if ((this._currentIcon is IStateObserver)) {
-			cast(this._currentIcon, IStateObserver).stateContext = this;
+		if ((icon is IStateObserver)) {
+			cast(icon, IStateObserver).stateContext = this;
 		}
+		icon.addEventListener(Event.RESIZE, button_icon_resizeHandler, false, 0, true);
 		var index = this.getChildIndex(this.textField);
 		// the icon should be below the text
-		this.addChildAt(this._currentIcon, index);
+		this.addChildAt(icon, index);
 	}
 
 	private function getCurrentIcon():DisplayObject {
@@ -1198,6 +1203,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		if (icon == null) {
 			return;
 		}
+		icon.removeEventListener(Event.RESIZE, button_icon_resizeHandler);
 		if ((icon is IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
@@ -1233,6 +1239,13 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	}
 
 	private function button_textFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
+	}
+
+	private function button_icon_resizeHandler(event:Event):Void {
+		if (this._ignoreIconResizes) {
+			return;
+		}
 		this.setInvalid(STYLES);
 	}
 }
