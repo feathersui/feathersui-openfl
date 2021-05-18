@@ -25,6 +25,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.HProgressBarTest());
 		runner.addCase(new feathers.controls.HScrollBarTest());
 		runner.addCase(new feathers.controls.HSliderTest());
+		runner.addCase(new feathers.controls.dataRenderers.ItemRendererTest());
 		runner.addCase(new feathers.controls.LabelTest());
 		runner.addCase(new feathers.controls.LayoutGroupTest());
 		runner.addCase(new feathers.controls.ListViewTest());
@@ -58,7 +59,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.ThemeTest());
 		runner.addCase(new feathers.themes.DefaultThemeTest());
 		#if js
-		if(#if (haxe_ver >= 4.0) js.Syntax.code #else untyped __js__ #end("typeof window != 'undefined'")) {
+		if (#if (haxe_ver >= 4.0) js.Syntax.code #else untyped __js__ #end ("typeof window != 'undefined'")) {
 			new HtmlReport(runner, true);
 		} else {
 			new NoExitPrintReport(runner);

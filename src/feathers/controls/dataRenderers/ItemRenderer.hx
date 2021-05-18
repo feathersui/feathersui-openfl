@@ -263,6 +263,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	@:style
 	public var alternateBackgroundSkin:DisplayObject = null;
 
+	private var _ignoreAccessoryResizes = false;
 	private var _accessoryViewMeasurements:Measurements;
 	private var _currentAccessoryView:DisplayObject;
 
@@ -462,6 +463,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (view == null) {
 			return;
 		}
+		view.removeEventListener(Event.RESIZE, itemRenderer_accessoryView_resizeHandler);
 		if ((view is IProgrammaticSkin)) {
 			cast(view, IProgrammaticSkin).uiContext = null;
 		}
@@ -495,6 +497,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if ((view is IStateObserver)) {
 			cast(view, IStateObserver).stateContext = this;
 		}
+		view.addEventListener(Event.RESIZE, itemRenderer_accessoryView_resizeHandler, false, 0, true);
 		this.addChild(view);
 	}
 
@@ -596,9 +599,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			contentWidth = Math.max(contentWidth, this._secondaryTextMeasuredWidth);
 		}
 		if (this._currentAccessoryView != null) {
+			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
+			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
+			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			contentWidth += this._currentAccessoryView.width + adjustedGap;
 		}
 		if (this._currentIcon != null) {
@@ -629,9 +635,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			}
 		}
 		if (this._currentAccessoryView != null) {
+			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
+			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
+			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			contentHeight += Math.max(contentHeight, this._currentAccessoryView.height);
 		}
 		if (this._currentIcon != null) {
@@ -709,16 +718,22 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function layoutChildren():Void {
 		this.refreshTextFieldDimensions(false);
+		var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
+		this._ignoreAccessoryResizes = true;
 		if ((this._currentAccessoryView is IValidating)) {
 			cast(this._currentAccessoryView, IValidating).validateNow();
 		}
+		this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 
 		var availableTextWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var currentX = this.paddingLeft;
 		if (this._currentIcon != null) {
+			var oldIgnoreIconResizes = this._ignoreIconResizes;
+			this._ignoreIconResizes = true;
 			if ((this._currentIcon is IValidating)) {
 				cast(this._currentIcon, IValidating).validateNow();
 			}
+			this._ignoreIconResizes = oldIgnoreIconResizes;
 			this._currentIcon.x = currentX;
 			currentX += this._currentIcon.width + this.gap;
 			this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
@@ -752,6 +767,13 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	}
 
 	private function itemRenderer_secondaryTextFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
+	}
+
+	private function itemRenderer_accessoryView_resizeHandler(event:Event):Void {
+		if (this._ignoreAccessoryResizes) {
+			return;
+		}
 		this.setInvalid(STYLES);
 	}
 }
