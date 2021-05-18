@@ -413,15 +413,15 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					}
 					var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
 					if (layoutData != null) {
-						if (percentWidth < 0.0) {
-							percentWidth = 0.0;
-						} else if (percentWidth > 100.0) {
-							percentWidth = 100.0;
-						}
 						percentWidth = layoutData.percentWidth;
 					}
 				}
 				if (percentWidth != null) {
+					if (percentWidth < 0.0) {
+						percentWidth = 0.0;
+					} else if (percentWidth > 100.0) {
+						percentWidth = 100.0;
+					}
 					item.width = justifyWidth * (percentWidth / 100.0);
 				}
 			}
