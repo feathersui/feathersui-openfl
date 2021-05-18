@@ -103,7 +103,8 @@ class TreeViewTest extends Test {
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
-		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two", children: []}, {text: "Three"}]}], (item:Dynamic) -> item.children);
+		var items:Array<Dynamic> = [{text: "A", children: [{text: "One"}, {text: "Two", children: []}, {text: "Three"}]}];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
 		var itemLocation = [0, 1];
 		var item = this._treeView.dataProvider.get(itemLocation);
 		this._treeView.selectedLocation = itemLocation;
