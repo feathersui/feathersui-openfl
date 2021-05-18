@@ -188,7 +188,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
-	private var _layoutIndex:Int;
+	private var _layoutIndex:Int = -1;
 	@:flash.property
 	public var layoutIndex(get, set):Int;
 	private function get_layoutIndex():Int {

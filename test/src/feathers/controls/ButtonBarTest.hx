@@ -98,7 +98,7 @@ private class CustomRendererWithInterfaces extends Button implements IDataRender
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
-	private var _layoutIndex:Int;
+	private var _layoutIndex:Int = -1;
 	@:flash.property
 	public var layoutIndex(get, set):Int;
 	private function get_layoutIndex():Int {

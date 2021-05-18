@@ -204,7 +204,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
-	private var _layoutIndex:Int;
+	private var _layoutIndex:Int = -1;
 	@:flash.property
 	public var layoutIndex(get, set):Int;
 	private function get_layoutIndex():Int {
@@ -236,7 +236,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setIndexValues:Array<Int> = [];
-	private var _index:Int;
+	private var _index:Int = -1;
 	@:flash.property
 	public var index(get, set):Int;
 	private function get_index():Int {

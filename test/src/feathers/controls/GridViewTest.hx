@@ -223,7 +223,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setLayoutIndexValues:Array<Int> = [];
-	private var _layoutIndex:Int;
+	private var _layoutIndex:Int = -1;
 	@:flash.property
 	public var layoutIndex(get, set):Int;
 	private function get_layoutIndex():Int {
@@ -255,7 +255,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setRowIndexValues:Array<Int> = [];
-	private var _rowIndex:Int;
+	private var _rowIndex:Int = -1;
 	@:flash.property
 	public var rowIndex(get, set):Int;
 	private function get_rowIndex():Int {
@@ -271,7 +271,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	public var setColumnIndexValues:Array<Int> = [];
-	private var _columnIndex:Int;
+	private var _columnIndex:Int = -1;
 	@:flash.property
 	public var columnIndex(get, set):Int;
 	private function get_columnIndex():Int {
