@@ -1522,6 +1522,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function updateItemRendererForIndex(index:Int):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache[index] = null;
+		}
 		var item = this._dataProvider.get(index);
 		var itemRenderer = this.dataToItemRenderer.get(item);
 		if (itemRenderer == null) {
@@ -1536,6 +1539,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
 		this.resetItemRenderer(itemRenderer, state, storage);
+		if (storage.measurements != null) {
+			storage.measurements.restore(itemRenderer);
+		}
 		this.updateItemRenderer(itemRenderer, state, storage);
 	}
 

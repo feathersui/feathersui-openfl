@@ -1759,6 +1759,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	@:access(feathers.controls.dataRenderers.GridViewRowRenderer)
 	private function updateRowRendererForIndex(index:Int):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache[index] = null;
+		}
 		var item = this._dataProvider.get(index);
 		var rowRenderer = this.dataToRowRenderer.get(item);
 		if (rowRenderer == null) {
@@ -1772,6 +1775,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
 		this.resetRowRenderer(rowRenderer, state);
+		if (this._rowRendererMeasurements != null) {
+			this._rowRendererMeasurements.restore(rowRenderer);
+		}
 		this.updateRowRenderer(rowRenderer, state);
 		rowRenderer.updateCells();
 	}

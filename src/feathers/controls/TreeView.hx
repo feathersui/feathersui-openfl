@@ -1664,6 +1664,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	private function updateItemRendererForLocation(location:Array<Int>):Void {
+		var layoutIndex = this.locationToDisplayIndex(location, false);
+		if (this._virtualCache != null && layoutIndex != -1) {
+			this._virtualCache[layoutIndex] = null;
+		}
 		var item = this._dataProvider.get(location);
 		var itemRenderer = this.dataToItemRenderer.get(item);
 
@@ -1673,11 +1677,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		} else {
 			var state = this.itemRendererToItemState.get(itemRenderer);
 			var storage = this.itemStateToStorage(state);
-			this.populateCurrentItemState(item, location, state.layoutIndex, state);
+			this.populateCurrentItemState(item, location, layoutIndex, state);
 			// in order to display the same item with modified properties, this
 			// hack tricks the item renderer into thinking that it has been given
 			// a different item to render.
 			this.resetItemRenderer(itemRenderer, state, storage);
+			if (storage.measurements != null) {
+				storage.measurements.restore(itemRenderer);
+			}
 			this.updateItemRenderer(itemRenderer, state, storage);
 		}
 		if (this._dataProvider.isBranch(item)) {

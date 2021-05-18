@@ -1827,6 +1827,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function updateItemRendererForLocation(location:Array<Int>):Void {
+		var layoutIndex = this.locationToDisplayIndex(location);
+		if (this._virtualCache != null) {
+			this._virtualCache[layoutIndex] = null;
+		}
 		var item = this._dataProvider.get(location);
 		var itemRenderer = this.dataToItemRenderer.get(item);
 		if (itemRenderer == null) {
@@ -1837,12 +1841,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var type = location.length == 1 ? HEADER : STANDARD;
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		var storage = this.itemStateToStorage(state);
-		var layoutIndex = this.locationToDisplayIndex(location);
 		this.populateCurrentItemState(item, type, location, layoutIndex, state);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
 		this.resetItemRenderer(itemRenderer, state, storage);
+		if (storage.measurements != null) {
+			storage.measurements.restore(itemRenderer);
+		}
 		this.updateItemRenderer(itemRenderer, state, storage);
 		if (type == HEADER) {
 			for (i in 0...this._dataProvider.getLength(location)) {
