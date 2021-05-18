@@ -404,6 +404,26 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				} else if (this._justifyResetEnabled && (item is IMeasureObject)) {
 					cast(item, IMeasureObject).resetHeight();
 				}
+			} else if (justifyHeight != null) {
+				var percentHeight:Null<Float> = null;
+				if ((item is ILayoutObject)) {
+					var layoutItem = cast(item, ILayoutObject);
+					if (!layoutItem.includeInLayout) {
+						continue;
+					}
+					var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
+					if (layoutData != null) {
+						percentHeight = layoutData.percentHeight;
+					}
+				}
+				if (percentHeight != null) {
+					if (percentHeight < 0.0) {
+						percentHeight = 0.0;
+					} else if (percentHeight > 100.0) {
+						percentHeight = 100.0;
+					}
+					item.height = justifyHeight * (percentHeight / 100.0);
+				}
 			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
