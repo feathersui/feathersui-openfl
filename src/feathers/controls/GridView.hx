@@ -1780,6 +1780,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this.updateRowRenderer(rowRenderer, state);
 		rowRenderer.updateCells();
+		this.setInvalid(LAYOUT);
 	}
 
 	private function validateCustomColumnWidths():Void {

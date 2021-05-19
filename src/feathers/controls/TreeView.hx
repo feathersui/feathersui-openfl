@@ -1686,6 +1686,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 				storage.measurements.restore(itemRenderer);
 			}
 			this.updateItemRenderer(itemRenderer, state, storage);
+			this.setInvalid(LAYOUT);
 		}
 		if (this._dataProvider.isBranch(item)) {
 			for (i in 0...this._dataProvider.getLength(location)) {

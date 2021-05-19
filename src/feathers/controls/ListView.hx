@@ -1543,6 +1543,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			storage.measurements.restore(itemRenderer);
 		}
 		this.updateItemRenderer(itemRenderer, state, storage);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function listView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {

@@ -1857,6 +1857,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				location.pop();
 			}
 		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function groupListView_dataProvider_updateItemHandler(event:HierarchicalCollectionEvent):Void {
