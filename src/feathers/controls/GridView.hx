@@ -15,13 +15,15 @@ import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
-import feathers.core.InvalidationFlag;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
+import feathers.core.InvalidationFlag;
 import feathers.data.ArrayCollection;
 import feathers.data.GridViewCellState;
 import feathers.data.GridViewHeaderState;
 import feathers.data.IFlatCollection;
+import feathers.data.ISortOrderObserver;
+import feathers.data.SortOrder;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.GridViewEvent;
@@ -1548,6 +1550,20 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			header.column = state.column;
 			header.columnIndex = state.columnIndex;
 			header.gridViewOwner = state.owner;
+		}
+		if ((headerRenderer is ISortOrderObserver)) {
+			var sortObject = cast(headerRenderer, ISortOrderObserver);
+			if (this._sortedColumn == state.column) {
+				var defaultSort = state.column.sortOrder;
+				if (defaultSort == NONE) {
+					sortObject.sortOrder = NONE;
+				} else {
+					var reverseSort = (defaultSort == ASCENDING) ? SortOrder.DESCENDING : SortOrder.ASCENDING;
+					sortObject.sortOrder = this._reverseSort ? reverseSort : defaultSort;
+				}
+			} else {
+				sortObject.sortOrder = NONE;
+			}
 		}
 		if ((headerRenderer is ILayoutIndexObject)) {
 			var layoutObject = cast(headerRenderer, ILayoutIndexObject);
