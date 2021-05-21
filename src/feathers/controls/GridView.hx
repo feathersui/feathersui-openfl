@@ -243,6 +243,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var gridViewPort:AdvancedLayoutViewPort;
 
+	private var _ignoreDataProviderChanges:Bool = false;
+
 	private var _dataProvider:IFlatCollection<Dynamic>;
 
 	/**
@@ -842,9 +844,22 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var sortOrder(get, never):SortOrder;
+	public var sortOrder(get, set):SortOrder;
 
 	private function get_sortOrder():SortOrder {
+		return this._sortOrder;
+	}
+
+	private function set_sortOrder(value:SortOrder):SortOrder {
+		if (this._sortedColumn == null) {
+			// can't change the order of a sort that doesn't exist!
+			value = NONE;
+		}
+		if (this._sortOrder == value) {
+			return this._sortOrder;
+		}
+		this._sortOrder = value;
+		this.setInvalid(SORT);
 		return this._sortOrder;
 	}
 
@@ -856,9 +871,28 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var sortedColumn(get, never):GridViewColumn;
+	public var sortedColumn(get, set):GridViewColumn;
 
 	private function get_sortedColumn():GridViewColumn {
+		return this._sortedColumn;
+	}
+
+	private function set_sortedColumn(value:GridViewColumn):GridViewColumn {
+		if (this._sortedColumn == value) {
+			return this._sortedColumn;
+		}
+		if (this._columns.indexOf(value) == -1) {
+			this._sortedColumn = null;
+			this._sortOrder = NONE;
+			return this._sortedColumn;
+		}
+		this._sortedColumn = value;
+		if (this._sortedColumn != null) {
+			this.sortOrder = this._sortedColumn.defaultSortOrder;
+		} else {
+			this._sortOrder = NONE;
+		}
+		this.setInvalid(SORT);
 		return this._sortedColumn;
 	}
 
@@ -1022,13 +1056,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var layoutInvalid = this.isInvalid(LAYOUT);
-		var selectionInvalid = this.isInvalid(SELECTION);
+		var sortInvalid = this.isInvalid(SORT);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 
 		this.validateColumns();
 		this.validateCustomColumnWidths();
+
+		if (dataInvalid || sortInvalid) {
+			this.refreshSortedColumn(sortInvalid);
+		}
 
 		if (stylesInvalid || layoutInvalid) {
 			this.refreshColumnResizeSkin();
@@ -1769,6 +1807,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_dataProvider_changeHandler(event:Event):Void {
+		if (this._ignoreDataProviderChanges) {
+			return;
+		}
 		this.setInvalid(DATA);
 	}
 
@@ -2112,24 +2153,40 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._sortedColumn.sortCompareFunction(a, b);
 	}
 
+	private function refreshSortedColumn(sortInvalid:Bool):Void {
+		if (this._dataProvider == null) {
+			return;
+		}
+		var oldIgnoreDataProviderChanges = this._ignoreDataProviderChanges;
+		oldIgnoreDataProviderChanges = true;
+		if (this._sortOrder == ASCENDING) {
+			this._dataProvider.sortCompareFunction = this.sortCompareFunction;
+		} else if (this._sortOrder == DESCENDING) {
+			this._dataProvider.sortCompareFunction = this.reverseSortCompareFunction;
+		} else if (this._dataProvider.sortCompareFunction == this.sortCompareFunction
+			|| Reflect.compareMethods(this._dataProvider.sortCompareFunction, this.sortCompareFunction)
+			|| this._dataProvider.sortCompareFunction == this.reverseSortCompareFunction
+			|| Reflect.compareMethods(this._dataProvider.sortCompareFunction, this.reverseSortCompareFunction)) {
+			// don't clear a user-defined sort compare function
+			this._dataProvider.sortCompareFunction = null;
+		}
+		if (sortInvalid) {
+			// the sortCompareFunction might not have changed if we're sorting a
+			// different column with the same function, so force a refresh.
+			this._dataProvider.refresh();
+		}
+		this._ignoreDataProviderChanges = oldIgnoreDataProviderChanges;
+	}
+
 	private function updateSortedColumn(column:GridViewColumn):Void {
 		if (!this._sortableColumns || column.defaultSortOrder == NONE) {
 			return;
 		}
 		if (this._sortedColumn != column) {
-			this._sortedColumn = column;
-			this._sortOrder = column.defaultSortOrder;
+			this.sortedColumn = column;
 		} else {
-			this._sortOrder = (this._sortOrder == DESCENDING) ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+			this.sortOrder = (this._sortOrder == ASCENDING) ? SortOrder.DESCENDING : SortOrder.ASCENDING;
 		}
-		if (this._sortOrder == ASCENDING) {
-			this._dataProvider.sortCompareFunction = this.sortCompareFunction;
-		} else {
-			this._dataProvider.sortCompareFunction = this.reverseSortCompareFunction;
-		}
-		// the sortCompareFunction might not have changed if we're sorting a
-		// different column with the same function, so force a refresh.
-		this._dataProvider.refresh();
 	}
 
 	private function gridView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
