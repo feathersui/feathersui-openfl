@@ -184,6 +184,18 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
+	private static function defaultSortCompareFunction(a:Dynamic, b:Dynamic):Int {
+		var aString = Std.string(a).toLowerCase();
+		var bString = Std.string(b).toLowerCase();
+		if (aString < bString) {
+			return -1;
+		}
+		if (aString > bString) {
+			return 1;
+		}
+		return 0;
+	}
+
 	/**
 		Creates a new `GridView` object.
 
@@ -739,6 +751,41 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return this._cellRendererRecycler;
 	}
 
+	private var _sortableColumns:Bool = false;
+
+	/**
+		Determines if the data grid's columns may be sorted by triggering the
+		column headers. If a column does not provide a custom
+		`sortCompareFunction`, the default behavior will compare the strings
+		returned by`itemToText()`. A custom `sortCompareFunction` is recommended
+		for comparing numeric values.
+
+		The following example enables column sorting:
+
+		```hx
+		gridView.sortableColumns = true;
+		```
+
+		@see `feathers.controls.GridViewColumn.sortOrder`
+		@see `feathers.controls.GridViewColumn.sortCompareFunction`
+
+		@default false
+	**/
+	@:flash.property
+	public var sortableColumns(get, set):Bool;
+
+	private function get_sortableColumns():Bool {
+		return this._sortableColumns;
+	}
+
+	private function set_sortableColumns(value:Bool):Bool {
+		if (this._sortableColumns == value) {
+			return this._sortableColumns;
+		}
+		this._sortableColumns = value;
+		return this._sortableColumns;
+	}
+
 	private var _resizableColumns:Bool = false;
 
 	/**
@@ -781,6 +828,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	@:style
 	public var columnResizeSkin:DisplayObject = null;
+
+	private var _reverseSort:Bool = false;
+	private var _sortedColumn:GridViewColumn = null;
 
 	private var activeHeaderRenderers:Array<DisplayObject> = [];
 	private var dataToHeaderRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
@@ -2011,6 +2061,39 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
+	private function reverseSortCompareFunction(a:Dynamic, b:Dynamic):Int {
+		return -this.sortCompareFunction(a, b);
+	}
+
+	private function sortCompareFunction(a:Dynamic, b:Dynamic):Int {
+		if (this._sortedColumn.sortCompareFunction == null) {
+			var aText = this._sortedColumn.itemToText(a);
+			var bText = this._sortedColumn.itemToText(b);
+			return defaultSortCompareFunction(aText, bText);
+		}
+		return this._sortedColumn.sortCompareFunction(a, b);
+	}
+
+	private function updateSortedColumn(column:GridViewColumn):Void {
+		if (!this._sortableColumns || column.sortOrder == NONE) {
+			return;
+		}
+		if (this._sortedColumn != column) {
+			this._sortedColumn = column;
+			this._reverseSort = column.sortOrder == DESCENDING;
+		} else {
+			this._reverseSort = !this._reverseSort;
+		}
+		if (this._reverseSort) {
+			this._dataProvider.sortCompareFunction = this.reverseSortCompareFunction;
+		} else {
+			this._dataProvider.sortCompareFunction = this.sortCompareFunction;
+		}
+		// the sortCompareFunction might not have changed if we're sorting a
+		// different column, so force a refresh.
+		this._dataProvider.refresh();
+	}
+
 	private function gridView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
 		this.updateRowRendererForIndex(event.index);
 	}
@@ -2036,6 +2119,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 
@@ -2046,6 +2130,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 
@@ -2056,6 +2141,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 

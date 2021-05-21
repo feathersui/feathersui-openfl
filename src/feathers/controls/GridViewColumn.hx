@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.SortOrder;
 import feathers.data.GridViewCellState;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
@@ -90,6 +91,48 @@ class GridViewColumn extends EventDispatcher {
 		@since 1.0.0
 	**/
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = null;
+
+	/**
+
+		A function to compare each item in the collection to determine the
+		order when sorted.
+
+		The return value should be `-1` if the first item should appear before
+		the second item when the collection is sorted. The return value should
+		be `1` if the first item should appear after the second item when the
+		collection in sorted. Finally, the return value should be `0` if both
+		items have the same sort order.
+
+		@see `GridViewColumn.sortOrder`
+
+		@since 1.0.0
+	**/
+	public var sortCompareFunction:(Dynamic, Dynamic) -> Int = null;
+
+	/**
+		Indicates if the column may be sorted by triggering the
+		header renderer, and which direction it should be sorted
+		by default (ascending or descending).
+
+		Setting this property will not start a sort. It only provides the
+		initial order of the sort when triggered by the user.
+
+		If the `sortableColumns` property of the `GridView` is `false`, it takes
+		precendence over this property, and the column will not be sortable.
+
+		The following example disables sorting:
+
+		```hx
+		column.sortOrder = SortOrder.NONE;
+		```
+
+		@see `feathers.controls.GridView.sortableColumns`
+		@see `GridViewColumn.sortCompareFunction`
+		@see `feathers.data.SortOrder.ASCENDING`
+		@see `feathers.data.SortOrder.DESCENDING`
+		@see `feathers.data.SortOrder.NONE`
+	**/
+	public var sortOrder:SortOrder = ASCENDING;
 
 	/**
 		Converts an item to text to display within a grid view cell. By default,
