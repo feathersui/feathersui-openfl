@@ -8,8 +8,9 @@
 
 package feathers.controls.supportClasses;
 
-import feathers.core.IFocusManagerAware;
 import feathers.core.FeathersControl;
+import feathers.core.IFocusManagerAware;
+import feathers.core.IStageFocusDelegate;
 import feathers.core.ITextControl;
 import feathers.events.FeathersEvent;
 import openfl.display.InteractiveObject;
@@ -31,7 +32,7 @@ import openfl.text.TextLineMetrics;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class TextFieldViewPort extends FeathersControl implements IViewPort implements ITextControl implements IFocusManagerAware {
+class TextFieldViewPort extends FeathersControl implements IViewPort implements ITextControl implements IFocusManagerAware implements IStageFocusDelegate {
 	public function new() {
 		super();
 
