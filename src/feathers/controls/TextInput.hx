@@ -284,7 +284,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var promptTextField:TextField;
 	private var errorStringCallout:TextCallout;
 
-	private var _previousText:String = null;
+	private var _previousMeasureText:String = null;
 	private var _previousPrompt:String = null;
 	private var _previousTextFormat:TextFormat = null;
 	private var _previousSimpleTextFormat:openfl.text.TextFormat;
@@ -337,6 +337,35 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.setInvalid(DATA);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._text;
+	}
+
+	private var _measureText:String = null;
+
+	/**
+		If not `null`, the dimensions of the `measureText` will be used in the
+		calculation of the text input's width. If the text input's width hasn't
+		been set explicitly, its calculated dimensions will be at least large
+		enough to display the `measureText`. If other children of the text
+		input, such as the background skin or the prompt text is larger than the
+		width of the `measureText`, the text input will choose the largest
+		required width.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var measureText(get, set):String;
+
+	private function get_measureText():String {
+		return this._measureText;
+	}
+
+	private function set_measureText(value:String):String {
+		if (this._measureText == value) {
+			return this._measureText;
+		}
+		this._measureText = value;
+		this.setInvalid(DATA);
+		return this._measureText;
 	}
 
 	/**
@@ -1248,7 +1277,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			if (this.autoSizeWidth) {
+			if (this.autoSizeWidth || this._measureText != null) {
 				newWidth = this._textMeasuredWidth;
 			} else {
 				newWidth = 0.0;
@@ -1290,7 +1319,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			if (this.autoSizeWidth) {
+			if (this.autoSizeWidth || this._measureText != null) {
 				newMinWidth = this._textMeasuredWidth;
 			} else {
 				newMinWidth = 0.0;
@@ -1468,26 +1497,33 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private function refreshText(sizeInvalid:Bool):Void {
 		this.textField.restrict = this.__restrict;
 		this.textField.maxChars = this._maxChars;
-		if (this._text == this._previousText && !this._updatedTextStyles && !sizeInvalid) {
+		var hasMeasureText = this._measureText != null;
+		var measureText = hasMeasureText ? this._measureText : this._text;
+		if (measureText == null || measureText.length == 0) {
+			hasMeasureText = true;
+			measureText = "\u200b"; // zero-width space
+		}
+		if (measureText == this._previousMeasureText && !this._updatedTextStyles && !sizeInvalid) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
 		this.textField.autoSize = TextFieldAutoSize.LEFT;
-		var hasText = this._text != null && this._text.length > 0;
-		if (hasText) {
-			this.textField.text = this._text;
-		} else {
-			this.textField.text = "\u200b"; // zero-width space
-		}
+		this.textField.text = measureText;
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
 		this.textField.autoSize = TextFieldAutoSize.NONE;
-		if (!hasText) {
-			this.textField.text = "";
+		var finalText:String = null;
+		if (this._text == null || this._text.length == 0) {
+			finalText = "";
+		} else if (hasMeasureText) {
+			finalText = this._text;
 		}
-		this._previousText = this._text;
+		if (finalText != null) {
+			this.textField.text = finalText;
+		}
+		this._previousMeasureText = measureText;
 	}
 
 	private function refreshSelection():Void {
