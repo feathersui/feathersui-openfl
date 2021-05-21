@@ -103,27 +103,29 @@ class GridViewColumn extends EventDispatcher {
 		collection in sorted. Finally, the return value should be `0` if both
 		items have the same sort order.
 
-		@see `GridViewColumn.sortOrder`
+		@see `GridViewColumn.defaultSortOrder`
+		@see `feathers.controls.GridView.sortableColumns`
 
 		@since 1.0.0
 	**/
 	public var sortCompareFunction:(Dynamic, Dynamic) -> Int = null;
 
 	/**
-		Indicates if the column may be sorted by triggering the
-		header renderer, and which direction it should be sorted
-		by default (ascending or descending).
+		Indicates if the column may be sorted by triggering the header renderer,
+		and which direction it should be sorted by default (ascending or
+		descending).
 
 		Setting this property will not start a sort. It only provides the
 		initial order of the sort when triggered by the user.
 
 		If the `sortableColumns` property of the `GridView` is `false`, it takes
-		precendence over this property, and the column will not be sortable.
+		precendence over this property, and the column will not be sortable by
+		the user under any circumstances.
 
-		The following example disables sorting:
+		The following example disables sorting of a column:
 
 		```hx
-		column.sortOrder = SortOrder.NONE;
+		column.defaultSortOrder = SortOrder.NONE;
 		```
 
 		@see `feathers.controls.GridView.sortableColumns`
@@ -132,7 +134,7 @@ class GridViewColumn extends EventDispatcher {
 		@see `feathers.data.SortOrder.DESCENDING`
 		@see `feathers.data.SortOrder.NONE`
 	**/
-	public var sortOrder:SortOrder = ASCENDING;
+	public var defaultSortOrder:SortOrder = ASCENDING;
 
 	/**
 		Converts an item to text to display within a grid view cell. By default,

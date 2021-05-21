@@ -831,8 +831,36 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	@:style
 	public var columnResizeSkin:DisplayObject = null;
 
-	private var _reverseSort:Bool = false;
+	private var _sortOrder:SortOrder = NONE;
+
+	/**
+		Indicates the sort order of `sortedColumn`, if `sortedColumn` is not
+		`null`. Otherwise, returns `SortOrder.NONE`.
+
+		@see `GridView.sortedColumn`.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var sortOrder(get, never):SortOrder;
+
+	private function get_sortOrder():SortOrder {
+		return this._sortOrder;
+	}
+
 	private var _sortedColumn:GridViewColumn = null;
+
+	/**
+		The currently sorted column, or `null`, if no columns have been sorted.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var sortedColumn(get, never):GridViewColumn;
+
+	private function get_sortedColumn():GridViewColumn {
+		return this._sortedColumn;
+	}
 
 	private var activeHeaderRenderers:Array<DisplayObject> = [];
 	private var dataToHeaderRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
@@ -1554,13 +1582,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if ((headerRenderer is ISortOrderObserver)) {
 			var sortObject = cast(headerRenderer, ISortOrderObserver);
 			if (this._sortedColumn == state.column) {
-				var defaultSort = state.column.sortOrder;
-				if (defaultSort == NONE) {
-					sortObject.sortOrder = NONE;
-				} else {
-					var reverseSort = (defaultSort == ASCENDING) ? SortOrder.DESCENDING : SortOrder.ASCENDING;
-					sortObject.sortOrder = this._reverseSort ? reverseSort : defaultSort;
-				}
+				sortObject.sortOrder = this._sortOrder;
 			} else {
 				sortObject.sortOrder = NONE;
 			}
@@ -2091,22 +2113,22 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function updateSortedColumn(column:GridViewColumn):Void {
-		if (!this._sortableColumns || column.sortOrder == NONE) {
+		if (!this._sortableColumns || column.defaultSortOrder == NONE) {
 			return;
 		}
 		if (this._sortedColumn != column) {
 			this._sortedColumn = column;
-			this._reverseSort = column.sortOrder == DESCENDING;
+			this._sortOrder = column.defaultSortOrder;
 		} else {
-			this._reverseSort = !this._reverseSort;
+			this._sortOrder = (this._sortOrder == DESCENDING) ? SortOrder.ASCENDING : SortOrder.DESCENDING;
 		}
-		if (this._reverseSort) {
-			this._dataProvider.sortCompareFunction = this.reverseSortCompareFunction;
-		} else {
+		if (this._sortOrder == ASCENDING) {
 			this._dataProvider.sortCompareFunction = this.sortCompareFunction;
+		} else {
+			this._dataProvider.sortCompareFunction = this.reverseSortCompareFunction;
 		}
 		// the sortCompareFunction might not have changed if we're sorting a
-		// different column, so force a refresh.
+		// different column with the same function, so force a refresh.
 		this._dataProvider.refresh();
 	}
 
