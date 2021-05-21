@@ -1282,6 +1282,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			} else {
 				newWidth = 0.0;
 			}
+			newWidth = Math.max(newWidth, this._promptTextMeasuredWidth);
 			if (measureLeftView != null) {
 				newWidth += measureLeftView.width + this.leftViewGap;
 			} else if (this._leftViewMeasurements != null) {
@@ -1301,6 +1302,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			newHeight = this._textMeasuredHeight;
+			newHeight = Math.max(newHeight, this._promptTextMeasuredHeight);
 			if (measureLeftView != null && newHeight < measureLeftView.height) {
 				newHeight = measureLeftView.height;
 			} else if (this._leftViewMeasurements != null && newHeight < this._leftViewMeasurements.height) {
@@ -1324,6 +1326,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			} else {
 				newMinWidth = 0.0;
 			}
+			newMinWidth = Math.max(newMinWidth, this._promptTextMeasuredWidth);
 			if (measureLeftView != null) {
 				newMinWidth += measureLeftView.minWidth + this.leftViewGap;
 			} else if (this._leftViewMeasurements != null) {
@@ -1345,6 +1348,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
 			newMinHeight = this._textMeasuredHeight;
+			newMinHeight = Math.max(newMinHeight, this._promptTextMeasuredHeight);
 			if (measureLeftView != null && newMinHeight < measureLeftView.minHeight) {
 				newMinHeight = measureLeftView.minHeight;
 			} else if (this._leftViewMeasurements != null && newMinHeight < this._leftViewMeasurements.minHeight) {
