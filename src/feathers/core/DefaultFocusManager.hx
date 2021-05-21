@@ -279,11 +279,14 @@ class DefaultFocusManager implements IFocusManager {
 
 	private function clearFocusManager(target:DisplayObject):Void {
 		if ((target is IFocusManagerAware)) {
-			var targetWithFocus = cast(target, IFocusObject);
+			var targetWithFocus = cast(target, IFocusManagerAware);
 			if (targetWithFocus.focusManager == this) {
 				if (this._focus == targetWithFocus) {
 					// change to focus owner, which falls back to null
-					var focusOwner = targetWithFocus.focusOwner;
+					var focusOwner:IFocusObject = null;
+					if ((target is IFocusObject)) {
+						focusOwner = cast(targetWithFocus, IFocusObject).focusOwner;
+					}
 					if (focusOwner != null && focusOwner.focusManager != this) {
 						focusOwner = null;
 					}
