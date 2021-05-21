@@ -91,6 +91,13 @@ enum InvalidationFlag {
 	FOCUS;
 
 	/**
+		Indicate that the sort state of the UI control has changed.
+
+		@since 1.0.0
+	**/
+	SORT;
+
+	/**
 		Add a custom flag based on a string value.
 
 		@since 1.0.0
