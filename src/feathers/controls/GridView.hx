@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.GridViewHeaderRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -388,11 +389,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _oldHeaderRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = null;
 
-	private var _headerRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = DisplayObjectRecycler.withFunction(() -> {
-		var headerRenderer = new ItemRenderer();
-		headerRenderer.toggleable = false;
-		return headerRenderer;
-	});
+	private var _headerRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewHeaderState,
+		DisplayObject> = DisplayObjectRecycler.withClass(GridViewHeaderRenderer);
 
 	/**
 		Manages header renderers used by the grid view.
@@ -1072,7 +1070,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.refreshColumnResizeSkin();
 		}
 
-		if (headerRendererInvalid || stateInvalid || dataInvalid) {
+		if (headerRendererInvalid || stateInvalid || dataInvalid || sortInvalid) {
 			this.refreshHeaderRenderers();
 		}
 
