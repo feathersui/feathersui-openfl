@@ -111,7 +111,7 @@ class LayoutGroup extends FeathersControl {
 	private var _layoutResult:LayoutBoundsResult = new LayoutBoundsResult();
 	private var _layoutMeasurements:Measurements = new Measurements();
 	private var _ignoreChildChanges:Bool = false;
-	private var _ignoreChildChangesButSetFlags:Bool = false;
+	private var _ignoreChangesButSetFlags:Bool = false;
 	private var _ignoreLayoutChanges:Bool = false;
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
@@ -400,18 +400,18 @@ class LayoutGroup extends FeathersControl {
 		// for the start of validation, we're going to ignore when children
 		// resize or dispatch changes to layout data. this allows subclasses
 		// to modify children in draw() before the layout is applied.
-		var oldIgnoreChildChanges = this._ignoreChildChangesButSetFlags;
-		this._ignoreChildChangesButSetFlags = true;
+		var oldIgnoreChildChanges = this._ignoreChangesButSetFlags;
+		this._ignoreChangesButSetFlags = true;
 		super.validateNow();
 		// if super.validateNow() returns without calling update(), the flag
 		// won't be reset before layout is called, so we need reset manually.
-		this._ignoreChildChangesButSetFlags = oldIgnoreChildChanges;
+		this._ignoreChangesButSetFlags = oldIgnoreChildChanges;
 	}
 
 	override private function update():Void {
 		// children are allowed to change during update() in a subclass up
 		// until it calls super.update().
-		this._ignoreChildChangesButSetFlags = false;
+		this._ignoreChangesButSetFlags = false;
 
 		var layoutInvalid = this.isInvalid(LAYOUT);
 		var sizeInvalid = this.isInvalid(SIZE);
@@ -714,7 +714,7 @@ class LayoutGroup extends FeathersControl {
 		if (this._ignoreChildChanges) {
 			return;
 		}
-		if (this._ignoreChildChangesButSetFlags) {
+		if (this._ignoreChangesButSetFlags) {
 			this.setInvalidationFlag(LAYOUT);
 			return;
 		}
@@ -725,7 +725,7 @@ class LayoutGroup extends FeathersControl {
 		if (this._ignoreChildChanges) {
 			return;
 		}
-		if (this._ignoreChildChangesButSetFlags) {
+		if (this._ignoreChangesButSetFlags) {
 			this.setInvalidationFlag(LAYOUT);
 			return;
 		}
@@ -734,6 +734,10 @@ class LayoutGroup extends FeathersControl {
 
 	private function layoutGroup_layout_changeHandler(event:Event):Void {
 		if (this._ignoreLayoutChanges) {
+			return;
+		}
+		if (this._ignoreChangesButSetFlags) {
+			this.setInvalidationFlag(LAYOUT);
 			return;
 		}
 		this.setInvalid(LAYOUT);
