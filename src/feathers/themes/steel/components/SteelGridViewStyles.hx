@@ -72,6 +72,8 @@ class SteelGridViewStyles {
 				gridView.focusRectSkin = focusRectSkin;
 			}
 
+			gridView.showHeaderDividersOnlyWhenResizable = true;
+
 			gridView.paddingTop = 1.0;
 			gridView.paddingRight = 1.0;
 			gridView.paddingBottom = 1.0;
@@ -104,6 +106,8 @@ class SteelGridViewStyles {
 				skin.border = theme.getFocusBorder();
 				gridView.focusRectSkin = skin;
 			}
+
+			gridView.showHeaderDividersOnlyWhenResizable = true;
 		}
 
 		var styleProvider = theme.styleProvider;

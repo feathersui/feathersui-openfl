@@ -192,8 +192,18 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public static final CHILD_VARIANT_HEADER_DIVIDER = "gridView_headerDivider";
 
+	/**
+		The variant used to style the column view port dividers in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_COLUMN_DIVIDER = "gridView_columnDivider";
+
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
 	private static final INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("headerDividerFactory");
+	private static final INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("columnDividerFactory");
 
 	private static final RESET_HEADER_STATE = new GridViewHeaderState();
 	private static final RESET_ROW_STATE = new GridViewCellState();
@@ -249,6 +259,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _headerContainer:LayoutGroup;
 	private var _headerContainerLayout:GridViewRowLayout;
 	private var _headerResizeContainer:Sprite;
+	private var _columnDividerContainer:Sprite;
 	private var _resizingHeaderIndex:Int = -1;
 	private var _resizingHeaderTouchID:Int = -1;
 	private var _resizingHeaderStartStageX:Float;
@@ -260,6 +271,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _defaultHeaderDividerStorage:HeaderDividerStorage = new HeaderDividerStorage(DisplayObjectFactory.withClass(Button));
 	private var _headerDividerLayoutItems:Array<InteractiveObject> = [];
+
+	private var _defaultColumnDividerStorage:ColumnDividerStorage = new ColumnDividerStorage();
+	private var _columnDividerLayoutItems:Array<InteractiveObject> = [];
+
 	private var _currentHeaderScrollRect:Rectangle;
 	private var _headerScrollRect1:Rectangle = new Rectangle();
 	private var _headerScrollRect2:Rectangle = new Rectangle();
@@ -492,7 +507,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _previousCustomHeaderDividerVariant:String = null;
 
 	/**
-		A custom variant to set on all header divider, instead of
+		A custom variant to set on all header dividers, instead of
 		`GridView.CHILD_VARIANT_HEADER_DIVIDER`.
 
 		The `customHeaderDividerVariant` will be not be used if the result of
@@ -504,6 +519,51 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	@:style
 	public var customHeaderDividerVariant:String = null;
+
+	/**
+		Manages the dividers between the grid view's columns.
+
+		In the following example, the grid view uses a custom column divider
+		class:
+
+		```hx
+		gridView.columnDividerFactory = DisplayObjectFactory.withClass(CustomColumnDivider);
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var columnDividerFactory(get, set):DisplayObjectFactory<Dynamic, DisplayObject>;
+
+	private function get_columnDividerFactory():DisplayObjectFactory<Dynamic, DisplayObject> {
+		return this._defaultColumnDividerStorage.columnDividerFactory;
+	}
+
+	private function set_columnDividerFactory(value:DisplayObjectFactory<Dynamic, DisplayObject>):DisplayObjectFactory<Dynamic, DisplayObject> {
+		if (this._defaultColumnDividerStorage.columnDividerFactory == value) {
+			return this._defaultColumnDividerStorage.columnDividerFactory;
+		}
+		this._defaultColumnDividerStorage.oldColumnDividerFactory = this._defaultColumnDividerStorage.columnDividerFactory;
+		this._defaultColumnDividerStorage.columnDividerFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
+		return this._defaultColumnDividerStorage.columnDividerFactory;
+	}
+
+	private var _previousCustomColumnDividerVariant:String = null;
+
+	/**
+		A custom variant to set on all column dividers, instead of
+		`GridView.CHILD_VARIANT_COLUMN_DIVIDER`.
+
+		The `customColumnDividerVariant` will be not be used if the result of
+		`columnDividerFactory.create()` already has a variant set.
+
+		@see `GridView.CHILD_VARIANT_COLUMN_DIVIDER
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customColumnDividerVariant:String = null;
 
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
 	private var _rowRendererMeasurements:Measurements;
@@ -1034,6 +1094,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	@:style
 	public var extendedScrollBarY:Bool = false;
 
+	/**
+		Determines if header dividers are visible only when `resizableColumns`
+		is `true`.
+	**/
+	@:style
+	public var showHeaderDividersOnlyWhenResizable:Bool = false;
+
 	private var _ignoreSelectionChange = false;
 	private var _ignoreLayoutChanges = false;
 	private var _ignoreHeaderLayoutChanges = false;
@@ -1127,6 +1194,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._headerResizeContainer = new Sprite();
 			this.addChild(this._headerResizeContainer);
 		}
+
+		if (this._columnDividerContainer == null) {
+			this._columnDividerContainer = new Sprite();
+			this._columnDividerContainer.mouseEnabled = false;
+			this._columnDividerContainer.mouseChildren = false;
+			this.addChild(this._columnDividerContainer);
+		}
 	}
 
 	override private function update():Void {
@@ -1146,6 +1220,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		var headerDividerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
 
+		if (this._previousCustomColumnDividerVariant != this.customColumnDividerVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
+		}
+		var columnDividerInvalid = this.isInvalid(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
+
 		this.validateColumns();
 
 		if (dataInvalid || sortInvalid) {
@@ -1156,8 +1235,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.refreshColumnResizeSkin();
 		}
 
-		if (headerRendererInvalid || headerDividerInvalid || stateInvalid || dataInvalid || sortInvalid) {
+		if (headerRendererInvalid || stateInvalid || dataInvalid || sortInvalid) {
 			this.refreshHeaderRenderers();
+		}
+
+		if (headerDividerInvalid || stateInvalid || dataInvalid || sortInvalid) {
+			this.refreshHeaderDividers();
+		}
+
+		if (columnDividerInvalid || stateInvalid || dataInvalid || sortInvalid) {
+			this.refreshColumnDividers();
 		}
 
 		if (layoutInvalid) {
@@ -1191,6 +1278,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		this.validateCustomColumnWidths();
 		this.layoutHeaders();
+		this.layoutHeaderDividers();
+		this.layoutColumnDividers();
 		this.handlePendingScroll();
 	}
 
@@ -1319,11 +1408,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			this._headerContainer.scrollRect = null;
 		}
+	}
 
+	private function layoutHeaderDividers():Void {
 		this._headerResizeContainer.x = this._headerContainer.x;
 		this._headerResizeContainer.y = this._headerContainer.y;
 		for (i in 0...this._headerDividerLayoutItems.length) {
 			var headerDivider = this._headerDividerLayoutItems[i];
+			headerDivider.visible = !this.showHeaderDividersOnlyWhenResizable || this.resizableColumns;
 			if ((headerDivider is IValidating)) {
 				cast(headerDivider, IValidating).validateNow();
 			}
@@ -1331,6 +1423,21 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			headerDivider.x = headerRenderer.x + headerRenderer.width - (headerDivider.width / 2.0);
 			headerDivider.y = headerRenderer.y;
 			headerDivider.height = headerRenderer.height;
+		}
+	}
+
+	private function layoutColumnDividers():Void {
+		this._columnDividerContainer.x = this._viewPort.x;
+		this._columnDividerContainer.y = this._viewPort.y;
+		for (i in 0...this._columnDividerLayoutItems.length) {
+			var columnDivider = this._columnDividerLayoutItems[i];
+			if ((columnDivider is IValidating)) {
+				cast(columnDivider, IValidating).validateNow();
+			}
+			var headerRenderer = this._headerLayoutItems[i];
+			columnDivider.x = headerRenderer.x + headerRenderer.width - (columnDivider.width / 2.0);
+			columnDivider.y = headerRenderer.y;
+			columnDivider.height = this._viewPort.visibleHeight;
 		}
 	}
 
@@ -1409,13 +1516,25 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._defaultHeaderStorage.inactiveHeaderRenderers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive header renderers should be empty after updating.');
 		}
+	}
 
+	private function refreshHeaderDividers():Void {
 		var headerDividerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
 		this.refreshInactiveHeaderDividers(headerDividerInvalid);
 		this.refreshActiveHeaderDividers();
 		this.freeInactiveHeaderDividers();
 		if (this._defaultHeaderDividerStorage.inactiveHeaderDividers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive header dividers should be empty after updating.');
+		}
+	}
+
+	private function refreshColumnDividers():Void {
+		var columnDividerInvalid = this.isInvalid(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
+		this.refreshInactiveColumnDividers(columnDividerInvalid);
+		this.refreshActiveColumnDividers();
+		this.freeInactiveColumnDividers();
+		if (this._defaultColumnDividerStorage.inactiveColumnDividers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive column dividers should be empty after updating.');
 		}
 	}
 
@@ -1445,32 +1564,41 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function refreshActiveHeaderDividers():Void {
 		this._headerDividerLayoutItems.resize(0);
+		if (this._defaultHeaderDividerStorage.headerDividerFactory == null) {
+			return;
+		}
 
 		for (i in 0...this._columns.length - 1) {
-			var headerDivider:InteractiveObject = null;
-			if (this._defaultHeaderDividerStorage.inactiveHeaderDividers.length == 0) {
-				headerDivider = this._defaultHeaderDividerStorage.headerDividerFactory.create();
-				if ((headerDivider is IVariantStyleObject)) {
-					var variantHeaderDivider = cast(headerDivider, IVariantStyleObject);
-					if (variantHeaderDivider.variant == null) {
-						var variant = (this.customHeaderDividerVariant != null) ? this.customHeaderDividerVariant : CHILD_VARIANT_HEADER_DIVIDER;
-						variantHeaderDivider.variant = variant;
-					}
-				}
-				if ((headerDivider is IUIControl)) {
-					cast(headerDivider, IUIControl).initializeNow();
-				}
-				headerDivider.addEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
-				headerDivider.addEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
-				headerDivider.addEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
-				headerDivider.addEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
-				this._headerResizeContainer.addChildAt(headerDivider, i);
-			} else {
-				headerDivider = this._defaultHeaderDividerStorage.inactiveHeaderDividers.shift();
-				this._headerResizeContainer.setChildIndex(headerDivider, i);
-			}
+			var column = this._columns.get(i);
+			var headerDivider = this.createHeaderDivider(column, i);
 			this._headerDividerLayoutItems[i] = headerDivider;
 		}
+	}
+
+	private function createHeaderDivider(column:GridViewColumn, columnIndex:Int):InteractiveObject {
+		var headerDivider:InteractiveObject = null;
+		if (this._defaultHeaderDividerStorage.inactiveHeaderDividers.length == 0) {
+			headerDivider = this._defaultHeaderDividerStorage.headerDividerFactory.create();
+			if ((headerDivider is IVariantStyleObject)) {
+				var variantHeaderDivider = cast(headerDivider, IVariantStyleObject);
+				if (variantHeaderDivider.variant == null) {
+					var variant = (this.customHeaderDividerVariant != null) ? this.customHeaderDividerVariant : CHILD_VARIANT_HEADER_DIVIDER;
+					variantHeaderDivider.variant = variant;
+				}
+			}
+			if ((headerDivider is IUIControl)) {
+				cast(headerDivider, IUIControl).initializeNow();
+			}
+			headerDivider.addEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
+			headerDivider.addEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
+			headerDivider.addEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
+			headerDivider.addEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
+			this._headerResizeContainer.addChildAt(headerDivider, columnIndex);
+		} else {
+			headerDivider = this._defaultHeaderDividerStorage.inactiveHeaderDividers.shift();
+			this._headerResizeContainer.setChildIndex(headerDivider, columnIndex);
+		}
+		return headerDivider;
 	}
 
 	private function destroyHeaderDivider(headerDivider:InteractiveObject, factory:DisplayObjectFactory<Dynamic, InteractiveObject>):Void {
@@ -1481,6 +1609,72 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerResizeContainer.removeChild(headerDivider);
 		if (factory != null && factory.destroy != null) {
 			factory.destroy(headerDivider);
+		}
+	}
+
+	private function refreshInactiveColumnDividers(factoryInvalid:Bool):Void {
+		var temp = this._defaultColumnDividerStorage.inactiveColumnDividers;
+		this._defaultColumnDividerStorage.inactiveColumnDividers = this._defaultColumnDividerStorage.activeColumnDividers;
+		this._defaultColumnDividerStorage.activeColumnDividers = temp;
+		if (this._defaultColumnDividerStorage.activeColumnDividers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active column dividers should be empty before updating.');
+		}
+		if (factoryInvalid) {
+			this.freeInactiveHeaderDividers();
+			this._defaultColumnDividerStorage.oldColumnDividerFactory = null;
+		}
+	}
+
+	private function freeInactiveColumnDividers():Void {
+		var factory = this._defaultColumnDividerStorage.oldColumnDividerFactory != null ? this._defaultColumnDividerStorage.oldColumnDividerFactory : this._defaultColumnDividerStorage.columnDividerFactory;
+		for (headerDivider in this._defaultColumnDividerStorage.inactiveColumnDividers) {
+			if (headerDivider == null) {
+				continue;
+			}
+			this.destroyColumnDivider(headerDivider, factory);
+		}
+		this._defaultColumnDividerStorage.inactiveColumnDividers.resize(0);
+	}
+
+	private function refreshActiveColumnDividers():Void {
+		this._columnDividerLayoutItems.resize(0);
+		if (this._defaultColumnDividerStorage.columnDividerFactory == null) {
+			return;
+		}
+
+		for (i in 0...this._columns.length - 1) {
+			var column = this._columns.get(i);
+			var columnDivider = this.createColumnDivider(column, i);
+			this._columnDividerLayoutItems[i] = columnDivider;
+		}
+	}
+
+	private function createColumnDivider(column:GridViewColumn, columnIndex:Int):InteractiveObject {
+		var columnDivider:InteractiveObject = null;
+		if (this._defaultColumnDividerStorage.inactiveColumnDividers.length == 0) {
+			columnDivider = this._defaultColumnDividerStorage.columnDividerFactory.create();
+			if ((columnDivider is IVariantStyleObject)) {
+				var variantColumnDivider = cast(columnDivider, IVariantStyleObject);
+				if (variantColumnDivider.variant == null) {
+					var variant = (this.customColumnDividerVariant != null) ? this.customColumnDividerVariant : CHILD_VARIANT_COLUMN_DIVIDER;
+					variantColumnDivider.variant = variant;
+				}
+			}
+			if ((columnDivider is IUIControl)) {
+				cast(columnDivider, IUIControl).initializeNow();
+			}
+			this._columnDividerContainer.addChildAt(columnDivider, columnIndex);
+		} else {
+			columnDivider = this._defaultColumnDividerStorage.inactiveColumnDividers.shift();
+			this._columnDividerContainer.setChildIndex(columnDivider, columnIndex);
+		}
+		return columnDivider;
+	}
+
+	private function destroyColumnDivider(columnDivider:DisplayObject, factory:DisplayObjectFactory<Dynamic, DisplayObject>):Void {
+		this._columnDividerContainer.removeChild(columnDivider);
+		if (factory != null && factory.destroy != null) {
+			factory.destroy(columnDivider);
 		}
 	}
 
@@ -2547,4 +2741,15 @@ private class HeaderDividerStorage {
 	public var headerDividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject>;
 	public var activeHeaderDividers:Array<InteractiveObject> = [];
 	public var inactiveHeaderDividers:Array<InteractiveObject> = [];
+}
+
+private class ColumnDividerStorage {
+	public function new(?factory:DisplayObjectFactory<Dynamic, DisplayObject>) {
+		this.columnDividerFactory = factory;
+	}
+
+	public var oldColumnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject>;
+	public var columnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject>;
+	public var activeColumnDividers:Array<InteractiveObject> = [];
+	public var inactiveColumnDividers:Array<InteractiveObject> = [];
 }
