@@ -163,13 +163,25 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	public static final VARIANT_BORDER = "border";
 
 	/**
-		The variant used to style the column headers in a theme.
+		The variant used to style the cell renderers in a theme.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
-	public static final CHILD_VARIANT_HEADER = "gridView_header";
+	public static final CHILD_VARIANT_CELL_RENDERER = "gridView_cellRenderer";
+
+	/**
+		The variant used to style the column header renderers in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_HEADER_RENDERER = "gridView_headerRenderer";
+
+	@:deprecated('GridView.CHILD_VARIANT_HEADER is deprecated. Use GridView.CHILD_VARIANT_HEADER_RENDERER instead.')
+	public static final CHILD_VARIANT_HEADER = CHILD_VARIANT_HEADER_RENDERER;
 
 	/**
 		The variant used to style the column header dividers in a theme.
@@ -436,12 +448,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	/**
 		A custom variant to set on all header renderers, instead of
-		`GridView.CHILD_VARIANT_HEADER`.
+		`GridView.CHILD_VARIANT_HEADER_RENDERER`.
 
 		The `customHeaderRendererVariant` will be not be used if the result of
 		`headerRendererRecycler.create()` already has a variant set.
 
-		@see `GridView.CHILD_VARIANT_HEADER
+		@see `GridView.CHILD_VARIANT_HEADER_RENDERER
 
 		@since 1.0.0
 	**/
@@ -1755,7 +1767,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			if ((headerRenderer is IVariantStyleObject)) {
 				var variantHeaderRenderer = cast(headerRenderer, IVariantStyleObject);
 				if (variantHeaderRenderer.variant == null) {
-					var variant = (this.customHeaderRendererVariant != null) ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER;
+					var variant = (this.customHeaderRendererVariant != null) ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER_RENDERER;
 					variantHeaderRenderer.variant = variant;
 				}
 			}

@@ -124,8 +124,8 @@ class SteelGridViewStyles {
 			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithBorderlessVariant);
 		}
 
-		if (styleProvider.getStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER) == null) {
-			styleProvider.setStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER, function(itemRenderer:ItemRenderer):Void {
+		if (styleProvider.getStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER_RENDERER) == null) {
+			styleProvider.setStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER_RENDERER, function(itemRenderer:ItemRenderer):Void {
 				var isDesktop = DeviceUtil.isDesktop();
 
 				if (itemRenderer.backgroundSkin == null) {

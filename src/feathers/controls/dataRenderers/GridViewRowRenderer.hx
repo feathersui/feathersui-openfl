@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.style.IVariantStyleObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.IPointerDelegate;
 import feathers.core.ITextControl;
@@ -251,6 +252,24 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		return this._defaultStorage.cellRendererRecycler;
 	}
 
+	private var _customCellRendererVariant:String = null;
+
+	@:flash.property
+	public var customCellRendererVariant(get, set):String;
+
+	private function get_customCellRendererVariant():String {
+		return this._customCellRendererVariant;
+	}
+
+	private function set_customCellRendererVariant(value:String):String {
+		if (this._customCellRendererVariant == value) {
+			return this._customCellRendererVariant;
+		}
+		this._customCellRendererVariant = value;
+		this.setInvalid(INVALIDATION_FLAG_CELL_RENDERER_FACTORY);
+		return this._customCellRendererVariant;
+	}
+
 	private var _customColumnWidths:Array<Float>;
 
 	@:flash.property
@@ -458,6 +477,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		if (storage.inactiveCellRenderers.length == 0) {
 			cellRenderer = storage.cellRendererRecycler.create();
+			if ((cellRenderer is IVariantStyleObject)) {
+				var variantCellRenderer = cast(cellRenderer, IVariantStyleObject);
+				if (variantCellRenderer.variant == null) {
+					var variant = (this.customCellRendererVariant != null) ? this.customCellRendererVariant : GridView.CHILD_VARIANT_CELL_RENDERER;
+					variantCellRenderer.variant = variant;
+				}
+			}
 			if (storage.measurements == null) {
 				storage.measurements = new Measurements(cellRenderer);
 			}
