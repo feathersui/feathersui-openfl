@@ -1440,8 +1440,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				headerDivider = this._defaultHeaderDividerStorage.headerDividerFactory.create();
 				if ((headerDivider is IVariantStyleObject)) {
 					var variantHeaderDivider = cast(headerDivider, IVariantStyleObject);
-					var variant = (this.customHeaderDividerVariant != null) ? this.customHeaderDividerVariant : CHILD_VARIANT_HEADER_DIVIDER;
 					if (variantHeaderDivider.variant == null) {
+						var variant = (this.customHeaderDividerVariant != null) ? this.customHeaderDividerVariant : CHILD_VARIANT_HEADER_DIVIDER;
 						variantHeaderDivider.variant = variant;
 					}
 				}
@@ -1752,10 +1752,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var headerRenderer:DisplayObject = null;
 		if (this._defaultHeaderStorage.inactiveHeaderRenderers.length == 0) {
 			headerRenderer = this._defaultHeaderStorage.headerRendererRecycler.create();
-			if (this.customHeaderRendererVariant != null && (headerRenderer is IVariantStyleObject)) {
+			if ((headerRenderer is IVariantStyleObject)) {
 				var variantHeaderRenderer = cast(headerRenderer, IVariantStyleObject);
-				var variant = this.customHeaderRendererVariant != null ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER;
 				if (variantHeaderRenderer.variant == null) {
+					var variant = (this.customHeaderRendererVariant != null) ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER;
 					variantHeaderRenderer.variant = variant;
 				}
 			}

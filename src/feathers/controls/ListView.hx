@@ -1190,10 +1190,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var itemRenderer:DisplayObject = null;
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
-			if (this.customItemRendererVariant != null && (itemRenderer is IVariantStyleObject)) {
+			if ((itemRenderer is IVariantStyleObject)) {
 				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
-				var variant = this.customItemRendererVariant != null ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 				if (variantItemRenderer.variant == null) {
+					var variant = (this.customItemRendererVariant != null) ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 					variantItemRenderer.variant = variant;
 				}
 			}
