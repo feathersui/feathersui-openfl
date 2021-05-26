@@ -8,13 +8,16 @@
 
 package feathers.themes.steel.components;
 
-import feathers.layout.VerticalListLayout;
-import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.utils.DeviceUtil;
+import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.GridView;
+import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.layout.VerticalListLayout;
 import feathers.skins.RectangleSkin;
+import feathers.skins.VerticalLineSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `GridView` component.
@@ -162,6 +165,22 @@ class SteelGridViewStyles {
 				itemRenderer.gap = 4.0;
 
 				itemRenderer.horizontalAlign = LEFT;
+			});
+		}
+
+		if (styleProvider.getStyleFunction(Button, GridView.CHILD_VARIANT_HEADER_DIVIDER) == null) {
+			styleProvider.setStyleFunction(Button, GridView.CHILD_VARIANT_HEADER_DIVIDER, function(headerDivider:Button):Void {
+				if (headerDivider.backgroundSkin == null) {
+					var skin = new VerticalLineSkin();
+					skin.border = theme.getSubHeadingDividerBorder();
+					skin.fill = SolidColor(0xff00ff, 0.0);
+					skin.setBorderForState(HOVER, theme.getThemeBorder());
+					skin.width = 6.0;
+					skin.height = 2.0;
+					skin.minWidth = 6.0;
+					skin.minHeight = 2.0;
+					headerDivider.backgroundSkin = skin;
+				}
 			});
 		}
 	}

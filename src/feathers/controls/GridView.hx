@@ -18,6 +18,7 @@ import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
+import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
 import feathers.data.ArrayCollection;
 import feathers.data.GridViewCellState;
@@ -38,6 +39,7 @@ import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGridViewStyles;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.utils.DisplayUtil;
 import feathers.utils.ExclusivePointer;
@@ -47,6 +49,7 @@ import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
+import openfl.display.Stage;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
@@ -168,7 +171,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public static final CHILD_VARIANT_HEADER = "gridView_header";
 
+	/**
+		The variant used to style the column header dividers in a theme.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_HEADER_DIVIDER = "gridView_headerDivider";
+
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
+	private static final INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("headerDividerFactory");
 
 	private static final RESET_HEADER_STATE = new GridViewHeaderState();
 	private static final RESET_ROW_STATE = new GridViewCellState();
@@ -224,19 +237,20 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _headerContainer:LayoutGroup;
 	private var _headerContainerLayout:GridViewRowLayout;
 	private var _headerResizeContainer:Sprite;
-	private var _headerDividerLayoutItems:Array<InteractiveObject> = [];
 	private var _resizingHeaderIndex:Int = -1;
 	private var _resizingHeaderTouchID:Int = -1;
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
+
 	private var _defaultHeaderStorage:HeaderRendererStorage = new HeaderRendererStorage(DisplayObjectRecycler.withClass(GridViewHeaderRenderer));
 	private var _unrenderedHeaderData:Array<GridViewColumn> = [];
 	private var _headerLayoutItems:Array<DisplayObject> = [];
 
+	private var _defaultHeaderDividerStorage:HeaderDividerStorage = new HeaderDividerStorage(DisplayObjectFactory.withClass(Button));
+	private var _headerDividerLayoutItems:Array<InteractiveObject> = [];
 	private var _currentHeaderScrollRect:Rectangle;
 	private var _headerScrollRect1:Rectangle = new Rectangle();
 	private var _headerScrollRect2:Rectangle = new Rectangle();
-
 	private var _oldHeaderDividerMouseCursor:MouseCursor;
 
 	override private function get_focusEnabled():Bool {
@@ -246,9 +260,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private var gridViewPort:AdvancedLayoutViewPort;
-
 	private var _ignoreDataProviderChanges:Bool = false;
-
 	private var _dataProvider:IFlatCollection<Dynamic>;
 
 	/**
@@ -436,9 +448,53 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	@:style
 	public var customHeaderRendererVariant:String = null;
 
+	/**
+		Manages the dividers between the grid view's headers.
+
+		In the following example, the grid view uses a custom header divider
+		class:
+
+		```hx
+		gridView.headerDividerFactory = DisplayObjectFactory.withClass(CustomHeaderDivider);
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var headerDividerFactory(get, set):DisplayObjectFactory<Dynamic, InteractiveObject>;
+
+	private function get_headerDividerFactory():DisplayObjectFactory<Dynamic, InteractiveObject> {
+		return this._defaultHeaderDividerStorage.headerDividerFactory;
+	}
+
+	private function set_headerDividerFactory(value:DisplayObjectFactory<Dynamic, InteractiveObject>):DisplayObjectFactory<Dynamic, InteractiveObject> {
+		if (this._defaultHeaderDividerStorage.headerDividerFactory == value) {
+			return this._defaultHeaderDividerStorage.headerDividerFactory;
+		}
+		this._defaultHeaderDividerStorage.oldHeaderDividerFactory = this._defaultHeaderDividerStorage.headerDividerFactory;
+		this._defaultHeaderDividerStorage.headerDividerFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
+		return this._defaultHeaderDividerStorage.headerDividerFactory;
+	}
+
+	private var _previousCustomHeaderDividerVariant:String = null;
+
+	/**
+		A custom variant to set on all header divider, instead of
+		`GridView.CHILD_VARIANT_HEADER_DIVIDER`.
+
+		The `customHeaderDividerVariant` will be not be used if the result of
+		`headerDividerFactory.create()` already has a variant set.
+
+		@see `GridView.CHILD_VARIANT_HEADER_DIVIDER
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customHeaderDividerVariant:String = null;
+
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
 	private var _rowRendererMeasurements:Measurements;
-
 	private var _selectedIndex:Int = -1;
 
 	/**
@@ -567,7 +623,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private var _selectionAnchorIndex:Int = -1;
-
 	private var _selectedIndices:Array<Int> = [];
 
 	/**
@@ -920,7 +975,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _rowLayoutItems:Array<DisplayObject> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
-
 	private var _selectable:Bool = true;
 
 	/**
@@ -971,7 +1025,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _ignoreSelectionChange = false;
 	private var _ignoreLayoutChanges = false;
 	private var _ignoreHeaderLayoutChanges = false;
-
 	private var _pendingScrollRowIndex:Int = -1;
 	private var _pendingScrollDuration:Null<Float> = null;
 
@@ -1074,11 +1127,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._previousCustomHeaderRendererVariant != this.customHeaderRendererVariant) {
 			this.setInvalidationFlag(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		}
-
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 
+		if (this._previousCustomHeaderDividerVariant != this.customHeaderDividerVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
+		}
+		var headerDividerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
+
 		this.validateColumns();
-		this.validateCustomColumnWidths();
 
 		if (dataInvalid || sortInvalid) {
 			this.refreshSortedColumn(sortInvalid);
@@ -1088,7 +1144,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.refreshColumnResizeSkin();
 		}
 
-		if (headerRendererInvalid || stateInvalid || dataInvalid || sortInvalid) {
+		if (headerRendererInvalid || headerDividerInvalid || stateInvalid || dataInvalid || sortInvalid) {
 			this.refreshHeaderRenderers();
 		}
 
@@ -1119,7 +1175,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this._previousCustomHeaderRendererVariant = this.customHeaderRendererVariant;
+		this._previousCustomHeaderDividerVariant = this.customHeaderDividerVariant;
 
+		this.validateCustomColumnWidths();
 		this.layoutHeaders();
 		this.handlePendingScroll();
 	}
@@ -1253,11 +1311,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerResizeContainer.x = this._headerContainer.x;
 		this._headerResizeContainer.y = this._headerContainer.y;
 		for (i in 0...this._headerDividerLayoutItems.length) {
-			var divider = this._headerDividerLayoutItems[i];
-			var header = this._headerLayoutItems[i];
-			divider.x = header.x + header.width - (divider.width / 2.0);
-			divider.y = header.y;
-			divider.height = header.height;
+			var headerDivider = this._headerDividerLayoutItems[i];
+			if ((headerDivider is IValidating)) {
+				cast(headerDivider, IValidating).validateNow();
+			}
+			var headerRenderer = this._headerLayoutItems[i];
+			headerDivider.x = headerRenderer.x + headerRenderer.width - (headerDivider.width / 2.0);
+			headerDivider.y = headerRenderer.y;
+			headerDivider.height = headerRenderer.height;
 		}
 	}
 
@@ -1337,27 +1398,77 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive header renderers should be empty after updating.');
 		}
 
-		for (divider in this._headerDividerLayoutItems) {
-			divider.removeEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
-			divider.removeEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
-			divider.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
-			divider.removeEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
-			this._headerResizeContainer.removeChild(divider);
+		var headerDividerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
+		this.refreshInactiveHeaderDividers(headerDividerInvalid);
+		this.refreshActiveHeaderDividers();
+		this.freeInactiveHeaderDividers();
+		if (this._defaultHeaderDividerStorage.inactiveHeaderDividers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive header dividers should be empty after updating.');
 		}
+	}
+
+	private function refreshInactiveHeaderDividers(factoryInvalid:Bool):Void {
+		var temp = this._defaultHeaderDividerStorage.inactiveHeaderDividers;
+		this._defaultHeaderDividerStorage.inactiveHeaderDividers = this._defaultHeaderDividerStorage.activeHeaderDividers;
+		this._defaultHeaderDividerStorage.activeHeaderDividers = temp;
+		if (this._defaultHeaderDividerStorage.activeHeaderDividers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active header dividers should be empty before updating.');
+		}
+		if (factoryInvalid) {
+			this.freeInactiveHeaderDividers();
+			this._defaultHeaderDividerStorage.oldHeaderDividerFactory = null;
+		}
+	}
+
+	private function freeInactiveHeaderDividers():Void {
+		var factory = this._defaultHeaderDividerStorage.oldHeaderDividerFactory != null ? this._defaultHeaderDividerStorage.oldHeaderDividerFactory : this._defaultHeaderDividerStorage.headerDividerFactory;
+		for (headerDivider in this._defaultHeaderDividerStorage.inactiveHeaderDividers) {
+			if (headerDivider == null) {
+				continue;
+			}
+			this.destroyHeaderDivider(headerDivider, factory);
+		}
+		this._defaultHeaderDividerStorage.inactiveHeaderDividers.resize(0);
+	}
+
+	private function refreshActiveHeaderDividers():Void {
 		this._headerDividerLayoutItems.resize(0);
 
 		for (i in 0...this._columns.length - 1) {
-			var divider = new Sprite();
-			divider.graphics.clear();
-			divider.graphics.beginFill(0xff00ff, 0.0);
-			divider.graphics.drawRect(0.0, 0.0, 6.0, 1.0);
-			divider.graphics.endFill();
-			divider.addEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
-			divider.addEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
-			divider.addEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
-			divider.addEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
-			this._headerDividerLayoutItems[i] = divider;
-			this._headerResizeContainer.addChildAt(divider, i);
+			var headerDivider:InteractiveObject = null;
+			if (this._defaultHeaderDividerStorage.inactiveHeaderDividers.length == 0) {
+				headerDivider = this._defaultHeaderDividerStorage.headerDividerFactory.create();
+				if ((headerDivider is IVariantStyleObject)) {
+					var variantHeaderDivider = cast(headerDivider, IVariantStyleObject);
+					var variant = (this.customHeaderDividerVariant != null) ? this.customHeaderDividerVariant : CHILD_VARIANT_HEADER_DIVIDER;
+					if (variantHeaderDivider.variant == null) {
+						variantHeaderDivider.variant = variant;
+					}
+				}
+				if ((headerDivider is IUIControl)) {
+					cast(headerDivider, IUIControl).initializeNow();
+				}
+				headerDivider.addEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
+				headerDivider.addEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
+				headerDivider.addEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
+				headerDivider.addEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
+				this._headerResizeContainer.addChildAt(headerDivider, i);
+			} else {
+				headerDivider = this._defaultHeaderDividerStorage.inactiveHeaderDividers.shift();
+				this._headerResizeContainer.setChildIndex(headerDivider, i);
+			}
+			this._headerDividerLayoutItems[i] = headerDivider;
+		}
+	}
+
+	private function destroyHeaderDivider(headerDivider:InteractiveObject, factory:DisplayObjectFactory<Dynamic, InteractiveObject>):Void {
+		headerDivider.removeEventListener(MouseEvent.ROLL_OVER, gridView_headerDivider_rollOverHandler);
+		headerDivider.removeEventListener(MouseEvent.ROLL_OUT, gridView_headerDivider_rollOutHandler);
+		headerDivider.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_headerDivider_mouseDownHandler);
+		headerDivider.removeEventListener(TouchEvent.TOUCH_BEGIN, gridView_headerDivider_touchBeginHandler);
+		this._headerResizeContainer.removeChild(headerDivider);
+		if (factory != null && factory.destroy != null) {
+			factory.destroy(headerDivider);
 		}
 	}
 
@@ -1630,10 +1741,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.rowIndex = state.rowIndex;
 		rowRenderer.selected = state.selected;
 		rowRenderer.enabled = state.enabled;
-		rowRenderer.columns = this._columns;
-		rowRenderer.selectable = this._selectable;
-		rowRenderer.cellRendererRecycler = this._cellRendererRecycler;
-		rowRenderer.customColumnWidths = this._customColumnWidths;
+		rowRenderer.columns = (state.rowIndex == -1) ? null : this._columns;
+		rowRenderer.selectable = (state.rowIndex == -1) ? false : this._selectable;
+		rowRenderer.cellRendererRecycler = (state.rowIndex == -1) ? null : this._cellRendererRecycler;
+		rowRenderer.customColumnWidths = (state.rowIndex == -1) ? null : this._customColumnWidths;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
@@ -2019,7 +2130,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 
-		var availableWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset;
+		var minContainerWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		// same width as the viewPort so that the columns line up
+		var totalContainerWidth = Math.max(this._viewPort.width + this._headerContainerLayout.paddingLeft + this._headerContainerLayout.paddingRight,
+			minContainerWidth);
+		var availableWidth = totalContainerWidth - this._headerContainerLayout.paddingLeft - this._headerContainerLayout.paddingRight;
 		var totalWidth = 0.0;
 		var indices:Array<Int> = [];
 		for (i in 0...this._customColumnWidths.length) {
@@ -2042,6 +2157,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var widthToDistribute = availableWidth - totalWidth;
 		this.distributeWidthToIndices(widthToDistribute, indices, totalWidth);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function calculateResizedColumnWidth(offset:Float):Void {
@@ -2065,7 +2181,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var originalX = this._headerContainer.x + headerRenderer.x + headerRenderer.width;
 		var newX = Math.min(Math.max(originalX + offset, minX), maxX);
 
-		var preferredWidth = newX - headerRenderer.x;
+		var preferredWidth = newX - headerRenderer.x - this._headerContainer.x;
 		var totalMinWidth = 0.0;
 		var originalWidth = headerRenderer.width;
 		var totalWidthAfter = 0.0;
@@ -2154,7 +2270,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			widthToDistribute = nextWidthToDistribute;
 		}
 
-		if (widthToDistribute != 0) {
+		if (widthToDistribute != 0.0) {
 			// if we have less than a pixel left, just add it to the
 			// final column and exit the loop
 			this._customColumnWidths[this._customColumnWidths.length - 1] += widthToDistribute;
@@ -2343,16 +2459,18 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_headerDivider_mouseDownHandler(event:MouseEvent):Void {
-		var divider = cast(event.currentTarget, InteractiveObject);
-		this.headerResizeTouchBegin(ExclusivePointer.POINTER_ID_MOUSE, divider, event.stageX);
+		var headerDivider = cast(event.currentTarget, InteractiveObject);
+		this.headerResizeTouchBegin(ExclusivePointer.POINTER_ID_MOUSE, headerDivider, headerDivider.stage.mouseX);
 	}
 
 	private function gridView_headerDivider_stage_mouseMoveHandler(event:MouseEvent):Void {
-		this.headerResizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, event.stageX);
+		var stage = cast(event.currentTarget, Stage);
+		this.headerResizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX);
 	}
 
 	private function gridView_headerDivider_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.headerResizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, event.stageX);
+		var stage = cast(event.currentTarget, Stage);
+		this.headerResizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX);
 	}
 
 	private function gridView_headerDivider_touchBeginHandler(event:TouchEvent):Void {
@@ -2361,16 +2479,18 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 
-		var divider = cast(event.currentTarget, InteractiveObject);
-		this.headerResizeTouchBegin(event.touchPointID, divider, event.stageX);
+		var headerDivider = cast(event.currentTarget, InteractiveObject);
+		this.headerResizeTouchBegin(event.touchPointID, headerDivider, headerDivider.stage.mouseX);
 	}
 
 	private function gridView_headerDivider_stage_touchMoveHandler(event:TouchEvent):Void {
-		this.headerResizeTouchMove(event.touchPointID, event.stageX);
+		var stage = cast(event.currentTarget, Stage);
+		this.headerResizeTouchMove(event.touchPointID, stage.mouseX);
 	}
 
 	private function gridView_headerDivider_stage_touchEndHandler(event:TouchEvent):Void {
-		this.headerResizeTouchEnd(event.touchPointID, event.stageX);
+		var stage = cast(event.currentTarget, Stage);
+		this.headerResizeTouchEnd(event.touchPointID, stage.mouseX);
 	}
 
 	private function gridView_headerDivider_rollOverHandler(event:MouseEvent):Void {
@@ -2404,4 +2524,15 @@ private class HeaderRendererStorage {
 	public var activeHeaderRenderers:Array<DisplayObject> = [];
 	public var inactiveHeaderRenderers:Array<DisplayObject> = [];
 	public var measurements:Measurements;
+}
+
+private class HeaderDividerStorage {
+	public function new(?factory:DisplayObjectFactory<Dynamic, InteractiveObject>) {
+		this.headerDividerFactory = factory;
+	}
+
+	public var oldHeaderDividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject>;
+	public var headerDividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject>;
+	public var activeHeaderDividers:Array<InteractiveObject> = [];
+	public var inactiveHeaderDividers:Array<InteractiveObject> = [];
 }

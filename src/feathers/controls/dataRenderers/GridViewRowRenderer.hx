@@ -291,24 +291,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	override private function update():Void {
-		// children are allowed to change during update() in a subclass up
-		// until it calls super.update().
-		this._ignoreChildChangesButSetFlags = false;
-
-		var oldIgnoreChildChanges = this._ignoreChildChanges;
-		this._ignoreChildChanges = true;
 		this.preLayout();
-		this._ignoreChildChanges = oldIgnoreChildChanges;
-
 		super.update();
 	}
 
 	private function preLayout():Void {
-		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
-		this._ignoreLayoutChanges = true;
 		this._rowLayout.columns = this._columns;
 		this._rowLayout.customColumnWidths = this._customColumnWidths;
-		this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 
 		if (this._defaultStorage.cellRendererRecycler.update == null) {
 			this._defaultStorage.cellRendererRecycler.update = defaultUpdateCellRenderer;

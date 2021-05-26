@@ -97,6 +97,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var subHeadingFillColor:Int;
 	private var borderColor:Int;
 	private var dividerColor:Int;
+	private var subHeadingDividerColor:Int;
 	private var textColor:Int;
 	private var secondaryTextColor:Int;
 	private var disabledTextColor:Int;
@@ -152,6 +153,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.dangerBorderColor = this.darken(this.dangerColor, 0x2f2f2f);
 			this.borderColor = 0x080808;
 			this.dividerColor = 0x282828;
+			this.subHeadingDividerColor = 0x0c0c0c;
 			this.textColor = 0xf1f1f1;
 			this.disabledTextColor = 0x8f8f8f;
 			this.secondaryTextColor = 0xcfcfcf;
@@ -186,6 +188,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.dangerBorderColor = this.darken(this.dangerColor, 0x2f2f2f);
 			this.borderColor = 0xacacac;
 			this.dividerColor = 0xdfdfdf;
+			this.subHeadingDividerColor = 0xcfcfcf;
 			this.textColor = 0x1f1f1f;
 			this.disabledTextColor = 0x9f9f9f;
 			this.secondaryTextColor = 0x6f6f6f;
@@ -273,6 +276,18 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getDividerBorder(thickness:Float = 1.0):LineStyle {
 		return SolidColor(thickness, this.dividerColor);
+	}
+
+	private function getDividerFill():FillStyle {
+		return SolidColor(this.dividerColor);
+	}
+
+	private function getSubHeadingDividerBorder(thickness:Float = 1.0):LineStyle {
+		return SolidColor(thickness, this.subHeadingDividerColor);
+	}
+
+	private function getSubHeadingDividerFill():FillStyle {
+		return SolidColor(this.subHeadingDividerColor);
 	}
 
 	private function getFocusBorder(thickness:Float = 1.0):LineStyle {
