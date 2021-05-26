@@ -27,12 +27,13 @@ class GridViewColumn extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public function new(headerText:String, itemToText:(Dynamic) -> String = null) {
+	public function new(headerText:String, itemToText:(Dynamic) -> String = null, ?width:Float) {
 		super();
 		this.headerText = headerText;
 		if (itemToText != null) {
 			this.itemToText = itemToText;
 		}
+		this.width = width;
 	}
 
 	/**
