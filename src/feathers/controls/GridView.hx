@@ -487,24 +487,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
-	public var headerDividerFactory(get, set):DisplayObjectFactory<Dynamic, InteractiveObject>;
-
-	private function get_headerDividerFactory():DisplayObjectFactory<Dynamic, InteractiveObject> {
-		return this._defaultHeaderDividerStorage.headerDividerFactory;
-	}
-
-	private function set_headerDividerFactory(value:DisplayObjectFactory<Dynamic, InteractiveObject>):DisplayObjectFactory<Dynamic, InteractiveObject> {
-		if (this._defaultHeaderDividerStorage.headerDividerFactory == value) {
-			return this._defaultHeaderDividerStorage.headerDividerFactory;
-		}
-		this._defaultHeaderDividerStorage.oldHeaderDividerFactory = this._defaultHeaderDividerStorage.headerDividerFactory;
-		this._defaultHeaderDividerStorage.headerDividerFactory = value;
-		this.setInvalid(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
-		return this._defaultHeaderDividerStorage.headerDividerFactory;
-	}
-
-	private var _previousCustomHeaderDividerVariant:String = null;
+	@:style
+	public var headerDividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject> = DisplayObjectFactory.withClass(Button);
 
 	/**
 		A custom variant to set on all header dividers, instead of
@@ -532,24 +516,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
-	public var columnDividerFactory(get, set):DisplayObjectFactory<Dynamic, DisplayObject>;
-
-	private function get_columnDividerFactory():DisplayObjectFactory<Dynamic, DisplayObject> {
-		return this._defaultColumnDividerStorage.columnDividerFactory;
-	}
-
-	private function set_columnDividerFactory(value:DisplayObjectFactory<Dynamic, DisplayObject>):DisplayObjectFactory<Dynamic, DisplayObject> {
-		if (this._defaultColumnDividerStorage.columnDividerFactory == value) {
-			return this._defaultColumnDividerStorage.columnDividerFactory;
-		}
-		this._defaultColumnDividerStorage.oldColumnDividerFactory = this._defaultColumnDividerStorage.columnDividerFactory;
-		this._defaultColumnDividerStorage.columnDividerFactory = value;
-		this.setInvalid(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
-		return this._defaultColumnDividerStorage.columnDividerFactory;
-	}
-
-	private var _previousCustomColumnDividerVariant:String = null;
+	@:style
+	public var columnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject> = null;
 
 	/**
 		A custom variant to set on all column dividers, instead of
@@ -1215,12 +1183,24 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 
-		if (this._previousCustomHeaderDividerVariant != this.customHeaderDividerVariant) {
+		if (this._defaultHeaderDividerStorage.headerDividerFactory != this.headerDividerFactory) {
+			this._defaultHeaderDividerStorage.oldHeaderDividerFactory = this._defaultHeaderDividerStorage.headerDividerFactory;
+			this._defaultHeaderDividerStorage.headerDividerFactory = this.headerDividerFactory;
+			this.setInvalidationFlag(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
+		}
+		if (this._defaultHeaderDividerStorage.customHeaderDividerVariant != this.customHeaderDividerVariant) {
+			this._defaultHeaderDividerStorage.customHeaderDividerVariant = this.customHeaderDividerVariant;
 			this.setInvalidationFlag(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
 		}
 		var headerDividerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY);
 
-		if (this._previousCustomColumnDividerVariant != this.customColumnDividerVariant) {
+		if (this._defaultColumnDividerStorage.columnDividerFactory != this.columnDividerFactory) {
+			this._defaultColumnDividerStorage.oldColumnDividerFactory = this._defaultColumnDividerStorage.columnDividerFactory;
+			this._defaultColumnDividerStorage.columnDividerFactory = this.columnDividerFactory;
+			this.setInvalidationFlag(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
+		}
+		if (this._defaultColumnDividerStorage.customColumnDividerVariant != this.customColumnDividerVariant) {
+			this._defaultColumnDividerStorage.customColumnDividerVariant = this.customColumnDividerVariant;
 			this.setInvalidationFlag(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
 		}
 		var columnDividerInvalid = this.isInvalid(INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY);
@@ -1274,7 +1254,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		super.update();
 
 		this._previousCustomHeaderRendererVariant = this.customHeaderRendererVariant;
-		this._previousCustomHeaderDividerVariant = this.customHeaderDividerVariant;
 
 		this.validateCustomColumnWidths();
 		this.layoutHeaders();
@@ -2737,6 +2716,7 @@ private class HeaderDividerStorage {
 		this.headerDividerFactory = factory;
 	}
 
+	public var customHeaderDividerVariant:String;
 	public var oldHeaderDividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject>;
 	public var headerDividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject>;
 	public var activeHeaderDividers:Array<InteractiveObject> = [];
@@ -2748,6 +2728,7 @@ private class ColumnDividerStorage {
 		this.columnDividerFactory = factory;
 	}
 
+	public var customColumnDividerVariant:String;
 	public var oldColumnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject>;
 	public var columnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject>;
 	public var activeColumnDividers:Array<InteractiveObject> = [];
