@@ -174,15 +174,24 @@ class SteelGridViewStyles {
 
 		if (styleProvider.getStyleFunction(Button, GridView.CHILD_VARIANT_HEADER_DIVIDER) == null) {
 			styleProvider.setStyleFunction(Button, GridView.CHILD_VARIANT_HEADER_DIVIDER, function(headerDivider:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
 				if (headerDivider.backgroundSkin == null) {
 					var skin = new VerticalLineSkin();
 					skin.border = theme.getSubHeadingDividerBorder();
 					skin.fill = SolidColor(0xff00ff, 0.0);
 					skin.setBorderForState(HOVER, theme.getThemeBorder());
-					skin.width = 6.0;
-					skin.height = 2.0;
-					skin.minWidth = 6.0;
-					skin.minHeight = 2.0;
+					if (isDesktop) {
+						skin.width = 6.0;
+						skin.height = 1.0;
+						skin.minWidth = 6.0;
+						skin.minHeight = 1.0;
+					} else {
+						skin.width = 10.0;
+						skin.height = 1.0;
+						skin.minWidth = 10.0;
+						skin.minHeight = 1.0;
+					}
 					headerDivider.backgroundSkin = skin;
 				}
 			});
