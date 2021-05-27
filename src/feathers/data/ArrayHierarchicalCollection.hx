@@ -468,6 +468,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			throw new RangeError('Failed to update item at index ${index}. Expected a value between 0 and ${branchChildren.length - 1} at index ${location.length - 1}.');
 		}
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.UPDATE_ITEM, location);
+		this.refresh();
 	}
 
 	/**
@@ -475,6 +476,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	**/
 	public function updateAll():Void {
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.UPDATE_ALL, null);
+		this.refresh();
 	}
 
 	/**
