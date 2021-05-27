@@ -926,11 +926,25 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			container.validateNow();
 
 			if (container.maxScrollY > 0.0) {
+				var lineIndex = -1;
 				var caretIndex = this.textField.caretIndex;
 				if (caretIndex == this.textField.length) {
+					if (caretIndex == 0) {
+						// this shouldn't happen, but let's check just in case
+						return;
+					}
+					// get the line index of the final character because there
+					// isn't a character at the caret
 					caretIndex--;
+					lineIndex = this.textField.getLineIndexOfChar(caretIndex);
+					var charAtIndex = this.textField.text.charAt(caretIndex);
+					if (charAtIndex == "\n" || charAtIndex == "\r") {
+						// if the last character is a new line, increase by one
+						lineIndex++;
+					}
+				} else {
+					lineIndex = this.textField.getLineIndexOfChar(caretIndex);
 				}
-				var lineIndex = this.textField.getLineIndexOfChar(this.textField.caretIndex - 1);
 				if (this._smoothScrolling) {
 					var lineHeight = this._savedLineMetrics.height + this._savedLineMetrics.leading;
 					var minScrollYForLine = container.maxScrollY - (this.textField.numLines - lineIndex - 1) * lineHeight;
