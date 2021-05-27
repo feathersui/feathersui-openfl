@@ -1238,8 +1238,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if ((itemRenderer is IVariantStyleObject)) {
 				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
 				if (variantItemRenderer.variant == null) {
-					var variant = (this.customItemRendererVariant != null) ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
-					variantItemRenderer.variant = variant;
+					if (state.type == HEADER) {
+						var variant = (this.customHeaderRendererVariant != null) ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER_RENDERER;
+						variantItemRenderer.variant = variant;
+					} else {
+						var variant = (this.customItemRendererVariant != null) ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
+						variantItemRenderer.variant = variant;
+					}
 				}
 			}
 			if (storage.measurements == null) {
@@ -1254,13 +1259,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
-		}
-		if (state.type == HEADER && (itemRenderer is IVariantStyleObject)) {
-			var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
-			if (variantItemRenderer.variant == null) {
-				var variant = this.customHeaderRendererVariant != null ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER_RENDERER;
-				variantItemRenderer.variant = variant;
-			}
 		}
 		this.updateItemRenderer(itemRenderer, state, storage);
 		if (state.type == STANDARD) {
