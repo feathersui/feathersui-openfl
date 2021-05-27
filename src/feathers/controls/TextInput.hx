@@ -1448,7 +1448,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
-		this.promptTextField.autoSize = TextFieldAutoSize.LEFT;
+		this.promptTextField.autoSize = LEFT;
 		var hasText = this._prompt.length > 0;
 		if (hasText) {
 			this.promptTextField.text = this._prompt;
@@ -1457,7 +1457,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		this._promptTextMeasuredWidth = this.promptTextField.width;
 		this._promptTextMeasuredHeight = this.promptTextField.height;
-		this.promptTextField.autoSize = TextFieldAutoSize.NONE;
+		this.promptTextField.autoSize = NONE;
 		if (!hasText) {
 			this.promptTextField.text = "";
 		}
@@ -1498,7 +1498,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return textFormat;
 	}
 
-	private function refreshText(sizeInvalid:Bool):Void {
+	private function refreshText(forceMeasurement:Bool):Void {
 		this.textField.restrict = this.__restrict;
 		this.textField.maxChars = this._maxChars;
 		var hasMeasureText = this._measureText != null;
@@ -1507,17 +1507,17 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			hasMeasureText = true;
 			measureText = "\u200b"; // zero-width space
 		}
-		if (measureText == this._previousMeasureText && !this._updatedTextStyles && !sizeInvalid) {
+		if (measureText == this._previousMeasureText && !this._updatedTextStyles && !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
+		this.textField.autoSize = LEFT;
 		this.textField.text = measureText;
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
-		this.textField.autoSize = TextFieldAutoSize.NONE;
+		this.textField.autoSize = NONE;
 		var finalText:String = null;
 		if (this._text == null || this._text.length == 0) {
 			finalText = "";

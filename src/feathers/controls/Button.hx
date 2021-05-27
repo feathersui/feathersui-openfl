@@ -533,6 +533,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
+	private var _textMeasuredLines:Int;
 	private var _stateToTextFormat:Map<ButtonState, AbstractTextFormat> = new Map();
 
 	/**
@@ -663,6 +664,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		super.commitChanges();
 
 		var dataInvalid = this.isInvalid(DATA);
+		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
@@ -676,8 +678,8 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			this.refreshTextStyles();
 		}
 
-		if (dataInvalid || stylesInvalid || stateInvalid) {
-			this.refreshText();
+		if (dataInvalid || stylesInvalid || stateInvalid || sizeInvalid) {
+			this.refreshText(sizeInvalid);
 		}
 	}
 
@@ -777,6 +779,39 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+	}
+
+	private function calculateExplicitWidthForTextMeasurement():Null<Float> {
+		var textFieldExplicitWidth:Null<Float> = null;
+		if (this.explicitWidth != null) {
+			textFieldExplicitWidth = this.explicitWidth;
+		} else if (this.explicitMaxWidth != null) {
+			textFieldExplicitWidth = this.explicitMaxWidth;
+		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
+			textFieldExplicitWidth = this._backgroundSkinMeasurements.maxWidth;
+		}
+
+		if (textFieldExplicitWidth == null) {
+			return textFieldExplicitWidth;
+		}
+		textFieldExplicitWidth -= (this.paddingLeft + this.paddingRight);
+		var adjustedGap = this.gap;
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
+			adjustedGap = this.minGap;
+		}
+		if (this._currentIcon != null) {
+			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+				if ((this._currentIcon is IValidating)) {
+					cast(this._currentIcon, IValidating).validateNow();
+				}
+				textFieldExplicitWidth -= (this._currentIcon.width + adjustedGap);
+			}
+		}
+		if (textFieldExplicitWidth < 0.0) {
+			textFieldExplicitWidth = 0.0;
+		}
+		return textFieldExplicitWidth;
 	}
 
 	private function measureContentWidth():Float {
@@ -891,44 +926,44 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		this._previousSimpleTextFormat = simpleTextFormat;
 	}
 
-	private function refreshText():Void {
+	private function refreshText(forceMeasurement:Bool):Void {
 		// this is the only place where hasText also checks the length
 		// because TextField height may not be accurate with an empty string
 		var hasText = this.showText && this._text != null && this._text.length > 0;
 		this.textField.visible = hasText;
-		if (this._text == this._previousText && !this._updatedTextStyles) {
+		if (this._text == this._previousText && !this._updatedTextStyles && !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
+		this.textField.autoSize = LEFT;
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
 			this.textField.text = "\u200b"; // zero-width space
 		}
-		var textFieldExplicitWidth:Null<Float> = null;
-		if (this.explicitWidth != null) {
-			textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
-		} else if (this.explicitMaxWidth != null) {
-			textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
-		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
-			textFieldExplicitWidth = this._backgroundSkinMeasurements.maxWidth - this.paddingLeft - this.paddingRight;
-		}
-		if (textFieldExplicitWidth == null && this.wordWrap) {
-			// to get an accurate measurement, we need to temporarily disable
-			// wrapping to multiple lines
-			// it can be inaccurate with the flash target sometimes
+		var textFieldExplicitWidth = this.calculateExplicitWidthForTextMeasurement();
+		if (this.wordWrap) {
+			// to get an accurate measurement on the flash target, we need to
+			// temporarily disable wrapping to multiple lines
+			// there seems to be a bug when combining autoSize and wordWrap
 			this.textField.wordWrap = false;
-		} else if (textFieldExplicitWidth != null) {
+		}
+		if (textFieldExplicitWidth != null) {
 			this.textField.width = textFieldExplicitWidth;
 		}
-		this._textMeasuredWidth = this.textField.width;
-		this._textMeasuredHeight = this.textField.height;
-		this.textField.autoSize = TextFieldAutoSize.NONE;
-		if (textFieldExplicitWidth == null && this.wordWrap) {
+		this._textMeasuredWidth = this.textField.textWidth + 4;
+		if (this.wordWrap && textFieldExplicitWidth != null && this._textMeasuredWidth > textFieldExplicitWidth) {
+			// enable wrapping only if we definitely need it
 			this.textField.wordWrap = true;
+			this._textMeasuredWidth = this.textField.width;
+		}
+		this._textMeasuredHeight = this.textField.height;
+		this._textMeasuredLines = this.textField.numLines;
+		this.textField.autoSize = NONE;
+		if (this.textField.wordWrap != this.wordWrap) {
+			this.textField.wordWrap = this.wordWrap;
 		}
 		if (!hasText) {
 			this.textField.text = "";
@@ -1039,22 +1074,12 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		}
 		this.textField.width = calculatedWidth;
 		var wordWrap = this.wordWrap;
-		if (wordWrap && calculatedWidth == this._textMeasuredWidth) {
-			var textFieldExplicitWidth:Null<Float> = null;
-			if (this.explicitWidth != null) {
-				textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
-			} else if (this.explicitMaxWidth != null) {
-				textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
-			} else if (this.actualMaxWidth < (1.0 / 0.0)) {
-				textFieldExplicitWidth = this.actualMaxWidth - this.paddingLeft - this.paddingRight;
-			}
-			if (textFieldExplicitWidth == null) {
-				// sometimes, using the width measured with wrapping disabled
-				// will still cause the final rendered result to wrap, but we
-				// can skip wrapping forcefully as a workaround
-				// this happens with the flash target sometimes
-				wordWrap = false;
-			}
+		if (wordWrap && calculatedWidth == this._textMeasuredWidth && this._textMeasuredLines == 1) {
+			// sometimes, using the width measured with wrapping disabled
+			// will still cause the final rendered result to wrap, but we
+			// can skip wrapping forcefully as a workaround
+			// this happens with the flash target sometimes
+			wordWrap = false;
 		}
 		if (this.textField.wordWrap != wordWrap) {
 			this.textField.wordWrap = wordWrap;

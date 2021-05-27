@@ -266,6 +266,36 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		super.update();
 	}
 
+	override private function calculateExplicitWidthForTextMeasurement():Null<Float> {
+		var textFieldExplicitWidth = super.calculateExplicitWidthForTextMeasurement();
+		if (textFieldExplicitWidth == null) {
+			return textFieldExplicitWidth;
+		}
+		var adjustedGap = this.gap;
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
+			adjustedGap = this.minGap;
+		}
+		var indentDepth = 0;
+		if (this._location != null) {
+			indentDepth = this._location.length - 1;
+		}
+		var indent = this.indentation * indentDepth;
+		textFieldExplicitWidth -= indent;
+		this.disclosureButton.validateNow();
+		textFieldExplicitWidth -= (this.disclosureButton.width + adjustedGap);
+		if (this._currentBranchOrLeafIcon != null) {
+			if ((this._currentBranchOrLeafIcon is IValidating)) {
+				cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+			}
+			textFieldExplicitWidth -= (this._currentBranchOrLeafIcon.width + adjustedGap);
+		}
+		if (textFieldExplicitWidth < 0.0) {
+			textFieldExplicitWidth = 0.0;
+		}
+		return textFieldExplicitWidth;
+	}
+
 	override private function measureContentWidth():Float {
 		var contentWidth = super.measureContentWidth();
 		this.disclosureButton.validateNow();
@@ -277,11 +307,11 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var depth = 0;
+		var indentDepth = 0;
 		if (this._location != null) {
-			depth = this._location.length - 1;
+			indentDepth = this._location.length - 1;
 		}
-		var indent = this.indentation * depth;
+		var indent = this.indentation * indentDepth;
 		contentWidth += indent + this.disclosureButton.width + adjustedGap;
 		if (this._currentBranchOrLeafIcon != null) {
 			contentWidth += this._currentBranchOrLeafIcon.width + adjustedGap;
@@ -300,11 +330,11 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var depth = 0;
+		var indentDepth = 0;
 		if (this._location != null) {
-			depth = this._location.length - 1;
+			indentDepth = this._location.length - 1;
 		}
-		var indent = this.indentation * depth;
+		var indent = this.indentation * indentDepth;
 		contentMinWidth += indent + this.disclosureButton.width + adjustedGap;
 		if (this._currentBranchOrLeafIcon != null) {
 			contentMinWidth += this._currentBranchOrLeafIcon.width + adjustedGap;
@@ -325,11 +355,11 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		}
 		var disclosureGap = adjustedGap;
 		var branchOrLeafIconGap = adjustedGap;
-		var depth = 0;
+		var indentDepth = 0;
 		if (this._location != null) {
-			depth = this._location.length - 1;
+			indentDepth = this._location.length - 1;
 		}
-		var indent = this.indentation * depth;
+		var indent = this.indentation * indentDepth;
 		this.runWithoutInvalidation(() -> {
 			var newPaddingLeft = paddingLeft + indent + this.disclosureButton.width + disclosureGap;
 			if (this._currentBranchOrLeafIcon != null) {

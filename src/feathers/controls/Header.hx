@@ -627,17 +627,20 @@ class Header extends FeathersControl implements ITextControl {
 		this._previousSimpleTextFormat = simpleTextFormat;
 	}
 
-	private function refreshText(sizeInvalid:Bool):Void {
+	private function refreshText(forceMeasurement:Bool):Void {
 		var hasText = this._text != null && this._text.length > 0;
 		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;
-		if (this._text == this._previousText && this._htmlText == this._previousHTMLText && !this._updatedTextStyles && !sizeInvalid) {
+		if (this._text == this._previousText
+			&& this._htmlText == this._previousHTMLText
+			&& !this._updatedTextStyles
+			&& !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
+		this.textField.autoSize = LEFT;
 		if (hasHTMLText) {
 			this.textField.htmlText = this._htmlText;
 		} else if (hasText) {
@@ -656,7 +659,7 @@ class Header extends FeathersControl implements ITextControl {
 		}
 		this._textMeasuredWidth = this.textField.width;
 		this._textMeasuredHeight = this.textField.height;
-		this.textField.autoSize = TextFieldAutoSize.NONE;
+		this.textField.autoSize = NONE;
 		if (!hasText && !hasHTMLText) {
 			this.textField.text = "";
 		}

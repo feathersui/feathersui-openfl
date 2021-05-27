@@ -101,6 +101,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
+	private var _textMeasuredLines:Int;
 	private var _text:String;
 
 	/**
@@ -638,17 +639,20 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		this._previousSimpleTextFormat = simpleTextFormat;
 	}
 
-	private function refreshText(sizeInvalid:Bool):Void {
+	private function refreshText(forceMeasurement:Bool):Void {
 		var hasText = this._text != null && this._text.length > 0;
 		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;
-		if (this._text == this._previousText && this._htmlText == this._previousHTMLText && !this._updatedTextStyles && !sizeInvalid) {
+		if (this._text == this._previousText
+			&& this._htmlText == this._previousHTMLText
+			&& !this._updatedTextStyles
+			&& !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
-		this.textField.autoSize = TextFieldAutoSize.LEFT;
+		this.textField.autoSize = LEFT;
 		if (hasHTMLText) {
 			this.textField.htmlText = this._htmlText;
 		} else if (hasText) {
@@ -656,33 +660,49 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		} else {
 			this.textField.text = "\u200b"; // zero-width space
 		}
-		var textFieldExplicitWidth:Null<Float> = null;
-		if (this.explicitWidth != null) {
-			textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
-		} else if (this.explicitMaxWidth != null) {
-			textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
-		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
-			textFieldExplicitWidth = this._backgroundSkinMeasurements.maxWidth - this.paddingLeft - this.paddingRight;
-		}
-		if (textFieldExplicitWidth == null && this.wordWrap) {
-			// to get an accurate measurement, we need to temporarily disable
-			// wrapping to multiple lines
-			// it can be inaccurate with the flash target sometimes
+		var textFieldExplicitWidth = this.calculateExplicitWidthForTextMeasurement();
+		if (this.wordWrap) {
+			// to get an accurate measurement on the flash target, we need to
+			// temporarily disable wrapping to multiple lines
+			// there seems to be a bug when combining autoSize and wordWrap
 			this.textField.wordWrap = false;
-		} else if (textFieldExplicitWidth != null) {
+		}
+		if (textFieldExplicitWidth != null) {
 			this.textField.width = textFieldExplicitWidth;
 		}
-		this._textMeasuredWidth = this.textField.width;
-		this._textMeasuredHeight = this.textField.height;
-		this.textField.autoSize = TextFieldAutoSize.NONE;
-		if (textFieldExplicitWidth == null && this.wordWrap) {
+		this._textMeasuredWidth = this.textField.textWidth + 4;
+		if (this.wordWrap && textFieldExplicitWidth != null && this._textMeasuredWidth > textFieldExplicitWidth) {
+			// enable wrapping only if we definitely need it
 			this.textField.wordWrap = true;
+			this._textMeasuredWidth = this.textField.width;
+		}
+		this._textMeasuredHeight = this.textField.height;
+		this._textMeasuredLines = this.textField.numLines;
+		this.textField.autoSize = NONE;
+		if (this.textField.wordWrap != this.wordWrap) {
+			this.textField.wordWrap = this.wordWrap;
 		}
 		if (!hasText && !hasHTMLText) {
 			this.textField.text = "";
 		}
 		this._previousText = this._text;
 		this._previousHTMLText = this._htmlText;
+	}
+
+	private function calculateExplicitWidthForTextMeasurement():Null<Float> {
+		var textFieldExplicitWidth:Null<Float> = null;
+		if (this.explicitWidth != null) {
+			textFieldExplicitWidth = this.explicitWidth;
+		} else if (this.explicitMaxWidth != null) {
+			textFieldExplicitWidth = this.explicitMaxWidth;
+		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
+			textFieldExplicitWidth = this._backgroundSkinMeasurements.maxWidth;
+		}
+		if (textFieldExplicitWidth == null) {
+			return textFieldExplicitWidth;
+		}
+		textFieldExplicitWidth -= (this.paddingLeft + this.paddingRight);
+		return textFieldExplicitWidth;
 	}
 
 	private function refreshSelection():Void {
@@ -757,22 +777,12 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		this.textField.x = this.paddingLeft;
 		this.textField.width = textFieldLayoutWidth;
 		var wordWrap = this.wordWrap;
-		if (wordWrap && textFieldLayoutWidth == this._textMeasuredWidth) {
-			var textFieldExplicitWidth:Null<Float> = null;
-			if (this.explicitWidth != null) {
-				textFieldExplicitWidth = this.explicitWidth - this.paddingLeft - this.paddingRight;
-			} else if (this.explicitMaxWidth != null) {
-				textFieldExplicitWidth = this.explicitMaxWidth - this.paddingLeft - this.paddingRight;
-			} else if (this.actualMaxWidth < (1.0 / 0.0)) {
-				textFieldExplicitWidth = this.actualMaxWidth - this.paddingLeft - this.paddingRight;
-			}
-			if (textFieldExplicitWidth == null) {
-				// sometimes, using the width measured with wrapping disabled
-				// will still cause the final rendered result to wrap, but we
-				// can skip wrapping forcefully as a workaround
-				// this happens with the flash target sometimes
-				wordWrap = false;
-			}
+		if (wordWrap && textFieldLayoutWidth == this._textMeasuredWidth && this._textMeasuredLines == 1) {
+			// sometimes, using the width measured with wrapping disabled
+			// will still cause the final rendered result to wrap, but we
+			// can skip wrapping forcefully as a workaround
+			// this happens with the flash target sometimes
+			wordWrap = false;
 		}
 		if (this.textField.wordWrap != wordWrap) {
 			this.textField.wordWrap = wordWrap;

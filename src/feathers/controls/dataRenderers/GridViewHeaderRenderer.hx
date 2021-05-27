@@ -164,6 +164,28 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 		super.update();
 	}
 
+	override private function calculateExplicitWidthForTextMeasurement():Null<Float> {
+		var textFieldExplicitWidth = super.calculateExplicitWidthForTextMeasurement();
+		if (textFieldExplicitWidth == null) {
+			return textFieldExplicitWidth;
+		}
+		var adjustedGap = this.gap;
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
+			adjustedGap = this.minGap;
+		}
+		if (this._currentSortOrderIcon != null) {
+			if ((this._currentSortOrderIcon is IValidating)) {
+				cast(this._currentSortOrderIcon, IValidating).validateNow();
+			}
+			textFieldExplicitWidth -= (this._currentSortOrderIcon.width + adjustedGap);
+		}
+		if (textFieldExplicitWidth < 0.0) {
+			textFieldExplicitWidth = 0.0;
+		}
+		return textFieldExplicitWidth;
+	}
+
 	override private function measureContentWidth():Float {
 		var contentWidth = super.measureContentWidth();
 		if ((this._currentSortOrderIcon is IValidating)) {

@@ -339,6 +339,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
+		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
@@ -354,8 +355,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			this.refreshAccessoryView();
 		}
 
-		if (dataInvalid || stylesInvalid || stateInvalid) {
-			this.refreshSecondaryText();
+		if (dataInvalid || stylesInvalid || stateInvalid || sizeInvalid) {
+			this.refreshSecondaryText(sizeInvalid);
 		}
 
 		super.update();
@@ -404,19 +405,19 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		this._previousSecondarySimpleTextFormat = simpleTextFormat;
 	}
 
-	private function refreshSecondaryText():Void {
+	private function refreshSecondaryText(forceMeasurement:Bool):Void {
 		if (this.secondaryTextField == null) {
 			return;
 		}
 		var hasText = this._secondaryText != null && this._secondaryText.length > 0;
 		this.secondaryTextField.visible = hasText;
-		if (this._secondaryText == this._previousSecondaryText && !this._updatedSecondaryTextStyles) {
+		if (this._secondaryText == this._previousSecondaryText && !this._updatedSecondaryTextStyles && !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
-		this.secondaryTextField.autoSize = TextFieldAutoSize.LEFT;
+		this.secondaryTextField.autoSize = LEFT;
 		if (hasText) {
 			this.secondaryTextField.text = this._secondaryText;
 		} else {
@@ -424,7 +425,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		}
 		this._secondaryTextMeasuredWidth = this.secondaryTextField.width;
 		this._secondaryTextMeasuredHeight = this.secondaryTextField.height;
-		this.secondaryTextField.autoSize = TextFieldAutoSize.NONE;
+		this.secondaryTextField.autoSize = NONE;
 		if (!hasText) {
 			this.secondaryTextField.text = "";
 		}
@@ -525,6 +526,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			cast(this._currentIcon, IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
+		var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
+		this._ignoreAccessoryResizes = true;
+		if ((this._currentAccessoryView is IValidating)) {
+			cast(this._currentAccessoryView, IValidating).validateNow();
+		}
+		this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 		if (this._text == null || this._text.length == 0) {
 			return;
 		}
@@ -564,6 +571,14 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 				calculatedHeight -= (this._currentIcon.height + adjustedGap);
 			}
 		}
+		if (this._currentAccessoryView != null) {
+			var adjustedGap = this.gap;
+			// Math.POSITIVE_INFINITY bug workaround
+			if (adjustedGap == (1.0 / 0.0)) {
+				adjustedGap = this.minGap;
+			}
+			calculatedWidth -= (this._currentAccessoryView.width + adjustedGap);
+		}
 		if (this.secondaryTextField != null) {
 			var adjustedGap = this.gap;
 			// Math.POSITIVE_INFINITY bug workaround
@@ -585,7 +600,41 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			calculatedHeight = this._textMeasuredHeight;
 		}
 		this.textField.width = calculatedWidth;
+		var wordWrap = this.wordWrap;
+		if (wordWrap && calculatedWidth == this._textMeasuredWidth && this._textMeasuredLines == 1) {
+			// sometimes, using the width measured with wrapping disabled
+			// will still cause the final rendered result to wrap, but we
+			// can skip wrapping forcefully as a workaround
+			// this happens with the flash target sometimes
+			wordWrap = false;
+		}
+		if (this.textField.wordWrap != wordWrap) {
+			this.textField.wordWrap = wordWrap;
+		}
+
 		this.textField.height = calculatedHeight;
+	}
+
+	override private function calculateExplicitWidthForTextMeasurement():Null<Float> {
+		var textFieldExplicitWidth = super.calculateExplicitWidthForTextMeasurement();
+		if (textFieldExplicitWidth == null) {
+			return textFieldExplicitWidth;
+		}
+		var adjustedGap = this.gap;
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
+			adjustedGap = this.minGap;
+		}
+		if (this._currentAccessoryView != null) {
+			if ((this._currentAccessoryView is IValidating)) {
+				cast(this._currentAccessoryView, IValidating).validateNow();
+			}
+			textFieldExplicitWidth -= (this._currentIcon.width + adjustedGap);
+		}
+		if (textFieldExplicitWidth < 0.0) {
+			textFieldExplicitWidth = 0.0;
+		}
+		return textFieldExplicitWidth;
 	}
 
 	override private function measureContentWidth():Float {
