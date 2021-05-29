@@ -1075,7 +1075,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			newSelectedItem = this._dataProvider.get(this.pendingSelectedIndex);
 		} else {
 			var filterText = this._filterText.toLowerCase();
-			if (this._dataProvider.length > 0) {
+			if (this._dataProvider != null && this._dataProvider.length > 0) {
 				for (item in this._dataProvider) {
 					var itemText = this.itemToText(item).toLowerCase();
 					if (itemText == filterText) {
