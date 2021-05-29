@@ -331,9 +331,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			value = "";
 		}
 		if (this._text == value) {
-			if (this._text != textField.text){
-				this.setInvalid(DATA);
-			}
+			this.setInvalid(DATA);
 			return this._text;
 		}
 		this._text = value;
@@ -1510,7 +1508,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			hasMeasureText = true;
 			measureText = "\u200b"; // zero-width space
 		}
-		if (measureText == this._previousMeasureText && !this._updatedTextStyles && !forceMeasurement) {
+		if (measureText == this._previousMeasureText && !this._updatedTextStyles && !forceMeasurement && this._text == textField.text) {
 			// nothing to refresh
 			return;
 		}
