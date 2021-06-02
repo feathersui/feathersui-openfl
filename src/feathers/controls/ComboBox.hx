@@ -19,6 +19,7 @@ import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.data.ListViewItemState;
 import feathers.events.FeathersEvent;
+import feathers.events.FlatCollectionEvent;
 import feathers.events.ListViewEvent;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelComboBoxStyles;
@@ -232,9 +233,15 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		if (this._dataProvider != null) {
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, comboBox_dataProvider_removeAllHandler);
+		}
 		var oldSelectedIndex = this._selectedIndex;
 		var oldSelectedItem = this._selectedItem;
 		this._dataProvider = value;
+		if (this._dataProvider != null) {
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, comboBox_dataProvider_removeAllHandler);
+		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			// use the setter
 			this.selectedIndex = -1;
@@ -1098,5 +1105,10 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		// even if the selected item has not changed, invalidate because the
 		// displayed text may need to be updated
 		this.setInvalid(SELECTION);
+	}
+
+	private function comboBox_dataProvider_removeAllHandler(event:Event):Void {
+		// use the setter
+		this.selectedIndex = -1;
 	}
 }

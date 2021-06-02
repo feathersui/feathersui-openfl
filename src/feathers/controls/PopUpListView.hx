@@ -19,6 +19,7 @@ import feathers.core.PopUpManager;
 import feathers.data.IFlatCollection;
 import feathers.data.ListViewItemState;
 import feathers.events.FeathersEvent;
+import feathers.events.FlatCollectionEvent;
 import feathers.events.ListViewEvent;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelPopUpListViewStyles;
@@ -210,9 +211,15 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		if (this._dataProvider != null) {
+			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, popUpListView_dataProvider_removeAllHandler);
+		}
 		var oldSelectedIndex = this._selectedIndex;
 		var oldSelectedItem = this._selectedItem;
 		this._dataProvider = value;
+		if (this._dataProvider != null) {
+			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, popUpListView_dataProvider_removeAllHandler);
+		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			// use the setter
 			this.selectedIndex = -1;
@@ -923,5 +930,10 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function popUpListView_popUpAdapter_closeHandler(event:Event):Void {
 		FeathersEvent.dispatch(this, Event.CLOSE);
+	}
+
+	private function popUpListView_dataProvider_removeAllHandler(event:Event):Void {
+		// use the setter
+		this.selectedIndex = -1;
 	}
 }
