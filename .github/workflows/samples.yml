@@ -24,6 +24,7 @@ jobs:
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
+        haxelib install hxargs --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Build samples/hello-world
       working-directory: samples/hello-world
@@ -124,6 +125,7 @@ jobs:
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
+        haxelib install hxargs --quiet
         haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Build samples/components-explorer
@@ -145,6 +147,7 @@ jobs:
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
+        haxelib install hxargs --quiet
         haxelib install hxcpp --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Build samples/components-explorer
@@ -166,6 +169,7 @@ jobs:
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
+        haxelib install hxargs --quiet
         haxelib install hxcpp --quiet
         haxelib dev feathersui ${{ github.workspace }} 
     - name: Build samples/components-explorer
@@ -188,6 +192,7 @@ jobs:
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
+        haxelib install hxargs --quiet
         haxelib dev feathersui ${{ github.workspace }} 
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
     - name: Build samples/hello-world
