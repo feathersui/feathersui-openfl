@@ -78,7 +78,7 @@ jobs:
         haxelib install openfl 9.1.0 --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib dev feathersui ${{ github.workspace }} 
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
     - name: Run Tests
       working-directory: test
