@@ -1722,16 +1722,22 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		event.stopPropagation();
 
 		var oldText = this._text;
+		var newText = this.textField.text;
 
 		// no need to invalidate here. just store the new text.
-		this._text = this.textField.text;
+		this._text = newText;
 		// ...UNLESS the prompt needs to be shown or hidden as a result of the
 		// changed text
-		var hasText = this._text != null && this._text.length > 0;
+		var hasText = newText != null && newText.length > 0;
+		var measureText = hasText ? newText : "\u200b"; // zero-width space
 		var hasOldText = oldText != null && oldText.length > 0;
 		var hasPrompt = this._prompt != null && this._prompt.length > 0;
 		if (this.autoSizeWidth || (hasPrompt && ((!hasText && hasOldText) || (hasText && !hasOldText)))) {
+			// we need to measure, so invalidate
 			this.setInvalid(DATA);
+		} else {
+			// we don't need to measure again, so just save the value
+			this._previousMeasureText = measureText;
 		}
 		// either way, the event still needs to be dispatched
 		FeathersEvent.dispatch(this, Event.CHANGE);
