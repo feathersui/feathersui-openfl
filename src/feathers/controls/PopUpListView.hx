@@ -527,7 +527,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.open || this.stage == null) {
 			return;
 		}
-		this.listView.focusManager = this._focusManager;
 		if (this.popUpAdapter != null) {
 			this.popUpAdapter.addEventListener(Event.OPEN, popUpListView_popUpAdapter_openHandler);
 			this.popUpAdapter.addEventListener(Event.CLOSE, popUpListView_popUpAdapter_closeHandler);
@@ -542,8 +541,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
 		this.listView.scrollToIndex(this._selectedIndex);
-		if (this._focusManager != null) {
-			this._focusManager.focus = this.listView;
+		if (this.listView.focusManager != null) {
+			this.listView.focusManager.focus = this.listView;
 		} else {
 			this.stage.focus = this.listView;
 		}

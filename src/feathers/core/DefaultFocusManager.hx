@@ -194,6 +194,14 @@ class DefaultFocusManager implements IFocusManager {
 		this.root = null;
 	}
 
+	public function addPopUp(popUp:DisplayObject):Void {
+		this.setFocusManager(popUp);
+	}
+
+	public function removePopUp(popUp:DisplayObject):Void {
+		this.clearFocusManager(popUp);
+	}
+
 	/**
 		@see `feathers.core.IFocusManager.findNextFocus()`
 	**/
@@ -218,9 +226,8 @@ class DefaultFocusManager implements IFocusManager {
 			if (currentFocus != null && currentFocus.parent != null) {
 				newFocus = this.findPreviousContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 			}
-			if (newFocus == null && (this._root is DisplayObjectContainer)) {
-				var rootContainer = cast(this._root, DisplayObjectContainer);
-				newFocus = this.findPreviousContainerFocus(rootContainer, null, false);
+			if (newFocus == null) {
+				newFocus = this.findPreviousChildFocus(this._root);
 				wrapped = currentFocus != null;
 			}
 		} else {
@@ -231,9 +238,8 @@ class DefaultFocusManager implements IFocusManager {
 					newFocus = this.findNextContainerFocus(currentFocus.parent, cast(currentFocus, DisplayObject), true);
 				}
 			}
-			if (newFocus == null && (this._root is DisplayObjectContainer)) {
-				var rootContainer = cast(this._root, DisplayObjectContainer);
-				newFocus = this.findNextContainerFocus(rootContainer, null, false);
+			if (newFocus == null) {
+				newFocus = this.findNextChildFocus(this._root);
 				wrapped = currentFocus != null;
 			}
 		}
@@ -262,9 +268,6 @@ class DefaultFocusManager implements IFocusManager {
 	private function setFocusManager(target:DisplayObject):Void {
 		if ((target is IFocusManagerAware)) {
 			var targetWithFocus = cast(target, IFocusManagerAware);
-			if (targetWithFocus.focusManager != null && targetWithFocus.focusManager != this) {
-				return;
-			}
 			targetWithFocus.focusManager = this;
 		}
 		var container = Std.downcast(target, DisplayObjectContainer);

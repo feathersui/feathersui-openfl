@@ -89,7 +89,9 @@ class DefaultPopUpManager implements IPopUpManager {
 
 	private var _popUpToOverlay:Map<DisplayObject, DisplayObject> = [];
 
+	private var _popUpToPushedFocusManager:Map<DisplayObject, IFocusManager> = [];
 	private var _popUpToFocusManager:Map<DisplayObject, IFocusManager> = [];
+	private var _pushedFocusManagerStack:Array<IFocusManager> = [];
 
 	private var _overlayFactory:() -> DisplayObject;
 
@@ -205,7 +207,25 @@ class DefaultPopUpManager implements IPopUpManager {
 		}
 
 		this.popUps.push(popUp);
+
+		var needsPushedFocusManager = isModal && this._focusManager != null;
+		if (needsPushedFocusManager) {
+			var focusManager = FocusManager.pushForPopUpManager(this._focusManager, popUp);
+			this._pushedFocusManagerStack.push(focusManager);
+			this._popUpToPushedFocusManager.set(popUp, focusManager);
+			this._popUpToFocusManager.set(popUp, focusManager);
+		}
+
 		var result = this._root.addChild(popUp);
+
+		if (!needsPushedFocusManager && this._focusManager != null) {
+			var focusManager = this._focusManager;
+			if (this._pushedFocusManagerStack.length > 0) {
+				focusManager = this._pushedFocusManagerStack[this._pushedFocusManagerStack.length - 1];
+			}
+			this._popUpToFocusManager.set(popUp, focusManager);
+			focusManager.addPopUp(popUp);
+		}
 
 		// this listener needs to be added after the pop-up is added to the
 		// root because the pop-up may not have been removed from its old
@@ -213,10 +233,6 @@ class DefaultPopUpManager implements IPopUpManager {
 		popUp.addEventListener(Event.REMOVED_FROM_STAGE, popUp_removedFromStageHandler);
 		if (this.popUps.length == 1) {
 			this._root.stage.addEventListener(Event.RESIZE, stage_resizeHandler, false, 0, true);
-		}
-		if (isModal && this._focusManager != null) {
-			var focusManager = FocusManager.push(this._focusManager, popUp);
-			this._popUpToFocusManager.set(popUp, focusManager);
 		}
 		if (isCentered) {
 			if ((popUp is IMeasureObject)) {
@@ -285,11 +301,17 @@ class DefaultPopUpManager implements IPopUpManager {
 
 	private function cleanupFocus(popUp:DisplayObject):Void {
 		var focusManager = this._popUpToFocusManager.get(popUp);
-		if (focusManager == null) {
-			return;
+		var pushedFocusManager = this._popUpToPushedFocusManager.get(popUp);
+		if (pushedFocusManager != null) {
+			this._popUpToFocusManager.remove(popUp);
+			this._popUpToPushedFocusManager.remove(popUp);
+			FocusManager.removeForPopUpManager(this._focusManager, pushedFocusManager);
+		} else {
+			this._popUpToFocusManager.remove(popUp);
+			if (focusManager != null) {
+				focusManager.removePopUp(popUp);
+			}
 		}
-		this._popUpToFocusManager.remove(popUp);
-		FocusManager.remove(this._focusManager, focusManager);
 	}
 
 	private function popUp_removedFromStageHandler(event:Event):Void {

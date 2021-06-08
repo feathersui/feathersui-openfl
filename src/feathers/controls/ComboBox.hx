@@ -621,7 +621,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.open || this.stage == null) {
 			return;
 		}
-		this.listView.focusManager = this._focusManager;
 		this._filterText = "";
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();

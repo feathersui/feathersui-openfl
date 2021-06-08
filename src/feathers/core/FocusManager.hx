@@ -121,7 +121,7 @@ class FocusManager {
 		focusManager.focus = focusable;
 	}
 
-	private static function push(rootManager:IFocusManager, secondaryRoot:DisplayObject):IFocusManager {
+	private static function pushForPopUpManager(rootManager:IFocusManager, secondaryRoot:DisplayObject):IFocusManager {
 		var rootData = _rootToData.get(rootManager.root);
 		return pushWithRootData(rootData, secondaryRoot);
 	}
@@ -139,7 +139,7 @@ class FocusManager {
 		return focusManager;
 	}
 
-	private static function remove(rootManager:IFocusManager, secondaryManager:IFocusManager):Void {
+	private static function removeForPopUpManager(rootManager:IFocusManager, secondaryManager:IFocusManager):Void {
 		var rootData = _rootToData.get(rootManager.root);
 		var stack = rootData.stack;
 		for (i in 0...stack.length) {
