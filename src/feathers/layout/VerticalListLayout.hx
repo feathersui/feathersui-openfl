@@ -8,13 +8,14 @@
 
 package feathers.layout;
 
-import openfl.geom.Point;
-import feathers.layout.IVirtualLayout.VirtualLayoutRange;
+import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
+import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.geom.Point;
 
 /**
 	A simple list layout that positions items from top to bottom, in a single
@@ -470,6 +471,30 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		return this._contentJustify;
 	}
 
+	private var _widthResetEnabled:Bool = true;
+
+	/**
+		Indicates if the width of items should be reset if the explicit width of
+		the parent container is not set.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var widthResetEnabled(get, set):Bool;
+
+	private function get_widthResetEnabled():Bool {
+		return this._widthResetEnabled;
+	}
+
+	private function set_widthResetEnabled(value:Bool):Bool {
+		if (this._widthResetEnabled == value) {
+			return this._widthResetEnabled;
+		}
+		this._widthResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._widthResetEnabled;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -491,7 +516,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		var maxItemWidth = this.calculateMaxItemWidth(items);
+		var maxItemWidth = this.calculateMaxItemWidth(items, measurements);
 		var viewPortWidth = this.calculateViewPortWidth(maxItemWidth, measurements);
 		var minItemWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
 		var itemWidth = maxItemWidth;
@@ -572,7 +597,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 		return result;
 	}
 
-	private function calculateMaxItemWidth(items:Array<DisplayObject>):Float {
+	private function calculateMaxItemWidth(items:Array<DisplayObject>, measurements:Measurements):Float {
 		var maxItemWidth = 0.0;
 		for (i in 0...items.length) {
 			var item = items[i];
@@ -595,6 +620,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
 				}
+			}
+			if (this._widthResetEnabled && measurements.width == null && (item is IMeasureObject)) {
+				cast(item, IMeasureObject).resetWidth();
 			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();

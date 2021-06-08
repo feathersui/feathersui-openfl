@@ -8,13 +8,14 @@
 
 package feathers.layout;
 
-import openfl.geom.Point;
-import feathers.layout.IVirtualLayout.VirtualLayoutRange;
+import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
+import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.geom.Point;
 
 /**
 	A simple list layout that positions items from left to right, in a single
@@ -466,6 +467,30 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		return this._contentJustify;
 	}
 
+	private var _heightResetEnabled:Bool = true;
+
+	/**
+		Indicates if the height of items should be reset if the explicit height
+		of the parent container is not set.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var heightResetEnabled(get, set):Bool;
+
+	private function get_heightResetEnabled():Bool {
+		return this._heightResetEnabled;
+	}
+
+	private function set_heightResetEnabled(value:Bool):Bool {
+		if (this._heightResetEnabled == value) {
+			return this._heightResetEnabled;
+		}
+		this._heightResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._heightResetEnabled;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -487,7 +512,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		var maxItemHeight = this.calculateMaxItemHeight(items);
+		var maxItemHeight = this.calculateMaxItemHeight(items, measurements);
 		var viewPortHeight = this.calculateViewPortHeight(maxItemHeight, measurements);
 		var minItemHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
 		var itemHeight = maxItemHeight;
@@ -562,7 +587,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		return result;
 	}
 
-	private function calculateMaxItemHeight(items:Array<DisplayObject>):Float {
+	private function calculateMaxItemHeight(items:Array<DisplayObject>, measurements:Measurements):Float {
 		var maxItemHeight = 0.0;
 		for (i in 0...items.length) {
 			var item = items[i];
@@ -585,6 +610,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				if (!cast(item, ILayoutObject).includeInLayout) {
 					continue;
 				}
+			}
+			if (this._heightResetEnabled && measurements.height == null && (item is IMeasureObject)) {
+				cast(item, IMeasureObject).resetHeight();
 			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
