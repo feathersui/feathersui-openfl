@@ -101,6 +101,7 @@ class FocusManager {
 		var stack = rootData.stack;
 		for (focusManager in stack) {
 			focusManager.enabled = false;
+			focusManager.dispose();
 		}
 		stack.resize(0);
 		_rootToData.remove(root);
