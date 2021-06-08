@@ -8,9 +8,9 @@
 
 package feathers.core;
 
-import openfl.ui.Keyboard;
-import openfl.events.FocusEvent;
 import feathers.controls.Button;
+import openfl.events.FocusEvent;
+import openfl.ui.Keyboard;
 import utest.Assert;
 import utest.Test;
 
@@ -50,7 +50,7 @@ class FocusManagerTest extends Test {
 		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	public function testAddFocusableChildren():Void {
+	public function testFocusManagerProperty():Void {
 		Assert.notNull(this._focusObject1.focusManager, "Focus manager should not be null");
 		Assert.notNull(this._focusObject2.focusManager, "Focus manager should not be null");
 		Assert.equals(this._focusObject1.focusManager, this._focusObject2.focusManager, "Focus manager should be equal");
@@ -59,6 +59,12 @@ class FocusManagerTest extends Test {
 	public function testRemoveFocusManagerOnRemoveChild():Void {
 		TestMain.openfl_root.removeChild(this._focusObject1);
 		Assert.isNull(this._focusObject1.focusManager, "Focus manager should be null");
+	}
+
+	public function testRemoveFocusManagerOnRemoveRoot():Void {
+		FocusManager.removeRoot(TestMain.openfl_root);
+		Assert.isNull(this._focusObject1.focusManager, "Focus manager should be null");
+		Assert.isNull(this._focusObject2.focusManager, "Focus manager should be null");
 	}
 
 	public function testFocusPropertyInFocusInEventListener():Void {
