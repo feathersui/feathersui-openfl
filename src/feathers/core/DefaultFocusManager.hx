@@ -181,6 +181,20 @@ class DefaultFocusManager implements IFocusManager {
 	}
 
 	/**
+		@see `feathers.core.IFocusManager.dispose()`
+	**/
+	public function dispose():Void {
+		this.focus = null;
+		if (this._focusPane != null) {
+			if (this._focusPane.parent != null) {
+				this._focusPane.parent.removeChild(this._focusPane);
+			}
+			this._focusPane = null;
+		}
+		this.root = null;
+	}
+
+	/**
 		@see `feathers.core.IFocusManager.findNextFocus()`
 	**/
 	public function findNextFocus(backward:Bool = false):IFocusObject {

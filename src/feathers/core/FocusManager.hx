@@ -148,6 +148,7 @@ class FocusManager {
 				continue;
 			}
 			manager.enabled = false;
+			manager.dispose();
 			stack.splice(i, 1);
 			// if this is the top-level focus manager, enable the previous one
 			if (i == stack.length) {

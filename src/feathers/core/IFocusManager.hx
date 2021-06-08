@@ -56,4 +56,12 @@ interface IFocusManager {
 		@since 1.0.0
 	**/
 	public function findNextFocus(backward:Bool = false):IFocusObject;
+
+	/**
+		Disposes this focus manager. A focus manager should never be used again
+		after calling `dispose()`.
+
+		@since 1.0.0
+	**/
+	public function dispose():Void;
 }
