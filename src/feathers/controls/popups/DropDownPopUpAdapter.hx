@@ -8,15 +8,18 @@
 
 package feathers.controls.popups;
 
-import feathers.layout.Measurements;
+import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
-import openfl.geom.Point;
 import feathers.core.PopUpManager;
+import feathers.core.ValidationQueue;
+import feathers.events.FeathersEvent;
+import feathers.layout.Measurements;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
-import feathers.events.FeathersEvent;
-import openfl.errors.IllegalOperationError;
-import openfl.display.DisplayObject;
+import openfl.geom.Point;
 
 /**
 	Displays a pop-up like a drop-down, either below or above the source.
@@ -54,7 +57,57 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		return this.content != null;
 	}
 
+	private var _gap:Float = 0.0;
+
+	/**
+		The gap, measured in pixels, between the origin and the content.
+	**/
+	public var gap(get, set):Float;
+
+	private function get_gap():Float {
+		return this._gap;
+	}
+
+	private function set_gap(value:Float):Float {
+		if (this._gap == value) {
+			return this._gap;
+		}
+		this._gap = value;
+		if (this.active) {
+			this.layout();
+		}
+		return this._gap;
+	}
+
+	/**
+		Determines if the content is displayed modally on the pop-up manager.
+	**/
 	public var modal:Bool = false;
+
+	private var _fitContentToOriginWidth:Bool = true;
+
+	/**
+		Determines if the `width` or `minWidth` of the content is adjusted to
+		match the width of the origin, when the content is smaller than the
+		origin.
+	**/
+	@:flash.property
+	public var fitContentToOriginWidth(get, set):Bool;
+
+	private function get_fitContentToOriginWidth():Bool {
+		return this._fitContentToOriginWidth;
+	}
+
+	private function set_fitContentToOriginWidth(value:Bool):Bool {
+		if (this._fitContentToOriginWidth == value) {
+			return this._fitContentToOriginWidth;
+		}
+		this._fitContentToOriginWidth = value;
+		if (this.active) {
+			this.layout();
+		}
+		return this._fitContentToOriginWidth;
+	}
 
 	/**
 		@see `feathers.controls.popups.IPopUpAdapter.persistent`
@@ -66,6 +119,11 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		return false;
 	}
 
+	private var _stage:Stage;
+
+	private var _prevOriginX:Float;
+	private var _prevOriginY:Float;
+
 	private var _contentMeasurements:Measurements = new Measurements();
 
 	/**
@@ -75,8 +133,16 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if (this.active) {
 			throw new IllegalOperationError("Pop-up adapter is already open. Close the previous content before opening new content.");
 		}
+		if (origin.stage == null) {
+			throw new IllegalOperationError("Pop-up adapter failed to open because the origin is not added to the stage.");
+		}
+		this._stage = origin.stage;
 		this.content = content;
+		this.content.addEventListener(Event.ENTER_FRAME, dropDownPopUpAdapter_content_enterFrameHandler, false, 0, true);
+		this.content.addEventListener(Event.RESIZE, dropDownPopUpAdapter_content_resizeHandler, false, 0, true);
+		this.content.addEventListener(Event.REMOVED_FROM_STAGE, dropDownPopUpAdapter_content_removedFromStageHandler, false, 0, true);
 		this.origin = origin;
+		this.origin.addEventListener(Event.RESIZE, dropDownPopUpAdapter_origin_resizeHandler, false, 0, true);
 		PopUpManager.addPopUp(this.content, this.origin, this.modal, false);
 
 		if ((this.content is IValidating)) {
@@ -85,6 +151,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this._contentMeasurements.save(this.content);
 
 		this.layout();
+
+		this._stage.addEventListener(Event.RESIZE, dropDownPopUpAdapter_stage_resizeHandler, false, 0, true);
 
 		FeathersEvent.dispatch(this, Event.OPEN);
 	}
@@ -101,9 +169,18 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if (!this.active) {
 			return;
 		}
+		this._stage.removeEventListener(Event.RESIZE, dropDownPopUpAdapter_stage_resizeHandler);
+
+		this.content.removeEventListener(Event.ENTER_FRAME, dropDownPopUpAdapter_content_enterFrameHandler);
+		this.content.removeEventListener(Event.RESIZE, dropDownPopUpAdapter_content_resizeHandler);
+		this.content.removeEventListener(Event.REMOVED_FROM_STAGE, dropDownPopUpAdapter_content_removedFromStageHandler);
+
+		this.origin.removeEventListener(Event.RESIZE, dropDownPopUpAdapter_origin_resizeHandler);
+
 		var content = this.content;
 		this.origin = null;
 		this.content = null;
+		this._stage = null;
 
 		if (content.parent != null) {
 			content.parent.removeChild(content);
@@ -117,7 +194,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			cast(this.origin, IValidating).validateNow();
 		}
 
-		var popUpRoot = PopUpManager.forStage(this.origin.stage).root;
+		var popUpRoot = PopUpManager.forStage(this._stage).root;
 
 		var originTopLeft = new Point(this.origin.x, this.origin.y);
 		originTopLeft = origin.parent.localToGlobal(originTopLeft);
@@ -127,14 +204,89 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		originBottomRight = origin.parent.localToGlobal(originBottomRight);
 		originBottomRight = popUpRoot.globalToLocal(originBottomRight);
 
-		this.content.x = originTopLeft.x;
-		this.content.y = originBottomRight.y;
+		this._prevOriginX = originTopLeft.x;
+		this._prevOriginY = originTopLeft.y;
 
+		var originWidth = Math.max(0.0, originBottomRight.x - originTopLeft.x);
+
+		var hasSetMinWidth = false;
+		if (this.fitContentToOriginWidth && (this.content is IMeasureObject)) {
+			var measureContent = cast(this.content, IMeasureObject);
+			if (measureContent.minWidth < originWidth) {
+				measureContent.minWidth = originWidth;
+				hasSetMinWidth = true;
+			}
+		}
 		if ((this.content is IValidating)) {
 			cast(this.content, IValidating).validateNow();
 		}
-		if (this.content.width < this.origin.width) {
-			this.content.width = this.origin.width;
+		if (this.fitContentToOriginWidth && !hasSetMinWidth && this.content.width < originWidth) {
+			this.content.width = originWidth;
+		}
+
+		var stageTopLeft = popUpRoot.globalToLocal(new Point());
+		var stageBottomRight = popUpRoot.globalToLocal(new Point(this._stage.stageWidth, this._stage.stageHeight));
+
+		var contentX = originTopLeft.x;
+		if (contentX < stageTopLeft.x) {
+			// don't go into negative stage coordinates
+			contentX = stageTopLeft.x;
+		} else if ((contentX + this.content.width) > stageBottomRight.x) {
+			contentX = Math.max(stageTopLeft.x, stageBottomRight.x - this.content.width);
+		}
+		this.content.x = contentX;
+
+		var contentY = originBottomRight.y + this.gap;
+		if ((contentY + this.content.height) > stageBottomRight.y) {
+			contentY = Math.max(stageTopLeft.y, originTopLeft.y - this.gap - this.content.height);
+		}
+		this.content.y = contentY;
+	}
+
+	private function dropDownPopUpAdapter_content_removedFromStageHandler(event:Event):Void {
+		if (!this.active) {
+			return;
+		}
+		this.close();
+	}
+
+	private function dropDownPopUpAdapter_stage_resizeHandler(event:Event):Void {
+		if (!this.active) {
+			return;
+		}
+		ValidationQueue.forStage(this._stage).validateNow();
+		this.layout();
+	}
+
+	private function dropDownPopUpAdapter_content_resizeHandler(event:Event):Void {
+		if (!this.active) {
+			return;
+		}
+		this.layout();
+	}
+
+	private function dropDownPopUpAdapter_origin_resizeHandler(event:Event):Void {
+		if (!this.active) {
+			return;
+		}
+		this.layout();
+	}
+
+	private function dropDownPopUpAdapter_content_enterFrameHandler(event:Event):Void {
+		if (!this.active) {
+			return;
+		}
+
+		var popUpRoot = PopUpManager.forStage(this._stage).root;
+
+		var originTopLeft = new Point(this.origin.x, this.origin.y);
+		originTopLeft = origin.parent.localToGlobal(originTopLeft);
+		originTopLeft = popUpRoot.globalToLocal(originTopLeft);
+
+		// check if the position of the origin has changed since the previous
+		// time we updated the size/position of the content
+		if (originTopLeft.x != this._prevOriginX || originTopLeft.y != this._prevOriginY) {
+			this.layout();
 		}
 	}
 }
