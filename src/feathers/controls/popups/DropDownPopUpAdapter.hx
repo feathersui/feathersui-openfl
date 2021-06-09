@@ -216,7 +216,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		var originWidth = Math.max(0.0, originBottomRight.x - originTopLeft.x);
 
 		var hasSetMinWidth = false;
-		if (this.fitContentToOriginWidth && (this.content is IMeasureObject)) {
+		if (this._fitContentToOriginWidth && (this.content is IMeasureObject)) {
 			var measureContent = cast(this.content, IMeasureObject);
 			if (measureContent.minWidth < originWidth) {
 				measureContent.minWidth = originWidth;
@@ -226,7 +226,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if ((this.content is IValidating)) {
 			cast(this.content, IValidating).validateNow();
 		}
-		if (this.fitContentToOriginWidth && !hasSetMinWidth && this.content.width < originWidth) {
+		if (this._fitContentToOriginWidth && !hasSetMinWidth && this.content.width < originWidth) {
 			this.content.width = originWidth;
 		}
 
@@ -242,9 +242,9 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		}
 		this.content.x = contentX;
 
-		var contentY = originBottomRight.y + this.gap;
+		var contentY = originBottomRight.y + this._gap;
 		if ((contentY + this.content.height) > stageBottomRight.y) {
-			contentY = Math.max(stageTopLeft.y, originTopLeft.y - this.gap - this.content.height);
+			contentY = Math.max(stageTopLeft.y, originTopLeft.y - this._gap - this.content.height);
 		}
 		this.content.y = contentY;
 	}
