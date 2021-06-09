@@ -51,6 +51,36 @@ class FocusManagerTest extends Test {
 		TestMain.openfl_root.addChild(this._focusObject2);
 	}
 
+	public function testHasRoot():Void {
+		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		FocusManager.addRoot(TestMain.openfl_root.stage);
+		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
+	}
+
+	public function testDispose():Void {
+		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		focusManager.dispose();
+		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+	}
+
+	public function testRemoveRoot():Void {
+		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		FocusManager.addRoot(TestMain.openfl_root.stage);
+		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		FocusManager.removeRoot(TestMain.openfl_root.stage);
+		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+	}
+
+	public function testDisposeAll():Void {
+		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		FocusManager.addRoot(TestMain.openfl_root.stage);
+		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		FocusManager.dispose();
+		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+	}
+
 	public function testFocusManagerProperty():Void {
 		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
 		Assert.notNull(focusManager, "Focus manager should not be null");

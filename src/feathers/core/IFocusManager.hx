@@ -10,15 +10,19 @@ package feathers.core;
 
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
+import openfl.events.IEventDispatcher;
 
 /**
 	Manages focus of UI components.
+
+	@event openfl.events.Event.CLEAR Dispatched when the focus manager is disposed.
 
 	@see `feathers.core.IFocusObject`
 
 	@since 1.0.0
 **/
-interface IFocusManager {
+@:event(openfl.events.Event.CLEAR)
+interface IFocusManager extends IEventDispatcher {
 	/**
 		The root of the focus manager.
 
@@ -59,7 +63,7 @@ interface IFocusManager {
 
 	/**
 		Disposes this focus manager. A focus manager should never be used again
-		after calling `dispose()`.
+		after calling `dispose()`. Must dispatch `Event.CLEAR` when called.
 
 		@since 1.0.0
 	**/

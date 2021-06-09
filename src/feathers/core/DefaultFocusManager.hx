@@ -23,6 +23,7 @@ import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.events.EventDispatcher;
 import openfl.events.FocusEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
@@ -36,15 +37,19 @@ import openfl.system.Capabilities;
 /**
 	The default implementation of `IFocusManager`.
 
+	@event openfl.events.Event.CLEAR Dispatched when the focus manager is disposed.
+
 	@since 1.0.0
 **/
-class DefaultFocusManager implements IFocusManager {
+@:event(openfl.events.Event.CLEAR)
+class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	/**
 		Creates a new `DefaultFocusManager` object with the given arguments.
 
 		@since 1.0.0
 	**/
 	public function new(root:DisplayObject) {
+		super();
 		this.root = root;
 	}
 
@@ -194,7 +199,14 @@ class DefaultFocusManager implements IFocusManager {
 			}
 			this._focusPane = null;
 		}
+		var savedRoot = this._root;
 		this.root = null;
+		// temporarily put the root back (without calling the setter) so that it
+		// is accessible in event listeners. we'll set it back to null after
+		this._root = savedRoot;
+		FeathersEvent.dispatch(this, Event.CLEAR);
+		// okay, now clear _root for real
+		this._root = null;
 	}
 
 	/**

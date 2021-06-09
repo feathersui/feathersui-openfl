@@ -9,9 +9,9 @@
 package feathers.core;
 
 import openfl.display.DisplayObject;
-import openfl.display.DisplayObjectContainer;
 import openfl.display.Stage;
 import openfl.errors.ArgumentError;
+import openfl.events.Event;
 
 /**
 	Manages mouse/touch and keyboard focus.
@@ -85,6 +85,7 @@ class FocusManager {
 			factory = FocusManager.defaultFocusManagerFactory;
 		}
 		focusManager = factory(stage);
+		focusManager.addEventListener(Event.CLEAR, focusManager_clearHandler, false, 0, true);
 		stageToManager.set(stage, focusManager);
 		return focusManager;
 	}
@@ -100,7 +101,6 @@ class FocusManager {
 			return;
 		}
 		focusManager.dispose();
-		stageToManager.remove(stage);
 	}
 
 	/**
@@ -130,6 +130,15 @@ class FocusManager {
 			throw new ArgumentError("Cannot set focus because focus manager is null.");
 		}
 		focusManager.focus = focusable;
+	}
+
+	private static function focusManager_clearHandler(event:Event):Void {
+		var focusManager = cast(event.currentTarget, IFocusManager);
+		focusManager.removeEventListener(Event.CLEAR, focusManager_clearHandler);
+		var stage = Std.downcast(focusManager.root, Stage);
+		if (stage != null) {
+			stageToManager.remove(stage);
+		}
 	}
 
 	private function FocusManager() {}
