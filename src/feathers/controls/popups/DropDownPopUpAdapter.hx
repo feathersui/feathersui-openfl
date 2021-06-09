@@ -144,6 +144,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.content.addEventListener(Event.REMOVED_FROM_STAGE, dropDownPopUpAdapter_content_removedFromStageHandler, false, 0, true);
 		this.origin = origin;
 		this.origin.addEventListener(Event.RESIZE, dropDownPopUpAdapter_origin_resizeHandler, false, 0, true);
+		this.origin.addEventListener(Event.REMOVED_FROM_STAGE, dropDownPopUpAdapter_origin_removedFromStageHandler, false, 0, true);
 		PopUpManager.addPopUp(this.content, this.origin, this.modal, false);
 		if (!this.active) {
 			// it's possible to immediately close this adapter in an
@@ -180,6 +181,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.content.removeEventListener(Event.REMOVED_FROM_STAGE, dropDownPopUpAdapter_content_removedFromStageHandler);
 
 		this.origin.removeEventListener(Event.RESIZE, dropDownPopUpAdapter_origin_resizeHandler);
+		this.origin.removeEventListener(Event.REMOVED_FROM_STAGE, dropDownPopUpAdapter_origin_removedFromStageHandler);
 
 		var content = this.content;
 		this.origin = null;
@@ -245,6 +247,13 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			contentY = Math.max(stageTopLeft.y, originTopLeft.y - this.gap - this.content.height);
 		}
 		this.content.y = contentY;
+	}
+
+	private function dropDownPopUpAdapter_origin_removedFromStageHandler(event:Event):Void {
+		if (!this.active) {
+			return;
+		}
+		this.close();
 	}
 
 	private function dropDownPopUpAdapter_content_removedFromStageHandler(event:Event):Void {

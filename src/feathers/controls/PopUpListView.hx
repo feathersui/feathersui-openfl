@@ -873,7 +873,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function popUpListView_removedFromStageHandler(event:Event):Void {
 		// if something went terribly wrong, at least make sure that the
-		// ListView isn't still visible and blocking the rest of the app
+		// ListView isn't still visible and blocking the rest of the app.
+		// don't rely on the IPopUpAdapter to take care of it (though, it should
+		// try to as well, without conflict)
 		this.closeListView();
 	}
 
