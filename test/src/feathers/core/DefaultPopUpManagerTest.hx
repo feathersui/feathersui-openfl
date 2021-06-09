@@ -165,6 +165,17 @@ class DefaultPopUpManagerTest extends Test {
 		Assert.isNull(this._popUp2.parent);
 	}
 
+	public function testGetPopUpAt():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		popUpManager.addPopUp(this._popUp1);
+		Assert.equals(this._popUp1, popUpManager.getPopUpAt(0));
+		popUpManager.addPopUp(this._popUp2);
+		Assert.equals(this._popUp1, popUpManager.getPopUpAt(0));
+		Assert.equals(this._popUp2, popUpManager.getPopUpAt(1));
+	}
+
 	public function testHasModalPopUps():Void {
 		this.createPopUp1();
 		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
@@ -175,6 +186,65 @@ class DefaultPopUpManagerTest extends Test {
 		Assert.isFalse(popUpManager.hasModalPopUps());
 		popUpManager.addPopUp(this._popUp1, false);
 		Assert.isFalse(popUpManager.hasModalPopUps());
+	}
+
+	public function testTopLevelPopUpCountWithNoPopUps():Void {
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		Assert.equals(0, popUpManager.topLevelPopUpCount);
+	}
+
+	public function testTopLevelPopUpCountWithNoModals():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		Assert.equals(0, popUpManager.topLevelPopUpCount);
+		popUpManager.addPopUp(this._popUp1, false);
+		popUpManager.addPopUp(this._popUp2, false);
+		Assert.equals(2, popUpManager.topLevelPopUpCount);
+	}
+
+	public function testTopLevelPopUpCountWithFirstModalAndSecondNonModal():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		Assert.equals(0, popUpManager.topLevelPopUpCount);
+		popUpManager.addPopUp(this._popUp1, true);
+		popUpManager.addPopUp(this._popUp2, false);
+		Assert.equals(2, popUpManager.topLevelPopUpCount);
+	}
+
+	public function testTopLevelPopUpCountWithFirstNonModalAndSecondModal():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		Assert.equals(0, popUpManager.topLevelPopUpCount);
+		popUpManager.addPopUp(this._popUp1, false);
+		popUpManager.addPopUp(this._popUp2, true);
+		Assert.equals(1, popUpManager.topLevelPopUpCount);
+	}
+
+	public function testTopLevelPopUpCountWithFirstModalAndSecondModal():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		Assert.equals(0, popUpManager.topLevelPopUpCount);
+		popUpManager.addPopUp(this._popUp1, true);
+		popUpManager.addPopUp(this._popUp2, true);
+		Assert.equals(1, popUpManager.topLevelPopUpCount);
+	}
+
+	public function testIsTopLevelPopUpWithNoModals():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		Assert.isFalse(popUpManager.isTopLevelPopUp(this._popUp1));
+		Assert.isFalse(popUpManager.isTopLevelPopUp(this._popUp2));
+		popUpManager.addPopUp(this._popUp1, false);
+		Assert.isTrue(popUpManager.isTopLevelPopUp(this._popUp1));
+		Assert.isFalse(popUpManager.isTopLevelPopUp(this._popUp2));
+		popUpManager.addPopUp(this._popUp2, false);
+		Assert.isTrue(popUpManager.isTopLevelPopUp(this._popUp1));
+		Assert.isTrue(popUpManager.isTopLevelPopUp(this._popUp2));
 	}
 
 	public function testIsTopLevelPopUpWithModals():Void {

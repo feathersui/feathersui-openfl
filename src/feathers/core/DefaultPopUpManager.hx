@@ -144,6 +144,34 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
+		@see `feathers.core.IPopUpManager.topLevelPopUpCount`
+	**/
+	@:flash.property
+	public var topLevelPopUpCount(get, never):Int;
+
+	private function get_topLevelPopUpCount():Int {
+		var count = 0;
+		var i = this.popUps.length - 1;
+		while (i >= 0) {
+			count++;
+			var popUp = this.popUps[i];
+			var overlay = this._popUpToOverlay.get(popUp);
+			if (overlay != null) {
+				return count;
+			}
+			i--;
+		}
+		return count;
+	}
+
+	/**
+		@see `feathers.core.IPopUpManager.getPopUpAt()`
+	**/
+	public function getPopUpAt(index:Int):DisplayObject {
+		return this.popUps[index];
+	}
+
+	/**
 		@see `feathers.core.IPopUpManager.isPopUp`
 	**/
 	public function isPopUp(target:DisplayObject):Bool {

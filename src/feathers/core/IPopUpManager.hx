@@ -55,6 +55,21 @@ interface IPopUpManager {
 	public var popUpCount(get, never):Int;
 
 	/**
+		The current number of top-level pop-ups.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var topLevelPopUpCount(get, never):Int;
+
+	/**
+		Gets the pop-up at the specified index.
+
+		@since 1.0.0
+	**/
+	public function getPopUpAt(index:Int):DisplayObject;
+
+	/**
 		Determines if a display object is a pop-up.
 
 		@since 1.0.0
