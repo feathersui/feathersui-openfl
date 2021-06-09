@@ -183,6 +183,13 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	/**
+		@see `feathers.core.IPopUpManager.hasModalPopUps`
+	**/
+	public function hasModalPopUps():Bool {
+		return this._popUpToOverlay.keyValueIterator().hasNext();
+	}
+
+	/**
 		@see `feathers.core.IPopUpManager.addPopUp`
 	**/
 	public function addPopUp(popUp:DisplayObject, isModal:Bool = true, isCentered:Bool = true, ?customOverlayFactory:() -> DisplayObject):DisplayObject {

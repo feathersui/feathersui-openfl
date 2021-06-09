@@ -78,6 +78,13 @@ interface IPopUpManager {
 	public function isModal(target:DisplayObject):Bool;
 
 	/**
+		Determines if the pop-up manager has any modal pop-ups.
+
+		@since 1.0.0
+	**/
+	public function hasModalPopUps():Bool;
+
+	/**
 		Adds a pop-up.
 
 		@since 1.0.0

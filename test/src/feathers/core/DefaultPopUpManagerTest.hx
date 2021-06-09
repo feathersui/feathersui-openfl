@@ -165,6 +165,18 @@ class DefaultPopUpManagerTest extends Test {
 		Assert.isNull(this._popUp2.parent);
 	}
 
+	public function testHasModalPopUps():Void {
+		this.createPopUp1();
+		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		Assert.isFalse(popUpManager.hasModalPopUps());
+		popUpManager.addPopUp(this._popUp1, true);
+		Assert.isTrue(popUpManager.hasModalPopUps());
+		popUpManager.removePopUp(this._popUp1);
+		Assert.isFalse(popUpManager.hasModalPopUps());
+		popUpManager.addPopUp(this._popUp1, false);
+		Assert.isFalse(popUpManager.hasModalPopUps());
+	}
+
 	public function testIsTopLevelPopUpWithModals():Void {
 		this.createPopUp1();
 		this.createPopUp2();
