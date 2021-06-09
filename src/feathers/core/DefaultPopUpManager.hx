@@ -209,8 +209,13 @@ class DefaultPopUpManager implements IPopUpManager {
 				customOverlayFactory = DefaultPopUpManager.defaultOverlayFactory;
 			}
 			var overlay = customOverlayFactory();
-			overlay.width = this._root.stage.stageWidth;
-			overlay.height = this._root.stage.stageHeight;
+			var stage = this._root.stage;
+			var stageTopLeft = this._root.globalToLocal(new Point());
+			var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));
+			overlay.x = stageTopLeft.x;
+			overlay.y = stageTopLeft.y;
+			overlay.width = stageBottomRight.x - stageTopLeft.x;
+			overlay.height = stageBottomRight.y - stageTopLeft.y;
 			this._root.addChild(overlay);
 			this._popUpToOverlay.set(popUp, overlay);
 		}
@@ -275,16 +280,14 @@ class DefaultPopUpManager implements IPopUpManager {
 		@see `feathers.core.IPopUpManager.centerPopUp`
 	**/
 	public function centerPopUp(popUp:DisplayObject):Void {
-		var stage = this._root.stage;
 		if ((popUp is IValidating)) {
 			cast(popUp, IValidating).validateNow();
 		}
-		var topLeft = new Point(0, 0);
-		topLeft = this._root.globalToLocal(topLeft);
-		var bottomRight = new Point(stage.stageWidth, stage.stageHeight);
-		bottomRight = this._root.globalToLocal(bottomRight);
-		popUp.x = topLeft.x + (bottomRight.x - topLeft.x - popUp.width) / 2.0;
-		popUp.y = topLeft.y + (bottomRight.y - topLeft.y - popUp.height) / 2.0;
+		var stage = this._root.stage;
+		var stageTopLeft = this._root.globalToLocal(new Point());
+		var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));
+		popUp.x = stageTopLeft.x + (stageBottomRight.x - stageTopLeft.x - popUp.width) / 2.0;
+		popUp.y = stageTopLeft.y + (stageBottomRight.y - stageTopLeft.y - popUp.height) / 2.0;
 	}
 
 	private function cleanupOverlay(popUp:DisplayObject):Void {
@@ -317,13 +320,15 @@ class DefaultPopUpManager implements IPopUpManager {
 
 	private function stage_resizeHandler(event:Event):Void {
 		var stage = this._root.stage;
-		var stageWidth = stage.stageWidth;
-		var stageHeight = stage.stageHeight;
+		var stageTopLeft = this._root.globalToLocal(new Point());
+		var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));
 		for (popUp in popUps) {
 			var overlay = this._popUpToOverlay.get(popUp);
 			if (overlay != null) {
-				overlay.width = stageWidth;
-				overlay.height = stageHeight;
+				overlay.x = stageTopLeft.x;
+				overlay.y = stageTopLeft.y;
+				overlay.width = stageBottomRight.x - stageTopLeft.x;
+				overlay.height = stageBottomRight.y - stageTopLeft.y;
 			}
 		}
 		for (popUp in this._centeredPopUps) {
