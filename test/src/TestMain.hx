@@ -63,6 +63,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.StyleProviderRestrictedStyleTest());
 		runner.addCase(new feathers.style.ThemeTest());
 		runner.addCase(new feathers.themes.DefaultThemeTest());
+		runner.addCase(new feathers.utils.PopUpUtilTest());
 		#if js
 		if (#if (haxe_ver >= 4.0) js.Syntax.code #else untyped __js__ #end ("typeof window != 'undefined'")) {
 			new HtmlReport(runner, true);
