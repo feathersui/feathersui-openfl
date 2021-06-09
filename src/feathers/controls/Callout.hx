@@ -321,6 +321,9 @@ class Callout extends FeathersControl {
 		if (this._content != null) {
 			this._content.removeEventListener(Event.RESIZE, callout_content_resizeHandler);
 			this._contentMeasurements.restore(this._content);
+			if (this._content.parent == this) {
+				this.removeChild(this._content);
+			}
 		}
 		this._content = value;
 		if (this._content != null) {
