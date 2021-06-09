@@ -8,8 +8,8 @@
 
 package feathers.core;
 
-import openfl.display.DisplayObjectContainer;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 
 /**
 	Manages pop-ups for all children of a root component (usually, all children
@@ -37,14 +37,6 @@ interface IPopUpManager {
 	**/
 	@:flash.property
 	public var root(get, set):DisplayObjectContainer;
-
-	/**
-		The root focus manager for pop-ups.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	public var focusManager(get, set):IFocusManager;
 
 	/**
 		The current number of pop-ups.

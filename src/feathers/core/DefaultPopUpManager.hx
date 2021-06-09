@@ -8,12 +8,12 @@
 
 package feathers.core;
 
-import openfl.geom.Point;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
-import openfl.display.Sprite;
-import openfl.display.DisplayObjectContainer;
-import openfl.display.DisplayObject;
+import openfl.geom.Point;
 
 /**
 	The default implementation of the `IPopUpManager` interface.
@@ -22,7 +22,6 @@ import openfl.display.DisplayObject;
 
 	@since 1.0.0
 **/
-@:access(feathers.core.FocusManager)
 class DefaultPopUpManager implements IPopUpManager {
 	private static function defaultOverlayFactory():DisplayObject {
 		var overlay = new Sprite();
@@ -89,10 +88,6 @@ class DefaultPopUpManager implements IPopUpManager {
 
 	private var _popUpToOverlay:Map<DisplayObject, DisplayObject> = [];
 
-	private var _popUpToPushedFocusManager:Map<DisplayObject, IFocusManager> = [];
-	private var _popUpToFocusManager:Map<DisplayObject, IFocusManager> = [];
-	private var _pushedFocusManagerStack:Array<IFocusManager> = [];
-
 	private var _overlayFactory:() -> DisplayObject;
 
 	/**
@@ -111,26 +106,6 @@ class DefaultPopUpManager implements IPopUpManager {
 		}
 		this._overlayFactory = value;
 		return this._overlayFactory;
-	}
-
-	private var _focusManager:IFocusManager;
-
-	/**
-		@see `feathers.core.IPopUpManager.focusManager`
-	**/
-	@:flash.property
-	public var focusManager(get, set):IFocusManager;
-
-	private function get_focusManager():IFocusManager {
-		return this._focusManager;
-	}
-
-	private function set_focusManager(value:IFocusManager):IFocusManager {
-		if (this._focusManager == value) {
-			return this._focusManager;
-		}
-		this._focusManager = value;
-		return this._focusManager;
 	}
 
 	/**
@@ -224,7 +199,6 @@ class DefaultPopUpManager implements IPopUpManager {
 		var index = this.popUps.indexOf(popUp);
 		if (index != -1) {
 			this.cleanupOverlay(popUp);
-			this.cleanupFocus(popUp);
 			this.popUps.splice(index, 1);
 		}
 		if (isModal) {
@@ -243,23 +217,11 @@ class DefaultPopUpManager implements IPopUpManager {
 
 		this.popUps.push(popUp);
 
-		var needsPushedFocusManager = isModal && this._focusManager != null;
-		if (needsPushedFocusManager) {
-			var focusManager = FocusManager.pushForPopUpManager(this._focusManager, popUp);
-			this._pushedFocusManagerStack.push(focusManager);
-			this._popUpToPushedFocusManager.set(popUp, focusManager);
-			this._popUpToFocusManager.set(popUp, focusManager);
-		}
-
 		var result = this._root.addChild(popUp);
-
-		if (!needsPushedFocusManager && this._focusManager != null) {
-			var focusManager = this._focusManager;
-			if (this._pushedFocusManagerStack.length > 0) {
-				focusManager = this._pushedFocusManagerStack[this._pushedFocusManagerStack.length - 1];
-			}
-			this._popUpToFocusManager.set(popUp, focusManager);
-			focusManager.addPopUp(popUp);
+		if (popUp.parent == null) {
+			this.cleanupOverlay(popUp);
+			this.popUps.remove(popUp);
+			return null;
 		}
 
 		// this listener needs to be added after the pop-up is added to the
@@ -334,21 +296,6 @@ class DefaultPopUpManager implements IPopUpManager {
 		this._popUpToOverlay.remove(popUp);
 	}
 
-	private function cleanupFocus(popUp:DisplayObject):Void {
-		var focusManager = this._popUpToFocusManager.get(popUp);
-		var pushedFocusManager = this._popUpToPushedFocusManager.get(popUp);
-		if (pushedFocusManager != null) {
-			this._popUpToFocusManager.remove(popUp);
-			this._popUpToPushedFocusManager.remove(popUp);
-			FocusManager.removeForPopUpManager(this._focusManager, pushedFocusManager);
-		} else {
-			this._popUpToFocusManager.remove(popUp);
-			if (focusManager != null) {
-				focusManager.removePopUp(popUp);
-			}
-		}
-	}
-
 	private function popUp_removedFromStageHandler(event:Event):Void {
 		if (this._ignoreRemoval) {
 			return;
@@ -357,7 +304,6 @@ class DefaultPopUpManager implements IPopUpManager {
 		popUp.removeEventListener(Event.REMOVED_FROM_STAGE, popUp_removedFromStageHandler);
 		this.popUps.remove(popUp);
 		this.cleanupOverlay(popUp);
-		this.cleanupFocus(popUp);
 
 		if (this.popUps.length == 0) {
 			this._root.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);

@@ -10,6 +10,7 @@ package feathers.core;
 
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
+import openfl.display.Stage;
 import openfl.errors.ArgumentError;
 
 /**
@@ -18,7 +19,7 @@ import openfl.errors.ArgumentError;
 	@since 1.0.0
 **/
 class FocusManager {
-	private function FocusManager() {}
+	private static var stageToManager:Map<Stage, IFocusManager> = [];
 
 	private static function defaultFocusManagerFactory(root:DisplayObject):IFocusManager {
 		return new DefaultFocusManager(root);
@@ -52,40 +53,40 @@ class FocusManager {
 		return _focusManagerFactory;
 	}
 
-	private static var _rootToData:Map<DisplayObject, FocusManagerRootData> = [];
-
 	/**
-		Indicates if a specific display object is a focus manager root.
+		Indicates if a specific stage object is a focus manager root.
 
 		@since 1.0.0
 	**/
-	public static function hasRoot(root:DisplayObject):Bool {
-		return _rootToData.exists(root);
+	public static function hasRoot(stage:Stage):Bool {
+		return stageToManager.exists(stage);
 	}
 
 	/**
-		Adds a focus manager root.
+		Returns the `IFocusManager` instance associated with the specified
+		`Stage` instance. If a focus manager hasn't been created for this
+		stage yet, one will be created automatically using
+		`FocusManager.focusManagerFactory`.
+
+		@see `FocusManager.focusManagerFactory`
 
 		@since 1.0.0
 	**/
-	public static function addRoot(root:DisplayObject, ?customFactory:(DisplayObject) -> IFocusManager):IFocusManager {
-		if (_rootToData.exists(root)) {
+	public static function addRoot(stage:Stage):IFocusManager {
+		if (stage == null) {
+			throw new ArgumentError("FocusManager stage argument must not be null.");
+		}
+		if (stageToManager.exists(stage)) {
 			throw new ArgumentError("Focus manager root already exists");
 		}
-		for (otherRoot in _rootToData.keys()) {
-			if ((otherRoot is DisplayObjectContainer)) {
-				var rootContainer = cast(otherRoot, DisplayObjectContainer);
-				if (rootContainer.contains(root)) {
-					throw new ArgumentError("Cannot nest focus manager roots");
-				}
-			}
+		var focusManager = stageToManager.get(stage);
+		var factory = FocusManager.focusManagerFactory;
+		if (factory == null) {
+			factory = FocusManager.defaultFocusManagerFactory;
 		}
-		var rootData = new FocusManagerRootData();
-		rootData.root = root;
-		rootData.factory = customFactory;
-		rootData.stack = [];
-		_rootToData.set(root, rootData);
-		return pushWithRootData(rootData, root);
+		focusManager = factory(stage);
+		stageToManager.set(stage, focusManager);
+		return focusManager;
 	}
 
 	/**
@@ -93,18 +94,27 @@ class FocusManager {
 
 		@since 1.0.0
 	**/
-	public static function removeRoot(root:DisplayObject):Void {
-		if (!_rootToData.exists(root)) {
+	public static function removeRoot(stage:Stage):Void {
+		var focusManager = stageToManager.get(stage);
+		if (focusManager == null) {
 			return;
 		}
-		var rootData = _rootToData.get(root);
-		var stack = rootData.stack;
-		for (focusManager in stack) {
-			focusManager.enabled = false;
+		focusManager.dispose();
+		stageToManager.remove(stage);
+	}
+
+	/**
+		Removes all `IFocusManager` instances created by calling
+		`FocusManager.forStage()`.
+
+		@since 1.0.0
+	**/
+	public static function dispose():Void {
+		for (stage in stageToManager.keys()) {
+			var focusManager = stageToManager.get(stage);
 			focusManager.dispose();
+			stageToManager.remove(stage);
 		}
-		stack.resize(0);
-		_rootToData.remove(root);
 	}
 
 	/**
@@ -122,49 +132,5 @@ class FocusManager {
 		focusManager.focus = focusable;
 	}
 
-	private static function pushForPopUpManager(rootManager:IFocusManager, secondaryRoot:DisplayObject):IFocusManager {
-		var rootData = _rootToData.get(rootManager.root);
-		return pushWithRootData(rootData, secondaryRoot);
-	}
-
-	private static function pushWithRootData(rootData:FocusManagerRootData, secondaryRoot:DisplayObject):IFocusManager {
-		var stack = rootData.stack;
-		for (focusManager in stack) {
-			focusManager.enabled = false;
-		}
-		var customFactory = rootData.factory;
-		var factory = (customFactory != null) ? customFactory : _focusManagerFactory;
-		var focusManager = factory(secondaryRoot);
-		stack.push(focusManager);
-		focusManager.enabled = true;
-		return focusManager;
-	}
-
-	private static function removeForPopUpManager(rootManager:IFocusManager, secondaryManager:IFocusManager):Void {
-		var rootData = _rootToData.get(rootManager.root);
-		var stack = rootData.stack;
-		for (i in 0...stack.length) {
-			var manager = stack[i];
-			if (manager != secondaryManager) {
-				continue;
-			}
-			manager.enabled = false;
-			manager.dispose();
-			stack.splice(i, 1);
-			// if this is the top-level focus manager, enable the previous one
-			if (i == stack.length) {
-				manager = stack[stack.length - 1];
-				manager.enabled = true;
-			}
-			break;
-		}
-	}
-}
-
-private class FocusManagerRootData {
-	public function new() {}
-
-	public var root:DisplayObject;
-	public var factory:(DisplayObject) -> IFocusManager;
-	public var stack:Array<IFocusManager>;
+	private function FocusManager() {}
 }

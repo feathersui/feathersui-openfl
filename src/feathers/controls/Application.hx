@@ -17,6 +17,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 #if !disable_focus_manager
 import feathers.core.FocusManager;
+import feathers.core.IFocusManager;
 #end
 #if !disable_tool_tip_manager
 import feathers.core.IToolTipManager;
@@ -118,8 +119,12 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		SteelApplicationStyles.initialize();
 	}
 
+	#if !disable_focus_manager
+	private var _applicationFocusManager:IFocusManager;
+	#end
+
 	#if !disable_tool_tip_manager
-	private var _toolTipManager:IToolTipManager;
+	private var _applicationToolTipManager:IToolTipManager;
 	#end
 
 	override private function update():Void {
@@ -180,7 +185,6 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		this.stage.addChild(this._popUpContainer);
 		var popUpManager = PopUpManager.forStage(this.stage);
 		popUpManager.root = this._popUpContainer;
-		popUpManager.focusManager = this._focusManager;
 	}
 
 	private function cleanupPopUpManager():Void {
@@ -188,23 +192,23 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		if (popUpManager.root == this._popUpContainer) {
 			popUpManager.root = this.stage;
 		}
-		if (popUpManager.focusManager == this._focusManager) {
-			popUpManager.focusManager = null;
-		}
 		this.stage.removeChild(this._popUpContainer);
 		this._popUpContainer = null;
 	}
 
 	private function prepareFocusManager():Void {
 		#if !disable_focus_manager
-		FocusManager.addRoot(this);
+		if (!FocusManager.hasRoot(this.stage)) {
+			this._applicationFocusManager = FocusManager.addRoot(this.stage);
+		}
 		#end
 	}
 
 	private function cleanupFocusManager():Void {
 		#if !disable_focus_manager
-		if (FocusManager.hasRoot(this)) {
-			FocusManager.removeRoot(this);
+		if (this._applicationFocusManager != null) {
+			this._applicationFocusManager = null;
+			FocusManager.removeRoot(this.stage);
 		}
 		#end
 	}
@@ -212,16 +216,16 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	private function prepareToolTipManager():Void {
 		#if !disable_tool_tip_manager
 		if (!ToolTipManager.hasRoot(this.stage)) {
-			this._toolTipManager = ToolTipManager.addRoot(this.stage);
+			this._applicationToolTipManager = ToolTipManager.addRoot(this.stage);
 		}
 		#end
 	}
 
 	private function cleanupToolTipManager():Void {
 		#if !disable_tool_tip_manager
-		if (this._toolTipManager != null) {
+		if (this._applicationToolTipManager != null) {
+			this._applicationToolTipManager = null;
 			ToolTipManager.removeRoot(this.stage);
-			this._toolTipManager = null;
 		}
 		#end
 	}

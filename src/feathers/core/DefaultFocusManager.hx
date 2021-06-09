@@ -8,7 +8,6 @@
 
 package feathers.core;
 
-import openfl.errors.ArgumentError;
 import feathers.controls.IGroupedToggle;
 import feathers.controls.supportClasses.IViewPort;
 import feathers.core.IFocusContainer;
@@ -16,10 +15,12 @@ import feathers.core.IFocusManager;
 import feathers.core.IFocusObject;
 import feathers.core.IUIControl;
 import feathers.events.FeathersEvent;
+import feathers.utils.PopUpUtil;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
+import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
@@ -71,7 +72,7 @@ class DefaultFocusManager implements IFocusManager {
 			} else {
 				this._focus.showFocus(false);
 				if (this._root.stage.focus == cast(this._focus, InteractiveObject)) {
-					this._root.stage.focus = null;
+					this._root.stage.focus = this._root.stage;
 				}
 			}
 		}
@@ -97,7 +98,7 @@ class DefaultFocusManager implements IFocusManager {
 			this._root.removeEventListener(Event.REMOVED_FROM_STAGE, defaultFocusManager_root_removedFromStageHandler);
 			this._root.removeEventListener(Event.ADDED, defaultFocusManager_root_addedHandler);
 			this._root.removeEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler);
-			this._root.removeEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler);
+			this._root.removeEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownCaptureHandler, true);
 			this._root.removeEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler);
 			this._root.removeEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler);
 			this.handleRootRemovedFromStage(this._root.stage);
@@ -110,7 +111,7 @@ class DefaultFocusManager implements IFocusManager {
 			this._root.addEventListener(Event.REMOVED_FROM_STAGE, defaultFocusManager_root_removedFromStageHandler, false, 0, true);
 			this._root.addEventListener(Event.ADDED, defaultFocusManager_root_addedHandler, false, 0, true);
 			this._root.addEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler, false, 0, true);
-			this._root.addEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownHandler, false, 0, true);
+			this._root.addEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownCaptureHandler, true, 0, true);
 			this._root.addEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler, false, 0, true);
 			this._root.addEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler, false, 0, true);
 		}
@@ -184,7 +185,9 @@ class DefaultFocusManager implements IFocusManager {
 		@see `feathers.core.IFocusManager.dispose()`
 	**/
 	public function dispose():Void {
-		this.focus = null;
+		if (this._focus != null) {
+			this.focus = null;
+		}
 		if (this._focusPane != null) {
 			if (this._focusPane.parent != null) {
 				this._focusPane.parent.removeChild(this._focusPane);
@@ -192,14 +195,6 @@ class DefaultFocusManager implements IFocusManager {
 			this._focusPane = null;
 		}
 		this.root = null;
-	}
-
-	public function addPopUp(popUp:DisplayObject):Void {
-		this.setFocusManager(popUp);
-	}
-
-	public function removePopUp(popUp:DisplayObject):Void {
-		this.clearFocusManager(popUp);
 	}
 
 	/**
@@ -251,10 +246,7 @@ class DefaultFocusManager implements IFocusManager {
 			return false;
 		}
 		if (!target.focusEnabled) {
-			var focusOwner = target.focusOwner;
-			if (focusOwner == null || !this.isValidFocus(focusOwner)) {
-				return false;
-			}
+			return false;
 		}
 		if ((target is IUIControl)) {
 			var uiTarget = cast(target, IUIControl);
@@ -262,6 +254,14 @@ class DefaultFocusManager implements IFocusManager {
 				return false;
 			}
 		}
+		var popUpManager = PopUpManager.forStage(this._root.stage);
+		if (popUpManager.hasModalPopUps()) {
+			var displayTarget = cast(target, DisplayObject);
+			if (!PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(displayTarget)) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -308,6 +308,9 @@ class DefaultFocusManager implements IFocusManager {
 						focusOwner = null;
 					}
 					this.focus = focusOwner;
+					if (this._focus != null) {
+						this._focus.showFocus(true);
+					}
 				}
 				targetWithFocus.focusManager = null;
 			}
@@ -572,6 +575,9 @@ class DefaultFocusManager implements IFocusManager {
 			}
 			value = newFocusTarget;
 		}
+		if (value == null) {
+			value = this._root.stage;
+		}
 		this._root.stage.focus = value;
 	}
 
@@ -671,11 +677,21 @@ class DefaultFocusManager implements IFocusManager {
 
 	private function defaultFocusManager_root_addedHandler(event:Event):Void {
 		var target = cast(event.target, DisplayObject);
-		var valid = this.shouldBeManaged(target);
-		if (!valid) {
-			return;
+		if (this._focusPane != null) {
+			if (this._focusPane == target || this._focusPane.contains(target)) {
+				// move focusPane to top so that it's not below other pop-ups
+				PopUpManager.forStage(this._root.stage).addPopUp(this._focusPane, false, false);
+				return;
+			}
 		}
-		this.setFocusManager(target);
+		if (this.shouldBeManaged(target)) {
+			this.setFocusManager(target);
+		}
+		if (this._focus != null && !this.isValidFocus(this._focus)) {
+			// it's possible that a modal pop-up has been added, and the current
+			// focus is no longer valid
+			this.focus = null;
+		}
 	}
 
 	private function defaultFocusManager_root_removedHandler(event:Event):Void {
@@ -740,7 +756,7 @@ class DefaultFocusManager implements IFocusManager {
 	}
 	#end
 
-	private function defaultFocusManager_root_mouseDownHandler(event:MouseEvent):Void {
+	private function defaultFocusManager_root_mouseDownCaptureHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -755,6 +771,9 @@ class DefaultFocusManager implements IFocusManager {
 						|| !cast(tempFocusTarget, IFocusContainer).childFocusEnabled) {
 						focusTarget = tempFocusTarget;
 					}
+				} else if (tempFocusTarget.focusOwner != null && this.isValidFocus(tempFocusTarget.focusOwner)) {
+					focusTarget = tempFocusTarget.focusOwner;
+					target = cast(tempFocusTarget, DisplayObject);
 				}
 			}
 			target = target.parent;

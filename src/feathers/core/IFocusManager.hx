@@ -58,21 +58,6 @@ interface IFocusManager {
 	public function findNextFocus(backward:Bool = false):IFocusObject;
 
 	/**
-		Used by the `PopUpManager` to add a pop-up to a specific focus manager.
-
-		@since 1.0.0
-	**/
-	public function addPopUp(popUp:DisplayObject):Void;
-
-	/**
-		Used by the `PopUpManager` to remove a pop-up from a specific focus
-		manager.
-
-		@since 1.0.0
-	**/
-	public function removePopUp(popUp:DisplayObject):Void;
-
-	/**
 		Disposes this focus manager. A focus manager should never be used again
 		after calling `dispose()`.
 

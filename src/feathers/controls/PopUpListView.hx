@@ -536,6 +536,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			FeathersEvent.dispatch(this, Event.OPEN);
 		}
 		this.listView.validateNow();
+		this.button.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.listView.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
@@ -629,7 +630,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private function createButton():Void {
 		if (this.button != null) {
-			this.button.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
 			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
@@ -641,7 +641,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.button.variant == null) {
 			this.button.variant = this.customButtonVariant != null ? this.customButtonVariant : PopUpListView.CHILD_VARIANT_BUTTON;
 		}
-		this.button.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 		this.button.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
 		this.button.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
 		this.button.addEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
@@ -840,6 +839,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function popUpListView_listView_removedFromStageHandler(event:Event):Void {
+		this.button.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.listView.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler);

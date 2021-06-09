@@ -43,7 +43,6 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.VSliderTest());
 		runner.addCase(new feathers.core.ComponentLifecycleTest());
 		runner.addCase(new feathers.core.DefaultPopUpManagerTest());
-		runner.addCase(new feathers.core.DefaultPopUpManagerFocusManagerTest());
 		runner.addCase(new feathers.core.FocusManagerTest());
 		runner.addCase(new feathers.core.InvalidationTest());
 		runner.addCase(new feathers.core.MinAndMaxDimensionsTest());
