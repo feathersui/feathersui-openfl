@@ -137,6 +137,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			throw new IllegalOperationError("Pop-up adapter failed to open because the origin is not added to the stage.");
 		}
 		this._stage = origin.stage;
+		this._stage.addEventListener(Event.RESIZE, dropDownPopUpAdapter_stage_resizeHandler, false, 0, true);
 		this.content = content;
 		this.content.addEventListener(Event.ENTER_FRAME, dropDownPopUpAdapter_content_enterFrameHandler, false, 0, true);
 		this.content.addEventListener(Event.RESIZE, dropDownPopUpAdapter_content_resizeHandler, false, 0, true);
@@ -144,6 +145,11 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.origin = origin;
 		this.origin.addEventListener(Event.RESIZE, dropDownPopUpAdapter_origin_resizeHandler, false, 0, true);
 		PopUpManager.addPopUp(this.content, this.origin, this.modal, false);
+		if (!this.active) {
+			// it's possible to immediately close this adapter in an
+			// ADDED_TO_STAGE listener. in that case, we should not continue
+			return;
+		}
 
 		if ((this.content is IValidating)) {
 			cast(this.content, IValidating).validateNow();
@@ -151,8 +157,6 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this._contentMeasurements.save(this.content);
 
 		this.layout();
-
-		this._stage.addEventListener(Event.RESIZE, dropDownPopUpAdapter_stage_resizeHandler, false, 0, true);
 
 		FeathersEvent.dispatch(this, Event.OPEN);
 	}
