@@ -304,7 +304,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 	private function validatingSprite_addedToStageHandler(event:Event):Void {
 		this._depth = DisplayUtil.getDisplayObjectDepthFromStage(this);
 		this._validationQueue = ValidationQueue.forStage(this.stage);
-		if (this.isInvalid()) {
+		if (this._validationQueue != null && this.isInvalid()) {
 			this._setInvalidCount = 0;
 			// add to validation queue, if required
 			this._validationQueue.addControl(this);
