@@ -1050,7 +1050,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		this._layoutItems[layoutIndex] = itemRenderer;
 		var removed = storage.inactiveItemRenderers.remove(itemRenderer);
 		if (!removed) {
-			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: item renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.');
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: item renderer map contains bad data for item at location ${location}. This may be caused by duplicate items in the data provider, which is not allowed.');
 		}
 		storage.activeItemRenderers.push(itemRenderer);
 	}

@@ -1726,7 +1726,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				this._headerLayoutItems[i] = headerRenderer;
 				var removed = this._defaultHeaderStorage.inactiveHeaderRenderers.remove(headerRenderer);
 				if (!removed) {
-					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: header renderer map contains bad data. This may be caused by duplicate columns, which is not allowed.');
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: header renderer map contains bad data for column at index ${i}. This may be caused by duplicate columns, which is not allowed.');
 				}
 				this._defaultHeaderStorage.activeHeaderRenderers.push(headerRenderer);
 			} else {
@@ -1836,7 +1836,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				this._rowLayoutItems[i] = rowRenderer;
 				var removed = this.inactiveRowRenderers.remove(rowRenderer);
 				if (!removed) {
-					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: row renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.');
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: row renderer map contains bad data for item at index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				this.activeRowRenderers.push(rowRenderer);
 			} else {

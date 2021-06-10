@@ -623,8 +623,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 				this.addChildAt(tab, i + depthOffset);
 				var removed = this.inactiveTabs.remove(tab);
 				if (!removed) {
-					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-						+ ": data renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: tab renderer map contains bad data for item at index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				this.activeTabs.push(tab);
 			} else {
@@ -651,8 +650,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this.inactiveTabs.length == 0) {
 			tab = this.tabRecycler.create();
 			if (tab.variant == null) {
-				// if the factory set a variant already, don't use the default
-				var variant = this.customTabVariant != null ? this.customTabVariant : TabBar.CHILD_VARIANT_TAB;
+				// if the factory set a variant already, don' t use the default var variant = this.customTabVariant != null ? this.customTabVariant : TabBar.CHILD_VARIANT_TAB;
+
 				tab.variant = variant;
 			}
 			// for consistency, initialize before passing to the recycler's

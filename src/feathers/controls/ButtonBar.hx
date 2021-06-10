@@ -517,8 +517,7 @@ class ButtonBar extends FeathersControl {
 				this.addChildAt(button, i + depthOffset);
 				var removed = this.inactiveButtons.remove(button);
 				if (!removed) {
-					throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-						+ ": data renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: button renderer map contains bad data for item at index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				this.activeButtons.push(button);
 			} else {

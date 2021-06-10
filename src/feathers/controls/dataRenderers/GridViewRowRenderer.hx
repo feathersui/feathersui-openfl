@@ -398,7 +398,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				this.setChildIndex(cellRenderer, i);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
 				if (!removed) {
-					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: cell renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.');
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: cell renderer map contains bad data for item at row index ${this._rowIndex} and column index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				storage.activeCellRenderers.push(cellRenderer);
 			} else {
