@@ -188,6 +188,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 	private var inactiveToggleButtons:Array<ToggleButton> = [];
 	private var activeToggleButtons:Array<ToggleButton> = [];
+	private var _layoutItems:Array<DisplayObject> = [];
 
 	private var _ignoreSelectionChange = false;
 
@@ -292,6 +293,20 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 	private var _currentItemState = new PageIndicatorItemState();
 
+	/**
+		Returns the current toggle button used to render the item at the
+		specified index in the data provider. May return `null` if an item
+		doesn't currently have a toggle button.
+
+		@since 1.0.0
+	**/
+	public function indexToToggleButton(index:Int):ToggleButton {
+		if (index < 0 || index >= this.activeToggleButtons.length) {
+			return null;
+		}
+		return this.activeToggleButtons[index];
+	}
+
 	private function initializePageIndicatorTheme():Void {
 		SteelPageIndicatorStyles.initialize();
 	}
@@ -339,7 +354,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		this._layoutResult.reset();
-		this.layout.layout(cast this.activeToggleButtons, this._layoutMeasurements, this._layoutResult);
+		this.layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}
 
@@ -356,12 +371,17 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function refreshToggleButtons():Void {
+		// remove all old items, then fill with null
+		this._layoutItems.resize(0);
+		this._layoutItems.resize(this._maxSelectedIndex + 1);
+
 		var buttonsInvalid = this.isInvalid(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
 		this.refreshInactiveToggleButtons(buttonsInvalid);
 
 		this.recoverInactiveToggleButtons();
 		for (i in 0...this._maxSelectedIndex + 1) {
-			this.createToggleButton(i);
+			var button = this.createToggleButton(i);
+			this._layoutItems[i] = button;
 		}
 		this.freeInactiveToggleButtons();
 		if (this.inactiveToggleButtons.length > 0) {
