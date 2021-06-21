@@ -220,7 +220,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (this._columns == value) {
 			return this._columns;
 		}
+		if (this._columns != null) {
+			this._columns.removeEventListener(Event.CHANGE, gridViewRowRenderer_columns_changeHandler);
+		}
 		this._columns = value;
+		if (this._columns != null) {
+			this._columns.addEventListener(Event.CHANGE, gridViewRowRenderer_columns_changeHandler, false, 0, true);
+		}
 		this.setInvalid(DATA);
 		return this._columns;
 	}
@@ -679,6 +685,10 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				}
 			}
 		}
+	}
+
+	private function gridViewRowRenderer_columns_changeHandler(event:Event):Void {
+		this.setInvalid(DATA);
 	}
 }
 
