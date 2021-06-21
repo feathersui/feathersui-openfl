@@ -1020,23 +1020,23 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (hasText) {
 			this.textField.text = this._text;
 		} else {
-			this.textField.text = "\u200b"; // zero-width space
+			// zero-width space results in a more accurate height measurement
+			// than we'd get with an empty string
+			this.textField.text = "\u200b";
 		}
-		var textFieldExplicitWidth = this.calculateExplicitWidthForTextMeasurement();
 		if (this.wordWrap) {
-			// to get an accurate measurement on the flash target, we need to
-			// temporarily disable wrapping to multiple lines
-			// there seems to be a bug when combining autoSize and wordWrap
+			// temporarily disable wrapping for an accurate width measurement
 			this.textField.wordWrap = false;
 		}
-		if (textFieldExplicitWidth != null) {
-			this.textField.width = textFieldExplicitWidth;
-		}
 		this._textMeasuredWidth = this.textField.textWidth + 4;
-		if (this.wordWrap && textFieldExplicitWidth != null && this._textMeasuredWidth > textFieldExplicitWidth) {
-			// enable wrapping only if we definitely need it
-			this.textField.wordWrap = true;
-			this._textMeasuredWidth = this.textField.width;
+		if (this.wordWrap) {
+			var textFieldExplicitWidth = this.calculateExplicitWidthForTextMeasurement();
+			if (textFieldExplicitWidth != null && this._textMeasuredWidth > textFieldExplicitWidth) {
+				// enable wrapping only if we definitely need it
+				this.textField.wordWrap = true;
+				this.textField.width = textFieldExplicitWidth;
+				this._textMeasuredWidth = this.textField.width;
+			}
 		}
 		this._textMeasuredHeight = this.textField.height;
 		this._textMeasuredLines = this.textField.numLines;
