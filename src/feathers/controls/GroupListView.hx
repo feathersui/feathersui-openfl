@@ -642,6 +642,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
+	private var _layoutItems:Array<DisplayObject> = [];
 
 	private var _selectable:Bool = true;
 
@@ -943,8 +944,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private function initializeGroupListViewTheme():Void {
 		SteelGroupListViewStyles.initialize();
 	}
-
-	private var _layoutItems:Array<DisplayObject> = [];
 
 	override private function update():Void {
 		var layoutInvalid = this.isInvalid(LAYOUT);

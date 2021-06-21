@@ -675,6 +675,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _unrenderedData:Array<Dynamic> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
+	private var _layoutItems:Array<DisplayObject> = [];
 
 	private var _selectable:Bool = true;
 
@@ -908,8 +909,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private function initializeListViewTheme():Void {
 		SteelListViewStyles.initialize();
 	}
-
-	private var _layoutItems:Array<DisplayObject> = [];
 
 	override private function update():Void {
 		var layoutInvalid = this.isInvalid(LAYOUT);
