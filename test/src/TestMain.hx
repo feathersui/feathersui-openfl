@@ -1,5 +1,3 @@
-import feathers.core.FocusManagerTest;
-import feathers.controls.ButtonBarTest;
 import openfl.display.Sprite;
 import utest.Runner;
 import utest.ui.common.PackageResult;
@@ -31,6 +29,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.LabelTest());
 		runner.addCase(new feathers.controls.LayoutGroupTest());
 		runner.addCase(new feathers.controls.ListViewTest());
+		runner.addCase(new feathers.controls.PageIndicatorTest());
 		runner.addCase(new feathers.controls.PopUpListViewTest());
 		runner.addCase(new feathers.controls.navigators.StackNavigatorTest());
 		runner.addCase(new feathers.controls.ScrollContainerTest());
