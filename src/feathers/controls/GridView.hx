@@ -2561,7 +2561,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var oldIgnoreDataProviderChanges = this._ignoreDataProviderChanges;
-		oldIgnoreDataProviderChanges = true;
+		this._ignoreDataProviderChanges = true;
 		if (this._sortOrder == ASCENDING) {
 			this._dataProvider.sortCompareFunction = this.sortCompareFunction;
 		} else if (this._sortOrder == DESCENDING) {
