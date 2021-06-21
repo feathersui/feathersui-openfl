@@ -10,8 +10,10 @@ package feathers.themes.steel.components;
 
 import feathers.controls.Alert;
 import feathers.controls.ButtonBar;
+import feathers.controls.Label;
 import feathers.layout.HorizontalDistributedLayout;
 import feathers.layout.HorizontalLayout;
+import feathers.layout.HorizontalLayoutData;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -70,6 +72,21 @@ class SteelAlertStyles {
 					layout.gap = 6.0;
 					buttonBar.layout = layout;
 				}
+			});
+		}
+
+		if (styleProvider.getStyleFunction(Label, Alert.CHILD_VARIANT_MESSAGE_LABEL) == null) {
+			styleProvider.setStyleFunction(Label, Alert.CHILD_VARIANT_MESSAGE_LABEL, function(label:Label):Void {
+				if (label.textFormat == null) {
+					label.textFormat = theme.getTextFormat();
+				}
+				if (label.disabledTextFormat == null) {
+					label.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+				if (label.layoutData == null) {
+					label.layoutData = HorizontalLayoutData.fillHorizontal();
+				}
+				label.wordWrap = true;
 			});
 		}
 	}
