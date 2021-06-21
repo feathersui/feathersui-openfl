@@ -198,6 +198,96 @@ class GridViewTest extends Test {
 		Assert.isNull(setGridViewOwnerValues[1]);
 		Assert.equals(this._gridView, setGridViewOwnerValues[2]);
 	}
+
+	public function testAddItemToDataProviderCreatesNewCellRenderer():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._gridView.dataProvider = new ArrayCollection([item1]);
+		var column1 = new GridViewColumn("text", item -> item.text);
+		this._gridView.columns = new ArrayCollection([column1]);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.isNull(this._gridView.itemAndColumnToCellRenderer(item2, column1));
+		this._gridView.dataProvider.add(item2);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item2, column1));
+	}
+
+	public function testRemoveItemFromDataProviderDestroysCellRenderer():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._gridView.dataProvider = new ArrayCollection([item1, item2]);
+		var column1 = new GridViewColumn("text", item -> item.text);
+		this._gridView.columns = new ArrayCollection([column1]);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item2, column1));
+		this._gridView.dataProvider.remove(item2);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.isNull(this._gridView.itemAndColumnToCellRenderer(item2, column1));
+	}
+
+	public function testAddColumnCreatesNewCellRenderer():Void {
+		var item1 = {text: "One", value: 1};
+		this._gridView.dataProvider = new ArrayCollection([item1]);
+		var column1 = new GridViewColumn("text", item -> item.text);
+		var column2 = new GridViewColumn("value", item -> Std.string(item.value));
+		this._gridView.columns = new ArrayCollection([column1]);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.isNull(this._gridView.itemAndColumnToCellRenderer(item1, column2));
+		this._gridView.columns.add(column2);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column2));
+	}
+
+	public function testRemoveColumnDestroysCellRenderer():Void {
+		var item1 = {text: "One", value: 1};
+		this._gridView.dataProvider = new ArrayCollection([item1]);
+		var column1 = new GridViewColumn("text", item -> item.text);
+		var column2 = new GridViewColumn("value", item -> Std.string(item.value));
+		this._gridView.columns = new ArrayCollection([column1, column2]);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column2));
+		this._gridView.columns.remove(column2);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.itemAndColumnToCellRenderer(item1, column1));
+		Assert.isNull(this._gridView.itemAndColumnToCellRenderer(item1, column2));
+	}
+
+	public function testAddColumnCreatesNewHeaderRenderer():Void {
+		var item1 = {text: "One", value: 1};
+		this._gridView.dataProvider = new ArrayCollection([item1]);
+		var column1 = new GridViewColumn("text", item -> item.text);
+		var column2 = new GridViewColumn("value", item -> Std.string(item.value));
+		this._gridView.columns = new ArrayCollection([column1]);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.columnToHeaderRenderer(column1));
+		Assert.isNull(this._gridView.columnToHeaderRenderer(column2));
+		this._gridView.columns.add(column2);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.columnToHeaderRenderer(column1));
+		Assert.notNull(this._gridView.columnToHeaderRenderer(column2));
+	}
+
+	public function testRemoveColumnDestroysHeaderRenderer():Void {
+		var item1 = {text: "One", value: 1};
+		this._gridView.dataProvider = new ArrayCollection([item1]);
+		var column1 = new GridViewColumn("text", item -> item.text);
+		var column2 = new GridViewColumn("value", item -> Std.string(item.value));
+		this._gridView.columns = new ArrayCollection([column1, column2]);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.columnToHeaderRenderer(column1));
+		Assert.notNull(this._gridView.columnToHeaderRenderer(column2));
+		this._gridView.columns.remove(column2);
+		this._gridView.validateNow();
+		Assert.notNull(this._gridView.columnToHeaderRenderer(column1));
+		Assert.isNull(this._gridView.columnToHeaderRenderer(column2));
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

@@ -180,6 +180,32 @@ class ListViewTest extends Test {
 		Assert.isNull(setListViewOwnerValues[1]);
 		Assert.equals(this._listView, setListViewOwnerValues[2]);
 	}
+
+	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._listView.dataProvider = new ArrayCollection([item1]);
+		this._listView.validateNow();
+		Assert.notNull(this._listView.itemToItemRenderer(item1));
+		Assert.isNull(this._listView.itemToItemRenderer(item2));
+		this._listView.dataProvider.add(item2);
+		this._listView.validateNow();
+		Assert.notNull(this._listView.itemToItemRenderer(item1));
+		Assert.notNull(this._listView.itemToItemRenderer(item2));
+	}
+
+	public function testRemoveItemFromDataProviderDestroysItemRenderer():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2]);
+		this._listView.validateNow();
+		Assert.notNull(this._listView.itemToItemRenderer(item1));
+		Assert.notNull(this._listView.itemToItemRenderer(item2));
+		this._listView.dataProvider.remove(item2);
+		this._listView.validateNow();
+		Assert.notNull(this._listView.itemToItemRenderer(item1));
+		Assert.isNull(this._listView.itemToItemRenderer(item2));
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

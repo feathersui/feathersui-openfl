@@ -120,6 +120,32 @@ class TabBarTest extends Test {
 		Assert.equals(false, setSelectedValues[1]);
 		Assert.equals(true, setSelectedValues[2]);
 	}
+
+	public function testAddItemToDataProviderCreatesNewTab():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._tabBar.dataProvider = new ArrayCollection([item1]);
+		this._tabBar.validateNow();
+		Assert.notNull(this._tabBar.itemToTab(item1));
+		Assert.isNull(this._tabBar.itemToTab(item2));
+		this._tabBar.dataProvider.add(item2);
+		this._tabBar.validateNow();
+		Assert.notNull(this._tabBar.itemToTab(item1));
+		Assert.notNull(this._tabBar.itemToTab(item2));
+	}
+
+	public function testRemoveItemFromDataProviderDestroysTab():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._tabBar.dataProvider = new ArrayCollection([item1, item2]);
+		this._tabBar.validateNow();
+		Assert.notNull(this._tabBar.itemToTab(item1));
+		Assert.notNull(this._tabBar.itemToTab(item2));
+		this._tabBar.dataProvider.remove(item2);
+		this._tabBar.validateNow();
+		Assert.notNull(this._tabBar.itemToTab(item1));
+		Assert.isNull(this._tabBar.itemToTab(item2));
+	}
 }
 
 private class CustomRendererWithInterfaces extends ToggleButton implements IDataRenderer implements ILayoutIndexObject {

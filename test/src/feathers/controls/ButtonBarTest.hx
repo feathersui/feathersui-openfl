@@ -74,6 +74,32 @@ class ButtonBarTest extends Test {
 		Assert.equals(-1, setLayoutIndexValues[1]);
 		Assert.equals(itemIndex, setLayoutIndexValues[2]);
 	}
+
+	public function testAddItemToDataProviderCreatesNewButton():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._buttonBar.dataProvider = new ArrayCollection([item1]);
+		this._buttonBar.validateNow();
+		Assert.notNull(this._buttonBar.itemToButton(item1));
+		Assert.isNull(this._buttonBar.itemToButton(item2));
+		this._buttonBar.dataProvider.add(item2);
+		this._buttonBar.validateNow();
+		Assert.notNull(this._buttonBar.itemToButton(item1));
+		Assert.notNull(this._buttonBar.itemToButton(item2));
+	}
+
+	public function testRemoveItemFromDataProviderDestroysButton():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._buttonBar.dataProvider = new ArrayCollection([item1, item2]);
+		this._buttonBar.validateNow();
+		Assert.notNull(this._buttonBar.itemToButton(item1));
+		Assert.notNull(this._buttonBar.itemToButton(item2));
+		this._buttonBar.dataProvider.remove(item2);
+		this._buttonBar.validateNow();
+		Assert.notNull(this._buttonBar.itemToButton(item1));
+		Assert.isNull(this._buttonBar.itemToButton(item2));
+	}
 }
 
 private class CustomRendererWithInterfaces extends Button implements IDataRenderer implements ILayoutIndexObject {

@@ -166,6 +166,32 @@ class TreeViewTest extends Test {
 		Assert.isNull(setTreeViewOwnerValues[1]);
 		Assert.equals(this._treeView, setTreeViewOwnerValues[2]);
 	}
+
+	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([item1]);
+		this._treeView.validateNow();
+		Assert.notNull(this._treeView.itemToItemRenderer(item1));
+		Assert.isNull(this._treeView.itemToItemRenderer(item2));
+		this._treeView.dataProvider.addAt(item2, [1]);
+		this._treeView.validateNow();
+		Assert.notNull(this._treeView.itemToItemRenderer(item1));
+		Assert.notNull(this._treeView.itemToItemRenderer(item2));
+	}
+
+	public function testRemoveItemFromDataProviderDestroysItemRenderer():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([item1, item2]);
+		this._treeView.validateNow();
+		Assert.notNull(this._treeView.itemToItemRenderer(item1));
+		Assert.notNull(this._treeView.itemToItemRenderer(item2));
+		this._treeView.dataProvider.remove(item2);
+		this._treeView.validateNow();
+		Assert.notNull(this._treeView.itemToItemRenderer(item1));
+		Assert.isNull(this._treeView.itemToItemRenderer(item2));
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer
