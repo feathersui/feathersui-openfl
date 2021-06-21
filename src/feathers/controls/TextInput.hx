@@ -1064,6 +1064,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (errorCalloutFactoryInvalid || stateInvalid || dataInvalid) {
 			this.refreshErrorString();
 		}
+		this._previousCustomErrorCalloutVariant = this.customErrorCalloutVariant;
 	}
 
 	private function refreshBackgroundSkin():Void {
