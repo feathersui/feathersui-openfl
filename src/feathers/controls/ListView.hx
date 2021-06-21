@@ -886,7 +886,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		`itemRendererRecyclerIDFunction` may be specified to return the ID of
 		the recycler to use for a specific item in the data provider.
 
-		To clear a recycler, pass in `null` for the ID.
+		To clear a recycler, pass in `null` for the value.
 
 		@see `ListView.itemRendererRecyclerIDFunction`
 		@see `ListView.getItemRendererRecycler()`
