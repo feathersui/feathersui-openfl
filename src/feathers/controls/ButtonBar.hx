@@ -378,6 +378,21 @@ class ButtonBar extends FeathersControl {
 	}
 
 	/**
+		Returns the current button used to render the item at the specified
+		index in the data provider. May return `null` if an item doesn't
+		currently have a button.
+
+		@since 1.0.0
+	**/
+	public function indexToButton(index:Int):Button {
+		if (this._dataProvider == null || index < 0 || index >= this._dataProvider.length) {
+			return null;
+		}
+		var item = this._dataProvider.get(index);
+		return this.dataToButton.get(item);
+	}
+
+	/**
 		Returns the button recycler associated with a specific ID. Returns
 		`null` if no recycler is associated with the ID.
 

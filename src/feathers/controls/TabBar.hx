@@ -483,6 +483,21 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	/**
+		Returns the current tab used to render the item at the specified index
+		in the data provider. May return `null` if an item doesn't currently
+		have a tab.
+
+		@since 1.0.0
+	**/
+	public function indexToTab(index:Int):ToggleButton {
+		if (this._dataProvider == null || index < 0 || index >= this._dataProvider.length) {
+			return null;
+		}
+		var item = this._dataProvider.get(index);
+		return this.dataToTab.get(item);
+	}
+
+	/**
 		Returns the tab recycler associated with a specific ID. Returns `null`
 		if no recycler is associated with the ID.
 
