@@ -81,4 +81,13 @@ class TabBarItemState {
 		@since 1.0.0
 	**/
 	public var enabled:Bool = true;
+
+	/**
+		Returns the item's recycler ID.
+
+		@see `feathers.controls.TabBar.tabRecyclerIDFunction`
+
+		@since 1.0.0
+	**/
+	public var recyclerID:String;
 }

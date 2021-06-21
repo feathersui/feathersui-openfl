@@ -198,14 +198,80 @@ class ButtonBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var buttonRecycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button> = DisplayObjectRecycler.withClass(Button);
+	public var buttonRecycler(get, set):DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>;
 
-	private var inactiveButtons:Array<Button> = [];
-	private var activeButtons:Array<Button> = [];
+	private function get_buttonRecycler():DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button> {
+		return this._defaultStorage.buttonRecycler;
+	}
+
+	private function set_buttonRecycler(value:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>):DisplayObjectRecycler<Dynamic, ButtonBarItemState,
+		Button> {
+		if (this._defaultStorage.buttonRecycler == value) {
+			return this._defaultStorage.buttonRecycler;
+		}
+		this._defaultStorage.oldButtonRecycler = this._defaultStorage.buttonRecycler;
+		this._defaultStorage.buttonRecycler = value;
+		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+		return this._defaultStorage.buttonRecycler;
+	}
+
+	private var _recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>> = null;
+
+	private var _buttonRecyclerIDFunction:(state:ButtonBarItemState) -> String;
+
+	/**
+		When a button bar requires multiple button styles, this function is used
+		to determine which style of button is required for a specific item.
+		Returns the ID of the button recycler to use for the item, or `null` if
+		the default `buttonRecycler` should be used.
+
+		The following example provides an `buttonRecyclerIDFunction`:
+
+		```hx
+		var regularButtonRecycler = DisplayObjectRecycler.withClass(Button);
+		var firstButtonRecycler = DisplayObjectRecycler.withClass(MyCustomButton);
+
+		buttonBar.setButtonRecycler("regular-button", regularButtonRecycler);
+		buttonBar.setButtonRecycler("first-button", firstButtonRecycler);
+
+		buttonBar.buttonRecyclerIDFunction = function(state:ButtonBarItemState):String {
+			if(state.index == 0) {
+				return "first-button";
+			}
+			return "regular-button";
+		};
+		```
+
+		@default null
+
+		@see `ButtonBar.setButtonRecycler()`
+		@see `ButtonBar.buttonRecycler
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var buttonRecyclerIDFunction(get, set):(state:ButtonBarItemState) -> String;
+
+	private function get_buttonRecyclerIDFunction():(state:ButtonBarItemState) -> String {
+		return this._buttonRecyclerIDFunction;
+	}
+
+	private function set_buttonRecyclerIDFunction(value:(state:ButtonBarItemState) -> String):(state:ButtonBarItemState) -> String {
+		if (this._buttonRecyclerIDFunction == value) {
+			return this._buttonRecyclerIDFunction;
+		}
+		this._buttonRecyclerIDFunction = value;
+		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+		return this._buttonRecyclerIDFunction;
+	}
+
+	private var _defaultStorage:ButtonStorage = new ButtonStorage(null, DisplayObjectRecycler.withClass(Button));
+	private var _additionalStorage:Array<ButtonStorage> = null;
 	private var dataToButton = new ObjectMap<Dynamic, Button>();
 	private var buttonToItemState = new ObjectMap<Button, ButtonBarItemState>();
 	private var itemStatePool = new ObjectPool(() -> new ButtonBarItemState());
 	private var _unrenderedData:Array<Dynamic> = [];
+	private var _layoutItems:Array<DisplayObject> = [];
 
 	private var _ignoreSelectionChange = false;
 
@@ -311,6 +377,47 @@ class ButtonBar extends FeathersControl {
 		return this.dataToButton.get(item);
 	}
 
+	/**
+		Returns the button recycler associated with a specific ID. Returns
+		`null` if no recycler is associated with the ID.
+
+		@see `ButtonBar.buttonRecyclerIDFunction`
+		@see `ButtonBar.setButtonRecycler()`
+
+		@since 1.0.0
+	**/
+	public function getButtonRecycler(id:String):DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button> {
+		if (this._recyclerMap == null) {
+			return null;
+		}
+		return this._recyclerMap.get(id);
+	}
+
+	/**
+		Associates an button recycler with an ID to allow multiple types
+		of buttons to be displayed in the button bar. A custom
+		`buttonRecyclerIDFunction` may be specified to return the ID of the
+		recycler to use for a specific item in the data provider.
+
+		To clear a recycler, pass in `null` as the value.
+
+		@see `ButtonBar.buttonRecyclerIDFunction`
+		@see `ButtonBar.getButtonRecycler()`
+
+		@since 1.0.0
+	**/
+	public function setButtonRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>):Void {
+		if (this._recyclerMap == null) {
+			this._recyclerMap = [];
+		}
+		if (recycler == null) {
+			this._recyclerMap.remove(id);
+			return;
+		}
+		this._recyclerMap.set(id, recycler);
+		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+	}
+
 	private function initializeButtonBarTheme():Void {
 		SteelButtonBarStyles.initialize();
 	}
@@ -354,7 +461,7 @@ class ButtonBar extends FeathersControl {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		this._layoutResult.reset();
-		this.layout.layout(cast this.activeButtons, this._layoutMeasurements, this._layoutResult);
+		this.layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}
 
@@ -365,8 +472,11 @@ class ButtonBar extends FeathersControl {
 	}
 
 	private function validateChildren():Void {
-		for (button in this.activeButtons) {
-			button.validateNow();
+		for (button in this._layoutItems) {
+			if (!(button is IValidating)) {
+				return;
+			}
+			cast(button, IValidating).validateNow();
 		}
 	}
 
@@ -377,33 +487,65 @@ class ButtonBar extends FeathersControl {
 				this.buttonRecycler.reset = defaultResetButton;
 			}
 		}
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				if (storage.buttonRecycler.update == null) {
+					storage.buttonRecycler.update = defaultUpdateButton;
+					if (storage.buttonRecycler.reset == null) {
+						storage.buttonRecycler.reset = defaultResetButton;
+					}
+				}
+			}
+		}
 
 		var buttonsInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
-		this.refreshInactiveButtons(buttonsInvalid);
+		this.refreshInactiveButtons(this._defaultStorage, buttonsInvalid);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveButtons(storage, buttonsInvalid);
+			}
+		}
 		this.findUnrenderedData();
-		this.recoverInactiveButtons();
+		this.recoverInactiveButtons(this._defaultStorage);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.recoverInactiveButtons(storage);
+			}
+		}
 		this.renderUnrenderedData();
-		this.freeInactiveButtons();
-		if (this.inactiveButtons.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": inactive item renderers should be empty after updating.");
+		this.freeInactiveButtons(this._defaultStorage);
+		if (this._defaultStorage.inactiveButtons.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive buttons should be empty after updating.');
+		}
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.freeInactiveButtons(storage);
+				if (storage.inactiveButtons.length > 0) {
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: inactive buttons ${storage.id} should be empty after updating.');
+				}
+			}
 		}
 	}
 
-	private function refreshInactiveButtons(factoryInvalid:Bool):Void {
-		var temp = this.inactiveButtons;
-		this.inactiveButtons = this.activeButtons;
-		this.activeButtons = temp;
-		if (this.activeButtons.length > 0) {
-			throw new IllegalOperationError(Type.getClassName(Type.getClass(this)) + ": active item renderers should be empty before updating.");
+	private function refreshInactiveButtons(storage:ButtonStorage, factoryInvalid:Bool):Void {
+		var temp = storage.inactiveButtons;
+		storage.inactiveButtons = storage.activeButtons;
+		storage.activeButtons = temp;
+		if (storage.activeButtons.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active buttons should be empty before updating.');
 		}
 		if (factoryInvalid) {
-			this.recoverInactiveButtons();
-			this.freeInactiveButtons();
+			this.recoverInactiveButtons(storage);
+			this.freeInactiveButtons(storage);
 		}
 	}
 
-	private function recoverInactiveButtons():Void {
-		for (button in this.inactiveButtons) {
+	private function recoverInactiveButtons(storage:ButtonStorage):Void {
+		for (button in storage.inactiveButtons) {
 			if (button == null) {
 				continue;
 			}
@@ -420,14 +562,14 @@ class ButtonBar extends FeathersControl {
 		}
 	}
 
-	private function freeInactiveButtons():Void {
-		for (button in this.inactiveButtons) {
+	private function freeInactiveButtons(storage:ButtonStorage):Void {
+		for (button in storage.inactiveButtons) {
 			if (button == null) {
 				continue;
 			}
 			this.destroyButton(button);
 		}
-		this.inactiveButtons.resize(0);
+		storage.inactiveButtons.resize(0);
 	}
 
 	private function refreshBackgroundSkin():Void {
@@ -503,9 +645,13 @@ class ButtonBar extends FeathersControl {
 	}
 
 	private function findUnrenderedData():Void {
+		// remove all old items, then fill with null
+		this._layoutItems.resize(0);
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
+		this._layoutItems.resize(this._dataProvider.length);
+
 		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		for (i in 0...this._dataProvider.length) {
 			var item = this._dataProvider.get(i);
@@ -513,13 +659,20 @@ class ButtonBar extends FeathersControl {
 			if (button != null) {
 				var state = this.buttonToItemState.get(button);
 				this.populateCurrentItemState(item, i, state);
-				this.updateButton(button, state);
-				this.addChildAt(button, i + depthOffset);
-				var removed = this.inactiveButtons.remove(button);
+				var oldRecyclerID = state.recyclerID;
+				var storage = this.itemStateToStorage(state);
+				if (storage.id != oldRecyclerID) {
+					this._unrenderedData.push(item);
+					continue;
+				}
+				this.updateButton(button, state, storage);
+				this._layoutItems[i] = button;
+				this.setChildIndex(button, i + depthOffset);
+				var removed = storage.inactiveButtons.remove(button);
 				if (!removed) {
 					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: button renderer map contains bad data for item at index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
-				this.activeButtons.push(button);
+				storage.activeButtons.push(button);
 			} else {
 				this._unrenderedData.push(item);
 			}
@@ -533,15 +686,16 @@ class ButtonBar extends FeathersControl {
 			var state = this.itemStatePool.get();
 			this.populateCurrentItemState(item, index, state);
 			var button = this.createButton(state);
-			this.activeButtons.push(button);
 			this.addChildAt(button, index + depthOffset);
+			this._layoutItems[index] = button;
 		}
 		this._unrenderedData.resize(0);
 	}
 
 	private function createButton(state:ButtonBarItemState):Button {
+		var storage = this.itemStateToStorage(state);
 		var button:Button = null;
-		if (this.inactiveButtons.length == 0) {
+		if (storage.inactiveButtons.length == 0) {
 			button = this.buttonRecycler.create();
 			if (button.variant == null) {
 				// if the factory set a variant already, don't use the default
@@ -552,12 +706,13 @@ class ButtonBar extends FeathersControl {
 			// update function
 			button.initializeNow();
 		} else {
-			button = this.inactiveButtons.shift();
+			button = storage.inactiveButtons.shift();
 		}
-		this.updateButton(button, state);
+		this.updateButton(button, state, storage);
 		button.addEventListener(TriggerEvent.TRIGGER, buttonBar_button_triggerHandler);
 		this.buttonToItemState.set(button, state);
 		this.dataToButton.set(state.data, button);
+		storage.activeButtons.push(button);
 		return button;
 	}
 
@@ -568,6 +723,37 @@ class ButtonBar extends FeathersControl {
 		}
 	}
 
+	private function itemStateToStorage(state:ButtonBarItemState):ButtonStorage {
+		var recyclerID:String = null;
+		if (this._buttonRecyclerIDFunction != null) {
+			recyclerID = this._buttonRecyclerIDFunction(state);
+		}
+		var recycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button> = null;
+		if (recyclerID != null) {
+			if (this._recyclerMap != null) {
+				recycler = this._recyclerMap.get(recyclerID);
+			}
+			if (recycler == null) {
+				throw new IllegalOperationError('Item renderer recycler ID "${recyclerID}" is not registered.');
+			}
+		}
+		if (recycler == null) {
+			return this._defaultStorage;
+		}
+		if (this._additionalStorage == null) {
+			this._additionalStorage = [];
+		}
+		for (i in 0...this._additionalStorage.length) {
+			var storage = this._additionalStorage[i];
+			if (storage.buttonRecycler == recycler) {
+				return storage;
+			}
+		}
+		var storage = new ButtonStorage(recyclerID, recycler);
+		this._additionalStorage.push(storage);
+		return storage;
+	}
+
 	private function populateCurrentItemState(item:Dynamic, index:Int, state:ButtonBarItemState):Void {
 		state.owner = this;
 		state.data = item;
@@ -576,7 +762,8 @@ class ButtonBar extends FeathersControl {
 		state.text = itemToText(item);
 	}
 
-	private function updateButton(button:Button, state:ButtonBarItemState):Void {
+	private function updateButton(button:Button, state:ButtonBarItemState, storage:ButtonStorage):Void {
+		state.recyclerID = storage.id;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this.buttonRecycler.update != null) {
@@ -635,12 +822,14 @@ class ButtonBar extends FeathersControl {
 			return;
 		}
 		var state = this.buttonToItemState.get(button);
+		var storage = this.itemStateToStorage(state);
 		this.populateCurrentItemState(item, index, state);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
 		this.resetButton(button, state);
-		this.updateButton(button, state);
+		this.updateButton(button, state, storage);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function buttonBar_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
@@ -652,4 +841,17 @@ class ButtonBar extends FeathersControl {
 			this.updateButtonForIndex(i);
 		}
 	}
+}
+
+private class ButtonStorage {
+	public function new(?id:String, ?recycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>) {
+		this.id = id;
+		this.buttonRecycler = recycler;
+	}
+
+	public var id:String;
+	public var oldButtonRecycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>;
+	public var buttonRecycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>;
+	public var activeButtons:Array<Button> = [];
+	public var inactiveButtons:Array<Button> = [];
 }

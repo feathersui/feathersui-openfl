@@ -70,4 +70,13 @@ class ButtonBarItemState {
 		@since 1.0.0
 	**/
 	public var enabled:Bool = true;
+
+	/**
+		Returns the item's recycler ID.
+
+		@see `feathers.controls.ButtonBar.buttonRecyclerIDFunction`
+
+		@since 1.0.0
+	**/
+	public var recyclerID:String;
 }
