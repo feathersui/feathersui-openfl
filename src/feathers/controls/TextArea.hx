@@ -333,6 +333,20 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	/**
+		Indicates if the callout for the `errorString` is currently open or
+		closed.
+
+		@see `TextInput.errorString`
+
+		@since 1.0.0
+	**/
+	public var errorStringCalloutOpen(get, never):Bool;
+
+	private function get_errorStringCalloutOpen():Bool {
+		return this.errorStringCallout != null && this.errorStringCallout.parent != null;
+	}
+
+	/**
 		Indicates if scrolling is smooth or strictly by line.
 
 		In the following example, smooth scrolling is enabled:

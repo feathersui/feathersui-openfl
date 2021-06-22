@@ -522,6 +522,20 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	/**
+		Indicates if the callout for the `errorString` is currently open or
+		closed.
+
+		@see `TextInput.errorString`
+
+		@since 1.0.0
+	**/
+	public var errorStringCalloutOpen(get, never):Bool;
+
+	private function get_errorStringCalloutOpen():Bool {
+		return this.errorStringCallout != null && this.errorStringCallout.parent != null;
+	}
+
+	/**
 		The font styles used to render the text input's text.
 
 		In the following example, the text input's formatting is customized:
