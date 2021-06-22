@@ -592,6 +592,11 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (value == null) {
 			value = this._root.stage;
 		}
+		#if !flash
+		if (this._root.stage.window == null) {
+			return;
+		}
+		#end
 		if (this._root.stage.focus != value) {
 			this._root.stage.focus = value;
 		}
