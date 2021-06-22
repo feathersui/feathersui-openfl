@@ -282,6 +282,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var promptTextField:TextField;
 	private var errorStringCallout:TextCallout;
 
+	private var _previousText:String = null;
 	private var _previousMeasureText:String = null;
 	private var _previousPrompt:String = null;
 	private var _previousTextFormat:TextFormat = null;
@@ -1526,7 +1527,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			hasMeasureText = true;
 			measureText = "\u200b"; // zero-width space
 		}
-		if (measureText == this._previousMeasureText && !this._updatedTextStyles && !forceMeasurement) {
+		if (this._text == this._previousText
+			&& measureText == this._previousMeasureText
+			&& !this._updatedTextStyles
+			&& !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
@@ -1546,6 +1550,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (finalText != null) {
 			this.textField.text = finalText;
 		}
+		this._previousText = this._text;
 		this._previousMeasureText = measureText;
 	}
 
@@ -1740,9 +1745,14 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		// no need to invalidate here. just store the new text.
 		this._text = newText;
 		// ...UNLESS the prompt needs to be shown or hidden as a result of the
-		// changed text
-		var hasText = newText != null && newText.length > 0;
-		var measureText = hasText ? newText : "\u200b"; // zero-width space
+		// changed text, or if autoSizeWidth is true
+		var hasMeasureText = this._measureText != null;
+		var measureText = hasMeasureText ? this._measureText : this._text;
+		if (measureText == null || measureText.length == 0) {
+			hasMeasureText = true;
+			measureText = "\u200b"; // zero-width space
+		}
+		var hasText = this._text != null && this._text.length > 0;
 		var hasOldText = oldText != null && oldText.length > 0;
 		var hasPrompt = this._prompt != null && this._prompt.length > 0;
 		if (this.autoSizeWidth || (hasPrompt && ((!hasText && hasOldText) || (hasText && !hasOldText)))) {
@@ -1751,6 +1761,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		} else {
 			// we don't need to measure again, so just save the value
 			this._previousMeasureText = measureText;
+			this._previousText = this._text;
 		}
 		// either way, the event still needs to be dispatched
 		FeathersEvent.dispatch(this, Event.CHANGE);
