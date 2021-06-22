@@ -47,6 +47,14 @@ interface IFocusManager extends IEventDispatcher {
 	public var focusPane(get, never):DisplayObjectContainer;
 
 	/**
+		Indicates if UI components should draw their focus indicators.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var showFocusIndicator(get, never):Bool;
+
+	/**
 		Specifies if this focus manager is enabled or disabled.
 
 		@since 1.0.0

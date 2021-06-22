@@ -70,15 +70,11 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			throw new IllegalOperationError("Cannot enable focus manager without a root container.");
 		}
 		this._enabled = value;
-		if (this._focus != null && this._root.stage != null) {
+		if (this.focus != null && this._root.stage != null) {
 			if (this._enabled) {
-				this._focus.showFocus(true);
-				this.setStageFocus(cast(this._focus, InteractiveObject));
+				this.restoreFocus();
 			} else {
-				this._focus.showFocus(false);
-				if (this._root.stage.focus == cast(this._focus, InteractiveObject)) {
-					this._root.stage.focus = this._root.stage;
-				}
+				this.focus = null;
 			}
 		}
 		return this._enabled;
@@ -104,6 +100,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			this._root.removeEventListener(Event.ADDED, defaultFocusManager_root_addedHandler);
 			this._root.removeEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler);
 			this._root.removeEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownCaptureHandler, true);
+			this._root.removeEventListener(FocusEvent.FOCUS_IN, defaultFocusManager_root_focusInCaptureHandler, true);
 			this._root.removeEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler);
 			this._root.removeEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler);
 			this.handleRootRemovedFromStage(this._root.stage);
@@ -117,6 +114,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			this._root.addEventListener(Event.ADDED, defaultFocusManager_root_addedHandler, false, 0, true);
 			this._root.addEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler, false, 0, true);
 			this._root.addEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownCaptureHandler, true, 0, true);
+			this._root.addEventListener(FocusEvent.FOCUS_IN, defaultFocusManager_root_focusInCaptureHandler, true, 0, true);
 			this._root.addEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler, false, 0, true);
 			this._root.addEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler, false, 0, true);
 		}
@@ -143,7 +141,19 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		return this._focusPane;
 	}
 
-	private var _focus:IFocusObject = null;
+	private var _showFocusIndicator:Bool = false;
+
+	/**
+		@see `feathers.core.IFocusManager.showFocusIndicator`
+	**/
+	@:flash.property
+	public var showFocusIndicator(get, never):Bool;
+
+	private function get_showFocusIndicator():Bool {
+		return this._showFocusIndicator;
+	}
+
+	private var _focusToRestore:IFocusObject;
 
 	/**
 		@see `feathers.core.IFocusManager.focus`
@@ -152,45 +162,37 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	public var focus(get, set):IFocusObject;
 
 	private function get_focus():IFocusObject {
-		return this._focus;
+		if (this._root.stage == null) {
+			return null;
+		}
+		return this.findFocusForDisplayObject(this._root.stage.focus);
 	}
 
 	private function set_focus(value:IFocusObject):IFocusObject {
-		if (this._focus == value) {
+		var oldFocus = this.findFocusForDisplayObject(this._root.stage.focus);
+		if (oldFocus == value) {
 			if (this._enabled && this._root.stage != null) {
 				// in some cases, the stage focus seems to get cleared, so even
 				// though our focus hasn't changed, we should still pass it to the
 				// stage
 				this.setStageFocus(cast(value, InteractiveObject));
 			}
-			return this._focus;
+			return this.focus;
 		}
 		if (value != null && value.focusManager != this) {
 			throw new ArgumentError("Failed to change focus. Object is not managed by this focus manager: " + value);
 		}
-		if (this._focus != null) {
-			if ((this._focus is IUIControl)) {
-				this._focus.removeEventListener(FeathersEvent.DISABLE, defaultFocusManager_focus_disableHandler);
-			}
-			this._focus.showFocus(false);
-		}
-		this._focus = value;
-		if (this._focus != null) {
-			if ((this._focus is IUIControl)) {
-				this._focus.addEventListener(FeathersEvent.DISABLE, defaultFocusManager_focus_disableHandler, false, 0, true);
-			}
-		}
 		if (this._enabled && this._root.stage != null) {
 			this.setStageFocus(cast(value, InteractiveObject));
 		}
-		return this._focus;
+		return this.focus;
 	}
 
 	/**
 		@see `feathers.core.IFocusManager.dispose()`
 	**/
 	public function dispose():Void {
-		if (this._focus != null) {
+		if (this.focus != null) {
 			this.focus = null;
 		}
 		if (this._focusPane != null) {
@@ -220,7 +222,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	private function findNextFocusInternal(backward:Bool = false):FocusResult {
 		var newFocus:IFocusObject = null;
 		var wrapped = false;
-		var currentFocus = this._focus;
+		var currentFocus = this.focus;
 		if (currentFocus != null && currentFocus.focusOwner != null) {
 			var focusOwner = currentFocus.focusOwner;
 			if (focusOwner != null && focusOwner.focusManager != this) {
@@ -254,7 +256,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function isValidFocus(target:IFocusObject):Bool {
-		if (target == null || target.focusManager != this) {
+		if (target == null || target.stage == null || target.focusManager != this) {
 			return false;
 		}
 		if (!target.focusEnabled) {
@@ -310,7 +312,10 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if ((target is IFocusManagerAware)) {
 			var targetWithFocus = cast(target, IFocusManagerAware);
 			if (targetWithFocus.focusManager == this) {
-				if (this._focus == targetWithFocus) {
+				if (targetWithFocus == _focusToRestore) {
+					_focusToRestore = null;
+				}
+				if (this.focus == targetWithFocus) {
 					// change to focus owner, which falls back to null
 					var focusOwner:IFocusObject = null;
 					if ((target is IFocusObject)) {
@@ -320,9 +325,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 						focusOwner = null;
 					}
 					this.focus = focusOwner;
-					if (this._focus != null) {
-						this._focus.showFocus(true);
-					}
 				}
 				targetWithFocus.focusManager = null;
 			}
@@ -531,7 +533,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 				}
 				if ((toggleGroup.selectedItem is IFocusObject)) {
 					var selectedItem = cast(toggleGroup.selectedItem, IFocusObject);
-					if (this._focus != selectedItem) {
+					if (this.focus != selectedItem) {
 						// don't let it keep the same focus
 						return selectedItem;
 					}
@@ -554,7 +556,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 				}
 				if ((toggleGroup.selectedItem is IFocusObject)) {
 					var selectedItem = cast(toggleGroup.selectedItem, IFocusObject);
-					if (this._focus != selectedItem) {
+					if (this.focus != selectedItem) {
 						// don't let it keep the same focus
 						return selectedItem;
 					}
@@ -590,11 +592,13 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (value == null) {
 			value = this._root.stage;
 		}
-		this._root.stage.focus = value;
+		if (this._root.stage.focus != value) {
+			this._root.stage.focus = value;
+		}
 	}
 
 	private function handleRootAddedToStage(root:DisplayObject):Void {
-		var stage = this.root.stage;
+		var stage = this._root.stage;
 		if (stage == null) {
 			return;
 		}
@@ -631,6 +635,13 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 
 	private function defaultFocusManager_root_removedFromStageHandler(event:Event):Void {
 		this.handleRootRemovedFromStage(cast(event.currentTarget, DisplayObject));
+	}
+
+	private function restoreFocus():Void {
+		if (this._root.stage == null || this._focusToRestore == null || !this.isValidFocus(this._focusToRestore)) {
+			return;
+		}
+		this.focus = this._focusToRestore;
 	}
 
 	private function shouldBeManaged(target:DisplayObject):Bool {
@@ -699,7 +710,14 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (this.shouldBeManaged(target)) {
 			this.setFocusManager(target);
 		}
-		if (this._focus != null && !this.isValidFocus(this._focus)) {
+		var currentFocus = this.focus;
+		var clearFocus = currentFocus != null && !this.isValidFocus(currentFocus);
+		if (!clearFocus && this._root.stage != null) {
+			// needs an extra check because the focus getter might return null
+			var stageFocus = this._root.stage.focus;
+			clearFocus = stageFocus != null && (stageFocus is IFocusObject) && !this.isValidFocus(cast(stageFocus, IFocusObject));
+		}
+		if (clearFocus) {
 			// it's possible that a modal pop-up has been added, and the current
 			// focus is no longer valid
 			this.focus = null;
@@ -712,6 +730,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function defaultFocusManager_stage_mouseFocusChangeHandler(event:FocusEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
 		if (!this._enabled) {
 			return;
 		}
@@ -734,10 +755,10 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB) {
 			return;
 		}
+		this._showFocusIndicator = true;
 		var result = this.findNextFocusInternal(event.shiftKey);
 		this.focus = result.newFocus;
-		if (this._focus != null) {
-			this._focus.showFocus(true);
+		if (this.focus != null) {
 			event.preventDefault();
 		}
 	}
@@ -753,7 +774,12 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
 			return;
 		}
+		this._showFocusIndicator = true;
+		var currentFocus = this.focus;
 		var result = this.findNextFocusInternal(event.shiftKey);
+		if (result.newFocus != currentFocus) {
+			event.preventDefault();
+		}
 		this.focus = result.newFocus;
 		if (result.wrapped) {
 			var skipWrap = Capabilities.playerType != "StandAlone" && Capabilities.playerType != "Desktop";
@@ -761,19 +787,14 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 				return;
 			}
 		}
-		if (this._focus != null) {
-			this._focus.showFocus(true);
-			event.preventDefault();
-		}
 	}
 	#end
 
-	private function defaultFocusManager_root_mouseDownCaptureHandler(event:MouseEvent):Void {
-		if (!this._enabled) {
-			return;
+	private function findFocusForDisplayObject(target:DisplayObject):IFocusObject {
+		if (target == null) {
+			return null;
 		}
 		var focusTarget:IFocusObject = null;
-		var target = cast(event.target, DisplayObject);
 		do {
 			if ((target is IFocusObject)) {
 				var tempFocusTarget = cast(target, IFocusObject);
@@ -790,70 +811,34 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			}
 			target = target.parent;
 		} while (target != null);
-		if (this._focus != null && focusTarget != null) {
-			// ignore touches on focusOwner because we consider the
-			// focusOwner to indirectly have focus already
-			var focusOwner = this._focus.focusOwner;
-			if (focusOwner == focusTarget) {
-				return;
-			}
-			// similarly, ignore touches on display objects that have a
-			// focusOwner and that owner is the currently focused object
-			var result:DisplayObject = cast(focusTarget, DisplayObject);
-			while (result != null) {
-				if ((result is IFocusObject)) {
-					var focusResult = cast(result, IFocusObject);
-					focusOwner = focusResult.focusOwner;
-					if (focusOwner != null && focusOwner.focusManager != this) {
-						focusOwner = null;
-					}
-					if (focusOwner != null) {
-						if (focusOwner == this._focus) {
-							// the current focus is the touch target's owner,
-							// so we don't need to clear focus
-							focusTarget = focusOwner;
-						}
-						// if we've found a display object with a focus owner,
-						// then we've gone far enough up the display list
-						break;
-					} else if (focusResult.focusEnabled) {
-						// if focus in enabled, then we've gone far enough up
-						// the display list
-						break;
-					}
-				}
-				result = result.parent;
-			}
+		return focusTarget;
+	}
+
+	private function defaultFocusManager_root_mouseDownCaptureHandler(event:MouseEvent):Void {
+		_showFocusIndicator = false;
+		if (!this._enabled) {
+			return;
 		}
-		this.focus = focusTarget;
+		var interactiveTarget = event.target;
+		var newFocus = this.findFocusForDisplayObject(interactiveTarget);
+		this.focus = newFocus;
+	}
+
+	private function defaultFocusManager_root_focusInCaptureHandler(event:FocusEvent):Void {
+		this._focusToRestore = this.findFocusForDisplayObject(Std.downcast(event.target, DisplayObject));
 	}
 
 	private function defaultFocusManager_root_activateHandler(event:Event):Void {
 		if (!this._enabled) {
 			return;
 		}
-		if (this._focus != null && this._root.stage != null) {
-			if (this.isValidFocus(this._focus)) {
-				this.setStageFocus(cast(this._focus, InteractiveObject));
-				this._focus.showFocus(true);
-			} else {
-				// if it's no longer valid focus, for some reason, clear it
-				this.focus = null;
-			}
-		}
+		this.restoreFocus();
 	}
 
 	private function defaultFocusManager_root_deactivateHandler(event:Event):Void {
 		if (!this._enabled) {
 			return;
 		}
-		if (this._focus != null) {
-			this._focus.showFocus(false);
-		}
-	}
-
-	private function defaultFocusManager_focus_disableHandler(event:Event):Void {
-		// clear the focus, if it becomes disabled
 		this.focus = null;
 	}
 }

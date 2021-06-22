@@ -527,6 +527,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.open || this.stage == null) {
 			return;
 		}
+		this.validateNow();
 		if (this.popUpAdapter != null) {
 			this.popUpAdapter.addEventListener(Event.OPEN, popUpListView_popUpAdapter_openHandler);
 			this.popUpAdapter.addEventListener(Event.CLOSE, popUpListView_popUpAdapter_closeHandler);
@@ -539,6 +540,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.button.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.listView.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
+		this.listView.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, popUpListView_listView_keyFocusChangeHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
 		this.listView.scrollToIndex(this._selectedIndex);
@@ -842,8 +844,17 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.button.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_button_focusOutHandler);
 		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.listView.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
+		this.listView.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, popUpListView_listView_keyFocusChangeHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler);
+	}
+
+	private function popUpListView_listView_keyFocusChangeHandler(event:FocusEvent):Void {
+		if (this._focusManager != null || event.isDefaultPrevented() || event.target != this.listView) {
+			return;
+		}
+		event.preventDefault();
+		this.stage.focus = this.button;
 	}
 
 	private function popUpListView_listView_focusOutHandler(event:FocusEvent):Void {
@@ -853,12 +864,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function popUpListView_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
-			if (this._focusManager == null) {
-				this.stage.focus = this.button;
-			} else {
-				this._focusManager.focus = this;
-			}
+		if (this.stage != null && this.stage.focus != this.button) {
+			event.stopImmediatePropagation();
+			this.stage.focus = this.button;
 		}
 	}
 

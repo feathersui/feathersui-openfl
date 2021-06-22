@@ -8,6 +8,8 @@
 
 package feathers.core;
 
+import haxe.CallStack;
+import openfl.events.FocusEvent;
 import feathers.events.FeathersEvent;
 import feathers.events.StyleProviderEvent;
 import feathers.layout.ILayoutData;
@@ -63,6 +65,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		super.tabEnabled = (this is IFocusObject);
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, feathersControl_removedFromStageHandler);
+		this.addEventListener(FocusEvent.FOCUS_IN, feathersControl_focusInHandler);
+		this.addEventListener(FocusEvent.FOCUS_OUT, feathersControl_focusOutHandler);
 	}
 
 	private var _waitingToApplyStyles:Bool = false;
@@ -398,9 +402,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (!this.setStyle("focusRectSkin")) {
 			return this._focusRectSkin;
 		}
-		if (this._focusRectSkin != null) {
-			this.showFocus(false);
-		}
+		this.showFocus(false);
 		// in a -final build, this forces the clearStyle
 		// function to be kept if the property is kept
 		// otherwise, it would be removed by dce
@@ -545,6 +547,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	@:noCompletion
 	private function clearStyle_focusRectSkin():DisplayObject {
+		this.showFocus(false);
 		this._focusRectSkin = null;
 		return this._focusRectSkin;
 	}
@@ -574,7 +577,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function positionFocusRect():Void {
-		if (this._focusManager == null || this._focusRectSkin == null) {
+		if (this._focusManager == null || this._focusRectSkin == null || this._focusRectSkin.parent == null) {
 			return;
 		}
 		var point = new Point(-this._focusPaddingLeft, -this._focusPaddingTop);
@@ -862,11 +865,30 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
+		this.showFocus(false);
 		// since there's no concept of disposing a Feathers UI component, we
 		// need to clear the style provider here so that there are no memory
 		// leaks. the style provider holds a reference to the component through
 		// an event listener.
 		this.clearStyleProvider();
+	}
+
+	private function feathersControl_focusInHandler(event:FocusEvent):Void {
+		var focusThis:IFocusObject = null;
+		if ((this is IFocusObject)) {
+			focusThis = cast(this, IFocusObject);
+		}
+		if (this._focusManager == null || !this._focusManager.showFocusIndicator || this._focusManager.focus != focusThis) {
+			return;
+		}
+		this.showFocus(true);
+	}
+
+	private function feathersControl_focusOutHandler(event:FocusEvent):Void {
+		if (this._focusManager == null) {
+			return;
+		}
+		this.showFocus(false);
 	}
 
 	private function styleProvider_stylesChangeHandler(event:StyleProviderEvent):Void {

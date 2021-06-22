@@ -39,7 +39,19 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		this.addEventListener(FocusEvent.FOCUS_IN, textFieldViewPort_focusInHandler);
 	}
 
-	private var textField:TextField;
+	private var _textField:TextField;
+
+	/**
+		The `TextField` displayed by the view port.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var textField(get, never):TextField;
+
+	private function get_textField():TextField {
+		return this._textField;
+	}
 
 	private var _textFieldType:TextFieldType = DYNAMIC;
 
@@ -97,10 +109,10 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {
-		if (this.textField == null) {
+		if (this._textField == null) {
 			return 0.0;
 		}
-		return this.textField.y + this.textField.getLineMetrics(0).ascent;
+		return this._textField.y + this._textField.getLineMetrics(0).ascent;
 	}
 
 	private var _wordWrap:Bool = false;
@@ -374,7 +386,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
-		return this.textField;
+		return this._textField;
 	}
 
 	private var _actualMinVisibleWidth:Float = 0.0;
@@ -618,12 +630,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	public var selectionAnchorIndex(get, never):Int;
 
 	private function get_selectionAnchorIndex():Int {
-		if (this.textField != null && this._pendingSelectionAnchorIndex == -1) {
+		if (this._textField != null && this._pendingSelectionAnchorIndex == -1) {
 			// return the opposite of the caret index
-			if (this.textField.caretIndex == this.textField.selectionBeginIndex) {
-				return this.textField.selectionEndIndex;
+			if (this._textField.caretIndex == this._textField.selectionBeginIndex) {
+				return this._textField.selectionEndIndex;
 			}
-			return this.textField.selectionBeginIndex;
+			return this._textField.selectionBeginIndex;
 		}
 		return this._pendingSelectionAnchorIndex;
 	}
@@ -637,9 +649,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	public var selectionActiveIndex(get, never):Int;
 
 	private function get_selectionActiveIndex():Int {
-		if (this.textField != null && this._pendingSelectionActiveIndex == -1) {
+		if (this._textField != null && this._pendingSelectionActiveIndex == -1) {
 			// always the same as caret index
-			return this.textField.caretIndex;
+			return this._textField.caretIndex;
 		}
 		return this._pendingSelectionActiveIndex;
 	}
@@ -679,18 +691,18 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	override private function initialize():Void {
 		super.initialize();
 
-		if (this.textField == null) {
-			this.textField = new TextField();
-			this.addChild(this.textField);
+		if (this._textField == null) {
+			this._textField = new TextField();
+			this.addChild(this._textField);
 		}
 
-		this.textField.selectable = true;
-		this.textField.tabEnabled = false;
-		this.textField.mouseWheelEnabled = false;
-		this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
-		this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
-		this.textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
-		this.textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
+		this._textField.selectable = true;
+		this._textField.tabEnabled = false;
+		this._textField.mouseWheelEnabled = false;
+		this._textField.addEventListener(Event.CHANGE, textField_changeHandler);
+		this._textField.addEventListener(Event.SCROLL, textField_scrollHandler);
+		this._textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
+		this._textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
 	}
 
 	override private function update():Void {
@@ -806,12 +818,12 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	}
 
 	private function refreshTextStyles():Void {
-		if (this.textField.embedFonts != this._embedFonts) {
-			this.textField.embedFonts = this._embedFonts;
+		if (this._textField.embedFonts != this._embedFonts) {
+			this._textField.embedFonts = this._embedFonts;
 			this._updatedTextStyles = true;
 		}
 		if (this._textFormat != this._previousTextFormat) {
-			this.textField.defaultTextFormat = this._textFormat;
+			this._textField.defaultTextFormat = this._textFormat;
 			this._updatedTextStyles = true;
 			this._previousTextFormat = this._textFormat;
 		}
@@ -819,20 +831,20 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 	private function refreshText():Void {
 		var textFieldType = this._enabled ? this._textFieldType : TextFieldType.DYNAMIC;
-		if (this.textField.type != textFieldType) {
-			this.textField.type = textFieldType;
+		if (this._textField.type != textFieldType) {
+			this._textField.type = textFieldType;
 		}
 		var calculatedWordWrap = this._explicitVisibleWidth != null ? this._wordWrap : false;
-		if (this.textField.wordWrap != calculatedWordWrap) {
-			this.textField.wordWrap = calculatedWordWrap;
+		if (this._textField.wordWrap != calculatedWordWrap) {
+			this._textField.wordWrap = calculatedWordWrap;
 			this._updatedTextStyles = true;
 		}
-		if (this.textField.multiline != this._multiline) {
-			this.textField.multiline = this._multiline;
+		if (this._textField.multiline != this._multiline) {
+			this._textField.multiline = this._multiline;
 			this._updatedTextStyles = true;
 		}
-		this.textField.restrict = this.__restrict;
-		this.textField.maxChars = this._maxChars;
+		this._textField.restrict = this.__restrict;
+		this._textField.maxChars = this._maxChars;
 		var calculatedWidth = this._explicitVisibleWidth;
 		if (calculatedWidth != null) {
 			calculatedWidth -= (this._paddingLeft + this._paddingRight);
@@ -842,23 +854,23 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			return;
 		}
 		if (calculatedWidth != null) {
-			this.textField.width = calculatedWidth;
+			this._textField.width = calculatedWidth;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
-		this.textField.autoSize = LEFT;
+		this._textField.autoSize = LEFT;
 		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
-			this.textField.text = this._text;
+			this._textField.text = this._text;
 		} else {
-			this.textField.text = "\u200b"; // zero-width space
+			this._textField.text = "\u200b"; // zero-width space
 		}
-		this._savedLineMetrics = this.textField.getLineMetrics(0);
-		this._textMeasuredWidth = this.textField.width;
-		this._textMeasuredHeight = 4 + (this._savedLineMetrics.height + this._savedLineMetrics.leading) * this.textField.numLines;
-		this.textField.autoSize = NONE;
+		this._savedLineMetrics = this._textField.getLineMetrics(0);
+		this._textMeasuredWidth = this._textField.width;
+		this._textMeasuredHeight = 4 + (this._savedLineMetrics.height + this._savedLineMetrics.leading) * this._textField.numLines;
+		this._textField.autoSize = NONE;
 		if (!hasText) {
-			this.textField.text = "";
+			this._textField.text = "";
 		}
 		this._previousText = this._text;
 		this._previousWidth = calculatedWidth;
@@ -872,37 +884,37 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		var activeIndex = this._pendingSelectionActiveIndex;
 		this._pendingSelectionAnchorIndex = -1;
 		this._pendingSelectionActiveIndex = -1;
-		this.textField.setSelection(anchorIndex, activeIndex);
+		this._textField.setSelection(anchorIndex, activeIndex);
 	}
 
 	private function layoutTextField():Void {
 		if (this._smoothScrolling) {
-			this.textField.x = this._paddingLeft;
-			this.textField.y = this._paddingTop;
+			this._textField.x = this._paddingLeft;
+			this._textField.y = this._paddingTop;
 			var calculatedWidth = Math.max(this.actualWidth, this._actualVisibleWidth);
 			var calculatedHeight = Math.max(this.actualHeight, this._actualVisibleHeight);
-			this.textField.width = calculatedWidth - this._paddingLeft - this._paddingRight;
-			this.textField.height = calculatedHeight - this._paddingTop - this._paddingBottom;
-			this.textField.scrollV = 1;
+			this._textField.width = calculatedWidth - this._paddingLeft - this._paddingRight;
+			this._textField.height = calculatedHeight - this._paddingTop - this._paddingBottom;
+			this._textField.scrollV = 1;
 		} else {
-			this.textField.x = this._paddingLeft + this._scrollX;
-			this.textField.y = this._paddingTop + this._scrollY;
-			this.textField.width = this._actualVisibleWidth - this._paddingLeft - this._paddingRight;
-			this.textField.height = this._actualVisibleHeight - this._paddingTop - this._paddingBottom;
+			this._textField.x = this._paddingLeft + this._scrollX;
+			this._textField.y = this._paddingTop + this._scrollY;
+			this._textField.width = this._actualVisibleWidth - this._paddingLeft - this._paddingRight;
+			this._textField.height = this._actualVisibleHeight - this._paddingTop - this._paddingBottom;
 			// for some reason, in flash, after changing the TextField's height,
 			// you need to access textHeight to get a valid maxScrollV
-			var textFieldHeight = this.textField.textHeight;
+			var textFieldHeight = this._textField.textHeight;
 			var maxScrollX = this.actualWidth - this._actualVisibleWidth;
 			var maxScrollY = this.actualHeight - this._actualVisibleHeight;
-			if (this.textField.maxScrollV == 1 || maxScrollY == 0.0) {
-				this.textField.scrollV = 1;
+			if (this._textField.maxScrollV == 1 || maxScrollY == 0.0) {
+				this._textField.scrollV = 1;
 			} else {
-				this.textField.scrollV = 1 + Math.ceil(this._scrollY / (this._savedLineMetrics.height + this._savedLineMetrics.leading));
+				this._textField.scrollV = 1 + Math.ceil(this._scrollY / (this._savedLineMetrics.height + this._savedLineMetrics.leading));
 			}
-			if (this.textField.maxScrollH == 0 || maxScrollX == 0.0) {
-				this.textField.scrollH = 0;
+			if (this._textField.maxScrollH == 0 || maxScrollX == 0.0) {
+				this._textField.scrollH = 0;
 			} else {
-				this.textField.scrollH = Math.round(this.textField.maxScrollH * (this._scrollX / maxScrollX));
+				this._textField.scrollH = Math.round(this._textField.maxScrollH * (this._scrollX / maxScrollX));
 			}
 		}
 	}
@@ -914,7 +926,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		// don't try to set the variable directly here because we need to
 		// measure again just in case it affected the maximum y scroll position
-		this.text = this.textField.text;
+		this.text = this._textField.text;
 
 		if (this._textFieldHasFocus) {
 			// if we have focus, we should update the scroll position so that
@@ -927,8 +939,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 			if (container.maxScrollY > 0.0) {
 				var lineIndex = -1;
-				var caretIndex = this.textField.caretIndex;
-				if (caretIndex == this.textField.length) {
+				var caretIndex = this._textField.caretIndex;
+				if (caretIndex == this._textField.length) {
 					if (caretIndex == 0) {
 						// this shouldn't happen, but let's check just in case
 						return;
@@ -936,19 +948,19 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 					// get the line index of the final character because there
 					// isn't a character at the caret
 					caretIndex--;
-					lineIndex = this.textField.getLineIndexOfChar(caretIndex);
-					var charAtIndex = this.textField.text.charAt(caretIndex);
+					lineIndex = this._textField.getLineIndexOfChar(caretIndex);
+					var charAtIndex = this._textField.text.charAt(caretIndex);
 					if (charAtIndex == "\n" || charAtIndex == "\r") {
 						// if the last character is a new line, increase by one
 						lineIndex++;
 					}
 				} else {
-					lineIndex = this.textField.getLineIndexOfChar(caretIndex);
+					lineIndex = this._textField.getLineIndexOfChar(caretIndex);
 				}
 				if (this._smoothScrolling) {
 					var lineHeight = this._savedLineMetrics.height + this._savedLineMetrics.leading;
-					var minScrollYForLine = container.maxScrollY - (this.textField.numLines - lineIndex - 1) * lineHeight;
-					var maxScrollYForLine = minScrollYForLine + ((this.textField.numLines - Math.floor(this.visibleHeight / lineHeight)) * lineHeight);
+					var minScrollYForLine = container.maxScrollY - (this._textField.numLines - lineIndex - 1) * lineHeight;
+					var maxScrollYForLine = minScrollYForLine + ((this._textField.numLines - Math.floor(this.visibleHeight / lineHeight)) * lineHeight);
 
 					var targetScrollY = this._scrollY;
 					if ((minScrollYForLine - targetScrollY) > 0.0) {
@@ -958,21 +970,21 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 					}
 
 					container.scrollY = targetScrollY;
-				} else if (this.textField.maxScrollV > 1) {
-					var minScrollVForLine = this.textField.maxScrollV - (this.textField.numLines - lineIndex - 1);
-					var maxScrollVForLine = minScrollVForLine + (this.textField.numLines - this.textField.maxScrollV);
-					if (maxScrollVForLine > this.textField.maxScrollV) {
-						maxScrollVForLine = this.textField.maxScrollV;
+				} else if (this._textField.maxScrollV > 1) {
+					var minScrollVForLine = this._textField.maxScrollV - (this._textField.numLines - lineIndex - 1);
+					var maxScrollVForLine = minScrollVForLine + (this._textField.numLines - this._textField.maxScrollV);
+					if (maxScrollVForLine > this._textField.maxScrollV) {
+						maxScrollVForLine = this._textField.maxScrollV;
 					}
 
-					var targetScrollV = this.textField.scrollV;
+					var targetScrollV = this._textField.scrollV;
 					if ((minScrollVForLine - targetScrollV) > 0) {
 						targetScrollV = minScrollVForLine;
 					} else if ((targetScrollV - maxScrollVForLine) > 0) {
 						targetScrollV = maxScrollVForLine;
 					}
 
-					if (targetScrollV != this.textField.scrollV) {
+					if (targetScrollV != this._textField.scrollV) {
 						container.scrollY = (targetScrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
 					}
 				}
@@ -993,14 +1005,15 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			return;
 		}
 		var container = cast(this.parent, BaseScrollContainer);
-		if (container.maxScrollY > 0.0 && this.textField.maxScrollV > 1) {
-			container.scrollY = (this.textField.scrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
+		if (container.maxScrollY > 0.0 && this._textField.maxScrollV > 1) {
+			container.scrollY = (this._textField.scrollV - 1) * (this._savedLineMetrics.height + this._savedLineMetrics.leading);
 		}
 	}
 
 	private function textFieldViewPort_focusInHandler(event:FocusEvent):Void {
-		if (this._focusManager == null && Reflect.compare(event.target, this) == 0) {
-			this.stage.focus = this.textField;
+		if (this.stage != null && this.stage.focus != this._textField) {
+			event.stopImmediatePropagation();
+			this.stage.focus = this._textField;
 		}
 	}
 }

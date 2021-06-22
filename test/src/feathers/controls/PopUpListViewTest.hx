@@ -112,4 +112,43 @@ class PopUpListViewTest extends Test {
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.equals(null, this._listView.selectedItem);
 	}
+
+	public function testOpenListView():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var dispatchedOpenEvent = false;
+		var dispatchedCloseEvent = false;
+		this._listView.addEventListener(Event.OPEN, function(event:Event):Void {
+			dispatchedOpenEvent = true;
+		});
+		this._listView.addEventListener(Event.CLOSE, function(event:Event):Void {
+			dispatchedCloseEvent = true;
+		});
+		Assert.isFalse(dispatchedOpenEvent);
+		Assert.isFalse(dispatchedCloseEvent);
+		Assert.isFalse(this._listView.open);
+		this._listView.openListView();
+		Assert.isTrue(dispatchedOpenEvent);
+		Assert.isFalse(dispatchedCloseEvent);
+		Assert.isTrue(this._listView.open);
+	}
+
+	public function testCloseListView():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.openListView();
+		var dispatchedOpenEvent = false;
+		var dispatchedCloseEvent = false;
+		this._listView.addEventListener(Event.OPEN, function(event:Event):Void {
+			dispatchedOpenEvent = true;
+		});
+		this._listView.addEventListener(Event.CLOSE, function(event:Event):Void {
+			dispatchedCloseEvent = true;
+		});
+		Assert.isFalse(dispatchedOpenEvent);
+		Assert.isFalse(dispatchedCloseEvent);
+		Assert.isTrue(this._listView.open);
+		this._listView.closeListView();
+		Assert.isFalse(dispatchedOpenEvent);
+		Assert.isTrue(dispatchedCloseEvent);
+		Assert.isFalse(this._listView.open);
+	}
 }

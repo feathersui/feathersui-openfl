@@ -109,26 +109,33 @@ class FocusManagerTest extends Test {
 	public function testFocusPropertyInFocusInEventListener():Void {
 		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
 		this.createFocusObject1();
-		var focusIsCorrectInListener = false;
+		var focusManagerFocusIsCorrectInListener = false;
+		var stageFocusIsCorrectInListener = false;
 		Assert.isTrue(this._focusObject1.focusManager.focus != this._focusObject1, "The focus property of the FocusManager is incorrect at start of test");
 		this._focusObject1.addEventListener(FocusEvent.FOCUS_IN, function(event:FocusEvent):Void {
-			focusIsCorrectInListener = this._focusObject1.focusManager.focus == this._focusObject1;
+			focusManagerFocusIsCorrectInListener = this._focusObject1.focusManager.focus == this._focusObject1;
+			stageFocusIsCorrectInListener = this._focusObject1.stage.focus == this._focusObject1;
 		});
 		this._focusObject1.focusManager.focus = this._focusObject1;
-		Assert.isTrue(focusIsCorrectInListener, "The focus property of the FocusManager is not updated before calling listener for FocusEvent.FOCUS_IN event");
+		Assert.isTrue(focusManagerFocusIsCorrectInListener,
+			"The focus property of the FocusManager is not updated before calling listener for FocusEvent.FOCUS_IN event");
+		Assert.isTrue(stageFocusIsCorrectInListener, "The focus property of the Stage is not updated before calling listener for FocusEvent.FOCUS_IN event");
 	}
 
 	public function testFocusPropertyInFocusOutEventListener():Void {
 		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
 		this.createFocusObject1();
-		var focusIsCorrectInListener = false;
+		var focusManagerFocusIsCorrectInListener = false;
+		var stageFocusIsCorrectInListener = false;
 		this._focusObject1.addEventListener(FocusEvent.FOCUS_OUT, function(event:FocusEvent):Void {
-			focusIsCorrectInListener = this._focusObject1.focusManager.focus == null;
+			focusManagerFocusIsCorrectInListener = this._focusObject1.focusManager.focus == this._focusObject1;
+			stageFocusIsCorrectInListener = this._focusObject1.stage.focus == this._focusObject1;
 		});
 		this._focusObject1.focusManager.focus = this._focusObject1;
 		this._focusObject1.focusManager.focus = null;
-		Assert.isTrue(focusIsCorrectInListener,
+		Assert.isFalse(focusManagerFocusIsCorrectInListener,
 			"The focus property of the FocusManager is not updated before calling listener for FocusEvent.FOCUS_OUT event");
+		Assert.isFalse(stageFocusIsCorrectInListener, "The focus property of the Stage is not updated before calling listener for FocusEvent.FOCUS_OUT event");
 	}
 
 	public function testFocusChangeOnTabKey():Void {
@@ -138,6 +145,7 @@ class FocusManagerTest extends Test {
 		this._focusObject1.focusManager.focus = this._focusObject1;
 		this._focusObject1.dispatchEvent(new FocusEvent(FocusEvent.KEY_FOCUS_CHANGE, true, true, this._focusObject2, false, Keyboard.TAB));
 		Assert.equals(this._focusObject2.focusManager.focus, this._focusObject2, "The FocusManager did not change focus when pressing Keyboard.TAB");
+		Assert.equals(this._focusObject2.stage.focus, this._focusObject2, "The FocusManager did not change stage focus when pressing Keyboard.TAB");
 	}
 
 	public function testFocusChangeOnShiftPlusTabKey():Void {
@@ -148,5 +156,27 @@ class FocusManagerTest extends Test {
 		this._focusObject2.dispatchEvent(new FocusEvent(FocusEvent.KEY_FOCUS_CHANGE, true, true, this._focusObject1, true, Keyboard.TAB));
 		Assert.equals(this._focusObject1.focusManager.focus, this._focusObject1,
 			"The FocusManager did not change focus when pressing Keyboard.TAB with shiftKey");
+		Assert.equals(this._focusObject1.stage.focus, this._focusObject1,
+			"The FocusManager did not change stage focus when pressing Keyboard.TAB with shiftKey");
+	}
+
+	public function checkFocusAfterAddModalPopUp():Void {
+		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		this.createFocusObject1();
+		this._focusObject1.focusManager.focus = this._focusObject1;
+		this._focusObject2 = new Button();
+		PopUpManager.addPopUp(this._focusObject2, TestMain.openfl_root, true);
+		Assert.notEquals(focusManager.focus, this._focusObject1, "The FocusManager failed to change focus when adding a modal pop-up");
+		Assert.notEquals(TestMain.openfl_root.stage.focus, this._focusObject1, "The FocusManager failed to change focus when adding a modal pop-up");
+	}
+
+	public function checkFocusAfterAddNonModalPopUp():Void {
+		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		this.createFocusObject1();
+		this._focusObject1.focusManager.focus = this._focusObject1;
+		this._focusObject2 = new Button();
+		PopUpManager.addPopUp(this._focusObject2, TestMain.openfl_root, false);
+		Assert.equals(this._focusObject1.focusManager.focus, this._focusObject1, "The FocusManager incorrectly changed focus when adding a non-modal pop-up");
+		Assert.equals(TestMain.openfl_root.stage.focus, this._focusObject1, "The FocusManager incorrectly changed focus when adding a non-modal pop-up");
 	}
 }

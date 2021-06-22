@@ -112,4 +112,43 @@ class ComboBoxTest extends Test {
 		Assert.equals(-1, this._comboBox.selectedIndex);
 		Assert.equals(null, this._comboBox.selectedItem);
 	}
+
+	public function testOpenListView():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var dispatchedOpenEvent = false;
+		var dispatchedCloseEvent = false;
+		this._comboBox.addEventListener(Event.OPEN, function(event:Event):Void {
+			dispatchedOpenEvent = true;
+		});
+		this._comboBox.addEventListener(Event.CLOSE, function(event:Event):Void {
+			dispatchedCloseEvent = true;
+		});
+		Assert.isFalse(dispatchedOpenEvent);
+		Assert.isFalse(dispatchedCloseEvent);
+		Assert.isFalse(this._comboBox.open);
+		this._comboBox.openListView();
+		Assert.isTrue(dispatchedOpenEvent);
+		Assert.isFalse(dispatchedCloseEvent);
+		Assert.isTrue(this._comboBox.open);
+	}
+
+	public function testCloseListView():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._comboBox.openListView();
+		var dispatchedOpenEvent = false;
+		var dispatchedCloseEvent = false;
+		this._comboBox.addEventListener(Event.OPEN, function(event:Event):Void {
+			dispatchedOpenEvent = true;
+		});
+		this._comboBox.addEventListener(Event.CLOSE, function(event:Event):Void {
+			dispatchedCloseEvent = true;
+		});
+		Assert.isFalse(dispatchedOpenEvent);
+		Assert.isFalse(dispatchedCloseEvent);
+		Assert.isTrue(this._comboBox.open);
+		this._comboBox.closeListView();
+		Assert.isFalse(dispatchedOpenEvent);
+		Assert.isTrue(dispatchedCloseEvent);
+		Assert.isFalse(this._comboBox.open);
+	}
 }

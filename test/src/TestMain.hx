@@ -43,6 +43,11 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.core.ComponentLifecycleTest());
 		runner.addCase(new feathers.core.DefaultPopUpManagerTest());
 		runner.addCase(new feathers.core.FocusManagerTest());
+		runner.addCase(new feathers.core.FocusManagerComboBoxTest());
+		runner.addCase(new feathers.core.FocusManagerNumericStepperTest());
+		runner.addCase(new feathers.core.FocusManagerPopUpListViewTest());
+		runner.addCase(new feathers.core.FocusManagerTextAreaTest());
+		runner.addCase(new feathers.core.FocusManagerTextInputTest());
 		runner.addCase(new feathers.core.InvalidationTest());
 		runner.addCase(new feathers.core.MinAndMaxDimensionsTest());
 		runner.addCase(new feathers.core.PopUpManagerTest());

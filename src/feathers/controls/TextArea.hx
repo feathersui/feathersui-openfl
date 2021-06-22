@@ -1014,13 +1014,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			// have focus. StageText, in particular, can't receive focus
 			// when its enabled property is false, but we still want to show
 			// that the input is focused.
-			var focused = false;
-			if (this._focusManager != null) {
-				focused = this._focusManager.focus != null
-					&& (this._focusManager.focus == this || this.contains(cast(this._focusManager.focus, DisplayObject)));
-			} else if (this.stage != null) {
-				focused = this.stage.focus == this.stageFocusTarget;
-			}
+			var focused = this.stage != null && this.stage.focus == this.textFieldViewPort.textField;
 			if (focused) {
 				this.changeState(FOCUSED);
 			} else if (this._errorString != null) {

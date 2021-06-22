@@ -8,26 +8,25 @@
 
 package feathers.controls;
 
-import openfl.display.InteractiveObject;
-import feathers.core.IStageFocusDelegate;
-import feathers.core.IFocusObject;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import openfl.errors.ArgumentError;
-import feathers.layout.Direction;
-import feathers.layout.HorizontalAlign;
 import feathers.controls.Button;
 import feathers.controls.IRange;
 import feathers.controls.TextInput;
 import feathers.core.FeathersControl;
+import feathers.core.IStageFocusDelegate;
 import feathers.core.InvalidationFlag;
+import feathers.layout.Direction;
+import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelNumericStepperStyles;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
+import openfl.display.InteractiveObject;
+import openfl.errors.ArgumentError;
 import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -894,12 +893,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function numericStepper_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
-			if (this._focusManager == null) {
-				this.stage.focus = this.textInput;
-			} else {
-				this._focusManager.focus = this;
-			}
+		if (this.stage != null && this.stage.focus != null && this.textInput != null && !this.textInput.contains(this.stage.focus)) {
+			event.stopImmediatePropagation();
+			this.stage.focus = this.textInput;
 		}
 	}
 

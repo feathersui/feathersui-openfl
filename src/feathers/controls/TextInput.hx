@@ -8,8 +8,6 @@
 
 package feathers.controls;
 
-import feathers.core.InvalidationFlag;
-import feathers.core.PopUpManager;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IStageFocusDelegate;
@@ -18,6 +16,8 @@ import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
+import feathers.core.PopUpManager;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
@@ -29,11 +29,8 @@ import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
-import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFieldType;
-import openfl.ui.Keyboard;
 
 /**
 	A text entry control that allows users to enter and edit a single line of
@@ -115,6 +112,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.focusRect = null;
 
 		this.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
+		this.addEventListener(FocusEvent.FOCUS_OUT, textInput_focusOutHandler);
 	}
 
 	private var _editable:Bool = true;
@@ -998,8 +996,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.textField.tabEnabled = false;
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
-			this.textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
-			this.textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
 			this.addChild(this.textField);
 		}
 	}
@@ -1707,13 +1703,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			// have focus. StageText, in particular, can't receive focus
 			// when its enabled property is false, but we still want to show
 			// that the input is focused.
-			var focused = false;
-			if (this._focusManager != null) {
-				focused = this._focusManager.focus == this;
-			} else if (this.stage != null) {
-				focused = this.stage.focus == this.textField;
-			}
-			if (focused) {
+			if (this.stage != null && this.stage.focus == this.textField) {
 				this.changeState(FOCUSED);
 			} else if (this._errorString != null) {
 				this.changeState(ERROR);
@@ -1760,23 +1750,14 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function textInput_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
-			if (this._focusManager == null) {
-				this.stage.focus = this.textField;
-			} else {
-				this._focusManager.focus = this;
-			}
+		if (this.stage != null && this.stage.focus != this.textField) {
+			event.stopImmediatePropagation();
+			this.stage.focus = this.textField;
 		}
 		this.refreshState();
 	}
 
-	private function textField_focusInHandler(event:FocusEvent):Void {
-		if (this._focusManager != null) {
-			this._focusManager.focus = this;
-		}
-	}
-
-	private function textField_focusOutHandler(event:FocusEvent):Void {
+	private function textInput_focusOutHandler(event:FocusEvent):Void {
 		this.refreshState();
 	}
 

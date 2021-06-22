@@ -621,6 +621,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this.open || this.stage == null) {
 			return;
 		}
+		this.validateNow();
 		this._filterText = "";
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
@@ -1011,12 +1012,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
-			if (this._focusManager == null) {
-				this.stage.focus = this.textInput;
-			} else {
-				this._focusManager.focus = this;
-			}
+		if (this.stage != null && this.stage.focus != null && this.textInput != null && !this.textInput.contains(this.stage.focus)) {
+			event.stopImmediatePropagation();
+			this.stage.focus = this.textInput;
 		}
 	}
 
