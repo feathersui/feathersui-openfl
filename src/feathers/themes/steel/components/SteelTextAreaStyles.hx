@@ -8,12 +8,13 @@
 
 package feathers.themes.steel.components;
 
-import feathers.utils.DeviceUtil;
 import feathers.controls.TextArea;
+import feathers.controls.TextCallout;
 import feathers.controls.TextInputState;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `TextArea` component.
@@ -47,6 +48,7 @@ class SteelTextAreaStyles {
 					backgroundSkin.fill = theme.getInsetFill();
 					backgroundSkin.border = theme.getInsetBorder();
 					backgroundSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
+					backgroundSkin.setBorderForState(ERROR, theme.getDangerBorder());
 					textArea.backgroundSkin = backgroundSkin;
 				}
 
@@ -69,6 +71,11 @@ class SteelTextAreaStyles {
 				textArea.textPaddingRight = 9.0;
 				textArea.textPaddingBottom = 5.0;
 				textArea.textPaddingLeft = 9.0;
+			});
+		}
+		if (styleProvider.getStyleFunction(TextCallout, TextArea.CHILD_VARIANT_ERROR_CALLOUT) == null) {
+			styleProvider.setStyleFunction(TextCallout, TextArea.CHILD_VARIANT_ERROR_CALLOUT, function(callout:TextCallout):Void {
+				theme.styleProvider.getStyleFunction(TextCallout, TextCallout.VARIANT_DANGER)(callout);
 			});
 		}
 	}

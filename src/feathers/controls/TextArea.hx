@@ -14,6 +14,8 @@ import feathers.core.IStageFocusDelegate;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
+import feathers.core.InvalidationFlag;
+import feathers.core.PopUpManager;
 import feathers.events.FeathersEvent;
 import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelTextAreaStyles;
@@ -23,8 +25,6 @@ import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
-import openfl.ui.Keyboard;
 
 /**
 	A text entry control that allows users to enter and edit multiple lines of
@@ -52,6 +52,23 @@ import openfl.ui.Keyboard;
 @defaultXmlProperty("text")
 @:styleContext
 class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl implements IStageFocusDelegate {
+	private static final INVALIDATION_FLAG_ERROR_CALLOUT_FACTORY = InvalidationFlag.CUSTOM("errorCalloutFactory");
+
+	/**
+		The variant used to style the error string `TextCallout` child component
+		in a theme.
+
+		To override this default variant, set the
+		`TextArea.customErrorCalloutVariant` property.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `TextArea.customErrorCalloutVariant`
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_ERROR_CALLOUT = "textArea_errorCallout";
+
 	/**
 		Creates a new `TextArea` object.
 
@@ -71,17 +88,17 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.textFieldViewPort.wordWrap = true;
 			this.textFieldViewPort.multiline = true;
 			this.textFieldViewPort.addEventListener(Event.CHANGE, textArea_viewPort_changeHandler);
-			this.textFieldViewPort.addEventListener(FocusEvent.FOCUS_IN, textArea_viewPort_focusInHandler);
-			this.textFieldViewPort.addEventListener(FocusEvent.FOCUS_OUT, textArea_viewPort_focusOutHandler);
 			this.addChild(this.textFieldViewPort);
 			this.viewPort = this.textFieldViewPort;
 		}
 
 		this.addEventListener(FocusEvent.FOCUS_IN, textArea_focusInHandler);
+		this.addEventListener(FocusEvent.FOCUS_OUT, textArea_focusOutHandler);
 	}
 
 	private var textFieldViewPort:TextFieldViewPort;
 	private var promptTextField:TextField;
+	private var errorStringCallout:TextCallout;
 
 	private var _previousTextFormat:TextFormat = null;
 	private var _previousSimpleTextFormat:openfl.text.TextFormat = null;
@@ -144,13 +161,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	override private function set_enabled(value:Bool):Bool {
 		super.enabled = value;
-		if (this._enabled) {
-			if (this._currentState == DISABLED) {
-				this.changeState(ENABLED);
-			}
-		} else {
-			this.changeState(DISABLED);
-		}
+		this.refreshState();
 		return this._enabled;
 	}
 
@@ -280,6 +291,45 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.__restrict = value;
 		this.setInvalid(DATA);
 		return this.__restrict;
+	}
+
+	private var _errorString:String = null;
+
+	/**
+		Error text to display in a `TextCallout` when the text input has focus.
+		When this value is not `null` the text area's `currentState` is
+		changed to `TextInputState.ERROR`.
+
+		An empty string will change the background, but no `TextCallout` will
+		appear on focus.
+
+		To clear an error, the `errorString` property must be set to `null`.
+
+		The following example displays an error string:
+
+		```hx
+		texterror.errorString = "Something is wrong";
+		```
+
+		@see `TextArea.currentState`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var errorString(get, set):String;
+
+	private function get_errorString():String {
+		return this._errorString;
+	}
+
+	private function set_errorString(value:String):String {
+		if (this._errorString == value) {
+			return this._errorString;
+		}
+		this._errorString = value;
+		this.refreshState();
+		this.setInvalid(DATA);
+		return this._text;
 	}
 
 	/**
@@ -513,6 +563,22 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._maxChars;
 	}
 
+	private var _previousCustomErrorCalloutVariant:String = null;
+
+	/**
+		A custom variant to set on the error callout, instead of
+		`TextArea.CHILD_VARIANT_ERROR_CALLOUT`.
+
+		The `customErrorCalloutVariant` will be not be used if the `TextCallout`
+		already has a variant set.
+
+		@see `TextArea.CHILD_VARIANT_ERROR_CALLOUT`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customErrorCalloutVariant:String = null;
+
 	private var _ignoreViewPortTextChange = false;
 
 	override private function get_measureViewPort():Bool {
@@ -669,8 +735,18 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomErrorCalloutVariant != this.customErrorCalloutVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_ERROR_CALLOUT_FACTORY);
+		}
+		var errorCalloutFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_ERROR_CALLOUT_FACTORY);
 
 		this._updatedPromptStyles = false;
+
+		// the state might not change if the text input has focus when
+		// the error string changes, so check for data too!
+		if (errorCalloutFactoryInvalid || dataInvalid) {
+			this.createErrorCallout();
+		}
 
 		if (dataInvalid) {
 			this.refreshPrompt();
@@ -710,6 +786,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 
 		super.update();
+
+		// the state might not change if the text input has focus when
+		// the error string changes, so check for data too!
+		if (errorCalloutFactoryInvalid || stateInvalid || dataInvalid) {
+			this.refreshErrorString();
+		}
+		this._previousCustomErrorCalloutVariant = this.customErrorCalloutVariant;
 	}
 
 	override private function layoutChildren():Void {
@@ -834,6 +917,19 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return textFormat;
 	}
 
+	private function refreshErrorString():Void {
+		if (this.errorStringCallout == null) {
+			return;
+		}
+
+		this.errorStringCallout.text = this._errorString;
+		if (this._currentState == FOCUSED && this.errorStringCallout.parent == null) {
+			PopUpManager.addPopUp(this.errorStringCallout, this, false, false);
+		} else if (this._currentState != FOCUSED && this.errorStringCallout.parent != null) {
+			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+		}
+	}
+
 	private function layoutPrompt():Void {
 		if (this._prompt == null) {
 			return;
@@ -881,6 +977,25 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this.textFormat;
 	}
 
+	private function createErrorCallout():Void {
+		if (this.errorStringCallout != null) {
+			if (this.errorStringCallout.parent != null) {
+				this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+			}
+			this.errorStringCallout = null;
+		}
+
+		if (this._errorString == null || this._errorString.length == 0) {
+			return;
+		}
+		this.errorStringCallout = new TextCallout();
+		if (this.errorStringCallout.variant == null) {
+			this.errorStringCallout.variant = this.customErrorCalloutVariant != null ? this.customErrorCalloutVariant : TextInput.CHILD_VARIANT_ERROR_CALLOUT;
+		}
+		this.errorStringCallout.origin = this;
+		this.errorStringCallout.closeOnPointerOutside = false;
+	}
+
 	private function changeState(state:TextInputState):Void {
 		if (!this._enabled) {
 			state = DISABLED;
@@ -893,14 +1008,44 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
-	private function textArea_focusInHandler(event:FocusEvent):Void {
-		if (Reflect.compare(event.target, this) == 0) {
-			if (this._focusManager == null) {
-				this.stage.focus = this.textFieldViewPort;
-			} else {
-				this._focusManager.focus = this;
+	private function refreshState():Void {
+		if (this._enabled) {
+			// this component can have focus while its text editor does not
+			// have focus. StageText, in particular, can't receive focus
+			// when its enabled property is false, but we still want to show
+			// that the input is focused.
+			var focused = false;
+			if (this._focusManager != null) {
+				focused = this._focusManager.focus != null
+					&& (this._focusManager.focus == this || this.contains(cast(this._focusManager.focus, DisplayObject)));
+			} else if (this.stage != null) {
+				focused = this.stage.focus == this.stageFocusTarget;
 			}
+			if (focused) {
+				this.changeState(FOCUSED);
+			} else if (this._errorString != null) {
+				this.changeState(ERROR);
+			} else {
+				this.changeState(ENABLED);
+			}
+		} else {
+			this.changeState(TextInputState.DISABLED);
 		}
+	}
+
+	private function textArea_focusInHandler(event:FocusEvent):Void {
+		if (this.stage != null
+			&& this.stage.focus != null
+			&& this.textFieldViewPort != null
+			&& !this.textFieldViewPort.contains(this.stage.focus)) {
+			event.stopImmediatePropagation();
+			this.stage.focus = this.textFieldViewPort;
+		}
+		this.refreshState();
+	}
+
+	private function textArea_focusOutHandler(event:FocusEvent):Void {
+		this.refreshState();
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
@@ -914,14 +1059,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		// don't try to skip the setter because we need to measure again. the
 		// new text may result in a different maximum y scroll position.
 		this.text = this.textFieldViewPort.text;
-	}
-
-	private function textArea_viewPort_focusInHandler(event:FocusEvent):Void {
-		this.changeState(FOCUSED);
-	}
-
-	private function textArea_viewPort_focusOutHandler(event:FocusEvent):Void {
-		this.changeState(ENABLED);
 	}
 
 	private function textArea_textFormat_changeHandler(event:Event):Void {
