@@ -91,4 +91,17 @@ class TextInputTest extends Test {
 		Assert.isNull(skin1.parent);
 		Assert.equals(this._input, skin2.parent);
 	}
+
+	public function testErrorStringCalloutOpenAndCloseOnFocusChange():Void {
+		Assert.isFalse(this._input.errorStringCalloutOpen);
+		this._input.errorString = "Something is wrong";
+		this._input.validateNow();
+		Assert.isFalse(this._input.errorStringCalloutOpen);
+		TestMain.openfl_root.stage.focus = this._input;
+		this._input.validateNow();
+		Assert.isTrue(this._input.errorStringCalloutOpen);
+		TestMain.openfl_root.stage.focus = TestMain.openfl_root.stage;
+		this._input.validateNow();
+		Assert.isFalse(this._input.errorStringCalloutOpen);
+	}
 }
