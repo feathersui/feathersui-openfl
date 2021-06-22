@@ -62,7 +62,7 @@ class SteelHSliderStyles {
 					var trackSkin = new TabSkin();
 					trackSkin.fill = theme.getActiveThemeFill();
 					trackSkin.border = theme.getActiveFillBorder();
-					trackSkin.cornerRadius = 2.0;
+					trackSkin.cornerRadius = 8.0;
 					trackSkin.cornerRadiusPosition = LEFT;
 					trackSkin.width = 100.0;
 					trackSkin.height = 8.0;
@@ -74,7 +74,7 @@ class SteelHSliderStyles {
 						var secondaryTrackSkin = new TabSkin();
 						secondaryTrackSkin.fill = theme.getInsetFill();
 						secondaryTrackSkin.border = theme.getInsetBorder();
-						secondaryTrackSkin.cornerRadius = 2.0;
+						secondaryTrackSkin.cornerRadius = 8.0;
 						secondaryTrackSkin.cornerRadiusPosition = RIGHT;
 						secondaryTrackSkin.width = 100.0;
 						secondaryTrackSkin.height = 8.0;
