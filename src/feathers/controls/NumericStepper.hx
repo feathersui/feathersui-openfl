@@ -562,6 +562,10 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 
 		if (dataInvalid) {
+			this.refreshMeasureText();
+		}
+
+		if (dataInvalid) {
 			this.refreshTextInputData();
 		}
 
@@ -647,6 +651,29 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight);
+	}
+
+	private function refreshMeasureText():Void {
+		var maxCharactersBeforeDecimal = Std.int(Math.max(Math.max(Std.string(Std.int(this._minimum)).length, Std.string(Std.int(this._maximum)).length),
+			Std.string(Std.int(this._step)).length));
+
+		// roundToPrecision() helps us to avoid numbers like 1.00000000000000001
+		// caused by the inaccuracies of floating point math.
+		var maxCharactersAfterDecimal = Std.int(Math.max(Math.max(Std.string(MathUtil.roundToPrecision(this._minimum - Std.int(this._minimum), 10)).length,
+			Std.string(MathUtil.roundToPrecision(this._maximum - Std.int(this._maximum), 10)).length),
+			Std.string(MathUtil.roundToPrecision(this._step - Std.int(this._step), 10)).length))
+			- 2;
+		if (maxCharactersAfterDecimal < 0) {
+			maxCharactersAfterDecimal = 0;
+		}
+		var measureText = "";
+		for (i in 0...(maxCharactersBeforeDecimal + maxCharactersAfterDecimal)) {
+			measureText += "0";
+		}
+		if (maxCharactersAfterDecimal > 0) {
+			measureText += ".";
+		}
+		this.textInput.measureText = measureText;
 	}
 
 	private function refreshEnabled():Void {

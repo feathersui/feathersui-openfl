@@ -100,7 +100,7 @@ class SteelNumericStepperStyles {
 			styleProvider.setStyleFunction(TextInput, NumericStepper.CHILD_VARIANT_TEXT_INPUT, function(input:TextInput):Void {
 				if (input.backgroundSkin == null) {
 					var inputSkin = new RectangleSkin();
-					inputSkin.width = 80.0;
+					inputSkin.width = 3.0;
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
