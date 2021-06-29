@@ -2,7 +2,7 @@
 <project>
 	
 	<meta title="Feathers UI" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
-	<app main="feathers.controls.Application" path="build" file="feathersui-openfl" />
+	<app main="feathers.controls.Application" file="feathersui-openfl" />
 	
 	<source path="src" />
 	

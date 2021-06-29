@@ -3,7 +3,6 @@
 .vscode/
 *.code-workspace
 
-build/
 bin/
 dist/
 

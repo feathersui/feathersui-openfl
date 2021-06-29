@@ -32,13 +32,13 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: feathersui-openfl-docs
-        path: build/api/
+        path: bin/api/
         if-no-files-found: error
     - name: Deploy to unstable
       if: ${{ github.event_name != 'pull_request' }}
       uses: garygrossgarten/github-action-scp@release
       with:
-        local: build/api
+        local: bin/api
         remote: api.feathersui.com/unstable
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
