@@ -14,6 +14,7 @@ import feathers.controls.TextInput;
 import feathers.core.FeathersControl;
 import feathers.core.IStageFocusDelegate;
 import feathers.core.InvalidationFlag;
+import feathers.events.FeathersEvent;
 import feathers.layout.Direction;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
@@ -22,6 +23,7 @@ import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
 import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
+import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
@@ -47,7 +49,7 @@ import openfl.ui.Multitouch;
 	stepper.maximum = 100.o;
 	stepper.step = 1.0;
 	stepper.value = 12.0;
-	slider.addEventListener(Event.CHANGE, stepper_changeHandler);er );
+	stepper.addEventListener(Event.CHANGE, stepper_changeHandler);
 	addChild(stepper);
 	```
 
@@ -119,7 +121,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		super();
 
 		this.addEventListener(FocusEvent.FOCUS_IN, numericStepper_focusInHandler);
-		this.addEventListener(KeyboardEvent.KEY_DOWN, numericStepper_keyDownHandler);
 	}
 
 	private var decrementButton:Button;
@@ -176,6 +177,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this._isDefaultValue = false;
 		this._value = value;
 		this.setInvalid(DATA);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._value;
 	}
 
@@ -360,6 +362,74 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this._editable = value;
 		this.setInvalid(STATE);
 		return this._editable;
+	}
+
+	private var _valueFormatFunction:(Float) -> String;
+
+	/**
+		A callback that formats the numeric stepper's value as a string to
+		display to the user.
+
+		In the following example, the stepper's value format function is
+		customized:
+
+		```hx
+		stepper.valueFormatFunction = function(value:Float):String
+		{
+			return currencyFormatter.format(value, true);
+		};
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var valueFormatFunction(get, set):(Float) -> String;
+
+	private function get_valueFormatFunction():(Float) -> String {
+		return this._valueFormatFunction;
+	}
+
+	private function set_valueFormatFunction(value:(Float) -> String):(Float) -> String {
+		if (this._valueFormatFunction == value) {
+			return this._valueFormatFunction;
+		}
+		this._valueFormatFunction = value;
+		this.setInvalid(DATA);
+		return this._valueFormatFunction;
+	}
+
+	private var _valueParseFunction:(String) -> Float;
+
+	/**
+		A callback that accepts the displayed text of the numeric stepper and
+		converts it to a simple `Float` value.
+
+		In the following example, the stepper's value parse function is
+		customized:
+
+		```hx
+		stepper.valueParseFunction = (displayedText:String):Float
+		{
+			return currencyFormatter.parse(displayedText).value;
+		};
+		```
+
+		 @since 1.0.0
+	**/
+	@:flash.property
+	public var valueParseFunction(get, set):(String) -> Float;
+
+	private function get_valueParseFunction():(String) -> Float {
+		return this._valueParseFunction;
+	}
+
+	private function set_valueParseFunction(value:(String) -> Float):(String) -> Float {
+		if (this._valueParseFunction == value) {
+			return this._valueParseFunction;
+		}
+		this._valueParseFunction = value;
+		this.setInvalid(DATA);
+		return this._valueParseFunction;
 	}
 
 	@:flash.property
@@ -687,7 +757,26 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function refreshTextInputData():Void {
-		this.textInput.text = Std.string(this._value);
+		if (this._valueFormatFunction != null) {
+			this.textInput.text = this._valueFormatFunction(this._value);
+		} else {
+			this.textInput.text = Std.string(this._value);
+		}
+	}
+
+	private function parseTextInputValue():Void {
+		var newValue = this._value;
+		if (this._valueFormatFunction != null) {
+			newValue = this._valueParseFunction(this.textInput.text);
+		} else {
+			newValue = Std.parseFloat(this.textInput.text);
+		}
+		if (newValue != null && !Math.isNaN(newValue)) {
+			this.value = newValue;
+		}
+		// we need to force invalidation just to be sure that the text input
+		// is displaying the correct value.
+		this.setInvalid(DATA);
 	}
 
 	private function layoutContent():Void {
@@ -882,6 +971,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private function createTextInput():Void {
 		if (this.textInput != null) {
+			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, numericStepper_textInput_keyDownHandler);
+			this.textInput.removeEventListener(FocusEvent.FOCUS_OUT, numericStepper_textInput_focusOutHandler);
 			this.removeChild(this.textInput);
 			this.textInput = null;
 		}
@@ -890,6 +981,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		if (this.textInput.variant == null) {
 			this.textInput.variant = this.customTextInputVariant != null ? this.customTextInputVariant : NumericStepper.CHILD_VARIANT_TEXT_INPUT;
 		}
+		this.textInput.addEventListener(KeyboardEvent.KEY_DOWN, numericStepper_textInput_keyDownHandler);
+		this.textInput.addEventListener(FocusEvent.FOCUS_OUT, numericStepper_textInput_focusOutHandler);
 		this.textInput.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
 		this.addChild(this.textInput);
@@ -926,13 +1019,18 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 	}
 
-	private function numericStepper_keyDownHandler(event:KeyboardEvent):Void {
+	private function canKeyCodeUpdateValue(keyCode:Int):Bool {
+		return keyCode == Keyboard.UP || keyCode == Keyboard.DOWN || keyCode == Keyboard.HOME || keyCode == Keyboard.END;
+	}
+
+	private function updateValueWithKeyboard(event:KeyboardEvent):Void {
 		if (event.isDefaultPrevented()) {
 			return;
 		}
-		if (!this._enabled) {
+		if (!this._enabled || !this.canKeyCodeUpdateValue(event.keyCode)) {
 			return;
 		}
+		this.parseTextInputValue();
 		var newValue = this._value;
 		switch (event.keyCode) {
 			case Keyboard.DOWN:
@@ -1016,5 +1114,23 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			return;
 		}
 		this.increment();
+	}
+
+	private function numericStepper_textInput_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		switch (event.keyCode) {
+			case Keyboard.ENTER:
+				event.preventDefault();
+				this.parseTextInputValue();
+				return;
+			default:
+				this.updateValueWithKeyboard(event);
+		}
+	}
+
+	private function numericStepper_textInput_focusOutHandler(event:FocusEvent):Void {
+		this.parseTextInputValue();
 	}
 }
