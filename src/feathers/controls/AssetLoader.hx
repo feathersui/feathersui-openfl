@@ -205,6 +205,46 @@ class AssetLoader extends FeathersControl {
 		return this._source;
 	}
 
+	/**
+		The original width of the `source` asset, measured in pixels. May return
+		`null`, if the `source` is `null`, or if the `source` has not yet
+		completed loading.
+
+		@see `AssetLoader.source`
+		@see `AssetLoader.originalSourceHeight`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var originalSourceWidth(get, never):Null<Float>;
+
+	private function get_originalSourceWidth():Null<Float> {
+		if (this._contentMeasurements == null) {
+			return null;
+		}
+		return this._contentMeasurements.width;
+	}
+
+	/**
+		The original height of the source asset, measured in pixels. May return
+		`null`, if the `source` is `null`, or if the `source` has not yet
+		completed loading.
+
+		@see `AssetLoader.source`
+		@see `AssetLoader.originalSourceWidth`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var originalSourceHeight(get, never):Null<Float>;
+
+	private function get_originalSourceHeight():Null<Float> {
+		if (this._contentMeasurements == null) {
+			return null;
+		}
+		return this._contentMeasurements.height;
+	}
+
 	private var _scaleMode:StageScaleMode = StageScaleMode.SHOW_ALL;
 
 	/**
