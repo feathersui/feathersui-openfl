@@ -262,13 +262,40 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._dataProvider;
 	}
 
+	private var _allowCustomUserValue:Bool = true;
+
+	/**
+		Allows the user to type a custom value into the text input. If a custom
+		value is selected, the `selectedIndex` property will be `-1`, but the
+		`selectedItem` property will contain the custom value.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var allowCustomUserValue(get, set):Bool;
+
+	private function get_allowCustomUserValue():Bool {
+		return this._allowCustomUserValue;
+	}
+
+	private function set_allowCustomUserValue(value:Bool):Bool {
+		if (this._allowCustomUserValue == value) {
+			return this._allowCustomUserValue;
+		}
+		this._allowCustomUserValue = value;
+		return this._allowCustomUserValue;
+	}
+
 	private var pendingSelectedIndex = -1;
-	private var pendingSelectedItem:Dynamic = null;
 
 	private var _selectedIndex:Int = -1;
 
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
+
+		Note: If the `selectedIndex` is `-1`, it's still possible for the
+		`selectedItem` to not be `null`. This can happen when a custom value is
+		entered into the text input by the user.
 	**/
 	@:flash.property
 	public var selectedIndex(get, set):Int;
@@ -285,6 +312,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return this._selectedIndex;
 		}
 		this._selectedIndex = value;
+		if (this.open) {
+			this.pendingSelectedIndex = value;
+		}
 		// using variable because if we were to call the selectedItem setter,
 		// then this change wouldn't be saved properly
 		if (this._selectedIndex == -1) {
@@ -292,10 +322,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else {
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 		}
-		if (this.open) {
-			this.pendingSelectedIndex = value;
-			this.pendingSelectedItem = this._selectedItem;
-		}
+		this._customSelectedItem = null;
 		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedIndex;
@@ -314,15 +341,24 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._dataProvider.length - 1;
 	}
 
+	private var _customSelectedItem:String = null;
+
 	private var _selectedItem:Dynamic = null;
 
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
+
+		Note: If the `selectedItem` is not `null`, and the `selectedIndex` is
+		`-1`, the value of `selectedItem` is a custom value entered into the
+		text input by the user.
 	**/
 	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
+		if (this._customSelectedItem != null) {
+			return this._customSelectedItem;
+		}
 		return this._selectedItem;
 	}
 
@@ -626,10 +662,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
 		}
-		this.pendingSelectedItem = this._selectedItem;
+		this.pendingSelectedIndex = -1;
 		this.popUpAdapter.addEventListener(Event.OPEN, comboBox_popUpAdapter_openHandler);
 		this.popUpAdapter.addEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
 		this.popUpAdapter.open(this.listView, this);
+		this.listView.visible = this._dataProvider != null && this._dataProvider.length > 0;
 		this.listView.validateNow();
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, comboBox_listView_removedFromStageHandler);
 		this.textInput.addEventListener(FocusEvent.FOCUS_OUT, comboBox_textInput_focusOutHandler);
@@ -790,7 +827,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		var oldIgnoreTextInputChange = this._ignoreTextInputChange;
 		this._ignoreTextInputChange = true;
-		if (this._selectedItem != null) {
+		if (this._customSelectedItem != null) {
+			this.textInput.text = this._customSelectedItem;
+		} else if (this._selectedItem != null) {
 			this.textInput.text = this.itemToText(this._selectedItem);
 		} else {
 			this.textInput.text = "";
@@ -936,6 +975,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this._filterText = this.textInput.text;
 			this._dataProvider.refresh();
 		}
+		this.listView.visible = this.open && this._dataProvider != null && this._dataProvider.length > 0;
 	}
 
 	private function comboBox_textInput_focusInHandler(event:FocusEvent):Void {
@@ -1079,7 +1119,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.popUpAdapter.removeEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
 		FeathersEvent.dispatch(this, Event.CLOSE);
 
-		var newSelectedItem = this.pendingSelectedItem;
+		var newSelectedItem:Dynamic = null;
 		if (this.pendingSelectedIndex != -1) {
 			newSelectedItem = this._dataProvider.get(this.pendingSelectedIndex);
 		} else {
@@ -1096,14 +1136,24 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 				}
 			}
 		}
+		var customSelectedItem:String = null;
+		if (this._allowCustomUserValue && newSelectedItem == null && this._filterText.length > 0) {
+			customSelectedItem = this._filterText;
+		}
 		this._filterText = "";
 		this.pendingSelectedIndex = -1;
-		this.pendingSelectedItem = null;
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
 		}
-		// use the setter
-		this.selectedItem = newSelectedItem;
+		if (customSelectedItem != null) {
+			this._customSelectedItem = customSelectedItem;
+			this._selectedItem = null;
+			this._selectedIndex = -1;
+			FeathersEvent.dispatch(this, Event.CHANGE);
+		} else if (newSelectedItem != null) {
+			// use the setter
+			this.selectedItem = newSelectedItem;
+		}
 		// even if the selected item has not changed, invalidate because the
 		// displayed text may need to be updated
 		this.setInvalid(SELECTION);
