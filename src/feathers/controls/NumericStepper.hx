@@ -771,7 +771,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		} else {
 			newValue = Std.parseFloat(this.textInput.text);
 		}
-		if (newValue != null && !Math.isNaN(newValue)) {
+		if (!Math.isNaN(newValue)) {
 			this.value = newValue;
 		}
 		// we need to force invalidation just to be sure that the text input
