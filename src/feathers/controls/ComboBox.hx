@@ -373,6 +373,37 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._selectedItem;
 	}
 
+	private var _prompt:String;
+
+	/**
+		The text displayed by the text input when no item is selected.
+
+		The following example sets the combo box's prompt:
+
+		```hx
+		comboBox.prompt = "Select an item";
+		```
+
+		@default null
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var prompt(get, set):String;
+
+	private function get_prompt():String {
+		return this._prompt;
+	}
+
+	private function set_prompt(value:String):String {
+		if (this._prompt == value) {
+			return this._prompt;
+		}
+		this._prompt = value;
+		this.setInvalid(DATA);
+		return this._prompt;
+	}
+
 	private var _itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
 
 	/**
@@ -764,7 +795,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 
 		if (dataInvalid || listViewFactoryInvalid) {
-			this.refreshData();
+			this.refreshListViewData();
+		}
+
+		if (dataInvalid || textInputFactoryInvalid) {
+			this.refreshTextInputData();
 		}
 
 		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
@@ -842,10 +877,14 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 	}
 
-	private function refreshData():Void {
+	private function refreshListViewData():Void {
 		this.listView.dataProvider = this._dataProvider;
 		this.listView.itemRendererRecycler = this._itemRendererRecycler;
 		this.listView.itemToText = this.itemToText;
+	}
+
+	private function refreshTextInputData():Void {
+		this.textInput.prompt = this._prompt;
 	}
 
 	private function refreshSelection():Void {
