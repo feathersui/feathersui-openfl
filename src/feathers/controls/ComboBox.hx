@@ -341,7 +341,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._dataProvider.length - 1;
 	}
 
-	private var _customSelectedItem:String = null;
+	private var _customSelectedItem:Dynamic = null;
 
 	private var _selectedItem:Dynamic = null;
 
@@ -410,6 +410,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`toString()` method is called to convert an item to text. This method
 		may be replaced to provide custom text.
 
+		This function is not called if the item is already a string.
+
 		For example, consider the following item:
 
 		```hx
@@ -429,6 +431,33 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	**/
 	public dynamic function itemToText(data:Dynamic):String {
 		return Std.string(data);
+	}
+
+	/**
+		Called when none of the items in the data provider match the custom text
+		typed by the user. By default, returns the original string, without any
+		changes.
+
+		For example, consider the following item type:
+
+		```hx
+		{ text: "Example Item" }
+		```
+
+		A custom implementation of `textToItem()` might look like this:
+
+		```hx
+		comboBox.textToItem = (customText:String) -> {
+			return { text: customText };
+		};
+		```
+
+		@since 1.0.0
+
+		@see `ComboBox.allowCustomUserValue`
+	**/
+	public dynamic function textToItem(text:String):Dynamic {
+		return text;
 	}
 
 	private var _ignoreTextInputChange = false;
@@ -827,10 +856,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		var oldIgnoreTextInputChange = this._ignoreTextInputChange;
 		this._ignoreTextInputChange = true;
-		if (this._customSelectedItem != null) {
-			this.textInput.text = this._customSelectedItem;
-		} else if (this._selectedItem != null) {
-			this.textInput.text = this.itemToText(this._selectedItem);
+		var item = (this._customSelectedItem != null) ? this._customSelectedItem : this._selectedItem;
+		if (item != null) {
+			this.textInput.text = (item is String) ? item : this.itemToText(item);
 		} else {
 			this.textInput.text = "";
 		}
@@ -847,7 +875,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._filterText.length == 0) {
 			return true;
 		}
-		var itemText = this.itemToText(item).toLowerCase();
+		var itemText:String = (item is String) ? item : this.itemToText(item);
+		itemText = itemText.toLowerCase();
 		return itemText.indexOf(this._filterText.toLowerCase()) != -1;
 	}
 
@@ -1126,7 +1155,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			var filterText = this._filterText.toLowerCase();
 			if (this._dataProvider != null && this._dataProvider.length > 0) {
 				for (item in this._dataProvider) {
-					var itemText = this.itemToText(item).toLowerCase();
+					var itemText = (item is String) ? item : this.itemToText(item);
+					itemText = itemText.toLowerCase();
 					if (itemText == filterText) {
 						// if the filtered data contains a match, use it
 						// otherwise, fall back to the previous item
@@ -1136,9 +1166,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 				}
 			}
 		}
-		var customSelectedItem:String = null;
+		var customSelectedItem:Dynamic = null;
 		if (this._allowCustomUserValue && newSelectedItem == null && this._filterText.length > 0) {
-			customSelectedItem = this._filterText;
+			customSelectedItem = this.textToItem(this._filterText);
 		}
 		this._filterText = "";
 		this.pendingSelectedIndex = -1;
