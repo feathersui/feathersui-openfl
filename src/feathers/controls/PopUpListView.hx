@@ -307,6 +307,37 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		return this._selectedItem;
 	}
 
+	private var _prompt:String;
+
+	/**
+		The text displayed by the button when no item is selected.
+
+		The following example sets the pop-up list view's prompt:
+
+		```hx
+		listView.prompt = "Select an item";
+		```
+
+		@default null
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var prompt(get, set):String;
+
+	private function get_prompt():String {
+		return this._prompt;
+	}
+
+	private function set_prompt(value:String):String {
+		if (this._prompt == value) {
+			return this._prompt;
+		}
+		this._prompt = value;
+		this.setInvalid(DATA);
+		return this._prompt;
+	}
+
 	private var _itemRendererRecycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> = DisplayObjectRecycler.withClass(ItemRenderer);
 
 	/**
@@ -612,7 +643,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 
 		if (dataInvalid || listViewFactoryInvalid) {
-			this.refreshData();
+			this.refreshListViewData();
 		}
 
 		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
@@ -669,7 +700,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.listView.addEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
 	}
 
-	private function refreshData():Void {
+	private function refreshListViewData():Void {
 		this.listView.dataProvider = this._dataProvider;
 		this.listView.itemRendererRecycler = this._itemRendererRecycler;
 		this.listView.itemToText = this.itemToText;
@@ -683,6 +714,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		if (this._selectedItem != null) {
 			this.button.text = this.itemToText(this._selectedItem);
+		} else if (this._prompt != null) {
+			this.button.text = this._prompt;
 		} else {
 			this.button.text = "";
 		}
