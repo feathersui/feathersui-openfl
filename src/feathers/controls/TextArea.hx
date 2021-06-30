@@ -293,6 +293,40 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this.__restrict;
 	}
 
+	private var _displayAsPassword:Bool = false;
+
+	/**
+		Masks the text so that it cannot be read.
+
+		In the following example, the text area's text is displayed as a
+		password:
+
+		```hx
+		textArea.displayAsPassword = true;
+		```
+
+		@default null
+
+		@see [`TextField.displayAsPassword`](https://api.openfl.org/openfl/text/TextField.html#displayAsPassword)
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var displayAsPassword(get, set):Bool;
+
+	private function get_displayAsPassword():Bool {
+		return this._displayAsPassword;
+	}
+
+	private function set_displayAsPassword(value:Bool):Bool {
+		if (this._displayAsPassword == value) {
+			return this._displayAsPassword;
+		}
+		this._displayAsPassword = value;
+		this.setInvalid(DATA);
+		return this._displayAsPassword;
+	}
+
 	private var _errorString:String = null;
 
 	/**
@@ -792,6 +826,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this._ignoreViewPortTextChange = oldIgnoreViewPortTextChange;
 			this.textFieldViewPort.restrict = this.__restrict;
 			this.textFieldViewPort.maxChars = this._maxChars;
+			this.textFieldViewPort.displayAsPassword = this._displayAsPassword;
 		}
 
 		if (stateInvalid) {

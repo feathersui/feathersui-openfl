@@ -186,6 +186,29 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		return this.__restrict;
 	}
 
+	private var _displayAsPassword:Bool = false;
+
+	/**
+		Indicates if the text is masked so that it cannot be read.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var displayAsPassword(get, set):Bool;
+
+	private function get_displayAsPassword():Bool {
+		return this._displayAsPassword;
+	}
+
+	private function set_displayAsPassword(value:Bool):Bool {
+		if (this._displayAsPassword == value) {
+			return this._displayAsPassword;
+		}
+		this._displayAsPassword = value;
+		this.setInvalid(DATA);
+		return this._displayAsPassword;
+	}
+
 	private var _maxChars:Int = 0;
 
 	/**
@@ -844,6 +867,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			this._updatedTextStyles = true;
 		}
 		this._textField.restrict = this.__restrict;
+		this._textField.displayAsPassword = this._displayAsPassword;
 		this._textField.maxChars = this._maxChars;
 		var calculatedWidth = this._explicitVisibleWidth;
 		if (calculatedWidth != null) {
