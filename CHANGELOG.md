@@ -1,4 +1,4 @@
-# Feather UI for OpenFL and Haxe Change Log
+# Feathers UI for OpenFL and Haxe Change Log
 
 ## 1.0.0-beta.4 (2021-07-??)
 
