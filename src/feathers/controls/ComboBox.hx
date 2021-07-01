@@ -895,7 +895,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		var oldIgnoreTextInputChange = this._ignoreTextInputChange;
 		this._ignoreTextInputChange = true;
-		var item = (this._customSelectedItem != null) ? this._customSelectedItem : this._selectedItem;
+		var item:Dynamic = (this._customSelectedItem != null) ? this._customSelectedItem : this._selectedItem;
 		if (item != null) {
 			this.textInput.text = (item is String) ? item : this.itemToText(item);
 		} else {
