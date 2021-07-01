@@ -1,5 +1,43 @@
 # Feather UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.4 (2021-07-??)
+
+- AssetLoader: Added new `originalSourceWidth` and `originalSourceHeight` properties that return the original dimensions of the content, after loading completes.
+- BaseScrollContainer: Added new `restrictedScrollX` and `restrictedScrollY` that may be used instead of `scrollX` and `scrollY` if it is necessary to clamp to the `minimum` and `maximum` bounds.
+- Button, ToggleButton: Added new `showText` style to allow the text to be hidden so that it does not affect the layout (such as for a button that contains only an icon).
+- ButtonBar, TabBar: Added support for multiple button/tab renderers.
+- ButtonBar, TabBar: Added a new `indexToButton()/indexToTab()` method to access one of the current renderers based on its position in the data provider.
+- Callout: New `closeOnPointerOutside` property that can be set to `false` to prevent the callout from automatically closing when clicking or tapping outside of its bounds.
+- CalloutPopUpAdapter: New implementation of `IPopUpAdapter` that adds the content to a `Callout` positioned near the origin.
+- ComboBox: Now allows the user to type a custom value. Will be returned by `selectedItem`, but `selectedIndex` will be `-1`. Set the new `allowCustomUserValue` property to `false` to restrict the value to only items from the data provider.
+- ComboBox: Added new `textToItem()` method that allows custom text to be converted into the same format as items in the data provider.
+- ComboBox, PopUpListView: Added a new `prompt` property to display some text when no item is currently selected.
+- DisplayObjectFactory: New class that's similar to `DisplayObjectRecycler`, but has only `create` and `destroy` functions. No `update` or `reset` functions.
+- DropDownPopUpAdapter: Can now open above origin, if there is not enough space below the origin.
+- FocusManager: The `addRoot()` method has been restricted to the `Stage` type only. To create a focus manager with a root other than the stage, use the `DefaultFocusManager` constructor instead.
+- GridView: Added new `sortableColumns`, `sortedColumn`, and `sortOrder` properties that enable the user to sort the data provider by clicking a column header, or to sort the columns programatically.
+- GridView: Added new `CHILD_VARIANT_CELL_RENDERER` static constant to allow targeting of `GridView` cell renderers in a theme.
+- GridView: Renamed `CHILD_VARIANT_HEADER` to `CHILD_VARIANT_HEADER_RENDERER` for consistency with `CHILD_VARIANT_CELL_RENDERER`. `CHILD_VARIANT_HEADER` is now deprecated and will be removed in a future update.
+- GridView: Added new `columnDividerFactory` and `headerDividerFactory` for displaying dividers between columns and column headers.
+- GridViewColumn: Added new constructor parameter to optionally set the width of the column.
+- HorizontalLayout, VerticalLayout: Added new `justifyResetEnabled` property that will optionally reset the size of all items before measuring them.
+- HorizontalLayoutData, VerticalLayoutData: Added new `fillHorizontal()`, `fillVertical()`, and `fill()` static helper functions to quickly create an object with `percentWidth`, `percentHeight` (or both) set to `100.0` in a single function call.
+- HorizontalLineSkin, VerticalLineSkin: New skin classes that draw a simple line in the center.
+- HorizontalListLayout, VerticalListLayout: Added new `heightResetEnabled` and `widthResetEnabled` (respectively) to reset the size of all items before measuring them.
+- IPopUpManager: Added new `hasModalPopUps()`, `topLevelPopUpCount`, and `getPopUpAt()` APIs.
+- IScaleManager: New interface for custom application scaling behavior. Includes `ScreenDensityScaleManager`, `LetterboxScaleManager`, and `CustomScaleManager` implementations.
+- ItemRenderer: Addded new `accessoryView` property to optionally display a UI component on the right side of the item renderer.
+- ListView: Added new `VARIANT_POP_UP` static constant for list views that are added as pop-ups, for components like `PopUpListView` and `ComboBox`.
+- NumericStepper: New UI component that displays a numeric value in a `TextInput`, with two buttons to increment or decrement the value.
+- PageIndicator: Added a new `indexToToggleButton()` method to access one of the current toggle butons based on its selection index.
+- PopUpUtil: Added new `isTopLevelPopUpOrIsContainedByTopLevelPopUp()` utility method.
+- TextArea, TextInput: All text is automatically selected when `showFocus(true)` is called.
+- TextArea, TextInput: Added new `errorString` property to optionally display validation errors in a `TextCallout` when focused.
+- TextArea: Added new `displayAsPassword` property to mask the rendered text, similar to the same property that `TextInput` already had.
+- TextCallout: Added new `VARIANT_DANGER` static constant to optionally display the callout in a style that indicates something potentially dangerous or destructive.
+- TextInput: Added new `measureText` property, which can specify custom text to use when measuring the text input's ideal size. Similar to `autoSizeWidth`, but uses a different value than the current value of the `text` property.
+- ValidationQueue: Uses `Event.RENDER` and `stage.invalidate()` instead of `Event.ENTER_FRAME` because it gives more stable results and doesn't run code every frame if no components need validation.
+
 ## 1.0.0-beta.3 (2021-04-12)
 
 - Alert: New component to display a pop-up dialog with a message, a title, and an optional icon.
