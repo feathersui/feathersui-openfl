@@ -649,7 +649,7 @@ class Callout extends FeathersControl {
 		When the callout closes, it will dispatch an event of type
 		`Event.CLOSE`.
 
-		@see `openfl.events.Event.CLOSE`
+		@see [`openfl.events.Event.CLOSE`](https://api.openfl.org/openfl/events/Event.html#CLOSE)
 
 		@since 1.0.0
 	**/

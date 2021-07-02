@@ -168,7 +168,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		When the adapter closes, it will dispatch an event of type
 		`Event.CLOSE`.
 
-		@see `openfl.events.Event.CLOSE`
+		@see [`openfl.events.Event.CLOSE`](https://api.openfl.org/openfl/events/Event.html#CLOSE)
 	**/
 	public function close():Void {
 		if (!this.active) {

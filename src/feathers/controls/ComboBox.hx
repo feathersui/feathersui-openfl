@@ -709,7 +709,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@see `ComboBox.open`
 		@see `ComboBox.closeListView()`
-		@see `openfl.events.Event.OPEN`
+		@see [`openfl.events.Event.OPEN`](https://api.openfl.org/openfl/events/Event.html#OPEN)
+		@see [`openfl.events.Event.CLOSE`](https://api.openfl.org/openfl/events/Event.html#CLOSE)
 
 		@since 1.0.0
 	**/
@@ -752,7 +753,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@see `ComboBox.open`
 		@see `ComboBox.openListView()`
-		@see `openfl.events.Event.CLOSE`
+		@see [`openfl.events.Event.CLOSE`](https://api.openfl.org/openfl/events/Event.html#CLOSE)
 
 		@since 1.0.0
 	**/

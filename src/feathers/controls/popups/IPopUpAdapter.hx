@@ -33,8 +33,8 @@ interface IPopUpAdapter extends IEventDispatcher {
 	/**
 		Indicates if the pop-up is currently active or not.
 
-		@see `openfl.events.Event.OPEN`
-		@see `openfl.events.Event.CLOSE`
+		@see [`openfl.events.Event.OPEN`](https://api.openfl.org/openfl/events/Event.html#OPEN)
+		@see [`openfl.events.Event.CLOSE`](https://api.openfl.org/openfl/events/Event.html#CLOSE)
 
 		@since 1.0.0
 	**/
@@ -55,7 +55,7 @@ interface IPopUpAdapter extends IEventDispatcher {
 
 		When the adapter opens, it will dispatch an event of type `Event.OPEN`.
 
-		@see `openfl.events.Event.OPEN`
+		@see [`openfl.events.Event.OPEN`](https://api.openfl.org/openfl/events/Event.html#OPEN)
 
 		@since 1.0.0
 	**/
@@ -67,7 +67,7 @@ interface IPopUpAdapter extends IEventDispatcher {
 		When the callout closes, it will dispatch an event of type
 		`Event.CLOSE`.
 
-		@see `openfl.events.Event.CLOSE`
+		@see [`openfl.events.Event.CLOSE`](https://api.openfl.org/openfl/events/Event.html#CLOSE)
 
 		@since 1.0.0
 	**/

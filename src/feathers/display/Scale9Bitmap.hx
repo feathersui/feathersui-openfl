@@ -122,7 +122,7 @@ class Scale9Bitmap extends Sprite {
 	/**
 		Controls whether or not the bitmap is smoothed when scaled.
 
-		@see `openfl.display.Bitmap.smoothing`
+		@see [`openfl.display.Bitmap.smoothing`](https://api.openfl.org/openfl/display/Bitmap.html#smoothing)
 
 		@since 1.0.0
 	**/
@@ -149,7 +149,7 @@ class Scale9Bitmap extends Sprite {
 	/**
 		The `BitmapData` object being referenced.
 
-		@see `openfl.display.Bitmap.bitmapData`
+		@see [`openfl.display.Bitmap.bitmapData`](https://api.openfl.org/openfl/display/Bitmap.html#bitmapData)
 
 		@since 1.0.0
 	**/

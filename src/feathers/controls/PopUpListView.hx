@@ -550,7 +550,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@see `PopUpListView.open`
 		@see `PopUpListView.closeListView()`
-		@see `openfl.events.Event.OPEN`
+		@see [`openfl.events.Event.OPEN`](https://api.openfl.org/openfl/events/Event.html#OPEN)
 
 		@since 1.0.0
 	**/
@@ -599,7 +599,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@see `PopUpListView.open`
 		@see `PopUpListView.openListView()`
-		@see `openfl.events.Event.CLOSE`
+		@see [`openfl.events.Event.CLOSE`](https://api.openfl.org/openfl/events/Event.html#CLOSE)
 
 		@since 1.0.0
 	**/

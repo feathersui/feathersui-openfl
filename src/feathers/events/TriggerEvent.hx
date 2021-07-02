@@ -188,115 +188,115 @@ class TriggerEvent extends Event {
 	}
 
 	/**
-		@see `openfl.events.TouchEvent.touchPointID`
+		@see [`openfl.events.TouchEvent.touchPointID`](https://api.openfl.org/openfl/events/TouchEvent.html#touchPointID)
 
 		@since 1.0.0
 	**/
 	public var touchPointID:Int;
 
 	/**
-		@see `openfl.events.TouchEvent.isPrimaryTouchPoint`
+		@see [`openfl.events.TouchEvent.isPrimaryTouchPoint`](https://api.openfl.org/openfl/events/TouchEvent.html#isPrimaryTouchPoint)
 
 		@since 1.0.0
 	**/
 	public var isPrimaryTouchPoint:Bool;
 
 	/**
-		@see `openfl.events.MouseEvent.altKey`
-		@see `openfl.events.TouchEvent.altKey`
+		@see [`openfl.events.MouseEvent.altKey`](https://api.openfl.org/openfl/events/MouseEvent.html#altKey)
+		@see [`openfl.events.TouchEvent.altKey`](https://api.openfl.org/openfl/events/TouchEvent.html#altKey)
 
 		@since 1.0.0
 	**/
 	public var altKey:Bool;
 
 	/**
-		@see `openfl.events.MouseEvent.commandKey`
-		@see `openfl.events.TouchEvent.commandKey`
+		@see [`openfl.events.MouseEvent.commandKey`](https://api.openfl.org/openfl/events/MouseEvent.html#commandKey)
+		@see [`openfl.events.TouchEvent.commandKey`](https://api.openfl.org/openfl/events/TouchEvent.html#commandKey)
 
 		@since 1.0.0
 	**/
 	public var commandKey:Bool;
 
 	/**
-		@see `openfl.events.MouseEvent.ctrlKey`
-		@see `openfl.events.TouchEvent.ctrlKey`
+		@see [`openfl.events.MouseEvent.ctrlKey`](https://api.openfl.org/openfl/events/MouseEvent.html#ctrlKey)
+		@see [`openfl.events.TouchEvent.ctrlKey`](https://api.openfl.org/openfl/events/TouchEvent.html#ctrlKey)
 
 		@since 1.0.0
 	**/
 	public var ctrlKey:Bool;
 
 	/**
-		@see `openfl.events.MouseEvent.controlKey`
-		@see `openfl.events.TouchEvent.controlKey`
+		@see [`openfl.events.MouseEvent.controlKey`](https://api.openfl.org/openfl/events/MouseEvent.html#controlKey)
+		@see [`openfl.events.TouchEvent.controlKey`](https://api.openfl.org/openfl/events/TouchEvent.html#controlKey)
 
 		@since 1.0.0
 	**/
 	public var controlKey:Bool;
 
 	/**
-		@see `openfl.events.MouseEvent.shiftKey`
-		@see `openfl.events.TouchEvent.shiftKey`
+		@see [`openfl.events.MouseEvent.shiftKey`](https://api.openfl.org/openfl/events/MouseEvent.html#shiftKey)
+		@see [`openfl.events.TouchEvent.shiftKey`](https://api.openfl.org/openfl/events/TouchEvent.html#shiftKey)
 
 		@since 1.0.0
 	**/
 	public var shiftKey:Bool;
 
 	/**
-		@see `openfl.events.MouseEvent.localX`
-		@see `openfl.events.TouchEvent.localX`
+		@see [`openfl.events.MouseEvent.localX`](https://api.openfl.org/openfl/events/MouseEvent.html#localX)
+		@see [`openfl.events.TouchEvent.localX`](https://api.openfl.org/openfl/events/TouchEvent.html#localX)
 
 		@since 1.0.0
 	**/
 	public var localX:Float;
 
 	/**
-		@see `openfl.events.MouseEvent.localY`
-		@see `openfl.events.TouchEvent.localY`
+		@see [`openfl.events.MouseEvent.localY`](https://api.openfl.org/openfl/events/MouseEvent.html#localY)
+		@see [`openfl.events.TouchEvent.localY`](https://api.openfl.org/openfl/events/TouchEvent.html#localY)
 
 		@since 1.0.0
 	**/
 	public var localY:Float;
 
 	/**
-		@see `openfl.events.TouchEvent.sizeX`
+		@see [`openfl.events.TouchEvent.sizeX`](https://api.openfl.org/openfl/events/TouchEvent.html#sizeX)
 
 		@since 1.0.0
 	**/
 	public var sizeX:Float;
 
 	/**
-		@see `openfl.events.TouchEvent.sizeY`
+		@see [`openfl.events.TouchEvent.sizeY`](https://api.openfl.org/openfl/events/TouchEvent.html#sizeY)
 
 		@since 1.0.0
 	**/
 	public var sizeY:Float;
 
 	/**
-		@see `openfl.events.TouchEvent.pressure`
+		@see [`openfl.events.TouchEvent.pressure`](https://api.openfl.org/openfl/events/TouchEvent.html#pressure)
 
 		@since 1.0.0
 	**/
 	public var pressure:Float;
 
 	/**
-		@see `openfl.events.MouseEvent.stageX`
-		@see `openfl.events.TouchEvent.stageX`
+		@see [`openfl.events.MouseEvent.stageX`](https://api.openfl.org/openfl/events/MouseEvent.html#stageX)
+		@see [`openfl.events.TouchEvent.stageX`](https://api.openfl.org/openfl/events/TouchEvent.html#stageX)
 
 		@since 1.0.0
 	**/
 	public var stageX:Float;
 
 	/**
-		@see `openfl.events.MouseEvent.stageY`
-		@see `openfl.events.TouchEvent.stageY`
+		@see [`openfl.events.MouseEvent.stageY`](https://api.openfl.org/openfl/events/MouseEvent.html#stageY)
+		@see [`openfl.events.TouchEvent.stageY`](https://api.openfl.org/openfl/events/TouchEvent.html#stageY)
 
 		@since 1.0.0
 	**/
 	public var stageY:Float;
 
 	/**
-		@see `openfl.events.MouseEvent.relatedObject`
-		@see `openfl.events.TouchEvent.relatedObject`
+		@see [`openfl.events.MouseEvent.relatedObject`](https://api.openfl.org/openfl/events/MouseEvent.html#relatedObject)
+		@see [`openfl.events.TouchEvent.relatedObject`](https://api.openfl.org/openfl/events/TouchEvent.html#relatedObject)
 
 		@since 1.0.0
 	**/

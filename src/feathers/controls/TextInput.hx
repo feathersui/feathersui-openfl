@@ -309,7 +309,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@default ""
 
 		@see `TextInput.textFormat`
-		@see `openfl.events.Event.CHANGE`
+		@see [`openfl.events.Event.CHANGE`](https://api.openfl.org/openfl/events/Event.html#CHANGE)
 
 		@since 1.0.0
 	**/

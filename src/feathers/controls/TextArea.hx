@@ -182,7 +182,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@default ""
 
 		@see `TextArea.textFormat`
-		@see `openfl.events.Event.CHANGE`
+		@see [`openfl.events.Event.CHANGE`](https://api.openfl.org/openfl/events/Event.html#CHANGE)
 
 		@since 1.0.0
 	**/

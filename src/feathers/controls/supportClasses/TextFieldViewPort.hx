@@ -58,7 +58,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		Indicates if it's a dynamic or input text field.
 
-		@see `openfl.text.TextField.type`
+		@see [`openfl.text.TextField.type`](https://api.openfl.org/openfl/text/TextField.html#type)
 
 		@since 1.0.0
 	**/

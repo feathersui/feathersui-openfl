@@ -72,7 +72,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@default -1
 
-		@see `openfl.events.Event.CHANGE`
+		@see [`openfl.events.Event.CHANGE`](https://api.openfl.org/openfl/events/Event.html#CHANGE)
 
 		@since 1.0.0
 	**/
@@ -135,7 +135,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@default null
 
-		@see `openfl.events.Event.CHANGE`
+		@see [`openfl.events.Event.CHANGE`](https://api.openfl.org/openfl/events/Event.html#CHANGE)
 
 		@since 1.0.0
 	**/

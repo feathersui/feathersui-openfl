@@ -142,7 +142,7 @@ class Header extends FeathersControl implements ITextControl {
 		@default null
 
 		@see `Header.text`
-		@see `openfl.text.TextField.htmlText`
+		@see [`openfl.text.TextField.htmlText`](https://api.openfl.org/openfl/text/TextField.html#htmlText)
 
 		@since 1.0.0
 	**/

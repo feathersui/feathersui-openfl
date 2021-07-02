@@ -53,7 +53,7 @@ interface IDataSelector<T> {
 		@default null
 
 		@see `IIndexSelector.selectedIndex`
-		@see `openfl.events.Event.CHANGE`
+		@see [`openfl.events.Event.CHANGE`](https://api.openfl.org/openfl/events/Event.html#CHANGE)
 
 		@since 1.0.0
 	**/

@@ -174,7 +174,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		@default null
 
 		@see `Label.text`
-		@see `openfl.text.TextField.htmlText`
+		@see [`openfl.text.TextField.htmlText`](https://api.openfl.org/openfl/text/TextField.html#htmlText)
 
 		@since 1.0.0
 	**/

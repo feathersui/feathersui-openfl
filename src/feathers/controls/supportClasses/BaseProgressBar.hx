@@ -55,7 +55,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		@see `BaseProgressBar.minimum`
 		@see `BaseProgressBar.maximum`
-		@see `openfl.events.Event.CHANGE`
+		@see [`openfl.events.Event.CHANGE`](https://api.openfl.org/openfl/events/Event.html#CHANGE)
 
 		@since 1.0.0
 	**/
