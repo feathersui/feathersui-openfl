@@ -569,10 +569,6 @@ class Alert extends Panel {
 		}
 	}
 
-	private function alert_textFormat_changeHandler(event:Event):Void {
-		this.setInvalid(STYLES);
-	}
-
 	private function alert_buttonBar_itemTriggerHandler(event:Event):Void {
 		this.parent.removeChild(this);
 		this.dispatchEvent(event);
