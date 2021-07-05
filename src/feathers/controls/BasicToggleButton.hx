@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
 import openfl.events.MouseEvent;
 import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
@@ -71,6 +72,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		this.useHandCursor = false;
 
 		this.addEventListener(MouseEvent.CLICK, basicToggleButton_clickHandler);
+		this.addEventListener(TouchEvent.TOUCH_TAP, basicToggleButton_touchTapHandler);
 		this.addEventListener(TriggerEvent.TRIGGER, basicToggleButton_triggerHandler);
 	}
 
@@ -566,6 +568,13 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 	}
 
 	private function basicToggleButton_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			event.stopImmediatePropagation();
+			return;
+		}
+	}
+
+	private function basicToggleButton_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			event.stopImmediatePropagation();
 			return;

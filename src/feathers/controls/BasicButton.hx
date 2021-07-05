@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
 import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
@@ -64,6 +65,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		this.useHandCursor = false;
 
 		this.addEventListener(MouseEvent.CLICK, basicButton_clickHandler);
+		this.addEventListener(TouchEvent.TOUCH_TAP, basicButton_touchTapHandler);
 	}
 
 	private var _currentState:ButtonState = UP;
@@ -420,6 +422,13 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 	}
 
 	private function basicButton_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			event.stopImmediatePropagation();
+			return;
+		}
+	}
+
+	private function basicButton_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			event.stopImmediatePropagation();
 			return;
