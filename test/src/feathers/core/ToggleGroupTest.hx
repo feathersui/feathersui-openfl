@@ -8,6 +8,7 @@
 
 package feathers.core;
 
+import openfl.errors.RangeError;
 import openfl.events.Event;
 import feathers.controls.ToggleButton;
 import utest.Assert;
@@ -229,9 +230,10 @@ class ToggleGroupTest extends Test {
 		Assert.equals(1, this._group.numItems);
 	}
 
-	// [Test(expects = "RangeError")]
 	public function testGetItemAtWhenEmpty():Void {
-		this._group.getItemAt(0);
+		Assert.raises(() -> {
+			this._group.getItemAt(0);
+		}, RangeError);
 	}
 
 	public function testGetItemAt():Void {
