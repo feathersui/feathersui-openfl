@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 import openfl.display.Shape;
@@ -31,6 +32,19 @@ class HProgressBarTest extends Test {
 		}
 		this._progress = null;
 		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+	}
+
+	public function testDispatchChangeEventOnSetValue():Void {
+		this._progress.value = 0.5;
+		var changed = false;
+		this._progress.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.equals(0.5, this._progress.value);
+		Assert.isFalse(changed);
+		this._progress.value = 1.0;
+		Assert.isTrue(changed);
+		Assert.equals(1.0, this._progress.value);
 	}
 
 	public function testRemoveBackgroundSkinAfterSetToNewValue():Void {

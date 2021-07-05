@@ -1,3 +1,4 @@
+import feathers.controls.NumericStepperTest;
 import openfl.display.Sprite;
 import utest.Runner;
 import utest.ui.common.PackageResult;
@@ -29,8 +30,10 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.LabelTest());
 		runner.addCase(new feathers.controls.LayoutGroupTest());
 		runner.addCase(new feathers.controls.ListViewTest());
+		runner.addCase(new feathers.controls.NumericStepperTest());
 		runner.addCase(new feathers.controls.PageIndicatorTest());
 		runner.addCase(new feathers.controls.PopUpListViewTest());
+		runner.addCase(new feathers.controls.RadioTest());
 		runner.addCase(new feathers.controls.navigators.StackNavigatorTest());
 		runner.addCase(new feathers.controls.ScrollContainerTest());
 		runner.addCase(new feathers.controls.TabBarTest());
@@ -38,6 +41,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ToggleButtonTest());
 		runner.addCase(new feathers.controls.ToggleSwitchTest());
 		runner.addCase(new feathers.controls.TreeViewTest());
+		runner.addCase(new feathers.controls.VProgressBarTest());
 		runner.addCase(new feathers.controls.VScrollBarTest());
 		runner.addCase(new feathers.controls.VSliderTest());
 		runner.addCase(new feathers.core.ComponentLifecycleTest());
@@ -53,6 +57,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.core.PopUpManagerTest());
 		runner.addCase(new feathers.core.RestrictedStyleTest());
 		runner.addCase(new feathers.core.ScaleTest());
+		runner.addCase(new feathers.core.ToggleGroupTest());
 		runner.addCase(new feathers.data.ArrayCollectionTest());
 		runner.addCase(new feathers.data.ArrayHierarchicalCollectionTest());
 		runner.addCase(new feathers.data.TreeCollectionTest());

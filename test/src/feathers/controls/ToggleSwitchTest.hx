@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
 import feathers.controls.ToggleSwitch;
@@ -66,6 +67,29 @@ class ToggleSwitchTest extends Test {
 		this._toggle.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		Assert.isFalse(this._toggle.selected, "selected property must not change on click when disabled");
 		Assert.isFalse(changed, "Event.CHANGE must not be dispatched on click when disabled");
+	}
+
+	public function testInteractiveSelectionChangeOnTouchTap():Void {
+		this._toggle.selected = false;
+		var changed = false;
+		this._toggle.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		this._toggle.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.isTrue(this._toggle.selected, "selected property must change on touch tap");
+		Assert.isTrue(changed, "Event.CHANGE must be dispatched on touch tap");
+	}
+
+	public function testNoInteractiveSelectionChangeOnTouchTapWhenDisabled():Void {
+		this._toggle.selected = false;
+		this._toggle.enabled = false;
+		var changed = false;
+		this._toggle.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		this._toggle.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.isFalse(this._toggle.selected, "selected property must not change on touch tap when disabled");
+		Assert.isFalse(changed, "Event.CHANGE must not be dispatched on touch tap when disabled");
 	}
 
 	public function testInteractiveSelectionChangeOnDrag():Void {

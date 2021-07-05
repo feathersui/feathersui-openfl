@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -30,6 +31,19 @@ class VSliderTest extends Test {
 		}
 		this._slider = null;
 		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+	}
+
+	public function testDispatchChangeEventOnSetValue():Void {
+		this._slider.value = 0.5;
+		var changed = false;
+		this._slider.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.equals(0.5, this._slider.value);
+		Assert.isFalse(changed);
+		this._slider.value = 1.0;
+		Assert.isTrue(changed);
+		Assert.equals(1.0, this._slider.value);
 	}
 
 	public function testSnapInterval():Void {

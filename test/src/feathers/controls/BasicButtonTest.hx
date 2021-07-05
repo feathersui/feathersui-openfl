@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
+import feathers.events.TriggerEvent;
 import openfl.display.Shape;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
@@ -38,14 +40,54 @@ class BasicButtonTest extends Test {
 		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	public function testClick():Void {
+	public function testDispatchTriggerOnClick():Void {
+		var triggered = false;
+		this._button.addEventListener(TriggerEvent.TRIGGER, function(event:Event):Void {
+			triggered = true;
+		});
+		Assert.isFalse(triggered);
+		this._button.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+		Assert.isTrue(triggered, "TriggerEvent.TRIGGER must be dispatched after MouseEvent.CLICK");
+	}
+
+	public function testDispatchTriggerOnTouchTap():Void {
+		var triggered = false;
+		this._button.addEventListener(TriggerEvent.TRIGGER, function(event:Event):Void {
+			triggered = true;
+		});
+		Assert.isFalse(triggered);
+		this._button.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.isTrue(triggered, "TriggerEvent.TRIGGER must be dispatched after TouchEvent.TOUCH_TAP");
+	}
+
+	public function testClickWhenDisabled():Void {
 		var clicked = false;
 		this._button.addEventListener(MouseEvent.CLICK, function(event:Event):Void {
 			clicked = true;
 		});
+		var triggered = false;
+		this._button.addEventListener(TriggerEvent.TRIGGER, function(event:Event):Void {
+			triggered = true;
+		});
 		this._button.enabled = false;
 		this._button.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		Assert.isFalse(clicked, "MouseEvent.CLICK must be stopped from propagating when disabled");
+		Assert.isFalse(triggered, "TriggerEvent.TRIGGER must be not be dispatched when disabled");
+	}
+
+	public function testTouchTapWhenDisabled():Void {
+		var clicked = false;
+		this._button.addEventListener(TouchEvent.TOUCH_TAP, function(event:Event):Void {
+			clicked = true;
+		});
+		var triggered = false;
+		this._button.addEventListener(TriggerEvent.TRIGGER, function(event:Event):Void {
+			triggered = true;
+		});
+		this._button.enabled = false;
+		this._button.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.isFalse(clicked, "TouchEvent.TOUCH_TAP must be stopped from propagating when disabled");
+		Assert.isFalse(triggered, "TriggerEvent.TRIGGER must be not be dispatched when disabled");
 	}
 
 	public function testDefaultsToButtonStateUp():Void {

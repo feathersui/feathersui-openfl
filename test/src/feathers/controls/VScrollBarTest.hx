@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -30,6 +31,19 @@ class VScrollBarTest extends Test {
 		}
 		this._scrollBar = null;
 		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+	}
+
+	public function testDispatchChangeEventOnSetValue():Void {
+		this._scrollBar.value = 0.5;
+		var changed = false;
+		this._scrollBar.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.equals(0.5, this._scrollBar.value);
+		Assert.isFalse(changed);
+		this._scrollBar.value = 1.0;
+		Assert.isTrue(changed);
+		Assert.equals(1.0, this._scrollBar.value);
 	}
 
 	public function testSnapInterval():Void {

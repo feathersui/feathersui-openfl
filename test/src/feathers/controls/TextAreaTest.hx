@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.Event;
 import openfl.display.Shape;
 import utest.Assert;
 import utest.Test;
@@ -32,6 +33,17 @@ class TextAreaTest extends Test {
 		}
 		this._textArea = null;
 		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+	}
+
+	public function testDispatchChangeEventOnSetTextProgramatically():Void {
+		this._textArea.validateNow();
+		var changed = false;
+		this._textArea.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._textArea.text = "Hello";
+		Assert.isTrue(changed);
 	}
 
 	public function testRemoveSkinAfterChangeState():Void {
