@@ -340,6 +340,9 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 		@since 1.0.0
 	**/
 	public function getItemAt(index:Int):IToggle {
+		if (index < 0 || index >= this._items.length) {
+			throw new RangeError("The supplied index is out of bounds.");
+		}
 		return this._items[index];
 	}
 
