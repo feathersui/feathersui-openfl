@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.MouseEvent;
 import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
@@ -69,6 +70,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		// a hand cursor only makes sense for hyperlinks
 		this.useHandCursor = false;
 
+		this.addEventListener(MouseEvent.CLICK, basicToggleButton_clickHandler);
 		this.addEventListener(TriggerEvent.TRIGGER, basicToggleButton_triggerHandler);
 	}
 
@@ -563,12 +565,15 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
 	}
 
-	private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
+	private function basicToggleButton_clickHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			event.stopImmediatePropagation();
 			return;
 		}
-		if (!this._toggleable) {
+	}
+
+	private function basicToggleButton_triggerHandler(event:TriggerEvent):Void {
+		if (!this._enabled || !this._toggleable) {
 			return;
 		}
 		this.selected = !this._selected;
