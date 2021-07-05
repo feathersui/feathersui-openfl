@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IUIControl;
@@ -26,6 +27,9 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.ui.Keyboard;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Similar to a light switch, with on and off states that may be toggled.
@@ -85,6 +89,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		this.addEventListener(KeyboardEvent.KEY_DOWN, toggleSwitch_keyDownHandler);
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
+		this.addEventListener(TouchEvent.TOUCH_TAP, toggleSwitch_touchTapHandler);
 	}
 
 	private var _selected:Bool = false;
@@ -612,6 +617,17 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function toggleSwitch_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled || this._ignoreClick) {
+			return;
+		}
+		this.setSelectionWithAnimation(!this._selected);
+	}
+
+	private function toggleSwitch_touchTapHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
 		if (!this._enabled || this._ignoreClick) {
 			return;
 		}
