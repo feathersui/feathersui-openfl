@@ -48,6 +48,7 @@ class BasicToggleButtonTest extends Test {
 		Assert.isTrue(triggered, "TriggerEvent.TRIGGER must be dispatched after MouseEvent.CLICK");
 	}
 
+	#if (openfl >= "9.0.0")
 	public function testDispatchTriggerOnTouchTap():Void {
 		var triggered = false;
 		this._button.addEventListener(TriggerEvent.TRIGGER, function(event:Event):Void {
@@ -57,6 +58,7 @@ class BasicToggleButtonTest extends Test {
 		this._button.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.isTrue(triggered, "TriggerEvent.TRIGGER must be dispatched after TouchEvent.TOUCH_TAP");
 	}
+	#end
 
 	public function testClickWhenDisabled():Void {
 		var clicked = false;
@@ -112,6 +114,7 @@ class BasicToggleButtonTest extends Test {
 		Assert.isTrue(this._button.selected);
 	}
 
+	#if (openfl >= "9.0.0")
 	public function testDispatchChangeEventOnTouchTap():Void {
 		var changed = false;
 		this._button.addEventListener(Event.CHANGE, function(event:Event):Void {
@@ -123,6 +126,7 @@ class BasicToggleButtonTest extends Test {
 		Assert.isTrue(changed);
 		Assert.isTrue(this._button.selected);
 	}
+	#end
 
 	public function testDoesNotDispatchChangeEventOnClickWhenNotToggleable():Void {
 		var changed = false;

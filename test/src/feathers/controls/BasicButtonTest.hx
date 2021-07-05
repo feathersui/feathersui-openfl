@@ -50,6 +50,7 @@ class BasicButtonTest extends Test {
 		Assert.isTrue(triggered, "TriggerEvent.TRIGGER must be dispatched after MouseEvent.CLICK");
 	}
 
+	#if (openfl >= "9.0.0")
 	public function testDispatchTriggerOnTouchTap():Void {
 		var triggered = false;
 		this._button.addEventListener(TriggerEvent.TRIGGER, function(event:Event):Void {
@@ -59,6 +60,7 @@ class BasicButtonTest extends Test {
 		this._button.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.isTrue(triggered, "TriggerEvent.TRIGGER must be dispatched after TouchEvent.TOUCH_TAP");
 	}
+	#end
 
 	public function testClickWhenDisabled():Void {
 		var clicked = false;
