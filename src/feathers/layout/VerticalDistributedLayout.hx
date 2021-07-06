@@ -408,6 +408,8 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 			if ((item is IMeasureObject)) {
 				var measureItem = cast(item, IMeasureObject);
 				itemMinHeight = measureItem.minHeight;
+			} else {
+				itemMinHeight = item.height;
 			}
 			if (maxMinHeight < itemMinHeight) {
 				maxMinHeight = itemMinHeight;
