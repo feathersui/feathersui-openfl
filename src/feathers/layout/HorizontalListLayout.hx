@@ -137,7 +137,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		return true;
 	}
 
-	private var _requestedColumnCount:Null<Float> = 5.0;
+	private var _requestedColumnCount:Null<Float> = null;
 
 	/**
 		The exact number of columns to render, if the width of the container has
