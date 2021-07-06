@@ -62,9 +62,13 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.data.ArrayHierarchicalCollectionTest());
 		runner.addCase(new feathers.data.TreeCollectionTest());
 		runner.addCase(new feathers.layout.AnchorLayoutTest());
+		runner.addCase(new feathers.layout.HorizontalDistributedLayoutTest());
 		runner.addCase(new feathers.layout.HorizontalLayoutTest());
+		runner.addCase(new feathers.layout.HorizontalListLayoutTest());
 		runner.addCase(new feathers.layout.MeasurementsTest());
+		runner.addCase(new feathers.layout.VerticalDistributedLayoutTest());
 		runner.addCase(new feathers.layout.VerticalLayoutTest());
+		runner.addCase(new feathers.layout.VerticalListLayoutTest());
 		runner.addCase(new feathers.style.ClassVariantStyleProviderTest());
 		runner.addCase(new feathers.style.FunctionStyleProviderTest());
 		runner.addCase(new feathers.style.StyleProviderAndVariantTest());
