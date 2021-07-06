@@ -395,6 +395,12 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		var maxMinHeight = 0.0;
 		var totalPercentHeight = 0.0;
 		for (item in items) {
+			if ((item is ILayoutObject)) {
+				var layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -425,6 +431,12 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		}
 		var percentToPixels = remainingHeight / totalPercentHeight;
 		for (item in items) {
+			if ((item is ILayoutObject)) {
+				var layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
 			var itemHeight = percentToPixels * 100.0;
 			if (itemHeight < this._minItemHeight) {
 				itemHeight = this._minItemHeight;

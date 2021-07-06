@@ -386,6 +386,12 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		var maxMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
 		for (item in items) {
+			if ((item is ILayoutObject)) {
+				var layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
@@ -418,6 +424,12 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		}
 		var percentToPixels = remainingWidth / totalPercentWidth;
 		for (item in items) {
+			if ((item is ILayoutObject)) {
+				var layoutObject = cast(item, ILayoutObject);
+				if (!layoutObject.includeInLayout) {
+					continue;
+				}
+			}
 			var itemWidth = percentToPixels * 100.0;
 			if (itemWidth < this._minItemWidth) {
 				itemWidth = this._minItemWidth;
