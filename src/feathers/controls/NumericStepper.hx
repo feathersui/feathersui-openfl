@@ -757,10 +757,13 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function refreshTextInputData():Void {
+		// roundToPrecision() helps us to avoid numbers like 1.00000000000000001
+		// caused by the inaccuracies of floating point math.
+		var valueToFormat = MathUtil.roundToPrecision(this._value, 10);
 		if (this._valueFormatFunction != null) {
-			this.textInput.text = this._valueFormatFunction(this._value);
+			this.textInput.text = this._valueFormatFunction(valueToFormat);
 		} else {
-			this.textInput.text = Std.string(this._value);
+			this.textInput.text = Std.string(valueToFormat);
 		}
 	}
 
