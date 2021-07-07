@@ -883,7 +883,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function popUpListView_listView_keyFocusChangeHandler(event:FocusEvent):Void {
-		if (this._focusManager != null || event.isDefaultPrevented() || event.target != this.listView) {
+		if (this.listView.focusManager != null || event.isDefaultPrevented() || event.target != this.listView) {
 			return;
 		}
 		event.preventDefault();
