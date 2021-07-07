@@ -17,8 +17,6 @@
 	<haxelib name="actuate" />
 	<haxelib name="feathersui" />
 
-	<haxdef name="openfl_pool_events"/>	
-
 	<!-- sync/embedded -->
 	<assets id="haxe" path="assets/img/haxe.png"/>
 	<assets id="favicon" path="assets/img/favicon.png"/>
