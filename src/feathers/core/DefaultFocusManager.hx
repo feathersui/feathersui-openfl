@@ -769,7 +769,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 	#else
 	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
-		if (!this._enabled) {
+		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
 		if (event.keyCode == Keyboard.UP || event.keyCode == Keyboard.DOWN || event.keyCode == Keyboard.LEFT || event.keyCode == Keyboard.RIGHT) {
