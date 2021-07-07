@@ -671,6 +671,34 @@ class Scroller extends EventDispatcher {
 	}
 
 	/**
+		Applies the `minScrollX` and `maxScrollX` restrictions to the current
+		`scrollX`, and applies the `minScrollY` and `maxScrollY` restrictions to
+		the current `scrollY`.
+
+		@since 1.0.0
+	**/
+	public function applyScrollRestrictions():Void {
+		var scrollChanged = false;
+		if (this._scrollX < this._minScrollX) {
+			this._scrollX = this._minScrollX;
+			scrollChanged = true;
+		} else if (this._scrollX > this._maxScrollX) {
+			this._scrollX = this._maxScrollX;
+			scrollChanged = true;
+		}
+		if (this._scrollY < this._minScrollY) {
+			this._scrollY = this._minScrollY;
+			scrollChanged = true;
+		} else if (this._scrollY > this._maxScrollY) {
+			this._scrollY = this._maxScrollY;
+			scrollChanged = true;
+		}
+		if (scrollChanged) {
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		}
+	}
+
+	/**
 		Immediately stops any animation that affects the scrolling.
 
 		@since 1.0.0
@@ -860,28 +888,6 @@ class Scroller extends EventDispatcher {
 		}
 		if (oldMinScrollY != this._minScrollY || oldMaxScrollY != this._maxScrollY) {
 			this.refreshAnimateScrollYEndRatio();
-		}
-		if (!this._scrolling) {
-			var scrollChanged = false;
-			// by checking for the minimum or maximum changing, ensures that
-			// scrollX/Y can be set out of range on purpose
-			if (oldMinScrollX != this._minScrollX && this._scrollX < this._minScrollX) {
-				this._scrollX = this._minScrollX;
-				scrollChanged = true;
-			} else if (oldMaxScrollX != this._maxScrollX && this._scrollX > this._maxScrollX) {
-				this._scrollX = this._maxScrollX;
-				scrollChanged = true;
-			}
-			if (oldMinScrollY != this._minScrollY && this._scrollY < this._minScrollY) {
-				this._scrollY = this._minScrollY;
-				scrollChanged = true;
-			} else if (oldMaxScrollY != this._maxScrollY && this._scrollY > this._maxScrollY) {
-				this._scrollY = this._maxScrollY;
-				scrollChanged = true;
-			}
-			if (scrollChanged) {
-				ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
-			}
 		}
 	}
 
