@@ -903,6 +903,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	@:style
 	public var scrollPixelSnapping:Bool = false;
 
+	private var _prevMinScrollX:Float = 0.0;
+	private var _prevMaxScrollX:Float = 0.0;
+	private var _prevMinScrollY:Float = 0.0;
+	private var _prevMaxScrollY:Float = 0.0;
+
 	private var _currentScrollRect:Rectangle;
 	private var _scrollRect1:Rectangle = new Rectangle();
 	private var _scrollRect2:Rectangle = new Rectangle();
@@ -1098,6 +1103,24 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 	}
 
+	private function restrictScrollAfterRefreshViewPort():Void {
+		if (this.scroller.scrolling) {
+			return;
+		}
+		// by checking for the minimum or maximum changing, ensures that
+		// scrollX/Y can be set out of range on purpose
+		if (this._prevMinScrollX != this.scroller.minScrollX && this.scroller.scrollX < this.scroller.minScrollX) {
+			this.scroller.restrictedScrollX = this.scroller.scrollX;
+		} else if (this._prevMaxScrollX != this.scroller.maxScrollX && this.scroller.scrollX > this.scroller.maxScrollX) {
+			this.scroller.restrictedScrollX = this.scroller.scrollX;
+		}
+		if (this._prevMinScrollY != this.scroller.minScrollY && this.scroller.scrollY < this.scroller.minScrollY) {
+			this.scroller.restrictedScrollY = this.scroller.scrollY;
+		} else if (this._prevMaxScrollY != this.scroller.maxScrollY && this.scroller.scrollY > this.scroller.maxScrollY) {
+			this.scroller.restrictedScrollY = this.scroller.scrollY;
+		}
+	}
+
 	private function refreshViewPort():Void {
 		if ((this.scrollBarX is IValidating)) {
 			cast(this.scrollBarX, IValidating).validateNow();
@@ -1109,9 +1132,15 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._viewPort.scrollX = this.scrollX;
 		this._viewPort.scrollY = this.scrollY;
 
+		this._prevMinScrollX = this.scroller.minScrollX;
+		this._prevMaxScrollX = this.scroller.maxScrollX;
+		this._prevMinScrollY = this.scroller.minScrollY;
+		this._prevMaxScrollY = this.scroller.maxScrollY;
+
 		if (!this.needsMeasurement()) {
 			this._viewPort.validateNow();
 			this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
+			this.restrictScrollAfterRefreshViewPort();
 			return;
 		}
 
@@ -1160,6 +1189,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		this._previousViewPortWidth = this._viewPort.width;
 		this._previousViewPortHeight = this._viewPort.height;
+		this.restrictScrollAfterRefreshViewPort();
 	}
 
 	private function resetViewPortOffsets():Void {
