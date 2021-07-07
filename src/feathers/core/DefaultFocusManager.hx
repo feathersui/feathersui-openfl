@@ -25,12 +25,11 @@ import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
-#if (html5 && openfl < "9.0.0")
-import openfl.events.KeyboardEvent;
-#else
+#if (!html5 || openfl >= "9.0.0")
 import openfl.system.Capabilities;
 #end
 
@@ -43,6 +42,8 @@ import openfl.system.Capabilities;
 **/
 @:event(openfl.events.Event.CLEAR)
 class DefaultFocusManager extends EventDispatcher implements IFocusManager {
+	private static final WRAP_OBJECT_HIGH_TAB_INDEX = 0x7FFFFFFF;
+
 	/**
 		Creates a new `DefaultFocusManager` object with the given arguments.
 
@@ -614,8 +615,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 		stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler, false, 0, true);
 		#if (html5 && openfl < "9.0.0")
-		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler, false, 0, true);
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler2, false, 0, true);
 		#else
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler, false, 0, true);
 		stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler, false, 0, true);
 		#end
 	}
@@ -628,8 +630,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 		stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler);
 		#if (html5 && openfl < "9.0.0")
-		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler);
+		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler2);
 		#else
+		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler);
 		stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler);
 		#end
 	}
@@ -753,7 +756,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	#if (html5 && openfl < "9.0.0")
-	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
+	private function defaultFocusManager_stage_keyDownHandler2(event:KeyboardEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -768,6 +771,46 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 	}
 	#else
+	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
+		if (Capabilities.playerType == "StandAlone" || Capabilities.playerType == "Desktop") {
+			// we care about wrapping in the browser only
+			return;
+		}
+
+		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
+			return;
+		}
+
+		if (this._wrapObject != null) {
+			// we can be fairly confident that if the tabIndex is equal to
+			// WRAP_OBJECT_HIGH_TAB_INDEX, it was set programmatically by us,
+			// so we can clear it safely.
+			// on the other hand, if it is 0, we don't know if we can clear it
+			// or not. that's not ideal, but it shouldn't have a huge impact.
+			if (this._wrapObject.tabIndex == WRAP_OBJECT_HIGH_TAB_INDEX) {
+				this._wrapObject.tabIndex = -1;
+			}
+			this._wrapObject = null;
+		}
+		var result = this.findNextFocusInternal(event.shiftKey);
+		if (result.wrapped) {
+			// if the current focus is the absolute first or last object in the
+			// tab order, we can set its tabIndex property to a value that will
+			// ensure that focus escapes OpenFL and goes to the browser chrome.
+			// this isn't foolproof, but it should work most of the time.
+			this._wrapObject = this._root.stage.focus;
+			if (this._wrapObject != null && this._wrapObject.tabIndex == -1) {
+				this._wrapObject.tabIndex = event.shiftKey ? 0 : WRAP_OBJECT_HIGH_TAB_INDEX;
+			}
+			return;
+		}
+	}
+
+	private var _wrapObject:InteractiveObject;
+
 	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
@@ -780,17 +823,12 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			return;
 		}
 		this._showFocusIndicator = true;
-		var currentFocus = this.focus;
 		var result = this.findNextFocusInternal(event.shiftKey);
-		if (result.newFocus != currentFocus) {
-			event.preventDefault();
-		}
 		this.focus = result.newFocus;
-		if (result.wrapped) {
-			var skipWrap = Capabilities.playerType != "StandAlone" && Capabilities.playerType != "Desktop";
-			if (skipWrap) {
-				return;
-			}
+		if (this._wrapObject == null) {
+			// cancel only when we aren't wrapping, so that focus may be passed
+			// to the browser chrome
+			event.preventDefault();
 		}
 	}
 	#end
