@@ -928,8 +928,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			// for some reason, in flash, after changing the TextField's height,
 			// you need to access textHeight to get a valid maxScrollV
 			var textFieldHeight = this._textField.textHeight;
-			var maxScrollX = this.actualWidth - this._actualVisibleWidth;
-			var maxScrollY = this.actualHeight - this._actualVisibleHeight;
+			var maxScrollX = Math.max(0.0, this.actualWidth - this._actualVisibleWidth);
+			var maxScrollY = Math.max(0.0, this.actualHeight - this._actualVisibleHeight);
 			if (this._textField.maxScrollV == 1 || maxScrollY == 0.0) {
 				this._textField.scrollV = 1;
 			} else {
