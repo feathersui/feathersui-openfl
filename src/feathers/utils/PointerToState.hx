@@ -304,7 +304,11 @@ class PointerToState<T> {
 	}
 
 	private function target_removedFromStageHandler(event:Event):Void {
-		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
+		// sometimes, OpenFL can dispatch this event multiple times, and stage
+		// will be null the second time
+		if (this._target.stage != null) {
+			this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
+		}
 		this.resetTouchState();
 	}
 
