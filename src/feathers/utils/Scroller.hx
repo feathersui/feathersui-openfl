@@ -148,13 +148,13 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function set_restrictedScrollX(value:Float):Float {
-		if (this._scrollX == value) {
-			return this._scrollX;
-		}
 		if (value < this._minScrollX) {
 			value = this._minScrollX;
 		} else if (value > this._maxScrollX) {
 			value = this._maxScrollX;
+		}
+		if (this._scrollX == value) {
+			return this._scrollX;
 		}
 		this._scrollX = value;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
@@ -174,13 +174,13 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function set_restrictedScrollY(value:Float):Float {
-		if (this._scrollY == value) {
-			return this._scrollY;
-		}
 		if (value < this._minScrollY) {
 			value = this._minScrollY;
 		} else if (value > this._maxScrollY) {
 			value = this._maxScrollY;
+		}
+		if (this._scrollY == value) {
+			return this._scrollY;
 		}
 		this._scrollY = value;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
