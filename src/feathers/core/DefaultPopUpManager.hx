@@ -232,14 +232,14 @@ class DefaultPopUpManager implements IPopUpManager {
 		// this listener needs to be added after the pop-up is added to the
 		// root because the pop-up may not have been removed from its old
 		// parent yet, which will trigger the listener if it is added first.
-		popUp.addEventListener(Event.REMOVED_FROM_STAGE, popUp_removedFromStageHandler);
+		popUp.addEventListener(Event.REMOVED_FROM_STAGE, defaultPopUpManager_popUp_removedFromStageHandler);
 		if (this.popUps.length == 1) {
-			this._root.stage.addEventListener(Event.RESIZE, stage_resizeHandler, false, 0, true);
+			this._root.stage.addEventListener(Event.RESIZE, defaultPopUpManager_stage_resizeHandler, false, 0, true);
 		}
 		if (isCentered) {
 			if ((popUp is IMeasureObject)) {
 				var measurePopUp = cast(popUp, IMeasureObject);
-				measurePopUp.addEventListener(Event.RESIZE, popUp_resizeHandler);
+				measurePopUp.addEventListener(Event.RESIZE, defaultPopUpManager_popUp_resizeHandler);
 			}
 			this._centeredPopUps.push(popUp);
 			this.centerPopUp(popUp);
@@ -299,26 +299,26 @@ class DefaultPopUpManager implements IPopUpManager {
 		this._popUpToOverlay.remove(popUp);
 	}
 
-	private function popUp_removedFromStageHandler(event:Event):Void {
+	private function defaultPopUpManager_popUp_removedFromStageHandler(event:Event):Void {
 		if (this._ignoreRemoval) {
 			return;
 		}
 		var popUp = cast(event.currentTarget, DisplayObject);
-		popUp.removeEventListener(Event.REMOVED_FROM_STAGE, popUp_removedFromStageHandler);
+		popUp.removeEventListener(Event.REMOVED_FROM_STAGE, defaultPopUpManager_popUp_removedFromStageHandler);
 		this.popUps.remove(popUp);
 		this.cleanupOverlay(popUp);
 
 		if (this.popUps.length == 0) {
-			this._root.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);
+			this._root.stage.removeEventListener(Event.RESIZE, defaultPopUpManager_stage_resizeHandler);
 		}
 	}
 
-	private function popUp_resizeHandler(event:Event):Void {
+	private function defaultPopUpManager_popUp_resizeHandler(event:Event):Void {
 		var popUp = cast(event.currentTarget, DisplayObject);
 		this.centerPopUp(popUp);
 	}
 
-	private function stage_resizeHandler(event:Event):Void {
+	private function defaultPopUpManager_stage_resizeHandler(event:Event):Void {
 		var stage = this._root.stage;
 		var stageTopLeft = this._root.globalToLocal(new Point());
 		var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));

@@ -42,7 +42,7 @@ class ValidationQueue {
 	**/
 	public function new(stage:Stage) {
 		this._stage = stage;
-		this._stage.addEventListener(Event.RENDER, stage_renderHandler, false, -1000, true);
+		this._stage.addEventListener(Event.RENDER, validationQueue_stage_renderHandler, false, -1000, true);
 	}
 
 	private var _stage:Stage = null;
@@ -71,7 +71,7 @@ class ValidationQueue {
 		if (this._stage == null) {
 			return;
 		}
-		this._stage.removeEventListener(Event.RENDER, stage_renderHandler);
+		this._stage.removeEventListener(Event.RENDER, validationQueue_stage_renderHandler);
 		this._stage = null;
 	}
 
@@ -159,7 +159,7 @@ class ValidationQueue {
 		this._validating = false;
 	}
 
-	private function stage_renderHandler(event:Event):Void {
+	private function validationQueue_stage_renderHandler(event:Event):Void {
 		this.validateNow();
 	}
 }

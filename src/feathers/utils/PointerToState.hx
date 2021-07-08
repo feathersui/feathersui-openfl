@@ -63,18 +63,18 @@ class PointerToState<T> {
 			return this._target;
 		}
 		if (this._target != null) {
-			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this._target.removeEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
-			this._target.removeEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
-			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, pointerToState_target_removedFromStageHandler);
+			this._target.removeEventListener(MouseEvent.ROLL_OVER, pointerToState_target_rollOverHandler);
+			this._target.removeEventListener(MouseEvent.ROLL_OUT, pointerToState_target_rollOutHandler);
+			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, pointerToState_target_mouseDownHandler);
 		}
 		this._target = value;
 		if (this._target != null) {
 			this._currentState = this._upState;
-			this._target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this._target.addEventListener(MouseEvent.ROLL_OVER, target_rollOverHandler);
-			this._target.addEventListener(MouseEvent.ROLL_OUT, target_rollOutHandler);
-			this._target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
+			this._target.addEventListener(Event.REMOVED_FROM_STAGE, pointerToState_target_removedFromStageHandler);
+			this._target.addEventListener(MouseEvent.ROLL_OVER, pointerToState_target_rollOverHandler);
+			this._target.addEventListener(MouseEvent.ROLL_OUT, pointerToState_target_rollOutHandler);
+			this._target.addEventListener(MouseEvent.MOUSE_DOWN, pointerToState_target_mouseDownHandler);
 		}
 		return this._target;
 	}
@@ -303,16 +303,16 @@ class PointerToState<T> {
 		this.changeState(this._upState);
 	}
 
-	private function target_removedFromStageHandler(event:Event):Void {
+	private function pointerToState_target_removedFromStageHandler(event:Event):Void {
 		// sometimes, OpenFL can dispatch this event multiple times, and stage
 		// will be null the second time
 		if (this._target.stage != null) {
-			this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
+			this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, pointerToState_stage_mouseUpHandler);
 		}
 		this.resetTouchState();
 	}
 
-	private function target_rollOverHandler(event:MouseEvent):Void {
+	private function pointerToState_target_rollOverHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -327,7 +327,7 @@ class PointerToState<T> {
 		}
 	}
 
-	private function target_rollOutHandler(event:MouseEvent):Void {
+	private function pointerToState_target_rollOutHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -339,7 +339,7 @@ class PointerToState<T> {
 		this.changeState(this._upState);
 	}
 
-	private function target_mouseDownHandler(event:MouseEvent):Void {
+	private function pointerToState_target_mouseDownHandler(event:MouseEvent):Void {
 		if (!this._enabled || this._target.stage == null) {
 			return;
 		}
@@ -347,13 +347,13 @@ class PointerToState<T> {
 			return;
 		}
 		this._down = true;
-		this._target.stage.addEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler, false, 0, true);
+		this._target.stage.addEventListener(MouseEvent.MOUSE_UP, pointerToState_stage_mouseUpHandler, false, 0, true);
 		this.changeState(this._downState);
 	}
 
-	private function stage_mouseUpHandler(event:MouseEvent):Void {
+	private function pointerToState_stage_mouseUpHandler(event:MouseEvent):Void {
 		this._down = false;
-		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, stage_mouseUpHandler);
+		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, pointerToState_stage_mouseUpHandler);
 		if (this._hoverBeforeDown && this._target.hitTestPoint(event.stageX, event.stageY)) {
 			this.changeState(this._hoverState);
 		} else {

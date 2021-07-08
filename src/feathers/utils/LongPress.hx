@@ -61,15 +61,15 @@ class LongPress {
 		if (this._target != null) {
 			this.cleanupMouseEvents();
 			this.cleanupTouchEvents();
-			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
-			this._target.removeEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
-			this._target.removeEventListener(TriggerEvent.TRIGGER, target_triggerHandler);
+			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, longPress_target_mouseDownHandler);
+			this._target.removeEventListener(TouchEvent.TOUCH_BEGIN, longPress_target_touchBeginHandler);
+			this._target.removeEventListener(TriggerEvent.TRIGGER, longPress_target_triggerHandler);
 		}
 		this._target = value;
 		if (this._target != null) {
-			this._target.addEventListener(MouseEvent.MOUSE_DOWN, target_mouseDownHandler);
-			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, target_touchBeginHandler);
-			this._target.addEventListener(TriggerEvent.TRIGGER, target_triggerHandler, false, 10);
+			this._target.addEventListener(MouseEvent.MOUSE_DOWN, longPress_target_mouseDownHandler);
+			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, longPress_target_touchBeginHandler);
+			this._target.addEventListener(TriggerEvent.TRIGGER, longPress_target_triggerHandler, false, 10);
 		}
 		return this._target;
 	}
@@ -163,7 +163,23 @@ class LongPress {
 	private var _startTime:Float;
 	private var _stopNextTrigger:Bool = false;
 
-	private function target_mouseDownHandler(event:MouseEvent):Void {
+	private function cleanupMouseEvents():Void {
+		var stage:Stage = this._target.stage;
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, longPress_target_stage_mouseMoveHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, longPress_target_stage_mouseUpHandler);
+		this._target.removeEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
+		this._savedMouseEvent = null;
+	}
+
+	private function cleanupTouchEvents():Void {
+		var stage:Stage = this._target.stage;
+		stage.removeEventListener(TouchEvent.TOUCH_MOVE, longPress_target_stage_touchMoveHandler);
+		stage.removeEventListener(TouchEvent.TOUCH_END, longPress_target_stage_touchEndHandler);
+		this._target.removeEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
+		this._savedTouchEvent = null;
+	}
+
+	private function longPress_target_mouseDownHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -174,12 +190,12 @@ class LongPress {
 		this._stopNextTrigger = false;
 		this._savedMouseEvent = event.clone();
 		var stage:Stage = this._target.stage;
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler, false, 0, true);
-		stage.addEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler, false, 0, true);
-		this._target.addEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, longPress_target_stage_mouseMoveHandler, false, 0, true);
+		stage.addEventListener(MouseEvent.MOUSE_UP, longPress_target_stage_mouseUpHandler, false, 0, true);
+		this._target.addEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
 	}
 
-	private function target_touchBeginHandler(event:TouchEvent):Void {
+	private function longPress_target_touchBeginHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -194,12 +210,12 @@ class LongPress {
 		this._stopNextTrigger = false;
 		this._savedTouchEvent = event.clone();
 		var stage:Stage = this._target.stage;
-		stage.addEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler, false, 0, true);
-		stage.addEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler, false, 0, true);
-		this._target.addEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
+		stage.addEventListener(TouchEvent.TOUCH_MOVE, longPress_target_stage_touchMoveHandler, false, 0, true);
+		stage.addEventListener(TouchEvent.TOUCH_END, longPress_target_stage_touchEndHandler, false, 0, true);
+		this._target.addEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
 	}
 
-	private function target_stage_mouseMoveHandler(event:MouseEvent):Void {
+	private function longPress_target_stage_mouseMoveHandler(event:MouseEvent):Void {
 		this._savedMouseEvent.localX = event.localX;
 		this._savedMouseEvent.localY = event.localY;
 		this._savedMouseEvent.stageX = event.stageX;
@@ -210,7 +226,7 @@ class LongPress {
 		this._savedMouseEvent.shiftKey = event.shiftKey;
 	}
 
-	private function target_stage_touchMoveHandler(event:TouchEvent):Void {
+	private function longPress_target_stage_touchMoveHandler(event:TouchEvent):Void {
 		if (this._savedTouchEvent.touchPointID != event.touchPointID) {
 			return;
 		}
@@ -224,18 +240,18 @@ class LongPress {
 		this._savedMouseEvent.shiftKey = event.shiftKey;
 	}
 
-	private function target_stage_mouseUpHandler(event:MouseEvent):Void {
+	private function longPress_target_stage_mouseUpHandler(event:MouseEvent):Void {
 		this.cleanupMouseEvents();
 	}
 
-	private function target_stage_touchEndHandler(event:TouchEvent):Void {
+	private function longPress_target_stage_touchEndHandler(event:TouchEvent):Void {
 		if (this._savedTouchEvent.touchPointID != event.touchPointID) {
 			return;
 		}
 		this.cleanupTouchEvents();
 	}
 
-	private function target_triggerHandler(event:TriggerEvent):Void {
+	private function longPress_target_triggerHandler(event:TriggerEvent):Void {
 		if (!this._stopNextTrigger) {
 			return;
 		}
@@ -243,23 +259,7 @@ class LongPress {
 		event.stopImmediatePropagation();
 	}
 
-	private function cleanupMouseEvents():Void {
-		var stage:Stage = this._target.stage;
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, target_stage_mouseMoveHandler);
-		stage.removeEventListener(MouseEvent.MOUSE_UP, target_stage_mouseUpHandler);
-		this._target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
-		this._savedMouseEvent = null;
-	}
-
-	private function cleanupTouchEvents():Void {
-		var stage:Stage = this._target.stage;
-		stage.removeEventListener(TouchEvent.TOUCH_MOVE, target_stage_touchMoveHandler);
-		stage.removeEventListener(TouchEvent.TOUCH_END, target_stage_touchEndHandler);
-		this._target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
-		this._savedTouchEvent = null;
-	}
-
-	private function target_enterFrameHandler(event:Event):Void {
+	private function longPress_target_enterFrameHandler(event:Event):Void {
 		var accumulatedTime = (Lib.getTimer() - this._startTime) / 1000.0;
 		if (accumulatedTime < this.duration) {
 			return;

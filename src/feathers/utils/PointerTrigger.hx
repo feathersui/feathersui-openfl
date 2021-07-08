@@ -56,14 +56,14 @@ class PointerTrigger {
 			return this._target;
 		}
 		if (this._target != null) {
-			this._target.removeEventListener(MouseEvent.CLICK, target_clickHandler);
-			this._target.removeEventListener(TouchEvent.TOUCH_TAP, target_touchTapHandler);
+			this._target.removeEventListener(MouseEvent.CLICK, pointerTrigger_target_clickHandler);
+			this._target.removeEventListener(TouchEvent.TOUCH_TAP, pointerTrigger_target_touchTapHandler);
 		}
 		this._target = value;
 		if (this._target != null) {
-			this._target.addEventListener(MouseEvent.CLICK, target_clickHandler);
+			this._target.addEventListener(MouseEvent.CLICK, pointerTrigger_target_clickHandler);
 			#if (openfl >= "9.0.0")
-			this._target.addEventListener(TouchEvent.TOUCH_TAP, target_touchTapHandler);
+			this._target.addEventListener(TouchEvent.TOUCH_TAP, pointerTrigger_target_touchTapHandler);
 			#end
 		}
 		return this._target;
@@ -140,7 +140,7 @@ class PointerTrigger {
 		return this._customHitTest;
 	}
 
-	private function target_clickHandler(event:MouseEvent):Void {
+	private function pointerTrigger_target_clickHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -154,7 +154,7 @@ class PointerTrigger {
 		TriggerEvent.dispatchFromMouseEvent(this._target, event);
 	}
 
-	private function target_touchTapHandler(event:TouchEvent):Void {
+	private function pointerTrigger_target_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			return;
 		}

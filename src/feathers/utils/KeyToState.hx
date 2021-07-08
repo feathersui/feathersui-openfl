@@ -61,18 +61,18 @@ class KeyToState<T> {
 			return this._target;
 		}
 		if (this._target != null) {
-			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this._target.removeEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
-			this._target.removeEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
-			this._target.removeEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
+			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, keyToState_target_removedFromStageHandler);
+			this._target.removeEventListener(FocusEvent.FOCUS_OUT, keyToState_target_focusOutHandler);
+			this._target.removeEventListener(KeyboardEvent.KEY_DOWN, keyToState_target_keyDownHandler);
+			this._target.removeEventListener(KeyboardEvent.KEY_UP, keyToState_target_keyUpHandler);
 		}
 		this._target = value;
 		if (this._target != null) {
 			this._currentState = this._upState;
-			this._target.addEventListener(Event.REMOVED_FROM_STAGE, target_removedFromStageHandler);
-			this._target.addEventListener(FocusEvent.FOCUS_OUT, target_focusOutHandler);
-			this._target.addEventListener(KeyboardEvent.KEY_DOWN, target_keyDownHandler);
-			this._target.addEventListener(KeyboardEvent.KEY_UP, target_keyUpHandler);
+			this._target.addEventListener(Event.REMOVED_FROM_STAGE, keyToState_target_removedFromStageHandler);
+			this._target.addEventListener(FocusEvent.FOCUS_OUT, keyToState_target_focusOutHandler);
+			this._target.addEventListener(KeyboardEvent.KEY_DOWN, keyToState_target_keyDownHandler);
+			this._target.addEventListener(KeyboardEvent.KEY_UP, keyToState_target_keyUpHandler);
 		}
 		return this._target;
 	}
@@ -214,15 +214,15 @@ class KeyToState<T> {
 		this.changeState(this._upState);
 	}
 
-	private function target_removedFromStageHandler(event:Event):Void {
+	private function keyToState_target_removedFromStageHandler(event:Event):Void {
 		this.resetKeyState();
 	}
 
-	private function target_focusOutHandler(event:FocusEvent):Void {
+	private function keyToState_target_focusOutHandler(event:FocusEvent):Void {
 		this.resetKeyState();
 	}
 
-	private function target_keyDownHandler(event:KeyboardEvent):Void {
+	private function keyToState_target_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled || this._downKeyCode != null || (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER)) {
 			return;
 		}
@@ -230,7 +230,7 @@ class KeyToState<T> {
 		this.changeState(this._downState);
 	}
 
-	private function target_keyUpHandler(event:KeyboardEvent):Void {
+	private function keyToState_target_keyUpHandler(event:KeyboardEvent):Void {
 		if (event.keyCode != this._downKeyCode) {
 			return;
 		}
