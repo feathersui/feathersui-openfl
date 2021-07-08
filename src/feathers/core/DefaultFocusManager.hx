@@ -858,7 +858,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function defaultFocusManager_root_mouseDownCaptureHandler(event:MouseEvent):Void {
-		_showFocusIndicator = false;
+		this._showFocusIndicator = false;
 		if (!this._enabled) {
 			return;
 		}
