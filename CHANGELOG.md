@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.4 (2021-07-??)
+## 1.0.0-beta.4 (2021-07-09)
 
 - AssetLoader: Added new `originalSourceWidth` and `originalSourceHeight` properties that return the original dimensions of the content, after loading completes.
 - BaseScrollContainer: Added new `restrictedScrollX` and `restrictedScrollY` that may be used instead of `scrollX` and `scrollY` if it is necessary to clamp to the `minimum` and `maximum` bounds.
