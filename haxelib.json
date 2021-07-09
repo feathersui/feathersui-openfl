@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: Alert, ButtonBar, Form, FormItem, and Header"
+	"releasenote": "Preview build: NumericStepper, application scaling, and lots of polish for 1.0"
 }
