@@ -413,12 +413,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		if (dataInvalid) {
 			this._edgePuller.target = this._content;
 			this._edgePuller.pullableEdge = this._pullableEdge;
-			if (this._pendingOpened != null) {
-				this._edgePuller.opened = this._pendingOpened;
-				this._pendingOpened = null;
-			} else {
-				this._edgePuller.opened = this._opened;
-			}
 			this._edgePuller.simulateTouch = this._simulateTouch;
 		}
 
@@ -433,6 +427,15 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		this.measure();
 
 		this.layoutChildren();
+
+		if (dataInvalid) {
+			if (this._pendingOpened != null) {
+				this._edgePuller.opened = this._pendingOpened;
+				this._pendingOpened = null;
+			} else {
+				this._edgePuller.opened = this._opened;
+			}
+		}
 	}
 
 	private function measure():Bool {
@@ -736,6 +739,10 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 	}
 
 	private function drawer_edgePuller_openHandler(event:Event):Void {
+		if (this._currentOverlaySkin != null) {
+			this._currentOverlaySkin.alpha = this._overlaySkinAlpha;
+			this._currentOverlaySkin.visible = true;
+		}
 		this._opened = true;
 		FeathersEvent.dispatch(this, Event.OPEN);
 		this.setInvalid(STATE);
