@@ -37,9 +37,6 @@ import openfl.ui.Multitouch;
 	Select a value between a minimum and a maximum by using increment and
 	decrement buttons or typing in a value in a text input.
 
-	@event openfl.events.Event.CHANGE Dispatched when `NumericStepper.value`
-	changes.
-
 	The following example sets the stepper's range and listens for when
 	the value changes:
 
@@ -52,6 +49,9 @@ import openfl.ui.Multitouch;
 	stepper.addEventListener(Event.CHANGE, stepper_changeHandler);
 	addChild(stepper);
 	```
+
+	@event openfl.events.Event.CHANGE Dispatched when `NumericStepper.value`
+	changes.
 
 	@see [How to use the NumericStepper component](https://feathersui.com/learn/haxe-openfl/numeric-stepper/)
 **/
