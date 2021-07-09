@@ -157,7 +157,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		}
 		this._content = value;
 		if (this._content != null) {
-			this.addChild(this._content);
+			this.addChildAt(this._content, 0);
 			if ((this._content is IUIControl)) {
 				cast(this._content, IUIControl).initializeNow();
 			}
