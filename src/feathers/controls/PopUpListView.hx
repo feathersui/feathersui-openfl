@@ -572,6 +572,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.listView.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.listView.addEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
 		this.listView.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, popUpListView_listView_keyFocusChangeHandler);
+		this.listView.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, popUpListView_listView_mouseFocusChangeHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler, false, 0, true);
 		this.listView.scrollToIndex(this._selectedIndex);
@@ -878,8 +879,19 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.listView.removeEventListener(Event.REMOVED_FROM_STAGE, popUpListView_listView_removedFromStageHandler);
 		this.listView.removeEventListener(FocusEvent.FOCUS_OUT, popUpListView_listView_focusOutHandler);
 		this.listView.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, popUpListView_listView_keyFocusChangeHandler);
+		this.listView.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, popUpListView_listView_mouseFocusChangeHandler);
 		this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_stage_mouseDownHandler);
 		this.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_stage_touchBeginHandler);
+	}
+
+	private function popUpListView_listView_mouseFocusChangeHandler(event:FocusEvent):Void {
+		if (this.listView.focusManager != null
+			|| event.isDefaultPrevented()
+			|| event.target != this.listView
+			|| !this.listView.contains(event.relatedObject)) {
+			return;
+		}
+		event.preventDefault();
 	}
 
 	private function popUpListView_listView_keyFocusChangeHandler(event:FocusEvent):Void {
