@@ -852,6 +852,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 					target = cast(tempFocusTarget, DisplayObject);
 				}
 			}
+			if (target == this._root) {
+				break;
+			}
 			target = target.parent;
 		} while (target != null);
 		return focusTarget;
