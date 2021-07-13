@@ -304,4 +304,20 @@ class VerticalListLayoutTest extends Test {
 		Assert.equals(300.0, result.viewPortHeight);
 		Assert.equals(200.0, result.contentHeight);
 	}
+
+	public function testExplicitViewPortWidthLargerThanItemWidth():Void {
+		var explicitWidth = CHILD1_WIDTH / 2.0;
+		this._measurements.width = explicitWidth;
+		var result = this._layout.layout([this._child1], this._measurements);
+		Assert.equals(explicitWidth, result.viewPortWidth);
+		Assert.equals(explicitWidth, result.contentWidth);
+	}
+
+	public function testExplicitViewPortMaxWidthLargerThanItemWidth():Void {
+		var maxWidth = CHILD1_WIDTH / 2.0;
+		this._measurements.maxWidth = maxWidth;
+		var result = this._layout.layout([this._child1], this._measurements);
+		Assert.equals(maxWidth, result.viewPortWidth);
+		Assert.equals(maxWidth, result.contentWidth);
+	}
 }

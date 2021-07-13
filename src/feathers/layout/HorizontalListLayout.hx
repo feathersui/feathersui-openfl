@@ -634,6 +634,12 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 				}
 			}
 		}
+		if (measurements.maxHeight != null) {
+			var maxJustifyHeight = measurements.maxHeight - this._paddingTop - this._paddingBottom;
+			if (maxItemHeight > maxJustifyHeight) {
+				maxItemHeight = maxJustifyHeight;
+			}
+		}
 		return maxItemHeight;
 	}
 

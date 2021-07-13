@@ -68,6 +68,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.layout.MeasurementsTest());
 		runner.addCase(new feathers.layout.VerticalDistributedLayoutTest());
 		runner.addCase(new feathers.layout.VerticalLayoutTest());
+		runner.addCase(new feathers.layout.VerticalListFixedRowLayoutTest());
 		runner.addCase(new feathers.layout.VerticalListLayoutTest());
 		runner.addCase(new feathers.style.ClassVariantStyleProviderTest());
 		runner.addCase(new feathers.style.FunctionStyleProviderTest());

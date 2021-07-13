@@ -428,6 +428,15 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
+			if (isJustified && justifyHeight == null && measurements.maxHeight != null) {
+				var maxJustifyHeight = measurements.maxHeight - this._paddingTop - this._paddingBottom;
+				if (item.height > maxJustifyHeight) {
+					item.height = maxJustifyHeight;
+					if ((item is IValidating)) {
+						cast(item, IValidating).validateNow();
+					}
+				}
+			}
 		}
 	}
 

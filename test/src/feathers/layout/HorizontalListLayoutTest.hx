@@ -304,4 +304,20 @@ class HorizontalListLayoutTest extends Test {
 		Assert.equals(300.0, result.viewPortWidth);
 		Assert.equals(200.0, result.contentWidth);
 	}
+
+	public function testExplicitViewPortHeightLargerThanItemHeight():Void {
+		var explicitHeight = CHILD1_HEIGHT / 2.0;
+		this._measurements.height = explicitHeight;
+		var result = this._layout.layout([this._child1], this._measurements);
+		Assert.equals(explicitHeight, result.viewPortHeight);
+		Assert.equals(explicitHeight, result.contentHeight);
+	}
+
+	public function testExplicitViewPortMaxHeightLargerThanItemHeight():Void {
+		var maxHeight = CHILD1_HEIGHT / 2.0;
+		this._measurements.maxHeight = maxHeight;
+		var result = this._layout.layout([this._child1], this._measurements);
+		Assert.equals(maxHeight, result.viewPortHeight);
+		Assert.equals(maxHeight, result.contentHeight);
+	}
 }

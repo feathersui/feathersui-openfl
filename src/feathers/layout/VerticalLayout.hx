@@ -428,6 +428,15 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
+			if (isJustified && justifyWidth == null && measurements.maxWidth != null) {
+				var maxJustifyWidth = measurements.maxWidth - this._paddingLeft - this._paddingRight;
+				if (item.width > maxJustifyWidth) {
+					item.width = maxJustifyWidth;
+					if ((item is IValidating)) {
+						cast(item, IValidating).validateNow();
+					}
+				}
+			}
 		}
 	}
 

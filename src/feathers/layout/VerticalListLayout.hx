@@ -644,6 +644,12 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 				}
 			}
 		}
+		if (measurements.maxWidth != null) {
+			var maxJustifyWidth = measurements.maxWidth - this._paddingLeft - this._paddingRight;
+			if (maxItemWidth > maxJustifyWidth) {
+				maxItemWidth = maxJustifyWidth;
+			}
+		}
 		return maxItemWidth;
 	}
 

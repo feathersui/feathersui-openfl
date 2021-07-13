@@ -625,6 +625,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				}
 			}
 		}
+		if (measurements.maxWidth != null) {
+			var maxJustifyWidth = measurements.maxWidth - this._paddingLeft - this._paddingRight;
+			if (maxItemWidth > maxJustifyWidth) {
+				maxItemWidth = maxJustifyWidth;
+			}
+		}
 		return maxItemWidth;
 	}
 

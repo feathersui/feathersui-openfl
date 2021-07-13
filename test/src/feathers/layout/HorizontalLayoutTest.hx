@@ -494,4 +494,22 @@ class HorizontalLayoutTest extends Test {
 		var result = this._layout.layout([this._control1], this._measurements);
 		Assert.equals(this._control1.y, 0.0);
 	}
+
+	public function testVerticalAlignJustifyAndExplicitViewPortHeightLargerThanItemHeight():Void {
+		var explicitHeight = CHILD1_HEIGHT / 2.0;
+		this._layout.verticalAlign = JUSTIFY;
+		this._measurements.height = explicitHeight;
+		var result = this._layout.layout([this._child1], this._measurements);
+		Assert.equals(explicitHeight, result.viewPortHeight);
+		Assert.equals(explicitHeight, result.contentHeight);
+	}
+
+	public function testVerticalAlignJustifyAndExplicitViewPortMaxHeightLargerThanItemHeight():Void {
+		var maxHeight = CHILD1_HEIGHT / 2.0;
+		this._layout.verticalAlign = JUSTIFY;
+		this._measurements.maxHeight = maxHeight;
+		var result = this._layout.layout([this._child1], this._measurements);
+		Assert.equals(maxHeight, result.viewPortHeight);
+		Assert.equals(maxHeight, result.contentHeight);
+	}
 }
