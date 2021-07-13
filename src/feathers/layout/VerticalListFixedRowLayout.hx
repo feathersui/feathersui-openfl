@@ -521,7 +521,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		var maxItemWidth = this.calculateMaxItemWidth(items);
+		var maxItemWidth = this.calculateMaxItemWidth(items, measurements);
 		var viewPortWidth = this.calculateViewPortWidth(maxItemWidth, measurements);
 		var minItemWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
 		var itemWidth = maxItemWidth;
@@ -581,7 +581,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		return result;
 	}
 
-	private function calculateMaxItemWidth(items:Array<DisplayObject>):Float {
+	private function calculateMaxItemWidth(items:Array<DisplayObject>, measurements:Measurements):Float {
 		var maxItemWidth = 0.0;
 		for (i in 0...items.length) {
 			var item = items[i];
