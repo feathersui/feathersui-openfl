@@ -1326,59 +1326,73 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		this._viewPort.x = this.paddingLeft + this.leftViewPortOffset;
 		this._viewPort.y = this.paddingTop + this.topViewPortOffset;
-		if (this.explicitWidth == null) {
-			this._viewPort.visibleWidth = null;
-		} else {
+		if (this.explicitWidth != null) {
 			var visibleWidth = this.explicitWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 			if (visibleWidth < 0.0) {
 				visibleWidth = 0.0;
 			}
 			this._viewPort.visibleWidth = visibleWidth;
-		}
-		if (this.explicitHeight == null) {
-			this._viewPort.visibleHeight = null;
 		} else {
+			this._viewPort.visibleWidth = null;
+		}
+		if (this.explicitHeight != null) {
 			var visibleHeight = this.explicitHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
 			if (visibleHeight < 0.0) {
 				visibleHeight = 0.0;
 			}
 			this._viewPort.visibleHeight = visibleHeight;
-		}
-		if (this.explicitMinWidth == null) {
-			this._viewPort.minVisibleWidth = null;
 		} else {
+			this._viewPort.visibleHeight = null;
+		}
+		if (this.explicitMinWidth != null) {
 			var minVisibleWidth = this.explicitMinWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 			if (minVisibleWidth < 0.0) {
 				minVisibleWidth = 0.0;
 			}
 			this._viewPort.minVisibleWidth = minVisibleWidth;
-		}
-		if (this.explicitMinHeight == null) {
-			this._viewPort.minVisibleHeight = null;
 		} else {
+			this._viewPort.minVisibleWidth = null;
+		}
+		if (this.explicitMinHeight != null) {
 			var minVisibleHeight = this.explicitMinHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
 			if (minVisibleHeight < 0.0) {
 				minVisibleHeight = 0.0;
 			}
 			this._viewPort.minVisibleHeight = minVisibleHeight;
-		}
-		if (this.explicitMaxWidth == null) {
-			this._viewPort.maxVisibleWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		} else {
+			this._viewPort.minVisibleHeight = null;
+		}
+		if (this.explicitMaxWidth != null) {
 			var maxVisibleWidth = this.explicitMaxWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 			if (maxVisibleWidth < 0.0) {
 				maxVisibleWidth = 0.0;
 			}
 			this._viewPort.maxVisibleWidth = maxVisibleWidth;
-		}
-		if (this.explicitMaxHeight == null) {
-			this._viewPort.maxVisibleHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
+			var maxVisibleWidth = this._backgroundSkinMeasurements.maxWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft
+				- this.paddingRight;
+			if (maxVisibleWidth < 0.0) {
+				maxVisibleWidth = 0.0;
+			}
+			this._viewPort.maxVisibleWidth = maxVisibleWidth;
 		} else {
+			this._viewPort.maxVisibleWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+		}
+		if (this.explicitMaxHeight != null) {
 			var maxVisibleHeight = this.explicitMaxHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
 			if (maxVisibleHeight < 0.0) {
 				maxVisibleHeight = 0.0;
 			}
 			this._viewPort.maxVisibleHeight = maxVisibleHeight;
+		} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxHeight != null) {
+			var maxVisibleHeight = this._backgroundSkinMeasurements.maxHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop
+				- this.paddingBottom;
+			if (maxVisibleHeight < 0.0) {
+				maxVisibleHeight = 0.0;
+			}
+			this._viewPort.maxVisibleHeight = maxVisibleHeight;
+		} else {
+			this._viewPort.maxVisibleHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 		}
 		this._viewPort.validateNow();
 
