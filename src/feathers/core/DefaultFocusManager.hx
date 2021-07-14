@@ -256,6 +256,13 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		return new FocusResult(newFocus, wrapped);
 	}
 
+	private function isValidFocusWithKeyboard(target:IFocusObject):Bool {
+		if ((target is InteractiveObject) && !cast(target, InteractiveObject).tabEnabled) {
+			return false;
+		}
+		return this.isValidFocus(target);
+	}
+
 	private function isValidFocus(target:IFocusObject):Bool {
 		if (target == null || target.stage == null || target.focusManager != this) {
 			return false;
@@ -427,7 +434,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			// try the container itself before moving backwards
 			if ((container is IFocusObject)) {
 				var focusContainer = cast(container, IFocusObject);
-				if (this.isValidFocus(focusContainer)) {
+				if (this.isValidFocusWithKeyboard(focusContainer)) {
 					return focusContainer;
 				}
 			}
@@ -524,7 +531,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 		if ((child is IFocusObject)) {
 			var childWithFocus = cast(child, IFocusObject);
-			if (this.isValidFocus(childWithFocus)) {
+			if (this.isValidFocusWithKeyboard(childWithFocus)) {
 				if (!(childWithFocus is IGroupedToggle)) {
 					return childWithFocus;
 				}
@@ -547,7 +554,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	private function findNextChildFocus(child:DisplayObject):IFocusObject {
 		if ((child is IFocusObject)) {
 			var childWithFocus = cast(child, IFocusObject);
-			if (this.isValidFocus(childWithFocus)) {
+			if (this.isValidFocusWithKeyboard(childWithFocus)) {
 				if (!(childWithFocus is IGroupedToggle)) {
 					return childWithFocus;
 				}
