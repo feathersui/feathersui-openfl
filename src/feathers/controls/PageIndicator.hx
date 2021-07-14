@@ -95,6 +95,9 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		super();
 
 		this.mouseChildren = this._interactionMode == PRECISE;
+		this.tabEnabled = true;
+		this.tabChildren = false;
+
 		this.addEventListener(MouseEvent.CLICK, pageIndicator_clickHandler);
 		#if (openfl >= "9.0.0")
 		this.addEventListener(TouchEvent.TOUCH_TAP, pageIndicator_touchTapHandler);

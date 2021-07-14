@@ -38,6 +38,9 @@ import openfl.geom.Point;
 class BaseSlider extends FeathersControl implements IRange implements IFocusObject {
 	private function new() {
 		super();
+
+		this.tabEnabled = true;
+		this.tabChildren = false;
 	}
 
 	private var _isDefaultValue = true;

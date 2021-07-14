@@ -68,6 +68,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function new() {
 		super();
 
+		this.tabEnabled = true;
+		this.tabChildren = true;
 		this.focusRect = null;
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, baseScrollContainer_keyDownHandler);

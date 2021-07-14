@@ -124,6 +124,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		this.dataProvider = dataProvider;
 
+		this.tabEnabled = true;
+		this.tabChildren = false;
+
 		this.addEventListener(KeyboardEvent.KEY_DOWN, tabBar_keyDownHandler);
 	}
 

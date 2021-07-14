@@ -69,6 +69,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		this.text = text;
 		this.selected = selected;
 
+		this.tabEnabled = true;
+		this.tabChildren = false;
+
 		this.addEventListener(KeyboardEvent.KEY_DOWN, toggleButton_keyDownHandler);
 		this.addEventListener(FocusEvent.FOCUS_IN, toggleButton_focusInHandler);
 		this.addEventListener(FocusEvent.FOCUS_OUT, toggleButton_focusOutHandler);
