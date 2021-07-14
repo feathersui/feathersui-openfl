@@ -53,6 +53,7 @@ class ViewPaths {
 	public static final ALERT = "/alert";
 	public static final CALLOUT = "/callout";
 	public static final DRAWER = "/drawer";
+	public static final ITEM_RENDERER = "/item-renderer";
 	public static final POP_UP_MANAGER = "/pop-up-manager";
 	public static final TEXT_CALLOUT = "/text-callout";
 }

@@ -16,6 +16,7 @@ import com.feathersui.components.views.GridViewScreen;
 import com.feathersui.components.views.GroupListViewScreen;
 import com.feathersui.components.views.HDividedBoxScreen;
 import com.feathersui.components.views.HeaderScreen;
+import com.feathersui.components.views.ItemRendererScreen;
 import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.LayoutGroupScreen;
 import com.feathersui.components.views.ListViewScreen;
@@ -118,6 +119,9 @@ class Main extends Application {
 
 		var header = Route.withClass(ViewPaths.HEADER, HeaderScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(header);
+
+		var itemRenderer = Route.withClass(ViewPaths.ITEM_RENDERER, ItemRendererScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(itemRenderer);
 
 		var label = Route.withClass(ViewPaths.LABEL, LabelScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(label);

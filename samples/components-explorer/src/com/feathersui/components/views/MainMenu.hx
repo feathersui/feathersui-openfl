@@ -75,6 +75,7 @@ class MainMenu extends Panel {
 				new MenuItem("Alert", ViewPaths.ALERT),
 				new MenuItem("Callout", ViewPaths.CALLOUT),
 				new MenuItem("Drawer", ViewPaths.DRAWER),
+				new MenuItem("Item Renderer", ViewPaths.ITEM_RENDERER),
 				new MenuItem("Pop Up Manager", ViewPaths.POP_UP_MANAGER),
 				new MenuItem("Text Callout", ViewPaths.TEXT_CALLOUT)
 			]),
