@@ -12,6 +12,8 @@ class TextInputScreen extends Panel {
 	private var textInput:TextInput;
 	private var textInputWithPrompt:TextInput;
 	private var searchTextInput:TextInput;
+	private var errorTextInput:TextInput;
+	private var errorTextInputWithoutMessage:TextInput;
 	private var disabledTextInput:TextInput;
 
 	override private function initialize():Void {
@@ -36,6 +38,16 @@ class TextInputScreen extends Panel {
 		this.searchTextInput.variant = TextInput.VARIANT_SEARCH;
 		this.searchTextInput.prompt = "Search";
 		this.addChild(this.searchTextInput);
+
+		this.errorTextInput = new TextInput();
+		this.errorTextInput.prompt = "Error";
+		this.errorTextInput.errorString = "Something is wrong";
+		this.addChild(this.errorTextInput);
+
+		this.errorTextInputWithoutMessage = new TextInput();
+		this.errorTextInputWithoutMessage.prompt = "Error (No Message)";
+		this.errorTextInputWithoutMessage.errorString = "";
+		this.addChild(this.errorTextInputWithoutMessage);
 
 		this.disabledTextInput = new TextInput();
 		this.disabledTextInput.enabled = false;
