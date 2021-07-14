@@ -62,7 +62,9 @@ import openfl.geom.Point;
 class FeathersControl extends MeasureSprite implements IUIControl implements IVariantStyleObject implements ILayoutObject {
 	private function new() {
 		super();
-		super.tabEnabled = (this is IFocusObject);
+
+		this.tabEnabled = (this is IFocusObject);
+
 		this.addEventListener(Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, feathersControl_removedFromStageHandler);
 		this.addEventListener(FocusEvent.FOCUS_IN, feathersControl_focusInHandler);
