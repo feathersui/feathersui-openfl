@@ -9,8 +9,10 @@
 package feathers.controls;
 
 import feathers.core.FeathersControl;
+import feathers.core.IFocusObject;
 import feathers.core.IHTMLTextControl;
 import feathers.core.IMeasureObject;
+import feathers.core.IStageFocusDelegate;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -21,7 +23,9 @@ import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 
@@ -43,7 +47,7 @@ import openfl.text.TextFieldAutoSize;
 @:meta(DefaultProperty("text"))
 @defaultXmlProperty("text")
 @:styleContext
-class Label extends FeathersControl implements ITextControl implements IHTMLTextControl {
+class Label extends FeathersControl implements ITextControl implements IHTMLTextControl implements IFocusObject implements IStageFocusDelegate {
 	/**
 		A variant used to style the label using a Larger text format for
 		headings. Variants allow themes to provide an assortment of different
@@ -91,6 +95,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		super();
 
 		this.text = text;
+
+		this.tabEnabled = false;
+		this.tabChildren = false;
+
+		this.addEventListener(FocusEvent.FOCUS_IN, label_focusInHandler);
 	}
 
 	private var textField:TextField;
@@ -255,6 +264,17 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		this._selectable = value;
 		this.setInvalid(SELECTION);
 		return this._selectable;
+	}
+
+	override private function get_focusEnabled():Bool {
+		return this._selectable && this._enabled && this._focusEnabled;
+	}
+
+	@:flash.property
+	public var stageFocusTarget(get, never):InteractiveObject;
+
+	private function get_stageFocusTarget():InteractiveObject {
+		return this.textField;
 	}
 
 	/**
@@ -825,6 +845,13 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
+		}
+	}
+
+	private function label_focusInHandler(event:FocusEvent):Void {
+		if (this.stage != null && this.stage.focus != this.textField) {
+			event.stopImmediatePropagation();
+			this.stage.focus = this.textField;
 		}
 	}
 
