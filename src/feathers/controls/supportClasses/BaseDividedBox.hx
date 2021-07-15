@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.display.Stage;
 import openfl.display.DisplayObjectContainer;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
@@ -879,7 +880,8 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function baseDividedBox_divider_stage_mouseMoveHandler(event:MouseEvent):Void {
-		this.resizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, this.stage.mouseX, this.stage.mouseY);
+		var stage = cast(event.currentTarget, Stage);
+		this.resizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX, stage.mouseY);
 	}
 
 	private function baseDividedBox_divider_stage_touchMoveHandler(event:TouchEvent):Void {
@@ -887,7 +889,8 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function baseDividedBox_divider_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.resizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, this.stage.mouseX, this.stage.mouseY);
+		var stage = cast(event.currentTarget, Stage);
+		this.resizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX, stage.mouseY);
 	}
 
 	private function baseDividedBox_divider_stage_touchEndHandler(event:TouchEvent):Void {

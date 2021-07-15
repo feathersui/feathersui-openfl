@@ -11,6 +11,7 @@ package feathers.core;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
+import openfl.display.Stage;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.geom.Point;
@@ -319,7 +320,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	}
 
 	private function defaultPopUpManager_stage_resizeHandler(event:Event):Void {
-		var stage = this._root.stage;
+		var stage = cast(event.currentTarget, Stage);
 		var stageTopLeft = this._root.globalToLocal(new Point());
 		var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));
 		for (popUp in popUps) {

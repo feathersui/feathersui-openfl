@@ -16,6 +16,7 @@ import motion.easing.IEasing;
 import motion.easing.Quart;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
@@ -752,11 +753,12 @@ class EdgePuller extends EventDispatcher {
 		if (!this._opened || !this.enabled || this._pointerID != -1) {
 			return;
 		}
+		var stage = cast(event.currentTarget, Stage);
 		var maxPullDistance = this.getMaxPullDistance();
 		if (!this.isInActiveBorder(event.stageX, event.stageY, maxPullDistance)) {
 			this._pointerID = event.touchPointID;
-			this._target.stage.addEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2, false, 0, true);
-			this._target.stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2, false, 0, true);
+			stage.addEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2, false, 0, true);
+			stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2, false, 0, true);
 			return;
 		}
 		this.touchBegin(event.touchPointID, event.stageX, event.stageY, false);
@@ -766,6 +768,7 @@ class EdgePuller extends EventDispatcher {
 		if (event.touchPointID != this._pointerID) {
 			return;
 		}
+		var stage = cast(event.currentTarget, Stage);
 		var maxPullDistance = this.getMaxPullDistance();
 		var point = new Point(event.stageX, event.stageY);
 		point = this._target.globalToLocal(point);
@@ -789,8 +792,8 @@ class EdgePuller extends EventDispatcher {
 			default:
 				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 		}
-		this._target.stage.removeEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2);
-		this._target.stage.removeEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2);
+		stage.removeEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2);
+		stage.removeEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2);
 		this._pointerID = -1;
 		this.touchBegin(event.touchPointID, event.stageX, event.stageY, false);
 	}
@@ -799,8 +802,9 @@ class EdgePuller extends EventDispatcher {
 		if (event.touchPointID != this._pointerID) {
 			return;
 		}
-		this._target.stage.removeEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2);
-		this._target.stage.removeEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2);
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2);
+		stage.removeEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2);
 		this._pointerID = -1;
 	}
 
@@ -808,11 +812,12 @@ class EdgePuller extends EventDispatcher {
 		if (!this._opened || !this.enabled || this._pointerID != -1 || !this.simulateTouch) {
 			return;
 		}
+		var stage = cast(event.currentTarget, Stage);
 		var maxPullDistance = this.getMaxPullDistance();
 		if (!this.isInActiveBorder(event.stageX, event.stageY, maxPullDistance)) {
 			this._pointerID = POINTER_ID_MOUSE;
-			this._target.stage.addEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2, false, 0, true);
-			this._target.stage.addEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2, false, 0, true);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2, false, 0, true);
+			stage.addEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2, false, 0, true);
 			return;
 		}
 		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
@@ -822,6 +827,7 @@ class EdgePuller extends EventDispatcher {
 		if (POINTER_ID_MOUSE != this._pointerID) {
 			return;
 		}
+		var stage = cast(event.currentTarget, Stage);
 		var maxPullDistance = this.getMaxPullDistance();
 		var point = new Point(event.stageX, event.stageY);
 		point = this._target.globalToLocal(point);
@@ -845,8 +851,8 @@ class EdgePuller extends EventDispatcher {
 			default:
 				throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 		}
-		this._target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
-		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2);
 		this._pointerID = -1;
 		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
 	}
@@ -855,8 +861,9 @@ class EdgePuller extends EventDispatcher {
 		if (POINTER_ID_MOUSE != this._pointerID) {
 			return;
 		}
-		this._target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
-		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2);
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2);
 		this._pointerID = -1;
 	}
 }

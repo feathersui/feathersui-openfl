@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import openfl.events.TouchEvent;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IUIControl;
@@ -23,9 +22,11 @@ import motion.actuators.SimpleActuator;
 import motion.easing.IEasing;
 import motion.easing.Quart;
 import openfl.display.DisplayObject;
+import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
@@ -655,8 +656,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function toggleSwitch_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, toggleSwitch_stage_mouseMoveHandler);
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, toggleSwitch_stage_mouseUpHandler);
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, toggleSwitch_stage_mouseMoveHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, toggleSwitch_stage_mouseUpHandler);
 	}
 
 	private function toggleTween_onUpdate():Void {

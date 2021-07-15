@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import openfl.display.Stage;
 import feathers.core.IStateContext;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
@@ -352,8 +353,9 @@ class PointerToState<T> {
 	}
 
 	private function pointerToState_stage_mouseUpHandler(event:MouseEvent):Void {
+		var stage = cast(event.currentTarget, Stage);
 		this._down = false;
-		this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, pointerToState_stage_mouseUpHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, pointerToState_stage_mouseUpHandler);
 		if (this._hoverBeforeDown && this._target.hitTestPoint(event.stageX, event.stageY)) {
 			this.changeState(this._hoverState);
 		} else {

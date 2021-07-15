@@ -17,10 +17,10 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
 import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.errors.TypeError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
-import openfl.geom.Point;
 
 /**
 	Base class for scroll bar components.
@@ -791,8 +791,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function thumbSkin_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler);
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler);
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler);
 		this._dragging = false;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 		if (!this.liveDragging) {
@@ -834,8 +835,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function trackSkin_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, trackSkin_stage_mouseMoveHandler);
-		this.stage.removeEventListener(MouseEvent.MOUSE_UP, trackSkin_stage_mouseUpHandler);
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, trackSkin_stage_mouseMoveHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, trackSkin_stage_mouseUpHandler);
 		this._dragging = false;
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 		if (!this.liveDragging) {

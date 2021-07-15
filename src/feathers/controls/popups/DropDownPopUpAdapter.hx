@@ -267,7 +267,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if (!this.active) {
 			return;
 		}
-		ValidationQueue.forStage(this._stage).validateNow();
+		var stage = cast(event.currentTarget, Stage);
+		ValidationQueue.forStage(stage).validateNow();
 		this.layout();
 	}
 
