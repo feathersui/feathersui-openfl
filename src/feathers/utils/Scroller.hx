@@ -15,6 +15,7 @@ import motion.easing.IEasing;
 import motion.easing.Quart;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.MouseEvent;
@@ -1315,7 +1316,11 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function scroller_target_mouseDownHandler(event:MouseEvent):Void {
-		this.touchBegin(POINTER_ID_MOUSE, event.stageX, event.stageY, true);
+		var stage = this._target.stage;
+		if (stage == null) {
+			return;
+		}
+		this.touchBegin(POINTER_ID_MOUSE, stage.mouseX, stage.mouseY, true);
 	}
 
 	private function scroller_target_stage_touchMoveHandler(event:TouchEvent):Void {
@@ -1323,7 +1328,8 @@ class Scroller extends EventDispatcher {
 	}
 
 	private function scroller_target_stage_mouseMoveHandler(event:MouseEvent):Void {
-		this.touchMove(POINTER_ID_MOUSE, event.stageX, event.stageY);
+		var stage = cast(event.currentTarget, Stage);
+		this.touchMove(POINTER_ID_MOUSE, stage.mouseX, stage.mouseY);
 	}
 
 	private function scroller_target_stage_touchEndHandler(event:TouchEvent):Void {
