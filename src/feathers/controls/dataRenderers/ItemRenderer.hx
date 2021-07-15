@@ -666,11 +666,14 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
-			contentWidth += this._currentAccessoryView.width + adjustedGap;
+			if (hasText || hasSecondaryText) {
+				contentWidth += adjustedGap;
+			}
+			contentWidth += this._currentAccessoryView.width;
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (hasText || hasSecondaryText) {
+				if (hasText || hasSecondaryText || this._currentAccessoryView != null) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -704,7 +707,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
-			contentHeight += Math.max(contentHeight, this._currentAccessoryView.height);
+			contentHeight = Math.max(contentHeight, this._currentAccessoryView.height);
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
@@ -731,9 +734,21 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (hasSecondaryText) {
 			contentMinWidth = Math.max(contentMinWidth, this._secondaryTextMeasuredWidth);
 		}
+		if (this._currentAccessoryView != null) {
+			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
+			this._ignoreAccessoryResizes = true;
+			if ((this._currentAccessoryView is IValidating)) {
+				cast(this._currentAccessoryView, IValidating).validateNow();
+			}
+			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
+			if (hasText || hasSecondaryText) {
+				contentMinWidth += adjustedGap;
+			}
+			contentMinWidth += this._currentAccessoryView.width;
+		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (hasText || hasSecondaryText) {
+				if (hasText || hasSecondaryText || this._currentAccessoryView != null) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -758,6 +773,15 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			if (hasText) {
 				contentMinHeight += adjustedGap;
 			}
+		}
+		if (this._currentAccessoryView != null) {
+			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
+			this._ignoreAccessoryResizes = true;
+			if ((this._currentAccessoryView is IValidating)) {
+				cast(this._currentAccessoryView, IValidating).validateNow();
+			}
+			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
+			contentMinHeight = Math.max(contentMinHeight, this._currentAccessoryView.height);
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
