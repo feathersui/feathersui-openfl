@@ -601,7 +601,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		}
 		this.textField.width = calculatedWidth;
 		var wordWrap = this.wordWrap;
-		if (wordWrap && calculatedWidth == this._textMeasuredWidth && this._textMeasuredLines == 1) {
+		if (wordWrap && !this._wrappedOnMeasure && calculatedWidth >= this._textMeasuredWidth) {
 			// sometimes, using the width measured with wrapping disabled
 			// will still cause the final rendered result to wrap, but we
 			// can skip wrapping forcefully as a workaround

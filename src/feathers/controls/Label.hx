@@ -110,7 +110,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	private var _updatedTextStyles = false;
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-	private var _textMeasuredLines:Int;
+	private var _wrappedOnMeasure:Bool = false;
 	private var _text:String;
 
 	/**
@@ -687,6 +687,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			this.textField.wordWrap = false;
 		}
 		this._textMeasuredWidth = this.textField.textWidth + 4;
+		this._wrappedOnMeasure = false;
 		if (this.wordWrap) {
 			var textFieldExplicitWidth = this.calculateExplicitWidthForTextMeasurement();
 			if (textFieldExplicitWidth != null && this._textMeasuredWidth > textFieldExplicitWidth) {
@@ -694,10 +695,10 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 				this.textField.wordWrap = true;
 				this.textField.width = textFieldExplicitWidth;
 				this._textMeasuredWidth = this.textField.width;
+				this._wrappedOnMeasure = true;
 			}
 		}
 		this._textMeasuredHeight = this.textField.height;
-		this._textMeasuredLines = this.textField.numLines;
 		this.textField.autoSize = NONE;
 		if (this.textField.wordWrap != this.wordWrap) {
 			this.textField.wordWrap = this.wordWrap;
@@ -797,7 +798,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		this.textField.x = this.paddingLeft;
 		this.textField.width = textFieldLayoutWidth;
 		var wordWrap = this.wordWrap;
-		if (wordWrap && textFieldLayoutWidth == this._textMeasuredWidth && this._textMeasuredLines == 1) {
+		if (wordWrap && !this._wrappedOnMeasure && textFieldLayoutWidth >= this._textMeasuredWidth) {
 			// sometimes, using the width measured with wrapping disabled
 			// will still cause the final rendered result to wrap, but we
 			// can skip wrapping forcefully as a workaround

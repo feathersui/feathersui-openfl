@@ -533,7 +533,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private var _textMeasuredWidth:Float;
 	private var _textMeasuredHeight:Float;
-	private var _textMeasuredLines:Int;
+	private var _wrappedOnMeasure:Bool = false;
 	private var _stateToTextFormat:Map<ButtonState, AbstractTextFormat> = new Map();
 
 	/**
@@ -950,6 +950,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			this.textField.wordWrap = false;
 		}
 		this._textMeasuredWidth = this.textField.textWidth + 4;
+		this._wrappedOnMeasure = false;
 		if (this.wordWrap) {
 			var textFieldExplicitWidth = this.calculateExplicitWidthForTextMeasurement();
 			if (textFieldExplicitWidth != null && this._textMeasuredWidth > textFieldExplicitWidth) {
@@ -957,10 +958,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 				this.textField.wordWrap = true;
 				this.textField.width = textFieldExplicitWidth;
 				this._textMeasuredWidth = this.textField.width;
+				this._wrappedOnMeasure = true;
 			}
 		}
 		this._textMeasuredHeight = this.textField.height;
-		this._textMeasuredLines = this.textField.numLines;
 		this.textField.autoSize = NONE;
 		if (this.textField.wordWrap != this.wordWrap) {
 			this.textField.wordWrap = this.wordWrap;
@@ -1074,7 +1075,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		}
 		this.textField.width = calculatedWidth;
 		var wordWrap = this.wordWrap;
-		if (wordWrap && calculatedWidth == this._textMeasuredWidth && this._textMeasuredLines == 1) {
+		if (wordWrap && !this._wrappedOnMeasure && calculatedWidth >= this._textMeasuredWidth) {
 			// sometimes, using the width measured with wrapping disabled
 			// will still cause the final rendered result to wrap, but we
 			// can skip wrapping forcefully as a workaround
