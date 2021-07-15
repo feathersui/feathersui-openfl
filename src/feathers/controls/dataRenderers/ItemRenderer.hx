@@ -263,6 +263,16 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	@:style
 	public var alternateBackgroundSkin:DisplayObject = null;
 
+	/**
+		Shows or hides the item renderer's secondary text. If the secondary text
+		is hidden, it will not affect the layout of other children, such as the
+		primary text or the icon.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var showSecondaryText:Bool = true;
+
 	private var _ignoreAccessoryResizes = false;
 	private var _accessoryViewMeasurements:Measurements;
 	private var _currentAccessoryView:DisplayObject;
@@ -409,8 +419,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (this.secondaryTextField == null) {
 			return;
 		}
-		var hasText = this._secondaryText != null && this._secondaryText.length > 0;
-		this.secondaryTextField.visible = hasText;
+		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null && this._secondaryText.length > 0;
+		this.secondaryTextField.visible = hasSecondaryText;
 		if (this._secondaryText == this._previousSecondaryText && !this._updatedSecondaryTextStyles && !forceMeasurement) {
 			// nothing to refresh
 			return;
@@ -418,7 +428,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
 		this.secondaryTextField.autoSize = LEFT;
-		if (hasText) {
+		if (hasSecondaryText) {
 			this.secondaryTextField.text = this._secondaryText;
 		} else {
 			this.secondaryTextField.text = "\u200b"; // zero-width space
@@ -426,7 +436,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		this._secondaryTextMeasuredWidth = this.secondaryTextField.width;
 		this._secondaryTextMeasuredHeight = this.secondaryTextField.height;
 		this.secondaryTextField.autoSize = NONE;
-		if (!hasText) {
+		if (!hasSecondaryText) {
 			this.secondaryTextField.text = "";
 		}
 		this._previousSecondaryText = this._secondaryText;
@@ -643,8 +653,10 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var contentWidth = this._text != null ? this._textMeasuredWidth : 0.0;
-		if (this._secondaryText != null) {
+		var hasText = this.showText && this._text != null;
+		var contentWidth = hasText ? this._textMeasuredWidth : 0.0;
+		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
+		if (hasSecondaryText) {
 			contentWidth = Math.max(contentWidth, this._secondaryTextMeasuredWidth);
 		}
 		if (this._currentAccessoryView != null) {
@@ -658,7 +670,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this._text != null) {
+				if (hasText || hasSecondaryText) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -676,10 +688,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			adjustedGap = this.minGap;
 		}
 
-		var contentHeight = this._text != null ? this._textMeasuredHeight : 0.0;
-		if (this._secondaryText != null) {
+		var hasText = this.showText && this._text != null;
+		var contentHeight = hasText ? this._textMeasuredHeight : 0.0;
+		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
+		if (hasSecondaryText) {
 			contentHeight += this._secondaryTextMeasuredHeight;
-			if (this._text != null) {
+			if (hasText) {
 				contentHeight += adjustedGap;
 			}
 		}
@@ -694,7 +708,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this._text != null) {
+				if (hasText || hasSecondaryText) {
 					contentHeight += adjustedGap;
 				}
 				contentHeight += this._currentIcon.height;
@@ -711,13 +725,15 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinWidth = this._text != null ? this._textMeasuredWidth : 0.0;
-		if (this._secondaryText != null) {
+		var hasText = this.showText && this._text != null;
+		var contentMinWidth = hasText ? this._textMeasuredWidth : 0.0;
+		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
+		if (hasSecondaryText) {
 			contentMinWidth = Math.max(contentMinWidth, this._secondaryTextMeasuredWidth);
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (this._text != null) {
+				if (hasText || hasSecondaryText) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -734,16 +750,18 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var contentMinHeight = this._text != null ? this._textMeasuredHeight : 0.0;
-		if (this._secondaryText != null) {
+		var hasText = this.showText && this._text != null;
+		var contentMinHeight = hasText ? this._textMeasuredHeight : 0.0;
+		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
+		if (hasSecondaryText) {
 			contentMinHeight += this._secondaryTextMeasuredHeight;
-			if (this._text != null) {
+			if (hasText) {
 				contentMinHeight += adjustedGap;
 			}
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (this._text != null) {
+				if (hasText || hasSecondaryText) {
 					contentMinHeight += adjustedGap;
 				}
 				contentMinHeight += this._currentIcon.height;
