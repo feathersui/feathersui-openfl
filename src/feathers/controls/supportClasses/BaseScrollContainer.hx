@@ -1999,6 +1999,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this._viewPort.requiresMeasurementOnScroll) {
 			this.setInvalid(SCROLL);
 		} else {
+			this._viewPort.scrollX = this.scrollX;
+			this._viewPort.scrollY = this.scrollY;
 			this.refreshScrollRect();
 			this.refreshScrollBarValues();
 		}
