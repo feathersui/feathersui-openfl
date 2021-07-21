@@ -249,7 +249,13 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	}
 
 	private function set_scrollX(value:Float):Float {
+		if (this._scrollX == value) {
+			return this._scrollX;
+		}
 		this._scrollX = value;
+		if ((this.layout is IScrollLayout) && cast(this.layout, IScrollLayout).requiresLayoutOnScroll) {
+			this.setInvalid(SCROLL);
+		}
 		return this._scrollX;
 	}
 
@@ -266,7 +272,13 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	}
 
 	private function set_scrollY(value:Float):Float {
+		if (this._scrollY == value) {
+			return this._scrollY;
+		}
 		this._scrollY = value;
+		if ((this.layout is IScrollLayout) && cast(this.layout, IScrollLayout).requiresLayoutOnScroll) {
+			this.setInvalid(SCROLL);
+		}
 		return this._scrollY;
 	}
 
