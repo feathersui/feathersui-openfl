@@ -1551,6 +1551,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var column = this._columns.get(i);
 			var headerDivider = this.createHeaderDivider(column, i);
 			this._headerDividerLayoutItems[i] = headerDivider;
+			this._defaultHeaderDividerStorage.activeHeaderDividers.push(headerDivider);
 		}
 	}
 
@@ -1625,6 +1626,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var column = this._columns.get(i);
 			var columnDivider = this.createColumnDivider(column, i);
 			this._columnDividerLayoutItems[i] = columnDivider;
+			this._defaultColumnDividerStorage.activeColumnDividers.push(columnDivider);
 		}
 	}
 
