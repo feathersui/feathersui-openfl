@@ -513,17 +513,22 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	}
 
 	private function customHitTest(stageX:Float, stageY:Float):Bool {
-		var objects = this.getObjectsUnderPoint(new Point(stageX, stageY));
+		if (this.stage == null) {
+			return false;
+		}
+		var objects = this.stage.getObjectsUnderPoint(new Point(stageX, stageY));
 		if (objects.length > 0) {
 			var lastObject = objects[objects.length - 1];
-			while (lastObject != null && lastObject != this) {
-				if ((lastObject is IFocusObject)) {
-					var focusable = cast(lastObject, IFocusObject);
-					if (focusable.focusEnabled) {
-						return false;
+			if (this.contains(lastObject)) {
+				while (lastObject != null && lastObject != this) {
+					if ((lastObject is IFocusObject)) {
+						var focusable = cast(lastObject, IFocusObject);
+						if (focusable.focusEnabled) {
+							return false;
+						}
 					}
+					lastObject = lastObject.parent;
 				}
-				lastObject = lastObject.parent;
 			}
 		}
 		return true;
