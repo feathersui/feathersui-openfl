@@ -816,6 +816,11 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		}
 		this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 
+		var adjustedGap = this.gap;
+		// Math.POSITIVE_INFINITY bug workaround
+		if (adjustedGap == (1.0 / 0.0)) {
+			adjustedGap = this.minGap;
+		}
 		var availableTextWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var currentX = this.paddingLeft;
 		if (this._currentIcon != null) {
@@ -826,20 +831,20 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			}
 			this._ignoreIconResizes = oldIgnoreIconResizes;
 			this._currentIcon.x = currentX;
-			currentX += this._currentIcon.width + this.gap;
+			currentX += this._currentIcon.width + adjustedGap;
 			this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
-			availableTextWidth -= this._currentIcon.width - this.gap;
+			availableTextWidth -= this._currentIcon.width - adjustedGap;
 		}
 		if (this._currentAccessoryView != null) {
 			this._currentAccessoryView.x = this.actualWidth - this.paddingRight - this._currentAccessoryView.width;
 			this._currentAccessoryView.y = this.paddingTop
 				+ (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentAccessoryView.height) / 2.0;
-			availableTextWidth -= this._currentAccessoryView.width - this.gap;
+			availableTextWidth -= this._currentAccessoryView.width - adjustedGap;
 		}
 
 		var totalTextHeight = this._textMeasuredHeight;
 		if (this.secondaryTextField != null) {
-			totalTextHeight += this.gap + this._secondaryTextMeasuredHeight;
+			totalTextHeight += adjustedGap + this._secondaryTextMeasuredHeight;
 		}
 
 		var currentY = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - totalTextHeight) / 2.0;
@@ -852,7 +857,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		this.textField.width = this._textMeasuredWidth < availableTextWidth ? this._textMeasuredWidth : availableTextWidth;
 		if (this.secondaryTextField != null) {
 			this.secondaryTextField.x = currentX;
-			this.secondaryTextField.y = this.textField.y + this._textMeasuredHeight + this.gap;
+			this.secondaryTextField.y = this.textField.y + this._textMeasuredHeight + adjustedGap;
 			this.secondaryTextField.width = this._secondaryTextMeasuredWidth < availableTextWidth ? this._secondaryTextMeasuredWidth : availableTextWidth;
 		}
 	}
