@@ -123,7 +123,7 @@ class TriggerEvent extends Event {
 			return existing;
 		}
 		#end
-		var result = new TriggerEvent(TriggerEvent.TRIGGER, event.bubbles, event.cancelable, -1, false, event.localX, event.localY, 0.0, 0.0, 1.0,
+		var result = new TriggerEvent(TriggerEvent.TRIGGER, false, event.cancelable, -1, false, event.localX, event.localY, 0.0, 0.0, 1.0,
 			event.relatedObject, event.ctrlKey, event.altKey, event.shiftKey, Reflect.hasField(event, "commandKey") ? event.commandKey : false);
 		result.stageX = event.stageX;
 		result.stageY = event.stageY;
@@ -160,7 +160,7 @@ class TriggerEvent extends Event {
 			return existing;
 		}
 		#end
-		var result = new TriggerEvent(TriggerEvent.TRIGGER, event.bubbles, event.cancelable, event.touchPointID, event.isPrimaryTouchPoint, event.localX,
+		var result = new TriggerEvent(TriggerEvent.TRIGGER, false, event.cancelable, event.touchPointID, event.isPrimaryTouchPoint, event.localX,
 			event.localY, event.sizeX, event.sizeY, event.pressure, event.relatedObject, event.ctrlKey, event.altKey, event.shiftKey, event.commandKey);
 		result.stageX = event.stageX;
 		result.stageY = event.stageY;
