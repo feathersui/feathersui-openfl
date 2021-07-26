@@ -833,18 +833,18 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			this._currentIcon.x = currentX;
 			currentX += this._currentIcon.width + adjustedGap;
 			this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
-			availableTextWidth -= this._currentIcon.width - adjustedGap;
+			availableTextWidth -= (this._currentIcon.width + adjustedGap);
 		}
 		if (this._currentAccessoryView != null) {
 			this._currentAccessoryView.x = this.actualWidth - this.paddingRight - this._currentAccessoryView.width;
 			this._currentAccessoryView.y = this.paddingTop
 				+ (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentAccessoryView.height) / 2.0;
-			availableTextWidth -= this._currentAccessoryView.width - adjustedGap;
+			availableTextWidth -= (this._currentAccessoryView.width + adjustedGap);
 		}
 
 		var totalTextHeight = this._textMeasuredHeight;
 		if (this.secondaryTextField != null) {
-			totalTextHeight += adjustedGap + this._secondaryTextMeasuredHeight;
+			totalTextHeight += (this._secondaryTextMeasuredHeight + adjustedGap);
 		}
 
 		var currentY = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - totalTextHeight) / 2.0;
