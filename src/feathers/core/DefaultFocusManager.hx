@@ -444,12 +444,13 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function findNextContainerFocus(container:DisplayObjectContainer, afterChild:DisplayObject, fallbackToGlobal:Bool):IFocusObject {
+		var outerContainer:DisplayObjectContainer = container;
 		if ((container is IViewPort) && !(container is IFocusContainer)) {
-			container = container.parent;
+			outerContainer = container.parent;
 		}
 		var hasProcessedAfterChild = afterChild == null;
-		if ((container is IFocusExtras)) {
-			var focusWithExtras = cast(container, IFocusExtras);
+		if ((outerContainer is IFocusExtras)) {
+			var focusWithExtras = cast(outerContainer, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasBefore;
 			if (extras != null) {
 				var skip = false;
@@ -482,8 +483,8 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 				return foundChild;
 			}
 		}
-		if ((container is IFocusExtras)) {
-			var focusWithExtras = cast(container, IFocusExtras);
+		if ((outerContainer is IFocusExtras)) {
+			var focusWithExtras = cast(outerContainer, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasAfter;
 			if (extras != null) {
 				var skip = false;
@@ -505,8 +506,8 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			}
 		}
 
-		if (fallbackToGlobal && container != this._root && container.parent != null) {
-			var foundChild = this.findNextContainerFocus(container.parent, container, true);
+		if (fallbackToGlobal && outerContainer != this._root && outerContainer.parent != null) {
+			var foundChild = this.findNextContainerFocus(outerContainer.parent, outerContainer, true);
 			if (foundChild != null) {
 				return foundChild;
 			}
