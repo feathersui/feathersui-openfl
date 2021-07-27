@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.controls.LayoutGroup;
 import openfl.display.Shape;
 import feathers.layout.Measurements;
 import utest.Assert;
@@ -114,5 +115,99 @@ class AnchorLayoutTest extends Test {
 		Assert.equals(Math.max(CHILD1_Y + CHILD1_HEIGHT, CHILD2_Y + CHILD2_HEIGHT), result.contentHeight);
 		Assert.equals(0.0, result.contentX);
 		Assert.equals(0.0, result.contentY);
+	}
+
+	public function testLeftAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		item1.width = CHILD1_WIDTH;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.left = PADDING_LEFT;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_WIDTH + PADDING_LEFT, result.viewPortWidth);
+		Assert.equals(CHILD1_WIDTH + PADDING_LEFT, result.contentWidth);
+	}
+
+	public function testRightAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		item1.width = CHILD1_WIDTH;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.right = PADDING_RIGHT;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_WIDTH + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(CHILD1_WIDTH + PADDING_RIGHT, result.contentWidth);
+	}
+
+	public function testTopAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		item1.height = CHILD1_HEIGHT;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.top = PADDING_TOP;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_HEIGHT + PADDING_TOP, result.viewPortHeight);
+		Assert.equals(CHILD1_HEIGHT + PADDING_TOP, result.contentHeight);
+	}
+
+	public function testBottomAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		item1.height = CHILD1_HEIGHT;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.bottom = PADDING_BOTTOM;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_HEIGHT + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(CHILD1_HEIGHT + PADDING_BOTTOM, result.contentHeight);
+	}
+
+	public function testLeftAndRightAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		item1.width = CHILD1_WIDTH;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.left = PADDING_LEFT;
+		layoutData1.right = PADDING_RIGHT;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_WIDTH + PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(CHILD1_WIDTH + PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+	}
+
+	public function testTopAndBottomAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		item1.height = CHILD1_HEIGHT;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.top = PADDING_TOP;
+		layoutData1.bottom = PADDING_BOTTOM;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_HEIGHT + PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(CHILD1_HEIGHT + PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+	}
+
+	public function testXAndRightAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		// make sure that x is ignored if right is set
+		item1.x = 2000.0;
+		item1.width = CHILD1_WIDTH;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.right = PADDING_RIGHT;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_WIDTH + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(CHILD1_WIDTH + PADDING_RIGHT, result.contentWidth);
+	}
+
+	public function testYAndBottomAndNullMeasurements():Void {
+		var item1 = new LayoutGroup();
+		// make sure that y is ignored if bottom is set
+		item1.y = 2000.0;
+		item1.height = CHILD1_HEIGHT;
+		var layoutData1 = new AnchorLayoutData();
+		layoutData1.bottom = PADDING_BOTTOM;
+		item1.layoutData = layoutData1;
+		var result = this._layout.layout([item1], this._measurements);
+		Assert.equals(CHILD1_HEIGHT + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(CHILD1_HEIGHT + PADDING_BOTTOM, result.contentHeight);
 	}
 }
