@@ -142,7 +142,11 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						if (layoutData.bottom != null) {
 							var bottom = layoutData.bottom;
 							var value = bottom.value;
-							itemMaxY += value;
+							if (layoutData.top != null) {
+								itemMaxY += value;
+							} else {
+								itemMaxY = item.height + value;
+							}
 						}
 						if (maxY < itemMaxY) {
 							maxY = itemMaxY;
@@ -158,7 +162,11 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						if (layoutData.right != null) {
 							var right = layoutData.right;
 							var value = right.value;
-							itemMaxX += value;
+							if (layoutData.left != null) {
+								itemMaxX += value;
+							} else {
+								itemMaxX = item.width + value;
+							}
 						}
 						if (maxX < itemMaxX) {
 							maxX = itemMaxX;
