@@ -644,7 +644,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			if ((this._currentAccessoryView is IValidating)) {
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
-			textFieldExplicitWidth -= (this._currentIcon.width + adjustedGap);
+			textFieldExplicitWidth -= (this._currentAccessoryView.width + adjustedGap);
 		}
 		if (textFieldExplicitWidth < 0.0) {
 			textFieldExplicitWidth = 0.0;
