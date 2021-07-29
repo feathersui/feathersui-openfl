@@ -359,6 +359,13 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._focusOwner;
 	}
 
+	@:dox(hide)
+	private var rawTabEnabled(get, never):Bool;
+
+	private function get_rawTabEnabled():Bool {
+		return super.tabEnabled;
+	}
+
 	private var _focusEnabled:Bool = true;
 
 	/**

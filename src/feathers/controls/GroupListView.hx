@@ -219,10 +219,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private var groupViewPort:AdvancedLayoutViewPort;
 
-	override private function get_focusEnabled():Bool {
+	@:getter(tabEnabled)
+	override private function get_tabEnabled():Bool {
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled
-			&& this._focusEnabled;
+			&& this.rawTabEnabled;
 	}
 
 	private var _dataProvider:IHierarchicalCollection<Dynamic>;

@@ -280,10 +280,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _headerScrollRect2:Rectangle = new Rectangle();
 	private var _oldHeaderDividerMouseCursor:MouseCursor;
 
-	override private function get_focusEnabled():Bool {
+	@:getter(tabEnabled)
+	override private function get_tabEnabled():Bool {
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled
-			&& this._focusEnabled;
+			&& this.rawTabEnabled;
 	}
 
 	private var gridViewPort:AdvancedLayoutViewPort;

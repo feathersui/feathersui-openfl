@@ -109,8 +109,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	private var _promptTextMeasuredWidth:Float;
 	private var _promptTextMeasuredHeight:Float;
 
-	override private function get_focusEnabled():Bool {
-		return this._enabled && this._focusEnabled;
+	@:getter(tabEnabled)
+	override private function get_tabEnabled():Bool {
+		return this._enabled && this.rawTabEnabled;
 	}
 
 	private var _editable:Bool = true;
