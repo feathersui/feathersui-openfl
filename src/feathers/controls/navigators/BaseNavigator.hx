@@ -638,18 +638,14 @@ class BaseNavigator extends FeathersControl {
 		this._previousViewInTransition = null;
 		this._previousViewInTransitionID = null;
 
-		this.transitionComplete();
-		// we need to dispatch this event before the previous view's
-		// owner property is set to null because legacy code that was
-		// written before TRANSITION_OUT_COMPLETE existed may be using
-		// this event for the same purpose.
-		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_COMPLETE);
-
 		if (previousView != null) {
 			previousView.removeEventListener(Event.RESIZE, activeItemView_resizeHandler);
 			this._viewsContainer.removeChild(previousView);
 			this.disposeView(previousItemID, previousView);
 		}
+
+		this.transitionComplete();
+		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_COMPLETE);
 
 		this.setInvalid(LAYOUT);
 
