@@ -189,6 +189,8 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		return this.focus;
 	}
 
+	private var _wrapObject:InteractiveObject;
+
 	/**
 		@see `feathers.core.IFocusManager.dispose()`
 	**/
@@ -779,7 +781,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 	}
 	#else
-	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
+	private function handleKeyDownFocusWrapping(event:KeyboardEvent):Void {
 		if (Capabilities.playerType == "StandAlone" || Capabilities.playerType == "Desktop") {
 			// we care about wrapping in the browser only
 			return;
@@ -817,7 +819,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 	}
 
-	private var _wrapObject:InteractiveObject;
+	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
+		this.handleKeyDownFocusWrapping(event);
+	}
 
 	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
