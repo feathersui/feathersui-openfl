@@ -818,7 +818,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (!this._enabled) {
 			return;
 		}
-		if (!open) {
+		if (!open && event.keyLocation != 4 /* KeyLocation.D_PAD */) {
 			this.navigateWithKeyboard(event);
 		}
 		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
