@@ -1149,6 +1149,17 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 				}
 				event.preventDefault();
 				this.closeListView();
+			#if flash
+			case Keyboard.BACK:
+				if (event.isDefaultPrevented()) {
+					return;
+				}
+				if (!this.open) {
+					return;
+				}
+				event.preventDefault();
+				this.closeListView();
+			#end
 			#if lime
 			case KeyCode.APP_CONTROL_BACK:
 				if (event.isDefaultPrevented()) {
