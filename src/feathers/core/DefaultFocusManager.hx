@@ -15,6 +15,9 @@ import feathers.core.IFocusManager;
 import feathers.core.IFocusObject;
 import feathers.core.IUIControl;
 import feathers.events.FeathersEvent;
+import feathers.layout.RelativePosition;
+import feathers.utils.DPadFocusUtil;
+import feathers.utils.FocusUtil;
 import feathers.utils.PopUpUtil;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -256,6 +259,39 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			}
 		}
 		return new FocusResult(newFocus, wrapped);
+	}
+
+	private function findNextRelativeFocusInternal(keyCode:Int):FocusResult {
+		var relativePosition = switch (keyCode) {
+			case Keyboard.UP: RelativePosition.TOP;
+			case Keyboard.RIGHT: RelativePosition.RIGHT;
+			case Keyboard.DOWN: RelativePosition.BOTTOM;
+			case Keyboard.LEFT: RelativePosition.LEFT;
+			default: return new FocusResult(null, false);
+		}
+		var currentFocus = this.focus;
+		var focusableObjects = FocusUtil.findAllFocusableObjects(this._root);
+		if (currentFocus == null) {
+			if (focusableObjects.length > 0) {
+				return new FocusResult(focusableObjects[0], false);
+			}
+			return new FocusResult(null, false);
+		}
+		var newFocus = currentFocus;
+		var focusedRect = cast(currentFocus, DisplayObject).getBounds(currentFocus.stage);
+		for (focusableObject in focusableObjects) {
+			if (focusableObject == currentFocus) {
+				continue;
+			}
+			if (!this.isValidFocus(focusableObject)) {
+				continue;
+			}
+			if (DPadFocusUtil.isBetterFocusForRelativePosition(cast(focusableObject, DisplayObject), cast(newFocus, DisplayObject), focusedRect,
+				relativePosition)) {
+				newFocus = focusableObject;
+			}
+		}
+		return new FocusResult(newFocus, false);
 	}
 
 	private function isValidFocusWithKeyboard(target:IFocusObject):Bool {
@@ -819,16 +855,28 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 	}
 
+	private function handleDPadArrowKeys(event:KeyboardEvent):Void {
+		if (event.keyLocation != 4 /* KeyLocation.D_PAD */) {
+			return;
+		}
+		if (event.keyCode != Keyboard.UP && event.keyCode != Keyboard.DOWN && event.keyCode != Keyboard.LEFT && event.keyCode != Keyboard.RIGHT) {
+			return;
+		}
+		if (event.isDefaultPrevented()) {
+			return;
+		}
+		this._showFocusIndicator = true;
+		var result = this.findNextRelativeFocusInternal(event.keyCode);
+		this.focus = result.newFocus;
+	}
+
 	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
 		this.handleKeyDownFocusWrapping(event);
+		this.handleDPadArrowKeys(event);
 	}
 
 	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
-			return;
-		}
-		if (event.keyCode == Keyboard.UP || event.keyCode == Keyboard.DOWN || event.keyCode == Keyboard.LEFT || event.keyCode == Keyboard.RIGHT) {
-			event.preventDefault();
 			return;
 		}
 		if (event.keyCode != Keyboard.TAB && event.keyCode != 0) {
