@@ -267,6 +267,42 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		return this._verticalGap;
 	}
 
+	private var _minVerticalGap:Float = 0.0;
+
+	/**
+		If the value of the `verticalGap` property is
+		`Math.POSITIVE_INFINITY`, meaning that the gap will fill as much space
+		as possible and position the items as far from each other as they can go
+		without going outside of the view port bounds, the final calculated
+		value of the vertical gap will not be smaller than the value of the
+		`minVerticalGap` property.
+
+		In the following example, the layout's vertical gap is set to 4 pixels:
+
+		```hx
+		layout.minVerticalGap = 4.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var minVerticalGap(get, set):Float;
+
+	private function get_minVerticalGap():Float {
+		return this._minVerticalGap;
+	}
+
+	private function set_minVerticalGap(value:Float):Float {
+		if (this._minVerticalGap == value) {
+			return this._minVerticalGap;
+		}
+		this._minVerticalGap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._minVerticalGap;
+	}
+
 	private var _horizontalAlign:HorizontalAlign = LEFT;
 
 	/**
@@ -442,6 +478,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
+		var maxColumnCount = 0;
 		var columnCount = 0;
 		var rowCount = 1;
 		var xPosition = this._paddingLeft;
@@ -463,10 +500,11 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 			var rowWidthWithItem = xPosition + tileWidth + this.paddingRight;
 			if (rowWidthWithItem > viewPortWidth) {
-				this.applyHorizontalAlign(items, i - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
+				this.applyHorizontalAlignToRow(items, i - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
 				xPosition = this._paddingLeft;
-				yPosition += tileHeight + this._verticalGap;
+				yPosition += tileHeight;
 				rowCount++;
+				maxColumnCount = Std.int(Math.max(maxColumnCount, columnCount));
 				columnCount = 0;
 			}
 
@@ -476,12 +514,19 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			xPosition += tileWidth + adjustedHorizontalGap;
 			columnCount++;
 		}
-		this.applyHorizontalAlign(items, items.length - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
+		this.applyHorizontalAlignToRow(items, items.length - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
+		maxColumnCount = Std.int(Math.max(maxColumnCount, columnCount));
 		yPosition += tileHeight + this.paddingBottom;
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
 
 		var viewPortHeight = measurements.height;
 		if (viewPortHeight == null) {
-			viewPortHeight = this._paddingTop + this._paddingBottom + rowCount * (tileHeight + this._verticalGap) - this._verticalGap;
+			viewPortHeight = this._paddingTop + this._paddingBottom + rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
 			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
 				viewPortHeight = measurements.minHeight;
 			} else if (measurements.maxHeight != null && viewPortHeight > measurements.maxHeight) {
@@ -489,7 +534,15 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			}
 		}
 
-		this.applyVerticalAlign(items, viewPortHeight - this.paddingTop - this.paddingBottom, tileHeight, rowCount);
+		var availableContentHeight = viewPortHeight - this.paddingTop - this.paddingBottom;
+		if (hasFlexVerticalGap) {
+			var maxContentHeight = rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
+			if (availableContentHeight > maxContentHeight) {
+				adjustedVerticalGap += (availableContentHeight - maxContentHeight) / (rowCount - 1);
+			}
+		}
+
+		this.applyVerticalAlignAndGap(items, viewPortHeight - this.paddingTop - this.paddingBottom, tileHeight, rowCount, maxColumnCount, adjustedVerticalGap);
 
 		if (result == null) {
 			result = new LayoutBoundsResult();
@@ -501,7 +554,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		return result;
 	}
 
-	private function applyHorizontalAlign(items:Array<DisplayObject>, startIndex:Int, count:Int, availableWidth:Float, tileWidth:Float,
+	private function applyHorizontalAlignToRow(items:Array<DisplayObject>, startIndex:Int, count:Int, availableWidth:Float, tileWidth:Float,
 			horizontalGap:Float):Void {
 		var contentWidth = count * (tileWidth + horizontalGap) - horizontalGap;
 		var xOffset = switch (this._horizontalAlign) {
@@ -518,17 +571,25 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		}
 	}
 
-	private function applyVerticalAlign(items:Array<DisplayObject>, availableHeight:Float, tileHeight:Float, rowCount:Int):Void {
-		var contentHeight = rowCount * (tileHeight + this._verticalGap) - this._verticalGap;
-		var yOffset = switch (this._verticalAlign) {
-			case BOTTOM: availableHeight - contentHeight;
-			case MIDDLE: (availableHeight - contentHeight) / 2.0;
-			default: 0.0;
+	private function applyVerticalAlignAndGap(items:Array<DisplayObject>, availableHeight:Float, tileHeight:Float, rowCount:Int, columnCount:Int,
+			adjustedVerticalGap:Float):Void {
+		var yOffset = 0.0;
+		if (this._verticalGap != (1.0 / 0.0)) {
+			var contentHeight = rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
+			yOffset = switch (this._verticalAlign) {
+				case BOTTOM: availableHeight - contentHeight;
+				case MIDDLE: (availableHeight - contentHeight) / 2.0;
+				default: 0.0;
+			}
 		}
-		if (yOffset <= 0.0) {
+		if (yOffset <= 0.0 && adjustedVerticalGap == 0.0) {
 			return;
 		}
-		for (item in items) {
+		for (i in 0...items.length) {
+			var item = items[i];
+			if (i > 0 && (i % columnCount) == 0) {
+				yOffset += adjustedVerticalGap;
+			}
 			item.y += yOffset;
 		}
 	}
