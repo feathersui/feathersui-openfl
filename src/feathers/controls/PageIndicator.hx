@@ -569,8 +569,14 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		var result = this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
+				if (event.keyLocation == 4 /* KeyLocation.D_PAD */) {
+					return;
+				}
 				result = result - 1;
 			case Keyboard.DOWN:
+				if (event.keyLocation == 4 /* KeyLocation.D_PAD */) {
+					return;
+				}
 				result = result + 1;
 			case Keyboard.LEFT:
 				result = result - 1;
