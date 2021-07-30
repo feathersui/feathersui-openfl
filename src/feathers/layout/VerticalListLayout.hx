@@ -409,7 +409,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout {
 
 	/**
 		How the content is positioned vertically (along the y-axis) within the
-		container.
+		container. If the total height of the content is larger than the
+		available height within the container, then the positioning of the items
+		will always start from the top.
 
 		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
 		layout.

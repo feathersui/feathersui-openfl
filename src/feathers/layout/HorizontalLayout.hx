@@ -200,7 +200,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 	/**
 		How the content is positioned horizontally (along the x-axis) within the
-		container.
+		container. If the total width of the content is larger than the
+		available width within the container, then the positioning of the items
+		will always start from the left.
 
 		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
 		layout.
