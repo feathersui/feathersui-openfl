@@ -169,6 +169,10 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		The horizontal space, in pixels, between each two adjacent items in the
 		layout.
 
+		If the `horizontalGap` is set to `Math.POSITIVE_INFINITY`, the items
+		will be positioned as far apart as possible. In this case, the
+		horizontal gap will never be smaller than `minHorizontalGap`.
+
 		In the following example, the layout's horizontal gap is set to 20 pixels:
 
 		```hx
@@ -193,6 +197,42 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		this._horizontalGap = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._horizontalGap;
+	}
+
+	private var _minHorizontalGap:Float = 0.0;
+
+	/**
+		If the value of the `horizontalGap` property is
+		`Math.POSITIVE_INFINITY`, meaning that the gap will fill as much space
+		as possible and position the items as far from each other as they can go
+		without going outside of the view port bounds, the final calculated
+		value of the horizontal gap will not be smaller than the value of the
+		`minHorizontalGap` property.
+
+		In the following example, the layout's horizontal gap is set to 4 pixels:
+
+		```hx
+		layout.minHorizontalGap = 4.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var minHorizontalGap(get, set):Float;
+
+	private function get_minHorizontalGap():Float {
+		return this._minHorizontalGap;
+	}
+
+	private function set_minHorizontalGap(value:Float):Float {
+		if (this._minHorizontalGap == value) {
+			return this._minHorizontalGap;
+		}
+		this._minHorizontalGap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._minHorizontalGap;
 	}
 
 	private var _verticalGap:Float = 0.0;
@@ -389,6 +429,18 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		}
 
 		var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+			var maxContentWidth = items.length * (tileWidth + adjustedHorizontalGap);
+			if (items.length > 0) {
+				maxContentWidth -= adjustedHorizontalGap;
+			}
+			if (availableRowWidth > maxContentWidth) {
+				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (items.length - 1);
+			}
+		}
 
 		var columnCount = 0;
 		var rowCount = 1;
@@ -411,7 +463,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 			var rowWidthWithItem = xPosition + tileWidth + this.paddingRight;
 			if (rowWidthWithItem > viewPortWidth) {
-				this.applyHorizontalAlign(items, i - columnCount, columnCount, availableRowWidth, tileWidth);
+				this.applyHorizontalAlign(items, i - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
 				xPosition = this._paddingLeft;
 				yPosition += tileHeight + this._verticalGap;
 				rowCount++;
@@ -421,10 +473,10 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			item.x = xPosition;
 			item.y = yPosition;
 
-			xPosition += tileWidth + this._horizontalGap;
+			xPosition += tileWidth + adjustedHorizontalGap;
 			columnCount++;
 		}
-		this.applyHorizontalAlign(items, items.length - columnCount, columnCount, availableRowWidth, tileWidth);
+		this.applyHorizontalAlign(items, items.length - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
 		yPosition += tileHeight + this.paddingBottom;
 
 		var viewPortHeight = measurements.height;
@@ -449,8 +501,9 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		return result;
 	}
 
-	private function applyHorizontalAlign(items:Array<DisplayObject>, startIndex:Int, count:Int, availableWidth:Float, tileWidth:Float):Void {
-		var contentWidth = count * (tileWidth + this._horizontalGap) - this._horizontalGap;
+	private function applyHorizontalAlign(items:Array<DisplayObject>, startIndex:Int, count:Int, availableWidth:Float, tileWidth:Float,
+			horizontalGap:Float):Void {
+		var contentWidth = count * (tileWidth + horizontalGap) - horizontalGap;
 		var xOffset = switch (this._horizontalAlign) {
 			case RIGHT: availableWidth - contentWidth;
 			case CENTER: (availableWidth - contentWidth) / 2.0;
