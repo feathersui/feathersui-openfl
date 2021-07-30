@@ -500,7 +500,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 			var rowWidthWithItem = xPosition + tileWidth + this.paddingRight;
 			if (rowWidthWithItem > viewPortWidth) {
-				this.applyHorizontalAlignToRow(items, i - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
+				this.applyHorizontalAlignToRow(items, i - columnCount, columnCount, availableRowWidth, tileWidth);
 				xPosition = this._paddingLeft;
 				yPosition += tileHeight;
 				rowCount++;
@@ -514,7 +514,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			xPosition += tileWidth + adjustedHorizontalGap;
 			columnCount++;
 		}
-		this.applyHorizontalAlignToRow(items, items.length - columnCount, columnCount, availableRowWidth, tileWidth, adjustedHorizontalGap);
+		this.applyHorizontalAlignToRow(items, items.length - columnCount, columnCount, availableRowWidth, tileWidth);
 		maxColumnCount = Std.int(Math.max(maxColumnCount, columnCount));
 		yPosition += tileHeight + this.paddingBottom;
 
@@ -554,20 +554,35 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		return result;
 	}
 
-	private function applyHorizontalAlignToRow(items:Array<DisplayObject>, startIndex:Int, count:Int, availableWidth:Float, tileWidth:Float,
-			horizontalGap:Float):Void {
-		var contentWidth = count * (tileWidth + horizontalGap) - horizontalGap;
+	private function applyHorizontalAlignToRow(items:Array<DisplayObject>, startIndex:Int, numItemsInRow:Int, availableRowWidth:Float, tileWidth:Float):Void {
+		var gapOffset = 0.0;
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+			var rowContentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			if (numItemsInRow > 0) {
+				rowContentWidth -= adjustedHorizontalGap;
+			}
+			if (availableRowWidth > rowContentWidth) {
+				adjustedHorizontalGap += (availableRowWidth - rowContentWidth) / (numItemsInRow - 1);
+			}
+			gapOffset = adjustedHorizontalGap - this._minHorizontalGap;
+		}
+
+		var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
 		var xOffset = switch (this._horizontalAlign) {
-			case RIGHT: availableWidth - contentWidth;
-			case CENTER: (availableWidth - contentWidth) / 2.0;
+			case RIGHT: availableRowWidth - contentWidth;
+			case CENTER: (availableRowWidth - contentWidth) / 2.0;
 			default: 0.0;
 		}
-		if (xOffset <= 0.0) {
+		if (xOffset <= 0.0 && gapOffset == 0.0) {
 			return;
 		}
-		for (i in startIndex...(startIndex + count)) {
+		for (i in startIndex...(startIndex + numItemsInRow)) {
 			var item = items[i];
 			item.x += xOffset;
+			xOffset += gapOffset;
 		}
 	}
 
