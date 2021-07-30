@@ -1150,18 +1150,25 @@ class Callout extends FeathersControl {
 		}
 	}
 
-	private function positionRelativeToOrigin():Void {
+	private function checkForOriginMoved():Bool {
 		if (this._origin == null) {
-			return;
+			return false;
 		}
 		var popUpRoot = PopUpManager.forStage(this.stage).root;
 		var bounds = this._origin.getBounds(popUpRoot);
 		var hasPopUpBounds = this._lastPopUpOriginBounds != null;
 		if (hasPopUpBounds && this._lastPopUpOriginBounds.equals(bounds)) {
-			return;
+			return false;
 		}
 		this._lastPopUpOriginBounds = bounds;
+		return true;
+	}
 
+	private function positionRelativeToOrigin():Void {
+		// make sure that everything is up-to-date
+		this.checkForOriginMoved();
+
+		var popUpRoot = PopUpManager.forStage(this.stage).root;
 		var stageBottomRight = new Point(this.stage.stageWidth, this.stage.stageHeight);
 		stageBottomRight = popUpRoot.globalToLocal(stageBottomRight);
 
@@ -1259,7 +1266,10 @@ class Callout extends FeathersControl {
 	}
 
 	private function callout_enterFrameHandler(event:Event):Void {
-		this.positionRelativeToOrigin();
+		if (!this.checkForOriginMoved()) {
+			return;
+		}
+		this.setInvalid(INVALIDATION_FLAG_ORIGIN);
 	}
 
 	private function callout_origin_removedFromStageHandler(event:Event):Void {
