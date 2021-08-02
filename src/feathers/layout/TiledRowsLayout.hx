@@ -241,6 +241,10 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		The vertical space, in pixels, between each two adjacent items in the
 		layout.
 
+		If the `verticalGap` is set to `Math.POSITIVE_INFINITY`, the items
+		will be positioned as far apart as possible. In this case, the
+		vertical gap will never be smaller than `minVerticalGap`.
+
 		In the following example, the layout's vertical gap is set to 20 pixels:
 
 		```hx
