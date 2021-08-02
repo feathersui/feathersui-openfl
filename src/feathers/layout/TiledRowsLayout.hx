@@ -585,6 +585,12 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		}
 		for (i in startIndex...(startIndex + numItemsInRow)) {
 			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem = cast(item, ILayoutObject);
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
 			item.x += xOffset;
 			xOffset += gapOffset;
 		}
@@ -606,6 +612,12 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		}
 		for (i in 0...items.length) {
 			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem = cast(item, ILayoutObject);
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
 			if (i > 0 && (i % columnCount) == 0) {
 				yOffset += adjustedVerticalGap;
 			}
