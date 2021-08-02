@@ -545,6 +545,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 				adjustedVerticalGap += (availableContentHeight - maxContentHeight) / (rowCount - 1);
 			}
 		}
+		yPosition += (rowCount - 1) * adjustedVerticalGap;
 
 		this.applyVerticalAlignAndGap(items, viewPortHeight - this.paddingTop - this.paddingBottom, tileHeight, rowCount, maxColumnCount, adjustedVerticalGap);
 
