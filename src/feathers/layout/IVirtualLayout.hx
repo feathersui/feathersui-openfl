@@ -59,14 +59,14 @@ class VirtualLayoutRange {
 	}
 
 	/**
-		The start index of the range.
+		The start index of the range. Inclusive.
 
 		@since 1.0.0
 	**/
 	public var start:Int;
 
 	/**
-		The end index of the range.
+		The end index of the range. Non-inclusive.
 
 		@since 1.0.0
 	**/
