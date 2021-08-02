@@ -455,11 +455,17 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			tileHeight = 0.0;
 		}
 
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+		}
+
 		var viewPortWidth = measurements.width;
 		if (viewPortWidth == null) {
-			viewPortWidth = this._paddingLeft + this._paddingRight + items.length * (tileWidth + this._horizontalGap);
+			viewPortWidth = this._paddingLeft + this._paddingRight + items.length * (tileWidth + adjustedHorizontalGap);
 			if (items.length > 0) {
-				viewPortWidth -= this._horizontalGap;
+				viewPortWidth -= adjustedHorizontalGap;
 			}
 			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
 				viewPortWidth = measurements.minWidth;
@@ -469,10 +475,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		}
 
 		var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
-		var adjustedHorizontalGap = this._horizontalGap;
-		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
 		if (hasFlexHorizontalGap) {
-			adjustedHorizontalGap = this._minHorizontalGap;
 			var maxContentWidth = items.length * (tileWidth + adjustedHorizontalGap);
 			if (items.length > 0) {
 				maxContentWidth -= adjustedHorizontalGap;
