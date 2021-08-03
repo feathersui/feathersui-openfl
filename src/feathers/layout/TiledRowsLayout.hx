@@ -387,6 +387,147 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		return this._verticalAlign;
 	}
 
+	private var _alignEmptyTiles:Bool = false;
+
+	/**
+		Indicates if empty tiles should be included when positioning items with
+		the `horizontalAlign` property. For instance, if the `requestedRowCount`
+		is `3`, but the total number of tiles in a row is `2`, that row can be
+		aligned as if it contained all `3` items.
+
+		@since 1.0.0
+
+		@see `TiledRowsLayout.horizontalAlign`
+	**/
+	public var alignEmptyTiles(get, set):Bool;
+
+	private function get_alignEmptyTiles():Bool {
+		return this._alignEmptyTiles;
+	}
+
+	private function set_alignEmptyTiles(value:Bool):Bool {
+		if (this._alignEmptyTiles == value) {
+			return this._alignEmptyTiles;
+		}
+		this._alignEmptyTiles = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._alignEmptyTiles;
+	}
+
+	private var _requestedColumnCount:Null<Int> = null;
+
+	/**
+		The exact number of columns to render, if space allows. If set to
+		`null`, the number of columns will be the total number of items that can
+		be displayed within the container's width.
+
+		In the following example, the layout's requested column count is set to
+		2 items:
+
+		```hx
+		layout.requestedColumnCount = 2;
+		```
+
+		@default null
+
+		@see `TiledRowsLayout.requestedMinColumnCount`
+		@see `TiledRowsLayout.requestedMaxColumnCount`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedColumnCount(get, set):Null<Int>;
+
+	private function get_requestedColumnCount():Null<Int> {
+		return this._requestedColumnCount;
+	}
+
+	private function set_requestedColumnCount(value:Null<Int>):Null<Int> {
+		if (this._requestedColumnCount == value) {
+			return this._requestedColumnCount;
+		}
+		this._requestedColumnCount = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._requestedColumnCount;
+	}
+
+	private var _requestedMinColumnCount:Null<Int> = null;
+
+	/**
+		The minimum number of columns to render, if space allows. If set to
+		`null`, the minimum number of columns will be 1.
+
+		If `requestedColumnCount` is also set, this property is ignored.
+
+		In the following example, the layout's requested minimum column count is
+		set to 3 items:
+
+		```hx
+		layout.requestedMinColumnCount = 3;
+		```
+
+		@default null
+
+		@see `TiledRowsLayout.requestedColumnCount`
+		@see `TiledRowsLayout.requestedMaxColumnCount`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedMinColumnCount(get, set):Null<Int>;
+
+	private function get_requestedMinColumnCount():Null<Int> {
+		return this._requestedMinColumnCount;
+	}
+
+	private function set_requestedMinColumnCount(value:Null<Int>):Null<Int> {
+		if (this._requestedMinColumnCount == value) {
+			return this._requestedMinColumnCount;
+		}
+		this._requestedMinColumnCount = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._requestedMinColumnCount;
+	}
+
+	private var _requestedMaxColumnCount:Null<Int> = null;
+
+	/**
+		The maximum number of columns to render, if space allows. If set to
+		`null`, the maximum number of columns will be the total number of items
+		that can be displayed within the container's width.
+
+		If `requestedColumnCount` is also set, this property is ignored.
+
+		In the following example, the layout's requested maximum column count is
+		set to 5 items:
+
+		```hx
+		layout.requestedMaxColumnCount = 5.0;
+		```
+
+		@default null
+
+		@see `TiledRowsLayout.requestedColumnCount`
+		@see `TiledRowsLayout.requestedMinColumnCount`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedMaxColumnCount(get, set):Null<Int>;
+
+	private function get_requestedMaxColumnCount():Null<Int> {
+		return this._requestedMaxColumnCount;
+	}
+
+	private function set_requestedMaxColumnCount(value:Null<Int>):Null<Int> {
+		if (this._requestedMaxColumnCount == value) {
+			return this._requestedMaxColumnCount;
+		}
+		this._requestedMaxColumnCount = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._requestedMaxColumnCount;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -461,12 +602,14 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			adjustedHorizontalGap = this._minHorizontalGap;
 		}
 
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, measurements.width, measurements.maxWidth, adjustedHorizontalGap, items.length);
+
 		var viewPortWidth = measurements.width;
 		if (viewPortWidth == null) {
-			viewPortWidth = this._paddingLeft + this._paddingRight + items.length * (tileWidth + adjustedHorizontalGap);
-			if (items.length > 0) {
-				viewPortWidth -= adjustedHorizontalGap;
-			}
+			viewPortWidth = this._paddingLeft
+				+ this._paddingRight
+				+ horizontalTileCount * (tileWidth + adjustedHorizontalGap)
+				- adjustedHorizontalGap;
 			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
 				viewPortWidth = measurements.minWidth;
 			} else if (measurements.maxWidth != null && viewPortWidth > measurements.maxWidth) {
@@ -476,17 +619,14 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
 		if (hasFlexHorizontalGap) {
-			var maxContentWidth = items.length * (tileWidth + adjustedHorizontalGap);
-			if (items.length > 0) {
-				maxContentWidth -= adjustedHorizontalGap;
-			}
+			var maxContentWidth = horizontalTileCount * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
 			if (availableRowWidth > maxContentWidth) {
-				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (items.length - 1);
+				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (horizontalTileCount - 1);
 			}
 		}
 
 		var maxColumnCount = 0;
-		var columnCount = 0;
+		var currentColumnCount = 0;
 		var rowCount = 1;
 		var xPosition = this._paddingLeft;
 		var yPosition = this._paddingTop;
@@ -505,24 +645,23 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 				item.height = tileHeight;
 			}
 
-			var rowWidthWithItem = xPosition + tileWidth + this.paddingRight;
-			if (rowWidthWithItem > viewPortWidth) {
-				this.applyHorizontalAlignToRow(items, i - columnCount, columnCount, availableRowWidth, tileWidth);
+			if (currentColumnCount >= horizontalTileCount) {
+				this.applyHorizontalAlignToRow(items, i - currentColumnCount, currentColumnCount, horizontalTileCount, availableRowWidth, tileWidth);
 				xPosition = this._paddingLeft;
 				yPosition += tileHeight;
 				rowCount++;
-				maxColumnCount = Std.int(Math.max(maxColumnCount, columnCount));
-				columnCount = 0;
+				maxColumnCount = Std.int(Math.max(maxColumnCount, currentColumnCount));
+				currentColumnCount = 0;
 			}
 
 			item.x = xPosition;
 			item.y = yPosition;
 
 			xPosition += tileWidth + adjustedHorizontalGap;
-			columnCount++;
+			currentColumnCount++;
 		}
-		this.applyHorizontalAlignToRow(items, items.length - columnCount, columnCount, availableRowWidth, tileWidth);
-		maxColumnCount = Std.int(Math.max(maxColumnCount, columnCount));
+		this.applyHorizontalAlignToRow(items, items.length - currentColumnCount, currentColumnCount, horizontalTileCount, availableRowWidth, tileWidth);
+		maxColumnCount = Std.int(Math.max(maxColumnCount, currentColumnCount));
 		yPosition += tileHeight + this.paddingBottom;
 
 		var adjustedVerticalGap = this._verticalGap;
@@ -562,7 +701,11 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		return result;
 	}
 
-	private function applyHorizontalAlignToRow(items:Array<DisplayObject>, startIndex:Int, numItemsInRow:Int, availableRowWidth:Float, tileWidth:Float):Void {
+	private function applyHorizontalAlignToRow(items:Array<DisplayObject>, startIndex:Int, numItemsInRow:Int, horizontalTileCount:Int,
+			availableRowWidth:Float, tileWidth:Float):Void {
+		if (this._alignEmptyTiles && horizontalTileCount > numItemsInRow) {
+			numItemsInRow = horizontalTileCount;
+		}
 		var gapOffset = 0.0;
 		var adjustedHorizontalGap = this._horizontalGap;
 		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
@@ -641,5 +784,75 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 				cast(item, IValidating).validateNow();
 			}
 		}
+	}
+
+	private function calculateHorizontalTileCount(tileWidth:Float, explicitWidth:Null<Float>, explicitMaxWidth:Null<Float>, horizontalGap:Float,
+			totalItemCount:Int):Int {
+		if (explicitWidth != null) {
+			// in this case, the exact width is known
+			final maxHorizontalTileCount = Std.int((explicitWidth - this._paddingLeft - this._paddingRight + horizontalGap) / (tileWidth + horizontalGap));
+			if (this._requestedColumnCount != null) {
+				if (this._requestedColumnCount > maxHorizontalTileCount) {
+					return maxHorizontalTileCount;
+				}
+				return Std.int(Math.max(1, this._requestedColumnCount));
+			}
+			var horizontalTileCount = maxHorizontalTileCount;
+			if (horizontalTileCount < 1) {
+				// we must have at least one tile per row
+				horizontalTileCount = 1;
+			} else if (horizontalTileCount > totalItemCount) {
+				horizontalTileCount = totalItemCount;
+			}
+			if (this._requestedMinColumnCount != null) {
+				if (this._requestedMinColumnCount < horizontalTileCount) {
+					return horizontalTileCount;
+				}
+				return Std.int(Math.max(1, this._requestedMinColumnCount));
+			}
+			if (this._requestedMaxColumnCount != null) {
+				if (this._requestedMaxColumnCount > horizontalTileCount) {
+					return horizontalTileCount;
+				}
+				return Std.int(Math.max(1, this._requestedMaxColumnCount));
+			}
+			return horizontalTileCount;
+		}
+
+		// in this case, the width is not known, but it may have a maximum
+
+		// prefer the total number of items
+		// unless some other bound takes precendence
+		var horizontalTileCount = totalItemCount;
+		if (this._requestedColumnCount != null) {
+			// requestedColumnCount has the highest precedence!
+			// requestedMinColumnCount and requestedMaxColumnCount should be
+			// ignored if it is set
+			horizontalTileCount = Std.int(Math.max(1, this._requestedColumnCount));
+		} else if (this._requestedMinColumnCount != null) {
+			if (horizontalTileCount < this._requestedMinColumnCount) {
+				horizontalTileCount = this._requestedMinColumnCount;
+			}
+		} else if (this._requestedMaxColumnCount != null) {
+			if (horizontalTileCount > this._requestedMaxColumnCount) {
+				horizontalTileCount = this._requestedMaxColumnCount;
+			}
+		}
+		var maxHorizontalTileCount = 0x7FFFFFFF;
+		if (explicitMaxWidth != null && explicitMaxWidth < Math.POSITIVE_INFINITY) {
+			maxHorizontalTileCount = Std.int((explicitMaxWidth - this._paddingLeft - this._paddingRight + horizontalGap) / (tileWidth + horizontalGap));
+			if (maxHorizontalTileCount < 1) {
+				// we must have at least one tile per row
+				maxHorizontalTileCount = 1;
+			}
+		}
+		if (horizontalTileCount > maxHorizontalTileCount) {
+			horizontalTileCount = maxHorizontalTileCount;
+		}
+		if (horizontalTileCount < 1) {
+			// we must have at least one tile per row
+			horizontalTileCount = 1;
+		}
+		return horizontalTileCount;
 	}
 }
