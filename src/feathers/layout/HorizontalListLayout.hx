@@ -569,6 +569,12 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		} else {
 			if (this._requestedColumnCount != null) {
 				viewPortWidth = virtualColumnWidth * this._requestedColumnCount;
+			} else {
+				if (this._requestedMinColumnCount != null && items.length < this._requestedMinColumnCount) {
+					viewPortWidth = virtualColumnWidth * this._requestedMinColumnCount;
+				} else if (this._requestedMaxColumnCount != null && items.length > this._requestedMaxColumnCount) {
+					viewPortWidth = virtualColumnWidth * this._requestedMaxColumnCount;
+				}
 			}
 			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
 				viewPortWidth = measurements.minWidth;
