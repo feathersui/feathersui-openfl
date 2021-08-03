@@ -290,25 +290,93 @@ class HorizontalListLayoutTest extends Test {
 	}
 
 	public function testRequestedColumnCountWithFewerItems():Void {
+		this._layout.heightResetEnabled = false;
 		this._layout.requestedColumnCount = 3;
-		this._control1.setSize(100, 60.0);
-		this._control2.setSize(100, 60.0);
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(300.0, result.viewPortWidth);
 		Assert.equals(200.0, result.contentWidth);
-		// Assert.equals(60.0, result.viewPortHeight);
-		// Assert.equals(60.0, result.contentHeight);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
 	}
 
 	public function testRequestedColumnCountWithMoreItems():Void {
+		this._layout.heightResetEnabled = false;
 		this._layout.requestedColumnCount = 1;
-		this._control1.setSize(100, 60.0);
-		this._control2.setSize(100, 60.0);
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
 		Assert.equals(200.0, result.contentWidth);
-		// Assert.equals(60.0, result.viewPortHeight);
-		// Assert.equals(60.0, result.contentHeight);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
+	}
+
+	public function testRequestedMinColumnCountWithZeroItems():Void {
+		this._layout.requestedMinColumnCount = 3;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentHeight);
+	}
+
+	public function testRequestedMinColumnCountWithFewerItems():Void {
+		this._layout.heightResetEnabled = false;
+		this._layout.requestedMinColumnCount = 3;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(300.0, result.viewPortWidth);
+		Assert.equals(200.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
+	}
+
+	public function testRequestedMinColumnCountWithMoreItems():Void {
+		this._layout.heightResetEnabled = false;
+		this._layout.requestedMinColumnCount = 1;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(200.0, result.viewPortWidth);
+		Assert.equals(200.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxColumnCountWithZeroItems():Void {
+		this._layout.requestedMaxColumnCount = 3;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxColumnCountWithFewerItems():Void {
+		this._layout.heightResetEnabled = false;
+		this._layout.requestedMaxColumnCount = 3;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(200.0, result.viewPortWidth);
+		Assert.equals(200.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxColumnCountWithMoreItems():Void {
+		this._layout.heightResetEnabled = false;
+		this._layout.requestedMaxColumnCount = 1;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(100.0, result.viewPortWidth);
+		Assert.equals(200.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
 	}
 
 	public function testExplicitViewPortHeightLargerThanItemHeight():Void {
