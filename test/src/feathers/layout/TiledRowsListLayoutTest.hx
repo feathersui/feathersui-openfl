@@ -356,6 +356,72 @@ class TiledRowsListLayoutTest extends Test {
 		Assert.equals(2.0 * CHILD1_HEIGHT, result.contentHeight);
 	}
 
+	public function testRequestedMinRowCountWithZeroItems():Void {
+		this._layout.requestedMinRowCount = 3;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentHeight);
+	}
+
+	public function testRequestedMinRowCountWithFewerItems():Void {
+		this._measurements.width = 100.0;
+		this._layout.requestedMinRowCount = 3;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(100.0, result.viewPortWidth);
+		Assert.equals(100.0, result.contentWidth);
+		Assert.equals(180.0, result.viewPortHeight);
+		Assert.equals(120.0, result.contentHeight);
+	}
+
+	public function testRequestedMinRowCountWithMoreItems():Void {
+		this._measurements.width = 100.0;
+		this._layout.requestedMinRowCount = 1;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(100.0, result.viewPortWidth);
+		Assert.equals(100.0, result.contentWidth);
+		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(120.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxRowCountWithZeroItems():Void {
+		this._layout.requestedMinRowCount = 3;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxRowCountWithFewerItems():Void {
+		this._measurements.width = 100.0;
+		this._layout.requestedMaxRowCount = 3;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(100.0, result.viewPortWidth);
+		Assert.equals(100.0, result.contentWidth);
+		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(120.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxRowCountWithMoreItems():Void {
+		this._measurements.width = 100.0;
+		this._layout.requestedMaxRowCount = 1;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(100.0, result.viewPortWidth);
+		Assert.equals(100.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(120.0, result.contentHeight);
+	}
+
 	public function testRequestedColumnCountWithZeroItems():Void {
 		this._layout.requestedColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
@@ -378,6 +444,68 @@ class TiledRowsListLayoutTest extends Test {
 
 	public function testRequestedColumnCountWithMoreItems():Void {
 		this._layout.requestedColumnCount = 1;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(100.0, result.viewPortWidth);
+		Assert.equals(100.0, result.contentWidth);
+		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(120.0, result.contentHeight);
+	}
+
+	public function testRequestedMinColumnCountWithZeroItems():Void {
+		this._layout.requestedMinColumnCount = 3;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentHeight);
+	}
+
+	public function testRequestedMinColumnCountWithFewerItems():Void {
+		this._layout.requestedMinColumnCount = 3;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(300.0, result.viewPortWidth);
+		Assert.equals(300.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
+	}
+
+	public function testRequestedMinColumnCountWithMoreItems():Void {
+		this._layout.requestedMinColumnCount = 1;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(200.0, result.viewPortWidth);
+		Assert.equals(200.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxColumnCountWithZeroItems():Void {
+		this._layout.requestedMaxColumnCount = 3;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxColumnCountWithFewerItems():Void {
+		this._layout.requestedMaxColumnCount = 3;
+		this._control1.setSize(100.0, 60.0);
+		this._control2.setSize(100.0, 60.0);
+		var result = this._layout.layout([this._control1, this._control2], this._measurements);
+		Assert.equals(200.0, result.viewPortWidth);
+		Assert.equals(200.0, result.contentWidth);
+		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(60.0, result.contentHeight);
+	}
+
+	public function testRequestedMaxColumnCountWithMoreItems():Void {
+		this._layout.requestedMaxColumnCount = 1;
 		this._control1.setSize(100.0, 60.0);
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
