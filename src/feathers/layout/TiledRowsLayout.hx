@@ -387,31 +387,31 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		return this._verticalAlign;
 	}
 
-	private var _alignEmptyTiles:Bool = false;
+	private var _alignEmptyHorizontalTiles:Bool = false;
 
 	/**
 		Indicates if empty tiles should be included when positioning items with
-		the `horizontalAlign` property. For instance, if the `requestedRowCount`
-		is `3`, but the total number of tiles in a row is `2`, that row can be
-		aligned as if it contained all `3` items.
+		the `horizontalAlign` property. For instance, if the
+		`requestedColumnCount` is `3`, but the total number of tiles in a row is
+		`2`, that row can be aligned as if it contained all `3` items.
 
 		@since 1.0.0
 
-		@see `TiledRowsLayout.horizontalAlign`
+		@see `PagedTiledRowsListLayout.horizontalAlign`
 	**/
-	public var alignEmptyTiles(get, set):Bool;
+	public var alignEmptyHorizontalTiles(get, set):Bool;
 
-	private function get_alignEmptyTiles():Bool {
-		return this._alignEmptyTiles;
+	private function get_alignEmptyHorizontalTiles():Bool {
+		return this._alignEmptyHorizontalTiles;
 	}
 
-	private function set_alignEmptyTiles(value:Bool):Bool {
-		if (this._alignEmptyTiles == value) {
-			return this._alignEmptyTiles;
+	private function set_alignEmptyHorizontalTiles(value:Bool):Bool {
+		if (this._alignEmptyHorizontalTiles == value) {
+			return this._alignEmptyHorizontalTiles;
 		}
-		this._alignEmptyTiles = value;
+		this._alignEmptyHorizontalTiles = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this._alignEmptyTiles;
+		return this._alignEmptyHorizontalTiles;
 	}
 
 	private var _requestedColumnCount:Null<Int> = null;
@@ -703,7 +703,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 	private function applyHorizontalAlignToRow(items:Array<DisplayObject>, startIndex:Int, numItemsInRow:Int, horizontalTileCount:Int,
 			availableRowWidth:Float, tileWidth:Float):Void {
-		if (this._alignEmptyTiles && horizontalTileCount > numItemsInRow) {
+		if (this._alignEmptyHorizontalTiles && horizontalTileCount > numItemsInRow) {
 			numItemsInRow = horizontalTileCount;
 		}
 		var gapOffset = 0.0;
