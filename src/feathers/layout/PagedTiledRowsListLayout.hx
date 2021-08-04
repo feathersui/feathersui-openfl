@@ -1033,6 +1033,10 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		@see `feathers.layout.IScrollLayout.getNearestScrollPositionForIndex()`
 	**/
 	public function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point {
+		if (result == null) {
+			result = new Point();
+		}
+
 		var tileWidth = 0.0;
 		var tileHeight = 0.0;
 		if (this._virtualCache != null && this._virtualCache.length != 0) {
@@ -1042,7 +1046,39 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 				tileHeight = cacheItem.itemHeight;
 			}
 		}
-		return null;
+
+		if (tileWidth == 0.0 || tileHeight == 0.0) {
+			return result;
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, width, null, adjustedHorizontalGap, itemCount);
+		var verticalTileCount = this.calculateVerticalTileCount(tileHeight, height, null, adjustedVerticalGap, itemCount, horizontalTileCount);
+
+		var perPage = horizontalTileCount * verticalTileCount;
+		var pageIndex = Std.int(index / perPage);
+		switch (this._pageDirection) {
+			case HORIZONTAL:
+				result.x = pageIndex * width;
+				result.y = 0;
+			case VERTICAL:
+				result.x = 0;
+				result.y = pageIndex * height;
+			default:
+				throw new ArgumentError("Unknown paging direction: " + this._pageDirection);
+		}
+		return result;
 	}
 
 	private function calculateHorizontalTileCount(tileWidth:Float, explicitWidth:Null<Float>, explicitMaxWidth:Null<Float>, horizontalGap:Float,
