@@ -1019,26 +1019,14 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		@see `feathers.layout.IVirtualLayout.getVisibleIndices()`
 	**/
 	public function getVisibleIndices(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange {
-		var tileWidth = 0.0;
-		var tileHeight = 0.0;
-		if (this._virtualCache != null && this._virtualCache.length != 0) {
-			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
-			if (cacheItem != null) {
-				tileWidth = cacheItem.itemWidth;
-				tileHeight = cacheItem.itemHeight;
-			}
+		switch (this._pageDirection) {
+			case Direction.HORIZONTAL:
+				return this.getVisibleIndicesHorizontal(itemCount, width, height, result);
+			case Direction.VERTICAL:
+				return this.getVisibleIndicesVertical(itemCount, width, height, result);
+			default:
+				throw new ArgumentError("Unknown paging direction: " + this._pageDirection);
 		}
-
-		if (tileWidth == 0.0 || tileHeight == 0.0) {
-			if (result == null) {
-				result = new VirtualLayoutRange(0, 0);
-			} else {
-				result.start = 0;
-				result.end = 0;
-			}
-			return result;
-		}
-		return result;
 	}
 
 	/**
@@ -1217,9 +1205,11 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
 		var xOffset = switch (this._horizontalAlign) {
+			case LEFT: 0.0;
 			case RIGHT: availableRowWidth - contentWidth;
 			case CENTER: (availableRowWidth - contentWidth) / 2.0;
-			default: 0.0;
+			default:
+				throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 		}
 		if (xOffset <= 0.0 && gapOffset == 0.0) {
 			return;
@@ -1248,9 +1238,11 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		if (this._verticalGap != (1.0 / 0.0)) {
 			var contentHeight = numRows * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
 			yOffset = switch (this._verticalAlign) {
+				case TOP: 0.0;
 				case BOTTOM: availableHeight - contentHeight;
 				case MIDDLE: (availableHeight - contentHeight) / 2.0;
-				default: 0.0;
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
 		}
 		if (yOffset <= 0.0 && adjustedVerticalGap == 0.0) {
@@ -1276,6 +1268,230 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 				item.y += yOffset;
 			}
 		}
+	}
+
+	private function getVisibleIndicesHorizontal(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange {
+		var tileWidth = 0.0;
+		var tileHeight = 0.0;
+		if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				tileWidth = cacheItem.itemWidth;
+				tileHeight = cacheItem.itemHeight;
+			}
+		}
+
+		if (tileWidth == 0.0 || tileHeight == 0.0) {
+			if (result == null) {
+				result = new VirtualLayoutRange(0, 0);
+			} else {
+				result.start = 0;
+				result.end = 0;
+			}
+			return result;
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, width, null, adjustedHorizontalGap, itemCount);
+		var verticalTileCount = this.calculateVerticalTileCount(tileHeight, height, null, adjustedVerticalGap, itemCount, horizontalTileCount);
+		var perPage = horizontalTileCount * verticalTileCount;
+		var minimumItemCount = perPage + 2 * verticalTileCount;
+		if (minimumItemCount > itemCount) {
+			minimumItemCount = itemCount;
+		}
+
+		var startPageIndex = Math.round(scrollX / width);
+		var minimum = startPageIndex * perPage;
+		var totalRowWidth = horizontalTileCount * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+		var leftSideOffset = 0.0;
+		var rightSideOffset = 0.0;
+		if (totalRowWidth < width) {
+			switch (this._horizontalAlign) {
+				case LEFT:
+					leftSideOffset = 0;
+					rightSideOffset = width - this._paddingLeft - this._paddingRight - totalRowWidth;
+				case RIGHT:
+					leftSideOffset = width - this._paddingLeft - this._paddingRight - totalRowWidth;
+					rightSideOffset = 0;
+				case CENTER:
+					leftSideOffset = rightSideOffset = Math.round((width - this._paddingLeft - this._paddingRight - totalRowWidth) / 2.0);
+				default:
+					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
+			}
+		}
+		var columnOffset = 0;
+		var pageStartPosition = startPageIndex * width;
+		var partialPageSize = this._scrollX - pageStartPosition;
+		if (partialPageSize < 0.0) {
+			partialPageSize = -partialPageSize - this._paddingRight - rightSideOffset;
+			if (partialPageSize < 0) {
+				partialPageSize = 0;
+			}
+			columnOffset = -Std.int(partialPageSize / (tileWidth + adjustedHorizontalGap)) - 1;
+			minimum += -perPage + horizontalTileCount + columnOffset;
+		} else if (partialPageSize > 0) {
+			partialPageSize = partialPageSize - this._paddingLeft - leftSideOffset;
+			if (partialPageSize < 0) {
+				partialPageSize = 0;
+			}
+			columnOffset = Std.int(partialPageSize / (tileWidth + adjustedHorizontalGap));
+			minimum += columnOffset;
+		}
+		if (minimum < 0) {
+			minimum = 0;
+			columnOffset = 0;
+		}
+		if (result == null) {
+			result = new VirtualLayoutRange(0, 0);
+		} else {
+			result.start = 0;
+			result.end = 0;
+		}
+		if (minimum + minimumItemCount >= itemCount) {
+			// an optimized path when we're on or near the last page
+			minimum = itemCount - minimumItemCount;
+			result.start = minimum;
+			result.end = itemCount - 1;
+		} else {
+			result.start = minimum;
+			var rowIndex = 0;
+			var columnIndex = (horizontalTileCount + columnOffset) % horizontalTileCount;
+			var pageStart = Std.int(minimum / perPage) * perPage;
+			var i = minimum;
+			var resultLength = 0;
+			do {
+				if (i < itemCount) {
+					if (result.end < i) {
+						result.end = i;
+					}
+					resultLength++;
+				}
+				rowIndex++;
+				if (rowIndex == verticalTileCount) {
+					rowIndex = 0;
+					columnIndex++;
+					if (columnIndex == horizontalTileCount) {
+						columnIndex = 0;
+						pageStart += perPage;
+					}
+					i = pageStart + columnIndex - horizontalTileCount;
+				}
+				i += horizontalTileCount;
+			} while (resultLength < minimumItemCount && pageStart < itemCount);
+		}
+		return result;
+	}
+
+	private function getVisibleIndicesVertical(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange {
+		var tileWidth = 0.0;
+		var tileHeight = 0.0;
+		if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				tileWidth = cacheItem.itemWidth;
+				tileHeight = cacheItem.itemHeight;
+			}
+		}
+
+		if (tileWidth == 0.0 || tileHeight == 0.0) {
+			if (result == null) {
+				result = new VirtualLayoutRange(0, 0);
+			} else {
+				result.start = 0;
+				result.end = 0;
+			}
+			return result;
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, width, null, adjustedHorizontalGap, itemCount);
+		var verticalTileCount = this.calculateVerticalTileCount(tileHeight, height, null, adjustedVerticalGap, itemCount, horizontalTileCount);
+		var perPage = horizontalTileCount * verticalTileCount;
+		var minimumItemCount = perPage + 2 * horizontalTileCount;
+		if (minimumItemCount > itemCount) {
+			minimumItemCount = itemCount;
+		}
+
+		var startPageIndex = Math.round(scrollY / height);
+		var minimum = startPageIndex * perPage;
+		var totalColumnHeight = verticalTileCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
+		var topSideOffset = 0.0;
+		var bottomSideOffset = 0.0;
+		if (totalColumnHeight < height) {
+			switch (this._verticalAlign) {
+				case TOP:
+					topSideOffset = 0;
+					bottomSideOffset = height - this._paddingTop - this._paddingBottom - totalColumnHeight;
+				case BOTTOM:
+					topSideOffset = height - this._paddingTop - this._paddingBottom - totalColumnHeight;
+					bottomSideOffset = 0;
+				case MIDDLE:
+					topSideOffset = bottomSideOffset = Math.round((height - this._paddingTop - this._paddingBottom - totalColumnHeight) / 2.0);
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
+			}
+		}
+		var rowOffset = 0;
+		var pageStartPosition = startPageIndex * height;
+		var partialPageSize = scrollY - pageStartPosition;
+		if (partialPageSize < 0) {
+			partialPageSize = -partialPageSize - this._paddingBottom - bottomSideOffset;
+			if (partialPageSize < 0) {
+				partialPageSize = 0;
+			}
+			rowOffset = -Math.floor(partialPageSize / (tileHeight + adjustedVerticalGap)) - 1;
+			minimum += horizontalTileCount * rowOffset;
+		} else if (partialPageSize > 0) {
+			partialPageSize = partialPageSize - this._paddingTop - topSideOffset;
+			if (partialPageSize < 0) {
+				partialPageSize = 0;
+			}
+			rowOffset = Math.floor(partialPageSize / (tileHeight + adjustedVerticalGap));
+			minimum += horizontalTileCount * rowOffset;
+		}
+		if (minimum < 0) {
+			minimum = 0;
+			rowOffset = 0;
+		}
+
+		var maximum = minimum + minimumItemCount;
+		if (maximum >= itemCount) {
+			maximum = itemCount - 1;
+			minimum = maximum - minimumItemCount;
+			if (minimum < 0) {
+				minimum = 0;
+			}
+		}
+
+		if (result == null) {
+			result = new VirtualLayoutRange(minimum, maximum);
+		} else {
+			result.start = minimum;
+			result.end = maximum;
+		}
+		return result;
 	}
 }
 
