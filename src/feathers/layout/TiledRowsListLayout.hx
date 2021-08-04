@@ -10,11 +10,12 @@ package feathers.layout;
 
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
-import openfl.events.Event;
-import openfl.geom.Point;
-import openfl.display.DisplayObject;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
+import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.geom.Point;
 
 /**
 	Positions items as tiles (all items have equal dimensions) in one or more
@@ -1233,9 +1234,11 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout {
 
 		var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
 		var xOffset = switch (this._horizontalAlign) {
+			case LEFT: 0.0;
 			case RIGHT: availableRowWidth - contentWidth;
 			case CENTER: (availableRowWidth - contentWidth) / 2.0;
-			default: 0.0;
+			default:
+				throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 		}
 		if (xOffset <= 0.0 && gapOffset == 0.0) {
 			return;
@@ -1261,9 +1264,11 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout {
 		if (this._verticalGap != (1.0 / 0.0)) {
 			var contentHeight = rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
 			yOffset = switch (this._verticalAlign) {
+				case TOP: 0.0;
 				case BOTTOM: availableHeight - contentHeight;
 				case MIDDLE: (availableHeight - contentHeight) / 2.0;
-				default: 0.0;
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
 		}
 		if (yOffset <= 0.0 && adjustedVerticalGap == 0.0) {
