@@ -25,6 +25,7 @@ import feathers.events.FeathersEvent;
 import feathers.events.GroupListViewEvent;
 import feathers.events.HierarchicalCollectionEvent;
 import feathers.events.TriggerEvent;
+import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
@@ -645,6 +646,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _tempVisibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _layoutItems:Array<DisplayObject> = [];
+	private var _layoutHeaderIndices:Array<Int> = [];
 
 	private var _selectable:Bool = true;
 
@@ -1167,6 +1169,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this._layoutItems.resize(0);
 		var newSize = this.calculateTotalLayoutCount([]);
 		this._layoutItems.resize(newSize);
+		this._layoutHeaderIndices.resize(0);
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
@@ -1191,6 +1194,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			var item = this._dataProvider.get(location);
 			if (layoutIndex < this._visibleIndices.start || layoutIndex > this._visibleIndices.end) {
 				this._layoutItems[layoutIndex] = null;
+				if (location.length == 1) {
+					this._layoutHeaderIndices.push(layoutIndex);
+				}
 			} else {
 				this.findItemRenderer(item, location.copy(), layoutIndex);
 			}
@@ -1225,6 +1231,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		// it isn't anymore, it may have been set invisible
 		itemRenderer.visible = true;
 		this._layoutItems[layoutIndex] = itemRenderer;
+		if (state.type == HEADER) {
+			this._layoutHeaderIndices.push(layoutIndex);
+		}
 		var removed = storage.inactiveItemRenderers.remove(itemRenderer);
 		if (!removed) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: item renderer map contains bad data for item at location ${location}. This may be caused by duplicate items in the data provider, which is not allowed.');
@@ -1243,6 +1252,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			itemRenderer.visible = true;
 			this.groupViewPort.addChild(itemRenderer);
 			this._layoutItems[layoutIndex] = itemRenderer;
+			if (type == HEADER) {
+				this._layoutHeaderIndices.push(layoutIndex);
+			}
 		}
 		this._unrenderedLocations.resize(0);
 	}
@@ -1501,6 +1513,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private var _currentDisplayIndex:Int;
 
 	private function displayIndexToLocation(displayIndex:Int):Array<Int> {
+		if (displayIndex < 0) {
+			return null;
+		}
 		this._currentDisplayIndex = -1;
 		return this.displayIndexToLocationAtBranch(displayIndex, []);
 	}
@@ -1570,53 +1585,69 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._layoutItems.length == 0) {
 			return;
 		}
+		var location:Array<Int> = null;
 		var startIndex = this.locationToDisplayIndex(this._selectedLocation);
 		var result = startIndex;
-		var location:Array<Int> = null;
-		var needsAnotherPass = true;
-		var nextKeyCode = event.keyCode;
-		var lastResult = -1;
-		while (needsAnotherPass) {
-			needsAnotherPass = false;
-			switch (nextKeyCode) {
-				case Keyboard.UP:
-					result = result - 1;
-				case Keyboard.DOWN:
-					result = result + 1;
-				case Keyboard.LEFT:
-					result = result - 1;
-				case Keyboard.RIGHT:
-					result = result + 1;
-				case Keyboard.PAGE_UP:
-					result = result - 1;
-				case Keyboard.PAGE_DOWN:
-					result = result + 1;
-				case Keyboard.HOME:
-					result = 0;
-					nextKeyCode = Keyboard.DOWN;
-				case Keyboard.END:
-					result = this._layoutItems.length - 1;
-					nextKeyCode = Keyboard.UP;
-				default:
-					// not keyboard navigation
-					return;
+		if ((this.layout is IKeyboardNavigationLayout)) {
+			if (event.keyCode != Keyboard.UP && event.keyCode != Keyboard.DOWN && event.keyCode != Keyboard.LEFT && event.keyCode != Keyboard.RIGHT
+				&& event.keyCode != Keyboard.PAGE_UP && event.keyCode != Keyboard.PAGE_DOWN && event.keyCode != Keyboard.HOME && event.keyCode != Keyboard.END) {
+				return;
 			}
-			if (result < 0) {
-				result = 0;
-			} else if (result >= this._layoutItems.length) {
-				result = this._layoutItems.length - 1;
-			}
+			result = cast(this.layout, IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._layoutItems, this._layoutHeaderIndices,
+				this.groupViewPort.visibleWidth, this.groupViewPort.visibleHeight);
 			location = this.displayIndexToLocation(result);
-			if (location.length != 2) {
-				// keep going until we reach a non-branch
-				if (result == lastResult) {
-					// but don't keep trying if we got the same result more than
-					// once because it means that we got stuck
-					return;
-				}
-				needsAnotherPass = true;
+			if (location == null || location.length != 2) {
+				return;
 			}
-			lastResult = result;
+		} else {
+			var needsAnotherPass = true;
+			var nextKeyCode = event.keyCode;
+			var lastResult = -1;
+			while (needsAnotherPass) {
+				needsAnotherPass = false;
+				switch (nextKeyCode) {
+					case Keyboard.UP:
+						result = result - 1;
+					case Keyboard.DOWN:
+						result = result + 1;
+					case Keyboard.LEFT:
+						result = result - 1;
+					case Keyboard.RIGHT:
+						result = result + 1;
+					case Keyboard.PAGE_UP:
+						result = result - 1;
+					case Keyboard.PAGE_DOWN:
+						result = result + 1;
+					case Keyboard.HOME:
+						result = 0;
+						nextKeyCode = Keyboard.DOWN;
+					case Keyboard.END:
+						result = this._layoutItems.length - 1;
+						nextKeyCode = Keyboard.UP;
+					default:
+						// not keyboard navigation
+						return;
+				}
+				if (result < 0) {
+					result = 0;
+				} else if (result >= this._layoutItems.length) {
+					result = this._layoutItems.length - 1;
+				}
+				location = this.displayIndexToLocation(result);
+				if (location.length != 2) {
+					// keep going until we reach a non-branch
+					if (result == lastResult) {
+						// but don't keep trying if we got the same result more than
+						// once because it means that we got stuck
+						return;
+					}
+					needsAnotherPass = true;
+				}
+				lastResult = result;
+			}
+		}
+		if (result == startIndex) {
+			return;
 		}
 		event.preventDefault();
 		// use the setter

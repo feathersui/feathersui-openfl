@@ -24,6 +24,7 @@ import feathers.events.FeathersEvent;
 import feathers.events.HierarchicalCollectionEvent;
 import feathers.events.TreeViewEvent;
 import feathers.events.TriggerEvent;
+import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
@@ -1406,31 +1407,43 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		var startIndex = this.locationToDisplayIndex(this._selectedLocation, false);
 		var result = startIndex;
-		switch (event.keyCode) {
-			case Keyboard.UP:
-				result = result - 1;
-			case Keyboard.DOWN:
-				result = result + 1;
-			case Keyboard.LEFT:
-				result = result - 1;
-			case Keyboard.RIGHT:
-				result = result + 1;
-			case Keyboard.PAGE_UP:
-				result = result - 1;
-			case Keyboard.PAGE_DOWN:
-				result = result + 1;
-			case Keyboard.HOME:
-				result = 0;
-			case Keyboard.END:
-				result = this._layoutItems.length - 1;
-			default:
-				// not keyboard navigation
+		if ((this.layout is IKeyboardNavigationLayout)) {
+			if (event.keyCode != Keyboard.UP && event.keyCode != Keyboard.DOWN && event.keyCode != Keyboard.LEFT && event.keyCode != Keyboard.RIGHT
+				&& event.keyCode != Keyboard.PAGE_UP && event.keyCode != Keyboard.PAGE_DOWN && event.keyCode != Keyboard.HOME && event.keyCode != Keyboard.END) {
 				return;
+			}
+			result = cast(this.layout, IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._layoutItems, null,
+				this.treeViewPort.visibleWidth, this.treeViewPort.visibleHeight);
+		} else {
+			switch (event.keyCode) {
+				case Keyboard.UP:
+					result = result - 1;
+				case Keyboard.DOWN:
+					result = result + 1;
+				case Keyboard.LEFT:
+					result = result - 1;
+				case Keyboard.RIGHT:
+					result = result + 1;
+				case Keyboard.PAGE_UP:
+					result = result - 1;
+				case Keyboard.PAGE_DOWN:
+					result = result + 1;
+				case Keyboard.HOME:
+					result = 0;
+				case Keyboard.END:
+					result = this._layoutItems.length - 1;
+				default:
+					// not keyboard navigation
+					return;
+			}
 		}
 		if (result < 0) {
 			result = 0;
 		} else if (result >= this._layoutItems.length) {
 			result = this._layoutItems.length - 1;
+		}
+		if (result == startIndex) {
+			return;
 		}
 		event.preventDefault();
 		// use the setter
