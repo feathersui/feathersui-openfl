@@ -242,19 +242,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 	private var _layoutItems:Array<DisplayObject> = [];
 
-	/**
-		@see `feathers.controls.supportClasses.IViewPort.requiresMeasurementOnScroll`
-	**/
-	@:flash.property
-	public var requiresMeasurementOnScroll(get, never):Bool;
-
-	private function get_requiresMeasurementOnScroll():Bool {
-		if (!(this._layout is IScrollLayout)) {
-			return false;
-		}
-		return cast(this._layout, IScrollLayout).requiresLayoutOnScroll;
-	}
-
 	private var _layoutMeasurements = new Measurements();
 	private var _layoutResult = new LayoutBoundsResult();
 	private var _ignoreLayoutChanges = false;

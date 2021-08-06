@@ -592,16 +592,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		return this._explicitVisibleWidth;
 	}
 
-	/**
-		@see `feathers.controls.supportClasses.IViewPort.requiresMeasurementOnScroll`
-	**/
-	@:flash.property
-	public var requiresMeasurementOnScroll(get, never):Bool;
-
-	private function get_requiresMeasurementOnScroll():Bool {
-		return !this._smoothScrolling;
-	}
-
 	private var _scrollX:Float = 0.0;
 
 	/**

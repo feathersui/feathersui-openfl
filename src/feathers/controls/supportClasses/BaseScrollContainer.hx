@@ -1018,13 +1018,17 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function needsMeasurement():Bool {
-		return (this.isInvalid(SCROLL) && this._viewPort.requiresMeasurementOnScroll)
+		return (this.isInvalid(SCROLL) && this.needsScrollMeasurement())
 			|| this.isInvalid(DATA)
 			|| this.isInvalid(SIZE)
 			|| this.isInvalid(STYLES)
 			|| this.isInvalid(INVALIDATION_FLAG_SCROLL_BAR_FACTORY)
 			|| this.isInvalid(STATE)
 			|| this.isInvalid(LAYOUT);
+	}
+
+	private function needsScrollMeasurement():Bool {
+		return false;
 	}
 
 	private function createScroller():Void {
@@ -1988,7 +1992,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function baseScrollContainer_scroller_scrollHandler(event:Event):Void {
 		if (this._ignoreScrollerChanges) {
-			if (this._settingScrollerDimensions && this.viewPort.requiresMeasurementOnScroll) {
+			if (this._settingScrollerDimensions && this.needsScrollMeasurement()) {
 				// the scroller changed its position while we were updating its
 				// dimensions. if it will affect the layout, we have no choice
 				// but to validate again later.
@@ -1997,7 +2001,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		this.checkForRevealScrollBars();
-		if (this._viewPort.requiresMeasurementOnScroll) {
+		if (this.needsScrollMeasurement()) {
 			this.setInvalid(SCROLL);
 		} else {
 			this._viewPort.scrollX = this.scrollX;

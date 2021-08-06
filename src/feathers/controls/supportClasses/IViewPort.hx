@@ -107,13 +107,4 @@ interface IViewPort extends IUIControl extends IValidating extends IMeasureObjec
 	**/
 	@:flash.property
 	public var scrollY(get, set):Float;
-
-	/**
-		Indicates if the content of the view port must be re-measured when
-		scrolling. Typically used by "virtualized" layouts.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	public var requiresMeasurementOnScroll(get, never):Bool;
 }

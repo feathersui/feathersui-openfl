@@ -65,19 +65,6 @@ interface IScrollLayout extends ILayout {
 	var elasticLeft(get, never):Bool;
 
 	/**
-		Determines if the container calls `layout()` when the scroll position
-		changes. Useful for transforming items as the view port scrolls. This
-		alue should typically be `true` for layouts that implement the
-		`IVirtualLayout` interface and the `useVirtualLayout` property is set to
-		`true`. May also be used by layouts that toggle item visibility as the
-		items scroll into and out of the view port.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	var requiresLayoutOnScroll(get, never):Bool;
-
-	/**
 		@since 1.0.0
 	**/
 	function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point;

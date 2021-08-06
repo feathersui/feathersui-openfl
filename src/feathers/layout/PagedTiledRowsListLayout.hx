@@ -119,16 +119,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		return false;
 	}
 
-	/**
-		@see `feathers.layout.IScrollLayout.requiresLayoutOnScroll`
-	**/
-	@:flash.property
-	public var requiresLayoutOnScroll(get, never):Bool;
-
-	private function get_requiresLayoutOnScroll():Bool {
-		return true;
-	}
-
 	private var _alignEmptyHorizontalTiles:Bool = false;
 
 	/**

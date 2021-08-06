@@ -222,20 +222,6 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitVisibleWidth;
 	}
 
-	/**
-		@see `feathers.controls.supportClasses.IViewPort.requiresMeasurementOnScroll`
-	**/
-	@:flash.property
-	public var requiresMeasurementOnScroll(get, never):Bool;
-
-	private function get_requiresMeasurementOnScroll():Bool {
-		if ((this.layout is IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
-			return scrollLayout.requiresLayoutOnScroll;
-		}
-		return false;
-	}
-
 	private var _scrollX:Float = 0.0;
 
 	/**
@@ -253,9 +239,6 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			return this._scrollX;
 		}
 		this._scrollX = value;
-		if ((this.layout is IScrollLayout) && cast(this.layout, IScrollLayout).requiresLayoutOnScroll) {
-			this.setInvalid(SCROLL);
-		}
 		return this._scrollX;
 	}
 
@@ -276,9 +259,6 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			return this._scrollY;
 		}
 		this._scrollY = value;
-		if ((this.layout is IScrollLayout) && cast(this.layout, IScrollLayout).requiresLayoutOnScroll) {
-			this.setInvalid(SCROLL);
-		}
 		return this._scrollY;
 	}
 

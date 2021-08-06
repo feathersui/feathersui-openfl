@@ -127,16 +127,6 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout {
 		return true;
 	}
 
-	/**
-		@see `feathers.layout.IScrollLayout.requiresLayoutOnScroll`
-	**/
-	@:flash.property
-	public var requiresLayoutOnScroll(get, never):Bool;
-
-	private function get_requiresLayoutOnScroll():Bool {
-		return true;
-	}
-
 	private var _requestedColumnCount:Null<Float> = null;
 
 	/**

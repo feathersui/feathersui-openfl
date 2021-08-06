@@ -1016,6 +1016,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _rowLayoutItems:Array<DisplayObject> = [];
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
+	private var _tempVisibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _selectable:Bool = true;
 
 	/**
@@ -1277,6 +1278,22 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.scroller.forceElasticBottom = false;
 			this.scroller.forceElasticLeft = false;
 		}
+	}
+
+	override private function needsScrollMeasurement():Bool {
+		var oldStart = this._visibleIndices.start;
+		var oldEnd = this._visibleIndices.end;
+		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
+			var virtualLayout = cast(this.layout, IVirtualLayout);
+			virtualLayout.scrollX = this.scrollX;
+			virtualLayout.scrollY = this.scrollY;
+			virtualLayout.getVisibleIndices(this._rowLayoutItems.length, this.gridViewPort.visibleWidth, this.gridViewPort.visibleHeight,
+				this._tempVisibleIndices);
+		} else {
+			this._tempVisibleIndices.start = 0;
+			this._tempVisibleIndices.end = this._rowLayoutItems.length - 1;
+		}
+		return oldStart != this._tempVisibleIndices.start || oldEnd != this._tempVisibleIndices.end;
 	}
 
 	override private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
