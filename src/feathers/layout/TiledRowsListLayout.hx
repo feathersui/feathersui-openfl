@@ -1153,14 +1153,30 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 				columnIndex = horizontalTileCount - 1;
 		}
 		if (rowIndex < 0) {
-			rowIndex = 0;
+			if (wrapArrowKeys) {
+				rowIndex = numRows - 1;
+			} else {
+				rowIndex = 0;
+			}
 		} else if (rowIndex >= numRows) {
-			rowIndex = numRows - 1;
+			if (wrapArrowKeys) {
+				rowIndex = 0;
+			} else {
+				rowIndex = numRows - 1;
+			}
 		}
 		if (columnIndex < 0) {
-			columnIndex = 0;
+			if (wrapArrowKeys) {
+				columnIndex = horizontalTileCount - 1;
+			} else {
+				columnIndex = 0;
+			}
 		} else if (columnIndex >= horizontalTileCount) {
-			columnIndex = horizontalTileCount - 1;
+			if (wrapArrowKeys) {
+				columnIndex = 0;
+			} else {
+				columnIndex = horizontalTileCount - 1;
+			}
 		}
 
 		var result = rowIndex * horizontalTileCount + columnIndex;

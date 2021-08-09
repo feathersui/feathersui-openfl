@@ -1186,14 +1186,30 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		}
 
 		if (rowIndex < 0) {
-			rowIndex = 0;
+			if (wrapArrowKeys) {
+				rowIndex = verticalTileCount - 1;
+			} else {
+				rowIndex = 0;
+			}
 		} else if (rowIndex >= verticalTileCount) {
-			rowIndex = verticalTileCount - 1;
+			if (wrapArrowKeys) {
+				rowIndex = 0;
+			} else {
+				rowIndex = verticalTileCount - 1;
+			}
 		}
 		if (columnIndex < 0) {
-			columnIndex = 0;
+			if (wrapArrowKeys) {
+				columnIndex = horizontalTileCount - 1;
+			} else {
+				columnIndex = 0;
+			}
 		} else if (columnIndex >= horizontalTileCount) {
-			columnIndex = horizontalTileCount - 1;
+			if (wrapArrowKeys) {
+				columnIndex = 0;
+			} else {
+				columnIndex = horizontalTileCount - 1;
+			}
 		}
 		if (this._pageDirection == HORIZONTAL) {
 			while (columnIndex >= pageHorizontalTileCount) {
