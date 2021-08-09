@@ -8,13 +8,15 @@
 
 package feathers.layout;
 
-import openfl.geom.Point;
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.geom.Point;
 
 /**
 	A simple list layout that positions items from top to bottom, in a single
@@ -28,7 +30,7 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayout {
+class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout {
 	/**
 		Creates a new `VerticalListFixedRowLayout` object.
 
@@ -752,6 +754,132 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		}
 		result.x = this._scrollX;
 		result.y = targetY;
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.IKeyboardNavigationLayout.findNextKeyboardIndex()`
+	**/
+	public function findNextKeyboardIndex(startIndex:Int, event:KeyboardEvent, wrapArrowKeys:Bool, items:Array<DisplayObject>, indicesToSkip:Array<Int>,
+			viewPortWidth:Float, viewPortHeight:Float):Int {
+		if (items.length == 0) {
+			return -1;
+		}
+
+		var itemHeight = 0.0;
+		if (this._rowHeight != null) {
+			itemHeight = this._rowHeight;
+		} else if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				itemHeight = cacheItem.itemHeight;
+			}
+		}
+
+		var maxIndex = items.length - 1;
+		var result = startIndex;
+		if (result == -1) {
+			result = switch (event.keyCode) {
+				case Keyboard.UP: wrapArrowKeys ? maxIndex : -1;
+				case Keyboard.DOWN: 0;
+				default: -1;
+			}
+			if (result == -1) {
+				return result;
+			}
+			if (indicesToSkip == null || indicesToSkip.indexOf(result) == -1) {
+				return result;
+			}
+			// otherwise, keep looking for the first valid index
+		}
+
+		var needsAnotherPass = true;
+		var nextKeyCode = event.keyCode;
+		var lastResult = result;
+		while (needsAnotherPass) {
+			needsAnotherPass = false;
+			switch (nextKeyCode) {
+				case Keyboard.UP:
+					result = result - 1;
+				case Keyboard.DOWN:
+					result = result + 1;
+				case Keyboard.PAGE_UP:
+					var yPosition = 0.0;
+					var i = startIndex;
+					while (i >= 0) {
+						yPosition += itemHeight;
+						if (indicesToSkip != null && indicesToSkip.indexOf(i) != -1) {
+							yPosition += this._gap;
+							i--;
+							continue;
+						}
+						if (yPosition > viewPortHeight) {
+							break;
+						}
+						yPosition += this._gap;
+						result = i;
+						i--;
+					}
+					nextKeyCode = Keyboard.UP;
+				case Keyboard.PAGE_DOWN:
+					var yPosition = 0.0;
+					for (i in startIndex...items.length) {
+						yPosition += itemHeight;
+						if (indicesToSkip != null && indicesToSkip.indexOf(i) != -1) {
+							yPosition += this._gap;
+							continue;
+						}
+						if (yPosition > viewPortHeight) {
+							break;
+						}
+						yPosition += this._gap;
+						result = i;
+					}
+					nextKeyCode = Keyboard.DOWN;
+				case Keyboard.HOME:
+					for (i in 0...startIndex) {
+						if (indicesToSkip == null || indicesToSkip.indexOf(i) == -1) {
+							result = i;
+							break;
+						}
+					}
+				case Keyboard.END:
+					var i = maxIndex;
+					while (i > startIndex) {
+						if (indicesToSkip == null || indicesToSkip.indexOf(i) == -1) {
+							result = i;
+							break;
+						}
+						i--;
+					}
+				default:
+					// not keyboard navigation
+					return startIndex;
+			}
+			if (result < 0) {
+				if (wrapArrowKeys) {
+					result = maxIndex;
+				} else {
+					result = 0;
+				}
+			} else if (result > maxIndex) {
+				if (wrapArrowKeys) {
+					result = 0;
+				} else {
+					result = maxIndex;
+				}
+			}
+			if (indicesToSkip != null && indicesToSkip.indexOf(result) != -1) {
+				// keep going until we reach a valid index
+				if (result == lastResult) {
+					// but don't keep trying if we got the same result more than
+					// once because it means that we got stuck
+					return startIndex;
+				}
+				needsAnotherPass = true;
+			}
+			lastResult = result;
+		}
 		return result;
 	}
 
