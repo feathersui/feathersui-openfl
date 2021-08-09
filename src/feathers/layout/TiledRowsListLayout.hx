@@ -8,6 +8,8 @@
 
 package feathers.layout;
 
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
@@ -28,7 +30,7 @@ import openfl.geom.Point;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout {
+class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout {
 	/**
 		Creates a new `TiledRowsListLayout` object.
 
@@ -1061,6 +1063,112 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout {
 		}
 		result.x = 0.0;
 		result.y = resultY;
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.IKeyboardNavigationLayout.findNextKeyboardIndex()`
+	**/
+	public function findNextKeyboardIndex(startIndex:Int, event:KeyboardEvent, wrapArrowKeys:Bool, items:Array<DisplayObject>, indicesToSkip:Array<Int>,
+			viewPortWidth:Float, viewPortHeight:Float):Int {
+		var itemCount = items.length;
+		if (itemCount == 0) {
+			return -1;
+		}
+
+		var tileWidth = 0.0;
+		var tileHeight = 0.0;
+		if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				tileWidth = cacheItem.itemWidth;
+				tileHeight = cacheItem.itemHeight;
+			}
+		}
+
+		if (tileWidth == 0.0 || tileHeight == 0.0) {
+			return startIndex;
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+			adjustedHorizontalGap = this._minHorizontalGap;
+			var maxContentWidth = itemCount * (tileWidth + adjustedHorizontalGap);
+			if (itemCount > 0) {
+				maxContentWidth -= adjustedHorizontalGap;
+			}
+			if (availableRowWidth > maxContentWidth) {
+				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (itemCount - 1);
+			}
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var result = startIndex;
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, viewPortWidth, null, adjustedHorizontalGap, itemCount);
+		var verticalTileCount = Std.int(this.calculateVerticalTileCount(tileHeight, viewPortHeight, null, adjustedVerticalGap, itemCount,
+			horizontalTileCount));
+		var numRows = Math.ceil(itemCount / horizontalTileCount);
+		var rowIndex = Std.int(startIndex / horizontalTileCount);
+		var columnIndex = Std.int(startIndex % horizontalTileCount);
+
+		if (result == -1) {
+			result = switch (event.keyCode) {
+				case Keyboard.LEFT: wrapArrowKeys ? itemCount - 1 : -1;
+				case Keyboard.UP: wrapArrowKeys ? itemCount - 1 : -1;
+				case Keyboard.RIGHT: 0;
+				case Keyboard.DOWN: 0;
+				default: -1;
+			}
+			if (indicesToSkip == null || indicesToSkip.indexOf(result) == -1) {
+				return result;
+			}
+			return -1;
+		}
+
+		switch (event.keyCode) {
+			case Keyboard.UP:
+				rowIndex--;
+			case Keyboard.DOWN:
+				rowIndex++;
+			case Keyboard.LEFT:
+				columnIndex--;
+			case Keyboard.RIGHT:
+				columnIndex++;
+			case Keyboard.PAGE_UP:
+				rowIndex -= verticalTileCount;
+			case Keyboard.PAGE_DOWN:
+				rowIndex += verticalTileCount;
+			case Keyboard.HOME:
+				rowIndex = 0;
+				columnIndex = 0;
+			case Keyboard.END:
+				rowIndex = numRows - 1;
+				columnIndex = horizontalTileCount - 1;
+		}
+		if (rowIndex < 0) {
+			rowIndex = 0;
+		} else if (rowIndex >= numRows) {
+			rowIndex = numRows - 1;
+		}
+		if (columnIndex < 0) {
+			columnIndex = 0;
+		} else if (columnIndex >= horizontalTileCount) {
+			columnIndex = horizontalTileCount - 1;
+		}
+
+		var result = rowIndex * horizontalTileCount + columnIndex;
+		if (result >= itemCount) {
+			// nothing at this column on the next row
+			result = itemCount - 1;
+		}
+
 		return result;
 	}
 
