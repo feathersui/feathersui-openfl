@@ -1126,63 +1126,85 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 				case Keyboard.DOWN: 0;
 				default: -1;
 			}
+			if (result == -1) {
+				return result;
+			}
 			if (indicesToSkip == null || indicesToSkip.indexOf(result) == -1) {
 				return result;
 			}
-			return -1;
+			// otherwise, keep looking for the first valid index
 		}
 
-		switch (event.keyCode) {
-			case Keyboard.UP:
-				rowIndex--;
-			case Keyboard.DOWN:
-				rowIndex++;
-			case Keyboard.LEFT:
-				columnIndex--;
-			case Keyboard.RIGHT:
-				columnIndex++;
-			case Keyboard.PAGE_UP:
-				rowIndex -= verticalTileCount;
-			case Keyboard.PAGE_DOWN:
-				rowIndex += verticalTileCount;
-			case Keyboard.HOME:
-				rowIndex = 0;
-				columnIndex = 0;
-			case Keyboard.END:
-				rowIndex = numRows - 1;
-				columnIndex = horizontalTileCount - 1;
-		}
-		if (rowIndex < 0) {
-			if (wrapArrowKeys) {
-				rowIndex = numRows - 1;
-			} else {
-				rowIndex = 0;
+		var needsAnotherPass = true;
+		var nextKeyCode = event.keyCode;
+		var lastResult = result;
+		while (needsAnotherPass) {
+			needsAnotherPass = false;
+			switch (nextKeyCode) {
+				case Keyboard.UP:
+					rowIndex--;
+				case Keyboard.DOWN:
+					rowIndex++;
+				case Keyboard.LEFT:
+					columnIndex--;
+				case Keyboard.RIGHT:
+					columnIndex++;
+				case Keyboard.PAGE_UP:
+					rowIndex -= verticalTileCount;
+					nextKeyCode = Keyboard.UP;
+				case Keyboard.PAGE_DOWN:
+					rowIndex += verticalTileCount;
+					nextKeyCode = Keyboard.DOWN;
+				case Keyboard.HOME:
+					rowIndex = 0;
+					columnIndex = 0;
+				case Keyboard.END:
+					rowIndex = numRows - 1;
+					columnIndex = horizontalTileCount - 1;
 			}
-		} else if (rowIndex >= numRows) {
-			if (wrapArrowKeys) {
-				rowIndex = 0;
-			} else {
-				rowIndex = numRows - 1;
+			if (rowIndex < 0) {
+				if (wrapArrowKeys) {
+					rowIndex = numRows - 1;
+				} else {
+					rowIndex = 0;
+				}
+			} else if (rowIndex >= numRows) {
+				if (wrapArrowKeys) {
+					rowIndex = 0;
+				} else {
+					rowIndex = numRows - 1;
+				}
 			}
-		}
-		if (columnIndex < 0) {
-			if (wrapArrowKeys) {
-				columnIndex = horizontalTileCount - 1;
-			} else {
-				columnIndex = 0;
+			if (columnIndex < 0) {
+				if (wrapArrowKeys) {
+					columnIndex = horizontalTileCount - 1;
+				} else {
+					columnIndex = 0;
+				}
+			} else if (columnIndex >= horizontalTileCount) {
+				if (wrapArrowKeys) {
+					columnIndex = 0;
+				} else {
+					columnIndex = horizontalTileCount - 1;
+				}
 			}
-		} else if (columnIndex >= horizontalTileCount) {
-			if (wrapArrowKeys) {
-				columnIndex = 0;
-			} else {
-				columnIndex = horizontalTileCount - 1;
-			}
-		}
 
-		var result = rowIndex * horizontalTileCount + columnIndex;
-		if (result >= itemCount) {
-			// nothing at this column on the next row
-			result = itemCount - 1;
+			result = rowIndex * horizontalTileCount + columnIndex;
+			if (result >= itemCount) {
+				// nothing at this column on the next row
+				result = itemCount - 1;
+			}
+
+			if (indicesToSkip != null && indicesToSkip.indexOf(result) != -1) {
+				// keep going until we reach a valid index
+				if (result == lastResult) {
+					// but don't keep trying if we got the same result more than
+					// once because it means that we got stuck
+					return startIndex;
+				}
+				needsAnotherPass = true;
+			}
+			lastResult = result;
 		}
 
 		return result;

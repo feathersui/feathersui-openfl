@@ -1127,10 +1127,13 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 				case Keyboard.DOWN: 0;
 				default: -1;
 			}
+			if (result == -1) {
+				return result;
+			}
 			if (indicesToSkip == null || indicesToSkip.indexOf(result) == -1) {
 				return result;
 			}
-			return -1;
+			// otherwise, keep looking for the first valid index
 		}
 
 		var pageHorizontalTileCount = this.calculateHorizontalTileCount(tileWidth, viewPortWidth, null, adjustedHorizontalGap, itemCount);
@@ -1150,77 +1153,100 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			}
 		}
 
-		switch (event.keyCode) {
-			case Keyboard.UP:
-				rowIndex--;
-			case Keyboard.DOWN:
-				rowIndex++;
-			case Keyboard.LEFT:
-				columnIndex--;
-			case Keyboard.RIGHT:
-				columnIndex++;
-			case Keyboard.PAGE_UP:
-				switch (this._pageDirection) {
-					case Direction.HORIZONTAL:
-						columnIndex -= pageHorizontalTileCount;
-					case VERTICAL:
-						rowIndex -= pageVerticalTileCount;
-					default:
-						throw new ArgumentError("Unknown paging direction: " + this._pageDirection);
-				}
-			case Keyboard.PAGE_DOWN:
-				switch (this._pageDirection) {
-					case Direction.HORIZONTAL:
-						columnIndex += pageHorizontalTileCount;
-					case VERTICAL:
-						rowIndex += pageVerticalTileCount;
-					default:
-						throw new ArgumentError("Unknown paging direction: " + this._pageDirection);
-				}
-			case Keyboard.HOME:
-				rowIndex = 0;
-				columnIndex = 0;
-			case Keyboard.END:
-				rowIndex = verticalTileCount - 1;
-				columnIndex = horizontalTileCount - 1;
-		}
+		var needsAnotherPass = true;
+		var nextKeyCode = event.keyCode;
+		var lastResult = result;
+		while (needsAnotherPass) {
+			needsAnotherPass = false;
+			switch (nextKeyCode) {
+				case Keyboard.UP:
+					rowIndex--;
+				case Keyboard.DOWN:
+					rowIndex++;
+				case Keyboard.LEFT:
+					columnIndex--;
+				case Keyboard.RIGHT:
+					columnIndex++;
+				case Keyboard.PAGE_UP:
+					switch (this._pageDirection) {
+						case Direction.HORIZONTAL:
+							columnIndex -= pageHorizontalTileCount;
+						case VERTICAL:
+							rowIndex -= pageVerticalTileCount;
+						default:
+							throw new ArgumentError("Unknown paging direction: " + this._pageDirection);
+					}
+					nextKeyCode = Keyboard.UP;
+				case Keyboard.PAGE_DOWN:
+					switch (this._pageDirection) {
+						case Direction.HORIZONTAL:
+							columnIndex += pageHorizontalTileCount;
+						case VERTICAL:
+							rowIndex += pageVerticalTileCount;
+						default:
+							throw new ArgumentError("Unknown paging direction: " + this._pageDirection);
+					}
+					nextKeyCode = Keyboard.DOWN;
+				case Keyboard.HOME:
+					rowIndex = 0;
+					columnIndex = 0;
+				case Keyboard.END:
+					rowIndex = verticalTileCount - 1;
+					columnIndex = horizontalTileCount - 1;
+			}
 
-		if (rowIndex < 0) {
-			if (wrapArrowKeys) {
-				rowIndex = verticalTileCount - 1;
+			if (rowIndex < 0) {
+				if (wrapArrowKeys) {
+					rowIndex = verticalTileCount - 1;
+				} else {
+					rowIndex = 0;
+				}
+			} else if (rowIndex >= verticalTileCount) {
+				if (wrapArrowKeys) {
+					rowIndex = 0;
+				} else {
+					rowIndex = verticalTileCount - 1;
+				}
+			}
+			if (columnIndex < 0) {
+				if (wrapArrowKeys) {
+					columnIndex = horizontalTileCount - 1;
+				} else {
+					columnIndex = 0;
+				}
+			} else if (columnIndex >= horizontalTileCount) {
+				if (wrapArrowKeys) {
+					columnIndex = 0;
+				} else {
+					columnIndex = horizontalTileCount - 1;
+				}
+			}
+			if (this._pageDirection == HORIZONTAL) {
+				var tempColumnIndex = columnIndex;
+				var tempRowIndex = rowIndex;
+				while (tempColumnIndex >= pageHorizontalTileCount) {
+					tempColumnIndex -= pageHorizontalTileCount;
+					tempRowIndex += verticalTileCount;
+				}
+				result = tempRowIndex * pageHorizontalTileCount + tempColumnIndex;
 			} else {
-				rowIndex = 0;
+				result = rowIndex * pageHorizontalTileCount + columnIndex;
 			}
-		} else if (rowIndex >= verticalTileCount) {
-			if (wrapArrowKeys) {
-				rowIndex = 0;
-			} else {
-				rowIndex = verticalTileCount - 1;
+			if (result >= itemCount) {
+				// nothing at this column on the next row
+				result = itemCount - 1;
 			}
-		}
-		if (columnIndex < 0) {
-			if (wrapArrowKeys) {
-				columnIndex = horizontalTileCount - 1;
-			} else {
-				columnIndex = 0;
+
+			if (indicesToSkip != null && indicesToSkip.indexOf(result) != -1) {
+				// keep going until we reach a valid index
+				if (result == lastResult) {
+					// but don't keep trying if we got the same result more than
+					// once because it means that we got stuck
+					return startIndex;
+				}
+				needsAnotherPass = true;
 			}
-		} else if (columnIndex >= horizontalTileCount) {
-			if (wrapArrowKeys) {
-				columnIndex = 0;
-			} else {
-				columnIndex = horizontalTileCount - 1;
-			}
-		}
-		if (this._pageDirection == HORIZONTAL) {
-			while (columnIndex >= pageHorizontalTileCount) {
-				columnIndex -= pageHorizontalTileCount;
-				rowIndex += verticalTileCount;
-			}
-		}
-		var result = rowIndex * pageHorizontalTileCount + columnIndex;
-		if (result >= itemCount) {
-			// nothing at this column on the next row
-			result = itemCount - 1;
+			lastResult = result;
 		}
 		return result;
 	}
