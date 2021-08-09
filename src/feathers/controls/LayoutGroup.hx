@@ -158,6 +158,32 @@ class LayoutGroup extends FeathersControl {
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
 
+	private var _currentMaskSkin:DisplayObject = null;
+
+	/**
+		A skin to mask the content of the layout group. The skin is resized to
+		the full dimensions of the layout group. It is passed to the `mask`
+		property.
+
+		The following example passes a `RectangleSkin` with a `cornerRadius` for
+		the layout group's mask skin:
+
+		```hx
+		var maskSkin = new RectangleSkin();
+		maskSkin.fill = SolidColor(0xff0000);
+		maskSkin.cornerRadius = 10.0;
+		group.maskSkin = maskSkin;
+		```
+
+		@default null
+
+		@see [`openfl.display.DisplayObject.mask`](https://api.openfl.org/openfl/display/DisplayObject.html#mask)
+
+		@since 1.0.0
+	**/
+	@:style
+	public var maskSkin:DisplayObject = null;
+
 	private var _autoSizeMode:AutoSizeMode = CONTENT;
 
 	/**
@@ -423,6 +449,7 @@ class LayoutGroup extends FeathersControl {
 		}
 
 		if (stylesInvalid) {
+			this.refreshMaskSkin();
 			this.refreshLayout();
 		}
 
@@ -435,6 +462,7 @@ class LayoutGroup extends FeathersControl {
 			}
 			this.handleLayoutResult();
 			this.refreshBackgroundLayout();
+			this.refreshMaskLayout();
 
 			// final invalidation to avoid juggler next frame issues
 			this.validateChildren();
@@ -504,6 +532,47 @@ class LayoutGroup extends FeathersControl {
 		if (skin.parent == this) {
 			this._removeChild(skin);
 		}
+	}
+
+	private function refreshMaskSkin():Void {
+		var oldSkin = this._currentMaskSkin;
+		this._currentMaskSkin = this.getCurrentMaskSkin();
+		if (this._currentMaskSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentMaskSkin(oldSkin);
+		this.addCurrentMaskSkin(this._currentMaskSkin);
+	}
+
+	private function getCurrentMaskSkin():DisplayObject {
+		return this.maskSkin;
+	}
+
+	private function addCurrentMaskSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IUIControl)) {
+			cast(skin, IUIControl).initializeNow();
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = this;
+		}
+		this._addChild(skin);
+		this.mask = skin;
+	}
+
+	private function removeCurrentMaskSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		if (skin.parent == this) {
+			this._removeChild(skin);
+		}
+		this.mask = null;
 	}
 
 	private function refreshViewPortBounds():Void {
@@ -655,6 +724,20 @@ class LayoutGroup extends FeathersControl {
 		var viewPortWidth = this._layoutResult.viewPortWidth;
 		var viewPortHeight = this._layoutResult.viewPortHeight;
 		this.saveMeasurements(viewPortWidth, viewPortHeight, viewPortWidth, viewPortHeight);
+	}
+
+	private function refreshMaskLayout():Void {
+		if (this._currentMaskSkin == null) {
+			return;
+		}
+
+		this._currentMaskSkin.x = 0.0;
+		this._currentMaskSkin.y = 0.0;
+		this._currentMaskSkin.width = this.actualWidth;
+		this._currentMaskSkin.height = this.actualHeight;
+		if ((this._currentMaskSkin is IValidating)) {
+			cast(this._currentMaskSkin, IValidating).validateNow();
+		}
 	}
 
 	private function refreshBackgroundLayout():Void {
