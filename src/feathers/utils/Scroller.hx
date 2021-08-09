@@ -573,6 +573,24 @@ class Scroller extends EventDispatcher {
 		return this._decelerationRate;
 	}
 
+	/**
+		If not `null`, and the scroller is dragged with touch, the `scrollX`
+		position is snapped to the nearest position in the array when the drag
+		completes.
+
+		@since 1.0.0
+	**/
+	public var snapPositionsX:Array<Float> = null;
+
+	/**
+		If not `null`, and the scroller is dragged with touch, the `scrollY`
+		position is snapped to the nearest position in the array when the drag
+		completes.
+
+		@since 1.0.0
+	**/
+	public var snapPositionsY:Array<Float> = null;
+
 	// this value is precalculated. See the `decelerationRate` setter for the dynamic calculation.
 	private var _logDecelerationRate:Float = -0.0020020026706730793;
 	private var _fixedThrowDuration:Float = 2.996998998998728;
@@ -805,6 +823,18 @@ class Scroller extends EventDispatcher {
 		if (velocityX != null) {
 			if (Math.abs(velocityX) <= MINIMUM_VELOCITY) {
 				this.finishScrollX();
+			} else if (this.snapPositionsX != null) {
+				for (i in 0...this.snapPositionsX.length) {
+					var posX = this.snapPositionsX[i];
+					if (velocityX > 0.0 && posX > this._scrollX) {
+						targetX = posX;
+						break;
+					}
+					if (velocityY < 0.0 && i > 0 && posX >= this._scrollX) {
+						targetX = this.snapPositionsX[i - 1];
+						break;
+					}
+				}
 			} else {
 				targetX = this._scrollX + this.calculateDistanceFromVelocity(velocityX);
 			}
@@ -812,6 +842,22 @@ class Scroller extends EventDispatcher {
 		if (velocityY != null) {
 			if (Math.abs(velocityY) <= MINIMUM_VELOCITY) {
 				this.finishScrollY();
+			} else if (this.snapPositionsY != null) {
+				for (i in 0...this.snapPositionsY.length) {
+					var posY = this.snapPositionsY[i];
+					if (velocityY < 0.0) {
+						targetY = posY;
+						if (posY > this._scrollY) {
+							break;
+						}
+					}
+					if (velocityY > 0.0) {
+						targetY = (i == 0) ? posY : this.snapPositionsY[i - 1];
+						if (posY >= this._scrollY) {
+							break;
+						}
+					}
+				}
 			} else {
 				targetY = this._scrollY + this.calculateDistanceFromVelocity(velocityY);
 			}
@@ -921,6 +967,19 @@ class Scroller extends EventDispatcher {
 		this._draggingX = false;
 
 		var targetScrollX:Null<Float> = null;
+		if (this.snapPositionsX != null) {
+			var minOffsetX = Math.POSITIVE_INFINITY;
+			for (snapX in this.snapPositionsX) {
+				var offsetX = Math.abs(snapX - this._scrollX);
+				if (minOffsetX > offsetX) {
+					minOffsetX = offsetX;
+					targetScrollX = snapX;
+				}
+			}
+			if (targetScrollX == this._scrollX) {
+				targetScrollX = null;
+			}
+		}
 		if (this._scrollX < this._minScrollX) {
 			targetScrollX = this._minScrollX;
 		} else if (this._scrollX > this._maxScrollX) {
@@ -938,6 +997,19 @@ class Scroller extends EventDispatcher {
 		this._draggingY = false;
 
 		var targetScrollY:Null<Float> = null;
+		if (this.snapPositionsY != null) {
+			var minOffsetY = Math.POSITIVE_INFINITY;
+			for (snapY in this.snapPositionsY) {
+				var offsetY = Math.abs(snapY - this._scrollY);
+				if (minOffsetY > offsetY) {
+					minOffsetY = offsetY;
+					targetScrollY = snapY;
+				}
+			}
+			if (targetScrollY == this._scrollY) {
+				targetScrollY = null;
+			}
+		}
 		if (this._scrollY < this._minScrollY) {
 			targetScrollY = this._minScrollY;
 		} else if (this._scrollY > this._maxScrollY) {
