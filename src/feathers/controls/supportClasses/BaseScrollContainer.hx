@@ -120,6 +120,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 
+	private var _currentMaskSkin:DisplayObject = null;
+	private var _currentViewPortMaskSkin:DisplayObject = null;
+
 	private var topViewPortOffset:Float = 0.0;
 	private var rightViewPortOffset:Float = 0.0;
 	private var bottomViewPortOffset:Float = 0.0;
@@ -237,6 +240,61 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	**/
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
+
+	/**
+		A skin to mask the content of the container. The skin is resized to
+		the full dimensions of the container. It is passed to the `mask`
+		property.
+
+		This property masks the entire container, including any chrome such as
+		scroll bars or headers and footers. To mask only the scrollable region,
+		use `viewPortMaskSkin` instead.
+
+		The following example passes a `RectangleSkin` with a `cornerRadius` for
+		the container's mask skin:
+
+		```hx
+		var maskSkin = new RectangleSkin();
+		maskSkin.fill = SolidColor(0xff0000);
+		maskSkin.cornerRadius = 10.0;
+		container.maskSkin = maskSkin;
+		```
+
+		@default null
+
+		@see [`openfl.display.DisplayObject.mask`](https://api.openfl.org/openfl/display/DisplayObject.html#mask)
+		@see `BaseScrollContainer.viewPortMaskSkin`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var maskSkin:DisplayObject = null;
+
+	/**
+		A skin to mask the view port (the scrollable region) of the container.
+		The skin is resized to the dimensions of the view port only, and it does
+		not affect any other chrome, such as scroll bars or a header or footer.
+		It is passed to the `mask` property.
+
+		The following example passes a `RectangleSkin` with a `cornerRadius` for
+		the container view port's mask skin:
+
+		```hx
+		var maskSkin = new RectangleSkin();
+		maskSkin.fill = SolidColor(0xff0000);
+		maskSkin.cornerRadius = 10.0;
+		container.viewPortMaskSkin = maskSkin;
+		```
+
+		@default null
+
+		@see [`openfl.display.DisplayObject.mask`](https://api.openfl.org/openfl/display/DisplayObject.html#mask)
+		@see `BaseScrollContainer.maskSkin`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var viewPortMaskSkin:DisplayObject = null;
 
 	private var scrollBarX:IScrollBar;
 	private var scrollBarY:IScrollBar;
@@ -978,8 +1036,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.refreshBackgroundSkin();
 		}
 
-		if (stylesInvalid || stateInvalid) {
-			this.refreshBackgroundSkin();
+		if (stylesInvalid) {
+			this.refreshMaskSkin();
+			this.refreshViewPortMaskSkin();
 		}
 
 		if (scrollBarFactoryInvalid) {
@@ -1688,8 +1747,92 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 	}
 
+	private function refreshMaskSkin():Void {
+		var oldSkin = this._currentMaskSkin;
+		this._currentMaskSkin = this.getCurrentMaskSkin();
+		if (this._currentMaskSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentMaskSkin(oldSkin);
+		this.addCurrentMaskSkin(this._currentMaskSkin);
+	}
+
+	private function getCurrentMaskSkin():DisplayObject {
+		return this.maskSkin;
+	}
+
+	private function addCurrentMaskSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IUIControl)) {
+			cast(skin, IUIControl).initializeNow();
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = this;
+		}
+		this.addChild(skin);
+		this.mask = skin;
+	}
+
+	private function removeCurrentMaskSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		if (skin.parent == this) {
+			this.removeChild(skin);
+		}
+		this.mask = null;
+	}
+
+	private function refreshViewPortMaskSkin():Void {
+		var oldSkin = this._currentViewPortMaskSkin;
+		this._currentViewPortMaskSkin = this.getCurrentViewPortMaskSkin();
+		if (this._currentViewPortMaskSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentViewPortMaskSkin(oldSkin);
+		this.addCurrentViewPortMaskSkin(this._currentViewPortMaskSkin);
+	}
+
+	private function getCurrentViewPortMaskSkin():DisplayObject {
+		return this.viewPortMaskSkin;
+	}
+
+	private function addCurrentViewPortMaskSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IUIControl)) {
+			cast(skin, IUIControl).initializeNow();
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = this;
+		}
+		this.addChild(skin);
+		cast(this._viewPort, DisplayObject).mask = skin;
+	}
+
+	private function removeCurrentViewPortMaskSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		if (skin.parent == this) {
+			this.removeChild(skin);
+		}
+		cast(this._viewPort, DisplayObject).mask = null;
+	}
+
 	private function layoutChildren():Void {
 		this.layoutBackgroundSkin();
+		this.layoutMaskSkin();
+		this.layoutViewPortMaskSkin();
 		this.layoutScrollBars();
 	}
 
@@ -1711,6 +1854,34 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
+		}
+	}
+
+	private function layoutMaskSkin():Void {
+		if (this._currentMaskSkin == null) {
+			return;
+		}
+
+		this._currentMaskSkin.x = 0.0;
+		this._currentMaskSkin.y = 0.0;
+		this._currentMaskSkin.width = this.actualWidth;
+		this._currentMaskSkin.height = this.actualHeight;
+		if ((this._currentMaskSkin is IValidating)) {
+			cast(this._currentMaskSkin, IValidating).validateNow();
+		}
+	}
+
+	private function layoutViewPortMaskSkin():Void {
+		if (this._currentViewPortMaskSkin == null) {
+			return;
+		}
+
+		this._currentViewPortMaskSkin.x = this._viewPort.x;
+		this._currentViewPortMaskSkin.y = this._viewPort.y;
+		this._currentViewPortMaskSkin.width = this._viewPort.visibleWidth;
+		this._currentViewPortMaskSkin.height = this._viewPort.visibleHeight;
+		if ((this._currentViewPortMaskSkin is IValidating)) {
+			cast(this._currentViewPortMaskSkin, IValidating).validateNow();
 		}
 	}
 
