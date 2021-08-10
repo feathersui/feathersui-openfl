@@ -651,6 +651,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		if (this._previousTextFormat != null) {
 			this._previousTextFormat.removeEventListener(Event.CHANGE, label_textFormat_changeHandler);
 		}
+		// clear the selection before setting defaultTextFormat because any
+		// selection seems to prevent the defaultTextFormat from fully applying
+		if (this.textField.selectionBeginIndex != this.textField.selectionEndIndex) {
+			this.textField.setSelection(0, 0);
+		}
 		if (textFormat != null) {
 			textFormat.addEventListener(Event.CHANGE, label_textFormat_changeHandler, false, 0, true);
 			this.textField.defaultTextFormat = simpleTextFormat;
