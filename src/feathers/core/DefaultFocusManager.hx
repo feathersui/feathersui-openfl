@@ -105,6 +105,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			this._root.removeEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler);
 			this._root.removeEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownCaptureHandler, true);
 			this._root.removeEventListener(FocusEvent.FOCUS_IN, defaultFocusManager_root_focusInCaptureHandler, true);
+			this._root.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_root_mouseFocusChangeHandler);
 			this._root.removeEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler);
 			this._root.removeEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler);
 			this.handleRootRemovedFromStage(this._root.stage);
@@ -119,6 +120,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			this._root.addEventListener(Event.REMOVED, defaultFocusManager_root_removedHandler, false, 0, true);
 			this._root.addEventListener(MouseEvent.MOUSE_DOWN, defaultFocusManager_root_mouseDownCaptureHandler, true, 0, true);
 			this._root.addEventListener(FocusEvent.FOCUS_IN, defaultFocusManager_root_focusInCaptureHandler, true, 0, true);
+			this._root.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_root_mouseFocusChangeHandler, false, 0, true);
 			this._root.addEventListener(Event.ACTIVATE, defaultFocusManager_root_activateHandler, false, 0, true);
 			this._root.addEventListener(Event.DEACTIVATE, defaultFocusManager_root_deactivateHandler, false, 0, true);
 		}
@@ -659,7 +661,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			// needed for some targets, like Neko
 			stage.focus = stage;
 		}
-		stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler, false, 0, true);
 		#if (html5 && openfl < "9.0.0")
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler2, false, 0, true);
 		#else
@@ -674,7 +675,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (stage == null) {
 			return;
 		}
-		stage.removeEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, defaultFocusManager_stage_mouseFocusChangeHandler);
 		#if (html5 && openfl < "9.0.0")
 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler2);
 		#else
@@ -783,7 +783,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		this.clearFocusManager(target);
 	}
 
-	private function defaultFocusManager_stage_mouseFocusChangeHandler(event:FocusEvent):Void {
+	private function defaultFocusManager_root_mouseFocusChangeHandler(event:FocusEvent):Void {
 		if (event.isDefaultPrevented()) {
 			return;
 		}
