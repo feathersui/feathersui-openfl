@@ -89,7 +89,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	public var elasticTop(get, never):Bool;
 
 	private function get_elasticTop():Bool {
-		return true;
+		return this._pageDirection == VERTICAL;
 	}
 
 	/**
@@ -99,7 +99,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	public var elasticRight(get, never):Bool;
 
 	private function get_elasticRight():Bool {
-		return false;
+		return this._pageDirection == HORIZONTAL;
 	}
 
 	/**
@@ -109,7 +109,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	public var elasticBottom(get, never):Bool;
 
 	private function get_elasticBottom():Bool {
-		return true;
+		return this._pageDirection == VERTICAL;
 	}
 
 	/**
@@ -119,7 +119,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	public var elasticLeft(get, never):Bool;
 
 	private function get_elasticLeft():Bool {
-		return false;
+		return this._pageDirection == HORIZONTAL;
 	}
 
 	private var _alignEmptyHorizontalTiles:Bool = false;
