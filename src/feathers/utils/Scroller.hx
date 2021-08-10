@@ -826,13 +826,17 @@ class Scroller extends EventDispatcher {
 			} else if (this.snapPositionsX != null) {
 				for (i in 0...this.snapPositionsX.length) {
 					var posX = this.snapPositionsX[i];
-					if (velocityX > 0.0 && posX > this._scrollX) {
+					if (velocityX < 0.0) {
 						targetX = posX;
-						break;
+						if (posX > this._scrollX) {
+							break;
+						}
 					}
-					if (velocityY < 0.0 && i > 0 && posX >= this._scrollX) {
-						targetX = this.snapPositionsX[i - 1];
-						break;
+					if (velocityX > 0.0) {
+						targetX = (i == 0) ? posX : this.snapPositionsX[i - 1];
+						if (posX >= this._scrollX) {
+							break;
+						}
 					}
 				}
 			} else {
