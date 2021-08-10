@@ -997,6 +997,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this.scroller.forceElasticBottom = false;
 			this.scroller.forceElasticLeft = false;
 		}
+		this.scroller.snapPositionsX = this.groupViewPort.snapPositionsX;
+		this.scroller.snapPositionsY = this.groupViewPort.snapPositionsY;
 	}
 
 	override private function needsScrollMeasurement():Bool {

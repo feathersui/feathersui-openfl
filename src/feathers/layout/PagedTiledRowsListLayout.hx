@@ -20,7 +20,7 @@ import openfl.events.EventDispatcher;
 import openfl.geom.Point;
 
 @:event(openfl.events.Event.CHANGE)
-class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout {
+class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements ISnapLayout {
 	/**
 		Creates a new `PagedTiledRowsListLayout` object.
 
@@ -1247,6 +1247,126 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 				needsAnotherPass = true;
 			}
 			lastResult = result;
+		}
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.ISnapLayout.getSnapPositionsX()`
+	**/
+	public function getSnapPositionsX(items:Array<DisplayObject>, viewPortWidth:Float, viewPortHeight:Float, ?result:Array<Float>):Array<Float> {
+		if (this._pageDirection == VERTICAL) {
+			return null;
+		}
+
+		if (result == null) {
+			result = [];
+		} else {
+			result.resize(0);
+		}
+		var itemCount = items.length;
+		if (itemCount == 0) {
+			result.push(0.0);
+			return result;
+		}
+
+		var tileWidth = 0.0;
+		var tileHeight = 0.0;
+		if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				tileWidth = cacheItem.itemWidth;
+				tileHeight = cacheItem.itemHeight;
+			}
+		}
+
+		if (tileWidth == 0.0 || tileHeight == 0.0) {
+			result.push(0.0);
+			return result;
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, viewPortWidth, null, adjustedHorizontalGap, itemCount);
+		var verticalTileCount = this.calculateVerticalTileCount(tileHeight, viewPortHeight, null, adjustedVerticalGap, itemCount, horizontalTileCount);
+
+		var perPage = horizontalTileCount * verticalTileCount;
+		var pageCount = Math.ceil(itemCount / perPage);
+
+		var positionX = 0.0;
+		for (i in 0...pageCount) {
+			result[i] = positionX;
+			positionX += viewPortWidth;
+		}
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.ISnapLayout.getSnapPositionsY()`
+	**/
+	public function getSnapPositionsY(items:Array<DisplayObject>, viewPortWidth:Float, viewPortHeight:Float, ?result:Array<Float>):Array<Float> {
+		if (this._pageDirection == HORIZONTAL) {
+			return null;
+		}
+
+		if (result == null) {
+			result = [];
+		} else {
+			result.resize(0);
+		}
+		var itemCount = items.length;
+		if (itemCount == 0) {
+			result.push(0.0);
+			return result;
+		}
+
+		var tileWidth = 0.0;
+		var tileHeight = 0.0;
+		if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				tileWidth = cacheItem.itemWidth;
+				tileHeight = cacheItem.itemHeight;
+			}
+		}
+
+		if (tileWidth == 0.0 || tileHeight == 0.0) {
+			result.push(0.0);
+			return result;
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, viewPortWidth, null, adjustedHorizontalGap, itemCount);
+		var verticalTileCount = this.calculateVerticalTileCount(tileHeight, viewPortHeight, null, adjustedVerticalGap, itemCount, horizontalTileCount);
+
+		var perPage = horizontalTileCount * verticalTileCount;
+		var pageCount = Math.ceil(itemCount / perPage);
+
+		var positionY = 0.0;
+		for (i in 0...pageCount) {
+			result[i] = positionY;
+			positionY += viewPortHeight;
 		}
 		return result;
 	}

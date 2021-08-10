@@ -1279,6 +1279,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.scroller.forceElasticBottom = false;
 			this.scroller.forceElasticLeft = false;
 		}
+		this.scroller.snapPositionsX = this.gridViewPort.snapPositionsX;
+		this.scroller.snapPositionsY = this.gridViewPort.snapPositionsY;
 	}
 
 	override private function needsScrollMeasurement():Bool {

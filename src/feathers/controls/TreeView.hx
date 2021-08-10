@@ -882,6 +882,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			this.scroller.forceElasticBottom = false;
 			this.scroller.forceElasticLeft = false;
 		}
+		this.scroller.snapPositionsX = this.treeViewPort.snapPositionsX;
+		this.scroller.snapPositionsY = this.treeViewPort.snapPositionsY;
 	}
 
 	override private function needsScrollMeasurement():Bool {

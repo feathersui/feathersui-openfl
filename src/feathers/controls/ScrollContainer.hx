@@ -470,6 +470,8 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			this.scroller.forceElasticBottom = false;
 			this.scroller.forceElasticLeft = false;
 		}
+		this.scroller.snapPositionsX = this.layoutViewPort.snapPositionsX;
+		this.scroller.snapPositionsY = this.layoutViewPort.snapPositionsY;
 	}
 
 	private function scrollContainer_addedToStageHandler(event:Event):Void {

@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import feathers.layout.ISnapLayout;
 import feathers.layout.IScrollLayout;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.Sprite;
@@ -262,6 +263,22 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._scrollY;
 	}
 
+	private var _snapPositionsX:Array<Float> = null;
+
+	public var snapPositionsX(get, never):Array<Float>;
+
+	private function get_snapPositionsX():Array<Float> {
+		return this._snapPositionsX;
+	}
+
+	private var _snapPositionsY:Array<Float> = null;
+
+	public var snapPositionsY(get, never):Array<Float>;
+
+	private function get_snapPositionsY():Array<Float> {
+		return this._snapPositionsY;
+	}
+
 	override private function refreshViewPortBounds():Void {
 		var needsWidth = this._explicitVisibleWidth == null;
 		var needsHeight = this._explicitVisibleHeight == null;
@@ -357,5 +374,14 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._viewPortBackground.y = 0.0;
 		this._viewPortBackground.width = Math.max(this.actualWidth, this._actualVisibleWidth);
 		this._viewPortBackground.height = Math.max(this.actualHeight, this._actualVisibleHeight);
+
+		if ((this.layout is ISnapLayout)) {
+			var snapLayout = cast(this.layout, ISnapLayout);
+			this._snapPositionsX = snapLayout.getSnapPositionsX(this.items, this._actualVisibleWidth, this._actualVisibleHeight, this._snapPositionsX);
+			this._snapPositionsY = snapLayout.getSnapPositionsY(this.items, this._actualVisibleWidth, this._actualVisibleHeight, this._snapPositionsY);
+		} else {
+			this._snapPositionsX = null;
+			this._snapPositionsY = null;
+		}
 	}
 }
