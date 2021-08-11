@@ -12,10 +12,10 @@ openfl test neko
 
 ## Run HashLink tests
 
-To run tests with Neko, run the following command:
+To run tests with HashLink, run the following command:
 
 ```sh
-openfl test neko
+openfl test hl
 ```
 
 ## Run Adobe AIR tests
