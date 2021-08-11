@@ -26,4 +26,4 @@ jobs:
         haxelib install actuate --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Build Flash .swc library
-      run: haxelib run openfl build flash
+      run: haxelib run openfl build flash -debug
