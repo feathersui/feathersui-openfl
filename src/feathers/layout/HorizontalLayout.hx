@@ -170,6 +170,10 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
 
+		If the `gap` is set to `Math.POSITIVE_INFINITY`, the items will be
+		positioned as far apart as possible. In this case, the gap will never be
+		smaller than `minGap`.
+
 		In the following example, the layout's gap is set to 20 pixels:
 
 		```hx
@@ -194,6 +198,41 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		this._gap = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._gap;
+	}
+
+	private var _minGap:Float = 0.0;
+
+	/**
+		If the value of the `gap` property is `Math.POSITIVE_INFINITY`, meaning
+		that the gap will fill as much space as possible and position the items
+		as far from each other as they can go without going outside of the view
+		port bounds, the final calculated value of the gap will not be smaller
+		than the value of the `minGap` property.
+
+		In the following example, the layout's minimum gap is set to 4 pixels:
+
+		```hx
+		layout.minGap = 4.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var minGap(get, set):Float;
+
+	private function get_minGap():Float {
+		return this._minGap;
+	}
+
+	private function set_minGap(value:Float):Float {
+		if (this._minGap == value) {
+			return this._minGap;
+		}
+		this._minGap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._minGap;
 	}
 
 	private var _horizontalAlign:HorizontalAlign = LEFT;
@@ -322,8 +361,14 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
 		this.validateItems(items, measurements);
-		this.applyPercentWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth);
+		this.applyPercentWidth(items, measurements.width, measurements.minWidth, measurements.maxWidth, adjustedGap);
 
 		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
@@ -342,12 +387,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				contentHeight = item.height;
 			}
 			item.x = contentWidth;
-			contentWidth += item.width + this._gap;
+			contentWidth += item.width + adjustedGap;
 		}
 		var maxItemHeight = contentHeight;
 		contentWidth += this._paddingRight;
 		if (items.length > 0) {
-			contentWidth -= this._gap;
+			contentWidth -= adjustedGap;
 		}
 		contentHeight += this._paddingTop + this._paddingBottom;
 
@@ -468,19 +513,34 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, contentWidth:Float, viewPortWidth:Float):Void {
-		if (this._horizontalAlign != RIGHT && this._horizontalAlign != CENTER) {
-			return;
-		}
+		var alignOffset = 0.0;
+		var gapOffset = 0.0;
 		var maxAlignmentWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
-		if (contentWidth >= maxAlignmentWidth) {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+			if (maxAlignmentWidth > contentWidth) {
+				adjustedGap += (maxAlignmentWidth - contentWidth) / (items.length - 1);
+			}
+			gapOffset = adjustedGap - this._minGap;
+		} else {
+			alignOffset = switch (this._horizontalAlign) {
+				case LEFT: 0.0;
+				case RIGHT: maxAlignmentWidth - contentWidth;
+				case CENTER: (maxAlignmentWidth - contentWidth) / 2.0;
+				default:
+					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
+			}
+			if (alignOffset < 0.0) {
+				alignOffset = 0.0;
+			}
+		}
+		if (alignOffset == 0.0 && gapOffset == 0.0) {
 			return;
 		}
-		var horizontalOffset = 0.0;
-		if (this._horizontalAlign == RIGHT) {
-			horizontalOffset = maxAlignmentWidth - contentWidth;
-		} else if (this._horizontalAlign == CENTER) {
-			horizontalOffset = (maxAlignmentWidth - contentWidth) / 2.0;
-		}
+
+		var totalOffset = alignOffset;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
@@ -489,12 +549,13 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 			}
-			item.x = Math.max(this._paddingLeft, item.x + horizontalOffset);
+			item.x = Math.max(this._paddingLeft, item.x + totalOffset);
+			totalOffset += gapOffset;
 		}
 	}
 
-	private function applyPercentWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
-			explicitMaxWidth:Null<Float>):Void {
+	private function applyPercentWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>, explicitMaxWidth:Null<Float>,
+			adjustedGap:Float):Void {
 		var pendingItems:Array<ILayoutObject> = [];
 		var totalMeasuredWidth = 0.0;
 		var totalMinWidth = 0.0;
@@ -517,15 +578,15 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 							totalMinWidth += measureItem.minWidth;
 						}
 						totalPercentWidth += percentWidth;
-						totalMeasuredWidth += this._gap;
+						totalMeasuredWidth += adjustedGap;
 						pendingItems.push(layoutItem);
 						continue;
 					}
 				}
 			}
-			totalMeasuredWidth += item.width + this._gap;
+			totalMeasuredWidth += item.width + adjustedGap;
 		}
-		totalMeasuredWidth -= this._gap;
+		totalMeasuredWidth -= adjustedGap;
 		totalMeasuredWidth += this._paddingLeft + this._paddingRight;
 		if (totalPercentWidth < 100.0) {
 			totalPercentWidth = 100.0;

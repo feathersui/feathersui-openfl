@@ -170,6 +170,10 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
 
+		If the `gap` is set to `Math.POSITIVE_INFINITY`, the items will be
+		positioned as far apart as possible. In this case, the gap will never be
+		smaller than `minGap`.
+
 		In the following example, the layout's gap is set to 20 pixels:
 
 		```hx
@@ -194,6 +198,41 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		this._gap = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._gap;
+	}
+
+	private var _minGap:Float = 0.0;
+
+	/**
+		If the value of the `gap` property is `Math.POSITIVE_INFINITY`, meaning
+		that the gap will fill as much space as possible and position the items
+		as far from each other as they can go without going outside of the view
+		port bounds, the final calculated value of the gap will not be smaller
+		than the value of the `minGap` property.
+
+		In the following example, the layout's minimum gap is set to 4 pixels:
+
+		```hx
+		layout.minGap = 4.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var minGap(get, set):Float;
+
+	private function get_minGap():Float {
+		return this._minGap;
+	}
+
+	private function set_minGap(value:Float):Float {
+		if (this._minGap == value) {
+			return this._minGap;
+		}
+		this._minGap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._minGap;
 	}
 
 	private var _horizontalAlign:HorizontalAlign = LEFT;
@@ -322,8 +361,14 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
 		this.validateItems(items, measurements);
-		this.applyPercentHeight(items, measurements.height, measurements.minHeight, measurements.maxHeight);
+		this.applyPercentHeight(items, measurements.height, measurements.minHeight, measurements.maxHeight, adjustedGap);
 
 		var contentWidth = 0.0;
 		var contentHeight = this._paddingTop;
@@ -342,13 +387,13 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 				contentWidth = item.width;
 			}
 			item.y = contentHeight;
-			contentHeight += item.height + this._gap;
+			contentHeight += item.height + adjustedGap;
 		}
 		var maxItemWidth = contentWidth;
 		contentWidth += this._paddingLeft + this._paddingRight;
 		contentHeight += this._paddingBottom;
 		if (items.length > 0) {
-			contentHeight -= this._gap;
+			contentHeight -= adjustedGap;
 		}
 
 		var viewPortWidth = contentWidth;
@@ -468,19 +513,34 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, contentHeight:Float, viewPortHeight:Float):Void {
-		if (this._verticalAlign != BOTTOM && this._verticalAlign != MIDDLE) {
+		var alignOffset = 0.0;
+		var gapOffset = 0.0;
+		var maxAlignmentHeight = viewPortHeight - this._paddingLeft - this._paddingRight;
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+			if (maxAlignmentHeight > contentHeight) {
+				adjustedGap += (maxAlignmentHeight - contentHeight) / (items.length - 1);
+			}
+			gapOffset = adjustedGap - this._minGap;
+		} else {
+			alignOffset = switch (this._verticalAlign) {
+				case TOP: 0.0;
+				case BOTTOM: maxAlignmentHeight - contentHeight;
+				case MIDDLE: (maxAlignmentHeight - contentHeight) / 2.0;
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
+			}
+			if (alignOffset < 0.0) {
+				alignOffset = 0.0;
+			}
+		}
+		if (alignOffset == 0.0 && gapOffset == 0.0) {
 			return;
 		}
-		var maxAlignmentHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
-		if (contentHeight >= maxAlignmentHeight) {
-			return;
-		}
-		var verticalOffset = 0.0;
-		if (this._verticalAlign == BOTTOM) {
-			verticalOffset = maxAlignmentHeight - contentHeight;
-		} else if (this._verticalAlign == MIDDLE) {
-			verticalOffset = (maxAlignmentHeight - contentHeight) / 2.0;
-		}
+
+		var totalOffset = alignOffset;
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
@@ -489,7 +549,8 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 			}
-			item.y = Math.max(this._paddingTop, item.y + verticalOffset);
+			item.y = Math.max(this._paddingTop, item.y + totalOffset);
+			totalOffset += gapOffset;
 		}
 	}
 
@@ -539,8 +600,8 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		}
 	}
 
-	private function applyPercentHeight(items:Array<DisplayObject>, explicitHeight:Null<Float>, explicitMinHeight:Null<Float>,
-			explicitMaxHeight:Null<Float>):Void {
+	private function applyPercentHeight(items:Array<DisplayObject>, explicitHeight:Null<Float>, explicitMinHeight:Null<Float>, explicitMaxHeight:Null<Float>,
+			adjustedGap:Float):Void {
 		var pendingItems:Array<ILayoutObject> = [];
 		var totalMeasuredHeight = 0.0;
 		var totalMinHeight = 0.0;
@@ -563,15 +624,15 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 							totalMinHeight += measureItem.minHeight;
 						}
 						totalPercentHeight += percentHeight;
-						totalMeasuredHeight += this._gap;
+						totalMeasuredHeight += adjustedGap;
 						pendingItems.push(layoutItem);
 						continue;
 					}
 				}
 			}
-			totalMeasuredHeight += item.height + this._gap;
+			totalMeasuredHeight += item.height + adjustedGap;
 		}
-		totalMeasuredHeight -= this._gap;
+		totalMeasuredHeight -= adjustedGap;
 		totalMeasuredHeight += this._paddingTop + this._paddingBottom;
 		if (totalPercentHeight < 100.0) {
 			totalPercentHeight = 100.0;
