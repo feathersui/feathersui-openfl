@@ -1815,6 +1815,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._ignoreSelectionChange) {
 			return;
 		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		var toggleItemRenderer = cast(itemRenderer, IToggle);
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (toggleItemRenderer.selected == state.selected) {
+			// nothing has changed
+			return;
+		}
 		// if we get here, the selected property of the renderer changed
 		// unexpectedly, and we need to restore its proper state
 		this.setInvalid(SELECTION);
