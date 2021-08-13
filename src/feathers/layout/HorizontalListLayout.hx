@@ -602,7 +602,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		positionX += this._paddingRight;
 
 		var viewPortWidth = positionX;
-		if (measurements.height != null) {
+		if (measurements.width != null) {
 			viewPortWidth = measurements.width;
 		} else {
 			if (this._requestedColumnCount != null) {
