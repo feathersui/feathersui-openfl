@@ -520,7 +520,7 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		var hasFlexGap = this._gap == (1.0 / 0.0);
 		if (hasFlexGap) {
 			adjustedGap = this._minGap;
-			if (maxAlignmentHeight > contentHeight) {
+			if (items.length > 1 && maxAlignmentHeight > contentHeight) {
 				adjustedGap += (maxAlignmentHeight - contentHeight) / (items.length - 1);
 			}
 			gapOffset = adjustedGap - this._minGap;

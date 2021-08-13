@@ -520,7 +520,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		var hasFlexGap = this._gap == (1.0 / 0.0);
 		if (hasFlexGap) {
 			adjustedGap = this._minGap;
-			if (maxAlignmentWidth > contentWidth) {
+			if (items.length > 1 && maxAlignmentWidth > contentWidth) {
 				adjustedGap += (maxAlignmentWidth - contentWidth) / (items.length - 1);
 			}
 			gapOffset = adjustedGap - this._minGap;

@@ -717,7 +717,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 			if (numItemsInRow > 0) {
 				rowContentWidth -= adjustedHorizontalGap;
 			}
-			if (availableRowWidth > rowContentWidth) {
+			if (numItemsInRow > 1 && availableRowWidth > rowContentWidth) {
 				adjustedHorizontalGap += (availableRowWidth - rowContentWidth) / (numItemsInRow - 1);
 			}
 			gapOffset = adjustedHorizontalGap - this._minHorizontalGap;
