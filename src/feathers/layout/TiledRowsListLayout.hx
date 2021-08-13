@@ -842,12 +842,6 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		}
 
 		var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
-		if (hasFlexHorizontalGap) {
-			var maxContentWidth = horizontalTileCount * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
-			if (availableRowWidth > maxContentWidth) {
-				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (horizontalTileCount - 1);
-			}
-		}
 
 		var maxColumnCount = 0;
 		var currentColumnCount = 0;
@@ -1359,7 +1353,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
 		if (hasFlexHorizontalGap) {
 			adjustedHorizontalGap = this._minHorizontalGap;
-			var rowContentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			var rowContentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap);
 			if (numItemsInRow > 0) {
 				rowContentWidth -= adjustedHorizontalGap;
 			}
@@ -1368,11 +1362,14 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 			}
 			gapOffset = adjustedHorizontalGap - this._minHorizontalGap;
 		} else {
-			var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			var rowContentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap);
+			if (numItemsInRow > 0) {
+				rowContentWidth -= adjustedHorizontalGap;
+			}
 			alignOffset = switch (this._horizontalAlign) {
 				case LEFT: 0.0;
-				case RIGHT: availableRowWidth - contentWidth;
-				case CENTER: (availableRowWidth - contentWidth) / 2.0;
+				case RIGHT: availableRowWidth - rowContentWidth;
+				case CENTER: (availableRowWidth - rowContentWidth) / 2.0;
 				default:
 					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 			}

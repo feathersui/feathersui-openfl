@@ -894,12 +894,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		}
 
 		var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
-		if (hasFlexHorizontalGap) {
-			var maxContentWidth = horizontalTileCount * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
-			if (availableRowWidth > maxContentWidth) {
-				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (horizontalTileCount - 1);
-			}
-		}
 
 		var adjustedVerticalGap = this._verticalGap;
 		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
@@ -1520,7 +1514,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
 		if (hasFlexHorizontalGap) {
 			adjustedHorizontalGap = this._minHorizontalGap;
-			var rowContentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			var rowContentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap);
 			if (numItemsInRow > 0) {
 				rowContentWidth -= adjustedHorizontalGap;
 			}
@@ -1529,11 +1523,14 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			}
 			gapOffset = adjustedHorizontalGap - this._minHorizontalGap;
 		} else {
-			var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			var rowContentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap);
+			if (numItemsInRow > 0) {
+				rowContentWidth -= adjustedHorizontalGap;
+			}
 			alignOffset = switch (this._horizontalAlign) {
 				case LEFT: 0.0;
-				case RIGHT: availableRowWidth - contentWidth;
-				case CENTER: (availableRowWidth - contentWidth) / 2.0;
+				case RIGHT: availableRowWidth - rowContentWidth;
+				case CENTER: (availableRowWidth - rowContentWidth) / 2.0;
 				default:
 					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 			}
