@@ -1514,6 +1514,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		if (this._alignEmptyHorizontalTiles && horizontalTileCount > numItemsInRow) {
 			numItemsInRow = horizontalTileCount;
 		}
+		var alignOffset = 0.0;
 		var gapOffset = 0.0;
 		var adjustedHorizontalGap = this._horizontalGap;
 		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
@@ -1527,19 +1528,23 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 				adjustedHorizontalGap += (availableRowWidth - rowContentWidth) / (numItemsInRow - 1);
 			}
 			gapOffset = adjustedHorizontalGap - this._minHorizontalGap;
+		} else {
+			var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			alignOffset = switch (this._horizontalAlign) {
+				case LEFT: 0.0;
+				case RIGHT: availableRowWidth - contentWidth;
+				case CENTER: (availableRowWidth - contentWidth) / 2.0;
+				default:
+					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
+			}
+			if (alignOffset < 0.0) {
+				alignOffset = 0.0;
+			}
 		}
-
-		var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
-		var xOffset = switch (this._horizontalAlign) {
-			case LEFT: 0.0;
-			case RIGHT: availableRowWidth - contentWidth;
-			case CENTER: (availableRowWidth - contentWidth) / 2.0;
-			default:
-				throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
-		}
-		if (xOffset <= 0.0 && gapOffset == 0.0) {
+		if (alignOffset == 0.0 && gapOffset == 0.0) {
 			return;
 		}
+		var totalOffset = alignOffset;
 		for (i in startIndex...(startIndex + numItemsInRow)) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
@@ -1549,9 +1554,9 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 				}
 			}
 			if (item != null) {
-				item.x += xOffset;
+				item.x += totalOffset;
 			}
-			xOffset += gapOffset;
+			totalOffset += gapOffset;
 		}
 	}
 
@@ -1560,20 +1565,28 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		if (this._alignEmptyVerticalTiles && verticalTileCount > numRows) {
 			numRows = verticalTileCount;
 		}
-		var yOffset = 0.0;
-		if (this._verticalGap != (1.0 / 0.0)) {
+		var alignOffset = 0.0;
+		var gapOffset = 0.0;
+		var hasFlexVerticalGap = this._verticalGap == (1.0 / 0.0);
+		if (hasFlexVerticalGap) {
+			gapOffset = adjustedVerticalGap;
+		} else {
 			var contentHeight = numRows * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
-			yOffset = switch (this._verticalAlign) {
+			alignOffset = switch (this._verticalAlign) {
 				case TOP: 0.0;
 				case BOTTOM: availableHeight - contentHeight;
 				case MIDDLE: (availableHeight - contentHeight) / 2.0;
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
+			if (alignOffset < 0.0) {
+				alignOffset = 0.0;
+			}
 		}
-		if (yOffset <= 0.0 && adjustedVerticalGap == 0.0) {
+		if (alignOffset == 0.0 && gapOffset == 0.0) {
 			return;
 		}
+		var totalOffset = alignOffset;
 		var columnIndex = 0;
 		var endIndex = Std.int(Math.min(startIndex + numItemsInPage, items.length));
 		for (i in startIndex...endIndex) {
@@ -1586,12 +1599,12 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			}
 			if ((i % horizontalTileCount) == 0) {
 				if (columnIndex > 0) {
-					yOffset += adjustedVerticalGap;
+					totalOffset += gapOffset;
 				}
 				columnIndex++;
 			}
 			if (item != null) {
-				item.y += yOffset;
+				item.y += totalOffset;
 			}
 		}
 	}

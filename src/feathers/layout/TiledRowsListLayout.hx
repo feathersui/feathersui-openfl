@@ -1353,6 +1353,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		if (this._alignEmptyHorizontalTiles && horizontalTileCount > numItemsInRow) {
 			numItemsInRow = horizontalTileCount;
 		}
+		var alignOffset = 0.0;
 		var gapOffset = 0.0;
 		var adjustedHorizontalGap = this._horizontalGap;
 		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
@@ -1366,19 +1367,23 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 				adjustedHorizontalGap += (availableRowWidth - rowContentWidth) / (numItemsInRow - 1);
 			}
 			gapOffset = adjustedHorizontalGap - this._minHorizontalGap;
+		} else {
+			var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			alignOffset = switch (this._horizontalAlign) {
+				case LEFT: 0.0;
+				case RIGHT: availableRowWidth - contentWidth;
+				case CENTER: (availableRowWidth - contentWidth) / 2.0;
+				default:
+					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
+			}
+			if (alignOffset < 0.0) {
+				alignOffset = 0.0;
+			}
 		}
-
-		var contentWidth = numItemsInRow * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
-		var xOffset = switch (this._horizontalAlign) {
-			case LEFT: 0.0;
-			case RIGHT: availableRowWidth - contentWidth;
-			case CENTER: (availableRowWidth - contentWidth) / 2.0;
-			default:
-				throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
-		}
-		if (xOffset <= 0.0 && gapOffset == 0.0) {
+		if (alignOffset == 0.0 && gapOffset == 0.0) {
 			return;
 		}
+		var totalOffset = alignOffset;
 		for (i in startIndex...(startIndex + numItemsInRow)) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
@@ -1388,28 +1393,36 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 				}
 			}
 			if (item != null) {
-				item.x += xOffset;
+				item.x += totalOffset;
 			}
-			xOffset += gapOffset;
+			totalOffset += gapOffset;
 		}
 	}
 
 	private function applyVerticalAlignAndGap(items:Array<DisplayObject>, availableHeight:Float, tileHeight:Float, rowCount:Int, columnCount:Int,
 			adjustedVerticalGap:Float):Void {
-		var yOffset = 0.0;
-		if (this._verticalGap != (1.0 / 0.0)) {
+		var alignOffset = 0.0;
+		var gapOffset = 0.0;
+		var hasFlexVerticalGap = this._verticalGap == (1.0 / 0.0);
+		if (hasFlexVerticalGap) {
+			gapOffset = adjustedVerticalGap;
+		} else {
 			var contentHeight = rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
-			yOffset = switch (this._verticalAlign) {
+			alignOffset = switch (this._verticalAlign) {
 				case TOP: 0.0;
 				case BOTTOM: availableHeight - contentHeight;
 				case MIDDLE: (availableHeight - contentHeight) / 2.0;
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
+			if (alignOffset < 0.0) {
+				alignOffset = 0.0;
+			}
 		}
-		if (yOffset <= 0.0 && adjustedVerticalGap == 0.0) {
+		if (alignOffset == 0.0 && gapOffset == 0.0) {
 			return;
 		}
+		var totalOffset = alignOffset;
 		for (i in 0...items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
@@ -1419,10 +1432,10 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 				}
 			}
 			if (i > 0 && (i % columnCount) == 0) {
-				yOffset += adjustedVerticalGap;
+				totalOffset += gapOffset;
 			}
 			if (item != null) {
-				item.y += yOffset;
+				item.y += totalOffset;
 			}
 		}
 	}
