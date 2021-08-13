@@ -653,7 +653,8 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		}
 		// clear the selection before setting defaultTextFormat because any
 		// selection seems to prevent the defaultTextFormat from fully applying
-		if (this.textField.selectionBeginIndex != this.textField.selectionEndIndex) {
+		if (this.textField.caretIndex != -1 && this.textField.selectionBeginIndex != this.textField.selectionEndIndex) {
+			// check for caretIndex != -1 first due to a bug in OpenFL
 			this.textField.setSelection(0, 0);
 		}
 		if (textFormat != null) {
