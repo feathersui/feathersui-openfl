@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import openfl.errors.ArgumentError;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import feathers.core.IValidating;
@@ -400,6 +401,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	/**
 		The space, in pixels, between each two adjacent items in the layout.
 
+		If the `gap` is set to `Math.POSITIVE_INFINITY`, the items will be
+		positioned as far apart as possible. In this case, the gap will never be
+		smaller than `minGap`.
+
 		In the following example, the layout's gap is set to 20 pixels:
 
 		```hx
@@ -424,6 +429,41 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		this._gap = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._gap;
+	}
+
+	private var _minGap:Float = 0.0;
+
+	/**
+		If the value of the `gap` property is `Math.POSITIVE_INFINITY`, meaning
+		that the gap will fill as much space as possible and position the items
+		as far from each other as they can go without going outside of the view
+		port bounds, the final calculated value of the gap will not be smaller
+		than the value of the `minGap` property.
+
+		In the following example, the layout's minimum gap is set to 4 pixels:
+
+		```hx
+		layout.minGap = 4.0;
+		```
+
+		@default 0.0
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var minGap(get, set):Float;
+
+	private function get_minGap():Float {
+		return this._minGap;
+	}
+
+	private function set_minGap(value:Float):Float {
+		if (this._minGap == value) {
+			return this._minGap;
+		}
+		this._minGap = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._minGap;
 	}
 
 	private var _verticalAlign:VerticalAlign = TOP;
@@ -515,6 +555,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
 		var maxItemWidth = this.calculateMaxItemWidth(items, measurements);
 		var viewPortWidth = this.calculateViewPortWidth(maxItemWidth, measurements);
 		var minItemWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
@@ -536,10 +582,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				item.width = itemWidth;
 				item.height = actualRowHeight;
 			}
-			positionY += actualRowHeight + this._gap;
+			positionY += actualRowHeight + adjustedGap;
 		}
 		if (items.length > 0) {
-			positionY -= this._gap;
+			positionY -= adjustedGap;
 		}
 		positionY += this._paddingBottom;
 
@@ -688,6 +734,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		@see `feathers.layout.IVirtualLayout.getVisibleIndices()`
 	**/
 	public function getVisibleIndices(itemCount:Int, width:Float, height:Float, ?result:VirtualLayoutRange):VirtualLayoutRange {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
 		var itemHeight = 0.0;
 		if (this._rowHeight != null) {
 			itemHeight = this._rowHeight;
@@ -697,7 +749,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				itemHeight = cacheItem.itemHeight;
 			}
 		}
-		itemHeight += this._gap;
+		itemHeight += adjustedGap;
 		var startIndex = 0;
 		var endIndex = 0;
 		if (itemHeight > 0.0) {
@@ -729,6 +781,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		@see `feathers.layout.IScrollLayout.getNearestScrollPositionForIndex()`
 	**/
 	public function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
 		var itemHeight = 0.0;
 		if (this._rowHeight != null) {
 			itemHeight = this._rowHeight;
@@ -738,7 +796,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				itemHeight = cacheItem.itemHeight;
 			}
 		}
-		itemHeight += this._gap;
+		itemHeight += adjustedGap;
 
 		var maxY = this._paddingTop + (itemHeight * index);
 		var minY = maxY + itemHeight - height;
@@ -764,6 +822,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 			viewPortWidth:Float, viewPortHeight:Float):Int {
 		if (items.length == 0) {
 			return -1;
+		}
+
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
 		}
 
 		var itemHeight = 0.0;
@@ -809,14 +873,14 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					while (i >= 0) {
 						yPosition += itemHeight;
 						if (indicesToSkip != null && indicesToSkip.indexOf(i) != -1) {
-							yPosition += this._gap;
+							yPosition += adjustedGap;
 							i--;
 							continue;
 						}
 						if (yPosition > viewPortHeight) {
 							break;
 						}
-						yPosition += this._gap;
+						yPosition += adjustedGap;
 						result = i;
 						i--;
 					}
@@ -826,13 +890,13 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					for (i in startIndex...items.length) {
 						yPosition += itemHeight;
 						if (indicesToSkip != null && indicesToSkip.indexOf(i) != -1) {
-							yPosition += this._gap;
+							yPosition += adjustedGap;
 							continue;
 						}
 						if (yPosition > viewPortHeight) {
 							break;
 						}
-						yPosition += this._gap;
+						yPosition += adjustedGap;
 						result = i;
 					}
 					nextKeyCode = Keyboard.DOWN;
@@ -884,23 +948,35 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, contentHeight:Float, viewPortHeight:Float):Void {
-		if (this._verticalAlign != BOTTOM && this._verticalAlign != MIDDLE) {
-			return;
-		}
-		var maxAlignmentHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
-		if (contentHeight >= maxAlignmentHeight) {
-			return;
-		}
-		var verticalOffset = 0.0;
-		if (this._verticalAlign == BOTTOM) {
-			verticalOffset = maxAlignmentHeight - contentHeight;
-		} else if (this._verticalAlign == MIDDLE) {
-			verticalOffset = (maxAlignmentHeight - contentHeight) / 2.0;
-		}
-		for (item in items) {
-			if (item == null) {
-				continue;
+		var alignOffset = 0.0;
+		var gapOffset = 0.0;
+		var maxAlignmentHeight = viewPortHeight - this._paddingLeft - this._paddingRight;
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+			if (items.length > 1 && maxAlignmentHeight > contentHeight) {
+				adjustedGap += (maxAlignmentHeight - contentHeight) / (items.length - 1);
 			}
+			gapOffset = adjustedGap - this._minGap;
+		} else {
+			alignOffset = switch (this._verticalAlign) {
+				case TOP: 0.0;
+				case BOTTOM: maxAlignmentHeight - contentHeight;
+				case MIDDLE: (maxAlignmentHeight - contentHeight) / 2.0;
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
+			}
+			if (alignOffset < 0.0) {
+				alignOffset = 0.0;
+			}
+		}
+		if (alignOffset == 0.0 && gapOffset == 0.0) {
+			return;
+		}
+
+		var totalOffset = alignOffset;
+		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
@@ -908,7 +984,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					continue;
 				}
 			}
-			item.y = Math.max(this._paddingTop, item.y + verticalOffset);
+			if (item != null) {
+				item.y = Math.max(this._paddingTop, item.y + totalOffset);
+			}
+			totalOffset += gapOffset;
 		}
 	}
 }
