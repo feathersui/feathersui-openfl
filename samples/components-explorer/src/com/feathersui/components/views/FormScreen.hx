@@ -1,5 +1,6 @@
 package com.feathersui.components.views;
 
+import feathers.controls.Alert;
 import feathers.controls.Button;
 import feathers.controls.Form;
 import feathers.controls.FormItem;
@@ -111,7 +112,20 @@ class FormScreen extends Panel {
 		var name = this.nameInput.text;
 		var email = this.emailInput.text;
 		var message = this.messageInput.text;
+		if (name.length == 0) {
+			Alert.show("Name is missing.", "Error", ["OK"]);
+			return;
+		}
+		if (email.length == 0) {
+			Alert.show("Email is missing.", "Error", ["OK"]);
+			return;
+		}
+		if (message.length == 0) {
+			Alert.show("Message is missing.", "Error", ["OK"]);
+			return;
+		}
 		trace('Submitted message! Name: ${name}, Email: ${email}, Message: ${message}');
+		Alert.show("The form has been submitted.", "Confirmation", ["OK"]);
 		this.clearForm();
 	}
 
