@@ -23,7 +23,7 @@ class ItemRendererScreen extends Panel {
 		this.itemRenderer.text = "Primary Text";
 		this.itemRenderer.secondaryText = "Optional Secondary Text";
 		this.itemRenderer.layoutData = AnchorLayoutData.center();
-		this.itemRenderer.width = 390.0;
+		this.itemRenderer.width = 360.0;
 		this.addChild(this.itemRenderer);
 
 		var accessoryView = new ToggleSwitch();
