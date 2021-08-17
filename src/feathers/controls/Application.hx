@@ -182,6 +182,8 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 			}
 			this._popUpContainer = factory();
 		}
+		this._popUpContainer.scaleX = this._scaleFactor;
+		this._popUpContainer.scaleY = this._scaleFactor;
 		this.stage.addChild(this._popUpContainer);
 		var popUpManager = PopUpManager.forStage(this.stage);
 		popUpManager.root = this._popUpContainer;
