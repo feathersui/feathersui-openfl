@@ -1339,15 +1339,19 @@ class Scroller extends EventDispatcher {
 		var timeOffset = this.savedScrollMoves[endIndex] - this.savedScrollMoves[startIndex];
 		var velocityX:Null<Float> = null;
 		var velocityY:Null<Float> = null;
-		if (!finishingX && this._draggingX) {
-			var movedX = this._scrollX - this.savedScrollMoves[startIndex - 2];
-			velocityX = -movedX / timeOffset;
+		// while it's unlikely to happen, it's not impossible that the time
+		// offset ends up being zero. if we divide by zero, the velocity is
+		// infinity, which is bad, so skip it.
+		if (timeOffset > 0.0) {
+			if (!finishingX && this._draggingX) {
+				var movedX = this._scrollX - this.savedScrollMoves[startIndex - 2];
+				velocityX = -movedX / timeOffset;
+			}
+			if (!finishingY && this._draggingY) {
+				var movedY = this._scrollY - this.savedScrollMoves[startIndex - 1];
+				velocityY = -movedY / timeOffset;
+			}
 		}
-		if (!finishingY && this._draggingY) {
-			var movedY = this._scrollY - this.savedScrollMoves[startIndex - 1];
-			velocityY = -movedY / timeOffset;
-		}
-
 		if (velocityX != null || velocityY != null) {
 			this.throwWithVelocity(velocityX, velocityY);
 		}
