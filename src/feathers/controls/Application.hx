@@ -233,7 +233,10 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	private function application_addedToStageHandler(event:Event):Void {
 		#if flash
 		if (Reflect.hasField(this.stage, "nativeWindow")) {
-			Reflect.field(this.stage, "nativeWindow").visible = true;
+			var window = Reflect.field(this.stage, "nativeWindow");
+			if (window != null) {
+				Reflect.setProperty(window, "visible", true);
+			}
 		}
 		#end
 		this.addEventListener(Event.REMOVED_FROM_STAGE, application_removedFromStageHandler);
