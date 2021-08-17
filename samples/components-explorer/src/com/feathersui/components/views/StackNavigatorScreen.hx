@@ -91,19 +91,19 @@ private class PopScreen extends LayoutGroup {
 		layout.verticalAlign = MIDDLE;
 		this.layout = layout;
 
-		var pushButton = new Button();
-		pushButton.text = "Push Another";
-		pushButton.addEventListener(TriggerEvent.TRIGGER, event -> {
-			this.dispatchEvent(new Event(EVENT_PUSH));
-		});
-		this.addChild(pushButton);
-
 		var popButton = new Button();
 		popButton.text = "Pop";
 		popButton.addEventListener(TriggerEvent.TRIGGER, event -> {
 			this.dispatchEvent(new Event(EVENT_POP));
 		});
 		this.addChild(popButton);
+
+		var pushButton = new Button();
+		pushButton.text = "Push Another";
+		pushButton.addEventListener(TriggerEvent.TRIGGER, event -> {
+			this.dispatchEvent(new Event(EVENT_PUSH));
+		});
+		this.addChild(pushButton);
 	}
 }
 
