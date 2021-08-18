@@ -23,7 +23,7 @@ class MainMenu extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var menuItems = new ArrayHierarchicalCollection([@formating
+		var menuItems = new ArrayHierarchicalCollection([
 			// @formatter:off
 			new MenuItem("Basic Controls", null, [
 				new MenuItem("Asset Loader", ViewPaths.ASSET_LOADER),
