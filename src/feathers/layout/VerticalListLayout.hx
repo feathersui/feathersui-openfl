@@ -1037,7 +1037,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, contentHeight:Float, viewPortHeight:Float):Void {
 		var alignOffset = 0.0;
 		var gapOffset = 0.0;
-		var maxAlignmentHeight = viewPortHeight - this._paddingLeft - this._paddingRight;
+		var maxAlignmentHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
 		var adjustedGap = this._gap;
 		var hasFlexGap = this._gap == (1.0 / 0.0);
 		if (hasFlexGap) {
