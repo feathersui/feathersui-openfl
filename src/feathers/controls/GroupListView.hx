@@ -1866,6 +1866,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		if (this.compareLocations(this._selectedLocation, event.location) == 0) {
+			// unlike when an item is removed, the selected index is kept when
+			// an item is replaced
 			this._selectedItem = this._dataProvider.get(event.location);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}

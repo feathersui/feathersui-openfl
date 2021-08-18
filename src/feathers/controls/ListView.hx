@@ -398,7 +398,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._selectionAnchorIndex = this._selectedIndex;
 		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this._selectedIndex;
+		return this._selectedItem;
 	}
 
 	private var _allowMultipleSelection:Bool = false;
@@ -1491,6 +1491,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		if (this._selectedIndex == event.index) {
 			this._selectedIndex = -1;
+			this._selectedItem = null;
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		} else if (this._selectedIndex > event.index) {
 			this._selectedIndex--;
@@ -1506,6 +1507,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		if (this._selectedIndex == event.index) {
+			// unlike when an item is removed, the selected index is kept when
+			// an item is replaced
 			this._selectedItem = this._dataProvider.get(this._selectedIndex);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}

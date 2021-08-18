@@ -206,6 +206,243 @@ class ListViewTest extends Test {
 		Assert.notNull(this._listView.itemToItemRenderer(item1));
 		Assert.isNull(this._listView.itemToItemRenderer(item2));
 	}
+
+	public function testAddItemBeforeSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.addAt(item3, 0);
+		Assert.isTrue(changed);
+		Assert.equals(2, eventIndex);
+		Assert.equals(2, this._listView.selectedIndex);
+		Assert.equals(item2, eventItem);
+		Assert.equals(item2, this._listView.selectedItem);
+	}
+
+	public function testAddItemAtSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.addAt(item3, 1);
+		Assert.isTrue(changed);
+		Assert.equals(2, eventIndex);
+		Assert.equals(2, this._listView.selectedIndex);
+		Assert.equals(item2, eventItem);
+		Assert.equals(item2, this._listView.selectedItem);
+	}
+
+	public function testAddItemAfterSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.addAt(item3, 2);
+		Assert.isFalse(changed);
+		Assert.equals(-1, eventIndex);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(null, eventItem);
+		Assert.equals(item2, this._listView.selectedItem);
+	}
+
+	public function testRemoveItemBeforeSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.removeAt(0);
+		Assert.isTrue(changed);
+		Assert.equals(0, eventIndex);
+		Assert.equals(0, this._listView.selectedIndex);
+		Assert.equals(item2, eventItem);
+		Assert.equals(item2, this._listView.selectedItem);
+	}
+
+	public function testRemoveItemAtSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.removeAt(1);
+		Assert.isTrue(changed);
+		Assert.equals(-1, eventIndex);
+		Assert.equals(-1, this._listView.selectedIndex);
+		Assert.equals(null, eventItem);
+		Assert.equals(null, this._listView.selectedItem);
+	}
+
+	public function testRemoveItemAfterSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.removeAt(2);
+		Assert.isFalse(changed);
+		Assert.equals(-1, eventIndex);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(null, eventItem);
+		Assert.equals(item2, this._listView.selectedItem);
+	}
+
+	public function testReplaceItemBeforeSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var item4 = {text: "Four"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.set(0, item4);
+		Assert.isFalse(changed);
+		Assert.equals(-1, eventIndex);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(null, eventItem);
+		Assert.equals(item2, this._listView.selectedItem);
+	}
+
+	public function testReplaceItemAtSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var item4 = {text: "Four"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.set(1, item4);
+		Assert.isTrue(changed);
+		Assert.equals(1, eventIndex);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item4, eventItem);
+		Assert.equals(item4, this._listView.selectedItem);
+	}
+
+	public function testReplaceItemAfterSelectedIndex():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var item4 = {text: "Four"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		var changed = false;
+		var eventIndex:Int = -1;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventIndex = this._listView.selectedIndex;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.set(2, item4);
+		Assert.isFalse(changed);
+		Assert.equals(-1, eventIndex);
+		Assert.equals(1, this._listView.selectedIndex);
+		Assert.equals(null, eventItem);
+		Assert.equals(item2, this._listView.selectedItem);
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

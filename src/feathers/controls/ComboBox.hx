@@ -1110,8 +1110,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else {
 			// if closed, update immediately
 			this.pendingSelectedIndex = -1;
-			// use the setter
-			this.selectedIndex = this.listView.selectedIndex;
+			this._selectedIndex = this.listView.selectedIndex;
+			this._selectedItem = this.listView.selectedItem;
+			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
 

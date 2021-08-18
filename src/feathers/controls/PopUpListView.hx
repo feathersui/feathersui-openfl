@@ -870,8 +870,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this._ignoreListViewChange) {
 			return;
 		}
-		// use the setter
-		this.selectedIndex = this.listView.selectedIndex;
+		this._selectedIndex = this.listView.selectedIndex;
+		this._selectedItem = this.listView.selectedItem;
+		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
 	private function popUpListView_listView_removedFromStageHandler(event:Event):Void {
