@@ -2253,8 +2253,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this._selectedIndex >= event.index) {
-			this._selectedIndex++;
+		var changed = false;
+		for (i in 0...this._selectedIndices.length) {
+			var selectedIndex = this._selectedIndices[i];
+			if (selectedIndex >= event.index) {
+				this._selectedIndices[i] = selectedIndex + 1;
+				changed = true;
+			}
+		}
+		if (changed) {
+			this._selectedIndex = this._selectedIndices[0];
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -2266,12 +2274,28 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this._selectedIndex == event.index) {
-			this._selectedIndex = -1;
-			this._selectedItem = null;
-			FeathersEvent.dispatch(this, Event.CHANGE);
-		} else if (this._selectedIndex > event.index) {
-			this._selectedIndex--;
+		var changed = false;
+		var i = this._selectedIndices.length - 1;
+		while (i >= 0) {
+			var selectedIndex = this._selectedIndices[i];
+			if (selectedIndex == event.index) {
+				this._selectedIndices.splice(i, 1);
+				this._selectedItems.splice(i, 1);
+				changed = true;
+			} else if (selectedIndex > event.index) {
+				this._selectedIndices[i] = selectedIndex - 1;
+				changed = true;
+			}
+			i--;
+		}
+		if (changed) {
+			if (this._selectedIndices.length > 0) {
+				this._selectedIndex = this._selectedIndices[0];
+				this._selectedItem = this._dataProvider.get(this._selectedIndex);
+			} else {
+				this._selectedIndex = -1;
+				this._selectedItem = null;
+			}
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 	}
@@ -2283,11 +2307,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._selectedIndex == -1) {
 			return;
 		}
-		if (this._selectedIndex == event.index) {
-			// unlike when an item is removed, the selected index is kept when
-			// an item is replaced
-			this._selectedItem = this._dataProvider.get(this._selectedIndex);
-			FeathersEvent.dispatch(this, Event.CHANGE);
+		for (i in 0...this._selectedIndices.length) {
+			var selectedIndex = this._selectedIndices[i];
+			if (selectedIndex == event.index) {
+				// unlike when an item is removed, the selected index is kept when
+				// an item is replaced
+				this._selectedItems[i] = this._dataProvider.get(selectedIndex);
+				this._selectedItem = this._selectedItems[0];
+				FeathersEvent.dispatch(this, Event.CHANGE);
+				break;
+			}
 		}
 	}
 

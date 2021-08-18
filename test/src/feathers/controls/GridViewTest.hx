@@ -299,20 +299,36 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.addAt(item3, 0);
 		Assert.isTrue(changed);
 		Assert.equals(2, eventIndex);
 		Assert.equals(2, this._gridView.selectedIndex);
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(eventIndices.length == 1);
+		Assert.equals(2, eventIndices[0]);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(2, this._gridView.selectedIndices[0]);
+		Assert.isTrue(eventItems.length == 1);
+		Assert.equals(item2, eventItems[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 
 	public function testAddItemAtSelectedIndex():Void {
@@ -325,20 +341,36 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.addAt(item3, 1);
 		Assert.isTrue(changed);
 		Assert.equals(2, eventIndex);
 		Assert.equals(2, this._gridView.selectedIndex);
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(eventIndices.length == 1);
+		Assert.equals(2, eventIndices[0]);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(2, this._gridView.selectedIndices[0]);
+		Assert.isTrue(eventItems.length == 1);
+		Assert.equals(item2, eventItems[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 
 	public function testAddItemAfterSelectedIndex():Void {
@@ -351,20 +383,34 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.addAt(item3, 2);
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(null, eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.equals(null, eventIndices);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.equals(null, eventItems);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 
 	public function testRemoveItemBeforeSelectedIndex():Void {
@@ -377,20 +423,36 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.removeAt(0);
 		Assert.isTrue(changed);
 		Assert.equals(0, eventIndex);
 		Assert.equals(0, this._gridView.selectedIndex);
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(eventIndices.length == 1);
+		Assert.equals(0, eventIndices[0]);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(0, this._gridView.selectedIndices[0]);
+		Assert.isTrue(eventItems.length == 1);
+		Assert.equals(item2, eventItems[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 
 	public function testRemoveItemAtSelectedIndex():Void {
@@ -403,20 +465,32 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.removeAt(1);
 		Assert.isTrue(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.equals(null, eventItem);
 		Assert.equals(null, this._gridView.selectedItem);
+		Assert.isTrue(eventIndices.length == 0);
+		Assert.isTrue(this._gridView.selectedIndices.length == 0);
+		Assert.isTrue(eventItems.length == 0);
+		Assert.isTrue(this._gridView.selectedItems.length == 0);
 	}
 
 	public function testRemoveItemAfterSelectedIndex():Void {
@@ -429,20 +503,34 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.removeAt(2);
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(null, eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.equals(null, eventIndices);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.equals(null, eventItems);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 
 	public function testReplaceItemBeforeSelectedIndex():Void {
@@ -456,20 +544,34 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.set(0, item4);
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(null, eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.equals(null, eventIndices);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.equals(null, eventItems);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 
 	public function testReplaceItemAtSelectedIndex():Void {
@@ -483,20 +585,35 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.set(1, item4);
 		Assert.isTrue(changed);
 		Assert.equals(1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item4, eventItem);
 		Assert.equals(item4, this._gridView.selectedItem);
+		Assert.equals(1, eventIndices[0]);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(eventItems.length == 1);
+		Assert.equals(item4, eventItems[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item4, this._gridView.selectedItems[0]);
 	}
 
 	public function testReplaceItemAfterSelectedIndex():Void {
@@ -510,20 +627,34 @@ class GridViewTest extends Test {
 		var changed = false;
 		var eventIndex:Int = -1;
 		var eventItem = null;
+		var eventIndices:Array<Int> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventIndex = this._gridView.selectedIndex;
 			eventItem = this._gridView.selectedItem;
+			eventIndices = this._gridView.selectedIndices.copy();
+			eventItems = this._gridView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 		this._gridView.dataProvider.set(2, item4);
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
 		Assert.equals(null, eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
+		Assert.equals(null, eventIndices);
+		Assert.isTrue(this._gridView.selectedIndices.length == 1);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.equals(null, eventItems);
+		Assert.isTrue(this._gridView.selectedItems.length == 1);
+		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 }
 
