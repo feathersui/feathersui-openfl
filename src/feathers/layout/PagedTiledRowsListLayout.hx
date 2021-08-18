@@ -1567,12 +1567,14 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			numRows = verticalTileCount;
 		}
 		var alignOffset = 0.0;
-		var gapOffset = 0.0;
+		var gapOffset = adjustedVerticalGap;
 		var hasFlexVerticalGap = this._verticalGap == (1.0 / 0.0);
+		var contentHeight = numRows * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
 		if (hasFlexVerticalGap) {
-			gapOffset = adjustedVerticalGap;
+			if (availableHeight > contentHeight) {
+				gapOffset += (availableHeight - contentHeight) / (numRows - 1);
+			}
 		} else {
-			var contentHeight = numRows * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
 			alignOffset = switch (this._verticalAlign) {
 				case TOP: 0.0;
 				case BOTTOM: availableHeight - contentHeight;

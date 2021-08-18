@@ -755,11 +755,9 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 	private function applyVerticalAlignAndGap(items:Array<DisplayObject>, availableHeight:Float, tileHeight:Float, rowCount:Int, columnCount:Int,
 			adjustedVerticalGap:Float):Void {
 		var alignOffset = 0.0;
-		var gapOffset = 0.0;
+		var gapOffset = adjustedVerticalGap;
 		var hasFlexVerticalGap = this._verticalGap == (1.0 / 0.0);
-		if (hasFlexVerticalGap) {
-			gapOffset = adjustedVerticalGap;
-		} else {
+		if (!hasFlexVerticalGap) {
 			var contentHeight = rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
 			alignOffset = switch (this._verticalAlign) {
 				case TOP: 0.0;
@@ -775,7 +773,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		if (alignOffset == 0.0 && gapOffset == 0.0) {
 			return;
 		}
-		var totalOffset = 0.0;
+		var totalOffset = alignOffset;
 		for (i in 0...items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {

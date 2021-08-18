@@ -1403,11 +1403,9 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 	private function applyVerticalAlignAndGap(items:Array<DisplayObject>, availableHeight:Float, tileHeight:Float, rowCount:Int, columnCount:Int,
 			adjustedVerticalGap:Float):Void {
 		var alignOffset = 0.0;
-		var gapOffset = 0.0;
+		var gapOffset = adjustedVerticalGap;
 		var hasFlexVerticalGap = this._verticalGap == (1.0 / 0.0);
-		if (hasFlexVerticalGap) {
-			gapOffset = adjustedVerticalGap;
-		} else {
+		if (!hasFlexVerticalGap) {
 			var contentHeight = rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
 			alignOffset = switch (this._verticalAlign) {
 				case TOP: 0.0;
