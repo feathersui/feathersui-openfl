@@ -1542,7 +1542,11 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			return;
 		}
 		var totalOffset = alignOffset;
-		for (i in startIndex...(startIndex + numItemsInRow)) {
+		var endIndex = startIndex + numItemsInRow;
+		if (endIndex > items.length) {
+			endIndex = items.length;
+		}
+		for (i in startIndex...endIndex) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
 				var layoutItem = cast(item, ILayoutObject);
