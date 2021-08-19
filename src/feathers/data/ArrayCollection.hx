@@ -570,6 +570,19 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 		}
 	}
 
+	/**
+		Returns a new array containing the items in the collection, honoring the
+		current filter and sort, if any.
+
+		@since 1.0.0
+	**/
+	public function toArray():Array<T> {
+		if (this._filterAndSortData != null) {
+			return this._filterAndSortData.copy();
+		}
+		return this._array.copy();
+	}
+
 	private function getSortedInsertionIndex(item:T):Int {
 		if (this._sortCompareFunction == null) {
 			return this._filterAndSortData.length;
