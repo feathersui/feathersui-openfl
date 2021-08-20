@@ -14,7 +14,7 @@
 		"layout"
 	],
 	"description": "Cross-platform user interface components for creative frontend projects built with Haxe and OpenFL",
-	"version": "1.0.0-beta.4",
+	"version": "1.0.0-beta.5",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: NumericStepper, application scaling, and lots of polish for 1.0"
+	"releasenote": "Preview build: Tiled layouts, scroll snapping, mask skins, flexible gaps, and a ton of bug fixes"
 }

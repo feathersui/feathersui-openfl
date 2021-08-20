@@ -1,5 +1,18 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.5 (2021-08-20)
+
+- ArrayCollection: Added `toArray()` method to return a new array of the items in the collection (respecting filter and sort).
+- DefaultFocusManager: Handle focus changes with keyboard arrow keys, if they originate from `KeyLocation.D_PAD`.
+- HorizontalLayout, HorizontalListLayout, VerticalLayout, VerticalListLayout: The `gap` property may be set to `Math.POSITIVE_INFINITY` to position items as far from each other as possible while staying within the container's view port bounds. Use `minGap` to set the minimum spacing.
+- ItemRenderer: Added `showSecondaryText` property to optionally hide the secondary text, even if not `null`, similar to how `showText` works.
+- LayoutGroup, ScrollContainer: Added `maskSkin` to optionally mask the content of the container. The `maskSkin` is resized automatically when the container resizes. Useful for masking with rounded corners or other non-rectangular shapes.
+- ScrollContainer: Added `viewPortMaskSkin` to optionally mask only the view port. Works similarly to `maskSkin`.
+- TiledRowsLayout, TiledRowsListLayout: New layout for containers that positions items as tiles (all items have equal dimensions) in one or more rows.
+- PagedTiledRowsListLayout: A variation of `TiledRowsListLayout` that separates tiles across multiple pages instead of scrolling continuously.
+- Scroller: Added `snapPositionsX` and `snapPositionsY` properties that accept an array of snap positions, which is populated by subclasses of `BaseScrollContainer`, when a layout supports snapping.
+- A ton of stability and bug fixes!
+
 ## 1.0.0-beta.4 (2021-07-09)
 
 - AssetLoader: Added new `originalSourceWidth` and `originalSourceHeight` properties that return the original dimensions of the content, after loading completes.
