@@ -58,7 +58,7 @@ class Main extends Application {
 			layout.gap = 4.0;
 			var row = new LayoutGroup();
 			row.layout = layout;
-			row.layoutData = new VerticalLayoutData(100, 20);
+			row.layoutData = new VerticalLayoutData(100.0, 20.0);
 			this.addChild(row);
 			this.rows.push(row);
 		}
@@ -76,14 +76,14 @@ class Main extends Application {
 		this.clearButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.clearButton.text = "C";
 		this.clearButton.toolTip = "Clear (Esc)";
-		this.clearButton.layoutData = new HorizontalLayoutData(25, 100);
+		this.clearButton.layoutData = new HorizontalLayoutData(25.0, 100.0);
 		this.clearButton.addEventListener(TriggerEvent.TRIGGER, clearButton_triggerHandler);
 		this.rows[4].addChild(this.clearButton);
 
 		for (i in 0...10) {
 			var button = new Button();
 			button.text = Std.string(i);
-			button.layoutData = new HorizontalLayoutData(25, 100);
+			button.layoutData = new HorizontalLayoutData(25.0, 100.0);
 			button.addEventListener(TriggerEvent.TRIGGER, numberButton_triggerHandler);
 			this.numberButtons.push(button);
 			if (i == 0) {
@@ -101,7 +101,7 @@ class Main extends Application {
 		this.equalsButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.equalsButton.text = "=";
 		this.equalsButton.toolTip = "Equal (or press Enter/Return)";
-		this.equalsButton.layoutData = new HorizontalLayoutData(25, 100);
+		this.equalsButton.layoutData = new HorizontalLayoutData(25.0, 100.0);
 		this.equalsButton.addEventListener(TriggerEvent.TRIGGER, equalsButton_triggerHandler);
 		this.rows[4].addChild(this.equalsButton);
 
@@ -110,7 +110,7 @@ class Main extends Application {
 		// not all fonts support ÷
 		this.divideButton.text = "/";
 		this.divideButton.toolTip = "Divide (or press /)";
-		this.divideButton.layoutData = new HorizontalLayoutData(25, 100);
+		this.divideButton.layoutData = new HorizontalLayoutData(25.0, 100.0);
 		this.divideButton.addEventListener(TriggerEvent.TRIGGER, divideButton_triggerHandler);
 		this.rows[1].addChild(this.divideButton);
 
@@ -119,7 +119,7 @@ class Main extends Application {
 		// not all fonts support ×
 		this.multiplyButton.text = "x";
 		this.multiplyButton.toolTip = "Multiply (or press *)";
-		this.multiplyButton.layoutData = new HorizontalLayoutData(25, 100);
+		this.multiplyButton.layoutData = new HorizontalLayoutData(25.0, 100.0);
 		this.multiplyButton.addEventListener(TriggerEvent.TRIGGER, multiplyButton_triggerHandler);
 		this.rows[2].addChild(this.multiplyButton);
 
@@ -128,7 +128,7 @@ class Main extends Application {
 		// not all fonts support −
 		this.subtractButton.text = "-";
 		this.subtractButton.toolTip = "Subtract (or press -)";
-		this.subtractButton.layoutData = new HorizontalLayoutData(25, 100);
+		this.subtractButton.layoutData = new HorizontalLayoutData(25.0, 100.0);
 		this.subtractButton.addEventListener(TriggerEvent.TRIGGER, subtractButton_triggerHandler);
 		this.rows[3].addChild(this.subtractButton);
 
@@ -136,7 +136,7 @@ class Main extends Application {
 		this.addButton.variant = CalculatorTheme.VARIANT_OPERATION_BUTTON;
 		this.addButton.text = "+";
 		this.addButton.toolTip = "Add (or press +)";
-		this.addButton.layoutData = new HorizontalLayoutData(25, 100);
+		this.addButton.layoutData = new HorizontalLayoutData(25.0, 100.0);
 		this.addButton.addEventListener(TriggerEvent.TRIGGER, addButton_triggerHandler);
 		this.rows[4].addChild(this.addButton);
 	}
