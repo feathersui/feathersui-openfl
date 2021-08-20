@@ -32,6 +32,7 @@ class PopUpManager {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public static var root(never, set):DisplayObjectContainer;
 
 	private static function set_root(value:DisplayObjectContainer):DisplayObjectContainer {
@@ -48,6 +49,7 @@ class PopUpManager {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public static var popUpCount(get, never):Int;
 
 	private static function get_popUpCount():Int {
