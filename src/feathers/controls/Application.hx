@@ -48,6 +48,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public static var topLevelApplication(get, never):Application;
 
 	private static function get_topLevelApplication():Application {
