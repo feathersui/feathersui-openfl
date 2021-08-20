@@ -1,3 +1,4 @@
+import feathers.core.ScreenDensityScaleManager;
 import feathers.core.DefaultToolTipManager;
 import feathers.skins.MultiSkin;
 import feathers.controls.Application;
@@ -65,6 +66,9 @@ class CalculatorTheme implements ITheme {
 			app.backgroundSkin = skin;
 		}
 		app.stage.color = this.backgroundColor;
+		if (app.scaleManager == null) {
+			app.scaleManager = new ScreenDensityScaleManager();
+		}
 	}
 
 	private function setButtonStyles(button:Button):Void {
