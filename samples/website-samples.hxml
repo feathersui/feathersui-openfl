@@ -1,0 +1,25 @@
+-cmd haxelib run openfl build animated-tween-skin/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build calculator/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build components-explorer/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build custom-programmatic-skin/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build custom-programmatic-skin-with-states/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build custom-theme/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build hello-world/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build horizontal-layout-percentage-sizing/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build list-view-data-provider-collection-sorting/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build login-form/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build router-navigator-pass-data-between-views/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build stack-navigator-pass-data-between-views/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build tab-navigator/project.xml html5 -final -clean --haxedef=feathersui.com
