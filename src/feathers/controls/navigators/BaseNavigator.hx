@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.events.TransitionEvent;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
@@ -34,19 +35,19 @@ import feathers.core.FeathersControl;
 
 	@event openfl.events.Event.CHANGE
 
-	@event feathers.events.FeathersEvent.TRANSITION_START
+	@event feathers.events.TransitionEvent.TRANSITION_START
 
-	@event feathers.events.FeathersEvent.TRANSITION_COMPLETE
+	@event feathers.events.TransitionEvent.TRANSITION_COMPLETE
 
-	@event feathers.events.FeathersEvent.TRANSITION_CANCEL
+	@event feathers.events.TransitionEvent.TRANSITION_CANCEL
 
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CLEAR)
 @:event(openfl.events.Event.CHANGE)
-@:event(feathers.events.FeathersEvent.TRANSITION_START)
-@:event(feathers.events.FeathersEvent.TRANSITION_COMPLETE)
-@:event(feathers.events.FeathersEvent.TRANSITION_CANCEL)
+@:event(feathers.events.TransitionEvent.TRANSITION_START)
+@:event(feathers.events.TransitionEvent.TRANSITION_COMPLETE)
+@:event(feathers.events.TransitionEvent.TRANSITION_CANCEL)
 class BaseNavigator extends FeathersControl {
 	private static function defaultTransition(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 		return new NoOpEffectContext(oldView);
@@ -108,8 +109,10 @@ class BaseNavigator extends FeathersControl {
 	private var _addedItems:Map<String, Dynamic> = new Map();
 	private var _previousViewInTransition:DisplayObject;
 	private var _previousViewInTransitionID:String;
-	private var _nextItemID:String;
-	private var _nextItemTransition:(DisplayObject, DisplayObject) -> IEffectContext;
+	private var _nextViewInTransition:DisplayObject;
+	private var _nextViewInTransitionID:String;
+	private var _pendingItemID:String;
+	private var _pendingItemTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 	private var _clearAfterTransition:Bool = false;
 	private var _delayedTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 	private var _waitingForDelayedTransition:Bool = false;
@@ -393,6 +396,19 @@ class BaseNavigator extends FeathersControl {
 		if ((this._activeItemView is IValidating)) {
 			cast(this._activeItemView, IValidating).validateNow();
 		}
+		if (this._nextViewInTransition != null) {
+			this._nextViewInTransition.x = 0.0;
+			this._nextViewInTransition.y = 0.0;
+			if (this._nextViewInTransition.width != this.actualWidth) {
+				this._nextViewInTransition.width = this.actualWidth;
+			}
+			if (this._nextViewInTransition.height != this.actualHeight) {
+				this._nextViewInTransition.height = this.actualHeight;
+			}
+			if ((this._nextViewInTransition is IValidating)) {
+				cast(this._nextViewInTransition, IValidating).validateNow();
+			}
+		}
 	}
 
 	/**
@@ -463,8 +479,8 @@ class BaseNavigator extends FeathersControl {
 			throw new ArgumentError('Item with id \'$id\' cannot be displayed because this id has not been added.');
 		}
 		if (this._transitionActive) {
-			this._nextItemID = id;
-			this._nextItemTransition = transition;
+			this._pendingItemID = id;
+			this._pendingItemTransition = transition;
 			this._clearAfterTransition = false;
 			return null;
 		}
@@ -475,21 +491,20 @@ class BaseNavigator extends FeathersControl {
 		this._transitionActive = true;
 
 		var item = this._addedItems.get(id);
-		this._activeItemView = this.getView(id);
-		if (this._activeItemView == null) {
+		this._nextViewInTransition = this.getView(id);
+		if (this._nextViewInTransition == null) {
 			throw new IllegalOperationError('Failed to display navigator item with id \'$id\'. Call to getView() incorrectly returned null.');
 		}
-		this._activeItemID = id;
+		this._nextViewInTransitionID = id;
 		if (this._autoSizeMode == CONTENT || this.stage == null) {
-			this._activeItemView.addEventListener(Event.RESIZE, activeItemView_resizeHandler);
+			this._nextViewInTransition.addEventListener(Event.RESIZE, activeItemView_resizeHandler);
 		}
-		var sameInstance = this._previousViewInTransition == this._activeItemView;
-		this._viewsContainer.addChild(this._activeItemView);
-		if ((this._activeItemView is IUIControl)) {
+		var sameInstance = this._previousViewInTransition == this._nextViewInTransition;
+		this._viewsContainer.addChild(this._nextViewInTransition);
+		if ((this._nextViewInTransition is IUIControl)) {
 			// initialize so that we can save the measurements
-			cast(this._activeItemView, IUIControl).initializeNow();
+			cast(this._nextViewInTransition, IUIControl).initializeNow();
 		}
-		this._activeViewMeasurements.save(this._activeItemView);
 
 		this.setInvalid(SELECTION);
 		if (this._validationQueue != null && this._validationQueue.validating) {
@@ -506,13 +521,18 @@ class BaseNavigator extends FeathersControl {
 		if (sameInstance) {
 			// we can't transition if both view are the same display object, so
 			// so skip the transition!
+			this._activeItemView = this._nextViewInTransition;
+			this._activeItemID = this._nextViewInTransitionID;
+			this._activeViewMeasurements.save(this._activeItemView);
 			this._previousViewInTransition = null;
 			this._previousViewInTransitionID = null;
+			this._nextViewInTransition = null;
+			this._nextViewInTransitionID = null;
 			this._transitionActive = false;
+			FeathersEvent.dispatch(this, Event.CHANGE);
 		} else {
 			this.startTransition(transition);
 		}
-		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._activeItemView;
 	}
 
@@ -523,8 +543,8 @@ class BaseNavigator extends FeathersControl {
 		}
 
 		if (this._transitionActive) {
-			this._nextItemID = null;
-			this._nextItemTransition = transition;
+			this._pendingItemID = null;
+			this._pendingItemTransition = transition;
 			this._clearAfterTransition = true;
 			return;
 		}
@@ -533,8 +553,8 @@ class BaseNavigator extends FeathersControl {
 
 		this._previousViewInTransition = this._activeItemView;
 		this._previousViewInTransitionID = this._activeItemID;
-		this._activeItemView = null;
-		this._activeItemID = null;
+		this._nextViewInTransition = null;
+		this._nextViewInTransitionID = null;
 
 		this.setInvalid(SELECTION);
 
@@ -542,12 +562,13 @@ class BaseNavigator extends FeathersControl {
 	}
 
 	private function startTransition(transition:(DisplayObject, DisplayObject) -> IEffectContext):Void {
-		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_START);
+		TransitionEvent.dispatch(this, TransitionEvent.TRANSITION_START, this._previousViewInTransitionID, this._previousViewInTransition,
+			this._nextViewInTransitionID, this._nextViewInTransition);
 		if (transition != null && transition != defaultTransition) {
-			if (this._activeItemView != null) {
+			if (this._nextViewInTransition != null) {
 				// temporarily make the active view invisible because the
 				// transition doesn't start right away.
-				this._activeItemView.visible = false;
+				this._nextViewInTransition.visible = false;
 			}
 			this._waitingForTransitionFrameCount = 0;
 			this._waitingTransition = transition;
@@ -556,11 +577,11 @@ class BaseNavigator extends FeathersControl {
 			// see the comment in the listener for details.
 			this.addEventListener(Event.ENTER_FRAME, baseNavigator_transitionWait_enterFrameHandler);
 		} else {
-			if (this._activeItemView != null) {
+			if (this._nextViewInTransition != null) {
 				// the view may have been hidden if the transition was delayed
-				this._activeItemView.visible = true;
+				this._nextViewInTransition.visible = true;
 			}
-			var transitionContext = defaultTransition(this._previousViewInTransition, this._activeItemView);
+			var transitionContext = defaultTransition(this._previousViewInTransition, this._nextViewInTransition);
 			transitionContext.addEventListener(Event.COMPLETE, transition_completeHandler);
 			transitionContext.addEventListener(Event.CANCEL, transition_cancelHandler);
 			transitionContext.play();
@@ -569,15 +590,15 @@ class BaseNavigator extends FeathersControl {
 
 	private function startWaitingTransition():Void {
 		this.removeEventListener(Event.ENTER_FRAME, baseNavigator_transitionWait_enterFrameHandler);
-		if (this._activeItemView != null) {
+		if (this._nextViewInTransition != null) {
 			// this view may have been hidden while we were waiting to start the
 			// transition
-			this._activeItemView.visible = true;
+			this._nextViewInTransition.visible = true;
 		}
 
 		var transition = this._waitingTransition;
 		this._waitingTransition = null;
-		var transitionContext = transition(this._previousViewInTransition, this._activeItemView);
+		var transitionContext = transition(this._previousViewInTransition, this._nextViewInTransition);
 		transitionContext.addEventListener(Event.COMPLETE, transition_completeHandler);
 		transitionContext.addEventListener(Event.CANCEL, transition_cancelHandler);
 		transitionContext.play();
@@ -627,16 +648,23 @@ class BaseNavigator extends FeathersControl {
 		// consider the transition still active if something is already
 		// queued up to happen next. if an event listener asks to show a new
 		// item, it needs to replace what is queued up.
-		this._transitionActive = this._clearAfterTransition || (this._nextItemID != null);
+		this._transitionActive = this._clearAfterTransition || (this._pendingItemID != null);
+
+		// call this before clearing prev/next view variables so that subclass
+		// overrides have one last chance to access them
+		this.transitionComplete();
 
 		// we need to save these in local variables because a new
 		// transition may be started in the listeners for the transition
 		// complete events, and that will overwrite them.
-		var activeItemView = this._activeItemView;
+		var nextView = this._nextViewInTransition;
+		var nextItemID = this._nextViewInTransitionID;
 		var previousView = this._previousViewInTransition;
 		var previousItemID:String = this._previousViewInTransitionID;
 		this._previousViewInTransition = null;
 		this._previousViewInTransitionID = null;
+		this._nextViewInTransition = null;
+		this._nextViewInTransitionID = null;
 
 		if (previousView != null) {
 			previousView.removeEventListener(Event.RESIZE, activeItemView_resizeHandler);
@@ -644,27 +672,32 @@ class BaseNavigator extends FeathersControl {
 			this.disposeView(previousItemID, previousView);
 		}
 
-		this.transitionComplete();
-		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_COMPLETE);
+		// similar to above, make sure that these are populated before the
+		// events are dispatched
+		this._activeItemView = nextView;
+		this._activeItemID = nextItemID;
+		this._activeViewMeasurements.save(nextView);
+		TransitionEvent.dispatch(this, TransitionEvent.TRANSITION_COMPLETE, previousItemID, previousView, nextItemID, nextView);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 
 		this.setInvalid(LAYOUT);
 
 		if (this.stage != null && (this.stage.focus == null || this.stage.focus.stage == null)) {
-			if ((activeItemView is InteractiveObject)) {
-				this.stage.focus = cast(activeItemView, InteractiveObject);
+			if ((nextView is InteractiveObject)) {
+				this.stage.focus = cast(nextView, InteractiveObject);
 			}
 		}
 
 		this._transitionActive = false;
-		var nextTransition = this._nextItemTransition;
-		this._nextItemTransition = null;
+		var pendingTransition = this._pendingItemTransition;
+		this._pendingItemTransition = null;
 		if (this._clearAfterTransition) {
 			this._clearAfterTransition = false;
-			this.clearActiveItemInternal(nextTransition);
-		} else if (this._nextItemID != null) {
-			var nextItemID = this._nextItemID;
-			this._nextItemID = null;
-			this.showItemInternal(nextItemID, nextTransition);
+			this.clearActiveItemInternal(pendingTransition);
+		} else if (this._pendingItemID != null) {
+			var pendingItemID = this._pendingItemID;
+			this._pendingItemID = null;
+			this.showItemInternal(pendingItemID, pendingTransition);
 		}
 	}
 
@@ -672,20 +705,31 @@ class BaseNavigator extends FeathersControl {
 		// consider the transition still active if something is already
 		// queued up to happen next. if an event listener asks to show a new
 		// item, it needs to replace what is queued up.
-		this._transitionActive = this._clearAfterTransition || (this._nextItemID != null);
+		this._transitionActive = this._clearAfterTransition || (this._pendingItemID != null);
 
-		if (this._activeItemView != null) {
-			this._viewsContainer.removeChild(this._activeItemView);
-			this._activeViewMeasurements.restore(this._activeItemView);
-			this.disposeView(this._activeItemID, this._activeItemView);
-		}
-		this._activeItemView = this._previousViewInTransition;
-		this._activeItemID = this._previousViewInTransitionID;
+		// we need to save these in local variables because a new
+		// transition may be started in the listeners for the transition
+		// complete events, and that will overwrite them.
+		var nextView = this._nextViewInTransition;
+		var nextItemID = this._nextViewInTransitionID;
+		var previousView = this._previousViewInTransition;
+		var previousItemID:String = this._previousViewInTransitionID;
 		this._previousViewInTransition = null;
 		this._previousViewInTransitionID = null;
-		this._activeViewMeasurements.save(this._activeItemView);
-		FeathersEvent.dispatch(this, FeathersEvent.TRANSITION_CANCEL);
+		this._nextViewInTransition = null;
+		this._nextViewInTransitionID = null;
+
+		if (nextView != null) {
+			this._viewsContainer.removeChild(nextView);
+			this._activeViewMeasurements.restore(nextView);
+			this.disposeView(nextItemID, nextView);
+		}
+
+		this._activeItemView = previousView;
+		this._activeItemID = previousItemID;
+		this._activeViewMeasurements.save(previousView);
 		this.transitionCancel();
+		TransitionEvent.dispatch(this, TransitionEvent.TRANSITION_CANCEL, previousItemID, previousView, nextItemID, nextView);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 
 		this.setInvalid(LAYOUT);
@@ -697,15 +741,15 @@ class BaseNavigator extends FeathersControl {
 		}
 
 		this._transitionActive = false;
-		var nextTransition = this._nextItemTransition;
-		this._nextItemTransition = null;
+		var pendingTransition = this._pendingItemTransition;
+		this._pendingItemTransition = null;
 		if (this._clearAfterTransition) {
 			this._clearAfterTransition = false;
-			this.clearActiveItemInternal(nextTransition);
-		} else if (this._nextItemID != null) {
-			var nextItemID = this._nextItemID;
-			this._nextItemID = null;
-			this.showItemInternal(nextItemID, nextTransition);
+			this.clearActiveItemInternal(pendingTransition);
+		} else if (this._pendingItemID != null) {
+			var pendingItemID = this._pendingItemID;
+			this._pendingItemID = null;
+			this.showItemInternal(pendingItemID, pendingTransition);
 		}
 	}
 }
