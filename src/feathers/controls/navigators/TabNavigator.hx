@@ -462,18 +462,32 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 				throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
 		}
 
-		if (this.activeItemView != null) {
-			this.activeItemView.x = 0.0;
+		if (this._activeItemView != null) {
+			this._activeItemView.x = 0.0;
 			switch (this.tabBarPosition) {
 				case TOP:
-					this.activeItemView.y = this.tabBar.height + this.gap;
+					this._activeItemView.y = this.tabBar.height + this.gap;
 				case BOTTOM:
-					this.activeItemView.y = 0.0;
+					this._activeItemView.y = 0.0;
 				default:
 					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
 			}
-			this.activeItemView.width = this.actualWidth;
-			this.activeItemView.height = this.actualHeight - this.tabBar.height - this.gap;
+			this._activeItemView.width = this.actualWidth;
+			this._activeItemView.height = this.actualHeight - this.tabBar.height - this.gap;
+		}
+
+		if (this._nextViewInTransition != null) {
+			this._nextViewInTransition.x = 0.0;
+			switch (this.tabBarPosition) {
+				case TOP:
+					this._nextViewInTransition.y = this.tabBar.height + this.gap;
+				case BOTTOM:
+					this._nextViewInTransition.y = 0.0;
+				default:
+					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
+			}
+			this._nextViewInTransition.width = this.actualWidth;
+			this._nextViewInTransition.height = this.actualHeight - this.tabBar.height - this.gap;
 		}
 	}
 

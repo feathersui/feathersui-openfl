@@ -454,18 +454,32 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 				throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
 		}
 
-		if (this.activeItemView != null) {
-			this.activeItemView.x = 0.0;
+		if (this._activeItemView != null) {
+			this._activeItemView.x = 0.0;
 			switch (this.pageIndicatorPosition) {
 				case TOP:
-					this.activeItemView.y = this.pageIndicator.height + this.gap;
+					this._activeItemView.y = this.pageIndicator.height + this.gap;
 				case BOTTOM:
-					this.activeItemView.y = 0.0;
+					this._activeItemView.y = 0.0;
 				default:
 					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
 			}
-			this.activeItemView.width = this.actualWidth;
-			this.activeItemView.height = this.actualHeight - this.pageIndicator.height - this.gap;
+			this._activeItemView.width = this.actualWidth;
+			this._activeItemView.height = this.actualHeight - this.pageIndicator.height - this.gap;
+		}
+
+		if (this._nextViewInTransition != null) {
+			this._nextViewInTransition.x = 0.0;
+			switch (this.pageIndicatorPosition) {
+				case TOP:
+					this._nextViewInTransition.y = this.pageIndicator.height + this.gap;
+				case BOTTOM:
+					this._nextViewInTransition.y = 0.0;
+				default:
+					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
+			}
+			this._nextViewInTransition.width = this.actualWidth;
+			this._nextViewInTransition.height = this.actualHeight - this.pageIndicator.height - this.gap;
 		}
 	}
 
