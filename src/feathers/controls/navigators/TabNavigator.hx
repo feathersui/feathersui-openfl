@@ -501,12 +501,15 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		} else if (this._selectedItem != null) {
 			var oldIndex = this._activeItemIndex;
 			this._activeItemIndex = this._selectedIndex;
-			if (!this._previousEdgePuller.active && !this._nextEdgePuller.active && this._activeItemID != this._selectedItem.internalID) {
-				var transition:(DisplayObject, DisplayObject) -> IEffectContext = null;
-				if (oldIndex != -1 && oldIndex != this._selectedIndex) {
-					transition = (oldIndex < this._selectedIndex) ? this.nextTransition : this.previousTransition;
+			if (!this._previousEdgePuller.active && !this._nextEdgePuller.active) {
+				var activeID = this._transitionActive ? this._nextViewInTransitionID : this._activeItemID;
+				if (activeID != this._selectedItem.internalID) {
+					var transition:(DisplayObject, DisplayObject) -> IEffectContext = null;
+					if (oldIndex != -1 && oldIndex != this._selectedIndex) {
+						transition = (oldIndex < this._selectedIndex) ? this.nextTransition : this.previousTransition;
+					}
+					this.showItemInternal(this._selectedItem.internalID, transition);
 				}
-				this.showItemInternal(this._selectedItem.internalID, transition);
 			}
 		}
 
