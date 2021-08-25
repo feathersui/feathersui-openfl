@@ -81,6 +81,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
+	@:deprecated("FeathersEvent.TRANSITION_START replaced by TransitionEvent.TRANSITION_START")
 	public static inline var TRANSITION_START:EventType<FeathersEvent> = "transitionStart";
 
 	/**
@@ -91,6 +92,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
+	@:deprecated("FeathersEvent.TRANSITION_COMPLETE replaced by TransitionEvent.TRANSITION_COMPLETE")
 	public static inline var TRANSITION_COMPLETE:EventType<FeathersEvent> = "transitionComplete";
 
 	/**
@@ -102,6 +104,7 @@ class FeathersEvent extends Event {
 
 		@since 1.0.0
 	**/
+	@:deprecated("FeathersEvent.TRANSITION_CANCEL replaced by TransitionEvent.TRANSITION_CANCEL")
 	public static inline var TRANSITION_CANCEL:EventType<FeathersEvent> = "transitionCancel";
 
 	/**
