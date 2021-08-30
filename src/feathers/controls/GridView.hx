@@ -1967,15 +1967,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 					variantHeaderRenderer.variant = variant;
 				}
 			}
-			if (this._defaultHeaderStorage.measurements == null) {
-				this._defaultHeaderStorage.measurements = new Measurements(headerRenderer);
-			}
 			// for consistency, initialize before passing to the recycler's
 			// update function. plus, this ensures that custom header renderers
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((headerRenderer is IUIControl)) {
 				cast(headerRenderer, IUIControl).initializeNow();
+			}
+			// save measurements after initialize, because width/height could be
+			// set explicitly there, and we want to restore those values
+			if (this._defaultHeaderStorage.measurements == null) {
+				this._defaultHeaderStorage.measurements = new Measurements(headerRenderer);
 			}
 		} else {
 			headerRenderer = this._defaultHeaderStorage.inactiveHeaderRenderers.shift();

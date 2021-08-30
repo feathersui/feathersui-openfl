@@ -490,15 +490,17 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 					variantCellRenderer.variant = variant;
 				}
 			}
-			if (storage.measurements == null) {
-				storage.measurements = new Measurements(cellRenderer);
-			}
 			// for consistency, initialize before passing to the recycler's
 			// update function. plus, this ensures that custom item renderers
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((cellRenderer is IUIControl)) {
 				cast(cellRenderer, IUIControl).initializeNow();
+			}
+			// save measurements after initialize, because width/height could be
+			// set explicitly there, and we want to restore those values
+			if (storage.measurements == null) {
+				storage.measurements = new Measurements(cellRenderer);
 			}
 		} else {
 			cellRenderer = storage.inactiveCellRenderers.shift();

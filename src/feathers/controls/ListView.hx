@@ -1217,15 +1217,17 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 					variantItemRenderer.variant = variant;
 				}
 			}
-			if (storage.measurements == null) {
-				storage.measurements = new Measurements(itemRenderer);
-			}
 			// for consistency, initialize before passing to the recycler's
 			// update function. plus, this ensures that custom item renderers
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((itemRenderer is IUIControl)) {
 				cast(itemRenderer, IUIControl).initializeNow();
+			}
+			// save measurements after initialize, because width/height could be
+			// set explicitly there, and we want to restore those values
+			if (storage.measurements == null) {
+				storage.measurements = new Measurements(itemRenderer);
 			}
 		} else {
 			itemRenderer = storage.inactiveItemRenderers.shift();
