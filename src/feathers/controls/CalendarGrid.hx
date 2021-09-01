@@ -94,9 +94,9 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		names of weekdays.
 
 		To override this default variant, set the
-		`CalendarGrid.customWeekdayLabel` property.
+		`CalendarGrid.customWeekdayLabelVariant` property.
 
-		@see `CalendarGrid.customWeekdayLabel`
+		@see `CalendarGrid.customWeekdayLabelVariant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
