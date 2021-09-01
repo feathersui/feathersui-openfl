@@ -8,11 +8,10 @@
 
 package feathers.themes.steel.components;
 
-import feathers.motion.transitions.SlideTransitions;
 import feathers.controls.navigators.StackNavigator;
+import feathers.motion.transitions.SlideTransitionBuilder;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
-import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `StackNavigator` component.
@@ -34,8 +33,8 @@ class SteelStackNavigatorStyles {
 
 		if (styleProvider.getStyleFunction(StackNavigator, null) == null) {
 			styleProvider.setStyleFunction(StackNavigator, null, function(navigator:StackNavigator):Void {
-				navigator.popTransition = SlideTransitions.right();
-				navigator.pushTransition = SlideTransitions.left();
+				navigator.popTransition = new SlideTransitionBuilder().setRight().build();
+				navigator.pushTransition = new SlideTransitionBuilder().setLeft().build();
 			});
 		}
 	}

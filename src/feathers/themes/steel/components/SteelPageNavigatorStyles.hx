@@ -8,11 +8,10 @@
 
 package feathers.themes.steel.components;
 
-import feathers.motion.transitions.SlideTransitions;
 import feathers.controls.navigators.PageNavigator;
+import feathers.motion.transitions.SlideTransitionBuilder;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
-import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `PageNavigator` component.
@@ -36,8 +35,8 @@ class SteelPageNavigatorStyles {
 			styleProvider.setStyleFunction(PageNavigator, null, function(navigator:PageNavigator):Void {
 				navigator.pageIndicatorPosition = BOTTOM;
 
-				navigator.previousTransition = SlideTransitions.right();
-				navigator.nextTransition = SlideTransitions.left();
+				navigator.previousTransition = new SlideTransitionBuilder().setRight().build();
+				navigator.nextTransition = new SlideTransitionBuilder().setLeft().build();
 			});
 		}
 	}
