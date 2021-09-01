@@ -8,14 +8,10 @@
 
 package feathers.motion.transitions;
 
-import motion.Actuate;
-import motion.easing.IEasing;
-import openfl.display.DisplayObject;
-import openfl.errors.ArgumentError;
-import feathers.motion.effects.actuate.ActuateEffectContext;
-import feathers.motion.effects.actuate.ActuateForEffects;
 import feathers.motion.effects.EffectInterruptBehavior;
 import feathers.motion.effects.IEffectContext;
+import motion.easing.IEasing;
+import openfl.display.DisplayObject;
 
 /**
 	Creates animated transitions for view navigators that modify the opacity of
@@ -26,9 +22,8 @@ import feathers.motion.effects.IEffectContext;
 
 	@since 1.0.0
 **/
+@:deprecated("FadeTransitions replaced by feathers.motion.transitions.FadeTransitionBuilder")
 class FadeTransitions {
-	private static final VIEW_REQUIRED_ERROR:String = "Cannot transition if both old view and new view are null.";
-
 	/**
 		Creates a transition function for a view navigator that crossfades the
 		views. In other words, the old view fades out, animating the `alpha`
@@ -37,46 +32,14 @@ class FadeTransitions {
 
 		@since 1.0.0
 	**/
+	@:deprecated("FadeTransitions.crossFade() replaced by feathers.motion.transitions.FadeTransitionBuilder")
 	public static function crossFade(duration:Float = 0.5, ?ease:IEasing,
 			?interruptBehavior:EffectInterruptBehavior):(DisplayObject, DisplayObject) -> IEffectContext {
-		return function(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
-			if (oldView == null && newView == null) {
-				throw new ArgumentError(VIEW_REQUIRED_ERROR);
-			}
-			var oldViewIndex = -1;
-			if (oldView != null) {
-				oldView.alpha = 1.0;
-				oldViewIndex = oldView.parent.getChildIndex(oldView);
-			}
-			if (newView != null) {
-				newView.alpha = 0.0;
-				var parent = newView.parent;
-				// make sure the new view is on top of the old view
-				if (parent.getChildIndex(newView) < oldViewIndex) {
-					parent.swapChildren(oldView, newView);
-				}
-			}
-			var actuator = ActuateForEffects.update(function(oldViewAlpha:Float, newViewAlpha:Float):Void {
-				if (oldView != null) {
-					oldView.alpha = oldViewAlpha;
-				}
-				if (newView != null) {
-					newView.alpha = newViewAlpha;
-				}
-			}, duration, [1.0, 0.0], [0.0, 1.0]);
-			if (ease != null) {
-				actuator.ease(ease);
-			}
-			actuator.onComplete(function():Void {
-				if (oldView != null) {
-					oldView.alpha = 1.0;
-				}
-				if (newView != null) {
-					newView.alpha = 1.0;
-				}
-			});
-			Actuate.pause(actuator);
-			return new ActuateEffectContext(null, actuator, interruptBehavior);
-		};
+		return new FadeTransitionBuilder().setFadeIn(true)
+			.setFadeOut(true)
+			.setDuration(duration)
+			.setEase(ease)
+			.setInterruptBehavior(interruptBehavior)
+			.build();
 	}
 }
