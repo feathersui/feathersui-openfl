@@ -46,7 +46,6 @@ class RevealTransitionBuilder {
 	private var _duration:Float;
 	private var _ease:IEasing;
 	private var _interruptBehavior:EffectInterruptBehavior;
-	private var _parallax:Float = 0.5;
 
 	/**
 		Sets the angle, measured in degrees, that the old view is translated
