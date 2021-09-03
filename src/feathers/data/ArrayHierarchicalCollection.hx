@@ -8,11 +8,14 @@
 
 package feathers.data;
 
+import feathers.events.FeathersEvent;
+import feathers.events.HierarchicalCollectionEvent;
 import openfl.errors.RangeError;
 import openfl.events.Event;
-import feathers.events.HierarchicalCollectionEvent;
-import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
+import openfl.utils.IDataInput;
+import openfl.utils.IDataOutput;
+import openfl.utils.IExternalizable;
 
 /**
 	Wraps an `Array` data source with a common API for use with UI controls that
@@ -54,7 +57,7 @@ import openfl.events.EventDispatcher;
 @:event(feathers.events.HierarchicalCollectionEvent.SORT_CHANGE)
 @:meta(DefaultProperty("array"))
 @defaultXmlProperty("array")
-class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarchicalCollection<T> {
+class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarchicalCollection<T> implements IExternalizable {
 	/**
 		Creates a new `ArrayHierarchicalCollection` object with the given arguments.
 
@@ -494,6 +497,16 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.SORT_CHANGE, null);
 		}
 		FeathersEvent.dispatch(this, Event.CHANGE);
+	}
+
+	@:dox(hide)
+	public function readExternal(input:IDataInput):Void {
+		this.array = Std.downcast(input.readObject(), Array);
+	}
+
+	@:dox(hide)
+	public function writeExternal(output:IDataOutput):Void {
+		output.writeObject(this.array);
 	}
 
 	private function findItemInBranch(branchChildren:Array<T>, itemToFind:T, result:Array<Int>):Bool {
