@@ -8,11 +8,14 @@
 
 package feathers.data;
 
+import feathers.events.FeathersEvent;
+import feathers.events.FlatCollectionEvent;
 import openfl.errors.RangeError;
 import openfl.events.Event;
-import feathers.events.FlatCollectionEvent;
-import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
+import openfl.utils.IDataInput;
+import openfl.utils.IDataOutput;
+import openfl.utils.IExternalizable;
 
 /**
 	Wraps an `Array` in the common `IFlatCollection` API used for data
@@ -52,7 +55,7 @@ import openfl.events.EventDispatcher;
 @:event(feathers.events.FlatCollectionEvent.SORT_CHANGE)
 @:meta(DefaultProperty("array"))
 @defaultXmlProperty("array")
-class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
+class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> implements IExternalizable {
 	/**
 		Creates a new `ArrayCollection` object with the given arguments.
 
@@ -529,6 +532,16 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> {
 			result.push(callback(item, i, this));
 		}
 		return new ArrayCollection(result);
+	}
+
+	@:dox(hide)
+	public function readExternal(input:IDataInput):Void {
+		this.array = Std.downcast(input.readObject(), Array);
+	}
+
+	@:dox(hide)
+	public function writeExternal(output:IDataOutput):Void {
+		output.writeObject(this.array);
 	}
 
 	private function refreshFilterAndSort():Void {
