@@ -54,6 +54,9 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._fill == value) {
 			return this._fill;
 		}
+		if (this._previousFill == this._fill) {
+			this._previousFill = null;
+		}
 		this._fill = value;
 		this.setInvalid(STYLES);
 		return this._fill;
@@ -81,6 +84,9 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._disabledFill == value) {
 			return this._disabledFill;
 		}
+		if (this._previousFill == this._disabledFill) {
+			this._previousFill = null;
+		}
 		this._disabledFill = value;
 		this.setInvalid(STYLES);
 		return this._disabledFill;
@@ -107,6 +113,9 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._selectedFill == value) {
 			return this._selectedFill;
 		}
+		if (this._previousFill == this._selectedFill) {
+			this._previousFill = null;
+		}
 		this._selectedFill = value;
 		this.setInvalid(STYLES);
 		return this._selectedFill;
@@ -131,6 +140,9 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 	private function set_border(value:LineStyle):LineStyle {
 		if (this._border == value) {
 			return this._border;
+		}
+		if (this._previousBorder == this._border) {
+			this._previousBorder = null;
 		}
 		this._border = value;
 		this.setInvalid(STYLES);
@@ -159,6 +171,9 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._disabledBorder == value) {
 			return this._disabledBorder;
 		}
+		if (this._previousBorder == this._disabledBorder) {
+			this._previousBorder = null;
+		}
 		this._disabledBorder = value;
 		this.setInvalid(STYLES);
 		return this._disabledBorder;
@@ -184,6 +199,9 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 	private function set_selectedBorder(value:LineStyle):LineStyle {
 		if (this._selectedBorder == value) {
 			return this._selectedBorder;
+		}
+		if (this._previousBorder == this._selectedBorder) {
+			this._previousBorder = null;
 		}
 		this._selectedBorder = value;
 		this.setInvalid(STYLES);
@@ -228,8 +246,12 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._stateToFill == null) {
 			this._stateToFill = [];
 		}
-		if (this._stateToFill.get(state) == fill) {
+		var oldFill = this._stateToFill.get(state);
+		if (oldFill == fill) {
 			return;
+		}
+		if (this._previousFill == oldFill) {
+			this._previousFill = null;
 		}
 		this._stateToFill.set(state, fill);
 		this.setInvalid(STYLES);
@@ -273,8 +295,12 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		if (this._stateToBorder == null) {
 			this._stateToBorder = [];
 		}
-		if (this._stateToBorder.get(state) == border) {
+		var oldBorder = this._stateToBorder.get(state);
+		if (oldBorder == border) {
 			return;
+		}
+		if (this._previousBorder == oldBorder) {
+			this._previousBorder = null;
 		}
 		this._stateToBorder.set(state, border);
 		this.setInvalid(STYLES);
