@@ -1155,7 +1155,22 @@ class Callout extends FeathersControl {
 			return false;
 		}
 		var popUpRoot = PopUpManager.forStage(this.stage).root;
+
+		#if flash
 		var bounds = this._origin.getBounds(popUpRoot);
+		#else
+		// OpenFL bug: doesn't account for scrollRect in getBounds() calls
+		var originTopLeft = new Point(this.origin.x, this.origin.y);
+		originTopLeft = origin.parent.localToGlobal(originTopLeft);
+		originTopLeft = popUpRoot.globalToLocal(originTopLeft);
+
+		var originBottomRight = new Point(this.origin.x + this.origin.width, this.origin.y + this.origin.height);
+		originBottomRight = origin.parent.localToGlobal(originBottomRight);
+		originBottomRight = popUpRoot.globalToLocal(originBottomRight);
+
+		var bounds = new Rectangle(originTopLeft.x, originTopLeft.y, originBottomRight.x - originTopLeft.x, originBottomRight.y - originTopLeft.y);
+		#end
+
 		var hasPopUpBounds = this._lastPopUpOriginBounds != null;
 		if (hasPopUpBounds && this._lastPopUpOriginBounds.equals(bounds)) {
 			return false;
