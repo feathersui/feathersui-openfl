@@ -561,6 +561,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	@:style
 	public var buttonDirection:Direction = HORIZONTAL;
 
+	private var _pendingTextInputChanges:Bool = false;
+
 	override public function showFocus(show:Bool):Void {
 		super.showFocus(show);
 		if (this.textInput != null) {
@@ -780,6 +782,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		// we need to force invalidation just to be sure that the text input
 		// is displaying the correct value.
 		this.setInvalid(DATA);
+		this._pendingTextInputChanges = false;
 	}
 
 	private function layoutContent():Void {
@@ -975,6 +978,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	private function createTextInput():Void {
 		if (this.textInput != null) {
 			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, numericStepper_textInput_keyDownHandler);
+			this.textInput.removeEventListener(Event.CHANGE, numericStepper_textInput_changeHandler);
+			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, numericStepper_textInput_focusInHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_OUT, numericStepper_textInput_focusOutHandler);
 			this.removeChild(this.textInput);
 			this.textInput = null;
@@ -985,6 +990,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			this.textInput.variant = this.customTextInputVariant != null ? this.customTextInputVariant : NumericStepper.CHILD_VARIANT_TEXT_INPUT;
 		}
 		this.textInput.addEventListener(KeyboardEvent.KEY_DOWN, numericStepper_textInput_keyDownHandler);
+		this.textInput.addEventListener(Event.CHANGE, numericStepper_textInput_changeHandler);
+		this.textInput.addEventListener(FocusEvent.FOCUS_IN, numericStepper_textInput_focusInHandler);
 		this.textInput.addEventListener(FocusEvent.FOCUS_OUT, numericStepper_textInput_focusOutHandler);
 		this.textInput.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
@@ -1133,7 +1140,18 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 	}
 
+	private function numericStepper_textInput_focusInHandler(event:FocusEvent):Void {
+		this._pendingTextInputChanges = false;
+	}
+
+	private function numericStepper_textInput_changeHandler(event:Event):Void {
+		this._pendingTextInputChanges = true;
+	}
+
 	private function numericStepper_textInput_focusOutHandler(event:FocusEvent):Void {
+		if (!this._pendingTextInputChanges) {
+			return;
+		}
 		this.parseTextInputValue();
 	}
 }
