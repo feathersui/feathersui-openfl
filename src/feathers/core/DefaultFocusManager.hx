@@ -662,24 +662,24 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			stage.focus = stage;
 		}
 		#if (html5 && openfl < "9.0.0")
-		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler2, false, 0, true);
+		this._root.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_root_keyDownHandler2, false, 0, true);
 		#else
-		stage.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler, false, 0, true);
-		stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler, false, 0, true);
+		this._root.addEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_root_keyDownHandler, false, 0, true);
+		this._root.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_root_keyFocusChangeHandler, false, 0, true);
 		#end
 	}
 
 	private function handleRootRemovedFromStage(root:DisplayObject):Void {
 		this.focus = null;
-		var stage = this.root.stage;
+		var stage = this._root.stage;
 		if (stage == null) {
 			return;
 		}
 		#if (html5 && openfl < "9.0.0")
-		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler2);
+		this._root.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_root_keyDownHandler2);
 		#else
-		stage.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_stage_keyDownHandler);
-		stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_stage_keyFocusChangeHandler);
+		this._root.removeEventListener(KeyboardEvent.KEY_DOWN, defaultFocusManager_root_keyDownHandler);
+		this._root.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, defaultFocusManager_root_keyFocusChangeHandler);
 		#end
 	}
 
@@ -802,7 +802,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	#if (html5 && openfl < "9.0.0")
-	private function defaultFocusManager_stage_keyDownHandler2(event:KeyboardEvent):Void {
+	private function defaultFocusManager_root_keyDownHandler2(event:KeyboardEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -870,12 +870,12 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		this.focus = result.newFocus;
 	}
 
-	private function defaultFocusManager_stage_keyDownHandler(event:KeyboardEvent):Void {
+	private function defaultFocusManager_root_keyDownHandler(event:KeyboardEvent):Void {
 		this.handleKeyDownFocusWrapping(event);
 		this.handleDPadArrowKeys(event);
 	}
 
-	private function defaultFocusManager_stage_keyFocusChangeHandler(event:FocusEvent):Void {
+	private function defaultFocusManager_root_keyFocusChangeHandler(event:FocusEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
@@ -887,7 +887,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		this.focus = result.newFocus;
 		if (this._wrapObject == null) {
 			// cancel only when we aren't wrapping, so that focus may be passed
-			// to the browser chrome
+			// to the browser chrome or to another framework
 			event.preventDefault();
 		}
 	}
