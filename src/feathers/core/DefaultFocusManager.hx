@@ -74,7 +74,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			throw new IllegalOperationError("Cannot enable focus manager without a root container.");
 		}
 		this._enabled = value;
-		if (this.focus != null && this._root.stage != null) {
+		if (this._root.stage != null) {
 			if (this._enabled) {
 				this.restoreFocus();
 			} else {
@@ -360,8 +360,8 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if ((target is IFocusManagerAware)) {
 			var targetWithFocus = cast(target, IFocusManagerAware);
 			if (targetWithFocus.focusManager == this) {
-				if (targetWithFocus == _focusToRestore) {
-					_focusToRestore = null;
+				if (targetWithFocus == this._focusToRestore) {
+					this._focusToRestore = null;
 				}
 				if (this.focus == targetWithFocus) {
 					// change to focus owner, which falls back to null
