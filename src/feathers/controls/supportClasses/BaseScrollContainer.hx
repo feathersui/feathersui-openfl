@@ -8,6 +8,8 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.errors.ArgumentError;
+import feathers.skins.RectangleSkin;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
@@ -122,6 +124,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private var _currentMaskSkin:DisplayObject = null;
 	private var _currentViewPortMaskSkin:DisplayObject = null;
+	private var _fallbackViewPortMaskSkin:DisplayObject = null;
 
 	private var topViewPortOffset:Float = 0.0;
 	private var rightViewPortOffset:Float = 0.0;
@@ -986,6 +989,35 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return true;
 	}
 
+	private var _scrollMode:ScrollMode = SCROLL_RECT;
+
+	/**
+		Determines how scrolling is rendered by the container.
+
+		In the following example, scroll mode is changed to use a mask:
+
+		```hx
+		container.scrollMode = MASK;
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var scrollMode(get, set):ScrollMode;
+
+	private function get_scrollMode():ScrollMode {
+		return this._scrollMode;
+	}
+
+	private function set_scrollMode(value:ScrollMode):ScrollMode {
+		if (this._scrollMode == value) {
+			return this._scrollMode;
+		}
+		this._scrollMode = value;
+		this.setInvalid(LAYOUT);
+		return this._scrollMode;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -1390,8 +1422,14 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		// infinite loop)
 		this._ignoreViewPortResizing = true;
 
-		this._viewPort.x = this.paddingLeft + this.leftViewPortOffset;
-		this._viewPort.y = this.paddingTop + this.topViewPortOffset;
+		var viewPortX = this.paddingLeft + this.leftViewPortOffset;
+		var viewPortY = this.paddingTop + this.topViewPortOffset;
+		if (this._scrollMode == MASK) {
+			viewPortX -= scrollX;
+			viewPortY -= scrollY;
+		}
+		this._viewPort.x = viewPortX;
+		this._viewPort.y = viewPortY;
 		if (this.explicitWidth != null) {
 			var visibleWidth = this.explicitWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
 			if (visibleWidth < 0.0) {
@@ -1501,8 +1539,14 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			maxVisibleHeight = 0.0;
 		}
 
-		this._viewPort.x = this.paddingLeft + this.leftViewPortOffset;
-		this._viewPort.y = this.paddingTop + this.topViewPortOffset;
+		var viewPortX = this.paddingLeft + this.leftViewPortOffset;
+		var viewPortY = this.paddingTop + this.topViewPortOffset;
+		if (this._scrollMode == MASK) {
+			viewPortX -= scrollX;
+			viewPortY -= scrollY;
+		}
+		this._viewPort.x = viewPortX;
+		this._viewPort.y = viewPortY;
 		this._viewPort.visibleWidth = visibleWidth;
 		this._viewPort.visibleHeight = visibleHeight;
 		this._viewPort.minVisibleWidth = minVisibleWidth;
@@ -1799,7 +1843,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function getCurrentViewPortMaskSkin():DisplayObject {
-		return this.viewPortMaskSkin;
+		if (this.viewPortMaskSkin != null) {
+			return this.viewPortMaskSkin;
+		}
+		if (this._fallbackViewPortMaskSkin == null) {
+			this._fallbackViewPortMaskSkin = new RectangleSkin(SolidColor(0xff00ff));
+		}
+		return this._fallbackViewPortMaskSkin;
 	}
 
 	private function addCurrentViewPortMaskSkin(skin:DisplayObject):Void {
@@ -1876,8 +1926,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 
-		this._currentViewPortMaskSkin.x = this._viewPort.x;
-		this._currentViewPortMaskSkin.y = this._viewPort.y;
+		this._currentViewPortMaskSkin.x = this.paddingLeft + this.leftViewPortOffset;
+		this._currentViewPortMaskSkin.y = this.paddingTop + this.topViewPortOffset;
 		this._currentViewPortMaskSkin.width = this._viewPort.visibleWidth;
 		this._currentViewPortMaskSkin.height = this._viewPort.visibleHeight;
 		if ((this._currentViewPortMaskSkin is IValidating)) {
@@ -1951,22 +2001,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function refreshScrollRect():Void {
-		// instead of creating a new Rectangle every time, we're going to swap
-		// between two of them to avoid excessive garbage collection
-		var scrollRect = this._scrollRect1;
-		if (this._currentScrollRect == scrollRect) {
-			scrollRect = this._scrollRect2;
-		}
-		this._currentScrollRect = scrollRect;
-		var scrollRectWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
-		if (scrollRectWidth < 0.0) {
-			scrollRectWidth = 0.0;
-		}
-		var scrollRectHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
-		if (scrollRectHeight < 0.0) {
-			scrollRectHeight = 0.0;
-		}
-
 		var scrollX = scroller.scrollX;
 		var scrollY = scroller.scrollY;
 		if (this.scrollPixelSnapping) {
@@ -1975,9 +2009,35 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			scrollX = Math.round(scrollX / scaleFactorX) * scaleFactorX;
 			scrollY = Math.round(scrollY / scaleFactorY) * scaleFactorY;
 		}
-		scrollRect.setTo(scrollX, scrollY, scrollRectWidth, scrollRectHeight);
-		var displayViewPort = cast(this._viewPort, DisplayObject);
-		displayViewPort.scrollRect = scrollRect;
+
+		switch (this._scrollMode) {
+			case SCROLL_RECT:
+				// instead of creating a new Rectangle every time, we're going to swap
+				// between two of them to avoid excessive garbage collection
+				var scrollRect = this._scrollRect1;
+				if (this._currentScrollRect == scrollRect) {
+					scrollRect = this._scrollRect2;
+				}
+				this._currentScrollRect = scrollRect;
+				var scrollRectWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+				if (scrollRectWidth < 0.0) {
+					scrollRectWidth = 0.0;
+				}
+				var scrollRectHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
+				if (scrollRectHeight < 0.0) {
+					scrollRectHeight = 0.0;
+				}
+				scrollRect.setTo(scrollX, scrollY, scrollRectWidth, scrollRectHeight);
+				var displayViewPort = cast(this._viewPort, DisplayObject);
+				displayViewPort.scrollRect = scrollRect;
+			case MASK:
+				var displayViewPort = cast(this._viewPort, DisplayObject);
+				displayViewPort.scrollRect = null;
+				this._viewPort.x = this.paddingLeft + this.leftViewPortOffset - scrollX;
+				this._viewPort.y = this.paddingTop + this.topViewPortOffset - scrollY;
+			default:
+				throw new ArgumentError("Unknown scrollMode: " + this._scrollMode);
+		}
 	}
 
 	private function revealScrollBarX():Void {
