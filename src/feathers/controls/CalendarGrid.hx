@@ -558,10 +558,18 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		var numDays = DateUtil.getDaysInMonth(this._displayedMonth, this._displayedFullYear);
 		var numDaysLastMonth = DateUtil.getDaysInMonth(lastMonth, lastMonthYear);
 		var currentDate = numDaysLastMonth - dayIndexOfFirst + 1;
-		var inCurrentMonth = currentDate == 1;
+		var inCurrentMonth = false;
 		var toggleButtonVariant = this.customToggleButtonVariant != null ? this.customToggleButtonVariant : CHILD_VARIANT_DATE_TOGGLE_BUTTON;
 		var mutedToggleButtonVariant = this.customMutedToggleButtonVariant != null ? this.customMutedToggleButtonVariant : CHILD_VARIANT_MUTED_DATE_TOGGLE_BUTTON;
 		for (i in 0...this._dateButtons.length) {
+			if (!inCurrentMonth && currentDate > numDaysLastMonth) {
+				currentDate = 1;
+				inCurrentMonth = true;
+			}
+			if (inCurrentMonth && currentDate > numDays) {
+				currentDate = 1;
+				inCurrentMonth = false;
+			}
 			var dateButton = this._dateButtons[i];
 			dateButton.selected = inCurrentMonth
 				&& this._selectedDate != null
@@ -573,14 +581,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 			dateButton.toggleable = this._selectable;
 			dateButton.visible = inCurrentMonth || this.showDatesFromAdjacentMonths;
 			currentDate++;
-			if (!inCurrentMonth && currentDate > numDaysLastMonth) {
-				currentDate = 1;
-				inCurrentMonth = true;
-			}
-			if (inCurrentMonth && currentDate > numDays) {
-				currentDate = 1;
-				inCurrentMonth = false;
-			}
 		}
 	}
 
