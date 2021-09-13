@@ -1516,10 +1516,36 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			super.baseScrollContainer_keyDownHandler(event);
 			return;
 		}
-		if (!this._enabled || event.isDefaultPrevented()) {
+		if (!this._enabled || event.isDefaultPrevented() || this._dataProvider == null) {
 			return;
 		}
-
+		if (event.keyCode == Keyboard.LEFT) {
+			if (this._dataProvider.isBranch(this._selectedItem)) {
+				if (this.openBranches.contains(this._selectedItem)) {
+					this.toggleBranch(this._selectedItem, false);
+					return;
+				}
+			}
+			var parentLocation = this._selectedLocation.copy();
+			parentLocation.pop();
+			if (parentLocation.length > 0) {
+				this.selectedLocation = parentLocation;
+			}
+		}
+		if (event.keyCode == Keyboard.RIGHT) {
+			if (this._dataProvider.isBranch(this._selectedItem)) {
+				if (!this.openBranches.contains(this._selectedItem)) {
+					this.toggleBranch(this._selectedItem, true);
+					return;
+				}
+				var childCount = this._dataProvider.getLength(this._selectedItem);
+				if (childCount > 0) {
+					var childLocation = this._selectedLocation.copy();
+					childLocation.push(0);
+					this.selectedLocation = childLocation;
+				}
+			}
+		}
 		if (event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
 				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
