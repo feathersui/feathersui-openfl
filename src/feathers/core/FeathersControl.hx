@@ -8,7 +8,6 @@
 
 package feathers.core;
 
-import haxe.CallStack;
 import openfl.events.FocusEvent;
 import feathers.events.FeathersEvent;
 import feathers.events.StyleProviderEvent;
@@ -781,9 +780,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this._waitingToApplyStyles = false;
 		var styleProvider = this._customStyleProvider;
 		if (styleProvider == null) {
-			styleProvider = this._currentStyleProvider;
-		}
-		if (styleProvider == null) {
 			var theme = Theme.getTheme(this);
 			if (theme != null) {
 				styleProvider = theme.getStyleProvider(this);
@@ -794,6 +790,10 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			if (theme != null) {
 				styleProvider = theme.getStyleProvider(this);
 			}
+		}
+		if (styleProvider == null) {
+			// fall back to keeping the previous style provider
+			styleProvider = this._currentStyleProvider;
 		}
 		if (this._currentStyleProvider != styleProvider) {
 			if (this._currentStyleProvider != null) {
