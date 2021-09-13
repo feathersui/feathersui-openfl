@@ -17,6 +17,7 @@ class ThemeTest extends Test {
 	private var _container:LayoutGroup;
 	private var _containerChild:LayoutGroup;
 	private var _otherChild:LayoutGroup;
+	private var _themeDisabledChild:LayoutGroup;
 
 	public function new() {
 		super();
@@ -29,6 +30,9 @@ class ThemeTest extends Test {
 		TestMain.openfl_root.addChild(this._container);
 		this._otherChild = new LayoutGroup();
 		TestMain.openfl_root.addChild(this._otherChild);
+		this._themeDisabledChild = new LayoutGroup();
+		this._themeDisabledChild.themeEnabled = false;
+		TestMain.openfl_root.addChild(this._themeDisabledChild);
 	}
 
 	public function teardown():Void {
@@ -41,6 +45,10 @@ class ThemeTest extends Test {
 			this._otherChild.parent.removeChild(this._otherChild);
 		}
 		this._otherChild = null;
+		if (this._themeDisabledChild.parent != null) {
+			this._themeDisabledChild.parent.removeChild(this._themeDisabledChild);
+		}
+		this._themeDisabledChild = null;
 		Theme.setTheme(null);
 		Theme.setTheme(null, this._container);
 		Assert.equals(Theme.fallbackTheme, Theme.getTheme(), "Test cleanup failed to remove primary theme.");
@@ -53,6 +61,7 @@ class ThemeTest extends Test {
 		Assert.equals(Theme.fallbackTheme, Theme.getTheme(this._container), "Must not have primary theme for container");
 		Assert.equals(Theme.fallbackTheme, Theme.getTheme(this._containerChild), "Must not have primary theme for child of container");
 		Assert.equals(Theme.fallbackTheme, Theme.getTheme(this._otherChild), "Must not have primary theme for child of container");
+		Assert.isNull(Theme.getTheme(this._themeDisabledChild));
 	}
 
 	public function testGetThemeWithPrimaryTheme():Void {
@@ -62,6 +71,7 @@ class ThemeTest extends Test {
 		Assert.equals(primaryTheme, Theme.getTheme(this._container), "Must return primary theme for container");
 		Assert.equals(primaryTheme, Theme.getTheme(this._containerChild), "Must return primary theme for child of container");
 		Assert.equals(primaryTheme, Theme.getTheme(this._otherChild), "Must return primary theme for non-child of container");
+		Assert.isNull(Theme.getTheme(this._themeDisabledChild));
 	}
 
 	public function testGetThemeWithPrimaryAndContainerTheme():Void {
@@ -73,6 +83,7 @@ class ThemeTest extends Test {
 		Assert.equals(containerTheme, Theme.getTheme(this._container), "Must return container theme for container");
 		Assert.equals(containerTheme, Theme.getTheme(this._containerChild), "Must return container theme for child of container");
 		Assert.equals(primaryTheme, Theme.getTheme(this._otherChild), "Must return primary theme for non-child of container");
+		Assert.isNull(Theme.getTheme(this._themeDisabledChild));
 	}
 }
 
