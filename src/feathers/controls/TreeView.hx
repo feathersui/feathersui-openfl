@@ -1521,7 +1521,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		if (event.keyCode == Keyboard.LEFT) {
 			if (this._dataProvider.isBranch(this._selectedItem)) {
-				if (this.openBranches.contains(this._selectedItem)) {
+				if (this.openBranches.indexOf(this._selectedItem) != -1) {
 					this.toggleBranch(this._selectedItem, false);
 					return;
 				}
@@ -1534,7 +1534,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		}
 		if (event.keyCode == Keyboard.RIGHT) {
 			if (this._dataProvider.isBranch(this._selectedItem)) {
-				if (!this.openBranches.contains(this._selectedItem)) {
+				if (this.openBranches.indexOf(this._selectedItem) == -1) {
 					this.toggleBranch(this._selectedItem, true);
 					return;
 				}
