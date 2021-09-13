@@ -2410,7 +2410,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			var size = this._customColumnWidths[i];
 			totalWidth += size;
-			indices[i] = i;
+			indices.push(i);
 		}
 		if (totalWidth == availableWidth) {
 			return;
