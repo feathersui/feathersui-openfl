@@ -11,6 +11,7 @@ package feathers.controls;
 import feathers.core.FeathersControl;
 import feathers.core.IDateSelector;
 import feathers.core.IUIControl;
+import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.Measurements;
@@ -102,6 +103,10 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_WEEKDAY_LABEL = "calendarGrid_weekdayLabel";
+
+	private static final INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY = InvalidationFlag.CUSTOM("dateToggleButtonFactory");
+	private static final INVALIDATION_FLAG_MUTED_TOGGLE_BUTTON_FACTORY = InvalidationFlag.CUSTOM("mutedDateToggleButtonFactory");
+	private static final INVALIDATION_FLAG_WEEKDAY_LABEL_FACTORY = InvalidationFlag.CUSTOM("weekdayLabelFactory");
 
 	/**
 		Creates a new `CalendarGrid` object.
@@ -268,6 +273,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
 
+	private var _previousCustomToggleButtonVariant:String = null;
+
 	/**
 		An optional custom variant to use for the toggle buttons that represent
 		dates in the current month, instead of
@@ -280,6 +287,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	@:style
 	public var customToggleButtonVariant:String = null;
 
+	private var _previousCustomMutedToggleButtonVariant:String = null;
+
 	/**
 		An optional custom variant to use for the toggle buttons that represent
 		dates in the adjacent months, instead of
@@ -291,6 +300,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	**/
 	@:style
 	public var customMutedToggleButtonVariant:String = null;
+
+	private var _previousCustomWeekdayLabelVariant:String = null;
 
 	/**
 		An optional custom variant to use for the labels that display the names
@@ -399,16 +410,28 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomWeekdayLabelVariant != this.customWeekdayLabelVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_WEEKDAY_LABEL_FACTORY);
+		}
+		if (this._previousCustomToggleButtonVariant != this.customToggleButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
+		}
+		if (this._previousCustomMutedToggleButtonVariant != this.customMutedToggleButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_MUTED_TOGGLE_BUTTON_FACTORY);
+		}
+		var weekdayLabelFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_WEEKDAY_LABEL_FACTORY);
+		var toggleButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
+		var mutedToggleButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_MUTED_TOGGLE_BUTTON_FACTORY);
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
 		}
 
-		if (dataInvalid || stylesInvalid) {
+		if (weekdayLabelFactoryInvalid || dataInvalid || stylesInvalid) {
 			this.refreshWeekdayLabels();
 		}
 
-		if (dataInvalid || selectionInvalid) {
+		if (toggleButtonFactoryInvalid || mutedToggleButtonFactoryInvalid || dataInvalid || selectionInvalid) {
 			this.refreshDisplayedMonth();
 		}
 
