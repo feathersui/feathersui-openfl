@@ -422,10 +422,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		if (this._columns != null) {
 			this._columns.removeEventListener(Event.CHANGE, gridView_columns_changeHandler);
+			this._columns.removeEventListener(FlatCollectionEvent.ADD_ITEM, gridView_columns_addItemHandler);
+			this._columns.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_columns_removeItemHandler);
 		}
 		this._columns = value;
 		if (this._columns != null) {
 			this._columns.addEventListener(Event.CHANGE, gridView_columns_changeHandler);
+			this._columns.addEventListener(FlatCollectionEvent.ADD_ITEM, gridView_columns_addItemHandler);
+			this._columns.addEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_columns_removeItemHandler);
 		}
 		this.setInvalid(DATA);
 		return this._columns;
@@ -2675,6 +2679,63 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		for (i in 0...this._dataProvider.length) {
 			this.updateRowRendererForIndex(i);
 		}
+	}
+
+	private function gridView_columns_addItemHandler(event:FlatCollectionEvent):Void {
+		if (this._customColumnWidths == null) {
+			return;
+		}
+		var column = cast(event.addedItem, GridViewColumn);
+		var columnIndex = event.index;
+		if (column.width != null || columnIndex > this._customColumnWidths.length) {
+			return;
+		}
+		this._customColumnWidths.insert(columnIndex, 0.0);
+
+		var minContainerWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		// same width as the viewPort so that the columns line up
+		var totalContainerWidth = Math.max(this._viewPort.width + this._headerContainerLayout.paddingLeft + this._headerContainerLayout.paddingRight,
+			minContainerWidth);
+		var availableWidth = totalContainerWidth - this._headerContainerLayout.paddingLeft - this._headerContainerLayout.paddingRight;
+		var totalWidth = 0.0;
+		var indices:Array<Int> = [];
+		for (i in 0...this._customColumnWidths.length) {
+			if (i == columnIndex) {
+				continue;
+			}
+			var column = this._columns.get(i);
+			if (column.width != null) {
+				// if the width is set explicitly, skip it!
+				availableWidth -= column.width;
+				continue;
+			}
+			var size = this._customColumnWidths[i];
+			totalWidth += size;
+			indices.push(i);
+		}
+
+		var idealColumnWidth = totalWidth / (indices.length + 1);
+		this._customColumnWidths[columnIndex] = idealColumnWidth;
+
+		// make a copy so that this is detected as a change
+		this._customColumnWidths = this._customColumnWidths.copy();
+
+		var widthToDistribute = -idealColumnWidth;
+		this.distributeWidthToIndices(widthToDistribute, indices, totalWidth);
+		this.setInvalid(LAYOUT);
+	}
+
+	private function gridView_columns_removeItemHandler(event:FlatCollectionEvent):Void {
+		if (this._customColumnWidths == null) {
+			return;
+		}
+		var column = cast(event.removedItem, GridViewColumn);
+		var columnIndex = event.index;
+		if (column.width != null || columnIndex > this._customColumnWidths.length) {
+			return;
+		}
+		this._customColumnWidths.splice(columnIndex, 1);
+		this.setInvalid(LAYOUT);
 	}
 
 	private function gridView_columns_changeHandler(event:Event):Void {
