@@ -1424,7 +1424,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		var viewPortX = this.paddingLeft + this.leftViewPortOffset;
 		var viewPortY = this.paddingTop + this.topViewPortOffset;
-		if (this._scrollMode == MASK) {
+		if (this._scrollMode == MASK || this._currentViewPortMaskSkin != null) {
 			viewPortX -= scrollX;
 			viewPortY -= scrollY;
 		}
@@ -1541,7 +1541,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		var viewPortX = this.paddingLeft + this.leftViewPortOffset;
 		var viewPortY = this.paddingTop + this.topViewPortOffset;
-		if (this._scrollMode == MASK) {
+		if (this._scrollMode == MASK || this._currentViewPortMaskSkin != null) {
 			viewPortX -= scrollX;
 			viewPortY -= scrollY;
 		}
@@ -1846,10 +1846,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.viewPortMaskSkin != null) {
 			return this.viewPortMaskSkin;
 		}
-		if (this._fallbackViewPortMaskSkin == null) {
-			this._fallbackViewPortMaskSkin = new RectangleSkin(SolidColor(0xff00ff));
+		if (this._scrollMode == MASK) {
+			if (this._fallbackViewPortMaskSkin == null) {
+				this._fallbackViewPortMaskSkin = new RectangleSkin(SolidColor(0xff00ff));
+			}
+			return this._fallbackViewPortMaskSkin;
 		}
-		return this._fallbackViewPortMaskSkin;
+		return null;
 	}
 
 	private function addCurrentViewPortMaskSkin(skin:DisplayObject):Void {
@@ -2010,33 +2013,32 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			scrollY = Math.round(scrollY / scaleFactorY) * scaleFactorY;
 		}
 
-		switch (this._scrollMode) {
-			case SCROLL_RECT:
-				// instead of creating a new Rectangle every time, we're going to swap
-				// between two of them to avoid excessive garbage collection
-				var scrollRect = this._scrollRect1;
-				if (this._currentScrollRect == scrollRect) {
-					scrollRect = this._scrollRect2;
-				}
-				this._currentScrollRect = scrollRect;
-				var scrollRectWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
-				if (scrollRectWidth < 0.0) {
-					scrollRectWidth = 0.0;
-				}
-				var scrollRectHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
-				if (scrollRectHeight < 0.0) {
-					scrollRectHeight = 0.0;
-				}
-				scrollRect.setTo(scrollX, scrollY, scrollRectWidth, scrollRectHeight);
-				var displayViewPort = cast(this._viewPort, DisplayObject);
-				displayViewPort.scrollRect = scrollRect;
-			case MASK:
-				var displayViewPort = cast(this._viewPort, DisplayObject);
-				displayViewPort.scrollRect = null;
-				this._viewPort.x = this.paddingLeft + this.leftViewPortOffset - scrollX;
-				this._viewPort.y = this.paddingTop + this.topViewPortOffset - scrollY;
-			default:
-				throw new ArgumentError("Unknown scrollMode: " + this._scrollMode);
+		if (this._scrollMode == MASK || this._currentViewPortMaskSkin != null) {
+			var displayViewPort = cast(this._viewPort, DisplayObject);
+			displayViewPort.scrollRect = null;
+			this._viewPort.x = this.paddingLeft + this.leftViewPortOffset - scrollX;
+			this._viewPort.y = this.paddingTop + this.topViewPortOffset - scrollY;
+		} else if (this._scrollMode == SCROLL_RECT) {
+			// instead of creating a new Rectangle every time, we're going to swap
+			// between two of them to avoid excessive garbage collection
+			var scrollRect = this._scrollRect1;
+			if (this._currentScrollRect == scrollRect) {
+				scrollRect = this._scrollRect2;
+			}
+			this._currentScrollRect = scrollRect;
+			var scrollRectWidth = this.actualWidth - this.leftViewPortOffset - this.rightViewPortOffset - this.paddingLeft - this.paddingRight;
+			if (scrollRectWidth < 0.0) {
+				scrollRectWidth = 0.0;
+			}
+			var scrollRectHeight = this.actualHeight - this.topViewPortOffset - this.bottomViewPortOffset - this.paddingTop - this.paddingBottom;
+			if (scrollRectHeight < 0.0) {
+				scrollRectHeight = 0.0;
+			}
+			scrollRect.setTo(scrollX, scrollY, scrollRectWidth, scrollRectHeight);
+			var displayViewPort = cast(this._viewPort, DisplayObject);
+			displayViewPort.scrollRect = scrollRect;
+		} else {
+			throw new ArgumentError("Unknown scrollMode: " + this._scrollMode);
 		}
 	}
 
