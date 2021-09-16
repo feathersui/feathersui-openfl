@@ -674,7 +674,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this.listView != null && this.listView.parent != null;
 	}
 
-	private var _filterText:String = "";
+	private var _filterText:String = null;
 
 	override public function showFocus(show:Bool):Void {
 		super.showFocus(show);
@@ -719,7 +719,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return;
 		}
 		this.validateNow();
-		this._filterText = "";
+		this._filterText = null;
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
 		}
@@ -912,7 +912,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBoxFilterFunction(item:Dynamic):Bool {
-		if (this._filterText.length == 0) {
+		if (this._filterText == null || this._filterText.length == 0) {
 			return true;
 		}
 		var itemText = (item is String) ? cast(item, String) : this.itemToText(item);
@@ -1043,6 +1043,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.openListView();
 		}
 		if (this._dataProvider != null) {
+			this.pendingSelectedIndex = -1;
 			this._filterText = this.textInput.text;
 			this._dataProvider.refresh();
 		}
@@ -1094,6 +1095,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_listView_itemTriggerHandler(event:ListViewEvent):Void {
+		this._filterText = null;
+		this.pendingSelectedIndex = event.state.index;
 		this.dispatchEvent(event);
 		if (!this.popUpAdapter.persistent) {
 			this.closeListView();
@@ -1110,9 +1113,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else {
 			// if closed, update immediately
 			this.pendingSelectedIndex = -1;
+			this._filterText = null;
 			this._selectedIndex = this.listView.selectedIndex;
 			this._selectedItem = this.listView.selectedItem;
 			FeathersEvent.dispatch(this, Event.CHANGE);
+			this.setInvalid(SELECTION);
 		}
 	}
 
@@ -1205,7 +1210,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		var newSelectedItem:Dynamic = null;
 		if (this.pendingSelectedIndex != -1) {
 			newSelectedItem = this._dataProvider.get(this.pendingSelectedIndex);
-		} else {
+		} else if (this._filterText != null) {
 			var filterText = this._filterText.toLowerCase();
 			if (this._dataProvider != null && this._dataProvider.length > 0) {
 				for (item in this._dataProvider) {
@@ -1219,12 +1224,15 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 					}
 				}
 			}
+		} else {
+			// nothing has changed
+			return;
 		}
 		var customSelectedItem:Dynamic = null;
-		if (this._allowCustomUserValue && newSelectedItem == null && this._filterText.length > 0) {
+		if (this._allowCustomUserValue && newSelectedItem == null && this._filterText != null && this._filterText.length > 0) {
 			customSelectedItem = this.textToItem(this._filterText);
 		}
-		this._filterText = "";
+		this._filterText = null;
 		this.pendingSelectedIndex = -1;
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
