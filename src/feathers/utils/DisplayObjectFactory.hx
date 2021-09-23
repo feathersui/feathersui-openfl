@@ -28,6 +28,23 @@ class DisplayObjectFactory<T:B, B:DisplayObject> {
 		To instantiate an object with one or more required constructor
 		arguments, use `DisplayObjectFactory.withFunction()` instead.
 	**/
+	public static function withDisplayObject<T:B, B:DisplayObject>(displayObject:T, ?destroy:(T) -> Void):DisplayObjectFactory<T, B> {
+		var item = new DisplayObjectFactory<T, B>();
+		item.create = () -> {
+			return displayObject;
+		};
+		item.destroy = destroy;
+		return item;
+	}
+
+	/**
+		Creates a `DisplayObjectFactory` that instantiates a display object by
+		instantiating the specified class. The class must have a constructor
+		with zero required arguments.
+
+		To instantiate an object with one or more required constructor
+		arguments, use `DisplayObjectFactory.withFunction()` instead.
+	**/
 	public static function withClass<T:B, B:DisplayObject>(displayObjectType:Class<T>, ?destroy:(T) -> Void):DisplayObjectFactory<T, B> {
 		var item = new DisplayObjectFactory<T, B>();
 		item.create = () -> {
