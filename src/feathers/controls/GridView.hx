@@ -60,7 +60,7 @@ import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
-#if (lime && !flash)
+#if (lime && !flash && !commonjs)
 import lime.ui.MouseCursor as LimeMouseCursor;
 #end
 #if air
@@ -2819,7 +2819,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			// already has the resize cursor
 			return;
 		}
-		#if (lime && !flash)
+		#if (lime && !flash && !commonjs)
 		this._oldHeaderDividerMouseCursor = Mouse.cursor;
 		Mouse.cursor = LimeMouseCursor.RESIZE_WE;
 		#end

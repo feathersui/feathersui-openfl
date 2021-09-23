@@ -15,7 +15,7 @@ import feathers.layout.VDividedBoxLayout;
 import feathers.themes.steel.components.SteelVDividedBoxStyles;
 import feathers.utils.DisplayUtil;
 import openfl.display.DisplayObject;
-#if (lime && !flash)
+#if (lime && !flash && !commonjs)
 import lime.ui.MouseCursor as LimeMouseCursor;
 #end
 
@@ -39,7 +39,7 @@ class VDividedBox extends BaseDividedBox {
 
 		super();
 
-		#if (lime && !flash)
+		#if (lime && !flash && !commonjs)
 		this.resizeCursor = LimeMouseCursor.RESIZE_NS;
 		#end
 	}
