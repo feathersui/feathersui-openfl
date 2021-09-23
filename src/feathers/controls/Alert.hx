@@ -8,21 +8,22 @@
 
 package feathers.controls;
 
-import openfl.errors.IllegalOperationError;
 import feathers.controls.popups.IPopUpAdapter;
-import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
+import feathers.core.InvalidationFlag;
 import feathers.core.PopUpManager;
 import feathers.data.ArrayCollection;
 import feathers.data.ButtonBarItemState;
 import feathers.data.IFlatCollection;
 import feathers.events.ButtonBarEvent;
-import feathers.layout.HorizontalLayoutData;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelAlertStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import openfl.Lib;
 import openfl.display.DisplayObject;
+import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 
 /**
@@ -123,17 +124,11 @@ class Alert extends Panel {
 		return alert;
 	}
 
-	private static function defaultButtonBarFactory():ButtonBar {
-		return new ButtonBar();
-	}
+	private static final defaultButtonBarFactory = DisplayObjectFactory.withClass(ButtonBar);
 
-	private static function defaultHeaderFactory():Header {
-		return new Header();
-	}
+	private static final defaultHeaderFactory = DisplayObjectFactory.withClass(Header);
 
-	private static function defaultMessageLabelFactory():Label {
-		return new Label();
-	}
+	private static final defaultMessageLabelFactory = DisplayObjectFactory.withClass(Label);
 
 	/**
 		Creates a new `Alert` object.
@@ -219,7 +214,9 @@ class Alert extends Panel {
 		return this._titleText;
 	}
 
-	private var _messageLabelFactory:() -> Label;
+	private var _oldMessageLabelFactory:DisplayObjectFactory<Dynamic, Label>;
+
+	private var _messageLabelFactory:DisplayObjectFactory<Dynamic, Label>;
 
 	/**
 		Creates the message label, which must be of type
@@ -239,13 +236,13 @@ class Alert extends Panel {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var messageLabelFactory(get, set):() -> Label;
+	public var messageLabelFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Label>;
 
-	private function get_messageLabelFactory():() -> Label {
+	private function get_messageLabelFactory():AbstractDisplayObjectFactory<Dynamic, Label> {
 		return this._messageLabelFactory;
 	}
 
-	private function set_messageLabelFactory(value:() -> Label):() -> Label {
+	private function set_messageLabelFactory(value:AbstractDisplayObjectFactory<Dynamic, Label>):AbstractDisplayObjectFactory<Dynamic, Label> {
 		if (this._messageLabelFactory == value) {
 			return this._messageLabelFactory;
 		}
@@ -254,7 +251,9 @@ class Alert extends Panel {
 		return this._messageLabelFactory;
 	}
 
-	private var _headerFactory:() -> Header;
+	private var _oldHeaderFactory:DisplayObjectFactory<Dynamic, Header>;
+
+	private var _headerFactory:DisplayObjectFactory<Dynamic, Header>;
 
 	/**
 		Creates the header, which must be of type `feathers.controls.Header`.
@@ -273,13 +272,13 @@ class Alert extends Panel {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var headerFactory(get, set):() -> Header;
+	public var headerFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Header>;
 
-	private function get_headerFactory():() -> Header {
+	private function get_headerFactory():AbstractDisplayObjectFactory<Dynamic, Header> {
 		return this._headerFactory;
 	}
 
-	private function set_headerFactory(value:() -> Header):() -> Header {
+	private function set_headerFactory(value:AbstractDisplayObjectFactory<Dynamic, Header>):AbstractDisplayObjectFactory<Dynamic, Header> {
 		if (this._headerFactory == value) {
 			return this._headerFactory;
 		}
@@ -288,7 +287,9 @@ class Alert extends Panel {
 		return this._headerFactory;
 	}
 
-	private var _buttonBarFactory:() -> ButtonBar;
+	private var _oldButtonBarFactory:DisplayObjectFactory<Dynamic, ButtonBar>;
+
+	private var _buttonBarFactory:DisplayObjectFactory<Dynamic, ButtonBar>;
 
 	/**
 		Creates the button bar, which must be of type
@@ -308,13 +309,13 @@ class Alert extends Panel {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var buttonBarFactory(get, set):() -> ButtonBar;
+	public var buttonBarFactory(get, set):AbstractDisplayObjectFactory<Dynamic, ButtonBar>;
 
-	private function get_buttonBarFactory():() -> ButtonBar {
+	private function get_buttonBarFactory():AbstractDisplayObjectFactory<Dynamic, ButtonBar> {
 		return this._buttonBarFactory;
 	}
 
-	private function set_buttonBarFactory(value:() -> ButtonBar):() -> ButtonBar {
+	private function set_buttonBarFactory(value:AbstractDisplayObjectFactory<Dynamic, ButtonBar>):AbstractDisplayObjectFactory<Dynamic, ButtonBar> {
 		if (this._buttonBarFactory == value) {
 			return this._buttonBarFactory;
 		}
@@ -473,11 +474,14 @@ class Alert extends Panel {
 	private function createButtonBar():Void {
 		if (this.buttonBar != null) {
 			this.buttonBar.removeEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
+			this._oldButtonBarFactory.destroy(this.buttonBar);
+			this._oldButtonBarFactory = null;
 			this.buttonBar = null;
 			super.footer = null;
 		}
 		var factory = this._buttonBarFactory != null ? this._buttonBarFactory : defaultButtonBarFactory;
-		this.buttonBar = factory();
+		this._oldButtonBarFactory = factory;
+		this.buttonBar = factory.create();
 		if (this.buttonBar.variant == null) {
 			this.buttonBar.variant = this.customButtonBarVariant != null ? this.customButtonBarVariant : Alert.CHILD_VARIANT_BUTTON_BAR;
 		}
@@ -487,11 +491,14 @@ class Alert extends Panel {
 
 	private function createHeader():Void {
 		if (this.alertHeader != null) {
+			this._oldHeaderFactory.destroy(this.alertHeader);
+			this._oldHeaderFactory = null;
 			this.alertHeader = null;
 			super.header = null;
 		}
 		var factory = this._headerFactory != null ? this._headerFactory : defaultHeaderFactory;
-		this.alertHeader = factory();
+		this._oldHeaderFactory = factory;
+		this.alertHeader = factory.create();
 		if (this.alertHeader.variant == null) {
 			this.alertHeader.variant = this.customHeaderVariant != null ? this.customHeaderVariant : Alert.CHILD_VARIANT_HEADER;
 		}
@@ -501,10 +508,13 @@ class Alert extends Panel {
 	private function createMessageLabel():Void {
 		if (this.messageLabel != null) {
 			this.removeChild(this.messageLabel);
+			this._oldMessageLabelFactory.destroy(this.messageLabel);
+			this._oldMessageLabelFactory = null;
 			this.messageLabel = null;
 		}
 		var factory = this._messageLabelFactory != null ? this._messageLabelFactory : defaultMessageLabelFactory;
-		this.messageLabel = factory();
+		this._oldMessageLabelFactory = factory;
+		this.messageLabel = factory.create();
 		if (this.messageLabel.variant == null) {
 			this.messageLabel.variant = this.customMessageLabelVariant != null ? this.customMessageLabelVariant : Alert.CHILD_VARIANT_MESSAGE_LABEL;
 		}

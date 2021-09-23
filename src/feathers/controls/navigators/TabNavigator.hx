@@ -8,9 +8,9 @@
 
 package feathers.controls.navigators;
 
-import feathers.core.InvalidationFlag;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
+import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
@@ -19,6 +19,8 @@ import feathers.layout.RelativePosition;
 import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelTabNavigatorStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.EdgePuller;
 import feathers.utils.ExclusivePointer;
 import openfl.display.DisplayObject;
@@ -67,9 +69,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	**/
 	public static final CHILD_VARIANT_TAB_BAR = "tabNavigator_tabBar";
 
-	private static function defaultTabBarFactory():TabBar {
-		return new TabBar();
-	}
+	private static final defaultTabBarFactory = DisplayObjectFactory.withClass(TabBar);
 
 	/**
 		Creates a new `TabNavigator` object.
@@ -315,7 +315,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	@:style
 	public var customTabBarVariant:String = null;
 
-	private var _tabBarFactory:() -> TabBar;
+	private var _oldTabBarFactory:DisplayObjectFactory<Dynamic, TabBar>;
+
+	private var _tabBarFactory:DisplayObjectFactory<Dynamic, TabBar>;
 
 	/**
 		Creates the tab bar, which must be of type `feathers.controls.TabBar`.
@@ -334,13 +336,13 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var tabBarFactory(get, set):() -> TabBar;
+	public var tabBarFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TabBar>;
 
-	private function get_tabBarFactory():() -> TabBar {
+	private function get_tabBarFactory():AbstractDisplayObjectFactory<Dynamic, TabBar> {
 		return this._tabBarFactory;
 	}
 
-	private function set_tabBarFactory(value:() -> TabBar):() -> TabBar {
+	private function set_tabBarFactory(value:AbstractDisplayObjectFactory<Dynamic, TabBar>):AbstractDisplayObjectFactory<Dynamic, TabBar> {
 		if (this._tabBarFactory == value) {
 			return this._tabBarFactory;
 		}
@@ -437,10 +439,13 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this.tabBar.removeEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
 			this.tabBar.removeEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
 			this.removeChild(this.tabBar);
+			this._oldTabBarFactory.destroy(this.tabBar);
+			this._oldTabBarFactory = null;
 			this.tabBar = null;
 		}
 		var factory = this._tabBarFactory != null ? this._tabBarFactory : defaultTabBarFactory;
-		this.tabBar = factory();
+		this._oldTabBarFactory = factory;
+		this.tabBar = factory.create();
 		if (this.tabBar.variant == null) {
 			this.tabBar.variant = this.customTabBarVariant != null ? this.customTabBarVariant : TabNavigator.CHILD_VARIANT_TAB_BAR;
 		}

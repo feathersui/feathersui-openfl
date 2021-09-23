@@ -8,18 +8,19 @@
 
 package feathers.controls.supportClasses;
 
-import openfl.errors.ArgumentError;
-import feathers.skins.RectangleSkin;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
-import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
 import feathers.events.ScrollEvent;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.skins.IProgrammaticSkin;
+import feathers.skins.RectangleSkin;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayUtil;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
@@ -33,6 +34,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
+import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
@@ -59,13 +61,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private static final INVALIDATION_FLAG_SCROLLER_FACTORY = InvalidationFlag.CUSTOM("scrollerFactory");
 	private static final INVALIDATION_FLAG_SCROLL_BAR_FACTORY = InvalidationFlag.CUSTOM("scrollBarFactory");
 
-	private static function defaultScrollBarXFactory():IScrollBar {
-		return new HScrollBar();
-	}
-
-	private static function defaultScrollBarYFactory():IScrollBar {
-		return new VScrollBar();
-	}
+	private static final defaultScrollBarXFactory = DisplayObjectFactory.withClass(HScrollBar);
+	private static final defaultScrollBarYFactory = DisplayObjectFactory.withClass(VScrollBar);
 
 	private function new() {
 		super();
@@ -360,7 +357,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var showScrollBarX = false;
 	private var showScrollBarY = false;
 
-	private var _scrollBarXFactory:() -> IScrollBar = defaultScrollBarXFactory;
+	private var _oldScrollBarXFactory:DisplayObjectFactory<Dynamic, HScrollBar>;
+
+	private var _scrollBarXFactory:DisplayObjectFactory<Dynamic, HScrollBar>;
 
 	/**
 		Creates the horizontal scroll bar. The horizontal scroll bar may be any
@@ -382,13 +381,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var scrollBarXFactory(get, set):() -> IScrollBar;
+	public var scrollBarXFactory(get, set):AbstractDisplayObjectFactory<Dynamic, HScrollBar>;
 
-	private function get_scrollBarXFactory():() -> IScrollBar {
+	private function get_scrollBarXFactory():AbstractDisplayObjectFactory<Dynamic, HScrollBar> {
 		return this._scrollBarXFactory;
 	}
 
-	private function set_scrollBarXFactory(value:() -> IScrollBar):() -> IScrollBar {
+	private function set_scrollBarXFactory(value:AbstractDisplayObjectFactory<Dynamic, HScrollBar>):AbstractDisplayObjectFactory<Dynamic, HScrollBar> {
 		if (this._scrollBarXFactory == value) {
 			return this._scrollBarXFactory;
 		}
@@ -397,7 +396,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return this._scrollBarXFactory;
 	}
 
-	private var _scrollBarYFactory:() -> IScrollBar = defaultScrollBarYFactory;
+	private var _oldScrollBarYFactory:DisplayObjectFactory<Dynamic, VScrollBar>;
+
+	private var _scrollBarYFactory:DisplayObjectFactory<Dynamic, VScrollBar>;
 
 	/**
 		Creates the vertical scroll bar. The vertical scroll bar may be any
@@ -419,13 +420,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var scrollBarYFactory(get, set):() -> IScrollBar;
+	public var scrollBarYFactory(get, set):AbstractDisplayObjectFactory<Dynamic, VScrollBar>;
 
-	private function get_scrollBarYFactory():() -> IScrollBar {
+	private function get_scrollBarYFactory():AbstractDisplayObjectFactory<Dynamic, VScrollBar> {
 		return this._scrollBarYFactory;
 	}
 
-	private function set_scrollBarYFactory(value:() -> IScrollBar):() -> IScrollBar {
+	private function set_scrollBarYFactory(value:AbstractDisplayObjectFactory<Dynamic, VScrollBar>):AbstractDisplayObjectFactory<Dynamic, VScrollBar> {
 		if (this._scrollBarYFactory == value) {
 			return this._scrollBarYFactory;
 		}
@@ -1149,6 +1150,8 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_START, scrollBarX_scrollStartHandler);
 			this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
 			this.removeChild(cast(this.scrollBarX, DisplayObject));
+			this._oldScrollBarXFactory.destroy(this.scrollBarX);
+			this._oldScrollBarXFactory = null;
 			this.scrollBarX = null;
 		}
 		if (this.scrollBarY != null) {
@@ -1158,13 +1161,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_START, scrollBarY_scrollStartHandler);
 			this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarY_scrollCompleteHandler);
 			this.removeChild(cast(this.scrollBarY, DisplayObject));
+			this._oldScrollBarYFactory.destroy(this.scrollBarY);
+			this._oldScrollBarYFactory = null;
 			this.scrollBarY = null;
 		}
-		var scrollBarXFactory = this._scrollBarXFactory;
-		if (scrollBarXFactory == null) {
-			scrollBarXFactory = defaultScrollBarXFactory;
-		}
-		this.scrollBarX = scrollBarXFactory();
+		var factory = this._scrollBarXFactory != null ? this._scrollBarXFactory : defaultScrollBarXFactory;
+		this._oldScrollBarXFactory = factory;
+		this.scrollBarX = factory.create();
 		if (this.autoHideScrollBars) {
 			this.scrollBarX.alpha = 0.0;
 		}
@@ -1175,11 +1178,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.scrollBarX.addEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
 		this.addChild(cast(this.scrollBarX, DisplayObject));
 
-		var scrollBarYFactory = this._scrollBarYFactory;
-		if (scrollBarYFactory == null) {
-			scrollBarYFactory = defaultScrollBarYFactory;
-		}
-		this.scrollBarY = scrollBarYFactory();
+		var factory = this._scrollBarYFactory != null ? this._scrollBarYFactory : defaultScrollBarYFactory;
+		this._oldScrollBarYFactory = factory;
+		this.scrollBarY = factory.create();
 		if (this.autoHideScrollBars) {
 			this.scrollBarY.alpha = 0.0;
 		}

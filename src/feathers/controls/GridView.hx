@@ -30,8 +30,8 @@ import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.GridViewEvent;
 import feathers.events.TriggerEvent;
-import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.GridViewRowLayout;
+import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
@@ -40,6 +40,7 @@ import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelGridViewStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.utils.DisplayUtil;
@@ -494,7 +495,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	@:style
-	public var headerDividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject> = DisplayObjectFactory.withClass(Button);
+	public var headerDividerFactory:AbstractDisplayObjectFactory<Dynamic, InteractiveObject> = DisplayObjectFactory.withClass(Button);
 
 	/**
 		A custom variant to set on all header dividers, instead of
@@ -523,7 +524,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	@:style
-	public var columnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject> = null;
+	public var columnDividerFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject> = null;
 
 	/**
 		A custom variant to set on all column dividers, instead of

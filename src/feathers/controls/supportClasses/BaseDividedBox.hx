@@ -8,8 +8,6 @@
 
 package feathers.controls.supportClasses;
 
-import openfl.display.Stage;
-import openfl.display.DisplayObjectContainer;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -18,11 +16,15 @@ import feathers.layout.ILayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
+import openfl.display.Stage;
 import openfl.errors.RangeError;
 import openfl.errors.TypeError;
 import openfl.events.Event;
@@ -174,15 +176,15 @@ class BaseDividedBox extends FeathersControl {
 	**/
 	public var liveDragging:Bool = true;
 
-	private static function defaultDividerFactory():InteractiveObject {
+	private static final defaultDividerFactory = DisplayObjectFactory.withFunction(() -> {
 		var divider = new Sprite();
 		divider.graphics.beginFill(0xff00ff, 0.0);
 		divider.graphics.drawRect(0.0, 0.0, 6.0, 6.0);
 		divider.graphics.endFill();
 		return divider;
-	}
+	});
 
-	private var _dividerFactory:() -> InteractiveObject;
+	private var _dividerFactory:DisplayObjectFactory<Dynamic, InteractiveObject>;
 
 	/**
 		Creates the dividers, which must be of type `openfl.display.InteractiveObject`.
@@ -199,24 +201,30 @@ class BaseDividedBox extends FeathersControl {
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var dividerFactory(get, set):() -> InteractiveObject;
+	public var dividerFactory(get, set):AbstractDisplayObjectFactory<Dynamic, InteractiveObject>;
 
-	private function get_dividerFactory():() -> InteractiveObject {
+	private function get_dividerFactory():AbstractDisplayObjectFactory<Dynamic, InteractiveObject> {
 		return this._dividerFactory;
 	}
 
-	private function set_dividerFactory(value:() -> InteractiveObject):() -> InteractiveObject {
+	private function set_dividerFactory(value:AbstractDisplayObjectFactory<Dynamic, InteractiveObject>):AbstractDisplayObjectFactory<Dynamic,
+		InteractiveObject> {
 		if (this._dividerFactory == value) {
 			return this._dividerFactory;
+		}
+		if (this.items.length > 1) {
+			for (i in 1...this.items.length) {
+				var layoutIndex = i * 2;
+				var childIndex = layoutIndex + ((this._currentBackgroundSkin != null) ? 1 : 0);
+				var oldDivider = this.removeRawChildAt(childIndex - 1);
+				this.destroyDivider(cast(oldDivider, InteractiveObject), this._dividerFactory);
+			}
 		}
 		this._dividerFactory = value;
 		if (this.items.length > 1) {
 			for (i in 1...this.items.length) {
 				var layoutIndex = i * 2;
 				var childIndex = layoutIndex + ((this._currentBackgroundSkin != null) ? 1 : 0);
-				var oldDivider = this.removeRawChildAt(childIndex - 1);
-				this.destroyDivider(cast(oldDivider, InteractiveObject));
-
 				var newDivider = this.createDivider();
 				this.addRawChildAt(newDivider, childIndex - 1);
 				this.dividers[i - 1] = newDivider;
@@ -485,7 +493,7 @@ class BaseDividedBox extends FeathersControl {
 			var divider = super.getChildAt(index - 1);
 			this.dividers.splice(index - 1, 1);
 			this._layoutItems.remove(divider);
-			this.destroyDivider(cast(divider, InteractiveObject));
+			this.destroyDivider(cast(divider, InteractiveObject), this._dividerFactory);
 		}
 		this._layoutItems.remove(child);
 		return super.removeChild(child);
@@ -607,7 +615,7 @@ class BaseDividedBox extends FeathersControl {
 
 	private function createDivider():InteractiveObject {
 		var dividerFactory = (this._dividerFactory != null) ? this._dividerFactory : defaultDividerFactory;
-		var divider = dividerFactory();
+		var divider:InteractiveObject = dividerFactory.create();
 		divider.addEventListener(MouseEvent.ROLL_OVER, baseDividedBox_divider_rollOverHandler);
 		divider.addEventListener(MouseEvent.ROLL_OUT, baseDividedBox_divider_rollOutHandler);
 		divider.addEventListener(MouseEvent.MOUSE_DOWN, baseDividedBox_divider_mouseDownHandler);
@@ -615,11 +623,14 @@ class BaseDividedBox extends FeathersControl {
 		return divider;
 	}
 
-	private function destroyDivider(divider:InteractiveObject):Void {
+	private function destroyDivider(divider:InteractiveObject, factory:DisplayObjectFactory<Dynamic, InteractiveObject>):Void {
 		divider.removeEventListener(MouseEvent.ROLL_OVER, baseDividedBox_divider_rollOverHandler);
 		divider.removeEventListener(MouseEvent.ROLL_OUT, baseDividedBox_divider_rollOutHandler);
 		divider.removeEventListener(MouseEvent.MOUSE_DOWN, baseDividedBox_divider_mouseDownHandler);
 		divider.removeEventListener(TouchEvent.TOUCH_BEGIN, baseDividedBox_divider_touchBeginHandler);
+		if (factory != null && factory.destroy != null) {
+			factory.destroy(divider);
+		}
 	}
 
 	private function refreshViewPortBounds():Void {

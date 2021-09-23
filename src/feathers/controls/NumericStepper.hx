@@ -19,6 +19,8 @@ import feathers.layout.Direction;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelNumericStepperStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
 import openfl.display.InteractiveObject;
@@ -103,17 +105,11 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	**/
 	public static final CHILD_VARIANT_TEXT_INPUT = "numericStepper_textInput";
 
-	private static function defaultDecrementButtonFactory():Button {
-		return new Button();
-	}
+	private static final defaultDecrementButtonFactory = DisplayObjectFactory.withClass(Button);
 
-	private static function defaultIncrementButtonFactory():Button {
-		return new Button();
-	}
+	private static final defaultIncrementButtonFactory = DisplayObjectFactory.withClass(Button);
 
-	private static function defaultTextInputFactory():TextInput {
-		return new TextInput();
-	}
+	private static final defaultTextInputFactory = DisplayObjectFactory.withClass(TextInput);
 
 	public function new() {
 		initializeNumericStepperTheme();
@@ -439,15 +435,17 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		return this.textInput;
 	}
 
-	private var _decrementButtonFactory:() -> Button;
+	private var _oldDecrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
-	public var decrementButtonFactory(get, set):() -> Button;
+	private var _decrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
-	private function get_decrementButtonFactory():() -> Button {
+	public var decrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
+
+	private function get_decrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
 		return this._decrementButtonFactory;
 	}
 
-	private function set_decrementButtonFactory(value:() -> Button):() -> Button {
+	private function set_decrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, Button>):AbstractDisplayObjectFactory<Dynamic, Button> {
 		if (this._decrementButtonFactory == value) {
 			return this._decrementButtonFactory;
 		}
@@ -456,15 +454,17 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		return this._decrementButtonFactory;
 	}
 
-	private var _incrementButtonFactory:() -> Button;
+	private var _oldIncrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
-	public var incrementButtonFactory(get, set):() -> Button;
+	private var _incrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
-	private function get_incrementButtonFactory():() -> Button {
+	public var incrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
+
+	private function get_incrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
 		return this._incrementButtonFactory;
 	}
 
-	private function set_incrementButtonFactory(value:() -> Button):() -> Button {
+	private function set_incrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, Button>):AbstractDisplayObjectFactory<Dynamic, Button> {
 		if (this._incrementButtonFactory == value) {
 			return this._incrementButtonFactory;
 		}
@@ -473,15 +473,17 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		return this._incrementButtonFactory;
 	}
 
-	private var _textInputFactory:() -> TextInput;
+	private var _oldTextInputFactory:DisplayObjectFactory<Dynamic, TextInput>;
 
-	public var textInputFactory(get, set):() -> TextInput;
+	private var _textInputFactory:DisplayObjectFactory<Dynamic, TextInput>;
 
-	private function get_textInputFactory():() -> TextInput {
+	public var textInputFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextInput>;
+
+	private function get_textInputFactory():AbstractDisplayObjectFactory<Dynamic, TextInput> {
 		return this._textInputFactory;
 	}
 
-	private function set_textInputFactory(value:() -> TextInput):() -> TextInput {
+	private function set_textInputFactory(value:AbstractDisplayObjectFactory<Dynamic, TextInput>):AbstractDisplayObjectFactory<Dynamic, TextInput> {
 		if (this._textInputFactory == value) {
 			return this._textInputFactory;
 		}
@@ -940,10 +942,13 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			this.decrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, numericStepper_decrementButton_mouseDownHandler);
 			this.decrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_decrementButton_touchBeginHandler);
 			this.removeChild(this.decrementButton);
+			this._oldDecrementButtonFactory.destroy(this.decrementButton);
+			this._oldDecrementButtonFactory = null;
 			this.decrementButton = null;
 		}
 		var factory = this._decrementButtonFactory != null ? this._decrementButtonFactory : defaultDecrementButtonFactory;
-		this.decrementButton = factory();
+		this._oldDecrementButtonFactory = factory;
+		this.decrementButton = factory.create();
 		if (this.decrementButton.variant == null) {
 			this.decrementButton.variant = this.customDecrementButtonVariant != null ? this.customDecrementButtonVariant : NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON;
 		}
@@ -960,10 +965,13 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			this.incrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, numericStepper_incrementButton_mouseDownHandler);
 			this.incrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_incrementButton_touchBeginHandler);
 			this.removeChild(this.incrementButton);
+			this._oldIncrementButtonFactory.destroy(this.incrementButton);
+			this._oldIncrementButtonFactory = null;
 			this.incrementButton = null;
 		}
 		var factory = this._incrementButtonFactory != null ? this._incrementButtonFactory : defaultIncrementButtonFactory;
-		this.incrementButton = factory();
+		this._oldIncrementButtonFactory = factory;
+		this.incrementButton = factory.create();
 		if (this.incrementButton.variant == null) {
 			this.incrementButton.variant = this.customIncrementButtonVariant != null ? this.customIncrementButtonVariant : NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON;
 		}
@@ -982,10 +990,13 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, numericStepper_textInput_focusInHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_OUT, numericStepper_textInput_focusOutHandler);
 			this.removeChild(this.textInput);
+			this._oldTextInputFactory.destroy(this.textInput);
+			this._oldTextInputFactory = null;
 			this.textInput = null;
 		}
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
-		this.textInput = factory();
+		this._oldTextInputFactory = factory;
+		this.textInput = factory.create();
 		if (this.textInput.variant == null) {
 			this.textInput.variant = this.customTextInputVariant != null ? this.customTextInputVariant : NumericStepper.CHILD_VARIANT_TEXT_INPUT;
 		}

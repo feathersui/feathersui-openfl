@@ -23,6 +23,8 @@ import feathers.events.FlatCollectionEvent;
 import feathers.events.ListViewEvent;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelComboBoxStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
@@ -144,17 +146,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	**/
 	public static final CHILD_VARIANT_LIST_VIEW = "comboBox_listView";
 
-	private static function defaultButtonFactory():Button {
-		return new Button();
-	}
+	private static final defaultButtonFactory = DisplayObjectFactory.withClass(Button);
 
-	private static function defaultTextInputFactory():TextInput {
-		return new TextInput();
-	}
+	private static final defaultTextInputFactory = DisplayObjectFactory.withClass(TextInput);
 
-	private static function defaultListViewFactory():ListView {
-		return new ListView();
-	}
+	private static final defaultListViewFactory = DisplayObjectFactory.withClass(ListView);
 
 	/**
 		Creates a new `ComboBox` object.
@@ -556,7 +552,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	@:style
 	public var customListViewVariant:String = null;
 
-	private var _buttonFactory:() -> Button;
+	private var _oldButtonFactory:DisplayObjectFactory<Dynamic, Button>;
+
+	private var _buttonFactory:DisplayObjectFactory<Dynamic, Button>;
 
 	/**
 		Creates the button, which must be of type `feathers.controls.Button`.
@@ -575,13 +573,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var buttonFactory(get, set):() -> Button;
+	public var buttonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
-	private function get_buttonFactory():() -> Button {
+	private function get_buttonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
 		return this._buttonFactory;
 	}
 
-	private function set_buttonFactory(value:() -> Button):() -> Button {
+	private function set_buttonFactory(value:AbstractDisplayObjectFactory<Dynamic, Button>):AbstractDisplayObjectFactory<Dynamic, Button> {
 		if (this._buttonFactory == value) {
 			return this._buttonFactory;
 		}
@@ -590,7 +588,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._buttonFactory;
 	}
 
-	private var _textInputFactory:() -> TextInput;
+	private var _oldTextInputFactory:DisplayObjectFactory<Dynamic, TextInput>;
+
+	private var _textInputFactory:DisplayObjectFactory<Dynamic, TextInput>;
 
 	/**
 		Creates the text input, which must be of type `feathers.controls.TextInput`.
@@ -609,13 +609,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var textInputFactory(get, set):() -> TextInput;
+	public var textInputFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextInput>;
 
-	private function get_textInputFactory():() -> TextInput {
+	private function get_textInputFactory():AbstractDisplayObjectFactory<Dynamic, TextInput> {
 		return this._textInputFactory;
 	}
 
-	private function set_textInputFactory(value:() -> TextInput):() -> TextInput {
+	private function set_textInputFactory(value:AbstractDisplayObjectFactory<Dynamic, TextInput>):AbstractDisplayObjectFactory<Dynamic, TextInput> {
 		if (this._textInputFactory == value) {
 			return this._textInputFactory;
 		}
@@ -624,7 +624,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._textInputFactory;
 	}
 
-	private var _listViewFactory:() -> ListView;
+	private var _oldListViewFactory:DisplayObjectFactory<Dynamic, ListView>;
+
+	private var _listViewFactory:DisplayObjectFactory<Dynamic, ListView>;
 
 	/**
 		Creates the list view that is displayed as a pop-up. The list view must
@@ -644,13 +646,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var listViewFactory(get, set):() -> ListView;
+	public var listViewFactory(get, set):AbstractDisplayObjectFactory<Dynamic, ListView>;
 
-	private function get_listViewFactory():() -> ListView {
+	private function get_listViewFactory():AbstractDisplayObjectFactory<Dynamic, ListView> {
 		return this._listViewFactory;
 	}
 
-	private function set_listViewFactory(value:() -> ListView):() -> ListView {
+	private function set_listViewFactory(value:AbstractDisplayObjectFactory<Dynamic, ListView>):AbstractDisplayObjectFactory<Dynamic, ListView> {
 		if (this._listViewFactory == value) {
 			return this._listViewFactory;
 		}
@@ -824,10 +826,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_button_mouseDownHandler);
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_button_touchBeginHandler);
 			this.removeChild(this.button);
+			this._oldButtonFactory.destroy(this.button);
+			this._oldButtonFactory = null;
 			this.button = null;
 		}
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
-		this.button = factory();
+		this._oldButtonFactory = factory;
+		this.button = factory.create();
 		if (this.button.variant == null) {
 			this.button.variant = this.customButtonVariant != null ? this.customButtonVariant : ComboBox.CHILD_VARIANT_BUTTON;
 		}
@@ -845,10 +850,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
 			this.removeChild(this.textInput);
+			this._oldTextInputFactory.destroy(this.textInput);
+			this._oldTextInputFactory = null;
 			this.textInput = null;
 		}
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
-		this.textInput = factory();
+		this._oldTextInputFactory = factory;
+		this.textInput = factory.create();
 		if (this.textInput.variant == null) {
 			this.textInput.variant = this.customTextInputVariant != null ? this.customTextInputVariant : ComboBox.CHILD_VARIANT_TEXT_INPUT;
 		}
@@ -865,10 +873,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.listView.removeEventListener(Event.CHANGE, comboBox_listView_changeHandler);
 			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 			this.listView.focusOwner = null;
+			this._oldListViewFactory.destroy(this.listView);
+			this._oldListViewFactory = null;
 			this.listView = null;
 		}
 		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
-		this.listView = factory();
+		this._oldListViewFactory = factory;
+		this.listView = factory.create();
 		this.listView.focusOwner = this;
 		this.listView.focusEnabled = false;
 		if (this.listView.variant == null) {

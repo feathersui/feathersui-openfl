@@ -8,9 +8,9 @@
 
 package feathers.controls.navigators;
 
-import feathers.core.InvalidationFlag;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
+import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
@@ -18,6 +18,8 @@ import feathers.layout.RelativePosition;
 import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelPageNavigatorStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.EdgePuller;
 import feathers.utils.ExclusivePointer;
 import openfl.display.DisplayObject;
@@ -66,9 +68,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	**/
 	public static final CHILD_VARIANT_PAGE_INDICATOR = "pageNavigator_pageIndicator";
 
-	private static function defaultPageIndicatorFactory():PageIndicator {
-		return new PageIndicator();
-	}
+	private static final defaultPageIndicatorFactory = DisplayObjectFactory.withClass(PageIndicator);
 
 	/**
 		Creates a new `PageNavigator` object.
@@ -312,7 +312,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	@:style
 	public var customPageIndicatorVariant:String = null;
 
-	private var _pageIndicatorFactory:() -> PageIndicator;
+	private var _oldPageIndicatorFactory:DisplayObjectFactory<Dynamic, PageIndicator>;
+
+	private var _pageIndicatorFactory:DisplayObjectFactory<Dynamic, PageIndicator>;
 
 	/**
 		Creates the page indicator, which must be of type
@@ -332,13 +334,13 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var pageIndicatorFactory(get, set):() -> PageIndicator;
+	public var pageIndicatorFactory(get, set):AbstractDisplayObjectFactory<Dynamic, PageIndicator>;
 
-	private function get_pageIndicatorFactory():() -> PageIndicator {
+	private function get_pageIndicatorFactory():AbstractDisplayObjectFactory<Dynamic, PageIndicator> {
 		return this._pageIndicatorFactory;
 	}
 
-	private function set_pageIndicatorFactory(value:() -> PageIndicator):() -> PageIndicator {
+	private function set_pageIndicatorFactory(value:AbstractDisplayObjectFactory<Dynamic, PageIndicator>):AbstractDisplayObjectFactory<Dynamic, PageIndicator> {
 		if (this._pageIndicatorFactory == value) {
 			return this._pageIndicatorFactory;
 		}
@@ -430,10 +432,13 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		if (this.pageIndicator != null) {
 			this.pageIndicator.removeEventListener(Event.CHANGE, pageNavigator_pageIndicator_changeHandler);
 			this.removeChild(this.pageIndicator);
+			this._oldPageIndicatorFactory.destroy(this.pageIndicator);
+			this._oldPageIndicatorFactory = null;
 			this.pageIndicator = null;
 		}
 		var factory = this._pageIndicatorFactory != null ? this._pageIndicatorFactory : defaultPageIndicatorFactory;
-		this.pageIndicator = factory();
+		this._oldPageIndicatorFactory = factory;
+		this.pageIndicator = factory.create();
 		if (this.pageIndicator.variant == null) {
 			this.pageIndicator.variant = this.customPageIndicatorVariant != null ? this.customPageIndicatorVariant : PageNavigator.CHILD_VARIANT_PAGE_INDICATOR;
 		}
