@@ -718,6 +718,31 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 	}
 
 	/**
+		Opens or closes all children of a branch recursively.
+
+		@since 1.0.0
+	**/
+	public function toggleChildrenOf(branch:Dynamic, open:Bool):Void {
+		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+			throw new ArgumentError("Cannot open branch because it is not in the data provider.");
+		}
+		if (!this._dataProvider.isBranch(branch)) {
+			throw new ArgumentError("Cannot open item because it is not a branch.");
+		}
+		this.toggleBranch(branch, open);
+		var location = this._dataProvider.locationOf(branch);
+		var itemCount = this._dataProvider.getLength(location);
+		for (i in 0...itemCount) {
+			location.push(i);
+			var child = this._dataProvider.get(location);
+			if (this._dataProvider.isBranch(child)) {
+				this.toggleChildrenOf(child, open);
+			}
+			location.pop();
+		}
+	}
+
+	/**
 		Returns the current item renderer used to render a specific item from
 		the data provider. May return `null` if an item doesn't currently have
 		an item renderer.
