@@ -1398,10 +1398,17 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 
 	private function locationToDisplayIndex(location:Array<Int>, returnNearestIfBranchNotOpen:Bool):Int {
 		this._currentDisplayIndex = -1;
-		return this.locationToDisplayIndexAtBranch([], location, returnNearestIfBranchNotOpen);
+		var nearestNotOpenBranch:Array<Int> = null;
+		if (returnNearestIfBranchNotOpen) {
+			nearestNotOpenBranch = [];
+		}
+		return this.locationToDisplayIndexAtBranch([], location, nearestNotOpenBranch);
 	}
 
-	private function locationToDisplayIndexAtBranch(locationOfBranch:Array<Int>, locationToFind:Array<Int>, returnNearestIfBranchNotOpen:Bool):Int {
+	private function locationToDisplayIndexAtBranch(locationOfBranch:Array<Int>, locationToFind:Array<Int>, nearestNotOpenBranch:Array<Int>):Int {
+		if (nearestNotOpenBranch != null) {
+			nearestNotOpenBranch.push(locationToFind[locationOfBranch.length]);
+		}
 		for (i in 0...this._dataProvider.getLength(locationOfBranch)) {
 			this._currentDisplayIndex++;
 			locationOfBranch[locationOfBranch.length] = i;
@@ -1411,17 +1418,20 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			var child = this._dataProvider.get(locationOfBranch);
 			if (this._dataProvider.isBranch(child)) {
 				if (this.openBranches.indexOf(child) != -1) {
-					var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, returnNearestIfBranchNotOpen);
+					var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, nearestNotOpenBranch);
 					if (result != -1) {
 						return result;
 					}
-				} else if (returnNearestIfBranchNotOpen) {
+				} else if (nearestNotOpenBranch != null && this.compareLocations(nearestNotOpenBranch, locationOfBranch) == 0) {
 					// if the location is inside a closed branch
 					// return that branch
 					return this._currentDisplayIndex;
 				}
 			}
 			locationOfBranch.resize(locationOfBranch.length - 1);
+		}
+		if (nearestNotOpenBranch != null) {
+			nearestNotOpenBranch.pop();
 		}
 		// location was not found!
 		return -1;
