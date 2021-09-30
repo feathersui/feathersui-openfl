@@ -516,18 +516,27 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		if (this.stage == null) {
 			return false;
 		}
-		var objects = this.stage.getObjectsUnderPoint(new Point(stageX, stageY));
-		if (objects.length > 0) {
-			var lastObject = objects[objects.length - 1];
-			if (this.contains(lastObject)) {
-				while (lastObject != null && lastObject != this) {
-					if ((lastObject is IFocusObject)) {
-						var focusable = cast(lastObject, IFocusObject);
-						if (focusable.focusEnabled) {
-							return false;
+		if (this.mouseChildren) {
+			var objects = this.stage.getObjectsUnderPoint(new Point(stageX, stageY));
+			if (objects.length > 0) {
+				var lastObject = objects[objects.length - 1];
+				if (this.contains(lastObject)) {
+					while (lastObject != null && lastObject != this) {
+						if ((lastObject is InteractiveObject)) {
+							var interactive = cast(lastObject, InteractiveObject);
+							if (!interactive.mouseEnabled) {
+								lastObject = lastObject.parent;
+								continue;
+							}
 						}
+						if ((lastObject is IFocusObject)) {
+							var focusable = cast(lastObject, IFocusObject);
+							if (focusable.focusEnabled) {
+								return false;
+							}
+						}
+						lastObject = lastObject.parent;
 					}
-					lastObject = lastObject.parent;
 				}
 			}
 		}
