@@ -1238,6 +1238,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (layoutInvalid) {
 			this._headerResizeContainer.mouseEnabled = this._resizableColumns;
 			this._headerResizeContainer.mouseChildren = this._resizableColumns;
+			var oldIgnoreHeaderLayoutChanges = this._ignoreHeaderLayoutChanges;
+			this._ignoreHeaderLayoutChanges = true;
+			this._headerContainerLayout.customColumnWidths = this._customColumnWidths;
+			this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
 		}
 
 		if (layoutInvalid || stylesInvalid) {
@@ -1377,10 +1381,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._headerContainer == null) {
 			return;
 		}
-		var oldIgnoreHeaderLayoutChanges = this._ignoreHeaderLayoutChanges;
-		this._ignoreHeaderLayoutChanges = true;
-		this._headerContainerLayout.customColumnWidths = this._customColumnWidths;
-		this._ignoreHeaderLayoutChanges = oldIgnoreHeaderLayoutChanges;
 
 		this._headerContainer.x = this.paddingLeft;
 		this._headerContainer.y = this.paddingTop;
