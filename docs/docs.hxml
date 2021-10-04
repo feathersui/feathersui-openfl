@@ -1,4 +1,4 @@
 -cmd haxelib run openfl build ../project.xml html5 -xml -clean
 
 --next
--cmd haxelib run dox -o ../bin/api -i ../bin/html5/types.xml -in feathers --title "Feathers UI API Reference (Haxe/OpenFL)" --toplevel-package feathers -theme ./feathersui-theme -D website "https://feathersui.com" -D textColor 0x292522 -D source-path "https://github.com/BowlerHatLLC/feathersui-openfl/tree/master/src/"
+-cmd haxelib run dox -o ../bin/api -i ../bin/html5/types.xml -in feathers --title "Feathers UI API Reference (Haxe/OpenFL)" --toplevel-package feathers -theme ./feathersui-theme -D website "https://feathersui.com" -D textColor 0x292522 -D source-path "https://github.com/BowlerHatLLC/feathersui-openfl/tree/v1.0.0-beta.6/src/"
