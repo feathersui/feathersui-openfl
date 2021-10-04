@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.6 (2021-10-??)
+## 1.0.0-beta.6 (2021-10-04)
 
 - ArrayCollection, ArrayHierarchicalCollection: These collections now implement the `IExternalizable` interface.
 - BaseNavigator: Uses the new `TransitionEvent` instead of `FeathersEvent` for transition start, complete, and cancel events. This allows references to the views involved in the transition to be included as properties of the event. The old transition constants on `FeathersEvent` are now deprecated and will be removed in a future version.
