@@ -1573,7 +1573,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 					this.toggleBranch(this._selectedItem, true);
 					return;
 				}
-				var childCount = this._dataProvider.getLength(this._selectedItem);
+				var childCount = this._dataProvider.getLength(this._selectedLocation);
 				if (childCount > 0) {
 					var childLocation = this._selectedLocation.copy();
 					childLocation.push(0);
