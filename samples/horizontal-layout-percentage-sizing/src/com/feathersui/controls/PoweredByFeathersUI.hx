@@ -35,21 +35,22 @@ class PoweredByFeathersUI extends LayoutGroup {
 		label.text = "Powered by ";
 		this.addChild(label);
 
-		var icon = new AssetLoader();
+		this.icon = new AssetLoader();
 		// <assets id="feathersui-logo" path="assets/img/feathersui-logo.png" embed="false"/>
-		icon.source = "feathersui-logo";
-		icon.height = 16.0;
-		this.addChild(icon);
+		this.icon.source = "feathersui-logo";
+		this.icon.height = 16.0;
+		this.addChild(this.icon);
 
 		this.addEventListener(MouseEvent.ROLL_OVER, poweredBy_rollOverHandler);
 		this.addEventListener(MouseEvent.ROLL_OUT, poweredBy_rollOutHandler);
 		this.addEventListener(MouseEvent.CLICK, poweredBy_clickHandler);
 	}
 
+	private var icon:AssetLoader;
 	private var callout:TextCallout;
 
 	private function poweredBy_rollOverHandler(event:MouseEvent):Void {
-		this.callout = TextCallout.show("Learn more at feathersui.com", this, null, false);
+		this.callout = TextCallout.show("Learn more at feathersui.com", this.icon, null, false);
 	}
 
 	private function poweredBy_rollOutHandler(event:MouseEvent):Void {
