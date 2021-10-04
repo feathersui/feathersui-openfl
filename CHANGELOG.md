@@ -1,5 +1,16 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.6 (2021-10-??)
+
+- ArrayCollection, ArrayHierarchicalCollection: These collections now implement the `IExternalizable` interface.
+- BaseNavigator: Uses the new `TransitionEvent` instead of `FeathersEvent` for transition start, complete, and cancel events. This allows references to the views involved in the transition to be included as properties of the event. The old transition constants on `FeathersEvent` are now deprecated and will be removed in a future version.
+- BaseNavigator: Now dispatches `Event.CHANGE` after a transition is completed, instead of at the start of the transition.
+- BaseScrollContainer: Added new `scrollMode` property that controls how scrolling is implemented on the OpenFL display list. This property may be set to either `SCROLL_RECT` or `MASK`. It defaults to `SCROLL_RECT`, which was the existing behavior.
+- Transition Builders: An improved way to create transitions for navigators. The following transitions are implemented: Color Fade, Cover, Fade, Iris, Reveal, Slide, and Wipe.
+- TreeView: Added `toggleChildrenOf()` method to open or close all children of a branch.
+- TreeView: Left and right keyboard arrow keys will open and close a branch.
+- Various bug fixes.
+
 ## 1.0.0-beta.5 (2021-08-20)
 
 - ArrayCollection: Added `toArray()` method to return a new array of the items in the collection (respecting filter and sort).
