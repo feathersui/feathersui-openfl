@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: Tiled layouts, scroll snapping, mask skins, flexible gaps, and a ton of bug fixes"
+	"releasenote": "Preview build: Transition animation builders, mask/scrollRect scroll modes, TreeView improvements"
 }
