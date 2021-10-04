@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.core.IValidating;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
 import feathers.core.InvalidationFlag;
@@ -82,6 +83,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		super();
 
 		this.dataProvider = dataProvider;
+
+		this._viewsContainer = new LayoutGroup();
+		this.addChild(this._viewsContainer);
 	}
 
 	private var tabBar:TabBar;
@@ -467,32 +471,34 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 				throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
 		}
 
+		this._viewsContainer.x = 0.0;
+		switch (this.tabBarPosition) {
+			case TOP:
+				this._viewsContainer.y = this.tabBar.height + this.gap;
+			case BOTTOM:
+				this._viewsContainer.y = 0.0;
+			default:
+				throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
+		}
+		this._viewsContainer.width = this.actualWidth;
+		this._viewsContainer.height = this.actualHeight - this.tabBar.height - this.gap;
+
 		if (this._activeItemView != null) {
 			this._activeItemView.x = 0.0;
-			switch (this.tabBarPosition) {
-				case TOP:
-					this._activeItemView.y = this.tabBar.height + this.gap;
-				case BOTTOM:
-					this._activeItemView.y = 0.0;
-				default:
-					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
-			}
-			this._activeItemView.width = this.actualWidth;
-			this._activeItemView.height = this.actualHeight - this.tabBar.height - this.gap;
+			this._activeItemView.y = 0.0;
+			this._activeItemView.width = this._viewsContainer.width;
+			this._activeItemView.height = this._viewsContainer.height;
 		}
 
 		if (this._nextViewInTransition != null) {
 			this._nextViewInTransition.x = 0.0;
-			switch (this.tabBarPosition) {
-				case TOP:
-					this._nextViewInTransition.y = this.tabBar.height + this.gap;
-				case BOTTOM:
-					this._nextViewInTransition.y = 0.0;
-				default:
-					throw new ArgumentError('Invalid tabBarPosition ${this.tabBarPosition}');
-			}
-			this._nextViewInTransition.width = this.actualWidth;
-			this._nextViewInTransition.height = this.actualHeight - this.tabBar.height - this.gap;
+			this._nextViewInTransition.y = 0.0;
+			this._nextViewInTransition.width = this._viewsContainer.width;
+			this._nextViewInTransition.height = this._viewsContainer.height;
+		}
+
+		if ((this._viewsContainer is IValidating)) {
+			cast(this._viewsContainer, IValidating).validateNow();
 		}
 	}
 

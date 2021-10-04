@@ -81,6 +81,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		this.dataProvider = dataProvider;
 
 		super();
+
+		this._viewsContainer = new LayoutGroup();
+		this.addChild(this._viewsContainer);
 	}
 
 	private var pageIndicator:PageIndicator;
@@ -459,32 +462,30 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 				throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
 		}
 
+		this._viewsContainer.x = 0.0;
+		switch (this.pageIndicatorPosition) {
+			case TOP:
+				this._viewsContainer.y = this.pageIndicator.height + this.gap;
+			case BOTTOM:
+				this._viewsContainer.y = 0.0;
+			default:
+				throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
+		}
+		this._viewsContainer.width = this.actualWidth;
+		this._viewsContainer.height = this.actualHeight - this.pageIndicator.height - this.gap;
+
 		if (this._activeItemView != null) {
 			this._activeItemView.x = 0.0;
-			switch (this.pageIndicatorPosition) {
-				case TOP:
-					this._activeItemView.y = this.pageIndicator.height + this.gap;
-				case BOTTOM:
-					this._activeItemView.y = 0.0;
-				default:
-					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
-			}
-			this._activeItemView.width = this.actualWidth;
-			this._activeItemView.height = this.actualHeight - this.pageIndicator.height - this.gap;
+			this._activeItemView.y = 0.0;
+			this._activeItemView.width = this._viewsContainer.width;
+			this._activeItemView.height = this._viewsContainer.height;
 		}
 
 		if (this._nextViewInTransition != null) {
 			this._nextViewInTransition.x = 0.0;
-			switch (this.pageIndicatorPosition) {
-				case TOP:
-					this._nextViewInTransition.y = this.pageIndicator.height + this.gap;
-				case BOTTOM:
-					this._nextViewInTransition.y = 0.0;
-				default:
-					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
-			}
-			this._nextViewInTransition.width = this.actualWidth;
-			this._nextViewInTransition.height = this.actualHeight - this.pageIndicator.height - this.gap;
+			this._nextViewInTransition.y = 0.0;
+			this._nextViewInTransition.width = this._viewsContainer.width;
+			this._nextViewInTransition.height = this._viewsContainer.height;
 		}
 	}
 

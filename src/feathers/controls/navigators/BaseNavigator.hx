@@ -409,6 +409,9 @@ class BaseNavigator extends FeathersControl {
 				cast(this._nextViewInTransition, IValidating).validateNow();
 			}
 		}
+		if (this._viewsContainer != this && (this._viewsContainer is IValidating)) {
+			cast(this._viewsContainer, IValidating).validateNow();
+		}
 	}
 
 	/**
