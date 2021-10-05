@@ -770,8 +770,8 @@ class Scroller extends EventDispatcher {
 					this.startScrollX = this._scrollX;
 					this.targetScrollX = scrollX;
 					this._animateScrollXEase = ease;
-					var tween = Actuate.update((scrollX:Float) -> {
-						if (scrollX == null && this._scrollX != null && this.targetScrollX != null) {
+					var tween = Actuate.update((scrollX:Null<Float>) -> {
+						if (scrollX == null) {
 							// workaround for jgranick/actuate#108
 							scrollX = this.targetScrollX;
 						}
@@ -803,8 +803,8 @@ class Scroller extends EventDispatcher {
 					this.startScrollY = this._scrollY;
 					this.targetScrollY = scrollY;
 					this._animateScrollYEase = ease;
-					var tween = Actuate.update((scrollY:Float) -> {
-						if (scrollY == null && this._scrollY != null && this.targetScrollY != null) {
+					var tween = Actuate.update((scrollY:Null<Float>) -> {
+						if (scrollY == null) {
 							// workaround for jgranick/actuate#108
 							scrollY = this.targetScrollY;
 						}
