@@ -604,6 +604,10 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	private function pageNavigator_dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
 		// use the setter
 		this.selectedIndex = -1;
+		for (id in this._addedItems.keys()) {
+			var item = this._addedItems.get(id);
+			this.removeItemInternal(item.internalID);
+		}
 	}
 
 	private function pageNavigator_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
