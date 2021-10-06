@@ -443,7 +443,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this.tabBar.removeEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
 			this.tabBar.removeEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
 			this.removeChild(this.tabBar);
-			this._oldTabBarFactory.destroy(this.tabBar);
+			if (this._oldTabBarFactory.destroy != null) {
+				this._oldTabBarFactory.destroy(this.tabBar);
+			}
 			this._oldTabBarFactory = null;
 			this.tabBar = null;
 		}

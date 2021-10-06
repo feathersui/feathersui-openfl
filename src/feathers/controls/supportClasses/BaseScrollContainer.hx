@@ -1150,7 +1150,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_START, scrollBarX_scrollStartHandler);
 			this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
 			this.removeChild(cast(this.scrollBarX, DisplayObject));
-			this._oldScrollBarXFactory.destroy(this.scrollBarX);
+			if (this._oldScrollBarXFactory.destroy != null) {
+				this._oldScrollBarXFactory.destroy(this.scrollBarX);
+			}
 			this._oldScrollBarXFactory = null;
 			this.scrollBarX = null;
 		}
@@ -1161,7 +1163,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_START, scrollBarY_scrollStartHandler);
 			this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarY_scrollCompleteHandler);
 			this.removeChild(cast(this.scrollBarY, DisplayObject));
-			this._oldScrollBarYFactory.destroy(this.scrollBarY);
+			if (this._oldScrollBarYFactory.destroy != null) {
+				this._oldScrollBarYFactory.destroy(this.scrollBarY);
+			}
 			this._oldScrollBarYFactory = null;
 			this.scrollBarY = null;
 		}

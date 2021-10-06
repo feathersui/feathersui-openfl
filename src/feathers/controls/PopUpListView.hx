@@ -670,7 +670,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
 			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
 			this.removeChild(this.button);
-			this._oldButtonFactory.destroy(this.button);
+			if (this._oldButtonFactory.destroy != null) {
+				this._oldButtonFactory.destroy(this.button);
+			}
 			this._oldButtonFactory = null;
 			this.button = null;
 		}
@@ -693,7 +695,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this.listView.removeEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
 			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);
 			this.listView.removeEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
-			this._oldListViewFactory.destroy(this.listView);
+			if (this._oldListViewFactory.destroy != null) {
+				this._oldListViewFactory.destroy(this.listView);
+			}
 			this._oldListViewFactory = null;
 			this.listView = null;
 		}

@@ -435,7 +435,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		if (this.pageIndicator != null) {
 			this.pageIndicator.removeEventListener(Event.CHANGE, pageNavigator_pageIndicator_changeHandler);
 			this.removeChild(this.pageIndicator);
-			this._oldPageIndicatorFactory.destroy(this.pageIndicator);
+			if (this._oldPageIndicatorFactory.destroy != null) {
+				this._oldPageIndicatorFactory.destroy(this.pageIndicator);
+			}
 			this._oldPageIndicatorFactory = null;
 			this.pageIndicator = null;
 		}

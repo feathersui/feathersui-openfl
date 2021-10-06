@@ -826,7 +826,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_button_mouseDownHandler);
 			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, comboBox_button_touchBeginHandler);
 			this.removeChild(this.button);
-			this._oldButtonFactory.destroy(this.button);
+			if (this._oldButtonFactory.destroy != null) {
+				this._oldButtonFactory.destroy(this.button);
+			}
 			this._oldButtonFactory = null;
 			this.button = null;
 		}
@@ -850,7 +852,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
 			this.removeChild(this.textInput);
-			this._oldTextInputFactory.destroy(this.textInput);
+			if (this._oldTextInputFactory.destroy != null) {
+				this._oldTextInputFactory.destroy(this.textInput);
+			}
 			this._oldTextInputFactory = null;
 			this.textInput = null;
 		}
@@ -873,7 +877,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.listView.removeEventListener(Event.CHANGE, comboBox_listView_changeHandler);
 			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 			this.listView.focusOwner = null;
-			this._oldListViewFactory.destroy(this.listView);
+			if (this._oldListViewFactory.destroy != null) {
+				this._oldListViewFactory.destroy(this.listView);
+			}
 			this._oldListViewFactory = null;
 			this.listView = null;
 		}

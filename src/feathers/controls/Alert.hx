@@ -474,7 +474,9 @@ class Alert extends Panel {
 	private function createButtonBar():Void {
 		if (this.buttonBar != null) {
 			this.buttonBar.removeEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
-			this._oldButtonBarFactory.destroy(this.buttonBar);
+			if (this._oldButtonBarFactory.destroy != null) {
+				this._oldButtonBarFactory.destroy(this.buttonBar);
+			}
 			this._oldButtonBarFactory = null;
 			this.buttonBar = null;
 			super.footer = null;
@@ -491,7 +493,9 @@ class Alert extends Panel {
 
 	private function createHeader():Void {
 		if (this.alertHeader != null) {
-			this._oldHeaderFactory.destroy(this.alertHeader);
+			if (this._oldHeaderFactory.destroy != null) {
+				this._oldHeaderFactory.destroy(this.alertHeader);
+			}
 			this._oldHeaderFactory = null;
 			this.alertHeader = null;
 			super.header = null;
@@ -508,7 +512,9 @@ class Alert extends Panel {
 	private function createMessageLabel():Void {
 		if (this.messageLabel != null) {
 			this.removeChild(this.messageLabel);
-			this._oldMessageLabelFactory.destroy(this.messageLabel);
+			if (this._oldMessageLabelFactory.destroy != null) {
+				this._oldMessageLabelFactory.destroy(this.messageLabel);
+			}
 			this._oldMessageLabelFactory = null;
 			this.messageLabel = null;
 		}
