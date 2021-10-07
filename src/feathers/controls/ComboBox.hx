@@ -1010,10 +1010,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 				result = result - 1;
 			case Keyboard.DOWN:
 				result = result + 1;
-			case Keyboard.LEFT:
-				result = result - 1;
-			case Keyboard.RIGHT:
-				result = result + 1;
 			case Keyboard.PAGE_UP:
 				result = result - 1;
 			case Keyboard.PAGE_DOWN:
