@@ -43,6 +43,7 @@ class SteelCalendarGridStyles {
 					backgroundSkin.selectedBorder = theme.getActiveFillBorder();
 					backgroundSkin.width = 20.0;
 					backgroundSkin.height = 20.0;
+					backgroundSkin.cornerRadius = 4.0;
 					button.backgroundSkin = backgroundSkin;
 				}
 
