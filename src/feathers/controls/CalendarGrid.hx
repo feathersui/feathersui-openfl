@@ -480,6 +480,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		}
 		for (i in 0...this._dateButtons.length) {
 			var dateButton = this._dateButtons[i];
+			dateButton.width = columnWidth;
+			dateButton.height = rowHeight;
 			dateButton.validateNow();
 			dateButton.x = currentX + (columnWidth - dateButton.width) / 2.0;
 			dateButton.y = currentY + (rowHeight - dateButton.height) / 2.0;
