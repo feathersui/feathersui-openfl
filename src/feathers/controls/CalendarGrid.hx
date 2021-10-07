@@ -170,7 +170,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	private function set_displayedMonth(value:Int):Int {
 		if (value < 0 || value > 11) {
-			throw new RangeError("displayedMonth must be in the range 0-6");
+			throw new RangeError("displayedMonth must be in the range 0-11");
 		}
 		if (this._displayedMonth == value) {
 			return this._displayedMonth;
