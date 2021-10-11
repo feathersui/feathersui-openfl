@@ -11,13 +11,17 @@ package feathers.controls;
 import feathers.core.FeathersControl;
 import feathers.core.IDateSelector;
 import feathers.core.IUIControl;
+import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.events.TriggerEvent;
+import feathers.layout.CalendarGridLayout;
+import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelCalendarGridStyles;
 import feathers.utils.DateUtil;
+import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.errors.RangeError;
@@ -120,6 +124,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	private var _dayNameLabels:Array<Label> = [];
 	private var _dateButtons:Array<ToggleButton> = [];
+	private var _layoutItems:Array<DisplayObject> = [];
 
 	private var _displayedFullYear:Int = Date.now().getFullYear();
 
@@ -386,15 +391,23 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		return this._customStartOfWeek;
 	}
 
+	private var _layoutMeasurements:Measurements = new Measurements();
+	private var _layout:CalendarGridLayout;
+	private var _layoutResult:LayoutBoundsResult = new LayoutBoundsResult();
+
 	private function initializeCalendarGridTheme():Void {
 		SteelCalendarGridStyles.initialize();
 	}
 
 	override private function initialize():Void {
+		if (this._layout == null) {
+			this._layout = new CalendarGridLayout();
+		}
 		for (i in 0...7) {
 			var dayNameLabel = new Label();
 			this.addChild(dayNameLabel);
 			this._dayNameLabels.push(dayNameLabel);
+			this._layoutItems[i] = dayNameLabel;
 		}
 		for (i in 0...42) {
 			var dateButton = new ToggleButton();
@@ -402,6 +415,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 			dateButton.addEventListener(TriggerEvent.TRIGGER, dateButton_triggerHandler);
 			this.addChild(dateButton);
 			this._dateButtons.push(dateButton);
+			this._layoutItems[i + 7] = dateButton;
 		}
 	}
 
@@ -435,13 +449,79 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 			this.refreshDisplayedMonth();
 		}
 
-		this.measure();
-
-		this.layoutContent();
+		this.refreshViewPortBounds();
+		this._layoutResult.reset();
+		this._layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
+		this.handleLayoutResult();
 	}
 
-	private function measure():Bool {
-		return this.saveMeasurements(200.0, 250.0, 200.0, 250.0);
+	private function refreshViewPortBounds():Void {
+		var needsWidth = this.explicitWidth == null;
+		var needsHeight = this.explicitHeight == null;
+		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinHeight = this.explicitMinHeight == null;
+		var needsMaxWidth = this.explicitMaxWidth == null;
+		var needsMaxHeight = this.explicitMaxHeight == null;
+
+		if (this._currentBackgroundSkin != null) {
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
+			if ((this._currentBackgroundSkin is IValidating)) {
+				cast(this._currentBackgroundSkin, IValidating).validateNow();
+			}
+		}
+
+		this._layoutMeasurements.width = this.explicitWidth;
+		this._layoutMeasurements.height = this.explicitHeight;
+
+		var viewPortMinWidth = this.explicitMinWidth;
+		if (needsMinWidth) {
+			viewPortMinWidth = 0.0;
+		}
+		var viewPortMinHeight = this.explicitMinHeight;
+		if (needsMinHeight) {
+			viewPortMinHeight = 0.0;
+		}
+		var viewPortMaxWidth = this.explicitMaxWidth;
+		if (needsMaxWidth) {
+			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+		}
+		var viewPortMaxHeight = this.explicitMaxHeight;
+		if (needsMaxHeight) {
+			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+		}
+		if (this._backgroundSkinMeasurements != null) {
+			// because the layout might need it, we account for the
+			// dimensions of the background skin when determining the minimum
+			// dimensions of the view port.
+			if (this._backgroundSkinMeasurements.width != null) {
+				if (this._backgroundSkinMeasurements.width > viewPortMinWidth) {
+					viewPortMinWidth = this._backgroundSkinMeasurements.width;
+				}
+			} else if (this._backgroundSkinMeasurements.minWidth != null) {
+				if (this._backgroundSkinMeasurements.minWidth > viewPortMinWidth) {
+					viewPortMinWidth = this._backgroundSkinMeasurements.minWidth;
+				}
+			}
+			if (this._backgroundSkinMeasurements.height != null) {
+				if (this._backgroundSkinMeasurements.height > viewPortMinHeight) {
+					viewPortMinHeight = this._backgroundSkinMeasurements.height;
+				}
+			} else if (this._backgroundSkinMeasurements.minHeight != null) {
+				if (this._backgroundSkinMeasurements.minHeight > viewPortMinHeight) {
+					viewPortMinHeight = this._backgroundSkinMeasurements.minHeight;
+				}
+			}
+		}
+		this._layoutMeasurements.minWidth = viewPortMinWidth;
+		this._layoutMeasurements.minHeight = viewPortMinHeight;
+		this._layoutMeasurements.maxWidth = viewPortMaxWidth;
+		this._layoutMeasurements.maxHeight = viewPortMaxHeight;
+	}
+
+	private function handleLayoutResult():Void {
+		var viewPortWidth = this._layoutResult.viewPortWidth;
+		var viewPortHeight = this._layoutResult.viewPortHeight;
+		this.saveMeasurements(viewPortWidth, viewPortHeight, viewPortWidth, viewPortHeight);
 	}
 
 	private function refreshWeekdayLabels():Void {
@@ -455,42 +535,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 			dayNameLabel.text = weekdayNames[nameIndex];
 			dayNameLabel.visible = this.showWeekdayLabels;
 			dayNameLabel.includeInLayout = this.showWeekdayLabels;
-		}
-	}
-
-	private function layoutContent() {
-		var columnWidth = this.actualWidth / 7.0;
-		var rowHeight = columnWidth;
-
-		var currentX = 0.0;
-		var currentY = 0.0;
-		for (i in 0...this._dayNameLabels.length) {
-			var dayNameLabel = this._dayNameLabels[i];
-			if (dayNameLabel.includeInLayout) {
-				dayNameLabel.validateNow();
-				dayNameLabel.x = currentX + (columnWidth - dayNameLabel.width) / 2.0;
-				dayNameLabel.y = currentY + (rowHeight - dayNameLabel.height) / 2.0;
-				currentX += columnWidth;
-			}
-		}
-
-		currentX = 0.0;
-		if (this.showWeekdayLabels) {
-			currentY += rowHeight;
-		}
-		for (i in 0...this._dateButtons.length) {
-			var dateButton = this._dateButtons[i];
-			dateButton.width = columnWidth;
-			dateButton.height = rowHeight;
-			dateButton.validateNow();
-			dateButton.x = currentX + (columnWidth - dateButton.width) / 2.0;
-			dateButton.y = currentY + (rowHeight - dateButton.height) / 2.0;
-			if (i % 7 == 6) {
-				currentX = 0.0;
-				currentY += rowHeight;
-			} else {
-				currentX += columnWidth;
-			}
 		}
 	}
 
