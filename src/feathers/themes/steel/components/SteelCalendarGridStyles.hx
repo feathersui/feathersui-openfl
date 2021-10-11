@@ -50,6 +50,9 @@ class SteelCalendarGridStyles {
 				button.textFormat = theme.getTextFormat();
 				button.disabledTextFormat = theme.getDisabledTextFormat();
 
+				button.horizontalAlign = CENTER;
+				button.verticalAlign = MIDDLE;
+
 				button.paddingTop = 2.0;
 				button.paddingRight = 2.0;
 				button.paddingBottom = 2.0;
@@ -70,6 +73,9 @@ class SteelCalendarGridStyles {
 				button.textFormat = theme.getSecondaryTextFormat();
 				button.disabledTextFormat = theme.getDisabledTextFormat();
 
+				button.horizontalAlign = CENTER;
+				button.verticalAlign = MIDDLE;
+
 				button.paddingTop = 2.0;
 				button.paddingRight = 2.0;
 				button.paddingBottom = 2.0;
@@ -78,8 +84,17 @@ class SteelCalendarGridStyles {
 		}
 		if (styleProvider.getStyleFunction(Label, CalendarGrid.CHILD_VARIANT_WEEKDAY_LABEL) == null) {
 			styleProvider.setStyleFunction(Label, CalendarGrid.CHILD_VARIANT_WEEKDAY_LABEL, function(label:Label):Void {
-				label.textFormat = theme.getSecondaryTextFormat();
-				label.disabledTextFormat = theme.getDisabledTextFormat();
+				if (label.textFormat == null) {
+					var textFormat = theme.getSecondaryTextFormat();
+					textFormat.align = CENTER;
+					label.textFormat = textFormat;
+				}
+				if (label.disabledTextFormat == null) {
+					var disabledTextFormat = theme.getDisabledTextFormat();
+					disabledTextFormat.align = CENTER;
+					label.disabledTextFormat = disabledTextFormat;
+				}
+				label.verticalAlign = MIDDLE;
 			});
 		}
 	}
