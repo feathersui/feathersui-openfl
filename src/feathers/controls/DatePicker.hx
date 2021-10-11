@@ -1116,8 +1116,8 @@ class DatePicker extends FeathersControl {
 	private function layoutChildren():Void {
 		this.layoutBackgroundSkin();
 
-		this.decrementMonthButton.visible = this.showYearButtons;
-		this.incrementMonthButton.visible = this.showYearButtons;
+		this.decrementMonthButton.visible = this.showMonthButtons;
+		this.incrementMonthButton.visible = this.showMonthButtons;
 		this.decrementYearButton.visible = this.showYearButtons;
 		this.incrementYearButton.visible = this.showYearButtons;
 		this.currentMonthView.validateNow();
