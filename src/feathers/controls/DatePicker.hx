@@ -25,16 +25,20 @@ import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.errors.RangeError;
 import openfl.events.Event;
+#if (openfl >= "9.2.0" && !neko)
+import openfl.globalization.DateTimeFormatter;
+#end
 
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
 @:styleContext
 class DatePicker extends FeathersControl {
-	// TODO: get these values from openfl.globalization.DateTimeFormatter
+	#if (openfl < "9.2.0" || neko)
 	private static final DEFAULT_MONTH_NAMES = [
 		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 	];
+	#end
 
 	private static final INVALIDATION_FLAG_CURRENT_MONTH_VIEW_FACTORY = InvalidationFlag.CUSTOM("currentMonthViewFactory");
 	private static final INVALIDATION_FLAG_DECREMENT_MONTH_BUTTON_FACTORY = InvalidationFlag.CUSTOM("decrementMonthButtonFactory");
@@ -745,6 +749,9 @@ class DatePicker extends FeathersControl {
 	public var showYearButtons:Bool = true;
 
 	private var _currentMonthNames:Array<String>;
+	#if (openfl >= "9.2.0" && !neko)
+	private var _currentDateFormatter:DateTimeFormatter;
+	#end
 
 	/**
 		Sets all four padding properties to the same value.
@@ -987,7 +994,7 @@ class DatePicker extends FeathersControl {
 
 		this.currentMonthViewMeasurements.restore(this.currentMonthView);
 		var oldText = this.currentMonthView.text;
-		var measureText = '${this._currentMonthNames[this.getMonthWithLongestName()]} 0000';
+		var measureText = this.getMonthText(this.getMonthWithLongestName(), 0);
 		this.currentMonthView.text = measureText;
 		this.currentMonthView.validateNow();
 
@@ -1041,7 +1048,18 @@ class DatePicker extends FeathersControl {
 	}
 
 	private function refreshLocale():Void {
+		#if (openfl >= "9.2.0" && !neko)
+		this._currentDateFormatter = new DateTimeFormatter("en_US", LONG, NONE);
+		this._currentDateFormatter.setDateTimePattern("MMMM yyyy");
+		var monthNamesVector = this._currentDateFormatter.getMonthNames(FULL, FORMAT);
+		var monthNames:Array<String> = [];
+		for (monthName in monthNamesVector) {
+			monthNames.push(monthName);
+		}
+		this._currentMonthNames = monthNames;
+		#else
 		this._currentMonthNames = DEFAULT_MONTH_NAMES;
+		#end
 	}
 
 	private function refreshBackgroundSkin():Void {
@@ -1240,7 +1258,7 @@ class DatePicker extends FeathersControl {
 	}
 
 	private function refreshCurrentMonth():Void {
-		this.currentMonthView.text = this.getCurrentMonthText(this.displayedMonth);
+		this.currentMonthView.text = this.getMonthText(this.displayedMonth, this.displayedFullYear);
 	}
 
 	private function getMonthWithLongestName():Int {
@@ -1257,9 +1275,13 @@ class DatePicker extends FeathersControl {
 		return maxIndex;
 	}
 
-	private function getCurrentMonthText(month:Int):String {
-		var monthName = this._currentMonthNames[this.displayedMonth];
-		return '$monthName ${this._displayedFullYear}';
+	private function getMonthText(month:Int, fullYear:Int):String {
+		#if (openfl >= "9.2.0" && !neko)
+		return this._currentDateFormatter.format(new Date(fullYear, month, 1, 0, 0, 0));
+		#else
+		var monthName = this._currentMonthNames[month];
+		return '$monthName ${StringTools.lpad(Std.string(fullYear), "0", 4)}';
+		#end
 	}
 
 	private function datePicker_calendarGrid_changeHandler(event:Event):Void {
