@@ -8,6 +8,7 @@
 
 package feathers.themes.steel;
 
+import openfl.text.TextFormatAlign;
 import feathers.events.StyleProviderEvent;
 import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
@@ -342,32 +343,32 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		return SolidColor(this.subHeadingFillColor);
 	}
 
-	private function getTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.textColor);
+	private function getTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.fontSize, this.textColor, null, null, null, null, null, align);
 	}
 
-	private function getDisabledTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.disabledTextColor);
+	private function getDisabledTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.fontSize, this.disabledTextColor, null, null, null, null, null, align);
 	}
 
-	private function getSecondaryTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.secondaryTextColor);
+	private function getSecondaryTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.fontSize, this.secondaryTextColor, null, null, null, null, null, align);
 	}
 
-	private function getHeaderTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.headerFontSize, this.textColor);
+	private function getHeaderTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.headerFontSize, this.textColor, null, null, null, null, null, align);
 	}
 
-	private function getDisabledHeaderTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.headerFontSize, this.disabledTextColor);
+	private function getDisabledHeaderTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.headerFontSize, this.disabledTextColor, null, null, null, null, null, align);
 	}
 
-	private function getDetailTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.detailFontSize, this.secondaryTextColor);
+	private function getDetailTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.detailFontSize, this.secondaryTextColor, null, null, null, null, null, align);
 	}
 
-	private function getDisabledDetailTextFormat():TextFormat {
-		return new TextFormat(this.fontName, this.detailFontSize, this.disabledTextColor);
+	private function getDisabledDetailTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.detailFontSize, this.disabledTextColor, null, null, null, null, null, align);
 	}
 
 	private function getHeaderFill():FillStyle {
