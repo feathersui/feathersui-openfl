@@ -409,6 +409,14 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 		this.popUpAdapter.addEventListener(Event.OPEN, popUpDatePicker_popUpAdapter_openHandler);
 		this.popUpAdapter.addEventListener(Event.CLOSE, popUpDatePicker_popUpAdapter_closeHandler);
 		this.popUpAdapter.open(this.datePicker, this);
+		if (this.selectedDate != null) {
+			this.datePicker.displayedFullYear = this.selectedDate.getFullYear();
+			this.datePicker.displayedMonth = this.selectedDate.getMonth();
+		} else {
+			var now = Date.now();
+			this.datePicker.displayedFullYear = now.getFullYear();
+			this.datePicker.displayedMonth = now.getMonth();
+		}
 		this.datePicker.validateNow();
 		this.textInput.addEventListener(FocusEvent.FOCUS_OUT, popUpDatePicker_textInput_focusOutHandler);
 		this.datePicker.addEventListener(Event.REMOVED_FROM_STAGE, popUpDatePicker_datePicker_removedFromStageHandler);
