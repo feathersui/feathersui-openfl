@@ -7,11 +7,13 @@ class ViewPaths {
 	public static final ASSET_LOADER = "/asset-loader";
 	public static final BUTTON = "/button";
 	public static final CHECK = "/check";
+	public static final DATE_PICKER = "/date-picker";
 	public static final FORM = "/form";
 	public static final HEADER = "/header";
 	public static final LABEL = "/label";
 	public static final NUMERIC_STEPPER = "/numeric-stepper";
 	public static final PAGE_INDICATOR = "/page-indicator";
+	public static final POP_UP_DATE_PICKER = "/pop-up-date-picker";
 	public static final PROGRESS_BAR = "/progress-bar";
 	public static final RADIO = "/radio";
 	public static final SLIDER = "/slider";

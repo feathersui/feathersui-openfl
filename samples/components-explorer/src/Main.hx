@@ -1,5 +1,3 @@
-import feathers.layout.AnchorLayoutData;
-import feathers.layout.AnchorLayout;
 import com.feathersui.components.ViewPaths;
 import com.feathersui.components.views.AlertScreen;
 import com.feathersui.components.views.AssetLoaderScreen;
@@ -9,6 +7,7 @@ import com.feathersui.components.views.CalloutScreen;
 import com.feathersui.components.views.CheckScreen;
 import com.feathersui.components.views.CircleSkinScreen;
 import com.feathersui.components.views.ComboBoxScreen;
+import com.feathersui.components.views.DatePickerScreen;
 import com.feathersui.components.views.DrawerScreen;
 import com.feathersui.components.views.EllipseSkinScreen;
 import com.feathersui.components.views.FormScreen;
@@ -26,6 +25,7 @@ import com.feathersui.components.views.PageIndicatorScreen;
 import com.feathersui.components.views.PageNavigatorScreen;
 import com.feathersui.components.views.PanelScreen;
 import com.feathersui.components.views.PillSkinScreen;
+import com.feathersui.components.views.PopUpDatePickerScreen;
 import com.feathersui.components.views.PopUpListViewScreen;
 import com.feathersui.components.views.PopUpManagerScreen;
 import com.feathersui.components.views.ProgressBarScreen;
@@ -48,6 +48,8 @@ import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterAction;
 import feathers.controls.navigators.RouterNavigator;
+import feathers.layout.AnchorLayout;
+import feathers.layout.AnchorLayoutData;
 import openfl.events.Event;
 
 class Main extends Application {
@@ -95,6 +97,9 @@ class Main extends Application {
 
 		var comboBox = Route.withClass(ViewPaths.COMBO_BOX, ComboBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(comboBox);
+
+		var datePicker = Route.withClass(ViewPaths.DATE_PICKER, DatePickerScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(datePicker);
 
 		var hDividedBox = Route.withClass(ViewPaths.HORIZONTAL_DIVIDED_BOX, HDividedBoxScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(hDividedBox);
@@ -146,6 +151,9 @@ class Main extends Application {
 
 		var pillSkin = Route.withClass(ViewPaths.PILL_SKIN, PillSkinScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(pillSkin);
+
+		var popUpDatePicker = Route.withClass(ViewPaths.POP_UP_DATE_PICKER, PopUpDatePickerScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
+		this._navigator.addRoute(popUpDatePicker);
 
 		var popUpListView = Route.withClass(ViewPaths.POP_UP_LIST_VIEW, PopUpListViewScreen, [Event.COMPLETE => createBackAction(ViewPaths.MAIN_MENU)]);
 		this._navigator.addRoute(popUpListView);
