@@ -85,14 +85,10 @@ class SteelCalendarGridStyles {
 		if (styleProvider.getStyleFunction(Label, CalendarGrid.CHILD_VARIANT_WEEKDAY_LABEL) == null) {
 			styleProvider.setStyleFunction(Label, CalendarGrid.CHILD_VARIANT_WEEKDAY_LABEL, function(label:Label):Void {
 				if (label.textFormat == null) {
-					var textFormat = theme.getSecondaryTextFormat();
-					textFormat.align = CENTER;
-					label.textFormat = textFormat;
+					label.textFormat = theme.getSecondaryTextFormat(CENTER);
 				}
 				if (label.disabledTextFormat == null) {
-					var disabledTextFormat = theme.getDisabledTextFormat();
-					disabledTextFormat.align = CENTER;
-					label.disabledTextFormat = disabledTextFormat;
+					label.disabledTextFormat = theme.getDisabledTextFormat(CENTER);
 				}
 				label.verticalAlign = MIDDLE;
 			});
