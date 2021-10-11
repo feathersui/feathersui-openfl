@@ -1159,12 +1159,14 @@ class DatePicker extends FeathersControl {
 				}
 				var currentX = this.actualWidth - this.paddingRight;
 				if (this.showYearButtons) {
-					currentX -= (this.incrementYearButton.width + this.headerGap);
+					currentX -= this.incrementYearButton.width;
 					this.incrementYearButton.x = currentX;
+					currentX -= this.headerGap;
 				}
 				if (this.showMonthButtons) {
-					currentX -= (this.incrementMonthButton.width + this.headerGap);
+					currentX -= this.incrementMonthButton.width;
 					this.incrementMonthButton.x = currentX;
+					currentX -= this.headerGap;
 				}
 			case RIGHT:
 				this.currentMonthView.x = this.actualWidth - this.paddingRight - this.currentMonthView.width;
@@ -1189,20 +1191,24 @@ class DatePicker extends FeathersControl {
 				this.currentMonthView.x = this.paddingLeft;
 				var currentX = this.actualWidth - this.paddingRight;
 				if (this.showYearButtons) {
-					currentX -= (this.incrementYearButton.width + this.headerGap);
+					currentX -= this.incrementYearButton.width;
 					this.incrementYearButton.x = currentX;
+					currentX -= this.headerGap;
 				}
 				if (this.showMonthButtons) {
-					currentX -= (this.incrementMonthButton.width + this.headerGap);
+					currentX -= this.incrementMonthButton.width;
 					this.incrementMonthButton.x = currentX;
+					currentX -= this.headerGap;
 				}
 				if (this.showMonthButtons) {
-					currentX -= (this.decrementMonthButton.width + this.headerGap);
+					currentX -= this.decrementMonthButton.width;
 					this.decrementMonthButton.x = currentX;
+					currentX -= this.headerGap;
 				}
 				if (this.showYearButtons) {
-					currentX -= (this.decrementYearButton.width + this.headerGap);
+					currentX -= this.decrementYearButton.width;
 					this.decrementYearButton.x = currentX;
+					currentX -= this.headerGap;
 				}
 			default:
 				throw new ArgumentError("Invalid month position: " + this.currentMonthViewPosition);
