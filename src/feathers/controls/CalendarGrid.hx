@@ -28,6 +28,7 @@ import openfl.errors.RangeError;
 import openfl.events.Event;
 #if (openfl >= "9.2.0" && !neko)
 import openfl.globalization.DateTimeFormatter;
+import openfl.globalization.LocaleID;
 #end
 
 /**
@@ -402,7 +403,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		return this._customStartOfWeek;
 	}
 
-	private var _requestedLocaleIDName:String = "en-US";
+	private var _requestedLocaleIDName:String = null;
 
 	/**
 		The locale ID name that is requested.
@@ -515,7 +516,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	private function refreshLocale():Void {
 		#if (openfl >= "9.2.0" && !neko)
-		this._currentDateFormatter = new DateTimeFormatter(this._requestedLocaleIDName, SHORT, NONE);
+		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
+		this._currentDateFormatter = new DateTimeFormatter(localeID, SHORT, NONE);
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
 		this._currentWeekdayNames = this._customWeekdayNames;
 		if (this._currentWeekdayNames == null) {

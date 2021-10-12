@@ -8,24 +8,24 @@
 
 package feathers.controls;
 
-import feathers.core.IStageFocusDelegate;
-import feathers.core.IFocusObject;
-import feathers.events.FeathersEvent;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
-import openfl.events.FocusEvent;
-import feathers.utils.AbstractDisplayObjectFactory;
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
-import openfl.events.Event;
 import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
+import feathers.core.IFocusObject;
+import feathers.core.IStageFocusDelegate;
 import feathers.core.InvalidationFlag;
+import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelPopUpDatePickerStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import openfl.display.InteractiveObject;
+import openfl.events.Event;
+import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -34,6 +34,7 @@ import lime.ui.KeyCode;
 #end
 #if (openfl >= "9.2.0" && !neko)
 import openfl.globalization.DateTimeFormatter;
+import openfl.globalization.LocaleID;
 #end
 
 @:event(openfl.events.Event.CHANGE)
@@ -353,7 +354,7 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 		return this._datePickerFactory;
 	}
 
-	private var _requestedLocaleIDName:String = "en-US";
+	private var _requestedLocaleIDName:String = null;
 
 	/**
 		The locale ID name that is requested.
@@ -584,7 +585,8 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 
 	private function refreshLocale():Void {
 		#if (openfl >= "9.2.0" && !neko)
-		this._currentDateFormatter = new DateTimeFormatter(this._requestedLocaleIDName, SHORT, NONE);
+		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
+		this._currentDateFormatter = new DateTimeFormatter(localeID, SHORT, NONE);
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
 		#else
 		this._actualLocaleIDName = "en-US";

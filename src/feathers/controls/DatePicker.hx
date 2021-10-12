@@ -27,6 +27,7 @@ import openfl.errors.RangeError;
 import openfl.events.Event;
 #if (openfl >= "9.2.0" && !neko)
 import openfl.globalization.DateTimeFormatter;
+import openfl.globalization.LocaleID;
 #end
 
 @:event(openfl.events.Event.CHANGE)
@@ -754,7 +755,7 @@ class DatePicker extends FeathersControl {
 	private var _currentDateFormatter:DateTimeFormatter;
 	#end
 
-	private var _requestedLocaleIDName:String = "en-US";
+	private var _requestedLocaleIDName:String = null;
 
 	/**
 		The locale ID name that is requested.
@@ -1093,7 +1094,8 @@ class DatePicker extends FeathersControl {
 
 	private function refreshLocale():Void {
 		#if (openfl >= "9.2.0" && !neko)
-		this._currentDateFormatter = new DateTimeFormatter(this._requestedLocaleIDName, LONG, NONE);
+		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
+		this._currentDateFormatter = new DateTimeFormatter(localeID, LONG, NONE);
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
 		this._currentDateFormatter.setDateTimePattern("MMMM yyyy");
 		var monthNamesVector = this._currentDateFormatter.getMonthNames(FULL, FORMAT);
