@@ -35,6 +35,9 @@ import lime.ui.KeyCode;
 #if (openfl >= "9.2.0" && !neko)
 import openfl.globalization.DateTimeFormatter;
 import openfl.globalization.LocaleID;
+#elseif flash
+import flash.globalization.DateTimeFormatter;
+import flash.globalization.LocaleID;
 #end
 
 @:event(openfl.events.Event.CHANGE)
@@ -120,7 +123,7 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 		return this.textInput;
 	}
 
-	#if (openfl >= "9.2.0" && !neko)
+	#if (flash || (openfl >= "9.2.0" && !neko))
 	private var _currentDateFormatter:DateTimeFormatter;
 	#end
 
@@ -584,7 +587,7 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 	}
 
 	private function refreshLocale():Void {
-		#if (openfl >= "9.2.0" && !neko)
+		#if (flash || (openfl >= "9.2.0" && !neko))
 		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
 		this._currentDateFormatter = new DateTimeFormatter(localeID, SHORT, NONE);
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
@@ -648,7 +651,7 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 	private function refreshTextInputData():Void {
 		this.textInput.prompt = this._prompt;
 		if (this._selectedDate != null) {
-			#if (openfl >= "9.2.0" && !neko)
+			#if (flash || (openfl >= "9.2.0" && !neko))
 			this.textInput.text = this._currentDateFormatter.format(this._selectedDate);
 			#else
 			this.textInput.text = '${this._selectedDate.getMonth() + 1}/${this._selectedDate.getDate()}/${this._selectedDate.getFullYear()}';

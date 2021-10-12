@@ -29,6 +29,9 @@ import openfl.events.Event;
 #if (openfl >= "9.2.0" && !neko)
 import openfl.globalization.DateTimeFormatter;
 import openfl.globalization.LocaleID;
+#elseif flash
+import flash.globalization.DateTimeFormatter;
+import flash.globalization.LocaleID;
 #end
 
 /**
@@ -65,7 +68,7 @@ import openfl.globalization.LocaleID;
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.SCROLL)
 class CalendarGrid extends FeathersControl implements IDateSelector {
-	#if (openfl < "9.2.0" || neko)
+	#if ((!flash && openfl < "9.2.0") || neko)
 	private var DEFAULT_WEEKDAY_NAMES = ["S", "M", "T", "W", "T", "F", "S"];
 	private var DEFAULT_START_OF_WEEK = 0;
 	#end
@@ -340,7 +343,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	@:style
 	public var showDatesFromAdjacentMonths:Bool = true;
 
-	#if (openfl >= "9.2.0" && !neko)
+	#if (flash || (openfl >= "9.2.0" && !neko))
 	private var _currentDateFormatter:DateTimeFormatter;
 	#end
 
@@ -515,7 +518,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	}
 
 	private function refreshLocale():Void {
-		#if (openfl >= "9.2.0" && !neko)
+		#if (flash || (openfl >= "9.2.0" && !neko))
 		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
 		this._currentDateFormatter = new DateTimeFormatter(localeID, SHORT, NONE);
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;

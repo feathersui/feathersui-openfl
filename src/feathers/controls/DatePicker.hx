@@ -28,6 +28,9 @@ import openfl.events.Event;
 #if (openfl >= "9.2.0" && !neko)
 import openfl.globalization.DateTimeFormatter;
 import openfl.globalization.LocaleID;
+#elseif flash
+import flash.globalization.DateTimeFormatter;
+import flash.globalization.LocaleID;
 #end
 
 @:event(openfl.events.Event.CHANGE)
@@ -35,7 +38,7 @@ import openfl.globalization.LocaleID;
 @:event(openfl.events.Event.CLOSE)
 @:styleContext
 class DatePicker extends FeathersControl {
-	#if (openfl < "9.2.0" || neko)
+	#if ((!flash && openfl < "9.2.0") || neko)
 	private static final DEFAULT_MONTH_NAMES = [
 		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 	];
@@ -751,7 +754,7 @@ class DatePicker extends FeathersControl {
 
 	private var _currentMonthNames:Array<String>;
 
-	#if (openfl >= "9.2.0" && !neko)
+	#if (flash || (openfl >= "9.2.0" && !neko))
 	private var _currentDateFormatter:DateTimeFormatter;
 	#end
 
@@ -1093,7 +1096,7 @@ class DatePicker extends FeathersControl {
 	}
 
 	private function refreshLocale():Void {
-		#if (openfl >= "9.2.0" && !neko)
+		#if (flash || (openfl >= "9.2.0" && !neko))
 		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
 		this._currentDateFormatter = new DateTimeFormatter(localeID, LONG, NONE);
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
@@ -1331,7 +1334,7 @@ class DatePicker extends FeathersControl {
 	}
 
 	private function getMonthText(month:Int, fullYear:Int):String {
-		#if (openfl >= "9.2.0" && !neko)
+		#if (flash || (openfl >= "9.2.0" && !neko))
 		return this._currentDateFormatter.format(new Date(fullYear, month, 1, 0, 0, 0));
 		#else
 		var monthName = this._currentMonthNames[month];
