@@ -83,6 +83,20 @@ class SteelDatePickerStyles {
 					button.icon = icon;
 				}
 
+				if (button.getIconForState(DISABLED) == null) {
+					var disabledIcon = new Shape();
+					disabledIcon.graphics.beginFill(0xff00ff, 0.0);
+					disabledIcon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
+					disabledIcon.graphics.endFill();
+					disabledIcon.graphics.beginFill(theme.disabledTextColor);
+					disabledIcon.graphics.moveTo(2.0, 4.0);
+					disabledIcon.graphics.lineTo(6.0, 0.0);
+					disabledIcon.graphics.lineTo(6.0, 8.0);
+					disabledIcon.graphics.lineTo(2.0, 4.0);
+					disabledIcon.graphics.endFill();
+					button.setIconForState(DISABLED, disabledIcon);
+				}
+
 				button.setPadding(4.0);
 				button.gap = 4.0;
 			});
@@ -115,17 +129,17 @@ class SteelDatePickerStyles {
 				}
 
 				if (button.getIconForState(DISABLED) == null) {
-					var icon = new Shape();
-					icon.graphics.beginFill(0xff00ff, 0.0);
-					icon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
-					icon.graphics.endFill();
-					icon.graphics.beginFill(theme.disabledTextColor);
-					icon.graphics.moveTo(2.0, 0.0);
-					icon.graphics.lineTo(6.0, 4.0);
-					icon.graphics.lineTo(2.0, 8.0);
-					icon.graphics.lineTo(2.0, 0.0);
-					icon.graphics.endFill();
-					button.setIconForState(DISABLED, icon);
+					var disabledIcon = new Shape();
+					disabledIcon.graphics.beginFill(0xff00ff, 0.0);
+					disabledIcon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
+					disabledIcon.graphics.endFill();
+					disabledIcon.graphics.beginFill(theme.disabledTextColor);
+					disabledIcon.graphics.moveTo(2.0, 0.0);
+					disabledIcon.graphics.lineTo(6.0, 4.0);
+					disabledIcon.graphics.lineTo(2.0, 8.0);
+					disabledIcon.graphics.lineTo(2.0, 0.0);
+					disabledIcon.graphics.endFill();
+					button.setIconForState(DISABLED, disabledIcon);
 				}
 
 				button.setPadding(4.0);

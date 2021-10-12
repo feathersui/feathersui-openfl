@@ -972,6 +972,11 @@ class DatePicker extends FeathersControl {
 			this.refreshLocale();
 		}
 
+		if (stateInvalid || calendarGridFactoryInvalid || currentMonthViewFactoryInvalid || decrementMonthButtonFactoryInvalid
+			|| incrementMonthButtonFactoryInvalid || decrementYearButtonFactoryInvalid || incrementYearButtonFactoryInvalid) {
+			this.refreshEnabled();
+		}
+
 		if (dataInvalid || selectionInvalid) {
 			this.refreshCalendarGrid();
 			this.refreshCurrentMonth();
@@ -1181,6 +1186,15 @@ class DatePicker extends FeathersControl {
 		this.currentMonthView.text = oldText;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight);
+	}
+
+	private function refreshEnabled():Void {
+		this.currentMonthView.enabled = this.enabled;
+		this.decrementMonthButton.enabled = this.enabled;
+		this.incrementMonthButton.enabled = this.enabled;
+		this.decrementYearButton.enabled = this.enabled;
+		this.incrementYearButton.enabled = this.enabled;
+		this.calendarGrid.enabled = this.enabled;
 	}
 
 	private function refreshLocale():Void {

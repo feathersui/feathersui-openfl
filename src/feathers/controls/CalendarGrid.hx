@@ -507,6 +507,10 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 			this.refreshDisplayedMonth();
 		}
 
+		if (stateInvalid || weekdayLabelFactoryInvalid || toggleButtonFactoryInvalid || mutedToggleButtonFactoryInvalid) {
+			this.refreshEnabled();
+		}
+
 		this.refreshViewPortBounds();
 		this._layoutResult.reset();
 		this._layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
@@ -532,6 +536,15 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		this._currentWeekdayNames = this._customWeekdayNames != null ? this._customWeekdayNames : DEFAULT_WEEKDAY_NAMES;
 		this._currentStartOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : DEFAULT_START_OF_WEEK;
 		#end
+	}
+
+	private function refreshEnabled():Void {
+		for (dayNameLabel in this._dayNameLabels) {
+			dayNameLabel.enabled = this._enabled;
+		}
+		for (dateButton in this._dateButtons) {
+			dateButton.enabled = this._enabled;
+		}
 	}
 
 	private function refreshViewPortBounds():Void {
