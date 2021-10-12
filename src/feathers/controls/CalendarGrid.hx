@@ -26,6 +26,9 @@ import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.errors.RangeError;
 import openfl.events.Event;
+#if (openfl >= "9.2.0" && !neko)
+import openfl.globalization.DateTimeFormatter;
+#end
 
 /**
 	Displays a calendar for a specific month.
@@ -61,10 +64,10 @@ import openfl.events.Event;
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.SCROLL)
 class CalendarGrid extends FeathersControl implements IDateSelector {
-	// TODO: get these values from openfl.globalization.DateTimeFormatter
+	#if (openfl < "9.2.0" || neko)
 	private var DEFAULT_WEEKDAY_NAMES = ["S", "M", "T", "W", "T", "F", "S"];
-	// TODO: get this value from openfl.globalization.DateTimeFormatter
 	private var DEFAULT_START_OF_WEEK = 0;
+	#end
 
 	/**
 		The variant used to style the `ToggleButton` child components from the
@@ -336,6 +339,12 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	@:style
 	public var showDatesFromAdjacentMonths:Bool = true;
 
+	#if (openfl >= "9.2.0" && !neko)
+	private var _currentDateFormatter:DateTimeFormatter;
+	#end
+
+	private var _currentWeekdayNames:Array<String>;
+
 	private var _customWeekdayNames:Array<String> = null;
 
 	/**
@@ -362,6 +371,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		this.setInvalid(DATA);
 		return this._customWeekdayNames;
 	}
+
+	private var _currentStartOfWeek:Int = 0;
 
 	private var _customStartOfWeek:Null<Int> = null;
 
@@ -441,6 +452,10 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 			this.refreshBackgroundSkin();
 		}
 
+		if (dataInvalid) {
+			this.refreshLocale();
+		}
+
 		if (weekdayLabelFactoryInvalid || dataInvalid || stylesInvalid) {
 			this.refreshWeekdayLabels();
 		}
@@ -453,6 +468,24 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		this._layoutResult.reset();
 		this._layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
 		this.handleLayoutResult();
+	}
+
+	private function refreshLocale():Void {
+		#if (openfl >= "9.2.0" && !neko)
+		this._currentDateFormatter = new DateTimeFormatter("en_US", SHORT, NONE);
+		this._currentWeekdayNames = this._customWeekdayNames;
+		if (this._currentWeekdayNames == null) {
+			var weekdayNamesVector = this._currentDateFormatter.getWeekdayNames();
+			this._currentWeekdayNames = [];
+			for (weekdayName in weekdayNamesVector) {
+				this._currentWeekdayNames.push(weekdayName.charAt(0));
+			}
+		}
+		this._currentStartOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : this._currentDateFormatter.getFirstWeekday();
+		#else
+		this._currentWeekdayNames = this._customWeekdayNames != null ? this._customWeekdayNames : DEFAULT_WEEKDAY_NAMES;
+		this._currentStartOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : DEFAULT_START_OF_WEEK;
+		#end
 	}
 
 	private function refreshViewPortBounds():Void {
@@ -525,14 +558,12 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	}
 
 	private function refreshWeekdayLabels():Void {
-		var weekdayNames = this._customWeekdayNames != null ? this._customWeekdayNames : DEFAULT_WEEKDAY_NAMES;
 		var weekdayLabelVariant = this.customWeekdayLabelVariant != null ? this.customWeekdayLabelVariant : CHILD_VARIANT_WEEKDAY_LABEL;
-		var startOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : DEFAULT_START_OF_WEEK;
 		for (i in 0...this._dayNameLabels.length) {
-			var nameIndex = (i + startOfWeek) % this._dayNameLabels.length;
+			var nameIndex = (i + this._currentStartOfWeek) % this._dayNameLabels.length;
 			var dayNameLabel = this._dayNameLabels[i];
 			dayNameLabel.variant = weekdayLabelVariant;
-			dayNameLabel.text = weekdayNames[nameIndex];
+			dayNameLabel.text = this._currentWeekdayNames[nameIndex];
 			dayNameLabel.visible = this.showWeekdayLabels;
 			dayNameLabel.includeInLayout = this.showWeekdayLabels;
 		}
