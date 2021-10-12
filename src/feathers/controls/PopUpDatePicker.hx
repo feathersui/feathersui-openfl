@@ -20,6 +20,8 @@ import feathers.themes.steel.components.SteelPopUpDatePickerStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import openfl.display.InteractiveObject;
+import openfl.errors.ArgumentError;
+import openfl.errors.RangeError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -328,6 +330,18 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 		Creates the date picker that is displayed as a pop-up. The date picker
 		must be of type `feathers.controls.DatePicker`.
 
+		Note: The following properties should not be set in the
+		`datePickerFactory` because they will be overridden by the
+		`PopUpDatePicker` when it validates.
+
+		- `DatePicker.requestedLocaleIDName`
+		- `DatePicker.displayedMonth`
+		- `DatePicker.displayedFullYear`
+		- `DatePicker.selectedDate`
+		- `DatePicker.customMonthNames`;
+		- `DatePicker.customWeekdayNames`
+		- `DatePicker.customStartOfWeek`
+
 		In the following example, a custom date picker factory is provided:
 
 		```hx
@@ -398,6 +412,82 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 
 	private function get_actualLocaleIDName():String {
 		return this._actualLocaleIDName;
+	}
+
+	private var _customMonthNames:Array<String> = null;
+
+	/**
+		A custom set of month names to use instead of the default.
+
+		@since 1.0.0
+	**/
+	public var customMonthNames(get, set):Array<String>;
+
+	private function get_customMonthNames():Array<String> {
+		return this._customMonthNames;
+	}
+
+	private function set_customMonthNames(value:Array<String>):Array<String> {
+		if (value != null && value.length != 12) {
+			throw new ArgumentError("Length of customMonthNames must be exactly equal to 12");
+		}
+		if (this._customMonthNames == value) {
+			return this._customMonthNames;
+		}
+		this._customMonthNames = value;
+		this.setInvalid(DATA);
+		return this._customMonthNames;
+	}
+
+	private var _customWeekdayNames:Array<String> = null;
+
+	/**
+		A custom set of weekday names to use instead of the default.
+
+		@since 1.0.0
+	**/
+	public var customWeekdayNames(get, set):Array<String>;
+
+	private function get_customWeekdayNames():Array<String> {
+		return this._customWeekdayNames;
+	}
+
+	private function set_customWeekdayNames(value:Array<String>):Array<String> {
+		if (value != null && value.length != 7) {
+			throw new ArgumentError("Length of customWeekdayNames must be exactly equal to 7");
+		}
+		if (this._customWeekdayNames == value) {
+			return this._customWeekdayNames;
+		}
+		this._customWeekdayNames = value;
+		this.setInvalid(DATA);
+		return this._customWeekdayNames;
+	}
+
+	private var _customStartOfWeek:Null<Int> = null;
+
+	/**
+		The index of the day that starts each week. `0` is Sunday and `6` is
+		Saturday. Set to `null` to use the default.
+
+		@since 1.0.0
+	**/
+	public var customStartOfWeek(get, set):Null<Int>;
+
+	private function get_customStartOfWeek():Null<Int> {
+		return this._customStartOfWeek;
+	}
+
+	private function set_customStartOfWeek(value:Null<Int>):Null<Int> {
+		if (value < 0 || value > 6) {
+			throw new RangeError("startOfWeek must be in the range 0-6");
+		}
+		if (this._customStartOfWeek == value) {
+			return this._customStartOfWeek;
+		}
+		this._customStartOfWeek = value;
+		this.setInvalid(DATA);
+		return this._customStartOfWeek;
 	}
 
 	/**
@@ -645,6 +735,9 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 		this._ignoreDatePickerChange = true;
 		this.datePicker.requestedLocaleIDName = this._requestedLocaleIDName;
 		this.datePicker.selectedDate = this._selectedDate;
+		this.datePicker.customMonthNames = this._customMonthNames;
+		this.datePicker.customWeekdayNames = this._customWeekdayNames;
+		this.datePicker.customStartOfWeek = this._customStartOfWeek;
 		this._ignoreDatePickerChange = oldIgnoreDatePickerChange;
 	}
 

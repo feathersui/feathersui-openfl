@@ -329,6 +329,18 @@ class DatePicker extends FeathersControl {
 		calendar grid must be of type
 		`feathers.controls.supportClasses.CalendarGrid`.
 
+		Note: The following properties should not be set in the
+		`calendarGridFactory` because they will be overridden by the
+		`DatePicker` when it validates.
+
+		- `CalendarGrid.requestedLocaleIDName`
+		- `CalendarGrid.displayedMonth`
+		- `CalendarGrid.displayedFullYear`
+		- `CalendarGrid.selectable`
+		- `CalendarGrid.selectedDate`
+		- `CalendarGrid.customWeekdayNames`
+		- `CalendarGrid.customStartOfWeek`
+
 		In the following example, a custom calendar grid factory is provided:
 
 		```hx
@@ -818,6 +830,82 @@ class DatePicker extends FeathersControl {
 		this.paddingLeft = value;
 	}
 
+	private var _customMonthNames:Array<String> = null;
+
+	/**
+		A custom set of month names to use instead of the default.
+
+		@since 1.0.0
+	**/
+	public var customMonthNames(get, set):Array<String>;
+
+	private function get_customMonthNames():Array<String> {
+		return this._customMonthNames;
+	}
+
+	private function set_customMonthNames(value:Array<String>):Array<String> {
+		if (value != null && value.length != 12) {
+			throw new ArgumentError("Length of customMonthNames must be exactly equal to 12");
+		}
+		if (this._customMonthNames == value) {
+			return this._customMonthNames;
+		}
+		this._customMonthNames = value;
+		this.setInvalid(DATA);
+		return this._customMonthNames;
+	}
+
+	private var _customWeekdayNames:Array<String> = null;
+
+	/**
+		A custom set of weekday names to use instead of the default.
+
+		@since 1.0.0
+	**/
+	public var customWeekdayNames(get, set):Array<String>;
+
+	private function get_customWeekdayNames():Array<String> {
+		return this._customWeekdayNames;
+	}
+
+	private function set_customWeekdayNames(value:Array<String>):Array<String> {
+		if (value != null && value.length != 7) {
+			throw new ArgumentError("Length of customWeekdayNames must be exactly equal to 7");
+		}
+		if (this._customWeekdayNames == value) {
+			return this._customWeekdayNames;
+		}
+		this._customWeekdayNames = value;
+		this.setInvalid(DATA);
+		return this._customWeekdayNames;
+	}
+
+	private var _customStartOfWeek:Null<Int> = null;
+
+	/**
+		The index of the day that starts each week. `0` is Sunday and `6` is
+		Saturday. Set to `null` to use the default.
+
+		@since 1.0.0
+	**/
+	public var customStartOfWeek(get, set):Null<Int>;
+
+	private function get_customStartOfWeek():Null<Int> {
+		return this._customStartOfWeek;
+	}
+
+	private function set_customStartOfWeek(value:Null<Int>):Null<Int> {
+		if (value < 0 || value > 6) {
+			throw new RangeError("startOfWeek must be in the range 0-6");
+		}
+		if (this._customStartOfWeek == value) {
+			return this._customStartOfWeek;
+		}
+		this._customStartOfWeek = value;
+		this.setInvalid(DATA);
+		return this._customStartOfWeek;
+	}
+
 	private function initializeDatePickerTheme():Void {
 		SteelDatePickerStyles.initialize();
 	}
@@ -1101,12 +1189,14 @@ class DatePicker extends FeathersControl {
 		this._currentDateFormatter = new DateTimeFormatter(localeID, LONG, NONE);
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
 		this._currentDateFormatter.setDateTimePattern("MMMM yyyy");
-		var monthNamesVector = this._currentDateFormatter.getMonthNames(FULL, FORMAT);
-		var monthNames:Array<String> = [];
-		for (monthName in monthNamesVector) {
-			monthNames.push(monthName);
+		this._currentMonthNames = this._customMonthNames;
+		if (this._currentMonthNames == null) {
+			var monthNamesVector = this._currentDateFormatter.getMonthNames(FULL, FORMAT);
+			this._currentMonthNames = [];
+			for (monthName in monthNamesVector) {
+				this._currentMonthNames.push(monthName);
+			}
 		}
-		this._currentMonthNames = monthNames;
 		#else
 		this._currentMonthNames = DEFAULT_MONTH_NAMES;
 		this._actualLocaleIDName = "en-US";
@@ -1312,6 +1402,8 @@ class DatePicker extends FeathersControl {
 		this.calendarGrid.displayedFullYear = this._displayedFullYear;
 		this.calendarGrid.selectable = this._selectable;
 		this.calendarGrid.selectedDate = this._selectedDate;
+		this.calendarGrid.customWeekdayNames = this._customWeekdayNames;
+		this.calendarGrid.customStartOfWeek = this._customStartOfWeek;
 		this._ignoreCalendarGridChange = oldIgnoreCalendarGridChange;
 	}
 
@@ -1335,7 +1427,12 @@ class DatePicker extends FeathersControl {
 
 	private function getMonthText(month:Int, fullYear:Int):String {
 		#if (flash || (openfl >= "9.2.0" && !neko))
-		return this._currentDateFormatter.format(new Date(fullYear, month, 1, 0, 0, 0));
+		if (this._customMonthNames != null) {
+			var monthName = this._currentMonthNames[month];
+			return '$monthName ${StringTools.lpad(Std.string(fullYear), "0", 4)}';
+		} else {
+			return this._currentDateFormatter.format(new Date(fullYear, month, 1, 0, 0, 0));
+		}
 		#else
 		var monthName = this._currentMonthNames[month];
 		return '$monthName ${StringTools.lpad(Std.string(fullYear), "0", 4)}';

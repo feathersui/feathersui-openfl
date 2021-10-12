@@ -354,8 +354,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	/**
 		A custom set of weekday names to use instead of the default.
 
-		@default ["S", "M", "T", "W", "T", "F", "S"]
-
 		@since 1.0.0
 	**/
 	public var customWeekdayNames(get, set):Array<String>;
@@ -383,8 +381,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	/**
 		The index of the day that starts each week. `0` is Sunday and `6` is
 		Saturday. Set to `null` to use the default.
-
-		@default 0
 
 		@since 1.0.0
 	**/
