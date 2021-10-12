@@ -32,6 +32,9 @@ import openfl.ui.Multitouch;
 #if lime
 import lime.ui.KeyCode;
 #end
+#if (openfl >= "9.2.0" && !neko)
+import openfl.globalization.DateTimeFormatter;
+#end
 
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.OPEN)
@@ -115,6 +118,10 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 	private function get_stageFocusTarget():InteractiveObject {
 		return this.textInput;
 	}
+
+	#if (openfl >= "9.2.0" && !neko)
+	private var _currentDateFormatter:DateTimeFormatter;
+	#end
 
 	private var _selectedDate:Date = null;
 
@@ -483,6 +490,10 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 			this.createDatePicker();
 		}
 
+		if (dataInvalid) {
+			this.refreshLocale();
+		}
+
 		if (selectionInvalid || datePickerFactoryInvalid) {
 			this.refreshDatePickerData();
 		}
@@ -526,6 +537,12 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 		this.button.initializeNow();
 		this.buttonMeasurements.save(this.button);
 		this.addChild(this.button);
+	}
+
+	private function refreshLocale():Void {
+		#if (openfl >= "9.2.0" && !neko)
+		this._currentDateFormatter = new DateTimeFormatter("en_US", SHORT, NONE);
+		#end
 	}
 
 	private function createTextInput():Void {
@@ -582,7 +599,11 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 	private function refreshTextInputData():Void {
 		this.textInput.prompt = this._prompt;
 		if (this._selectedDate != null) {
+			#if (openfl >= "9.2.0" && !neko)
+			this.textInput.text = this._currentDateFormatter.format(this._selectedDate);
+			#else
 			this.textInput.text = '${this._selectedDate.getMonth() + 1}/${this._selectedDate.getDate()}/${this._selectedDate.getFullYear()}';
+			#end
 		} else {
 			this.textInput.text = "";
 		}
