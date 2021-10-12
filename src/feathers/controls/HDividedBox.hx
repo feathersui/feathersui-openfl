@@ -147,10 +147,10 @@ class HDividedBox extends BaseDividedBox {
 		var secondItemWidth = this._resizeStartWidth2 - offsetX;
 		if ((secondItem is IMeasureObject)) {
 			var secondMeasureItem = cast(secondItem, IMeasureObject);
-			if (secondItemWidth < secondMeasureItem.minWidth) {
-				secondItemWidth = secondMeasureItem.minWidth;
-			} else if (secondItemWidth > secondMeasureItem.maxWidth) {
-				secondItemWidth = secondMeasureItem.maxWidth;
+			if (secondMeasureItem.explicitMinWidth != null && secondItemWidth < secondMeasureItem.explicitMinWidth) {
+				secondItemWidth = secondMeasureItem.explicitMinWidth;
+			} else if (secondMeasureItem.explicitMaxWidth != null && secondItemWidth > secondMeasureItem.explicitMaxWidth) {
+				secondItemWidth = secondMeasureItem.explicitMaxWidth;
 			}
 		}
 		if (secondItemWidth < 0.0) {
@@ -163,10 +163,10 @@ class HDividedBox extends BaseDividedBox {
 		var firstItemWidth = totalWidth - secondItemWidth;
 		if ((firstItem is IMeasureObject)) {
 			var firstMeasureItem = cast(firstItem, IMeasureObject);
-			if (firstItemWidth < firstMeasureItem.minWidth) {
-				firstItemWidth = firstMeasureItem.minWidth;
-			} else if (firstItemWidth > firstMeasureItem.maxWidth) {
-				firstItemWidth = firstMeasureItem.maxWidth;
+			if (firstMeasureItem.explicitMinWidth != null && firstItemWidth < firstMeasureItem.explicitMinWidth) {
+				firstItemWidth = firstMeasureItem.explicitMinWidth;
+			} else if (firstMeasureItem.explicitMaxWidth != null && firstItemWidth > firstMeasureItem.explicitMaxWidth) {
+				firstItemWidth = firstMeasureItem.explicitMaxWidth;
 			}
 		}
 		if (firstItemWidth < 0.0) {

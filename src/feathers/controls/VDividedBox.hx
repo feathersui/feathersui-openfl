@@ -147,10 +147,10 @@ class VDividedBox extends BaseDividedBox {
 		var secondItemHeight = this._resizeStartHeight2 - offsetY;
 		if ((secondItem is IMeasureObject)) {
 			var secondMeasureItem = cast(secondItem, IMeasureObject);
-			if (secondItemHeight < secondMeasureItem.minHeight) {
-				secondItemHeight = secondMeasureItem.minHeight;
-			} else if (secondItemHeight > secondMeasureItem.maxHeight) {
-				secondItemHeight = secondMeasureItem.maxHeight;
+			if (secondMeasureItem.explicitMinHeight != null && secondItemHeight < secondMeasureItem.explicitMinHeight) {
+				secondItemHeight = secondMeasureItem.explicitMinHeight;
+			} else if (secondMeasureItem.explicitMaxHeight != null && secondItemHeight > secondMeasureItem.explicitMaxHeight) {
+				secondItemHeight = secondMeasureItem.explicitMaxHeight;
 			}
 		}
 		if (secondItemHeight < 0.0) {
@@ -163,10 +163,10 @@ class VDividedBox extends BaseDividedBox {
 		var firstItemHeight = totalHeight - secondItemHeight;
 		if ((firstItem is IMeasureObject)) {
 			var firstMeasureItem = cast(firstItem, IMeasureObject);
-			if (firstItemHeight < firstMeasureItem.minHeight) {
-				firstItemHeight = firstMeasureItem.minHeight;
-			} else if (firstItemHeight > firstMeasureItem.maxHeight) {
-				firstItemHeight = firstMeasureItem.maxHeight;
+			if (firstMeasureItem.explicitMinHeight != null && firstItemHeight < firstMeasureItem.explicitMinHeight) {
+				firstItemHeight = firstMeasureItem.explicitMinHeight;
+			} else if (firstMeasureItem.explicitMaxHeight != null && firstItemHeight > firstMeasureItem.explicitMaxHeight) {
+				firstItemHeight = firstMeasureItem.explicitMaxHeight;
 			}
 		}
 		if (firstItemHeight < 0.0) {
