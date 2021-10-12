@@ -749,9 +749,53 @@ class DatePicker extends FeathersControl {
 	public var showYearButtons:Bool = true;
 
 	private var _currentMonthNames:Array<String>;
+
 	#if (openfl >= "9.2.0" && !neko)
 	private var _currentDateFormatter:DateTimeFormatter;
 	#end
+
+	private var _requestedLocaleIDName:String = "en-US";
+
+	/**
+		The locale ID name that is requested.
+
+		@see `CalendarGrid.actualLocaleIDName`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedLocaleIDName(get, set):String;
+
+	private function get_requestedLocaleIDName():String {
+		return this._requestedLocaleIDName;
+	}
+
+	private function set_requestedLocaleIDName(value:String):String {
+		if (this._requestedLocaleIDName == value) {
+			return this._requestedLocaleIDName;
+		}
+		this._requestedLocaleIDName = value;
+		this._actualLocaleIDName = null;
+		this.setInvalid(DATA);
+		return this._requestedLocaleIDName;
+	}
+
+	private var _actualLocaleIDName:String = null;
+
+	/**
+		The locale ID name that is being used, which may be different from the
+		requested locale ID name.
+
+		@see `CalendarGrid.requestedLocaleIDName`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var actualLocaleIDName(get, never):String;
+
+	private function get_actualLocaleIDName():String {
+		return this._actualLocaleIDName;
+	}
 
 	/**
 		Sets all four padding properties to the same value.
@@ -1049,7 +1093,8 @@ class DatePicker extends FeathersControl {
 
 	private function refreshLocale():Void {
 		#if (openfl >= "9.2.0" && !neko)
-		this._currentDateFormatter = new DateTimeFormatter("en_US", LONG, NONE);
+		this._currentDateFormatter = new DateTimeFormatter(this._requestedLocaleIDName, LONG, NONE);
+		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
 		this._currentDateFormatter.setDateTimePattern("MMMM yyyy");
 		var monthNamesVector = this._currentDateFormatter.getMonthNames(FULL, FORMAT);
 		var monthNames:Array<String> = [];
@@ -1059,6 +1104,7 @@ class DatePicker extends FeathersControl {
 		this._currentMonthNames = monthNames;
 		#else
 		this._currentMonthNames = DEFAULT_MONTH_NAMES;
+		this._actualLocaleIDName = "en-US";
 		#end
 	}
 
@@ -1256,6 +1302,7 @@ class DatePicker extends FeathersControl {
 	private function refreshCalendarGrid():Void {
 		var oldIgnoreCalendarGridChange = this._ignoreCalendarGridChange;
 		this._ignoreCalendarGridChange = true;
+		this.calendarGrid.requestedLocaleIDName = this._requestedLocaleIDName;
 		this.calendarGrid.displayedMonth = this._displayedMonth;
 		this.calendarGrid.displayedFullYear = this._displayedFullYear;
 		this.calendarGrid.selectable = this._selectable;

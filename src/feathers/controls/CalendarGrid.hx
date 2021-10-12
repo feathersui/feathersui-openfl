@@ -402,6 +402,49 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		return this._customStartOfWeek;
 	}
 
+	private var _requestedLocaleIDName:String = "en-US";
+
+	/**
+		The locale ID name that is requested.
+
+		@see `CalendarGrid.actualLocaleIDName`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedLocaleIDName(get, set):String;
+
+	private function get_requestedLocaleIDName():String {
+		return this._requestedLocaleIDName;
+	}
+
+	private function set_requestedLocaleIDName(value:String):String {
+		if (this._requestedLocaleIDName == value) {
+			return this._requestedLocaleIDName;
+		}
+		this._requestedLocaleIDName = value;
+		this._actualLocaleIDName = null;
+		this.setInvalid(DATA);
+		return this._requestedLocaleIDName;
+	}
+
+	private var _actualLocaleIDName:String = null;
+
+	/**
+		The locale ID name that is being used, which may be different from the
+		requested locale ID name.
+
+		@see `CalendarGrid.requestedLocaleIDName`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var actualLocaleIDName(get, never):String;
+
+	private function get_actualLocaleIDName():String {
+		return this._actualLocaleIDName;
+	}
+
 	private var _layoutMeasurements:Measurements = new Measurements();
 	private var _layout:CalendarGridLayout;
 	private var _layoutResult:LayoutBoundsResult = new LayoutBoundsResult();
@@ -472,7 +515,8 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 	private function refreshLocale():Void {
 		#if (openfl >= "9.2.0" && !neko)
-		this._currentDateFormatter = new DateTimeFormatter("en_US", SHORT, NONE);
+		this._currentDateFormatter = new DateTimeFormatter(this._requestedLocaleIDName, SHORT, NONE);
+		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
 		this._currentWeekdayNames = this._customWeekdayNames;
 		if (this._currentWeekdayNames == null) {
 			var weekdayNamesVector = this._currentDateFormatter.getWeekdayNames();
@@ -483,6 +527,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		}
 		this._currentStartOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : this._currentDateFormatter.getFirstWeekday();
 		#else
+		this._actualLocaleIDName = "en-US";
 		this._currentWeekdayNames = this._customWeekdayNames != null ? this._customWeekdayNames : DEFAULT_WEEKDAY_NAMES;
 		this._currentStartOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : DEFAULT_START_OF_WEEK;
 		#end

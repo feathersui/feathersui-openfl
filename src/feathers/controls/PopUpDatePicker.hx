@@ -353,6 +353,49 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 		return this._datePickerFactory;
 	}
 
+	private var _requestedLocaleIDName:String = "en-US";
+
+	/**
+		The locale ID name that is requested.
+
+		@see `CalendarGrid.actualLocaleIDName`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var requestedLocaleIDName(get, set):String;
+
+	private function get_requestedLocaleIDName():String {
+		return this._requestedLocaleIDName;
+	}
+
+	private function set_requestedLocaleIDName(value:String):String {
+		if (this._requestedLocaleIDName == value) {
+			return this._requestedLocaleIDName;
+		}
+		this._requestedLocaleIDName = value;
+		this._actualLocaleIDName = null;
+		this.setInvalid(DATA);
+		return this._requestedLocaleIDName;
+	}
+
+	private var _actualLocaleIDName:String = null;
+
+	/**
+		The locale ID name that is being used, which may be different from the
+		requested locale ID name.
+
+		@see `CalendarGrid.requestedLocaleIDName`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var actualLocaleIDName(get, never):String;
+
+	private function get_actualLocaleIDName():String {
+		return this._actualLocaleIDName;
+	}
+
 	/**
 		Indicates if the pop-up date picker is open or closed.
 
@@ -494,7 +537,7 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 			this.refreshLocale();
 		}
 
-		if (selectionInvalid || datePickerFactoryInvalid) {
+		if (dataInvalid || selectionInvalid || datePickerFactoryInvalid) {
 			this.refreshDatePickerData();
 		}
 
@@ -541,7 +584,10 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 
 	private function refreshLocale():Void {
 		#if (openfl >= "9.2.0" && !neko)
-		this._currentDateFormatter = new DateTimeFormatter("en_US", SHORT, NONE);
+		this._currentDateFormatter = new DateTimeFormatter(this._requestedLocaleIDName, SHORT, NONE);
+		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
+		#else
+		this._actualLocaleIDName = "en-US";
 		#end
 	}
 
@@ -592,6 +638,7 @@ class PopUpDatePicker extends FeathersControl implements IFocusObject implements
 	private function refreshDatePickerData():Void {
 		var oldIgnoreDatePickerChange = this._ignoreDatePickerChange;
 		this._ignoreDatePickerChange = true;
+		this.datePicker.requestedLocaleIDName = this._requestedLocaleIDName;
 		this.datePicker.selectedDate = this._selectedDate;
 		this._ignoreDatePickerChange = oldIgnoreDatePickerChange;
 	}
