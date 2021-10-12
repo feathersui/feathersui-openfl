@@ -519,7 +519,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
 		this._currentWeekdayNames = this._customWeekdayNames;
 		if (this._currentWeekdayNames == null) {
-			var weekdayNamesVector = this._currentDateFormatter.getWeekdayNames();
+			var weekdayNamesVector = this._currentDateFormatter.getWeekdayNames(SHORT_ABBREVIATION, STANDALONE);
 			this._currentWeekdayNames = [];
 			for (weekdayName in weekdayNamesVector) {
 				this._currentWeekdayNames.push(weekdayName.charAt(0));
