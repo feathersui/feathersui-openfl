@@ -11,6 +11,7 @@ package feathers.controls;
 import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
+import feathers.core.IDateSelector;
 import feathers.core.IFocusObject;
 import feathers.core.IStageFocusDelegate;
 import feathers.core.InvalidationFlag;
@@ -46,7 +47,7 @@ import flash.globalization.LocaleID;
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
 @:styleContext
-class PopUpDatePicker extends FeathersControl implements IFocusObject implements IStageFocusDelegate {
+class PopUpDatePicker extends FeathersControl implements IDateSelector implements IFocusObject implements IStageFocusDelegate {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");
 	private static final INVALIDATION_FLAG_TEXT_INPUT_FACTORY = InvalidationFlag.CUSTOM("textInputFactory");
 	private static final INVALIDATION_FLAG_DATE_PICKER_FACTORY = InvalidationFlag.CUSTOM("datePickerFactory");
