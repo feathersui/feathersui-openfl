@@ -1,0 +1,9 @@
+<svg id="feathersui-icon" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
+  <rect class="cls-1" width="1024" height="1024" rx="170" ry="170" style="fill: #ff8b26;"/>
+  <circle class="cls-2" cx="512" cy="512" r="444.156" style="fill: #f2eae4;"/>
+  <g id="Wings">
+    <path id="Rectangle_3_copy_3" data-name="Rectangle 3 copy 3" class="cls-3" d="M532.228,620.778H762.353v114.9H532.228v-114.9Z" style="fill: #ffc28c;fill-rule: evenodd;"/>
+    <path id="Rectangle_3_copy_4" data-name="Rectangle 3 copy 4" class="cls-4" d="M379.028,486.553H762.353V601.6H379.028V486.553Z" style="fill: #ffa759;fill-rule: evenodd;"/>
+    <path id="Rectangle_3_copy_5" data-name="Rectangle 3 copy 5" class="cls-5" d="M225.678,352.353H762.353V467.4H225.678V352.353Z" style="fill: #ff8b26;fill-rule: evenodd;"/>
+  </g>
+</svg>
