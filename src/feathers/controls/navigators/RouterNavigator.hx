@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.events.NavigatorDataEvent;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelRouterNavigatorStyles;
 import openfl.display.DisplayObject;
@@ -50,6 +51,11 @@ class RouterNavigator extends BaseNavigator {
 	public function new() {
 		initializeRouterNavigatorTheme();
 		super();
+		#if !html5
+		if (this._history.length == 0) {
+			this._history.push(new HistoryItem(new Location("/"), {state: null, viewData: null}));
+		}
+		#end
 		this.addEventListener(Event.ADDED_TO_STAGE, routerNavigator_addedToStageHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, routerNavigator_removedFromStageHandler);
 	}
@@ -141,14 +147,39 @@ class RouterNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function push(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+		if (this._activeItemView != null) {
+			var event = new NavigatorDataEvent(NavigatorDataEvent.SAVE_NAVIGATOR_DATA);
+			this._activeItemView.dispatchEvent(event);
+			#if html5
+			var historyState:HistoryState = this.htmlWindow.history.state;
+			if (historyState == null) {
+				historyState = {state: null, viewData: event.data};
+			} else {
+				historyState.viewData = event.data;
+			}
+			this.htmlWindow.history.replaceState(historyState, null, this.htmlWindow.location.pathname);
+			#else
+			var historyItem = this._history[this._history.length - 1];
+			var location = historyItem.location;
+			var historyState = historyItem.state;
+			historyState.viewData = event.data;
+			this._history[this._history.length - 1] = new HistoryItem(location, historyState);
+			#end
+		}
 		#if html5
 		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
 		}
-		this.htmlWindow.history.pushState(state, null, path);
+		this.htmlWindow.history.pushState({
+			state: state,
+			viewData: null
+		}, null, path);
 		#else
-		this._history.push(new HistoryItem(Location.fromString(path), state));
+		this._history.push(new HistoryItem(Location.fromString(path), {
+			state: state,
+			viewData: null
+		}));
 		this._forwardHistory.resize(0);
 		#end
 		if (transition == null) {
@@ -178,9 +209,15 @@ class RouterNavigator extends BaseNavigator {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
 		}
-		this.htmlWindow.history.replaceState(state, null, path);
+		this.htmlWindow.history.replaceState({
+			state: state,
+			viewData: null
+		}, null, path);
 		#else
-		this._history[this._history.length - 1] = new HistoryItem(Location.fromString(path), state);
+		this._history[this._history.length - 1] = new HistoryItem(Location.fromString(path), {
+			state: state,
+			viewData: null
+		});
 		this._forwardHistory.resize(0);
 		#end
 		if (transition == null) {
@@ -276,10 +313,7 @@ class RouterNavigator extends BaseNavigator {
 		#if html5
 		return this.htmlWindow.location;
 		#else
-		if (this._history.length > 0) {
-			return this._history[this._history.length - 1].location;
-		}
-		return new Location("/");
+		return this._history[this._history.length - 1].location;
 		#end
 	}
 
@@ -290,11 +324,8 @@ class RouterNavigator extends BaseNavigator {
 			pathname = pathname.substr(this.basePath.length);
 		}
 		#else
-		var pathname = "/";
-		if (this._history.length > 0) {
-			var item = this._history[this._history.length - 1];
-			pathname = item.location.pathname;
-		}
+		var item = this._history[this._history.length - 1];
+		var pathname = item.location.pathname;
 		#end
 		pathname = pathname.toLowerCase();
 		for (path => route in this._addedItems) {
@@ -321,17 +352,19 @@ class RouterNavigator extends BaseNavigator {
 	override private function getView(id:String):DisplayObject {
 		var item = cast(this._addedItems.get(id), Route);
 		var view = item.getView(this);
+		#if html5
+		var historyState:HistoryState = this.htmlWindow.history.state;
+		#else
+		var historyItem = this._history[this._history.length - 1];
+		var historyState = historyItem.state;
+		#end
 		if (item.injectState != null) {
-			#if html5
-			var state = this.htmlWindow.history.state;
-			#else
-			var state = null;
-			if (this._history.length > 0) {
-				var historyItem = this._history[this._history.length - 1];
-				state = historyItem.state;
-			}
-			#end
-			item.injectState(view, state);
+			var viewState = (historyState != null) ? historyState.state : null;
+			item.injectState(view, viewState);
+		}
+		var viewData = (historyState != null) ? historyState.viewData : null;
+		if (viewData != null) {
+			NavigatorDataEvent.dispatch(view, NavigatorDataEvent.RESTORE_NAVIGATOR_DATA, viewData);
 		}
 		return view;
 	}
@@ -384,7 +417,7 @@ class RouterNavigator extends BaseNavigator {
 		if (event.isDefaultPrevented()) {
 			return;
 		}
-		if (this._history.length < 1) {
+		if (this._history.length <= 1) {
 			// can't go back
 			return;
 		}
@@ -396,15 +429,20 @@ class RouterNavigator extends BaseNavigator {
 	#end
 }
 
+typedef HistoryState = {
+	state:Any,
+	viewData:Any
+};
+
 #if !html5
 private class HistoryItem {
-	public function new(location:Location, state:Dynamic) {
+	public function new(location:Location, state:HistoryState) {
 		this.location = location;
 		this.state = state;
 	}
 
 	public var location:Location;
-	public var state:Dynamic;
+	public var state:HistoryState;
 }
 
 class Location {
