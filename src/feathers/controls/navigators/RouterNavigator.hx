@@ -61,6 +61,7 @@ class RouterNavigator extends BaseNavigator {
 
 	#if html5
 	private var htmlWindow:Window;
+	private var historyDepth:Int = 0;
 	#else
 	private var _history:Array<HistoryItem> = [];
 	private var _forwardHistory:Array<HistoryItem> = [];
@@ -157,7 +158,7 @@ class RouterNavigator extends BaseNavigator {
 			#if html5
 			var historyState:HistoryState = this.htmlWindow.history.state;
 			if (historyState == null) {
-				historyState = {state: null, viewData: viewData};
+				historyState = {depth: this.historyDepth, state: null, viewData: viewData};
 			} else {
 				historyState.viewData = viewData;
 			}
@@ -179,7 +180,9 @@ class RouterNavigator extends BaseNavigator {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
 		}
+		this.historyDepth++;
 		this.htmlWindow.history.pushState({
+			depth: this.historyDepth,
 			state: state,
 			viewData: null
 		}, null, path);
@@ -218,6 +221,7 @@ class RouterNavigator extends BaseNavigator {
 			path = this.basePath + (needsSlash ? "/" : "") + path;
 		}
 		this.htmlWindow.history.replaceState({
+			depth: this.historyDepth,
 			state: state,
 			viewData: null
 		}, null, path);
@@ -399,10 +403,21 @@ class RouterNavigator extends BaseNavigator {
 	#if html5
 	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
 		event.preventDefault();
-		// there's no good way to determine if we went forward or back
-		// so use a transition only if we've saved one
+		var newDepth = this.historyDepth;
+		var historyState:HistoryState = this.htmlWindow.history.state;
+		if (historyState != null && historyState.depth != null) {
+			newDepth = historyState.depth;
+		}
 		var transition = this._savedGoTransition;
 		this._savedGoTransition = null;
+		if (this._activeItemView != null && transition == null) {
+			if (this.historyDepth > newDepth) {
+				transition = this.backTransition;
+			} else if (this.historyDepth < newDepth) {
+				transition = this.forwardTransition;
+			}
+		}
+		this.historyDepth = newDepth;
 		this.matchRouteAndShow(transition);
 	}
 	#else
@@ -443,6 +458,9 @@ class RouterNavigator extends BaseNavigator {
 }
 
 typedef HistoryState = {
+	#if html5
+	depth:Int,
+	#end
 	state:Any,
 	viewData:Any
 };
