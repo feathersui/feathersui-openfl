@@ -46,12 +46,15 @@ class StackItem {
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
 	public static function withClass(id:String, viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>,
-			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
+			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
+			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
 		var item = new StackItem();
 		item.id = id;
 		item.viewClass = viewClass;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
+		item.saveData = saveData;
+		item.restoreData = restoreData;
 		return item;
 	}
 
@@ -60,12 +63,15 @@ class StackItem {
 		`DisplayObject` when the `StackNavigator` requests the item's view.
 	**/
 	public static function withFunction(id:String, viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>,
-			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
+			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
+			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
 		var item = new StackItem();
 		item.id = id;
 		item.viewFunction = viewFunction;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
+		item.saveData = saveData;
+		item.restoreData = restoreData;
 		return item;
 	}
 
@@ -74,12 +80,15 @@ class StackItem {
 		instance when the `StackNavigator` requests the item's view.
 	**/
 	public static function withDisplayObject(id:String, viewInstance:DisplayObject, ?actions:Map<String, StackAction>,
-			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>):StackItem {
+			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
+			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
 		var item = new StackItem();
 		item.id = id;
 		item.viewInstance = viewInstance;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
+		item.saveData = saveData;
+		item.restoreData = restoreData;
 		return item;
 	}
 
@@ -192,6 +201,24 @@ class StackItem {
 			this.actions.set(eventType, action);
 		}
 	}
+
+	/**
+		An optional function to save the view's data before navigating away.
+
+		@since 1.0.0
+	**/
+	public dynamic function saveData(view:Dynamic):Dynamic {
+		return null;
+	}
+
+	/**
+		An optional function to restore the view's data before navigating away.
+
+		This function must be able to handle `null` data.
+
+		@since 1.0.0
+	**/
+	public dynamic function restoreData(view:Dynamic, data:Dynamic):Void {}
 
 	// called internally by StackNavigator to get this item's view
 	private function getView(navigator:StackNavigator):DisplayObject {

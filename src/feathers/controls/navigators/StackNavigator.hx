@@ -175,9 +175,9 @@ class StackNavigator extends BaseNavigator {
 
 		// show without a transition because we're not navigating.
 		// we're forcibly replacing the root item.
-		var historyItem = new HistoryItem(value, null, null);
+		var historyItem = new HistoryItem(value, null, null, null);
 		this._history.push(historyItem);
-		this.showItemWithInjectAndReturnedObject(value, null, null, null, false);
+		this.showItemWithInjectAndReturnedObject(value, null, null, null, null, false);
 		return value;
 	}
 
@@ -261,6 +261,8 @@ class StackNavigator extends BaseNavigator {
 	private var savedInject:(Dynamic) -> Void;
 	private var savedReturnedObject:Dynamic;
 	private var savedIsPop:Bool = false;
+	private var savedRestoreData:(Dynamic, Dynamic) -> Void;
+	private var savedViewData:Dynamic;
 
 	private var _poppedHistoryItems:Array<HistoryItem> = null;
 
@@ -351,9 +353,18 @@ class StackNavigator extends BaseNavigator {
 				transition = this.pushTransition;
 			}
 		}
-		var historyItem = new HistoryItem(id, inject, transition);
+		if (this._activeItemView != null) {
+			var viewData:Dynamic = null;
+			var oldItem:StackItem = this._addedItems.get(this._activeItemID);
+			if (oldItem.saveData != null) {
+				viewData = oldItem.saveData(this._activeItemView);
+			}
+			var historyItem = this._history[this._history.length - 1];
+			historyItem.viewData = viewData;
+		}
+		var historyItem = new HistoryItem(id, inject, null, transition);
 		this._history.push(historyItem);
-		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, false);
+		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, null, false);
 	}
 
 	/**
@@ -394,7 +405,7 @@ class StackNavigator extends BaseNavigator {
 		}
 		this._poppedHistoryItems = [this._history.pop()];
 		var item = this._history[this._history.length - 1];
-		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, true);
+		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, item.viewData, true);
 	}
 
 	/**
@@ -428,7 +439,7 @@ class StackNavigator extends BaseNavigator {
 		this._poppedHistoryItems = this._history.slice(1);
 		this._history.resize(1);
 		var item = this._history[0];
-		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, true);
+		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, null, true);
 	}
 
 	/**
@@ -478,9 +489,9 @@ class StackNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = this.replaceTransition;
 		}
-		var historyItem = new HistoryItem(id, inject, transition);
+		var historyItem = new HistoryItem(id, inject, null, transition);
 		this._history[this._history.length - 1] = historyItem;
-		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, false);
+		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, null, false);
 	}
 
 	/**
@@ -507,8 +518,8 @@ class StackNavigator extends BaseNavigator {
 			transition = this.popTransition;
 		}
 		this._history.resize(1);
-		this._history[0] = new HistoryItem(id, inject, transition);
-		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, false);
+		this._history[0] = new HistoryItem(id, inject, null, transition);
+		return this.showItemWithInjectAndReturnedObject(id, transition, inject, null, null, false);
 	}
 
 	override private function initialize():Void {
@@ -541,6 +552,9 @@ class StackNavigator extends BaseNavigator {
 		if (this.savedInject != null) {
 			this.savedInject(view);
 		}
+		if (item.restoreData != null) {
+			item.restoreData(view, this.savedViewData);
+		}
 		if (this.savedIsPop) {
 			var returnHandlers = item.returnHandlers;
 			if (returnHandlers != null && returnHandlers.exists(this._previousViewInTransitionID)) {
@@ -571,14 +585,16 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	private function showItemWithInjectAndReturnedObject(id:String, ?transition:(DisplayObject, DisplayObject) -> IEffectContext, ?inject:(Dynamic) -> Void,
-			returnedObject:Dynamic, isPop:Bool):DisplayObject {
+			returnedObject:Dynamic, viewData:Dynamic, isPop:Bool):DisplayObject {
 		this.savedInject = inject;
 		this.savedReturnedObject = returnedObject;
+		this.savedViewData = viewData;
 		this.savedIsPop = isPop;
 		var result = this.showItemInternal(id, transition);
 		this.savedInject = null;
 		this.savedReturnedObject = null;
 		this.savedIsPop = false;
+		this.savedViewData = null;
 		return result;
 	}
 
@@ -597,9 +613,9 @@ class StackNavigator extends BaseNavigator {
 			// we don't want to start any transitions if it changes before that
 			var id = this._tempRootItemID;
 			this._tempRootItemID = null;
-			var historyItem = new HistoryItem(id, null, null);
+			var historyItem = new HistoryItem(id, null, null, null);
 			this._history.push(historyItem);
-			this.showItemWithInjectAndReturnedObject(id, null, null, null, false);
+			this.showItemWithInjectAndReturnedObject(id, null, null, null, null, false);
 		}
 	}
 
@@ -694,13 +710,15 @@ class StackNavigator extends BaseNavigator {
 }
 
 private class HistoryItem {
-	public function new(id:String, inject:(Dynamic) -> Void, transition:(DisplayObject, DisplayObject) -> IEffectContext) {
+	public function new(id:String, inject:(Dynamic) -> Void, viewData:Dynamic, transition:(DisplayObject, DisplayObject) -> IEffectContext) {
 		this.id = id;
 		this.inject = inject;
+		this.viewData = viewData;
 		this.transition = transition;
 	}
 
 	public var id(default, null):String;
 	public var inject(default, null):(Dynamic) -> Void;
+	public var viewData(default, default):Dynamic;
 	public var transition(default, null):(DisplayObject, DisplayObject) -> IEffectContext;
 }
