@@ -103,6 +103,13 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
+    - name: Build samples/stack-navigator-save-and-restore
+      working-directory: samples/stack-navigator-save-and-restore
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
     - name: Build samples/tab-navigator
       working-directory: samples/tab-navigator
       run: |
@@ -225,6 +232,10 @@ jobs:
         haxelib run openfl build air
     - name: Build samples/stack-navigator-pass-data-between-views
       working-directory: samples/stack-navigator-pass-data-between-views
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/stack-navigator-save-and-restore
+      working-directory: samples/stack-navigator-save-and-restore
       run: |
         haxelib run openfl build air
     - name: Build samples/tab-navigator
