@@ -72,15 +72,15 @@ class Main extends Application {
 		this.addChild(this._navigator);
 
 		var mainMenu = Route.withClass(ViewPaths.MAIN_MENU, MainMenu, [Event.CHANGE => NewAction(createPushPathAction)]);
-		mainMenu.saveData = (view:MainMenu) -> {
+		mainMenu.saveData = function(view:MainMenu) {
 			return {savedScrollY: view.savedScrollY};
 		}
-		mainMenu.restoreData = (view:MainMenu, data:Dynamic) -> {
+		mainMenu.restoreData = function(view:MainMenu, data:Dynamic) {
 			if (data == null) {
 				view.savedScrollY = 0.0;
 				return;
 			}
-			view.savedScrollY = (data.savedScrollY : Float);
+			view.savedScrollY = data.savedScrollY;
 		}
 		this._navigator.addRoute(mainMenu);
 
