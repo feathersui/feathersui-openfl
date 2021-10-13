@@ -80,7 +80,7 @@ class Main extends Application {
 				view.savedScrollY = 0.0;
 				return;
 			}
-			view.savedScrollY = data.savedScrollY;
+			view.savedScrollY = (data.savedScrollY : Float);
 		}
 		this._navigator.addRoute(mainMenu);
 
