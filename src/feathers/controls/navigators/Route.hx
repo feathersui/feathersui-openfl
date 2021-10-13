@@ -28,12 +28,14 @@ class Route {
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
 	public static function withClass(path:String, viewClass:Class<DisplayObject>, ?actions:Map<String, RouterAction>,
-			?injectState:(view:Dynamic, state:Dynamic) -> Void):Route {
+			?injectState:(view:Dynamic, state:Dynamic) -> Void, ?saveData:(view:Dynamic) -> Dynamic, ?restoreData:(view:Dynamic, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewClass = viewClass;
 		item.actions = actions;
 		item.injectState = injectState;
+		item.saveData = saveData;
+		item.restoreData = restoreData;
 		return item;
 	}
 
@@ -42,12 +44,14 @@ class Route {
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
 	public static function withFunction(path:String, viewFunction:() -> DisplayObject, ?actions:Map<String, RouterAction>,
-			?injectState:(view:Dynamic, state:Dynamic) -> Void):Route {
+			?injectState:(view:Dynamic, state:Dynamic) -> Void, ?saveData:(view:Dynamic) -> Dynamic, ?restoreData:(view:Dynamic, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewFunction = viewFunction;
 		item.actions = actions;
 		item.injectState = injectState;
+		item.saveData = saveData;
+		item.restoreData = restoreData;
 		return item;
 	}
 
@@ -56,12 +60,14 @@ class Route {
 		instance when the `RouterNavigator` requests the item's view.
 	**/
 	public static function withDisplayObject(path:String, viewInstance:DisplayObject, ?actions:Map<String, RouterAction>,
-			?injectState:(view:Dynamic, state:Dynamic) -> Void):Route {
+			?injectState:(view:Dynamic, state:Dynamic) -> Void, ?saveData:(view:Dynamic) -> Dynamic, ?restoreData:(view:Dynamic, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewInstance = viewInstance;
 		item.actions = actions;
 		item.injectState = injectState;
+		item.saveData = saveData;
+		item.restoreData = restoreData;
 		return item;
 	}
 
@@ -78,9 +84,29 @@ class Route {
 		An optional function to parse the current history state when a view is
 		shown.
 
+		This function must be able to handle `null` state.
+
 		@since 1.0.0
 	**/
-	public dynamic function injectState(view:DisplayObject, state:Dynamic):Void {}
+	public dynamic function injectState(view:Dynamic, state:Dynamic):Void {}
+
+	/**
+		An optional function to save the view's data before navigating away.
+
+		@since 1.0.0
+	**/
+	public dynamic function saveData(view:Dynamic):Dynamic {
+		return null;
+	}
+
+	/**
+		An optional function to restore the view's data before navigating away.
+
+		This function must be able to handle `null` data.
+
+		@since 1.0.0
+	**/
+	public dynamic function restoreData(view:Dynamic, data:Dynamic):Void {}
 
 	private var viewClass:Class<DisplayObject>;
 	private var viewFunction:() -> DisplayObject;

@@ -8,7 +8,6 @@
 
 package feathers.controls.navigators;
 
-import feathers.events.NavigatorDataEvent;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelRouterNavigatorStyles;
 import openfl.display.DisplayObject;
@@ -150,21 +149,28 @@ class RouterNavigator extends BaseNavigator {
 	**/
 	public function push(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._activeItemView != null) {
-			var event = new NavigatorDataEvent(NavigatorDataEvent.SAVE_NAVIGATOR_DATA);
-			this._activeItemView.dispatchEvent(event);
+			var viewData:Dynamic = null;
+			var oldItem = this._addedItems.get(this._activeItemID);
+			if (oldItem.saveData != null) {
+				viewData = oldItem.saveData(this._activeItemView);
+			}
 			#if html5
 			var historyState:HistoryState = this.htmlWindow.history.state;
 			if (historyState == null) {
-				historyState = {state: null, viewData: event.data};
+				historyState = {state: null, viewData: viewData};
 			} else {
-				historyState.viewData = event.data;
+				historyState.viewData = viewData;
 			}
 			this.htmlWindow.history.replaceState(historyState, null, this.htmlWindow.location.pathname);
 			#else
 			var historyItem = this._history[this._history.length - 1];
 			var location = historyItem.location;
 			var historyState = historyItem.state;
-			historyState.viewData = event.data;
+			if (historyState == null) {
+				historyState = {state: null, viewData: viewData};
+			} else {
+				historyState.viewData = viewData;
+			}
 			this._history[this._history.length - 1] = new HistoryItem(location, historyState);
 			#end
 		}
@@ -363,13 +369,13 @@ class RouterNavigator extends BaseNavigator {
 		var historyItem = this._history[this._history.length - 1];
 		var historyState = historyItem.state;
 		#end
+		var viewState = (historyState != null) ? historyState.state : null;
 		if (item.injectState != null) {
-			var viewState = (historyState != null) ? historyState.state : null;
 			item.injectState(view, viewState);
 		}
 		var viewData = (historyState != null) ? historyState.viewData : null;
-		if (viewData != null) {
-			NavigatorDataEvent.dispatch(view, NavigatorDataEvent.RESTORE_NAVIGATOR_DATA, viewData);
+		if (item.restoreData != null) {
+			item.restoreData(view, viewData);
 		}
 		return view;
 	}
