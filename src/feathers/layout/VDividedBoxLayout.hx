@@ -503,7 +503,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			} else {
 				remainingHeight = 0.0;
 			}
-			fallbackItem.height += itemHeight;
+			fallbackItem.height = itemHeight;
 		}
 
 		if (remainingHeight == 0.0) {
