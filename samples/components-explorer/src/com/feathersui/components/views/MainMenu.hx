@@ -7,6 +7,8 @@ import feathers.controls.Header;
 import feathers.controls.Panel;
 import feathers.data.ArrayHierarchicalCollection;
 import feathers.events.GroupListViewEvent;
+import feathers.events.NavigatorDataEvent;
+import feathers.events.ScrollEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
@@ -15,7 +17,14 @@ import feathers.style.Theme;
 import openfl.events.Event;
 
 class MainMenu extends Panel {
+	public function new() {
+		super();
+		this.addEventListener(NavigatorDataEvent.SAVE_NAVIGATOR_DATA, saveNavigatorDataHandler);
+		this.addEventListener(NavigatorDataEvent.RESTORE_NAVIGATOR_DATA, restoreNavigatorDataHandler);
+	}
+
 	private var listView:GroupListView;
+	private var savedScrollY = 0.0;
 
 	override private function initialize():Void {
 		super.initialize();
@@ -87,7 +96,9 @@ class MainMenu extends Panel {
 
 		this.listView = new GroupListView();
 		this.listView.dataProvider = menuItems;
+		this.listView.scrollY = this.savedScrollY;
 		this.listView.layoutData = AnchorLayoutData.fill();
+		this.listView.addEventListener(ScrollEvent.SCROLL, listView_scrollHandler);
 		this.listView.addEventListener(GroupListViewEvent.ITEM_TRIGGER, listView_itemTriggerHandler);
 		this.addChild(this.listView);
 	}
@@ -119,6 +130,21 @@ class MainMenu extends Panel {
 			darkModeTheme.darkMode = !darkModeTheme.darkMode;
 		});
 		header.rightView = themeButton;
+	}
+
+	private function saveNavigatorDataHandler(event:NavigatorDataEvent):Void {
+		// this data will be restored if this view is shown again
+		event.data = {scrollY: this.savedScrollY};
+	}
+
+	private function restoreNavigatorDataHandler(event:NavigatorDataEvent):Void {
+		// this listener is called before the view is initialized, so save the
+		// data for later
+		this.savedScrollY = event.data.scrollY;
+	}
+
+	private function listView_scrollHandler(event:ScrollEvent):Void {
+		this.savedScrollY = this.listView.scrollY;
 	}
 
 	private function listView_itemTriggerHandler(event:GroupListViewEvent):Void {
