@@ -1422,6 +1422,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 			return;
 		}
 		var totalOffset = alignOffset;
+		var layoutIndex = 0;
 		for (i in 0...items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
@@ -1430,12 +1431,13 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 					continue;
 				}
 			}
-			if (i > 0 && (i % columnCount) == 0) {
+			if (layoutIndex > 0 && (layoutIndex % columnCount) == 0) {
 				totalOffset += gapOffset;
 			}
 			if (item != null) {
 				item.y += totalOffset;
 			}
+			layoutIndex++;
 		}
 	}
 }

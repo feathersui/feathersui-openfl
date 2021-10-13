@@ -1592,6 +1592,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		var totalOffset = alignOffset;
 		var columnIndex = 0;
 		var endIndex = Std.int(Math.min(startIndex + numItemsInPage, items.length));
+		var layoutIndex = 0;
 		for (i in startIndex...endIndex) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
@@ -1600,7 +1601,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 					continue;
 				}
 			}
-			if ((i % horizontalTileCount) == 0) {
+			if ((layoutIndex % horizontalTileCount) == 0) {
 				if (columnIndex > 0) {
 					totalOffset += gapOffset;
 				}
@@ -1609,6 +1610,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			if (item != null) {
 				item.y += totalOffset;
 			}
+			layoutIndex++;
 		}
 	}
 
