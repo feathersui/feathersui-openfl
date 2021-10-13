@@ -106,6 +106,8 @@ class RouterNavigator extends BaseNavigator {
 	@:style
 	public var replaceTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
+	private var _savedGoTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
+
 	private function initializeRouterNavigatorTheme():Void {
 		SteelRouterNavigatorStyles.initialize();
 	}
@@ -241,8 +243,14 @@ class RouterNavigator extends BaseNavigator {
 		if (n == 0) {
 			return this.activeItemView;
 		}
+		if (transition == null) {
+			transition = (n < 0) ? this.backTransition : this.forwardTransition;
+		}
 		#if html5
+		this._savedGoTransition = transition;
 		this.htmlWindow.history.go(n);
+		// the view is not restored until popstate is dispatched
+		return null;
 		#else
 		if (n > 0) {
 			for (i in 0...Std.int(Math.min(n, this._forwardHistory.length))) {
@@ -255,11 +263,8 @@ class RouterNavigator extends BaseNavigator {
 				this._forwardHistory.unshift(item);
 			}
 		}
-		#end
-		if (transition == null) {
-			transition = (n < 0) ? this.backTransition : this.forwardTransition;
-		}
 		return this.matchRouteAndShow(transition);
+		#end
 	}
 
 	/**
@@ -389,8 +394,10 @@ class RouterNavigator extends BaseNavigator {
 	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
 		event.preventDefault();
 		// there's no good way to determine if we went forward or back
-		// so it may be better not to use a transition in this case
-		this.matchRouteAndShow(null);
+		// so use a transition only if we've saved one
+		var transition = this._savedGoTransition;
+		this._savedGoTransition = null;
+		this.matchRouteAndShow(transition);
 	}
 	#else
 	private function routerNavigator_stage_keyUpHandler(event:KeyboardEvent):Void {
