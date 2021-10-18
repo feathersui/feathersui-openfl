@@ -768,6 +768,23 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.textFieldViewPort.selectRange(0, this._text.length);
 	}
 
+	/**
+		Sets all four text padding properties to the same value.
+
+		@see `TextArea.textPaddingTop`
+		@see `TextArea.textPaddingRight`
+		@see `TextArea.textPaddingBottom`
+		@see `TextArea.textPaddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setTextPadding(value:Float):Void {
+		this.textPaddingTop = value;
+		this.textPaddingRight = value;
+		this.textPaddingBottom = value;
+		this.textPaddingLeft = value;
+	}
+
 	override public function showFocus(show:Bool):Void {
 		super.showFocus(show);
 		if (show) {
