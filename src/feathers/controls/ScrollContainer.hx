@@ -20,6 +20,7 @@ import feathers.themes.steel.components.SteelScrollContainerStyles;
 import openfl.display.DisplayObject;
 import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.geom.Point;
 
 /**
 	A generic container that supports layout, scrolling, and a background skin.
@@ -445,9 +446,12 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			return false;
 		}
 		if (this._autoSizeMode == STAGE && this.stage != null) {
-			var newWidth = this.stage.stageWidth;
-			var newHeight = this.stage.stageHeight;
-			return this.saveMeasurements(newWidth, newHeight, newWidth, newHeight);
+			// TODO: see if this can be done without allocations
+			var topLeft = this.globalToLocal(new Point());
+			var bottomRight = this.globalToLocal(new Point(this.stage.stageWidth, this.stage.stageHeight));
+			var stageWidth = bottomRight.x - topLeft.x;
+			var stageHeight = bottomRight.y - topLeft.y;
+			return this.saveMeasurements(stageWidth, stageHeight, stageWidth, stageHeight);
 		}
 		return super.measure();
 	}
