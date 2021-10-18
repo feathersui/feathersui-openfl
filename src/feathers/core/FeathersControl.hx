@@ -532,6 +532,23 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	/**
+		Sets all four padding properties to the same value.
+
+		@see `FeathersControl.focusPaddingTop`
+		@see `FeathersControl.focusPaddingRight`
+		@see `FeathersControl.focusPaddingBottom`
+		@see `FeathersControl.focusPaddingLeft`
+
+		@since 1.0.0
+	**/
+	public function setFocusPadding(value:Float):Void {
+		this.focusPaddingTop = value;
+		this.focusPaddingRight = value;
+		this.focusPaddingBottom = value;
+		this.focusPaddingLeft = value;
+	}
+
+	/**
 		@see `feathers.core.IFocusObject.showFocus()`
 	**/
 	public function showFocus(show:Bool):Void {
