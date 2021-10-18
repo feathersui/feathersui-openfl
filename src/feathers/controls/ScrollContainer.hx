@@ -402,6 +402,14 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		SteelScrollContainerStyles.initialize();
 	}
 
+	override public function dispatchEvent(event:Event):Bool {
+		var oldBypass = this._displayListBypassEnabled;
+		this._displayListBypassEnabled = true;
+		var result = super.dispatchEvent(event);
+		this._displayListBypassEnabled = oldBypass;
+		return result;
+	}
+
 	override public function validateNow():Void {
 		// for the start of validation, we're going to ignore when children
 		// resize or dispatch changes to layout data. this allows subclasses
@@ -456,8 +464,18 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		return super.measure();
 	}
 
-	private function refreshLayout():Void {
-		this.layoutViewPort.layout = this.layout;
+	override private function refreshViewPortBoundsForMeasurement():Void {
+		var oldBypass = this._displayListBypassEnabled;
+		this._displayListBypassEnabled = true;
+		super.refreshViewPortBoundsForMeasurement();
+		this._displayListBypassEnabled = oldBypass;
+	}
+
+	override private function refreshViewPortBoundsForLayout():Void {
+		var oldBypass = this._displayListBypassEnabled;
+		this._displayListBypassEnabled = true;
+		super.refreshViewPortBoundsForLayout();
+		this._displayListBypassEnabled = oldBypass;
 	}
 
 	override private function refreshScrollerValues():Void {
@@ -476,6 +494,10 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		}
 		this.scroller.snapPositionsX = this.layoutViewPort.snapPositionsX;
 		this.scroller.snapPositionsY = this.layoutViewPort.snapPositionsY;
+	}
+
+	private function refreshLayout():Void {
+		this.layoutViewPort.layout = this.layout;
 	}
 
 	private function scrollContainer_addedToStageHandler(event:Event):Void {
