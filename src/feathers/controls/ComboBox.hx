@@ -851,6 +851,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.removeEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
+			this.textInput.removeEventListener(MouseEvent.MOUSE_DOWN, comboBox_textInput_mouseDownHandler);
 			this.removeChild(this.textInput);
 			if (this._oldTextInputFactory.destroy != null) {
 				this._oldTextInputFactory.destroy(this.textInput);
@@ -867,6 +868,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.textInput.addEventListener(Event.CHANGE, comboBox_textInput_changeHandler);
 		this.textInput.addEventListener(KeyboardEvent.KEY_DOWN, comboBox_textInput_keyDownHandler);
 		this.textInput.addEventListener(FocusEvent.FOCUS_IN, comboBox_textInput_focusInHandler);
+		this.textInput.addEventListener(MouseEvent.MOUSE_DOWN, comboBox_textInput_mouseDownHandler);
 		this.textInput.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
 		this.addChild(this.textInput);
@@ -1272,5 +1274,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private function comboBox_dataProvider_removeAllHandler(event:Event):Void {
 		// use the setter
 		this.selectedIndex = -1;
+	}
+
+	private function comboBox_textInput_mouseDownHandler(event:MouseEvent):Void {
+		if (this.textInput.editable || this.textInput.selectable) {
+			return;
+		}
+		this.openListView();
 	}
 }
