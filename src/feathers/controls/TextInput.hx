@@ -144,6 +144,38 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._editable;
 	}
 
+	private var _selectable:Bool = true;
+
+	/**
+		If the `editable` property is `false`, indicates if the text can still
+		be selected. If the `editable` property is `true`, the text is always
+		selectable, and this property is ignored.
+
+		The following example disables selection:
+
+		```hx
+		textInput.editable = false;
+		textInput.selectable = false;
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectable(get, set):Bool;
+
+	private function get_selectable():Bool {
+		return this._selectable;
+	}
+
+	private function set_selectable(value:Bool):Bool {
+		if (this._selectable == value) {
+			return this._selectable;
+		}
+		this._selectable = value;
+		this.setInvalid(STATE);
+		return this._selectable;
+	}
+
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
@@ -1007,7 +1039,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		super.initialize();
 		if (this.textField == null) {
 			this.textField = new TextField();
-			this.textField.selectable = true;
 			this.textField.tabEnabled = false;
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
@@ -1521,6 +1552,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private function refreshText(forceMeasurement:Bool):Void {
 		this.textField.restrict = this.__restrict;
 		this.textField.maxChars = this._maxChars;
+		if (this._editable) {
+			this.textField.selectable = this._enabled;
+		} else {
+			this.textField.selectable = this._enabled && this._selectable;
+		}
 		var hasMeasureText = this._measureText != null;
 		var measureText = hasMeasureText ? this._measureText : this._text;
 		if (measureText == null || measureText.length == 0) {

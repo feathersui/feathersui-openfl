@@ -143,6 +143,35 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._editable;
 	}
 
+	private var _selectable:Bool = true;
+
+	/**
+		Indicates if the text can be selected.
+
+		The following example disables selection:
+
+		```hx
+		textArea.selectable = false;
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectable(get, set):Bool;
+
+	private function get_selectable():Bool {
+		return this._selectable;
+	}
+
+	private function set_selectable(value:Bool):Bool {
+		if (this._selectable == value) {
+			return this._selectable;
+		}
+		this._selectable = value;
+		this.setInvalid(DATA);
+		return this._selectable;
+	}
+
 	private var _currentState:TextInputState = ENABLED;
 
 	/**
@@ -845,6 +874,11 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.textFieldViewPort.restrict = this.__restrict;
 			this.textFieldViewPort.maxChars = this._maxChars;
 			this.textFieldViewPort.displayAsPassword = this._displayAsPassword;
+			if (this._editable) {
+				this.textFieldViewPort.selectable = this._enabled;
+			} else {
+				this.textFieldViewPort.selectable = this._enabled && this._selectable;
+			}
 		}
 
 		if (stateInvalid) {

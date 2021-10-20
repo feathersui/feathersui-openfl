@@ -232,6 +232,29 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		return this._maxChars;
 	}
 
+	private var _selectable:Bool = true;
+
+	/**
+		Determines if the text can be selected.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var selectable(get, set):Bool;
+
+	private function get_selectable():Bool {
+		return this._selectable;
+	}
+
+	private function set_selectable(value:Bool):Bool {
+		if (this._selectable == value) {
+			return this._selectable;
+		}
+		this._selectable = value;
+		this.setInvalid(DATA);
+		return this._selectable;
+	}
+
 	private var _smoothScrolling:Bool = false;
 
 	/**
@@ -859,6 +882,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		this._textField.restrict = this.__restrict;
 		this._textField.displayAsPassword = this._displayAsPassword;
 		this._textField.maxChars = this._maxChars;
+		this._textField.selectable = this._selectable;
 		var calculatedWidth = this._explicitVisibleWidth;
 		if (calculatedWidth != null) {
 			calculatedWidth -= (this._paddingLeft + this._paddingRight);
