@@ -1453,7 +1453,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		if (this.promptTextField == null) {
 			this.promptTextField = new TextField();
-			this.addChild(this.promptTextField);
+			this.addChildAt(this.promptTextField, this.getChildIndex(this.textField));
 		}
 		this.promptTextField.selectable = false;
 		this.promptTextField.mouseWheelEnabled = false;

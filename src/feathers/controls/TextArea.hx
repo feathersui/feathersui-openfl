@@ -918,7 +918,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.promptTextField.mouseWheelEnabled = false;
 			this.promptTextField.mouseEnabled = false;
 			this.promptTextField.multiline = true;
-			this.addChild(this.promptTextField);
+			this.addChildAt(this.promptTextField, this.getChildIndex(this.textFieldViewPort));
 		}
 		this.promptTextField.visible = this._text.length == 0;
 	}
