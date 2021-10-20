@@ -11,8 +11,9 @@ package feathers.controls.navigators;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelRouterNavigatorStyles;
 import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
-#if (html5 && !electron)
+#if html5
 import js.Lib;
 import js.html.Window;
 #else
@@ -50,7 +51,7 @@ class RouterNavigator extends BaseNavigator {
 	public function new() {
 		initializeRouterNavigatorTheme();
 		super();
-		#if (!html5 || electron)
+		#if !html5
 		if (this._history.length == 0) {
 			this._history.push(new HistoryItem(new Location("/"), {state: null, viewData: null}));
 		}
@@ -59,7 +60,7 @@ class RouterNavigator extends BaseNavigator {
 		this.addEventListener(Event.REMOVED_FROM_STAGE, routerNavigator_removedFromStageHandler);
 	}
 
-	#if (html5 && !electron)
+	#if html5
 	private var htmlWindow:Window;
 	private var historyDepth:Int = 0;
 	#else
@@ -108,6 +109,34 @@ class RouterNavigator extends BaseNavigator {
 
 	private var _savedGoTransition:(DisplayObject, DisplayObject) -> IEffectContext = null;
 
+	private var _preferHashRouting:Bool = false;
+
+	/**
+		Indicates if hash routing should be preferred for the default pathname
+		routing.
+
+		This property is used only on HTML/JS targets, and is ignored on other
+		targets.
+
+		@since 1.0.0
+	**/
+	public var preferHashRouting(get, set):Bool;
+
+	private function get_preferHashRouting():Bool {
+		return this._preferHashRouting;
+	}
+
+	private function set_preferHashRouting(value:Bool):Bool {
+		if (this._preferHashRouting == value) {
+			return this._preferHashRouting;
+		}
+		if (this._activeItemView != null) {
+			throw new ArgumentError("Must set preferHashRouting before a view is displayed");
+		}
+		this._preferHashRouting = value;
+		return this._preferHashRouting;
+	}
+
 	private function initializeRouterNavigatorTheme():Void {
 		SteelRouterNavigatorStyles.initialize();
 	}
@@ -155,14 +184,18 @@ class RouterNavigator extends BaseNavigator {
 			if (oldItem.saveData != null) {
 				viewData = oldItem.saveData(this._activeItemView);
 			}
-			#if (html5 && !electron)
+			#if html5
 			var historyState:HistoryState = this.htmlWindow.history.state;
 			if (historyState == null) {
 				historyState = {depth: this.historyDepth, state: null, viewData: viewData};
 			} else {
 				historyState.viewData = viewData;
 			}
-			this.htmlWindow.history.replaceState(historyState, null, this.htmlWindow.location.pathname);
+			var pathname = this.getPathname();
+			if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
+				pathname = this.htmlWindow.location.pathname + "#" + pathname;
+			}
+			this.htmlWindow.history.replaceState(historyState, null, pathname);
 			#else
 			var historyItem = this._history[this._history.length - 1];
 			var location = historyItem.location;
@@ -175,12 +208,15 @@ class RouterNavigator extends BaseNavigator {
 			this._history[this._history.length - 1] = new HistoryItem(location, historyState);
 			#end
 		}
-		#if (html5 && !electron)
+		#if html5
 		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
 		}
 		this.historyDepth++;
+		if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
+			path = this.htmlWindow.location.pathname + "#" + path;
+		}
 		this.htmlWindow.history.pushState({
 			depth: this.historyDepth,
 			state: state,
@@ -215,7 +251,7 @@ class RouterNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function replace(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
-		#if (html5 && !electron)
+		#if html5
 		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
@@ -256,7 +292,7 @@ class RouterNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = (n < 0) ? this.backTransition : this.forwardTransition;
 		}
-		#if (html5 && !electron)
+		#if html5
 		this._savedGoTransition = transition;
 		this.htmlWindow.history.go(n);
 		// the view is not restored until popstate is dispatched
@@ -308,7 +344,7 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function routerNavigator_addedToStageHandler(event:Event):Void {
-		#if (html5 && !electron)
+		#if html5
 		this.htmlWindow = cast(Lib.global, js.html.Window);
 		this.htmlWindow.addEventListener("popstate", htmlWindow_popstateHandler);
 		#else
@@ -322,19 +358,29 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var location(get, never):#if (html5 && !electron) js.html.Location #else Location #end;
+	public var location(get, never):#if html5 js.html.Location #else Location #end;
 
-	private function get_location():#if (html5 && !electron) js.html.Location #else Location #end {
-		#if (html5 && !electron)
+	private function get_location():#if html5 js.html.Location #else Location #end {
+		#if html5
 		return this.htmlWindow.location;
 		#else
 		return this._history[this._history.length - 1].location;
 		#end
 	}
 
-	private function matchRoute():Route {
-		#if (html5 && !electron)
-		var pathname = this.htmlWindow.location.pathname;
+	private function getPathname():String {
+		#if html5
+		var pathname:String = null;
+		if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
+			pathname = this.htmlWindow.location.hash;
+			if (pathname.length == 0) {
+				pathname = "/";
+			} else {
+				pathname = pathname.substr(1);
+			}
+		} else {
+			pathname = this.htmlWindow.location.pathname;
+		}
 		if (this.basePath != null && StringTools.startsWith(pathname, this.basePath + "/")) {
 			pathname = pathname.substr(this.basePath.length);
 		}
@@ -343,7 +389,11 @@ class RouterNavigator extends BaseNavigator {
 		var pathname = item.location.pathname;
 		#end
 		pathname = pathname.toLowerCase();
-		trace(pathname);
+		return pathname;
+	}
+
+	private function matchRoute():Route {
+		var pathname = this.getPathname();
 		for (path => route in this._addedItems) {
 			path = path.toLowerCase();
 			if (pathname == path) {
@@ -368,7 +418,7 @@ class RouterNavigator extends BaseNavigator {
 	override private function getView(id:String):DisplayObject {
 		var item = cast(this._addedItems.get(id), Route);
 		var view = item.getView(this);
-		#if (html5 && !electron)
+		#if html5
 		var historyState:HistoryState = this.htmlWindow.history.state;
 		#else
 		var historyItem = this._history[this._history.length - 1];
@@ -391,7 +441,7 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function routerNavigator_removedFromStageHandler(event:Event):Void {
-		#if (html5 && !electron)
+		#if html5
 		if (this.htmlWindow != null) {
 			this.htmlWindow.removeEventListener("popstate", htmlWindow_popstateHandler);
 			this.htmlWindow = null;
@@ -401,7 +451,7 @@ class RouterNavigator extends BaseNavigator {
 		#end
 	}
 
-	#if (html5 && !electron)
+	#if html5
 	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
 		event.preventDefault();
 		var newDepth = this.historyDepth;
@@ -459,14 +509,14 @@ class RouterNavigator extends BaseNavigator {
 }
 
 typedef HistoryState = {
-	#if (html5 && !electron)
+	#if html5
 	depth:Int,
 	#end
 	state:Any,
 	viewData:Any
 };
 
-#if (!html5 || electron)
+#if !html5
 private class HistoryItem {
 	public function new(location:Location, state:HistoryState) {
 		this.location = location;
