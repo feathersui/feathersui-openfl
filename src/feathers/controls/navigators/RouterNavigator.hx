@@ -12,7 +12,7 @@ import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelRouterNavigatorStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
-#if html5
+#if (html5 && !electron)
 import js.Lib;
 import js.html.Window;
 #else
@@ -50,7 +50,7 @@ class RouterNavigator extends BaseNavigator {
 	public function new() {
 		initializeRouterNavigatorTheme();
 		super();
-		#if !html5
+		#if (!html5 || electron)
 		if (this._history.length == 0) {
 			this._history.push(new HistoryItem(new Location("/"), {state: null, viewData: null}));
 		}
@@ -59,7 +59,7 @@ class RouterNavigator extends BaseNavigator {
 		this.addEventListener(Event.REMOVED_FROM_STAGE, routerNavigator_removedFromStageHandler);
 	}
 
-	#if html5
+	#if (html5 && !electron)
 	private var htmlWindow:Window;
 	private var historyDepth:Int = 0;
 	#else
@@ -155,7 +155,7 @@ class RouterNavigator extends BaseNavigator {
 			if (oldItem.saveData != null) {
 				viewData = oldItem.saveData(this._activeItemView);
 			}
-			#if html5
+			#if (html5 && !electron)
 			var historyState:HistoryState = this.htmlWindow.history.state;
 			if (historyState == null) {
 				historyState = {depth: this.historyDepth, state: null, viewData: viewData};
@@ -175,7 +175,7 @@ class RouterNavigator extends BaseNavigator {
 			this._history[this._history.length - 1] = new HistoryItem(location, historyState);
 			#end
 		}
-		#if html5
+		#if (html5 && !electron)
 		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
@@ -215,7 +215,7 @@ class RouterNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function replace(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
-		#if html5
+		#if (html5 && !electron)
 		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
@@ -256,7 +256,7 @@ class RouterNavigator extends BaseNavigator {
 		if (transition == null) {
 			transition = (n < 0) ? this.backTransition : this.forwardTransition;
 		}
-		#if html5
+		#if (html5 && !electron)
 		this._savedGoTransition = transition;
 		this.htmlWindow.history.go(n);
 		// the view is not restored until popstate is dispatched
@@ -308,7 +308,7 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function routerNavigator_addedToStageHandler(event:Event):Void {
-		#if html5
+		#if (html5 && !electron)
 		this.htmlWindow = cast(Lib.global, js.html.Window);
 		this.htmlWindow.addEventListener("popstate", htmlWindow_popstateHandler);
 		#else
@@ -322,10 +322,10 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public var location(get, never):#if html5 js.html.Location #else Location #end;
+	public var location(get, never):#if (html5 && !electron) js.html.Location #else Location #end;
 
-	private function get_location():#if html5 js.html.Location #else Location #end {
-		#if html5
+	private function get_location():#if (html5 && !electron) js.html.Location #else Location #end {
+		#if (html5 && !electron)
 		return this.htmlWindow.location;
 		#else
 		return this._history[this._history.length - 1].location;
@@ -333,7 +333,7 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function matchRoute():Route {
-		#if html5
+		#if (html5 && !electron)
 		var pathname = this.htmlWindow.location.pathname;
 		if (this.basePath != null && StringTools.startsWith(pathname, this.basePath + "/")) {
 			pathname = pathname.substr(this.basePath.length);
@@ -343,6 +343,7 @@ class RouterNavigator extends BaseNavigator {
 		var pathname = item.location.pathname;
 		#end
 		pathname = pathname.toLowerCase();
+		trace(pathname);
 		for (path => route in this._addedItems) {
 			path = path.toLowerCase();
 			if (pathname == path) {
@@ -367,7 +368,7 @@ class RouterNavigator extends BaseNavigator {
 	override private function getView(id:String):DisplayObject {
 		var item = cast(this._addedItems.get(id), Route);
 		var view = item.getView(this);
-		#if html5
+		#if (html5 && !electron)
 		var historyState:HistoryState = this.htmlWindow.history.state;
 		#else
 		var historyItem = this._history[this._history.length - 1];
@@ -390,7 +391,7 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function routerNavigator_removedFromStageHandler(event:Event):Void {
-		#if html5
+		#if (html5 && !electron)
 		if (this.htmlWindow != null) {
 			this.htmlWindow.removeEventListener("popstate", htmlWindow_popstateHandler);
 			this.htmlWindow = null;
@@ -400,7 +401,7 @@ class RouterNavigator extends BaseNavigator {
 		#end
 	}
 
-	#if html5
+	#if (html5 && !electron)
 	private function htmlWindow_popstateHandler(event:js.html.PopStateEvent):Void {
 		event.preventDefault();
 		var newDepth = this.historyDepth;
@@ -458,14 +459,14 @@ class RouterNavigator extends BaseNavigator {
 }
 
 typedef HistoryState = {
-	#if html5
+	#if (html5 && !electron)
 	depth:Int,
 	#end
 	state:Any,
 	viewData:Any
 };
 
-#if !html5
+#if (!html5 || electron)
 private class HistoryItem {
 	public function new(location:Location, state:HistoryState) {
 		this.location = location;
