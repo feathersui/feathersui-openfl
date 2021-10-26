@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import openfl.errors.RangeError;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -22,6 +21,8 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
+import openfl.display.Sprite;
+import openfl.errors.RangeError;
 import openfl.events.Event;
 import openfl.geom.Point;
 
@@ -226,6 +227,8 @@ class LayoutGroup extends FeathersControl {
 		}
 		return this._autoSizeMode;
 	}
+
+	private var _disabledOverlay:Sprite;
 
 	private var _currentLayout:ILayout;
 
@@ -462,10 +465,32 @@ class LayoutGroup extends FeathersControl {
 			}
 			this.handleLayoutResult();
 			this.refreshBackgroundLayout();
+			this.refreshDisabledOverlay();
 			this.refreshMaskLayout();
 
 			// final invalidation to avoid juggler next frame issues
 			this.validateChildren();
+		}
+	}
+
+	private function refreshDisabledOverlay():Void {
+		if (!this._enabled) {
+			if (this._disabledOverlay == null) {
+				this._disabledOverlay = new Sprite();
+				this._disabledOverlay.graphics.beginFill(0xff00ff, 0.0);
+				this._disabledOverlay.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
+				this._disabledOverlay.graphics.endFill();
+				this._addChild(this._disabledOverlay);
+			} else {
+				this._setChildIndex(this._disabledOverlay, this._numChildren - 1);
+			}
+		}
+		if (this._disabledOverlay != null) {
+			this._disabledOverlay.visible = !this._enabled;
+			this._disabledOverlay.x = 0.0;
+			this._disabledOverlay.y = 0.0;
+			this._disabledOverlay.width = this.actualWidth;
+			this._disabledOverlay.height = this.actualHeight;
 		}
 	}
 
