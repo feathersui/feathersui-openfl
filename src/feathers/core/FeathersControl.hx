@@ -144,6 +144,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._enabled;
 		}
 		this._enabled = value;
+		if (this._enabled || this.disabledAlpha == null) {
+			super.alpha = this._explicitAlpha;
+		} else if (!this._enabled && this.disabledAlpha != null) {
+			super.alpha = this.disabledAlpha;
+		}
 		this.setInvalid(STATE);
 		if (this._enabled) {
 			FeathersEvent.dispatch(this, FeathersEvent.ENABLE);
@@ -314,6 +319,35 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this._previousClearStyle = this.clearStyle_layoutData;
 		return this.setLayoutDataInternal(value);
 	}
+
+	private var _explicitAlpha:Float = 1.0;
+
+	#if flash
+	@:setter(alpha)
+	private function set_alpha(value:Float):Void {
+		this._explicitAlpha = value;
+		if (this._enabled || this.disabledAlpha == null) {
+			super.alpha = value;
+		}
+	}
+	#else
+	override private function set_alpha(value:Float):Float {
+		this._explicitAlpha = value;
+		if (this._enabled || this.disabledAlpha == null) {
+			super.alpha = value;
+		}
+		return this._explicitAlpha;
+	}
+	#end
+
+	/**
+		When `disabledAlpha` is not `null`, sets the `alpha` property to this
+		value when the the `enabled` property is set to `false`.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var disabledAlpha:Null<Float> = null;
 
 	private var _focusManager:IFocusManager = null;
 
