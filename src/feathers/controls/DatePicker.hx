@@ -10,6 +10,7 @@ package feathers.controls;
 
 import feathers.core.FeathersControl;
 import feathers.core.IDateSelector;
+import feathers.core.IFocusObject;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -38,7 +39,7 @@ import flash.globalization.LocaleID;
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
 @:styleContext
-class DatePicker extends FeathersControl implements IDateSelector {
+class DatePicker extends FeathersControl implements IDateSelector implements IFocusObject {
 	#if ((!flash && openfl < "9.2.0") || neko)
 	private static final DEFAULT_MONTH_NAMES = [
 		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
