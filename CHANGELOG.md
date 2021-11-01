@@ -1,5 +1,20 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.7 (2021-11-??)
+
+- DatePicker: New component for selecting a date from a calendar view.
+- FeathersControl: Added `disabledAlpha` property to change the `alpha` value of the component when disabled.
+- FeathersControl: Added `setFocusPadding()` convenience method.
+- LayoutGroup: Prevents mouse/touch from reaching children when disabled.
+- PopUpDatePicker: New component that displays a date as an input field, with a pop-up `DatePicker`.
+- RouterNavigator: Support for "hash" routing instead of URL routing. Will fall back to hash routing when loaded with the `file:` protocol. Can also set `preferHashRouting` to use hash routing as default.
+- RouterNavigator: Added optional `saveData` and `restoreData` methods to `Route` to allow a view's state to be saved when navigating away and restored when returning.
+- StackNavigator: Added optional `saveData` and `restoreData` methods to `StackItem` to allow a view's state to be saved when navigating away and restored when returning.
+- TextArea, TextInput: Added `selectable` property, which can be set to `false` to disable selection when `editable` is also `false`.
+- TextArea: Added `setTextPadding()` convenience method.
+- stack-navigator-save-and-restore: New sample that demonstrates how to use the `saveData` and `restoreData` methods on `StackItem`.
+- router-navigator-save-and-restore: New sample that demonstrates how to use the `saveData` and `restoreData` methods on `Route`.
+
 ## 1.0.0-beta.6 (2021-10-04)
 
 - ArrayCollection, ArrayHierarchicalCollection: These collections now implement the `IExternalizable` interface.
