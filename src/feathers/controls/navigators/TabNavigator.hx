@@ -629,6 +629,10 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	private function tabNavigator_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
 		// use the setter
 		this.selectedIndex = -1;
+		for (id in this._addedItems.keys()) {
+			var item = this._addedItems.get(id);
+			this.removeItemInternal(item.internalID);
+		}
 	}
 
 	private function tabNavigator_previousEdgePuller_openingHandler(event:FeathersEvent):Void {
