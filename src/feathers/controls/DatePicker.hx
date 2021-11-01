@@ -897,7 +897,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	}
 
 	private function set_customStartOfWeek(value:Null<Int>):Null<Int> {
-		if (value < 0 || value > 6) {
+		if (value != null && (value < 0 || value > 6)) {
 			throw new RangeError("startOfWeek must be in the range 0-6");
 		}
 		if (this._customStartOfWeek == value) {
