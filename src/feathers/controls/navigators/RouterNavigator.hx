@@ -260,6 +260,9 @@ class RouterNavigator extends BaseNavigator {
 			var needsSlash = !StringTools.startsWith(path, "/");
 			path = this.basePath + (needsSlash ? "/" : "") + path;
 		}
+		if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
+			path = this.htmlWindow.location.pathname + "#" + path;
+		}
 		this.htmlWindow.history.replaceState({
 			depth: this.historyDepth,
 			state: state,
