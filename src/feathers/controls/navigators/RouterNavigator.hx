@@ -191,11 +191,15 @@ class RouterNavigator extends BaseNavigator {
 			} else {
 				historyState.viewData = viewData;
 			}
-			var pathname = this.getPathname();
-			if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
-				pathname = this.htmlWindow.location.pathname + "#" + pathname;
+			var oldPath = this.getPathname();
+			if (this.basePath != null && !StringTools.startsWith(oldPath, this.basePath + "/")) {
+				var needsSlash = !StringTools.startsWith(path, "/");
+				oldPath = this.basePath + (needsSlash ? "/" : "") + oldPath;
 			}
-			this.htmlWindow.history.replaceState(historyState, null, pathname);
+			if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
+				oldPath = this.htmlWindow.location.pathname + "#" + oldPath;
+			}
+			this.htmlWindow.history.replaceState(historyState, null, oldPath);
 			#else
 			var historyItem = this._history[this._history.length - 1];
 			var location = historyItem.location;
