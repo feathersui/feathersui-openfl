@@ -162,8 +162,8 @@ class IrisTransitionBuilder {
 			var height = 0.0;
 			var oldViewMask:Shape = null;
 			var newViewMask:Shape = null;
-			var oldViewOldMask:DisplayObject;
-			var newViewOldMask:DisplayObject;
+			var oldViewOldMask:DisplayObject = null;
+			var newViewOldMask:DisplayObject = null;
 			if (oldView != null) {
 				parent = oldView.parent;
 				width = oldView.width;
