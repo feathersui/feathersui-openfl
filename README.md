@@ -46,10 +46,12 @@ The Haxe programming language is supported by [more editors and IDEs](https://ha
 ## Help & Support
 
 - [Documentation](https://feathersui.com/learn/haxe-openfl/)
+- [API Reference](https://api.feathersui.com/)
 - [Sample Projects](https://feathersui.com/samples/haxe-openfl/)
 - [Community Forum](https://community.feathersui.com/)
 - [Discord Chat](https://discord.feathersui.com/)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/feathersui)
+- [Premium Support](https://feathersui.com/premium-support/)
 
 ## News & Updates
 
