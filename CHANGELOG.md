@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.7 (2021-11-??)
+## 1.0.0-beta.7 (2021-11-02)
 
 - DatePicker: New component for selecting a date from a calendar view.
 - FeathersControl: Added `disabledAlpha` property to change the `alpha` value of the component when disabled.
