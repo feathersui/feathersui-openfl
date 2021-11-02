@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: Transition animation builders, mask/scrollRect scroll modes, TreeView improvements"
+	"releasenote": "Preview build: DatePicker, PopUpDatePicker, disabledAlpha, URL routing improvements"
 }
