@@ -19,11 +19,11 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelItemRendererStyles;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
 
 /**
 	A generic renderer for UI components that display data collections.
@@ -513,15 +513,19 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 	}
 
 	private function customHitTest(stageX:Float, stageY:Float):Bool {
-		if (this.stage == null) {
+		var pointerTargetContainer:DisplayObjectContainer = Std.downcast(this._pointerTarget, DisplayObjectContainer);
+		if (pointerTargetContainer == null) {
+			pointerTargetContainer = this;
+		}
+		if (pointerTargetContainer.stage == null) {
 			return false;
 		}
-		if (this.mouseChildren) {
-			var objects = this.stage.getObjectsUnderPoint(new Point(stageX, stageY));
+		if (pointerTargetContainer.mouseChildren) {
+			var objects = pointerTargetContainer.stage.getObjectsUnderPoint(new Point(stageX, stageY));
 			if (objects.length > 0) {
 				var lastObject = objects[objects.length - 1];
-				if (this.contains(lastObject)) {
-					while (lastObject != null && lastObject != this) {
+				if (pointerTargetContainer.contains(lastObject)) {
+					while (lastObject != null && lastObject != pointerTargetContainer) {
 						if ((lastObject is InteractiveObject)) {
 							var interactive = cast(lastObject, InteractiveObject);
 							if (!interactive.mouseEnabled) {
@@ -531,7 +535,7 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 						}
 						if ((lastObject is IFocusObject)) {
 							var focusable = cast(lastObject, IFocusObject);
-							if (focusable.focusEnabled) {
+							if (focusable.parent != this._pointerTarget && focusable.focusEnabled) {
 								return false;
 							}
 						}
