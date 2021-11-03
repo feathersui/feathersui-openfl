@@ -176,6 +176,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var buttonMeasurements = new Measurements();
 	private var textInputMeasurements = new Measurements();
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 

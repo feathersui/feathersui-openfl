@@ -428,6 +428,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		return this._paddingLeft;
 	}
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 

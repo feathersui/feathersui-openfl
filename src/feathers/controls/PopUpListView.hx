@@ -156,6 +156,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 	private var buttonMeasurements:Measurements = new Measurements();
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 

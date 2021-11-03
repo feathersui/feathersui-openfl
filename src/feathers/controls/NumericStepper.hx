@@ -428,6 +428,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		return this._valueParseFunction;
 	}
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 

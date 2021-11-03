@@ -663,6 +663,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return false;
 	}
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 

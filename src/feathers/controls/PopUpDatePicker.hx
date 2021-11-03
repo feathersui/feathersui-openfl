@@ -141,6 +141,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	private var buttonMeasurements = new Measurements();
 	private var textInputMeasurements = new Measurements();
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 

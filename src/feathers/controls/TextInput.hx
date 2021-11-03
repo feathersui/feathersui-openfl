@@ -176,6 +176,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._selectable;
 	}
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 

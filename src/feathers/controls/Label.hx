@@ -271,6 +271,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		return this._selectable && this._enabled && this.rawTabEnabled;
 	}
 
+	@:dox(hide)
 	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
