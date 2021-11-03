@@ -43,6 +43,12 @@ import flash.globalization.DateTimeFormatter;
 import flash.globalization.LocaleID;
 #end
 
+/**
+
+	@see [Tutorial: How to use the PopUpDatePicker component](https://feathersui.com/learn/haxe-openfl/pop-up-date-picker/)
+
+	@since 1.0.0
+**/
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
