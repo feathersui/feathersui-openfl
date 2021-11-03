@@ -44,6 +44,22 @@ import flash.globalization.LocaleID;
 #end
 
 /**
+	Displays a control consisting of a `TextInput` and `Button` that allows a
+	date to be selected. When the button is triggered, a `DatePicker` is
+	displayed as a pop-up.
+
+	The following example creates a pop-up date picker, sets the selected date,
+	and listens for when the selection changes:
+
+	```hx
+	var datePicker = new PopUpDatePicker();
+	datePicker.selectedDate = new Date(2020, 1, 6);
+	datePicker.addEventListener(Event.CHANGE, (event:Event) -> {
+		var datePicker = cast(event.currentTarget, PopUpDatePicker);
+		trace("DatePicker changed: " + datePicker.selectedDate);
+	});
+	this.addChild(datePicker);
+	```
 
 	@see [Tutorial: How to use the PopUpDatePicker component](https://feathersui.com/learn/haxe-openfl/pop-up-date-picker/)
 

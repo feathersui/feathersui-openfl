@@ -36,6 +36,23 @@ import flash.globalization.LocaleID;
 #end
 
 /**
+	Displays a calendar month view that allows the selection of a date. The
+	header displays the current month and year name, along with buttons to
+	change the currently displayed month and year. The buttons in the header may
+	be hidden, if desired.
+
+	The following example creates a date picker, sets the selected date, and
+	listens for when the selection changes:
+
+	```hx
+	var datePicker = new DatePicker();
+	datePicker.selectedDate = new Date(2020, 1, 6);
+	datePicker.addEventListener(Event.CHANGE, (event:Event) -> {
+		var datePicker = cast(event.currentTarget, DatePicker);
+		trace("DatePicker changed: " + datePicker.selectedDate);
+	});
+	this.addChild(datePicker);
+	```
 
 	@see [Tutorial: How to use the DatePicker component](https://feathersui.com/learn/haxe-openfl/date-picker/)
 
@@ -155,6 +172,11 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	private static final defaultIncrementYearButtonFactory = DisplayObjectFactory.withClass(Button);
 	private static final defaultCurrentMonthViewFactory = DisplayObjectFactory.withClass(Label);
 
+	/**
+		Creates a new `DatePicker` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		initializeDatePickerTheme();
 		super();
