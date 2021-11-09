@@ -591,27 +591,127 @@ class Callout extends FeathersControl {
 
 	private var _currentArrowSkin:DisplayObject;
 
+	/**
+		The arrow skin to display when the arrow is positioned on the top of
+		the callout.
+
+		In the following example, the callout's top arrow skin is set to a
+		bitmap:
+
+		```hx
+		callout.topArrowSkin = new Bitmap(bitmapData);
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var topArrowSkin:DisplayObject = null;
 
+	/**
+		The arrow skin to display when the arrow is positioned on the right side
+		of the callout.
+
+		In the following example, the callout's right arrow skin is set to a
+		bitmap:
+
+		```hx
+		callout.rightArrowSkin = new Bitmap(bitmapData);
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var rightArrowSkin:DisplayObject = null;
 
+	/**
+		The arrow skin to display when the arrow is positioned on the bottom of
+		the callout.
+
+		In the following example, the callout's bottom arrow skin is set to a
+		bitmap:
+
+		```hx
+		callout.bottomArrowSkin = new Bitmap(bitmapData);
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var bottomArrowSkin:DisplayObject = null;
 
+	/**
+		The arrow skin to display when the arrow is positioned on the left side
+		of the callout.
+
+		In the following example, the callout's left arrow skin is set to a
+		bitmap:
+
+		```hx
+		callout.leftArrowSkin = new Bitmap(bitmapData);
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var leftArrowSkin:DisplayObject = null;
 
+	/**
+		The gap, in pixels, between the callout and the `topArrowSkin`.
+
+		In the following example, the callout's top arrow gap is set to -1.0
+		pixels:
+
+		```hx
+		callout.topArrowGap = -1.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var topArrowGap:Float = 0.0;
 
+	/**
+		The gap, in pixels, between the callout and the `rightArrowSkin`.
+
+		In the following example, the callout's right arrow gap is set to -1.0
+		pixels:
+
+		```hx
+		callout.rightArrowGap = -1.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var rightArrowGap:Float = 0.0;
 
+	/**
+		The gap, in pixels, between the callout and the `bottomArrowSkin`.
+
+		In the following example, the callout's bottom arrow gap is set to -1.0
+		pixels:
+
+		```hx
+		callout.bottomArrowGap = -1.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var bottomArrowGap:Float = 0.0;
 
+	/**
+		The gap, in pixels, between the callout and the `leftArrowSkin`.
+
+		In the following example, the callout's left arrow gap is set to -1.0
+		pixels:
+
+		```hx
+		callout.leftArrowGap = -1.0;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var leftArrowGap:Float = 0.0;
 
