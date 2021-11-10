@@ -204,7 +204,7 @@ class HScrollBar extends BaseScrollBar {
 				this._currentThumbSkin.width = this._thumbSkinMeasurements.width;
 			}
 		} else {
-			var thumbWidth = contentWidth * this.getAdjustedPage() / range;
+			var thumbWidth = range == 1 && step == 1 ? contentWidth * .75 : contentWidth * this.getAdjustedPage() / range;
 			if (thumbWidth > 0.0) {
 				var widthOffset = contentWidth - thumbWidth;
 				if (widthOffset > thumbWidth) {
