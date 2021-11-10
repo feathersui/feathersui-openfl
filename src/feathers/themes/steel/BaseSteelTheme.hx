@@ -102,8 +102,9 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var textColor:Int;
 	private var secondaryTextColor:Int;
 	private var disabledTextColor:Int;
-	private var dangerColor:Int;
-	private var offsetDangerColor:Int;
+	private var dangerTextColor:Int;
+	private var dangerFillColor:Int;
+	private var offsetDangerFillColor:Int;
 	private var dangerBorderColor:Int;
 	private var fontName:String;
 	private var fontSize:Int;
@@ -149,15 +150,16 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.headerFillColor = 0x3f3f3f;
 			this.overlayFillColor = 0x6f6f6f;
 			this.subHeadingFillColor = 0x2c2c2c;
-			this.dangerColor = 0x9f4f4f;
-			this.offsetDangerColor = this.darken(this.dangerColor, 0x0f0f0f);
-			this.dangerBorderColor = this.darken(this.dangerColor, 0x2f2f2f);
+			this.dangerFillColor = 0x9f4f4f;
+			this.offsetDangerFillColor = this.darken(this.dangerFillColor, 0x0f0f0f);
+			this.dangerBorderColor = this.darken(this.dangerFillColor, 0x2f2f2f);
 			this.borderColor = 0x080808;
 			this.dividerColor = 0x282828;
 			this.subHeadingDividerColor = 0x0c0c0c;
 			this.textColor = 0xf1f1f1;
 			this.disabledTextColor = 0x8f8f8f;
 			this.secondaryTextColor = 0xcfcfcf;
+			this.dangerTextColor = 0xcc3f3f;
 		} else // light
 		{
 			if (this.customThemeColor != null) {
@@ -184,15 +186,16 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.headerFillColor = 0xececec;
 			this.overlayFillColor = 0x8f8f8f;
 			this.subHeadingFillColor = 0xdfdfdf;
-			this.dangerColor = 0xf0a0a0;
-			this.offsetDangerColor = this.darken(this.dangerColor, 0x0f0f0f);
-			this.dangerBorderColor = this.darken(this.dangerColor, 0x2f2f2f);
+			this.dangerFillColor = 0xf0a0a0;
+			this.offsetDangerFillColor = this.darken(this.dangerFillColor, 0x0f0f0f);
+			this.dangerBorderColor = this.darken(this.dangerFillColor, 0x2f2f2f);
 			this.borderColor = 0xacacac;
 			this.dividerColor = 0xdfdfdf;
 			this.subHeadingDividerColor = 0xcfcfcf;
 			this.textColor = 0x1f1f1f;
 			this.disabledTextColor = 0x9f9f9f;
 			this.secondaryTextColor = 0x6f6f6f;
+			this.dangerTextColor = 0xcc3f3f;
 		}
 	}
 
@@ -314,12 +317,12 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	}
 
 	private function getDangerFill():FillStyle {
-		var colors = [this.dangerColor, this.offsetDangerColor];
+		var colors = [this.dangerFillColor, this.offsetDangerFillColor];
 		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
 	private function getReversedDangerFill():FillStyle {
-		var colors = [this.offsetDangerColor, this.dangerColor];
+		var colors = [this.offsetDangerFillColor, this.dangerFillColor];
 		return Gradient(GradientType.LINEAR, colors, [1.0, 1.0], [0, 0xff], Math.PI / 2.0);
 	}
 
@@ -353,6 +356,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getSecondaryTextFormat(align:TextFormatAlign = LEFT):TextFormat {
 		return new TextFormat(this.fontName, this.fontSize, this.secondaryTextColor, null, null, null, null, null, align);
+	}
+
+	private function getDangerTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.fontSize, this.dangerTextColor, null, null, null, null, null, align);
 	}
 
 	private function getHeaderTextFormat(align:TextFormatAlign = LEFT):TextFormat {
