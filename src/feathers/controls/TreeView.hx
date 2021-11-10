@@ -62,34 +62,50 @@ import openfl._internal.utils.ObjectPool;
 	```hx
 	var treeView = new TreeView();
 
-	treeView.dataProvider = new TreeCollection([
-		new TreeNode({text: "Node 1"}, [
-			new TreeNode({text: "Node 1A"}, [
-				new TreeNode({text: "Node 1A-I"}),
-				new TreeNode({text: "Node 1A-II"}),
-				new TreeNode({text: "Node 1A-III"}),
-				new TreeNode({text: "Node 1A-IV"})
-			]),
-			new TreeNode({text: "Node 1B"}),
-			new TreeNode({text: "Node 1C"})
-		]),
-		new TreeNode({text: "Node 2"}, [
-			new TreeNode({text: "Node 2A"}),
-			new TreeNode({text: "Node 2B"}),
-			new TreeNode({text: "Node 2C"})
-		]),
-		new TreeNode({text: "Node 3"}),
-		new TreeNode({text: "Node 4"}, [
-			new TreeNode({text: "Node 4A"}),
-			new TreeNode({text: "Node 4B"}),
-			new TreeNode({text: "Node 4C"}),
-			new TreeNode({text: "Node 4D"}),
-			new TreeNode({text: "Node 4E"})
-		])
+	var collection = new ArrayHierarchicalCollection([
+		{
+			text: "Node 1",
+			children: [
+				{
+					text: "Node 1A",
+					children: [
+						{text: "Node 1A-I"},
+						{text: "Node 1A-II"},
+						{text: "Node 1A-III"},
+						{text: "Node 1A-IV"}
+					]
+				},
+				{text: "Node 1B"},
+				{text: "Node 1C"}
+			]
+		},
+		{
+			text: "Node 2",
+			children: [
+				{text: "Node 2A"},
+				{text: "Node 2B"},
+				{text: "Node 2C"}
+			]
+		},
+		{text: "Node 3"},
+		{
+			text: "Node 4",
+			children: [
+				{text: "Node 4A"},
+				{text: "Node 4B"},
+				{text: "Node 4C"},
+				{text: "Node 4D"},
+				{text: "Node 4E"}
+			]
+		}
 	]);
+	collection.itemToChildren = (item:Dynamic) -> {
+		return item.children;
+	};
+	treeView.dataProvider = collection;
 
 	treeView.itemToText = (item:TreeNode<Dynamic>) -> {
-		return item.data.text;
+		return item.text;
 	};
 
 	treeView.addEventListener(Event.CHANGE, (event:Event) -> {
@@ -243,31 +259,47 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		renderer how to interpret the data:
 
 		```hx
-		treeView.dataProvider = new TreeCollection([
-			new TreeNode({text: "Node 1"}, [
-				new TreeNode({text: "Node 1A"}, [
-					new TreeNode({text: "Node 1A-I"}),
-					new TreeNode({text: "Node 1A-II"}),
-					new TreeNode({text: "Node 1A-III"}),
-					new TreeNode({text: "Node 1A-IV"})
-				]),
-				new TreeNode({text: "Node 1B"}),
-				new TreeNode({text: "Node 1C"})
-			]),
-			new TreeNode({text: "Node 2"}, [
-				new TreeNode({text: "Node 2A"}),
-				new TreeNode({text: "Node 2B"}),
-				new TreeNode({text: "Node 2C"})
-			]),
-			new TreeNode({text: "Node 3"}),
-			new TreeNode({text: "Node 4"}, [
-				new TreeNode({text: "Node 4A"}),
-				new TreeNode({text: "Node 4B"}),
-				new TreeNode({text: "Node 4C"}),
-				new TreeNode({text: "Node 4D"}),
-				new TreeNode({text: "Node 4E"})
-			])
+		var collection = new ArrayHierarchicalCollection([
+			{
+				text: "Node 1",
+				children: [
+					{
+						text: "Node 1A",
+						children: [
+							{text: "Node 1A-I"},
+							{text: "Node 1A-II"},
+							{text: "Node 1A-III"},
+							{text: "Node 1A-IV"}
+						]
+					},
+					{text: "Node 1B"},
+					{text: "Node 1C"}
+				]
+			},
+			{
+				text: "Node 2",
+				children: [
+					{text: "Node 2A"},
+					{text: "Node 2B"},
+					{text: "Node 2C"}
+				]
+			},
+			{text: "Node 3"},
+			{
+				text: "Node 4",
+				children: [
+					{text: "Node 4A"},
+					{text: "Node 4B"},
+					{text: "Node 4C"},
+					{text: "Node 4D"},
+					{text: "Node 4E"}
+				]
+			}
 		]);
+		collection.itemToChildren = (item:Dynamic) -> {
+			return item.children;
+		};
+		treeView.dataProvider = collection;
 
 		treeView.itemToText = (item:Dynamic) -> {
 			return item.text;
