@@ -223,6 +223,57 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		return this.textField.selectionEndIndex;
 	}
 
+	private var _required:Bool = false;
+
+	/**
+		Indicates if the form item is required. This is purely a visual
+		indicator, and it will not prevent the form from being submitted.
+
+		In the following example, the form item is required:
+
+		```hx
+		formItem.required = true;
+		```
+
+		@see `FormItem.requiredSkin`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var required(get, set):Bool;
+
+	private function get_required():Bool {
+		return this._required;
+	}
+
+	private function set_required(value:Bool):Bool {
+		if (this._required == value) {
+			return this._required;
+		}
+		this._required = value;
+		this.setInvalid(SELECTION);
+		return this._required;
+	}
+
+	private var _currentRequiredSkin:DisplayObject = null;
+	private var _requiredSkinMeasurements:Measurements = null;
+
+	/**
+		The symbol displayed if the `required` property is `true`.
+
+		In the following example, the form item's required skin is set to a bitmap:
+
+		```hx
+		formItem.requiredSkin = new Bitmap(bitmapData);
+		```
+
+		@see `FormItem.required`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var requiredSkin:DisplayObject = null;
+
 	/**
 		The font styles used to render the form item's text.
 
@@ -423,21 +474,21 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	@:style
 	public var wordWrap:Bool = false;
 
-	private var _customTextWidth:Null<Float> = null;
+	private var _customTextColumnWidth:Null<Float> = null;
 
-	private var customTextWidth(get, set):Null<Float>;
+	private var customTextColumnWidth(get, set):Null<Float>;
 
-	private function get_customTextWidth():Null<Float> {
-		return this._customTextWidth;
+	private function get_customTextColumnWidth():Null<Float> {
+		return this._customTextColumnWidth;
 	}
 
-	private function set_customTextWidth(value:Null<Float>):Null<Float> {
-		if (this._customTextWidth == value) {
-			return this._customTextWidth;
+	private function set_customTextColumnWidth(value:Null<Float>):Null<Float> {
+		if (this._customTextColumnWidth == value) {
+			return this._customTextColumnWidth;
 		}
-		this._customTextWidth = value;
+		this._customTextColumnWidth = value;
 		this.setInvalid(SIZE);
-		return this._customTextWidth;
+		return this._customTextColumnWidth;
 	}
 
 	private var _currentBackgroundSkin:DisplayObject = null;
@@ -501,7 +552,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	public var textPosition:RelativePosition = TOP;
 
 	public function getTextMeasuredWidth():Float {
-		return this._textMeasuredWidth;
+		var result = this._textMeasuredWidth;
+		if (this._currentRequiredSkin != null) {
+			result += this.gap + this._currentRequiredSkin.width;
+		}
+		return result;
 	}
 
 	/**
@@ -549,6 +604,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 
 		if (stylesInvalid || stateInvalid) {
+			this.refreshRequiredSkin();
+		}
+
+		if (stylesInvalid || stateInvalid) {
 			this.refreshTextStyles();
 		}
 
@@ -593,6 +652,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			cast(this._currentBackgroundSkin, IValidating).validateNow();
 		}
 
+		if ((this._currentRequiredSkin is IValidating)) {
+			cast(this._currentRequiredSkin, IValidating).validateNow();
+		}
+
 		var measureContent:IMeasureObject = null;
 		if ((this._currentContent is IMeasureObject)) {
 			measureContent = cast(this._currentContent, IMeasureObject);
@@ -605,8 +668,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			newWidth = this._textMeasuredWidth;
-			if (this._customTextWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
-				newWidth = this._customTextWidth;
+			if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+				newWidth = this._customTextColumnWidth;
+			} else if (this._requiredSkinMeasurements != null) {
+				newWidth += this.gap + this._requiredSkinMeasurements.width;
 			}
 			newWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentContent != null) {
@@ -624,6 +689,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			newHeight = this._textMeasuredHeight;
+			if (this._requiredSkinMeasurements != null) {
+				newHeight = Math.max(newHeight, this._requiredSkinMeasurements.height);
+			}
 			if (this._currentContent != null) {
 				if (this.textPosition == LEFT || this.textPosition == RIGHT) {
 					newHeight = Math.max(newHeight, this._currentContent.height);
@@ -637,12 +705,14 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				newHeight = Math.max(this._currentBackgroundSkin.height, newHeight);
 			}
 		}
-
 		var newMinWidth = this.explicitMinWidth;
+
 		if (needsMinWidth) {
 			newMinWidth = this._textMeasuredWidth;
-			if (this._customTextWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
-				newMinWidth = this._customTextWidth;
+			if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+				newMinWidth = this._customTextColumnWidth;
+			} else if (this._requiredSkinMeasurements != null) {
+				newMinWidth += this.gap + this._requiredSkinMeasurements.width;
 			}
 			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (this._currentContent != null) {
@@ -668,10 +738,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				newMinWidth = Math.max(this._backgroundSkinMeasurements.minWidth, newMinWidth);
 			}
 		}
-
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
 			newMinHeight = this._textMeasuredHeight;
+			if (this._requiredSkinMeasurements != null) {
+				newMinHeight = Math.max(newMinHeight, this._requiredSkinMeasurements.height);
+			}
 			if (this._currentContent != null) {
 				if (this.textPosition == LEFT || this.textPosition == RIGHT) {
 					if (measureContent != null) {
@@ -697,6 +769,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			}
 		}
 		var newMaxWidth = this.explicitMaxWidth;
+
 		if (needsMaxWidth) {
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
@@ -706,7 +779,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 		}
-
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
 			if (measureSkin != null) {
@@ -717,7 +789,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
 			}
 		}
-
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
@@ -885,6 +956,54 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 	}
 
+	private function refreshRequiredSkin():Void {
+		var oldSkin = this._currentRequiredSkin;
+		this._currentRequiredSkin = this.getCurrentRequiredSkin();
+		if (this._currentRequiredSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentRequiredSkin(oldSkin);
+		this.addCurrentRequiredSkin(this._currentRequiredSkin);
+	}
+
+	private function getCurrentRequiredSkin():DisplayObject {
+		return this.requiredSkin;
+	}
+
+	private function addCurrentRequiredSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			this._requiredSkinMeasurements = null;
+			return;
+		}
+		if ((skin is IUIControl)) {
+			cast(skin, IUIControl).initializeNow();
+		}
+		if (this._requiredSkinMeasurements == null) {
+			this._requiredSkinMeasurements = new Measurements(skin);
+		} else {
+			this._requiredSkinMeasurements.save(skin);
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = this;
+		}
+		this.addChild(skin);
+	}
+
+	private function removeCurrentRequiredSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		// we need to restore these values so that they won't be lost the
+		// next time that this skin is used for measurement
+		this._requiredSkinMeasurements.restore(skin);
+		if (skin.parent == this) {
+			this.removeChild(skin);
+		}
+	}
+
 	private function refreshContent():Void {
 		var oldContent = this._currentContent;
 		this._currentContent = this._content;
@@ -912,14 +1031,23 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	private function layoutContent():Void {
 		this.layoutBackgroundSkin();
 
+		if ((this._currentRequiredSkin is IValidating)) {
+			cast(this._currentRequiredSkin, IValidating).validateNow();
+		}
+
+		var requiredOffset = 0.0;
+		if (this._currentRequiredSkin != null) {
+			requiredOffset = this.gap + this._currentRequiredSkin.width;
+		}
+
 		var textFieldWidth = this._textMeasuredWidth;
-		if (this._customTextWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
-			textFieldWidth = this._customTextWidth;
+		if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+			textFieldWidth = this._customTextColumnWidth - requiredOffset;
 		}
 		var textFieldHeight = this._textMeasuredHeight;
 		var remainingWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		if (this.textPosition == LEFT || this.textPosition == RIGHT) {
-			remainingWidth -= this.gap;
+			remainingWidth -= (this.gap + requiredOffset);
 		}
 		if (textFieldWidth > remainingWidth) {
 			textFieldWidth = remainingWidth;
@@ -938,7 +1066,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				this.textField.y = this.paddingTop;
 				remainingHeight -= textFieldHeight;
 			case RIGHT:
-				this.textField.x = this.actualWidth - textFieldWidth - this.paddingRight;
+				this.textField.x = this.actualWidth - textFieldWidth - requiredOffset - this.paddingRight;
 				remainingWidth -= textFieldWidth;
 			case BOTTOM:
 				this.textField.x = this.paddingLeft;
@@ -973,7 +1101,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				case RIGHT:
 				case BOTTOM:
 				case LEFT:
-					contentStartX = this.textField.x + textFieldWidth + this.gap;
+					contentStartX = this.textField.x + textFieldWidth + this.gap + requiredOffset;
 				default:
 					throw new ArgumentError("Unknown text position: " + this.textPosition);
 			}
@@ -1035,6 +1163,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 							throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
 					}
 				}
+			}
+			if (this._currentRequiredSkin != null) {
+				this._currentRequiredSkin.y = this.textField.y + (textFieldHeight - this._currentRequiredSkin.height) / 2.0;
+				this._currentRequiredSkin.x = this.textField.x + textFieldWidth + this.gap;
 			}
 		}
 	}

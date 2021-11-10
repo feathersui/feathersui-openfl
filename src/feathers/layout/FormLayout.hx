@@ -296,11 +296,11 @@ class FormLayout extends EventDispatcher implements ILayout {
 			if (formItem != null) {
 				switch (formItem.textPosition) {
 					case LEFT:
-						formItem.customTextWidth = maxLeftTextWidth;
+						formItem.customTextColumnWidth = maxLeftTextWidth;
 					case RIGHT:
-						formItem.customTextWidth = maxRightTextWidth;
+						formItem.customTextColumnWidth = maxRightTextWidth;
 					default:
-						formItem.customTextWidth = null;
+						formItem.customTextColumnWidth = null;
 				}
 				if ((item is IValidating)) {
 					cast(item, IValidating).validateNow();
