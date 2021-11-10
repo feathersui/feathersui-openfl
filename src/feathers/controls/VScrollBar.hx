@@ -205,7 +205,7 @@ class VScrollBar extends BaseScrollBar {
 				this._currentThumbSkin.height = this._thumbSkinMeasurements.height;
 			}
 		} else {
-			var thumbHeight = contentHeight * this.getAdjustedPage() / range;
+			var thumbHeight = range == 1 ? contentHeight * .75 : contentHeight * this.getAdjustedPage() / range;
 			if (thumbHeight > 0.0) {
 				var heightOffset = contentHeight - thumbHeight;
 				if (heightOffset > thumbHeight) {
