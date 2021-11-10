@@ -41,6 +41,7 @@ import com.feathersui.components.views.TextAreaScreen;
 import com.feathersui.components.views.TextCalloutScreen;
 import com.feathersui.components.views.TextInputScreen;
 import com.feathersui.components.views.ToggleSwitchScreen;
+import com.feathersui.components.views.TreeGridViewScreen;
 import com.feathersui.components.views.TreeViewScreen;
 import com.feathersui.components.views.TriangleSkinScreen;
 import com.feathersui.components.views.VDividedBoxScreen;
@@ -209,6 +210,9 @@ class Main extends Application {
 
 		var toggleSwitch = Route.withClass(ViewPaths.TOGGLE_SWITCH, ToggleSwitchScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(toggleSwitch);
+
+		var treeGridView = Route.withClass(ViewPaths.TREE_GRID_VIEW, TreeGridViewScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(treeGridView);
 
 		var treeView = Route.withClass(ViewPaths.TREE_VIEW, TreeViewScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(treeView);

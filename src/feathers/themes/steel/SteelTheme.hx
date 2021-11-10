@@ -50,6 +50,8 @@ import feathers.themes.steel.components.SteelTextInputStyles;
 import feathers.themes.steel.components.SteelToggleButtonStyles;
 import feathers.themes.steel.components.SteelToggleSwitchStyles;
 import feathers.themes.steel.components.SteelToolTipStyles;
+import feathers.themes.steel.components.SteelTreeGridViewStyles;
+import feathers.themes.steel.components.SteelTreeGridViewCellRendererStyles;
 import feathers.themes.steel.components.SteelTreeViewItemRendererStyles;
 import feathers.themes.steel.components.SteelTreeViewStyles;
 import feathers.themes.steel.components.SteelVDividedBoxStyles;
@@ -115,6 +117,8 @@ class SteelTheme extends BaseSteelTheme {
 		SteelToggleButtonStyles.initialize(this);
 		SteelToggleSwitchStyles.initialize(this);
 		SteelToolTipStyles.initialize(this);
+		SteelTreeGridViewStyles.initialize(this);
+		SteelTreeGridViewCellRendererStyles.initialize(this);
 		SteelTreeViewStyles.initialize(this);
 		SteelTreeViewItemRendererStyles.initialize(this);
 		SteelVDividedBoxStyles.initialize(this);

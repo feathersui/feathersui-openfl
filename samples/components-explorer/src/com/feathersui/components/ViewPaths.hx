@@ -35,6 +35,7 @@ class ViewPaths {
 	public static final GROUP_LIST_VIEW = "/group-list-view";
 	public static final LIST_VIEW = "/list-view";
 	public static final TAB_BAR = "/tab-bar";
+	public static final TREE_GRID_VIEW = "/tree-grid-view";
 	public static final TREE_VIEW = "/tree-view";
 	public static final POP_UP_LIST_VIEW = "/pop-up-list-view";
 

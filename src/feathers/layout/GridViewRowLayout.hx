@@ -9,7 +9,7 @@
 package feathers.layout;
 
 import feathers.core.IMeasureObject;
-import feathers.controls.GridViewColumn;
+import feathers.controls.IGridViewColumn;
 import feathers.core.IValidating;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;
@@ -73,19 +73,19 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		return this._paddingRight;
 	}
 
-	private var _columns:IFlatCollection<GridViewColumn>;
+	private var _columns:IFlatCollection<IGridViewColumn>;
 
 	/**
 		The collection of columns displayed by the `GridView`.
 	**/
 	@:flash.property
-	public var columns(get, set):IFlatCollection<GridViewColumn>;
+	public var columns(get, set):IFlatCollection<IGridViewColumn>;
 
-	private function get_columns():IFlatCollection<GridViewColumn> {
+	private function get_columns():IFlatCollection<IGridViewColumn> {
 		return this._columns;
 	}
 
-	private function set_columns(value:IFlatCollection<GridViewColumn>):IFlatCollection<GridViewColumn> {
+	private function set_columns(value:IFlatCollection<IGridViewColumn>):IFlatCollection<IGridViewColumn> {
 		if (this._columns == value) {
 			return this._columns;
 		}

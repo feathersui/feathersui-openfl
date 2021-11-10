@@ -8,20 +8,21 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.style.IVariantStyleObject;
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.core.IOpenCloseToggle;
 import feathers.core.IPointerDelegate;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.InvalidationFlag;
-import feathers.data.GridViewCellState;
 import feathers.data.IFlatCollection;
+import feathers.data.TreeGridViewCellState;
 import feathers.events.FeathersEvent;
-import feathers.events.GridViewEvent;
+import feathers.events.TreeGridViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.Measurements;
+import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
@@ -41,27 +42,26 @@ import openfl._internal.utils.ObjectPool;
 #end
 
 /**
-	Renders a row of data in the `GridView` component.
+	Renders a row of data in the `TreeGridView` component.
 
-	@see `feathers.controls.GridView`
+	@see `feathers.controls.TreeGridView`
 
 	@since 1.0.0
 **/
 @:dox(hide)
-@:access(feathers.data.GridViewCellState)
-class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer {
+class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
-	private static final RESET_CELL_STATE = new GridViewCellState();
+	private static final RESET_CELL_STATE = new TreeGridViewCellState();
 
-	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
+	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:TreeGridViewCellState):Void {
 		if ((cellRenderer is ITextControl)) {
 			var textControl = cast(cellRenderer, ITextControl);
 			textControl.text = state.text;
 		}
 	}
 
-	private static function defaultResetCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
+	private static function defaultResetCellRenderer(cellRenderer:DisplayObject, state:TreeGridViewCellState):Void {
 		if ((cellRenderer is ITextControl)) {
 			var textControl = cast(cellRenderer, ITextControl);
 			textControl.text = null;
@@ -69,7 +69,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	/**
-		Creates a new `GridViewRowRenderer` object.
+		Creates a new `TreeGridViewRowRenderer` object.
 
 		@since 1.0.0
 	**/
@@ -80,40 +80,40 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	private var _defaultStorage:CellRendererStorage = new CellRendererStorage();
 	private var _additionalStorage:Array<CellRendererStorage> = null;
 	private var _unrenderedData:Array<Int> = [];
-	private var _columnToCellRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
-	private var _cellRendererToCellState = new ObjectMap<DisplayObject, GridViewCellState>();
-	private var cellStatePool = new ObjectPool(() -> new GridViewCellState());
+	private var _columnToCellRenderer = new ObjectMap<TreeGridViewColumn, DisplayObject>();
+	private var _cellRendererToCellState = new ObjectMap<DisplayObject, TreeGridViewCellState>();
+	private var cellStatePool = new ObjectPool(() -> new TreeGridViewCellState());
 
-	private var _gridView:GridView;
+	private var _treeGridView:TreeGridView;
 
 	/**
-		The `GridView` component that contains this row.
+		The `TreeGridView` component that contains this row.
 
-		_This special property must be set by the `GridView`, and it should not
+		_This special property must be set by the `TreeGridView`, and it should not
 		be modified externally._
 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var gridView(get, set):GridView;
+	public var treeGridView(get, set):TreeGridView;
 
-	private function get_gridView():GridView {
-		return this._gridView;
+	private function get_treeGridView():TreeGridView {
+		return this._treeGridView;
 	}
 
-	private function set_gridView(value:GridView):GridView {
-		if (this._gridView == value) {
-			return this._gridView;
+	private function set_treeGridView(value:TreeGridView):TreeGridView {
+		if (this._treeGridView == value) {
+			return this._treeGridView;
 		}
-		if (this._gridView != null) {
-			this._gridView.removeEventListener(KeyboardEvent.KEY_DOWN, gridViewRowRenderer_gridView_keyDownHandler);
+		if (this._treeGridView != null) {
+			this._treeGridView.removeEventListener(KeyboardEvent.KEY_DOWN, treeGridViewRowRenderer_treeGridView_keyDownHandler);
 		}
-		this._gridView = value;
-		if (this._gridView != null) {
-			this._gridView.addEventListener(KeyboardEvent.KEY_DOWN, gridViewRowRenderer_gridView_keyDownHandler, false, 0, true);
+		this._treeGridView = value;
+		if (this._treeGridView != null) {
+			this._treeGridView.addEventListener(KeyboardEvent.KEY_DOWN, treeGridViewRowRenderer_treeGridView_keyDownHandler, false, 0, true);
 		}
 		this.setInvalid(DATA);
-		return this._gridView;
+		return this._treeGridView;
 	}
 
 	private var _selected:Bool = false;
@@ -121,7 +121,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	/**
 		Indicates if the row is selected or not.
 
-		_This special property must be set by the `GridView`, and it should not
+		_This special property must be set by the `TreeGridView`, and it should not
 		be modified externally._
 
 		@since 1.0.0
@@ -144,33 +144,112 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private var _ignoreSelectionChange = false;
+	private var _ignoreOpenedChange = false;
 
 	public var selectable:Bool = true;
 
-	private var _rowIndex:Int = -1;
+	private var _rowLocation:Array<Int> = null;
 
 	/**
-		The vertical position of the row within the `GridView`.
+		The vertical position of the row within the `TreeGridView`.
 
-		_This special property must be set by the `GridView`, and it should not
+		_This special property must be set by the `TreeGridView`, and it should not
 		be modified externally._
 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var rowIndex(get, set):Int;
+	public var rowLocation(get, set):Array<Int>;
 
-	private function get_rowIndex():Int {
-		return this._rowIndex;
+	private function get_rowLocation():Array<Int> {
+		return this._rowLocation;
 	}
 
-	private function set_rowIndex(value:Int):Int {
-		if (this._rowIndex == value) {
-			return this._rowIndex;
+	private function set_rowLocation(value:Array<Int>):Array<Int> {
+		if (this._rowLocation == value) {
+			return this._rowLocation;
 		}
-		this._rowIndex = value;
+		this._rowLocation = value;
 		this.setInvalid(DATA);
-		return this._rowIndex;
+		return this._rowLocation;
+	}
+
+	private var _layoutIndex:Int = -1;
+
+	/**
+		Returns the location of the item in the `TreeGridView` layout.
+
+		_This special property must be set by the `TreeGridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var layoutIndex(get, set):Int;
+
+	private function get_layoutIndex():Int {
+		return this._layoutIndex;
+	}
+
+	private function set_layoutIndex(value:Int):Int {
+		if (this._layoutIndex == value) {
+			return this._layoutIndex;
+		}
+		this._layoutIndex = value;
+		this.setInvalid(DATA);
+		return this._layoutIndex;
+	}
+
+	private var _branch:Bool = false;
+
+	/**
+		Returns whether the item is a branch or a leaf.
+
+		_This special property must be set by the `TreeGridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var branch(get, set):Bool;
+
+	private function get_branch():Bool {
+		return this._branch;
+	}
+
+	private function set_branch(value:Bool):Bool {
+		if (this._branch == value) {
+			return this._branch;
+		}
+		this._branch = value;
+		this.setInvalid(DATA);
+		return this._branch;
+	}
+
+	private var _opened:Bool = false;
+
+	/**
+		Returns whether the branch is opened or closed.
+
+		_This special property must be set by the `TreeGridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var opened(get, set):Bool;
+
+	private function get_opened():Bool {
+		return this._branch;
+	}
+
+	private function set_opened(value:Bool):Bool {
+		if (this._opened == value) {
+			return this._opened;
+		}
+		this._opened = value;
+		this.setInvalid(DATA);
+		return this._opened;
 	}
 
 	private var _data:Dynamic = null;
@@ -178,7 +257,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	/**
 		The item from the data provider that is rendered by this row.
 
-		_This special property must be set by the `GridView`, and it should not
+		_This special property must be set by the `TreeGridView`, and it should not
 		be modified externally._
 
 		@since 1.0.0
@@ -199,33 +278,33 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		return this._data;
 	}
 
-	private var _columns:IFlatCollection<GridViewColumn> = null;
+	private var _columns:IFlatCollection<TreeGridViewColumn> = null;
 
 	/**
 		The columns displayed in this row.
 
-		_This special property must be set by the `GridView`, and it should not
+		_This special property must be set by the `TreeGridView`, and it should not
 		be modified externally._
 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var columns(get, set):IFlatCollection<GridViewColumn>;
+	public var columns(get, set):IFlatCollection<TreeGridViewColumn>;
 
-	private function get_columns():IFlatCollection<GridViewColumn> {
+	private function get_columns():IFlatCollection<TreeGridViewColumn> {
 		return this._columns;
 	}
 
-	private function set_columns(value:IFlatCollection<GridViewColumn>):IFlatCollection<GridViewColumn> {
+	private function set_columns(value:IFlatCollection<TreeGridViewColumn>):IFlatCollection<TreeGridViewColumn> {
 		if (this._columns == value) {
 			return this._columns;
 		}
 		if (this._columns != null) {
-			this._columns.removeEventListener(Event.CHANGE, gridViewRowRenderer_columns_changeHandler);
+			this._columns.removeEventListener(Event.CHANGE, treeGridViewRowRenderer_columns_changeHandler);
 		}
 		this._columns = value;
 		if (this._columns != null) {
-			this._columns.addEventListener(Event.CHANGE, gridViewRowRenderer_columns_changeHandler, false, 0, true);
+			this._columns.addEventListener(Event.CHANGE, treeGridViewRowRenderer_columns_changeHandler, false, 0, true);
 		}
 		this.setInvalid(DATA);
 		return this._columns;
@@ -234,20 +313,20 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	/**
 		Manages cell renderers used by the column.
 
-		_This special property must be set by the `GridView`, and it should not
+		_This special property must be set by the `TreeGridView`, and it should not
 		be modified externally._
 
 		@since 1.0.0
 	**/
 	@:flash.property
-	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
+	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 
-	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
+	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> {
 		return this._defaultStorage.cellRendererRecycler;
 	}
 
-	private function set_cellRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		GridViewCellState, DisplayObject> {
+	private function set_cellRendererRecycler(value:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		TreeGridViewCellState, DisplayObject> {
 		if (this._defaultStorage.cellRendererRecycler == value) {
 			return this._defaultStorage.cellRendererRecycler;
 		}
@@ -305,7 +384,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
-	public function columnToCellRenderer(column:GridViewColumn):DisplayObject {
+	public function columnToCellRenderer(column:TreeGridViewColumn):DisplayObject {
 		return this._columnToCellRenderer.get(column);
 	}
 
@@ -404,7 +483,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				this.setChildIndex(cellRenderer, i);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
 				if (!removed) {
-					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: cell renderer map contains bad data for item at row index ${this._rowIndex} and column index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
+					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: cell renderer map contains bad data for item at row location ${this._rowLocation} and column index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				storage.activeCellRenderers.push(cellRenderer);
 			} else {
@@ -413,7 +492,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
-	private function cellRendererRecyclerToStorage(recycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):CellRendererStorage {
+	private function cellRendererRecyclerToStorage(recycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>):CellRendererStorage {
 		if (recycler == null) {
 			return this._defaultStorage;
 		}
@@ -443,10 +522,12 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			var column = state.column;
 			this._cellRendererToCellState.remove(cellRenderer);
 			this._columnToCellRenderer.remove(column);
-			cellRenderer.removeEventListener(MouseEvent.CLICK, gridViewRowRenderer_cellRenderer_clickHandler);
-			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
-			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
-			cellRenderer.removeEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
+			cellRenderer.removeEventListener(MouseEvent.CLICK, treeGridViewRowRenderer_cellRenderer_clickHandler);
+			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeGridViewRowRenderer_cellRenderer_touchTapHandler);
+			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, treeGridViewRowRenderer_cellRenderer_triggerHandler);
+			cellRenderer.removeEventListener(Event.CHANGE, treeGridViewRowRenderer_cellRenderer_changeHandler);
+			cellRenderer.removeEventListener(Event.OPEN, treeGridViewRowRenderer_cellRenderer_openHandler);
+			cellRenderer.removeEventListener(Event.CLOSE, treeGridViewRowRenderer_cellRenderer_closeHandler);
 			this.resetCellRenderer(cellRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(cellRenderer);
@@ -477,7 +558,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		storage.inactiveCellRenderers.resize(0);
 	}
 
-	private function createCellRenderer(state:GridViewCellState):DisplayObject {
+	private function createCellRenderer(state:TreeGridViewCellState):DisplayObject {
 		var column = state.column;
 		var cellRenderer:DisplayObject = null;
 		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
@@ -486,7 +567,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			if ((cellRenderer is IVariantStyleObject)) {
 				var variantCellRenderer = cast(cellRenderer, IVariantStyleObject);
 				if (variantCellRenderer.variant == null) {
-					var variant = (this.customCellRendererVariant != null) ? this.customCellRendererVariant : GridView.CHILD_VARIANT_CELL_RENDERER;
+					var variant = (this.customCellRendererVariant != null) ? this.customCellRendererVariant : TreeGridView.CHILD_VARIANT_CELL_RENDERER;
 					variantCellRenderer.variant = variant;
 				}
 			}
@@ -509,16 +590,20 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.updateCellRenderer(cellRenderer, state, storage);
 		if ((cellRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
-			cellRenderer.addEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
+			cellRenderer.addEventListener(TriggerEvent.TRIGGER, treeGridViewRowRenderer_cellRenderer_triggerHandler);
 		} else {
 			// fall back to these events if TriggerEvent.TRIGGER isn't available
-			cellRenderer.addEventListener(MouseEvent.CLICK, gridViewRowRenderer_cellRenderer_clickHandler);
+			cellRenderer.addEventListener(MouseEvent.CLICK, treeGridViewRowRenderer_cellRenderer_clickHandler);
 			#if (openfl >= "9.0.0")
-			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
+			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, treeGridViewRowRenderer_cellRenderer_touchTapHandler);
 			#end
 		}
 		if ((cellRenderer is IToggle)) {
-			cellRenderer.addEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
+			cellRenderer.addEventListener(Event.CHANGE, treeGridViewRowRenderer_cellRenderer_changeHandler);
+		}
+		if ((cellRenderer is IOpenCloseToggle)) {
+			cellRenderer.addEventListener(Event.OPEN, treeGridViewRowRenderer_cellRenderer_openHandler);
+			cellRenderer.addEventListener(Event.CLOSE, treeGridViewRowRenderer_cellRenderer_closeHandler);
 		}
 		this._cellRendererToCellState.set(cellRenderer, state);
 		this._columnToCellRenderer.set(column, cellRenderer);
@@ -527,7 +612,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function destroyCellRenderer(cellRenderer:DisplayObject,
-			cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):Void {
+			cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>):Void {
 		this.removeChild(cellRenderer);
 		if (cellRendererRecycler != null && cellRendererRecycler.destroy != null) {
 			cellRendererRecycler.destroy(cellRenderer);
@@ -552,41 +637,52 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.updateCellRenderer(cellRenderer, state, storage);
 	}
 
-	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int, state:GridViewCellState):Void {
-		state.owner = this._gridView;
+	private function populateCurrentItemState(column:TreeGridViewColumn, columnIndex:Int, state:TreeGridViewCellState):Void {
+		state.owner = this._treeGridView;
 		state.data = this._data;
-		state.rowIndex = this._rowIndex;
+		state.rowLocation = this._rowLocation;
 		state.columnIndex = columnIndex;
 		state.column = column;
+		state.layoutIndex = this._layoutIndex;
+		state.branch = this._branch;
+		state.opened = this._opened;
 		state.selected = this._selected;
 		state.enabled = this._enabled;
-		state.text = (this._rowIndex != -1) ? column.itemToText(this._data) : null;
+		state.text = (this._rowLocation != null) ? column.itemToText(this._data) : null;
 	}
 
-	private function updateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState, storage:CellRendererStorage):Void {
+	private function updateCellRenderer(cellRenderer:DisplayObject, state:TreeGridViewCellState, storage:CellRendererStorage):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
+		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
+		this._ignoreOpenedChange = true;
 		if (storage.cellRendererRecycler.update != null) {
 			storage.cellRendererRecycler.update(cellRenderer, state);
 		}
+		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshCellRendererProperties(cellRenderer, state);
 	}
 
-	private function resetCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState, storage:CellRendererStorage):Void {
+	private function resetCellRenderer(cellRenderer:DisplayObject, state:TreeGridViewCellState, storage:CellRendererStorage):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
+		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
+		this._ignoreOpenedChange = true;
 		var recycler = storage.oldCellRendererRecycler != null ? storage.oldCellRendererRecycler : storage.cellRendererRecycler;
 		if (recycler != null && recycler.reset != null) {
 			recycler.reset(cellRenderer, state);
 		}
+		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshCellRendererProperties(cellRenderer, RESET_CELL_STATE);
 	}
 
-	private function refreshCellRendererProperties(cellRenderer:DisplayObject, state:GridViewCellState):Void {
+	private function refreshCellRendererProperties(cellRenderer:DisplayObject, state:TreeGridViewCellState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
+		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
+		this._ignoreOpenedChange = true;
 		if ((cellRenderer is IUIControl)) {
 			var uiControl = cast(cellRenderer, IUIControl);
 			uiControl.enabled = state.enabled;
@@ -601,25 +697,31 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
-		if ((cellRenderer is IGridViewCellRenderer)) {
-			var gridCell = cast(cellRenderer, IGridViewCellRenderer);
+		if ((cellRenderer is ITreeGridViewCellRenderer)) {
+			var gridCell = cast(cellRenderer, ITreeGridViewCellRenderer);
 			gridCell.column = state.column;
 			gridCell.columnIndex = state.columnIndex;
-			gridCell.rowIndex = state.rowIndex;
-			gridCell.gridViewOwner = state.owner;
+			gridCell.rowLocation = state.rowLocation;
+			gridCell.branch = state.branch;
+			gridCell.treeGridViewOwner = state.owner;
 		}
 		if ((cellRenderer is ILayoutIndexObject)) {
 			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
-			layoutIndexObject.layoutIndex = state.rowIndex;
+			layoutIndexObject.layoutIndex = state.layoutIndex;
+		}
+		if ((cellRenderer is IOpenCloseToggle)) {
+			var openCloseItem = cast(cellRenderer, IOpenCloseToggle);
+			openCloseItem.opened = state.opened;
 		}
 		if ((cellRenderer is IPointerDelegate)) {
 			var pointerDelgate = cast(cellRenderer, IPointerDelegate);
-			pointerDelgate.pointerTarget = state.rowIndex == -1 ? null : this;
+			pointerDelgate.pointerTarget = state.rowLocation == null ? null : this;
 		}
+		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
-	private function gridViewRowRenderer_cellRenderer_touchTapHandler(event:TouchEvent):Void {
+	private function treeGridViewRowRenderer_cellRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
@@ -630,30 +732,30 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		TriggerEvent.dispatchFromTouchEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
-		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 	}
 
-	private function gridViewRowRenderer_cellRenderer_clickHandler(event:MouseEvent):Void {
+	private function treeGridViewRowRenderer_cellRenderer_clickHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
 		TriggerEvent.dispatchFromMouseEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
-		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 	}
 
-	private function gridViewRowRenderer_cellRenderer_triggerHandler(event:TriggerEvent):Void {
+	private function treeGridViewRowRenderer_cellRenderer_triggerHandler(event:TriggerEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
 		this.dispatchEvent(event.clone());
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
-		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 	}
 
-	private function gridViewRowRenderer_cellRenderer_changeHandler(event:Event):Void {
+	private function treeGridViewRowRenderer_cellRenderer_changeHandler(event:Event):Void {
 		if (this._ignoreSelectionChange) {
 			return;
 		}
@@ -669,7 +771,21 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.setInvalid(SELECTION);
 	}
 
-	private function gridViewRowRenderer_gridView_keyDownHandler(event:KeyboardEvent):Void {
+	private function treeGridViewRowRenderer_cellRenderer_openHandler(event:Event):Void {
+		if (this._ignoreOpenedChange) {
+			return;
+		}
+		this.dispatchEvent(event.clone());
+	}
+
+	private function treeGridViewRowRenderer_cellRenderer_closeHandler(event:Event):Void {
+		if (this._ignoreOpenedChange) {
+			return;
+		}
+		this.dispatchEvent(event.clone());
+	}
+
+	private function treeGridViewRowRenderer_treeGridView_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
@@ -677,7 +793,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			if (this._selected) {
 				var column = this._columns.get(0);
 				var cellRenderer = this.columnToCellRenderer(column);
-				var state:GridViewCellState = null;
+				var state:TreeGridViewCellState = null;
 				if (cellRenderer != null) {
 					state = this._cellRendererToCellState.get(cellRenderer);
 				}
@@ -688,7 +804,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 					state = this.cellStatePool.get();
 				}
 				this.populateCurrentItemState(column, 0, state);
-				GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+				TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 				if (isTemporary) {
 					this.cellStatePool.release(state);
 				}
@@ -696,18 +812,18 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
-	private function gridViewRowRenderer_columns_changeHandler(event:Event):Void {
+	private function treeGridViewRowRenderer_columns_changeHandler(event:Event):Void {
 		this.setInvalid(DATA);
 	}
 }
 
 private class CellRendererStorage {
-	public function new(?recycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>) {
+	public function new(?recycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>) {
 		this.cellRendererRecycler = recycler;
 	}
 
-	public var oldCellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
-	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
+	public var oldCellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
+	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 	public var activeCellRenderers:Array<DisplayObject> = [];
 	public var inactiveCellRenderers:Array<DisplayObject> = [];
 	public var measurements:Measurements;

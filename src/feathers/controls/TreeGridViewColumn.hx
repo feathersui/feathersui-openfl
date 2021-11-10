@@ -8,22 +8,21 @@
 
 package feathers.controls;
 
-import feathers.data.SortOrder;
-import feathers.data.GridViewCellState;
+import feathers.data.TreeGridViewCellState;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 
 /**
-	Configures a column in a `GridView` component.
+	Configures a column in a `TreeGridView` component.
 
-	@see `feathers.controls.GridView`
+	@see `feathers.controls.TreeGridView`
 
 	@since 1.0.0
 **/
-class GridViewColumn extends EventDispatcher implements IGridViewColumn {
+class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 	/**
-		Creates a new `GridViewColumn` object with the given arguments.
+		Creates a new `TreeGridViewColumn` object with the given arguments.
 
 		@since 1.0.0
 	**/
@@ -87,55 +86,11 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 		column.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomCellRenderer);
 		```
 
-		@see `feathers.controls.GridView.cellRendererRecycler`
+		@see `feathers.controls.TreeGridView.cellRendererRecycler`
 
 		@since 1.0.0
 	**/
-	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = null;
-
-	/**
-
-		A function to compare each item in the collection to determine the
-		order when sorted.
-
-		The return value should be `-1` if the first item should appear before
-		the second item when the collection is sorted. The return value should
-		be `1` if the first item should appear after the second item when the
-		collection in sorted. Finally, the return value should be `0` if both
-		items have the same sort order.
-
-		@see `GridViewColumn.defaultSortOrder`
-		@see `feathers.controls.GridView.sortableColumns`
-
-		@since 1.0.0
-	**/
-	public var sortCompareFunction:(Dynamic, Dynamic) -> Int = null;
-
-	/**
-		Indicates if the column may be sorted by triggering the header renderer,
-		and which direction it should be sorted by default (ascending or
-		descending).
-
-		Setting this property will not start a sort. It only provides the
-		initial order of the sort when triggered by the user.
-
-		If the `sortableColumns` property of the `GridView` is `false`, it takes
-		precendence over this property, and the column will not be sortable by
-		the user under any circumstances.
-
-		The following example disables sorting of a column:
-
-		```hx
-		column.defaultSortOrder = SortOrder.NONE;
-		```
-
-		@see `feathers.controls.GridView.sortableColumns`
-		@see `GridViewColumn.sortCompareFunction`
-		@see `feathers.data.SortOrder.ASCENDING`
-		@see `feathers.data.SortOrder.DESCENDING`
-		@see `feathers.data.SortOrder.NONE`
-	**/
-	public var defaultSortOrder:SortOrder = ASCENDING;
+	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> = null;
 
 	/**
 		Converts an item to text to display within a grid view cell. By default,
