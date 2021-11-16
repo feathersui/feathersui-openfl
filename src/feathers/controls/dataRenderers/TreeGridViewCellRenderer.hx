@@ -200,6 +200,7 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 
 	private var _currentBranchOrLeafIcon:DisplayObject;
 	private var _branchOrLeafIconMeasurements:Measurements;
+	private var _ignoreBranchOrLeafIconResizes:Bool;
 
 	/**
 		The display object to use as an icon when the item renderer's data is a
@@ -310,9 +311,12 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 			textFieldExplicitWidth -= (this.disclosureButton.width + adjustedGap);
 		}
 		if (this._currentBranchOrLeafIcon != null) {
+			var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+			this._ignoreBranchOrLeafIconResizes = true;
 			if ((this._currentBranchOrLeafIcon is IValidating)) {
 				cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 			}
+			this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 			textFieldExplicitWidth -= (this._currentBranchOrLeafIcon.width + adjustedGap);
 		}
 		if (textFieldExplicitWidth < 0.0) {
@@ -324,9 +328,12 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 	override private function measureContentWidth():Float {
 		var contentWidth = super.measureContentWidth();
 		this.disclosureButton.validateNow();
+		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
+		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround
 		if (adjustedGap == (1.0 / 0.0)) {
@@ -350,9 +357,12 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 	override private function measureContentMinWidth():Float {
 		var contentMinWidth = super.measureContentMinWidth();
 		this.disclosureButton.validateNow();
+		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
+		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround
 		if (adjustedGap == (1.0 / 0.0)) {
@@ -375,9 +385,12 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 
 	override private function layoutChildren():Void {
 		this.disclosureButton.validateNow();
+		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
+		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var paddingLeft = this.paddingLeft;
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround
@@ -429,25 +442,7 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 			return;
 		}
 		this.removeCurrentBranchOrLeafIcon(oldIcon);
-		if (this._currentBranchOrLeafIcon == null) {
-			this._branchOrLeafIconMeasurements = null;
-			return;
-		}
-		if ((this._currentBranchOrLeafIcon is IUIControl)) {
-			cast(this._currentBranchOrLeafIcon, IUIControl).initializeNow();
-		}
-		if (this._branchOrLeafIconMeasurements == null) {
-			this._branchOrLeafIconMeasurements = new Measurements(this._currentBranchOrLeafIcon);
-		} else {
-			this._branchOrLeafIconMeasurements.save(this._currentBranchOrLeafIcon);
-		}
-		if ((this._currentBranchOrLeafIcon is IProgrammaticSkin)) {
-			cast(this._currentBranchOrLeafIcon, IProgrammaticSkin).uiContext = this;
-		}
-		if ((this._currentBranchOrLeafIcon is IStateObserver)) {
-			cast(this._currentBranchOrLeafIcon, IStateObserver).stateContext = this;
-		}
-		this.addChild(this._currentBranchOrLeafIcon);
+		this.addCurrentBranchOrLeafIcon(this._currentBranchOrLeafIcon);
 	}
 
 	private function getCurrentBranchOrLeafIcon():DisplayObject {
@@ -467,6 +462,7 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 		if (icon == null) {
 			return;
 		}
+		icon.removeEventListener(Event.RESIZE, treeGridViewCellRenderer_branchOrLeafIcon_resizeHandler);
 		if ((icon is IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
@@ -479,6 +475,29 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 		if (icon.parent == this) {
 			this.removeChild(icon);
 		}
+	}
+
+	private function addCurrentBranchOrLeafIcon(icon:DisplayObject):Void {
+		if (icon == null) {
+			this._branchOrLeafIconMeasurements = null;
+			return;
+		}
+		if ((icon is IUIControl)) {
+			cast(icon, IUIControl).initializeNow();
+		}
+		if (this._branchOrLeafIconMeasurements == null) {
+			this._branchOrLeafIconMeasurements = new Measurements(icon);
+		} else {
+			this._branchOrLeafIconMeasurements.save(icon);
+		}
+		if ((icon is IProgrammaticSkin)) {
+			cast(icon, IProgrammaticSkin).uiContext = this;
+		}
+		if ((icon is IStateObserver)) {
+			cast(icon, IStateObserver).stateContext = this;
+		}
+		icon.addEventListener(Event.RESIZE, treeGridViewCellRenderer_branchOrLeafIcon_resizeHandler, false, 0, true);
+		this.addChild(icon);
 	}
 
 	private function refreshBranchOrLeafStatus():Void {
@@ -498,5 +517,12 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 		}
 		// use the setter
 		this.opened = this.disclosureButton.selected;
+	}
+
+	private function treeGridViewCellRenderer_branchOrLeafIcon_resizeHandler(event:Event):Void {
+		if (this._ignoreBranchOrLeafIconResizes) {
+			return;
+		}
+		this.setInvalid(STYLES);
 	}
 }

@@ -177,6 +177,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	private var _currentBranchOrLeafIcon:DisplayObject;
 	private var _branchOrLeafIconMeasurements:Measurements;
+	private var _ignoreBranchOrLeafIconResizes = false;
 
 	/**
 		The display object to use as an icon when the item renderer's data is a
@@ -285,9 +286,12 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		this.disclosureButton.validateNow();
 		textFieldExplicitWidth -= (this.disclosureButton.width + adjustedGap);
 		if (this._currentBranchOrLeafIcon != null) {
+			var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+			this._ignoreBranchOrLeafIconResizes = true;
 			if ((this._currentBranchOrLeafIcon is IValidating)) {
 				cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 			}
+			this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 			textFieldExplicitWidth -= (this._currentBranchOrLeafIcon.width + adjustedGap);
 		}
 		if (textFieldExplicitWidth < 0.0) {
@@ -299,9 +303,12 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	override private function measureContentWidth():Float {
 		var contentWidth = super.measureContentWidth();
 		this.disclosureButton.validateNow();
+		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
+		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround
 		if (adjustedGap == (1.0 / 0.0)) {
@@ -322,9 +329,12 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 	override private function measureContentMinWidth():Float {
 		var contentMinWidth = super.measureContentMinWidth();
 		this.disclosureButton.validateNow();
+		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
+		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround
 		if (adjustedGap == (1.0 / 0.0)) {
@@ -344,9 +354,12 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 
 	override private function layoutChildren():Void {
 		this.disclosureButton.validateNow();
+		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
+		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
 			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
 		}
+		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var paddingLeft = this.paddingLeft;
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround
@@ -391,25 +404,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 			return;
 		}
 		this.removeCurrentBranchOrLeafIcon(oldIcon);
-		if (this._currentBranchOrLeafIcon == null) {
-			this._branchOrLeafIconMeasurements = null;
-			return;
-		}
-		if ((this._currentBranchOrLeafIcon is IUIControl)) {
-			cast(this._currentBranchOrLeafIcon, IUIControl).initializeNow();
-		}
-		if (this._branchOrLeafIconMeasurements == null) {
-			this._branchOrLeafIconMeasurements = new Measurements(this._currentBranchOrLeafIcon);
-		} else {
-			this._branchOrLeafIconMeasurements.save(this._currentBranchOrLeafIcon);
-		}
-		if ((this._currentBranchOrLeafIcon is IProgrammaticSkin)) {
-			cast(this._currentBranchOrLeafIcon, IProgrammaticSkin).uiContext = this;
-		}
-		if ((this._currentBranchOrLeafIcon is IStateObserver)) {
-			cast(this._currentBranchOrLeafIcon, IStateObserver).stateContext = this;
-		}
-		this.addChild(this._currentBranchOrLeafIcon);
+		this.addCurrentBranchOrLeafIcon(this._currentBranchOrLeafIcon);
 	}
 
 	private function getCurrentBranchOrLeafIcon():DisplayObject {
@@ -429,6 +424,7 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		if (icon == null) {
 			return;
 		}
+		icon.removeEventListener(Event.RESIZE, treeViewItemRenderer_branchOrLeafIcon_resizeHandler);
 		if ((icon is IProgrammaticSkin)) {
 			cast(icon, IProgrammaticSkin).uiContext = null;
 		}
@@ -441,6 +437,29 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		if (icon.parent == this) {
 			this.removeChild(icon);
 		}
+	}
+
+	private function addCurrentBranchOrLeafIcon(icon:DisplayObject):Void {
+		if (icon == null) {
+			this._branchOrLeafIconMeasurements = null;
+			return;
+		}
+		if ((icon is IUIControl)) {
+			cast(icon, IUIControl).initializeNow();
+		}
+		if (this._branchOrLeafIconMeasurements == null) {
+			this._branchOrLeafIconMeasurements = new Measurements(icon);
+		} else {
+			this._branchOrLeafIconMeasurements.save(icon);
+		}
+		if ((icon is IProgrammaticSkin)) {
+			cast(icon, IProgrammaticSkin).uiContext = this;
+		}
+		if ((icon is IStateObserver)) {
+			cast(icon, IStateObserver).stateContext = this;
+		}
+		icon.addEventListener(Event.RESIZE, treeViewItemRenderer_branchOrLeafIcon_resizeHandler, false, 0, true);
+		this.addChild(icon);
 	}
 
 	private function refreshBranchOrLeafStatus():Void {
@@ -460,5 +479,12 @@ class TreeViewItemRenderer extends ItemRenderer implements ITreeViewItemRenderer
 		}
 		// use the setter
 		this.opened = this.disclosureButton.selected;
+	}
+
+	private function treeViewItemRenderer_branchOrLeafIcon_resizeHandler(event:Event):Void {
+		if (this._ignoreBranchOrLeafIconResizes) {
+			return;
+		}
+		this.setInvalid(STYLES);
 	}
 }
