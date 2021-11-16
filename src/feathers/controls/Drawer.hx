@@ -615,8 +615,12 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		if (this._content != null) {
 			this._content.x = 0.0;
 			this._content.y = 0.0;
-			this._content.width = this.actualWidth;
-			this._content.height = this.actualHeight;
+			if (this._content.width != this.actualWidth) {
+				this._content.width = this.actualWidth;
+			}
+			if (this._content.height != this.actualHeight) {
+				this._content.height = this.actualHeight;
+			}
 			if ((this._content is IValidating)) {
 				cast(this._content, IValidating).validateNow();
 			}
@@ -855,6 +859,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		if (this._ignoreContentResize) {
 			return;
 		}
+		this._contentMeasurements.save(this.content);
 		this.setInvalid(SIZE);
 	}
 }

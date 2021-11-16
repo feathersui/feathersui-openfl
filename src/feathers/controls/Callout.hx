@@ -10,9 +10,9 @@ package feathers.controls;
 
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
-import feathers.core.InvalidationFlag;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
 import feathers.core.PopUpManager;
 import feathers.events.FeathersEvent;
 import feathers.layout.HorizontalAlign;
@@ -1395,6 +1395,7 @@ class Callout extends FeathersControl {
 		if (this._ignoreContentResize) {
 			return;
 		}
+		this._contentMeasurements.save(this.content);
 		this.setInvalid(SIZE);
 	}
 
