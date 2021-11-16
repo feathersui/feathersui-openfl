@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.controls.supportClasses.BaseSlider;
+import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.themes.steel.components.SteelVSliderStyles;
 import openfl.events.KeyboardEvent;
@@ -137,13 +138,26 @@ class VSlider extends BaseSlider {
 			}
 		}
 
-		// TODO: calculate min and max
-		var newMinWidth = newWidth;
-		var newMinHeight = newHeight;
-		var newMaxWidth = newWidth;
-		var newMaxHeight = newHeight;
+		var newMinWidth = this.explicitMinWidth;
+		if (needsMinWidth) {
+			newMinWidth = this._currentThumbSkin.width;
+			if (newMinWidth < this._currentTrackSkin.width) {
+				newMinWidth = this._currentTrackSkin.width;
+			}
+			if (this._currentSecondaryTrackSkin != null && newMinWidth < this._currentSecondaryTrackSkin.width) {
+				newMinWidth = this._currentSecondaryTrackSkin.width;
+			}
+		}
 
-		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+		var newMinHeight = this.explicitMinHeight;
+		if (needsMinHeight) {
+			newMinHeight = this._currentTrackSkin.height;
+			if (this._currentSecondaryTrackSkin != null) {
+				newMinHeight += this._secondaryTrackSkinMeasurements.height;
+			}
+		}
+
+		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight);
 	}
 
 	override private function saveThumbStart(x:Float, y:Float):Void {
