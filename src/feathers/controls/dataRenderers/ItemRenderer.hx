@@ -654,9 +654,12 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			adjustedGap = this.minGap;
 		}
 		if (this._currentAccessoryView != null) {
+			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
+			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
+			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			textFieldExplicitWidth -= (this._currentAccessoryView.width + adjustedGap);
 		}
 		if (textFieldExplicitWidth < 0.0) {
