@@ -102,10 +102,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(text:String = "", ?prompt:String) {
 		initializeTextInputTheme();
 
 		super();
+
+		this.text = text;
+		this.prompt = prompt;
 
 		this.tabEnabled = true;
 		this.tabChildren = false;
@@ -325,7 +328,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	private var _updatedTextStyles = false;
 	private var _updatedPromptStyles = false;
 
-	private var _text:String = "";
+	private var _text:String;
 
 	/**
 		The text displayed by the text input.

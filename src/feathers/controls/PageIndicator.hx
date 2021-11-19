@@ -89,7 +89,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(maxSelectedIndex:Int = -1) {
 		initializePageIndicatorTheme();
 
 		super();
@@ -97,6 +97,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		this.mouseChildren = this._interactionMode == PRECISE;
 		this.tabEnabled = true;
 		this.tabChildren = false;
+
+		this.maxSelectedIndex = maxSelectedIndex;
 
 		this.addEventListener(MouseEvent.CLICK, pageIndicator_clickHandler);
 		#if (openfl >= "9.0.0")

@@ -74,10 +74,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(text:String = "", ?prompt:String) {
 		initializeTextAreaTheme();
 
 		super();
+
+		this.text = text;
+		this.prompt = prompt;
 
 		this.tabEnabled = true;
 		this.tabChildren = false;
@@ -195,7 +198,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._enabled;
 	}
 
-	private var _text:String = "";
+	private var _text:String;
 
 	/**
 		The text displayed by the text area.
