@@ -10,8 +10,8 @@ package feathers.controls;
 
 import feathers.events.FormEvent;
 import feathers.events.TriggerEvent;
-import feathers.layout.FormLayout;
 import feathers.themes.steel.components.SteelFormStyles;
+import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
@@ -91,6 +91,16 @@ class Form extends LayoutGroup {
 		}
 		if (event.isDefaultPrevented()) {
 			return;
+		}
+		var current = cast(event.target, DisplayObject);
+		while (current != this && current != null) {
+			if ((current is FormItem)) {
+				var formItem = cast(current, FormItem);
+				if (!formItem.submitOnEnterEnabled) {
+					return;
+				}
+			}
+			current = current.parent;
 		}
 		event.preventDefault();
 		this.submit();

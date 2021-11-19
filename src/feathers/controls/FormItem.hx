@@ -255,6 +255,21 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		return this._required;
 	}
 
+	/**
+		Set to false to prevent `Keyboard.ENTER` from submitting the `Form` that
+		contains this item.
+
+		In the following example, the form item does not submit when pressing
+		the enter key:
+
+		```hx
+		formItem.submitOnEnterEnabled = false;
+		```
+
+		@since 1.0.0
+	**/
+	public var submitOnEnterEnabled:Bool = true;
+
 	private var _currentRequiredSkin:DisplayObject = null;
 	private var _requiredSkinMeasurements:Measurements = null;
 
