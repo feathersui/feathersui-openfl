@@ -491,6 +491,15 @@ class BaseNavigator extends FeathersControl {
 		this._previousViewInTransition = this._activeItemView;
 		this._previousViewInTransitionID = this._activeItemID;
 
+		if (this.stage.focus == this._previousViewInTransition) {
+			this.stage.focus = this.stage;
+		}
+		if (this.stage.focus != null
+			&& (this._previousViewInTransition is DisplayObjectContainer)
+			&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(this.stage.focus)) {
+			this.stage.focus = this.stage;
+		}
+
 		this._transitionActive = true;
 
 		var item = this._addedItems.get(id);
@@ -550,6 +559,15 @@ class BaseNavigator extends FeathersControl {
 			this._pendingItemTransition = transition;
 			this._clearAfterTransition = true;
 			return;
+		}
+
+		if (this.stage.focus == this._previousViewInTransition) {
+			this.stage.focus = this.stage;
+		}
+		if (this.stage.focus != null
+			&& (this._previousViewInTransition is DisplayObjectContainer)
+			&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(this.stage.focus)) {
+			this.stage.focus = this.stage;
 		}
 
 		this._transitionActive = true;
