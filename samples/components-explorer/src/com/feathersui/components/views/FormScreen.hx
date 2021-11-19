@@ -63,6 +63,7 @@ class FormScreen extends Panel {
 
 		var mesageItem = new FormItem();
 		mesageItem.text = "Message";
+		mesageItem.submitOnEnterEnabled = false;
 		mesageItem.textPosition = TOP;
 		mesageItem.horizontalAlign = JUSTIFY;
 		this.messageInput = new TextArea();
