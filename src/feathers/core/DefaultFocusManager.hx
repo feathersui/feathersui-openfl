@@ -489,6 +489,10 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			outerContainer = container.parent;
 		}
 		var hasProcessedAfterChild = afterChild == null;
+		var exclusions:Array<DisplayObject> = null;
+		if ((outerContainer is IFocusExclusions)) {
+			exclusions = cast(outerContainer, IFocusExclusions).focusExclusions;
+		}
 		if ((outerContainer is IFocusExtras)) {
 			var focusWithExtras = cast(outerContainer, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasBefore;
@@ -503,6 +507,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 				if (!skip) {
 					for (i in startIndex...extras.length) {
 						var child = extras[i];
+						if (exclusions != null && exclusions.indexOf(child) != -1) {
+							continue;
+						}
 						var foundChild = this.findNextChildFocus(child);
 						if (foundChild != null) {
 							return foundChild;
@@ -518,6 +525,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 		for (i in startIndex...container.numChildren) {
 			var child = container.getChildAt(i);
+			if (exclusions != null && exclusions.indexOf(child) != -1) {
+				continue;
+			}
 			var foundChild = this.findNextChildFocus(child);
 			if (foundChild != null) {
 				return foundChild;
@@ -537,6 +547,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 				if (!skip) {
 					for (i in startIndex...extras.length) {
 						var child = extras[i];
+						if (exclusions != null && exclusions.indexOf(child) != -1) {
+							continue;
+						}
 						var foundChild = this.findNextChildFocus(child);
 						if (foundChild != null) {
 							return foundChild;
