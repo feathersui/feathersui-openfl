@@ -19,7 +19,7 @@ import openfl.display.DisplayObject;
 
 	 @since 1.0.0
 **/
-interface IFocusExtras extends IFocusObject {
+interface IFocusExtras extends IFocusManagerAware {
 	/**
 		Extra display objects that are not accessible through standard display
 		list functions like `getChildAt()`, but should appear before those
