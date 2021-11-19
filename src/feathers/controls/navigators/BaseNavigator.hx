@@ -8,6 +8,8 @@
 
 package feathers.controls.navigators;
 
+import feathers.core.IFocusObject;
+import feathers.core.IFocusContainer;
 import feathers.events.TransitionEvent;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.InteractiveObject;
@@ -48,7 +50,7 @@ import feathers.core.FeathersControl;
 @:event(feathers.events.TransitionEvent.TRANSITION_START)
 @:event(feathers.events.TransitionEvent.TRANSITION_COMPLETE)
 @:event(feathers.events.TransitionEvent.TRANSITION_CANCEL)
-class BaseNavigator extends FeathersControl {
+class BaseNavigator extends FeathersControl implements IFocusContainer {
 	private static function defaultTransition(oldView:DisplayObject, newView:DisplayObject):IEffectContext {
 		return new NoOpEffectContext(oldView);
 	}
@@ -102,6 +104,31 @@ class BaseNavigator extends FeathersControl {
 
 	private function get_transitionActive():Bool {
 		return this._transitionActive;
+	}
+
+	@:getter(tabEnabled)
+	override private function get_tabEnabled():Bool {
+		return false;
+	}
+
+	private var _childFocusEnabled:Bool = true;
+
+	/**
+		@see `feathers.core.IFocusContainer.childFocusEnabled`
+	**/
+	@:flash.property
+	public var childFocusEnabled(get, set):Bool;
+
+	private function get_childFocusEnabled():Bool {
+		return this._enabled && !this._transitionActive && this._childFocusEnabled;
+	}
+
+	private function set_childFocusEnabled(value:Bool):Bool {
+		if (this._childFocusEnabled == value) {
+			return this._childFocusEnabled;
+		}
+		this._childFocusEnabled = value;
+		return this._childFocusEnabled;
 	}
 
 	private var _viewsContainer:DisplayObjectContainer;
@@ -477,6 +504,34 @@ class BaseNavigator extends FeathersControl {
 		return item;
 	}
 
+	private function clearFocusFromPreviousView():Void {
+		if (this._previousViewInTransition == null) {
+			return;
+		}
+
+		if (this._focusManager != null) {
+			if (this._focusManager.focus == null) {
+				return;
+			}
+			if ((this._previousViewInTransition is IFocusObject)
+				&& this._focusManager.focus == cast(this._previousViewInTransition, IFocusObject)) {
+				this._focusManager.focus = null;
+			} else if ((this._previousViewInTransition is DisplayObjectContainer)
+				&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(cast(this._focusManager.focus, DisplayObject))) {
+				this._focusManager.focus = null;
+			}
+		}
+
+		if (this.stage.focus == null) {
+			return;
+		}
+		if (this.stage.focus == this._previousViewInTransition
+			|| ((this._previousViewInTransition is DisplayObjectContainer)
+				&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(this.stage.focus))) {
+			this.stage.focus = this.stage;
+		}
+	}
+
 	private function showItemInternal(id:String, transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (!this.hasItem(id)) {
 			throw new ArgumentError('Item with id \'$id\' cannot be displayed because this id has not been added.');
@@ -491,14 +546,7 @@ class BaseNavigator extends FeathersControl {
 		this._previousViewInTransition = this._activeItemView;
 		this._previousViewInTransitionID = this._activeItemID;
 
-		if (this.stage.focus == this._previousViewInTransition) {
-			this.stage.focus = this.stage;
-		}
-		if (this.stage.focus != null
-			&& (this._previousViewInTransition is DisplayObjectContainer)
-			&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(this.stage.focus)) {
-			this.stage.focus = this.stage;
-		}
+		this.clearFocusFromPreviousView();
 
 		this._transitionActive = true;
 
@@ -561,14 +609,7 @@ class BaseNavigator extends FeathersControl {
 			return;
 		}
 
-		if (this.stage.focus == this._previousViewInTransition) {
-			this.stage.focus = this.stage;
-		}
-		if (this.stage.focus != null
-			&& (this._previousViewInTransition is DisplayObjectContainer)
-			&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(this.stage.focus)) {
-			this.stage.focus = this.stage;
-		}
+		this.clearFocusFromPreviousView();
 
 		this._transitionActive = true;
 
