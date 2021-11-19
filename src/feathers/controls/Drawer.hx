@@ -9,6 +9,8 @@
 package feathers.controls;
 
 import feathers.core.FeathersControl;
+import feathers.core.IFocusExclusions;
+import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.IUIControl;
@@ -23,6 +25,7 @@ import feathers.utils.EdgePuller;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
@@ -65,7 +68,7 @@ import openfl.ui.Multitouch;
 @:meta(DefaultProperty("content"))
 @defaultXmlProperty("content")
 @:styleContext
-class Drawer extends FeathersControl implements IOpenCloseToggle {
+class Drawer extends FeathersControl implements IOpenCloseToggle implements IFocusExclusions {
 	private static final MAX_CLICK_DISTANCE_FOR_CLOSE = 6.0;
 
 	/**
@@ -79,6 +82,20 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		this.content = content;
 		this.drawer = drawer;
 		this.addEventListener(Event.ADDED_TO_STAGE, drawer_addedToStageHandler);
+	}
+
+	private var _focusExclusions:Array<DisplayObject> = [];
+
+	/**
+		@see `feathers.core.IFocusExclusions.focusExclusions`
+	**/
+	public var focusExclusions(get, never):Array<DisplayObject>;
+
+	private function get_focusExclusions():Array<DisplayObject> {
+		if (this._edgePuller != null && (this._edgePuller.opened || this._edgePuller.active)) {
+			return this._focusExclusions;
+		}
+		return null;
 	}
 
 	private var _edgePuller:EdgePuller;
@@ -154,6 +171,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			if (this._content.parent == this) {
 				this.removeChild(this._content);
 			}
+			this._focusExclusions.remove(this._content);
 		}
 		this._content = value;
 		if (this._content != null) {
@@ -167,6 +185,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 				this._contentMeasurements.save(this._content);
 			}
 			this._content.addEventListener(Event.RESIZE, drawer_content_resizeHandler, false, 0, true);
+			this._focusExclusions.push(this._content);
 		}
 		this.setInvalid(DATA);
 		return this._content;
@@ -707,6 +726,28 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 		};
 	}
 
+	private function clearFocusOnOpening():Void {
+		if (this._focusManager != null) {
+			if (this._focusManager.focus == null) {
+				return;
+			}
+			if ((this._content is IFocusObject) && this._focusManager.focus == cast(this._content, IFocusObject)) {
+				this._focusManager.focus = null;
+			} else if ((this._content is DisplayObjectContainer)
+				&& cast(this._content, DisplayObjectContainer).contains(cast(this._focusManager.focus, DisplayObject))) {
+				this._focusManager.focus = null;
+			}
+		}
+
+		if (this.stage.focus == null) {
+			return;
+		}
+		if (this.stage.focus == this._content
+			|| ((this._content is DisplayObjectContainer) && cast(this._content, DisplayObjectContainer).contains(this.stage.focus))) {
+			this.stage.focus = this.stage;
+		}
+	}
+
 	private function drawer_edgePuller_openingHandler(event:FeathersEvent):Void {
 		var pointerID = this._edgePuller.pointerID;
 		if (pointerID != -1) {
@@ -722,6 +763,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle {
 			event.preventDefault();
 			return;
 		}
+		this.clearFocusOnOpening();
 		this.updateWithPullDistance();
 		this._drawer.visible = true;
 		if (this._currentOverlaySkin != null) {
