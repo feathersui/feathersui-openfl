@@ -261,8 +261,9 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 	function removeAt(location:Array<Int>):T;
 
 	/**
-		Removes all items from the collection, decreasing the length of the root
-		to zero.
+		Removes all items from a branch, decreasing the branch's length to zero.
+		If called without a location, returns removes all items from the
+		root of collection, resulting in a completely empty location.
 
 		The following example removes all items from a collection:
 
@@ -274,7 +275,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	function removeAll():Void;
+	function removeAll(?location:Array<Int>):Void;
 
 	/**
 		Notifies components using the collection that an item at the specified

@@ -345,12 +345,15 @@ import openfl.events.Event;
 			removeAllEvent = true;
 		});
 		var resetEvent = false;
+		var locationFromEvent:Array<Int> = null;
 		this._collection.addEventListener(HierarchicalCollectionEvent.RESET, function(event:HierarchicalCollectionEvent):Void {
 			resetEvent = true;
+			locationFromEvent = event.location;
 		});
 		this._collection.removeAll();
 		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after removing all from collection");
 		Assert.isTrue(removeAllEvent, "HierarchicalCollectionEvent.REMOVE_ALL must be dispatched after removing all from collection");
+		Assert.isNull(locationFromEvent, "HierarchicalCollectionEvent.REMOVE_ALL location be be null if no location passed as argument");
 		Assert.isFalse(resetEvent, "HierarchicalCollectionEvent.RESET must not be dispatched after removing all from collection");
 		Assert.equals(0, this._collection.getLength(), "Collection length must change after removing all from collection");
 	}
@@ -362,12 +365,36 @@ import openfl.events.Event;
 			changeEvent = true;
 		});
 		var removeAllEvent = false;
+		var locationFromEvent:Array<Int> = null;
 		this._collection.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, function(event:HierarchicalCollectionEvent):Void {
 			removeAllEvent = true;
+			locationFromEvent = event.location;
 		});
 		this._collection.removeAll();
 		Assert.isFalse(changeEvent, "Event.CHANGE must not be dispatched after removing all from empty collection");
 		Assert.isFalse(removeAllEvent, "HierarchicalCollectionEvent.REMOVE_ALL must not be dispatched after removing all from empty collection");
+		Assert.isNull(locationFromEvent, "HierarchicalCollectionEvent.REMOVE_ALL location be be null if no location passed as argument");
+	}
+
+	public function testRemoveAllWithLocation():Void {
+		var originalLength1 = this._collection.getLength();
+		var originalLength2 = this._collection.getLength([1]);
+		var changeEvent = false;
+		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changeEvent = true;
+		});
+		var removeAllEvent = false;
+		var locationFromEvent:Array<Int> = null;
+		this._collection.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, function(event:HierarchicalCollectionEvent):Void {
+			removeAllEvent = true;
+			locationFromEvent = event.location;
+		});
+		this._collection.removeAll([1]);
+		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after removing all from collection");
+		Assert.isTrue(removeAllEvent, "HierarchicalCollectionEvent.REMOVE_ALL must be dispatched after removing all from collection");
+		Assert.isTrue(locationsMatch([1], locationFromEvent), "Removing item from collection returns incorrect location in event");
+		Assert.equals(originalLength1, this._collection.getLength(), "Collection length must change after removing all from collection");
+		Assert.equals(0, this._collection.getLength([1]), "Collection branch length must change after removing all from branch");
 	}
 
 	public function testResetArray():Void {

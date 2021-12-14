@@ -417,7 +417,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.removeAll`
 	**/
-	public function removeAll():Void {
+	public function removeAll(?location:Array<Int>):Void {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();
 		}
@@ -425,11 +425,31 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 			// nothing to remove
 			return;
 		}
-		if (this._filterAndSortData != null) {
-			this._filterAndSortData.resize(0);
+		if (location == null || location.length == 1) {
+			if (this._filterAndSortData != null) {
+				this._filterAndSortData.resize(0);
+			}
+			this._array.resize(0);
+			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, null);
+			FeathersEvent.dispatch(this, Event.CHANGE);
+			return;
 		}
-		this._array.resize(0);
-		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, null);
+		if (this._filterAndSortData != null) {
+			var firstChildLocation = location.copy();
+			firstChildLocation.push(0);
+			var branchChildren = this.findBranchChildren(this._array, firstChildLocation);
+			var filteredOrSortedBranchChildren = this.findBranchChildren(this._filterAndSortData, firstChildLocation);
+			filteredOrSortedBranchChildren.resize(0);
+			branchChildren.resize(0);
+			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, location);
+			FeathersEvent.dispatch(this, Event.CHANGE);
+			return;
+		}
+		var firstChildLocation = location.copy();
+		firstChildLocation.push(0);
+		var branchChildren = this.findBranchChildren(this._array, firstChildLocation);
+		branchChildren.resize(0);
+		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, location);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
