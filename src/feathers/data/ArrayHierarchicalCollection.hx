@@ -443,7 +443,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			// nothing to remove
 			return;
 		}
-		if (location == null || location.length == 1) {
+		if (location == null || location.length == 0) {
 			if (this._filterAndSortData != null) {
 				this._filterAndSortData.resize(0);
 			}
