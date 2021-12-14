@@ -403,7 +403,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	}
 
 	/**
-		@see `feathers.data.IHierarchicalCollection.removeAt`
+		@see `feathers.data.IHierarchicalCollection.remove`
 	**/
 	public function remove(item:TreeNode<T>):Void {
 		var location = this.locationOf(item);

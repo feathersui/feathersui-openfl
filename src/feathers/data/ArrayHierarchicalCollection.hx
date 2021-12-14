@@ -421,7 +421,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	}
 
 	/**
-		@see `feathers.data.IHierarchicalCollection.removeAt`
+		@see `feathers.data.IHierarchicalCollection.remove`
 	**/
 	public function remove(item:T):Void {
 		var location = this.locationOf(item);
