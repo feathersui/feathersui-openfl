@@ -508,14 +508,15 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 				result.push(i);
 				return true;
 			}
-			if (item.isBranch()) {
-				result.push(i);
-				var found = this.findItemInBranch(item.children, itemToFind, result);
-				if (found) {
-					return true;
-				}
-				result.pop();
+			if (!item.isBranch()) {
+				continue;
 			}
+			result.push(i);
+			var found = this.findItemInBranch(item.children, itemToFind, result);
+			if (found) {
+				return true;
+			}
+			result.pop();
 		}
 		return false;
 	}

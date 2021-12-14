@@ -536,6 +536,9 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 				result.push(i);
 				return true;
 			}
+			if (!this.isBranch(item)) {
+				continue;
+			}
 			var itemChildren = (this._itemToChildren != null) ? this._itemToChildren(item) : null;
 			if (itemChildren != null) {
 				result.push(i);
