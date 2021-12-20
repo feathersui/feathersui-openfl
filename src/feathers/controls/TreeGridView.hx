@@ -10,7 +10,7 @@ package feathers.controls;
 
 import feathers.controls.dataRenderers.GridViewHeaderRenderer;
 import feathers.controls.dataRenderers.ITreeGridViewHeaderRenderer;
-import feathers.controls.dataRenderers.TreeGridViewCellRenderer;
+import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.TreeGridViewRowRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
@@ -676,7 +676,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private var _cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState,
-		DisplayObject> = DisplayObjectRecycler.withClass(TreeGridViewCellRenderer);
+		DisplayObject> = DisplayObjectRecycler.withClass(HierarchicalItemRenderer);
 
 	/**
 		Manages cell renderers used by the tree grid view.

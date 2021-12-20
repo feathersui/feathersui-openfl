@@ -701,6 +701,14 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			var hierarchicalCell = cast(cellRenderer, IHierarchicalItemRenderer);
 			hierarchicalCell.branch = state.branch;
 		}
+		if ((cellRenderer is IOptionalHierarchyItemRenderer)) {
+			var optionalCell = cast(cellRenderer, IOptionalHierarchyItemRenderer);
+			optionalCell.showHierarchy = state.columnIndex == 0;
+		}
+		if ((cellRenderer is IHierarchicalDepthItemRenderer)) {
+			var depthCell = cast(cellRenderer, IHierarchicalDepthItemRenderer);
+			depthCell.hierarchyDepth = (state.rowLocation != null) ? (state.rowLocation.length - 1) : 0;
+		}
 		if ((cellRenderer is ITreeGridViewCellRenderer)) {
 			var gridCell = cast(cellRenderer, ITreeGridViewCellRenderer);
 			gridCell.column = state.column;

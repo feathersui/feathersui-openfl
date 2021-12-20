@@ -9,9 +9,10 @@
 package feathers.controls;
 
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.controls.dataRenderers.IHierarchicalDepthItemRenderer;
 import feathers.controls.dataRenderers.IHierarchicalItemRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
-import feathers.controls.dataRenderers.TreeViewItemRenderer;
+import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
@@ -527,7 +528,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		The following example provides an `itemRendererRecyclerIDFunction`:
 
 		```hx
-		var regularItemRecycler = DisplayObjectRecycler.withClass(TreeViewItemRenderer);
+		var regularItemRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer);
 		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
 		treeView.setItemRendererRecycler("regular-item", regularItemRecycler);
 		treeView.setItemRendererRecycler("first-item", firstItemRecycler);
@@ -562,7 +563,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		return this._itemRendererRecyclerIDFunction;
 	}
 
-	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(TreeViewItemRenderer));
+	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(HierarchicalItemRenderer));
 	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
 	private var itemRendererToItemState = new ObjectMap<DisplayObject, TreeViewItemState>();
@@ -1195,6 +1196,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 		if ((itemRenderer is IHierarchicalItemRenderer)) {
 			var hierarchicalItem = cast(itemRenderer, IHierarchicalItemRenderer);
 			hierarchicalItem.branch = state.branch;
+		}
+		if ((itemRenderer is IHierarchicalDepthItemRenderer)) {
+			var depthItem = cast(itemRenderer, IHierarchicalDepthItemRenderer);
+			depthItem.hierarchyDepth = (state.location != null) ? (state.location.length - 1) : 0;
 		}
 		if ((itemRenderer is ITreeViewItemRenderer)) {
 			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);

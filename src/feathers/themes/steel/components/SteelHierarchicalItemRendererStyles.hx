@@ -8,26 +8,24 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.MultiSkin;
-import feathers.utils.DeviceUtil;
-import openfl.display.Shape;
-import feathers.skins.RectangleSkin;
 import feathers.controls.ToggleButton;
-import feathers.layout.HorizontalAlign;
 import feathers.controls.ToggleButtonState;
+import feathers.controls.dataRenderers.HierarchicalItemRenderer;
+import feathers.skins.MultiSkin;
 import feathers.skins.UnderlineSkin;
-import feathers.controls.dataRenderers.TreeGridViewCellRenderer;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
+import openfl.display.Shape;
 
 /**
-	Initialize "steel" styles for the `TreeGridViewCellRenderer` component.
+	Initialize "steel" styles for the `HierarchicalItemRenderer` component.
 
 	@since 1.0.0
 **/
 @:dox(hide)
 @:access(feathers.themes.steel.BaseSteelTheme)
-class SteelTreeGridViewCellRendererStyles {
+class SteelHierarchicalItemRendererStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {
 		if (theme == null) {
 			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
@@ -37,8 +35,8 @@ class SteelTreeGridViewCellRendererStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(TreeGridViewCellRenderer, null) == null) {
-			styleProvider.setStyleFunction(TreeGridViewCellRenderer, null, function(itemRenderer:TreeGridViewCellRenderer):Void {
+		if (styleProvider.getStyleFunction(HierarchicalItemRenderer, null) == null) {
+			styleProvider.setStyleFunction(HierarchicalItemRenderer, null, function(itemRenderer:HierarchicalItemRenderer):Void {
 				var isDesktop = DeviceUtil.isDesktop();
 
 				if (itemRenderer.backgroundSkin == null) {
@@ -85,8 +83,8 @@ class SteelTreeGridViewCellRendererStyles {
 				itemRenderer.horizontalAlign = LEFT;
 			});
 		}
-		if (styleProvider.getStyleFunction(ToggleButton, TreeGridViewCellRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON) == null) {
-			styleProvider.setStyleFunction(ToggleButton, TreeGridViewCellRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON, function(button:ToggleButton):Void {
+		if (styleProvider.getStyleFunction(ToggleButton, HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON) == null) {
+			styleProvider.setStyleFunction(ToggleButton, HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON, function(button:ToggleButton):Void {
 				if (button.icon == null) {
 					var icon = new MultiSkin();
 					button.icon = icon;
