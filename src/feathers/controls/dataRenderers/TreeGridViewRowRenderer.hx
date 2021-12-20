@@ -697,12 +697,15 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
+		if ((cellRenderer is IHierarchicalItemRenderer)) {
+			var hierarchicalCell = cast(cellRenderer, IHierarchicalItemRenderer);
+			hierarchicalCell.branch = state.branch;
+		}
 		if ((cellRenderer is ITreeGridViewCellRenderer)) {
 			var gridCell = cast(cellRenderer, ITreeGridViewCellRenderer);
 			gridCell.column = state.column;
 			gridCell.columnIndex = state.columnIndex;
 			gridCell.rowLocation = state.rowLocation;
-			gridCell.branch = state.branch;
 			gridCell.treeGridViewOwner = state.owner;
 		}
 		if ((cellRenderer is ILayoutIndexObject)) {

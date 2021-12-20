@@ -80,7 +80,7 @@ class TreeGridViewCellRenderer extends ItemRenderer implements ITreeGridViewCell
 	private var _branch:Bool = false;
 
 	/**
-		@see `feathers.controls.dataRenderers.ITreeGridViewCellRenderer.branch`
+		@see `feathers.controls.dataRenderers.IHierarchicalItemRenderer.branch`
 	**/
 	@:flash.property
 	public var branch(get, set):Bool;

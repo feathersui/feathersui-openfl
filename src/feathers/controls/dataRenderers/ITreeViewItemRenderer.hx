@@ -8,8 +8,6 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IUIControl;
-
 /**
 	An item renderer optimized for the `TreeView` component.
 
@@ -17,7 +15,7 @@ import feathers.core.IUIControl;
 
 	@since 1.0.0
 **/
-interface ITreeViewItemRenderer extends IUIControl {
+interface ITreeViewItemRenderer extends IHierarchicalItemRenderer {
 	/**
 		The location of the item in the data provider of the `TreeView`.
 
@@ -25,14 +23,6 @@ interface ITreeViewItemRenderer extends IUIControl {
 	**/
 	@:flash.property
 	public var location(get, set):Array<Int>;
-
-	/**
-		Indicates if the item renderer is a branch or a leaf.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	public var branch(get, set):Bool;
 
 	/**
 		The `TreeView` that contains this header renderer.

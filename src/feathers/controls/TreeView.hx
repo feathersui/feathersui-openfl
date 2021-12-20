@@ -9,15 +9,16 @@
 package feathers.controls;
 
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.controls.dataRenderers.IHierarchicalItemRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
 import feathers.controls.dataRenderers.TreeViewItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
-import feathers.core.InvalidationFlag;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
+import feathers.core.InvalidationFlag;
 import feathers.data.IHierarchicalCollection;
 import feathers.data.TreeViewItemState;
 import feathers.events.FeathersEvent;
@@ -1191,10 +1192,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> {
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
+		if ((itemRenderer is IHierarchicalItemRenderer)) {
+			var hierarchicalItem = cast(itemRenderer, IHierarchicalItemRenderer);
+			hierarchicalItem.branch = state.branch;
+		}
 		if ((itemRenderer is ITreeViewItemRenderer)) {
 			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
 			treeItem.location = state.location;
-			treeItem.branch = state.branch;
 			treeItem.treeViewOwner = state.owner;
 		}
 		if ((itemRenderer is ILayoutIndexObject)) {

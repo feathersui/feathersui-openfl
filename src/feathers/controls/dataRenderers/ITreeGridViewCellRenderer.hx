@@ -8,8 +8,6 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IUIControl;
-
 /**
 	A cell renderer optimized for the `TreeGridView` component.
 
@@ -17,7 +15,7 @@ import feathers.core.IUIControl;
 
 	@since 1.0.0
 **/
-interface ITreeGridViewCellRenderer extends IUIControl {
+interface ITreeGridViewCellRenderer extends IHierarchicalItemRenderer {
 	/**
 		The column rendered by this cell.
 
@@ -41,14 +39,6 @@ interface ITreeGridViewCellRenderer extends IUIControl {
 	**/
 	@:flash.property
 	public var rowLocation(get, set):Array<Int>;
-
-	/**
-		Indicates if the cell renderer is a branch or a leaf.
-
-		@since 1.0.0
-	**/
-	@:flash.property
-	public var branch(get, set):Bool;
 
 	/**
 		The `TreeGridView` that contains this cell renderer.
