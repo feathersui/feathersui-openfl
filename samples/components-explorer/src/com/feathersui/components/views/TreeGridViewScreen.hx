@@ -23,18 +23,38 @@ class TreeGridViewScreen extends Panel {
 
 		this.treeGridView = new TreeGridView();
 		this.treeGridView.dataProvider = new ArrayHierarchicalCollection([
-			{item: "Chicken breast", dept: "Meat", price: "5.90"},
-			{item: "Bacon", dept: "Meat", price: "4.49"},
-			{item: "2% Milk", dept: "Dairy", price: "2.49"},
-			{item: "Butter", dept: "Dairy", price: "4.69"},
-			{item: "Lettuce", dept: "Produce", price: "1.29"},
-			{item: "Broccoli", dept: "Produce", price: "2.99"},
-			{item: "Whole Wheat Bread", dept: "Bakery", price: "2.49"},
-			{item: "English Muffins", dept: "Bakery", price: "2.99"},
-		]);
+			{
+				dept: "Bakery",
+				children: [
+					{item: "Whole Wheat Bread", dept: "Bakery", price: "2.49"},
+					{item: "English Muffins", dept: "Bakery", price: "2.99"},
+				]
+			},
+			{
+				dept: "Dairy",
+				children: [
+					{item: "2% Milk", dept: "Dairy", price: "2.49"},
+					{item: "Butter", dept: "Dairy", price: "4.69"},
+				]
+			},
+			{
+				dept: "Meat",
+				children: [
+					{item: "Chicken breast", dept: "Meat", price: "5.90"},
+					{item: "Bacon", dept: "Meat", price: "4.49"},
+				]
+			},
+			{
+				dept: "Produce",
+				children: [
+					{item: "Lettuce", dept: "Produce", price: "1.29"},
+					{item: "Broccoli", dept: "Produce", price: "2.99"},
+				]
+			},
+		], (item:Dynamic) -> return item.children);
 		this.treeGridView.columns = new ArrayCollection([
-			new TreeGridViewColumn("Item", (data) -> data.item),
 			new TreeGridViewColumn("Department", (data) -> data.dept),
+			new TreeGridViewColumn("Item", (data) -> data.item),
 			new TreeGridViewColumn("Unit Price", (data) -> data.price)
 		]);
 		this.treeGridView.layoutData = AnchorLayoutData.fill();
