@@ -17,6 +17,7 @@ import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelHierarchicalItemRendererStyles;
 import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
 
 /**
@@ -381,11 +382,40 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 			this.paddingLeft = paddingLeft;
 		});
 		this.disclosureButton.x = this.paddingLeft + indent;
-		this.disclosureButton.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this.disclosureButton.height) / 2.0;
+		switch (this.verticalAlign) {
+			case TOP:
+				this.disclosureButton.y = this.paddingTop;
+			case BOTTOM:
+				this.disclosureButton.y = Math.max(this.paddingTop,
+					this.paddingTop
+					+ this.actualHeight
+					- this.paddingTop
+					- this.paddingBottom
+					- this.disclosureButton.height);
+			case MIDDLE:
+				this.disclosureButton.y = Math.max(this.paddingTop,
+					this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this.disclosureButton.height) / 2.0);
+			default:
+				throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+		}
 		if (this._currentBranchOrLeafIcon != null) {
 			this._currentBranchOrLeafIcon.x = this.disclosureButton.x + this.disclosureButton.width + disclosureGap;
-			this._currentBranchOrLeafIcon.y = this.paddingTop
-				+ (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentBranchOrLeafIcon.height) / 2.0;
+			switch (this.verticalAlign) {
+				case TOP:
+					this._currentBranchOrLeafIcon.y = this.paddingTop;
+				case BOTTOM:
+					this._currentBranchOrLeafIcon.y = Math.max(this.paddingTop,
+						this.paddingTop
+						+ this.actualHeight
+						- this.paddingTop
+						- this.paddingBottom
+						- this._currentBranchOrLeafIcon.height);
+				case MIDDLE:
+					this._currentBranchOrLeafIcon.y = Math.max(this.paddingTop,
+						this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentBranchOrLeafIcon.height) / 2.0);
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+			}
 		}
 	}
 

@@ -8,15 +8,16 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IValidating;
-import feathers.core.IUIControl;
 import feathers.core.IStateObserver;
-import feathers.skins.IProgrammaticSkin;
-import feathers.layout.Measurements;
-import feathers.themes.steel.components.SteelGridViewHeaderRendererStyles;
-import openfl.display.DisplayObject;
+import feathers.core.IUIControl;
+import feathers.core.IValidating;
 import feathers.data.ISortOrderObserver;
 import feathers.data.SortOrder;
+import feathers.layout.Measurements;
+import feathers.skins.IProgrammaticSkin;
+import feathers.themes.steel.components.SteelGridViewHeaderRendererStyles;
+import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 
 /**
 	A header renderer for `GridView`. Includes a sort order indicator on the
@@ -241,8 +242,22 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 		});
 		if (this._currentSortOrderIcon != null) {
 			this._currentSortOrderIcon.x = this.actualWidth - this.paddingRight - this._currentSortOrderIcon.width;
-			this._currentSortOrderIcon.y = this.paddingTop
-				+ (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentSortOrderIcon.height) / 2.0;
+			switch (this.verticalAlign) {
+				case TOP:
+					this._currentSortOrderIcon.y = this.paddingTop;
+				case BOTTOM:
+					this._currentSortOrderIcon.y = Math.max(this.paddingTop,
+						this.paddingTop
+						+ this.actualHeight
+						- this.paddingTop
+						- this.paddingBottom
+						- this._currentSortOrderIcon.height);
+				case MIDDLE:
+					this._currentSortOrderIcon.y = Math.max(this.paddingTop,
+						this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentSortOrderIcon.height) / 2.0);
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+			}
 		}
 	}
 

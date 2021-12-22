@@ -21,6 +21,7 @@ import feathers.themes.steel.components.SteelItemRendererStyles;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.text.TextField;
@@ -853,13 +854,36 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			this._ignoreIconResizes = oldIgnoreIconResizes;
 			this._currentIcon.x = currentX;
 			currentX += this._currentIcon.width + adjustedGap;
-			this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
+			switch (this.verticalAlign) {
+				case TOP:
+					this._currentIcon.y = this.paddingTop;
+				case BOTTOM:
+					this._currentIcon.y = this.paddingTop + this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height;
+				case MIDDLE:
+					this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+			}
 			availableTextWidth -= (this._currentIcon.width + adjustedGap);
 		}
 		if (this._currentAccessoryView != null) {
 			this._currentAccessoryView.x = this.actualWidth - this.paddingRight - this._currentAccessoryView.width;
-			this._currentAccessoryView.y = this.paddingTop
-				+ (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentAccessoryView.height) / 2.0;
+			switch (this.verticalAlign) {
+				case TOP:
+					this._currentAccessoryView.y = this.paddingTop;
+				case BOTTOM:
+					this._currentAccessoryView.y = Math.max(this.paddingTop,
+						this.paddingTop
+						+ this.actualHeight
+						- this.paddingTop
+						- this.paddingBottom
+						- this._currentAccessoryView.height);
+				case MIDDLE:
+					this._currentAccessoryView.y = Math.max(this.paddingTop,
+						this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentAccessoryView.height) / 2.0);
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+			}
 			availableTextWidth -= (this._currentAccessoryView.width + adjustedGap);
 		}
 
@@ -868,9 +892,16 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			totalTextHeight += (this._secondaryTextMeasuredHeight + adjustedGap);
 		}
 
-		var currentY = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - totalTextHeight) / 2.0;
-		if (currentY < this.paddingTop) {
-			currentY = this.paddingTop;
+		var currentY = this.paddingTop;
+		switch (this.verticalAlign) {
+			case TOP:
+				currentY = this.paddingTop;
+			case BOTTOM:
+				currentY = Math.max(this.paddingTop, this.paddingTop + this.actualHeight - this.paddingTop - this.paddingBottom - totalTextHeight);
+			case MIDDLE:
+				currentY = Math.max(this.paddingTop, this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - totalTextHeight) / 2.0);
+			default:
+				throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
 		}
 
 		this.textField.x = currentX;
