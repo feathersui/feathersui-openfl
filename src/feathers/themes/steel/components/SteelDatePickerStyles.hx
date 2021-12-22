@@ -8,15 +8,15 @@
 
 package feathers.themes.steel.components;
 
-import feathers.controls.ButtonState;
-import openfl.display.Shape;
 import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.DatePicker;
 import feathers.controls.Label;
 import feathers.skins.RectangleSkin;
-import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
+import openfl.display.Shape;
 
 /**
 	Initialize "steel" styles for the `DatePicker` component.
@@ -58,6 +58,7 @@ class SteelDatePickerStyles {
 		}
 		if (styleProvider.getStyleFunction(Button, DatePicker.CHILD_VARIANT_DECREMENT_MONTH_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, DatePicker.CHILD_VARIANT_DECREMENT_MONTH_BUTTON, function(button:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
@@ -66,6 +67,13 @@ class SteelDatePickerStyles {
 					skin.border = theme.getButtonBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
+					if (isDesktop) {
+						skin.width = 20.0;
+						skin.height = 20.0;
+					} else {
+						skin.width = 24.0;
+						skin.height = 24.0;
+					}
 					button.backgroundSkin = skin;
 				}
 
@@ -103,6 +111,7 @@ class SteelDatePickerStyles {
 		}
 		if (styleProvider.getStyleFunction(Button, DatePicker.CHILD_VARIANT_INCREMENT_MONTH_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, DatePicker.CHILD_VARIANT_INCREMENT_MONTH_BUTTON, function(button:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
@@ -111,6 +120,13 @@ class SteelDatePickerStyles {
 					skin.border = theme.getButtonBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
+					if (isDesktop) {
+						skin.width = 20.0;
+						skin.height = 20.0;
+					} else {
+						skin.width = 24.0;
+						skin.height = 24.0;
+					}
 					button.backgroundSkin = skin;
 				}
 
@@ -148,6 +164,7 @@ class SteelDatePickerStyles {
 		}
 		if (styleProvider.getStyleFunction(Button, DatePicker.CHILD_VARIANT_DECREMENT_YEAR_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, DatePicker.CHILD_VARIANT_DECREMENT_YEAR_BUTTON, function(button:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
@@ -156,6 +173,13 @@ class SteelDatePickerStyles {
 					skin.border = theme.getButtonBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
+					if (isDesktop) {
+						skin.width = 20.0;
+						skin.height = 20.0;
+					} else {
+						skin.width = 24.0;
+						skin.height = 24.0;
+					}
 					button.backgroundSkin = skin;
 				}
 
@@ -195,6 +219,7 @@ class SteelDatePickerStyles {
 		}
 		if (styleProvider.getStyleFunction(Button, DatePicker.CHILD_VARIANT_INCREMENT_YEAR_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, DatePicker.CHILD_VARIANT_INCREMENT_YEAR_BUTTON, function(button:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
@@ -203,6 +228,13 @@ class SteelDatePickerStyles {
 					skin.border = theme.getButtonBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
+					if (isDesktop) {
+						skin.width = 20.0;
+						skin.height = 20.0;
+					} else {
+						skin.width = 24.0;
+						skin.height = 24.0;
+					}
 					button.backgroundSkin = skin;
 				}
 

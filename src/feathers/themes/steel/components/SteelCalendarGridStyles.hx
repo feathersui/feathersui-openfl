@@ -8,15 +8,13 @@
 
 package feathers.themes.steel.components;
 
-import feathers.controls.Label;
-import feathers.controls.Button;
-import feathers.controls.ButtonState;
 import feathers.controls.CalendarGrid;
+import feathers.controls.Label;
 import feathers.controls.ToggleButton;
 import feathers.skins.RectangleSkin;
-import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `CalendarGrid` component.
@@ -37,12 +35,18 @@ class SteelCalendarGridStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(ToggleButton, CalendarGrid.CHILD_VARIANT_DATE_TOGGLE_BUTTON) == null) {
 			styleProvider.setStyleFunction(ToggleButton, CalendarGrid.CHILD_VARIANT_DATE_TOGGLE_BUTTON, function(button:ToggleButton):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.selectedFill = theme.getActiveThemeFill();
 					backgroundSkin.selectedBorder = theme.getActiveFillBorder();
-					backgroundSkin.width = 20.0;
-					backgroundSkin.height = 20.0;
+					if (isDesktop) {
+						backgroundSkin.width = 20.0;
+						backgroundSkin.height = 20.0;
+					} else {
+						backgroundSkin.width = 32.0;
+						backgroundSkin.height = 32.0;
+					}
 					backgroundSkin.cornerRadius = 4.0;
 					button.backgroundSkin = backgroundSkin;
 				}
@@ -61,12 +65,18 @@ class SteelCalendarGridStyles {
 		}
 		if (styleProvider.getStyleFunction(ToggleButton, CalendarGrid.CHILD_VARIANT_MUTED_DATE_TOGGLE_BUTTON) == null) {
 			styleProvider.setStyleFunction(ToggleButton, CalendarGrid.CHILD_VARIANT_MUTED_DATE_TOGGLE_BUTTON, function(button:ToggleButton):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.selectedFill = theme.getActiveThemeFill();
 					backgroundSkin.selectedBorder = theme.getActiveFillBorder();
-					backgroundSkin.width = 20.0;
-					backgroundSkin.height = 20.0;
+					if (isDesktop) {
+						backgroundSkin.width = 20.0;
+						backgroundSkin.height = 20.0;
+					} else {
+						backgroundSkin.width = 32.0;
+						backgroundSkin.height = 32.0;
+					}
 					button.backgroundSkin = backgroundSkin;
 				}
 
