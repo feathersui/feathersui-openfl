@@ -561,7 +561,8 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 			cast(this._currentAccessoryView, IValidating).validateNow();
 		}
 		this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
-		if (this._text == null || this._text.length == 0) {
+		var hasText = this.showText && this._text != null;
+		if (!hasText) {
 			return;
 		}
 
@@ -831,86 +832,138 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 	override private function layoutChildren():Void {
 		this.refreshTextFieldDimensions(false);
-		var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
-		this._ignoreAccessoryResizes = true;
-		if ((this._currentAccessoryView is IValidating)) {
-			cast(this._currentAccessoryView, IValidating).validateNow();
-		}
-		this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		var availableTextWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
-		var currentX = this.paddingLeft;
-		if (this._currentIcon != null) {
-			var oldIgnoreIconResizes = this._ignoreIconResizes;
-			this._ignoreIconResizes = true;
-			if ((this._currentIcon is IValidating)) {
-				cast(this._currentIcon, IValidating).validateNow();
-			}
-			this._ignoreIconResizes = oldIgnoreIconResizes;
-			this._currentIcon.x = currentX;
-			currentX += this._currentIcon.width + adjustedGap;
-			switch (this.verticalAlign) {
-				case TOP:
-					this._currentIcon.y = this.paddingTop;
-				case BOTTOM:
-					this._currentIcon.y = this.paddingTop + this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height;
-				case MIDDLE:
-					this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
-				default:
-					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
-			}
-			availableTextWidth -= (this._currentIcon.width + adjustedGap);
+
+		var hasText = this.showText && this._text != null;
+		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
+		var availableContentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		var availableContentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		var totalContentWidth = hasText ? this._textMeasuredWidth : 0.0;
+		var totalContentHeight = hasText ? this._textMeasuredHeight : 0.0;
+		if (hasSecondaryText && this.secondaryTextField != null) {
+			totalContentWidth = Math.max(totalContentWidth, this._secondaryTextMeasuredWidth);
+			totalContentHeight += (this._secondaryTextMeasuredHeight + adjustedGap);
 		}
+		if (this._currentIcon != null) {
+			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
+				totalContentWidth += adjustedGap + this._currentIcon.width;
+			}
+			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
+				totalContentHeight += adjustedGap + this._currentIcon.height;
+			}
+		}
+
 		if (this._currentAccessoryView != null) {
+			// the accessory view is always positioned on the far right
 			this._currentAccessoryView.x = this.actualWidth - this.paddingRight - this._currentAccessoryView.width;
 			switch (this.verticalAlign) {
 				case TOP:
 					this._currentAccessoryView.y = this.paddingTop;
 				case BOTTOM:
-					this._currentAccessoryView.y = Math.max(this.paddingTop,
-						this.paddingTop
-						+ this.actualHeight
-						- this.paddingTop
-						- this.paddingBottom
-						- this._currentAccessoryView.height);
+					this._currentAccessoryView.y = Math.max(this.paddingTop, this.paddingTop + availableContentHeight - this._currentAccessoryView.height);
 				case MIDDLE:
 					this._currentAccessoryView.y = Math.max(this.paddingTop,
-						this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentAccessoryView.height) / 2.0);
+						this.paddingTop + (availableContentHeight - this._currentAccessoryView.height) / 2.0);
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
 			}
-			availableTextWidth -= (this._currentAccessoryView.width + adjustedGap);
+			availableContentWidth -= (this._currentAccessoryView.width + adjustedGap);
+		}
+		if (this._currentIcon != null) {
+			if (this.iconPosition == TOP || iconPosition == BOTTOM) {
+				switch (this.horizontalAlign) {
+					case LEFT:
+						this._currentIcon.x = this.paddingLeft;
+					case RIGHT:
+						this._currentIcon.x = Math.max(this.paddingLeft, this.paddingLeft + availableContentWidth - this._currentIcon.width);
+					case CENTER:
+						this._currentIcon.x = Math.max(this.paddingLeft, this.paddingLeft + (availableContentWidth - this._currentIcon.height) / 2.0);
+					default:
+						throw new ArgumentError("Unknown horizontal align: " + this.horizontalAlign);
+				}
+			}
+			if (this.iconPosition == LEFT || iconPosition == RIGHT) {
+				switch (this.verticalAlign) {
+					case TOP:
+						this._currentIcon.y = this.paddingTop;
+					case BOTTOM:
+						this._currentIcon.y = Math.max(this.paddingTop, this.paddingTop + availableContentHeight - this._currentIcon.height);
+					case MIDDLE:
+						this._currentIcon.y = Math.max(this.paddingTop, this.paddingTop + (availableContentHeight - this._currentIcon.height) / 2.0);
+					default:
+						throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+				}
+			}
 		}
 
-		var totalTextHeight = this._textMeasuredHeight;
-		if (this.secondaryTextField != null) {
-			totalTextHeight += (this._secondaryTextMeasuredHeight + adjustedGap);
-		}
-
+		var currentX = this.paddingLeft;
 		var currentY = this.paddingTop;
+		switch (this.horizontalAlign) {
+			case LEFT:
+				currentX = this.paddingLeft;
+			case RIGHT:
+				currentX = Math.max(this.paddingLeft, this.paddingLeft + availableContentWidth - totalContentWidth);
+			case CENTER:
+				currentX = Math.max(this.paddingLeft, this.paddingLeft + (availableContentWidth - totalContentWidth) / 2.0);
+			default:
+				throw new ArgumentError("Unknown horizontal align: " + this.horizontalAlign);
+		}
 		switch (this.verticalAlign) {
 			case TOP:
 				currentY = this.paddingTop;
 			case BOTTOM:
-				currentY = Math.max(this.paddingTop, this.paddingTop + this.actualHeight - this.paddingTop - this.paddingBottom - totalTextHeight);
+				currentY = Math.max(this.paddingTop, this.paddingTop + availableContentHeight - totalContentHeight);
 			case MIDDLE:
-				currentY = Math.max(this.paddingTop, this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - totalTextHeight) / 2.0);
+				currentY = Math.max(this.paddingTop, this.paddingTop + (availableContentHeight - totalContentHeight) / 2.0);
 			default:
 				throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
 		}
 
-		this.textField.x = currentX;
-		this.textField.y = currentY;
-		this.textField.width = this._textMeasuredWidth < availableTextWidth ? this._textMeasuredWidth : availableTextWidth;
-		if (this.secondaryTextField != null) {
+		if (this._currentIcon != null) {
+			if (this.iconPosition == LEFT) {
+				this._currentIcon.x = currentX;
+				currentX += adjustedGap + this._currentIcon.width;
+			}
+			if (this.iconPosition == TOP) {
+				this._currentIcon.y = currentY;
+				currentY += adjustedGap + this._currentIcon.height;
+			}
+		}
+
+		var totalTextWidth = 0.0;
+		var availableTextWidth = availableContentWidth;
+		if (this._currentIcon != null && (this.iconPosition == LEFT || this.iconPosition == RIGHT)) {
+			availableTextWidth -= (adjustedGap + this._currentIcon.width);
+		}
+		if (hasText) {
+			this.textField.x = currentX;
+			this.textField.y = currentY;
+			currentY += this._textMeasuredHeight + adjustedGap;
+			totalTextWidth = Math.max(totalTextWidth, this.textField.width);
+		}
+		if (hasSecondaryText && this.secondaryTextField != null) {
 			this.secondaryTextField.x = currentX;
-			this.secondaryTextField.y = this.textField.y + this._textMeasuredHeight + adjustedGap;
+			this.secondaryTextField.y = currentY;
 			this.secondaryTextField.width = this._secondaryTextMeasuredWidth < availableTextWidth ? this._secondaryTextMeasuredWidth : availableTextWidth;
+			currentY += this._secondaryTextMeasuredHeight + adjustedGap;
+			totalTextWidth = Math.max(totalTextWidth, this.secondaryTextField.width);
+		}
+		if (hasText || hasSecondaryText) {
+			currentX += totalTextWidth + adjustedGap;
+		}
+
+		if (this._currentIcon != null) {
+			if (this.iconPosition == RIGHT) {
+				this._currentIcon.x = currentX;
+			}
+			if (this.iconPosition == BOTTOM) {
+				this._currentIcon.y = currentY;
+			}
 		}
 	}
 
