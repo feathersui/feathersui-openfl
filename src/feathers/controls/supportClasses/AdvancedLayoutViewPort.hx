@@ -28,14 +28,14 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 		// an invisible background that makes the entire width and height of the
 		// viewport interactive for touch scrolling
-		this._background = new Sprite();
-		this._background.graphics.beginFill(0xff00ff, 0.0);
-		this._background.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
-		this._background.graphics.endFill();
-		this.addChild(this._background);
+		this._viewPortBackground = new Sprite();
+		this._viewPortBackground.graphics.beginFill(0xff00ff, 0.0);
+		this._viewPortBackground.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
+		this._viewPortBackground.graphics.endFill();
+		this.addChildAt(this._viewPortBackground, 0);
 	}
 
-	private var _background:Sprite;
+	private var _viewPortBackground:Sprite;
 
 	private var _actualMinVisibleWidth:Float = 0.0;
 	private var _explicitMinVisibleWidth:Null<Float> = null;
@@ -368,10 +368,10 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this._actualMinVisibleWidth = this._layoutResult.contentMinWidth;
 		this._actualMinVisibleHeight = this._layoutResult.contentMinHeight;
 
-		this._background.x = 0.0;
-		this._background.y = 0.0;
-		this._background.width = Math.max(this.actualWidth, this._actualVisibleWidth);
-		this._background.height = Math.max(this.actualHeight, this._actualVisibleHeight);
+		this._viewPortBackground.x = Math.min(this.scrollX, 0.0);
+		this._viewPortBackground.y = Math.min(this.scrollY, 0.0);
+		this._viewPortBackground.width = Math.max(this.actualWidth, this._actualVisibleWidth);
+		this._viewPortBackground.height = Math.max(this.actualHeight, this._actualVisibleHeight);
 
 		if ((this.layout is ISnapLayout)) {
 			var snapLayout = cast(this.layout, ISnapLayout);

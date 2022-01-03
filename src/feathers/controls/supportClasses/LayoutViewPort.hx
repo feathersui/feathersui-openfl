@@ -370,8 +370,8 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._actualMinVisibleWidth = this._layoutResult.contentMinWidth;
 		this._actualMinVisibleHeight = this._layoutResult.contentMinHeight;
 
-		this._viewPortBackground.x = 0.0;
-		this._viewPortBackground.y = 0.0;
+		this._viewPortBackground.x = Math.min(this.scrollX, 0.0);
+		this._viewPortBackground.y = Math.min(this.scrollY, 0.0);
 		this._viewPortBackground.width = Math.max(this.actualWidth, this._actualVisibleWidth);
 		this._viewPortBackground.height = Math.max(this.actualHeight, this._actualVisibleHeight);
 
