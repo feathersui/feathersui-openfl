@@ -763,8 +763,8 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 			result = new LayoutBoundsResult();
 		}
 		if (items.length == 0) {
-			result.contentX = 0;
-			result.contentY = 0;
+			result.contentX = 0.0;
+			result.contentY = 0.0;
 			result.contentWidth = this._paddingLeft + this._paddingRight;
 			result.contentHeight = this._paddingTop + this._paddingBottom;
 			result.viewPortWidth = result.contentWidth;
@@ -914,6 +914,8 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
+		result.contentX = 0.0;
+		result.contentY = 0.0;
 		result.contentWidth = viewPortWidth;
 		result.contentHeight = yPosition;
 		result.viewPortWidth = viewPortWidth;

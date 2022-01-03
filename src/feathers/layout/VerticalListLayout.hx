@@ -630,6 +630,8 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
+		result.contentX = 0.0;
+		result.contentY = 0.0;
 		result.contentWidth = itemWidth + this._paddingLeft + this._paddingRight;
 		result.contentHeight = positionY;
 		result.viewPortWidth = viewPortWidth;

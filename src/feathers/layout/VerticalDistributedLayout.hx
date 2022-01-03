@@ -375,6 +375,8 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
+		result.contentX = 0.0;
+		result.contentY = 0.0;
 		result.contentWidth = contentWidth;
 		result.contentHeight = contentHeight;
 		result.viewPortWidth = viewPortWidth;

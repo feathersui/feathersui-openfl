@@ -389,8 +389,8 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 			result = new LayoutBoundsResult();
 		}
 		if (items.length == 0) {
-			result.contentX = 0;
-			result.contentY = 0;
+			result.contentX = 0.0;
+			result.contentY = 0.0;
 			result.contentWidth = this._paddingLeft + this._paddingRight;
 			result.contentHeight = this._paddingTop + this._paddingBottom;
 			result.viewPortWidth = result.contentWidth;
@@ -579,10 +579,12 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		if (result == null) {
 			result = new LayoutBoundsResult();
 		}
-		result.viewPortWidth = availableRowWidth;
-		result.viewPortHeight = availableHeight;
+		result.contentX = 0.0;
+		result.contentY = 0.0;
 		result.contentWidth = availableRowWidth;
 		result.contentHeight = totalHeight;
+		result.viewPortWidth = availableRowWidth;
+		result.viewPortHeight = availableHeight;
 		return result;
 	}
 
