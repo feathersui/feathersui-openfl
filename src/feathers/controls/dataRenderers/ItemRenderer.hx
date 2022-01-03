@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IFocusContainer;
 import feathers.core.IFocusObject;
 import feathers.core.IPointerDelegate;
 import feathers.core.IStateObserver;
@@ -34,7 +35,7 @@ import openfl.text.TextField;
 	@since 1.0.0
 **/
 @:styleContext
-class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements IDataRenderer implements IPointerDelegate {
+class ItemRenderer extends ToggleButton implements IFocusContainer implements ILayoutIndexObject implements IDataRenderer implements IPointerDelegate {
 	/**
 		Creates a new `ItemRenderer` object.
 
@@ -53,6 +54,9 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 
 		// toggling is handled by the owner component, like ListView
 		this.toggleable = false;
+
+		this.tabEnabled = false;
+		this.tabChildren = true;
 	}
 
 	private var _data:Dynamic;
@@ -114,6 +118,26 @@ class ItemRenderer extends ToggleButton implements ILayoutIndexObject implements
 		this._secondaryText = value;
 		this.setInvalid(DATA);
 		return this._secondaryText;
+	}
+
+	private var _childFocusEnabled:Bool = true;
+
+	/**
+		@see `feathers.core.IFocusContainer.childFocusEnabled`
+	**/
+	@:flash.property
+	public var childFocusEnabled(get, set):Bool;
+
+	private function get_childFocusEnabled():Bool {
+		return this._enabled && this._childFocusEnabled;
+	}
+
+	private function set_childFocusEnabled(value:Bool):Bool {
+		if (this._childFocusEnabled == value) {
+			return this._childFocusEnabled;
+		}
+		this._childFocusEnabled = value;
+		return this._childFocusEnabled;
 	}
 
 	private var _layoutIndex:Int = -1;
