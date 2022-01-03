@@ -614,7 +614,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		calculatedHeight -= (this.paddingTop + this.paddingBottom);
 		if (this._currentIcon != null) {
 			var adjustedGap = this.gap;
-			// Math.POSITIVE_INFINITY bug workaround
+			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (adjustedGap == (1.0 / 0.0)) {
 				adjustedGap = this.minGap;
 			}
@@ -627,7 +627,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		if (this._currentAccessoryView != null) {
 			var adjustedGap = this.gap;
-			// Math.POSITIVE_INFINITY bug workaround
+			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (adjustedGap == (1.0 / 0.0)) {
 				adjustedGap = this.minGap;
 			}
@@ -635,7 +635,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		if (this.secondaryTextField != null) {
 			var adjustedGap = this.gap;
-			// Math.POSITIVE_INFINITY bug workaround
+			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (adjustedGap == (1.0 / 0.0)) {
 				adjustedGap = this.minGap;
 			}
@@ -675,7 +675,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			return textFieldExplicitWidth;
 		}
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -696,7 +696,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 	override private function measureContentWidth():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -733,7 +733,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 	override private function measureContentHeight():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -771,7 +771,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 	override private function measureContentMinWidth():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -808,7 +808,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 	override private function measureContentMinHeight():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -858,7 +858,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		this.refreshTextFieldDimensions(false);
 
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}

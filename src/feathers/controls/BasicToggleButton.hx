@@ -492,7 +492,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
-				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 
@@ -503,7 +503,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
-				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 

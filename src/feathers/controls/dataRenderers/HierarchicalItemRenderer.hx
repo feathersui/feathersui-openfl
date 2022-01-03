@@ -276,7 +276,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 			return textFieldExplicitWidth;
 		}
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -312,7 +312,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		}
 		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -337,7 +337,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		}
 		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -363,7 +363,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var paddingLeft = this.paddingLeft;
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}

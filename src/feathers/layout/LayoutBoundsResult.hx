@@ -109,8 +109,8 @@ class LayoutBoundsResult {
 		this.contentHeight = 0.0;
 		this.contentMinWidth = 0.0;
 		this.contentMinHeight = 0.0;
-		this.contentMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
-		this.contentMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+		this.contentMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+		this.contentMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		this.viewPortWidth = 0.0;
 		this.viewPortHeight = 0.0;
 	}

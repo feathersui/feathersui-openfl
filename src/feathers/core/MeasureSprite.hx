@@ -31,14 +31,14 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	private var actualHeight:Float = 0.0;
 	private var actualMinWidth:Float = 0.0;
 	private var actualMinHeight:Float = 0.0;
-	private var actualMaxWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
-	private var actualMaxHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+	private var actualMaxWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+	private var actualMaxHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 	private var scaledActualWidth:Float = 0.0;
 	private var scaledActualHeight:Float = 0.0;
 	private var scaledActualMinWidth:Float = 0.0;
 	private var scaledActualMinHeight:Float = 0.0;
-	private var scaledActualMaxWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
-	private var scaledActualMaxHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+	private var scaledActualMaxWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+	private var scaledActualMaxHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
 	/**
 		Creates a new `MeasureSprite` object.
@@ -296,8 +296,8 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		var oldValue = this._explicitMaxWidth;
 		this._explicitMaxWidth = value;
 		if (value == null) {
-			this.actualMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
-			this.scaledActualMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			this.actualMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+			this.scaledActualMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			this.setInvalid(SIZE);
 		} else {
 			// saveMeasurements() might change actualWidth, so keep the old
@@ -332,8 +332,8 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		var oldValue = this._explicitMaxHeight;
 		this._explicitMaxHeight = value;
 		if (value == null) {
-			this.actualMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
-			this.scaledActualMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			this.actualMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+			this.scaledActualMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			this.setInvalid(SIZE);
 		} else {
 			// saveMeasurements() might change actualWidth, so keep the old
@@ -501,10 +501,10 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 	@:dox(show)
 	private function saveMeasurements(width:Float, height:Float, minWidth:Float = 0.0, minHeight:Float = 0.0, ?maxWidth:Float, ?maxHeight:Float):Bool {
 		if (maxWidth == null) {
-			maxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			maxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		if (maxHeight == null) {
-			maxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			maxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		// if any of the dimensions were set explicitly, the explicit values must
 		// take precedence over the measured values
@@ -518,13 +518,13 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 			maxWidth = this._explicitMaxWidth;
 		} else if (maxWidth == null) {
 			// since it's optional, this is our default
-			maxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			maxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		if (this._explicitMaxHeight != null) {
 			maxHeight = this._explicitMaxHeight;
 		} else if (maxHeight == null) {
 			// since it's optional, this is our default
-			maxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			maxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 
 		// next, we ensure that minimum and maximum measured dimensions are not

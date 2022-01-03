@@ -328,7 +328,7 @@ class MultiSkin extends ProgrammaticSkin {
 		}
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
-			newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
 			} else if (this._currentViewMeasurements != null) {
@@ -338,7 +338,7 @@ class MultiSkin extends ProgrammaticSkin {
 
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
-			newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			if (measureSkin != null) {
 				newMaxHeight = measureSkin.maxHeight;
 			} else if (this._currentViewMeasurements != null) {

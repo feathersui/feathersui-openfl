@@ -379,7 +379,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 				} else if (this._activeItemView != null) {
 					newMaxWidth = this._activeItemView.width;
 				} else {
-					newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+					newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 				}
 				newMaxWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
@@ -395,7 +395,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 				} else if (this._activeItemView != null) {
 					newMaxHeight = this._activeItemView.height;
 				} else {
-					newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+					newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 				}
 				newMaxHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {

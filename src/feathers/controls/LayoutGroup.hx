@@ -648,11 +648,11 @@ class LayoutGroup extends FeathersControl {
 		}
 		var viewPortMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
-			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		var viewPortMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
-			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		if (this._backgroundSkinMeasurements != null) {
 			// because the layout might need it, we account for the

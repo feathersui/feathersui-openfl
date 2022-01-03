@@ -78,7 +78,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitMinVisibleWidth;
 	}
 
-	private var _maxVisibleWidth:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+	private var _maxVisibleWidth:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
@@ -168,7 +168,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		return this._explicitMinVisibleHeight;
 	}
 
-	private var _maxVisibleHeight:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+	private var _maxVisibleHeight:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
@@ -324,11 +324,11 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		}
 		var viewPortMaxWidth = this._maxVisibleWidth;
 		if (needsMaxWidth) {
-			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		var viewPortMaxHeight = this._maxVisibleHeight;
 		if (needsMaxHeight) {
-			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		if (this._currentBackgroundSkin != null) {
 			// because the layout might need it, we account for the

@@ -763,7 +763,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
-				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 
@@ -774,7 +774,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 			} else if (this._backgroundSkinMeasurements != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
-				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 
@@ -796,7 +796,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		}
 		textFieldExplicitWidth -= (this.paddingLeft + this.paddingRight);
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -816,7 +816,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private function measureContentWidth():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -837,7 +837,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private function measureContentHeight():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -859,7 +859,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private function measureContentMinWidth():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -880,7 +880,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private function measureContentMinHeight():Float {
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -1109,7 +1109,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 	private function positionTextAndIcon():Void {
 		if (this.iconPosition == TOP) {
-			// Math.POSITIVE_INFINITY bug workaround
+			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this._currentIcon.y = this.paddingTop;
 				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
@@ -1122,7 +1122,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 				this._currentIcon.y = this.textField.y - this._currentIcon.height - this.gap;
 			}
 		} else if (this.iconPosition == RIGHT) {
-			// Math.POSITIVE_INFINITY bug workaround
+			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this.textField.x = this.paddingLeft;
 				this._currentIcon.x = this.actualWidth - this.paddingRight - this._currentIcon.width;
@@ -1135,7 +1135,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 				this._currentIcon.x = this.textField.x + this.textField.width + this.gap;
 			}
 		} else if (this.iconPosition == BOTTOM) {
-			// Math.POSITIVE_INFINITY bug workaround
+			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this.textField.y = this.paddingTop;
 				this._currentIcon.y = this.actualHeight - this.paddingBottom - this._currentIcon.height;
@@ -1148,7 +1148,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 				this._currentIcon.y = this.textField.y + this.textField.height + this.gap;
 			}
 		} else if (this.iconPosition == LEFT) {
-			// Math.POSITIVE_INFINITY bug workaround
+			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this._currentIcon.x = this.paddingLeft;
 				this.textField.x = this.actualWidth - this.paddingRight - this.textField.width;

@@ -48,7 +48,7 @@ class SteelPopUpListViewStyles {
 				theme.styleProvider.getStyleFunction(Button, null)(button);
 
 				button.horizontalAlign = LEFT;
-				button.gap = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				button.gap = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 				button.minGap = 6.0;
 
 				if (button.icon == null) {

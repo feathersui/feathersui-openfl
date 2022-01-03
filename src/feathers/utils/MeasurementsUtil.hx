@@ -76,7 +76,7 @@ final class MeasurementsUtil {
 				maxWidth = measureTarget.explicitMaxWidth;
 			}
 			if (maxWidth == null) {
-				maxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				maxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 			measureTarget.maxWidth = maxWidth;
 
@@ -85,7 +85,7 @@ final class MeasurementsUtil {
 				maxHeight = measureTarget.explicitMaxHeight;
 			}
 			if (maxHeight == null) {
-				maxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				maxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 			measureTarget.maxHeight = maxHeight;
 			return;

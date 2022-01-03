@@ -407,9 +407,9 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		if (needsWidth) {
 			availableRowWidth = measurements.maxWidth;
 			if (availableRowWidth == null) {
-				availableRowWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+				availableRowWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
-			if (availableRowWidth == (1.0 / 0.0)) // Math.POSITIVE_INFINITY bug workaround
+			if (availableRowWidth == (1.0 / 0.0)) // Math.POSITIVE_INFINITY bug workaround for swf
 			{
 				supportsMultipleRows = false;
 			}

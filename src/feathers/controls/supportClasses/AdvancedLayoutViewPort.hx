@@ -72,7 +72,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		return this._explicitMinVisibleWidth;
 	}
 
-	private var _maxVisibleWidth:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+	private var _maxVisibleWidth:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
@@ -162,7 +162,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		return this._explicitMinVisibleHeight;
 	}
 
-	private var _maxVisibleHeight:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+	private var _maxVisibleHeight:Null<Float> = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
@@ -346,11 +346,11 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		}
 		var viewPortMaxWidth = this._maxVisibleWidth;
 		if (needsMaxWidth) {
-			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		var viewPortMaxHeight = this._maxVisibleHeight;
 		if (needsMaxHeight) {
-			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		}
 		this._layoutMeasurements.minWidth = viewPortMinWidth;
 		this._layoutMeasurements.minHeight = viewPortMinHeight;

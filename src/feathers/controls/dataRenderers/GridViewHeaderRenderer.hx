@@ -171,7 +171,7 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 			return textFieldExplicitWidth;
 		}
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -193,7 +193,7 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 			cast(this._currentSortOrderIcon, IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -209,7 +209,7 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 			cast(this._currentSortOrderIcon, IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
@@ -225,7 +225,7 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 		}
 		var paddingRight = this.paddingRight;
 		var adjustedGap = this.gap;
-		// Math.POSITIVE_INFINITY bug workaround
+		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}

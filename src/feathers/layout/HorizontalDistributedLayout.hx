@@ -196,7 +196,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		return this._gap;
 	}
 
-	private var _maxItemWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround
+	private var _maxItemWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
 	/**
 		The maximum width of an item in the layout.
