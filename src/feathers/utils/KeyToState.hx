@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import feathers.core.IFocusObject;
 import feathers.core.IStateContext;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
@@ -223,6 +224,13 @@ class KeyToState<T> {
 	}
 
 	private function keyToState_target_keyDownHandler(event:KeyboardEvent):Void {
+		if ((this._target is IFocusObject)) {
+			var focusObject = cast(this._target, IFocusObject);
+			var focusManager = focusObject.focusManager;
+			if (focusManager != null && focusManager.focus != focusObject) {
+				return;
+			}
+		}
 		if (!this._enabled || this._downKeyCode != null || (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER)) {
 			return;
 		}
