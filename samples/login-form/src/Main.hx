@@ -1,3 +1,4 @@
+import feathers.controls.Alert;
 import feathers.controls.Application;
 import feathers.controls.Button;
 import feathers.controls.Form;
@@ -57,6 +58,14 @@ class Main extends Application {
 	private function form_submitHandler(event:FormEvent):Void {
 		var email = this.emailInput.text;
 		var password = this.passwordInput.text;
+		if (email.length == 0) {
+			Alert.show("Email is required.", "Error", ["OK"]);
+			return;
+		}
+		if (password.length == 0) {
+			Alert.show("Password is required.", "Error", ["OK"]);
+			return;
+		}
 		trace('submit! email: ${email}, password: ${password}');
 
 		this.resetForm();
