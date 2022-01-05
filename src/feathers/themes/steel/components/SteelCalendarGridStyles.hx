@@ -11,6 +11,7 @@ package feathers.themes.steel.components;
 import feathers.controls.CalendarGrid;
 import feathers.controls.Label;
 import feathers.controls.ToggleButton;
+import feathers.controls.ToggleButtonState;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -38,8 +39,11 @@ class SteelCalendarGridStyles {
 				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
 					backgroundSkin.selectedFill = theme.getActiveThemeFill();
-					backgroundSkin.selectedBorder = theme.getActiveFillBorder();
+					backgroundSkin.setFillForState(DOWN(false), theme.getReversedActiveThemeFill());
+					backgroundSkin.selectedBorder = theme.getSelectedBorder();
+					backgroundSkin.setBorderForState(DOWN(false), theme.getActiveFillBorder());
 					if (isDesktop) {
 						backgroundSkin.width = 20.0;
 						backgroundSkin.height = 20.0;
@@ -68,8 +72,11 @@ class SteelCalendarGridStyles {
 				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
 					backgroundSkin.selectedFill = theme.getActiveThemeFill();
-					backgroundSkin.selectedBorder = theme.getActiveFillBorder();
+					backgroundSkin.setFillForState(DOWN(false), theme.getReversedActiveThemeFill());
+					backgroundSkin.selectedBorder = theme.getSelectedBorder();
+					backgroundSkin.setBorderForState(DOWN(false), theme.getActiveFillBorder());
 					if (isDesktop) {
 						backgroundSkin.width = 20.0;
 						backgroundSkin.height = 20.0;
@@ -77,6 +84,7 @@ class SteelCalendarGridStyles {
 						backgroundSkin.width = 32.0;
 						backgroundSkin.height = 32.0;
 					}
+					backgroundSkin.cornerRadius = 4.0;
 					button.backgroundSkin = backgroundSkin;
 				}
 
