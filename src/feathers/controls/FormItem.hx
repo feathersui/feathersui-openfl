@@ -982,7 +982,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	}
 
 	private function getCurrentRequiredSkin():DisplayObject {
-		return this.requiredSkin;
+		if (this._required) {
+			return this.requiredSkin;
+		}
+		return null;
 	}
 
 	private function addCurrentRequiredSkin(skin:DisplayObject):Void {
