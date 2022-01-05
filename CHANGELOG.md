@@ -1,5 +1,16 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.8 (2021-01-??)
+
+- TreeGridView: New component that displays a tree of hierarchical data with multiple columns, like a mix between `TreeView` and `GridView`.
+- HierarchicalItemRenderer: New subclass of `ItemRenderer` that is used by both `TreeView` and `TreeGridView`. Includes a toggle button to open and close branches, and an optional branch or leaf icon, in addition to the text, secondary text, icon and accessory provided by `ItemRenderer`. This component replaces `TreeViewItemRenderer`, which is now deprecated and will be removed in a future update.
+- FlowRowsLayout: New layout that displays items in multiple rows. Starts by positioning items from left to right. When the combined width of items in a row reaches the width of the container, a new row will be created below. Similar to `TiledRowsLayout`, but the items may be different sizes.
+- BitmapDataCache: New utility class for sharing references to `BitmapData` that was loaded from a URL.
+- FormItem: Added `required` and `requiredSkin` properties, to optionally indicate if the form item is required.
+- FormItem: Added `submitOnEnterEnabled` property to allow form submission to be disabled when pressing the Enter/Return key for that specific item. Useful for components like `TextArea`, which needs to use Enter/Return to insert a line break in its text.
+- HScrollBar/VScrollBar: Minor tweak to the sizing behavior of the thumb to more accurately match the behavior of native scroll bars.
+- IHierarchicalCollection: The `removeAll()` method now accepts an optional `?location:Array<Int>` argument that may be used to remove all children from a specific branch.
+
 ## 1.0.0-beta.7 (2021-11-02)
 
 - DatePicker: New component for selecting a date from a calendar view.
