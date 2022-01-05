@@ -47,6 +47,7 @@ class FormScreen extends Panel {
 
 		var nameItem = new FormItem();
 		nameItem.text = "Name";
+		nameItem.required = true;
 		nameItem.textPosition = LEFT;
 		this.nameInput = new TextInput();
 		this.nameInput.prompt = "Your Full Name";
@@ -55,6 +56,7 @@ class FormScreen extends Panel {
 
 		var emailItem = new FormItem();
 		emailItem.text = "Email";
+		emailItem.required = true;
 		emailItem.textPosition = LEFT;
 		this.emailInput = new TextInput();
 		this.emailInput.prompt = "name@example.com";
@@ -64,6 +66,7 @@ class FormScreen extends Panel {
 		var mesageItem = new FormItem();
 		mesageItem.text = "Message";
 		mesageItem.submitOnEnterEnabled = false;
+		mesageItem.required = true;
 		mesageItem.textPosition = TOP;
 		mesageItem.horizontalAlign = JUSTIFY;
 		this.messageInput = new TextArea();
