@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.8 (2021-01-??)
+## 1.0.0-beta.8 (2021-01-06)
 
 - TreeGridView: New component that displays a tree of hierarchical data with multiple columns, like a mix between `TreeView` and `GridView`.
 - HierarchicalItemRenderer: New subclass of `ItemRenderer` that is used by both `TreeView` and `TreeGridView`. Includes a toggle button to open and close branches, and an optional branch or leaf icon, in addition to the text, secondary text, icon and accessory provided by `ItemRenderer`. This component replaces `TreeViewItemRenderer`, which is now deprecated and will be removed in a future update.
