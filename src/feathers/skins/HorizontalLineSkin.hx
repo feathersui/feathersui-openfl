@@ -8,8 +8,10 @@
 
 package feathers.skins;
 
-import feathers.graphics.LineStyle;
 import feathers.graphics.FillStyle;
+import feathers.graphics.LineStyle;
+import feathers.layout.VerticalAlign;
+import openfl.errors.ArgumentError;
 
 /**
 	A skin for Feathers UI components that draws a line horizontally from left
@@ -28,6 +30,27 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 		super(fill, border);
 	}
 
+	/**
+		How the line is positioned vertically (along the y-axis) within the
+		skin.
+
+		The following example aligns the line to the top:
+
+		```hx
+		skin.verticalAlign = TOP;
+		```
+
+		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
+		component.
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
+	**/
+	public var verticalAlign:VerticalAlign = MIDDLE;
+
 	override private function draw():Void {
 		var currentBorder = this.getCurrentBorder();
 		var thicknessOffset = getLineThickness(currentBorder) / 2.0;
@@ -41,10 +64,16 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 
 		var minLineX = Math.min(this.actualWidth, thicknessOffset);
 		var maxLineX = Math.max(minLineX, this.actualWidth - thicknessOffset);
-		var centerY = this.actualHeight / 2.0;
+
+		var positionY = switch (this.verticalAlign) {
+			case TOP: thicknessOffset;
+			case MIDDLE: this.actualHeight / 2.0;
+			case BOTTOM: this.actualHeight - thicknessOffset;
+			default: throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+		}
 
 		this.applyLineStyle(currentBorder);
-		this.graphics.moveTo(minLineX, centerY);
-		this.graphics.lineTo(maxLineX, centerY);
+		this.graphics.moveTo(minLineX, positionY);
+		this.graphics.lineTo(maxLineX, positionY);
 	}
 }
