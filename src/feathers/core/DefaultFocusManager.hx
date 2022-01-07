@@ -716,16 +716,15 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			return true;
 		}
 		var container = target.parent;
-		if ((container is IViewPort) && !(container is IFocusContainer)) {
-			container = container.parent;
-		}
 		var valid = false;
 		try {
 			valid = container.getChildIndex(target) != -1;
 		} catch (e:Dynamic) {
-			// throws on some targets
+			// throws on some targets, but not all
 		}
-		if (!valid && (container is IFocusExtras)) {
+		if (valid && (container is IViewPort) && !(container is IFocusContainer)) {
+			container = container.parent;
+		} else if (!valid && (container is IFocusExtras)) {
 			var container = cast(container, IFocusExtras);
 			if (container.focusExtrasBefore != null) {
 				for (child in container.focusExtrasBefore) {
