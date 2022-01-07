@@ -399,22 +399,24 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function findPreviousContainerFocus(container:DisplayObjectContainer, beforeChild:DisplayObject, fallbackToGlobal:Bool):IFocusObject {
+		var outerContainer:DisplayObjectContainer = container;
 		if ((container is IViewPort) && !(container is IFocusContainer)) {
-			container = container.parent;
+			outerContainer = container.parent;
 		}
 		var hasProcessedBeforeChild = beforeChild == null;
-		if ((container is IFocusExtras)) {
-			var focusWithExtras = cast(container, IFocusExtras);
+		if ((outerContainer is IFocusExtras)) {
+			var focusWithExtras = cast(outerContainer, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasAfter;
 			if (extras != null) {
-				var skip = false;
 				var startIndex = extras.length - 1;
-				if (beforeChild != null) {
-					startIndex = extras.indexOf(beforeChild) - 1;
-					hasProcessedBeforeChild = startIndex >= -1;
-					skip = !hasProcessedBeforeChild;
+				if (!hasProcessedBeforeChild) {
+					var extraIndex = extras.indexOf(beforeChild);
+					if (extraIndex != -1) {
+						startIndex = extraIndex - 1;
+						hasProcessedBeforeChild = true;
+					}
 				}
-				if (!skip) {
+				if (hasProcessedBeforeChild) {
 					var i = startIndex;
 					while (i >= 0) {
 						var child = extras[i];
@@ -428,32 +430,42 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			}
 		}
 		var startIndex = container.numChildren - 1;
-		if (beforeChild != null && !hasProcessedBeforeChild) {
-			startIndex = container.getChildIndex(beforeChild) - 1;
-			hasProcessedBeforeChild = startIndex >= -1;
-		}
-
-		var i = startIndex;
-		while (i >= 0) {
-			var child = container.getChildAt(i);
-			var foundChild = this.findPreviousChildFocus(child);
-			if (foundChild != null) {
-				return foundChild;
+		if (!hasProcessedBeforeChild) {
+			var childIndex = -1;
+			try {
+				childIndex = container.getChildIndex(beforeChild);
+			} catch (e:Dynamic) {
+				// throws on some targets when not a child, but not all targets
 			}
-			i--;
+			if (childIndex != -1) {
+				startIndex = childIndex - 1;
+				hasProcessedBeforeChild = true;
+			}
 		}
-		if ((container is IFocusExtras)) {
-			var focusWithExtras = cast(container, IFocusExtras);
+		if (hasProcessedBeforeChild) {
+			var i = startIndex;
+			while (i >= 0) {
+				var child = container.getChildAt(i);
+				var foundChild = this.findPreviousChildFocus(child);
+				if (foundChild != null) {
+					return foundChild;
+				}
+				i--;
+			}
+		}
+		if ((outerContainer is IFocusExtras)) {
+			var focusWithExtras = cast(outerContainer, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasBefore;
 			if (extras != null) {
-				var skip = false;
 				var startIndex = extras.length - 1;
-				if (beforeChild != null && !hasProcessedBeforeChild) {
-					startIndex = extras.indexOf(beforeChild) - 1;
-					hasProcessedBeforeChild = startIndex >= -1;
-					skip = !hasProcessedBeforeChild;
+				if (!hasProcessedBeforeChild) {
+					var extraIndex = extras.indexOf(beforeChild);
+					if (extraIndex != -1) {
+						startIndex = extraIndex - 1;
+						hasProcessedBeforeChild = true;
+					}
 				}
-				if (!skip) {
+				if (hasProcessedBeforeChild) {
 					var i = startIndex;
 					while (i >= 0) {
 						var child = extras[i];
@@ -467,15 +479,15 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			}
 		}
 
-		if (fallbackToGlobal && container != this._root) {
+		if (fallbackToGlobal && outerContainer != this._root) {
 			// try the container itself before moving backwards
-			if ((container is IFocusObject)) {
-				var focusContainer = cast(container, IFocusObject);
+			if ((outerContainer is IFocusObject)) {
+				var focusContainer = cast(outerContainer, IFocusObject);
 				if (this.isValidFocusWithKeyboard(focusContainer)) {
 					return focusContainer;
 				}
 			}
-			return this.findPreviousContainerFocus(container.parent, container, true);
+			return this.findPreviousContainerFocus(outerContainer.parent, outerContainer, true);
 		}
 		return null;
 	}
@@ -494,14 +506,15 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			var focusWithExtras = cast(outerContainer, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasBefore;
 			if (extras != null) {
-				var skip = false;
 				var startIndex = 0;
-				if (afterChild != null) {
-					startIndex = extras.indexOf(afterChild) + 1;
-					hasProcessedAfterChild = startIndex > 0;
-					skip = !hasProcessedAfterChild;
+				if (!hasProcessedAfterChild) {
+					var extrasIndex = extras.indexOf(afterChild);
+					if (extrasIndex != -1) {
+						startIndex = extrasIndex + 1;
+						hasProcessedAfterChild = true;
+					}
 				}
-				if (!skip) {
+				if (hasProcessedAfterChild) {
 					for (i in startIndex...extras.length) {
 						var child = extras[i];
 						if (exclusions != null && exclusions.indexOf(child) != -1) {
@@ -516,32 +529,43 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			}
 		}
 		var startIndex = 0;
-		if (afterChild != null && !hasProcessedAfterChild) {
-			startIndex = container.getChildIndex(afterChild) + 1;
-			hasProcessedAfterChild = startIndex > 0;
-		}
-		for (i in startIndex...container.numChildren) {
-			var child = container.getChildAt(i);
-			if (exclusions != null && exclusions.indexOf(child) != -1) {
-				continue;
+		if (!hasProcessedAfterChild) {
+			var childIndex = -1;
+			try {
+				childIndex = container.getChildIndex(afterChild);
+			} catch (e:Dynamic) {
+				// throws on some targets when not a child, but not all targets
 			}
-			var foundChild = this.findNextChildFocus(child);
-			if (foundChild != null) {
-				return foundChild;
+			if (childIndex != -1) {
+				startIndex = childIndex + 1;
+				hasProcessedAfterChild = true;
+			}
+		}
+		if (hasProcessedAfterChild) {
+			for (i in startIndex...container.numChildren) {
+				var child = container.getChildAt(i);
+				if (exclusions != null && exclusions.indexOf(child) != -1) {
+					continue;
+				}
+				var foundChild = this.findNextChildFocus(child);
+				if (foundChild != null) {
+					return foundChild;
+				}
 			}
 		}
 		if ((outerContainer is IFocusExtras)) {
 			var focusWithExtras = cast(outerContainer, IFocusExtras);
 			var extras = focusWithExtras.focusExtrasAfter;
 			if (extras != null) {
-				var skip = false;
 				var startIndex = 0;
-				if (afterChild != null && !hasProcessedAfterChild) {
-					startIndex = extras.indexOf(afterChild) + 1;
-					hasProcessedAfterChild = startIndex > 0;
-					skip = !hasProcessedAfterChild;
+				if (!hasProcessedAfterChild) {
+					var extrasIndex = extras.indexOf(afterChild);
+					if (extrasIndex != -1) {
+						startIndex = extrasIndex + 1;
+						hasProcessedAfterChild = true;
+					}
 				}
-				if (!skip) {
+				if (hasProcessedAfterChild) {
 					for (i in startIndex...extras.length) {
 						var child = extras[i];
 						if (exclusions != null && exclusions.indexOf(child) != -1) {
@@ -717,7 +741,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		try {
 			valid = container.getChildIndex(target) != -1;
 		} catch (e:Dynamic) {
-			// throws on some targets, but not all
+			// throws on some targets when not a child, but not all targets
 		}
 		if (valid && (container is IViewPort) && !(container is IFocusContainer)) {
 			container = container.parent;
