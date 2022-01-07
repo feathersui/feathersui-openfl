@@ -1342,6 +1342,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (!this._enabled || (this.buttonMode && this.focusRect == true)) {
 			return;
 		}
+		if (this._focusManager != null && this._focusManager.focus != this) {
+			return;
+		}
 		if (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER) {
 			return;
 		}
