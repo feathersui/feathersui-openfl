@@ -117,6 +117,13 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
+    - name: Build samples/todomvc
+      working-directory: samples/todomvc
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
 
   build-linux:
 
@@ -240,5 +247,9 @@ jobs:
         haxelib run openfl build air
     - name: Build samples/tab-navigator
       working-directory: samples/tab-navigator
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/todomvc
+      working-directory: samples/todomvc
       run: |
         haxelib run openfl build air

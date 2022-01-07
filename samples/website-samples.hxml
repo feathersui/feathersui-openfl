@@ -27,3 +27,5 @@
 -cmd haxelib run openfl build stack-navigator-save-and-restore/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
 -cmd haxelib run openfl build tab-navigator/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
+-cmd haxelib run openfl build todomvc/project.xml html5 -final -clean --haxedef=feathersui.com
