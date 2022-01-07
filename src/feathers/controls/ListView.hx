@@ -14,6 +14,7 @@ import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
+import feathers.core.IFocusContainer;
 import feathers.core.IIndexSelector;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
@@ -106,7 +107,7 @@ import openfl._internal.utils.ObjectPool;
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class ListView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> {
+class ListView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusContainer {
 	/**
 		A variant used to style the list view without a border. The variant is
 		used by default on mobile.
@@ -220,6 +221,26 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled
 			&& this.rawTabEnabled;
+	}
+
+	private var _childFocusEnabled:Bool = true;
+
+	/**
+		@see `feathers.core.IFocusContainer.childFocusEnabled`
+	**/
+	@:flash.property
+	public var childFocusEnabled(get, set):Bool;
+
+	private function get_childFocusEnabled():Bool {
+		return this._enabled && this._childFocusEnabled;
+	}
+
+	private function set_childFocusEnabled(value:Bool):Bool {
+		if (this._childFocusEnabled == value) {
+			return this._childFocusEnabled;
+		}
+		this._childFocusEnabled = value;
+		return this._childFocusEnabled;
 	}
 
 	private var _dataProvider:IFlatCollection<Dynamic>;

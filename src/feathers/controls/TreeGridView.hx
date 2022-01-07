@@ -9,12 +9,13 @@
 package feathers.controls;
 
 import feathers.controls.dataRenderers.GridViewHeaderRenderer;
-import feathers.controls.dataRenderers.ITreeGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
+import feathers.controls.dataRenderers.ITreeGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.TreeGridViewRowRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
+import feathers.core.IFocusContainer;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -137,7 +138,7 @@ import openfl._internal.utils.ObjectPool;
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic> implements IFocusContainer {
 	/**
 		A variant used to style the tree grid view without a border. This
 		variant is used by default on mobile.
@@ -280,6 +281,26 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled
 			&& this.rawTabEnabled;
+	}
+
+	private var _childFocusEnabled:Bool = true;
+
+	/**
+		@see `feathers.core.IFocusContainer.childFocusEnabled`
+	**/
+	@:flash.property
+	public var childFocusEnabled(get, set):Bool;
+
+	private function get_childFocusEnabled():Bool {
+		return this._enabled && this._childFocusEnabled;
+	}
+
+	private function set_childFocusEnabled(value:Bool):Bool {
+		if (this._childFocusEnabled == value) {
+			return this._childFocusEnabled;
+		}
+		this._childFocusEnabled = value;
+		return this._childFocusEnabled;
 	}
 
 	private var openBranches:Array<Dynamic> = [];

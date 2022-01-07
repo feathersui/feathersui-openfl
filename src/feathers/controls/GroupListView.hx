@@ -8,16 +8,16 @@
 
 package feathers.controls;
 
-import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
-import feathers.core.InvalidationFlag;
+import feathers.core.IFocusContainer;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
+import feathers.core.InvalidationFlag;
 import feathers.data.GroupListViewItemState;
 import feathers.data.GroupListViewItemType;
 import feathers.data.IHierarchicalCollection;
@@ -27,6 +27,7 @@ import feathers.events.HierarchicalCollectionEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
+import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
@@ -111,7 +112,7 @@ import openfl.ui.Multitouch;
 @:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic> {
+class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic> implements IFocusContainer {
 	/**
 		The variant used to style the group headers in a theme.
 
@@ -225,6 +226,26 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled
 			&& this.rawTabEnabled;
+	}
+
+	private var _childFocusEnabled:Bool = true;
+
+	/**
+		@see `feathers.core.IFocusContainer.childFocusEnabled`
+	**/
+	@:flash.property
+	public var childFocusEnabled(get, set):Bool;
+
+	private function get_childFocusEnabled():Bool {
+		return this._enabled && this._childFocusEnabled;
+	}
+
+	private function set_childFocusEnabled(value:Bool):Bool {
+		if (this._childFocusEnabled == value) {
+			return this._childFocusEnabled;
+		}
+		this._childFocusEnabled = value;
+		return this._childFocusEnabled;
 	}
 
 	private var _dataProvider:IHierarchicalCollection<Dynamic>;
