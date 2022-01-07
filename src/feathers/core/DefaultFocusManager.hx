@@ -304,10 +304,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function isValidFocus(target:IFocusObject):Bool {
-		if (target == null || target.stage == null || target.focusManager != this) {
-			return false;
-		}
-		if (!target.focusEnabled) {
+		if (target == null || target.stage == null || target.focusManager != this || !target.focusEnabled || !target.visible) {
 			return false;
 		}
 		if ((target is IUIControl)) {
