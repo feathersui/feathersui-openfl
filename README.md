@@ -32,7 +32,7 @@ This will also automatically install any additional required dependencies, like 
 haxelib run openfl setup
 ```
 
-### Choose a development envirionment
+### Choose a development environment
 
 The following tutorials explain how to create a new Feathers UI project:
 
