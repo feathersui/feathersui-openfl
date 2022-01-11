@@ -89,7 +89,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public function new(maxSelectedIndex:Int = -1) {
+	public function new(maxSelectedIndex:Int = -1, ?changeListener:(Event) -> Void) {
 		initializePageIndicatorTheme();
 
 		super();
@@ -105,6 +105,10 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		this.addEventListener(TouchEvent.TOUCH_TAP, pageIndicator_touchTapHandler);
 		#end
 		this.addEventListener(KeyboardEvent.KEY_DOWN, pageIndicator_keyDownHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var _selectedIndex:Int = -1;

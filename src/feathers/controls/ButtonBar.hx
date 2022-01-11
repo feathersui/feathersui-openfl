@@ -103,12 +103,16 @@ class ButtonBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IFlatCollection<Dynamic>) {
+	public function new(?dataProvider:IFlatCollection<Dynamic>, ?itemTriggerListener:(ButtonBarEvent) -> Void) {
 		initializeButtonBarTheme();
 
 		super();
 
 		this.dataProvider = dataProvider;
+
+		if (itemTriggerListener != null) {
+			this.addEventListener(ButtonBarEvent.ITEM_TRIGGER, itemTriggerListener);
+		}
 	}
 
 	private var _dataProvider:IFlatCollection<Dynamic>;

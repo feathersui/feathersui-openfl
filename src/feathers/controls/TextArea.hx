@@ -74,7 +74,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	public function new(text:String = "", ?prompt:String) {
+	public function new(text:String = "", ?prompt:String, ?changeListener:(Event) -> Void) {
 		initializeTextAreaTheme();
 
 		super();
@@ -97,6 +97,10 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		this.addEventListener(FocusEvent.FOCUS_IN, textArea_focusInHandler);
 		this.addEventListener(FocusEvent.FOCUS_OUT, textArea_focusOutHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var textFieldViewPort:TextFieldViewPort;

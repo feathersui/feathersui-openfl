@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.themes.steel.components.SteelCheckStyles;
+import openfl.events.Event;
 
 /**
 	A toggle control that contains a label and a box that may be checked (or
@@ -37,10 +38,10 @@ class Check extends ToggleButton {
 
 		@since 1.0.0
 	**/
-	public function new(?text:String, selected:Bool = false) {
+	public function new(?text:String, selected:Bool = false, ?changeListener:(Event) -> Void) {
 		initializeCheckTheme();
 
-		super(text, selected);
+		super(text, selected, changeListener);
 	}
 
 	private function initializeCheckTheme():Void {

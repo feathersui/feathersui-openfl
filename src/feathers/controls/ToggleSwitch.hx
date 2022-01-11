@@ -65,7 +65,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		@since 1.0.0
 	**/
-	public function new(selected:Bool = false) {
+	public function new(selected:Bool = false, ?changeListener:(Event) -> Void) {
 		initializeToggleSwitchTheme();
 
 		super();
@@ -91,6 +91,10 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		this.addEventListener(MouseEvent.MOUSE_DOWN, toggleSwitch_mouseDownHandler);
 		this.addEventListener(MouseEvent.CLICK, toggleSwitch_clickHandler);
 		this.addEventListener(TouchEvent.TOUCH_TAP, toggleSwitch_touchTapHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var _selected:Bool = false;

@@ -68,10 +68,14 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public function new(?source:String) {
+	public function new(?source:String, ?completeListener:(Event) -> Void) {
 		super();
 
 		this.source = source;
+
+		if (completeListener != null) {
+			this.addEventListener(Event.COMPLETE, completeListener);
+		}
 	}
 
 	private var content:DisplayObject;

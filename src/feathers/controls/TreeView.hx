@@ -217,7 +217,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IHierarchicalCollection<Dynamic>) {
+	public function new(?dataProvider:IHierarchicalCollection<Dynamic>, ?changeListener:(Event) -> Void) {
 		initializeTreeViewTheme();
 
 		super();
@@ -231,6 +231,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this.treeViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.treeViewPort);
 			this.viewPort = this.treeViewPort;
+		}
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
 		}
 	}
 

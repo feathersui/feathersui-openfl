@@ -14,6 +14,7 @@ import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.events.TriggerEvent;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
@@ -28,7 +29,6 @@ import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
 import openfl.ui.Keyboard;
 
 /**
@@ -97,7 +97,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 		@since 1.0.0
 	**/
-	public function new(?text:String) {
+	public function new(?text:String, ?triggerListener:(TriggerEvent) -> Void) {
 		initializeButtonTheme();
 
 		super();
@@ -111,6 +111,10 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		this.addEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
 		this.addEventListener(FocusEvent.FOCUS_IN, button_focusInHandler);
 		this.addEventListener(FocusEvent.FOCUS_OUT, button_focusOutHandler);
+
+		if (triggerListener != null) {
+			this.addEventListener(TriggerEvent.TRIGGER, triggerListener);
+		}
 	}
 
 	private var textField:TextField;

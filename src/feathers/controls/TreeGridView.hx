@@ -235,7 +235,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IHierarchicalCollection<Dynamic>, ?columns:IFlatCollection<TreeGridViewColumn>) {
+	public function new(?dataProvider:IHierarchicalCollection<Dynamic>, ?columns:IFlatCollection<TreeGridViewColumn>, ?changeListener:(Event) -> Void) {
 		initializeTreeGridViewTheme();
 
 		super();
@@ -250,6 +250,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.treeGridViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.treeGridViewPort);
 			this.viewPort = this.treeGridViewPort;
+		}
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
 		}
 	}
 

@@ -140,7 +140,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IFlatCollection<Dynamic>) {
+	public function new(?dataProvider:IFlatCollection<Dynamic>, ?changeListener:(Event) -> Void) {
 		initializePopUpListViewTheme();
 
 		super();
@@ -149,6 +149,10 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		this.addEventListener(FocusEvent.FOCUS_IN, popUpListView_focusInHandler);
 		this.addEventListener(Event.REMOVED_FROM_STAGE, popUpListView_removedFromStageHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var button:Button;

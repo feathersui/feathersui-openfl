@@ -195,7 +195,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IFlatCollection<Dynamic>) {
+	public function new(?dataProvider:IFlatCollection<Dynamic>, ?changeListener:(Event) -> Void) {
 		initializeListViewTheme();
 
 		super();
@@ -212,6 +212,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, listView_keyDownHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var listViewPort:AdvancedLayoutViewPort;

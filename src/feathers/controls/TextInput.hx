@@ -102,7 +102,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	public function new(text:String = "", ?prompt:String) {
+	public function new(text:String = "", ?prompt:String, ?changeListener:(Event) -> Void) {
 		initializeTextInputTheme();
 
 		super();
@@ -116,6 +116,10 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		this.addEventListener(FocusEvent.FOCUS_IN, textInput_focusInHandler);
 		this.addEventListener(FocusEvent.FOCUS_OUT, textInput_focusOutHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var _editable:Bool = true;

@@ -200,7 +200,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IHierarchicalCollection<Dynamic>) {
+	public function new(?dataProvider:IHierarchicalCollection<Dynamic>, ?changeListener:(Event) -> Void) {
 		initializeGroupListViewTheme();
 
 		super();
@@ -217,6 +217,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, groupListView_keyDownHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var groupViewPort:AdvancedLayoutViewPort;

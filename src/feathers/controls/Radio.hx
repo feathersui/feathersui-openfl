@@ -66,7 +66,7 @@ class Radio extends ToggleButton implements IGroupedToggle {
 
 		@since 1.0.0
 	**/
-	public function new(?text:String, selected:Bool = false) {
+	public function new(?text:String, selected:Bool = false, ?changeListener:(Event) -> Void) {
 		initializeRadioTheme();
 
 		super(text, selected);
@@ -75,6 +75,10 @@ class Radio extends ToggleButton implements IGroupedToggle {
 
 		this.addEventListener(Event.ADDED_TO_STAGE, radio_addedToStageHandler);
 		this.addEventListener(KeyboardEvent.KEY_DOWN, radio_keyDownHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	override private function set_toggleable(value:Bool):Bool {

@@ -242,7 +242,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IFlatCollection<Dynamic>, ?columns:IFlatCollection<GridViewColumn>) {
+	public function new(?dataProvider:IFlatCollection<Dynamic>, ?columns:IFlatCollection<GridViewColumn>, ?changeListener:(Event) -> Void) {
 		initializeGridViewTheme();
 
 		super();
@@ -257,6 +257,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.gridViewPort = new AdvancedLayoutViewPort();
 			this.addChild(this.gridViewPort);
 			this.viewPort = this.gridViewPort;
+		}
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
 		}
 	}
 
