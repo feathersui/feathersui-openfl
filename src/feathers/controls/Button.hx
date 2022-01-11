@@ -100,7 +100,7 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	public function new(?text:String, ?triggerListener:(TriggerEvent) -> Void) {
 		initializeButtonTheme();
 
-		super();
+		super(triggerListener);
 
 		this.text = text;
 
@@ -111,10 +111,6 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 		this.addEventListener(KeyboardEvent.KEY_DOWN, button_keyDownHandler);
 		this.addEventListener(FocusEvent.FOCUS_IN, button_focusInHandler);
 		this.addEventListener(FocusEvent.FOCUS_OUT, button_focusOutHandler);
-
-		if (triggerListener != null) {
-			this.addEventListener(TriggerEvent.TRIGGER, triggerListener);
-		}
 	}
 
 	private var textField:TextField;

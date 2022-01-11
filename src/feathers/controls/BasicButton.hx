@@ -8,14 +8,14 @@
 
 package feathers.controls;
 
-import openfl.events.TouchEvent;
-import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IStateContext;
+import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.utils.KeyToState;
@@ -24,6 +24,7 @@ import feathers.utils.PointerToState;
 import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 
 /**
 	A simple button control with states, but no content, that is useful for
@@ -51,7 +52,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?triggerListener:(TriggerEvent) -> Void) {
 		super();
 		// MouseEvent.CLICK is dispatched only if the same object is under the
 		// pointer for both MouseEvent.MOUSE_DOWN and MouseEvent.MOUSE_UP. The
@@ -66,6 +67,10 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 
 		this.addEventListener(MouseEvent.CLICK, basicButton_clickHandler);
 		this.addEventListener(TouchEvent.TOUCH_TAP, basicButton_touchTapHandler);
+
+		if (triggerListener != null) {
+			this.addEventListener(TriggerEvent.TRIGGER, triggerListener);
+		}
 	}
 
 	private var _currentState:ButtonState = UP;

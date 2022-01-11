@@ -58,7 +58,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(?changeListener:(Event) -> Void) {
 		super();
 		// MouseEvent.CLICK is dispatched only if the same object is under the
 		// pointer for both MouseEvent.MOUSE_DOWN and MouseEvent.MOUSE_UP. The
@@ -74,6 +74,10 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		this.addEventListener(MouseEvent.CLICK, basicToggleButton_clickHandler);
 		this.addEventListener(TouchEvent.TOUCH_TAP, basicToggleButton_touchTapHandler);
 		this.addEventListener(TriggerEvent.TRIGGER, basicToggleButton_triggerHandler);
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var _currentState:ToggleButtonState = UP(false);
