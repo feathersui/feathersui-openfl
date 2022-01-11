@@ -12,6 +12,7 @@ import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.themes.steel.components.SteelHScrollBarStyles;
+import openfl.events.Event;
 import openfl.geom.Point;
 
 /**
@@ -30,10 +31,10 @@ class HScrollBar extends BaseScrollBar {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		this.initializeHScrollBarTheme();
 
-		super();
+		super(value, minimum, maximum, changeListener);
 	}
 
 	private function initializeHScrollBarTheme():Void {

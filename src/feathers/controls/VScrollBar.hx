@@ -12,7 +12,7 @@ import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.themes.steel.components.SteelVScrollBarStyles;
-import openfl.geom.Point;
+import openfl.events.Event;
 
 /**
 	A vertical scroll bar, for use with scrolling containers like
@@ -30,10 +30,10 @@ class VScrollBar extends BaseScrollBar {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		this.initializeVScrollBarTheme();
 
-		super();
+		super(value, minimum, maximum, changeListener);
 	}
 
 	private function initializeVScrollBarTheme():Void {

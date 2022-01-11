@@ -9,11 +9,10 @@
 package feathers.controls;
 
 import feathers.controls.supportClasses.BaseSlider;
-import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.themes.steel.components.SteelVSliderStyles;
+import openfl.events.Event;
 import openfl.events.KeyboardEvent;
-import openfl.geom.Point;
 import openfl.ui.Keyboard;
 
 /**
@@ -46,10 +45,10 @@ class VSlider extends BaseSlider {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		initializeVSliderTheme();
 
-		super();
+		super(value, minimum, maximum, changeListener);
 
 		this.addEventListener(KeyboardEvent.KEY_DOWN, vSlider_keyDownHandler);
 	}

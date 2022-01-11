@@ -111,12 +111,20 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private static final defaultTextInputFactory = DisplayObjectFactory.withClass(TextInput);
 
-	public function new() {
+	public function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		initializeNumericStepperTheme();
 
 		super();
 
 		this.addEventListener(FocusEvent.FOCUS_IN, numericStepper_focusInHandler);
+
+		this.minimum = minimum;
+		this.maximum = maximum;
+		this.value = value;
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var decrementButton:Button;

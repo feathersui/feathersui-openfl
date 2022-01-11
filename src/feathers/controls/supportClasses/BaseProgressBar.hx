@@ -30,8 +30,16 @@ import openfl.events.Event;
 **/
 @:event(openfl.events.Event.CHANGE)
 class BaseProgressBar extends FeathersControl implements IRange {
-	private function new() {
+	private function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		super();
+
+		this.minimum = minimum;
+		this.maximum = maximum;
+		this.value = value;
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var _value:Float = 0.0;

@@ -8,11 +8,12 @@
 
 package feathers.controls;
 
-import feathers.utils.MeasurementsUtil;
-import feathers.themes.steel.components.SteelVProgressBarStyles;
+import feathers.controls.supportClasses.BaseProgressBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
-import feathers.controls.supportClasses.BaseProgressBar;
+import feathers.themes.steel.components.SteelVProgressBarStyles;
+import feathers.utils.MeasurementsUtil;
+import openfl.events.Event;
 
 /**
 	Displays the progress of a task in a vertical direction, from bottom to top.
@@ -39,10 +40,10 @@ class VProgressBar extends BaseProgressBar {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		initializeVProgressBarTheme();
 
-		super();
+		super(value, minimum, maximum, changeListener);
 	}
 
 	private function initializeVProgressBarTheme():Void {

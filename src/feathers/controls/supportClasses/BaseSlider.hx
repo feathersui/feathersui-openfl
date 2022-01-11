@@ -36,11 +36,19 @@ import openfl.events.MouseEvent;
 **/
 @:event(openfl.events.Event.CHANGE)
 class BaseSlider extends FeathersControl implements IRange implements IFocusObject {
-	private function new() {
+	private function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		super();
 
 		this.tabEnabled = true;
 		this.tabChildren = false;
+
+		this.minimum = minimum;
+		this.maximum = maximum;
+		this.value = value;
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var _isDefaultValue = true;

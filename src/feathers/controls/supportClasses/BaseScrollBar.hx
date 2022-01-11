@@ -41,11 +41,19 @@ import openfl.events.MouseEvent;
 @:event(feathers.events.ScrollEvent.SCROLL_START)
 @:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 class BaseScrollBar extends FeathersControl implements IScrollBar {
-	private function new() {
+	private function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		super();
 
 		this.tabChildren = false;
 		this.focusRect = null;
+
+		this.minimum = minimum;
+		this.maximum = maximum;
+		this.value = value;
+
+		if (changeListener != null) {
+			this.addEventListener(Event.CHANGE, changeListener);
+		}
 	}
 
 	private var _isDefaultValue = true;
