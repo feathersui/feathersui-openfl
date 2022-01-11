@@ -26,7 +26,7 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		@since 1.0.0
 	**/
-	public function new(headerText:String, itemToText:(Dynamic) -> String = null, ?width:Float) {
+	public function new(?headerText:String, ?itemToText:(Dynamic) -> String, ?width:Float) {
 		super();
 		this.headerText = headerText;
 		if (itemToText != null) {

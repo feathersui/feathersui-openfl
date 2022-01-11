@@ -135,14 +135,16 @@ class Alert extends Panel {
 
 		@since 1.0.0
 	**/
-	public function new() {
+	public function new(text:String = "") {
 		initializeAlertTheme();
 		super();
+
+		this.text = text;
 	}
 
 	private var messageLabel:Label;
 
-	private var _text:String = "";
+	private var _text:String;
 
 	/**
 		The message displayed by the alert.

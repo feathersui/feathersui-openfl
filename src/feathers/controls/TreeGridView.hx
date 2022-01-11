@@ -235,12 +235,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	public function new(?dataProvider:IHierarchicalCollection<Dynamic>) {
+	public function new(?dataProvider:IHierarchicalCollection<Dynamic>, ?columns:IFlatCollection<TreeGridViewColumn>) {
 		initializeTreeGridViewTheme();
 
 		super();
 
 		this.dataProvider = dataProvider;
+		this.columns = columns;
 
 		this.tabEnabled = true;
 		this.focusRect = null;
