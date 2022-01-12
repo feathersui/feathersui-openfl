@@ -12,4 +12,7 @@
 	<haxeflag name="--macro" value="include('feathers')"/>
 
 	<template path="templates" if="flash"/>
+
+	<source path="docs" if="find_missing_docs" />
+	<haxeflag name="--macro" value="FindMissingDocs.find('feathers')" if="find_missing_docs"/>
 </project>
