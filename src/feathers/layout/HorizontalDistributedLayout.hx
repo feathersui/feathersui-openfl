@@ -20,7 +20,8 @@ import openfl.events.EventDispatcher;
 	Positions items from left to right in a single row, and all items are
 	resized to have the same width and height.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@see [Tutorial: How to use HorizontalDistributedLayout with layout containers](https://feathersui.com/learn/haxe-openfl/horizontal-distributed-layout/)
 

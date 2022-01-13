@@ -18,7 +18,8 @@ import openfl.events.EventDispatcher;
 /**
 	Positions weekday label and date buttons in a `CalendarGrid` component.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@see `feathers.controls.supportClasses.CalendarGrid`
 

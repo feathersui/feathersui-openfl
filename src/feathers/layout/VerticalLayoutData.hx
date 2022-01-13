@@ -16,7 +16,8 @@ import openfl.events.EventDispatcher;
 	Provides optional percentage sizing for children of containers that use
 	`VerticalLayout`.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	data changes, which triggers the container to invalidate.
 
 	@see `feathers.layout.VerticalLayout`
 	@see `feathers.layout.ILayoutObject.layoutData`

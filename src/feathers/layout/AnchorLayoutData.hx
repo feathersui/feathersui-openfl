@@ -17,7 +17,8 @@ import openfl.events.EventDispatcher;
 /**
 	Sets anchors on children of containers that use `AnchorLayout`.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	data changes, which triggers the container to invalidate.
 
 	@see `feathers.layout.AnchorLayout`
 	@see `feathers.layout.ILayoutObject.layoutData`

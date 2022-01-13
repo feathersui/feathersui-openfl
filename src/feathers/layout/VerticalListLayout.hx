@@ -28,7 +28,8 @@ import openfl.ui.Keyboard;
 	`VerticalListFixedRowLayout` instead. When a fixed height for items is
 	known, that layout offers better performance optimization.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@since 1.0.0
 **/

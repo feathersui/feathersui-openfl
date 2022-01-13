@@ -24,7 +24,8 @@ import openfl.ui.Keyboard;
 	A simple list layout that positions items from left to right, in a single
 	row, where every item fills the entire height of the container.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@since 1.0.0
 **/

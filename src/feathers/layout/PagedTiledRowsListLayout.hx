@@ -23,7 +23,8 @@ import openfl.geom.Point;
 	Positions items as tiles (all items have equal dimensions) in one or more
 	rows, creating new pages as the view port bounds are filled.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@see [Tutorial: How to use PagedTiledRowsListLayout with layout containers](https://feathersui.com/learn/haxe-openfl/paged-tiled-rows-list-layout/)
 

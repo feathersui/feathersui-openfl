@@ -19,7 +19,8 @@ import openfl.events.EventDispatcher;
 /**
 	The layout used by the `HDividedBox` component.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@see `feathers.controls.HDividedBox`
 

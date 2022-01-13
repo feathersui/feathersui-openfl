@@ -21,7 +21,8 @@ import openfl.events.EventDispatcher;
 	be started. Constrained to the suggested width, the content's total height
 	will change as the number of items increases or decreases.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@see [Tutorial: How to use FlowRowsLayout with layout containers](https://feathersui.com/learn/haxe-openfl/flow-rows-layout/)
 

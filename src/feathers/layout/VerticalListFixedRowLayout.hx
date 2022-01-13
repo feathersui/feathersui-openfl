@@ -26,7 +26,8 @@ import openfl.geom.Point;
 	measured height of the first item, or it may be overridden using the
 	`rowHeight` property.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@since 1.0.0
 **/

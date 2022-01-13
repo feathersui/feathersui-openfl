@@ -21,7 +21,8 @@ import openfl.events.EventDispatcher;
 	Positions cell or header renderers in a `GridView` or `TreeGridView`
 	component.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@see `feathers.controls.GridView`
 	@see `feathers.controls.TreeGridView`

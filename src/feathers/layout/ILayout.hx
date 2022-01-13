@@ -14,7 +14,8 @@ import openfl.events.IEventDispatcher;
 /**
 	Positions and sizes children in a container.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
+	changes, which triggers the container to invalidate.
 
 	@since 1.0.0
 **/
