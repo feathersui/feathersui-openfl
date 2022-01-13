@@ -14,6 +14,9 @@ import haxe.macro.Type.ClassType;
 
 class FindIncompleteProps {
 	public static function find(?inPackage:String):Void {
+		if (!Context.defined("flash")) {
+			return;
+		}
 		final result:Array<SymbolAndPosition> = [];
 		final packStart:String = inPackage == null ? null : inPackage;
 		Context.onGenerate((types:Array<haxe.macro.Type>) -> {
