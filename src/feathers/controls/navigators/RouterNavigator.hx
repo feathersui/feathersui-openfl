@@ -577,6 +577,9 @@ class Location {
 
 	private var _protocol:String = "file:";
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#protocol
+	**/
 	@:flash.property
 	public var protocol(get, null):String;
 
@@ -586,6 +589,9 @@ class Location {
 
 	private var _hostname:String = ".";
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#hostname
+	**/
 	@:flash.property
 	public var hostname(get, null):String;
 
@@ -593,6 +599,9 @@ class Location {
 		return ".";
 	}
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#host
+	**/
 	@:flash.property
 	public var host(get, null):String;
 
@@ -600,6 +609,9 @@ class Location {
 		return this.hostname;
 	}
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#port
+	**/
 	@:flash.property
 	public var port(get, null):String;
 
@@ -607,6 +619,9 @@ class Location {
 		return "";
 	}
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#origin
+	**/
 	@:flash.property
 	public var origin(get, never):String;
 
@@ -616,6 +631,9 @@ class Location {
 
 	private var _pathname:String = "/";
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#pathname
+	**/
 	@:flash.property
 	public var pathname(get, never):String;
 
@@ -625,6 +643,9 @@ class Location {
 
 	private var _search:String = "";
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#search
+	**/
 	@:flash.property
 	public var search(get, never):String;
 
@@ -634,6 +655,9 @@ class Location {
 
 	private var _hash:String = "";
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#hash
+	**/
 	@:flash.property
 	public var hash(get, never):String;
 
@@ -641,6 +665,9 @@ class Location {
 		return this._hash;
 	}
 
+	/**
+		@see https://api.haxe.org/js/html/Location.html#href
+	**/
 	@:flash.property
 	public var href(get, never):String;
 
