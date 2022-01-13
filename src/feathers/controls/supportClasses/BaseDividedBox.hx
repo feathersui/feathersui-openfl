@@ -274,7 +274,7 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	@:flash.property
-	public var numRawChildren(get, never):Int;
+	private var numRawChildren(get, never):Int;
 
 	private function get_numRawChildren():Int {
 		var oldBypass = this._displayListBypassEnabled;
