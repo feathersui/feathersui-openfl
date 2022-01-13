@@ -232,12 +232,12 @@ class LongPress {
 		this._savedTouchEvent.localY = event.localY;
 		this._savedTouchEvent.stageX = event.stageX;
 		this._savedTouchEvent.stageY = event.stageY;
-		this._savedMouseEvent.altKey = event.altKey;
-		this._savedMouseEvent.ctrlKey = event.ctrlKey;
-		if (Reflect.hasField(this._savedMouseEvent, "commandKey")) {
-			Reflect.setField(this._savedMouseEvent, "commandKey", Reflect.field(event, "commandKey"));
+		this._savedTouchEvent.altKey = event.altKey;
+		this._savedTouchEvent.ctrlKey = event.ctrlKey;
+		if (Reflect.hasField(this._savedTouchEvent, "commandKey")) {
+			Reflect.setField(this._savedTouchEvent, "commandKey", Reflect.field(event, "commandKey"));
 		}
-		this._savedMouseEvent.shiftKey = event.shiftKey;
+		this._savedTouchEvent.shiftKey = event.shiftKey;
 	}
 
 	private function longPress_target_stage_mouseUpHandler(event:MouseEvent):Void {
