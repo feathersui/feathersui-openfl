@@ -6,15 +6,12 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
-import haxe.macro.Type.MethodKind;
-import haxe.macro.Type.FieldKind;
-import haxe.macro.Type.MetaAccess;
-import haxe.macro.Expr.Constant;
 #if macro
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
 import haxe.macro.Type.ClassField;
 import haxe.macro.Type.ClassType;
+import haxe.macro.Type.MetaAccess;
 
 class FindMissingDocs {
 	public static function find(?inPackage:String):Void {

@@ -13,6 +13,9 @@
 
 	<template path="templates" if="flash"/>
 
-	<source path="docs" if="find_missing_docs" />
-	<haxeflag name="--macro" value="FindMissingDocs.find('feathers')" if="find_missing_docs"/>
+	<section if="lint">
+		<source path="linter_macros"/>
+		<haxeflag name="--macro" value="FindMissingDocs.find('feathers')"/>
+		<haxeflag name="--macro" value="FindIncompleteProps.find('feathers')"/>
+	</section>
 </project>
