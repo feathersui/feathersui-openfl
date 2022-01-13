@@ -28,7 +28,7 @@ class FindMissingDocs {
 						var abstractPack = abstractType.pack.join(".");
 						if (packStart == null
 							|| (abstractPack != null && StringTools.startsWith(abstractType.pack.join("."), packStart))) {
-							if (abstractType.isPrivate) {
+							if (!abstractType.isPrivate && !isHiddenByMetadata(abstractType.meta)) {
 								if (abstractType.doc == null || abstractType.doc.length == 0) {
 									result.push({symbol: '${abstractType.name}', pos: abstractType.pos});
 								}
@@ -38,7 +38,7 @@ class FindMissingDocs {
 						var classType = t.get();
 						var classPack = classType.pack.join(".");
 						if (packStart == null || (classPack != null && StringTools.startsWith(classType.pack.join("."), packStart))) {
-							if (!classType.isPrivate) {
+							if (!classType.isPrivate && !isHiddenByMetadata(classType.meta)) {
 								if (classType.doc == null || classType.doc.length == 0) {
 									result.push({symbol: '${classType.name}', pos: classType.pos});
 								}
