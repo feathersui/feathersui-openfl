@@ -116,6 +116,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var itemToChildren(get, set):(T) -> Array<T>;
 
 	private function get_itemToChildren():(T) -> Array<T> {

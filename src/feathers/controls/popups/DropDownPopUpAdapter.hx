@@ -62,6 +62,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	/**
 		The gap, measured in pixels, between the origin and the content.
 	**/
+	@:flash.property
 	public var gap(get, set):Float;
 
 	private function get_gap():Float {

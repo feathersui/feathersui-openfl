@@ -272,6 +272,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var snapPositionsX(get, never):Array<Float>;
 
 	private function get_snapPositionsX():Array<Float> {
@@ -287,6 +288,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var snapPositionsY(get, never):Array<Float>;
 
 	private function get_snapPositionsY():Array<Float> {

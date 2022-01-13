@@ -142,6 +142,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var restrictedScrollX(get, set):Float;
 
 	private function get_restrictedScrollX():Float {
@@ -168,6 +169,7 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var restrictedScrollY(get, set):Float;
 
 	private function get_restrictedScrollY():Float {

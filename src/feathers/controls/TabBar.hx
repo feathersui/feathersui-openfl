@@ -322,6 +322,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var tabRecycler(get, set):DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>;
 
 	private function get_tabRecycler():DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> {

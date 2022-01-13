@@ -338,6 +338,7 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.bullet`](https://api.openfl.org/openfl/text/TextFormat.html#bullet)
 	**/
+	@:flash.property
 	public var bullet(get, set):Null<Bool>;
 
 	private function get_bullet():Null<Bool> {
@@ -358,6 +359,7 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.kerning`](https://api.openfl.org/openfl/text/TextFormat.html#kerning)
 	**/
+	@:flash.property
 	public var kerning(get, set):Null<Bool>;
 
 	private function get_kerning():Null<Bool> {
@@ -378,6 +380,7 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.letterSpacing`](https://api.openfl.org/openfl/text/TextFormat.html#letterSpacing)
 	**/
+	@:flash.property
 	public var letterSpacing(get, set):Null<Float>;
 
 	private function get_letterSpacing():Null<Float> {
@@ -398,6 +401,7 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.tabStops`](https://api.openfl.org/openfl/text/TextFormat.html#tabStops)
 	**/
+	@:flash.property
 	public var tabStops(get, set):Array<Int>;
 
 	private function get_tabStops():Array<Int> {

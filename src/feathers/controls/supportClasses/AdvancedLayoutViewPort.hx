@@ -291,6 +291,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 	private var _snapPositionsX:Array<Float> = null;
 
+	@:flash.property
 	public var snapPositionsX(get, never):Array<Float>;
 
 	private function get_snapPositionsX():Array<Float> {
@@ -299,6 +300,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 	private var _snapPositionsY:Array<Float> = null;
 
+	@:flash.property
 	public var snapPositionsY(get, never):Array<Float>;
 
 	private function get_snapPositionsY():Array<Float> {

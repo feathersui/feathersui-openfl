@@ -867,6 +867,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var customMonthNames(get, set):Array<String>;
 
 	private function get_customMonthNames():Array<String> {
@@ -892,6 +893,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var customWeekdayNames(get, set):Array<String>;
 
 	private function get_customWeekdayNames():Array<String> {
@@ -918,6 +920,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var customStartOfWeek(get, set):Null<Int>;
 
 	private function get_customStartOfWeek():Null<Int> {

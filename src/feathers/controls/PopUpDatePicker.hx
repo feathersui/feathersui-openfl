@@ -445,6 +445,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var customMonthNames(get, set):Array<String>;
 
 	private function get_customMonthNames():Array<String> {
@@ -470,6 +471,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var customWeekdayNames(get, set):Array<String>;
 
 	private function get_customWeekdayNames():Array<String> {
@@ -496,6 +498,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var customStartOfWeek(get, set):Null<Int>;
 
 	private function get_customStartOfWeek():Null<Int> {

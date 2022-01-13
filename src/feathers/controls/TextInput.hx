@@ -570,6 +570,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var errorStringCalloutOpen(get, never):Bool;
 
 	private function get_errorStringCalloutOpen():Bool {

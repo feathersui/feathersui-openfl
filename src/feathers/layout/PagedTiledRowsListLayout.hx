@@ -144,6 +144,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@see `PagedTiledRowsListLayout.horizontalAlign`
 	**/
+	@:flash.property
 	public var alignEmptyHorizontalTiles(get, set):Bool;
 
 	private function get_alignEmptyHorizontalTiles():Bool {
@@ -210,6 +211,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@see `PagedTiledRowsListLayout.verticalAlign`
 	**/
+	@:flash.property
 	public var alignEmptyVerticalTiles(get, set):Bool;
 
 	private function get_alignEmptyVerticalTiles():Bool {

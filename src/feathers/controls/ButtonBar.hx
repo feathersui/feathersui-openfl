@@ -202,6 +202,7 @@ class ButtonBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var buttonRecycler(get, set):DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>;
 
 	private function get_buttonRecycler():DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button> {

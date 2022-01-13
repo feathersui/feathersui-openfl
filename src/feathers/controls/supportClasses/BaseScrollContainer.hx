@@ -536,6 +536,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var restrictedScrollX(get, set):Float;
 
 	private function get_restrictedScrollX():Float {
@@ -615,6 +616,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var restrictedScrollY(get, set):Float;
 
 	private function get_restrictedScrollY():Float {

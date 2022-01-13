@@ -143,6 +143,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@see `PagedTiledRowsListLayout.horizontalAlign`
 	**/
+	@:flash.property
 	public var alignEmptyHorizontalTiles(get, set):Bool;
 
 	private function get_alignEmptyHorizontalTiles():Bool {

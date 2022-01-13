@@ -120,6 +120,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var preferHashRouting(get, set):Bool;
 
 	private function get_preferHashRouting():Bool {
@@ -365,6 +366,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var location(get, never):#if html5 js.html.Location #else Location #end;
 
 	private function get_location():#if html5 js.html.Location #else Location #end {

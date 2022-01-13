@@ -89,6 +89,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	/**
 		@see `feathers.core.IFocusExclusions.focusExclusions`
 	**/
+	@:flash.property
 	public var focusExclusions(get, never):Array<DisplayObject>;
 
 	private function get_focusExclusions():Array<DisplayObject> {

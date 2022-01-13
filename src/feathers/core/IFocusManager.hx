@@ -28,6 +28,7 @@ interface IFocusManager extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:flash.property
 	public var root(get, never):DisplayObject;
 
 	/**
