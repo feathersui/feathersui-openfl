@@ -143,7 +143,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var displayedFullYear(get, set):Int;
 
 	private function get_displayedFullYear():Int {
@@ -173,7 +172,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var displayedMonth(get, set):Int;
 
 	private function get_displayedMonth():Int {
@@ -198,7 +196,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 	/**
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -223,7 +220,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedDate(get, set):Date;
 
 	private function get_selectedDate():Date {
@@ -356,7 +352,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customWeekdayNames(get, set):Array<String>;
 
 	private function get_customWeekdayNames():Array<String> {
@@ -385,7 +380,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customStartOfWeek(get, set):Null<Int>;
 
 	private function get_customStartOfWeek():Null<Int> {
@@ -413,7 +407,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedLocaleIDName(get, set):String;
 
 	private function get_requestedLocaleIDName():String {
@@ -440,7 +433,6 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var actualLocaleIDName(get, never):String;
 
 	private function get_actualLocaleIDName():String {

@@ -104,7 +104,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<TabItem>;
 
 	private function get_dataProvider():IFlatCollection<TabItem> {
@@ -154,7 +153,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -185,7 +183,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -200,7 +197,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):#if flash Dynamic #else TabItem #end;
 
 	private function get_selectedItem():#if flash Dynamic #else TabItem #end {
@@ -236,7 +232,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var swipeEnabled(get, set):Bool;
 
 	private function get_swipeEnabled():Bool {
@@ -264,7 +259,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var simulateTouch(get, set):Bool;
 
 	private function get_simulateTouch():Bool {
@@ -339,7 +333,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var tabBarFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TabBar>;
 
 	private function get_tabBarFactory():AbstractDisplayObjectFactory<Dynamic, TabBar> {

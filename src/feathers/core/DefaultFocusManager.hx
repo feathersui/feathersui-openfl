@@ -62,7 +62,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	/**
 		@see `feathers.core.IFocusManager.enabled`
 	**/
-	@:flash.property
 	public var enabled(get, set):Bool;
 
 	private function get_enabled():Bool {
@@ -92,7 +91,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	/**
 		@see `feathers.core.IFocusManager.root`
 	**/
-	@:flash.property
 	public var root(get, set):DisplayObject;
 
 	private function get_root():DisplayObject {
@@ -138,7 +136,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	/**
 		@see `feathers.core.IFocusManager.focusPane`
 	**/
-	@:flash.property
 	public var focusPane(get, never):DisplayObjectContainer;
 
 	private function get_focusPane():DisplayObjectContainer {
@@ -158,7 +155,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	/**
 		@see `feathers.core.IFocusManager.showFocusIndicator`
 	**/
-	@:flash.property
 	public var showFocusIndicator(get, never):Bool;
 
 	private function get_showFocusIndicator():Bool {
@@ -170,7 +166,6 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	/**
 		@see `feathers.core.IFocusManager.focus`
 	**/
-	@:flash.property
 	public var focus(get, set):IFocusObject;
 
 	private function get_focus():IFocusObject {

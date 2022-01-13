@@ -587,7 +587,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _data:Dynamic;
 
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -607,7 +606,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _layoutIndex:Int = -1;
 
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 
 	private function get_layoutIndex():Int {
@@ -627,7 +625,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _selected:Bool;
 
-	@:flash.property
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
@@ -647,7 +644,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _index:Int = -1;
 
-	@:flash.property
 	public var index(get, set):Int;
 
 	private function get_index():Int {
@@ -667,7 +663,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _listViewOwner:ListView;
 
-	@:flash.property
 	public var listViewOwner(get, set):ListView;
 
 	private function get_listViewOwner():ListView {

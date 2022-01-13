@@ -52,7 +52,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -84,7 +83,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -116,7 +114,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -148,7 +145,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -185,7 +181,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {
@@ -208,7 +203,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customItemHeights(get, set):Array<Null<Float>>;
 
 	private function get_customItemHeights():Array<Null<Float>> {
@@ -231,7 +225,6 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var fallbackFluidIndex(get, set):Int;
 
 	private function get_fallbackFluidIndex():Int {

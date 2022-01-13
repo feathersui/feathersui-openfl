@@ -207,7 +207,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var displayedFullYear(get, set):Int;
 
 	private function get_displayedFullYear():Int {
@@ -237,7 +236,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var displayedMonth(get, set):Int;
 
 	private function get_displayedMonth():Int {
@@ -262,7 +260,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	/**
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -288,7 +285,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedDate(get, set):Date;
 
 	private function get_selectedDate():Date {
@@ -384,7 +380,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var calendarGridFactory(get, set):AbstractDisplayObjectFactory<Dynamic, CalendarGrid>;
 
 	private function get_calendarGridFactory():AbstractDisplayObjectFactory<Dynamic, CalendarGrid> {
@@ -437,7 +432,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var decrementMonthButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_decrementMonthButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -490,7 +484,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var incrementMonthButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_incrementMonthButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -543,7 +536,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var decrementYearButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_decrementYearButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -596,7 +588,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var incrementYearButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_incrementYearButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -647,7 +638,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var currentMonthViewFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Label>;
 
 	private function get_currentMonthViewFactory():AbstractDisplayObjectFactory<Dynamic, Label> {
@@ -809,7 +799,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedLocaleIDName(get, set):String;
 
 	private function get_requestedLocaleIDName():String {
@@ -836,7 +825,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var actualLocaleIDName(get, never):String;
 
 	private function get_actualLocaleIDName():String {
@@ -867,7 +855,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customMonthNames(get, set):Array<String>;
 
 	private function get_customMonthNames():Array<String> {
@@ -893,7 +880,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customWeekdayNames(get, set):Array<String>;
 
 	private function get_customWeekdayNames():Array<String> {
@@ -920,7 +906,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customStartOfWeek(get, set):Null<Int>;
 
 	private function get_customStartOfWeek():Null<Int> {

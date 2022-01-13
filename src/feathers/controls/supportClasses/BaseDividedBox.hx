@@ -78,7 +78,6 @@ class BaseDividedBox extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var autoSizeMode(get, set):AutoSizeMode;
 
 	private function get_autoSizeMode():AutoSizeMode {
@@ -200,7 +199,6 @@ class BaseDividedBox extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dividerFactory(get, set):AbstractDisplayObjectFactory<Dynamic, InteractiveObject>;
 
 	private function get_dividerFactory():AbstractDisplayObjectFactory<Dynamic, InteractiveObject> {
@@ -247,7 +245,6 @@ class BaseDividedBox extends FeathersControl {
 
 	@:dox(hide)
 	@:noCompletion
-	@:flash.property
 	public var xmlContent(get, set):Array<DisplayObject>;
 
 	private function get_xmlContent():Array<DisplayObject> {
@@ -273,7 +270,6 @@ class BaseDividedBox extends FeathersControl {
 		return this._xmlContent;
 	}
 
-	@:flash.property
 	private var numRawChildren(get, never):Int;
 
 	private function get_numRawChildren():Int {

@@ -46,7 +46,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	/**
 		@see `feathers.layout.IScrollLayout.scrollX`
 	**/
-	@:flash.property
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -63,7 +62,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	/**
 		@see `feathers.layout.IScrollLayout.scrollY`
 	**/
-	@:flash.property
 	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
@@ -80,7 +78,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	/**
 		@see `feathers.layout.IVirtualLayout.virtualCache`
 	**/
-	@:flash.property
 	public var virtualCache(get, set):Array<Dynamic>;
 
 	private function get_virtualCache():Array<Dynamic> {
@@ -95,7 +92,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	/**
 		@see `feathers.layout.IScrollLayout.elasticTop`
 	**/
-	@:flash.property
 	public var elasticTop(get, never):Bool;
 
 	private function get_elasticTop():Bool {
@@ -105,7 +101,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	/**
 		@see `feathers.layout.IScrollLayout.elasticRight`
 	**/
-	@:flash.property
 	public var elasticRight(get, never):Bool;
 
 	private function get_elasticRight():Bool {
@@ -115,7 +110,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	/**
 		@see `feathers.layout.IScrollLayout.elasticBottom`
 	**/
-	@:flash.property
 	public var elasticBottom(get, never):Bool;
 
 	private function get_elasticBottom():Bool {
@@ -125,7 +119,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 	/**
 		@see `feathers.layout.IScrollLayout.elasticLeft`
 	**/
-	@:flash.property
 	public var elasticLeft(get, never):Bool;
 
 	private function get_elasticLeft():Bool {
@@ -144,7 +137,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@see `PagedTiledRowsListLayout.horizontalAlign`
 	**/
-	@:flash.property
 	public var alignEmptyHorizontalTiles(get, set):Bool;
 
 	private function get_alignEmptyHorizontalTiles():Bool {
@@ -183,7 +175,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {
@@ -211,7 +202,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@see `PagedTiledRowsListLayout.verticalAlign`
 	**/
-	@:flash.property
 	public var alignEmptyVerticalTiles(get, set):Bool;
 
 	private function get_alignEmptyVerticalTiles():Bool {
@@ -252,7 +242,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var verticalAlign(get, set):VerticalAlign;
 
 	private function get_verticalAlign():VerticalAlign {
@@ -286,7 +275,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var pageDirection(get, set):Direction;
 
 	private function get_pageDirection():Direction {
@@ -318,7 +306,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -350,7 +337,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -382,7 +368,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -414,7 +399,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -450,7 +434,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var horizontalGap(get, set):Float;
 
 	private function get_horizontalGap():Float {
@@ -486,7 +469,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minHorizontalGap(get, set):Float;
 
 	private function get_minHorizontalGap():Float {
@@ -518,7 +500,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var verticalGap(get, set):Float;
 
 	private function get_verticalGap():Float {
@@ -554,7 +535,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minVerticalGap(get, set):Float;
 
 	private function get_minVerticalGap():Float {
@@ -591,7 +571,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedColumnCount(get, set):Null<Int>;
 
 	private function get_requestedColumnCount():Null<Int> {
@@ -629,7 +608,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedMinColumnCount(get, set):Null<Int>;
 
 	private function get_requestedMinColumnCount():Null<Int> {
@@ -668,7 +646,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedMaxColumnCount(get, set):Null<Int>;
 
 	private function get_requestedMaxColumnCount():Null<Int> {
@@ -702,7 +679,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedRowCount(get, set):Null<Int>;
 
 	private function get_requestedRowCount():Null<Int> {
@@ -737,7 +713,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedMinRowCount(get, set):Null<Int>;
 
 	private function get_requestedMinRowCount():Null<Int> {
@@ -773,7 +748,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedMaxRowCount(get, set):Null<Int>;
 
 	private function get_requestedMaxRowCount():Null<Int> {

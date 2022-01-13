@@ -101,7 +101,6 @@ class ValidatingSprite extends Sprite implements IValidating {
 	/**
 		@see `feathers.core.IValidating.depth`
 	**/
-	@:flash.property
 	public var depth(get, never):Int;
 
 	private function get_depth():Int {

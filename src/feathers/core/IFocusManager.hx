@@ -28,7 +28,6 @@ interface IFocusManager extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var root(get, never):DisplayObject;
 
 	/**
@@ -36,7 +35,6 @@ interface IFocusManager extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var focus(get, set):IFocusObject;
 
 	/**
@@ -44,7 +42,6 @@ interface IFocusManager extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var focusPane(get, never):DisplayObjectContainer;
 
 	/**
@@ -52,7 +49,6 @@ interface IFocusManager extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var showFocusIndicator(get, never):Bool;
 
 	/**
@@ -60,7 +56,6 @@ interface IFocusManager extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var enabled(get, set):Bool;
 
 	/**

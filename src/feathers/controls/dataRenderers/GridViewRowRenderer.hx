@@ -94,7 +94,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var gridView(get, set):GridView;
 
 	private function get_gridView():GridView {
@@ -126,7 +125,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
@@ -157,7 +155,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var rowIndex(get, set):Int;
 
 	private function get_rowIndex():Int {
@@ -183,7 +180,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -209,7 +205,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var columns(get, set):IFlatCollection<GridViewColumn>;
 
 	private function get_columns():IFlatCollection<GridViewColumn> {
@@ -239,7 +234,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 
 	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
@@ -260,7 +254,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private var _customCellRendererVariant:String = null;
 
-	@:flash.property
 	public var customCellRendererVariant(get, set):String;
 
 	private function get_customCellRendererVariant():String {
@@ -278,7 +271,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private var _customColumnWidths:Array<Float>;
 
-	@:flash.property
 	public var customColumnWidths(get, set):Array<Float>;
 
 	private function get_customColumnWidths():Array<Float> {

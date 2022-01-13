@@ -394,7 +394,6 @@ private class CustomRendererWithInterfaces extends ToggleButton implements IData
 
 	private var _data:Dynamic;
 
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -414,7 +413,6 @@ private class CustomRendererWithInterfaces extends ToggleButton implements IData
 
 	private var _layoutIndex:Int = -1;
 
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 
 	private function get_layoutIndex():Int {

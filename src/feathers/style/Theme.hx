@@ -28,7 +28,6 @@ final class Theme {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public static var fallbackTheme(get, never):ITheme;
 
 	private static function get_fallbackTheme():ITheme {

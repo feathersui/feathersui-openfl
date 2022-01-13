@@ -39,7 +39,6 @@ class TreeViewItemRenderer extends HierarchicalItemRenderer implements ITreeView
 	/**
 		@see `feathers.controls.dataRenderers.ITreeViewItemRenderer.location`
 	**/
-	@:flash.property
 	public var location(get, set):Array<Int>;
 
 	private function get_location():Array<Int> {
@@ -60,7 +59,6 @@ class TreeViewItemRenderer extends HierarchicalItemRenderer implements ITreeView
 	/**
 		@see `feathers.controls.dataRenderers.ITreeViewItemRenderer.treeViewOwner`
 	**/
-	@:flash.property
 	public var treeViewOwner(get, set):TreeView;
 
 	private function get_treeViewOwner():TreeView {

@@ -21,7 +21,6 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var scrollX(get, set):Float;
 
 	/**
@@ -29,7 +28,6 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var scrollY(get, set):Float;
 
 	/**
@@ -37,7 +35,6 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var elasticTop(get, never):Bool;
 
 	/**
@@ -45,7 +42,6 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var elasticRight(get, never):Bool;
 
 	/**
@@ -53,7 +49,6 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var elasticBottom(get, never):Bool;
 
 	/**
@@ -61,7 +56,6 @@ interface IScrollLayout extends ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var elasticLeft(get, never):Bool;
 
 	/**

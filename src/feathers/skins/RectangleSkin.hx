@@ -36,7 +36,6 @@ class RectangleSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var cornerRadius(get, set):Float;
 
 	private function get_cornerRadius():Float {

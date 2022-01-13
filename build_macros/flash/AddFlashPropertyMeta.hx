@@ -8,16 +8,11 @@
 
 #if macro
 import haxe.macro.Context;
-import haxe.macro.Expr.Position;
 import haxe.macro.Type.ClassField;
 import haxe.macro.Type.ClassType;
 
-class FindIncompleteProps {
+class AddFlashPropertyMeta {
 	public static function find(?inPackage:String):Void {
-		if (!Context.defined("flash")) {
-			return;
-		}
-		final result:Array<SymbolAndPosition> = [];
 		final packStart:String = inPackage == null ? null : inPackage;
 		Context.onGenerate((types:Array<haxe.macro.Type>) -> {
 			for (type in types) {
@@ -27,42 +22,33 @@ class FindIncompleteProps {
 						var classPack = classType.pack.join(".");
 						if (packStart == null || (classPack != null && StringTools.startsWith(classType.pack.join("."), packStart))) {
 							if (!classType.isPrivate) {
-								checkFields(classType, classType.fields.get(), result);
+								checkFields(classType, classType.fields.get());
 							}
 						}
 					default: // skip
 				};
 			}
-
-			for (symbolAndPos in result) {
-				Context.warning('Missing :flash.property ${symbolAndPos.symbol}', symbolAndPos.pos);
-			}
 		});
 	}
 
-	private static function checkField(classType:ClassType, field:ClassField, result:Array<SymbolAndPosition>):Void {
+	private static function checkField(classType:ClassType, field:ClassField):Void {
 		if (!field.isPublic) {
 			return;
 		}
 		switch (field.kind) {
 			case FVar(read, write):
 				if ((read.equals(AccCall) || write.match(AccCall)) && !field.meta.has(":flash.property")) {
-					result.push({symbol: '${classType.name}.${field.name}', pos: field.pos});
+					field.meta.add(":flash.property", [], field.pos);
 				}
 			default:
 				return;
 		}
 	}
 
-	private static function checkFields(classType:ClassType, fields:Array<ClassField>, result:Array<SymbolAndPosition>):Void {
+	private static function checkFields(classType:ClassType, fields:Array<ClassField>):Void {
 		for (field in fields) {
-			checkField(classType, field, result);
+			checkField(classType, field);
 		}
 	}
-}
-
-private typedef SymbolAndPosition = {
-	symbol:String,
-	pos:Position
 }
 #end

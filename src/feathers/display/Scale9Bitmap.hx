@@ -126,7 +126,6 @@ class Scale9Bitmap extends Sprite {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var smoothing(get, set):Bool;
 
 	private function get_smoothing():Bool {
@@ -153,7 +152,6 @@ class Scale9Bitmap extends Sprite {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var bitmapData(get, set):BitmapData;
 
 	private function get_bitmapData():BitmapData {
@@ -205,7 +203,6 @@ class Scale9Bitmap extends Sprite {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var useGraphics(get, set):Bool;
 
 	private function get_useGraphics():Bool {

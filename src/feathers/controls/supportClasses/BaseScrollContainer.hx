@@ -380,7 +380,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollBarXFactory(get, set):AbstractDisplayObjectFactory<Dynamic, HScrollBar>;
 
 	private function get_scrollBarXFactory():AbstractDisplayObjectFactory<Dynamic, HScrollBar> {
@@ -419,7 +418,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollBarYFactory(get, set):AbstractDisplayObjectFactory<Dynamic, VScrollBar>;
 
 	private function get_scrollBarYFactory():AbstractDisplayObjectFactory<Dynamic, VScrollBar> {
@@ -455,7 +453,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollerFactory(get, set):() -> Scroller;
 
 	private function get_scrollerFactory():() -> Scroller {
@@ -500,7 +497,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -536,7 +532,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var restrictedScrollX(get, set):Float;
 
 	private function get_restrictedScrollX():Float {
@@ -581,7 +576,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
@@ -616,7 +610,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var restrictedScrollY(get, set):Float;
 
 	private function get_restrictedScrollY():Float {
@@ -652,7 +645,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minScrollX(get, never):Float;
 
 	private function get_minScrollX():Float {
@@ -677,7 +669,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minScrollY(get, never):Float;
 
 	private function get_minScrollY():Float {
@@ -702,7 +693,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxScrollX(get, never):Float;
 
 	private function get_maxScrollX():Float {
@@ -727,7 +717,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxScrollY(get, never):Float;
 
 	private function get_maxScrollY():Float {
@@ -752,7 +741,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollStepX(get, set):Float;
 
 	private function get_scrollStepX():Float {
@@ -783,7 +771,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollStepY(get, set):Float;
 
 	private function get_scrollStepY():Float {
@@ -815,7 +802,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollPolicyX(get, set):ScrollPolicy;
 
 	private function get_scrollPolicyX():ScrollPolicy {
@@ -847,7 +833,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollPolicyY(get, set):ScrollPolicy;
 
 	private function get_scrollPolicyY():ScrollPolicy {
@@ -1005,7 +990,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollMode(get, set):ScrollMode;
 
 	private function get_scrollMode():ScrollMode {

@@ -67,7 +67,6 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var value(get, set):Float;
 
 	private function get_value():Float {
@@ -104,7 +103,6 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minimum(get, set):Float;
 
 	private function get_minimum():Float {
@@ -144,7 +142,6 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maximum(get, set):Float;
 
 	private function get_maximum():Float {

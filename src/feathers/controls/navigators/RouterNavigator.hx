@@ -120,7 +120,6 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var preferHashRouting(get, set):Bool;
 
 	private function get_preferHashRouting():Bool {
@@ -366,7 +365,6 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var location(get, never):#if html5 js.html.Location #else Location #end;
 
 	private function get_location():#if html5 js.html.Location #else Location #end {
@@ -580,7 +578,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#protocol
 	**/
-	@:flash.property
 	public var protocol(get, null):String;
 
 	public function get_protocol():String {
@@ -592,7 +589,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#hostname
 	**/
-	@:flash.property
 	public var hostname(get, null):String;
 
 	public function get_hostname():String {
@@ -602,7 +598,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#host
 	**/
-	@:flash.property
 	public var host(get, null):String;
 
 	public function get_host():String {
@@ -612,7 +607,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#port
 	**/
-	@:flash.property
 	public var port(get, null):String;
 
 	public function get_port():String {
@@ -622,7 +616,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#origin
 	**/
-	@:flash.property
 	public var origin(get, never):String;
 
 	public function get_origin():String {
@@ -634,7 +627,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#pathname
 	**/
-	@:flash.property
 	public var pathname(get, never):String;
 
 	public function get_pathname():String {
@@ -646,7 +638,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#search
 	**/
-	@:flash.property
 	public var search(get, never):String;
 
 	public function get_search():String {
@@ -658,7 +649,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#hash
 	**/
-	@:flash.property
 	public var hash(get, never):String;
 
 	public function get_hash():String {
@@ -668,7 +658,6 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#href
 	**/
-	@:flash.property
 	public var href(get, never):String;
 
 	public function get_href():String {

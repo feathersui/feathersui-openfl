@@ -668,7 +668,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _data:Dynamic;
 
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -688,7 +687,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _layoutIndex:Int = -1;
 
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 
 	private function get_layoutIndex():Int {
@@ -708,7 +706,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _selected:Bool;
 
-	@:flash.property
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
@@ -728,7 +725,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _rowIndex:Int = -1;
 
-	@:flash.property
 	public var rowIndex(get, set):Int;
 
 	private function get_rowIndex():Int {
@@ -748,7 +744,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _columnIndex:Int = -1;
 
-	@:flash.property
 	public var columnIndex(get, set):Int;
 
 	private function get_columnIndex():Int {
@@ -768,7 +763,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _column:GridViewColumn;
 
-	@:flash.property
 	public var column(get, set):GridViewColumn;
 
 	private function get_column():GridViewColumn {
@@ -788,7 +782,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _gridViewOwner:GridView;
 
-	@:flash.property
 	public var gridViewOwner(get, set):GridView;
 
 	private function get_gridViewOwner():GridView {

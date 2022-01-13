@@ -21,6 +21,5 @@ interface IStateObserver {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var stateContext(get, set):IStateContext<Dynamic>;
 }

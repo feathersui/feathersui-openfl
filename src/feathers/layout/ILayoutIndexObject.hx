@@ -19,6 +19,5 @@ interface ILayoutIndexObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 }

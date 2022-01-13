@@ -237,7 +237,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -295,7 +294,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IHierarchicalCollection<Dynamic>;
 
 	private function get_dataProvider():IHierarchicalCollection<Dynamic> {
@@ -378,7 +376,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedLocation(get, set):Array<Int>;
 
 	private function get_selectedLocation():Array<Int> {
@@ -413,7 +410,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -500,7 +496,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
 
 	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
@@ -533,7 +528,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
 
 	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
@@ -587,7 +581,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecyclerIDFunction(get, set):(state:GroupListViewItemState) -> String;
 
 	private function get_itemRendererRecyclerIDFunction():(state:GroupListViewItemState) -> String {
@@ -639,7 +632,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var headerRendererRecyclerIDFunction(get, set):(state:GroupListViewItemState) -> String;
 
 	private function get_headerRendererRecyclerIDFunction():(state:GroupListViewItemState) -> String {
@@ -693,7 +685,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		@see `GroupListView.selectedItem`
 		@see `GroupListView.selectedIndex`
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -726,7 +717,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var virtualLayout(get, set):Bool;
 
 	private function get_virtualLayout():Bool {

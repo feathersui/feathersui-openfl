@@ -21,6 +21,5 @@ interface ISortOrderObserver {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var sortOrder(get, set):SortOrder;
 }

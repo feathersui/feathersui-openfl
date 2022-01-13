@@ -51,7 +51,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var textField(get, never):TextField;
 
 	private function get_textField():TextField {
@@ -67,7 +66,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var textFieldType(get, set):TextFieldType;
 
 	private function get_textFieldType():TextFieldType {
@@ -90,7 +88,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -110,7 +107,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {
@@ -128,7 +124,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var wordWrap(get, set):Bool;
 
 	private function get_wordWrap():Bool {
@@ -151,7 +146,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var multiline(get, set):Bool;
 
 	private function get_multiline():Bool {
@@ -175,7 +169,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var restrict(get, set):String;
 
 	private function get_restrict():String {
@@ -198,7 +191,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var displayAsPassword(get, set):Bool;
 
 	private function get_displayAsPassword():Bool {
@@ -221,7 +213,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxChars(get, set):Int;
 
 	private function get_maxChars():Int {
@@ -244,7 +235,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -267,7 +257,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var smoothScrolling(get, set):Bool;
 
 	private function get_smoothScrolling():Bool {
@@ -298,7 +287,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var textFormat(get, set):TextFormat;
 
 	private function get_textFormat():TextFormat {
@@ -321,7 +309,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var embedFonts(get, set):Bool;
 
 	private function get_embedFonts():Bool {
@@ -345,7 +332,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -369,7 +355,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -393,7 +378,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -417,7 +401,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -434,7 +417,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	}
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
@@ -447,7 +429,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleWidth`
 	**/
-	@:flash.property
 	public var minVisibleWidth(get, set):Null<Float>;
 
 	private function get_minVisibleWidth():Null<Float> {
@@ -481,7 +462,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
 	**/
-	@:flash.property
 	public var maxVisibleWidth(get, set):Null<Float>;
 
 	private function get_maxVisibleWidth():Null<Float> {
@@ -510,7 +490,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleWidth`
 	**/
-	@:flash.property
 	public var visibleWidth(get, set):Null<Float>;
 
 	private function get_visibleWidth():Null<Float> {
@@ -537,7 +516,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleHeight`
 	**/
-	@:flash.property
 	public var minVisibleHeight(get, set):Null<Float>;
 
 	private function get_minVisibleHeight():Null<Float> {
@@ -571,7 +549,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
 	**/
-	@:flash.property
 	public var maxVisibleHeight(get, set):Null<Float>;
 
 	private function get_maxVisibleHeight():Null<Float> {
@@ -600,7 +577,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleHeight`
 	**/
-	@:flash.property
 	public var visibleHeight(get, set):Null<Float>;
 
 	private function get_visibleHeight():Null<Float> {
@@ -626,7 +602,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollX`
 	**/
-	@:flash.property
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -647,7 +622,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollY`
 	**/
-	@:flash.property
 	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
@@ -668,7 +642,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.TextArea.selectionAnchorIndex`
 	**/
-	@:flash.property
 	public var selectionAnchorIndex(get, never):Int;
 
 	private function get_selectionAnchorIndex():Int {
@@ -687,7 +660,6 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	/**
 		@see `feathers.controls.TextArea.selectionActiveIndex`
 	**/
-	@:flash.property
 	public var selectionActiveIndex(get, never):Int;
 
 	private function get_selectionActiveIndex():Int {

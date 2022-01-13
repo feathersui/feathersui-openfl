@@ -58,7 +58,6 @@ class DefaultToolTipManager implements IToolTipManager {
 	/**
 		@see `feathers.core.IToolTipManager.root`
 	**/
-	@:flash.property
 	public var root(get, never):DisplayObject;
 
 	private function get_root():DisplayObject {

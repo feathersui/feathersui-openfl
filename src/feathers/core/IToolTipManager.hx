@@ -23,7 +23,6 @@ interface IToolTipManager {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var root(get, never):DisplayObject;
 
 	/**

@@ -85,7 +85,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var value(get, set):Float;
 
 	private function get_value():Float {
@@ -130,7 +129,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minimum(get, set):Float;
 
 	private function get_minimum():Float {
@@ -167,7 +165,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maximum(get, set):Float;
 
 	private function get_maximum():Float {
@@ -207,7 +204,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var step(get, set):Float;
 
 	private function get_step():Float {
@@ -246,7 +242,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var snapInterval(get, set):Float;
 
 	private function get_snapInterval():Float {
@@ -290,7 +285,6 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var page(get, set):Float;
 
 	private function get_page():Float {

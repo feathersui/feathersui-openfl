@@ -93,7 +93,6 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var currentState(get, never):#if flash Dynamic #else ToggleButtonState #end;
 
 	private function get_currentState():#if flash Dynamic #else ToggleButtonState #end {
@@ -151,7 +150,6 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
@@ -190,7 +188,6 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var toggleable(get, set):Bool;
 
 	private function get_toggleable():Bool {

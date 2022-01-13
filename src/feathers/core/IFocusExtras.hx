@@ -29,7 +29,6 @@ interface IFocusExtras extends IFocusManagerAware {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var focusExtrasBefore(get, never):Array<DisplayObject>;
 
 	/**
@@ -41,6 +40,5 @@ interface IFocusExtras extends IFocusManagerAware {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var focusExtrasAfter(get, never):Array<DisplayObject>;
 }

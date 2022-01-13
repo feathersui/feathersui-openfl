@@ -40,7 +40,6 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var uiContext(get, set):IUIControl;
 
 	private function get_uiContext():IUIControl {
@@ -85,7 +84,6 @@ class ProgrammaticSkin extends MeasureSprite implements IProgrammaticSkin implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var stateContext(get, set):IStateContext<Dynamic>;
 
 	private function get_stateContext():IStateContext<Dynamic> {

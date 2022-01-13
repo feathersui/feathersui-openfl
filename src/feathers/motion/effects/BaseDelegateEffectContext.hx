@@ -39,7 +39,6 @@ class BaseDelegateEffectContext extends EventDispatcher implements IEffectContex
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var context(get, never):IEffectContext;
 
 	private function get_context():IEffectContext {
@@ -49,7 +48,6 @@ class BaseDelegateEffectContext extends EventDispatcher implements IEffectContex
 	/**
 		@see `feathers.motion.effects.IEffectContext.target`
 	**/
-	@:flash.property
 	public var target(get, never):Dynamic;
 
 	private function get_target():Dynamic {
@@ -59,7 +57,6 @@ class BaseDelegateEffectContext extends EventDispatcher implements IEffectContex
 	/**
 		@see `feathers.motion.effects.IEffectContext.duration`
 	**/
-	@:flash.property
 	public var duration(get, never):Float;
 
 	private function get_duration():Float {
@@ -69,7 +66,6 @@ class BaseDelegateEffectContext extends EventDispatcher implements IEffectContex
 	/**
 		@see `feathers.motion.effects.IEffectContext.position`
 	**/
-	@:flash.property
 	public var position(get, set):Float;
 
 	private function get_position():Float {

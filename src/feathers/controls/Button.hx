@@ -137,7 +137,6 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -156,7 +155,6 @@ class Button extends BasicButton implements ITextControl implements IFocusObject
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {

@@ -24,6 +24,5 @@ interface IPointerDelegate {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var pointerTarget(get, set):InteractiveObject;
 }

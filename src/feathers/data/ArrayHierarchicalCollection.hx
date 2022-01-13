@@ -87,7 +87,6 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var array(get, set):Array<T>;
 
 	private function get_array():Array<T> {
@@ -116,7 +115,6 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemToChildren(get, set):(T) -> Array<T>;
 
 	private function get_itemToChildren():(T) -> Array<T> {
@@ -140,7 +138,6 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	/**
 		@see `feathers.data.IHierarchicalCollection.filterFunction`
 	**/
-	@:flash.property
 	public var filterFunction(get, set):(T) -> Bool;
 
 	private function get_filterFunction():(T) -> Bool {
@@ -163,7 +160,6 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	/**
 		@see `feathers.data.IHierarchicalCollection.sortCompareFunction`
 	**/
-	@:flash.property
 	public var sortCompareFunction(get, set):(T, T) -> Int;
 
 	private function get_sortCompareFunction():(T, T) -> Int {

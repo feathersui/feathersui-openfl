@@ -43,7 +43,6 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var fill(get, set):FillStyle;
 
 	private function get_fill():FillStyle {
@@ -73,7 +72,6 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var disabledFill(get, set):FillStyle;
 
 	private function get_disabledFill():FillStyle {
@@ -102,7 +100,6 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedFill(get, set):FillStyle;
 
 	private function get_selectedFill():FillStyle {
@@ -130,7 +127,6 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var border(get, set):LineStyle;
 
 	private function get_border():LineStyle {
@@ -160,7 +156,6 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var disabledBorder(get, set):LineStyle;
 
 	private function get_disabledBorder():LineStyle {
@@ -189,7 +184,6 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedBorder(get, set):LineStyle;
 
 	private function get_selectedBorder():LineStyle {

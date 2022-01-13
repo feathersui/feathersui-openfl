@@ -132,7 +132,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -159,7 +158,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {
@@ -187,7 +185,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var htmlText(get, set):String;
 
 	private function get_htmlText():String {
@@ -250,7 +247,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -272,7 +268,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	}
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
@@ -286,7 +281,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionBeginIndex(get, never):Int;
 
 	private function get_selectionBeginIndex():Int {
@@ -306,7 +300,6 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionEndIndex(get, never):Int;
 
 	private function get_selectionEndIndex():Int {

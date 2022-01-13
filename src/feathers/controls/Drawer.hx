@@ -89,7 +89,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	/**
 		@see `feathers.core.IFocusExclusions.focusExclusions`
 	**/
-	@:flash.property
 	public var focusExclusions(get, never):Array<DisplayObject>;
 
 	private function get_focusExclusions():Array<DisplayObject> {
@@ -110,7 +109,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var drawer(get, set):DisplayObject;
 
 	private function get_drawer():DisplayObject {
@@ -155,7 +153,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var content(get, set):InteractiveObject;
 
 	private function get_content():InteractiveObject {
@@ -206,7 +203,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var pullableEdge(get, set):RelativePosition;
 
 	private function get_pullableEdge():RelativePosition {
@@ -229,7 +225,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	/**
 		@see `feathers.core.IOpenCloseToggle.opened`
 	**/
-	@:flash.property
 	public var opened(get, set):Bool;
 
 	private function get_opened():Bool {
@@ -271,7 +266,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var autoSizeMode(get, set):AutoSizeMode;
 
 	private function get_autoSizeMode():AutoSizeMode {
@@ -304,7 +298,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var simulateTouch(get, set):Bool;
 
 	private function get_simulateTouch():Bool {
@@ -345,7 +338,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var clickOverlayToClose(get, set):Bool;
 
 	private function get_clickOverlayToClose():Bool {
@@ -366,7 +358,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var swipeCloseEnabled(get, set):Bool;
 
 	private function get_swipeCloseEnabled():Bool {
@@ -391,7 +382,6 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var swipeOpenEnabled(get, set):Bool;
 
 	private function get_swipeOpenEnabled():Bool {

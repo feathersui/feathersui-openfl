@@ -69,7 +69,6 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var activeItemID(get, never):String;
 
 	private function get_activeItemID():String {
@@ -84,7 +83,6 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var activeItemView(get, never):DisplayObject;
 
 	private function get_activeItemView():DisplayObject {
@@ -99,7 +97,6 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var transitionActive(get, never):Bool;
 
 	private function get_transitionActive():Bool {
@@ -116,7 +113,6 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -166,7 +162,6 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var autoSizeMode(get, set):AutoSizeMode;
 
 	private function get_autoSizeMode():AutoSizeMode {

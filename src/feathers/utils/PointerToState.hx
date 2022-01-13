@@ -52,7 +52,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var target(get, set):InteractiveObject;
 
 	private function get_target():InteractiveObject {
@@ -87,7 +86,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var stateContext(get, set):IStateContext<T>;
 
 	private function get_stateContext():IStateContext<T> {
@@ -115,7 +113,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var callback(get, set):(T) -> Void;
 
 	private function get_callback():(T) -> Void {
@@ -141,7 +138,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var currentState(get, never):T;
 
 	private function get_currentState():T {
@@ -155,7 +151,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var upState(get, set):T;
 
 	private function get_upState():T {
@@ -174,7 +169,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var downState(get, set):T;
 
 	private function get_downState():T {
@@ -193,7 +187,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var hoverState(get, set):T;
 
 	private function get_hoverState():T {
@@ -215,7 +208,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var enabled(get, set):Bool;
 
 	private function get_enabled():Bool {
@@ -239,7 +231,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var keepDownStateOnRollOut(get, set):Bool;
 
 	private function get_keepDownStateOnRollOut():Bool {
@@ -265,7 +256,6 @@ class PointerToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customHitTest(get, set):(stageX:Float, stageY:Float) -> Bool;
 
 	private function get_customHitTest():(stageX:Float, stageY:Float) -> Bool {

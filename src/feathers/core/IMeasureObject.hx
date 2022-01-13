@@ -27,7 +27,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var explicitWidth(get, never):Null<Float>;
 
 	/**
@@ -38,7 +37,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var explicitHeight(get, never):Null<Float>;
 
 	/**
@@ -49,7 +47,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var explicitMinWidth(get, never):Null<Float>;
 
 	/**
@@ -60,7 +57,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var explicitMinHeight(get, never):Null<Float>;
 
 	/**
@@ -71,7 +67,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var explicitMaxWidth(get, never):Null<Float>;
 
 	/**
@@ -82,7 +77,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var explicitMaxHeight(get, never):Null<Float>;
 
 	/**
@@ -93,7 +87,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minWidth(get, set):Float;
 
 	/**
@@ -104,7 +97,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minHeight(get, set):Float;
 
 	/**
@@ -115,7 +107,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxWidth(get, set):Float;
 
 	/**
@@ -126,7 +117,6 @@ interface IMeasureObject extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxHeight(get, set):Float;
 
 	/**

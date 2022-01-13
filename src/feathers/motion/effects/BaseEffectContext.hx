@@ -44,7 +44,6 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var target(get, never):Dynamic;
 
 	private function get_target():Dynamic {
@@ -58,7 +57,6 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var duration(get, never):Float;
 
 	private function get_duration():Float {
@@ -74,7 +72,6 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var position(get, set):Float;
 
 	private function get_position():Float {
@@ -98,7 +95,6 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var ease(get, never):IEasing;
 
 	private function get_ease():IEasing {

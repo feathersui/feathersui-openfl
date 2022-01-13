@@ -28,7 +28,6 @@ interface IEffectContext extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var target(get, never):Dynamic;
 
 	/**
@@ -36,7 +35,6 @@ interface IEffectContext extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var duration(get, never):Float;
 
 	/**
@@ -46,7 +44,6 @@ interface IEffectContext extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var position(get, set):Float;
 
 	/**

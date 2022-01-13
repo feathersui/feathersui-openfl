@@ -12,6 +12,5 @@ interface IStageFocusDelegate extends IFocusObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 }

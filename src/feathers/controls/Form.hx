@@ -48,7 +48,6 @@ class Form extends LayoutGroup {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var submitButton(get, set):Button;
 
 	private function get_submitButton():Button {

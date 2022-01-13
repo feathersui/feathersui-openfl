@@ -44,7 +44,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.font`](https://api.openfl.org/openfl/text/TextFormat.html#font)
 	**/
-	@:flash.property
 	public var font(get, set):String;
 
 	private function get_font():String {
@@ -65,7 +64,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.size`](https://api.openfl.org/openfl/text/TextFormat.html#size)
 	**/
-	@:flash.property
 	public var size(get, set):Null<Int>;
 
 	private function get_size():Null<Int> {
@@ -86,7 +84,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.color`](https://api.openfl.org/openfl/text/TextFormat.html#color)
 	**/
-	@:flash.property
 	public var color(get, set):Null<Int>;
 
 	private function get_color():Null<Int> {
@@ -107,7 +104,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.bold`](https://api.openfl.org/openfl/text/TextFormat.html#bold)
 	**/
-	@:flash.property
 	public var bold(get, set):Null<Bool>;
 
 	private function get_bold():Null<Bool> {
@@ -128,7 +124,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.italic`](https://api.openfl.org/openfl/text/TextFormat.html#italic)
 	**/
-	@:flash.property
 	public var italic(get, set):Null<Bool>;
 
 	private function get_italic():Null<Bool> {
@@ -149,7 +144,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.underline`](https://api.openfl.org/openfl/text/TextFormat.html#underline)
 	**/
-	@:flash.property
 	public var underline(get, set):Null<Bool>;
 
 	private function get_underline():Null<Bool> {
@@ -170,7 +164,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.url`](https://api.openfl.org/openfl/text/TextFormat.html#url)
 	**/
-	@:flash.property
 	public var url(get, set):String;
 
 	private function get_url():String {
@@ -191,7 +184,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.target`](https://api.openfl.org/openfl/text/TextFormat.html#target)
 	**/
-	@:flash.property
 	public var target(get, set):String;
 
 	private function get_target():String {
@@ -212,7 +204,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.align`](https://api.openfl.org/openfl/text/TextFormat.html#align)
 	**/
-	@:flash.property
 	public var align(get, set):TextFormatAlign;
 
 	private function get_align():TextFormatAlign {
@@ -233,7 +224,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.leftMargin`](https://api.openfl.org/openfl/text/TextFormat.html#leftMargin)
 	**/
-	@:flash.property
 	public var leftMargin(get, set):Null<Int>;
 
 	private function get_leftMargin():Null<Int> {
@@ -254,7 +244,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.rightMargin`](https://api.openfl.org/openfl/text/TextFormat.html#rightMargin)
 	**/
-	@:flash.property
 	public var rightMargin(get, set):Null<Int>;
 
 	private function get_rightMargin():Null<Int> {
@@ -275,7 +264,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.indent`](https://api.openfl.org/openfl/text/TextFormat.html#indent)
 	**/
-	@:flash.property
 	public var indent(get, set):Null<Int>;
 
 	private function get_indent():Null<Int> {
@@ -296,7 +284,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.leading`](https://api.openfl.org/openfl/text/TextFormat.html#leading)
 	**/
-	@:flash.property
 	public var leading(get, set):Null<Int>;
 
 	private function get_leading():Null<Int> {
@@ -317,7 +304,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.blockIndent`](https://api.openfl.org/openfl/text/TextFormat.html#blockIndent)
 	**/
-	@:flash.property
 	public var blockIndent(get, set):Null<Int>;
 
 	private function get_blockIndent():Null<Int> {
@@ -338,7 +324,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.bullet`](https://api.openfl.org/openfl/text/TextFormat.html#bullet)
 	**/
-	@:flash.property
 	public var bullet(get, set):Null<Bool>;
 
 	private function get_bullet():Null<Bool> {
@@ -359,7 +344,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.kerning`](https://api.openfl.org/openfl/text/TextFormat.html#kerning)
 	**/
-	@:flash.property
 	public var kerning(get, set):Null<Bool>;
 
 	private function get_kerning():Null<Bool> {
@@ -380,7 +364,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.letterSpacing`](https://api.openfl.org/openfl/text/TextFormat.html#letterSpacing)
 	**/
-	@:flash.property
 	public var letterSpacing(get, set):Null<Float>;
 
 	private function get_letterSpacing():Null<Float> {
@@ -401,7 +384,6 @@ class TextFormat extends EventDispatcher {
 	/**
 		@see [`openfl.text.TextFormat.tabStops`](https://api.openfl.org/openfl/text/TextFormat.html#tabStops)
 	**/
-	@:flash.property
 	public var tabStops(get, set):Array<Int>;
 
 	private function get_tabStops():Array<Int> {

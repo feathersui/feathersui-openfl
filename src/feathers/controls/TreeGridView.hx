@@ -293,7 +293,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -348,7 +347,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IHierarchicalCollection<Dynamic>;
 
 	private function get_dataProvider():IHierarchicalCollection<Dynamic> {
@@ -428,7 +426,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var columns(get, set):IFlatCollection<TreeGridViewColumn>;
 
 	private function get_columns():IFlatCollection<TreeGridViewColumn> {
@@ -466,7 +463,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject>;
 
 	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject> {
@@ -596,7 +592,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedLocation(get, set):Array<Int>;
 
 	private function get_selectedLocation():Array<Int> {
@@ -628,7 +623,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -685,7 +679,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var virtualLayout(get, set):Bool;
 
 	private function get_virtualLayout():Bool {
@@ -718,7 +711,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 
 	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> {
@@ -751,7 +743,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@default false
 	**/
-	@:flash.property
 	public var resizableColumns(get, set):Bool;
 
 	private function get_resizableColumns():Bool {
@@ -812,7 +803,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		@see `TreeGridView.selectedItem`
 		@see `TreeGridView.selectedLocation`
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {

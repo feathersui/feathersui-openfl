@@ -52,6 +52,5 @@ interface IDateSelector {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedDate(get, set):Date;
 }

@@ -84,7 +84,6 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var array(get, set):Array<T>;
 
 	private function get_array():Array<T> {
@@ -107,7 +106,6 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 	/**
 		@see `feathers.data.IFlatCollection.length`
 	**/
-	@:flash.property
 	public var length(get, never):Int;
 
 	private function get_length():Int {
@@ -127,7 +125,6 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 	/**
 		@see `feathers.data.IFlatCollection.filterFunction`
 	**/
-	@:flash.property
 	public var filterFunction(get, set):(T) -> Bool;
 
 	private function get_filterFunction():(T) -> Bool {
@@ -150,7 +147,6 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 	/**
 		@see `feathers.data.IFlatCollection.sortCompareFunction`
 	**/
-	@:flash.property
 	public var sortCompareFunction(get, set):(T, T) -> Int;
 
 	private function get_sortCompareFunction():(T, T) -> Int {

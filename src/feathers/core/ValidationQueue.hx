@@ -55,7 +55,6 @@ class ValidationQueue {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var validating(get, never):Bool;
 
 	private function get_validating():Bool {

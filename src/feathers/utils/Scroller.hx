@@ -91,7 +91,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -120,7 +119,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
@@ -142,7 +140,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var restrictedScrollX(get, set):Float;
 
 	private function get_restrictedScrollX():Float {
@@ -169,7 +166,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var restrictedScrollY(get, set):Float;
 
 	private function get_restrictedScrollY():Float {
@@ -197,7 +193,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minScrollX(get, never):Float;
 
 	private function get_minScrollX():Float {
@@ -211,7 +206,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minScrollY(get, never):Float;
 
 	private function get_minScrollY():Float {
@@ -225,7 +219,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxScrollX(get, never):Float;
 
 	private function get_maxScrollX():Float {
@@ -239,7 +232,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxScrollY(get, never):Float;
 
 	private function get_maxScrollY():Float {
@@ -255,7 +247,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var visibleWidth(get, never):Float;
 
 	private function get_visibleWidth():Float {
@@ -271,7 +262,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var visibleHeight(get, never):Float;
 
 	private function get_visibleHeight():Float {
@@ -288,7 +278,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var contentWidth(get, never):Float;
 
 	private function get_contentWidth():Float {
@@ -305,7 +294,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var contentHeight(get, never):Float;
 
 	private function get_contentHeight():Float {
@@ -319,7 +307,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrolling(get, never):Bool;
 
 	private function get_scrolling():Bool {
@@ -333,7 +320,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var draggingX(get, never):Bool;
 
 	private function get_draggingX():Bool {
@@ -347,7 +333,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var draggingY(get, never):Bool;
 
 	private function get_draggingY():Bool {
@@ -558,7 +543,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var decelerationRate(get, set):Float;
 
 	private function get_decelerationRate():Float {
@@ -619,7 +603,6 @@ class Scroller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var target(get, set):InteractiveObject;
 
 	private function get_target():InteractiveObject {
@@ -671,7 +654,6 @@ class Scroller extends EventDispatcher {
 		The pointer that is currently dragging the scroll target. Returns `-1`
 		if no pointer is currently associated with the drag.
 	**/
-	@:flash.property
 	public var pointerID(get, never):Int;
 
 	private function get_pointerID():Int {

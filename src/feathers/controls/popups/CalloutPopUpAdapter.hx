@@ -48,7 +48,6 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	/**
 		@see `feathers.controls.popups.IPopUpAdapter.active`
 	**/
-	@:flash.property
 	public var active(get, never):Bool;
 
 	private function get_active():Bool {
@@ -67,7 +66,6 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		match the width of the origin, when the content is smaller than the
 		origin.
 	**/
-	@:flash.property
 	public var fitContentToOriginWidth(get, set):Bool;
 
 	private function get_fitContentToOriginWidth():Bool {
@@ -88,7 +86,6 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	/**
 		@see `feathers.controls.popups.IPopUpAdapter.persistent`
 	**/
-	@:flash.property
 	public var persistent(get, never):Bool;
 
 	private function get_persistent():Bool {

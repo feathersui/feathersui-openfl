@@ -19,7 +19,6 @@ interface ITextControl extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	/**
@@ -32,6 +31,5 @@ interface ITextControl extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 }

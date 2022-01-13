@@ -38,7 +38,6 @@ class TabSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var cornerRadiusPosition(get, set):RelativePosition;
 
 	private function get_cornerRadiusPosition():RelativePosition {
@@ -61,7 +60,6 @@ class TabSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var drawBaseBorder(get, set):Bool;
 
 	private function get_drawBaseBorder():Bool {
@@ -85,7 +83,6 @@ class TabSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var cornerRadius(get, set):Float;
 
 	private function get_cornerRadius():Float {

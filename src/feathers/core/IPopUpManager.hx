@@ -26,7 +26,6 @@ interface IPopUpManager {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var overlayFactory(get, set):() -> DisplayObject;
 
 	/**
@@ -35,7 +34,6 @@ interface IPopUpManager {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var root(get, set):DisplayObjectContainer;
 
 	/**
@@ -43,7 +41,6 @@ interface IPopUpManager {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var popUpCount(get, never):Int;
 
 	/**
@@ -51,7 +48,6 @@ interface IPopUpManager {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var topLevelPopUpCount(get, never):Int;
 
 	/**

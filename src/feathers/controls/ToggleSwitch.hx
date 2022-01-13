@@ -118,7 +118,6 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {

@@ -142,7 +142,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	private var textInputMeasurements = new Measurements();
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
@@ -160,7 +159,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedDate(get, set):Date;
 
 	private function get_selectedDate():Date {
@@ -192,7 +190,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var prompt(get, set):String;
 
 	private function get_prompt():String {
@@ -294,7 +291,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var buttonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_buttonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -330,7 +326,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var textInputFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextInput>;
 
 	private function get_textInputFactory():AbstractDisplayObjectFactory<Dynamic, TextInput> {
@@ -379,7 +374,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var datePickerFactory(get, set):AbstractDisplayObjectFactory<Dynamic, DatePicker>;
 
 	private function get_datePickerFactory():AbstractDisplayObjectFactory<Dynamic, DatePicker> {
@@ -404,7 +398,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requestedLocaleIDName(get, set):String;
 
 	private function get_requestedLocaleIDName():String {
@@ -431,7 +424,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var actualLocaleIDName(get, never):String;
 
 	private function get_actualLocaleIDName():String {
@@ -445,7 +437,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customMonthNames(get, set):Array<String>;
 
 	private function get_customMonthNames():Array<String> {
@@ -471,7 +462,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customWeekdayNames(get, set):Array<String>;
 
 	private function get_customWeekdayNames():Array<String> {
@@ -498,7 +488,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customStartOfWeek(get, set):Null<Int>;
 
 	private function get_customStartOfWeek():Null<Int> {
@@ -525,7 +514,6 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {

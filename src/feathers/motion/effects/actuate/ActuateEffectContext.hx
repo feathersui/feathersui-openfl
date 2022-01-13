@@ -74,7 +74,6 @@ class ActuateEffectContext extends BaseEffectContext {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var actuator(get, never):IReadableGenericActuator;
 
 	private function get_actuator():IReadableGenericActuator {

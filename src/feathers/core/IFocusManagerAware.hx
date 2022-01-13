@@ -22,6 +22,5 @@ interface IFocusManagerAware {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var focusManager(get, set):IFocusManager;
 }

@@ -53,7 +53,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var span(get, set):Int;
 
 	private function get_span():Int {
@@ -79,7 +78,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var offset(get, set):Int;
 
 	private function get_offset():Int {
@@ -105,7 +103,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var smSpan(get, set):Int;
 
 	private function get_smSpan():Int {
@@ -132,7 +129,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var smOffset(get, set):Int;
 
 	private function get_smOffset():Int {
@@ -158,7 +154,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var mdSpan(get, set):Int;
 
 	private function get_mdSpan():Int {
@@ -185,7 +180,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var mdOffset(get, set):Int;
 
 	private function get_mdOffset():Int {
@@ -211,7 +205,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var lgSpan(get, set):Int;
 
 	private function get_lgSpan():Int {
@@ -238,7 +231,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var lgOffset(get, set):Int;
 
 	private function get_lgOffset():Int {
@@ -264,7 +256,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var xlSpan(get, set):Int;
 
 	private function get_xlSpan():Int {
@@ -291,7 +282,6 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var xlOffset(get, set):Int;
 
 	private function get_xlOffset():Int {

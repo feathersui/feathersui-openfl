@@ -161,7 +161,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	private var buttonMeasurements:Measurements = new Measurements();
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
@@ -203,7 +202,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_dataProvider():IFlatCollection<Dynamic> {
@@ -247,7 +245,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -277,7 +274,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -292,7 +288,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -325,7 +320,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var prompt(get, set):String;
 
 	private function get_prompt():String {
@@ -355,7 +349,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 
 	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
@@ -465,7 +458,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var buttonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_buttonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -502,7 +494,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var listViewFactory(get, set):AbstractDisplayObjectFactory<Dynamic, ListView>;
 
 	private function get_listViewFactory():AbstractDisplayObjectFactory<Dynamic, ListView> {
@@ -526,7 +517,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {

@@ -48,7 +48,6 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public static var topLevelApplication(get, never):Application;
 
 	private static function get_topLevelApplication():Application {
@@ -89,7 +88,6 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		application coordinates is equal to this number of pixels in screen
 		coordinates.
 	**/
-	@:flash.property
 	public var scaleFactor(get, never):Float;
 
 	private function get_scaleFactor():Float {

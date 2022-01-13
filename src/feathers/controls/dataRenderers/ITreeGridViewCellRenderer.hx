@@ -21,7 +21,6 @@ interface ITreeGridViewCellRenderer extends IHierarchicalItemRenderer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var column(get, set):TreeGridViewColumn;
 
 	/**
@@ -29,7 +28,6 @@ interface ITreeGridViewCellRenderer extends IHierarchicalItemRenderer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var columnIndex(get, set):Int;
 
 	/**
@@ -37,7 +35,6 @@ interface ITreeGridViewCellRenderer extends IHierarchicalItemRenderer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var rowLocation(get, set):Array<Int>;
 
 	/**
@@ -45,6 +42,5 @@ interface ITreeGridViewCellRenderer extends IHierarchicalItemRenderer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var treeGridViewOwner(get, set):TreeGridView;
 }

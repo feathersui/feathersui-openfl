@@ -21,7 +21,6 @@ interface IFocusObject extends IFocusManagerAware extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var focusEnabled(get, set):Bool;
 
 	/**
@@ -31,7 +30,6 @@ interface IFocusObject extends IFocusManagerAware extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var focusOwner(get, set):IFocusObject;
 
 	/**

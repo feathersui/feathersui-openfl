@@ -50,7 +50,6 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var target(get, set):InteractiveObject;
 
 	private function get_target():InteractiveObject {
@@ -91,7 +90,6 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var callback(get, set):(T) -> Void;
 
 	private function get_callback():(T) -> Void {
@@ -117,7 +115,6 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var currentState(get, never):T;
 
 	private function get_currentState():T {
@@ -131,7 +128,6 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var upState(get, set):T;
 
 	private function get_upState():T {
@@ -150,7 +146,6 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var downState(get, set):T;
 
 	private function get_downState():T {
@@ -172,7 +167,6 @@ class KeyToState<T> {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var enabled(get, set):Bool;
 
 	private function get_enabled():Bool {

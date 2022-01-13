@@ -50,7 +50,6 @@ class Panel extends ScrollContainer implements IFocusExtras {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var header(get, set):DisplayObject;
 
 	private function get_header():DisplayObject {
@@ -98,7 +97,6 @@ class Panel extends ScrollContainer implements IFocusExtras {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var footer(get, set):DisplayObject;
 
 	private function get_footer():DisplayObject {
@@ -137,7 +135,6 @@ class Panel extends ScrollContainer implements IFocusExtras {
 	private var _focusExtrasBefore:Array<DisplayObject> = [];
 
 	@:dox(hide)
-	@:flash.property
 	public var focusExtrasBefore(get, never):Array<DisplayObject>;
 
 	private function get_focusExtrasBefore():Array<DisplayObject> {
@@ -147,7 +144,6 @@ class Panel extends ScrollContainer implements IFocusExtras {
 	private var _focusExtrasAfter:Array<DisplayObject> = [];
 
 	@:dox(hide)
-	@:flash.property
 	public var focusExtrasAfter(get, never):Array<DisplayObject>;
 
 	private function get_focusExtrasAfter():Array<DisplayObject> {

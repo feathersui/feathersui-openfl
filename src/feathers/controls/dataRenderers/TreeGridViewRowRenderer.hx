@@ -94,7 +94,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var treeGridView(get, set):TreeGridView;
 
 	private function get_treeGridView():TreeGridView {
@@ -126,7 +125,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
@@ -158,7 +156,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var rowLocation(get, set):Array<Int>;
 
 	private function get_rowLocation():Array<Int> {
@@ -184,7 +181,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 
 	private function get_layoutIndex():Int {
@@ -210,7 +206,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var branch(get, set):Bool;
 
 	private function get_branch():Bool {
@@ -236,7 +231,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var opened(get, set):Bool;
 
 	private function get_opened():Bool {
@@ -262,7 +256,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -288,7 +281,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var columns(get, set):IFlatCollection<TreeGridViewColumn>;
 
 	private function get_columns():IFlatCollection<TreeGridViewColumn> {
@@ -318,7 +310,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 
 	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> {
@@ -339,7 +330,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private var _customCellRendererVariant:String = null;
 
-	@:flash.property
 	public var customCellRendererVariant(get, set):String;
 
 	private function get_customCellRendererVariant():String {
@@ -357,7 +347,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private var _customColumnWidths:Array<Float>;
 
-	@:flash.property
 	public var customColumnWidths(get, set):Array<Float>;
 
 	private function get_customColumnWidths():Array<Float> {

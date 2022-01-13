@@ -168,7 +168,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_dataProvider():IFlatCollection<Dynamic> {
@@ -220,7 +219,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -251,7 +249,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -266,7 +263,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -322,7 +318,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var tabRecycler(get, set):DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>;
 
 	private function get_tabRecycler():DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> {
@@ -374,7 +369,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var tabRecyclerIDFunction(get, set):(state:TabBarItemState) -> String;
 
 	private function get_tabRecyclerIDFunction():(state:TabBarItemState) -> String {

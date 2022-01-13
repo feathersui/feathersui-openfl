@@ -203,7 +203,6 @@ class LayoutGroup extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var autoSizeMode(get, set):AutoSizeMode;
 
 	private function get_autoSizeMode():AutoSizeMode {
@@ -399,7 +398,6 @@ class LayoutGroup extends FeathersControl {
 
 	@:dox(hide)
 	@:noCompletion
-	@:flash.property
 	public var xmlContent(get, set):Array<DisplayObject>;
 
 	private function get_xmlContent():Array<DisplayObject> {

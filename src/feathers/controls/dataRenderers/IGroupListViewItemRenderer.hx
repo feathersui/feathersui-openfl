@@ -21,7 +21,6 @@ interface IGroupListViewItemRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var location(get, set):Array<Int>;
 
 	/**
@@ -29,6 +28,5 @@ interface IGroupListViewItemRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var groupListViewOwner(get, set):GroupListView;
 }

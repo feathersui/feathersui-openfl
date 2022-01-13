@@ -44,7 +44,6 @@ class PointerTrigger {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var target(get, set):InteractiveObject;
 
 	private function get_target():InteractiveObject {
@@ -77,7 +76,6 @@ class PointerTrigger {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var eventFactory(get, set):() -> Event;
 
 	private function get_eventFactory():() -> Event {
@@ -102,7 +100,6 @@ class PointerTrigger {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var enabled(get, set):Bool;
 
 	private function get_enabled():Bool {
@@ -128,7 +125,6 @@ class PointerTrigger {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var customHitTest(get, set):(stageX:Float, stageY:Float) -> Bool;
 
 	private function get_customHitTest():(stageX:Float, stageY:Float) -> Bool {

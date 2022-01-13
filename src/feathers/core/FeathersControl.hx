@@ -94,7 +94,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var initialized(get, never):Bool;
 
 	private function get_initialized():Bool {
@@ -120,7 +119,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `FeathersEvent.CREATION_COMPLETE`
 		@see `FeathersControl.update()`
 	**/
-	@:flash.property
 	public var created(get, never):Bool;
 
 	private function get_created():Bool {
@@ -132,7 +130,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.core.IUIControl.enabled`
 	**/
-	@:flash.property
 	public var enabled(get, set):Bool;
 
 	private function get_enabled():Bool {
@@ -163,7 +160,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.core.IUIControl.toolTip`
 	**/
-	@:flash.property
 	public var toolTip(get, set):String;
 
 	private function get_toolTip():String {
@@ -183,7 +179,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.style.IStyleObject.themeEnabled`
 	**/
-	@:flash.property
 	public var themeEnabled(get, set):Bool;
 
 	private function get_themeEnabled():Bool {
@@ -226,7 +221,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var styleProvider(get, set):IStyleProvider;
 
 	private function get_styleProvider():IStyleProvider {
@@ -268,7 +262,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var styleContext(get, never):Class<IStyleObject>;
 
 	private function get_styleContext():Class<IStyleObject> {
@@ -280,7 +273,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.layout.ILayoutObject.includeInLayout`
 	**/
-	@:flash.property
 	public var includeInLayout(get, set):Bool;
 
 	private function get_includeInLayout():Bool {
@@ -302,7 +294,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `feathers.layout.ILayoutObject.layoutData`
 	**/
 	@style
-	@:flash.property
 	public var layoutData(get, set):ILayoutData;
 
 	private function get_layoutData():ILayoutData {
@@ -354,7 +345,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.layout.IFocusObject.focusManager`
 	**/
-	@:flash.property
 	public var focusManager(get, set):IFocusManager;
 
 	private function get_focusManager():IFocusManager {
@@ -377,7 +367,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.layout.IFocusObject.focusOwner`
 	**/
-	@:flash.property
 	public var focusOwner(get, set):IFocusObject;
 
 	private function get_focusOwner():IFocusObject {
@@ -404,7 +393,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.layout.IFocusObject.focusEnabled`
 	**/
-	@:flash.property
 	public var focusEnabled(get, set):Bool;
 
 	private function get_focusEnabled():Bool {
@@ -433,7 +421,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@since 1.0.0
 	**/
 	@style
-	@:flash.property
 	public var focusRectSkin(get, set):DisplayObject;
 
 	private function get_focusRectSkin():DisplayObject {
@@ -462,7 +449,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@since 1.0.0
 	**/
 	@style
-	@:flash.property
 	public var focusPaddingTop(get, set):Float;
 
 	private function get_focusPaddingTop():Float {
@@ -490,7 +476,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@since 1.0.0
 	**/
 	@style
-	@:flash.property
 	public var focusPaddingRight(get, set):Float;
 
 	private function get_focusPaddingRight():Float {
@@ -518,7 +503,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@since 1.0.0
 	**/
 	@style
-	@:flash.property
 	public var focusPaddingBottom(get, set):Float;
 
 	private function get_focusPaddingBottom():Float {
@@ -546,7 +530,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@since 1.0.0
 	**/
 	@style
-	@:flash.property
 	public var focusPaddingLeft(get, set):Float;
 
 	private function get_focusPaddingLeft():Float {
@@ -674,7 +657,6 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var variant(get, set):String;
 
 	private function get_variant():String {

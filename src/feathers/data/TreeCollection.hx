@@ -83,7 +83,6 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var array(get, set):Array<TreeNode<T>>;
 
 	private function get_array():Array<TreeNode<T>> {
@@ -110,7 +109,6 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.filterFunction`
 	**/
-	@:flash.property
 	public var filterFunction(get, set):(TreeNode<T>) -> Bool;
 
 	private function get_filterFunction():(TreeNode<T>) -> Bool {
@@ -133,7 +131,6 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.sortCompareFunction`
 	**/
-	@:flash.property
 	public var sortCompareFunction(get, set):(TreeNode<T>, TreeNode<T>) -> Int;
 
 	private function get_sortCompareFunction():(TreeNode<T>, TreeNode<T>) -> Int {

@@ -23,7 +23,6 @@ interface ITreeGridViewHeaderRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var column(get, set):TreeGridViewColumn;
 
 	/**
@@ -31,7 +30,6 @@ interface ITreeGridViewHeaderRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var columnIndex(get, set):Int;
 
 	/**
@@ -39,6 +37,5 @@ interface ITreeGridViewHeaderRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var treeGridViewOwner(get, set):TreeGridView;
 }

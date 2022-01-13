@@ -37,7 +37,6 @@ class ToolTipManager {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public static var toolTipManagerFactory(get, set):(DisplayObject) -> IToolTipManager;
 
 	private static function get_toolTipManagerFactory():(DisplayObject) -> IToolTipManager {

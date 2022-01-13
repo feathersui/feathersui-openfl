@@ -47,7 +47,6 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var numItems(get, never):Int;
 
 	private function get_numItems():Int {
@@ -76,7 +75,6 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -114,7 +112,6 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -139,7 +136,6 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedItem(get, set):#if flash Dynamic #else IToggle #end;
 
 	private function get_selectedItem():#if flash Dynamic #else IToggle #end {
@@ -176,7 +172,6 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var requireSelection(get, set):Bool;
 
 	private function get_requireSelection():Bool {

@@ -21,7 +21,6 @@ interface IVariantStyleObject extends IStyleObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var styleContext(get, never):Class<IStyleObject>;
 
 	/**
@@ -37,6 +36,5 @@ interface IVariantStyleObject extends IStyleObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var variant(get, set):String;
 }

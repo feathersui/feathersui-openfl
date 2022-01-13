@@ -58,7 +58,6 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var callback(get, set):(Dynamic) -> Void;
 
 	private function get_callback():(Dynamic) -> Void {

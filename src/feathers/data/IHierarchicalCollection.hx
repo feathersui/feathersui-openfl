@@ -65,7 +65,6 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var filterFunction(get, set):(T) -> Bool;
 
 	/**
@@ -96,7 +95,6 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var sortCompareFunction(get, set):(T, T) -> Int;
 
 	/**

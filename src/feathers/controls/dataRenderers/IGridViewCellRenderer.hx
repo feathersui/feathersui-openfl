@@ -23,7 +23,6 @@ interface IGridViewCellRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var column(get, set):GridViewColumn;
 
 	/**
@@ -31,7 +30,6 @@ interface IGridViewCellRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var columnIndex(get, set):Int;
 
 	/**
@@ -39,7 +37,6 @@ interface IGridViewCellRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var rowIndex(get, set):Int;
 
 	/**
@@ -47,6 +44,5 @@ interface IGridViewCellRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var gridViewOwner(get, set):GridView;
 }

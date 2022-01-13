@@ -43,7 +43,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleWidth`
 	**/
-	@:flash.property
 	public var minVisibleWidth(get, set):Null<Float>;
 
 	private function get_minVisibleWidth():Null<Float> {
@@ -77,7 +76,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleWidth`
 	**/
-	@:flash.property
 	public var maxVisibleWidth(get, set):Null<Float>;
 
 	private function get_maxVisibleWidth():Null<Float> {
@@ -106,7 +104,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleWidth`
 	**/
-	@:flash.property
 	public var visibleWidth(get, set):Null<Float>;
 
 	private function get_visibleWidth():Null<Float> {
@@ -133,7 +130,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.minVisibleHeight`
 	**/
-	@:flash.property
 	public var minVisibleHeight(get, set):Null<Float>;
 
 	private function get_minVisibleHeight():Null<Float> {
@@ -167,7 +163,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.maxVisibleHeight`
 	**/
-	@:flash.property
 	public var maxVisibleHeight(get, set):Null<Float>;
 
 	private function get_maxVisibleHeight():Null<Float> {
@@ -196,7 +191,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.visibleHeight`
 	**/
-	@:flash.property
 	public var visibleHeight(get, set):Null<Float>;
 
 	private function get_visibleHeight():Null<Float> {
@@ -219,7 +213,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 	private var _layout:ILayout = null;
 
-	@:flash.property
 	public var layout(get, set):ILayout;
 
 	private function get_layout():ILayout {
@@ -252,7 +245,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollX`
 	**/
-	@:flash.property
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -273,7 +265,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	/**
 		@see `feathers.controls.supportClasses.IViewPort.scrollY`
 	**/
-	@:flash.property
 	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
@@ -291,7 +282,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 	private var _snapPositionsX:Array<Float> = null;
 
-	@:flash.property
 	public var snapPositionsX(get, never):Array<Float>;
 
 	private function get_snapPositionsX():Array<Float> {
@@ -300,7 +290,6 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 	private var _snapPositionsY:Array<Float> = null;
 
-	@:flash.property
 	public var snapPositionsY(get, never):Array<Float>;
 
 	private function get_snapPositionsY():Array<Float> {

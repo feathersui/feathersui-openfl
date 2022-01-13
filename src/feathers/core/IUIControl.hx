@@ -36,7 +36,6 @@ interface IUIControl extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var enabled(get, set):Bool;
 
 	/**
@@ -59,7 +58,6 @@ interface IUIControl extends IDisplayObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var toolTip(get, set):String;
 
 	/**

@@ -102,7 +102,6 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<PageItem>;
 
 	private function get_dataProvider():IFlatCollection<PageItem> {
@@ -152,7 +151,6 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -183,7 +181,6 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -198,7 +195,6 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):#if flash Dynamic #else PageItem #end;
 
 	private function get_selectedItem():#if flash Dynamic #else PageItem #end {
@@ -234,7 +230,6 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var swipeEnabled(get, set):Bool;
 
 	private function get_swipeEnabled():Bool {
@@ -260,7 +255,6 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var simulateTouch(get, set):Bool;
 
 	private function get_simulateTouch():Bool {
@@ -336,7 +330,6 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var pageIndicatorFactory(get, set):AbstractDisplayObjectFactory<Dynamic, PageIndicator>;
 
 	private function get_pageIndicatorFactory():AbstractDisplayObjectFactory<Dynamic, PageIndicator> {

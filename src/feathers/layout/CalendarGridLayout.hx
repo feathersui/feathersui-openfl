@@ -51,7 +51,6 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -83,7 +82,6 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -115,7 +113,6 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -147,7 +144,6 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -179,7 +175,6 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var horizontalGap(get, set):Float;
 
 	private function get_horizontalGap():Float {
@@ -211,7 +206,6 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var verticalGap(get, set):Float;
 
 	private function get_verticalGap():Float {

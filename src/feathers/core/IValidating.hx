@@ -24,7 +24,6 @@ interface IValidating {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var depth(get, never):Int;
 
 	/**

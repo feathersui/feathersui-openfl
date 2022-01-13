@@ -83,7 +83,6 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	/**
 		@see `feathers.controls.dataRenderers.IHierarchicalDepthItemRenderer.hierarchyDepth`
 	**/
-	@:flash.property
 	public var hierarchyDepth(get, set):Int;
 
 	private function get_hierarchyDepth():Int {
@@ -104,7 +103,6 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	/**
 		@see `feathers.controls.dataRenderers.IHierarchicalItemRenderer.branch`
 	**/
-	@:flash.property
 	public var branch(get, set):Bool;
 
 	private function get_branch():Bool {
@@ -125,7 +123,6 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	/**
 		@see `feathers.core.IOpenCloseToggle.opened`
 	**/
-	@:flash.property
 	public var opened(get, set):Bool;
 
 	private function get_opened():Bool {
@@ -153,7 +150,6 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	/**
 		@see `feathers.controls.dataRenderers.IOptionaHierarchyItemRenderer.showHierarchy`
 	**/
-	@:flash.property
 	public var showHierarchy(get, set):Bool;
 
 	private function get_showHierarchy():Bool {

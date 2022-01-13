@@ -102,7 +102,6 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 
 	@:dox(hide)
 	@:noCompletion
-	@:flash.property
 	public var xmlContent(get, set):Array<DisplayObject>;
 
 	private function get_xmlContent():Array<DisplayObject> {
@@ -133,7 +132,6 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -166,7 +164,6 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var autoSizeMode(get, set):AutoSizeMode;
 
 	private function get_autoSizeMode():AutoSizeMode {
@@ -191,7 +188,6 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		return this._autoSizeMode;
 	}
 
-	@:flash.property
 	private var numRawChildren(get, never):Int;
 
 	private function get_numRawChildren():Int {

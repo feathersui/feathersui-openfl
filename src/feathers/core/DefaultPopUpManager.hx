@@ -48,7 +48,6 @@ class DefaultPopUpManager implements IPopUpManager {
 	/**
 		@see `feathers.core.IPopUpManager.root`
 	**/
-	@:flash.property
 	public var root(get, set):DisplayObjectContainer;
 
 	private function get_root():DisplayObjectContainer {
@@ -94,7 +93,6 @@ class DefaultPopUpManager implements IPopUpManager {
 	/**
 		@see `feathers.core.IPopUpManager.overlayFactory`
 	**/
-	@:flash.property
 	public var overlayFactory(get, set):() -> DisplayObject;
 
 	private function get_overlayFactory():() -> DisplayObject {
@@ -112,7 +110,6 @@ class DefaultPopUpManager implements IPopUpManager {
 	/**
 		@see `feathers.core.IPopUpManager.popUpCount`
 	**/
-	@:flash.property
 	public var popUpCount(get, never):Int;
 
 	private function get_popUpCount():Int {
@@ -122,7 +119,6 @@ class DefaultPopUpManager implements IPopUpManager {
 	/**
 		@see `feathers.core.IPopUpManager.topLevelPopUpCount`
 	**/
-	@:flash.property
 	public var topLevelPopUpCount(get, never):Int;
 
 	private function get_topLevelPopUpCount():Int {

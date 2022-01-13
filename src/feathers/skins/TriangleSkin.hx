@@ -37,7 +37,6 @@ class TriangleSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var pointPosition(get, set):RelativePosition;
 
 	private function get_pointPosition():RelativePosition {
@@ -60,7 +59,6 @@ class TriangleSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var drawBaseBorder(get, set):Bool;
 
 	private function get_drawBaseBorder():Bool {

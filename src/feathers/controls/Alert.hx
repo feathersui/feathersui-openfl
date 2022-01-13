@@ -159,7 +159,6 @@ class Alert extends Panel {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -192,7 +191,6 @@ class Alert extends Panel {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var titleText(get, set):String;
 
 	private function get_titleText():String {
@@ -237,7 +235,6 @@ class Alert extends Panel {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var messageLabelFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Label>;
 
 	private function get_messageLabelFactory():AbstractDisplayObjectFactory<Dynamic, Label> {
@@ -273,7 +270,6 @@ class Alert extends Panel {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var headerFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Header>;
 
 	private function get_headerFactory():AbstractDisplayObjectFactory<Dynamic, Header> {
@@ -310,7 +306,6 @@ class Alert extends Panel {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var buttonBarFactory(get, set):AbstractDisplayObjectFactory<Dynamic, ButtonBar>;
 
 	private function get_buttonBarFactory():AbstractDisplayObjectFactory<Dynamic, ButtonBar> {
@@ -334,7 +329,6 @@ class Alert extends Panel {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var buttonsDataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_buttonsDataProvider():IFlatCollection<Dynamic> {

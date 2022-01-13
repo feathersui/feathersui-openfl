@@ -45,7 +45,6 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 	/**
 		@see `feathers.controls.dataRenderers.IGridViewHeaderRenderer.column`
 	**/
-	@:flash.property
 	public var column(get, set):GridViewColumn;
 
 	private function get_column():GridViewColumn {
@@ -66,7 +65,6 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 	/**
 		@see `feathers.controls.dataRenderers.IGridViewHeaderRenderer.columnIndex`
 	**/
-	@:flash.property
 	public var columnIndex(get, set):Int;
 
 	private function get_columnIndex():Int {
@@ -87,7 +85,6 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 	/**
 		@see `feathers.controls.dataRenderers.IGridViewHeaderRenderer.gridViewOwner`
 	**/
-	@:flash.property
 	public var gridViewOwner(get, set):GridView;
 
 	private function get_gridViewOwner():GridView {
@@ -108,7 +105,6 @@ class GridViewHeaderRenderer extends ItemRenderer implements IGridViewHeaderRend
 	/**
 		@see `feathers.data.ISortOrderObserver.sortOrder`
 	**/
-	@:flash.property
 	public var sortOrder(get, set):SortOrder;
 
 	private function get_sortOrder():SortOrder {

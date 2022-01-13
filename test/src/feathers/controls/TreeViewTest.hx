@@ -451,7 +451,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _data:Dynamic;
 
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -471,7 +470,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _layoutIndex:Int = -1;
 
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 
 	private function get_layoutIndex():Int {
@@ -491,7 +489,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _selected:Bool;
 
-	@:flash.property
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {
@@ -511,7 +508,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _branch:Bool;
 
-	@:flash.property
 	public var branch(get, set):Bool;
 
 	private function get_branch():Bool {
@@ -531,7 +527,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _opened:Bool;
 
-	@:flash.property
 	public var opened(get, set):Bool;
 
 	private function get_opened():Bool {
@@ -551,7 +546,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _location:Array<Int>;
 
-	@:flash.property
 	public var location(get, set):Array<Int>;
 
 	private function get_location():Array<Int> {
@@ -571,7 +565,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 
 	private var _treeViewOwner:TreeView;
 
-	@:flash.property
 	public var treeViewOwner(get, set):TreeView;
 
 	private function get_treeViewOwner():TreeView {

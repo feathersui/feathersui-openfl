@@ -53,7 +53,6 @@ class FormLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -85,7 +84,6 @@ class FormLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -117,7 +115,6 @@ class FormLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -149,7 +146,6 @@ class FormLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -180,7 +176,6 @@ class FormLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var gap(get, set):Float;
 
 	private function get_gap():Float {
@@ -219,7 +214,6 @@ class FormLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var verticalAlign(get, set):VerticalAlign;
 
 	private function get_verticalAlign():VerticalAlign {

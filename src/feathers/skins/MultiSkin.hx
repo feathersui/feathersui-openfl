@@ -54,7 +54,6 @@ class MultiSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var defaultView(get, set):DisplayObject;
 
 	private function get_defaultView():DisplayObject {
@@ -80,7 +79,6 @@ class MultiSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var disabledView(get, set):DisplayObject;
 
 	private function get_disabledView():DisplayObject {
@@ -106,7 +104,6 @@ class MultiSkin extends ProgrammaticSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedView(get, set):DisplayObject;
 
 	private function get_selectedView():DisplayObject {

@@ -31,6 +31,5 @@ interface IOpenCloseToggle extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var opened(get, set):Bool;
 }

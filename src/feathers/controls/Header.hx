@@ -91,7 +91,6 @@ class Header extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -118,7 +117,6 @@ class Header extends FeathersControl implements ITextControl {
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {
@@ -146,7 +144,6 @@ class Header extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var htmlText(get, set):String;
 
 	private function get_htmlText():String {
@@ -374,7 +371,6 @@ class Header extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var leftView(get, set):DisplayObject;
 
 	private function get_leftView():DisplayObject {
@@ -410,7 +406,6 @@ class Header extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var rightView(get, set):DisplayObject;
 
 	private function get_rightView():DisplayObject {

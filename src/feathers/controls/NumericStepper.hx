@@ -169,7 +169,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var value(get, set):Float;
 
 	private function get_value():Float {
@@ -211,7 +210,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minimum(get, set):Float;
 
 	private function get_minimum():Float {
@@ -248,7 +246,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maximum(get, set):Float;
 
 	private function get_maximum():Float {
@@ -289,7 +286,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var step(get, set):Float;
 
 	private function get_step():Float {
@@ -328,7 +324,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var snapInterval(get, set):Float;
 
 	private function get_snapInterval():Float {
@@ -357,7 +352,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var editable(get, set):Bool;
 
 	private function get_editable():Bool {
@@ -391,7 +385,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var valueFormatFunction(get, set):(Float) -> String;
 
 	private function get_valueFormatFunction():(Float) -> String {
@@ -425,7 +418,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		 @since 1.0.0
 	**/
-	@:flash.property
 	public var valueParseFunction(get, set):(String) -> Float;
 
 	private function get_valueParseFunction():(String) -> Float {
@@ -442,7 +434,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
@@ -470,7 +461,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var decrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_decrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -507,7 +497,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var incrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_incrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -544,7 +533,6 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var textInputFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextInput>;
 
 	private function get_textInputFactory():AbstractDisplayObjectFactory<Dynamic, TextInput> {

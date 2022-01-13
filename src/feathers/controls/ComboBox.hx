@@ -181,7 +181,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private var textInputMeasurements = new Measurements();
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
@@ -223,7 +222,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_dataProvider():IFlatCollection<Dynamic> {
@@ -272,7 +270,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var allowCustomUserValue(get, set):Bool;
 
 	private function get_allowCustomUserValue():Bool {
@@ -298,7 +295,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`selectedItem` to not be `null`. This can happen when a custom value is
 		entered into the text input by the user.
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -332,7 +328,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	/**
 		@see `feathers.core.IndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -353,7 +348,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`-1`, the value of `selectedItem` is a custom value entered into the
 		text input by the user.
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -389,7 +383,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var prompt(get, set):String;
 
 	private function get_prompt():String {
@@ -419,7 +412,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 
 	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
@@ -577,7 +569,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var buttonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_buttonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -613,7 +604,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var textInputFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextInput>;
 
 	private function get_textInputFactory():AbstractDisplayObjectFactory<Dynamic, TextInput> {
@@ -650,7 +640,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var listViewFactory(get, set):AbstractDisplayObjectFactory<Dynamic, ListView>;
 
 	private function get_listViewFactory():AbstractDisplayObjectFactory<Dynamic, ListView> {
@@ -674,7 +663,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var open(get, never):Bool;
 
 	private function get_open():Bool {

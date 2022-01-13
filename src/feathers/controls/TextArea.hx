@@ -134,7 +134,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var editable(get, set):Bool;
 
 	private function get_editable():Bool {
@@ -163,7 +162,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -189,7 +187,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var currentState(get, never):#if flash Dynamic #else TextInputState #end;
 
 	private function get_currentState():#if flash Dynamic #else TextInputState #end {
@@ -223,7 +220,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -251,7 +247,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {
@@ -279,7 +274,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var prompt(get, set):String;
 
 	private function get_prompt():String {
@@ -314,7 +308,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var restrict(get, set):String;
 
 	private function get_restrict():String {
@@ -348,7 +341,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var displayAsPassword(get, set):Bool;
 
 	private function get_displayAsPassword():Bool {
@@ -386,7 +378,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var errorString(get, set):String;
 
 	private function get_errorString():String {
@@ -411,7 +402,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var errorStringCalloutOpen(get, never):Bool;
 
 	private function get_errorStringCalloutOpen():Bool {
@@ -596,7 +586,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionAnchorIndex(get, never):Int;
 
 	private function get_selectionAnchorIndex():Int {
@@ -616,7 +605,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionActiveIndex(get, never):Int;
 
 	private function get_selectionActiveIndex():Int {
@@ -633,7 +621,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxChars(get, set):Int;
 
 	private function get_maxChars():Int {
@@ -672,7 +659,6 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {

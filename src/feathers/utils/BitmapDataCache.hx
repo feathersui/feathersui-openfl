@@ -45,7 +45,6 @@ class BitmapDataCache {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxUnretained(get, set):Int;
 
 	private function get_maxUnretained():Int {

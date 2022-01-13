@@ -104,7 +104,6 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var source(get, set):String;
 
 	private function get_source():String {
@@ -219,7 +218,6 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var originalSourceWidth(get, never):Null<Float>;
 
 	private function get_originalSourceWidth():Null<Float> {
@@ -239,7 +237,6 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var originalSourceHeight(get, never):Null<Float>;
 
 	private function get_originalSourceHeight():Null<Float> {
@@ -269,7 +266,6 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scaleMode(get, set):StageScaleMode;
 
 	private function get_scaleMode():StageScaleMode {

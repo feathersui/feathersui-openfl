@@ -19,6 +19,5 @@ interface IHTMLTextControl extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var htmlText(get, set):String;
 }

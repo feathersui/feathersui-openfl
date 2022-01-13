@@ -76,7 +76,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -103,7 +102,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {
@@ -138,7 +136,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var content(get, set):DisplayObject;
 
 	private function get_content():DisplayObject {
@@ -167,7 +164,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -190,7 +186,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionBeginIndex(get, never):Int;
 
 	private function get_selectionBeginIndex():Int {
@@ -210,7 +205,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionEndIndex(get, never):Int;
 
 	private function get_selectionEndIndex():Int {
@@ -239,7 +233,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var required(get, set):Bool;
 
 	private function get_required():Bool {

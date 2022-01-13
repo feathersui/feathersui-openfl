@@ -26,6 +26,5 @@ interface IStyleObject {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var themeEnabled(get, set):Bool;
 }

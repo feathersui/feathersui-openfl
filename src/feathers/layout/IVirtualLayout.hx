@@ -28,7 +28,6 @@ interface IVirtualLayout extends IScrollLayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var virtualCache(get, set):Array<Dynamic>;
 
 	/**

@@ -38,7 +38,6 @@ class PillSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var capDirection(get, set):Direction;
 
 	private function get_capDirection():Direction {

@@ -252,7 +252,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -337,7 +336,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IHierarchicalCollection<Dynamic>;
 
 	private function get_dataProvider():IHierarchicalCollection<Dynamic> {
@@ -420,7 +418,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedLocation(get, set):Array<Int>;
 
 	private function get_selectedLocation():Array<Int> {
@@ -452,7 +449,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -521,7 +517,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>;
 
 	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> {
@@ -572,7 +567,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecyclerIDFunction(get, set):(state:TreeViewItemState) -> String;
 
 	private function get_itemRendererRecyclerIDFunction():(state:TreeViewItemState) -> String {
@@ -619,7 +613,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		@see `TreeView.selectedItem`
 		@see `TreeView.selectedIndex`
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -652,7 +645,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var virtualLayout(get, set):Bool;
 
 	private function get_virtualLayout():Bool {

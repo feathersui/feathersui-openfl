@@ -23,7 +23,6 @@ interface IScaleManager extends IEventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var target(get, set):DisplayObject;
 
 	/**

@@ -111,7 +111,6 @@ private class CustomRendererWithInterfaces extends Button implements IDataRender
 
 	private var _data:Dynamic;
 
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -131,7 +130,6 @@ private class CustomRendererWithInterfaces extends Button implements IDataRender
 
 	private var _layoutIndex:Int = -1;
 
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 
 	private function get_layoutIndex():Int {

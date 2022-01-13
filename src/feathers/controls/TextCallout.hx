@@ -116,7 +116,6 @@ class TextCallout extends Callout implements ITextControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -135,7 +134,6 @@ class TextCallout extends Callout implements ITextControl {
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {

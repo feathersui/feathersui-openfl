@@ -62,7 +62,6 @@ A typical property on a Feathers UI component will look similar to the code belo
 ```hx
 private var _property:Int = 0;
 
-@:flash.property
 public var property(get, set):Int;
 
 private function get_property():Int {
@@ -80,8 +79,6 @@ private function set_property(value:Int):Int {
 ```
 
 For getters and setters, use `get`, `set`, or `never`. Never use `default` or `null` because it will break compatibility with some supported workflows. Never use `@:isVar`. This means that a `private` backing variable is always required.
-
-All properties must include `@:flash.property` metadata. This metadata is used when Feathers UI is built as a _.swc_ file for ActionScript and when it is built as an npm bundle for JavaScript.
 
 In general, `setInvalid()` should be called when the property of a UI component has changed. Always check to see if the value is different before calling `setInvalid()` to avoid updating for no reason. The response to changes to a property should go into the `update()` method.
 

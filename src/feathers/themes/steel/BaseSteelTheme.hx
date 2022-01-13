@@ -57,7 +57,6 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private var _darkMode:Bool = false;
 
-	@:flash.property
 	public var darkMode(get, set):Bool;
 
 	private function get_darkMode():Bool {

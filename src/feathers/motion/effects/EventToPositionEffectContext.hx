@@ -35,7 +35,6 @@ class EventToPositionEffectContext extends BaseDelegateEffectContext {
 	/**
 		The object that dispatches `eventType`.
 	**/
-	@:flash.property
 	public var dispatcher(get, set):IEventDispatcher;
 
 	private function get_dispatcher():IEventDispatcher {
@@ -59,7 +58,6 @@ class EventToPositionEffectContext extends BaseDelegateEffectContext {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var eventType(get, set):String;
 
 	private function get_eventType():String {
@@ -85,7 +83,6 @@ class EventToPositionEffectContext extends BaseDelegateEffectContext {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var callback(get, set):(Event) -> Float;
 
 	private function get_callback():(Event) -> Float {

@@ -35,7 +35,6 @@ class FocusManager {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public static var focusManagerFactory(get, set):(DisplayObject) -> IFocusManager;
 
 	private static function get_focusManagerFactory():(DisplayObject) -> IFocusManager {

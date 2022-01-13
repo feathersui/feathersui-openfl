@@ -23,6 +23,5 @@ interface IFocusExclusions extends IFocusManagerAware {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	var focusExclusions(get, never):Array<DisplayObject>;
 }

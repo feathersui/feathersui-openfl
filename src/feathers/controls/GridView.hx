@@ -300,7 +300,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -353,7 +352,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_dataProvider():IFlatCollection<Dynamic> {
@@ -436,7 +434,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var columns(get, set):IFlatCollection<GridViewColumn>;
 
 	private function get_columns():IFlatCollection<GridViewColumn> {
@@ -474,7 +471,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>;
 
 	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> {
@@ -573,7 +569,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -612,7 +607,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -627,7 +621,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -679,7 +672,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var allowMultipleSelection(get, set):Bool;
 
 	private function get_allowMultipleSelection():Bool {
@@ -713,7 +705,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedIndices(get, set):Array<Int>;
 
 	private function get_selectedIndices():Array<Int> {
@@ -762,7 +753,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedItems(get, set):Array<Dynamic>;
 
 	private function get_selectedItems():Array<Dynamic> {
@@ -846,7 +836,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var virtualLayout(get, set):Bool;
 
 	private function get_virtualLayout():Bool {
@@ -878,7 +867,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 
 	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
@@ -915,7 +903,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@default false
 	**/
-	@:flash.property
 	public var sortableColumns(get, set):Bool;
 
 	private function get_sortableColumns():Bool {
@@ -945,7 +932,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@default false
 	**/
-	@:flash.property
 	public var resizableColumns(get, set):Bool;
 
 	private function get_resizableColumns():Bool {
@@ -983,7 +969,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var sortOrder(get, set):SortOrder;
 
 	private function get_sortOrder():SortOrder {
@@ -1010,7 +995,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var sortedColumn(get, set):GridViewColumn;
 
 	private function get_sortedColumn():GridViewColumn {
@@ -1068,7 +1052,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@see `GridView.selectedItem`
 		@see `GridView.selectedIndex`
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {

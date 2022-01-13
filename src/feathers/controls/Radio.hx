@@ -95,7 +95,6 @@ class Radio extends ToggleButton implements IGroupedToggle {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var toggleGroup(get, set):ToggleGroup;
 
 	private function get_toggleGroup():ToggleGroup {

@@ -232,7 +232,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -282,7 +281,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_dataProvider():IFlatCollection<Dynamic> {
@@ -338,7 +336,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
-	@:flash.property
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -377,7 +374,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
-	@:flash.property
 	public var maxSelectedIndex(get, never):Int;
 
 	private function get_maxSelectedIndex():Int {
@@ -392,7 +388,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
-	@:flash.property
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -444,7 +439,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var allowMultipleSelection(get, set):Bool;
 
 	private function get_allowMultipleSelection():Bool {
@@ -479,7 +473,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedIndices(get, set):Array<Int>;
 
 	private function get_selectedIndices():Array<Int> {
@@ -528,7 +521,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectedItems(get, set):Array<Dynamic>;
 
 	private function get_selectedItems():Array<Dynamic> {
@@ -625,7 +617,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 
 	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
@@ -678,7 +669,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var itemRendererRecyclerIDFunction(get, set):(state:ListViewItemState) -> String;
 
 	private function get_itemRendererRecyclerIDFunction():(state:ListViewItemState) -> String {
@@ -724,7 +714,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		@see `ListView.selectedItem`
 		@see `ListView.selectedIndex`
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -757,7 +746,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var virtualLayout(get, set):Bool;
 
 	private function get_virtualLayout():Bool {

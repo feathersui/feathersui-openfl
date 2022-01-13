@@ -64,7 +64,6 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	/**
 		@see `feathers.controls.dataRenderers.IDataRenderer.data`
 	**/
-	@:flash.property
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -104,7 +103,6 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var secondaryText(get, set):String;
 
 	private function get_secondaryText():String {
@@ -125,7 +123,6 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	/**
 		@see `feathers.core.IFocusContainer.childFocusEnabled`
 	**/
-	@:flash.property
 	public var childFocusEnabled(get, set):Bool;
 
 	private function get_childFocusEnabled():Bool {
@@ -145,7 +142,6 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	/**
 		@see `feathers.layout.ILayoutIndexObject.layoutIndex`
 	**/
-	@:flash.property
 	public var layoutIndex(get, set):Int;
 
 	private function get_layoutIndex():Int {
@@ -167,7 +163,6 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	/**
 		@see `feathers.core.IPointerDelegate.pointerTarget`
 	**/
-	@:flash.property
 	public var pointerTarget(get, set):InteractiveObject;
 
 	private function get_pointerTarget():InteractiveObject {

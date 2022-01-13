@@ -86,7 +86,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var active(get, never):Bool;
 
 	private function get_active():Bool {
@@ -100,7 +99,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var dragging(get, never):Bool;
 
 	private function get_dragging():Bool {
@@ -142,7 +140,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var target(get, set):InteractiveObject;
 
 	private function get_target():InteractiveObject {
@@ -187,7 +184,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxPullDistance(get, set):Null<Float>;
 
 	private function get_maxPullDistance():Null<Float> {
@@ -212,7 +208,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var pullDistance(get, never):Float;
 
 	private function get_pullDistance():Float {
@@ -228,7 +223,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var activeBorderSize(get, set):Null<Float>;
 
 	private function get_activeBorderSize():Null<Float> {
@@ -252,7 +246,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var pullableEdge(get, set):RelativePosition;
 
 	private function get_pullableEdge():RelativePosition {
@@ -276,7 +269,6 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var opened(get, set):Bool;
 
 	private function get_opened():Bool {
@@ -310,7 +302,6 @@ class EdgePuller extends EventDispatcher {
 
 		@default 0.5
 	**/
-	@:flash.property
 	public var snapDuration(get, set):Float;
 
 	private function get_snapDuration():Float {
@@ -331,7 +322,6 @@ class EdgePuller extends EventDispatcher {
 		The pointer that is currently dragging the target. Returns `-1`
 		if no pointer is currently associated with the drag.
 	**/
-	@:flash.property
 	public var pointerID(get, never):Int;
 
 	private function get_pointerID():Int {

@@ -119,7 +119,6 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var stackSize(get, never):Int;
 
 	private function get_stackSize():Int {
@@ -145,7 +144,6 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var rootItemID(get, set):String;
 
 	private function get_rootItemID():String {
@@ -190,7 +188,6 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var popSwipeEnabled(get, set):Bool;
 
 	private function get_popSwipeEnabled():Bool {
@@ -216,7 +213,6 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var simulateTouch(get, set):Bool;
 
 	private function get_simulateTouch():Bool {
@@ -242,7 +238,6 @@ class StackNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var popSwipeActiveEdgeSize(get, set):Float;
 
 	private function get_popSwipeActiveEdgeSize():Float {

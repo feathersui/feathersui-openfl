@@ -31,7 +31,6 @@ interface IRange extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var value(get, set):Float;
 
 	/**
@@ -46,7 +45,6 @@ interface IRange extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var minimum(get, set):Float;
 
 	/**
@@ -63,6 +61,5 @@ interface IRange extends IUIControl {
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maximum(get, set):Float;
 }

@@ -135,7 +135,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var editable(get, set):Bool;
 
 	private function get_editable():Bool {
@@ -167,7 +166,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectable(get, set):Bool;
 
 	private function get_selectable():Bool {
@@ -184,7 +182,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	@:dox(hide)
-	@:flash.property
 	public var stageFocusTarget(get, never):InteractiveObject;
 
 	private function get_stageFocusTarget():InteractiveObject {
@@ -201,7 +198,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var currentState(get, never):#if flash Dynamic #else TextInputState #end;
 
 	private function get_currentState():#if flash Dynamic #else TextInputState #end {
@@ -353,7 +349,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -391,7 +386,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var measureText(get, set):String;
 
 	private function get_measureText():String {
@@ -410,7 +404,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
-	@:flash.property
 	public var baseline(get, never):Float;
 
 	private function get_baseline():Float {
@@ -438,7 +431,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var prompt(get, set):String;
 
 	private function get_prompt():String {
@@ -473,7 +465,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var restrict(get, set):String;
 
 	private function get_restrict():String {
@@ -507,7 +498,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var displayAsPassword(get, set):Bool;
 
 	private function get_displayAsPassword():Bool {
@@ -545,7 +535,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var errorString(get, set):String;
 
 	private function get_errorString():String {
@@ -570,7 +559,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var errorStringCalloutOpen(get, never):Bool;
 
 	private function get_errorStringCalloutOpen():Bool {
@@ -753,7 +741,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -785,7 +772,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionAnchorIndex(get, never):Int;
 
 	private function get_selectionAnchorIndex():Int {
@@ -814,7 +800,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var selectionActiveIndex(get, never):Int;
 
 	private function get_selectionActiveIndex():Int {
@@ -835,7 +820,6 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		@since 1.0.0
 	**/
-	@:flash.property
 	public var maxChars(get, set):Int;
 
 	private function get_maxChars():Int {
