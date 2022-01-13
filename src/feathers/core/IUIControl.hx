@@ -11,11 +11,14 @@ package feathers.core;
 /**
 	A user interface control.
 
-	@event feathers.events.FeathersEvent.INITIALIZE
+	@event feathers.events.FeathersEvent.INITIALIZE Dispatched after the
+	component's `initialize()` method has been called.
 
-	@event feathers.events.FeathersEvent.ENABLE
+	@event feathers.events.FeathersEvent.ENABLE Dispatched when
+	`IUIControl.enabled` is set to `true`.
 
-	@event feathers.events.FeathersEvent.DISABLE
+	@event feathers.events.FeathersEvent.DISABLE Dispatched when
+	`IUIControl.enabled` is set to `false`.
 
 	@since 1.0.0
 **/

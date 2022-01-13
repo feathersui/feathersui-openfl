@@ -18,9 +18,11 @@ import openfl.events.EventDispatcher;
 /**
 	An abstract base class for `IEffectContext` implementations.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the effect's position is
+	updated.
 
-	@event openfl.events.Event.COMPLETE
+	@event openfl.events.Event.COMPLETE Dispatched when the effect has
+	completed.
 
 	@see [Effects and animation for Feathers UI components](https://feathersui.com/learn/haxe-openfl/effects-and-animation/)
 

@@ -34,17 +34,23 @@ import openfl.geom.Point;
 	(including optional support for layouts), see
 	`feathers.controls.LayoutGroup`.
 
-	@event feathers.events.FeathersEvent.INITIALIZE
+	@event feathers.events.FeathersEvent.INITIALIZE Dispatched after the
+	component's `initialize()` method has been called.
 
-	@event feathers.events.FeathersEvent.ENABLE
+	@event feathers.events.FeathersEvent.ENABLE Dispatched when
+	`IUIControl.enabled` is set to `true`.
 
-	@event feathers.events.FeathersEvent.DISABLE
+	@event feathers.events.FeathersEvent.DISABLE Dispatched when
+	`IUIControl.enabled` is set to `false`.
 
-	@event feathers.events.FeathersEvent.CREATION_COMPLETE
+	@event feathers.events.FeathersEvent.CREATION_COMPLETE Dispatched after the
+	component's `update()` method has been called for the first time.
 
-	@event feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE
+	@event feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE Dispatched when
+	`ILayoutObject.layoutData` changes.
 
-	@event feathers.events.FeathersEvent.STATE_CHANGE
+	@event feathers.events.FeathersEvent.STATE_CHANGE Dispatched when
+	`IStateContext.currentState` changes.
 
 	@since 1.0.0
 

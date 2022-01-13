@@ -16,29 +16,39 @@ import openfl.events.EventDispatcher;
 
 /**
 	Wraps an `Array` data source with a common API for use with UI controls that
-	support hierarchical data, such as `TreeView`.
+	support hierarchical data, such as `TreeView` or `TreeGridView`.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the collection changes.
 
-	@event feathers.events.HierarchicalCollectionEvent.ADD_ITEM
+	@event feathers.events.HierarchicalCollectionEvent.ADD_ITEM Dispatched when
+	an item is added to the collection.
 
-	@event feathers.events.HierarchicalCollectionEvent.REMOVE_ITEM
+	@event feathers.events.HierarchicalCollectionEvent.REMOVE_ITEM Dispatched
+	when an item is removed from the collection.
 
-	@event feathers.events.HierarchicalCollectionEvent.REPLACE_ITEM
+	@event feathers.events.HierarchicalCollectionEvent.REPLACE_ITEM Dispatched
+	when an item is replaced in the collection.
 
-	@event feathers.events.HierarchicalCollectionEvent.REMOVE_ALL
+	@event feathers.events.HierarchicalCollectionEvent.REMOVE_ALL Dispatched
+	when all items are removed from the collection.
 
-	@event feathers.events.HierarchicalCollectionEvent.RESET
+	@event feathers.events.HierarchicalCollectionEvent.RESET Dispatched
+	when the source of the collection is changed.
 
-	@event feathers.events.HierarchicalCollectionEvent.UPDATE_ITEM
+	@event feathers.events.HierarchicalCollectionEvent.UPDATE_ITEM Dispatched
+	when `IHierarchicalCollection.updateItem()` is called.
 
-	@event feathers.events.HierarchicalCollectionEvent.UPDATE_ALL
+	@event feathers.events.HierarchicalCollectionEvent.UPDATE_ALL Dispatched
+	when `IHierarchicalCollection.updateAll()` is called.
 
-	@event feathers.events.HierarchicalCollectionEvent.FILTER_CHANGE
+	@event feathers.events.HierarchicalCollectionEvent.FILTER_CHANGE Dispatched
+	when `IHierarchicalCollection.filterFunction` is changed.
 
-	@event feathers.events.HierarchicalCollectionEvent.SORT_CHANGE
+	@event feathers.events.HierarchicalCollectionEvent.SORT_CHANGE Dispatched
+	when `IHierarchicalCollection.sortCompareFunction` is changed.
 
 	@see `feathers.controls.TreeView`
+	@see `feathers.controls.TreeGridView`
 
 	@since 1.0.0
 **/

@@ -25,7 +25,8 @@ import openfl.text.TextLineMetrics;
 /**
 	An implementation of `IViewPort` for `TextArea`.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when `TextFieldViewPort.text`
+	changes.
 
 	@see `feathers.controls.TextArea`
 

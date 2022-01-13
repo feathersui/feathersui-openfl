@@ -14,7 +14,8 @@ import openfl.events.IEventDispatcher;
 	An object that may contain extra data for use with the parent container's
 	layout.
 
-	@event feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE
+	@event feathers.events.FeathersEvent.LAYOUT_DATA_CHANGE Dispatched when
+	`ILayoutObject.layoutData` changes.
 
 	@see `feathers.layout.ILayout`
 

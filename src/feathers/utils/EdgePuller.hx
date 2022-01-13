@@ -30,17 +30,23 @@ import openfl.ui.Multitouch;
 /**
 	Utility that provides a pull gesture with touch events.
 
-	@event openfl.events.Event.OPEN
+	@event openfl.events.Event.OPEN Dispatched when the edge puller has
+	completely opened.
 
-	@event openfl.events.Event.CLOSE
+	@event openfl.events.Event.CLOSE Dispatched when the edge puller has
+	completely closed.
 
-	@event feathers.events.FeathersEvent.OPENING
+	@event openfl.events.Event.CANCEL Dispatched when an open or close action
+	is cancelled before completing.
 
-	@event feathers.events.FeathersEvent.CLOSING
+	@event feathers.events.FeathersEvent.OPENING Dispatched when the drawer
+	starts opening. This event may be cancelled.
 
-	@event openfl.events.Event.CANCEL
+	@event feathers.events.FeathersEvent.CLOSING Dispatched when the drawer
+	starts closing. This event may be cancelled.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the
+	`EdgePuller.pullDistance` property changes.
 
 	@since 1.0.0
 **/

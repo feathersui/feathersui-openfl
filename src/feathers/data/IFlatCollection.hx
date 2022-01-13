@@ -13,25 +13,34 @@ import openfl.events.IEventDispatcher;
 /**
 	Interface for collections of flat data, such as arrays or other lists.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the collection changes.
 
-	@event feathers.events.FlatCollectionEvent.ADD_ITEM
+	@event feathers.events.FlatCollectionEvent.ADD_ITEM Dispatched when
+	an item is added to the collection.
 
-	@event feathers.events.FlatCollectionEvent.REMOVE_ITEM
+	@event feathers.events.FlatCollectionEvent.REMOVE_ITEM Dispatched
+	when an item is removed from the collection.
 
-	@event feathers.events.FlatCollectionEvent.REPLACE_ITEM
+	@event feathers.events.FlatCollectionEvent.REPLACE_ITEM Dispatched
+	when an item is replaced in the collection.
 
-	@event feathers.events.FlatCollectionEvent.REMOVE_ALL
+	@event feathers.events.FlatCollectionEvent.REMOVE_ALL Dispatched
+	when all items are removed from the collection.
 
-	@event feathers.events.FlatCollectionEvent.RESET
+	@event feathers.events.FlatCollectionEvent.RESET Dispatched
+	when the source of the collection is changed.
 
-	@event feathers.events.FlatCollectionEvent.UPDATE_ITEM
+	@event feathers.events.FlatCollectionEvent.UPDATE_ITEM Dispatched
+	when `IHierarchicalCollection.updateItem()` is called.
 
-	@event feathers.events.FlatCollectionEvent.UPDATE_ALL
+	@event feathers.events.FlatCollectionEvent.UPDATE_ALL Dispatched
+	when `IHierarchicalCollection.updateAll()` is called.
 
-	@event feathers.events.FlatCollectionEvent.FILTER_CHANGE
+	@event feathers.events.FlatCollectionEvent.FILTER_CHANGE Dispatched
+	when `IFlatCollection.filterFunction` is changed.
 
-	@event feathers.events.FlatCollectionEvent.SORT_CHANGE
+	@event feathers.events.FlatCollectionEvent.SORT_CHANGE Dispatched
+	when `IFlatCollection.sortCompareFunction` is changed.
 
 	@since 1.0.0
 **/

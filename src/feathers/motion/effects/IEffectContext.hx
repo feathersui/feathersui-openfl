@@ -13,9 +13,11 @@ import openfl.events.IEventDispatcher;
 /**
 	Gives a component the ability to control an effect.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the effect's position is
+	updated.
 
-	@event openfl.events.Event.COMPLETE
+	@event openfl.events.Event.COMPLETE Dispatched when the effect has
+	completed.
 
 	@since 1.0.0
 **/

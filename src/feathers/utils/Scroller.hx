@@ -32,11 +32,14 @@ import openfl.ui.Multitouch;
 	Utility that provides touch and mouse wheel scrolling capabilities for any
 	interactive display object.
 
-	@event feathers.events.ScrollEvent.SCROLL
+	@event feathers.events.ScrollEvent.SCROLL Dispatched when the scroll
+	position changes, or when the minimum or maximum scroll positions change.
 
-	@event feathers.events.ScrollEvent.SCROLL_START
+	@event feathers.events.ScrollEvent.SCROLL_START Dispatched when scrolling
+	begins.
 
-	@event feathers.events.ScrollEvent.SCROLL_COMPLETE
+	@event feathers.events.ScrollEvent.SCROLL_COMPLETE Dispatched when scrolling
+	ends.
 
 	@since 1.0.0
 **/

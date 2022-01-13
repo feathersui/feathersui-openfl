@@ -16,9 +16,11 @@ import openfl.events.EventDispatcher;
 	An abstract base class for `IEffectContext` implementations that delegate to
 	other `IEffectContext` instances.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the effect's position is
+	updated.
 
-	@event openfl.events.Event.COMPLETE
+	@event openfl.events.Event.COMPLETE Dispatched when the effect has
+	completed.
 
 	@since 1.0.0
 **/

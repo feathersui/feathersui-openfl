@@ -28,9 +28,11 @@ import openfl.events.MouseEvent;
 	@event openfl.events.Event.CHANGE Dispatched when `BaseScrollBar.value`
 	changes.
 
-	@event feathers.events.ScrollEvent.SCROLL_START
+	@event feathers.events.ScrollEvent.SCROLL_START Dispatched when scrolling
+	begins.
 
-	@event feathers.events.ScrollEvent.SCROLL_COMPLETE
+	@event feathers.events.ScrollEvent.SCROLL_COMPLETE Dispatched when scrolling
+	ends.
 
 	@see `feathers.controls.HScrollBar`
 	@see `feathers.controls.VScrollBar`

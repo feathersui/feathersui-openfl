@@ -46,11 +46,14 @@ import openfl.ui.Keyboard;
 /**
 	A base class for scrolling containers.
 
-	@event feathers.events.ScrollEvent.SCROLL
+	@event feathers.events.ScrollEvent.SCROLL Dispatched when the scroll
+	position changes, or when the minimum or maximum scroll positions change.
 
-	@event feathers.events.ScrollEvent.SCROLL_START
+	@event feathers.events.ScrollEvent.SCROLL_START Dispatched when scrolling
+	begins.
 
-	@event feathers.events.ScrollEvent.SCROLL_COMPLETE
+	@event feathers.events.ScrollEvent.SCROLL_COMPLETE Dispatched when scrolling
+	ends.
 
 	@since 1.0.0
 **/

@@ -33,15 +33,20 @@ import feathers.core.FeathersControl;
 /**
 	Base class for navigator components.
 
-	@event openfl.events.Event.CLEAR
+	@event openfl.events.Event.CLEAR Dispatched when the
+	`BaseNavigator.activeItemView` and `BaseNavigator.activeItemID` are cleared.
 
-	@event openfl.events.Event.CHANGE
+	@event openfl.events.Event.CHANGE Dispatched when the
+	`BaseNavigator.activeItemView` and `BaseNavigator.activeItemID` are changed.
 
-	@event feathers.events.TransitionEvent.TRANSITION_START
+	@event feathers.events.TransitionEvent.TRANSITION_START Dispatched at the
+	beginning of a transition.
 
-	@event feathers.events.TransitionEvent.TRANSITION_COMPLETE
+	@event feathers.events.TransitionEvent.TRANSITION_COMPLETE Dispatched at the
+	end of a transition.
 
-	@event feathers.events.TransitionEvent.TRANSITION_CANCEL
+	@event feathers.events.TransitionEvent.TRANSITION_CANCEL Dispatched when a
+	transition is cancelled without completing.
 
 	@since 1.0.0
 **/
