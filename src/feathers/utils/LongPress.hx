@@ -218,9 +218,13 @@ class LongPress {
 		this._savedMouseEvent.stageY = event.stageY;
 		this._savedMouseEvent.altKey = event.altKey;
 		this._savedMouseEvent.ctrlKey = event.ctrlKey;
+		#if flash
 		if (Reflect.hasField(this._savedMouseEvent, "commandKey")) {
 			Reflect.setField(this._savedMouseEvent, "commandKey", Reflect.field(event, "commandKey"));
 		}
+		#else
+		this._savedMouseEvent.commandKey = event.commandKey;
+		#end
 		this._savedMouseEvent.shiftKey = event.shiftKey;
 	}
 
@@ -234,9 +238,13 @@ class LongPress {
 		this._savedTouchEvent.stageY = event.stageY;
 		this._savedTouchEvent.altKey = event.altKey;
 		this._savedTouchEvent.ctrlKey = event.ctrlKey;
+		#if flash
 		if (Reflect.hasField(this._savedTouchEvent, "commandKey")) {
 			Reflect.setField(this._savedTouchEvent, "commandKey", Reflect.field(event, "commandKey"));
 		}
+		#else
+		this._savedTouchEvent.commandKey = event.commandKey;
+		#end
 		this._savedTouchEvent.shiftKey = event.shiftKey;
 	}
 
