@@ -448,6 +448,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private var _decrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
+	@:flash.property
 	public var decrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_decrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -467,6 +468,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private var _incrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
+	@:flash.property
 	public var incrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
 	private function get_incrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
@@ -486,6 +488,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private var _textInputFactory:DisplayObjectFactory<Dynamic, TextInput>;
 
+	@:flash.property
 	public var textInputFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextInput>;
 
 	private function get_textInputFactory():AbstractDisplayObjectFactory<Dynamic, TextInput> {

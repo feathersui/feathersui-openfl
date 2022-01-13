@@ -192,7 +192,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	}
 
 	@:flash.property
-	public var numRawChildren(get, never):Int;
+	private var numRawChildren(get, never):Int;
 
 	private function get_numRawChildren():Int {
 		var oldBypass = this._displayListBypassEnabled;
