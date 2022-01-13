@@ -265,6 +265,13 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 
 	private var _snapPositionsX:Array<Float> = null;
 
+	/**
+		If not `null`, and the scroller is dragged with touch, the `scrollX`
+		position is snapped to the nearest position in the array when the drag
+		completes.
+
+		@since 1.0.0
+	**/
 	public var snapPositionsX(get, never):Array<Float>;
 
 	private function get_snapPositionsX():Array<Float> {
@@ -273,6 +280,13 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 
 	private var _snapPositionsY:Array<Float> = null;
 
+	/**
+		If not `null`, and the scroller is dragged with touch, the `scrollY`
+		position is snapped to the nearest position in the array when the drag
+		completes.
+
+		@since 1.0.0
+	**/
 	public var snapPositionsY(get, never):Array<Float>;
 
 	private function get_snapPositionsY():Array<Float> {

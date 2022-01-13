@@ -111,6 +111,11 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private static final defaultTextInputFactory = DisplayObjectFactory.withClass(TextInput);
 
+	/**
+		Creates a new `NumericStepper` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		initializeNumericStepperTheme();
 
@@ -448,6 +453,23 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private var _decrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
+	/**
+		Creates the decrement button, which must be of type
+		`feathers.controls.Button`.
+
+		In the following example, a custom decrement button factory is provided:
+
+		```hx
+		stepper.decrementButtonFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.Button`
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var decrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
@@ -468,6 +490,23 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private var _incrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
+	/**
+		Creates the increment button, which must be of type
+		`feathers.controls.Button`.
+
+		In the following example, a custom increment button factory is provided:
+
+		```hx
+		stepper.incrementButtonFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.Button`
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var incrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
@@ -488,6 +527,23 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private var _textInputFactory:DisplayObjectFactory<Dynamic, TextInput>;
 
+	/**
+		Creates the text input, which must be of type
+		`feathers.controls.TextInput`.
+
+		In the following example, a custom text input factory is provided:
+
+		```hx
+		stepper.textInputFactory = () ->
+		{
+			return new TextInput();
+		};
+		```
+
+		@see `feathers.controls.TextInput`
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var textInputFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextInput>;
 

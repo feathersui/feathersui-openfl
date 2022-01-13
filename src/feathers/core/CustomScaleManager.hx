@@ -35,6 +35,9 @@ class CustomScaleManager extends EventDispatcher implements IScaleManager {
 
 	private var _target:DisplayObject;
 
+	/**
+		@see `feathers.core.IScaleManager.target`
+	**/
 	@:flash.property
 	public var target(get, set):DisplayObject;
 

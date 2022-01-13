@@ -18,9 +18,27 @@ import openfl.geom.Rectangle;
 	@since 1.0.0
 **/
 interface IScaleManager extends IEventDispatcher {
+	/**
+		The target application that is being scaled.
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var target(get, set):DisplayObject;
 
+	/**
+		Calculates the application's scale, which will be applied to the
+		`scaleX` and `scaleY` properties.
+
+		@since 1.0.0
+	**/
 	public function getScale():Float;
+
+	/**
+		Calculates the application's bounds, which will be applied to the
+		`x`, `y`, `width`, and `height` properties.
+
+		@since 1.0.0
+	**/
 	public function getBounds():Rectangle;
 }

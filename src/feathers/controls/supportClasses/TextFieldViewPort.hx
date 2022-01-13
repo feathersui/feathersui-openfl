@@ -33,6 +33,11 @@ import openfl.text.TextLineMetrics;
 **/
 @:event(openfl.events.Event.CHANGE)
 class TextFieldViewPort extends FeathersControl implements IViewPort implements ITextControl implements IFocusManagerAware implements IStageFocusDelegate {
+	/**
+		Creates a new `TextFieldViewPort` object.
+
+		@since 1.0.0
+	**/
 	public function new() {
 		super();
 

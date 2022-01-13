@@ -127,11 +127,23 @@ class TreeGridViewEvent<S> extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `TreeGridViewEvent` object with the given arguments.
+
+		@see `TreeGridViewEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String, state:S) {
 		super(type, false, false);
 		this.state = state;
 	}
 
+	/**
+		The current state of the cell or header associated with this event.
+
+		@since 1.0.0
+	**/
 	public var state:S;
 
 	override public function clone():Event {

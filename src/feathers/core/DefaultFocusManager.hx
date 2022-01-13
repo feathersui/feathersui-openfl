@@ -59,6 +59,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 
 	private var _enabled = true;
 
+	/**
+		@see `feathers.core.IFocusManager.enabled`
+	**/
 	@:flash.property
 	public var enabled(get, set):Bool;
 
@@ -86,6 +89,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 
 	private var _root:DisplayObject = null;
 
+	/**
+		@see `feathers.core.IFocusManager.root`
+	**/
 	@:flash.property
 	public var root(get, set):DisplayObject;
 

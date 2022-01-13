@@ -19,6 +19,16 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.geom.Point;
 
+/**
+	Positions items as tiles (all items have equal dimensions) in one or more
+	rows, creating new pages as the view port bounds are filled.
+
+	@event openfl.events.Event.CHANGE
+
+	@see [Tutorial: How to use PagedTiledRowsListLayout with layout containers](https://feathersui.com/learn/haxe-openfl/paged-tiled-rows-list-layout/)
+
+	@since 1.0.0
+**/
 @:event(openfl.events.Event.CHANGE)
 class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements ISnapLayout {
 	/**

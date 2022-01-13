@@ -70,11 +70,23 @@ class ListViewEvent extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `ListViewEvent` object with the given arguments.
+
+		@see `ListViewEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String, state:ListViewItemState) {
 		super(type, false, false);
 		this.state = state;
 	}
 
+	/**
+		The current state of the item associated with this event.
+
+		@since 1.0.0
+	**/
 	public var state:ListViewItemState;
 
 	override public function clone():Event {

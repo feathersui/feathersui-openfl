@@ -19,6 +19,11 @@ import openfl.errors.IllegalOperationError;
 	@since 1.0.0
 **/
 class BitmapDataCache {
+	/**
+		Creates a new `BitmapDataCache` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(maxUnretained:Int = 0x7FFFFFFF) {
 		this._maxUnretained = maxUnretained;
 	}

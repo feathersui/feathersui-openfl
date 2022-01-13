@@ -8,6 +8,11 @@
 
 package feathers.controls;
 
+/**
+	Interface for column data in components like `GridView` and `TreeGridView`.
+
+	@since 1.0.0
+**/
 interface IGridViewColumn {
 	/**
 		The width of the column, measured in pixels.

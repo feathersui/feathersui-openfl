@@ -26,6 +26,11 @@ import openfl.text.TextFormatAlign;
 **/
 @:event(openfl.events.Event.CHANGE)
 class TextFormat extends EventDispatcher {
+	/**
+		Creates a new `TextFormat` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(font:String = null, size:Null<Int> = null, color:Null<Int> = null, bold:Null<Bool> = null, italic:Null<Bool> = null,
 			underline:Null<Bool> = null, url:String = null, target:String = null, align:TextFormatAlign = null, leftMargin:Null<Int> = null,
 			rightMargin:Null<Int> = null, indent:Null<Int> = null, leading:Null<Int> = null) {
@@ -433,6 +438,14 @@ class TextFormat extends EventDispatcher {
 	}
 }
 
+/**
+	Converts a `openfl.text.TextFormat` value to a `feathers.text.TextFormat`
+	used by many Feathers UI components.
+
+	@see `feathers.text.TextFormat`
+
+	@since 1.0.0
+**/
 @:forward(font, size, color, bold, italic, underline, url, target, align, leftMargin, rightMargin, indent, leading, blockIndent, bullet, kerning,
 	letterSpacing, tabStops, clone)
 abstract AbstractTextFormat(TextFormat) from TextFormat to TextFormat {

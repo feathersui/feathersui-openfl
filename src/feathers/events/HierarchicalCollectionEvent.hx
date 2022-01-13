@@ -173,8 +173,28 @@ class HierarchicalCollectionEvent extends Event {
 		this.removedItem = removedItem;
 	}
 
+	/**
+		The location of the item in the collection that is associated with this
+		event, or `null`, if there is no specific item.
+
+		@since 1.0.0
+	**/
 	public var location:Array<Int>;
+
+	/**
+		The item that was added to the collection, or `null`, if no item was
+		added.
+
+		@since 1.0.0
+	**/
 	public var addedItem:Dynamic;
+
+	/**
+		The item that was removed from the collection, or `null`, if no item was
+		removed.
+
+		@since 1.0.0
+	**/
 	public var removedItem:Dynamic;
 
 	override public function clone():Event {

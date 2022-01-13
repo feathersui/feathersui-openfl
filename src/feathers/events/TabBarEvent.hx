@@ -70,11 +70,23 @@ class TabBarEvent extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `TabBarEvent` object with the given arguments.
+
+		@see `TabBarEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String, state:TabBarItemState) {
 		super(type, false, false);
 		this.state = state;
 	}
 
+	/**
+		The current state of the item associated with this event.
+
+		@since 1.0.0
+	**/
 	public var state:TabBarItemState;
 
 	override public function clone():Event {

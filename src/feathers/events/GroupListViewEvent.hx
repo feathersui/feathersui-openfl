@@ -70,11 +70,23 @@ class GroupListViewEvent extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `GroupListViewEvent` object with the given arguments.
+
+		@see `GroupListViewEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String, state:GroupListViewItemState) {
 		super(type, false, false);
 		this.state = state;
 	}
 
+	/**
+		The current state of the item associated with this event.
+
+		@since 1.0.0
+	**/
 	public var state:GroupListViewItemState;
 
 	override public function clone():Event {

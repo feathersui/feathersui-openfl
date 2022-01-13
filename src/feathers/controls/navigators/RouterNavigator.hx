@@ -534,7 +534,17 @@ private class HistoryItem {
 	public var state:HistoryState;
 }
 
+/**
+	Used by all targets except html5 to represent the current location.
+
+	@since 1.0.0
+**/
 class Location {
+	/**
+		Creates a `Location` object from a URL.
+
+		@since 1.0.0
+	**/
 	public static function fromString(value:String):Location {
 		var pathname = value;
 		var search = "";
@@ -552,6 +562,11 @@ class Location {
 		return new Location(pathname, search, hash);
 	}
 
+	/**
+		Creates a new `Location` object.
+
+		@since 1.0.0
+	**/
 	public function new(pathname:String, search:String = "", hash:String = "") {
 		this._pathname = pathname;
 		this._search = search;

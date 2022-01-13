@@ -18,11 +18,13 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**
-	Positions cell or header renderers in a `GridView` component.
+	Positions cell or header renderers in a `GridView` or `TreeGridView`
+	component.
 
 	@event openfl.events.Event.CHANGE
 
 	@see `feathers.controls.GridView`
+	@see `feathers.controls.TreeGridView`
 
 	@since 1.0.0
 **/
@@ -39,6 +41,14 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 	private var _paddingLeft:Float = 0.0;
 
+	/**
+		The space, in pixels, between the row's left edge and its content.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var paddingLeft(get, set):Float;
 
@@ -57,6 +67,14 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 	private var _paddingRight:Float = 0.0;
 
+	/**
+		The space, in pixels, between the row's right edge and its content.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var paddingRight(get, set):Float;
 
@@ -77,6 +95,11 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 	/**
 		The collection of columns displayed by the `GridView`.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
 	**/
 	@:flash.property
 	public var columns(get, set):IFlatCollection<IGridViewColumn>;
@@ -96,6 +119,14 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 	private var _customColumnWidths:Array<Float>;
 
+	/**
+		The custom column widths used by the `GridView`.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
 	@:flash.property
 	public var customColumnWidths(get, set):Array<Float>;
 

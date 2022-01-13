@@ -14,7 +14,7 @@ package feathers.core;
 	merely suggestions, and custom components may support custom flags.
 
 	Generally, invalidation flags are not considered part of the public API
-	for any component. They're meant o tbe used internally. With that in mind,
+	for any component. They're meant to be used internally. With that in mind,
 	calling `invalidate()` with a flag from outside the component means that
 	you're probably doing something wrong.
 

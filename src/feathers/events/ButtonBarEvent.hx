@@ -70,11 +70,23 @@ class ButtonBarEvent extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `ButtonBarEvent` object with the given arguments.
+
+		@see `ButtonBarEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String, state:ButtonBarItemState) {
 		super(type, false, false);
 		this.state = state;
 	}
 
+	/**
+		The current state of the item associated with this event.
+
+		@since 1.0.0
+	**/
 	public var state:ButtonBarItemState;
 
 	override public function clone():Event {

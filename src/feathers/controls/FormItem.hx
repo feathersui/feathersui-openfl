@@ -566,6 +566,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	@:style
 	public var textPosition:RelativePosition = TOP;
 
+	/**
+		Returns the measured width of the form item's text. Used by `Form` to
+		position all form items correctly.
+
+		@since 1.0.0
+	**/
 	public function getTextMeasuredWidth():Float {
 		var result = this._textMeasuredWidth;
 		if (this._currentRequiredSkin != null) {

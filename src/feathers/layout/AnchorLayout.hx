@@ -337,6 +337,11 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 	@since 1.0.0
 **/
 class Anchor extends EventDispatcher {
+	/**
+		Creates a new `Anchor` object with the given arguments.
+
+		@since 1.0.0
+	**/
 	public function new(value:Float, ?relativeTo:DisplayObject) {
 		super();
 		this._value = value;

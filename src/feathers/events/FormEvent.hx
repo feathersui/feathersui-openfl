@@ -68,6 +68,13 @@ class FormEvent extends Event {
 		#end
 	}
 
+	/**
+		Creates a new `FormEvent` object with the given arguments.
+
+		@see `FormEvent.dispatch`
+
+		@since 1.0.0
+	**/
 	public function new(type:String) {
 		super(type, false, false);
 	}

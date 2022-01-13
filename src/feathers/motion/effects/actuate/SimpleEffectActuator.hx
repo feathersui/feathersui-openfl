@@ -28,86 +28,149 @@ class SimpleEffectActuator<T, U> extends SimpleActuator<T, U> implements IReadab
 		super(target, duration, properties);
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getTarget()`
+	**/
 	public function getTarget():Dynamic {
 		return this.target;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getDuration()`
+	**/
 	public function getDuration():Float {
 		return this.duration;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getEase()`
+	**/
 	public function getEase():IEasing {
 		return this._ease;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getAutoVisible()`
+	**/
 	public function getAutoVisible():Bool {
 		return this._autoVisible;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getDelay()`
+	**/
 	public function getDelay():Float {
 		return this._delay;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getReflect()`
+	**/
 	public function getReflect():Bool {
 		return this._reflect;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getRepeat()`
+	**/
 	public function getRepeat():Int {
 		return this._repeat;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getReverse()`
+	**/
 	public function getReverse():Bool {
 		return this._reverse;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getSmartRotation()`
+	**/
 	public function getSmartRotation():Bool {
 		return this._smartRotation;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getSnapping()`
+	**/
 	public function getSnapping():Bool {
 		return this._snapping;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnComplete()`
+	**/
 	public function getOnComplete():Dynamic {
 		return this._onComplete;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnCompleteParams()`
+	**/
 	public function getOnCompleteParams():Array<Dynamic> {
 		return this._onCompleteParams;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnRepeat()`
+	**/
 	public function getOnRepeat():Dynamic {
 		return this._onRepeat;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnRepeatParams()`
+	**/
 	public function getOnRepeatParams():Array<Dynamic> {
 		return this._onRepeatParams;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnUpdate()`
+	**/
 	public function getOnUpdate():Dynamic {
 		return this._onUpdate;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnUpdateParams()`
+	**/
 	public function getOnUpdateParams():Array<Dynamic> {
 		return this._onUpdateParams;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnPause()`
+	**/
 	public function getOnPause():Dynamic {
 		return this._onPause;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnPauseParams()`
+	**/
 	public function getOnPauseParams():Array<Dynamic> {
 		return this._onPauseParams;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnResume()`
+	**/
 	public function getOnResume():Dynamic {
 		return this._onResume;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IReadableGenericActuator.getOnResumeParams()`
+	**/
 	public function getOnResumeParams():Array<Dynamic> {
 		return this._onResumeParams;
 	}
 
+	/**
+		@see `feathers.motion.effects.actuate.IGotoActuator.goto()`
+	**/
 	public function goto(tweenPosition:Float):Void {
 		var details:PropertyDetails<U>;
 		var easing:Float;

@@ -495,6 +495,19 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	@:style
 	public var paddingLeft:Float = 0.0;
 
+	/**
+		Determines if the thumb is hidden or not when the scroll bar is
+		disabled.
+
+		In the following example, the scroll bar's thumb is hidden when the
+		scroll bar is disabled:
+
+		```hx
+		scrollBar.hideThumbWhenDisabled = true;
+		```
+
+		@since 1.0.0
+	**/
 	@:style
 	public var hideThumbWhenDisabled:Bool = false;
 
