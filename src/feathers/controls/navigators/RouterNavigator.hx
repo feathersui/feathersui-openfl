@@ -578,7 +578,7 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#protocol
 	**/
-	public var protocol(get, null):String;
+	public var protocol(get, never):String;
 
 	public function get_protocol():String {
 		return this._protocol;
@@ -589,7 +589,7 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#hostname
 	**/
-	public var hostname(get, null):String;
+	public var hostname(get, never):String;
 
 	public function get_hostname():String {
 		return ".";
@@ -598,7 +598,7 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#host
 	**/
-	public var host(get, null):String;
+	public var host(get, never):String;
 
 	public function get_host():String {
 		return this.hostname;
@@ -607,7 +607,7 @@ class Location {
 	/**
 		@see https://api.haxe.org/js/html/Location.html#port
 	**/
-	public var port(get, null):String;
+	public var port(get, never):String;
 
 	public function get_port():String {
 		return "";
