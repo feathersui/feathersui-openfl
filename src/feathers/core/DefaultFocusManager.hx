@@ -825,9 +825,10 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			return;
 		}
 		var textField = Std.downcast(event.relatedObject, TextField);
-		if (textField != null && (textField.type == INPUT || textField.selectable)) {
-			// let OpenFL handle setting mouse focus on an input TextField
-			// because it also sets the caret position and stuff
+		if (textField != null) {
+			// let OpenFL handle setting mouse focus on a TextField
+			// because it also sets the caret position, handles TextEvent.LINK,
+			// and stuff like that
 			return;
 		}
 
