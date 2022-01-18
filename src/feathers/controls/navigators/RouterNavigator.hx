@@ -13,6 +13,7 @@ import feathers.themes.steel.components.SteelRouterNavigatorStyles;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
+import openfl.events.TextEvent;
 #if html5
 import js.Lib;
 import js.html.Window;
@@ -439,10 +440,12 @@ class RouterNavigator extends BaseNavigator {
 		if (item.restoreData != null) {
 			item.restoreData(view, viewData);
 		}
+		view.addEventListener(TextEvent.LINK, routerNavigator_activeView_linkHandler);
 		return view;
 	}
 
 	override private function disposeView(id:String, view:DisplayObject):Void {
+		view.removeEventListener(TextEvent.LINK, routerNavigator_activeView_linkHandler);
 		var item = cast(this._addedItems.get(id), Route);
 		item.returnView(view);
 	}
@@ -456,6 +459,18 @@ class RouterNavigator extends BaseNavigator {
 		#else
 		this.stage.removeEventListener(KeyboardEvent.KEY_UP, routerNavigator_stage_keyUpHandler);
 		#end
+	}
+
+	private function routerNavigator_activeView_linkHandler(event:TextEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
+		if (!StringTools.startsWith(event.text, "router:")) {
+			return;
+		}
+		event.preventDefault();
+		var url = event.text.substr(7);
+		this.push(url);
 	}
 
 	#if html5
