@@ -825,11 +825,28 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			return;
 		}
 		var textField = Std.downcast(event.relatedObject, TextField);
+		// in some cases, we must allow to OpenFL set mouse focus on a TextField
 		if (textField != null) {
-			// let OpenFL handle setting mouse focus on a TextField
-			// because it also sets the caret position, handles TextEvent.LINK,
-			// and stuff like that
-			return;
+			if (textField.type == INPUT || textField.selectable) {
+				// always let OpenFL handle setting mouse focus on an input or
+				// selectable TextField because it also sets the caret position
+				// and selection range
+				return;
+			}
+			var newFocus = cast(this.findFocusForDisplayObject(textField), DisplayObject);
+			while ((newFocus is IStageFocusDelegate)) {
+				var newFocusTarget = cast(newFocus, IStageFocusDelegate).stageFocusTarget;
+				if (newFocusTarget == null) {
+					break;
+				}
+				newFocus = newFocusTarget;
+			}
+			if (textField == newFocus) {
+				// if the TextField is the target of an IStageFocusDelegate, let
+				// OpenFL handle setting its mouse focus. this ensures that
+				// things like TextEvent.LINK work properly.
+				return;
+			}
 		}
 
 		// for everything else, we'll handle focus changes in a pointer event
