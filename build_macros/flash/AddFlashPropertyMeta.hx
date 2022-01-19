@@ -21,9 +21,7 @@ class AddFlashPropertyMeta {
 						var classType = t.get();
 						var classPack = classType.pack.join(".");
 						if (packStart == null || (classPack != null && StringTools.startsWith(classType.pack.join("."), packStart))) {
-							if (!classType.isPrivate) {
-								checkFields(classType, classType.fields.get());
-							}
+							checkFields(classType, classType.fields.get());
 						}
 					default: // skip
 				};
@@ -32,9 +30,6 @@ class AddFlashPropertyMeta {
 	}
 
 	private static function checkField(classType:ClassType, field:ClassField):Void {
-		if (!field.isPublic) {
-			return;
-		}
 		switch (field.kind) {
 			case FVar(read, write):
 				if ((read.equals(AccCall) || write.match(AccCall)) && !field.meta.has(":flash.property")) {
