@@ -14,6 +14,7 @@ import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.TextEvent;
+import openfl.net.URLVariables;
 #if html5
 import js.Lib;
 import js.html.Window;
@@ -374,6 +375,41 @@ class RouterNavigator extends BaseNavigator {
 		#else
 		return this._history[this._history.length - 1].location;
 		#end
+	}
+
+	/**
+		Returns the current pathname. If a `basePath` is defined, it will not be
+		included in the returned value.
+
+		@since 1.0.0
+	**/
+	public var pathname(get, never):String;
+
+	private function get_pathname():String {
+		return this.getPathname();
+	}
+
+	/**
+		Returns an `URLVariables` object constructed from the current query
+		parameters.
+
+		If the query parameters cannot be parsed by `URLVariables`, returns an
+		empty `URLVariables` object.
+
+		@since 1.0.0
+	**/
+	public var urlVariables(get, never):URLVariables;
+
+	private function get_urlVariables():URLVariables {
+		var search = location.search;
+		if (search.length > 0) {
+			search = search.substr(1);
+		}
+		try {
+			return new URLVariables(search);
+		} catch (e) {
+			return new URLVariables();
+		}
 	}
 
 	private function getPathname():String {
