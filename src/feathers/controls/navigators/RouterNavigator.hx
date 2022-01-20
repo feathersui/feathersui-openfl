@@ -396,12 +396,11 @@ class RouterNavigator extends BaseNavigator {
 		var item = this._history[this._history.length - 1];
 		var pathname = item.location.pathname;
 		#end
-		pathname = pathname.toLowerCase();
 		return pathname;
 	}
 
 	private function matchRoute():Route {
-		var pathname = this.getPathname();
+		var pathname = this.getPathname().toLowerCase();
 		for (path => route in this._addedItems) {
 			path = path.toLowerCase();
 			if (pathname == path) {
