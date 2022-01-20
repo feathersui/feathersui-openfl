@@ -15,6 +15,7 @@ import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.ILayoutObject;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
@@ -620,7 +621,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				calculatedHeight -= (this._currentIcon.height + adjustedGap);
 			}
 		}
-		if (this._currentAccessoryView != null) {
+		if (this.hasAccessoryViewInLayout()) {
 			var adjustedGap = this.gap;
 			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (adjustedGap == (1.0 / 0.0)) {
@@ -674,7 +675,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		if (this._currentAccessoryView != null) {
+		if (this.hasAccessoryViewInLayout()) {
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
@@ -701,7 +702,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		if (hasSecondaryText) {
 			contentWidth = Math.max(contentWidth, this._secondaryTextMeasuredWidth);
 		}
-		if (this._currentAccessoryView != null) {
+		if (this.hasAccessoryViewInLayout()) {
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
@@ -715,7 +716,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (hasText || hasSecondaryText || this._currentAccessoryView != null) {
+				if (hasText || hasSecondaryText || this.hasAccessoryViewInLayout()) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -742,7 +743,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				contentHeight += adjustedGap;
 			}
 		}
-		if (this._currentAccessoryView != null) {
+		if (this.hasAccessoryViewInLayout()) {
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
@@ -776,7 +777,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		if (hasSecondaryText) {
 			contentMinWidth = Math.max(contentMinWidth, this._secondaryTextMeasuredWidth);
 		}
-		if (this._currentAccessoryView != null) {
+		if (this.hasAccessoryViewInLayout()) {
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
@@ -790,7 +791,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (hasText || hasSecondaryText || this._currentAccessoryView != null) {
+				if (hasText || hasSecondaryText || this.hasAccessoryViewInLayout()) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -816,7 +817,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				contentMinHeight += adjustedGap;
 			}
 		}
-		if (this._currentAccessoryView != null) {
+		if (this.hasAccessoryViewInLayout()) {
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
@@ -836,6 +837,16 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			}
 		}
 		return contentMinHeight;
+	}
+
+	private function hasAccessoryViewInLayout():Bool {
+		if (this._currentAccessoryView == null) {
+			return false;
+		}
+		if ((this._currentAccessoryView is ILayoutObject)) {
+			return cast(this._currentAccessoryView, ILayoutObject).includeInLayout;
+		}
+		return true;
 	}
 
 	override private function getCurrentBackgroundSkin():DisplayObject {
@@ -877,7 +888,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			}
 		}
 
-		if (this._currentAccessoryView != null) {
+		if (this.hasAccessoryViewInLayout()) {
 			// the accessory view is always positioned on the far right
 			this._currentAccessoryView.x = this.actualWidth - this.paddingRight - this._currentAccessoryView.width;
 			switch (this.verticalAlign) {
