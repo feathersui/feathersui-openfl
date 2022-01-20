@@ -193,15 +193,17 @@ class RouterNavigator extends BaseNavigator {
 			} else {
 				historyState.viewData = viewData;
 			}
-			var oldPath = this.getPathname();
-			if (this.basePath != null && !StringTools.startsWith(oldPath, this.basePath + "/")) {
-				var needsSlash = !StringTools.startsWith(path, "/");
-				oldPath = this.basePath + (needsSlash ? "/" : "") + oldPath;
+			var oldPathname = this.getPathname();
+			var oldURL = oldPathname + location.search;
+			if (this.basePath != null && !StringTools.startsWith(oldPathname, this.basePath + "/")) {
+				var needsSlash = !StringTools.startsWith(oldPathname, "/");
+				oldPathname = this.basePath + (needsSlash ? "/" : "") + oldPathname;
+				oldURL = oldPathname + location.search;
 			}
 			if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
-				oldPath = this.htmlWindow.location.pathname + "#" + oldPath;
+				oldURL = this.htmlWindow.location.pathname + location.search + "#" + oldPathname;
 			}
-			this.htmlWindow.history.replaceState(historyState, null, oldPath);
+			this.htmlWindow.history.replaceState(historyState, null, oldURL);
 			#else
 			var historyItem = this._history[this._history.length - 1];
 			var location = historyItem.location;
@@ -215,19 +217,27 @@ class RouterNavigator extends BaseNavigator {
 			#end
 		}
 		#if html5
-		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
-			var needsSlash = !StringTools.startsWith(path, "/");
-			path = this.basePath + (needsSlash ? "/" : "") + path;
+		var newPathParts = path.split("?");
+		var newPathname = newPathParts[0];
+		var newSearch = "";
+		if (newPathParts.length > 1) {
+			newSearch = "?" + newPathParts[1];
+		}
+		var newURL = newPathname + newSearch;
+		if (this.basePath != null && !StringTools.startsWith(newPathname, this.basePath + "/")) {
+			var needsSlash = !StringTools.startsWith(newPathname, "/");
+			newPathname = this.basePath + (needsSlash ? "/" : "") + newPathname;
+			newURL = newPathname + newSearch;
+		}
+		if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
+			newURL = this.htmlWindow.location.pathname + newSearch + "#" + newPathname;
 		}
 		this.historyDepth++;
-		if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
-			path = this.htmlWindow.location.pathname + "#" + path;
-		}
 		this.htmlWindow.history.pushState({
 			depth: this.historyDepth,
 			state: state,
 			viewData: null
-		}, null, path);
+		}, null, newURL);
 		#else
 		this._history.push(new HistoryItem(Location.fromString(path), {
 			state: state,
@@ -258,18 +268,26 @@ class RouterNavigator extends BaseNavigator {
 	**/
 	public function replace(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		#if html5
-		if (this.basePath != null && !StringTools.startsWith(path, this.basePath + "/")) {
-			var needsSlash = !StringTools.startsWith(path, "/");
-			path = this.basePath + (needsSlash ? "/" : "") + path;
+		var newPathParts = path.split("?");
+		var newPathname = newPathParts[0];
+		var newSearch = "";
+		if (newPathParts.length > 1) {
+			newSearch = "?" + newPathParts[1];
+		}
+		var newURL = newPathname + newSearch;
+		if (this.basePath != null && !StringTools.startsWith(newPathname, this.basePath + "/")) {
+			var needsSlash = !StringTools.startsWith(newPathname, "/");
+			newPathname = this.basePath + (needsSlash ? "/" : "") + newPathname;
+			newURL = newPathname + newSearch;
 		}
 		if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
-			path = this.htmlWindow.location.pathname + "#" + path;
+			newURL = this.htmlWindow.location.pathname + newSearch + "#" + newPathname;
 		}
 		this.htmlWindow.history.replaceState({
 			depth: this.historyDepth,
 			state: state,
 			viewData: null
-		}, null, path);
+		}, null, newURL);
 		#else
 		this._history[this._history.length - 1] = new HistoryItem(Location.fromString(path), {
 			state: state,
