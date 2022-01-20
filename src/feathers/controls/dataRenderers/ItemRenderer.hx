@@ -608,12 +608,12 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		calculatedWidth -= (this.paddingLeft + this.paddingRight);
 		calculatedHeight -= (this.paddingTop + this.paddingBottom);
+		var adjustedGap = this.gap;
+		// Math.POSITIVE_INFINITY bug workaround for swf
+		if (adjustedGap == (1.0 / 0.0)) {
+			adjustedGap = this.minGap;
+		}
 		if (this._currentIcon != null) {
-			var adjustedGap = this.gap;
-			// Math.POSITIVE_INFINITY bug workaround for swf
-			if (adjustedGap == (1.0 / 0.0)) {
-				adjustedGap = this.minGap;
-			}
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				calculatedWidth -= (this._currentIcon.width + adjustedGap);
 			}
@@ -622,19 +622,9 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			}
 		}
 		if (this.hasAccessoryViewInLayout()) {
-			var adjustedGap = this.gap;
-			// Math.POSITIVE_INFINITY bug workaround for swf
-			if (adjustedGap == (1.0 / 0.0)) {
-				adjustedGap = this.minGap;
-			}
 			calculatedWidth -= (this._currentAccessoryView.width + adjustedGap);
 		}
 		if (this.secondaryTextField != null) {
-			var adjustedGap = this.gap;
-			// Math.POSITIVE_INFINITY bug workaround for swf
-			if (adjustedGap == (1.0 / 0.0)) {
-				adjustedGap = this.minGap;
-			}
 			calculatedHeight -= (this._secondaryTextMeasuredHeight + adjustedGap);
 		}
 		if (calculatedWidth < 0.0) {
