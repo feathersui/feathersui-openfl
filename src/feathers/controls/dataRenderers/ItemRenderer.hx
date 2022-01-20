@@ -844,6 +844,9 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		if (result != null) {
 			return result;
 		}
+		if (this._selected && this.selectedBackgroundSkin != null) {
+			return this.selectedBackgroundSkin;
+		}
 		if (this.alternateBackgroundSkin != null && (this._layoutIndex % 2) == 1) {
 			return this.alternateBackgroundSkin;
 		}
