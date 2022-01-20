@@ -598,13 +598,15 @@ class Location {
 		return this._protocol;
 	}
 
+	private var _hostname:String = "";
+
 	/**
 		@see https://api.haxe.org/js/html/Location.html#hostname
 	**/
 	public var hostname(get, never):String;
 
 	public function get_hostname():String {
-		return "";
+		return this._hostname;
 	}
 
 	/**
@@ -613,8 +615,13 @@ class Location {
 	public var host(get, never):String;
 
 	public function get_host():String {
-		return "";
+		if (this._hostname.length > 0 && this._port.length > 0) {
+			return this._hostname + ":" + this._port;
+		}
+		return this._hostname;
 	}
+
+	private var _port:String = "";
 
 	/**
 		@see https://api.haxe.org/js/html/Location.html#port
@@ -622,7 +629,7 @@ class Location {
 	public var port(get, never):String;
 
 	public function get_port():String {
-		return "";
+		return this._port;
 	}
 
 	/**
@@ -631,7 +638,7 @@ class Location {
 	public var origin(get, never):String;
 
 	public function get_origin():String {
-		return this._protocol + "//" + this._hostname;
+		return this._protocol + "//" + this.host;
 	}
 
 	private var _pathname:String = "/";
