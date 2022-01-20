@@ -168,6 +168,27 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	@:style
 	public var selectedBackgroundSkin:DisplayObject = null;
 
+	/**
+		The display object to use as the background skin when the alternate
+		skin is enabled.
+
+		The following example passes a bitmap to use as an alternate background
+		skin:
+
+		```hx
+		itemRenderer.alternateBackgroundSkin = new Bitmap(bitmapData);
+		```
+
+		@default null
+
+		@see `LayoutGroup.backgroundSkin`
+
+		@since 1.0.0
+
+	**/
+	@:style
+	public var alternateBackgroundSkin:DisplayObject = null;
+
 	private var _stateToSkin:Map<ToggleButtonState, DisplayObject> = new Map();
 
 	/**
@@ -283,6 +304,9 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 		}
 		if (this._selected && this.selectedBackgroundSkin != null) {
 			return this.selectedBackgroundSkin;
+		}
+		if (this.alternateBackgroundSkin != null && (this._layoutIndex % 2) == 1) {
+			return this.alternateBackgroundSkin;
 		}
 		return this.backgroundSkin;
 	}
