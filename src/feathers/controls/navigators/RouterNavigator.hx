@@ -567,12 +567,12 @@ class Location {
 		var splitWithHash = pathname.split("#");
 		pathname = splitWithHash[0];
 		if (splitWithHash.length > 1) {
-			hash = splitWithHash[1];
+			hash = "#" + splitWithHash[1];
 		}
 		var splitWithSearch = pathname.split("?");
 		pathname = splitWithSearch[0];
 		if (splitWithSearch.length > 1) {
-			search = splitWithSearch[1];
+			search = "?" + splitWithSearch[1];
 		}
 		return new Location(pathname, search, hash);
 	}
