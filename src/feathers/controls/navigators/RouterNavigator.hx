@@ -425,7 +425,7 @@ class RouterNavigator extends BaseNavigator {
 		}
 		try {
 			return new URLVariables(search);
-		} catch (e) {
+		} catch (e:Dynamic) {
 			return new URLVariables();
 		}
 	}
