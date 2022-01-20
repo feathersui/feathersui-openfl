@@ -599,15 +599,13 @@ class Location {
 		return this._protocol;
 	}
 
-	private var _hostname:String = ".";
-
 	/**
 		@see https://api.haxe.org/js/html/Location.html#hostname
 	**/
 	public var hostname(get, never):String;
 
 	public function get_hostname():String {
-		return ".";
+		return "";
 	}
 
 	/**
@@ -616,7 +614,7 @@ class Location {
 	public var host(get, never):String;
 
 	public function get_host():String {
-		return this.hostname;
+		return "";
 	}
 
 	/**
