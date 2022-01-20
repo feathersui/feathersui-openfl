@@ -534,7 +534,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	}
 
 	private function customHitTest(stageX:Float, stageY:Float):Bool {
-		var pointerTargetContainer:DisplayObjectContainer = Std.downcast(this._pointerTarget, DisplayObjectContainer);
+		var pointerTargetContainer = Std.downcast(this._pointerTarget, DisplayObjectContainer);
 		if (pointerTargetContainer == null) {
 			pointerTargetContainer = this;
 		}
