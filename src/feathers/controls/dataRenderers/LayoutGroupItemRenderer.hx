@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IFocusObject;
 import feathers.core.IPointerDelegate;
 import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
@@ -16,8 +17,10 @@ import feathers.layout.ILayoutIndexObject;
 import feathers.themes.steel.components.SteelLayoutGroupItemRendererStyles;
 import feathers.utils.PointerToState;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
+import openfl.geom.Point;
 
 /**
 	A generic renderer with support for layout that may support any number of
@@ -250,6 +253,8 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 		if (this._pointerToState == null) {
 			this._pointerToState = new PointerToState(this, this.changeState, UP(false), DOWN(false), HOVER(false));
 		}
+
+		this._pointerToState.customHitTest = this.customHitTest;
 	}
 
 	override private function update():Void {
@@ -260,6 +265,41 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 		}
 
 		super.update();
+	}
+
+	private function customHitTest(stageX:Float, stageY:Float):Bool {
+		var pointerTargetContainer = Std.downcast(this._pointerTarget, DisplayObjectContainer);
+		if (pointerTargetContainer == null) {
+			pointerTargetContainer = this;
+		}
+		if (pointerTargetContainer.stage == null) {
+			return false;
+		}
+		if (pointerTargetContainer.mouseChildren) {
+			var objects = pointerTargetContainer.stage.getObjectsUnderPoint(new Point(stageX, stageY));
+			if (objects.length > 0) {
+				var lastObject = objects[objects.length - 1];
+				if (pointerTargetContainer.contains(lastObject)) {
+					while (lastObject != null && lastObject != pointerTargetContainer) {
+						if ((lastObject is InteractiveObject)) {
+							var interactive = cast(lastObject, InteractiveObject);
+							if (!interactive.mouseEnabled) {
+								lastObject = lastObject.parent;
+								continue;
+							}
+						}
+						if ((lastObject is IFocusObject)) {
+							var focusable = cast(lastObject, IFocusObject);
+							if (focusable.parent != this._pointerTarget && focusable.focusEnabled) {
+								return false;
+							}
+						}
+						lastObject = lastObject.parent;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	private function changeState(state:ToggleButtonState):Void {
