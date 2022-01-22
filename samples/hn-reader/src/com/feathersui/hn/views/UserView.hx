@@ -73,7 +73,8 @@ class UserView extends ScrollContainer {
 			_links.htmlText = '<li><u><a href="https://news.ycombinator.com/submitted?id=${user.id}">submissions</a></u></li>'
 				+ '<li><u><a href="https://news.ycombinator.com/threads?id=${user.id}">comments</a></u></li>'
 				+ '<li><u><a href="https://news.ycombinator.com/favorites?id=${user.id}">favorites</a></u></li>';
-		} catch (e) {
+		} catch (e:Dynamic) {
+			trace("error: " + e);
 			_title.text = "Error loading user";
 			_meta.text = null;
 			_links.text = null;

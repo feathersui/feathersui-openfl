@@ -135,7 +135,8 @@ class FeedView extends LayoutGroup {
 				feed.push(MORE_ITEM);
 			}
 			_feedItemListView.dataProvider = new ArrayCollection(feed);
-		} catch (e) {
+		} catch (e:Dynamic) {
+			trace("error: " + e);
 			_feedItemListView.dataProvider = new ArrayCollection([ERROR_ITEM]);
 		}
 	}

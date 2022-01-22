@@ -92,7 +92,7 @@ class ItemView extends LayoutGroup {
 				return item.comments;
 			});
 			_itemsTreeView.toggleChildrenOf(rootItem, true);
-		} catch (e) {
+		} catch (e:Dynamic) {
 			trace("error: " + e);
 			_itemsTreeView.dataProvider = new ArrayHierarchicalCollection([ERROR_ITEM]);
 		}
