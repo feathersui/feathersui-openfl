@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="HN Reader" package="com.feathersui.samples.HN" version="1.0.0" company="Bowler Hat LLC"/>
+	<meta title="HN Reader — Feathers UI Samples" if="html5"/>
+	<app main="com.feathersui.hn.Main" file="HN"/>
+
+	<window allow-high-dpi="true"/>
+	<window fps="60"/>
+	<window fps="0" if="html5"/>
+
+	<source path="src"/>
+	
+	<haxelib name="openfl"/>
+	<haxelib name="actuate"/>
+	<haxelib name="feathersui"/>
+
+	<icon path="assets/icons/feathersui-icon.svg"/>
+
+	<assets id="feathersui" path="assets/img/feathers-ui-icon-color.png"/>
+</project>

@@ -12,6 +12,8 @@
 --next
 -cmd haxelib run openfl build hello-world/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
+-cmd haxelib run openfl build hn-reader/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
 -cmd haxelib run openfl build horizontal-layout-percentage-sizing/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
 -cmd haxelib run openfl build list-view-data-provider-collection-sorting/project.xml html5 -final -clean --haxedef=feathersui.com

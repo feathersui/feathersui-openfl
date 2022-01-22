@@ -75,6 +75,13 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
+    - name: Build samples/hn-reader
+      working-directory: samples/hn-reader
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
     - name: Build samples/horizontal-layout-percentage-sizing
       working-directory: samples/horizontal-layout-percentage-sizing
       run: |
@@ -211,6 +218,10 @@ jobs:
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
     - name: Build samples/hello-world
       working-directory: samples/hello-world
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/hn-reader
+      working-directory: samples/hn-reader
       run: |
         haxelib run openfl build air
     - name: Build samples/calculator
