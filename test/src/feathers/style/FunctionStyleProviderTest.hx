@@ -8,9 +8,10 @@
 
 package feathers.style;
 
-import openfl.events.Event;
 import feathers.controls.LayoutGroup;
 import feathers.events.StyleProviderEvent;
+import openfl.Lib;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -37,7 +38,7 @@ class FunctionStyleProviderTest extends Test {
 		this._control = null;
 		this._styleProvider = null;
 		this._appliedStyles = false;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	private function setExtraStyles(target:LayoutGroup):Void {

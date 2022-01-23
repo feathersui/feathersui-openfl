@@ -8,13 +8,14 @@
 
 package feathers.controls;
 
-import openfl.events.TouchEvent;
-import feathers.events.TriggerEvent;
-import openfl.display.Shape;
-import openfl.events.MouseEvent;
-import openfl.events.Event;
 import feathers.controls.BasicButton;
 import feathers.events.FeathersEvent;
+import feathers.events.TriggerEvent;
+import openfl.Lib;
+import openfl.display.Shape;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -29,7 +30,7 @@ class BasicButtonTest extends Test {
 
 	public function setup():Void {
 		this._button = new BasicButton();
-		TestMain.openfl_root.addChild(this._button);
+		Lib.current.addChild(this._button);
 	}
 
 	public function teardown():Void {
@@ -37,7 +38,7 @@ class BasicButtonTest extends Test {
 			this._button.parent.removeChild(this._button);
 		}
 		this._button = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDispatchTriggerOnClick():Void {

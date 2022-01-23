@@ -8,11 +8,12 @@
 
 package feathers.controls;
 
-import feathers.utils.DisplayObjectRecycler;
-import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
-import openfl.events.Event;
 import feathers.data.ArrayCollection;
+import feathers.layout.ILayoutIndexObject;
+import feathers.utils.DisplayObjectRecycler;
+import openfl.Lib;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -26,7 +27,7 @@ class TabBarTest extends Test {
 
 	public function setup():Void {
 		this._tabBar = new TabBar();
-		TestMain.openfl_root.addChild(this._tabBar);
+		Lib.current.addChild(this._tabBar);
 	}
 
 	public function teardown():Void {
@@ -34,7 +35,7 @@ class TabBarTest extends Test {
 			this._tabBar.parent.removeChild(this._tabBar);
 		}
 		this._tabBar = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testValidateWithNullDataProvider():Void {

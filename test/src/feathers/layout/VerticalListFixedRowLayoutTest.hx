@@ -10,6 +10,7 @@ package feathers.layout;
 
 import feathers.controls.LayoutGroup;
 import feathers.layout.Measurements;
+import openfl.Lib;
 import openfl.display.Shape;
 import utest.Assert;
 import utest.Test;

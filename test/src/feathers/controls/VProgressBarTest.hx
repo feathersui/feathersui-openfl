@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.Lib;
 import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
@@ -22,7 +23,7 @@ class VProgressBarTest extends Test {
 
 	public function setup():Void {
 		this._progress = new VProgressBar();
-		TestMain.openfl_root.addChild(this._progress);
+		Lib.current.addChild(this._progress);
 	}
 
 	public function teardown():Void {
@@ -30,7 +31,7 @@ class VProgressBarTest extends Test {
 			this._progress.parent.removeChild(this._progress);
 		}
 		this._progress = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDispatchChangeEventOnSetValue():Void {

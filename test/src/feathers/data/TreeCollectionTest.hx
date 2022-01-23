@@ -9,12 +9,13 @@
 package feathers.data;
 
 import feathers.data.TreeNode;
-import openfl.errors.RangeError;
+import feathers.events.HierarchicalCollectionEvent;
 import haxe.io.Error;
+import openfl.Lib;
+import openfl.errors.RangeError;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
-import feathers.events.HierarchicalCollectionEvent;
-import openfl.events.Event;
 
 @:keep class TreeCollectionTest extends Test {
 	private static final TEXT_FILTER_ME = "__FILTER_ME__";

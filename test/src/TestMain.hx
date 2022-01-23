@@ -1,4 +1,11 @@
-import feathers.controls.NumericStepperTest;
+/*
+	Feathers UI
+	Copyright 2022 Bowler Hat LLC. All Rights Reserved.
+
+	This program is free software. You can redistribute and/or modify it in
+	accordance with the terms of the accompanying license agreement.
+ */
+
 import openfl.display.Sprite;
 import utest.Runner;
 import utest.ui.common.PackageResult;
@@ -6,12 +13,8 @@ import utest.ui.common.ResultAggregator;
 import utest.ui.text.HtmlReport;
 
 class TestMain extends Sprite {
-	public static var openfl_root:Sprite;
-
 	public function new() {
 		super();
-
-		openfl_root = this;
 
 		var runner = new Runner();
 		runner.addCase(new feathers.controls.AssetLoaderTest());

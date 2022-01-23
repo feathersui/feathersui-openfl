@@ -9,6 +9,7 @@
 package feathers.core;
 
 import feathers.controls.Button;
+import openfl.Lib;
 import openfl.events.FocusEvent;
 import openfl.ui.Keyboard;
 import utest.Assert;
@@ -37,52 +38,52 @@ class FocusManagerTest extends Test {
 			this._focusObject2 = null;
 		}
 		FocusManager.dispose();
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
-		Assert.equals(1, TestMain.openfl_root.stage.numChildren, "Test cleanup failed to remove all children from the stage");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.stage.numChildren, "Test cleanup failed to remove all children from the stage");
 	}
 
 	private function createFocusObject1():Void {
 		this._focusObject1 = new Button();
-		TestMain.openfl_root.addChild(this._focusObject1);
+		Lib.current.addChild(this._focusObject1);
 	}
 
 	private function createFocusObject2():Void {
 		this._focusObject2 = new Button();
-		TestMain.openfl_root.addChild(this._focusObject2);
+		Lib.current.addChild(this._focusObject2);
 	}
 
 	public function testHasRoot():Void {
-		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
-		FocusManager.addRoot(TestMain.openfl_root.stage);
-		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		Assert.isFalse(FocusManager.hasRoot(Lib.current.stage));
+		FocusManager.addRoot(Lib.current.stage);
+		Assert.isTrue(FocusManager.hasRoot(Lib.current.stage));
 	}
 
 	public function testDispose():Void {
-		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
-		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		Assert.isFalse(FocusManager.hasRoot(Lib.current.stage));
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
+		Assert.isTrue(FocusManager.hasRoot(Lib.current.stage));
 		focusManager.dispose();
-		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		Assert.isFalse(FocusManager.hasRoot(Lib.current.stage));
 	}
 
 	public function testRemoveRoot():Void {
-		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
-		FocusManager.addRoot(TestMain.openfl_root.stage);
-		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
-		FocusManager.removeRoot(TestMain.openfl_root.stage);
-		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		Assert.isFalse(FocusManager.hasRoot(Lib.current.stage));
+		FocusManager.addRoot(Lib.current.stage);
+		Assert.isTrue(FocusManager.hasRoot(Lib.current.stage));
+		FocusManager.removeRoot(Lib.current.stage);
+		Assert.isFalse(FocusManager.hasRoot(Lib.current.stage));
 	}
 
 	public function testDisposeAll():Void {
-		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
-		FocusManager.addRoot(TestMain.openfl_root.stage);
-		Assert.isTrue(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		Assert.isFalse(FocusManager.hasRoot(Lib.current.stage));
+		FocusManager.addRoot(Lib.current.stage);
+		Assert.isTrue(FocusManager.hasRoot(Lib.current.stage));
 		FocusManager.dispose();
-		Assert.isFalse(FocusManager.hasRoot(TestMain.openfl_root.stage));
+		Assert.isFalse(FocusManager.hasRoot(Lib.current.stage));
 	}
 
 	public function testFocusManagerProperty():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		Assert.notNull(focusManager, "Focus manager should not be null");
 		createFocusObject1();
 		createFocusObject2();
@@ -91,14 +92,14 @@ class FocusManagerTest extends Test {
 	}
 
 	public function testRemoveFocusManagerOnRemoveChild():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		createFocusObject1();
-		TestMain.openfl_root.removeChild(this._focusObject1);
+		Lib.current.removeChild(this._focusObject1);
 		Assert.isNull(this._focusObject1.focusManager, "Focus manager should be null after removing from stage");
 	}
 
 	public function testRemoveFocusManagerOnRemoveRoot():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		createFocusObject1();
 		createFocusObject2();
 		focusManager.dispose();
@@ -107,7 +108,7 @@ class FocusManagerTest extends Test {
 	}
 
 	public function testFocusPropertyInFocusInEventListener():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this.createFocusObject1();
 		var focusManagerFocusIsCorrectInListener = false;
 		var stageFocusIsCorrectInListener = false;
@@ -123,7 +124,7 @@ class FocusManagerTest extends Test {
 	}
 
 	public function testFocusPropertyInFocusOutEventListener():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this.createFocusObject1();
 		var focusManagerFocusIsCorrectInListener = false;
 		var stageFocusIsCorrectInListener = false;
@@ -139,7 +140,7 @@ class FocusManagerTest extends Test {
 	}
 
 	public function testFocusChangeOnTabKey():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this.createFocusObject1();
 		this.createFocusObject2();
 		this._focusObject1.focusManager.focus = this._focusObject1;
@@ -149,7 +150,7 @@ class FocusManagerTest extends Test {
 	}
 
 	public function testFocusChangeOnShiftPlusTabKey():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this.createFocusObject1();
 		this.createFocusObject2();
 		this._focusObject1.focusManager.focus = this._focusObject2;
@@ -161,22 +162,22 @@ class FocusManagerTest extends Test {
 	}
 
 	public function checkFocusAfterAddModalPopUp():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this.createFocusObject1();
 		this._focusObject1.focusManager.focus = this._focusObject1;
 		this._focusObject2 = new Button();
-		PopUpManager.addPopUp(this._focusObject2, TestMain.openfl_root, true);
+		PopUpManager.addPopUp(this._focusObject2, Lib.current, true);
 		Assert.notEquals(focusManager.focus, this._focusObject1, "The FocusManager failed to change focus when adding a modal pop-up");
-		Assert.notEquals(TestMain.openfl_root.stage.focus, this._focusObject1, "The FocusManager failed to change focus when adding a modal pop-up");
+		Assert.notEquals(Lib.current.stage.focus, this._focusObject1, "The FocusManager failed to change focus when adding a modal pop-up");
 	}
 
 	public function checkFocusAfterAddNonModalPopUp():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this.createFocusObject1();
 		this._focusObject1.focusManager.focus = this._focusObject1;
 		this._focusObject2 = new Button();
-		PopUpManager.addPopUp(this._focusObject2, TestMain.openfl_root, false);
+		PopUpManager.addPopUp(this._focusObject2, Lib.current, false);
 		Assert.equals(this._focusObject1.focusManager.focus, this._focusObject1, "The FocusManager incorrectly changed focus when adding a non-modal pop-up");
-		Assert.equals(TestMain.openfl_root.stage.focus, this._focusObject1, "The FocusManager incorrectly changed focus when adding a non-modal pop-up");
+		Assert.equals(Lib.current.stage.focus, this._focusObject1, "The FocusManager incorrectly changed focus when adding a non-modal pop-up");
 	}
 }

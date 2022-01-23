@@ -8,11 +8,12 @@
 
 package feathers.controls;
 
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
 import feathers.events.TriggerEvent;
-import openfl.events.Event;
+import openfl.Lib;
 import openfl.display.Shape;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -27,7 +28,7 @@ class BasicToggleButtonTest extends Test {
 
 	public function setup():Void {
 		this._button = new BasicToggleButton();
-		TestMain.openfl_root.addChild(this._button);
+		Lib.current.addChild(this._button);
 	}
 
 	public function teardown():Void {
@@ -35,7 +36,7 @@ class BasicToggleButtonTest extends Test {
 			this._button.parent.removeChild(this._button);
 		}
 		this._button = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDispatchTriggerOnClick():Void {

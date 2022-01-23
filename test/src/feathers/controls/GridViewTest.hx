@@ -8,13 +8,14 @@
 
 package feathers.controls;
 
-import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGridViewCellRenderer;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.events.ScrollEvent;
-import openfl.events.Event;
 import feathers.data.ArrayCollection;
+import feathers.events.ScrollEvent;
+import feathers.layout.ILayoutIndexObject;
+import feathers.utils.DisplayObjectRecycler;
+import openfl.Lib;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -28,7 +29,7 @@ class GridViewTest extends Test {
 
 	public function setup():Void {
 		this._gridView = new GridView();
-		TestMain.openfl_root.addChild(this._gridView);
+		Lib.current.addChild(this._gridView);
 	}
 
 	public function teardown():Void {
@@ -36,7 +37,7 @@ class GridViewTest extends Test {
 			this._gridView.parent.removeChild(this._gridView);
 		}
 		this._gridView = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testValidateWithNullDataProvider():Void {

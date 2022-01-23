@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.Lib;
 import openfl.display.Shape;
 import openfl.events.Event;
 import utest.Assert;
@@ -24,7 +25,7 @@ class TextInputTest extends Test {
 
 	public function setup():Void {
 		this._input = new TextInput();
-		TestMain.openfl_root.addChild(this._input);
+		Lib.current.addChild(this._input);
 	}
 
 	public function teardown():Void {
@@ -32,7 +33,7 @@ class TextInputTest extends Test {
 			this._input.parent.removeChild(this._input);
 		}
 		this._input = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDispatchChangeEventOnSetTextProgramatically():Void {
@@ -109,10 +110,10 @@ class TextInputTest extends Test {
 		this._input.errorString = "Something is wrong";
 		this._input.validateNow();
 		Assert.isFalse(this._input.errorStringCalloutOpen);
-		TestMain.openfl_root.stage.focus = this._input;
+		Lib.current.stage.focus = this._input;
 		this._input.validateNow();
 		Assert.isTrue(this._input.errorStringCalloutOpen);
-		TestMain.openfl_root.stage.focus = TestMain.openfl_root.stage;
+		Lib.current.stage.focus = Lib.current.stage;
 		this._input.validateNow();
 		Assert.isFalse(this._input.errorStringCalloutOpen);
 	}

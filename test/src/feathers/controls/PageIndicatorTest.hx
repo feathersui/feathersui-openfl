@@ -8,11 +8,12 @@
 
 package feathers.controls;
 
-import feathers.utils.DisplayObjectRecycler;
-import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.IDataRenderer;
-import openfl.events.Event;
 import feathers.data.ArrayCollection;
+import feathers.layout.ILayoutIndexObject;
+import feathers.utils.DisplayObjectRecycler;
+import openfl.Lib;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -26,7 +27,7 @@ class PageIndicatorTest extends Test {
 
 	public function setup():Void {
 		this._pageIndicator = new PageIndicator();
-		TestMain.openfl_root.addChild(this._pageIndicator);
+		Lib.current.addChild(this._pageIndicator);
 	}
 
 	public function teardown():Void {
@@ -34,7 +35,7 @@ class PageIndicatorTest extends Test {
 			this._pageIndicator.parent.removeChild(this._pageIndicator);
 		}
 		this._pageIndicator = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testValidateWithNoMaximum():Void {

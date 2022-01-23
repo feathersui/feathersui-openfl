@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.core.ToggleGroup;
+import openfl.Lib;
 import utest.Assert;
 import utest.Test;
 
@@ -22,7 +23,7 @@ class RadioTest extends Test {
 
 	public function setup():Void {
 		this._radio = new Radio();
-		TestMain.openfl_root.addChild(this._radio);
+		Lib.current.addChild(this._radio);
 	}
 
 	public function teardown():Void {
@@ -30,7 +31,7 @@ class RadioTest extends Test {
 			this._radio.parent.removeChild(this._radio);
 		}
 		this._radio = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDefaultToggleGroup():Void {

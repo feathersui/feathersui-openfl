@@ -9,9 +9,10 @@
 package feathers.layout;
 
 import feathers.controls.LayoutGroup;
-import openfl.events.Event;
-import openfl.display.Shape;
 import feathers.layout.Measurements;
+import openfl.Lib;
+import openfl.display.Shape;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 

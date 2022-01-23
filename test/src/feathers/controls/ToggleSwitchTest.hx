@@ -8,10 +8,11 @@
 
 package feathers.controls;
 
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
-import openfl.events.Event;
 import feathers.controls.ToggleSwitch;
+import openfl.Lib;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -25,7 +26,7 @@ class ToggleSwitchTest extends Test {
 
 	public function setup():Void {
 		this._toggle = new ToggleSwitch();
-		TestMain.openfl_root.addChild(this._toggle);
+		Lib.current.addChild(this._toggle);
 	}
 
 	public function teardown():Void {
@@ -33,7 +34,7 @@ class ToggleSwitchTest extends Test {
 			this._toggle.parent.removeChild(this._toggle);
 		}
 		this._toggle = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testProgrammaticSelectionChange():Void {

@@ -8,8 +8,9 @@
 
 package feathers.layout;
 
-import feathers.layout.Measurements;
 import feathers.controls.LayoutGroup;
+import feathers.layout.Measurements;
+import openfl.Lib;
 import utest.Assert;
 import utest.Test;
 
@@ -25,7 +26,7 @@ class MeasurementsTest extends Test {
 	public function setup():Void {
 		this._measurements = new Measurements();
 		this._control = new LayoutGroup();
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 	}
 
 	public function teardown():Void {
@@ -34,7 +35,7 @@ class MeasurementsTest extends Test {
 		}
 		this._control = null;
 		this._measurements = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDefaults():Void {

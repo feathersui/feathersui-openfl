@@ -8,8 +8,9 @@
 
 package feathers.core;
 
-import openfl.errors.Error;
 import feathers.controls.LayoutGroup;
+import openfl.Lib;
+import openfl.errors.Error;
 import utest.Assert;
 import utest.Test;
 
@@ -24,7 +25,7 @@ class InvalidationTest extends Test {
 
 	public function setup():Void {
 		this._control = new LayoutGroup();
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 	}
 
 	public function teardown():Void {
@@ -36,7 +37,7 @@ class InvalidationTest extends Test {
 			this._control2.parent.removeChild(this._control2);
 		}
 		this._control2 = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testNotInvalidAfterConstructor() {
@@ -104,7 +105,7 @@ class InvalidationTest extends Test {
 
 	public function testInfiniteInvalidateDuringValidation() {
 		this._control2 = new InvalidationControl();
-		TestMain.openfl_root.addChild(this._control2);
+		Lib.current.addChild(this._control2);
 
 		Assert.raises(() -> {
 			ValidationQueue.forStage(this._control2.stage).validateNow();

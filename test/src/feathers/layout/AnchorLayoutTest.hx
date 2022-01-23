@@ -9,8 +9,8 @@
 package feathers.layout;
 
 import feathers.controls.LayoutGroup;
-import openfl.display.Shape;
 import feathers.layout.Measurements;
+import openfl.display.Shape;
 import utest.Assert;
 import utest.Test;
 

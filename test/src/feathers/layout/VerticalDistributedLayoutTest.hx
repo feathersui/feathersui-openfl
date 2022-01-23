@@ -10,6 +10,7 @@ package feathers.layout;
 
 import feathers.controls.LayoutGroup;
 import feathers.layout.Measurements;
+import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Shape;
 import openfl.events.Event;

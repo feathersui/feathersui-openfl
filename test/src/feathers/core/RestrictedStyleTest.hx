@@ -8,9 +8,10 @@
 
 package feathers.core;
 
-import feathers.controls.ButtonState;
-import openfl.display.Sprite;
 import feathers.controls.BasicButton;
+import feathers.controls.ButtonState;
+import openfl.Lib;
+import openfl.display.Sprite;
 import utest.Assert;
 import utest.Test;
 
@@ -29,7 +30,7 @@ class RestrictedStyleTest extends Test {
 
 	public function teardown():Void {
 		this._control = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testStyleNotRestrictedAfterConstructor():Void {

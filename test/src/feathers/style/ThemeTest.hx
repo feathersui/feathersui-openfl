@@ -9,6 +9,7 @@
 package feathers.style;
 
 import feathers.controls.LayoutGroup;
+import openfl.Lib;
 import utest.Assert;
 import utest.Test;
 
@@ -27,12 +28,12 @@ class ThemeTest extends Test {
 		this._container = new LayoutGroup();
 		this._containerChild = new LayoutGroup();
 		this._container.addChild(this._containerChild);
-		TestMain.openfl_root.addChild(this._container);
+		Lib.current.addChild(this._container);
 		this._otherChild = new LayoutGroup();
-		TestMain.openfl_root.addChild(this._otherChild);
+		Lib.current.addChild(this._otherChild);
 		this._themeDisabledChild = new LayoutGroup();
 		this._themeDisabledChild.themeEnabled = false;
-		TestMain.openfl_root.addChild(this._themeDisabledChild);
+		Lib.current.addChild(this._themeDisabledChild);
 	}
 
 	public function teardown():Void {
@@ -53,7 +54,7 @@ class ThemeTest extends Test {
 		Theme.setTheme(null, this._container);
 		Assert.equals(Theme.fallbackTheme, Theme.getTheme(), "Test cleanup failed to remove primary theme.");
 		Assert.equals(Theme.fallbackTheme, Theme.getTheme(this._container), "Test cleanup failed to remove container theme");
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testGetThemeWithNoThemes():Void {

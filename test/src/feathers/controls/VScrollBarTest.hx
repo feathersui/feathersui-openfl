@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.Lib;
 import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
@@ -22,7 +23,7 @@ class VScrollBarTest extends Test {
 
 	public function setup():Void {
 		this._scrollBar = new VScrollBar();
-		TestMain.openfl_root.addChild(this._scrollBar);
+		Lib.current.addChild(this._scrollBar);
 	}
 
 	public function teardown():Void {
@@ -30,7 +31,7 @@ class VScrollBarTest extends Test {
 			this._scrollBar.parent.removeChild(this._scrollBar);
 		}
 		this._scrollBar = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDispatchChangeEventOnSetValue():Void {

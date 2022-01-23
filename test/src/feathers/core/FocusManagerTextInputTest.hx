@@ -8,9 +8,10 @@
 
 package feathers.core;
 
+import feathers.controls.TextInput;
+import openfl.Lib;
 import openfl.events.FocusEvent;
 import openfl.text.TextField;
-import feathers.controls.TextInput;
 import utest.Assert;
 import utest.Test;
 
@@ -24,7 +25,7 @@ class FocusManagerTextInputTest extends Test {
 
 	public function setup():Void {
 		this._textInput = new TextInput();
-		TestMain.openfl_root.addChild(this._textInput);
+		Lib.current.addChild(this._textInput);
 	}
 
 	public function teardown():Void {
@@ -35,33 +36,33 @@ class FocusManagerTextInputTest extends Test {
 			this._textInput = null;
 		}
 		FocusManager.dispose();
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
-		Assert.equals(1, TestMain.openfl_root.stage.numChildren, "Test cleanup failed to remove all children from the stage");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.stage.numChildren, "Test cleanup failed to remove all children from the stage");
 	}
 
 	public function testSetFocusManagerFocus():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this._textInput.validateNow();
 		var focusInCount = 0;
 		this._textInput.addEventListener(FocusEvent.FOCUS_IN, event -> {
 			focusInCount++;
 		});
 		focusManager.focus = this._textInput;
-		Assert.isTrue((TestMain.openfl_root.stage.focus is TextField),
-			'Setting stage focus without focus manager set focus to ${TestMain.openfl_root.stage.focus} instead of TextField');
+		Assert.isTrue((Lib.current.stage.focus is TextField),
+			'Setting stage focus without focus manager set focus to ${Lib.current.stage.focus} instead of TextField');
 		Assert.equals(1, focusInCount, "FocusEvent.FOCUS_IN must be dispatched once");
 	}
 
 	public function testSetStageFocusWithFocusManager():Void {
-		var focusManager = FocusManager.addRoot(TestMain.openfl_root.stage);
+		var focusManager = FocusManager.addRoot(Lib.current.stage);
 		this._textInput.validateNow();
 		var focusInCount = 0;
 		this._textInput.addEventListener(FocusEvent.FOCUS_IN, event -> {
 			focusInCount++;
 		});
-		TestMain.openfl_root.stage.focus = this._textInput;
-		Assert.isTrue((TestMain.openfl_root.stage.focus is TextField),
-			'Setting stage focus without focus manager set focus to ${TestMain.openfl_root.stage.focus} instead of TextField');
+		Lib.current.stage.focus = this._textInput;
+		Assert.isTrue((Lib.current.stage.focus is TextField),
+			'Setting stage focus without focus manager set focus to ${Lib.current.stage.focus} instead of TextField');
 		Assert.equals(1, focusInCount, "FocusEvent.FOCUS_IN must be dispatched once");
 	}
 
@@ -71,9 +72,9 @@ class FocusManagerTextInputTest extends Test {
 		this._textInput.addEventListener(FocusEvent.FOCUS_IN, event -> {
 			focusInCount++;
 		});
-		TestMain.openfl_root.stage.focus = this._textInput;
-		Assert.isTrue((TestMain.openfl_root.stage.focus is TextField),
-			'Setting stage focus without focus manager set focus to ${TestMain.openfl_root.stage.focus} instead of TextField');
+		Lib.current.stage.focus = this._textInput;
+		Assert.isTrue((Lib.current.stage.focus is TextField),
+			'Setting stage focus without focus manager set focus to ${Lib.current.stage.focus} instead of TextField');
 		Assert.equals(1, focusInCount, "FocusEvent.FOCUS_IN must be dispatched once");
 	}
 }

@@ -8,15 +8,16 @@
 
 package feathers.controls;
 
-import openfl.events.Event;
-import feathers.core.IOpenCloseToggle;
-import feathers.utils.DisplayObjectRecycler;
-import feathers.data.ArrayHierarchicalCollection;
 import feathers.controls.dataRenderers.IDataRenderer;
-import feathers.layout.ILayoutIndexObject;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
+import feathers.core.IOpenCloseToggle;
+import feathers.data.ArrayHierarchicalCollection;
 import feathers.data.TreeCollection;
 import feathers.data.TreeNode;
+import feathers.layout.ILayoutIndexObject;
+import feathers.utils.DisplayObjectRecycler;
+import openfl.Lib;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -30,7 +31,7 @@ class TreeViewTest extends Test {
 
 	public function setup():Void {
 		this._treeView = new TreeView();
-		TestMain.openfl_root.addChild(this._treeView);
+		Lib.current.addChild(this._treeView);
 	}
 
 	public function teardown():Void {
@@ -38,7 +39,7 @@ class TreeViewTest extends Test {
 			this._treeView.parent.removeChild(this._treeView);
 		}
 		this._treeView = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {

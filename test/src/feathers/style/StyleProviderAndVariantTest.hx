@@ -8,10 +8,11 @@
 
 package feathers.style;
 
-import openfl.events.EventDispatcher;
-import openfl.events.Event;
 import feathers.controls.LayoutGroup;
 import feathers.events.StyleProviderEvent;
+import openfl.Lib;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
 import utest.Assert;
 import utest.Test;
 
@@ -35,7 +36,7 @@ class StyleProviderAndVariantTest extends Test {
 		}
 		this._control = null;
 		this._styleProvider = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testSetStyleProviderBeforeInitialize():Void {
@@ -113,7 +114,7 @@ class StyleProviderAndVariantTest extends Test {
 	}
 
 	public function testSetStyleProviderAfterInitializeAndAddedToStage():Void {
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
 
 		this._styleProvider.reset();
@@ -123,7 +124,7 @@ class StyleProviderAndVariantTest extends Test {
 
 	public function testSetVariantAfterInitializeAndAddedToStage():Void {
 		this._control.styleProvider = this._styleProvider;
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
 
 		this._styleProvider.reset();
@@ -133,7 +134,7 @@ class StyleProviderAndVariantTest extends Test {
 
 	public function testStyleProviderChangeEventAfterInitializeAndAddedToStage():Void {
 		this._control.styleProvider = this._styleProvider;
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
 
 		this._styleProvider.reset();
@@ -144,7 +145,7 @@ class StyleProviderAndVariantTest extends Test {
 
 	public function testStyleProviderClearEventAfterInitializeAndAddedToStage():Void {
 		this._control.styleProvider = this._styleProvider;
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
 
 		this._styleProvider.reset();
@@ -155,67 +156,67 @@ class StyleProviderAndVariantTest extends Test {
 
 	public function testStyleProviderRemovedFromStageAndAddedAgain():Void {
 		this._control.styleProvider = this._styleProvider;
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
 
 		this._styleProvider.reset();
-		TestMain.openfl_root.removeChild(this._control);
+		Lib.current.removeChild(this._control);
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider when removed from stage");
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		Assert.isTrue(this._styleProvider.appliedStyles, "Must apply style provider when removed from stage and added again");
 	}
 
 	public function testSetStyleProviderBetweenRemovedFromStageAndAddedAgain():Void {
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
-		TestMain.openfl_root.removeChild(this._control);
+		Lib.current.removeChild(this._control);
 
 		this._styleProvider.reset();
 		this._control.styleProvider = this._styleProvider;
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider when set after initialization and off stage");
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		Assert.isTrue(this._styleProvider.appliedStyles, "Must apply style provider when waiting after removal");
 	}
 
 	public function testSetStyleVariantBetweenRemovedFromStageAndAddedAgain():Void {
 		this._control.styleProvider = this._styleProvider;
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
-		TestMain.openfl_root.removeChild(this._control);
+		Lib.current.removeChild(this._control);
 
 		this._styleProvider.reset();
 		this._control.variant = "custom-style-name";
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider when set variant after initialization and off stage");
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		Assert.isTrue(this._styleProvider.appliedStyles, "Must apply style provider when waiting after removal");
 	}
 
 	public function testStyleProviderChangeEventBetweenRemovedFromStageAndAddedAgain():Void {
 		this._control.styleProvider = this._styleProvider;
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
-		TestMain.openfl_root.removeChild(this._control);
+		Lib.current.removeChild(this._control);
 		Assert.isTrue(this._styleProvider.appliedStyles);
 
 		this._styleProvider.reset();
 		StyleProviderEvent.dispatch(this._styleProvider, StyleProviderEvent.STYLES_CHANGE);
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider when removed from stage");
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		Assert.isTrue(this._styleProvider.appliedStyles, "Must apply style provider when waiting after removal");
 	}
 
 	public function testStyleProviderClearEventBetweenRemovedFromStageAndAddedAgain():Void {
 		this._control.styleProvider = this._styleProvider;
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		this._control.initializeNow();
-		TestMain.openfl_root.removeChild(this._control);
+		Lib.current.removeChild(this._control);
 		Assert.isTrue(this._styleProvider.appliedStyles);
 
 		this._styleProvider.reset();
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
 		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider when removed from stage");
-		TestMain.openfl_root.addChild(this._control);
+		Lib.current.addChild(this._control);
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply cleared style provider when waiting after removal");
 	}
 }

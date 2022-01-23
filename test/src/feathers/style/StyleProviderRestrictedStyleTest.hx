@@ -8,10 +8,11 @@
 
 package feathers.style;
 
+import feathers.controls.Button;
+import openfl.Lib;
+import openfl.display.Shape;
 import utest.Assert;
 import utest.Test;
-import openfl.display.Shape;
-import feathers.controls.Button;
 
 @:keep
 class StyleProviderRestrictedStyleTest extends Test {

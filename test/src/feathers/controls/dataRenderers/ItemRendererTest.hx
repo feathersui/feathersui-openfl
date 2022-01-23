@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import openfl.Lib;
 import openfl.display.Shape;
 import utest.Assert;
 import utest.Test;
@@ -22,7 +23,7 @@ class ItemRendererTest extends Test {
 
 	public function setup():Void {
 		this._itemRenderer = new ItemRenderer();
-		TestMain.openfl_root.addChild(this._itemRenderer);
+		Lib.current.addChild(this._itemRenderer);
 	}
 
 	public function teardown():Void {
@@ -30,7 +31,7 @@ class ItemRendererTest extends Test {
 			this._itemRenderer.parent.removeChild(this._itemRenderer);
 		}
 		this._itemRenderer = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testRemoveAccessoryAfterSetToNewValue():Void {

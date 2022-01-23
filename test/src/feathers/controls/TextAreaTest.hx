@@ -8,8 +8,9 @@
 
 package feathers.controls;
 
-import openfl.events.Event;
+import openfl.Lib;
 import openfl.display.Shape;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -24,7 +25,7 @@ class TextAreaTest extends Test {
 
 	public function setup():Void {
 		this._textArea = new TextArea();
-		TestMain.openfl_root.addChild(this._textArea);
+		Lib.current.addChild(this._textArea);
 	}
 
 	public function teardown():Void {
@@ -32,7 +33,7 @@ class TextAreaTest extends Test {
 			this._textArea.parent.removeChild(this._textArea);
 		}
 		this._textArea = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testDispatchChangeEventOnSetTextProgramatically():Void {
@@ -67,10 +68,10 @@ class TextAreaTest extends Test {
 		this._textArea.errorString = "Something is wrong";
 		this._textArea.validateNow();
 		Assert.isFalse(this._textArea.errorStringCalloutOpen);
-		TestMain.openfl_root.stage.focus = this._textArea;
+		Lib.current.stage.focus = this._textArea;
 		this._textArea.validateNow();
 		Assert.isTrue(this._textArea.errorStringCalloutOpen);
-		TestMain.openfl_root.stage.focus = TestMain.openfl_root.stage;
+		Lib.current.stage.focus = Lib.current.stage;
 		this._textArea.validateNow();
 		Assert.isFalse(this._textArea.errorStringCalloutOpen);
 	}

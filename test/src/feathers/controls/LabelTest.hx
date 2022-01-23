@@ -8,9 +8,10 @@
 
 package feathers.controls;
 
+import openfl.Lib;
+import openfl.display.Shape;
 import utest.Assert;
 import utest.Test;
-import openfl.display.Shape;
 
 @:keep
 class LabelTest extends Test {
@@ -22,7 +23,7 @@ class LabelTest extends Test {
 
 	public function setup():Void {
 		this._label = new Label();
-		TestMain.openfl_root.addChild(this._label);
+		Lib.current.addChild(this._label);
 	}
 
 	public function teardown():Void {
@@ -30,7 +31,7 @@ class LabelTest extends Test {
 			this._label.parent.removeChild(this._label);
 		}
 		this._label = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testRemoveSkinAfterSetToNewValue():Void {

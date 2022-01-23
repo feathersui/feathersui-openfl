@@ -9,6 +9,7 @@
 package feathers.style;
 
 import feathers.controls.LayoutGroup;
+import openfl.Lib;
 import utest.Assert;
 import utest.Test;
 
@@ -42,7 +43,7 @@ class ClassVariantStyleProviderTest extends Test {
 		this._defaultCalled = false;
 		this._oneCalled = false;
 		this._twoCalled = false;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	private function defaultFunction(target:LayoutGroup):Void {

@@ -8,8 +8,9 @@
 
 package feathers.utils;
 
-import openfl.display.Shape;
 import feathers.core.PopUpManager;
+import openfl.Lib;
+import openfl.display.Shape;
 import openfl.display.Sprite;
 import utest.Assert;
 import utest.Test;
@@ -39,15 +40,15 @@ class PopUpUtilTest extends Test {
 			}
 			this._popUp2 = null;
 		}
-		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		var popUpManager = PopUpManager.forStage(Lib.current.stage);
 		popUpManager.removeAllPopUps();
-		popUpManager.root = TestMain.openfl_root.stage;
+		popUpManager.root = Lib.current.stage;
 
 		// just in case
 		PopUpManager.dispose();
 
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
-		Assert.equals(1, TestMain.openfl_root.stage.numChildren, "Test cleanup failed to remove all children from the stage");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.stage.numChildren, "Test cleanup failed to remove all children from the stage");
 	}
 
 	private function createPopUp1():Void {
@@ -86,8 +87,8 @@ class PopUpUtilTest extends Test {
 	public function testIsTopLevelPopUpOrIsContainedByTopLevelPopUpDefaults2():Void {
 		this.createPopUp1();
 		this.createPopUp2();
-		TestMain.openfl_root.addChild(this._popUp1);
-		TestMain.openfl_root.addChild(this._popUp2);
+		Lib.current.addChild(this._popUp1);
+		Lib.current.addChild(this._popUp2);
 		Assert.isFalse(PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(this._popUp1));
 		Assert.isFalse(PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(this._popUp1Child));
 		Assert.isFalse(PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(this._popUp2));
@@ -97,7 +98,7 @@ class PopUpUtilTest extends Test {
 	public function testIsTopLevelPopUpOrIsContainedByTopLevelPopUpWithNoModals():Void {
 		this.createPopUp1();
 		this.createPopUp2();
-		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		var popUpManager = PopUpManager.forStage(Lib.current.stage);
 		popUpManager.addPopUp(this._popUp1, false);
 		popUpManager.addPopUp(this._popUp2, false);
 		Assert.isTrue(PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(this._popUp1));
@@ -109,7 +110,7 @@ class PopUpUtilTest extends Test {
 	public function testIsTopLevelPopUpOrIsContainedByTopLevelPopUpWithFirstModalAndSecondNotModal():Void {
 		this.createPopUp1();
 		this.createPopUp2();
-		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		var popUpManager = PopUpManager.forStage(Lib.current.stage);
 		popUpManager.addPopUp(this._popUp1, true);
 		popUpManager.addPopUp(this._popUp2, false);
 		Assert.isTrue(PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(this._popUp1));
@@ -121,7 +122,7 @@ class PopUpUtilTest extends Test {
 	public function testIsTopLevelPopUpOrIsContainedByTopLevelPopUpWithFirstNotModalAndSecondModal():Void {
 		this.createPopUp1();
 		this.createPopUp2();
-		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		var popUpManager = PopUpManager.forStage(Lib.current.stage);
 		popUpManager.addPopUp(this._popUp1, false);
 		popUpManager.addPopUp(this._popUp2, true);
 		Assert.isFalse(PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(this._popUp1));
@@ -133,7 +134,7 @@ class PopUpUtilTest extends Test {
 	public function testIsTopLevelPopUpOrIsContainedByTopLevelPopUpWithFirstModalAndSecondModal():Void {
 		this.createPopUp1();
 		this.createPopUp2();
-		var popUpManager = PopUpManager.forStage(TestMain.openfl_root.stage);
+		var popUpManager = PopUpManager.forStage(Lib.current.stage);
 		popUpManager.addPopUp(this._popUp1, true);
 		popUpManager.addPopUp(this._popUp2, true);
 		Assert.isFalse(PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(this._popUp1));

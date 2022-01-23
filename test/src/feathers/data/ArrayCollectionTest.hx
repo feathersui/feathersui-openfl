@@ -8,12 +8,13 @@
 
 package feathers.data;
 
-import openfl.errors.RangeError;
+import feathers.events.FlatCollectionEvent;
 import haxe.io.Error;
+import openfl.Lib;
+import openfl.errors.RangeError;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
-import feathers.events.FlatCollectionEvent;
-import openfl.events.Event;
 
 @:keep
 class ArrayCollectionTest extends Test {

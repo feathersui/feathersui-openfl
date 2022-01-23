@@ -8,9 +8,9 @@
 
 package feathers.controls.navigators;
 
+import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import feathers.events.FeathersEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -28,7 +28,7 @@ class StackNavigatorTest extends Test {
 
 	public function setup():Void {
 		this._navigator = new StackNavigator();
-		TestMain.openfl_root.addChild(this._navigator);
+		Lib.current.addChild(this._navigator);
 	}
 
 	public function teardown():Void {
@@ -36,7 +36,7 @@ class StackNavigatorTest extends Test {
 			this._navigator.parent.removeChild(this._navigator);
 		}
 		this._navigator = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testInject_withPushItemMethod():Void {

@@ -8,9 +8,9 @@
 
 package feathers.themes;
 
+import feathers.controls.Button;
 import utest.Assert;
 import utest.Test;
-import feathers.controls.Button;
 
 @:keep
 class DefaultThemeTest extends Test {

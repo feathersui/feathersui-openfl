@@ -9,12 +9,13 @@
 package feathers.controls;
 
 import haxe.Timer;
-import utest.Async;
+import openfl.Lib;
 import openfl.display.StageScaleMode;
-import openfl.events.SecurityErrorEvent;
-import openfl.events.IOErrorEvent;
 import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.events.SecurityErrorEvent;
 import utest.Assert;
+import utest.Async;
 import utest.Test;
 
 @:keep
@@ -30,7 +31,7 @@ class AssetLoaderTest extends Test {
 
 	public function setup():Void {
 		this._loader = new AssetLoader();
-		TestMain.openfl_root.addChild(this._loader);
+		Lib.current.addChild(this._loader);
 	}
 
 	public function teardown():Void {
@@ -38,7 +39,7 @@ class AssetLoaderTest extends Test {
 			this._loader.parent.removeChild(this._loader);
 		}
 		this._loader = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	@:timeout(1000)

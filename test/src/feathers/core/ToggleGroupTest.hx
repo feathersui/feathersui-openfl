@@ -8,9 +8,10 @@
 
 package feathers.core;
 
+import feathers.controls.ToggleButton;
+import openfl.Lib;
 import openfl.errors.RangeError;
 import openfl.events.Event;
-import feathers.controls.ToggleButton;
 import utest.Assert;
 import utest.Test;
 

@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.data.ArrayCollection;
+import openfl.Lib;
 import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
@@ -23,7 +24,7 @@ class ComboBoxTest extends Test {
 
 	public function setup():Void {
 		this._comboBox = new ComboBox();
-		TestMain.openfl_root.addChild(this._comboBox);
+		Lib.current.addChild(this._comboBox);
 	}
 
 	public function teardown():Void {
@@ -31,7 +32,7 @@ class ComboBoxTest extends Test {
 			this._comboBox.parent.removeChild(this._comboBox);
 		}
 		this._comboBox = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testValidateWithNullDataProvider():Void {

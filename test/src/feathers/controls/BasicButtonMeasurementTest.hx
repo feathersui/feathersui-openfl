@@ -8,12 +8,10 @@
 
 package feathers.controls;
 
-import feathers.skins.RectangleSkin;
-import openfl.display.Shape;
-import openfl.events.MouseEvent;
-import openfl.events.Event;
 import feathers.controls.BasicButton;
-import feathers.events.FeathersEvent;
+import feathers.skins.RectangleSkin;
+import openfl.Lib;
+import openfl.display.Shape;
 import utest.Assert;
 import utest.Test;
 
@@ -36,7 +34,7 @@ class BasicButtonMeasurementTest extends Test {
 
 	public function setup():Void {
 		this._button = new BasicButton();
-		TestMain.openfl_root.addChild(this._button);
+		Lib.current.addChild(this._button);
 	}
 
 	public function teardown():Void {
@@ -44,7 +42,7 @@ class BasicButtonMeasurementTest extends Test {
 			this._button.parent.removeChild(this._button);
 		}
 		this._button = null;
-		Assert.equals(0, TestMain.openfl_root.numChildren, "Test cleanup failed to remove all children from the root");
+		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	private function addShapeBackground():Void {
