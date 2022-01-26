@@ -148,7 +148,7 @@ class Main extends Application {
 
 		var footerText = new Label();
 		footerText.variant = CHILD_VARIANT_FOOTER_TEXT;
-		footerText.htmlText = '<p>Created with <a href="https://feathersui.com/"><u>Feathers UI</u></p><p>Inspired by <a href="https://todomvc.com/"><u>TodoMVC</u></p>';
+		footerText.htmlText = '<p>Created with <a href="https://feathersui.com/"><u>Feathers UI</u></a></p><p>Inspired by <a href="https://todomvc.com/"><u>TodoMVC</u></a></p>';
 		this.mainContainer.addChild(footerText);
 	}
 
