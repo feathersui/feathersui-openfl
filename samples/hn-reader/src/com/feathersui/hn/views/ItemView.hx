@@ -8,7 +8,6 @@ import feathers.controls.TreeView;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.navigators.RouterNavigator;
 import feathers.data.ArrayHierarchicalCollection;
-import feathers.data.TreeViewItemState;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.utils.DisplayObjectRecycler;
@@ -38,16 +37,19 @@ class ItemView extends LayoutGroup {
 		layout = new AnchorLayout();
 
 		_itemsTreeView = new TreeView();
+		_itemsTreeView.itemToText = (item:Any) -> {
+			if (item == LOADING_ITEM) {
+				return "Loading...";
+			}
+			if (item == ERROR_ITEM) {
+				return "Error loading feed";
+			}
+			return (item : Item).content;
+		}
 		_itemsTreeView.itemRendererRecycler = DisplayObjectRecycler.withClass(CommentItemRenderer);
 		_itemsTreeView.setItemRendererRecycler(HEADER_ITEM_RECYCLER_ID, DisplayObjectRecycler.withClass(ItemHeaderItemRenderer));
-		_itemsTreeView.setItemRendererRecycler(LOADING_ITEM_RECYCLER_ID,
-			DisplayObjectRecycler.withClass(ItemRenderer, (itemRenderer, state:TreeViewItemState) -> {
-				itemRenderer.text = "Loading...";
-			}));
-		_itemsTreeView.setItemRendererRecycler(ERROR_ITEM_RECYCLER_ID,
-			DisplayObjectRecycler.withClass(ItemRenderer, (itemRenderer, state:TreeViewItemState) -> {
-				itemRenderer.text = "Error loading feed";
-			}));
+		_itemsTreeView.setItemRendererRecycler(LOADING_ITEM_RECYCLER_ID, DisplayObjectRecycler.withClass(ItemRenderer));
+		_itemsTreeView.setItemRendererRecycler(ERROR_ITEM_RECYCLER_ID, DisplayObjectRecycler.withClass(ItemRenderer));
 		_itemsTreeView.itemRendererRecyclerIDFunction = (state) -> {
 			if (state.data == LOADING_ITEM) {
 				return LOADING_ITEM_RECYCLER_ID;

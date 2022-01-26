@@ -1,6 +1,7 @@
 package com.feathersui.hn.views;
 
 import com.feathersui.hn.views.controls.FeedItemRenderer;
+import com.feathersui.hn.vo.FeedItem;
 import feathers.controls.LayoutGroup;
 import feathers.controls.ListView;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -51,6 +52,18 @@ class FeedView extends LayoutGroup {
 		layout = new AnchorLayout();
 
 		_feedItemListView = new ListView();
+		_feedItemListView.itemToText = (item:Any) -> {
+			if (item == MORE_ITEM) {
+				return "More...";
+			}
+			if (item == LOADING_ITEM) {
+				return "Loading...";
+			}
+			if (item == ERROR_ITEM) {
+				return "Error loading feed";
+			}
+			return (item : FeedItem).title;
+		}
 
 		_feedItemListView.itemRendererRecycler = DisplayObjectRecycler.withClass(FeedItemRenderer, (itemRenderer, state:ListViewItemState) -> {
 			itemRenderer.pageIndex = _pageIndex;
@@ -63,17 +76,9 @@ class FeedView extends LayoutGroup {
 				dispatchEvent(new TextEvent(TextEvent.LINK, false, false, 'router:${_baseURL}?p=${nextPageIndex}'));
 			});
 			return itemRenderer;
-		}, (itemRenderer, state:ListViewItemState) -> {
-			itemRenderer.text = "More...";
 		}));
-		_feedItemListView.setItemRendererRecycler(LOADING_ITEM_RECYCLER_ID,
-			DisplayObjectRecycler.withClass(ItemRenderer, (itemRenderer, state:ListViewItemState) -> {
-				itemRenderer.text = "Loading...";
-			}));
-		_feedItemListView.setItemRendererRecycler(ERROR_ITEM_RECYCLER_ID,
-			DisplayObjectRecycler.withClass(ItemRenderer, (itemRenderer, state:ListViewItemState) -> {
-				itemRenderer.text = "Error loading feed";
-			}));
+		_feedItemListView.setItemRendererRecycler(LOADING_ITEM_RECYCLER_ID, DisplayObjectRecycler.withClass(ItemRenderer));
+		_feedItemListView.setItemRendererRecycler(ERROR_ITEM_RECYCLER_ID, DisplayObjectRecycler.withClass(ItemRenderer));
 		_feedItemListView.itemRendererRecyclerIDFunction = (state) -> {
 			if (state.data == LOADING_ITEM) {
 				return LOADING_ITEM_RECYCLER_ID;
