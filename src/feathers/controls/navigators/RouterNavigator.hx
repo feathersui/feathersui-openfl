@@ -8,8 +8,10 @@
 
 package feathers.controls.navigators;
 
+import feathers.data.RouteState;
 import feathers.motion.effects.IEffectContext;
 import feathers.themes.steel.components.SteelRouterNavigatorStyles;
+import feathers.utils.Path2EReg;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
@@ -156,6 +158,9 @@ class RouterNavigator extends BaseNavigator {
 		@since 1.0.0
 	**/
 	public function addRoute(route:Route):Void {
+		if (route.path == null) {
+			route.path = "";
+		}
 		this.addItemInternal(route.path, route);
 		if (this.stage != null && this.activeItemView == null) {
 			var matched = this.matchRoute();
@@ -453,14 +458,34 @@ class RouterNavigator extends BaseNavigator {
 		return pathname;
 	}
 
+	private var _cachedPaths:Map<String, {
+		ereg:EReg,
+		keys:Array<Key>
+	}> = [];
+
+	private function getMatcher(path:String):{
+		ereg:EReg,
+		keys:Array<Key>
+	} {
+		var matcher = this._cachedPaths.get(path);
+		if (matcher == null) {
+			matcher = feathers.utils.Path2EReg.toEReg(path, {
+				end: true
+			});
+			this._cachedPaths.set(path, matcher);
+		}
+		return matcher;
+	}
+
 	private function matchRoute():Route {
-		var pathname = this.getPathname().toLowerCase();
+		var pathname = this.getPathname();
 		for (path => route in this._addedItems) {
-			path = path.toLowerCase();
-			if (pathname == path) {
-				return cast(route, Route);
+			if (path == null || path.length == 0) {
+				// always match
+				return route;
 			}
-			if (path == "*") {
+			var matcher = getMatcher(path);
+			if (matcher.ereg.match(pathname)) {
 				return cast(route, Route);
 			}
 		}
@@ -478,6 +503,16 @@ class RouterNavigator extends BaseNavigator {
 
 	override private function getView(id:String):DisplayObject {
 		var item = cast(this._addedItems.get(id), Route);
+		var itemPath = item.path;
+		var params:Map<String, String> = [];
+		if (itemPath != null && itemPath.length > 0) {
+			var matcher = getMatcher(item.path);
+			for (i in 0...matcher.keys.length) {
+				var key = matcher.keys[i];
+				params.set(key.name, matcher.ereg.matched(i + 1));
+			}
+		}
+		var routeState = new RouteState(item.path, this.getPathname(), params);
 		var view = item.getView(this);
 		#if html5
 		var historyState:HistoryState = this.htmlWindow.history.state;
@@ -485,9 +520,9 @@ class RouterNavigator extends BaseNavigator {
 		var historyItem = this._history[this._history.length - 1];
 		var historyState = historyItem.state;
 		#end
-		var viewState = (historyState != null) ? historyState.state : null;
+		routeState.historyState = (historyState != null) ? historyState.state : null;
 		if (item.injectState != null) {
-			item.injectState(view, viewState);
+			item.injectState(view, routeState);
 		}
 		var viewData = (historyState != null) ? historyState.viewData : null;
 		if (item.restoreData != null) {

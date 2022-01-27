@@ -8,14 +8,36 @@
 
 package feathers.controls.navigators;
 
-import openfl.events.Event;
-import feathers.motion.effects.IEffectContext;
+import feathers.data.RouteState;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 
 /**
 	An individual item that will be displayed by a `RouterNavigator` component.
-	Provides the URL path, the view, and an optional list of events to map to
-	actions (like navigate) on the `RouterNavigator`.
+	Provides the URL path pattern, the view, and an optional list of events to
+	map to actions (like push or pop navigation) performed by the
+	`RouterNavigator`.
+
+	To determine which `Route` to use, the `RouterNavigator` matches the current
+	URL against the path patterns defined by the `Route` objects.
+
+	Path patterns must start with a forward slash `/` character. Do not include
+	the host/domain part of the URL.
+
+	Path patterns support _named parameters_ that start with a `:` colon
+	character. For example, the path pattern `/:foo/:bar` has named parameters
+	with the names "foo" and "bar". If the display object returned by the `Route` implements
+	the `IRouteView` interface, the name parameters are passsed to the view
+	for additional parsing.
+
+	Named parameters may be made optional by appending a `?` question mark
+	character. For example, the "foo" parameter is optional in the path pattern
+	`/baz/:foo?`, and it will also match "/baz" without the parameter.
+
+	If the path pattern is `null` or an empty string, it will always match.
+
+	If the `RouterNavigator` defines a `basePath`, path patterns should not
+	include the base path. It will be handled automatically.
 
 	@see [Tutorial: How to use the RouterNavigator component](https://feathersui.com/learn/haxe-openfl/router-navigator/)
 	@see `feathers.controls.RouterNavigator`
@@ -27,11 +49,11 @@ class Route {
 		Creates a `Route` that instantiates a view from a class that extends
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
-	public static function withClass(path:String, viewClass:Class<DisplayObject>, ?actions:Map<String, RouterAction>,
-			?injectState:(view:Dynamic, state:Dynamic) -> Void, ?saveData:(view:Dynamic) -> Dynamic, ?restoreData:(view:Dynamic, data:Dynamic) -> Void):Route {
+	public static function withClass<T:DisplayObject>(path:String, viewClass:Class<T>, ?actions:Map<String, RouterAction>,
+			?injectState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewClass = viewClass;
+		item.viewClass = cast viewClass;
 		item.actions = actions;
 		item.injectState = injectState;
 		item.saveData = saveData;
@@ -43,8 +65,8 @@ class Route {
 		Creates a `Route` that calls a function that returns a
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
-	public static function withFunction(path:String, viewFunction:() -> DisplayObject, ?actions:Map<String, RouterAction>,
-			?injectState:(view:Dynamic, state:Dynamic) -> Void, ?saveData:(view:Dynamic) -> Dynamic, ?restoreData:(view:Dynamic, data:Dynamic) -> Void):Route {
+	public static function withFunction<T:DisplayObject>(path:String, viewFunction:() -> T, ?actions:Map<String, RouterAction>,
+			?injectState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewFunction = viewFunction;
@@ -59,8 +81,8 @@ class Route {
 		Creates a `Route` that always returns the same `DisplayObject`
 		instance when the `RouterNavigator` requests the item's view.
 	**/
-	public static function withDisplayObject(path:String, viewInstance:DisplayObject, ?actions:Map<String, RouterAction>,
-			?injectState:(view:Dynamic, state:Dynamic) -> Void, ?saveData:(view:Dynamic) -> Dynamic, ?restoreData:(view:Dynamic, data:Dynamic) -> Void):Route {
+	public static function withDisplayObject<T:DisplayObject>(path:String, viewInstance:T, ?actions:Map<String, RouterAction>,
+			?injectState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewInstance = viewInstance;
@@ -88,7 +110,7 @@ class Route {
 
 		@since 1.0.0
 	**/
-	public dynamic function injectState(view:Dynamic, state:Dynamic):Void {}
+	public dynamic function injectState(view:Dynamic, routeState:RouteState):Void {}
 
 	/**
 		An optional function to save the view's data before navigating away.
