@@ -479,14 +479,15 @@ class RouterNavigator extends BaseNavigator {
 
 	private function matchRoute():Route {
 		var pathname = this.getPathname();
-		for (path => route in this._addedItems) {
+		// order matters, so loop through the ids array
+		for (path in this._addedItemIDs) {
 			if (path == null || path.length == 0) {
 				// always match
-				return route;
+				return this._addedItems.get(path);
 			}
 			var matcher = getMatcher(path);
 			if (matcher.ereg.match(pathname)) {
-				return cast(route, Route);
+				return this._addedItems.get(path);
 			}
 		}
 		return null;
