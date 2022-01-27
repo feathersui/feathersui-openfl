@@ -3,6 +3,7 @@ import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterNavigator;
 import feathers.data.ArrayCollection;
+import feathers.data.RouteState;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import valueObjects.Contact;
@@ -43,11 +44,14 @@ class Main extends Application {
 				}
 				return Push(ChooseContactView.ROUTE_PATH, newState);
 			})
-		], (view:ComposeMessageView, state:Dynamic) -> {
+		], (view:ComposeMessageView, state:RouteState) -> {
 			if (state == null) {
 				return;
 			}
-			var contactID:Null<Int> = state.contactID;
+			var contactID:Null<Int> = null;
+			if (state.historyState != null) {
+				contactID = state.historyState.contactID;
+			}
 			if (contactID != null) {
 				for (otherContact in contacts) {
 					if (contactID == otherContact.id) {
@@ -72,11 +76,14 @@ class Main extends Application {
 				// pass the selected contact back to the compose screen
 				return Push(ComposeMessageView.ROUTE_PATH, newState);
 			})
-		], (view:ChooseContactView, state:Dynamic) -> {
+		], (view:ChooseContactView, state:RouteState) -> {
 			if (state == null) {
 				return;
 			}
-			var contactID:Null<Int> = state.contactID;
+			var contactID:Null<Int> = null;
+			if (state.historyState != null) {
+				contactID = state.historyState.contactID;
+			}
 			if (contactID != null) {
 				for (otherContact in contacts) {
 					if (contactID == otherContact.id) {
