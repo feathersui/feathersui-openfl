@@ -412,18 +412,7 @@ class RouterNavigator extends BaseNavigator {
 		return this.getPathname();
 	}
 
-	/**
-		Returns an `URLVariables` object constructed from the current query
-		parameters.
-
-		If the query parameters cannot be parsed by `URLVariables`, returns an
-		empty `URLVariables` object.
-
-		@since 1.0.0
-	**/
-	public var urlVariables(get, never):URLVariables;
-
-	private function get_urlVariables():URLVariables {
+	private function getURLVariables():URLVariables {
 		var search = location.search;
 		if (search.length > 0) {
 			search = search.substr(1);
@@ -523,6 +512,7 @@ class RouterNavigator extends BaseNavigator {
 		#end
 		routeState.historyState = (historyState != null) ? historyState.state : null;
 		routeState.data = (historyState != null) ? historyState.viewData : null;
+		routeState.urlVariables = this.getURLVariables();
 		if (item.injectState != null) {
 			item.injectState(view, routeState);
 		}

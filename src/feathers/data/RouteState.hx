@@ -8,6 +8,8 @@
 
 package feathers.data;
 
+import openfl.net.URLVariables;
+
 /**
 	Represents the current state of a `RouterNavigator` view.
 
@@ -50,6 +52,17 @@ class RouteState {
 		@since 1.0.0
 	**/
 	public var params:Map<String, String>;
+
+	/**
+		Returns an `URLVariables` object constructed from the current query
+		parameters.
+
+		If the query parameters cannot be parsed by `URLVariables`, returns an
+		empty `URLVariables` object.
+
+		@since 1.0.0
+	**/
+	public var urlVariables:URLVariables;
 
 	/**
 		The state data restored from the HTML history API.
