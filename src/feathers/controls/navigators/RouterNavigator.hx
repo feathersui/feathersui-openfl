@@ -521,12 +521,12 @@ class RouterNavigator extends BaseNavigator {
 		var historyState = historyItem.state;
 		#end
 		routeState.historyState = (historyState != null) ? historyState.state : null;
+		routeState.data = (historyState != null) ? historyState.viewData : null;
 		if (item.injectState != null) {
 			item.injectState(view, routeState);
 		}
-		var viewData = (historyState != null) ? historyState.viewData : null;
 		if (item.restoreData != null) {
-			item.restoreData(view, viewData);
+			item.restoreData(view, routeState.data);
 		}
 		view.addEventListener(TextEvent.LINK, routerNavigator_activeView_linkHandler);
 		return view;

@@ -21,11 +21,12 @@ class RouteState {
 
 		@since 1.0.0
 	**/
-	public function new(pattern:String = null, pathname:String = null, params:Map<String, String> = null, historyState:Dynamic = null) {
+	public function new(pattern:String = null, pathname:String = null, params:Map<String, String> = null, historyState:Dynamic = null, data:Dynamic = null) {
 		this.pattern = pattern;
 		this.pathname = pathname;
 		this.params = params;
 		this.historyState = historyState;
+		this.data = data;
 	}
 
 	/**
@@ -56,4 +57,11 @@ class RouteState {
 		@since 1.0.0
 	**/
 	public var historyState:Dynamic;
+
+	/**
+		Data to restore that was saved with `Route.saveData()`.
+
+		@since 1.0.0
+	**/
+	public var data:Dynamic;
 }
