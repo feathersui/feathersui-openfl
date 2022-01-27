@@ -56,7 +56,7 @@ class ItemHeaderItemRenderer extends LayoutGroupItemRenderer {
 				if (metaText.length > 0) {
 					metaText += " ";
 				}
-				metaText += 'by <u><a href="event:router:/user?id=${item.user}">${item.user}</a></u>';
+				metaText += 'by <u><a href="event:router:/user/${item.user}">${item.user}</a></u>';
 			}
 			if (item.time_ago != null) {
 				if (metaText.length > 0) {

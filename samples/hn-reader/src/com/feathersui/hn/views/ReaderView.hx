@@ -5,6 +5,7 @@ import com.feathersui.hn.views.events.ReaderHeaderViewEvent;
 import feathers.controls.Panel;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterNavigator;
+import feathers.data.RouteState;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.layout.HorizontalLayoutData;
@@ -56,23 +57,43 @@ class ReaderView extends Panel {
 		addChild(_navigator);
 
 		_navigator.addRoute(Route.withClass("/about", AboutView));
-		_navigator.addRoute(Route.withClass("/user", UserView));
-		_navigator.addRoute(Route.withClass("/item", ItemView));
-		_navigator.addRoute(Route.withFunction("/top", () -> {
+		_navigator.addRoute(Route.withClass("/user/:id", UserView, null, (view, routeState) -> {
+			view.userID = routeState.params.get("id");
+		}));
+		_navigator.addRoute(Route.withClass("/item/:id", ItemView, null, (view, routeState) -> {
+			view.itemID = routeState.params.get("id");
+		}));
+
+		function populateFeed(view:FeedView, state:RouteState):Void {
+			var pageIndex = 1;
+			if (state.params.exists("page")) {
+				var rawPage = state.params.get("page");
+				if (rawPage != null) {
+					var parsedPage = Std.parseInt(rawPage);
+					if (parsedPage != null) {
+						pageIndex = parsedPage;
+					}
+				}
+			}
+			view.pageIndex = pageIndex;
+		}
+
+		_navigator.addRoute(Route.withFunction("/top/:page?", () -> {
 			return new FeedView("Top", "/top", "news", 10);
-		}));
-		_navigator.addRoute(Route.withFunction("/new", () -> {
+		}, null, populateFeed));
+		_navigator.addRoute(Route.withFunction("/new/:page?", () -> {
 			return new FeedView("New", "/new", "newest", 12);
-		}));
-		_navigator.addRoute(Route.withFunction("/show", () -> {
+		}, null, populateFeed));
+		_navigator.addRoute(Route.withFunction("/show/:page?", () -> {
 			return new FeedView("Show", "/show", "show", 2);
-		}));
-		_navigator.addRoute(Route.withFunction("/ask", () -> {
+		}, null, populateFeed));
+		_navigator.addRoute(Route.withFunction("/ask/:page?", () -> {
 			return new FeedView("Ask", "/ask", "ask", 2);
-		}));
-		_navigator.addRoute(Route.withFunction("/jobs", () -> {
+		}, null, populateFeed));
+		_navigator.addRoute(Route.withFunction("/jobs/:page?", () -> {
 			return new FeedView("Jobs", "/jobs", "jobs", 1);
-		}));
+		}, null, populateFeed));
+		_navigator.addRoute(Route.withClass(null, NotFoundView));
 
 		// keep the header view's location updated so that it can update which
 		// section is selected

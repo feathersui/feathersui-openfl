@@ -67,7 +67,7 @@ class CommentItemRenderer extends LayoutGroupItemRenderer implements IHierarchic
 				if (metaText.length > 0) {
 					metaText += " ";
 				}
-				metaText += '<u><a href="event:router:/user?id=${item.user}">${item.user}</a></u>';
+				metaText += '<u><a href="event:router:/user/${item.user}">${item.user}</a></u>';
 			}
 			if (item.time_ago != null) {
 				if (metaText.length > 0) {

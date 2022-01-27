@@ -3,7 +3,6 @@ package com.feathersui.hn.views;
 import com.feathersui.hn.vo.User;
 import feathers.controls.Label;
 import feathers.controls.ScrollContainer;
-import feathers.controls.navigators.RouterNavigator;
 import feathers.layout.VerticalLayout;
 import haxe.Json;
 import openfl.events.Event;
@@ -21,6 +20,29 @@ class UserView extends ScrollContainer {
 	private var _meta:Label;
 	private var _links:Label;
 	private var _description:Label;
+
+	private var _user:User;
+	private var _errorMessage:String;
+	private var _userLoader:URLLoader;
+
+	@:isVar
+	public var userID(default, set):String;
+
+	private function set_userID(value:String):String {
+		if (userID == value) {
+			return userID;
+		}
+		userID = value;
+		_user = null;
+		_errorMessage = null;
+
+		if (initialized) {
+			loadUser();
+		}
+
+		setInvalid(DATA);
+		return userID;
+	}
 
 	override private function initialize():Void {
 		super.initialize();
@@ -51,41 +73,64 @@ class UserView extends ScrollContainer {
 		_links.wordWrap = true;
 		addChild(_links);
 
-		var navigator = cast(parent, RouterNavigator);
-		var userName = Reflect.field(navigator.urlVariables, "id");
+		loadUser();
+	}
 
-		var loader = new URLLoader();
-		loader.dataFormat = TEXT;
-		loader.addEventListener(Event.COMPLETE, userLoader_completeHandler);
-		loader.addEventListener(IOErrorEvent.IO_ERROR, userLoader_errorHandler);
-		loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, userLoader_errorHandler);
-		loader.load(new URLRequest('https://api.hnpwa.com/v0/user/${userName}.json'));
+	override private function update():Void {
+		if (_user != null) {
+			_title.text = _user.id;
+			_meta.htmlText = 'joined <b>${_user.created}</b> and has <b>${_user.karma}</b> karma';
+			_description.htmlText = _user.about;
+			_links.htmlText = '<li><u><a href="https://news.ycombinator.com/submitted?id=${_user.id}">submissions</a></u></li>'
+				+ '<li><u><a href="https://news.ycombinator.com/threads?id=${_user.id}">comments</a></u></li>'
+				+ '<li><u><a href="https://news.ycombinator.com/favorites?id=${_user.id}">favorites</a></u></li>';
+		} else {
+			if (_errorMessage != null) {
+				_title.text = _errorMessage;
+			} else if (_userLoader != null) {
+				_title.text = "Loading...";
+			}
+			_meta.text = null;
+			_description.text = null;
+			_links.text = null;
+		}
+		super.update();
+	}
+
+	private function loadUser():Void {
+		if (_userLoader != null) {
+			_userLoader.close();
+			_userLoader = null;
+		}
+
+		if (userID == null) {
+			return;
+		}
+
+		_userLoader = new URLLoader();
+		_userLoader.dataFormat = TEXT;
+		_userLoader.addEventListener(Event.COMPLETE, userLoader_completeHandler);
+		_userLoader.addEventListener(IOErrorEvent.IO_ERROR, userLoader_errorHandler);
+		_userLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, userLoader_errorHandler);
+		_userLoader.load(new URLRequest('https://api.hnpwa.com/v0/user/${userID}.json'));
 	}
 
 	private function userLoader_completeHandler(event:Event):Void {
-		var userLoader = cast(event.currentTarget, URLLoader);
-		var userData = (userLoader.data : String);
+		var userData = (_userLoader.data : String);
+		_userLoader = null;
 		try {
-			var user = (Json.parse(userData) : User);
-			_title.text = user.id;
-			_meta.htmlText = 'joined <b>${user.created}</b> and has <b>${user.karma}</b> karma';
-			_description.htmlText = user.about;
-			_links.htmlText = '<li><u><a href="https://news.ycombinator.com/submitted?id=${user.id}">submissions</a></u></li>'
-				+ '<li><u><a href="https://news.ycombinator.com/threads?id=${user.id}">comments</a></u></li>'
-				+ '<li><u><a href="https://news.ycombinator.com/favorites?id=${user.id}">favorites</a></u></li>';
+			_user = (Json.parse(userData) : User);
 		} catch (e:Dynamic) {
 			trace("error: " + e);
-			_title.text = "Error loading user";
-			_meta.text = null;
-			_links.text = null;
-			_description.text = null;
+			_errorMessage = "Error loading user";
 		}
+		setInvalid(DATA);
 	}
 
 	private function userLoader_errorHandler(event:Event):Void {
-		_title.text = "Error loading user";
-		_meta.text = null;
-		_links.text = null;
-		_description.text = null;
+		trace("error: " + event);
+
+		_userLoader = null;
+		setInvalid(DATA);
 	}
 }

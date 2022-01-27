@@ -6,7 +6,6 @@ import com.feathersui.hn.vo.Item;
 import feathers.controls.LayoutGroup;
 import feathers.controls.TreeView;
 import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.controls.navigators.RouterNavigator;
 import feathers.data.ArrayHierarchicalCollection;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
@@ -27,6 +26,25 @@ class ItemView extends LayoutGroup {
 
 	public function new() {
 		super();
+	}
+
+	private var _itemLoader:URLLoader;
+
+	@:isVar
+	public var itemID(default, set):String;
+
+	private function set_itemID(value:String):String {
+		if (itemID == value) {
+			return itemID;
+		}
+		itemID = value;
+
+		if (initialized) {
+			loadItem();
+		}
+
+		setInvalid(DATA);
+		return itemID;
 	}
 
 	private var _itemsTreeView:TreeView;
@@ -66,30 +84,43 @@ class ItemView extends LayoutGroup {
 		_itemsTreeView.layoutData = AnchorLayoutData.fill();
 		addChild(_itemsTreeView);
 
-		var navigator = cast(parent, RouterNavigator);
-		var itemID = Reflect.field(navigator.urlVariables, "id");
+		loadItem();
+	}
+
+	private function loadItem():Void {
+		if (_itemLoader != null) {
+			_itemLoader.close();
+			_itemLoader = null;
+		}
+
+		if (itemID == null) {
+			return;
+		}
 
 		_itemsTreeView.dataProvider = new ArrayHierarchicalCollection([LOADING_ITEM]);
 
-		var loader = new URLLoader();
-		loader.dataFormat = TEXT;
-		loader.addEventListener(Event.COMPLETE, itemLoader_completeHandler);
-		loader.addEventListener(IOErrorEvent.IO_ERROR, itemLoader_errorHandler);
-		loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, itemLoader_errorHandler);
-		loader.load(new URLRequest('https://api.hnpwa.com/v0/item/${itemID}.json'));
+		_itemLoader = new URLLoader();
+		_itemLoader.dataFormat = TEXT;
+		_itemLoader.addEventListener(Event.COMPLETE, itemLoader_completeHandler);
+		_itemLoader.addEventListener(IOErrorEvent.IO_ERROR, itemLoader_errorHandler);
+		_itemLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, itemLoader_errorHandler);
+		_itemLoader.load(new URLRequest('https://api.hnpwa.com/v0/item/${itemID}.json'));
 	}
 
 	private function itemLoader_errorHandler(event:Event):Void {
 		trace("error: " + event);
 
+		_itemLoader = null;
+
 		_itemsTreeView.dataProvider = new ArrayHierarchicalCollection([ERROR_ITEM]);
 	}
 
 	private function itemLoader_completeHandler(event:Event):Void {
-		var userLoader = cast(event.currentTarget, URLLoader);
-		var userData = (userLoader.data : String);
+		var itemData = (_itemLoader.data : String);
+		_itemLoader = null;
+
 		try {
-			var rootItem = (Json.parse(userData) : Item);
+			var rootItem = (Json.parse(itemData) : Item);
 			_itemsTreeView.dataProvider = new ArrayHierarchicalCollection([rootItem], (item:Item) -> {
 				return item.comments;
 			});

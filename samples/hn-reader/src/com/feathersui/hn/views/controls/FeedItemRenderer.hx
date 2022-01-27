@@ -92,7 +92,7 @@ class FeedItemRenderer extends LayoutGroupItemRenderer implements ILayoutIndexOb
 				secondaryHtmlText += '${feedItem.points} points ';
 			}
 			if (feedItem.user != null) {
-				secondaryHtmlText += 'by <u><a href="event:router:/user?id=${feedItem.user}">${feedItem.user}</a></u> ';
+				secondaryHtmlText += 'by <u><a href="event:router:/user/${feedItem.user}">${feedItem.user}</a></u> ';
 			}
 			if (feedItem.time_ago != null) {
 				secondaryHtmlText += '${feedItem.time_ago} ';
@@ -100,7 +100,7 @@ class FeedItemRenderer extends LayoutGroupItemRenderer implements ILayoutIndexOb
 			if (secondaryHtmlText.length > 0) {
 				secondaryHtmlText += '| ';
 			}
-			secondaryHtmlText += '<u><a href="event:router:/item?id=${feedItem.id}">${feedItem.comments_count} comments</a></u>';
+			secondaryHtmlText += '<u><a href="event:router:/item/${feedItem.id}">${feedItem.comments_count} comments</a></u>';
 			_secondaryLabel.htmlText = secondaryHtmlText;
 		}
 		super.update();

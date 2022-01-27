@@ -5,7 +5,6 @@ import com.feathersui.hn.vo.FeedItem;
 import feathers.controls.LayoutGroup;
 import feathers.controls.ListView;
 import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.controls.navigators.RouterNavigator;
 import feathers.data.ArrayCollection;
 import feathers.data.ListViewItemState;
 import feathers.events.TriggerEvent;
@@ -42,7 +41,31 @@ class FeedView extends LayoutGroup {
 	private var _baseURL:String;
 	private var _feedName:String;
 	private var _maxPages:Int;
-	private var _pageIndex:Int;
+
+	private var _feedLoader:URLLoader;
+
+	@:isVar
+	public var pageIndex(default, set):Int;
+
+	private function set_pageIndex(value:Int):Int {
+		if (value < 1) {
+			value = 1;
+		} else if (value > _maxPages) {
+			value = _maxPages;
+		}
+
+		if (pageIndex == value) {
+			return pageIndex;
+		}
+		pageIndex = value;
+
+		if (initialized) {
+			loadFeed();
+		}
+
+		setInvalid(DATA);
+		return pageIndex;
+	}
 
 	private var _feedItemListView:ListView;
 
@@ -66,14 +89,14 @@ class FeedView extends LayoutGroup {
 		}
 
 		_feedItemListView.itemRendererRecycler = DisplayObjectRecycler.withClass(FeedItemRenderer, (itemRenderer, state:ListViewItemState) -> {
-			itemRenderer.pageIndex = _pageIndex;
+			itemRenderer.pageIndex = pageIndex;
 			itemRenderer.maxPerPage = MAX_PER_PAGE;
 		});
 		_feedItemListView.setItemRendererRecycler(MORE_ITEM_RECYCLER_ID, DisplayObjectRecycler.withFunction(() -> {
 			var itemRenderer = new ItemRenderer();
 			itemRenderer.addEventListener(TriggerEvent.TRIGGER, event -> {
-				var nextPageIndex = _pageIndex + 1;
-				dispatchEvent(new TextEvent(TextEvent.LINK, false, false, 'router:${_baseURL}?p=${nextPageIndex}'));
+				var nextPageIndex = pageIndex + 1;
+				dispatchEvent(new TextEvent(TextEvent.LINK, false, false, 'router:${_baseURL}/${nextPageIndex}'));
 			});
 			return itemRenderer;
 		}));
@@ -95,48 +118,39 @@ class FeedView extends LayoutGroup {
 		_feedItemListView.layoutData = AnchorLayoutData.fill();
 		addChild(_feedItemListView);
 
-		var urlPageIndex = 1;
-		var navigator = cast(parent, RouterNavigator);
-		var pageString = Reflect.field(navigator.urlVariables, "p");
-		if (pageString != null) {
-			var result = Std.parseInt(pageString);
-			if (result != null) {
-				urlPageIndex = result;
-			}
-		}
-		setPage(urlPageIndex);
+		loadFeed();
 	}
 
-	private function setPage(index:Int):Void {
-		if (index < 1) {
-			index = 1;
-		} else if (index > _maxPages) {
-			index = _maxPages;
+	private function loadFeed():Void {
+		if (_feedLoader != null) {
+			_feedLoader.close();
+			_feedLoader = null;
 		}
-		_pageIndex = index;
 
 		_feedItemListView.dataProvider = new ArrayCollection([LOADING_ITEM]);
 
-		var loader = new URLLoader();
-		loader.dataFormat = TEXT;
-		loader.addEventListener(Event.COMPLETE, feedLoader_completeHandler);
-		loader.addEventListener(IOErrorEvent.IO_ERROR, feedLoader_errorHandler);
-		loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, feedLoader_errorHandler);
-		loader.load(new URLRequest('https://api.hnpwa.com/v0/$_feedName/$_pageIndex.json'));
+		_feedLoader = new URLLoader();
+		_feedLoader.dataFormat = TEXT;
+		_feedLoader.addEventListener(Event.COMPLETE, feedLoader_completeHandler);
+		_feedLoader.addEventListener(IOErrorEvent.IO_ERROR, feedLoader_errorHandler);
+		_feedLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, feedLoader_errorHandler);
+		_feedLoader.load(new URLRequest('https://api.hnpwa.com/v0/$_feedName/$pageIndex.json'));
 	}
 
 	private function feedLoader_errorHandler(event:ErrorEvent):Void {
 		trace("error: " + event);
 
+		_feedLoader = null;
+
 		_feedItemListView.dataProvider = new ArrayCollection([ERROR_ITEM]);
 	}
 
 	private function feedLoader_completeHandler(event:Event):Void {
-		var feedLoader = cast(event.currentTarget, URLLoader);
-		var feedData = (feedLoader.data : String);
+		var feedData = (_feedLoader.data : String);
+		_feedLoader = null;
 		try {
 			var feed = (Json.parse(feedData) : Array<Any>);
-			if (_pageIndex < _maxPages) {
+			if (pageIndex < _maxPages) {
 				feed.push(MORE_ITEM);
 			}
 			_feedItemListView.dataProvider = new ArrayCollection(feed);
