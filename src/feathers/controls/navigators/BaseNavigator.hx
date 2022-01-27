@@ -134,6 +134,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 	private var _viewsContainer:DisplayObjectContainer;
 	private var _activeViewMeasurements:Measurements = new Measurements();
+	private var _addedItemIDs:Array<String> = [];
 	private var _addedItems:Map<String, Dynamic> = new Map();
 	private var _previousViewInTransition:DisplayObject;
 	private var _previousViewInTransitionID:String;
@@ -220,9 +221,8 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 			this.clearActiveItemInternal(null);
 			FeathersEvent.dispatch(this, Event.CLEAR);
 		}
-		for (id in this._addedItems.keys()) {
-			this._addedItems.remove(id);
-		}
+		this._addedItems.clear();
+		this._addedItemIDs.resize(0);
 	}
 
 	/**
@@ -484,6 +484,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 			throw new ArgumentError('Item with id \'$id\' already defined. Cannot add two items with the same id.');
 		}
 		this._addedItems.set(id, item);
+		this._addedItemIDs.push(id);
 	}
 
 	private function removeItemInternal(id:String):Dynamic {
@@ -501,6 +502,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		}
 		var item = this._addedItems.get(id);
 		this._addedItems.remove(id);
+		this._addedItemIDs.remove(id);
 		return item;
 	}
 
