@@ -17,4 +17,7 @@
 	<icon path="assets/icons/feathersui-icon.svg"/>
 
 	<assets id="feathersui" path="assets/img/feathers-ui-icon-color.png"/>
+
+	<!-- use a special template for production that defines a root path -->
+	<template path="templates" if="html5 feathersui.com"/>
 </project>
