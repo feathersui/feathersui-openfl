@@ -50,12 +50,12 @@ class Route {
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
 	public static function withClass<T:DisplayObject>(path:String, viewClass:Class<T>, ?actions:Map<String, RouterAction>,
-			?injectState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
+			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewClass = cast viewClass;
 		item.actions = actions;
-		item.injectState = injectState;
+		item.updateState = updateState;
 		item.saveData = saveData;
 		item.restoreData = restoreData;
 		return item;
@@ -66,12 +66,12 @@ class Route {
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
 	**/
 	public static function withFunction<T:DisplayObject>(path:String, viewFunction:() -> T, ?actions:Map<String, RouterAction>,
-			?injectState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
+			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewFunction = viewFunction;
 		item.actions = actions;
-		item.injectState = injectState;
+		item.updateState = updateState;
 		item.saveData = saveData;
 		item.restoreData = restoreData;
 		return item;
@@ -82,12 +82,12 @@ class Route {
 		instance when the `RouterNavigator` requests the item's view.
 	**/
 	public static function withDisplayObject<T:DisplayObject>(path:String, viewInstance:T, ?actions:Map<String, RouterAction>,
-			?injectState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
+			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic, ?restoreData:(view:T, data:Dynamic) -> Void):Route {
 		var item = new Route();
 		item.path = path;
 		item.viewInstance = viewInstance;
 		item.actions = actions;
-		item.injectState = injectState;
+		item.updateState = updateState;
 		item.saveData = saveData;
 		item.restoreData = restoreData;
 		return item;
@@ -110,7 +110,15 @@ class Route {
 
 		@since 1.0.0
 	**/
+	@:deprecated('Route.injectState is deprecated. Use Route.updateState() and RouteState.historyState instead.')
 	public dynamic function injectState(view:Dynamic, routeState:RouteState):Void {}
+
+	/**
+		An optional function to customize the view before it is shown.
+
+		@since 1.0.0
+	**/
+	public dynamic function updateState(view:Dynamic, routeState:RouteState):Void {}
 
 	/**
 		An optional function to save the view's data before navigating away.

@@ -513,8 +513,11 @@ class RouterNavigator extends BaseNavigator {
 		routeState.historyState = (historyState != null) ? historyState.state : null;
 		routeState.data = (historyState != null) ? historyState.viewData : null;
 		routeState.urlVariables = this.getURLVariables();
+		if (item.updateState != null) {
+			item.updateState(view, routeState);
+		}
 		if (item.injectState != null) {
-			item.injectState(view, routeState);
+			item.injectState(view, routeState.historyState);
 		}
 		if (item.restoreData != null) {
 			item.restoreData(view, routeState.data);
