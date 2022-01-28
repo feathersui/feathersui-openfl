@@ -136,6 +136,7 @@ class Route {
 
 		@since 1.0.0
 	**/
+	@:deprecated('Route.restoreData is deprecated. Use Route.updateState() and RouteState.data instead.')
 	public dynamic function restoreData(view:Dynamic, data:Dynamic):Void {}
 
 	private var viewClass:Class<DisplayObject>;
