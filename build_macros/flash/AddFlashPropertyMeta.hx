@@ -32,7 +32,7 @@ class AddFlashPropertyMeta {
 	private static function checkField(classType:ClassType, field:ClassField):Void {
 		switch (field.kind) {
 			case FVar(read, write):
-				if ((read.equals(AccCall) || write.match(AccCall)) && !field.meta.has(":flash.property")) {
+				if ((read.equals(AccCall) || write.equals(AccCall)) && !field.meta.has(":flash.property")) {
 					field.meta.add(":flash.property", [], field.pos);
 				}
 			default:
