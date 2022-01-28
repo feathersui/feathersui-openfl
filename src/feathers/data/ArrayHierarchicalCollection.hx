@@ -65,7 +65,6 @@ import openfl.utils.IExternalizable;
 @:event(feathers.events.HierarchicalCollectionEvent.UPDATE_ALL)
 @:event(feathers.events.HierarchicalCollectionEvent.FILTER_CHANGE)
 @:event(feathers.events.HierarchicalCollectionEvent.SORT_CHANGE)
-@:meta(DefaultProperty("array"))
 @defaultXmlProperty("array")
 class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarchicalCollection<T> implements IExternalizable {
 	/**

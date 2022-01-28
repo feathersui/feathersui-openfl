@@ -96,7 +96,6 @@ import lime.ui.KeyCode;
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
 @:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
-@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class PopUpListView extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IStageFocusDelegate {

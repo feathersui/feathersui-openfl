@@ -65,7 +65,6 @@ import openfl.ui.Multitouch;
 @:event(openfl.events.Event.CANCEL)
 @:event(feathers.events.FeathersEvent.OPENING)
 @:event(feathers.events.FeathersEvent.CLOSING)
-@:meta(DefaultProperty("content"))
 @defaultXmlProperty("content")
 @:styleContext
 class Drawer extends FeathersControl implements IOpenCloseToggle implements IFocusExclusions {

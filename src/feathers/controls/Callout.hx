@@ -63,7 +63,6 @@ import openfl.ui.Multitouch;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CLOSE)
-@:meta(DefaultProperty("content"))
 @defaultXmlProperty("content")
 @:styleContext
 class Callout extends FeathersControl {

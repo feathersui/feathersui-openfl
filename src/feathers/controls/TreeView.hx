@@ -142,7 +142,6 @@ import openfl._internal.utils.ObjectPool;
 @:event(feathers.events.TreeViewEvent.BRANCH_OPEN)
 @:event(feathers.events.TreeViewEvent.BRANCH_CLOSE)
 @:access(feathers.data.TreeViewItemState)
-@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> implements IFocusContainer {

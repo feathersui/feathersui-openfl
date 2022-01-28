@@ -44,7 +44,6 @@ import openfl.text.TextFieldAutoSize;
 
 	@since 1.0.0
 **/
-@:meta(DefaultProperty("text"))
 @defaultXmlProperty("text")
 @:styleContext
 class Label extends FeathersControl implements ITextControl implements IHTMLTextControl implements IFocusObject implements IStageFocusDelegate {

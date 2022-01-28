@@ -68,7 +68,6 @@ import openfl._internal.utils.ObjectPool;
 **/
 @:event(feathers.events.ButtonBarEvent.ITEM_TRIGGER)
 @:access(feathers.data.ButtonBarItemState)
-@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class ButtonBar extends FeathersControl {

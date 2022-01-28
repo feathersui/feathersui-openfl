@@ -16,6 +16,8 @@
 	<section if="flash">
 		<source path="build_macros/flash"/>
 		<haxeflag name="--macro" value="AddFlashPropertyMeta.find('feathers')"/>
+		<haxeflag name="--macro" value="AddEventMeta.find('feathers')"/>
+		<haxeflag name="--macro" value="AddDefaultPropertyMeta.find('feathers')"/>
 	</section>
 
 	<section if="find_missing_docs">

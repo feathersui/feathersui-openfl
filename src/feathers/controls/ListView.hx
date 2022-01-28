@@ -104,7 +104,6 @@ import openfl._internal.utils.ObjectPool;
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
 @:access(feathers.data.ListViewItemState)
-@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class ListView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusContainer {

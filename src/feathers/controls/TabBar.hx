@@ -82,7 +82,6 @@ import openfl._internal.utils.ObjectPool;
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.TabBarEvent.ITEM_TRIGGER)
 @:access(feathers.data.TabBarItemState)
-@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class TabBar extends FeathersControl implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusObject {

@@ -127,7 +127,6 @@ import openfl._internal.utils.ObjectPool;
 @:event(feathers.events.GridViewEvent.CELL_TRIGGER)
 @:event(feathers.events.GridViewEvent.HEADER_TRIGGER)
 @:access(feathers.data.GridViewHeaderState)
-@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusContainer {

@@ -58,7 +58,6 @@ import openfl.text.TextFieldType;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.SCROLL)
-@:meta(DefaultProperty("text"))
 @defaultXmlProperty("text")
 @:styleContext
 class TextInput extends FeathersControl implements IStateContext<TextInputState> implements ITextControl implements IStageFocusDelegate {

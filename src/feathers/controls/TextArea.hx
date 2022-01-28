@@ -48,7 +48,6 @@ import openfl.text.TextField;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-@:meta(DefaultProperty("text"))
 @defaultXmlProperty("text")
 @:styleContext
 class TextArea extends BaseScrollContainer implements IStateContext<TextInputState> implements ITextControl implements IStageFocusDelegate {

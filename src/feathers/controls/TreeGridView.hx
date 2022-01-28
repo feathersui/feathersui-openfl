@@ -135,7 +135,6 @@ import openfl._internal.utils.ObjectPool;
 @:event(feathers.events.TreeGridViewEvent.BRANCH_OPEN)
 @:event(feathers.events.TreeGridViewEvent.BRANCH_CLOSE)
 @:access(feathers.data.TreeGridViewHeaderState)
-@:meta(DefaultProperty("dataProvider"))
 @defaultXmlProperty("dataProvider")
 @:styleContext
 class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic> implements IFocusContainer {
