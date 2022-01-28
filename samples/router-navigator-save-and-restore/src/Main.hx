@@ -1,6 +1,7 @@
 import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterNavigator;
+import feathers.data.RouteState;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import openfl.events.Event;
@@ -30,8 +31,8 @@ class Main extends Application {
 		welcomeRoute.saveData = (view:WelcomeView) -> {
 			return view.welcomeData;
 		};
-		welcomeRoute.restoreData = (view:WelcomeView, data:WelcomeData) -> {
-			view.welcomeData = data;
+		welcomeRoute.updateState = (view:WelcomeView, state:RouteState) -> {
+			view.welcomeData = state.data;
 		};
 		navigator.addRoute(welcomeRoute);
 

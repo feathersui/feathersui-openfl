@@ -49,6 +49,7 @@ import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterAction;
 import feathers.controls.navigators.RouterNavigator;
+import feathers.data.RouteState;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import openfl.events.Event;
@@ -76,12 +77,13 @@ class Main extends Application {
 		mainMenu.saveData = function(view:MainMenu) {
 			return {savedScrollY: view.savedScrollY};
 		}
-		mainMenu.restoreData = function(view:MainMenu, data:Dynamic) {
-			if (data == null) {
+		mainMenu.updateState = function(view:MainMenu, state:RouteState) {
+			var dataToRestore = state.data;
+			if (dataToRestore == null) {
 				view.savedScrollY = 0.0;
 				return;
 			}
-			view.savedScrollY = data.savedScrollY;
+			view.savedScrollY = dataToRestore.savedScrollY;
 		}
 		this._navigator.addRoute(mainMenu);
 
