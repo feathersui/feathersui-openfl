@@ -12,10 +12,13 @@ import feathers.core.IOpenCloseToggle;
 import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelHierarchicalItemRendererStyles;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
@@ -40,6 +43,10 @@ import openfl.events.Event;
 @:styleContext
 class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItemRenderer implements IHierarchicalDepthItemRenderer
 		implements IOptionalHierarchyItemRenderer implements IOpenCloseToggle {
+	private static final INVALIDATION_FLAG_DISCLOSURE_BUTTON_FACTORY = InvalidationFlag.CUSTOM("disclosureButtonFactory");
+
+	private static final defaultDisclosureButtonFactory = DisplayObjectFactory.withClass(ToggleButton);
+
 	/**
 		A variant used to style the item renderer to appear in a file system
 		context where branches are directories/folders and leaves and individual
@@ -232,20 +239,70 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 
 	private var disclosureButton:ToggleButton;
 
-	override private function initialize():Void {
-		super.initialize();
-		if (this.disclosureButton == null) {
-			this.disclosureButton = new ToggleButton();
-			this.disclosureButton.variant = CHILD_VARIANT_DISCLOSURE_BUTTON;
-			this.addChild(this.disclosureButton);
+	private var _previousCustomDisclosureButtonVariant:String = null;
+
+	/**
+		A custom variant to set on the button, instead of
+		`HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON`.
+
+		The `customDisclosureButtonVariant` will be not be used if the result of
+		`disclosureButtonFactory` already has a variant set.
+
+		@see `HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customDisclosureButtonVariant:String = null;
+
+	private var _oldDisclosureButtonFactory:DisplayObjectFactory<Dynamic, ToggleButton>;
+
+	private var _disclosureButtonFactory:DisplayObjectFactory<Dynamic, ToggleButton>;
+
+	/**
+		Creates the button, which must be of type `feathers.controls.Button`.
+
+		In the following example, a custom button factory is provided:
+
+		```hx
+		listView.buttonFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.ToggleButton`
+
+		@since 1.0.0
+	**/
+	public var disclosureButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, ToggleButton>;
+
+	private function get_disclosureButtonFactory():AbstractDisplayObjectFactory<Dynamic, ToggleButton> {
+		return this._disclosureButtonFactory;
+	}
+
+	private function set_disclosureButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, ToggleButton>):AbstractDisplayObjectFactory<Dynamic,
+		ToggleButton> {
+		if (this._disclosureButtonFactory == value) {
+			return this._disclosureButtonFactory;
 		}
-		this.disclosureButton.addEventListener(Event.CHANGE, hierarchicalItemRenderer_disclosureButton_changeHandler);
+		this._disclosureButtonFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_DISCLOSURE_BUTTON_FACTORY);
+		return this._disclosureButtonFactory;
 	}
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomDisclosureButtonVariant != this.customDisclosureButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_DISCLOSURE_BUTTON_FACTORY);
+		}
+		var disclosureButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_DISCLOSURE_BUTTON_FACTORY);
+
+		if (disclosureButtonFactoryInvalid) {
+			this.createDisclosureButton();
+		}
 
 		if (stylesInvalid || stateInvalid || dataInvalid) {
 			this.refreshBranchOrLeafIcon();
@@ -255,11 +312,11 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 			this.refreshBranchOrLeafStatus();
 		}
 
-		if (stateInvalid) {
+		if (stateInvalid || disclosureButtonFactoryInvalid) {
 			this.disclosureButton.enabled = this._enabled;
 		}
 
-		if (dataInvalid) {
+		if (dataInvalid || disclosureButtonFactoryInvalid) {
 			this.refreshOpenedState();
 		}
 
@@ -417,6 +474,27 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 
 	private function initializeHierarchicalItemRendererTheme():Void {
 		SteelHierarchicalItemRendererStyles.initialize();
+	}
+
+	private function createDisclosureButton():Void {
+		if (this.disclosureButton != null) {
+			this.disclosureButton.removeEventListener(Event.CHANGE, hierarchicalItemRenderer_disclosureButton_changeHandler);
+			this.removeChild(this.disclosureButton);
+			if (this._oldDisclosureButtonFactory.destroy != null) {
+				this._oldDisclosureButtonFactory.destroy(this.disclosureButton);
+			}
+			this._oldDisclosureButtonFactory = null;
+			this.disclosureButton = null;
+		}
+		var factory = this._disclosureButtonFactory != null ? this._disclosureButtonFactory : defaultDisclosureButtonFactory;
+		this._oldDisclosureButtonFactory = factory;
+		this.disclosureButton = factory.create();
+		if (this.disclosureButton.variant == null) {
+			this.disclosureButton.variant = this.customDisclosureButtonVariant != null ? this.customDisclosureButtonVariant : HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON;
+		}
+		this.disclosureButton.addEventListener(Event.CHANGE, hierarchicalItemRenderer_disclosureButton_changeHandler);
+		this.disclosureButton.initializeNow();
+		this.addChild(this.disclosureButton);
 	}
 
 	private function refreshBranchOrLeafIcon():Void {
