@@ -27,14 +27,14 @@ enum RouterAction {
 
 		@since 1.0.0
 	**/
-	Push(url:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	Push(url:String, ?newHistoryState:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Navigate to a new item that replaces the current item in the history stack.
 
 		@since 1.0.0
 	**/
-	Replace(url:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+	Replace(url:String, ?newHistoryState:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
 		Navigate to the previous item on the history stack.

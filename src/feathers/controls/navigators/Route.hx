@@ -202,13 +202,13 @@ class Route {
 
 	private function performAction(action:RouterAction, event:Event, navigator:RouterNavigator):RouterAction {
 		switch (action) {
-			case Push(url, state, transition):
+			case Push(url, newHistoryState, transition):
 				{
-					navigator.push(url, state, transition);
+					navigator.push(url, newHistoryState, transition);
 				}
-			case Replace(url, state, transition):
+			case Replace(url, newHistoryState, transition):
 				{
-					navigator.replace(url, state, transition);
+					navigator.replace(url, newHistoryState, transition);
 				}
 			case Go(n, transition):
 				{

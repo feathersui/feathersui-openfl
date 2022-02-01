@@ -184,7 +184,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function push(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+	public function push(path:String, ?newHistoryState:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (this._activeItemView != null) {
 			var viewData:Dynamic = null;
 			var oldItem = this._addedItems.get(this._activeItemID);
@@ -240,12 +240,12 @@ class RouterNavigator extends BaseNavigator {
 		this.historyDepth++;
 		this.htmlWindow.history.pushState({
 			depth: this.historyDepth,
-			state: state,
+			state: newHistoryState,
 			viewData: null
 		}, null, newURL);
 		#else
 		this._history.push(new HistoryItem(Location.fromString(path), {
-			state: state,
+			state: newHistoryState,
 			viewData: null
 		}));
 		this._forwardHistory.resize(0);
@@ -271,7 +271,7 @@ class RouterNavigator extends BaseNavigator {
 
 		@since 1.0.0
 	**/
-	public function replace(path:String, ?state:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+	public function replace(path:String, ?newHistoryState:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		#if html5
 		var newPathParts = path.split("?");
 		var newPathname = newPathParts[0];
@@ -290,12 +290,12 @@ class RouterNavigator extends BaseNavigator {
 		}
 		this.htmlWindow.history.replaceState({
 			depth: this.historyDepth,
-			state: state,
+			state: newHistoryState,
 			viewData: null
 		}, null, newURL);
 		#else
 		this._history[this._history.length - 1] = new HistoryItem(Location.fromString(path), {
-			state: state,
+			state: newHistoryState,
 			viewData: null
 		});
 		this._forwardHistory.resize(0);
