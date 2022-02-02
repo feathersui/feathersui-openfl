@@ -12,6 +12,8 @@ import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.DatePicker;
 import feathers.controls.Label;
+import feathers.controls.ToggleButtonState;
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
@@ -46,13 +48,13 @@ class SteelDatePickerStyles {
 				datePicker.headerGap = 2.0;
 			});
 		}
-		if (styleProvider.getStyleFunction(Label, DatePicker.CHILD_VARIANT_CURRENT_MONTH_VIEW) == null) {
-			styleProvider.setStyleFunction(Label, DatePicker.CHILD_VARIANT_CURRENT_MONTH_VIEW, function(button:Label):Void {
-				if (button.textFormat == null) {
-					button.textFormat = theme.getTextFormat();
+		if (styleProvider.getStyleFunction(Label, DatePicker.CHILD_VARIANT_MONTH_TITLE_VIEW) == null) {
+			styleProvider.setStyleFunction(Label, DatePicker.CHILD_VARIANT_MONTH_TITLE_VIEW, function(view:Label):Void {
+				if (view.textFormat == null) {
+					view.textFormat = theme.getTextFormat();
 				}
-				if (button.disabledTextFormat == null) {
-					button.disabledTextFormat = theme.getDisabledTextFormat();
+				if (view.disabledTextFormat == null) {
+					view.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 			});
 		}
@@ -62,10 +64,10 @@ class SteelDatePickerStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
-					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
+					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
-					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
+					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
 						skin.width = 20.0;
@@ -91,7 +93,7 @@ class SteelDatePickerStyles {
 					button.icon = icon;
 				}
 
-				if (button.getIconForState(DISABLED) == null) {
+				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
 					disabledIcon.graphics.beginFill(0xff00ff, 0.0);
 					disabledIcon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
@@ -102,7 +104,7 @@ class SteelDatePickerStyles {
 					disabledIcon.graphics.lineTo(6.0, 8.0);
 					disabledIcon.graphics.lineTo(2.0, 4.0);
 					disabledIcon.graphics.endFill();
-					button.setIconForState(DISABLED, disabledIcon);
+					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
 				button.setPadding(4.0);
@@ -115,10 +117,10 @@ class SteelDatePickerStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
-					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
+					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
-					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
+					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
 						skin.width = 20.0;
@@ -144,7 +146,7 @@ class SteelDatePickerStyles {
 					button.icon = icon;
 				}
 
-				if (button.getIconForState(DISABLED) == null) {
+				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
 					disabledIcon.graphics.beginFill(0xff00ff, 0.0);
 					disabledIcon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
@@ -155,7 +157,7 @@ class SteelDatePickerStyles {
 					disabledIcon.graphics.lineTo(2.0, 8.0);
 					disabledIcon.graphics.lineTo(2.0, 0.0);
 					disabledIcon.graphics.endFill();
-					button.setIconForState(DISABLED, disabledIcon);
+					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
 				button.setPadding(4.0);
@@ -168,10 +170,10 @@ class SteelDatePickerStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
-					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
+					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
-					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
+					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
 						skin.width = 20.0;
@@ -198,7 +200,7 @@ class SteelDatePickerStyles {
 					button.icon = icon;
 				}
 
-				if (button.getIconForState(DISABLED) == null) {
+				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
 					disabledIcon.graphics.beginFill(theme.disabledTextColor);
 					disabledIcon.graphics.moveTo(0.0, 4.0);
@@ -210,7 +212,7 @@ class SteelDatePickerStyles {
 					disabledIcon.graphics.lineTo(8.0, 8.0);
 					disabledIcon.graphics.lineTo(4.0, 4.0);
 					disabledIcon.graphics.endFill();
-					button.setIconForState(DISABLED, disabledIcon);
+					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
 				button.setPadding(4.0);
@@ -223,10 +225,10 @@ class SteelDatePickerStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
-					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
+					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
-					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
+					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
 						skin.width = 20.0;
@@ -253,7 +255,7 @@ class SteelDatePickerStyles {
 					button.icon = icon;
 				}
 
-				if (button.getIconForState(DISABLED) == null) {
+				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
 					disabledIcon.graphics.beginFill(theme.disabledTextColor);
 					disabledIcon.graphics.moveTo(0.0, 0.0);
@@ -265,11 +267,108 @@ class SteelDatePickerStyles {
 					disabledIcon.graphics.lineTo(4.0, 8.0);
 					disabledIcon.graphics.lineTo(4.0, 0.0);
 					disabledIcon.graphics.endFill();
-					button.setIconForState(DISABLED, disabledIcon);
+					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
 				button.setPadding(4.0);
 				button.gap = 4.0;
+			});
+		}
+		if (styleProvider.getStyleFunction(Label, DatePicker.CHILD_VARIANT_WEEKDAY_LABEL) == null) {
+			styleProvider.setStyleFunction(Label, DatePicker.CHILD_VARIANT_WEEKDAY_LABEL, function(label:Label):Void {
+				if (label.textFormat == null) {
+					label.textFormat = theme.getSecondaryTextFormat(CENTER);
+				}
+				if (label.disabledTextFormat == null) {
+					label.disabledTextFormat = theme.getDisabledTextFormat(CENTER);
+				}
+				label.verticalAlign = MIDDLE;
+			});
+		}
+		if (styleProvider.getStyleFunction(ItemRenderer, DatePicker.CHILD_VARIANT_DATE_RENDERER) == null) {
+			styleProvider.setStyleFunction(ItemRenderer, DatePicker.CHILD_VARIANT_DATE_RENDERER, function(dateRenderer:ItemRenderer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+				if (dateRenderer.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
+					backgroundSkin.selectedFill = theme.getActiveThemeFill();
+					backgroundSkin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
+					backgroundSkin.selectedBorder = theme.getSelectedBorder();
+					backgroundSkin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
+					if (isDesktop) {
+						backgroundSkin.width = 20.0;
+						backgroundSkin.height = 20.0;
+					} else {
+						backgroundSkin.width = 32.0;
+						backgroundSkin.height = 32.0;
+					}
+					backgroundSkin.cornerRadius = 4.0;
+					dateRenderer.backgroundSkin = backgroundSkin;
+				}
+
+				if (dateRenderer.textFormat == null) {
+					dateRenderer.textFormat = theme.getTextFormat();
+				}
+				if (dateRenderer.disabledTextFormat == null) {
+					dateRenderer.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+				if (dateRenderer.secondaryTextFormat == null) {
+					dateRenderer.secondaryTextFormat = theme.getDetailTextFormat();
+				}
+				if (dateRenderer.disabledSecondaryTextFormat == null) {
+					dateRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
+				}
+
+				dateRenderer.horizontalAlign = CENTER;
+				dateRenderer.verticalAlign = MIDDLE;
+
+				dateRenderer.paddingTop = 2.0;
+				dateRenderer.paddingRight = 2.0;
+				dateRenderer.paddingBottom = 2.0;
+				dateRenderer.paddingLeft = 2.0;
+			});
+		}
+		if (styleProvider.getStyleFunction(ItemRenderer, DatePicker.CHILD_VARIANT_MUTED_DATE_RENDERER) == null) {
+			styleProvider.setStyleFunction(ItemRenderer, DatePicker.CHILD_VARIANT_MUTED_DATE_RENDERER, function(dateRenderer:ItemRenderer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+				if (dateRenderer.backgroundSkin == null) {
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
+					backgroundSkin.selectedFill = theme.getActiveThemeFill();
+					backgroundSkin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
+					backgroundSkin.selectedBorder = theme.getSelectedBorder();
+					backgroundSkin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
+					if (isDesktop) {
+						backgroundSkin.width = 20.0;
+						backgroundSkin.height = 20.0;
+					} else {
+						backgroundSkin.width = 32.0;
+						backgroundSkin.height = 32.0;
+					}
+					backgroundSkin.cornerRadius = 4.0;
+					dateRenderer.backgroundSkin = backgroundSkin;
+				}
+
+				if (dateRenderer.textFormat == null) {
+					dateRenderer.textFormat = theme.getSecondaryTextFormat();
+				}
+				if (dateRenderer.disabledTextFormat == null) {
+					dateRenderer.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+				if (dateRenderer.secondaryTextFormat == null) {
+					dateRenderer.secondaryTextFormat = theme.getDetailTextFormat();
+				}
+				if (dateRenderer.disabledSecondaryTextFormat == null) {
+					dateRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
+				}
+
+				dateRenderer.horizontalAlign = CENTER;
+				dateRenderer.verticalAlign = MIDDLE;
+
+				dateRenderer.paddingTop = 2.0;
+				dateRenderer.paddingRight = 2.0;
+				dateRenderer.paddingBottom = 2.0;
+				dateRenderer.paddingLeft = 2.0;
 			});
 		}
 	}

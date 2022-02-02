@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IDateSelector;
 import feathers.core.IFocusObject;
@@ -15,24 +17,42 @@ import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
+import feathers.data.DatePickerItemState;
+import feathers.events.DatePickerEvent;
 import feathers.events.FeathersEvent;
 import feathers.events.TriggerEvent;
+import feathers.layout.CalendarGridLayout;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
+import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelDatePickerStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DateUtil;
 import feathers.utils.DisplayObjectFactory;
+import feathers.utils.DisplayObjectRecycler;
+import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
+import openfl.errors.IllegalOperationError;
 import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+#if air
+import openfl.ui.Multitouch;
+#end
 #if (openfl >= "9.2.0" && !neko)
 import openfl.globalization.DateTimeFormatter;
 import openfl.globalization.LocaleID;
 #elseif flash
 import flash.globalization.DateTimeFormatter;
 import flash.globalization.LocaleID;
+#end
+#if (openfl >= "9.1.0")
+import openfl.utils.ObjectPool;
+#else
+import openfl._internal.utils.ObjectPool;
 #end
 
 /**
@@ -61,34 +81,55 @@ import flash.globalization.LocaleID;
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
+@:event(feathers.events.DatePickerEvent.ITEM_TRIGGER)
 @:styleContext
 class DatePicker extends FeathersControl implements IDateSelector implements IFocusObject {
 	#if ((!flash && openfl < "9.2.0") || neko)
 	private static final DEFAULT_MONTH_NAMES = [
 		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 	];
+
+	private var DEFAULT_WEEKDAY_NAMES = ["S", "M", "T", "W", "T", "F", "S"];
+	private var DEFAULT_START_OF_WEEK = 0;
 	#end
 
-	private static final INVALIDATION_FLAG_CURRENT_MONTH_VIEW_FACTORY = InvalidationFlag.CUSTOM("currentMonthViewFactory");
+	private static final INVALIDATION_FLAG_MONTH_TITLE_VIEW_FACTORY = InvalidationFlag.CUSTOM("monthTitleViewFactory");
 	private static final INVALIDATION_FLAG_DECREMENT_MONTH_BUTTON_FACTORY = InvalidationFlag.CUSTOM("decrementMonthButtonFactory");
 	private static final INVALIDATION_FLAG_INCREMENT_MONTH_BUTTON_FACTORY = InvalidationFlag.CUSTOM("incrementMonthButtonFactory");
 	private static final INVALIDATION_FLAG_DECREMENT_YEAR_BUTTON_FACTORY = InvalidationFlag.CUSTOM("decrementYearButtonFactory");
 	private static final INVALIDATION_FLAG_INCREMENT_YEAR_BUTTON_FACTORY = InvalidationFlag.CUSTOM("incrementYearButtonFactory");
-	private static final INVALIDATION_FLAG_CALENDAR_GRID_FACTORY = InvalidationFlag.CUSTOM("calendarGridFactory");
+	private static final INVALIDATION_FLAG_DATE_RENDERER_FACTORY = InvalidationFlag.CUSTOM("dateRendererFactory");
+	private static final INVALIDATION_FLAG_WEEKDAY_LABEL_FACTORY = InvalidationFlag.CUSTOM("weekdayLabelFactory");
+
+	private static final RESET_ITEM_STATE = new DatePickerItemState();
 
 	/**
-		The variant used to style the `CalendarGrid` child component in a theme.
+		The variant used to style the date picker's date renderers in a theme.
 
 		To override this default variant, set the
-		`DatePicker.customCalendarGridVariant` property.
+		`DatePicker.customDateRendererVariant` property.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
-		@see `DatePicker.customCalendarGridVariant`
+		@see `DatePicker.customDateRendererVariant`
 
 		@since 1.0.0
 	**/
-	public static final CHILD_VARIANT_CALENDAR_GRID = "datePicker_calendarGrid";
+	public static final CHILD_VARIANT_DATE_RENDERER = "datePicker_dateRenderer";
+
+	/**
+		The variant used to style the date picker's date renderers in a theme.
+
+		To override this default variant, set the
+		`DatePicker.customMutedDateRendererVariant` property.
+
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@see `DatePicker.customMutedDateRendererVariant`
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_MUTED_DATE_RENDERER = "datePicker_mutedDateRenderer";
 
 	/**
 		The variant used to style the decrement month `Button` child component
@@ -151,26 +192,54 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	public static final CHILD_VARIANT_INCREMENT_YEAR_BUTTON = "datePicker_incrementYearButton";
 
 	/**
-		The variant used to style the current month `Label` child component
+		The variant used to style the current month title child component
 		in a theme.
 
 		To override this default variant, set the
-		`DatePicker.customCurrentMonthViewVariant` property.
+		`DatePicker.customMonthTitleViewVariant` property.
 
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
-		@see `DatePicker.customCurrentMonthViewVariant`
+		@see `DatePicker.customMonthTitleViewVariant`
 
 		@since 1.0.0
 	**/
-	public static final CHILD_VARIANT_CURRENT_MONTH_VIEW = "datePicker_currentMonthView";
+	public static final CHILD_VARIANT_MONTH_TITLE_VIEW = "datePicker_monthTitleView";
 
-	private static final defaultCalendarGridFactory = DisplayObjectFactory.withClass(CalendarGrid);
+	/**
+		The variant used to style the `Label` child components that display the
+		names of weekdays.
+
+		To override this default variant, set the
+		`DatePicker.customWeekdayLabelVariant` property.
+
+		@see `DatePicker.customWeekdayLabelVariant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.0.0
+	**/
+	public static final CHILD_VARIANT_WEEKDAY_LABEL = "datePicker_weekdayLabel";
+
 	private static final defaultDecrementMonthButtonFactory = DisplayObjectFactory.withClass(Button);
 	private static final defaultIncrementMonthButtonFactory = DisplayObjectFactory.withClass(Button);
 	private static final defaultDecrementYearButtonFactory = DisplayObjectFactory.withClass(Button);
 	private static final defaultIncrementYearButtonFactory = DisplayObjectFactory.withClass(Button);
-	private static final defaultCurrentMonthViewFactory = DisplayObjectFactory.withClass(Label);
+	private static final defaultMonthTitleViewFactory = DisplayObjectFactory.withClass(Label);
+	private static final defaultWeekdayLabelFactory = DisplayObjectFactory.withClass(Label);
+
+	private static function defaultUpdateDateRenderer(dateRenderer:DisplayObject, state:DatePickerItemState):Void {
+		if ((dateRenderer is ITextControl)) {
+			var textControl = cast(dateRenderer, ITextControl);
+			textControl.text = Std.string(state.date.getDate());
+		}
+	}
+
+	private static function defaultResetDateRenderer(dateRenderer:DisplayObject, state:DatePickerItemState):Void {
+		if ((dateRenderer is ITextControl)) {
+			var textControl = cast(dateRenderer, ITextControl);
+			textControl.text = null;
+		}
+	}
 
 	/**
 		Creates a new `DatePicker` object.
@@ -182,20 +251,25 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		super();
 	}
 
-	private var calendarGrid:CalendarGrid;
+	private var dateContainer:LayoutGroup;
 	private var monthView:ITextControl;
 	private var decrementMonthButton:Button;
 	private var incrementMonthButton:Button;
 	private var decrementYearButton:Button;
 	private var incrementYearButton:Button;
-	private var currentMonthView:Label;
+	private var monthTitleView:Label;
+	private var _dayNameLabels:Array<Label> = [];
+	private var dateRendererToItemState = new ObjectMap<DisplayObject, DatePickerItemState>();
+	private var _defaultStorage:DateRendererStorage = new DateRendererStorage(null, DisplayObjectRecycler.withClass(ItemRenderer));
+	private var _mutedStorage:DateRendererStorage = new DateRendererStorage(null, DisplayObjectRecycler.withClass(ItemRenderer));
 
-	private var calendarGridMeasurements:Measurements = new Measurements();
 	private var decrementMonthButtonMeasurements:Measurements = new Measurements();
 	private var incrementMonthButtonMeasurements:Measurements = new Measurements();
 	private var decrementYearButtonMeasurements:Measurements = new Measurements();
 	private var incrementYearButtonMeasurements:Measurements = new Measurements();
-	private var currentMonthViewMeasurements:Measurements = new Measurements();
+	private var monthTitleViewMeasurements:Measurements = new Measurements();
+
+	private var itemStatePool = new ObjectPool(() -> new DatePickerItemState());
 
 	private var _displayedFullYear:Int = Date.now().getFullYear();
 
@@ -278,6 +352,8 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		return this._selectable;
 	}
 
+	private var _ignoreSelectionChange:Bool = false;
+
 	private var _selectedDate:Date = null;
 
 	/**
@@ -345,71 +421,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	**/
 	@:style
 	public var disabledBackgroundSkin:DisplayObject = null;
-
-	private var _oldCalendarGridFactory:DisplayObjectFactory<Dynamic, CalendarGrid>;
-
-	private var _calendarGridFactory:DisplayObjectFactory<Dynamic, CalendarGrid>;
-
-	/**
-		Creates the calendar grid that is displayed as a sub-component. The
-		calendar grid must be of type
-		`feathers.controls.supportClasses.CalendarGrid`.
-
-		Note: The following properties should not be set in the
-		`calendarGridFactory` because they will be overridden by the
-		`DatePicker` when it validates.
-
-		- `CalendarGrid.requestedLocaleIDName`
-		- `CalendarGrid.displayedMonth`
-		- `CalendarGrid.displayedFullYear`
-		- `CalendarGrid.selectable`
-		- `CalendarGrid.selectedDate`
-		- `CalendarGrid.customWeekdayNames`
-		- `CalendarGrid.customStartOfWeek`
-
-		In the following example, a custom calendar grid factory is provided:
-
-		```hx
-		datePicker.calendarGridFactory = () ->
-		{
-			return new CalendarGrid();
-		};
-		```
-
-		@see `feathers.controls.supportClasses.CalendarGrid`
-
-		@since 1.0.0
-	**/
-	public var calendarGridFactory(get, set):AbstractDisplayObjectFactory<Dynamic, CalendarGrid>;
-
-	private function get_calendarGridFactory():AbstractDisplayObjectFactory<Dynamic, CalendarGrid> {
-		return this._calendarGridFactory;
-	}
-
-	private function set_calendarGridFactory(value:AbstractDisplayObjectFactory<Dynamic, CalendarGrid>):AbstractDisplayObjectFactory<Dynamic, CalendarGrid> {
-		if (this._calendarGridFactory == value) {
-			return this._calendarGridFactory;
-		}
-		this._calendarGridFactory = value;
-		this.setInvalid(INVALIDATION_FLAG_CALENDAR_GRID_FACTORY);
-		return this._calendarGridFactory;
-	}
-
-	private var _previousCustomCalendarGridVariant:String = null;
-
-	/**
-		A custom variant to set on the calendar grid sub-component, instead of
-		`DatePicker.CHILD_VARIANT_CALENDAR_GRID`.
-
-		The `customCalendarGridVariant` will be not be used if the result of
-		`calendarGridFactory` already has a variant set.
-
-		@see `DatePicker.CHILD_VARIANT_CALENDAR_GRID`
-
-		@since 1.0.0
-	**/
-	@:style
-	public var customCalendarGridVariant:String = null;
 
 	private var _oldDecrementMonthButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
@@ -619,18 +630,18 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	@:style
 	public var customIncrementYearButtonVariant:String = null;
 
-	private var _oldCurrentMonthViewFactory:DisplayObjectFactory<Dynamic, Label>;
+	private var _oldMonthTitleViewFactory:DisplayObjectFactory<Dynamic, Label>;
 
-	private var _currentMonthViewFactory:DisplayObjectFactory<Dynamic, Label>;
+	private var _monthTitleViewFactory:DisplayObjectFactory<Dynamic, Label>;
 
 	/**
 		Creates the current month view that is displayed as a sub-component.
-		The button must be of type `feathers.controls.Label`.
+		The view must be of type `feathers.controls.Label`.
 
 		In the following example, a custom current month view factory is provided:
 
 		```hx
-		datePicker.currentMonthViewFactory = () ->
+		datePicker.monthTitleViewFactory = () ->
 		{
 			return new Label();
 		};
@@ -638,38 +649,36 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	public var currentMonthViewFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Label>;
+	public var monthTitleViewFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Label>;
 
-	private function get_currentMonthViewFactory():AbstractDisplayObjectFactory<Dynamic, Label> {
-		return this._currentMonthViewFactory;
+	private function get_monthTitleViewFactory():AbstractDisplayObjectFactory<Dynamic, Label> {
+		return this._monthTitleViewFactory;
 	}
 
-	private function set_currentMonthViewFactory(value:AbstractDisplayObjectFactory<Dynamic, Label>):AbstractDisplayObjectFactory<Dynamic, Label> {
-		if (this._currentMonthViewFactory == value) {
-			return this._currentMonthViewFactory;
+	private function set_monthTitleViewFactory(value:AbstractDisplayObjectFactory<Dynamic, Label>):AbstractDisplayObjectFactory<Dynamic, Label> {
+		if (this._monthTitleViewFactory == value) {
+			return this._monthTitleViewFactory;
 		}
-		this._currentMonthViewFactory = value;
-		this.setInvalid(INVALIDATION_FLAG_CURRENT_MONTH_VIEW_FACTORY);
-		return this._currentMonthViewFactory;
+		this._monthTitleViewFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_MONTH_TITLE_VIEW_FACTORY);
+		return this._monthTitleViewFactory;
 	}
 
-	private var _previousCustomCurrentMonthViewVariant:String = null;
+	private var _previousCustomMonthTitleViewVariant:String = null;
 
 	/**
-		A custom variant to set on the current month button sub-component,
-		instead of `DatePicker.CHILD_VARIANT_CURRENT_MONTH_VIEW`.
+		A custom variant to set on the month title view sub-component,
+		instead of `DatePicker.CHILD_VARIANT_MONTH_TITLE_VIEW`.
 
-		The `customCurrentMonthViewVariant` will be not be used if the
-		result of `currentMonthViewFactory` already has a variant set.
+		The `customMonthTitleViewVariant` will be not be used if the
+		result of `monthTitleViewFactory` already has a variant set.
 
-		@see `DatePicker.CHILD_VARIANT_CURRENT_MONTH_VIEW`
+		@see `DatePicker.CHILD_VARIANT_MONTH_TITLE_VIEW`
 
 		@since 1.0.0
 	**/
 	@:style
-	public var customCurrentMonthViewVariant:String = null;
-
-	private var _ignoreCalendarGridChange = false;
+	public var customMonthTitleViewVariant:String = null;
 
 	/**
 		The space, in pixels, between items in the date picker's header.
@@ -751,7 +760,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	public var paddingLeft:Float = 0.0;
 
 	/**
-		The horizontal position of the current month button, relative to the
+		The horizontal position of the month title view, relative to the
 		increment and decrement buttons.
 
 		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
@@ -764,10 +773,18 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		@since 1.0.0
 	**/
 	@:style
-	public var currentMonthViewPosition:HorizontalAlign = CENTER;
+	public var monthTitleViewPosition:HorizontalAlign = CENTER;
 
 	/**
-		Determines if the buttons to decrement and increment the current month
+		Determines if the name of the month title view is displayed or hidden.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var showMonthTitleView:Bool = true;
+
+	/**
+		Determines if the buttons to decrement and increment the month buttons
 		are displayed or hidden.
 
 		@since 1.0.0
@@ -776,7 +793,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	public var showMonthButtons:Bool = true;
 
 	/**
-		Determines if the buttons to decrement and increment the current year
+		Determines if the buttons to decrement and increment the year buttons
 		are displayed or hidden.
 
 		@since 1.0.0
@@ -784,7 +801,16 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	@:style
 	public var showYearButtons:Bool = true;
 
+	/**
+		Determines if the weekday labels are visible or not.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var showWeekdayLabels:Bool = true;
+
 	private var _currentMonthNames:Array<String>;
+	private var _currentWeekdayNames:Array<String>;
 
 	#if (flash || (openfl >= "9.2.0" && !neko))
 	private var _currentDateFormatter:DateTimeFormatter;
@@ -898,6 +924,8 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		return this._customWeekdayNames;
 	}
 
+	private var _currentStartOfWeek:Int = 0;
+
 	private var _customStartOfWeek:Null<Int> = null;
 
 	/**
@@ -924,8 +952,155 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		return this._customStartOfWeek;
 	}
 
+	private var _oldWeekdayLabelFactory:DisplayObjectFactory<Dynamic, Label>;
+
+	private var _weekdayLabelFactory:DisplayObjectFactory<Dynamic, Label>;
+
+	/**
+		Creates the weekday labels that are displayed as sub-components.
+		The labels must be of type `feathers.controls.Label`.
+
+		In the following example, a custom weekday label factory is provided:
+
+		```hx
+		datePicker.weekdayLabelFactory = () ->
+		{
+			return new Label();
+		};
+		```
+
+		@since 1.0.0
+	**/
+	public var weekdayLabelFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Label>;
+
+	private function get_weekdayLabelFactory():AbstractDisplayObjectFactory<Dynamic, Label> {
+		return this._weekdayLabelFactory;
+	}
+
+	private function set_weekdayLabelFactory(value:AbstractDisplayObjectFactory<Dynamic, Label>):AbstractDisplayObjectFactory<Dynamic, Label> {
+		if (this._weekdayLabelFactory == value) {
+			return this._weekdayLabelFactory;
+		}
+		this._weekdayLabelFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_WEEKDAY_LABEL_FACTORY);
+		return this._weekdayLabelFactory;
+	}
+
+	private var _previousCustomWeekdayLabelVariant:String = null;
+
+	/**
+		An optional custom variant to use for the labels that display the names
+		of weekdays, instead of `DatePicker.CHILD_VARIANT_WEEKDAY_LABEL`.
+
+		@see `DatePicker.CHILD_VARIANT_WEEKDAY_LABEL`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customWeekdayLabelVariant:String = null;
+
+	private var _previousCustomDateRendererVariant:String = null;
+
+	/**
+		A custom variant to set on all date renderers, instead of
+		`DatePicker.CHILD_VARIANT_DATE_RENDERER`.
+
+		The `customDateRendererVariant` will be not be used if the result of
+		`dateRendererRecycler.create()` already has a variant set.
+
+		@see `DatePicker.CHILD_VARIANT_DATE_RENDERER`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customDateRendererVariant:String = null;
+
+	private var _previousCustomMutedDateRendererVariant:String = null;
+
+	/**
+		A custom variant to set on all date renderers, instead of
+		`DatePicker.CHILD_VARIANT_MUTED_DATE_RENDERER`.
+
+		The `customMutedDateRendererVariant` will be not be used if the result
+		of `dateRendererRecycler.create()` already has a variant set.
+
+		@see `DatePicker.CHILD_VARIANT_MUTED_DATE_RENDERER`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customMutedDateRendererVariant:String = null;
+
+	/**
+		Manages date renderers used by the date picker.
+
+		In the following example, the date picker uses a custom date renderer
+		class:
+
+		```hx
+		datePicker.dateRendererRecycler = DisplayObjectRecycler.withClass(CustomDateRenderer);
+		```
+
+		@since 1.0.0
+	**/
+	public var dateRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>;
+
+	private function get_dateRendererRecycler():DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject> {
+		return this._defaultStorage.dateRendererRecycler;
+	}
+
+	private function set_dateRendererRecycler(value:DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
+		DatePickerItemState, DisplayObject> {
+		if (this._defaultStorage.dateRendererRecycler == value) {
+			return this._defaultStorage.dateRendererRecycler;
+		}
+		this._defaultStorage.oldDateRendererRecycler = this._defaultStorage.dateRendererRecycler;
+		this._defaultStorage.dateRendererRecycler = value;
+		this._defaultStorage.measurements = null;
+
+		this._mutedStorage.oldDateRendererRecycler = this._mutedStorage.dateRendererRecycler;
+		this._mutedStorage.dateRendererRecycler = value;
+		this._mutedStorage.measurements = null;
+		this.setInvalid(INVALIDATION_FLAG_DATE_RENDERER_FACTORY);
+		return this._defaultStorage.dateRendererRecycler;
+	}
+
+	/**
+		Determines if the date renderers for dates in the adjacent months are
+		visible or not.
+
+		@since 1.0.0
+	**/
+	@:style
+	public var showDatesFromAdjacentMonths:Bool = true;
+
+	/**
+		Indicates if selection is changed with `MouseEvent.CLICK` or
+		`TouchEvent.TOUCH_TAP` when the item renderer does not implement the
+		`IToggle` interface. If set to `false`, all item renderers must control
+		their own selection manually (not only ones that implement `IToggle`).
+
+		The following example disables pointer selection:
+
+		```hx
+		datePicker.pointerSelectionEnabled = false;
+		```
+
+		@since 1.0.0
+	**/
+	public var pointerSelectionEnabled:Bool = true;
+
 	private function initializeDatePickerTheme():Void {
 		SteelDatePickerStyles.initialize();
+	}
+
+	override private function initialize():Void {
+		if (this.dateContainer == null) {
+			this.dateContainer = new LayoutGroup();
+			this.dateContainer.layout = new CalendarGridLayout();
+			this.addChild(this.dateContainer);
+		}
+		super.initialize();
 	}
 
 	override private function update():Void {
@@ -933,8 +1108,14 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
-		if (this._previousCustomCalendarGridVariant != this.customCalendarGridVariant) {
-			this.setInvalidationFlag(INVALIDATION_FLAG_CALENDAR_GRID_FACTORY);
+		if (this._previousCustomDateRendererVariant != this.customDateRendererVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_DATE_RENDERER_FACTORY);
+		}
+		if (this._previousCustomMutedDateRendererVariant != this.customMutedDateRendererVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_DATE_RENDERER_FACTORY);
+		}
+		if (this._previousCustomWeekdayLabelVariant != this.customWeekdayLabelVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_WEEKDAY_LABEL_FACTORY);
 		}
 		if (this._previousCustomDecrementMonthButtonVariant != this.customDecrementMonthButtonVariant) {
 			this.setInvalidationFlag(INVALIDATION_FLAG_DECREMENT_MONTH_BUTTON_FACTORY);
@@ -948,26 +1129,23 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		if (this._previousCustomIncrementYearButtonVariant != this.customIncrementYearButtonVariant) {
 			this.setInvalidationFlag(INVALIDATION_FLAG_INCREMENT_YEAR_BUTTON_FACTORY);
 		}
-		if (this._previousCustomCurrentMonthViewVariant != this.customCurrentMonthViewVariant) {
-			this.setInvalidationFlag(INVALIDATION_FLAG_CURRENT_MONTH_VIEW_FACTORY);
+		if (this._previousCustomMonthTitleViewVariant != this.customMonthTitleViewVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_MONTH_TITLE_VIEW_FACTORY);
 		}
-		var calendarGridFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_CALENDAR_GRID_FACTORY);
+		var dateRendererFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_DATE_RENDERER_FACTORY);
+		var weekdayLabelFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_WEEKDAY_LABEL_FACTORY);
 		var decrementMonthButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_DECREMENT_MONTH_BUTTON_FACTORY);
 		var incrementMonthButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_INCREMENT_MONTH_BUTTON_FACTORY);
 		var decrementYearButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_DECREMENT_YEAR_BUTTON_FACTORY);
 		var incrementYearButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_INCREMENT_YEAR_BUTTON_FACTORY);
-		var currentMonthViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_CURRENT_MONTH_VIEW_FACTORY);
+		var monthTitleViewFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_MONTH_TITLE_VIEW_FACTORY);
 
 		if (stylesInvalid || stateInvalid) {
 			this.refreshBackgroundSkin();
 		}
 
-		if (calendarGridFactoryInvalid) {
-			this.createCalendarGrid();
-		}
-
-		if (currentMonthViewFactoryInvalid) {
-			this.createCurrentMonthView();
+		if (monthTitleViewFactoryInvalid) {
+			this.createMonthTitleView();
 		}
 
 		if (decrementMonthButtonFactoryInvalid) {
@@ -986,71 +1164,60 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this.createIncrementYearButton();
 		}
 
+		if (weekdayLabelFactoryInvalid) {
+			this.createWeekdayLabels();
+		}
+
 		if (dataInvalid) {
 			this.refreshLocale();
 		}
 
-		if (stateInvalid || calendarGridFactoryInvalid || currentMonthViewFactoryInvalid || decrementMonthButtonFactoryInvalid
-			|| incrementMonthButtonFactoryInvalid || decrementYearButtonFactoryInvalid || incrementYearButtonFactoryInvalid) {
+		if (dataInvalid || selectionInvalid || dateRendererFactoryInvalid) {
+			this.refreshDateRenderers();
+		}
+
+		if (weekdayLabelFactoryInvalid || dataInvalid || stylesInvalid) {
+			this.refreshWeekdayLabels();
+		}
+
+		if (stateInvalid || monthTitleViewFactoryInvalid || decrementMonthButtonFactoryInvalid || incrementMonthButtonFactoryInvalid
+			|| decrementYearButtonFactoryInvalid || incrementYearButtonFactoryInvalid) {
 			this.refreshEnabled();
 		}
 
 		if (dataInvalid || selectionInvalid) {
-			this.refreshCalendarGrid();
-			this.refreshCurrentMonth();
+			this.refreshMonthTitle();
 		}
 
 		this.measure();
 		this.layoutChildren();
 
-		this._previousCustomCalendarGridVariant = this.customCalendarGridVariant;
-		this._previousCustomCurrentMonthViewVariant = this.customCurrentMonthViewVariant;
+		this._previousCustomDateRendererVariant = this.customDateRendererVariant;
+		this._previousCustomMutedDateRendererVariant = this.customMutedDateRendererVariant;
+		this._previousCustomMonthTitleViewVariant = this.customMonthTitleViewVariant;
 		this._previousCustomDecrementMonthButtonVariant = this.customDecrementMonthButtonVariant;
 		this._previousCustomIncrementMonthButtonVariant = this.customIncrementMonthButtonVariant;
 		this._previousCustomDecrementYearButtonVariant = this.customDecrementYearButtonVariant;
 		this._previousCustomIncrementYearButtonVariant = this.customIncrementYearButtonVariant;
 	}
 
-	private function createCalendarGrid():Void {
-		if (this.calendarGrid != null) {
-			this.calendarGrid.removeEventListener(Event.CHANGE, datePicker_calendarGrid_changeHandler);
-			this.calendarGrid.removeEventListener(Event.SCROLL, datePicker_calendarGrid_scrollHandler);
-			if (this._oldCalendarGridFactory.destroy != null) {
-				this._oldCalendarGridFactory.destroy(this.calendarGrid);
+	private function createMonthTitleView():Void {
+		if (this.monthTitleView != null) {
+			if (this._oldMonthTitleViewFactory.destroy != null) {
+				this._oldMonthTitleViewFactory.destroy(this.monthTitleView);
 			}
-			this._oldCalendarGridFactory = null;
-			this.calendarGrid = null;
+			this._oldMonthTitleViewFactory = null;
+			this.monthTitleView = null;
 		}
-		var factory = this._calendarGridFactory != null ? this._calendarGridFactory : defaultCalendarGridFactory;
-		this._oldCalendarGridFactory = factory;
-		this.calendarGrid = factory.create();
-		if (this.calendarGrid.variant == null) {
-			this.calendarGrid.variant = this.customCalendarGridVariant != null ? this.customCalendarGridVariant : DatePicker.CHILD_VARIANT_CALENDAR_GRID;
+		var factory = this._monthTitleViewFactory != null ? this._monthTitleViewFactory : defaultMonthTitleViewFactory;
+		this._oldMonthTitleViewFactory = factory;
+		this.monthTitleView = factory.create();
+		if (this.monthTitleView.variant == null) {
+			this.monthTitleView.variant = this.customMonthTitleViewVariant != null ? this.customMonthTitleViewVariant : DatePicker.CHILD_VARIANT_MONTH_TITLE_VIEW;
 		}
-		this.calendarGrid.initializeNow();
-		this.calendarGridMeasurements.save(this.calendarGrid);
-		this.addChild(this.calendarGrid);
-		this.calendarGrid.addEventListener(Event.CHANGE, datePicker_calendarGrid_changeHandler);
-		this.calendarGrid.addEventListener(Event.SCROLL, datePicker_calendarGrid_scrollHandler);
-	}
-
-	private function createCurrentMonthView():Void {
-		if (this.currentMonthView != null) {
-			if (this._oldCurrentMonthViewFactory.destroy != null) {
-				this._oldCurrentMonthViewFactory.destroy(this.currentMonthView);
-			}
-			this._oldCurrentMonthViewFactory = null;
-			this.currentMonthView = null;
-		}
-		var factory = this._currentMonthViewFactory != null ? this._currentMonthViewFactory : defaultCurrentMonthViewFactory;
-		this._oldCurrentMonthViewFactory = factory;
-		this.currentMonthView = factory.create();
-		if (this.currentMonthView.variant == null) {
-			this.currentMonthView.variant = this.customCurrentMonthViewVariant != null ? this.customCurrentMonthViewVariant : DatePicker.CHILD_VARIANT_CURRENT_MONTH_VIEW;
-		}
-		this.currentMonthView.initializeNow();
-		this.currentMonthViewMeasurements.save(this.currentMonthView);
-		this.addChild(this.currentMonthView);
+		this.monthTitleView.initializeNow();
+		this.monthTitleViewMeasurements.save(this.monthTitleView);
+		this.addChild(this.monthTitleView);
 	}
 
 	private function createDecrementMonthButton():Void {
@@ -1148,14 +1315,13 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			return false;
 		}
 
-		this.calendarGridMeasurements.restore(this.calendarGrid);
-		this.calendarGrid.validateNow();
+		this.dateContainer.validateNow();
 
-		this.currentMonthViewMeasurements.restore(this.currentMonthView);
-		var oldText = this.currentMonthView.text;
+		this.monthTitleViewMeasurements.restore(this.monthTitleView);
+		var oldText = this.monthTitleView.text;
 		var measureText = this.getMonthText(this.getMonthWithLongestName(), 0);
-		this.currentMonthView.text = measureText;
-		this.currentMonthView.validateNow();
+		this.monthTitleView.text = measureText;
+		this.monthTitleView.validateNow();
 
 		this.decrementMonthButtonMeasurements.restore(this.decrementMonthButton);
 		this.decrementMonthButton.validateNow();
@@ -1166,8 +1332,12 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.incrementYearButtonMeasurements.restore(this.incrementYearButton);
 		this.incrementYearButton.validateNow();
 
-		var headerWidth = this.currentMonthView.width;
-		var headerHeight = this.currentMonthView.height;
+		var headerWidth = 0.0;
+		var headerHeight = 0.0;
+		if (this.showMonthTitleView) {
+			headerWidth = this.monthTitleView.width;
+			headerHeight = this.monthTitleView.height;
+		}
 		if (this.showMonthButtons) {
 			headerWidth += (2.0 * this.headerGap) + this.decrementMonthButton.width + this.incrementMonthButton.width;
 			headerHeight = Math.max(headerHeight, Math.max(this.decrementMonthButton.height, this.incrementMonthButton.height));
@@ -1179,40 +1349,310 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = Math.max(this.calendarGrid.width, headerWidth);
+			newWidth = Math.max(this.dateContainer.width, headerWidth);
 			newWidth += this.paddingLeft + this.paddingRight;
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = headerHeight + this.calendarGrid.height;
+			newHeight = headerHeight + this.dateContainer.height;
 			newHeight += this.paddingTop + this.paddingBottom;
 		}
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = Math.max(this.calendarGrid.minWidth, headerWidth);
+			newMinWidth = Math.max(this.dateContainer.minWidth, headerWidth);
 			newMinWidth += this.paddingLeft + this.paddingRight;
 		}
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = headerHeight + this.calendarGrid.minHeight;
+			newMinHeight = headerHeight + this.dateContainer.minHeight;
 			newMinHeight += this.paddingTop + this.paddingBottom;
 		}
 
-		this.currentMonthView.text = oldText;
+		this.monthTitleView.text = oldText;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight);
 	}
 
 	private function refreshEnabled():Void {
-		this.currentMonthView.enabled = this.enabled;
+		this.monthTitleView.enabled = this.enabled;
 		this.decrementMonthButton.enabled = this.enabled;
 		this.incrementMonthButton.enabled = this.enabled;
 		this.decrementYearButton.enabled = this.enabled;
 		this.incrementYearButton.enabled = this.enabled;
-		this.calendarGrid.enabled = this.enabled;
+		this.dateContainer.enabled = this.enabled;
+	}
+
+	private function createWeekdayLabels():Void {
+		for (dayNameLabel in this._dayNameLabels) {
+			this.dateContainer.removeChild(dayNameLabel);
+			if (this._oldWeekdayLabelFactory.destroy != null) {
+				this._oldWeekdayLabelFactory.destroy(dayNameLabel);
+			}
+		}
+		this._oldWeekdayLabelFactory = null;
+		this._dayNameLabels.resize(0);
+
+		var factory = this._weekdayLabelFactory != null ? this._weekdayLabelFactory : defaultWeekdayLabelFactory;
+		var weekdayLabelVariant = this.customWeekdayLabelVariant != null ? this.customWeekdayLabelVariant : CHILD_VARIANT_WEEKDAY_LABEL;
+		for (i in 0...7) {
+			var dayNameLabel = cast(factory.create(), Label);
+			this._oldWeekdayLabelFactory = factory;
+			if (dayNameLabel.variant == null) {
+				dayNameLabel.variant = weekdayLabelVariant;
+			}
+			this.dateContainer.addChildAt(dayNameLabel, i);
+			this._dayNameLabels.push(dayNameLabel);
+		}
+	}
+
+	private function refreshWeekdayLabels():Void {
+		for (i in 0...this._dayNameLabels.length) {
+			var nameIndex = (i + this._currentStartOfWeek) % this._dayNameLabels.length;
+			var dayNameLabel = this._dayNameLabels[i];
+			dayNameLabel.text = this._currentWeekdayNames[nameIndex];
+			dayNameLabel.visible = this.showWeekdayLabels;
+			dayNameLabel.includeInLayout = this.showWeekdayLabels;
+		}
+	}
+
+	private function refreshDateRenderers():Void {
+		if (this._defaultStorage.dateRendererRecycler.update == null) {
+			this._defaultStorage.dateRendererRecycler.update = defaultUpdateDateRenderer;
+			if (this._defaultStorage.dateRendererRecycler.reset == null) {
+				this._defaultStorage.dateRendererRecycler.reset = defaultResetDateRenderer;
+			}
+		}
+		if (this._mutedStorage.dateRendererRecycler.update == null) {
+			this._mutedStorage.dateRendererRecycler.update = defaultUpdateDateRenderer;
+			if (this._mutedStorage.dateRendererRecycler.reset == null) {
+				this._mutedStorage.dateRendererRecycler.reset = defaultResetDateRenderer;
+			}
+		}
+
+		var dateRendererInvalid = this.isInvalid(INVALIDATION_FLAG_DATE_RENDERER_FACTORY);
+		this.refreshInactiveDateRenderers(this._defaultStorage, dateRendererInvalid);
+		this.refreshInactiveDateRenderers(this._mutedStorage, dateRendererInvalid);
+
+		this.recoverInactiveDateRenderers(this._defaultStorage);
+		this.recoverInactiveDateRenderers(this._mutedStorage);
+		this.renderUnrenderedData();
+		this.freeInactiveDateRenderers(this._defaultStorage);
+		this.freeInactiveDateRenderers(this._mutedStorage);
+	}
+
+	private function refreshInactiveDateRenderers(storage:DateRendererStorage, factoryInvalid:Bool):Void {
+		var temp = storage.inactiveDateRenderers;
+		storage.inactiveDateRenderers = storage.activeDateRenderers;
+		storage.activeDateRenderers = temp;
+		if (storage.activeDateRenderers.length > 0) {
+			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active date renderers should be empty before updating.');
+		}
+		if (factoryInvalid) {
+			this.recoverInactiveDateRenderers(storage);
+			this.freeInactiveDateRenderers(storage);
+			storage.oldDateRendererRecycler = null;
+		}
+	}
+
+	private function recoverInactiveDateRenderers(storage:DateRendererStorage):Void {
+		for (dateRenderer in storage.inactiveDateRenderers) {
+			if (dateRenderer == null) {
+				continue;
+			}
+			var state = this.dateRendererToItemState.get(dateRenderer);
+			if (state == null) {
+				continue;
+			}
+			this.dateRendererToItemState.remove(dateRenderer);
+			dateRenderer.removeEventListener(TriggerEvent.TRIGGER, datePicker_dateRenderer_triggerHandler);
+			dateRenderer.removeEventListener(MouseEvent.CLICK, datePicker_dateRenderer_clickHandler);
+			dateRenderer.removeEventListener(TouchEvent.TOUCH_TAP, datePicker_dateRenderer_touchTapHandler);
+			dateRenderer.removeEventListener(Event.CHANGE, datePicker_dateRenderer_changeHandler);
+			this.resetDateRenderer(dateRenderer, state, storage);
+			if (storage.measurements != null) {
+				storage.measurements.restore(dateRenderer);
+			}
+			this.itemStatePool.release(state);
+		}
+	}
+
+	private function freeInactiveDateRenderers(storage:DateRendererStorage):Void {
+		var recycler = storage.oldDateRendererRecycler != null ? storage.oldDateRendererRecycler : storage.dateRendererRecycler;
+		for (dateRenderer in storage.inactiveDateRenderers) {
+			if (dateRenderer == null) {
+				continue;
+			}
+			this.destroyDateRenderer(dateRenderer, recycler);
+		}
+		storage.inactiveDateRenderers.resize(0);
+	}
+
+	private function createDateRenderer(state:DatePickerItemState, storage:DateRendererStorage):DisplayObject {
+		var dateRenderer:DisplayObject = null;
+		if (storage.inactiveDateRenderers.length == 0) {
+			dateRenderer = storage.dateRendererRecycler.create();
+			if ((dateRenderer is IVariantStyleObject)) {
+				var variantItemRenderer = cast(dateRenderer, IVariantStyleObject);
+				if (variantItemRenderer.variant == null) {
+					if (storage == this._mutedStorage) {
+						var variant = (this.customMutedDateRendererVariant != null) ? this.customMutedDateRendererVariant : CHILD_VARIANT_MUTED_DATE_RENDERER;
+						variantItemRenderer.variant = variant;
+					} else {
+						var variant = (this.customDateRendererVariant != null) ? this.customDateRendererVariant : CHILD_VARIANT_DATE_RENDERER;
+						variantItemRenderer.variant = variant;
+					}
+				}
+			}
+			// for consistency, initialize before passing to the recycler's
+			// update function. plus, this ensures that custom item renderers
+			// correctly handle property changes in update() instead of trying
+			// to access them too early in initialize().
+			if ((dateRenderer is IUIControl)) {
+				cast(dateRenderer, IUIControl).initializeNow();
+			}
+			// save measurements after initialize, because width/height could be
+			// set explicitly there, and we want to restore those values
+			if (storage.measurements == null) {
+				storage.measurements = new Measurements(dateRenderer);
+			}
+		} else {
+			dateRenderer = storage.inactiveDateRenderers.shift();
+		}
+		this.updateDateRenderer(dateRenderer, state, storage);
+		if ((dateRenderer is ITriggerView)) {
+			// prefer TriggerEvent.TRIGGER
+			dateRenderer.addEventListener(TriggerEvent.TRIGGER, datePicker_dateRenderer_triggerHandler);
+		} else {
+			// fall back to these events if TriggerEvent.TRIGGER isn't available
+			dateRenderer.addEventListener(MouseEvent.CLICK, datePicker_dateRenderer_clickHandler);
+			#if (openfl >= "9.0.0")
+			dateRenderer.addEventListener(TouchEvent.TOUCH_TAP, datePicker_dateRenderer_touchTapHandler);
+			#end
+		}
+		if ((dateRenderer is IToggle)) {
+			dateRenderer.addEventListener(Event.CHANGE, datePicker_dateRenderer_changeHandler);
+		}
+		this.dateRendererToItemState.set(dateRenderer, state);
+		storage.activeDateRenderers.push(dateRenderer);
+		return dateRenderer;
+	}
+
+	private function destroyDateRenderer(dateRenderer:DisplayObject, recycler:DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>):Void {
+		this.dateContainer.removeChild(dateRenderer);
+		if (recycler != null && recycler.destroy != null) {
+			recycler.destroy(dateRenderer);
+		}
+	}
+
+	private function populateCurrentItemState(date:Date, state:DatePickerItemState):Void {
+		state.owner = this;
+		state.date = date;
+		state.selected = this._selectedDate != null
+			&& this._displayedFullYear == this._selectedDate.getFullYear()
+			&& this._displayedMonth == this._selectedDate.getMonth()
+			&& date.getFullYear() == this._selectedDate.getFullYear()
+			&& date.getMonth() == this._selectedDate.getMonth()
+			&& date.getDate() == this._selectedDate.getDate();
+		state.enabled = this._enabled;
+	}
+
+	private function resetDateRenderer(dateRenderer:DisplayObject, state:DatePickerItemState, storage:DateRendererStorage):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		var recycler = storage.oldDateRendererRecycler != null ? storage.oldDateRendererRecycler : storage.dateRendererRecycler;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(dateRenderer, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshDateRendererProperties(dateRenderer, RESET_ITEM_STATE);
+		dateRenderer.visible = true;
+	}
+
+	private function updateDateRenderer(dateRenderer:DisplayObject, state:DatePickerItemState, storage:DateRendererStorage):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if (storage.dateRendererRecycler.update != null) {
+			storage.dateRendererRecycler.update(dateRenderer, state);
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		this.refreshDateRendererProperties(dateRenderer, state);
+		dateRenderer.visible = this.showDatesFromAdjacentMonths
+			|| (state.date != null
+				&& this._displayedFullYear == state.date.getFullYear()
+				&& this._displayedMonth == state.date.getMonth());
+	}
+
+	private function refreshDateRendererProperties(dateRenderer:DisplayObject, state:DatePickerItemState):Void {
+		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+		this._ignoreSelectionChange = true;
+		if ((dateRenderer is IUIControl)) {
+			var uiControl = cast(dateRenderer, IUIControl);
+			uiControl.enabled = state.enabled;
+		}
+		if ((dateRenderer is IDataRenderer)) {
+			var dataRenderer = cast(dateRenderer, IDataRenderer);
+			dataRenderer.data = state.date;
+		}
+		if ((dateRenderer is IToggle)) {
+			var toggle = cast(dateRenderer, IToggle);
+			toggle.selected = state.selected;
+		}
+		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+	}
+
+	private function renderUnrenderedData():Void {
+		var startOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : 0;
+		var dayIndexOfFirst = -startOfWeek + (new Date(this._displayedFullYear, this._displayedMonth, 1, 0, 0, 0)).getDay();
+		if (dayIndexOfFirst < 0) {
+			dayIndexOfFirst = 0;
+		}
+		var lastMonthYear = this._displayedFullYear;
+		var lastMonth = this._displayedMonth - 1;
+		if (lastMonth < 0) {
+			lastMonth = 11;
+			lastMonthYear--;
+		}
+		var numDays = DateUtil.getDaysInMonth(this._displayedMonth, this._displayedFullYear);
+		var numDaysLastMonth = DateUtil.getDaysInMonth(lastMonth, lastMonthYear);
+
+		var currentFullYear = this._displayedFullYear;
+		var currentMonth = this._displayedMonth;
+		var currentDate = numDaysLastMonth - dayIndexOfFirst + 1;
+		if (currentDate > 1) {
+			currentMonth = lastMonth;
+			currentFullYear = lastMonthYear;
+		}
+		for (i in 0...42) {
+			if ((currentMonth < this._displayedMonth || currentFullYear < this._displayedFullYear) && currentDate > numDaysLastMonth) {
+				currentDate = 1;
+				currentMonth++;
+				if (currentMonth == 12) {
+					currentMonth = 0;
+					currentFullYear++;
+				}
+			}
+			if (currentMonth == this._displayedMonth && currentDate > numDays) {
+				currentDate = 1;
+				currentMonth++;
+				if (currentMonth == 12) {
+					currentMonth = 0;
+					currentFullYear++;
+				}
+			}
+
+			var state = this.itemStatePool.get();
+			// hours is 12 noon on neko to avoid a daylight savings issue
+			var stateDate = new Date(currentFullYear, currentMonth, currentDate, #if neko 12 #else 0 #end, 0, 0);
+			this.populateCurrentItemState(stateDate, state);
+			var storage = (currentMonth == this._displayedMonth) ? this._defaultStorage : this._mutedStorage;
+			var dateRenderer = this.createDateRenderer(state, storage);
+			this.dateContainer.addChildAt(dateRenderer, 7 + i);
+			this.updateDateRenderer(dateRenderer, state, storage);
+			currentDate++;
+		}
 	}
 
 	private function refreshLocale():Void {
@@ -1229,9 +1669,20 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 				this._currentMonthNames.push(monthName);
 			}
 		}
+		this._currentWeekdayNames = this._customWeekdayNames;
+		if (this._currentWeekdayNames == null) {
+			var weekdayNamesVector = this._currentDateFormatter.getWeekdayNames(SHORT_ABBREVIATION, STANDALONE);
+			this._currentWeekdayNames = [];
+			for (weekdayName in weekdayNamesVector) {
+				this._currentWeekdayNames.push(weekdayName.charAt(0));
+			}
+		}
+		this._currentStartOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : this._currentDateFormatter.getFirstWeekday();
 		#else
-		this._currentMonthNames = DEFAULT_MONTH_NAMES;
 		this._actualLocaleIDName = "en-US";
+		this._currentMonthNames = DEFAULT_MONTH_NAMES;
+		this._currentWeekdayNames = this._customWeekdayNames != null ? this._customWeekdayNames : DEFAULT_WEEKDAY_NAMES;
+		this._currentStartOfWeek = this._customStartOfWeek != null ? this._customStartOfWeek : DEFAULT_START_OF_WEEK;
 		#end
 	}
 
@@ -1293,7 +1744,8 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.incrementMonthButton.visible = this.showMonthButtons;
 		this.decrementYearButton.visible = this.showYearButtons;
 		this.incrementYearButton.visible = this.showYearButtons;
-		this.currentMonthView.validateNow();
+		this.monthTitleView.visible = this.showMonthTitleView;
+		this.monthTitleView.validateNow();
 		this.decrementMonthButton.validateNow();
 		this.incrementMonthButton.validateNow();
 		this.decrementYearButton.validateNow();
@@ -1317,10 +1769,13 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		if (this.incrementYearButton.height != maxButtonHeight) {
 			this.incrementYearButton.height = maxButtonHeight;
 		}
-		var headerHeight = Math.max(this.currentMonthView.height, maxButtonHeight);
-		switch (this.currentMonthViewPosition) {
+		var headerHeight = maxButtonHeight;
+		if (this.showMonthTitleView) {
+			headerHeight = Math.max(headerHeight, this.monthTitleView.height);
+		}
+		switch (this.monthTitleViewPosition) {
 			case CENTER:
-				this.currentMonthView.x = this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - this.currentMonthView.width) / 2.0;
+				this.monthTitleView.x = this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - this.monthTitleView.width) / 2.0;
 				var currentX = this.paddingLeft;
 				if (this.showYearButtons) {
 					this.decrementYearButton.x = currentX;
@@ -1342,7 +1797,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 					currentX -= this.headerGap;
 				}
 			case RIGHT:
-				this.currentMonthView.x = this.actualWidth - this.paddingRight - this.currentMonthView.width;
+				this.monthTitleView.x = this.actualWidth - this.paddingRight - this.monthTitleView.width;
 				var currentX = this.paddingLeft;
 				if (this.showYearButtons) {
 					this.decrementYearButton.x = currentX;
@@ -1361,7 +1816,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 					currentX += this.incrementYearButton.width + this.headerGap;
 				}
 			case LEFT:
-				this.currentMonthView.x = this.paddingLeft;
+				this.monthTitleView.x = this.paddingLeft;
 				var currentX = this.actualWidth - this.paddingRight;
 				if (this.showYearButtons) {
 					currentX -= this.incrementYearButton.width;
@@ -1384,25 +1839,31 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 					currentX -= this.headerGap;
 				}
 			default:
-				throw new ArgumentError("Invalid month position: " + this.currentMonthViewPosition);
+				throw new ArgumentError("Invalid month position: " + this.monthTitleViewPosition);
 		}
-		this.currentMonthView.y = this.paddingTop + (headerHeight - this.currentMonthView.height) / 2.0;
-		this.decrementMonthButton.y = this.paddingTop + (headerHeight - this.decrementMonthButton.height) / 2.0;
-		this.incrementMonthButton.y = this.paddingTop + (headerHeight - this.incrementMonthButton.height) / 2.0;
-		this.decrementYearButton.y = this.paddingTop + (headerHeight - this.decrementYearButton.height) / 2.0;
-		this.incrementYearButton.y = this.paddingTop + (headerHeight - this.incrementYearButton.height) / 2.0;
+		if (this.showMonthTitleView) {
+			this.monthTitleView.y = this.paddingTop + (headerHeight - this.monthTitleView.height) / 2.0;
+		}
+		if (this.showMonthButtons) {
+			this.decrementMonthButton.y = this.paddingTop + (headerHeight - this.decrementMonthButton.height) / 2.0;
+			this.incrementMonthButton.y = this.paddingTop + (headerHeight - this.incrementMonthButton.height) / 2.0;
+		}
+		if (this.showYearButtons) {
+			this.decrementYearButton.y = this.paddingTop + (headerHeight - this.decrementYearButton.height) / 2.0;
+			this.incrementYearButton.y = this.paddingTop + (headerHeight - this.incrementYearButton.height) / 2.0;
+		}
 
-		this.calendarGrid.x = this.paddingLeft;
-		this.calendarGrid.y = this.paddingTop + headerHeight;
+		this.dateContainer.x = this.paddingLeft;
+		this.dateContainer.y = this.paddingTop + headerHeight;
 		var calendarWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var calendarHeight = this.actualHeight - headerHeight - this.paddingTop - this.paddingBottom;
-		if (this.calendarGrid.width != calendarWidth) {
-			this.calendarGrid.width = calendarWidth;
+		if (this.dateContainer.width != calendarWidth) {
+			this.dateContainer.width = calendarWidth;
 		}
-		if (this.calendarGrid.height != calendarHeight) {
-			this.calendarGrid.height = calendarHeight;
+		if (this.dateContainer.height != calendarHeight) {
+			this.dateContainer.height = calendarHeight;
 		}
-		this.calendarGrid.validateNow();
+		this.dateContainer.validateNow();
 	}
 
 	private function layoutBackgroundSkin():Void {
@@ -1426,21 +1887,8 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		}
 	}
 
-	private function refreshCalendarGrid():Void {
-		var oldIgnoreCalendarGridChange = this._ignoreCalendarGridChange;
-		this._ignoreCalendarGridChange = true;
-		this.calendarGrid.requestedLocaleIDName = this._requestedLocaleIDName;
-		this.calendarGrid.displayedMonth = this._displayedMonth;
-		this.calendarGrid.displayedFullYear = this._displayedFullYear;
-		this.calendarGrid.selectable = this._selectable;
-		this.calendarGrid.selectedDate = this._selectedDate;
-		this.calendarGrid.customWeekdayNames = this._customWeekdayNames;
-		this.calendarGrid.customStartOfWeek = this._customStartOfWeek;
-		this._ignoreCalendarGridChange = oldIgnoreCalendarGridChange;
-	}
-
-	private function refreshCurrentMonth():Void {
-		this.currentMonthView.text = this.getMonthText(this.displayedMonth, this.displayedFullYear);
+	private function refreshMonthTitle():Void {
+		this.monthTitleView.text = this.getMonthText(this.displayedMonth, this.displayedFullYear);
 	}
 
 	private function getMonthWithLongestName():Int {
@@ -1469,21 +1917,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		var monthName = this._currentMonthNames[month];
 		return '$monthName ${StringTools.lpad(Std.string(fullYear), "0", 4)}';
 		#end
-	}
-
-	private function datePicker_calendarGrid_changeHandler(event:Event):Void {
-		if (this._ignoreCalendarGridChange) {
-			return;
-		}
-		this.selectedDate = this.calendarGrid.selectedDate;
-	}
-
-	private function datePicker_calendarGrid_scrollHandler(event:Event):Void {
-		if (this._ignoreCalendarGridChange) {
-			return;
-		}
-		this.displayedMonth = this.calendarGrid.displayedMonth;
-		this.displayedFullYear = this.calendarGrid.displayedFullYear;
 	}
 
 	private function datePicker_decrementMonthButton_triggerHandler(event:TriggerEvent):Void {
@@ -1517,4 +1950,89 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	private function datePicker_incrementYearButton_triggerHandler(event:TriggerEvent):Void {
 		this.displayedFullYear++;
 	}
+
+	private function datePicker_dateRenderer_touchTapHandler(event:TouchEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.CLICK will catch it
+			return;
+		}
+
+		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		var state = this.dateRendererToItemState.get(dateRenderer);
+		DatePickerEvent.dispatch(this, DatePickerEvent.ITEM_TRIGGER, state);
+
+		if (!this._selectable || !this.pointerSelectionEnabled) {
+			return;
+		}
+		this.selectedDate = state.date;
+		this.displayedFullYear = this.selectedDate.getFullYear();
+		this.displayedMonth = this.selectedDate.getMonth();
+	}
+
+	private function datePicker_dateRenderer_clickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		var state = this.dateRendererToItemState.get(dateRenderer);
+		DatePickerEvent.dispatch(this, DatePickerEvent.ITEM_TRIGGER, state);
+
+		if (!this._selectable || !this.pointerSelectionEnabled) {
+			return;
+		}
+		this.selectedDate = state.date;
+		this.displayedFullYear = this.selectedDate.getFullYear();
+		this.displayedMonth = this.selectedDate.getMonth();
+	}
+
+	private function datePicker_dateRenderer_triggerHandler(event:TriggerEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		var state = this.dateRendererToItemState.get(dateRenderer);
+		DatePickerEvent.dispatch(this, DatePickerEvent.ITEM_TRIGGER, state);
+
+		if (!this._selectable) {
+			return;
+		}
+		this.selectedDate = state.date;
+		this.displayedFullYear = this.selectedDate.getFullYear();
+		this.displayedMonth = this.selectedDate.getMonth();
+	}
+
+	private function datePicker_dateRenderer_changeHandler(event:Event):Void {
+		if (this._ignoreSelectionChange) {
+			return;
+		}
+		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		var toggleDateRenderer = cast(dateRenderer, IToggle);
+		var state = this.dateRendererToItemState.get(dateRenderer);
+		if (toggleDateRenderer.selected == state.selected) {
+			// nothing has changed
+			return;
+		}
+		// if we get here, the selected property of the renderer changed
+		// unexpectedly, and we need to restore its proper state
+		this.setInvalid(SELECTION);
+	}
+}
+
+private class DateRendererStorage {
+	public function new(?id:String, ?recycler:DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>) {
+		this.id = id;
+		this.dateRendererRecycler = recycler;
+	}
+
+	public var id:String;
+	public var oldDateRendererRecycler:DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>;
+	public var dateRendererRecycler:DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>;
+	public var activeDateRenderers:Array<DisplayObject> = [];
+	public var inactiveDateRenderers:Array<DisplayObject> = [];
+	public var measurements:Measurements;
 }

@@ -67,6 +67,7 @@ import flash.globalization.LocaleID;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.SCROLL)
+@:deprecated('CalendarGrid is deprecated. Use DatePicker instead.')
 class CalendarGrid extends FeathersControl implements IDateSelector {
 	#if ((!flash && openfl < "9.2.0") || neko)
 	private var DEFAULT_WEEKDAY_NAMES = ["S", "M", "T", "W", "T", "F", "S"];

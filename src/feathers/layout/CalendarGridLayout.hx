@@ -11,17 +11,16 @@ package feathers.layout;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
-import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**
-	Positions weekday label and date buttons in a `CalendarGrid` component.
+	Positions weekday label and date buttons in a `DatePicker` component.
 
 	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
 	changes, which triggers the container to invalidate.
 
-	@see `feathers.controls.supportClasses.CalendarGrid`
+	@see `feathers.controls.DatePicker`
 
 	@since 1.0.0
 **/

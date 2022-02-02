@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.DatePickerEvent;
 import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
@@ -68,6 +69,7 @@ import flash.globalization.LocaleID;
 @:event(openfl.events.Event.CHANGE)
 @:event(openfl.events.Event.OPEN)
 @:event(openfl.events.Event.CLOSE)
+@:event(feathers.events.DatePickerEvent.ITEM_TRIGGER)
 @:styleContext
 class PopUpDatePicker extends FeathersControl implements IDateSelector implements IFocusObject implements IStageFocusDelegate {
 	private static final INVALIDATION_FLAG_BUTTON_FACTORY = InvalidationFlag.CUSTOM("buttonFactory");
@@ -727,6 +729,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	private function createDatePicker():Void {
 		if (this.datePicker != null) {
 			this.datePicker.removeEventListener(Event.CHANGE, popUpDatePicker_datePicker_changeHandler);
+			this.datePicker.removeEventListener(DatePickerEvent.ITEM_TRIGGER, popUpDatePicker_datePicker_itemTriggerHandler);
 			this.datePicker.focusOwner = null;
 			if (this._oldDatePickerFactory.destroy != null) {
 				this._oldDatePickerFactory.destroy(this.datePicker);
@@ -743,6 +746,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 			this.datePicker.variant = this.customDatePickerVariant != null ? this.customDatePickerVariant : PopUpDatePicker.CHILD_VARIANT_DATE_PICKER;
 		}
 		this.datePicker.addEventListener(Event.CHANGE, popUpDatePicker_datePicker_changeHandler);
+		this.datePicker.addEventListener(DatePickerEvent.ITEM_TRIGGER, popUpDatePicker_datePicker_itemTriggerHandler);
 	}
 
 	private function refreshDatePickerData():Void {
@@ -875,6 +879,13 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 			return;
 		}
 		this.selectedDate = this.datePicker.selectedDate;
+	}
+
+	private function popUpDatePicker_datePicker_itemTriggerHandler(event:DatePickerEvent):Void {
+		this.dispatchEvent(event);
+		if (this.popUpAdapter == null || !this.popUpAdapter.persistent) {
+			this.closeDatePicker();
+		}
 	}
 
 	private function popUpDatePicker_datePicker_removedFromStageHandler(event:Event):Void {
