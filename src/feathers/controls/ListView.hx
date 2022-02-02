@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -616,14 +617,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
+	public var itemRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 
-	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
+	private function get_itemRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
 		return this._defaultStorage.itemRendererRecycler;
 	}
 
-	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		ListViewItemState, DisplayObject> {
+	private function set_itemRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, ListViewItemState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
 		if (this._defaultStorage.itemRendererRecycler == value) {
 			return this._defaultStorage.itemRendererRecycler;
 		}
@@ -909,7 +910,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public function setItemRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):Void {
+	public function setItemRendererRecycler(id:String, recycler:AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):Void {
 		if (this._recyclerMap == null) {
 			this._recyclerMap = [];
 		}

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
@@ -191,7 +192,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public var toggleButtonRecycler:DisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton> = DisplayObjectRecycler.withClass(ToggleButton);
+	public var toggleButtonRecycler:AbstractDisplayObjectRecycler<Dynamic, PageIndicatorItemState,
+		ToggleButton> = DisplayObjectRecycler.withClass(ToggleButton);
 
 	private var inactiveToggleButtons:Array<ToggleButton> = [];
 	private var activeToggleButtons:Array<ToggleButton> = [];

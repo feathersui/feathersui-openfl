@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IDataSelector;
@@ -317,14 +318,14 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
-	public var tabRecycler(get, set):DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>;
+	public var tabRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>;
 
-	private function get_tabRecycler():DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> {
+	private function get_tabRecycler():AbstractDisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton> {
 		return this._defaultStorage.tabRecycler;
 	}
 
-	private function set_tabRecycler(value:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>):DisplayObjectRecycler<Dynamic, TabBarItemState,
-		ToggleButton> {
+	private function set_tabRecycler(value:AbstractDisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>):AbstractDisplayObjectRecycler<Dynamic,
+		TabBarItemState, ToggleButton> {
 		if (this._defaultStorage.tabRecycler == value) {
 			return this._defaultStorage.tabRecycler;
 		}
@@ -539,7 +540,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		@since 1.0.0
 	**/
-	public function setTabRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>):Void {
+	public function setTabRecycler(id:String, recycler:AbstractDisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>):Void {
 		if (this._recyclerMap == null) {
 			this._recyclerMap = [];
 		}

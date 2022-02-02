@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -495,14 +496,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
+	public var itemRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
 
-	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
+	private function get_itemRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
 		return this._defaultItemStorage.itemRendererRecycler;
 	}
 
-	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		GroupListViewItemState, DisplayObject> {
+	private function set_itemRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
 		if (this._defaultItemStorage.itemRendererRecycler == value) {
 			return this._defaultItemStorage.itemRendererRecycler;
 		}
@@ -527,14 +528,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
+	public var headerRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
 
-	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
+	private function get_headerRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
 		return this._defaultHeaderStorage.itemRendererRecycler;
 	}
 
-	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		GroupListViewItemState, DisplayObject> {
+	private function set_headerRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject> {
 		if (this._defaultHeaderStorage.itemRendererRecycler == value) {
 			return this._defaultHeaderStorage.itemRendererRecycler;
 		}
@@ -884,7 +885,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public function setItemRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
+	public function setItemRendererRecycler(id:String, recycler:AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
 		if (this._itemRendererRecyclerMap == null) {
 			this._itemRendererRecyclerMap = [];
 		}
@@ -925,7 +926,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public function setHeaderRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
+	public function setHeaderRendererRecycler(id:String, recycler:AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>):Void {
 		if (this._headerRendererRecyclerMap == null) {
 			this._headerRendererRecyclerMap = [];
 		}

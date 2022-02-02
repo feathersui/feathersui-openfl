@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IHierarchicalDepthItemRenderer;
@@ -516,14 +517,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>;
+	public var itemRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>;
 
-	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> {
+	private function get_itemRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> {
 		return this._defaultStorage.itemRendererRecycler;
 	}
 
-	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		TreeViewItemState, DisplayObject> {
+	private function set_itemRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, TreeViewItemState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject> {
 		if (this._defaultStorage.itemRendererRecycler == value) {
 			return this._defaultStorage.itemRendererRecycler;
 		}
@@ -896,7 +897,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
-	public function setItemRendererRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):Void {
+	public function setItemRendererRecycler(id:String, recycler:AbstractDisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>):Void {
 		if (this._recyclerMap == null) {
 			this._recyclerMap = [];
 		}

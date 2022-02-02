@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
@@ -348,14 +349,14 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public var itemRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
+	public var itemRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;
 
-	private function get_itemRendererRecycler():DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
+	private function get_itemRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
 		return this._itemRendererRecycler;
 	}
 
-	private function set_itemRendererRecycler(value:DisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		ListViewItemState, DisplayObject> {
+	private function set_itemRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, ListViewItemState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject> {
 		if (this._itemRendererRecycler == value) {
 			return this._itemRendererRecycler;
 		}

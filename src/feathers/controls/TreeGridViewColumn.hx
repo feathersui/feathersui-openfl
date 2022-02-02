@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.data.TreeGridViewCellState;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
@@ -90,7 +91,7 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		@since 1.0.0
 	**/
-	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> = null;
+	public var cellRendererRecycler:AbstractDisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> = null;
 
 	/**
 		Converts an item to text to display within a grid view cell. By default,

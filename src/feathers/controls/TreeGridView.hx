@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.GridViewHeaderRenderer;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.ITreeGridViewHeaderRenderer;
@@ -462,14 +463,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject>;
+	public var headerRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject>;
 
-	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject> {
+	private function get_headerRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject> {
 		return this._defaultHeaderStorage.headerRendererRecycler;
 	}
 
-	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		TreeGridViewHeaderState, DisplayObject> {
+	private function set_headerRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, TreeGridViewHeaderState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject> {
 		if (this._defaultHeaderStorage.headerRendererRecycler == value) {
 			return this._defaultHeaderStorage.headerRendererRecycler;
 		}
@@ -710,14 +711,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@since 1.0.0
 	**/
-	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
+	public var cellRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 
-	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> {
+	private function get_cellRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> {
 		return this._cellRendererRecycler;
 	}
 
-	private function set_cellRendererRecycler(value:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		TreeGridViewCellState, DisplayObject> {
+	private function set_cellRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, TreeGridViewCellState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> {
 		if (this._cellRendererRecycler == value) {
 			return this._cellRendererRecycler;
 		}

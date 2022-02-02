@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.GridViewHeaderRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
@@ -470,14 +471,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var headerRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>;
+	public var headerRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>;
 
-	private function get_headerRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> {
+	private function get_headerRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> {
 		return this._defaultHeaderStorage.headerRendererRecycler;
 	}
 
-	private function set_headerRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		GridViewHeaderState, DisplayObject> {
+	private function set_headerRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, GridViewHeaderState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> {
 		if (this._defaultHeaderStorage.headerRendererRecycler == value) {
 			return this._defaultHeaderStorage.headerRendererRecycler;
 		}
@@ -866,14 +867,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public var cellRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
+	public var cellRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 
-	private function get_cellRendererRecycler():DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
+	private function get_cellRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
 		return this._cellRendererRecycler;
 	}
 
-	private function set_cellRendererRecycler(value:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		GridViewCellState, DisplayObject> {
+	private function set_cellRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, GridViewCellState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> {
 		if (this._cellRendererRecycler == value) {
 			return this._cellRendererRecycler;
 		}

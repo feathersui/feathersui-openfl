@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.data.SortOrder;
 import feathers.data.GridViewCellState;
 import feathers.utils.DisplayObjectRecycler;
@@ -91,7 +92,7 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		@since 1.0.0
 	**/
-	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = null;
+	public var cellRendererRecycler:AbstractDisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = null;
 
 	/**
 

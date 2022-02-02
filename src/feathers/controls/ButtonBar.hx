@@ -24,6 +24,7 @@ import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelButtonBarStyles;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
@@ -200,14 +201,14 @@ class ButtonBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public var buttonRecycler(get, set):DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>;
+	public var buttonRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>;
 
-	private function get_buttonRecycler():DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button> {
+	private function get_buttonRecycler():AbstractDisplayObjectRecycler<Dynamic, ButtonBarItemState, Button> {
 		return this._defaultStorage.buttonRecycler;
 	}
 
-	private function set_buttonRecycler(value:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>):DisplayObjectRecycler<Dynamic, ButtonBarItemState,
-		Button> {
+	private function set_buttonRecycler(value:AbstractDisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>):AbstractDisplayObjectRecycler<Dynamic,
+		ButtonBarItemState, Button> {
 		if (this._defaultStorage.buttonRecycler == value) {
 			return this._defaultStorage.buttonRecycler;
 		}
@@ -422,7 +423,7 @@ class ButtonBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
-	public function setButtonRecycler(id:String, recycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>):Void {
+	public function setButtonRecycler(id:String, recycler:AbstractDisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>):Void {
 		if (this._recyclerMap == null) {
 			this._recyclerMap = [];
 		}

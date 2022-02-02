@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.core.FeathersControl;
@@ -1043,14 +1044,14 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
-	public var dateRendererRecycler(get, set):DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>;
+	public var dateRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>;
 
-	private function get_dateRendererRecycler():DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject> {
+	private function get_dateRendererRecycler():AbstractDisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject> {
 		return this._defaultStorage.dateRendererRecycler;
 	}
 
-	private function set_dateRendererRecycler(value:DisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject>):DisplayObjectRecycler<Dynamic,
-		DatePickerItemState, DisplayObject> {
+	private function set_dateRendererRecycler(value:AbstractDisplayObjectRecycler<Dynamic, DatePickerItemState,
+		DisplayObject>):AbstractDisplayObjectRecycler<Dynamic, DatePickerItemState, DisplayObject> {
 		if (this._defaultStorage.dateRendererRecycler == value) {
 			return this._defaultStorage.dateRendererRecycler;
 		}
