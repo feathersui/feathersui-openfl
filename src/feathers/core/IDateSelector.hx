@@ -37,13 +37,13 @@ interface IDateSelector {
 		component changes, and it requests the new selected index:
 
 		```hx
-		var calendar = new CalendarGrid();
+		var datePicker = new DatePicker();
 		function changeHandler(event:Event):Void
 		{
-			var calendar = cast(event.currentTarget, CalendarGrid);
-			trace("selection change: " + calendar.selectedDate);
+			var datePicker = cast(event.currentTarget, DatePicker);
+			trace("selection change: " + datePicker.selectedDate);
 		}
-		calendar.addEventListener(Event.CHANGE, changeHandler);
+		datePicker.addEventListener(Event.CHANGE, changeHandler);
 		```
 
 		@default null

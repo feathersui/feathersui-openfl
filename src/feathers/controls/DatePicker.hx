@@ -203,7 +203,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		Along with the `displayedMonth`, sets the month that is currently
 		visible in the calendar. Defaults to the current year.
 
-		@see `CalendarGrid.displayedMonth`
+		@see `DatePicker.displayedMonth`
 
 		@since 1.0.0
 	**/
@@ -232,7 +232,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		Months are indexed starting from `0`. So the index of January is `0`,
 		and the index of December is `11`.
 
-		@see `CalendarGrid.displayedFullYear`
+		@see `DatePicker.displayedFullYear`
 
 		@since 1.0.0
 	**/
@@ -795,7 +795,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	/**
 		The locale ID name that is requested.
 
-		@see `CalendarGrid.actualLocaleIDName`
+		@see `DatePicker.actualLocaleIDName`
 
 		@since 1.0.0
 	**/
@@ -821,7 +821,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		The locale ID name that is being used, which may be different from the
 		requested locale ID name.
 
-		@see `CalendarGrid.requestedLocaleIDName`
+		@see `DatePicker.requestedLocaleIDName`
 
 		@since 1.0.0
 	**/

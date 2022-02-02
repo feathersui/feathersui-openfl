@@ -394,7 +394,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	/**
 		The locale ID name that is requested.
 
-		@see `CalendarGrid.actualLocaleIDName`
+		@see `PopUpDatePicker.actualLocaleIDName`
 
 		@since 1.0.0
 	**/
@@ -420,7 +420,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		The locale ID name that is being used, which may be different from the
 		requested locale ID name.
 
-		@see `CalendarGrid.requestedLocaleIDName`
+		@see `PopUpDatePicker.requestedLocaleIDName`
 
 		@since 1.0.0
 	**/
