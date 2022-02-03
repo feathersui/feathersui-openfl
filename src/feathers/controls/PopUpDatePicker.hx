@@ -62,6 +62,20 @@ import flash.globalization.LocaleID;
 	this.addChild(datePicker);
 	```
 
+	@event openfl.events.Event.CHANGE Dispatched when
+	`PopUpDateDatePicker.selectedDate` changes.
+
+	@event openfl.events.Event.OPEN Dispatched when the pop-up date picker is
+	opened.
+
+	@event openfl.events.Event.CLOSE Dispatched when the pop-up date picker is
+	closed.
+
+	@event feathers.events.DatePickerEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks an item renderer in the date picker. The pointer must remain
+	within the bounds of the item renderer on release, or the gesture will be
+	ignored.
+
 	@see [Tutorial: How to use the PopUpDatePicker component](https://feathersui.com/learn/haxe-openfl/pop-up-date-picker/)
 
 	@since 1.0.0

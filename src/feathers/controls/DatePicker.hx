@@ -75,13 +75,19 @@ import openfl._internal.utils.ObjectPool;
 	this.addChild(datePicker);
 	```
 
+	@event openfl.events.Event.CHANGE Dispatched when `DatePicker.selectedDate`
+	changes.
+
+	@event feathers.events.DatePickerEvent.ITEM_TRIGGER Dispatched when the user
+	taps or clicks an item renderer in the date picker. The pointer must remain
+	within the bounds of the item renderer on release, or the gesture will be
+	ignored.
+
 	@see [Tutorial: How to use the DatePicker component](https://feathersui.com/learn/haxe-openfl/date-picker/)
 
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-@:event(openfl.events.Event.OPEN)
-@:event(openfl.events.Event.CLOSE)
 @:event(feathers.events.DatePickerEvent.ITEM_TRIGGER)
 @:styleContext
 class DatePicker extends FeathersControl implements IDateSelector implements IFocusObject {
