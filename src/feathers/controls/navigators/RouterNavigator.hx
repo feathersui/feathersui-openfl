@@ -165,7 +165,11 @@ class RouterNavigator extends BaseNavigator {
 		if (this.stage != null && this.activeItemView == null) {
 			var matched = this.matchRoute();
 			if (matched == route) {
-				this.showItemInternal(matched.path, null);
+				if (route.redirectTo != null) {
+					this.redirect(route);
+				} else {
+					this.showItemInternal(matched.path, null);
+				}
 			}
 		}
 	}
@@ -412,6 +416,11 @@ class RouterNavigator extends BaseNavigator {
 		return this.getPathname();
 	}
 
+	private var _cachedPaths:Map<String, {
+		ereg:EReg,
+		keys:Array<Key>
+	}> = [];
+
 	private function getURLVariables():URLVariables {
 		var search = location.search;
 		if (search.length > 0) {
@@ -447,10 +456,25 @@ class RouterNavigator extends BaseNavigator {
 		return pathname;
 	}
 
-	private var _cachedPaths:Map<String, {
-		ereg:EReg,
-		keys:Array<Key>
-	}> = [];
+	private function redirect(route:Route):Void {
+		var newURL = route.redirectTo;
+
+		var itemPath = route.path;
+		var params:Map<String, String> = [];
+		if (itemPath != null && itemPath.length > 0) {
+			var matcher = getMatcher(itemPath);
+			for (i in 0...matcher.keys.length) {
+				var key = matcher.keys[i];
+				params.set(key.name, matcher.ereg.matched(i + 1));
+			}
+		}
+
+		for (name => value in params) {
+			newURL = StringTools.replace(newURL, ":name", value);
+		}
+
+		this.replace(newURL);
+	}
 
 	private function getMatcher(path:String):{
 		ereg:EReg,
@@ -485,6 +509,10 @@ class RouterNavigator extends BaseNavigator {
 	private function matchRouteAndShow(transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		var matched = this.matchRoute();
 		if (matched != null) {
+			if (matched.redirectTo != null) {
+				this.redirect(matched);
+				return null;
+			}
 			return this.showItemInternal(matched.path, transition);
 		}
 		this.clearActiveItemInternal(null);
@@ -496,7 +524,7 @@ class RouterNavigator extends BaseNavigator {
 		var itemPath = item.path;
 		var params:Map<String, String> = [];
 		if (itemPath != null && itemPath.length > 0) {
-			var matcher = getMatcher(item.path);
+			var matcher = getMatcher(itemPath);
 			for (i in 0...matcher.keys.length) {
 				var key = matcher.keys[i];
 				params.set(key.name, matcher.ereg.matched(i + 1));

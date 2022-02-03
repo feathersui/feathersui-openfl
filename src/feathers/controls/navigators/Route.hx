@@ -93,6 +93,16 @@ class Route {
 		return item;
 	}
 
+	/**
+		Creates a `Route` that redirects to a different path.
+	**/
+	public static function withRedirect(path:String, redirectTo:String):Route {
+		var item = new Route();
+		item.path = path;
+		item.redirectTo = redirectTo;
+		return item;
+	}
+
 	private function new() {}
 
 	/**
@@ -142,6 +152,7 @@ class Route {
 	private var viewClass:Class<DisplayObject>;
 	private var viewFunction:() -> DisplayObject;
 	private var viewInstance:DisplayObject;
+	private var redirectTo:String;
 	private var actions:Map<String, RouterAction>;
 
 	private var _viewToEvents:Map<DisplayObject, Array<ViewListener>> = [];
