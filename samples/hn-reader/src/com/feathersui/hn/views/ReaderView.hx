@@ -93,6 +93,8 @@ class ReaderView extends Panel {
 		_navigator.addRoute(Route.withFunction("/jobs/:page?", () -> {
 			return new FeedView("Jobs", "/jobs", "jobs", 1);
 		}, null, populateFeed));
+		// redirect to Top feed, if starting at the base path
+		_navigator.addRoute(Route.withRedirect("/", "/top"));
 		_navigator.addRoute(Route.withClass(null, NotFoundView));
 
 		// keep the header view's location updated so that it can update which
@@ -101,10 +103,5 @@ class ReaderView extends Panel {
 		_navigator.addEventListener(Event.CHANGE, event -> {
 			headerView.pathname = _navigator.pathname;
 		});
-
-		// redirect to Top feed, if starting at the base path
-		if (_navigator.pathname == "/") {
-			_navigator.replace("/top");
-		}
 	}
 }
