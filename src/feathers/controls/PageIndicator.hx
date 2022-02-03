@@ -180,6 +180,10 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	@:style
 	public var customToggleButtonVariant:String = null;
 
+	private var _oldToggleButtonRecycler:DisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton>;
+
+	private var _toggleButtonRecycler:DisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton> = DisplayObjectRecycler.withClass(ToggleButton);
+
 	/**
 		Manages toggle buttons used by the page indicator.
 
@@ -192,8 +196,22 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public var toggleButtonRecycler:AbstractDisplayObjectRecycler<Dynamic, PageIndicatorItemState,
-		ToggleButton> = DisplayObjectRecycler.withClass(ToggleButton);
+	public var toggleButtonRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton>;
+
+	private function get_toggleButtonRecycler():AbstractDisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton> {
+		return this._toggleButtonRecycler;
+	}
+
+	private function set_toggleButtonRecycler(value:AbstractDisplayObjectRecycler<Dynamic, PageIndicatorItemState,
+		ToggleButton>):AbstractDisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton> {
+		if (this._toggleButtonRecycler == value) {
+			return this._toggleButtonRecycler;
+		}
+		this._oldToggleButtonRecycler = this._toggleButtonRecycler;
+		this._toggleButtonRecycler = value;
+		this.setInvalid(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
+		return this._toggleButtonRecycler;
+	}
 
 	private var inactiveToggleButtons:Array<ToggleButton> = [];
 	private var activeToggleButtons:Array<ToggleButton> = [];
@@ -407,10 +425,12 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		if (factoryInvalid) {
 			this.recoverInactiveToggleButtons();
 			this.freeInactiveToggleButtons();
+			this._oldToggleButtonRecycler = null;
 		}
 	}
 
 	private function recoverInactiveToggleButtons():Void {
+		var recycler = this._oldToggleButtonRecycler != null ? this._oldToggleButtonRecycler : this._toggleButtonRecycler;
 		for (button in this.inactiveToggleButtons) {
 			if (button == null) {
 				continue;
@@ -422,8 +442,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			this._currentItemState.enabled = true;
 			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 			this._ignoreSelectionChange = true;
-			if (this.toggleButtonRecycler.reset != null) {
-				this.toggleButtonRecycler.reset(button, this._currentItemState);
+			if (recycler.reset != null) {
+				recycler.reset(button, this._currentItemState);
 			}
 			button.selected = this._currentItemState.selected;
 			button.enabled = this._currentItemState.enabled;
@@ -432,11 +452,12 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function freeInactiveToggleButtons():Void {
+		var recycler = this._oldToggleButtonRecycler != null ? this._oldToggleButtonRecycler : this._toggleButtonRecycler;
 		for (button in this.inactiveToggleButtons) {
 			if (button == null) {
 				continue;
 			}
-			this.destroyToggleButton(button);
+			this.destroyToggleButton(button, recycler);
 		}
 		this.inactiveToggleButtons.resize(0);
 	}
@@ -521,7 +542,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		var button:ToggleButton = null;
 		if (this.inactiveToggleButtons.length == 0) {
-			button = this.toggleButtonRecycler.create();
+			button = this._toggleButtonRecycler.create();
 			if (button.variant == null) {
 				// if the factory set a variant already, don't use the default
 				var variant = this.customToggleButtonVariant != null ? this.customToggleButtonVariant : PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON;
@@ -541,10 +562,10 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		return button;
 	}
 
-	private function destroyToggleButton(button:ToggleButton):Void {
+	private function destroyToggleButton(button:ToggleButton, recycler:DisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton>):Void {
 		this.removeChild(button);
-		if (this.toggleButtonRecycler.destroy != null) {
-			this.toggleButtonRecycler.destroy(button);
+		if (recycler.destroy != null) {
+			recycler.destroy(button);
 		}
 	}
 
@@ -559,8 +580,8 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		this.populateCurrentItemState(index);
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this.toggleButtonRecycler.update != null) {
-			this.toggleButtonRecycler.update(button, this._currentItemState);
+		if (this._toggleButtonRecycler.update != null) {
+			this._toggleButtonRecycler.update(button, this._currentItemState);
 		}
 		button.selected = this._currentItemState.selected;
 		button.enabled = this._currentItemState.enabled;
