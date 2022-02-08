@@ -176,15 +176,15 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function set_focus(value:IFocusObject):IFocusObject {
-		var oldFocus = this.findFocusForDisplayObject(this._root.stage.focus);
-		if (oldFocus == value) {
-			if (this._enabled && this._root.stage != null) {
+		if (this._enabled && this._root.stage != null) {
+			var oldFocus = this.findFocusForDisplayObject(this._root.stage.focus);
+			if (oldFocus == value) {
 				// in some cases, the stage focus seems to get cleared, so even
 				// though our focus hasn't changed, we should still pass it to the
 				// stage
 				this.setStageFocus(cast(value, InteractiveObject));
+				return this.focus;
 			}
-			return this.focus;
 		}
 		if (value != null && value.focusManager != this) {
 			throw new ArgumentError("Failed to change focus. Object is not managed by this focus manager: " + value);
