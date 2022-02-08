@@ -983,6 +983,9 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 
 	private function defaultFocusManager_root_focusInCaptureHandler(event:FocusEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
 		this._focusToRestore = this.findFocusForDisplayObject(cast(event.target, DisplayObject));
 	}
 
