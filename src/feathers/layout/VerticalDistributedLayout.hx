@@ -389,6 +389,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 			explicitMaxHeight:Null<Float>):Void {
 		var maxMinHeight = 0.0;
 		var totalPercentHeight = 0.0;
+		var itemsInLayoutCount = 0;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
 				var layoutObject = cast(item, ILayoutObject);
@@ -410,19 +411,20 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 				maxMinHeight = itemMinHeight;
 			}
 			totalPercentHeight += 100.0;
+			itemsInLayoutCount++;
 		}
 		var remainingHeight = 0.0;
 		if (explicitHeight != null) {
 			remainingHeight = explicitHeight;
 		} else {
-			remainingHeight = this._paddingTop + this._paddingBottom + ((maxMinHeight + this._gap) * items.length) - this._gap;
+			remainingHeight = this._paddingTop + this._paddingBottom + ((maxMinHeight + this._gap) * itemsInLayoutCount) - this._gap;
 			if (explicitMinHeight != null && remainingHeight < explicitMinHeight) {
 				remainingHeight = explicitMinHeight;
 			} else if (explicitMaxHeight != null && remainingHeight > explicitMaxHeight) {
 				remainingHeight = explicitMaxHeight;
 			}
 		}
-		remainingHeight -= (this._paddingTop + this._paddingBottom + this._gap * (items.length - 1));
+		remainingHeight -= (this._paddingTop + this._paddingBottom + this._gap * (itemsInLayoutCount - 1));
 		if (remainingHeight < 0.0) {
 			remainingHeight = 0.0;
 		}

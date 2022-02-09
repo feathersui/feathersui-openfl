@@ -380,6 +380,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 			explicitMaxWidth:Null<Float>):Void {
 		var maxMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
+		var itemsInLayoutCount = 0;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
 				var layoutObject = cast(item, ILayoutObject);
@@ -401,19 +402,20 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 				maxMinWidth = itemMinWidth;
 			}
 			totalPercentWidth += 100.0;
+			itemsInLayoutCount++;
 		}
 		var remainingWidth = 0.0;
 		if (explicitWidth != null) {
 			remainingWidth = explicitWidth;
 		} else {
-			remainingWidth = this._paddingLeft + this._paddingRight + ((maxMinWidth + this._gap) * items.length) - this._gap;
+			remainingWidth = this._paddingLeft + this._paddingRight + ((maxMinWidth + this._gap) * itemsInLayoutCount) - this._gap;
 			if (explicitMinWidth != null && remainingWidth < explicitMinWidth) {
 				remainingWidth = explicitMinWidth;
 			} else if (explicitMaxWidth != null && remainingWidth > explicitMaxWidth) {
 				remainingWidth = explicitMaxWidth;
 			}
 		}
-		remainingWidth -= (this._paddingLeft + this._paddingRight + this._gap * (items.length - 1));
+		remainingWidth -= (this._paddingLeft + this._paddingRight + this._gap * (itemsInLayoutCount - 1));
 		if (remainingWidth < 0.0) {
 			remainingWidth = 0.0;
 		}
