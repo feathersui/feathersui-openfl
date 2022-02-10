@@ -28,6 +28,11 @@ import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
+#if (openfl >= "9.2.0")
+import openfl.text.StyleSheet;
+#elseif flash
+import flash.text.StyleSheet;
+#end
 
 /**
 	Displays text next to a control in a form.
@@ -52,6 +57,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 	private var textField:TextField;
 	private var _previousText:String = null;
+	private var _previousHTMLText:String = null;
 	private var _previousTextFormat:TextFormat = null;
 	private var _previousSimpleTextFormat:openfl.text.TextFormat = null;
 	private var _updatedTextStyles = false;
@@ -96,6 +102,39 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		this._text = value;
 		this.setInvalid(DATA);
 		return this._text;
+	}
+
+	private var _htmlText:String = null;
+
+	/**
+		Text displayed by the label that is parsed as a simple form of HTML.
+
+		The following example sets the label's HTML text:
+
+		```hx
+		label.htmlText = "<b>Hello</b> <i>World</i>";
+		```
+
+		@default null
+
+		@see `Label.text`
+		@see [`openfl.text.TextField.htmlText`](https://api.openfl.org/openfl/text/TextField.html#htmlText)
+
+		@since 1.0.0
+	**/
+	public var htmlText(get, set):String;
+
+	private function get_htmlText():String {
+		return this._htmlText;
+	}
+
+	private function set_htmlText(value:String):String {
+		if (this._htmlText == value) {
+			return this._htmlText;
+		}
+		this._htmlText = value;
+		this.setInvalid(DATA);
+		return this._htmlText;
 	}
 
 	/**
@@ -298,6 +337,21 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	**/
 	@:style
 	public var textFormat:AbstractTextFormat = null;
+
+	#if (openfl >= "9.2.0" || flash)
+	/**
+		A custom stylesheet to use with `htmlText`.
+
+		If the `styleSheet` style is not `null`, the `textFormat` style will
+		be ignored.
+
+		@see `FormItem.htmlText`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var styleSheet:StyleSheet = null;
+	#end
 
 	/**
 		The font styles used to render the form item's text when the form item
@@ -814,6 +868,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
 		}
+		#if (openfl >= "9.2.0" || flash)
+		if (this.textField.styleSheet != this.styleSheet) {
+			this.textField.styleSheet = this.styleSheet;
+			this._updatedTextStyles = true;
+		}
+		#end
 		var textFormat = this.getCurrentTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
@@ -834,15 +894,21 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 	private function refreshText(forceMeasurement:Bool):Void {
 		var hasText = this._text != null && this._text.length > 0;
-		this.textField.visible = hasText;
-		if (this._text == this._previousText && !this._updatedTextStyles && !forceMeasurement) {
+		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		this.textField.visible = hasText || hasHTMLText;
+		if (this._text == this._previousText
+			&& this._htmlText == this._previousHTMLText
+			&& !this._updatedTextStyles
+			&& !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
 		this.textField.autoSize = LEFT;
-		if (hasText) {
+		if (hasHTMLText) {
+			this.textField.text = this._htmlText;
+		} else if (hasText) {
 			this.textField.text = this._text;
 		} else {
 			// zero-width space results in a more accurate height measurement
@@ -870,10 +936,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this.textField.wordWrap != this.wordWrap) {
 			this.textField.wordWrap = this.wordWrap;
 		}
-		if (!hasText) {
+		if (!hasText && !hasHTMLText) {
 			this.textField.text = "";
 		}
 		this._previousText = this._text;
+		this._previousHTMLText = this._htmlText;
 	}
 
 	private function calculateExplicitWidthForTextMeasurement():Null<Float> {
@@ -912,6 +979,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	}
 
 	private function getCurrentTextFormat():TextFormat {
+		#if (openfl >= "9.2.0" || flash)
+		if (this.styleSheet != null) {
+			// TextField won't let us use TextFormat if we have a StyleSheet
+			return null;
+		}
+		#end
 		if (!this._enabled && this.disabledTextFormat != null) {
 			return this.disabledTextFormat;
 		}

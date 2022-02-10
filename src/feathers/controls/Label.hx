@@ -27,7 +27,6 @@ import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
 #if (openfl >= "9.2.0")
 import openfl.text.StyleSheet;
 #elseif flash

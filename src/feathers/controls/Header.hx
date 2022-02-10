@@ -22,7 +22,6 @@ import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
 #if (openfl >= "9.2.0")
 import openfl.text.StyleSheet;
 #elseif flash

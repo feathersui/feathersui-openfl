@@ -182,6 +182,39 @@ class Alert extends Panel {
 		return this._text;
 	}
 
+	private var _htmlText:String = null;
+
+	/**
+		Text displayed by the alert that is parsed as a simple form of HTML.
+
+		The following example sets the alert's HTML text:
+
+		```hx
+		alert.htmlText = "<b>Hello</b> <i>World</i>";
+		```
+
+		@default null
+
+		@see `Alert.text`
+		@see [`openfl.text.TextField.htmlText`](https://api.openfl.org/openfl/text/TextField.html#htmlText)
+
+		@since 1.0.0
+	**/
+	public var htmlText(get, set):String;
+
+	private function get_htmlText():String {
+		return this._htmlText;
+	}
+
+	private function set_htmlText(value:String):String {
+		if (this._htmlText == value) {
+			return this._htmlText;
+		}
+		this._htmlText = value;
+		this.setInvalid(DATA);
+		return this._htmlText;
+	}
+
 	private var alertHeader:Header;
 
 	private var _titleText:String = "";
@@ -529,6 +562,7 @@ class Alert extends Panel {
 
 	private function refreshText():Void {
 		this.messageLabel.text = this._text;
+		this.messageLabel.htmlText = this._htmlText;
 	}
 
 	private function refreshTitleText():Void {

@@ -8,11 +8,17 @@
 
 package feathers.controls;
 
+import feathers.core.IHTMLTextControl;
 import feathers.core.ITextControl;
 import feathers.layout.RelativePositions;
 import feathers.text.TextFormat;
 import feathers.themes.steel.components.SteelTextCalloutStyles;
 import openfl.display.DisplayObject;
+#if (openfl >= "9.2.0")
+import openfl.text.StyleSheet;
+#elseif flash
+import flash.text.StyleSheet;
+#end
 
 /**
 	A special type of `Callout` designed to display text only.
@@ -36,7 +42,7 @@ import openfl.display.DisplayObject;
 **/
 @defaultXmlProperty("text")
 @:styleContext
-class TextCallout extends Callout implements ITextControl {
+class TextCallout extends Callout implements ITextControl implements IHTMLTextControl {
 	/**
 		A variant used to style the callout in a style that indicates that
 		something related to the origin is considered dangerous or in error.
@@ -130,6 +136,39 @@ class TextCallout extends Callout implements ITextControl {
 		return this._text;
 	}
 
+	private var _htmlText:String = null;
+
+	/**
+		Text displayed by the callout that is parsed as a simple form of HTML.
+
+		The following example sets the callout's HTML text:
+
+		```hx
+		callout.htmlText = "<b>Hello</b> <i>World</i>";
+		```
+
+		@default null
+
+		@see `TextCallout.text`
+		@see [`openfl.text.TextField.htmlText`](https://api.openfl.org/openfl/text/TextField.html#htmlText)
+
+		@since 1.0.0
+	**/
+	public var htmlText(get, set):String;
+
+	private function get_htmlText():String {
+		return this._htmlText;
+	}
+
+	private function set_htmlText(value:String):String {
+		if (this._htmlText == value) {
+			return this._htmlText;
+		}
+		this._htmlText = value;
+		this.setInvalid(DATA);
+		return this._htmlText;
+	}
+
 	/**
 		@see `feathers.controls.ITextControl.baseline`
 	**/
@@ -159,6 +198,21 @@ class TextCallout extends Callout implements ITextControl {
 	**/
 	@:style
 	public var textFormat:AbstractTextFormat = null;
+
+	#if (openfl >= "9.2.0" || flash)
+	/**
+		A custom stylesheet to use with `htmlText`.
+
+		If the `styleSheet` style is not `null`, the `textFormat` style will
+		be ignored.
+
+		@see `TextCallout.htmlText`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var styleSheet:StyleSheet = null;
+	#end
 
 	/**
 		Determines if an embedded font is used or not.
@@ -228,9 +282,13 @@ class TextCallout extends Callout implements ITextControl {
 		this.label.textFormat = this.textFormat;
 		this.label.disabledTextFormat = this.disabledTextFormat;
 		this.label.embedFonts = this.embedFonts;
+		#if (openfl >= "9.2.0" || flash)
+		this.label.styleSheet = this.styleSheet;
+		#end
 	}
 
 	private function refreshText():Void {
 		this.label.text = this._text;
+		this.label.htmlText = this._htmlText;
 	}
 }
