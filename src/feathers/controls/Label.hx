@@ -28,6 +28,11 @@ import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
+#if (openfl >= "9.2.0")
+import openfl.text.StyleSheet;
+#elseif flash
+import flash.text.StyleSheet;
+#end
 
 /**
 	Displays text with an optional background.
@@ -216,6 +221,21 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	**/
 	@:style
 	public var textFormat:AbstractTextFormat = null;
+
+	#if (openfl >= "9.2.0" || flash)
+	/**
+		A custom stylesheet to use with `htmlText`.
+
+		If the `styleSheet` style is not `null`, the `textFormat` style will
+		be ignored.
+
+		@see `Label.htmlText`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var styleSheet:StyleSheet = null;
+	#end
 
 	/**
 		Determines if an embedded font is used or not.
@@ -635,6 +655,12 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
 		}
+		#if (openfl >= "9.2.0" || flash)
+		if (this.textField.styleSheet != this.styleSheet) {
+			this.textField.styleSheet = this.styleSheet;
+			this._updatedTextStyles = true;
+		}
+		#end
 		var textFormat = this.getCurrentTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
@@ -734,6 +760,12 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	}
 
 	private function getCurrentTextFormat():TextFormat {
+		#if (openfl >= "9.2.0" || flash)
+		if (this.styleSheet != null) {
+			// TextField won't let us use TextFormat if we have a StyleSheet
+			return null;
+		}
+		#end
 		if (!this._enabled && this.disabledTextFormat != null) {
 			return this.disabledTextFormat;
 		}

@@ -23,6 +23,11 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
+#if (openfl >= "9.2.0")
+import openfl.text.StyleSheet;
+#elseif flash
+import flash.text.StyleSheet;
+#end
 
 /**
 	A header that displays a title in the center, and optional views on the left
@@ -176,6 +181,21 @@ class Header extends FeathersControl implements ITextControl {
 	**/
 	@:style
 	public var textFormat:AbstractTextFormat = null;
+
+	#if (openfl >= "9.2.0" || flash)
+	/**
+		A custom stylesheet to use with `htmlText`.
+
+		If the `styleSheet` style is not `null`, the `textFormat` style will
+		be ignored.
+
+		@see `Header.htmlText`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var styleSheet:StyleSheet = null;
+	#end
 
 	/**
 		Determines if an embedded font is used or not.
@@ -604,6 +624,12 @@ class Header extends FeathersControl implements ITextControl {
 			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
 		}
+		#if (openfl >= "9.2.0" || flash)
+		if (this.textField.styleSheet != this.styleSheet) {
+			this.textField.styleSheet = this.styleSheet;
+			this._updatedTextStyles = true;
+		}
+		#end
 		var textFormat = this.getCurrentTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
@@ -663,6 +689,12 @@ class Header extends FeathersControl implements ITextControl {
 	}
 
 	private function getCurrentTextFormat():TextFormat {
+		#if (openfl >= "9.2.0" || flash)
+		if (this.styleSheet != null) {
+			// TextField won't let us use TextFormat if we have a StyleSheet
+			return null;
+		}
+		#end
 		if (!this._enabled && this.disabledTextFormat != null) {
 			return this.disabledTextFormat;
 		}
