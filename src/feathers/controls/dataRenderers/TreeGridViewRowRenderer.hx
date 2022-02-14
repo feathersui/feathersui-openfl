@@ -789,25 +789,50 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
 		}
-		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
-			if (this._selected) {
-				var column = this._columns.get(0);
-				var cellRenderer = this.columnToCellRenderer(column);
-				var state:TreeGridViewCellState = null;
-				if (cellRenderer != null) {
-					state = this._cellRendererToCellState.get(cellRenderer);
+		if (this._selected && event.keyCode == Keyboard.LEFT) {
+			if (this._branch) {
+				if (this._opened) {
+					this.treeGridView.toggleBranch(this._data, false);
+					return;
 				}
-				var isTemporary = false;
-				if (state == null) {
-					// if there is no existing state, use a temporary object
-					isTemporary = true;
-					state = this.cellStatePool.get();
+			}
+			var parentLocation = this._rowLocation.copy();
+			parentLocation.pop();
+			if (parentLocation.length > 0) {
+				this.treeGridView.selectedLocation = parentLocation;
+			}
+		}
+		if (this._selected && event.keyCode == Keyboard.RIGHT) {
+			if (this._branch) {
+				if (!this._opened) {
+					this.treeGridView.toggleBranch(this._data, true);
+					return;
 				}
-				this.populateCurrentItemState(column, 0, state);
-				TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
-				if (isTemporary) {
-					this.cellStatePool.release(state);
+				var childCount = this.treeGridView.dataProvider.getLength(this._rowLocation);
+				if (childCount > 0) {
+					var childLocation = this._rowLocation.copy();
+					childLocation.push(0);
+					this.treeGridView.selectedLocation = childLocation;
 				}
+			}
+		}
+		if (this._selected && (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER)) {
+			var column = this._columns.get(0);
+			var cellRenderer = this.columnToCellRenderer(column);
+			var state:TreeGridViewCellState = null;
+			if (cellRenderer != null) {
+				state = this._cellRendererToCellState.get(cellRenderer);
+			}
+			var isTemporary = false;
+			if (state == null) {
+				// if there is no existing state, use a temporary object
+				isTemporary = true;
+				state = this.cellStatePool.get();
+			}
+			this.populateCurrentItemState(column, 0, state);
+			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
+			if (isTemporary) {
+				this.cellStatePool.release(state);
 			}
 		}
 	}
