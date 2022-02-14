@@ -51,7 +51,6 @@ class SteelTabBarStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 3.0;
 					tabBar.focusRectSkin = focusRectSkin;
 				}
 				if (tabBar.layout == null) {
