@@ -304,7 +304,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		return this.isValidFocus(target);
 	}
 
-	private function isValidFocus(target:IFocusObject):Bool {
+	private function isValidFocus(target:IFocusObject, allowIfUnderModal:Bool = false):Bool {
 		if (target == null || target.stage == null || target.focusManager != this || !target.focusEnabled || !target.visible) {
 			return false;
 		}
@@ -314,11 +314,13 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 				return false;
 			}
 		}
-		var popUpManager = PopUpManager.forStage(this._root.stage);
-		if (popUpManager.hasModalPopUps()) {
-			var displayTarget = cast(target, DisplayObject);
-			if (!PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(displayTarget)) {
-				return false;
+		if (!allowIfUnderModal) {
+			var popUpManager = PopUpManager.forStage(this._root.stage);
+			if (popUpManager.hasModalPopUps()) {
+				var displayTarget = cast(target, DisplayObject);
+				if (!PopUpUtil.isTopLevelPopUpOrIsContainedByTopLevelPopUp(displayTarget)) {
+					return false;
+				}
 			}
 		}
 
@@ -798,14 +800,12 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (this.shouldBeManaged(target)) {
 			this.setFocusManager(target);
 		}
-		var currentFocus = this.focus;
-		var clearFocus = currentFocus != null && !this.isValidFocus(currentFocus);
-		if (!clearFocus && this._root.stage != null) {
-			// needs an extra check because the focus getter might return null
-			var stageFocus = this._root.stage.focus;
-			clearFocus = stageFocus != null && (stageFocus is IFocusObject) && !this.isValidFocus(cast(stageFocus, IFocusObject));
+		var currentFocus:IFocusObject = null;
+		if (this._root.stage != null) {
+			// find the currently focused object, even if it's under a modal
+			currentFocus = this.findFocusForDisplayObject(this._root.stage.focus, false);
 		}
-		if (clearFocus) {
+		if (currentFocus != null && !this.isValidFocus(currentFocus)) {
 			// it's possible that a modal pop-up has been added, and the current
 			// focus is no longer valid
 			this.focus = null;
@@ -945,7 +945,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 	}
 	#end
 
-	private function findFocusForDisplayObject(target:DisplayObject):IFocusObject {
+	private function findFocusForDisplayObject(target:DisplayObject, allowIfUnderModal:Bool = false):IFocusObject {
 		if (target == null) {
 			return null;
 		}
@@ -953,13 +953,13 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		do {
 			if ((target is IFocusObject)) {
 				var tempFocusTarget = cast(target, IFocusObject);
-				if (this.isValidFocus(tempFocusTarget)) {
+				if (this.isValidFocus(tempFocusTarget, allowIfUnderModal)) {
 					if (focusTarget == null
 						|| !(tempFocusTarget is IFocusContainer)
 						|| !cast(tempFocusTarget, IFocusContainer).childFocusEnabled) {
 						focusTarget = tempFocusTarget;
 					}
-				} else if (tempFocusTarget.focusOwner != null && this.isValidFocus(tempFocusTarget.focusOwner)) {
+				} else if (tempFocusTarget.focusOwner != null && this.isValidFocus(tempFocusTarget.focusOwner, allowIfUnderModal)) {
 					focusTarget = tempFocusTarget.focusOwner;
 					target = cast(tempFocusTarget, DisplayObject);
 				}
