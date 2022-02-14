@@ -492,6 +492,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		if (this.disclosureButton.variant == null) {
 			this.disclosureButton.variant = this.customDisclosureButtonVariant != null ? this.customDisclosureButtonVariant : HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON;
 		}
+		this.disclosureButton.tabEnabled = false;
 		this.disclosureButton.addEventListener(Event.CHANGE, hierarchicalItemRenderer_disclosureButton_changeHandler);
 		this.disclosureButton.initializeNow();
 		this.addChild(this.disclosureButton);
