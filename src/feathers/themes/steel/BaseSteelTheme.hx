@@ -157,7 +157,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.subHeadingDividerColor = 0x0c0c0c;
 			this.textColor = 0xf1f1f1;
 			this.disabledTextColor = 0x8f8f8f;
-			this.secondaryTextColor = 0xcfcfcf;
+			this.secondaryTextColor = 0xafafaf;
 			this.dangerTextColor = 0xcc3f3f;
 		} else // light
 		{
