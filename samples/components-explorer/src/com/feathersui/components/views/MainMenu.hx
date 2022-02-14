@@ -94,6 +94,7 @@ class MainMenu extends Panel {
 		menuItems.itemToChildren = item -> item.children;
 
 		this.listView = new GroupListView();
+		this.listView.variant = GroupListView.VARIANT_BORDERLESS;
 		this.listView.dataProvider = menuItems;
 		this.listView.scrollY = this.savedScrollY;
 		this.listView.layoutData = AnchorLayoutData.fill();

@@ -48,6 +48,7 @@ class TreeViewScreen extends Panel {
 		];
 
 		this.treeView = new TreeView();
+		this.treeView.variant = TreeView.VARIANT_BORDERLESS;
 		this.treeView.dataProvider = new TreeCollection(data);
 		this.treeView.itemToText = (item) -> {
 			return item.data.text;

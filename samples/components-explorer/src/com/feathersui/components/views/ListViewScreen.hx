@@ -26,6 +26,7 @@ class ListViewScreen extends Panel {
 		}
 
 		this.listView = new ListView();
+		this.listView.variant = ListView.VARIANT_BORDERLESS;
 		this.listView.dataProvider = new ArrayCollection(items);
 		this.listView.itemToText = (item:Dynamic) -> {
 			return item.text;

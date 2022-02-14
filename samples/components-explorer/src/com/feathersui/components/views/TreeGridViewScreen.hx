@@ -22,6 +22,7 @@ class TreeGridViewScreen extends Panel {
 		this.layout = new AnchorLayout();
 
 		this.treeGridView = new TreeGridView();
+		this.treeGridView.variant = TreeGridView.VARIANT_BORDERLESS;
 		this.treeGridView.dataProvider = new ArrayHierarchicalCollection([
 			{
 				dept: "Bakery",

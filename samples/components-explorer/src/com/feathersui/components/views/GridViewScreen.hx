@@ -21,6 +21,7 @@ class GridViewScreen extends Panel {
 		this.layout = new AnchorLayout();
 
 		this.gridView = new GridView();
+		this.gridView.variant = GridView.VARIANT_BORDERLESS;
 		this.gridView.dataProvider = new ArrayCollection([
 			{item: "Chicken breast", dept: "Meat", price: "5.90"},
 			{item: "Bacon", dept: "Meat", price: "4.49"},
