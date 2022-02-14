@@ -816,7 +816,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 				}
 			}
 		}
-		if (this._selected && (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER)) {
+		if (this._selected && event.keyCode == Keyboard.ENTER) {
 			var column = this._columns.get(0);
 			var cellRenderer = this.columnToCellRenderer(column);
 			var state:TreeGridViewCellState = null;
@@ -834,6 +834,10 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			if (isTemporary) {
 				this.cellStatePool.release(state);
 			}
+		}
+		if (this._selected && event.keyCode == Keyboard.SPACE) {
+			event.preventDefault();
+			this.treeGridView.toggleBranch(this._data, !this._opened);
 		}
 	}
 
