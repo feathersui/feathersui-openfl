@@ -8,11 +8,10 @@
 
 package feathers.themes.steel.components;
 
-import feathers.layout.VerticalListLayout;
-import feathers.controls.ListView;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.ComboBox;
+import feathers.controls.ListView;
 import feathers.controls.TextInput;
 import feathers.controls.TextInputState;
 import feathers.skins.TabSkin;
@@ -44,10 +43,10 @@ class SteelComboBoxStyles {
 					var skin = new TabSkin();
 					skin.cornerRadiusPosition = RIGHT;
 					skin.fill = theme.getButtonFill();
-					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.disabledFill = theme.getButtonDisabledFill();
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
 					skin.border = theme.getButtonBorder();
-					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
+					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
 				}
@@ -81,7 +80,7 @@ class SteelComboBoxStyles {
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
-					inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
+					inputSkin.setBorderForState(TextInputState.FOCUSED, theme.getThemeBorder());
 					input.backgroundSkin = inputSkin;
 				}
 

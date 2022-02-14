@@ -36,8 +36,8 @@ class SteelButtonStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getButtonFill();
+					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
@@ -71,8 +71,8 @@ class SteelButtonStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getActiveThemeFill();
+					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getActiveFillBorder();
 					skin.disabledBorder = theme.getButtonBorder();
 					skin.cornerRadius = 3.0;
@@ -106,8 +106,8 @@ class SteelButtonStyles {
 				if (button.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getDangerFill();
+					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.setFillForState(DOWN, theme.getReversedDangerFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getDangerBorder();
 					skin.disabledBorder = theme.getButtonBorder();
 					skin.cornerRadius = 3.0;

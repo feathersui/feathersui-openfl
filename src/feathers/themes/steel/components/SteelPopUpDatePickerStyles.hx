@@ -43,10 +43,10 @@ class SteelPopUpDatePickerStyles {
 					var skin = new TabSkin();
 					skin.cornerRadiusPosition = RIGHT;
 					skin.fill = theme.getButtonFill();
-					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
-					skin.setFillForState(DISABLED, theme.getButtonDisabledFill());
+					skin.disabledFill = theme.getButtonDisabledFill();
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
 					skin.border = theme.getButtonBorder();
-					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
+					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
 				}
@@ -56,10 +56,10 @@ class SteelPopUpDatePickerStyles {
 					drawIcon(icon, theme.textColor);
 					button.icon = icon;
 
-					if (button.getIconForState(DISABLED) == null) {
+					if (button.getIconForState(ButtonState.DISABLED) == null) {
 						var disabledIcon = new Shape();
 						drawIcon(disabledIcon, theme.disabledTextColor);
-						button.setIconForState(DISABLED, disabledIcon);
+						button.setIconForState(ButtonState.DISABLED, disabledIcon);
 					}
 				}
 
@@ -79,9 +79,9 @@ class SteelPopUpDatePickerStyles {
 					inputSkin.drawBaseBorder = false;
 					inputSkin.width = 160.0;
 					inputSkin.fill = theme.getInsetFill();
-					inputSkin.border = theme.getInsetBorder();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
-					inputSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
+					inputSkin.border = theme.getInsetBorder();
+					inputSkin.setBorderForState(TextInputState.FOCUSED, theme.getThemeBorder());
 					input.backgroundSkin = inputSkin;
 				}
 
