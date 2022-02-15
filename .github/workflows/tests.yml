@@ -64,7 +64,7 @@ jobs:
       matrix:
         haxe-version: [4.2.1]
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
