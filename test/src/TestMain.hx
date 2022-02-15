@@ -83,11 +83,9 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.ThemeTest());
 		runner.addCase(new feathers.themes.DefaultThemeTest());
 		runner.addCase(new feathers.utils.PopUpUtilTest());
-		#if js
-		if (#if (haxe_ver >= 4.0) js.Syntax.code #else untyped __js__ #end ("typeof window != 'undefined'")) {
+		#if (html5 && !headless_html5)
+		if (js.Syntax.code("typeof window !== 'undefined'")) {
 			new HtmlReport(runner, true);
-		} else {
-			new NoExitPrintReport(runner);
 		}
 		#else
 		new NoExitPrintReport(runner);
@@ -114,7 +112,11 @@ class TestMain extends Sprite {
 		#if sys
 		Sys.exit(exitCode);
 		#elseif html5
-		// cast(js.Lib.global, js.html.Window).close();
+		#if headless_html5
+		Reflect.setField(js.Lib.global, "utestResult", result);
+		#else
+		trace("Tests complete. You may close this window.");
+		#end
 		#elseif air
 		flash.desktop.NativeApplication.nativeApplication.exit(exitCode);
 		#elseif flash

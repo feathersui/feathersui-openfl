@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "dependencies": {
+    "playwright": "^1.19.0",
+    "serve-handler": "^6.1.3"
+  }
+}
