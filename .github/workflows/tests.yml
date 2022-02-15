@@ -78,11 +78,12 @@ jobs:
         haxelib install actuate --quiet
         haxelib install utest --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Set up Node.js dependencies
+      run: |
+        npm ci
     - name: Run Tests
       working-directory: test
       run: |
-        npm ci
-        sudo npx playwright install-deps
         haxelib run openfl build html5 -final -Dheadless_html5
         node playwright-runner.js
 
