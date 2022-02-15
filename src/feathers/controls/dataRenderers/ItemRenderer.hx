@@ -856,10 +856,12 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	override private function layoutChildren():Void {
 		this.refreshTextFieldDimensions(false);
 
+		var flexGap = false;
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround for swf
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
+			flexGap = true;
 		}
 
 		var hasText = this.showText && this._text != null;
@@ -880,6 +882,15 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				totalContentHeight += adjustedGap + this._currentIcon.height;
 			}
 		}
+
+		var flexGapVertical = flexGap
+			&& (hasText || hasSecondaryText)
+			&& this._currentIcon != null
+			&& (this.iconPosition == TOP || this.iconPosition == BOTTOM);
+		var flexGapHorizontal = flexGap
+			&& (hasText || hasSecondaryText)
+			&& this._currentIcon != null
+			&& (this.iconPosition == LEFT || this.iconPosition == RIGHT);
 
 		if (this.hasAccessoryViewInLayout()) {
 			// the accessory view is always positioned on the far right
@@ -926,39 +937,47 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 		var currentX = this.paddingLeft;
 		var currentY = this.paddingTop;
-		switch (this.horizontalAlign) {
-			case LEFT:
-				currentX = this.paddingLeft;
-			case RIGHT:
-				currentX = Math.max(this.paddingLeft, this.paddingLeft + availableContentWidth - totalContentWidth);
-			case CENTER:
-				currentX = Math.max(this.paddingLeft, this.paddingLeft + (availableContentWidth - totalContentWidth) / 2.0);
-			default:
-				throw new ArgumentError("Unknown horizontal align: " + this.horizontalAlign);
+		if (flexGapHorizontal) {
+			currentX = this.paddingLeft;
+		} else {
+			switch (this.horizontalAlign) {
+				case LEFT:
+					currentX = this.paddingLeft;
+				case RIGHT:
+					currentX = Math.max(this.paddingLeft, this.paddingLeft + availableContentWidth - totalContentWidth);
+				case CENTER:
+					currentX = Math.max(this.paddingLeft, this.paddingLeft + (availableContentWidth - totalContentWidth) / 2.0);
+				default:
+					throw new ArgumentError("Unknown horizontal align: " + this.horizontalAlign);
+			}
 		}
-		switch (this.verticalAlign) {
-			case TOP:
-				currentY = this.paddingTop;
-			case BOTTOM:
-				currentY = Math.max(this.paddingTop, this.paddingTop + availableContentHeight - totalContentHeight);
-			case MIDDLE:
-				currentY = Math.max(this.paddingTop, this.paddingTop + (availableContentHeight - totalContentHeight) / 2.0);
-			default:
-				throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+		if (flexGapVertical) {
+			currentY = this.paddingTop;
+		} else {
+			switch (this.verticalAlign) {
+				case TOP:
+					currentY = this.paddingTop;
+				case BOTTOM:
+					currentY = Math.max(this.paddingTop, this.paddingTop + availableContentHeight - totalContentHeight);
+				case MIDDLE:
+					currentY = Math.max(this.paddingTop, this.paddingTop + (availableContentHeight - totalContentHeight) / 2.0);
+				default:
+					throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+			}
 		}
 
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT) {
 				this._currentIcon.x = currentX;
 				currentX += adjustedGap + this._currentIcon.width;
-			}
-			if (this.iconPosition == TOP) {
+			} else if (this.iconPosition == TOP) {
 				this._currentIcon.y = currentY;
 				currentY += adjustedGap + this._currentIcon.height;
 			}
 		}
 
 		var totalTextWidth = 0.0;
+		var totalTextHeight = 0.0;
 		var availableTextWidth = availableContentWidth;
 		if (this._currentIcon != null && (this.iconPosition == LEFT || this.iconPosition == RIGHT)) {
 			availableTextWidth -= (adjustedGap + this._currentIcon.width);
@@ -968,6 +987,10 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			this.textField.y = currentY;
 			currentY += this._textMeasuredHeight + adjustedGap;
 			totalTextWidth = Math.max(totalTextWidth, this.textField.width);
+			totalTextHeight += this.textField.height;
+			if (hasSecondaryText) {
+				totalTextHeight += adjustedGap;
+			}
 		}
 		if (hasSecondaryText && this.secondaryTextField != null) {
 			this.secondaryTextField.x = currentX;
@@ -975,6 +998,22 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			this.secondaryTextField.width = this._secondaryTextMeasuredWidth < availableTextWidth ? this._secondaryTextMeasuredWidth : availableTextWidth;
 			currentY += this._secondaryTextMeasuredHeight + adjustedGap;
 			totalTextWidth = Math.max(totalTextWidth, this.secondaryTextField.width);
+			totalTextHeight += this.secondaryTextField.height;
+		}
+		if (flexGapHorizontal && this.iconPosition == LEFT) {
+			if (hasText) {
+				this.textField.x = Math.max(this.textField.x, this.paddingLeft + availableContentWidth - totalTextWidth);
+			}
+			if (hasSecondaryText) {
+				this.secondaryTextField.x = Math.max(this.secondaryTextField.x, this.paddingLeft + availableContentWidth - totalTextWidth);
+			}
+		} else if (flexGapVertical && this.iconPosition == TOP) {
+			if (hasText) {
+				this.textField.y = Math.max(this.textField.y, this.paddingTop + availableContentHeight - totalTextHeight);
+			}
+			if (hasSecondaryText) {
+				this.secondaryTextField.y = this.paddingTop + availableContentHeight - this.secondaryTextField.height;
+			}
 		}
 		if (hasText || hasSecondaryText) {
 			currentX += totalTextWidth + adjustedGap;
@@ -982,10 +1021,18 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 		if (this._currentIcon != null) {
 			if (this.iconPosition == RIGHT) {
-				this._currentIcon.x = currentX;
+				if (flexGapHorizontal) {
+					this._currentIcon.x = Math.max(currentX, this.paddingLeft + availableContentWidth - this._currentIcon.width);
+				} else {
+					this._currentIcon.x = currentX;
+				}
 			}
 			if (this.iconPosition == BOTTOM) {
-				this._currentIcon.y = currentY;
+				if (flexGapVertical) {
+					this._currentIcon.y = Math.max(currentY, this.paddingTop + availableContentHeight - this._currentIcon.height);
+				} else {
+					this._currentIcon.y = currentY;
+				}
 			}
 		}
 	}
