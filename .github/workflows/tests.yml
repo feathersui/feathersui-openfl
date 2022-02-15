@@ -82,6 +82,7 @@ jobs:
       working-directory: test
       run: |
         npm ci
+        sudo npx playwright install-deps
         haxelib run openfl build html5 -final -Dheadless_html5
         node playwright-runner.js
 
