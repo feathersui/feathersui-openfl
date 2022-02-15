@@ -82,6 +82,7 @@ jobs:
         haxelib install utest --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Set up Node.js dependencies
+      working-directory: test
       run: |
         npm ci
     - name: Run Tests
