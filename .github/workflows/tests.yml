@@ -58,6 +58,33 @@ jobs:
       working-directory: test
       run: haxelib run openfl test neko
 
+  test-html5:
+
+    strategy:
+      matrix:
+        haxe-version: [4.2.1]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: ${{ matrix.haxe-version }}
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.9.0 --quiet
+        haxelib install openfl 9.1.0 --quiet
+        haxelib install actuate --quiet
+        haxelib install utest --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Run Tests
+      working-directory: test
+      run: |
+        npm ci
+        haxelib run openfl build html5 -final -Dheadless_html5
+        node playwright-runner.js
+
   test-air:
 
     strategy:
