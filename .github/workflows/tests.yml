@@ -71,6 +71,9 @@ jobs:
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: ${{ matrix.haxe-version }}
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
     - name: Set up Haxelib dependencies
       run: |
         haxelib install lime 7.9.0 --quiet
