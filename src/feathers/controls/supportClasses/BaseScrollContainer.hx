@@ -980,15 +980,15 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return true;
 	}
 
-	private var _scrollMode:ScrollMode = SCROLL_RECT;
+	private var _scrollMode:ScrollMode = MASK;
 
 	/**
 		Determines how scrolling is rendered by the container.
 
-		In the following example, scroll mode is changed to use a mask:
+		In the following example, scroll mode is changed to use a `scrollRect`:
 
 		```hx
-		container.scrollMode = MASK;
+		container.scrollMode = SCROLL_RECT;
 		```
 
 		@since 1.0.0
