@@ -803,7 +803,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		var currentFocus:IFocusObject = null;
 		if (this._root.stage != null) {
 			// find the currently focused object, even if it's under a modal
-			currentFocus = this.findFocusForDisplayObject(this._root.stage.focus, false);
+			currentFocus = this.findFocusForDisplayObject(this._root.stage.focus, true);
 		}
 		if (currentFocus != null && !this.isValidFocus(currentFocus)) {
 			// it's possible that a modal pop-up has been added, and the current
