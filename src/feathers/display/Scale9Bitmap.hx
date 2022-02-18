@@ -315,6 +315,24 @@ class Scale9Bitmap extends Sprite {
 		var center2 = Math.max(0.0, this._width - this.left - this.right);
 		var middle2 = Math.max(0.0, this._height - this.top - this.bottom);
 
+		var left2:Float = this.left;
+		var right2:Float = this.right;
+		var minWidth = this.left + this.right;
+		if (this._width < minWidth) {
+			var ratio = this._width / minWidth;
+			left2 *= ratio;
+			right2 *= ratio;
+		}
+
+		var top2:Float = this.top;
+		var bottom2:Float = this.bottom;
+		var minHeight = this.top + this.bottom;
+		if (this._height < minHeight) {
+			var ratio = this._height / minHeight;
+			top2 *= ratio;
+			bottom2 *= ratio;
+		}
+
 		if (this.topLeft != null) {
 			if (this._topLeftBitmap == null) {
 				this._topLeftBitmap = new Bitmap(null, NEVER, this._smoothing);
@@ -324,6 +342,8 @@ class Scale9Bitmap extends Sprite {
 			this._topLeftBitmap.smoothing = this._smoothing;
 			this._topLeftBitmap.x = 0.0;
 			this._topLeftBitmap.y = 0.0;
+			this._topLeftBitmap.width = left2;
+			this._topLeftBitmap.height = top2;
 		} else if (this._topLeftBitmap != null) {
 			this.removeChild(this._topLeftBitmap);
 			this._topLeftBitmap = null;
@@ -335,9 +355,10 @@ class Scale9Bitmap extends Sprite {
 			}
 			this._topCenterBitmap.bitmapData = this.topCenter;
 			this._topCenterBitmap.smoothing = this._smoothing;
-			this._topCenterBitmap.x = this.left;
+			this._topCenterBitmap.x = left2;
 			this._topCenterBitmap.y = 0.0;
 			this._topCenterBitmap.width = center2;
+			this._topCenterBitmap.height = top2;
 		} else if (this._topCenterBitmap != null) {
 			this.removeChild(this._topCenterBitmap);
 			this._topCenterBitmap = null;
@@ -349,8 +370,10 @@ class Scale9Bitmap extends Sprite {
 			}
 			this._topRightBitmap.bitmapData = this.topRight;
 			this._topRightBitmap.smoothing = this._smoothing;
-			this._topRightBitmap.x = this.left + center2;
+			this._topRightBitmap.x = left2 + center2;
 			this._topRightBitmap.y = 0.0;
+			this._topRightBitmap.width = right2;
+			this._topRightBitmap.height = top2;
 		} else if (this._topRightBitmap != null) {
 			this.removeChild(this._topRightBitmap);
 			this._topRightBitmap = null;
@@ -364,7 +387,8 @@ class Scale9Bitmap extends Sprite {
 			this._middleLeftBitmap.bitmapData = this.middleLeft;
 			this._middleLeftBitmap.smoothing = this._smoothing;
 			this._middleLeftBitmap.x = 0.0;
-			this._middleLeftBitmap.y = this.top;
+			this._middleLeftBitmap.y = top2;
+			this._middleLeftBitmap.width = left2;
 			this._middleLeftBitmap.height = middle2;
 		} else if (this._middleLeftBitmap != null) {
 			this.removeChild(this._middleLeftBitmap);
@@ -377,8 +401,8 @@ class Scale9Bitmap extends Sprite {
 			}
 			this._middleCenterBitmap.bitmapData = this.middleCenter;
 			this._middleCenterBitmap.smoothing = this._smoothing;
-			this._middleCenterBitmap.x = this.left;
-			this._middleCenterBitmap.y = this.top;
+			this._middleCenterBitmap.x = left2;
+			this._middleCenterBitmap.y = top2;
 			this._middleCenterBitmap.width = center2;
 			this._middleCenterBitmap.height = middle2;
 		} else if (this._middleCenterBitmap != null) {
@@ -392,8 +416,9 @@ class Scale9Bitmap extends Sprite {
 			}
 			this._middleRightBitmap.bitmapData = this.middleRight;
 			this._middleRightBitmap.smoothing = this._smoothing;
-			this._middleRightBitmap.x = this.left + center2;
-			this._middleRightBitmap.y = this.top;
+			this._middleRightBitmap.x = left2 + center2;
+			this._middleRightBitmap.y = top2;
+			this._middleRightBitmap.width = right2;
 			this._middleRightBitmap.height = middle2;
 		} else if (this._middleRightBitmap != null) {
 			this.removeChild(this._middleRightBitmap);
@@ -408,7 +433,9 @@ class Scale9Bitmap extends Sprite {
 			this._bottomLeftBitmap.bitmapData = this.bottomLeft;
 			this._bottomLeftBitmap.smoothing = this._smoothing;
 			this._bottomLeftBitmap.x = 0.0;
-			this._bottomLeftBitmap.y = this.top + middle2;
+			this._bottomLeftBitmap.y = top2 + middle2;
+			this._bottomLeftBitmap.width = left2;
+			this._bottomLeftBitmap.height = bottom2;
 		} else if (this._bottomLeftBitmap != null) {
 			this.removeChild(this._bottomLeftBitmap);
 			this._bottomLeftBitmap = null;
@@ -420,9 +447,10 @@ class Scale9Bitmap extends Sprite {
 			}
 			this._bottomCenterBitmap.bitmapData = this.bottomCenter;
 			this._bottomCenterBitmap.smoothing = this._smoothing;
-			this._bottomCenterBitmap.x = this.left;
-			this._bottomCenterBitmap.y = this.top + middle2;
+			this._bottomCenterBitmap.x = left2;
+			this._bottomCenterBitmap.y = top2 + middle2;
 			this._bottomCenterBitmap.width = center2;
+			this._bottomCenterBitmap.height = bottom2;
 		} else if (this._bottomCenterBitmap != null) {
 			this.removeChild(this._bottomCenterBitmap);
 			this._bottomCenterBitmap = null;
@@ -434,8 +462,10 @@ class Scale9Bitmap extends Sprite {
 			}
 			this._bottomRightBitmap.bitmapData = this.bottomRight;
 			this._bottomRightBitmap.smoothing = this._smoothing;
-			this._bottomRightBitmap.x = this.left + center2;
-			this._bottomRightBitmap.y = this.top + middle2;
+			this._bottomRightBitmap.x = left2 + center2;
+			this._bottomRightBitmap.y = top2 + middle2;
+			this._bottomRightBitmap.width = right2;
+			this._bottomRightBitmap.height = bottom2;
 		} else if (this._bottomRightBitmap != null) {
 			this.removeChild(this._bottomRightBitmap);
 			this._bottomRightBitmap = null;
