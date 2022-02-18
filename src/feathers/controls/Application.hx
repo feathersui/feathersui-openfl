@@ -102,6 +102,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	@:style
 	public var scaleManager:IScaleManager = null;
 
+	#if !feathersui_disable_application_pop_up_manager
 	/**
 		A factory may be provided to return a custom container where the
 		application's pop-ups may be added when using `PopUpManager`.
@@ -112,11 +113,8 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	**/
 	public var popUpContainerFactory:() -> DisplayObjectContainer;
 
-	private var _popUpContainer:DisplayObjectContainer;
-
-	private function initializeApplicationTheme():Void {
-		SteelApplicationStyles.initialize();
-	}
+	private var _applicationPopUpContainer:DisplayObjectContainer;
+	#end
 
 	#if !feathersui_disable_application_focus_manager
 	private var _applicationFocusManager:IFocusManager;
@@ -125,6 +123,10 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	#if !feathersui_disable_application_tool_tip_manager
 	private var _applicationToolTipManager:IToolTipManager;
 	#end
+
+	private function initializeApplicationTheme():Void {
+		SteelApplicationStyles.initialize();
+	}
 
 	override private function update():Void {
 		var sizeInvalid = this.isInvalid(SIZE);
@@ -167,34 +169,40 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		this.width = bounds.width;
 		this.height = bounds.height;
 
-		if (this._popUpContainer != null) {
-			this._popUpContainer.scaleX = this._scaleFactor;
-			this._popUpContainer.scaleY = this._scaleFactor;
+		#if !feathersui_disable_application_pop_up_manager
+		if (this._applicationPopUpContainer != null) {
+			this._applicationPopUpContainer.scaleX = this._scaleFactor;
+			this._applicationPopUpContainer.scaleY = this._scaleFactor;
 		}
+		#end
 	}
 
 	private function preparePopUpManager():Void {
-		if (this._popUpContainer == null) {
+		#if !feathersui_disable_application_pop_up_manager
+		if (this._applicationPopUpContainer == null) {
 			var factory = this.popUpContainerFactory;
 			if (factory == null) {
 				factory = defaultPopUpContainerFactory;
 			}
-			this._popUpContainer = factory();
+			this._applicationPopUpContainer = factory();
 		}
-		this._popUpContainer.scaleX = this._scaleFactor;
-		this._popUpContainer.scaleY = this._scaleFactor;
-		this.stage.addChild(this._popUpContainer);
+		this._applicationPopUpContainer.scaleX = this._scaleFactor;
+		this._applicationPopUpContainer.scaleY = this._scaleFactor;
+		this.stage.addChild(this._applicationPopUpContainer);
 		var popUpManager = PopUpManager.forStage(this.stage);
-		popUpManager.root = this._popUpContainer;
+		popUpManager.root = this._applicationPopUpContainer;
+		#end
 	}
 
 	private function cleanupPopUpManager():Void {
+		#if !feathersui_disable_application_pop_up_manager
 		var popUpManager = PopUpManager.forStage(this.stage);
-		if (popUpManager.root == this._popUpContainer) {
+		if (popUpManager.root == this._applicationPopUpContainer) {
 			popUpManager.root = this.stage;
 		}
-		this.stage.removeChild(this._popUpContainer);
-		this._popUpContainer = null;
+		this.stage.removeChild(this._applicationPopUpContainer);
+		this._applicationPopUpContainer = null;
+		#end
 	}
 
 	private function prepareFocusManager():Void {
