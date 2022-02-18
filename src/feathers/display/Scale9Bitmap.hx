@@ -306,7 +306,6 @@ class Scale9Bitmap extends Sprite {
 	}
 
 	private function draw():Void {
-		this.graphics.clear();
 		if (this._width == 0 || this._height == 0) {
 			// nothing to draw
 			this.cleanupBitmaps();
