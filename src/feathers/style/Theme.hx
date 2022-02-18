@@ -31,7 +31,7 @@ final class Theme {
 	public static var fallbackTheme(get, never):ITheme;
 
 	private static function get_fallbackTheme():ITheme {
-		#if !disable_default_theme
+		#if !feathersui_disable_default_theme
 		if (_fallbackTheme == null) {
 			_fallbackTheme = new DefaultSteelTheme();
 		}

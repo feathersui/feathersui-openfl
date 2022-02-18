@@ -15,11 +15,11 @@ import feathers.themes.steel.components.SteelApplicationStyles;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
-#if !disable_focus_manager
+#if !feathersui_disable_application_focus_manager
 import feathers.core.FocusManager;
 import feathers.core.IFocusManager;
 #end
-#if !disable_tool_tip_manager
+#if !feathersui_disable_application_tool_tip_manager
 import feathers.core.IToolTipManager;
 import feathers.core.ToolTipManager;
 #end
@@ -118,11 +118,11 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		SteelApplicationStyles.initialize();
 	}
 
-	#if !disable_focus_manager
+	#if !feathersui_disable_application_focus_manager
 	private var _applicationFocusManager:IFocusManager;
 	#end
 
-	#if !disable_tool_tip_manager
+	#if !feathersui_disable_application_tool_tip_manager
 	private var _applicationToolTipManager:IToolTipManager;
 	#end
 
@@ -198,7 +198,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	}
 
 	private function prepareFocusManager():Void {
-		#if !disable_focus_manager
+		#if !feathersui_disable_application_focus_manager
 		if (!FocusManager.hasRoot(this.stage)) {
 			this._applicationFocusManager = FocusManager.addRoot(this.stage);
 		}
@@ -206,7 +206,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	}
 
 	private function cleanupFocusManager():Void {
-		#if !disable_focus_manager
+		#if !feathersui_disable_application_focus_manager
 		if (this._applicationFocusManager != null) {
 			this._applicationFocusManager = null;
 			FocusManager.removeRoot(this.stage);
@@ -215,7 +215,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	}
 
 	private function prepareToolTipManager():Void {
-		#if !disable_tool_tip_manager
+		#if !feathersui_disable_application_tool_tip_manager
 		if (!ToolTipManager.hasRoot(this.stage)) {
 			this._applicationToolTipManager = ToolTipManager.addRoot(this.stage);
 		}
@@ -223,7 +223,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	}
 
 	private function cleanupToolTipManager():Void {
-		#if !disable_tool_tip_manager
+		#if !feathersui_disable_application_tool_tip_manager
 		if (this._applicationToolTipManager != null) {
 			this._applicationToolTipManager = null;
 			ToolTipManager.removeRoot(this.stage);
