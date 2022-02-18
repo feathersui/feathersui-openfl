@@ -195,31 +195,6 @@ class Scale9Bitmap extends Sprite {
 		#end
 	}
 
-	private var _useGraphics:Bool = false;
-
-	/**
-		Controls whether or not the bitmap is drawn with
-		`openfl.display.Graphics` or with separate `Bitmap` display objects.
-
-		@since 1.0.0
-	**/
-	public var useGraphics(get, set):Bool;
-
-	private function get_useGraphics():Bool {
-		return this._useGraphics;
-	}
-
-	private function set_useGraphics(value:Bool):Bool {
-		if (this._useGraphics == value) {
-			return this._useGraphics;
-		}
-		this._useGraphics = value;
-		if (this._allowRefresh) {
-			this.draw();
-		}
-		return this._useGraphics;
-	}
-
 	private var _matrix = new Matrix();
 	private var _point = new Point();
 	private var _rectangle = new Rectangle();
