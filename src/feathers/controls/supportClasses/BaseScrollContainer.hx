@@ -1032,10 +1032,12 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		@since 1.0.0
 	**/
 	public function getViewPortVisibleBounds(result:Rectangle = null):Rectangle {
+		var viewPortX = this.leftViewPortOffset + this.paddingLeft;
+		var viewPortY = this.topViewPortOffset + this.paddingTop;
 		if (result == null) {
-			result = new Rectangle(this._viewPort.x, this._viewPort.y, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
+			result = new Rectangle(viewPortX, viewPortY, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
 		} else {
-			result.setTo(this._viewPort.x, this._viewPort.y, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
+			result.setTo(viewPortX, viewPortY, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
 		}
 		return result;
 	}
