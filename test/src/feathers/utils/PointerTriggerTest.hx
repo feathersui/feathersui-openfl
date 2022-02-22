@@ -50,6 +50,7 @@ class PointerTriggerTest extends Test {
 		Assert.isTrue(triggered);
 	}
 
+	#if (openfl >= "9.0.0")
 	public function testPointerTriggerFromTouchEvent():Void {
 		var triggered = false;
 		this._control.addEventListener(TriggerEvent.TRIGGER, function(event:TriggerEvent):Void {
@@ -59,4 +60,5 @@ class PointerTriggerTest extends Test {
 		this._control.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.isTrue(triggered);
 	}
+	#end
 }
