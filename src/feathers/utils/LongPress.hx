@@ -60,15 +60,17 @@ class LongPress {
 		if (this._target != null) {
 			this.cleanupMouseEvents();
 			this.cleanupTouchEvents();
+			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, longPress_target_removedFromStageHandler);
 			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, longPress_target_mouseDownHandler);
 			this._target.removeEventListener(TouchEvent.TOUCH_BEGIN, longPress_target_touchBeginHandler);
 			this._target.removeEventListener(TriggerEvent.TRIGGER, longPress_target_triggerHandler);
 		}
 		this._target = value;
 		if (this._target != null) {
-			this._target.addEventListener(MouseEvent.MOUSE_DOWN, longPress_target_mouseDownHandler);
-			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, longPress_target_touchBeginHandler);
-			this._target.addEventListener(TriggerEvent.TRIGGER, longPress_target_triggerHandler, false, 10);
+			this._target.addEventListener(Event.REMOVED_FROM_STAGE, longPress_target_removedFromStageHandler, false, 0, true);
+			this._target.addEventListener(MouseEvent.MOUSE_DOWN, longPress_target_mouseDownHandler, false, 0, true);
+			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, longPress_target_touchBeginHandler, false, 0, true);
+			this._target.addEventListener(TriggerEvent.TRIGGER, longPress_target_triggerHandler, false, 10, true);
 		}
 		return this._target;
 	}
@@ -160,19 +162,34 @@ class LongPress {
 	private var _stopNextTrigger:Bool = false;
 
 	private function cleanupMouseEvents():Void {
+		if (this._target == null) {
+			return;
+		}
 		var stage:Stage = this._target.stage;
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, longPress_target_stage_mouseMoveHandler);
-		stage.removeEventListener(MouseEvent.MOUSE_UP, longPress_target_stage_mouseUpHandler);
+		if (stage != null) {
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, longPress_target_stage_mouseMoveHandler);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, longPress_target_stage_mouseUpHandler);
+		}
 		this._target.removeEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
 		this._savedMouseEvent = null;
 	}
 
 	private function cleanupTouchEvents():Void {
+		if (this._target == null) {
+			return;
+		}
 		var stage:Stage = this._target.stage;
-		stage.removeEventListener(TouchEvent.TOUCH_MOVE, longPress_target_stage_touchMoveHandler);
-		stage.removeEventListener(TouchEvent.TOUCH_END, longPress_target_stage_touchEndHandler);
+		if (stage != null) {
+			stage.removeEventListener(TouchEvent.TOUCH_MOVE, longPress_target_stage_touchMoveHandler);
+			stage.removeEventListener(TouchEvent.TOUCH_END, longPress_target_stage_touchEndHandler);
+		}
 		this._target.removeEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
 		this._savedTouchEvent = null;
+	}
+
+	private function longPress_target_removedFromStageHandler(event:Event):Void {
+		this.cleanupMouseEvents();
+		this.cleanupTouchEvents();
 	}
 
 	private function longPress_target_mouseDownHandler(event:MouseEvent):Void {
@@ -274,19 +291,21 @@ class LongPress {
 		}
 		this._stopNextTrigger = true;
 		if (this._savedMouseEvent != null) {
+			var mouseEvent = this._savedMouseEvent;
 			this.cleanupMouseEvents();
 			if (this._eventFactory != null) {
 				this._target.dispatchEvent(this._eventFactory());
 				return;
 			}
-			LongPressEvent.dispatchFromMouseEvent(this._target, this._savedMouseEvent);
+			LongPressEvent.dispatchFromMouseEvent(this._target, mouseEvent);
 			return;
 		}
+		var touchEvent = this._savedTouchEvent;
 		this.cleanupTouchEvents();
 		if (this._eventFactory != null) {
 			this._target.dispatchEvent(this._eventFactory());
 			return;
 		}
-		LongPressEvent.dispatchFromTouchEvent(this._target, this._savedTouchEvent);
+		LongPressEvent.dispatchFromTouchEvent(this._target, touchEvent);
 	}
 }

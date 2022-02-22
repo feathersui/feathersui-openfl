@@ -82,6 +82,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.StyleProviderRestrictedStyleTest());
 		runner.addCase(new feathers.style.ThemeTest());
 		runner.addCase(new feathers.themes.DefaultThemeTest());
+		runner.addCase(new feathers.utils.LongPressTest());
 		runner.addCase(new feathers.utils.PopUpUtilTest());
 		#if (html5 && !headless_html5)
 		if (js.Syntax.code("typeof window !== 'undefined'")) {
