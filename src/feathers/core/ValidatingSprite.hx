@@ -89,6 +89,18 @@ class ValidatingSprite extends Sprite implements IValidating {
 	}
 
 	private var _validating:Bool = false;
+
+	/**
+		Indicates if the display object is currently validating.
+
+		@since 1.0.0
+	**/
+	public var validating(get, never):Bool;
+
+	private function get_validating():Bool {
+		return _validating;
+	}
+
 	private var _allInvalid:Bool = false;
 	private var _allInvalidDelayed:Bool = false;
 	private var _invalidationFlags:Map<InvalidationFlag, Bool> = new Map();
