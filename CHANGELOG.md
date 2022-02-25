@@ -1,5 +1,32 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.0.0-beta.9 (2021-02-25)
+
+- BaseScrollContainer: `scrollMode` property defaults to `MASK` instead of `SCROLL_RECT` to avoid forcex pixel rounding.
+- Button, ToggleButton: Does not trigger on space/enter key when a button's child has focus instead of the button itself. This isn't common with simple buttons, but `ItemRenderer` is a subclass, and it may have children that can receive focus.
+- CalendarGrid: Deprecated in favor of `DatePicker`. Hide the items in a `DatePicker` header to make it behave like the old `CalendarPicker`.
+- General: All haxedefs to change Feathers UI behavior at compile time now start with `feathersui_` to avoid potential conflicts. Example: `disable_default_theme` is now `feathersui_disable_default_theme`.
+- General: More constructor arguments for UI components to automatically add listeners for common events.
+- General: Children of data containers, like `ListView`, can receive tab focus. Data containers now implement `IFocusContainer`.
+- HierarchicalItemRenderer: The disclosure toggle button is no longer allowed to receive tab focus.
+- HierarchicalItemRenderer: Added `disclosureButtonFactory` property to customize the creation of the disclosure toggle button.
+- hn-reader: A new sample application that displays feeds from Hacker News, and uses URL parameters in `RouterNavigator`.
+- HorizontalLineSkin, VerticalSkinSkin: new properties to align the line to the edges or center.
+- ItemRenderer: Fixed support for `Math.POSITIVE_INFINITY` as a valid `gap` value.
+- ItemRenderer: Respects the `includeInLayout` property of the `accessoryView`.
+- LayoutGroupItemRenderer: Added `alternateBackgroundSkin`, similar to the same property on `ItemRenderer`.
+- Route: Added `Route.withRedirect()` to allow a URL to automatically redirect to another.
+- Route: Deprecated `injectState()` and `restoreData()`. Use the new `updateState()` function instead, which replaces both.
+- Route: Static methods like `Route.withClass()` and `Route.withFunction()` replace `injectState` function argument with `updateState` instead. `updateState` accepts the new `RouteState` type.
+- RouterNavigator: The order that routes are added is enforced on all targets when matching route URL paths.
+- RouterNavigator: Route paths may now have parameters, like "/users/:id" where `:id` is a parameter. URL parameters are passed to the new `updateState()` function of the `Route`.
+- RouterNavigator: Now listens for `TextEvent.LINK` bubbled from the currently active view, and navigates if the event's text starts with "router:". For example, you can set the `htmlText` of a `Label` to `<a href="text:router:/users/list">Show all users</a>`. If the user clicks this link, the navigator will navigate to "/users/list". Requires OpenFL >= 9.2.0.
+- Scale9Bitmap: When width or height is set smaller than `scale9Grid` corners/edges allow, scales corners down.
+- Text: Components with `htmlText` property now have a `styleSheet` property. Requires OpenFL >= 9.2.0.
+- todomvc: New sample application based on the popular todomvc.com.
+- TreeGridView: Left and right arrow keys behave similarly to `TreeView`, to open and close branches and jump between a branch and its children.
+- ValidatingSprite: Added public `validating` property to indicate if it is currently validating or not.
+
 ## 1.0.0-beta.8 (2021-01-06)
 
 - TreeGridView: New component that displays a tree of hierarchical data with multiple columns, like a mix between `TreeView` and `GridView`.

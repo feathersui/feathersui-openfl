@@ -14,7 +14,7 @@
 		"layout"
 	],
 	"description": "Cross-platform user interface components for creative frontend projects built with Haxe and OpenFL",
-	"version": "1.0.0-beta.8",
+	"version": "1.0.0-beta.9",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Preview build: TreeGridView, HierarchicalItemRenderer, FlowRowsLayout, required FormItems"
+	"releasenote": "Preview build: RouterNavigator URL parameters and redirects, and various bug fixes"
 }
