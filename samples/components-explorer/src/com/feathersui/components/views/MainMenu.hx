@@ -103,15 +103,15 @@ class MainMenu extends Panel {
 		this.addChild(this.listView);
 	}
 
-	public var selectedViewPaths(default, set):String = null;
+	public var selectedViewPath(default, set):String = null;
 
-	private function set_selectedViewPaths(value:String):String {
-		if (this.selectedViewPaths == value) {
-			return this.selectedViewPaths;
+	private function set_selectedViewPath(value:String):String {
+		if (this.selectedViewPath == value) {
+			return this.selectedViewPath;
 		}
-		this.selectedViewPaths = value;
+		this.selectedViewPath = value;
 		this.dispatchEvent(new Event(Event.CHANGE));
-		return this.selectedViewPaths;
+		return this.selectedViewPath;
 	}
 
 	private function createHeader():Void {
@@ -139,23 +139,23 @@ class MainMenu extends Panel {
 	}
 
 	private function listView_itemTriggerHandler(event:GroupListViewEvent):Void {
-		var triggeredItem = event.state.data;
-		if (triggeredItem.screenID == null) {
+		var triggeredItem = cast(event.state.data, MenuItem);
+		if (triggeredItem.viewPath == null) {
 			return;
 		}
-		this.selectedViewPaths = triggeredItem.screenID;
+		this.selectedViewPath = triggeredItem.viewPath;
 	}
 }
 
 private class MenuItem {
-	public function new(title:String, screenID:String, ?children:Array<MenuItem>) {
+	public function new(title:String, viewPath:String, ?children:Array<MenuItem>) {
 		this.title = title;
-		this.screenID = screenID;
+		this.viewPath = viewPath;
 		this.children = children;
 	}
 
 	public var title:String;
-	public var screenID:String;
+	public var viewPath:String;
 	public var children:Array<MenuItem>;
 
 	@:keep

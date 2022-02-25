@@ -225,6 +225,6 @@ class Main extends Application {
 
 	private function createPushPathAction(event:Event):RouterAction {
 		var screen = cast(event.currentTarget, MainMenu);
-		return Push(screen.selectedViewPaths);
+		return Push(screen.selectedViewPath);
 	}
 }
