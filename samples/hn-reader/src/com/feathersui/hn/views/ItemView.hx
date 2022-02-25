@@ -55,6 +55,7 @@ class ItemView extends LayoutGroup {
 		layout = new AnchorLayout();
 
 		_itemsTreeView = new TreeView();
+		_itemsTreeView.variant = TreeView.VARIANT_BORDERLESS;
 		_itemsTreeView.itemToText = (item:Any) -> {
 			if (item == LOADING_ITEM) {
 				return "Loading...";

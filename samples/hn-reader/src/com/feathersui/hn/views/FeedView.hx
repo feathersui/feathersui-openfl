@@ -75,6 +75,7 @@ class FeedView extends LayoutGroup {
 		layout = new AnchorLayout();
 
 		_feedItemListView = new ListView();
+		_feedItemListView.variant = ListView.VARIANT_BORDERLESS;
 		_feedItemListView.itemToText = (item:Any) -> {
 			if (item == MORE_ITEM) {
 				return "More...";
