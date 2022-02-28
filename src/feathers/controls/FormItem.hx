@@ -47,12 +47,13 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		@since 1.0.0
 	**/
-	public function new(text:String = "", ?content:DisplayObject) {
+	public function new(text:String = "", ?content:DisplayObject, required:Bool = false) {
 		initializeFormItemTheme();
 		super();
 
 		this.text = text;
 		this.content = content;
+		this.required = required;
 	}
 
 	private var textField:TextField;
