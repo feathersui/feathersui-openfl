@@ -32,7 +32,7 @@ class ScreenDensityScaleCalculator {
 	/**
 		Adds a new scale for the specified screen density.
 
-		```hx
+		```haxe
 		calculator.addScaleForDensity(160, 1);
 		calculator.addScaleForDensity(240, 1.5);
 		calculator.addScaleForDensity(320, 2);
@@ -55,7 +55,7 @@ class ScreenDensityScaleCalculator {
 	/**
 		Removes an application scale that was added with `addScaleForDensity()`.
 
-		```hx
+		```haxe
 		selector.addScaleForDensity(320, 2);
 		selector.removeScaleForDensity(320);
 		```

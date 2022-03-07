@@ -92,13 +92,13 @@ class AssetLoader extends FeathersControl {
 
 		The following example sets the source to an asset name:
 
-		```hx
+		```haxe
 		loader.source = "my-asset-name";
 		```
 
 		The following example sets the source to a URL:
 
-		```hx
+		```haxe
 		loader.source = "https://example.com/my-asset.png";
 		```
 
@@ -258,7 +258,7 @@ class AssetLoader extends FeathersControl {
 		The following example maintains the aspect ratio of the asset, but
 		displays no border, and may crop it to fit:
 
-		```hx
+		```haxe
 		loader.scaleMode = StageScaleMode.NO_BORDER
 		```
 

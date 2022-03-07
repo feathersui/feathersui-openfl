@@ -41,7 +41,7 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column's header text is customized.
 
-		```hx
+		```haxe
 		column.headerText = "Name";
 		```
 
@@ -54,7 +54,7 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column's width is customized.
 
-		```hx
+		```haxe
 		column.width = 120.0;
 		```
 
@@ -70,7 +70,7 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column's minimum width is customized.
 
-		```hx
+		```haxe
 		column.minWidth = 120.0;
 		```
 
@@ -83,7 +83,7 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column uses a custom cell renderer class:
 
-		```hx
+		```haxe
 		column.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomCellRenderer);
 		```
 
@@ -100,14 +100,14 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the grid view cell should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		column.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};

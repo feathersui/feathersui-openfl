@@ -66,7 +66,7 @@ class BaseDividedBox extends FeathersControl {
 		In the following example, the container will be sized to match the
 		stage:
 
-		```hx
+		```haxe
 		drawer.autoSizeMode = STAGE;
 		```
 
@@ -110,7 +110,7 @@ class BaseDividedBox extends FeathersControl {
 		The following example passes a bitmap for the container to use as a
 		background skin:
 
-		```hx
+		```haxe
 		container.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -129,7 +129,7 @@ class BaseDividedBox extends FeathersControl {
 
 		The following example gives the container a disabled background skin:
 
-		```hx
+		```haxe
 		container.disabledBackgroundSkin = new Bitmap(bitmapData);
 		container.enabled = false;
 		```
@@ -162,7 +162,7 @@ class BaseDividedBox extends FeathersControl {
 
 		In the following example, live dragging is disabled:
 
-		```hx
+		```haxe
 		container.liveDragging = false;
 		```
 
@@ -189,7 +189,7 @@ class BaseDividedBox extends FeathersControl {
 
 		In the following example, a custom divider factory is provided:
 
-		```hx
+		```haxe
 		dividedBox.dividerFactory = () ->
 		{
 			return new Button();

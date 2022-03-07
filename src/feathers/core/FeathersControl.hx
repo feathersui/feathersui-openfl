@@ -88,7 +88,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		In the following example, we check if the component is initialized
 		or not, and we listen for an event if it isn't initialized:
 
-		```hx
+		```haxe
 		if(!control.initialized)
 		{
 			control.addEventListener(FeathersEvent.INITIALIZE, initializeHandler);
@@ -115,7 +115,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		In the following example, we check if the component is created or not,
 		and we listen for an event if it isn't:
 
-		```hx
+		```haxe
 		if(!control.created)
 		{
 			control.addEventListener(FeathersEventType.CREATION_COMPLETE, creationCompleteHandler);
@@ -760,7 +760,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		The following example overrides initialization:
 
-		```hx
+		```haxe
 		override private function initialize():Void {
 			super.initialize();
 

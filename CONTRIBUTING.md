@@ -12,13 +12,13 @@ For example, [function types](https://haxe.org/manual/types-function.html) shoul
 
 😃 Modern function types:
 
-```hx
+```haxe
 (String) -> Bool // good
 ```
 
 😡 Legacy function types:
 
-```hx
+```haxe
 String -> Bool // bad
 ```
 
@@ -28,7 +28,7 @@ All conditional and loop expressions must include curly braces, even if the body
 
 😃 With curly braces:
 
-```hx
+```haxe
 // good
 if (condition) {
 	doSomething();
@@ -37,7 +37,7 @@ if (condition) {
 
 😡 Without curly braces:
 
-```hx
+```haxe
 if (condition) doSomething(); // bad
 ```
 
@@ -59,7 +59,7 @@ All code must be formatted before each commit — use [Haxe Formatter](https://g
 
 A typical property on a Feathers UI component will look similar to the code below:
 
-```hx
+```haxe
 private var _property:Int = 0;
 
 public var property(get, set):Int;
@@ -89,18 +89,18 @@ Do not access children of a UI component in a getter or setter It's often better
 Event listeners should be named to avoid collisions in subclasses. Consider the
 class `MyComponent`:
 
-```hx
+```haxe
 class MyComponent extends FeathersControl {}
 ```
 
 To add a `MouseEvent.MOUSE_DOWN` listener inside this class, start the listener name with the name of the class. The first letter should be changed to lower-case, so use `myComponent` instead of `MyComponent`. Then, add an underscore `_` character. Then, add the event string, formatted in camel-case. For `MouseEvent.MOUSE_DOWN`, that's `mouseDown`. Finally, add `Handler` to the end of the name.
 
-```hx
+```haxe
 private function myComponent_mouseDownHandler(event:MouseEvent):Void {}
 ```
 
 If adding a listener to another object, format the class name the same. Then, add an extra underscore `_` character followed by the variable or property name of the other object. Finally add another underscore `_` character, followed byu the event string and `Handler`. In the `MyComponent` class, to add a `MouseEvent.MOUSE_UP` listener to the `stage`, the name of the listener should look like this:
 
-```hx
+```haxe
 private function myComponent_stage_mouseUpHandler(event:MouseEvent):Void {}
 ```

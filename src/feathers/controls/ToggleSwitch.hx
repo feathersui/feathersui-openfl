@@ -39,7 +39,7 @@ import openfl.ui.Multitouch;
 	The following example creates a toggle switch, programmatically selects it,
 	and listens for when the selection changes:
 
-	```hx
+	```haxe
 	var toggleSwitch = new ToggleSwitch();
 	toggleSwitch.selected = true;
 	toggleSwitch.addEventListener(Event.CHANGE, (event) -> {
@@ -104,7 +104,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		The following example selects the toggle switch:
 
-		```hx
+		```haxe
 		toggleSwitch.selected = true;
 		```
 
@@ -143,7 +143,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		In the following example, a thumb skin is passed to the toggle switch:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		toggleSwitch.thumbSkin = skin;
@@ -164,7 +164,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		In the following example, a track skin is passed to the toggle switch:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		toggleSwitch.trackSkin = skin;
@@ -193,7 +193,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		In the following example, a track skin and a secondary track skin are
 		passed to the toggle switch:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xaaaaaa);
 		toggleSwitch.trackSkin = skin;
@@ -217,7 +217,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		In the following example, the toggle switch's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		toggleSwitch.paddingRight = 20.0;
 		```
 
@@ -235,7 +235,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		In the following example, the toggle switch's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		toggleSwitch.paddingLeft = 20.0;
 		```
 
@@ -255,7 +255,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		In the following example, the duration of the animation that toggles the
 		thumb is set to 500 milliseconds:
 
-		```hx
+		```haxe
 		toggleSwitch.toggleDuration = 0.5;
 		```
 
@@ -271,7 +271,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		In the following example, the ease of the animation that toggles the
 		thumb is customized:
 
-		```hx
+		```haxe
 		toggleSwitch.toggleEase = Elastic.easeOut;
 		```
 

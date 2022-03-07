@@ -42,7 +42,7 @@ import openfl.ui.Multitouch;
 	In the following example, a callout displaying a `Label` is shown when a
 	`Button` is triggered:
 
-	```hx
+	```haxe
 	function button_triggerHandler(event:TriggerEvent):Void {
 		var button = cast(event.currentTarget, Button);
 
@@ -75,7 +75,7 @@ class Callout extends FeathersControl {
 		In the following example, a callout displaying a `Label` is shown when
 		a `Button` is triggered:
 
-		```hx
+		```haxe
 		function button_triggerHandler(event:TriggerEvent):Void {
 			var button = cast(event.currentTarget, Button);
 
@@ -298,7 +298,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's content is a bitmap:
 
-		```hx
+		```haxe
 		callout.content = new Bitmap(bitmapData);
 		```
 
@@ -386,7 +386,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's gap is set to 20 pixels:
 
-		```hx
+		```haxe
 		callout.gap = 20.0;
 		```
 
@@ -400,7 +400,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's top margin is set to 20 pixels:
 
-		```hx
+		```haxe
 		callout.marginTop = 20.0;
 		```
 
@@ -414,7 +414,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's right margin is set to 20 pixels:
 
-		```hx
+		```haxe
 		callout.marginRight = 20.0;
 		```
 
@@ -428,7 +428,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's bottom margin is set to 20 pixels:
 
-		```hx
+		```haxe
 		callout.marginBottom = 20.0;
 		```
 
@@ -442,7 +442,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's left margin is set to 20 pixels:
 
-		```hx
+		```haxe
 		callout.marginLeft = 20.0;
 		```
 
@@ -457,7 +457,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		callout.paddingTop = 20.0;
 		```
 
@@ -473,7 +473,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		callout.paddingRight = 20.0;
 		```
 
@@ -489,7 +489,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		callout.paddingBottom = 20.0;
 		```
 
@@ -505,7 +505,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		callout.paddingLeft = 20.0;
 		```
 
@@ -520,7 +520,7 @@ class Callout extends FeathersControl {
 
 		The following example aligns the callout to the right:
 
-		```hx
+		```haxe
 		callout.horizontalAlign = RIGHT;
 		```
 
@@ -542,7 +542,7 @@ class Callout extends FeathersControl {
 
 		The following example aligns the callout to the top:
 
-		```hx
+		```haxe
 		callout.verticalAlign = TOP;
 		```
 
@@ -577,7 +577,7 @@ class Callout extends FeathersControl {
 
 		In the following example, the callout's background is set to a bitmap:
 
-		```hx
+		```haxe
 		callout.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -595,7 +595,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's top arrow skin is set to a
 		bitmap:
 
-		```hx
+		```haxe
 		callout.topArrowSkin = new Bitmap(bitmapData);
 		```
 
@@ -611,7 +611,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's right arrow skin is set to a
 		bitmap:
 
-		```hx
+		```haxe
 		callout.rightArrowSkin = new Bitmap(bitmapData);
 		```
 
@@ -627,7 +627,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's bottom arrow skin is set to a
 		bitmap:
 
-		```hx
+		```haxe
 		callout.bottomArrowSkin = new Bitmap(bitmapData);
 		```
 
@@ -643,7 +643,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's left arrow skin is set to a
 		bitmap:
 
-		```hx
+		```haxe
 		callout.leftArrowSkin = new Bitmap(bitmapData);
 		```
 
@@ -658,7 +658,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's top arrow gap is set to -1.0
 		pixels:
 
-		```hx
+		```haxe
 		callout.topArrowGap = -1.0;
 		```
 
@@ -673,7 +673,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's right arrow gap is set to -1.0
 		pixels:
 
-		```hx
+		```haxe
 		callout.rightArrowGap = -1.0;
 		```
 
@@ -688,7 +688,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's bottom arrow gap is set to -1.0
 		pixels:
 
-		```hx
+		```haxe
 		callout.bottomArrowGap = -1.0;
 		```
 
@@ -703,7 +703,7 @@ class Callout extends FeathersControl {
 		In the following example, the callout's left arrow gap is set to -1.0
 		pixels:
 
-		```hx
+		```haxe
 		callout.leftArrowGap = -1.0;
 		```
 

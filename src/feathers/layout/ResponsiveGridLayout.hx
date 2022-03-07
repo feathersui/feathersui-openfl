@@ -53,7 +53,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the number of columns in the layout is set to 6:
 
-		```hx
+		```haxe
 		layout.columnCount = 6;
 		```
 
@@ -81,7 +81,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's _sm_ breakpoint is set to 1000 pixels:
 
-		```hx
+		```haxe
 		layout.lg = 1000.0;
 		```
 
@@ -110,7 +110,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's _md_ breakpoint is set to 1000 pixels:
 
-		```hx
+		```haxe
 		layout.lg = 1000.0;
 		```
 
@@ -139,7 +139,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's _lg_ breakpoint is set to 1000 pixels:
 
-		```hx
+		```haxe
 		layout.lg = 1000.0;
 		```
 
@@ -168,7 +168,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's _xl_ breakpoint is set to 1000 pixels:
 
-		```hx
+		```haxe
 		layout.xl = 1000.0;
 		```
 
@@ -196,7 +196,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's row gap is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.rowGap = 20.0;
 		```
 
@@ -224,7 +224,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's column gap is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.columnGap = 20.0;
 		```
 
@@ -253,7 +253,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingTop = 20.0;
 		```
 
@@ -284,7 +284,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's right padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingRight = 20.0;
 		```
 
@@ -315,7 +315,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's bottom padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingBottom = 20.0;
 		```
 
@@ -346,7 +346,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's left padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingLeft = 20.0;
 		```
 

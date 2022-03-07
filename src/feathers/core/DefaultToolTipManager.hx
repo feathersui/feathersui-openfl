@@ -32,7 +32,7 @@ class DefaultToolTipManager implements IToolTipManager {
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var toolTip = new Label();
 		toolTip.variant = DefaultToolTipManager.CHILD_VARIANT_TOOL_TIP;
 		```

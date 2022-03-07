@@ -15,7 +15,7 @@ import openfl.display.DisplayObject;
 
 	The following example creates a page navigator and adds some items:
 
-	```hx
+	```haxe
 	var navigator = new PageNavigator();
 	navigator.dataProvider = new ArrayCollection([
 		PageItem.withClass(WizardView1),

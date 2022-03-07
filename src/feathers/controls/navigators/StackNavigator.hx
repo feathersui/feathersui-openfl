@@ -35,7 +35,7 @@ import lime.ui.KeyCode;
 	The following example creates a stack navigator, adds an item, and displays
 	it as the root of the history:
 
-	```hx
+	```haxe
 	var navigator = new StackNavigator();
 	navigator.addItem("mainMenu", new StackItem(MainMenuScreen));
 	this.addChild(navigator);
@@ -136,7 +136,7 @@ class StackNavigator extends BaseNavigator {
 
 		In the following example, the root item ID is set:
 
-		```hx
+		```haxe
 		navigator.rootItemID = "my-item-id";
 		```
 

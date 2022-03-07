@@ -52,7 +52,7 @@ import flash.globalization.LocaleID;
 	The following example creates a pop-up date picker, sets the selected date,
 	and listens for when the selection changes:
 
-	```hx
+	```haxe
 	var datePicker = new PopUpDatePicker();
 	datePicker.selectedDate = new Date(2020, 1, 6);
 	datePicker.addEventListener(Event.CHANGE, (event:Event) -> {
@@ -198,7 +198,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		The following example sets the date picker's prompt:
 
-		```hx
+		```haxe
 		popUpDatePicker.prompt = "Select an item";
 		```
 
@@ -230,7 +230,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		In the following example, a custom pop-up adapter is provided:
 
-		```hx
+		```haxe
 		popUpDatePicker.popUpAdapter = new DropDownPopUpAdapter();
 		```
 
@@ -296,7 +296,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		In the following example, a custom button factory is provided:
 
-		```hx
+		```haxe
 		datePicker.buttonFactory = () ->
 		{
 			return new Button();
@@ -331,7 +331,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		In the following example, a custom text input factory is provided:
 
-		```hx
+		```haxe
 		datePicker.textInputFactory = () ->
 		{
 			return new TextInput();
@@ -379,7 +379,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		In the following example, a custom date picker factory is provided:
 
-		```hx
+		```haxe
 		datePicker.datePickerFactory = () ->
 		{
 			return new DatePicker();
@@ -559,7 +559,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		The following example opens the pop-up date picker:
 
-		```hx
+		```haxe
 		if(!datePicker.open)
 		{
 			datePicker.openDatePicker();
@@ -604,7 +604,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		The following example closes the pop-up date picker:
 
-		```hx
+		```haxe
 		if(datePicker.open)
 		{
 			datePicker.closeDatePicker();

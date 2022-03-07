@@ -49,7 +49,7 @@ class FormEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		FormEvent.dispatch(component, FormEvent.SUBMIT);
 		```
 

@@ -150,7 +150,7 @@ class RouterNavigator extends BaseNavigator {
 
 		The following example adds a new route for the "/settings" URL path:
 
-		```hx
+		```haxe
 		var route = Route.withClass("/settings", SettingsView);
 		navigator.addRoute(route);
 		```
@@ -180,7 +180,7 @@ class RouterNavigator extends BaseNavigator {
 
 		The following example navigates to the "/settings" URL path:
 
-		```hx
+		```haxe
 		navigator.push("/settings");
 		```
 
@@ -267,7 +267,7 @@ class RouterNavigator extends BaseNavigator {
 		The following example navigates to the "/settings" URL path without
 		adding a new history entry:
 
-		```hx
+		```haxe
 		navigator.replace("/settings");
 		```
 
@@ -315,7 +315,7 @@ class RouterNavigator extends BaseNavigator {
 
 		The following examples goes back 2 entries in the history stack.
 
-		```hx
+		```haxe
 		navigator.go(-2);
 		```
 
@@ -354,7 +354,7 @@ class RouterNavigator extends BaseNavigator {
 
 		The following examples goes back in history by 1 entry.
 
-		```hx
+		```haxe
 		navigator.goBack();
 		```
 
@@ -369,7 +369,7 @@ class RouterNavigator extends BaseNavigator {
 
 		The following examples goes forward in history by 1 entry.
 
-		```hx
+		```haxe
 		navigator.goForward();
 		```
 

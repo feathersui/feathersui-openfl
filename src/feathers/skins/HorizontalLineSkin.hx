@@ -36,7 +36,7 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 
 		The following example aligns the line to the top:
 
-		```hx
+		```haxe
 		skin.verticalAlign = TOP;
 		```
 

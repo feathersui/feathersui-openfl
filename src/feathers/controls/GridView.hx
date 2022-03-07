@@ -84,7 +84,7 @@ import openfl._internal.utils.ObjectPool;
 	the columns how to interpret the data, and listens for when the selection
 	changes:
 
-	```hx
+	```haxe
 	var gridView = new GridView();
 
 	gridView.dataProvider = new ArrayCollection([
@@ -137,7 +137,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var gridView = new GridView();
 		gridView.variant = GridView.VARIANT_BORDERLESS;
 		```
@@ -154,7 +154,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var gridView = new GridView();
 		gridView.variant = GridView.VARIANT_BORDER;
 		```
@@ -332,7 +332,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		The following example passes in a data provider and tells the columns
 		how to interpret the data:
 
-		```hx
+		```haxe
 		gridView.dataProvider = new ArrayCollection([
 			{ item: "Chicken breast", dept: "Meat", price: "5.90" },
 			{ item: "Butter", dept: "Dairy", price: "4.69" },
@@ -413,7 +413,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		The following example passes in a data provider and tells the columns
 		how to interpret the data:
 
-		```hx
+		```haxe
 		gridView.dataProvider = new ArrayCollection([
 			{ item: "Chicken breast", dept: "Meat", price: "5.90" },
 			{ item: "Butter", dept: "Dairy", price: "4.69" },
@@ -465,7 +465,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		In the following example, the grid view uses a custom header renderer
 		class:
 
-		```hx
+		```haxe
 		gridView.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
 		```
 
@@ -510,7 +510,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		In the following example, the grid view uses a custom header divider
 		class:
 
-		```hx
+		```haxe
 		gridView.headerDividerFactory = DisplayObjectFactory.withClass(CustomHeaderDivider);
 		```
 
@@ -539,7 +539,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		In the following example, the grid view uses a custom column divider
 		class:
 
-		```hx
+		```haxe
 		gridView.columnDividerFactory = DisplayObjectFactory.withClass(CustomColumnDivider);
 		```
 
@@ -662,7 +662,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		In the following example, multiple selection is enabled:
 
-		```hx
+		```haxe
 		gridView.allowMultipleSelection = true;
 		```
 
@@ -809,7 +809,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example tells the list view to use a horizontal layout:
 
-		```hx
+		```haxe
 		var layout = new VerticalListLayout();
 		layout.requestedRowCount = 5.0;
 		layout.gap = 20.0;
@@ -830,7 +830,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example disables virtual layouts:
 
-		```hx
+		```haxe
 		gridView.virtualLayout = false;
 		```
 
@@ -859,7 +859,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		In the following example, the grid view uses a custom cell renderer
 		class:
 
-		```hx
+		```haxe
 		gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomCellRenderer);
 		```
 
@@ -894,7 +894,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example enables column sorting:
 
-		```hx
+		```haxe
 		gridView.sortableColumns = true;
 		```
 
@@ -924,7 +924,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example enables column resizing:
 
-		```hx
+		```haxe
 		gridView.resizableColumns = true;
 		```
 
@@ -1043,7 +1043,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example disables selection of items in the grid view:
 
-		```hx
+		```haxe
 		gridView.selectable = false;
 		```
 

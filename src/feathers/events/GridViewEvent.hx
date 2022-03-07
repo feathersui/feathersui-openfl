@@ -68,7 +68,7 @@ class GridViewEvent<S> extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		GridViewEvent.dispatchForCell(component, GridViewEvent.CELL_TRIGGER, state);
 		```
 
@@ -91,7 +91,7 @@ class GridViewEvent<S> extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		GridViewEvent.dispatchForHeader(component, GridViewEvent.HEADER_TRIGGER, state);
 		```
 

@@ -50,7 +50,7 @@ class GroupListViewEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		GroupListViewEvent.dispatch(component, GroupListViewEvent.ITEM_TRIGGER, state);
 		```
 

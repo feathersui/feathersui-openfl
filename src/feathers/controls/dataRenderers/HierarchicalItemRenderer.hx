@@ -55,7 +55,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var itemRenderer = new HierarchicalItemRenderer();
 		itemRenderer.variant = HierarchicalItemRenderer.VARIANT_FILE_SYSTEM;
 		```
@@ -264,7 +264,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 
 		In the following example, a custom button factory is provided:
 
-		```hx
+		```haxe
 		listView.buttonFactory = () ->
 		{
 			return new Button();

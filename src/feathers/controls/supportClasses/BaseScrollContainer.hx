@@ -149,7 +149,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the container's top padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		container.paddingTop = 20.0;
 		```
 
@@ -165,7 +165,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the container's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		container.paddingRight = 20.0;
 		```
 
@@ -181,7 +181,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the container's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		container.paddingBottom = 20.0;
 		```
 
@@ -197,7 +197,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the container's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		container.paddingLeft = 20.0;
 		```
 
@@ -214,7 +214,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		The following example passes a bitmap for the container to use as a
 		background skin:
 
-		```hx
+		```haxe
 		group.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -232,7 +232,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		The following example gives the group a disabled background skin:
 
-		```hx
+		```haxe
 		group.disabledBackgroundSkin = new Bitmap(bitmapData);
 		group.enabled = false;
 		```
@@ -256,7 +256,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		The following example passes a `RectangleSkin` with a `cornerRadius` for
 		the container's mask skin:
 
-		```hx
+		```haxe
 		var maskSkin = new RectangleSkin();
 		maskSkin.fill = SolidColor(0xff0000);
 		maskSkin.cornerRadius = 10.0;
@@ -282,7 +282,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		The following example passes a `RectangleSkin` with a `cornerRadius` for
 		the container view port's mask skin:
 
-		```hx
+		```haxe
 		var maskSkin = new RectangleSkin();
 		maskSkin.fill = SolidColor(0xff0000);
 		maskSkin.cornerRadius = 10.0;
@@ -312,7 +312,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, the scroll bars are fixed:
 
-		```hx
+		```haxe
 		container.fixedScrollBars = true;
 		```
 
@@ -328,7 +328,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, the scroll bars are hidden:
 
-		```hx
+		```haxe
 		container.showScrollBars = false;
 		```
 
@@ -344,7 +344,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, scroll bar auto-hiding is disabled:
 
-		```hx
+		```haxe
 		container.autoHideScrollBars = false;
 		```
 
@@ -372,7 +372,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, a custom horizontal scroll bar factory is
 		passed to the container:
 
-		```hx
+		```haxe
 		scroller.scrollBarXFactory = () ->
 		{
 			return new HScrollBar();
@@ -410,7 +410,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, a custom vertical scroll bar factory is
 		passed to the container:
 
-		```hx
+		```haxe
 		scroller.scrollBarYFactory = () ->
 		{
 			return new VScrollBar();
@@ -445,7 +445,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, a custom scroller factory is passed to the
 		container:
 
-		```hx
+		```haxe
 		scroller.scrollBarYFactory = () ->
 		{
 			var scroller = new Scroller();
@@ -490,7 +490,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the horizontal scroll position is modified
 		immediately, without being animated:
 
-		```hx
+		```haxe
 		container.scrollX = 100.0;
 		```
 
@@ -569,7 +569,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the vertical scroll position is modified
 		immediately, without being animated:
 
-		```hx
+		```haxe
 		container.scrollY = 100.0;
 		```
 
@@ -738,7 +738,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, the horizontal scroll step is set to 20 pixels:
 
-		```hx
+		```haxe
 		container.scrollStepX = 20.0;
 		```
 
@@ -768,7 +768,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, the vertical scroll step is set to 20 pixels:
 
-		```hx
+		```haxe
 		container.scrollStepY = 20.0;
 		```
 
@@ -797,7 +797,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, horizontal scrolling is disabled:
 
-		```hx
+		```haxe
 		container.scrollPolicyX = OFF;
 		```
 
@@ -828,7 +828,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, vertical scrolling is disabled:
 
-		```hx
+		```haxe
 		container.scrollPolicyY = OFF;
 		```
 
@@ -858,7 +858,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the horizontal scroll bar is positioned on the
 		top edge of the container:
 
-		```hx
+		```haxe
 		container.scrollBarXPosition = TOP;
 		```
 
@@ -877,7 +877,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the vertical scroll bar is positioned on the
 		left edge of the container:
 
-		```hx
+		```haxe
 		container.scrollBarYPosition = LEFT;
 		```
 
@@ -896,7 +896,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the minimum duration to show scroll bars is
 		increased:
 
-		```hx
+		```haxe
 		container.showScrollBarMinimumDuration = 1.0;
 		```
 
@@ -919,7 +919,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the duration of the animation that hides the
 		scroll bars is set to 500 milliseconds:
 
-		```hx
+		```haxe
 		container.hideScrollBarDuration = 0.5;
 		```
 
@@ -934,7 +934,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		In the following example, the ease of the animation that hides the
 		scroll bars is customized:
 
-		```hx
+		```haxe
 		container.hideScrollBarEase = Elastic.easeOut;
 		```
 
@@ -949,7 +949,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, the scroll position is snapped to pixels:
 
-		```hx
+		```haxe
 		container.scrollPixelSnapping = true;
 		```
 
@@ -987,7 +987,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		In the following example, scroll mode is changed to use a `scrollRect`:
 
-		```hx
+		```haxe
 		container.scrollMode = SCROLL_RECT;
 		```
 

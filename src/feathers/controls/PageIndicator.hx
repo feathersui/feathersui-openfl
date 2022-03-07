@@ -45,7 +45,7 @@ import openfl.ui.Multitouch;
 	The following example creates a page indicator, sets its range and selected
 	index, and lsitens for when the selection changes:
 
-	```hx
+	```haxe
 	var pages = new PageIndicator();
 
 	pages.maxSelectedIndex = 5;
@@ -190,7 +190,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		In the following example, the page indicator uses a custom toggle
 		button:
 
-		```hx
+		```haxe
 		pages.toggleButtonRecycler = DisplayObjectRecycler.withClass(ToggleButtonSubClass);
 		```
 
@@ -228,7 +228,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		The following example tells the page indicator to use a custom layout:
 
-		```hx
+		```haxe
 		var layout = new HorizontalDistributedLayout();
 		layout.maxItemWidth = 300.0;
 		pages.layout = layout;
@@ -248,7 +248,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		The following example passes a bitmap for the page indicator to use as a
 		background skin:
 
-		```hx
+		```haxe
 		pages.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -267,7 +267,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		The following example gives the page indicator a disabled background skin:
 
-		```hx
+		```haxe
 		pages.disabledBackgroundSkin = new Bitmap(bitmapData);
 		pages.enabled = false;
 		```
@@ -292,7 +292,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 		In the following example, the interaction mode is changed to precise:
 
-		```hx
+		```haxe
 		pages.interactionMode = PRECISE;
 		```
 

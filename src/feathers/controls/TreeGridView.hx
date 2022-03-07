@@ -84,7 +84,7 @@ import openfl._internal.utils.ObjectPool;
 	tells the columns how to interpret the data, and listens for when the
 	selection changes:
 
-	```hx
+	```haxe
 	var treeGridView = new TreeGridView();
 
 	treeGridView.dataProvider = new ArrayHierarchicalCollection([
@@ -145,7 +145,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var treeGridView = new TreeGridView();
 		treeGridView.variant = TreeGridView.VARIANT_BORDERLESS;
 		```
@@ -162,7 +162,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var treeGridView = new TreeGridView();
 		treeGridView.variant = TreeGridView.VARIANT_BORDER;
 		```
@@ -327,7 +327,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		The following example passes in a data provider and tells the columns
 		how to interpret the data:
 
-		```hx
+		```haxe
 		treeGridView.dataProvider = new ArrayHierarchicalCollection([
 			{ item: "Chicken breast", dept: "Meat", price: "5.90" },
 			{ item: "Butter", dept: "Dairy", price: "4.69" },
@@ -405,7 +405,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		The following example passes in a data provider and tells the columns
 		how to interpret the data:
 
-		```hx
+		```haxe
 		treeGridView.dataProvider = new ArrayHierarchicalCollection([
 			{ item: "Chicken breast", dept: "Meat", price: "5.90" },
 			{ item: "Butter", dept: "Dairy", price: "4.69" },
@@ -457,7 +457,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		In the following example, the tree grid view uses a custom header
 		renderer class:
 
-		```hx
+		```haxe
 		treeGridView.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
 		```
 
@@ -502,7 +502,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		In the following example, the tree grid view uses a custom header
 		divider class:
 
-		```hx
+		```haxe
 		treeGridView.headerDividerFactory = DisplayObjectFactory.withClass(CustomHeaderDivider);
 		```
 
@@ -531,7 +531,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		In the following example, the tree grid view uses a custom column
 		divider class:
 
-		```hx
+		```haxe
 		treeGridView.columnDividerFactory = DisplayObjectFactory.withClass(CustomColumnDivider);
 		```
 
@@ -565,20 +565,20 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		The following example selects a specific location:
 
-		```hx
+		```haxe
 		treeView.selectedLocation = [2, 0];
 		```
 
 		The following example clears the currently selected location:
 
-		```hx
+		```haxe
 		treeView.selectedLocation = null;
 		```
 
 		The following example listens for when the selection changes, and it
 		prints the new selected location to the debug console:
 
-		```hx
+		```haxe
 		var treeView = new TreeView();
 		function changeHandler(event:Event):Void
 		{
@@ -652,7 +652,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		The following example tells the list view to use a horizontal layout:
 
-		```hx
+		```haxe
 		var layout = new VerticalListLayout();
 		layout.requestedRowCount = 5.0;
 		layout.gap = 20.0;
@@ -673,7 +673,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		The following example disables virtual layouts:
 
-		```hx
+		```haxe
 		treeGridView.virtualLayout = false;
 		```
 
@@ -703,7 +703,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		In the following example, the tree grid view uses a custom cell renderer
 		class:
 
-		```hx
+		```haxe
 		treeGridView.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomCellRenderer);
 		```
 
@@ -735,7 +735,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		The following example enables column resizing:
 
-		```hx
+		```haxe
 		treeGridView.resizableColumns = true;
 		```
 
@@ -794,7 +794,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		The following example disables selection of items in the tree grid view:
 
-		```hx
+		```haxe
 		treeGridView.selectable = false;
 		```
 

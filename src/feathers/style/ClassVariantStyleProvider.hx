@@ -27,7 +27,7 @@ import openfl.events.EventDispatcher;
 	In the following example, a `ClassVariantStyleProvider` is created with a
 	a default style function and an alternate style function:
 
-	```hx
+	```haxe
 	var styleProvider = new ClassVariantStyleProvider();
 	styleProvider.setFunctionForStyleName(Button, null, (target:Button) -> {
 		target.backgroundSkin = new Bitmap(bitmapData);

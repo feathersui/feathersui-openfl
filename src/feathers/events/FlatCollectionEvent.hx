@@ -133,7 +133,7 @@ class FlatCollectionEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		FlatCollectionEvent.dispatch(component, Event.ADD_ITEM, 0, item);
 		```
 

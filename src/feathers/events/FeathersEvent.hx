@@ -152,7 +152,7 @@ class FeathersEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		FeathersEvent.dispatch(component, Event.CHANGE);
 		```
 

@@ -31,7 +31,7 @@ import openfl.events.Event;
 
 	The following example creates a page navigator and adds some items:
 
-	```hx
+	```haxe
 	var navigator = new PageNavigator();
 	navigator.dataProvider = new ArrayCollection([
 		PageItem.withClass(WizardView1),
@@ -318,7 +318,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		In the following example, a custom page indicator factory is provided:
 
-		```hx
+		```haxe
 		navigator.pageIndicatorFactory = () ->
 		{
 			return new PageIndicator();

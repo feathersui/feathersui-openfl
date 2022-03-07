@@ -63,7 +63,7 @@ import openfl._internal.utils.ObjectPool;
 	the item renderer how to interpret the data, and listens for when the
 	selection changes:
 
-	```hx
+	```haxe
 	var treeView = new TreeView();
 
 	var collection = new ArrayHierarchicalCollection([
@@ -152,7 +152,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var treeView = new TreeView();
 		treeView.variant = TreeView.VARIANT_BORDERLESS;
 		```
@@ -169,7 +169,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var treeView = new TreeView();
 		treeView.variant = TreeView.VARIANT_BORDER;
 		```
@@ -284,7 +284,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		The following example passes in a data provider and tells the item
 		renderer how to interpret the data:
 
-		```hx
+		```haxe
 		var collection = new ArrayHierarchicalCollection([
 			{
 				text: "Node 1",
@@ -391,20 +391,20 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example selects a specific location:
 
-		```hx
+		```haxe
 		treeView.selectedLocation = [2, 0];
 		```
 
 		The following example clears the currently selected location:
 
-		```hx
+		```haxe
 		treeView.selectedLocation = null;
 		```
 
 		The following example listens for when the selection changes, and it
 		prints the new selected location to the debug console:
 
-		```hx
+		```haxe
 		var treeView = new TreeView();
 		function changeHandler(event:Event):Void
 		{
@@ -477,7 +477,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example tells the tree view to use a horizontal layout:
 
-		```hx
+		```haxe
 		var layout = new HorizontalListLayout();
 		layout.gap = 20.0;
 		layout.padding = 20.0;
@@ -511,7 +511,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		In the following example, the tree view uses a custom item renderer
 		class:
 
-		```hx
+		```haxe
 		treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
@@ -547,7 +547,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example provides an `itemRendererRecyclerIDFunction`:
 
-		```hx
+		```haxe
 		var regularItemRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer);
 		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
 		treeView.setItemRendererRecycler("regular-item", regularItemRecycler);
@@ -604,7 +604,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example disables selection of items in the tree view:
 
-		```hx
+		```haxe
 		treeView.selectable = false;
 		```
 
@@ -639,7 +639,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example disables virtual layouts:
 
-		```hx
+		```haxe
 		treeView.virtualLayout = false;
 		```
 
@@ -668,7 +668,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		The following example disables pointer selection:
 
-		```hx
+		```haxe
 		treeView.pointerSelectionEnabled = false;
 		```
 
@@ -687,14 +687,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the `TreeView` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		treeView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};

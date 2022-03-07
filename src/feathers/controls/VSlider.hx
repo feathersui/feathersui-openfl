@@ -23,7 +23,7 @@ import openfl.ui.Keyboard;
 	The following example sets the slider's range and listens for when the value
 	changes:
 
-	```hx
+	```haxe
 	var slider = new VSlider();
 	slider.minimum = 0.0;
 	slider.maximum = 100.0;

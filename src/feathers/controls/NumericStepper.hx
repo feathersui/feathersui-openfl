@@ -42,7 +42,7 @@ import openfl.ui.Multitouch;
 	The following example sets the stepper's range and listens for when
 	the value changes:
 
-	```hx
+	```haxe
 	var stepper = new NumericStepper();
 	stepper.minimum = 0.o;
 	stepper.maximum = 100.o;
@@ -153,7 +153,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, the value is changed to `12.0`:
 
-		```hx
+		```haxe
 		stepper.minimum = 0.0;
 		stepper.maximum = 100.0;
 		stepper.step = 1.0;
@@ -196,7 +196,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, the minimum is set to `-100.0`:
 
-		```hx
+		```haxe
 		stepper.minimum = -100.0;
 		stepper.maximum = 100.0;
 		stepper.step = 1.0;
@@ -232,7 +232,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, the maximum is set to `100.0`:
 
-		```hx
+		```haxe
 		stepper.minimum = 0.0;
 		stepper.maximum = 100.0;
 		stepper.step = 1.0;
@@ -270,7 +270,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, the step is changed to `1.0`:
 
-		```hx
+		```haxe
 		stepper.minimum = 0.0;
 		stepper.maximum = 100.0;
 		stepper.step = 1.0;
@@ -310,7 +310,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, the snap inverval is changed to `1.0`:
 
-		```hx
+		```haxe
 		stepper.minimum = 0.0;
 		stepper.maximum = 100.0;
 		stepper.step = 1.0;
@@ -346,7 +346,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		The following example disables editing:
 
-		```hx
+		```haxe
 		textInput.editable = false;
 		```
 
@@ -376,7 +376,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		In the following example, the stepper's value format function is
 		customized:
 
-		```hx
+		```haxe
 		stepper.valueFormatFunction = function(value:Float):String
 		{
 			return currencyFormatter.format(value, true);
@@ -409,7 +409,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		In the following example, the stepper's value parse function is
 		customized:
 
-		```hx
+		```haxe
 		stepper.valueParseFunction = (displayedText:String):Float
 		{
 			return currencyFormatter.parse(displayedText).value;
@@ -450,7 +450,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, a custom decrement button factory is provided:
 
-		```hx
+		```haxe
 		stepper.decrementButtonFactory = () ->
 		{
 			return new Button();
@@ -486,7 +486,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, a custom increment button factory is provided:
 
-		```hx
+		```haxe
 		stepper.incrementButtonFactory = () ->
 		{
 			return new Button();
@@ -522,7 +522,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		In the following example, a custom text input factory is provided:
 
-		```hx
+		```haxe
 		stepper.textInputFactory = () ->
 		{
 			return new TextInput();

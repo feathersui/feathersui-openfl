@@ -32,7 +32,7 @@ interface ILayoutObject extends IEventDispatcher {
 
 		In the following example, the object is excluded from the layout:
 
-		```hx
+		```haxe
 		object.includeInLayout = false;
 		```
 

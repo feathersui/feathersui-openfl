@@ -94,7 +94,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 		The following example sets the item renderer's secondary text:
 
-		```hx
+		```haxe
 		itemRenderer.secondaryText = "Click Me";
 		```
 
@@ -185,7 +185,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		In the following example, the item renderer's secondary text formatting
 		is customized:
 
-		```hx
+		```haxe
 		itemRenderer.secondaryTextFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -203,7 +203,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		In the following example, the item renderer's secondary disabled text
 		formatting is customized:
 
-		```hx
+		```haxe
 		itemRenderer.enabled = false;
 		itemRenderer.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -212,7 +212,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		provides a text format for the `ToggleButtonState.DISABLED(true)` state
 		that will be used instead of the disabled secondary text format:
 
-		```hx
+		```haxe
 		itemRenderer.disabledSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		itemRenderer.setSecondaryTextFormatForState(ToggleButtonState.DISABLED(true), new TextFormat("Helvetica", 20, 0xff0000));
 		```
@@ -236,7 +236,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		In the following example, the item renderer's selected secondary text
 		formatting is customized:
 
-		```hx
+		```haxe
 		itemRenderer.selected = true;
 		itemRenderer.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
 		```
@@ -245,7 +245,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		provides a text format for the `ToggleButtonState.DOWN(true)` state that
 		will be used instead of the selected secondary text format:
 
-		```hx
+		```haxe
 		itemRenderer.selectedSecondaryTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
 		itemRenderer.setSecondaryTextFormatForState(ToggleButtonState.DOWN(true), new TextFormat("Helvetica", 20, 0xcc0000));
 		```
@@ -270,7 +270,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		The following example passes a bitmap to use as an alternate background
 		skin:
 
-		```hx
+		```haxe
 		itemRenderer.alternateBackgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -304,7 +304,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 
 		The following example passes a button to use as the accessory view:
 
-		```hx
+		```haxe
 		itemRenderer.accessoryView = new Button("Info");
 		```
 	**/

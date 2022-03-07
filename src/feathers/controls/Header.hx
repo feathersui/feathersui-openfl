@@ -35,7 +35,7 @@ import flash.text.StyleSheet;
 	In the following example, a header is created, given a title, and a back
 	button:
 
-	```hx
+	```haxe
 	var header = new Header();
 	header.text = "I'm a header";
 
@@ -81,7 +81,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		The following example sets the header's text:
 
-		```hx
+		```haxe
 		header.text = "Good afternoon!";
 		```
 
@@ -137,7 +137,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		The following example sets the header's HTML text:
 
-		```hx
+		```haxe
 		header.htmlText = "<b>Hello</b> <i>World</i>";
 		```
 
@@ -168,7 +168,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		In the following example, the header's text formatting is customized:
 
-		```hx
+		```haxe
 		header.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -201,7 +201,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		In the following example, the header uses embedded fonts:
 
-		```hx
+		```haxe
 		header.embedFonts = true;
 		```
 
@@ -219,7 +219,7 @@ class Header extends FeathersControl implements ITextControl {
 		In the following example, the header's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		header.enabled = false;
 		header.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -240,7 +240,7 @@ class Header extends FeathersControl implements ITextControl {
 		The following example passes a bitmap for the header to use as a
 		background skin:
 
-		```hx
+		```haxe
 		header.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -259,7 +259,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		The following example gives the header a disabled background skin:
 
-		```hx
+		```haxe
 		header.disabledBackgroundSkin = new Bitmap(bitmapData);
 		header.enabled = false;
 		```
@@ -279,7 +279,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		In the following example, the header's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		header.paddingTop = 20.0;
 		```
 
@@ -297,7 +297,7 @@ class Header extends FeathersControl implements ITextControl {
 		In the following example, the header's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		header.paddingRight = 20.0;
 		```
 
@@ -315,7 +315,7 @@ class Header extends FeathersControl implements ITextControl {
 		In the following example, the header's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		header.paddingBottom = 20.0;
 		```
 
@@ -333,7 +333,7 @@ class Header extends FeathersControl implements ITextControl {
 		In the following example, the header's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		header.paddingLeft = 20.0;
 		```
 
@@ -351,7 +351,7 @@ class Header extends FeathersControl implements ITextControl {
 		The following example ensures that the gap is never smaller than 20
 		pixels:
 
-		```hx
+		```haxe
 		header.minGap = 20.0;
 		```
 
@@ -366,7 +366,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		The following example aligns the header's content to the top:
 
-		```hx
+		```haxe
 		header.verticalAlign = TOP;
 		```
 

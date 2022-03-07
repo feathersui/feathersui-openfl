@@ -138,7 +138,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		In the following example, the layout's requested row count is set to 2
 		complete items:
 
-		```hx
+		```haxe
 		layout.requestedRowCount = 2.0;
 		```
 
@@ -172,7 +172,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		In the following example, the layout's requested minimum row count is
 		set to 2 complete items:
 
-		```hx
+		```haxe
 		layout.requestedMinRowCount = 2.0;
 		```
 
@@ -207,7 +207,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		In the following example, the layout's requested maximum row count is
 		set to 5 complete items:
 
-		```hx
+		```haxe
 		layout.requestedMaxRowCount = 5.0;
 		```
 
@@ -238,7 +238,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		In the following example, the layout's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingTop = 20.0;
 		```
 
@@ -269,7 +269,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		In the following example, the layout's right padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingRight = 20.0;
 		```
 
@@ -300,7 +300,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		In the following example, the layout's bottom padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingBottom = 20.0;
 		```
 
@@ -331,7 +331,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		In the following example, the layout's left padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingLeft = 20.0;
 		```
 
@@ -365,7 +365,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		In the following example, the layout's gap is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.gap = 20.0;
 		```
 
@@ -399,7 +399,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		In the following example, the layout's minimum gap is set to 4 pixels:
 
-		```hx
+		```haxe
 		layout.minGap = 4.0;
 		```
 
@@ -435,7 +435,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		The following example aligns the container's content to the bottom:
 
-		```hx
+		```haxe
 		layout.verticalAlign = BOTTOM;
 		```
 

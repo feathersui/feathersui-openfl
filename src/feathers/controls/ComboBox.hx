@@ -52,7 +52,7 @@ import lime.ui.KeyCode;
 	the item renderer how to interpret the data, and listens for when the
 	selection changes:
 
-	```hx
+	```haxe
 	var comboBox = new ComboBox();
 
 	comboBox.dataProvider = new ArrayCollection([
@@ -203,7 +203,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		The following example passes in a data provider and tells the item
 		renderer how to interpret the data:
 
-		```hx
+		```haxe
 		comboBox.dataProvider = new ArrayCollection([
 			{ text: "Milk" },
 			{ text: "Eggs" },
@@ -375,7 +375,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		The following example sets the combo box's prompt:
 
-		```hx
+		```haxe
 		comboBox.prompt = "Select an item";
 		```
 
@@ -406,7 +406,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		In the following example, the pop-up list view uses a custom item
 		renderer class:
 
-		```hx
+		```haxe
 		comboBox.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
@@ -438,14 +438,14 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the `ListView` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		comboBox.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
@@ -464,13 +464,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		For example, consider the following item type:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		A custom implementation of `textToItem()` might look like this:
 
-		```hx
+		```haxe
 		comboBox.textToItem = (customText:String) -> {
 			return { text: customText };
 		};
@@ -492,7 +492,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		In the following example, a custom pop-up adapter is provided:
 
-		```hx
+		```haxe
 		comboBox.popUpAdapter = new DropDownPopUpAdapter();
 		```
 
@@ -558,7 +558,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		In the following example, a custom button factory is provided:
 
-		```hx
+		```haxe
 		comboBox.buttonFactory = () ->
 		{
 			return new Button();
@@ -593,7 +593,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		In the following example, a custom text input factory is provided:
 
-		```hx
+		```haxe
 		comboBox.textInputFactory = () ->
 		{
 			return new TextInput();
@@ -629,7 +629,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		In the following example, a custom list view factory is provided:
 
-		```hx
+		```haxe
 		comboBox.listViewFactory = () ->
 		{
 			return new ListView();
@@ -692,7 +692,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		The following example opens the pop-up list:
 
-		```hx
+		```haxe
 		if(!comboBox.open)
 		{
 			comboBox.openListView();
@@ -736,7 +736,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		The following example closes the pop-up list:
 
-		```hx
+		```haxe
 		if(comboBox.open)
 		{
 			comboBox.closeListView();

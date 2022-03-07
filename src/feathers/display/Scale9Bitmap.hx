@@ -21,7 +21,7 @@ import openfl.display.BitmapData;
 
 	The following example creates a bitmap with `scale9Grid`.
 
-	```hx
+	```haxe
 	var bitmap = new Scale9Bitmap(Assets.getBitmapData("myBitmap"), new Rectangle(4.0, 4.0, 16.0, 8.0));
 	```
 

@@ -128,7 +128,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 
 		The following example invalidates a component:
 
-		```hx
+		```haxe
 		component.setInvalid();
 		trace(component.isInvalid()); // true
 		```
@@ -177,7 +177,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 
 		The following example invalidates a component:
 
-		```hx
+		```haxe
 		component.setInvalid();
 		trace(component.isInvalid()); // true
 		```
@@ -300,7 +300,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 
 		The following example overrides updating after invalidation:
 
-		```hx
+		```haxe
 		override private function update():Void {
 			super.update();
 

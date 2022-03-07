@@ -42,7 +42,7 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column's header text is customized.
 
-		```hx
+		```haxe
 		column.headerText = "Name";
 		```
 
@@ -55,7 +55,7 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column's width is customized.
 
-		```hx
+		```haxe
 		column.width = 120.0;
 		```
 
@@ -71,7 +71,7 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column's minimum width is customized.
 
-		```hx
+		```haxe
 		column.minWidth = 120.0;
 		```
 
@@ -84,7 +84,7 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		In the following example, the column uses a custom cell renderer class:
 
-		```hx
+		```haxe
 		column.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomCellRenderer);
 		```
 
@@ -126,7 +126,7 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		The following example disables sorting of a column:
 
-		```hx
+		```haxe
 		column.defaultSortOrder = SortOrder.NONE;
 		```
 
@@ -145,14 +145,14 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the grid view cell should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		column.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};

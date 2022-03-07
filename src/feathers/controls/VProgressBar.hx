@@ -20,7 +20,7 @@ import openfl.events.Event;
 
 	The following example creates a progress bar:
 
-	```hx
+	```haxe
 	var progressBar = new VProgressBar();
 	progressBar.minimum = 0.0;
 	progressBar.maximum = 100.0;

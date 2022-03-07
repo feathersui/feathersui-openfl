@@ -39,7 +39,7 @@ import openfl.text.TextFieldType;
 	The following example sets the text in a text input, selects the text,
 	and listens for when the text value changes:
 
-	```hx
+	```haxe
 	var input = new TextInput();
 	input.text = "Hello World";
 	input.selectRange(0, input.text.length);
@@ -70,7 +70,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var input = new TextInput();
 		input.variant = Label.VARIANT_SEARCH;
 		```
@@ -128,7 +128,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example disables editing:
 
-		```hx
+		```haxe
 		textInput.editable = false;
 		```
 
@@ -158,7 +158,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example disables selection:
 
-		```hx
+		```haxe
 		textInput.editable = false;
 		textInput.selectable = false;
 		```
@@ -219,7 +219,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		The following example passes a bitmap for the text input to use as a
 		background skin:
 
-		```hx
+		```haxe
 		input.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -244,7 +244,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		The following example passes a bitmap for the text input to use as a
 		left view:
 
-		```hx
+		```haxe
 		input.leftView = new Bitmap(bitmapData);
 		```
 
@@ -261,7 +261,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example sets the left view's gap to 20 pixels:
 
-		```hx
+		```haxe
 		input.leftViewGap = 20.0;
 		```
 
@@ -283,7 +283,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		The following example passes a bitmap for the text input to use as a
 		right view:
 
-		```hx
+		```haxe
 		input.rightView = new Bitmap(bitmapData);
 		```
 
@@ -300,7 +300,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example sets the right view's gap to 20 pixels:
 
-		```hx
+		```haxe
 		input.rightViewGap = 20.0;
 		```
 
@@ -337,7 +337,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example sets the text input's text:
 
-		```hx
+		```haxe
 		input.text = "Good afternoon!";
 		```
 
@@ -420,7 +420,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example sets the text input's prompt:
 
-		```hx
+		```haxe
 		input.prompt = "Minimum 8 characters required";
 		```
 
@@ -454,7 +454,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		In the following example, the text input's allowed characters are
 		restricted:
 
-		```hx
+		```haxe
 		input.restrict = "0-9";
 		```
 
@@ -487,7 +487,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		In the following example, the text input's text is displayed as a
 		password:
 
-		```hx
+		```haxe
 		input.displayAsPassword = true;
 		```
 
@@ -526,7 +526,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example displays an error string:
 
-		```hx
+		```haxe
 		input.errorString = "Something is wrong";
 		```
 
@@ -569,7 +569,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		In the following example, the text input's formatting is customized:
 
-		```hx
+		```haxe
 		input.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -590,7 +590,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		In the following example, the text input's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		input.enabled = false;
 		input.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -607,7 +607,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		In the following example, the text input's prompt formatting is customized:
 
-		```hx
+		```haxe
 		input.promptTextFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -623,7 +623,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		In the following example, the text input uses embedded fonts:
 
-		```hx
+		```haxe
 		input.embedFonts = true;
 		```
 
@@ -643,7 +643,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		In the following example, the text input's top padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		input.paddingTop = 20.0;
 		```
 
@@ -661,7 +661,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		In the following example, the text input's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		input.paddingRight = 20.0;
 		```
 
@@ -679,7 +679,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		In the following example, the text input's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		input.paddingBottom = 20.0;
 		```
 
@@ -697,7 +697,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		In the following example, the text input's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		input.paddingLeft = 20.0;
 		```
 
@@ -714,7 +714,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example aligns the text input's content to the top:
 
-		```hx
+		```haxe
 		input.verticalAlign = TOP;
 		```
 
@@ -734,7 +734,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example changes the text input's scroll position:
 
-		```hx
+		```haxe
 		input.scrollX = 20.0;
 		```
 
@@ -840,7 +840,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example changes the text input's auto size behavior:
 
-		```hx
+		```haxe
 		input.autoSizeWidth = true;
 		```
 
@@ -968,7 +968,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		The following example selects the first three characters:
 
-		```hx
+		```haxe
 		input.selectRange(0, 3);
 		```
 

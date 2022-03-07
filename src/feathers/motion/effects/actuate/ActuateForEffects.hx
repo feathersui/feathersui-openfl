@@ -17,7 +17,7 @@ import motion.Actuate;
 	In the following example, a custom effect is created with
 	`ActuateForEffects` and `ActuateEffectContext`:
 
-	```hx
+	```haxe
 	var customFadeOutEffect = function(target:Dynamic):IEffectContext
 	{
 		var actuator = ActuateForEffects.tween(target, 1.0, {alpha: 0.0});

@@ -128,13 +128,13 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 
 		The following example selects the button:
 
-		```hx
+		```haxe
 		button.selected = true;
 		```
 
 		The following example listens for changes to the `selected` property:
 
-		```hx
+		```haxe
 		button.addEventListener(Event.CHANGE, (event:Event) -> {
 			trace("selected changed: " + button.selected)
 		});
@@ -177,7 +177,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 
 		The following example disables the ability to toggle on click or tap:
 
-		```hx
+		```haxe
 		button.toggleable = false;
 		```
 
@@ -217,7 +217,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		The following example ensures that the button's down state remains
 		active on roll out.
 
-		```hx
+		```haxe
 		button.keepDownStateOnRollOut = true;
 		```
 
@@ -233,7 +233,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		The following example passes a bitmap for the button to use as a
 		background skin:
 
-		```hx
+		```haxe
 		button.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -255,7 +255,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 
 		The following example gives the toggle button a default selected skin:
 
-		```hx
+		```haxe
 		button.selectedBackgroundSkin = new Bitmap(bitmapData);
 		```
 

@@ -33,7 +33,7 @@ import openfl.text.TextField;
 	The following example sets the text in a text area, selects the text, and
 	listens for when the text value changes:
 
-	```hx
+	```haxe
 	var textArea = new TextArea();
 	textArea.text = "Hello\nWorld"; //it's multiline!
 	textArea.selectRange(0, textArea.text.length);
@@ -127,7 +127,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		The following example disables editing:
 
-		```hx
+		```haxe
 		textArea.editable = false;
 		```
 
@@ -155,7 +155,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		The following example disables selection:
 
-		```hx
+		```haxe
 		textArea.selectable = false;
 		```
 
@@ -208,7 +208,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		The following example sets the text area's text:
 
-		```hx
+		```haxe
 		textArea.text = "Good afternoon!";
 		```
 
@@ -263,7 +263,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		The following example sets the text area's prompt:
 
-		```hx
+		```haxe
 		textArea.prompt = "Minimum 8 characters required";
 		```
 
@@ -297,7 +297,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		In the following example, the text area's allowed characters are
 		restricted:
 
-		```hx
+		```haxe
 		textArea.restrict = "0-9";
 		```
 
@@ -330,7 +330,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		In the following example, the text area's text is displayed as a
 		password:
 
-		```hx
+		```haxe
 		textArea.displayAsPassword = true;
 		```
 
@@ -369,7 +369,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		The following example displays an error string:
 
-		```hx
+		```haxe
 		texterror.errorString = "Something is wrong";
 		```
 
@@ -412,7 +412,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		In the following example, smooth scrolling is enabled:
 
-		```hx
+		```haxe
 		textArea.smoothScrolling = true;
 		```
 
@@ -428,7 +428,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		In the following example, the text area's formatting is customized:
 
-		```hx
+		```haxe
 		textArea.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -449,7 +449,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		In the following example, the text area's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		textArea.enabled = false;
 		textArea.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -466,7 +466,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		In the following example, the text area's prompt formatting is customized:
 
-		```hx
+		```haxe
 		textArea.promptTextFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -482,7 +482,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		In the following example, the text area uses embedded fonts:
 
-		```hx
+		```haxe
 		textArea.embedFonts = true;
 		```
 
@@ -499,7 +499,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		In the following example, the text area will not wrap its text:
 
-		```hx
+		```haxe
 		textArea.wordWrap = false;
 		```
 
@@ -515,7 +515,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		In the following example, the text padding is set to 20 pixels on the
 		top edge:
 
-		```hx
+		```haxe
 		textArea.textPaddingTop = 20.0;
 		```
 
@@ -531,7 +531,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		In the following example, the text padding is set to 20 pixels on the
 		right edge:
 
-		```hx
+		```haxe
 		textArea.textPaddingRight = 20.0;
 		```
 
@@ -547,7 +547,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		In the following example, the text padding is set to 20 pixels on the
 		bottom edge:
 
-		```hx
+		```haxe
 		textArea.textPaddingBottom = 20.0;
 		```
 
@@ -563,7 +563,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		In the following example, the text padding is set to 20 pixels on the
 		left edge:
 
-		```hx
+		```haxe
 		textArea.textPaddingLeft = 20.0;
 		```
 
@@ -764,7 +764,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		The following example selects the first three characters:
 
-		```hx
+		```haxe
 		input.selectRange(0, 3);
 		```
 

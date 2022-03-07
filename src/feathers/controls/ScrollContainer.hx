@@ -28,7 +28,7 @@ import openfl.geom.Point;
 	The following example creates a scroll container with a horizontal layout
 	and adds two buttons to it:
 
-	```hx
+	```haxe
 	var container = new ScrollContainer();
 	var layout = new HorizontalLayout();
 	layout.gap = 20.0;
@@ -84,7 +84,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 
 		The following example tells the group to use a vertical layout:
 
-		```hx
+		```haxe
 		var layout = new VerticalLayout();
 		layout.gap = 20.0;
 		layout.padding = 20.0;
@@ -154,7 +154,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		In the following example, the container will be sized to match the
 		stage:
 
-		```hx
+		```haxe
 		container.autoSizeMode = STAGE;
 		```
 

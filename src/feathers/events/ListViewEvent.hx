@@ -50,7 +50,7 @@ class ListViewEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		ListViewEvent.dispatch(component, ListViewEvent.ITEM_TRIGGER, state);
 		```
 

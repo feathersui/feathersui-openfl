@@ -40,7 +40,7 @@ import flash.globalization.LocaleID;
 	The following example creates a `CalendarGrid`, selects a date, and listens
 	for when the selection changes:
 
-	```hx
+	```haxe
 	var calendar = new CalendarGrid();
 
 	calendar.displayedFullYear = Date.now().getFullYear();
@@ -249,7 +249,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		The following example passes a bitmap for the calendar to use as a
 		background skin:
 
-		```hx
+		```haxe
 		calendar.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -268,7 +268,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 
 		The following example gives the calendar a disabled background skin:
 
-		```hx
+		```haxe
 		calendar.disabledBackgroundSkin = new Bitmap(bitmapData);
 		calendar.enabled = false;
 		```

@@ -157,7 +157,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 
 		The following example gives the group a selected background skin:
 
-		```hx
+		```haxe
 		group.selectedBackgroundSkin = new Bitmap(bitmapData);
 		group.selected = true;
 		```
@@ -178,7 +178,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 		The following example passes a bitmap to use as an alternate background
 		skin:
 
-		```hx
+		```haxe
 		itemRenderer.alternateBackgroundSkin = new Bitmap(bitmapData);
 		```
 

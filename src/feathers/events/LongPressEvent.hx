@@ -53,7 +53,7 @@ class LongPressEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		LongPressEvent.dispatchFromMouseEvent(component, event);
 		```
 
@@ -75,7 +75,7 @@ class LongPressEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		LongPressEvent.dispatchFromTouchEvent(component, event);
 		```
 

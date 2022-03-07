@@ -35,7 +35,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is centered
 		both horizontally and vertically within the container's bounds:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -61,7 +61,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children fills the
 		container's bounds:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -89,7 +89,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children fills the
 		container's width:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -115,7 +115,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children fills the
 		container's height:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -141,7 +141,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's top-left corner:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -167,7 +167,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's top-center edge:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -193,7 +193,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's top-right corner:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -219,7 +219,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's middle-left edge:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -245,7 +245,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's middle-right edge:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -271,7 +271,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's bottom-left corner:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -297,7 +297,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's bottom-center edge:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -323,7 +323,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is aligned to
 		the container's bottom-right corner:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -368,7 +368,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is anchored 10
 		pixels from the top edge of the container:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -416,7 +416,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is anchored 10
 		pixels from the right edge of the container:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -464,7 +464,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is anchored 10
 		pixels from the bottom edge of the container:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -512,7 +512,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is anchored 10
 		pixels from the left edge of the container:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -561,7 +561,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is centered
 		horizontally within the container's bounds:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 
@@ -602,7 +602,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children is centered
 		vertically within the container's bounds:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new AnchorLayout();
 

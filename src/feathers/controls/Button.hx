@@ -43,7 +43,7 @@ import flash.text.StyleSheet;
 	The following example creates a button, gives it a label and listens
 	for when the button is triggered:
 
-	```hx
+	```haxe
 	var button = new Button();
 	button.text = "Click Me";
 	button.addEventListener(TriggerEvent.TRIGGER, (event) -> {
@@ -67,7 +67,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var button = new Button();
 		button.variant = Button.VARIANT_PRIMARY;
 		```
@@ -86,7 +86,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var button = new Button();
 		button.variant = Button.VARIANT_DANGER;
 		```
@@ -133,7 +133,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example sets the button's text:
 
-		```hx
+		```haxe
 		button.text = "Click Me";
 		```
 
@@ -169,7 +169,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example sets the button's HTML text:
 
-		```hx
+		```haxe
 		button.htmlText = "<b>Hello</b> <i>World</i>";
 		```
 
@@ -212,7 +212,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		In the following example, the button's text formatting is customized:
 
-		```hx
+		```haxe
 		button.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -248,7 +248,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		In the following example, the button's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		button.enabled = false;
 		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -265,7 +265,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		In the following example, the button uses embedded fonts:
 
-		```hx
+		```haxe
 		button.embedFonts = true;
 		```
 
@@ -281,7 +281,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		In the following example, the button's text wraps at 150 pixels:
 
-		```hx
+		```haxe
 		button.width = 150.0;
 		button.wordWrap = true;
 		```
@@ -306,14 +306,14 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example gives the button an icon:
 
-		```hx
+		```haxe
 		button.icon = new Bitmap(bitmapData);
 		```
 
 		To change the position of the icon relative to the button's text, see
 		`iconPosition` and `gap`.
 
-		```hx
+		```haxe
 		button.icon = new Bitmap(bitmapData);
 		button.iconPosition = RIGHT;
 		button.gap = 20.0;
@@ -335,7 +335,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		In the following example, the button's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		button.paddingTop = 20.0;
 		```
 
@@ -351,7 +351,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		In the following example, the button's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		button.paddingRight = 20.0;
 		```
 
@@ -367,7 +367,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		In the following example, the button's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		button.paddingBottom = 20.0;
 		```
 
@@ -383,7 +383,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		In the following example, the button's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		button.paddingLeft = 20.0;
 		```
 
@@ -398,7 +398,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example aligns the button's content to the left:
 
-		```hx
+		```haxe
 		button.verticalAlign = LEFT;
 		```
 
@@ -418,7 +418,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example aligns the button's content to the top:
 
-		```hx
+		```haxe
 		button.verticalAlign = TOP;
 		```
 
@@ -437,7 +437,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		The following example positions the icon to the right of the text:
 
-		```hx
+		```haxe
 		button.text = "Click Me";
 		button.icon = new Bitmap(texture);
 		button.iconPosition = RIGHT;
@@ -462,7 +462,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		The following example creates a gap of 20 pixels between the icon and
 		the text:
 
-		```hx
+		```haxe
 		button.text = "Click Me";
 		button.icon = new Bitmap(bitmapData);
 		button.gap = 20.0;
@@ -484,7 +484,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		The following example ensures that the gap is never smaller than 20
 		pixels:
 
-		```hx
+		```haxe
 		button.gap = Math.POSITIVE_INFINITY;
 		button.minGap = 20.0;
 		```
@@ -505,7 +505,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		The following example offsets the x position of the button's icon by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.iconOffsetX = 20.0;
 		```
 
@@ -525,7 +525,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		The following example offsets the y position of the button's icon by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.iconOffsetY = 20.0;
 		```
 
@@ -546,7 +546,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		The following example offsets the x position of the button's text by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.textOffsetX = 20.0;
 		```
 
@@ -567,7 +567,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		The following example offsets the y position of the button's text by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.textOffsetY = 20.0;
 		```
 

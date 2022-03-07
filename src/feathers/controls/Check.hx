@@ -18,7 +18,7 @@ import openfl.events.Event;
 	In the following example, a check is created and selected, and a listener
 	for `Event.CHANGE` is added:
 
-	```hx
+	```haxe
 	var check = new Check();
 	check.text = "Pick Me!";
 	check.selected = true;

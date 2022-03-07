@@ -50,7 +50,7 @@ class DatePickerEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		DatePickerEvent.dispatch(component, DatePickerEvent.ITEM_TRIGGER, state);
 		```
 

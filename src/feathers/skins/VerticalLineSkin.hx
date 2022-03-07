@@ -36,7 +36,7 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 
 		The following example aligns the line to the left:
 
-		```hx
+		```haxe
 		skin.verticalAlign = LEFT;
 		```
 

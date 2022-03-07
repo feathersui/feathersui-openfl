@@ -19,7 +19,7 @@ interface IGridViewColumn {
 
 		In the following example, the column's width is customized.
 
-		```hx
+		```haxe
 		column.width = 120.0;
 		```
 
@@ -35,7 +35,7 @@ interface IGridViewColumn {
 
 		In the following example, the column's minimum width is customized.
 
-		```hx
+		```haxe
 		column.minWidth = 120.0;
 		```
 

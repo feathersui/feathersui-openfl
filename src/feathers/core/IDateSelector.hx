@@ -23,20 +23,20 @@ interface IDateSelector {
 
 		The following example selects a specific date:
 
-		```hx
+		```haxe
 		control.selectedDate = Date.now();
 		```
 
 		The following example clears the currently selected date:
 
-		```hx
+		```haxe
 		control.selectedDate = null;
 		```
 
 		The following example listens for when the selection of a calendar
 		component changes, and it requests the new selected index:
 
-		```hx
+		```haxe
 		var datePicker = new DatePicker();
 		function changeHandler(event:Event):Void
 		{

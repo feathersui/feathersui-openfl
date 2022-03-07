@@ -71,7 +71,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the value is changed to `12.0`:
 
-		```hx
+		```haxe
 		scrollBar.minimum = 0.0;
 		scrollBar.maximum = 100.0;
 		scrollBar.step = 1.0;
@@ -117,7 +117,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the minimum is set to `-100.0`:
 
-		```hx
+		```haxe
 		scrollBar.minimum = -100.0;
 		scrollBar.maximum = 100.0;
 		scrollBar.step = 1.0;
@@ -153,7 +153,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the maximum is set to `100.0`:
 
-		```hx
+		```haxe
 		scrollBar.minimum = 0.0;
 		scrollBar.maximum = 100.0;
 		scrollBar.step = 1.0;
@@ -190,7 +190,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the step is changed to `1.0`:
 
-		```hx
+		```haxe
 		scrollBar.minimum = 0.0;
 		scrollBar.maximum = 100.0;
 		scrollBar.step = 1.0;
@@ -230,7 +230,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the snap inverval is changed to `1.0`:
 
-		```hx
+		```haxe
 		slider.minimum = 0.0;
 		slider.maximum = 100.0;
 		slider.step = 1.0;
@@ -270,7 +270,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the page is changed to `10.0`:
 
-		```hx
+		```haxe
 		scrollBar.minimum = 0.0;
 		scrollBar.maximum = 100.0;
 		scrollBar.step = 1.0;
@@ -309,7 +309,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, live dragging is disabled:
 
-		```hx
+		```haxe
 		scrollBar.liveDragging = false;
 		```
 
@@ -327,7 +327,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, a thumb skin is passed to the scroll bar:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		scrollBar.thumbSkin = skin;
@@ -348,7 +348,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, a track skin is passed to the scroll bar:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		scrollBar.trackSkin = skin;
@@ -377,7 +377,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		In the following example, a track skin and a secondary track skin are
 		passed to the scroll bar:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xaaaaaa);
 		scrollBar.trackSkin = skin;
@@ -402,7 +402,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 		In the following example, the thumb size is fixed:
 
-		```hx
+		```haxe
 		scrollBar.fixedThumbSize = true;
 		```
 
@@ -418,7 +418,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		In the following example, the scroll bar's top padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		scrollBar.paddingTop = 20.0;
 		```
 
@@ -438,7 +438,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		In the following example, the scroll bar's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		scrollBar.paddingRight = 20.0;
 		```
 
@@ -458,7 +458,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		In the following example, the scroll bar's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		scrollBar.paddingBottom = 20.0;
 		```
 
@@ -478,7 +478,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		In the following example, the scroll bar's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		scrollBar.paddingLeft = 20.0;
 		```
 
@@ -498,7 +498,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		In the following example, the scroll bar's thumb is hidden when the
 		scroll bar is disabled:
 
-		```hx
+		```haxe
 		scrollBar.hideThumbWhenDisabled = true;
 		```
 

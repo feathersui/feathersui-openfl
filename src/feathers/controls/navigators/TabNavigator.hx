@@ -33,7 +33,7 @@ import openfl.events.Event;
 
 	The following example creates a tab navigator and adds some items:
 
-	```hx
+	```haxe
 	var navigator = new TabNavigator();
 	navigator.dataProvider = new ArrayCollection([
 		TabItem.withClass("Home", HomeView),
@@ -321,7 +321,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		In the following example, a custom tab bar factory is provided:
 
-		```hx
+		```haxe
 		navigator.tabBarFactory = () ->
 		{
 			return new TabBar();

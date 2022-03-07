@@ -63,7 +63,7 @@ import openfl.ui.Multitouch;
 	the item renderer how to interpret the data, and listens for when the
 	selection changes:
 
-	```hx
+	```haxe
 	var groupListView = new GroupListView();
 
 	groupListView.dataProvider = new TreeCollection([
@@ -148,7 +148,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var groupListView = new GroupListView();
 		groupListView.variant = GroupListView.VARIANT_BORDERLESS;
 		```
@@ -165,7 +165,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var groupListView = new GroupListView();
 		groupListView.variant = GroupListView.VARIANT_BORDER;
 		```
@@ -267,7 +267,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		The following example passes in a data provider and tells the item
 		renderer how to interpret the data:
 
-		```hx
+		```haxe
 		groupListView.dataProvider = new TreeCollection([
 			new TreeNode({text: "Group A"}, [
 				new TreeNode({text: "Node A1"}),
@@ -349,20 +349,20 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		The following example selects a specific location:
 
-		```hx
+		```haxe
 		groupListView.selectedLocation = [2, 0];
 		```
 
 		The following example clears the currently selected location:
 
-		```hx
+		```haxe
 		groupListView.selectedLocation = null;
 		```
 
 		The following example listens for when the selection changes, and it
 		prints the new selected location to the debug console:
 
-		```hx
+		```haxe
 		var groupListView = new GroupListView();
 		function changeHandler(event:Event):Void
 		{
@@ -440,7 +440,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		The following example tells the group list view to use a horizontal
 		layout:
 
-		```hx
+		```haxe
 		var layout = new HorizontalListLayout();
 		layout.gap = 20.0;
 		layout.padding = 20.0;
@@ -490,7 +490,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		In the following example, the group list view uses a custom item
 		renderer class:
 
-		```hx
+		```haxe
 		groupListView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
@@ -520,7 +520,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		In the following example, the group list view uses a custom header
 		renderer class:
 
-		```hx
+		```haxe
 		groupListView.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
 		```
 
@@ -559,7 +559,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		The following example provides an `itemRendererRecyclerIDFunction`:
 
-		```hx
+		```haxe
 		var regularItemRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
 		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
 
@@ -610,7 +610,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		The following example provides an `headerRendererRecyclerIDFunction`:
 
-		```hx
+		```haxe
 		var regularHeaderRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
 		var firstHeaderRecycler = DisplayObjectRecycler.withClass(MyCustomHeaderRenderer);
 
@@ -676,7 +676,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		The following example disables selection of items in the group list
 		view:
 
-		```hx
+		```haxe
 		groupListView.selectable = false;
 		```
 
@@ -711,7 +711,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		The following example disables virtual layouts:
 
-		```hx
+		```haxe
 		groupListView.virtualLayout = false;
 		```
 
@@ -740,7 +740,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		The following example disables pointer selection:
 
-		```hx
+		```haxe
 		groupListView.pointerSelectionEnabled = false;
 		```
 
@@ -758,14 +758,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the `GroupListView` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		groupListView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
@@ -784,14 +784,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Section" }
 		```
 
 		If the `GroupListView` should display the text "Example Item", a custom
 		implementation of `itemToHeaderText()` might look like this:
 
-		```hx
+		```haxe
 		groupListView.itemToHeaderText = (item:Dynamic) -> {
 			return item.text;
 		};

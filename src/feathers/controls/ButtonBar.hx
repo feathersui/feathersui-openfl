@@ -42,7 +42,7 @@ import openfl._internal.utils.ObjectPool;
 	The following example sets the data provider, tells the buttons how to
 	interpret the data, and listens for when a button is triggered:
 
-	```hx
+	```haxe
 	var buttonBar = new ButtonBar();
 	buttonBar.dataProvider = new ArrayCollection([
 		{ text: "Latest Posts" },
@@ -131,7 +131,7 @@ class ButtonBar extends FeathersControl {
 		The following example passes in a data provider and tells the buttons
 		how to interpret the data:
 
-		```hx
+		```haxe
 		buttonBar.dataProvider = new ArrayCollection([
 			{ text: "Latest Posts" },
 			{ text: "Profile" },
@@ -195,7 +195,7 @@ class ButtonBar extends FeathersControl {
 
 		In the following example, the button bar uses a custom button renderer class:
 
-		```hx
+		```haxe
 		buttonBar.buttonRecycler = DisplayObjectRecycler.withClass(Button);
 		```
 
@@ -230,7 +230,7 @@ class ButtonBar extends FeathersControl {
 
 		The following example provides an `buttonRecyclerIDFunction`:
 
-		```hx
+		```haxe
 		var regularButtonRecycler = DisplayObjectRecycler.withClass(Button);
 		var firstButtonRecycler = DisplayObjectRecycler.withClass(MyCustomButton);
 
@@ -284,14 +284,14 @@ class ButtonBar extends FeathersControl {
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the `ButtonBar` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		buttonBar.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
@@ -312,7 +312,7 @@ class ButtonBar extends FeathersControl {
 
 		The following example tells the button bar to use a custom layout:
 
-		```hx
+		```haxe
 		var layout = new HorizontalDistributedLayout();
 		layout.maxItemWidth = 300.0;
 		buttonBar.layout = layout;
@@ -332,7 +332,7 @@ class ButtonBar extends FeathersControl {
 		The following example passes a bitmap for the button bar to use as a
 		background skin:
 
-		```hx
+		```haxe
 		buttonBar.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -351,7 +351,7 @@ class ButtonBar extends FeathersControl {
 
 		The following example gives the button bar a disabled background skin:
 
-		```hx
+		```haxe
 		buttonBar.disabledBackgroundSkin = new Bitmap(bitmapData);
 		buttonBar.enabled = false;
 		```

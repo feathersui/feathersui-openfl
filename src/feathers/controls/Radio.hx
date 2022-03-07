@@ -24,7 +24,7 @@ import openfl.ui.Keyboard;
 	In the following example, a set of radios are created, along with a
 	`ToggleGroup` to group them together:
 
-	```hx
+	```haxe
 	var group = new ToggleGroup();
 	group.addEventListener(Event.CHANGE, group_changeHandler);
 

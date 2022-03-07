@@ -27,7 +27,7 @@ import openfl.display.DisplayObject;
 	will pop the view from its history stack and return navigate to the previous
 	view.
 
-	```hx
+	```haxe
 	var item = StackItem.withClass("settings", SettingsScreen, [
 		SettingsScreen.SHOW_ADVANCED_SETTINGS => StackActions.Push("advancedSettings"),
 		Event.COMPLETE => StackActions.Pop()
@@ -115,7 +115,7 @@ class StackItem {
 		In the following example, the stack navigator item is given a push
 		transition:
 
-		```hx
+		```haxe
 		item.pushTransition = Slide.createSlideLeftTransition();
 		```
 
@@ -125,7 +125,7 @@ class StackItem {
 
 		A custom transition function should have the following signature:
 
-		```hx
+		```haxe
 		(DisplayObject, DisplayObject) -> IEffectContext
 		```
 
@@ -153,7 +153,7 @@ class StackItem {
 		In the following example, the stack navigator item is given a push
 		transition:
 
-		```hx
+		```haxe
 		item.popTransition = Slide.createSlideRightTransition();
 		```
 
@@ -163,7 +163,7 @@ class StackItem {
 
 		A custom transition function should have the following signature:
 
-		```hx
+		```haxe
 		(DisplayObject, DisplayObject) -> IEffectContext
 		```
 

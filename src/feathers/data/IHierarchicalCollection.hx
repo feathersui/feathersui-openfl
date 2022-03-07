@@ -63,7 +63,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		The following example filters a collection of strings by searching for
 		a substring at the beginning:
 
-		```hx
+		```haxe
 		collection.filterFunction = (a:String) =>
 		{
 			return StringTools.startsWith(a.toLowerCase(), "john");
@@ -88,7 +88,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example sorts a collection of `Float` values:
 
-		```hx
+		```haxe
 		collection.sortCompareFunction = (a:Float, b:Float) =>
 		{
 			if (a > b) {
@@ -111,7 +111,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example gets an item from a specific location:
 
-		```hx
+		```haxe
 		var location = [2, 0];
 		var item = collection.get(location);
 		```
@@ -119,7 +119,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		The following example iterates over the items at the root of a
 		collection:
 
-		```hx
+		```haxe
 		for(i in 0...collection.getLength()) {
 			var location = [i];
 			var item = collection.get(i);
@@ -136,7 +136,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example replaces an item in a collection:
 
-		```hx
+		```haxe
 		var location = [2, 0];
 		collection.set(location, object);
 		```
@@ -154,7 +154,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		The following example iterates over the items at the root of a
 		collection:
 
-		```hx
+		```haxe
 		for(i in 0...collection.getLength()) {
 			var location = [i];
 			var item = collection.get(location);
@@ -171,7 +171,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example gets the location of an item in the collection:
 
-		```hx
+		```haxe
 		var item = { text: "New Item" };
 		collection.addAt(item, [0]);
 
@@ -187,7 +187,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example checks if a collection contains an item:
 
-		```hx
+		```haxe
 		var item = { text: "New Item" };
 		collection.addAt(item, [0]);
 
@@ -204,7 +204,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		The following example iterates over the items at the root of a
 		collection and prints the locations of branches to the debug console:
 
-		```hx
+		```haxe
 		for(i in 0...collection.getLength()) {
 			var location = [i];
 			var item = collection.get(location);
@@ -222,7 +222,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		Adds an item to the collection at the specified location, increasing the
 		the length of the parent branch by one.
 
-		```hx
+		```haxe
 		var location = [2, 0];
 		var item = { text: "New Item" };
 		collection.addAt(item, location);
@@ -237,7 +237,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 	/**
 		Removes an item from the collection.
 
-		```hx
+		```haxe
 		var location = [2, 0];
 		var item = { text: "New Item" };
 		collection.addAt(item, location);
@@ -254,7 +254,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		Removes an item from the collection at the specified location,
 		decreasing the length of the parent branch by one.
 
-		```hx
+		```haxe
 		var location = [2, 0];
 		var item = { text: "New Item" };
 		collection.addAt(item, location);
@@ -274,7 +274,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example removes all items from a collection:
 
-		```hx
+		```haxe
 		collection.removeAll();
 		```
 
@@ -290,7 +290,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example updates an item in the collection:
 
-		```hx
+		```haxe
 		var location = [2, 0];
 		collection.updateAt(location);
 		```
@@ -308,7 +308,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 
 		The following example updates all items in the collection:
 
-		```hx
+		```haxe
 		collection.updateAll();
 		```
 

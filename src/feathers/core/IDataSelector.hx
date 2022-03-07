@@ -23,7 +23,7 @@ interface IDataSelector<T> {
 
 		The following example changes the selected item:
 
-		```hx
+		```haxe
 		list.selectedItem = newItem;
 		```
 
@@ -32,14 +32,14 @@ interface IDataSelector<T> {
 
 		The following example clears the currently selected item:
 
-		```hx
+		```haxe
 		control.selectedItem = null;
 		```
 
 		The following example listens for when the selection of a `ListView`
 		component changes, and it requests the new selected index:
 
-		```hx
+		```haxe
 		var listView = new ListView();
 		function changeHandler(event:Event):Void
 		{

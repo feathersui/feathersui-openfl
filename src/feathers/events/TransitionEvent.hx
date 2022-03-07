@@ -74,7 +74,7 @@ class TransitionEvent extends FeathersEvent {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		TransitionEvent.dispatch(component, Event.CHANGE, "prev-view", "next-view");
 		```
 

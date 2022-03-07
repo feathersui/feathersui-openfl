@@ -66,7 +66,7 @@ import openfl._internal.utils.ObjectPool;
 	the item renderer how to interpret the data, and listens for when the
 	selection changes:
 
-	```hx
+	```haxe
 	var listView = new ListView();
 
 	listView.dataProvider = new ArrayCollection([
@@ -114,7 +114,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var listView = new ListView();
 		listView.variant = ListView.VARIANT_BORDERLESS;
 		```
@@ -131,7 +131,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var listView = new ListView();
 		listView.variant = ListView.VARIANT_BORDER;
 		```
@@ -147,7 +147,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var listView = new ListView();
 		listView.variant = ListView.VARIANT_POP_UP;
 		```
@@ -262,7 +262,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		The following example passes in a data provider and tells the item
 		renderer how to interpret the data:
 
-		```hx
+		```haxe
 		listView.dataProvider = new ArrayCollection([
 			{ text: "Milk" },
 			{ text: "Eggs" },
@@ -429,7 +429,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		In the following example, multiple selection is enabled:
 
-		```hx
+		```haxe
 		listView.allowMultipleSelection = true;
 		```
 
@@ -577,7 +577,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example tells the list view to use a horizontal layout:
 
-		```hx
+		```haxe
 		var layout = new HorizontalListLayout();
 		layout.gap = 20.0;
 		layout.padding = 20.0;
@@ -611,7 +611,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		In the following example, the list view uses a custom item renderer
 		class:
 
-		```hx
+		```haxe
 		listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
@@ -647,7 +647,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example provides an `itemRendererRecyclerIDFunction`:
 
-		```hx
+		```haxe
 		var regularItemRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
 		var firstItemRecycler = DisplayObjectRecycler.withClass(MyCustomItemRenderer);
 
@@ -705,7 +705,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example disables selection of items in the list view:
 
-		```hx
+		```haxe
 		listView.selectable = false;
 		```
 
@@ -740,7 +740,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example disables virtual layouts:
 
-		```hx
+		```haxe
 		listView.virtualLayout = false;
 		```
 
@@ -769,7 +769,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		The following example disables pointer selection:
 
-		```hx
+		```haxe
 		listView.pointerSelectionEnabled = false;
 		```
 
@@ -790,14 +790,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the `ListView` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};

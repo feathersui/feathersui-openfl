@@ -86,7 +86,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 
 		The following example replaces the data source with a new array:
 
-		```hx
+		```haxe
 		collection.array = [];
 		```
 

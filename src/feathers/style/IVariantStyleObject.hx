@@ -29,7 +29,7 @@ interface IVariantStyleObject extends IStyleObject {
 
 		The following example sets the variant of a `Label` component:
 
-		```hx
+		```haxe
 		var label = new Label();
 		label.variant = Label.VARIANT_HEADING;
 		```

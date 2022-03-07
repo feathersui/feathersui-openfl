@@ -52,7 +52,7 @@ import lime.ui.KeyCode;
 	the item renderer how to interpret the data, and listens for when the
 	selection changes:
 
-	```hx
+	```haxe
 	var listView = new PopUpListView();
 
 	listView.dataProvider = new ArrayCollection([
@@ -183,7 +183,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		The following example passes in a data provider and tells the item
 		renderer how to interpret the data:
 
-		```hx
+		```haxe
 		listView.dataProvider = new ArrayCollection([
 			{ text: "Milk" },
 			{ text: "Eggs" },
@@ -312,7 +312,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		The following example sets the pop-up list view's prompt:
 
-		```hx
+		```haxe
 		listView.prompt = "Select an item";
 		```
 
@@ -343,7 +343,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		In the following example, the pop-up list view uses a custom item
 		renderer class:
 
-		```hx
+		```haxe
 		listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
@@ -373,14 +373,14 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the `ListView` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		listView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
@@ -397,7 +397,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		In the following example, a custom pop-up adapter is provided:
 
-		```hx
+		```haxe
 		comboBox.popUpAdapter = new DropDownPopUpAdapter();
 		```
 
@@ -447,7 +447,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		In the following example, a custom button factory is provided:
 
-		```hx
+		```haxe
 		listView.buttonFactory = () ->
 		{
 			return new Button();
@@ -483,7 +483,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		In the following example, a custom list view factory is provided:
 
-		```hx
+		```haxe
 		listView.listViewFactory = () ->
 		{
 			return new ListView();
@@ -535,7 +535,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		The following example opens the pop-up list:
 
-		```hx
+		```haxe
 		if(!listView.open)
 		{
 			listView.openListView();
@@ -585,7 +585,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		The following example closes the pop-up list:
 
-		```hx
+		```haxe
 		if(listView.open)
 		{
 			listView.closeListView();

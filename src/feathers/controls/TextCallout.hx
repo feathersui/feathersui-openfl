@@ -26,7 +26,7 @@ import flash.text.StyleSheet;
 	In the following example, a text callout is shown when a `Button` is
 	triggered:
 
-	```hx
+	```haxe
 	function button_triggerHandler(event:TriggerEvent):Void
 	{
 		var button = cast(event.currentTarget, Button);
@@ -51,7 +51,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		callout.variant = TextCallout.VARIANT_DANGER;
 		```
 
@@ -68,7 +68,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 		In the following example, a text callout is shown when a `Button` is
 		triggered:
 
-		```hx
+		```haxe
 		function button_triggerHandler(event:TriggerEvent):Void
 		{
 			var button = cast(event.currentTarget, Button);
@@ -112,7 +112,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 
 		The following example creates a text callout and changes its text:
 
-		```hx
+		```haxe
 		var callout = TextCallout.show("Good morning!", origin);
 		callout.text = "Good afternoon!";
 		```
@@ -143,7 +143,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 
 		The following example sets the callout's HTML text:
 
-		```hx
+		```haxe
 		callout.htmlText = "<b>Hello</b> <i>World</i>";
 		```
 
@@ -186,7 +186,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 
 		In the following example, the text callout's formatting is customized:
 
-		```hx
+		```haxe
 		callout.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -219,7 +219,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 
 		In the following example, the callout uses embedded fonts:
 
-		```hx
+		```haxe
 		callout.embedFonts = true;
 		```
 
@@ -237,7 +237,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 		In the following example, the text callout's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		callout.enabled = false;
 		callout.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```

@@ -33,7 +33,7 @@ interface IUIControl extends IDisplayObject {
 
 		The following example disables a component:
 
-		```hx
+		```haxe
 		component.enabled = false;
 		```
 
@@ -47,7 +47,7 @@ interface IUIControl extends IDisplayObject {
 
 		The following example sets a tool tip:
 
-		```hx
+		```haxe
 		component.toolTip = "Description of component";
 		```
 

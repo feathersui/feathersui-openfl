@@ -49,7 +49,7 @@ import openfl._internal.utils.ObjectPool;
 	interpret the data, selects the second tab, and listens for when the
 	selection changes:
 
-	```hx
+	```haxe
 	var tabs = new TabBar();
 	tabs.dataProvider = new ArrayCollection([
 		{ text: "Latest Posts" },
@@ -150,7 +150,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		The following example passes in a data provider and tells the tabs how
 		to interpret the data:
 
-		```hx
+		```haxe
 		tabBar.dataProvider = new ArrayCollection([
 			{ text: "Latest Posts" },
 			{ text: "Profile" },
@@ -312,7 +312,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		In the following example, the tab bar uses a custom tab renderer class:
 
-		```hx
+		```haxe
 		tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton);
 		```
 
@@ -347,7 +347,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		The following example provides an `tabRecyclerIDFunction`:
 
-		```hx
+		```haxe
 		var regularTabRecycler = DisplayObjectRecycler.withClass(ToggleButton);
 		var firstTabRecycler = DisplayObjectRecycler.withClass(MyCustomToggleButton);
 
@@ -401,14 +401,14 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		For example, consider the following item:
 
-		```hx
+		```haxe
 		{ text: "Example Item" }
 		```
 
 		If the `TabBar` should display the text "Example Item", a custom
 		implementation of `itemToText()` might look like this:
 
-		```hx
+		```haxe
 		tabBar.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
@@ -429,7 +429,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		The following example tells the tab bar to use a custom layout:
 
-		```hx
+		```haxe
 		var layout = new HorizontalDistributedLayout();
 		layout.maxItemWidth = 300.0;
 		tabBar.layout = layout;
@@ -449,7 +449,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		The following example passes a bitmap for the tab bar to use as a
 		background skin:
 
-		```hx
+		```haxe
 		tabBar.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -468,7 +468,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 		The following example gives the tab bar a disabled background skin:
 
-		```hx
+		```haxe
 		tabBar.disabledBackgroundSkin = new Bitmap(bitmapData);
 		tabBar.enabled = false;
 		```

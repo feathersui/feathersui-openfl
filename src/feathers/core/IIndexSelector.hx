@@ -23,20 +23,20 @@ interface IIndexSelector {
 
 		The following example selects a specific index:
 
-		```hx
+		```haxe
 		control.selectedIndex = 2;
 		```
 
 		The following example clears the currently selected index:
 
-		```hx
+		```haxe
 		control.selectedIndex = -1;
 		```
 
 		The following example listens for when the selection of a `ListView`
 		component changes, and it requests the new selected index:
 
-		```hx
+		```haxe
 		var listView = new ListView();
 		function changeHandler(event:Event):Void
 		{

@@ -72,7 +72,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		The following example sets the form item's text:
 
-		```hx
+		```haxe
 		formItem.text = "Address";
 		```
 
@@ -112,7 +112,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		The following example sets the label's HTML text:
 
-		```hx
+		```haxe
 		label.htmlText = "<b>Hello</b> <i>World</i>";
 		```
 
@@ -165,7 +165,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		The following example sets the form item's content:
 
-		```hx
+		```haxe
 		var nameInput = new TextInput();
 		nameInput.prompt = "First and last name";
 		formItem.content = nameInput;
@@ -197,7 +197,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		In the following example, the form item's text is selectable:
 
-		```hx
+		```haxe
 		formItem.selectable = true;
 		```
 
@@ -264,7 +264,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		In the following example, the form item is required:
 
-		```hx
+		```haxe
 		formItem.required = true;
 		```
 
@@ -294,7 +294,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		In the following example, the form item does not submit when pressing
 		the enter key:
 
-		```hx
+		```haxe
 		formItem.submitOnEnterEnabled = false;
 		```
 
@@ -310,7 +310,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		In the following example, the form item's required skin is set to a bitmap:
 
-		```hx
+		```haxe
 		formItem.requiredSkin = new Bitmap(bitmapData);
 		```
 
@@ -326,7 +326,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		In the following example, the form item's text formatting is customized:
 
-		```hx
+		```haxe
 		formItem.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -361,7 +361,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		In the following example, the form item's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		formItem.enabled = false;
 		formItem.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -378,7 +378,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		In the following example, the form item uses embedded fonts:
 
-		```hx
+		```haxe
 		formItem.embedFonts = true;
 		```
 
@@ -396,7 +396,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		In the following example, the form item's top padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		formItem.paddingTop = 20.0;
 		```
 
@@ -414,7 +414,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		In the following example, the form item's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		formItem.paddingRight = 20.0;
 		```
 
@@ -432,7 +432,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		In the following example, the form item's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		formItem.paddingBottom = 20.0;
 		```
 
@@ -450,7 +450,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		In the following example, the form item's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		formItem.paddingLeft = 20.0;
 		```
 
@@ -469,7 +469,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		The following example creates a gap of 20 pixels between the text and
 		the content:
 
-		```hx
+		```haxe
 		formItem.text = "Name";
 		formItem.content = new TextInput();
 		formItem.gap = 20.0;
@@ -486,7 +486,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		The following example aligns the form item's content to the right:
 
-		```hx
+		```haxe
 		formItem.verticalAlign = RIGHT;
 		```
 
@@ -506,7 +506,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		The following example aligns the form item's content to the bottom:
 
-		```hx
+		```haxe
 		formItem.verticalAlign = BOTTOM;
 		```
 
@@ -525,7 +525,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		In the following example, the form item's text wraps:
 
-		```hx
+		```haxe
 		formItem.wordWrap = true;
 		```
 
@@ -562,7 +562,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		The following example passes a bitmap for the form item to use as a
 		background skin:
 
-		```hx
+		```haxe
 		formItem.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -581,7 +581,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		The following example gives the form item a disabled background skin:
 
-		```hx
+		```haxe
 		formItem.disabledBackgroundSkin = new Bitmap(bitmapData);
 		formItem.enabled = false;
 		```
@@ -600,7 +600,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		The following example positions the text to the left of the text:
 
-		```hx
+		```haxe
 		formItem.text = "Click Me";
 		formItem.content = new TextInput();
 		formItem.textPosition = LEFT;

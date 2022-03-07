@@ -157,7 +157,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		In the following example, the navigator will be sized to match its
 		content:
 
-		```hx
+		```haxe
 		navigator.autoSizeMode = CONTENT;
 		```
 

@@ -84,7 +84,7 @@ class TreeGridViewEvent<S> extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		TreeGridViewEvent.dispatchForCell(component, TreeGridViewEvent.CELL_TRIGGER, state);
 		```
 
@@ -107,7 +107,7 @@ class TreeGridViewEvent<S> extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		TreeGridViewEvent.dispatchForHeader(component, TreeGridViewEvent.HEADER_TRIGGER, state);
 		```
 

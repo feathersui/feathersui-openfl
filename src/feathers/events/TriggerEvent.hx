@@ -52,7 +52,7 @@ class TriggerEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		TriggerEvent.dispatchFromMouseEvent(component, event);
 		```
 
@@ -74,7 +74,7 @@ class TriggerEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		TriggerEvent.dispatchFromTouchEvent(component, event);
 		```
 

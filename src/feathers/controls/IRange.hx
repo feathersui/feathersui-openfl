@@ -24,7 +24,7 @@ interface IRange extends IUIControl {
 
 		The following example sets the range of acceptable values:
 
-		```hx
+		```haxe
 		range.minimum = 0.0;
 		range.maximum = 100.0;
 		```
@@ -38,7 +38,7 @@ interface IRange extends IUIControl {
 
 		The following example sets the range of acceptable values:
 
-		```hx
+		```haxe
 		range.minimum = 0.0;
 		range.maximum = 100.0;
 		```
@@ -53,7 +53,7 @@ interface IRange extends IUIControl {
 		The following example sets the range of acceptable values and updates
 		the current value:
 
-		```hx
+		```haxe
 		range.minimum = 0.0;
 		range.maximum = 100.0;
 		range.value = 50.0;

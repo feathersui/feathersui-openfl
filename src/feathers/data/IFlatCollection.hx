@@ -60,7 +60,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example iterates over the items in a collection:
 
-		```hx
+		```haxe
 		for(i in 0...collection.length) {
 			var item = collection.get(i);
 		}
@@ -78,7 +78,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		The following example filters a collection of strings by searching for
 		a substring at the beginning:
 
-		```hx
+		```haxe
 		collection.filterFunction = (a:String) =>
 		{
 			return StringTools.startsWith(a.toLowerCase(), "john");
@@ -103,7 +103,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example sorts a collection of `Float` values:
 
-		```hx
+		```haxe
 		collection.sortCompareFunction = (a:Float, b:Float) =>
 		{
 			if (a > b) {
@@ -126,7 +126,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example iterates over the items in a collection:
 
-		```hx
+		```haxe
 		for(i in 0...collection.length) {
 			var item = collection.get(i);
 		}
@@ -142,7 +142,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example replaces an item in a collection:
 
-		```hx
+		```haxe
 		collection.set(0, object);
 		```
 
@@ -158,7 +158,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example adds an item to a collection:
 
-		```hx
+		```haxe
 		collection.add(object);
 		```
 
@@ -174,7 +174,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example adds an item to the start of a collection:
 
-		```hx
+		```haxe
 		collection.addAt(object, 0);
 		```
 
@@ -189,7 +189,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example adds a collection of items to another collection:
 
-		```hx
+		```haxe
 		collection1.addAll(collection2);
 		```
 
@@ -202,7 +202,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example adds a collection of items to another collection:
 
-		```hx
+		```haxe
 		collection1.addAllAt(collection2, 0);
 		```
 
@@ -216,7 +216,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example resets a collection:
 
-		```hx
+		```haxe
 		collection1.reset(collection2);
 		```
 
@@ -232,7 +232,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example removes an item from a collection:
 
-		```hx
+		```haxe
 		var item = { text: "New Item" };
 		collection.add(item);
 		collection.remove(item);
@@ -248,7 +248,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 		Removes an item from the collection at the specified index, decreasing
 		the `length` by one.
 
-		```hx
+		```haxe
 		var item = { text: "New Item" };
 		collection.addAt(item, 0);
 		collection.removeAt(0);
@@ -265,7 +265,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example removes all items from a collection:
 
-		```hx
+		```haxe
 		collection.removeAll();
 		```
 
@@ -281,7 +281,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example gets the index of an item in the collection:
 
-		```hx
+		```haxe
 		var item = { text: "New Item" };
 		collection.addAt(item, 0);
 
@@ -297,7 +297,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example checks if a collection contains an item:
 
-		```hx
+		```haxe
 		var item = { text: "New Item" };
 		collection.addAt(item, 0);
 
@@ -314,7 +314,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example updates an item in the collection:
 
-		```hx
+		```haxe
 		collection.updateAt(0);
 		```
 
@@ -331,7 +331,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example updates all items in the collection:
 
-		```hx
+		```haxe
 		collection.updateAll();
 		```
 
@@ -357,7 +357,7 @@ interface IFlatCollection<T> extends IEventDispatcher {
 
 		The following example refreshes the collection:
 
-		```hx
+		```haxe
 		var includeAll = true;
 		collection.filterFunction = (item) =>
 		{

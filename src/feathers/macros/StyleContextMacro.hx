@@ -18,7 +18,7 @@ import haxe.macro.Context;
 	Add `@:styleContext` metadata to a Feathers UI component to make it
 	available for use in themes without inheriting styles from its superclass.
 
-	```hx
+	```haxe
 	@:styleContext
 	class MyComponent extends FeathersControl {
 

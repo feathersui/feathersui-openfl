@@ -66,7 +66,7 @@ class TreeViewEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		TreeViewEvent.dispatch(component, TreeViewEvent.ITEM_TRIGGER, state);
 		```
 

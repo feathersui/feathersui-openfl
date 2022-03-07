@@ -134,7 +134,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		In the following example, the layout's requested column count is set to
 		2 complete items:
 
-		```hx
+		```haxe
 		layout.requestedColumnCount = 2.0;
 		```
 
@@ -168,7 +168,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		In the following example, the layout's requested minimum coumn count is
 		set to 2 complete items:
 
-		```hx
+		```haxe
 		layout.requestedMinColumnCount = 2.0;
 		```
 
@@ -203,7 +203,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		In the following example, the layout's requested maximum column count is
 		set to 5 complete items:
 
-		```hx
+		```haxe
 		layout.requestedMaxColumnCount = 5.0;
 		```
 
@@ -234,7 +234,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		In the following example, the layout's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingTop = 20.0;
 		```
 
@@ -265,7 +265,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		In the following example, the layout's right padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingRight = 20.0;
 		```
 
@@ -296,7 +296,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		In the following example, the layout's bottom padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingBottom = 20.0;
 		```
 
@@ -327,7 +327,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		In the following example, the layout's left padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.paddingLeft = 20.0;
 		```
 
@@ -361,7 +361,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		In the following example, the layout's gap is set to 20 pixels:
 
-		```hx
+		```haxe
 		layout.gap = 20.0;
 		```
 
@@ -395,7 +395,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		In the following example, the layout's minimum gap is set to 4 pixels:
 
-		```hx
+		```haxe
 		layout.minGap = 4.0;
 		```
 
@@ -431,7 +431,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		The following example aligns the container's content to the right:
 
-		```hx
+		```haxe
 		layout.horizontalAlign = RIGHT;
 		```
 

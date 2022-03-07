@@ -86,7 +86,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 
 		The following example replaces the data source with a new array:
 
-		```hx
+		```haxe
 		collection.array = [];
 		```
 

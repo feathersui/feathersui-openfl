@@ -50,7 +50,7 @@ class StyleProviderEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		StyleProviderEvent.dispatch(component, StyleProviderEvent.STYLES_CHANGE);
 		```
 

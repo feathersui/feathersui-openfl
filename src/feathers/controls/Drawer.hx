@@ -254,7 +254,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		In the following example, the drawer container will be sized to match
 		the stage:
 
-		```hx
+		```haxe
 		drawer.autoSizeMode = STAGE;
 		```
 

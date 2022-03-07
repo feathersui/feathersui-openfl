@@ -53,7 +53,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		In the following example, the value is changed to `12.0`:
 
-		```hx
+		```haxe
 		progress.minimum = 0.0;
 		progress.maximum = 100.0;
 		progress.value = 12.0;
@@ -90,7 +90,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		In the following example, the minimum is set to `-100`:
 
-		```hx
+		```haxe
 		progress.minimum = -100;
 		progress.maximum = 100;
 		progress.value = 50;
@@ -129,7 +129,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		In the following example, the maximum is set to `100.0`:
 
-		```hx
+		```haxe
 		progress.minimum = 0.0;
 		progress.maximum = 100.0;
 		progress.value = 12.0;
@@ -182,7 +182,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		In the following example, the progress bar is given a background skin:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		progress.backgroundSkin = skin;
@@ -201,7 +201,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		In the following example, the progress bar is given a disabled
 		background skin:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xdddddd);
 		progress.disabledBackgroundSkin = skin;
@@ -226,7 +226,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		In the following example, the progress bar is given a fill skin:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xaaaaaa);
 		progress.fillSkin = skin;
@@ -243,7 +243,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		In the following example, the progress bar is given a disabled
 		fill skin:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		progress.disabledFillSkin = skin;
@@ -263,7 +263,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		In the following example, the progress bar's top padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		progress.paddingTop = 20.0;
 		```
 
@@ -283,7 +283,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		In the following example, the progress bar's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		progress.paddingRight = 20.0;
 		```
 
@@ -303,7 +303,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		In the following example, the progress bar's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		progress.paddingBottom = 20.0;
 		```
 
@@ -323,7 +323,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		In the following example, the progress bar's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		progress.paddingLeft = 20.0;
 		```
 

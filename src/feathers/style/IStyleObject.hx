@@ -20,7 +20,7 @@ interface IStyleObject {
 
 		In the following example, the object's theme is disabled.
 
-		```hx
+		```haxe
 		object.themeEnabled = false;
 		```
 

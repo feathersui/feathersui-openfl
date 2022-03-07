@@ -133,7 +133,7 @@ class HierarchicalCollectionEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		HierarchicalCollectionEvent.dispatch(component, Event.ADD_ITEM, 0, item);
 		```
 

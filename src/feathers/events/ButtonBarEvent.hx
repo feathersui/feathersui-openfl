@@ -50,7 +50,7 @@ class ButtonBarEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		ButtonBarEvent.dispatch(component, ButtonBarEvent.ITEM_TRIGGER, state);
 		```
 

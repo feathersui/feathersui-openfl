@@ -33,7 +33,7 @@ import openfl.geom.Point;
 	The following example creates a layout group with a horizontal layout and
 	adds two buttons to it:
 
-	```hx
+	```haxe
 	var group = new LayoutGroup();
 	var layout = new HorizontalLayout();
 	layout.gap = 20.0;
@@ -65,7 +65,7 @@ class LayoutGroup extends FeathersControl {
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var group = new LayoutGroup();
 		group.variant = LayoutGroup.VARIANT_TOOL_BAR;
 		```
@@ -95,7 +95,7 @@ class LayoutGroup extends FeathersControl {
 
 		The following example tells the group to use a vertical layout:
 
-		```hx
+		```haxe
 		var layout = new VerticalLayout();
 		layout.gap = 20.0;
 		layout.padding = 20.0;
@@ -124,7 +124,7 @@ class LayoutGroup extends FeathersControl {
 		The following example passes a bitmap for the layout group to use as a
 		background skin:
 
-		```hx
+		```haxe
 		group.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -144,7 +144,7 @@ class LayoutGroup extends FeathersControl {
 
 		The following example gives the group a disabled background skin:
 
-		```hx
+		```haxe
 		group.disabledBackgroundSkin = new Bitmap(bitmapData);
 		group.enabled = false;
 		```
@@ -168,7 +168,7 @@ class LayoutGroup extends FeathersControl {
 		The following example passes a `RectangleSkin` with a `cornerRadius` for
 		the layout group's mask skin:
 
-		```hx
+		```haxe
 		var maskSkin = new RectangleSkin();
 		maskSkin.fill = SolidColor(0xff0000);
 		maskSkin.cornerRadius = 10.0;
@@ -193,7 +193,7 @@ class LayoutGroup extends FeathersControl {
 		In the following example, the layout group will be sized to match the
 		stage:
 
-		```hx
+		```haxe
 		group.autoSizeMode = STAGE;
 		```
 

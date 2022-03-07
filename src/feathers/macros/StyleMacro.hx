@@ -20,7 +20,7 @@ import haxe.macro.Context;
 	Add `@:style` metadata to a public variable to convert it into a "style"
 	property.
 
-	```hx
+	```haxe
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 	```

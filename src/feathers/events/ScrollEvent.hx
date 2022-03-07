@@ -63,7 +63,7 @@ class ScrollEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		ScrollEvent.dispatch(component, ScrollEvent.SCROLL);
 		```
 

@@ -84,7 +84,7 @@ class KeyToState<T> {
 
 		The callback is expected to have the following signature:
 
-		```hx
+		```haxe
 		String -> Void
 		```
 

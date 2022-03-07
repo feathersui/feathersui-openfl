@@ -18,7 +18,7 @@ import openfl.events.EventDispatcher;
 
 	In the following example, a `FunctionStyleProvider` is created:
 
-	```hx
+	```haxe
 	var button = new Button();
 	button.text = "Click Me";
 	button.styleProvider = new FunctionStyleProvider(function(target:Button):Void

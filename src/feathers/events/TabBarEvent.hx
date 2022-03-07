@@ -50,7 +50,7 @@ class TabBarEvent extends Event {
 	/**
 		Dispatches a pooled event with the specified properties.
 
-		```hx
+		```haxe
 		TabBarEvent.dispatch(component, TabBarEvent.ITEM_TRIGGER, state);
 		```
 

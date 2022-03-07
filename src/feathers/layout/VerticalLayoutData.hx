@@ -33,7 +33,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children fills the
 		container's bounds:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new VerticalLayout();
 
@@ -59,7 +59,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children fills the
 		container's width:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new VerticalLayout();
 
@@ -84,7 +84,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, one of the container's children fills the
 		container's height:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new VerticalLayout();
 
@@ -128,7 +128,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, the width of a container's child is set to
 		50% of the container's width:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new VerticalLayout();
 
@@ -178,7 +178,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		In the following example, the height of a container's child is set to
 		50% of the container's height:
 
-		```hx
+		```haxe
 		var container = new LayoutGroup();
 		container.layout = new VerticalLayout();
 

@@ -65,7 +65,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, the selected index is changed:
 
-		```hx
+		```haxe
 		group.selectedIndex = 2;
 		```
 
@@ -126,7 +126,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, the selected item is changed:
 
-		```hx
+		```haxe
 		group.selectedItem = radio;
 		```
 
@@ -164,7 +164,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, selection is not required:
 
-		```hx
+		```haxe
 		group.requireSelection = false;
 		```
 
@@ -196,7 +196,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, an item is added to the toggle group:
 
-		```hx
+		```haxe
 		group.addItem(radio);
 		```
 
@@ -235,7 +235,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, an item is removed from the toggle group:
 
-		```hx
+		```haxe
 		group.removeItem(radio);
 		```
 
@@ -284,7 +284,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, all items are removed from the toggle group:
 
-		```hx
+		```haxe
 		group.removeAllItems();
 		```
 
@@ -307,7 +307,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, we check if an item is in the toggle group:
 
-		```hx
+		```haxe
 		if(group.hasItem(radio))
 		{
 			// do something
@@ -326,7 +326,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, an item's at a specific index is returned:
 
-		```hx
+		```haxe
 		var item:IToggle = group.getItemAt(2);
 		```
 
@@ -347,7 +347,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, an item's index is calculated:
 
-		```hx
+		```haxe
 		var index:Int = group.getItemIndex(radio);
 		```
 
@@ -363,7 +363,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		In the following example, an item's index is changed:
 
-		```hx
+		```haxe
 		group.setItemIndex(radio, 2);
 		```
 

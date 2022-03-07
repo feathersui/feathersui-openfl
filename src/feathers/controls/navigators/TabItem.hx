@@ -17,7 +17,7 @@ import openfl.display.DisplayObject;
 
 	The following example creates a tab navigator and adds some items:
 
-	```hx
+	```haxe
 	var navigator = new TabNavigator();
 	navigator.dataProvider = new ArrayCollection([
 		TabItem.withClass("Home", HomeView),

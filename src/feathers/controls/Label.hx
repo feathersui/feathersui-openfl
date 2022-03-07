@@ -38,7 +38,7 @@ import flash.text.StyleSheet;
 
 	The following example creates a label and gives it text:
 
-	```hx
+	```haxe
 	var label = new Label();
 	label.text = "Hello World";
 	this.addChild(label);
@@ -58,7 +58,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var label = new Label();
 		label.variant = Label.VARIANT_HEADING;
 		```
@@ -76,7 +76,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		The following example uses this variant:
 
-		```hx
+		```haxe
 		var label = new Label();
 		label.variant = Label.VARIANT_DETAIL;
 		```
@@ -121,7 +121,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		The following example sets the label's text:
 
-		```hx
+		```haxe
 		label.text = "Good afternoon!";
 		```
 
@@ -177,7 +177,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		The following example sets the label's HTML text:
 
-		```hx
+		```haxe
 		label.htmlText = "<b>Hello</b> <i>World</i>";
 		```
 
@@ -208,7 +208,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		In the following example, the label's text formatting is customized:
 
-		```hx
+		```haxe
 		label.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -241,7 +241,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		In the following example, the label uses embedded fonts:
 
-		```hx
+		```haxe
 		label.embedFonts = true;
 		```
 
@@ -259,7 +259,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		In the following example, the label text is selectable:
 
-		```hx
+		```haxe
 		label.selectable = true;
 		```
 
@@ -337,7 +337,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		In the following example, the label's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		label.enabled = false;
 		label.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -355,7 +355,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		In the following example, the label's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		label.paddingTop = 20.0;
 		```
 
@@ -373,7 +373,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		In the following example, the label's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		label.paddingRight = 20.0;
 		```
 
@@ -391,7 +391,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		In the following example, the label's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		label.paddingBottom = 20.0;
 		```
 
@@ -409,7 +409,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		In the following example, the label's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		label.paddingLeft = 20.0;
 		```
 
@@ -426,7 +426,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		The following example aligns the label's content to the top:
 
-		```hx
+		```haxe
 		label.verticalAlign = TOP;
 		```
 
@@ -445,7 +445,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		In the following example, the label's text wraps at 150 pixels:
 
-		```hx
+		```haxe
 		label.width = 150.0;
 		label.wordWrap = true;
 		```
@@ -466,7 +466,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		The following example passes a bitmap for the label to use as a
 		background skin:
 
-		```hx
+		```haxe
 		label.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -485,7 +485,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		The following example gives the label a disabled background skin:
 
-		```hx
+		```haxe
 		label.disabledBackgroundSkin = new Bitmap(bitmapData);
 		label.enabled = false;
 		```

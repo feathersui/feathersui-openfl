@@ -43,7 +43,7 @@ import flash.text.StyleSheet;
 	The following example creates a toggle button, programmatically selects it,
 	and listens for when the selection changes:
 
-	```hx
+	```haxe
 	var button = new ToggleButton();
 	button.text = "Click Me";
 	button.selected = true;
@@ -97,7 +97,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		The following example sets the button's text:
 
-		```hx
+		```haxe
 		button.text = "Click Me";
 		```
 
@@ -133,7 +133,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		The following example sets the button's HTML text:
 
-		```hx
+		```haxe
 		button.htmlText = "<b>Hello</b> <i>World</i>";
 		```
 
@@ -184,14 +184,14 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		The following example gives the button an icon:
 
-		```hx
+		```haxe
 		button.icon = new Bitmap(bitmapData);
 		```
 
 		To change the position of the icon relative to the button's text, see
 		`iconPosition` and `gap`.
 
-		```hx
+		```haxe
 		button.icon = new Bitmap(bitmapData);
 		button.iconPosition = RIGHT;
 		button.gap = 20.0;
@@ -214,7 +214,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		In the following example, the button's disabled icon is changed:
 
-		```hx
+		```haxe
 		button.enabled = false;
 		button.disabledIcon = new Bitmap(bitmapData);
 		```
@@ -223,7 +223,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		the `ToggleButtonState.DISABLED(true)` state that will be used instead
 		of the disabled icon:
 
-		```hx
+		```haxe
 		button.disabledIcon = new Bitmap(bitmapData);
 		button.setIconForState(ToggleButtonState.DISABLED(true), new Bitmap(bitmapData2));
 		```
@@ -246,7 +246,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		In the following example, the button's selected icon is changed:
 
-		```hx
+		```haxe
 		button.selected = true;
 		button.selectedIcon = new Bitmap(bitmapData);
 		```
@@ -255,7 +255,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		the `ToggleButtonState.DOWN(true)` state that will be used instead of
 		the selected icon:
 
-		```hx
+		```haxe
 		button.selectedIcon = new Bitmap(bitmapData);
 		button.setIconForState(ToggleButtonState.DOWN(true), new Bitmap(bitmapData2));
 		```
@@ -277,7 +277,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		In the following example, the button's text formatting is customized:
 
-		```hx
+		```haxe
 		button.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
 		```
 
@@ -311,7 +311,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		In the following example, the button uses embedded fonts:
 
-		```hx
+		```haxe
 		button.embedFonts = true;
 		```
 
@@ -327,7 +327,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		In the following example, the button's text wraps at 150 pixels:
 
-		```hx
+		```haxe
 		button.width = 150.0;
 		button.wordWrap = true;
 		```
@@ -346,7 +346,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		In the following example, the button's disabled text formatting is
 		customized:
 
-		```hx
+		```haxe
 		button.enabled = false;
 		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		```
@@ -355,7 +355,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		format for the `ToggleButtonState.DISABLED(true)` state that will be
 		used instead of the disabled text format:
 
-		```hx
+		```haxe
 		button.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
 		button.setTextFormatForState(ToggleButtonState.DISABLED(true), new TextFormat("Helvetica", 20, 0xff0000));
 		```
@@ -378,7 +378,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		In the following example, the button's selected text formatting is
 		customized:
 
-		```hx
+		```haxe
 		button.selected = true;
 		button.selectedTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
 		```
@@ -387,7 +387,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		format for the `ToggleButtonState.DOWN(true)` state that will be used
 		instead of the selected text format:
 
-		```hx
+		```haxe
 		button.selectedTextFormat = new TextFormat("Helvetica", 20, 0xff0000);
 		button.setTextFormatForState(ToggleButtonState.DOWN(true), new TextFormat("Helvetica", 20, 0xcc0000));
 		```
@@ -409,7 +409,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		The following example positions the icon to the right of the text:
 
-		```hx
+		```haxe
 		button.text = "Click Me";
 		button.icon = new Bitmap(texture);
 		button.iconPosition = RIGHT;
@@ -434,7 +434,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		The following example creates a gap of 20 pixels between the icon and
 		the text:
 
-		```hx
+		```haxe
 		button.text = "Click Me";
 		button.icon = new Bitmap(bitmapData);
 		button.gap = 20.0;
@@ -456,7 +456,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		The following example ensures that the gap is never smaller than 20
 		pixels:
 
-		```hx
+		```haxe
 		button.gap = Math.POSITIVE_INFINITY;
 		button.minGap = 20.0;
 		```
@@ -474,7 +474,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		In the following example, the button's top padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		button.paddingTop = 20.0;
 		```
 
@@ -492,7 +492,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		In the following example, the button's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		button.paddingRight = 20.0;
 		```
 
@@ -510,7 +510,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		In the following example, the button's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		button.paddingBottom = 20.0;
 		```
 
@@ -528,7 +528,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		In the following example, the button's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		button.paddingLeft = 20.0;
 		```
 
@@ -545,7 +545,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		The following example aligns the button's content to the left:
 
-		```hx
+		```haxe
 		button.verticalAlign = LEFT;
 		```
 
@@ -565,7 +565,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		The following example aligns the button's content to the top:
 
-		```hx
+		```haxe
 		button.verticalAlign = TOP;
 		```
 
@@ -588,7 +588,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		The following example offsets the x position of the button's icon by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.iconOffsetX = 20.0;
 		```
 
@@ -608,7 +608,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		The following example offsets the y position of the button's icon by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.iconOffsetY = 20.0;
 		```
 
@@ -629,7 +629,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		The following example offsets the x position of the button's text by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.textOffsetX = 20.0;
 		```
 
@@ -650,7 +650,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		The following example offsets the y position of the button's text by
 		20 pixels:
 
-		```hx
+		```haxe
 		button.textOffsetY = 20.0;
 		```
 

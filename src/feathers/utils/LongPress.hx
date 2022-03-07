@@ -80,7 +80,7 @@ class LongPress {
 
 		The following example changes the long press duration to one second:
 
-		```hx
+		```haxe
 		longPress.duration = 1.0;
 		```
 

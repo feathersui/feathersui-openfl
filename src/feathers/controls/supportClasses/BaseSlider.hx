@@ -64,7 +64,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, the value is changed to `12.0`:
 
-		```hx
+		```haxe
 		slider.minimum = 0.0;
 		slider.maximum = 100.0;
 		slider.step = 1.0;
@@ -109,7 +109,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, the minimum is set to `-100.0`:
 
-		```hx
+		```haxe
 		slider.minimum = -100.0;
 		slider.maximum = 100.0;
 		slider.step = 1.0;
@@ -145,7 +145,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, the maximum is set to `100.0`:
 
-		```hx
+		```haxe
 		slider.minimum = 0.0;
 		slider.maximum = 100.0;
 		slider.step = 1.0;
@@ -183,7 +183,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, the step is changed to `1.0`:
 
-		```hx
+		```haxe
 		slider.minimum = 0.0;
 		slider.maximum = 100.0;
 		slider.step = 1.0;
@@ -223,7 +223,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, the snap inverval is changed to `1.0`:
 
-		```hx
+		```haxe
 		slider.minimum = 0.0;
 		slider.maximum = 100.0;
 		slider.step = 1.0;
@@ -259,7 +259,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, live dragging is disabled:
 
-		```hx
+		```haxe
 		slider.liveDragging = false;
 		```
 
@@ -277,7 +277,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, a thumb skin is passed to the slider:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		slider.thumbSkin = skin;
@@ -298,7 +298,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, a track skin is passed to the slider:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xcccccc);
 		slider.trackSkin = skin;
@@ -326,7 +326,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		In the following example, a track skin and a secondary track skin are
 		passed to the slider:
 
-		```hx
+		```haxe
 		var skin = new RectangleSkin();
 		skin.fill = SolidColor(0xaaaaaa);
 		slider.trackSkin = skin;
@@ -350,7 +350,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, minimum padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		slider.minimumPadding = 20.0;
 		```
 
@@ -368,7 +368,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		In the following example, maximum padding is set to 20 pixels:
 
-		```hx
+		```haxe
 		slider.maximumPadding = 20.0;
 		```
 

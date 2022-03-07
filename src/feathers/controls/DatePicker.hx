@@ -65,7 +65,7 @@ import openfl._internal.utils.ObjectPool;
 	The following example creates a date picker, sets the selected date, and
 	listens for when the selection changes:
 
-	```hx
+	```haxe
 	var datePicker = new DatePicker();
 	datePicker.selectedDate = new Date(2020, 1, 6);
 	datePicker.addEventListener(Event.CHANGE, (event:Event) -> {
@@ -396,7 +396,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		The following example passes a bitmap for the date picker to use as a
 		background skin:
 
-		```hx
+		```haxe
 		datePicker.backgroundSkin = new Bitmap(bitmapData);
 		```
 
@@ -415,7 +415,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		The following example gives the date picker a disabled background skin:
 
-		```hx
+		```haxe
 		datePicker.disabledBackgroundSkin = new Bitmap(bitmapData);
 		datePicker.enabled = false;
 		```
@@ -439,7 +439,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		In the following example, a custom decrement month button factory is provided:
 
-		```hx
+		```haxe
 		datePicker.decrementMonthButtonFactory = () ->
 		{
 			return new Button();
@@ -491,7 +491,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		In the following example, a custom increment month button factory is provided:
 
-		```hx
+		```haxe
 		datePicker.incrementMonthButtonFactory = () ->
 		{
 			return new Button();
@@ -543,7 +543,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		In the following example, a custom decrement year button factory is provided:
 
-		```hx
+		```haxe
 		datePicker.decrementYearButtonFactory = () ->
 		{
 			return new Button();
@@ -595,7 +595,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		In the following example, a custom increment year button factory is provided:
 
-		```hx
+		```haxe
 		datePicker.incrementYearButtonFactory = () ->
 		{
 			return new Button();
@@ -647,7 +647,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		In the following example, a custom current month view factory is provided:
 
-		```hx
+		```haxe
 		datePicker.monthTitleViewFactory = () ->
 		{
 			return new Label();
@@ -693,7 +693,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		In the following example, the date picker's header gap is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		datePicker.headerGap = 20.0;
 		```
 
@@ -709,7 +709,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		In the following example, the date picker's top padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		datePicker.paddingTop = 20.0;
 		```
 
@@ -725,7 +725,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		In the following example, the date picker's right padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		datePicker.paddingRight = 20.0;
 		```
 
@@ -741,7 +741,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		In the following example, the date picker's bottom padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		datePicker.paddingBottom = 20.0;
 		```
 
@@ -757,7 +757,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		In the following example, the date picker's left padding is set to 20
 		pixels:
 
-		```hx
+		```haxe
 		datePicker.paddingLeft = 20.0;
 		```
 
@@ -969,7 +969,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		In the following example, a custom weekday label factory is provided:
 
-		```hx
+		```haxe
 		datePicker.weekdayLabelFactory = () ->
 		{
 			return new Label();
@@ -1044,7 +1044,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		In the following example, the date picker uses a custom date renderer
 		class:
 
-		```hx
+		```haxe
 		datePicker.dateRendererRecycler = DisplayObjectRecycler.withClass(CustomDateRenderer);
 		```
 
@@ -1089,7 +1089,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		The following example disables pointer selection:
 
-		```hx
+		```haxe
 		datePicker.pointerSelectionEnabled = false;
 		```
 

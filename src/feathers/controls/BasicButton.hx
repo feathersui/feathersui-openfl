@@ -119,7 +119,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		The following example ensures that the button's down state remains
 		active on roll out.
 
-		```hx
+		```haxe
 		button.keepDownStateOnRollOut = true;
 		```
 
@@ -137,7 +137,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		The following example passes a bitmap for the button to use as a
 		background skin:
 
-		```hx
+		```haxe
 		button.backgroundSkin = new Bitmap(bitmapData);
 		```
 

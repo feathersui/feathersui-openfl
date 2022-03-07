@@ -32,7 +32,7 @@ import openfl.events.Event;
 
 	In the following example, an alert is shown when a `Button` is triggered:
 
-	```hx
+	```haxe
 	var button = new Button();
 	button.text = "Click Me";
 	addChild(button);
@@ -151,7 +151,7 @@ class Alert extends Panel {
 
 		The following example sets the alert's text:
 
-		```hx
+		```haxe
 		alert.text = "Good afternoon!";
 		```
 
@@ -189,7 +189,7 @@ class Alert extends Panel {
 
 		The following example sets the alert's HTML text:
 
-		```hx
+		```haxe
 		alert.htmlText = "<b>Hello</b> <i>World</i>";
 		```
 
@@ -257,7 +257,7 @@ class Alert extends Panel {
 
 		In the following example, a custom message label factory is provided:
 
-		```hx
+		```haxe
 		alert.messageLabelFactory = () ->
 		{
 			return new Label();
@@ -292,7 +292,7 @@ class Alert extends Panel {
 
 		In the following example, a custom header factory is provided:
 
-		```hx
+		```haxe
 		alert.headerFactory = () ->
 		{
 			return new Header();
@@ -328,7 +328,7 @@ class Alert extends Panel {
 
 		In the following example, a custom button bar factory is provided:
 
-		```hx
+		```haxe
 		alert.buttonBarFactory = () ->
 		{
 			return new ButtonBar();
@@ -386,14 +386,14 @@ class Alert extends Panel {
 
 		The following example gives the alert an icon:
 
-		```hx
+		```haxe
 		alert.icon = new Bitmap(bitmapData);
 		```
 
 		To change the position of the icon relative to the alert's text, see
 		`iconPosition` and `gap`.
 
-		```hx
+		```haxe
 		alert.icon = new Bitmap(bitmapData);
 		alert.iconPosition = LEFT;
 		alert.gap = 20.0;
