@@ -110,9 +110,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		To override this default variant, set the
 		`ComboBox.customButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `ComboBox.customButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -124,9 +124,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		To override this default variant, set the
 		`ComboBox.customTextInputVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `ComboBox.customTextInputVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -138,9 +138,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		To override this default variant, set the
 		`ComboBox.customListViewVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `ComboBox.customListViewVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -511,6 +511,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`textInputFactory` already has a variant set.
 
 		@see `ComboBox.CHILD_VARIANT_TEXT_INPUT`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -527,6 +528,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`buttonFactory` already has a variant set.
 
 		@see `ComboBox.CHILD_VARIANT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -543,6 +545,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`listViewFactory` already has a variant set.
 
 		@see `ComboBox.CHILD_VARIANT_LIST_VIEW`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

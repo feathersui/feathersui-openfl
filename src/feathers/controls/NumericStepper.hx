@@ -69,9 +69,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		To override this default variant, set the
 		`NumericStepper.customDecrementButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `NumericStepper.customDecrementButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -83,9 +83,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		To override this default variant, set the
 		`NumericStepper.customIncrementButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `NumericStepper.customIncrementButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -97,9 +97,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		To override this default variant, set the
 		`NumericStepper.customTextInputVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `NumericStepper.customTextInputVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -558,6 +558,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		`decrementButtonFactory` already has a variant set.
 
 		@see `NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -574,6 +575,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		`incrementButtonFactory` already has a variant set.
 
 		@see `NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -590,6 +592,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		`textInputFactory` already has a variant set.
 
 		@see `NumericStepper.CHILD_VARIANT_TEXT_INPUT`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

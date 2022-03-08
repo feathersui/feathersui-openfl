@@ -58,6 +58,7 @@ class Alert extends Panel {
 		`Alert.customHeaderVariant` property.
 
 		@see `Alert.customHeaderVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -71,6 +72,7 @@ class Alert extends Panel {
 		`Alert.customMessageLabelVariant` property.
 
 		@see `Alert.customMessageLabelVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -84,6 +86,7 @@ class Alert extends Panel {
 		`Alert.customButtonBarVariant` property.
 
 		@see `Alert.customButtonBarVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0

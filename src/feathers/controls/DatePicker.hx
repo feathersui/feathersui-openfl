@@ -116,9 +116,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		To override this default variant, set the
 		`DatePicker.customDateRendererVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `DatePicker.customDateRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -130,9 +130,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		To override this default variant, set the
 		`DatePicker.customMutedDateRendererVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `DatePicker.customMutedDateRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -145,9 +145,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		To override this default variant, set the
 		`DatePicker.customDecrementMonthButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `DatePicker.customDecrementMonthButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -160,9 +160,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		To override this default variant, set the
 		`DatePicker.customIncrementMonthButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `DatePicker.customIncrementMonthButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -175,9 +175,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		To override this default variant, set the
 		`DatePicker.customDecrementYearButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `DatePicker.customDecrementYearButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -190,9 +190,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		To override this default variant, set the
 		`DatePicker.customIncrementYearButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `DatePicker.customIncrementYearButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -205,9 +205,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		To override this default variant, set the
 		`DatePicker.customMonthTitleViewVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `DatePicker.customMonthTitleViewVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -221,6 +221,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		`DatePicker.customWeekdayLabelVariant` property.
 
 		@see `DatePicker.customWeekdayLabelVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -475,6 +476,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		result of `decrementMonthButtonFactory` already has a variant set.
 
 		@see `DatePicker.CHILD_VARIANT_DECREMENT_MONTH_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -527,6 +529,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		result of `incrementMonthButtonFactory` already has a variant set.
 
 		@see `DatePicker.CHILD_VARIANT_INCREMENT_MONTH_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -579,6 +582,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		result of `decrementYearButtonFactory` already has a variant set.
 
 		@see `DatePicker.CHILD_VARIANT_DECREMENT_YEAR_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -631,6 +635,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		result of `incrementYearButtonFactory` already has a variant set.
 
 		@see `DatePicker.CHILD_VARIANT_INCREMENT_YEAR_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -681,6 +686,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		result of `monthTitleViewFactory` already has a variant set.
 
 		@see `DatePicker.CHILD_VARIANT_MONTH_TITLE_VIEW`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -1016,6 +1022,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		`dateRendererRecycler.create()` already has a variant set.
 
 		@see `DatePicker.CHILD_VARIANT_DATE_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -1032,6 +1039,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		of `dateRendererRecycler.create()` already has a variant set.
 
 		@see `DatePicker.CHILD_VARIANT_MUTED_DATE_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

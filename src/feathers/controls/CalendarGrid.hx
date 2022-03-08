@@ -82,6 +82,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		`CalendarGrid.customToggleButtonVariant` property.
 
 		@see `CalendarGrid.customToggleButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -96,6 +97,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		`CalendarGrid.customMutedToggleButtonVariant` property.
 
 		@see `CalendarGrid.customMutedToggleButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -110,6 +112,7 @@ class CalendarGrid extends FeathersControl implements IDateSelector {
 		`CalendarGrid.customWeekdayLabelVariant` property.
 
 		@see `CalendarGrid.customWeekdayLabelVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0

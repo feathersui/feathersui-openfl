@@ -61,6 +61,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		`PageNavigator.customPageIndicatorVariant` property.
 
 		@see `PageNavigator.customPageIndicatorVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0

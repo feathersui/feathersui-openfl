@@ -119,9 +119,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		To override this default variant, set the
 		`GroupListView.customHeaderRendererVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `GroupListView.customHeaderRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -134,9 +134,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		To override this default variant, set the
 		`GroupListView.customItemRendererVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `GroupListView.customItemRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -153,6 +153,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		groupListView.variant = GroupListView.VARIANT_BORDERLESS;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -170,6 +171,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		groupListView.variant = GroupListView.VARIANT_BORDER;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -462,6 +464,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		`headerRendererRecycler.create()` already has a variant set.
 
 		@see `GroupListView.CHILD_VARIANT_HEADER_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -478,6 +481,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		`itemRendererRecycler.create()` already has a variant set.
 
 		@see `GroupListView.CHILD_VARIANT_ITEM_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

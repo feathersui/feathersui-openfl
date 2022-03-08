@@ -80,9 +80,9 @@ class ButtonBar extends FeathersControl {
 		To override this default variant, set the
 		`ButtonBar.customButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `ButtonBar.customButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -184,6 +184,7 @@ class ButtonBar extends FeathersControl {
 		`buttonRecycler.create()` already has a variant set.
 
 		@see `ButtonBar.CHILD_VARIANT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

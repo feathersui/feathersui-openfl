@@ -119,6 +119,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		listView.variant = ListView.VARIANT_BORDERLESS;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -136,6 +137,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		listView.variant = ListView.VARIANT_BORDER;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -152,6 +154,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		listView.variant = ListView.VARIANT_POP_UP;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -164,9 +167,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		To override this default variant, set the
 		`ListView.customItemRendererVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `ListView.customItemRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -599,6 +602,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		`itemRendererRecycler.create()` already has a variant set.
 
 		@see `ListView.CHILD_VARIANT_ITEM_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

@@ -75,6 +75,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		input.variant = Label.VARIANT_SEARCH;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -88,9 +89,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		To override this default variant, set the
 		`TextInput.customErrorCalloutVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `TextInput.customErrorCalloutVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -859,6 +860,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		already has a variant set.
 
 		@see `TextInput.CHILD_VARIANT_ERROR_CALLOUT`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

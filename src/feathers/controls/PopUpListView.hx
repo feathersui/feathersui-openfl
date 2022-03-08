@@ -109,9 +109,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		To override this default variant, set the
 		`PopUpListView.customButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `PopUpListView.customButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -123,9 +123,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		To override this default variant, set the
 		`PopUpListView.customListViewVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `PopUpListView.customListViewVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -416,6 +416,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		`buttonFactory` already has a variant set.
 
 		@see `PopUpListView.CHILD_VARIANT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -432,6 +433,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		`listViewFactory` already has a variant set.
 
 		@see `PopUpListView.CHILD_VARIANT_LIST_VIEW`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

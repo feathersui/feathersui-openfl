@@ -94,9 +94,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		To override this default variant, set the
 		`TabBar.customTabVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `TabBar.customTabVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -301,6 +301,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		`tabRecycler.create()` already has a variant set.
 
 		@see `TabBar.CHILD_VARIANT_TAB`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

@@ -157,6 +157,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		treeView.variant = TreeView.VARIANT_BORDERLESS;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -174,6 +175,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		treeView.variant = TreeView.VARIANT_BORDER;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -186,9 +188,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		To override this default variant, set the
 		`TreeView.customItemRendererVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `TreeView.customItemRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -499,6 +501,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		`itemRendererRecycler.create()` already has a variant set.
 
 		@see `TreeView.CHILD_VARIANT_ITEM_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

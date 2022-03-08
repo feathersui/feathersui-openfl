@@ -25,7 +25,8 @@ interface IVariantStyleObject extends IStyleObject {
 
 	/**
 		May be used to provide multiple different variations of the same UI
-		component, each with a different appearance.
+		component, each with a different appearance, but instantiated with the
+		same class.
 
 		The following example sets the variant of a `Label` component:
 

@@ -96,9 +96,9 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		To override this default variant, set the
 		`PopUpDatePicker.customButtonVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `PopUpDatePicker.customButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -110,9 +110,9 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		To override this default variant, set the
 		`PopUpDatePicker.customTextInputVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `PopUpDatePicker.customTextInputVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -124,9 +124,9 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		To override this default variant, set the
 		`PopUpDatePicker.customDatePickerVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `PopUpDatePicker.customDatePickerVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -249,6 +249,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		`textInputFactory` already has a variant set.
 
 		@see `PopUpDatePicker.CHILD_VARIANT_TEXT_INPUT`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -265,6 +266,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		`buttonFactory` already has a variant set.
 
 		@see `PopUpDatePicker.CHILD_VARIANT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -281,6 +283,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		`datePickerFactory` already has a variant set.
 
 		@see `PopUpDatePicker.CHILD_VARIANT_DATE_PICKER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

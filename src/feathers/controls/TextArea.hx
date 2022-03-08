@@ -60,9 +60,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		To override this default variant, set the
 		`TextArea.customErrorCalloutVariant` property.
 
-		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
-
 		@see `TextArea.customErrorCalloutVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
 	**/
@@ -645,6 +645,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		already has a variant set.
 
 		@see `TextArea.CHILD_VARIANT_ERROR_CALLOUT`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

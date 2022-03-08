@@ -142,6 +142,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		gridView.variant = GridView.VARIANT_BORDERLESS;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -159,6 +160,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		gridView.variant = GridView.VARIANT_BORDER;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -168,6 +170,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		The variant used to style the cell renderers in a theme.
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -177,6 +180,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		The variant used to style the column header renderers in a theme.
 
+		@see `GridView.customHeaderRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -189,6 +194,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		The variant used to style the column header dividers in a theme.
 
+		@see `GridView.customHeaderDividerVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -198,6 +205,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		The variant used to style the column view port dividers in a theme.
 
+		@see `GridView.customColumnDividerVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -497,7 +506,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		The `customHeaderRendererVariant` will be not be used if the result of
 		`headerRendererRecycler.create()` already has a variant set.
 
-		@see `GridView.CHILD_VARIANT_HEADER_RENDERER
+		@see `GridView.CHILD_VARIANT_HEADER_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -526,7 +536,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		The `customHeaderDividerVariant` will be not be used if the result of
 		`headerDividerFactory.create()` already has a variant set.
 
-		@see `GridView.CHILD_VARIANT_HEADER_DIVIDER
+		@see `GridView.CHILD_VARIANT_HEADER_DIVIDER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -555,7 +566,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		The `customColumnDividerVariant` will be not be used if the result of
 		`columnDividerFactory.create()` already has a variant set.
 
-		@see `GridView.CHILD_VARIANT_COLUMN_DIVIDER
+		@see `GridView.CHILD_VARIANT_COLUMN_DIVIDER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

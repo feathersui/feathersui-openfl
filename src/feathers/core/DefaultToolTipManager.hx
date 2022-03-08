@@ -37,6 +37,7 @@ class DefaultToolTipManager implements IToolTipManager {
 		toolTip.variant = DefaultToolTipManager.CHILD_VARIANT_TOOL_TIP;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0

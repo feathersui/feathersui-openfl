@@ -150,6 +150,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		treeGridView.variant = TreeGridView.VARIANT_BORDERLESS;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -167,6 +168,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		treeGridView.variant = TreeGridView.VARIANT_BORDER;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -176,6 +178,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		The variant used to style the cell renderers in a theme.
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -185,6 +188,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		The variant used to style the column header renderers in a theme.
 
+		@see `TreeGridView.customHeaderRendererVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -194,6 +199,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		The variant used to style the column header dividers in a theme.
 
+		@see `TreeGridView.customHeaderDividerVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -203,6 +210,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		The variant used to style the column view port dividers in a theme.
 
+		@see `TreeGridView.customColumnDividerVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -489,7 +498,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		The `customHeaderRendererVariant` will be not be used if the result of
 		`headerRendererRecycler.create()` already has a variant set.
 
-		@see `TreeGridView.CHILD_VARIANT_HEADER_RENDERER
+		@see `TreeGridView.CHILD_VARIANT_HEADER_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -518,7 +528,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		The `customHeaderDividerVariant` will be not be used if the result of
 		`headerDividerFactory.create()` already has a variant set.
 
-		@see `TreeGridView.CHILD_VARIANT_HEADER_DIVIDER
+		@see `TreeGridView.CHILD_VARIANT_HEADER_DIVIDER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/
@@ -547,7 +558,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		The `customColumnDividerVariant` will be not be used if the result of
 		`columnDividerFactory.create()` already has a variant set.
 
-		@see `TreeGridView.CHILD_VARIANT_COLUMN_DIVIDER
+		@see `TreeGridView.CHILD_VARIANT_COLUMN_DIVIDER`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

@@ -60,6 +60,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		itemRenderer.variant = HierarchicalItemRenderer.VARIANT_FILE_SYSTEM;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -69,6 +70,8 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	/**
 		The variant used to style the `ToggleButton` child component in a theme.
 
+		@see `HierarchicalItemRenderer.customDisclosureButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -249,6 +252,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		`disclosureButtonFactory` already has a variant set.
 
 		@see `HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
 
 		@since 1.0.0
 	**/

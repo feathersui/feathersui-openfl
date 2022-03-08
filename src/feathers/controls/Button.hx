@@ -72,6 +72,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		button.variant = Button.VARIANT_PRIMARY;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -91,6 +92,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		button.variant = Button.VARIANT_DANGER;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0

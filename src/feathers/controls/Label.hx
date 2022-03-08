@@ -63,6 +63,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		label.variant = Label.VARIANT_HEADING;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
@@ -81,6 +82,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		label.variant = Label.VARIANT_DETAIL;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0

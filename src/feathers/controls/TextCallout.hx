@@ -55,6 +55,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 		callout.variant = TextCallout.VARIANT_DANGER;
 		```
 
+		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
 		@since 1.0.0
