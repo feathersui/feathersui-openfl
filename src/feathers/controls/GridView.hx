@@ -170,6 +170,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		The variant used to style the cell renderers in a theme.
 
+		To override this default variant, set the
+		`GridView.customCellRendererVariant` property.
+
+		@see `GridView.customCellRendererVariant`
 		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
@@ -496,6 +500,21 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		return this._defaultHeaderStorage.headerRendererRecycler;
 	}
+
+	/**
+		A custom variant to set on all cell renderers, instead of
+		`GridView.CHILD_VARIANT_CELL_RENDERER`.
+
+		The `customCellRendererVariant` will be not be used if the result of
+		`cellRendererRecycler.create()` already has a variant set.
+
+		@see `GridView.CHILD_VARIANT_CELL_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customCellRendererVariant:String = null;
 
 	private var _previousCustomHeaderRendererVariant:String = null;
 
@@ -1979,6 +1998,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.selectable = (state.rowIndex == -1) ? false : this._selectable;
 		rowRenderer.cellRendererRecycler = (state.rowIndex == -1) ? null : this._cellRendererRecycler;
 		rowRenderer.customColumnWidths = (state.rowIndex == -1) ? null : this._customColumnWidths;
+		rowRenderer.customCellRendererVariant = (state.rowIndex == -1) ? null : this.customCellRendererVariant;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 

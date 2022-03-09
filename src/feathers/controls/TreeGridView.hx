@@ -178,6 +178,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		The variant used to style the cell renderers in a theme.
 
+		To override this default variant, set the
+		`TreeGridView.customCellRendererVariant` property.
+
+		@see `TreeGridView.customCellRendererVariant`
 		@see `feathers.style.IVariantStyleObject.variant`
 		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
@@ -488,6 +492,21 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.setInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		return this._defaultHeaderStorage.headerRendererRecycler;
 	}
+
+	/**
+		A custom variant to set on all cell renderers, instead of
+		`TreeGridView.CHILD_VARIANT_CELL_RENDERER`.
+
+		The `customCellRendererVariant` will be not be used if the result of
+		`cellRendererRecycler.create()` already has a variant set.
+
+		@see `TreeGridView.CHILD_VARIANT_CELL_RENDERER`
+		@see `feathers.style.IVariantStyleObject.variant`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customCellRendererVariant:String = null;
 
 	private var _previousCustomHeaderRendererVariant:String = null;
 
@@ -1851,6 +1870,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		rowRenderer.columns = (state.rowLocation == null) ? null : this._columns;
 		rowRenderer.selectable = (state.rowLocation == null) ? false : this._selectable;
 		rowRenderer.cellRendererRecycler = (state.rowLocation == null) ? null : this._cellRendererRecycler;
+		rowRenderer.customCellRendererVariant = (state.rowLocation == null) ? null : this.customCellRendererVariant;
 		rowRenderer.customColumnWidths = (state.rowLocation == null) ? null : this._customColumnWidths;
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
