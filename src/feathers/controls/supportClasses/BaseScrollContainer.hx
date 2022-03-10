@@ -1420,7 +1420,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		var viewPortX = this.paddingLeft + this.leftViewPortOffset;
 		var viewPortY = this.paddingTop + this.topViewPortOffset;
-		if (this._scrollMode == MASK || this._currentViewPortMaskSkin != null) {
+		if (this._scrollMode == MASK || this._scrollMode == MASKLESS || this._currentViewPortMaskSkin != null) {
 			viewPortX -= scrollX;
 			viewPortY -= scrollY;
 		}
@@ -1537,7 +1537,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		var viewPortX = this.paddingLeft + this.leftViewPortOffset;
 		var viewPortY = this.paddingTop + this.topViewPortOffset;
-		if (this._scrollMode == MASK || this._currentViewPortMaskSkin != null) {
+		if (this._scrollMode == MASK || this._scrollMode == MASKLESS || this._currentViewPortMaskSkin != null) {
 			viewPortX -= scrollX;
 			viewPortY -= scrollY;
 		}
@@ -2009,7 +2009,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			scrollY = Math.round(scrollY / scaleFactorY) * scaleFactorY;
 		}
 
-		if (this._scrollMode == MASK || this._currentViewPortMaskSkin != null) {
+		if (this._scrollMode == MASK || this._scrollMode == MASKLESS || this._currentViewPortMaskSkin != null) {
 			var displayViewPort = cast(this._viewPort, DisplayObject);
 			displayViewPort.scrollRect = null;
 			this._viewPort.x = this.paddingLeft + this.leftViewPortOffset - scrollX;

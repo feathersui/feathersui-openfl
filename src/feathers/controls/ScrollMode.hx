@@ -29,4 +29,16 @@ enum ScrollMode {
 		@since 1.0.0
 	**/
 	MASK;
+
+	/**
+		The view port's `x` and `y` position are updated, but it is not masked
+		in any way. `MASKLESS` may have slightly better performance than `MASK`
+		on some devices.
+
+		Warning: Using `MASKLESS` may reveal some children outside of the bounds
+		of the view port, if they are not obscured by other display objects.
+
+		@since 1.0.0
+	**/
+	MASKLESS;
 }
