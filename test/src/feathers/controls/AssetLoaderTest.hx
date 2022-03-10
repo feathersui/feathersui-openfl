@@ -18,6 +18,10 @@ import utest.Assert;
 import utest.Async;
 import utest.Test;
 
+#if hl
+@:keep
+class AssetLoaderTest extends Test {}
+#else
 @:keep
 class AssetLoaderTest extends Test {
 	private static final BLUE100x50 = "assets/fixtures/blue100x50.png";
@@ -211,3 +215,4 @@ class AssetLoaderTest extends Test {
 		}, 800);
 	}
 }
+#end
