@@ -9,15 +9,11 @@ on:
       - master
 
 jobs:
-
   test-neko-legacy:
-
     strategy:
       matrix:
         haxe-version: [4.0.5, 4.1.5]
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - uses: krdlab/setup-haxe@v1
@@ -33,15 +29,11 @@ jobs:
     - name: Run Tests
       working-directory: test
       run: haxelib run openfl test neko
-
   test-neko:
-
     strategy:
       matrix:
         haxe-version: [4.2.1]
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - uses: krdlab/setup-haxe@v1
@@ -57,15 +49,31 @@ jobs:
     - name: Run Tests
       working-directory: test
       run: haxelib run openfl test neko
-
-  test-html5:
-
+  test-hashlink:
     strategy:
       matrix:
         haxe-version: [4.2.1]
-
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: ${{ matrix.haxe-version }}
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.9.0 --quiet
+        haxelib install openfl 9.1.0 --quiet
+        haxelib install actuate --quiet
+        haxelib install utest --quiet
+        haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Run Tests
+      working-directory: test
+      run: haxelib run openfl test hl
+  test-html5:
+    strategy:
+      matrix:
+        haxe-version: [4.2.1]
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@v2
     - uses: krdlab/setup-haxe@v1
@@ -90,15 +98,11 @@ jobs:
       run: |
         haxelib run openfl build html5 -final -Dheadless_html5
         node playwright-runner.js
-
   test-air:
-
     strategy:
       matrix:
         haxe-version: [4.2.1]
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
     - uses: joshtynjala/setup-adobe-air-action@v1
