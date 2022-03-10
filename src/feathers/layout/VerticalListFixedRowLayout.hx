@@ -674,10 +674,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 			for (i in 0...items.length) {
 				var item = items[i];
 				if (item == null) {
-					if (this._virtualCache == null || this._virtualCache.length == 0) {
+					if (this._virtualCache == null || this._virtualCache.length <= i) {
 						continue;
 					}
-					var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 					if (cacheItem == null) {
 						continue;
 					}
@@ -696,12 +696,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				}
 				actualRowHeight = item.height;
 				if (this._virtualCache != null) {
-					// since all items are the same height, we can store just
-					// one value as an optimization
-					var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 					if (cacheItem != null && cacheItem.itemHeight != actualRowHeight) {
 						cacheItem.itemHeight = actualRowHeight;
-						this._virtualCache[0] = cacheItem;
+						this._virtualCache[i] = cacheItem;
 						FeathersEvent.dispatch(this, Event.CHANGE);
 					}
 					// changing the item height in the cache may affect the
@@ -727,10 +725,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		var itemHeight = 0.0;
 		if (this._rowHeight != null) {
 			itemHeight = this._rowHeight;
-		} else if (this._virtualCache != null && this._virtualCache.length != 0) {
-			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
-			if (cacheItem != null) {
-				itemHeight = cacheItem.itemHeight;
+		} else if (this._virtualCache != null) {
+			for (cacheItem in this._virtualCache) {
+				if (cacheItem != null) {
+					itemHeight = cacheItem.itemHeight;
+					break;
+				}
 			}
 		}
 		itemHeight += adjustedGap;
@@ -774,10 +774,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		var itemHeight = 0.0;
 		if (this._rowHeight != null) {
 			itemHeight = this._rowHeight;
-		} else if (this._virtualCache != null && this._virtualCache.length != 0) {
-			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
-			if (cacheItem != null) {
-				itemHeight = cacheItem.itemHeight;
+		} else if (this._virtualCache != null) {
+			for (cacheItem in this._virtualCache) {
+				if (cacheItem != null) {
+					itemHeight = cacheItem.itemHeight;
+					break;
+				}
 			}
 		}
 		itemHeight += adjustedGap;
@@ -817,10 +819,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		var itemHeight = 0.0;
 		if (this._rowHeight != null) {
 			itemHeight = this._rowHeight;
-		} else if (this._virtualCache != null && this._virtualCache.length != 0) {
-			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
-			if (cacheItem != null) {
-				itemHeight = cacheItem.itemHeight;
+		} else if (this._virtualCache != null) {
+			for (cacheItem in this._virtualCache) {
+				if (cacheItem != null) {
+					itemHeight = cacheItem.itemHeight;
+					break;
+				}
 			}
 		}
 
