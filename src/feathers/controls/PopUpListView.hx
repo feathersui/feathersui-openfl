@@ -609,6 +609,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 		if (this._focusManager == null) {
 			this.stage.focus = this;
+			// removing focus from the ListView might cause closeListView()
+			// to be called recursively, so check again whether it is open
+			// before continuing
 			if (!this.open) {
 				return;
 			}
