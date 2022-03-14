@@ -609,6 +609,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 		if (this._focusManager == null) {
 			this.stage.focus = this;
+			if (!this.open) {
+				return;
+			}
 		}
 		if (this.popUpAdapter != null) {
 			this.popUpAdapter.close();
