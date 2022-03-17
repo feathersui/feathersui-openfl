@@ -138,7 +138,7 @@ class SlideTransitionBuilder {
 	**/
 	public function setParallax(parallax:Float):SlideTransitionBuilder {
 		if (parallax < 0.0 || parallax > 1.0) {
-			throw new RangeError("Invalid parallax value. Expected a value between 0.0 and 1.0.");
+			throw new RangeError('Invalid parallax value: ${parallax}. Expected a value between 0.0 and 1.0.');
 		}
 		this._parallax = parallax;
 		return this;

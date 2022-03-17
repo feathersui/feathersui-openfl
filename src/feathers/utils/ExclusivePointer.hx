@@ -94,7 +94,7 @@ class ExclusivePointer {
 			throw new ArgumentError("Target cannot claim a pointer on the selected stage because it appears on a different stage.");
 		}
 		if (pointerID < 0 && pointerID != POINTER_ID_MOUSE) {
-			throw new ArgumentError("Invalid pointer. Pointer ID must be >= 0 or ExclusivePointer.POINTER_ID_MOUSE.");
+			throw new ArgumentError('Invalid pointer ID: ${pointerID}. Pointer ID must be >= 0 or ExclusivePointer.POINTER_ID_MOUSE.');
 		}
 		var existingTarget = this._claims.get(pointerID);
 		if (existingTarget != null) {
@@ -136,7 +136,7 @@ class ExclusivePointer {
 	**/
 	public function getClaim(pointerID:Int):DisplayObject {
 		if (pointerID < 0 && pointerID != POINTER_ID_MOUSE) {
-			throw new ArgumentError("Invalid pointer. Pointer ID must be >= 0 or ExclusivePointer.POINTER_ID_MOUSE.");
+			throw new ArgumentError('Invalid pointer ID: ${pointerID}. Pointer ID must be >= 0 or ExclusivePointer.POINTER_ID_MOUSE.');
 		}
 		return this._claims.get(pointerID);
 	}
