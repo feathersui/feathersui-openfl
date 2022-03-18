@@ -387,6 +387,19 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 	}
 
 	/**
+		Sets both column and row gap properties to the same value.
+
+		@see `ResponsiveGridLayout.columnGap`
+		@see `ResponsiveGridLayout.rowGap`
+
+		@since 1.0.0
+	**/
+	public function setGap(value:Float):Void {
+		this.columnGap = value;
+		this.rowGap = value;
+	}
+
+	/**
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
