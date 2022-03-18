@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -17,6 +16,7 @@ import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
 import feathers.core.IFocusContainer;
 import feathers.core.IIndexSelector;
+import feathers.core.IMeasureObject;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.InvalidationFlag;
@@ -34,6 +34,7 @@ import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelListViewStyles;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
@@ -1081,6 +1082,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
+			itemRenderer.removeEventListener(Event.RESIZE, listView_itemRenderer_resizeHandler);
 			this.resetItemRenderer(itemRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(itemRenderer);
@@ -1262,6 +1264,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		if ((itemRenderer is IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
+		}
+		if ((itemRenderer is IMeasureObject)) {
+			itemRenderer.addEventListener(Event.RESIZE, listView_itemRenderer_resizeHandler);
 		}
 		this.itemRendererToItemState.set(itemRenderer, state);
 		this.dataToItemRenderer.set(state.data, itemRenderer);
@@ -1466,6 +1471,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		this.handleSelectionChange(state.data, state.index, event.ctrlKey, event.shiftKey);
+	}
+
+	private function listView_itemRenderer_resizeHandler(event:Event):Void {
+		if (this._validating) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function listView_itemRenderer_changeHandler(event:Event):Void {
