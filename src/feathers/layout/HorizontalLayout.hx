@@ -332,6 +332,66 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		return this._justifyResetEnabled;
 	}
 
+	private var _percentWidthResetEnabled:Bool = false;
+
+	/**
+		Indicates if the width of items should be reset for re-measurement if
+		the item has `HorizontalLayoutData` with the `percentWidth` property
+		populated and the container's width is not explicitly set.
+
+		Useful if changes to the items' content might affect their measured
+		dimensions after applying the percentages. For instance, if changing a
+		component's text should cause it to resize.
+
+		@see `HorizontalLayoutData.percentWidth`
+
+		@since 1.0.0
+	**/
+	public var percentWidthResetEnabled(get, set):Bool;
+
+	private function get_percentWidthResetEnabled():Bool {
+		return this._percentWidthResetEnabled;
+	}
+
+	private function set_percentWidthResetEnabled(value:Bool):Bool {
+		if (this._percentWidthResetEnabled == value) {
+			return this._percentWidthResetEnabled;
+		}
+		this._percentWidthResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._percentWidthResetEnabled;
+	}
+
+	private var _percentHeightResetEnabled:Bool = false;
+
+	/**
+		Indicates if the height of items should be reset for re-measurement if
+		the item has `HorizontalLayoutData` with the `percentHeight` property
+		populated and the container's height is not explicitly set.
+
+		Useful if changes to the items' content might affect their measured
+		dimensions after applying the percentages. For instance, if changing a
+		component's text should cause it to resize.
+
+		@see `HorizontalLayoutData.percentHeight`
+
+		@since 1.0.0
+	**/
+	public var percentHeightResetEnabled(get, set):Bool;
+
+	private function get_percentHeightResetEnabled():Bool {
+		return this._percentHeightResetEnabled;
+	}
+
+	private function set_percentHeightResetEnabled(value:Bool):Bool {
+		if (this._percentHeightResetEnabled == value) {
+			return this._percentHeightResetEnabled;
+		}
+		this._percentHeightResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._percentHeightResetEnabled;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -434,11 +494,16 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 	private inline function validateItems(items:Array<DisplayObject>, measurements:Measurements) {
 		var isJustified = this._verticalAlign == JUSTIFY;
-		var justifyHeight = measurements.height;
-		if (justifyHeight != null) {
-			justifyHeight -= (this._paddingTop + this._paddingBottom);
+		var explicitContentWidth = measurements.width;
+		if (explicitContentWidth != null) {
+			explicitContentWidth -= (this._paddingLeft + this._paddingRight);
+		}
+		var explicitContentHeight = measurements.height;
+		if (explicitContentHeight != null) {
+			explicitContentHeight -= (this._paddingTop + this._paddingBottom);
 		}
 		for (item in items) {
+			var percentWidth:Null<Float> = null;
 			var percentHeight:Null<Float> = null;
 			if ((item is ILayoutObject)) {
 				var layoutItem = cast(item, ILayoutObject);
@@ -447,32 +512,38 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				}
 				var layoutData = Std.downcast(layoutItem.layoutData, HorizontalLayoutData);
 				if (layoutData != null) {
+					percentWidth = layoutData.percentWidth;
 					percentHeight = layoutData.percentHeight;
 				}
 			}
 			if (isJustified) {
-				if (justifyHeight != null) {
-					item.height = justifyHeight;
+				if (explicitContentHeight != null) {
+					item.height = explicitContentHeight;
 				} else if (this._justifyResetEnabled && (item is IMeasureObject)) {
 					cast(item, IMeasureObject).resetHeight();
 				}
-			} else if (justifyHeight != null) {
+			} else if (explicitContentHeight != null) {
 				if (percentHeight != null) {
 					if (percentHeight < 0.0) {
 						percentHeight = 0.0;
 					} else if (percentHeight > 100.0) {
 						percentHeight = 100.0;
 					}
-					item.height = justifyHeight * (percentHeight / 100.0);
+					item.height = explicitContentHeight * (percentHeight / 100.0);
 				}
+			} else if (percentHeight != null && this._percentHeightResetEnabled && (item is IMeasureObject)) {
+				cast(item, IMeasureObject).resetHeight();
+			}
+			if (percentWidth != null && this._percentWidthResetEnabled && explicitContentWidth == null && (item is IMeasureObject)) {
+				cast(item, IMeasureObject).resetWidth();
 			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
-			if (isJustified && justifyHeight == null && measurements.maxHeight != null) {
-				var maxJustifyHeight = measurements.maxHeight - this._paddingTop - this._paddingBottom;
-				if (item.height > maxJustifyHeight) {
-					item.height = maxJustifyHeight;
+			if (isJustified && explicitContentHeight == null && measurements.maxHeight != null) {
+				var maxExplicitContentHeight = measurements.maxHeight - this._paddingTop - this._paddingBottom;
+				if (item.height > maxExplicitContentHeight) {
+					item.height = maxExplicitContentHeight;
 					if ((item is IValidating)) {
 						cast(item, IValidating).validateNow();
 					}
