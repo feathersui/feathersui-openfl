@@ -452,7 +452,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 					if (!layoutItem.includeInLayout) {
 						continue;
 					}
-					var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
+					var layoutData = Std.downcast(layoutItem.layoutData, HorizontalLayoutData);
 					if (layoutData != null) {
 						percentHeight = layoutData.percentHeight;
 					}
