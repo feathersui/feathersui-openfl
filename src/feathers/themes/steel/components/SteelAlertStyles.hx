@@ -56,6 +56,7 @@ class SteelAlertStyles {
 					layout.paddingBottom = 10.0;
 					layout.paddingLeft = 10.0;
 					layout.gap = 6.0;
+					layout.percentWidthResetEnabled = true;
 					alert.layout = layout;
 				}
 			});
