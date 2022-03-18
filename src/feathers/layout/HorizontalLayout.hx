@@ -439,6 +439,17 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			justifyHeight -= (this._paddingTop + this._paddingBottom);
 		}
 		for (item in items) {
+			var percentHeight:Null<Float> = null;
+			if ((item is ILayoutObject)) {
+				var layoutItem = cast(item, ILayoutObject);
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+				var layoutData = Std.downcast(layoutItem.layoutData, HorizontalLayoutData);
+				if (layoutData != null) {
+					percentHeight = layoutData.percentHeight;
+				}
+			}
 			if (isJustified) {
 				if (justifyHeight != null) {
 					item.height = justifyHeight;
@@ -446,17 +457,6 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 					cast(item, IMeasureObject).resetHeight();
 				}
 			} else if (justifyHeight != null) {
-				var percentHeight:Null<Float> = null;
-				if ((item is ILayoutObject)) {
-					var layoutItem = cast(item, ILayoutObject);
-					if (!layoutItem.includeInLayout) {
-						continue;
-					}
-					var layoutData = Std.downcast(layoutItem.layoutData, HorizontalLayoutData);
-					if (layoutData != null) {
-						percentHeight = layoutData.percentHeight;
-					}
-				}
 				if (percentHeight != null) {
 					if (percentHeight < 0.0) {
 						percentHeight = 0.0;

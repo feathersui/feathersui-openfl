@@ -439,6 +439,17 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			justifyWidth -= (this._paddingLeft + this._paddingRight);
 		}
 		for (item in items) {
+			var percentWidth:Null<Float> = null;
+			if ((item is ILayoutObject)) {
+				var layoutItem = cast(item, ILayoutObject);
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+				var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
+				if (layoutData != null) {
+					percentWidth = layoutData.percentWidth;
+				}
+			}
 			if (isJustified) {
 				if (justifyWidth != null) {
 					item.width = justifyWidth;
@@ -446,17 +457,6 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 					cast(item, IMeasureObject).resetWidth();
 				}
 			} else if (justifyWidth != null) {
-				var percentWidth:Null<Float> = null;
-				if ((item is ILayoutObject)) {
-					var layoutItem = cast(item, ILayoutObject);
-					if (!layoutItem.includeInLayout) {
-						continue;
-					}
-					var layoutData = Std.downcast(layoutItem.layoutData, VerticalLayoutData);
-					if (layoutData != null) {
-						percentWidth = layoutData.percentWidth;
-					}
-				}
 				if (percentWidth != null) {
 					if (percentWidth < 0.0) {
 						percentWidth = 0.0;
