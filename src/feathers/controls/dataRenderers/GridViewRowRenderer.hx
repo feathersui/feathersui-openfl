@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IMeasureObject;
 import feathers.style.IVariantStyleObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.IPointerDelegate;
@@ -512,6 +513,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if ((cellRenderer is IToggle)) {
 			cellRenderer.addEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
 		}
+		if ((cellRenderer is IMeasureObject)) {
+			cellRenderer.addEventListener(Event.RESIZE, gridViewRowRenderer_cellRenderer_resizeHandler);
+		}
 		this._cellRendererToCellState.set(cellRenderer, state);
 		this._columnToCellRenderer.set(column, cellRenderer);
 		storage.activeCellRenderers.push(cellRenderer);
@@ -643,6 +647,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+	}
+
+	private function gridViewRowRenderer_cellRenderer_resizeHandler(event:Event):Void {
+		if (this._validating) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_changeHandler(event:Event):Void {

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IMeasureObject;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
@@ -1064,6 +1065,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			itemRenderer.removeEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
+			itemRenderer.removeEventListener(Event.RESIZE, treeView_itemRenderer_resizeHandler);
 			itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
 			itemRenderer.removeEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 			this.resetItemRenderer(itemRenderer, state, storage);
@@ -1292,6 +1294,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		if ((itemRenderer is IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
+		}
+		if ((itemRenderer is IMeasureObject)) {
+			itemRenderer.addEventListener(Event.RESIZE, treeView_itemRenderer_resizeHandler);
 		}
 		if ((itemRenderer is IOpenCloseToggle)) {
 			itemRenderer.addEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
@@ -1736,6 +1741,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		// use the setter
 		this.selectedLocation = state.location.copy();
+	}
+
+	private function treeView_itemRenderer_resizeHandler(event:Event):Void {
+		if (this._validating) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function treeView_itemRenderer_changeHandler(event:Event):Void {

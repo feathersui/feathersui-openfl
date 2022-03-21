@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IMeasureObject;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.GridViewHeaderRenderer;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
@@ -1754,6 +1755,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			headerRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
 			headerRenderer.removeEventListener(MouseEvent.CLICK, gridView_headerRenderer_clickHandler);
 			headerRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridView_headerRenderer_touchTapHandler);
+			headerRenderer.removeEventListener(Event.RESIZE, gridView_headerRenderer_resizeHandler);
 			this.resetHeaderRenderer(headerRenderer, state);
 			if (this._defaultHeaderStorage.measurements != null) {
 				this._defaultHeaderStorage.measurements.restore(headerRenderer);
@@ -2038,6 +2040,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			#if (openfl >= "9.0.0")
 			headerRenderer.addEventListener(TouchEvent.TOUCH_TAP, gridView_headerRenderer_touchTapHandler);
 			#end
+		}
+		if ((headerRenderer is IMeasureObject)) {
+			headerRenderer.addEventListener(Event.RESIZE, gridView_headerRenderer_resizeHandler);
 		}
 		this.headerRendererToHeaderState.set(headerRenderer, state);
 		this.dataToHeaderRenderer.set(state.column, headerRenderer);
@@ -2819,6 +2824,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
 		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
+	}
+
+	private function gridView_headerRenderer_resizeHandler(event:Event):Void {
+		if (this._validating) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function gridView_headerDivider_mouseDownHandler(event:MouseEvent):Void {

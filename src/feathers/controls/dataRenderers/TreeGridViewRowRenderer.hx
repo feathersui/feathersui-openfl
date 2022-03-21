@@ -8,6 +8,7 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IMeasureObject;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.IPointerDelegate;
@@ -515,6 +516,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeGridViewRowRenderer_cellRenderer_touchTapHandler);
 			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, treeGridViewRowRenderer_cellRenderer_triggerHandler);
 			cellRenderer.removeEventListener(Event.CHANGE, treeGridViewRowRenderer_cellRenderer_changeHandler);
+			cellRenderer.removeEventListener(Event.RESIZE, treeGridViewRowRenderer_cellRenderer_resizeHandler);
 			cellRenderer.removeEventListener(Event.OPEN, treeGridViewRowRenderer_cellRenderer_openHandler);
 			cellRenderer.removeEventListener(Event.CLOSE, treeGridViewRowRenderer_cellRenderer_closeHandler);
 			this.resetCellRenderer(cellRenderer, state, storage);
@@ -589,6 +591,9 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 		if ((cellRenderer is IToggle)) {
 			cellRenderer.addEventListener(Event.CHANGE, treeGridViewRowRenderer_cellRenderer_changeHandler);
+		}
+		if ((cellRenderer is IMeasureObject)) {
+			cellRenderer.addEventListener(Event.RESIZE, treeGridViewRowRenderer_cellRenderer_resizeHandler);
 		}
 		if ((cellRenderer is IOpenCloseToggle)) {
 			cellRenderer.addEventListener(Event.OPEN, treeGridViewRowRenderer_cellRenderer_openHandler);
@@ -753,6 +758,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
+	}
+
+	private function treeGridViewRowRenderer_cellRenderer_resizeHandler(event:Event):Void {
+		if (this._validating) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function treeGridViewRowRenderer_cellRenderer_changeHandler(event:Event):Void {

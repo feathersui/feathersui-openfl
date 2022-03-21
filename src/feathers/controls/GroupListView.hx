@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IMeasureObject;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
@@ -1166,6 +1167,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
 				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
+			itemRenderer.removeEventListener(Event.RESIZE, groupListView_itemRenderer_resizeHandler);
 			this.resetItemRenderer(itemRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(itemRenderer);
@@ -1325,6 +1327,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if ((itemRenderer is IToggle)) {
 				itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
+		}
+		if ((itemRenderer is IMeasureObject)) {
+			itemRenderer.addEventListener(Event.RESIZE, groupListView_itemRenderer_resizeHandler);
 		}
 		this.itemRendererToItemState.set(itemRenderer, state);
 		this.dataToItemRenderer.set(state.data, itemRenderer);
@@ -1830,6 +1835,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		this.handleSelectionChange(state.data, state.location, event.ctrlKey, event.shiftKey);
+	}
+
+	private function groupListView_itemRenderer_resizeHandler(event:Event):Void {
+		if (this._validating) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function groupListView_itemRenderer_changeHandler(event:Event):Void {

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.IMeasureObject;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.GridViewHeaderRenderer;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
@@ -1588,6 +1589,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			headerRenderer.removeEventListener(TriggerEvent.TRIGGER, treeGridView_headerRenderer_triggerHandler);
 			headerRenderer.removeEventListener(MouseEvent.CLICK, treeGridView_headerRenderer_clickHandler);
 			headerRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeGridView_headerRenderer_touchTapHandler);
+			headerRenderer.removeEventListener(Event.RESIZE, treeGridView_headerRenderer_resizeHandler);
 			this.resetHeaderRenderer(headerRenderer, state);
 			if (this._defaultHeaderStorage.measurements != null) {
 				this._defaultHeaderStorage.measurements.restore(headerRenderer);
@@ -1912,6 +1914,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			#if (openfl >= "9.0.0")
 			headerRenderer.addEventListener(TouchEvent.TOUCH_TAP, treeGridView_headerRenderer_touchTapHandler);
 			#end
+		}
+		if ((headerRenderer is IMeasureObject)) {
+			headerRenderer.addEventListener(Event.RESIZE, treeGridView_headerRenderer_resizeHandler);
 		}
 		this.headerRendererToHeaderState.set(headerRenderer, state);
 		this.dataToHeaderRenderer.set(state.column, headerRenderer);
@@ -2689,6 +2694,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
 		TreeGridViewEvent.dispatchForHeader(this, TreeGridViewEvent.HEADER_TRIGGER, state);
+	}
+
+	private function treeGridView_headerRenderer_resizeHandler(event:Event):Void {
+		if (this._validating) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 
 	private function treeGridView_headerDivider_mouseDownHandler(event:MouseEvent):Void {
