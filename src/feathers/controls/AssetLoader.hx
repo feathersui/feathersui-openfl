@@ -9,7 +9,9 @@
 package feathers.controls;
 
 import feathers.core.FeathersControl;
+import feathers.core.IValidating;
 import feathers.layout.Measurements;
+import feathers.skins.RectangleSkin;
 import feathers.utils.ScaleUtil;
 import openfl.Assets;
 import openfl.display.Bitmap;
@@ -246,6 +248,8 @@ class AssetLoader extends FeathersControl {
 		return this._contentMeasurements.height;
 	}
 
+	private var _scaleModeMask:DisplayObject = null;
+
 	private var _scaleMode:StageScaleMode = StageScaleMode.SHOW_ALL;
 
 	/**
@@ -405,6 +409,7 @@ class AssetLoader extends FeathersControl {
 			return;
 		}
 
+		var needsMask = false;
 		switch (this._scaleMode) {
 			case StageScaleMode.EXACT_FIT:
 				this.content.x = 0.0;
@@ -415,14 +420,19 @@ class AssetLoader extends FeathersControl {
 				this.content.x = 0.0;
 				this.content.y = 0.0;
 				this._contentMeasurements.restore(this.content);
+				if ((this.content is IValidating)) {
+					cast(this.content, IValidating).validateNow();
+				}
+				needsMask = this.content.width > this.actualWidth || this.content.height > this.actualHeight;
 			case StageScaleMode.NO_BORDER:
 				var original = new Rectangle(0.0, 0.0, this._contentMeasurements.width, this._contentMeasurements.height);
 				var into = new Rectangle(0.0, 0.0, this.actualWidth, this.actualHeight);
-				ScaleUtil.fillRectangle(original, into, into);
-				this.content.x = into.x;
-				this.content.y = into.y;
-				this.content.width = into.width;
-				this.content.height = into.height;
+				var scaled = ScaleUtil.fillRectangle(original, into, into);
+				this.content.x = scaled.x;
+				this.content.y = scaled.y;
+				this.content.width = scaled.width;
+				this.content.height = scaled.height;
+				needsMask = this.content.width > this.actualWidth || this.content.height > this.actualHeight;
 			default: // showAll
 				var original = new Rectangle(0.0, 0.0, this._contentMeasurements.width, this._contentMeasurements.height);
 				var into = new Rectangle(0.0, 0.0, this.actualWidth, this.actualHeight);
@@ -431,6 +441,22 @@ class AssetLoader extends FeathersControl {
 				this.content.y = into.y;
 				this.content.width = into.width;
 				this.content.height = into.height;
+		}
+
+		if (needsMask) {
+			if (this._scaleModeMask == null) {
+				this._scaleModeMask = new RectangleSkin(SolidColor(0xff00ff));
+				this.addChild(this._scaleModeMask);
+			}
+			this._scaleModeMask.width = this.actualWidth;
+			this._scaleModeMask.height = this.actualHeight;
+			this.content.mask = this._scaleModeMask;
+		} else {
+			if (this._scaleModeMask != null) {
+				this.removeChild(this._scaleModeMask);
+				this._scaleModeMask = null;
+			}
+			this.content.mask = null;
 		}
 	}
 
