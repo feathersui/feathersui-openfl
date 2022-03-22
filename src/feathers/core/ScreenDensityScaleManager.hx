@@ -15,7 +15,7 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.geom.Rectangle;
-#if !((desktop && !air) || (web && !flash))
+#if !(!flash && (desktop || web) && (openfl < "9.2.0" || openfl_dpi_aware))
 import feathers.utils.DeviceUtil;
 import openfl.system.Capabilities;
 #end
@@ -77,7 +77,7 @@ class ScreenDensityScaleManager extends EventDispatcher implements IScaleManager
 		if (this._target == null) {
 			return result;
 		}
-		#if ((desktop && !air) || (web && !flash))
+		#if (!flash && (desktop || web) && (openfl < "9.2.0" || openfl_dpi_aware))
 		result = this._target.stage.window.scale;
 		#if web
 		if (result > 2.0) {
