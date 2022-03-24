@@ -120,6 +120,26 @@ class ScreenDensityScaleManager extends EventDispatcher implements IScaleManager
 	private var _scaler:ScreenDensityScaleCalculator;
 
 	/**
+		The scale manager's scale calculator.
+
+		@since 1.0.0
+	**/
+	public var scaler(get, set):ScreenDensityScaleCalculator;
+
+	private function get_scaler():ScreenDensityScaleCalculator {
+		return this._scaler;
+	}
+
+	private function set_scaler(value:ScreenDensityScaleCalculator):ScreenDensityScaleCalculator {
+		if (this._scaler == value) {
+			return this._scaler;
+		}
+		this._scaler = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._scaler;
+	}
+
+	/**
 		@see `feathers.core.IScaleManager.getScale()`
 	**/
 	public function getScale():Float {
