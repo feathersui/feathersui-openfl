@@ -84,7 +84,48 @@ class CustomScaleManager extends EventDispatcher implements IScaleManager {
 	}
 
 	private var _customScale:Float;
+
+	/**
+		Changes the scale manager's custom scale value.
+
+		@since 1.0.0
+	**/
+	public var customScale(get, set):Float;
+
+	private function get_customScale():Float {
+		return this._customScale;
+	}
+
+	private function set_customScale(value:Float):Float {
+		if (this._customScale == value) {
+			return this._customScale;
+		}
+		this._customScale = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._customScale;
+	}
+
 	private var _customBounds:Rectangle;
+
+	/**
+		Changes the scale manager's custom bounds value.
+
+		@since 1.0.0
+	**/
+	public var customBounds(get, set):Rectangle;
+
+	private function get_customBounds():Rectangle {
+		return this._customBounds;
+	}
+
+	private function set_customBounds(value:Rectangle):Rectangle {
+		if (this._customBounds == value) {
+			return this._customBounds;
+		}
+		this._customBounds = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._customBounds;
+	}
 
 	/**
 		@see `feathers.core.IScaleManager.getScale()`
