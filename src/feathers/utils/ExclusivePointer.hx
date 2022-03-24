@@ -35,7 +35,7 @@ class ExclusivePointer {
 	// integer, so it overflows and becomes negative
 	// as a workaround, we'll use this completely arbitrary threshold to check
 	// for overflow, while still considering some negative values invalid
-	private static final OVERFLOW_POINTER_ID:Int = -1000000000;
+	private static final OVERFLOW_POINTER_ID:Int = -1000000;
 
 	private static final stageToObject:Map<Stage, ExclusivePointer> = [];
 
