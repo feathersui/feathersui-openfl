@@ -16,7 +16,9 @@ import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
 /**
-	Displays a collection of form controls.
+	Groups a set of user-editable fields together. Supports the submission of
+	data when the Enter/Return key is pressed, or when a specific button is
+	triggered.
 
 	@event feathers.events.FormEvent.SUBMIT Dispatched when the form is
 	submitted. This event may be dispatched when the `Form.submitButton` is
