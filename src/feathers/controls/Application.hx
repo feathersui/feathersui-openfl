@@ -97,6 +97,15 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	private var _currentScaleManager:IScaleManager;
 
 	/**
+		Manages the application's scale, position, and dimensions. The default
+		theme sets this to an instance of `ScreenDensityScaleManager`, which
+		uses the window scale on desktop or web, or the screen DPI on mobile, to
+		determine how to scale the application within the stage bounds.
+
+		@see `feathers.core.ScreenDensityScaleManager`
+		@see `feathers.core.LetterboxScaleManager`
+		@see `feathers.core.CustomScaleManager`
+
 		@since 1.0.0
 	**/
 	@:style

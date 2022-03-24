@@ -21,6 +21,56 @@ import openfl.system.Capabilities;
 #end
 
 /**
+	Uses the device's screen density (sometimes called the DPI or PPI) to
+	calculate the ideal scale value for the application. The dimensions will be
+	calculated so that the application fills the entire stage, regardless of the
+	screen resolution of the device (or the size of the window, where
+	appropriate). With this in mind, it's best to use _fluid_ layouts, to
+	account for differences in screen resolution and aspect ratios.
+
+	On desktop and web, the contents scale factor of the stage is detected to
+	determine the application scale.
+
+	On mobile, the appropriate scale is calculated based on the value of
+	`Capabilities.screenDPI`. The calculation is inspired by native apps on
+	Google's Android operating system where "density-independent pixels" are
+	used for layout.
+
+	The following chart shows how different screen densities map to different
+	scale values returned by `ScreenDensityScaleManager`.
+
+	| Android | iOS              | Density | Scale |
+	| ------- | ---------------- | ------- | ----- |
+	| ldpi    |                  | 120     | 0.75  |
+	| mdpi    | non-Retina (@1x) | 160     | 1     |
+	| hdpi    |                  | 240     | 1.5   |
+	| xhdpi   | Retina (@2x)     | 320     | 2     |
+	| xxhdpi  | Retina HD (@3x)  | 480     | 3     |
+	| xxxhdpi |                  | 640     | 4     |
+
+	The density values in the table above are approximate. The screen density
+	of an iPhone 5 is 326, so it uses the scale factor from the xhdpi/Retina
+	bucket because 326 is closer to 320 than it is to 480.
+
+	The following example creates a `ScreenDensityScaleManager`:
+
+	```haxe
+	var manager = new ScreenDensityScaleManager();
+	application.scaleManager = manager;
+	```
+
+	The next example creates a `ScreenDensityScaleManager` with a custom
+	`ScreenDensityScaleCalculator` with a limited set of densities.
+
+	```haxe
+	var calculator = new ScreenDensityScaleCalculator();
+	calculator.addScaleForDensity(160, 1);
+	calculator.addScaleForDensity(240, 1.5);
+	calculator.addScaleForDensity(320, 2);
+	calculator.addScaleForDensity(480, 3);
+	var manager = new ScreenDensityScaleManager(calculator);
+	application.scaleManager = manager;
+	```
 
 	@see `feathers.controls.Application.scaleManager`
 

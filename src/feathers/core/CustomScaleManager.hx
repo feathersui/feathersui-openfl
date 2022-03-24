@@ -16,6 +16,26 @@ import openfl.events.EventDispatcher;
 import openfl.geom.Rectangle;
 
 /**
+	Allows the application's scale to be set manually to a specific value,
+	instead of calculating it automatically, like other scale managers. Defaults
+	to automtically calculating the application dimensions to fill the stage
+	dimensions, but can optionally accept custom application dimensions too.
+
+	The following example creates a `CustomScaleManager` with a scale value of
+	`2.0`:
+
+	```haxe
+	var manager = new CustomScaleManager(2.0);
+	application.scaleManager = manager;
+	```
+
+	The following example creates a `CustomScaleManager` with a scale value of
+	`1.0` and custom bounds:
+
+	```haxe
+	var manager = new CustomScaleManager(1.0, new Rectangle(0.0, 0.0, 640.0, 480.0));
+	application.scaleManager = manager;
+	```
 
 	@see `feathers.controls.Application.scaleManager`
 

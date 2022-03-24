@@ -16,6 +16,20 @@ import openfl.events.EventDispatcher;
 import openfl.geom.Rectangle;
 
 /**
+	Ensures that the application has the same internal width and height on
+	all devices, while scaling it larger or smaller to fit within the bounds of
+	the stage. The application may be letterboxed on some screens, which means
+	that there may be some empty space on the top and bottom, or on the left and
+	right, of the application's bounds within the window. The application will
+	always be centered within the stage bounds.
+
+	The following example creates a `LetterboxScaleManager` with an original
+	width value of `960.0` and an original height value of `640.0`:
+
+	```haxe
+	var manager = new LetterboxScaleManager(960.0, 640.0);
+	application.scaleManager = manager;
+	```
 
 	@see `feathers.controls.Application.scaleManager`
 
