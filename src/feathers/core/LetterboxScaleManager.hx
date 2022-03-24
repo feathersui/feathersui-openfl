@@ -79,7 +79,54 @@ class LetterboxScaleManager extends EventDispatcher implements IScaleManager {
 	}
 
 	private var _originalWidth:Float;
+
+	/**
+		The scale manager's original width value that will be scaled to fit
+		within the stage dimensions.
+
+		@see `LetterboxScaleManager.originalHeight`
+
+		@since 1.0.0
+	**/
+	public var originalWidth(get, set):Float;
+
+	private function get_originalWidth():Float {
+		return this._originalWidth;
+	}
+
+	private function set_originalWidth(value:Float):Float {
+		if (this._originalWidth == value) {
+			return this._originalWidth;
+		}
+		this._originalWidth = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._originalWidth;
+	}
+
 	private var _originalHeight:Float;
+
+	/**
+		The scale manager's original height value that will be scaled to fit
+		within the stage dimensions.
+
+		@see `LetterboxScaleManager.originalWidth`
+
+		@since 1.0.0
+	**/
+	public var originalHeight(get, set):Float;
+
+	private function get_originalHeight():Float {
+		return this._originalHeight;
+	}
+
+	private function set_originalHeight(value:Float):Float {
+		if (this._originalHeight == value) {
+			return this._originalHeight;
+		}
+		this._originalHeight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._originalHeight;
+	}
 
 	/**
 		@see `feathers.core.IScaleManager.getScale()`
