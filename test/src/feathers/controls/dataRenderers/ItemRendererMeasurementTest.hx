@@ -68,6 +68,10 @@ class ItemRendererMeasurementTest extends Test {
 	}
 
 	public function testMeasurementsWithRectangleSkinBackgroundSkinAndNoContent():Void {
+		var textField = new TextField();
+		textField.autoSize = LEFT;
+		textField.text = "\u200b";
+
 		this.addRectangleSkinBackground();
 		this._itemRenderer.validateNow();
 
@@ -77,7 +81,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(BACKGROUND_MIN_HEIGHT, this._itemRenderer.minHeight);
 		Assert.equals(BACKGROUND_MAX_WIDTH, this._itemRenderer.maxWidth);
 		Assert.equals(BACKGROUND_MAX_HEIGHT, this._itemRenderer.maxHeight);
-		Assert.equals(BACKGROUND_HEIGHT, this._itemRenderer.baseline);
+		Assert.equals(((BACKGROUND_HEIGHT - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithText():Void {
@@ -165,7 +169,8 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(textField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
+		// it probably isn't best to ignore secondary text baseline
+		Assert.equals(0.0, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithSecondaryHtmlText():Void {
@@ -185,7 +190,8 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(textField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
+		// it probably isn't best to ignore secondary text baseline
+		Assert.equals(0.0, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithSecondaryTextAndShowSecondaryTextFalse():Void {
@@ -217,11 +223,16 @@ class ItemRendererMeasurementTest extends Test {
 	}
 
 	public function testMeasurementsWithTextAndIconAndShowTextFalse():Void {
+		var text = "Hello World";
+		var textField = new TextField();
+		textField.autoSize = LEFT;
+		textField.text = text;
+
 		var icon = new RectangleSkin();
 		icon.width = 20.0;
 		icon.height = 20.0;
 		this._itemRenderer.icon = icon;
-		this._itemRenderer.text = "Hello World";
+		this._itemRenderer.text = text;
 		this._itemRenderer.showText = false;
 		this._itemRenderer.validateNow();
 
@@ -231,6 +242,6 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(20.0, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
-		Assert.equals(20.0, this._itemRenderer.baseline);
+		Assert.equals(((icon.height - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 }

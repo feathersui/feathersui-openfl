@@ -68,6 +68,10 @@ class ButtonMeasurementTest extends Test {
 	}
 
 	public function testMeasurementsWithRectangleSkinBackgroundSkinAndNoContent():Void {
+		var textField = new TextField();
+		textField.autoSize = LEFT;
+		textField.text = "\u200b";
+
 		this.addRectangleSkinBackground();
 		this._button.validateNow();
 
@@ -77,7 +81,7 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(BACKGROUND_MIN_HEIGHT, this._button.minHeight);
 		Assert.equals(BACKGROUND_MAX_WIDTH, this._button.maxWidth);
 		Assert.equals(BACKGROUND_MAX_HEIGHT, this._button.maxHeight);
-		Assert.equals(BACKGROUND_HEIGHT, this._button.baseline);
+		Assert.equals(((BACKGROUND_HEIGHT - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 
 	public function testMeasurementsWithText():Void {
@@ -149,11 +153,16 @@ class ButtonMeasurementTest extends Test {
 	}
 
 	public function testMeasurementsWithTextAndIconAndShowTextFalse():Void {
+		var text = "Hello World";
+		var textField = new TextField();
+		textField.autoSize = LEFT;
+		textField.text = text;
+
 		var icon = new RectangleSkin();
 		icon.width = 20.0;
 		icon.height = 20.0;
 		this._button.icon = icon;
-		this._button.text = "Hello World";
+		this._button.text = text;
 		this._button.showText = false;
 		this._button.validateNow();
 
@@ -163,6 +172,6 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(20.0, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
-		Assert.equals(20.0, this._button.baseline);
+		Assert.equals(((icon.height - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 }

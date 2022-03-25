@@ -180,6 +180,11 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 				// the same baseline, even if some have text and others do not.
 				if (this._currentIcon != null) {
 					textFieldY = this._currentIcon.y + (this._currentIcon.height - this._textMeasuredHeight) / 2.0;
+				} else if (this._currentBackgroundSkin != null) {
+					textFieldY = (this._currentBackgroundSkin.height - this._textMeasuredHeight) / 2.0;
+				} else {
+					// we don't have anything to measure against
+					return 0.0;
 				}
 			}
 			this.textField.text = "\u200b";
