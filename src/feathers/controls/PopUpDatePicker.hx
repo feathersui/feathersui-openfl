@@ -994,6 +994,9 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	private function popUpDatePicker_textInput_mouseDownHandler(event:MouseEvent):Void {
+		if (!this.enabled) {
+			return;
+		}
 		this.openDatePicker();
 	}
 }
