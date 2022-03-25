@@ -702,6 +702,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this.refreshContent();
 		}
 
+		if (dataInvalid || stateInvalid) {
+			this.refreshEnabled();
+		}
+
 		sizeInvalid = this.measure() || sizeInvalid;
 
 		this.layoutContent();
@@ -1129,6 +1133,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this._contentMeasurements.save(this._currentContent);
 		}
 		this.addChild(this._currentContent);
+	}
+
+	private function refreshEnabled():Void {
+		if (this._currentContent != null && (this._currentContent is IUIControl)) {
+			cast(this._currentContent, IUIControl).enabled = this._enabled;
+		}
 	}
 
 	private function layoutContent():Void {
