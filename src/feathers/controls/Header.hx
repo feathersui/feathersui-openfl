@@ -127,6 +127,16 @@ class Header extends FeathersControl implements ITextControl {
 		if (this.textField == null) {
 			return 0.0;
 		}
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
+		var hasText = this._text != null && this._text.length > 0;
+		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		if (!hasText && !hasHTMLText) {
+			this.textField.text = "\u200b";
+			var result = this.textField.y + this.textField.getLineMetrics(0).ascent;
+			this.textField.text = "";
+			return result;
+		}
 		return this.textField.y + this.textField.getLineMetrics(0).ascent;
 	}
 
@@ -648,6 +658,8 @@ class Header extends FeathersControl implements ITextControl {
 	}
 
 	private function refreshText(forceMeasurement:Bool):Void {
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
 		var hasText = this._text != null && this._text.length > 0;
 		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;

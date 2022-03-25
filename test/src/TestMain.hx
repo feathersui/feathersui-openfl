@@ -36,6 +36,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.dataRenderers.ItemRendererTest());
 		runner.addCase(new feathers.controls.dataRenderers.ItemRendererMeasurementTest());
 		runner.addCase(new feathers.controls.LabelTest());
+		runner.addCase(new feathers.controls.LabelMeasurementTest());
 		runner.addCase(new feathers.controls.LayoutGroupTest());
 		runner.addCase(new feathers.controls.ListViewTest());
 		runner.addCase(new feathers.controls.NumericStepperTest());

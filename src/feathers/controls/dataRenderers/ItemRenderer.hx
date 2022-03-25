@@ -347,6 +347,43 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	@:style
 	public var accessoryView:DisplayObject = null;
 
+	override private function get_baseline():Float {
+		if (this.textField == null && this.secondaryTextField == null) {
+			return 0.0;
+		}
+		if (this.showText && (this._text != null || this._htmlText != null)) {
+			// usually, hasText doesn't check the length, but TextField height may
+			// not be accurate with an empty string
+			var hasText = this._text != null && this._text.length > 0;
+			var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+			if (!hasText && !hasHTMLText) {
+				this.textField.text = "\u200b";
+				var result = this.textField.y + this.textField.getLineMetrics(0).ascent;
+				this.textField.text = "";
+				return result;
+			}
+			return this.textField.y + this.textField.getLineMetrics(0).ascent;
+		}
+		if (this.showSecondaryText && (this._secondaryText != null || this._secondaryHtmlText != null)) {
+			var hasSecondaryText = this._secondaryText != null && _secondaryText.length > 0;
+			var hasSecondaryHTMLText = this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
+			if (!hasSecondaryText && !hasSecondaryHTMLText) {
+				this.secondaryTextField.text = "\u200b";
+				var result = this.secondaryTextField.y + this.secondaryTextField.getLineMetrics(0).ascent;
+				this.secondaryTextField.text = "";
+				return result;
+			}
+			return this.secondaryTextField.y + this.secondaryTextField.getLineMetrics(0).ascent;
+		}
+		if (this._currentIcon != null) {
+			return this._currentIcon.y + this._currentIcon.height;
+		}
+		if (this._currentAccessoryView != null) {
+			return this._currentAccessoryView.y + this._currentAccessoryView.height;
+		}
+		return this.actualHeight;
+	}
+
 	private var _stateToSecondaryTextFormat:Map<ToggleButtonState, AbstractTextFormat> = new Map();
 
 	/**

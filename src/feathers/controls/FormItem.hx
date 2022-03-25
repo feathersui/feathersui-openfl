@@ -147,7 +147,18 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this.textField == null) {
 			return 0.0;
 		}
-		var textFieldBaseline = this.textField.y + this.textField.getLineMetrics(0).ascent;
+		var textFieldBaseline = 0.0;
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
+		var hasText = this._text != null && this._text.length > 0;
+		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		if (hasText || hasHTMLText) {
+			textFieldBaseline = this.textField.y + this.textField.getLineMetrics(0).ascent;
+		} else {
+			this.textField.text = "\u200b";
+			textFieldBaseline = this.textField.y + this.textField.getLineMetrics(0).ascent;
+			this.textField.text = "";
+		}
 		var contentBaseline = 0.0;
 		if ((this._currentContent is ITextControl)) {
 			contentBaseline = this._currentContent.y + cast(this._currentContent, ITextControl).baseline;
@@ -894,6 +905,8 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	}
 
 	private function refreshText(forceMeasurement:Bool):Void {
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
 		var hasText = this._text != null && this._text.length > 0;
 		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;

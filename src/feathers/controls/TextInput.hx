@@ -410,6 +410,15 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (this.textField == null) {
 			return 0.0;
 		}
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
+		var hasText = this._text != null && this._text.length > 0;
+		if (!hasText) {
+			this.textField.text = "\u200b";
+			var result = this.textField.y + this.textField.getLineMetrics(0).ascent;
+			this.textField.text = "";
+			return result;
+		}
 		return this.textField.y + this.textField.getLineMetrics(0).ascent;
 	}
 
@@ -1494,8 +1503,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
 		this.promptTextField.autoSize = LEFT;
-		var hasText = this._prompt.length > 0;
-		if (hasText) {
+		var hasPromptText = this._prompt.length > 0;
+		if (hasPromptText) {
 			this.promptTextField.text = this._prompt;
 		} else {
 			this.promptTextField.text = "\u200b"; // zero-width space
@@ -1503,7 +1512,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._promptTextMeasuredWidth = this.promptTextField.width;
 		this._promptTextMeasuredHeight = this.promptTextField.height;
 		this.promptTextField.autoSize = NONE;
-		if (!hasText) {
+		if (!hasPromptText) {
 			this.promptTextField.text = "";
 		}
 		this._previousPrompt = this._prompt;
@@ -1782,6 +1791,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			hasMeasureText = true;
 			measureText = "\u200b"; // zero-width space
 		}
+		// usually, hasText doesn't check the length, but we display the prompt
+		// when the text is null or the length is 0
 		var hasText = this._text != null && this._text.length > 0;
 		var hasOldText = oldText != null && oldText.length > 0;
 		var hasPrompt = this._prompt != null && this._prompt.length > 0;

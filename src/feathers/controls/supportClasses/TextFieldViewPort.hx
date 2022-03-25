@@ -114,6 +114,15 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		if (this._textField == null) {
 			return 0.0;
 		}
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
+		var hasText = this._text != null && this._text.length > 0;
+		if (!hasText) {
+			this.textField.text = "\u200b";
+			var result = this.textField.y + this.textField.getLineMetrics(0).ascent;
+			this.textField.text = "";
+			return result;
+		}
 		return this._textField.y + this._textField.getLineMetrics(0).ascent;
 	}
 
@@ -876,6 +885,8 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
 		this._textField.autoSize = LEFT;
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
 		var hasText = this._text != null && this._text.length > 0;
 		if (hasText) {
 			this._textField.text = this._text;

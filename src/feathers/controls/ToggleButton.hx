@@ -168,6 +168,22 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (this.textField == null) {
 			return 0.0;
 		}
+		if (!this.showText || (this._text == null && this._htmlText == null)) {
+			if (this._currentIcon != null) {
+				return this._currentIcon.y + this._currentIcon.height;
+			}
+			return this.actualHeight;
+		}
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
+		var hasText = this._text != null && this._text.length > 0;
+		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		if (!hasText && !hasHTMLText) {
+			this.textField.text = "\u200b";
+			var result = this.textField.y + this.textField.getLineMetrics(0).ascent;
+			this.textField.text = "";
+			return result;
+		}
 		return this.textField.y + this.textField.getLineMetrics(0).ascent;
 	}
 
@@ -1076,8 +1092,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function refreshText(forceMeasurement:Bool):Void {
-		// this is the only place where hasText also checks the length
-		// because TextField height may not be accurate with an empty string
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
 		var hasText = this.showText && this._text != null && this._text.length > 0;
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;

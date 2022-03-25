@@ -64,6 +64,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(0.0, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(0.0, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithRectangleSkinBackgroundSkinAndNoContent():Void {
@@ -76,6 +77,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(BACKGROUND_MIN_HEIGHT, this._itemRenderer.minHeight);
 		Assert.equals(BACKGROUND_MAX_WIDTH, this._itemRenderer.maxWidth);
 		Assert.equals(BACKGROUND_MAX_HEIGHT, this._itemRenderer.maxHeight);
+		Assert.equals(BACKGROUND_HEIGHT, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithText():Void {
@@ -95,6 +97,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(textField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithHtmlText():Void {
@@ -114,6 +117,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(textField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithTextAndShowTextFalse():Void {
@@ -127,6 +131,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(0.0, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(0.0, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithHtmlTextAndShowTextFalse():Void {
@@ -140,6 +145,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(0.0, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(0.0, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithSecondaryText():Void {
@@ -159,6 +165,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(textField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithSecondaryHtmlText():Void {
@@ -178,6 +185,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(textField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithSecondaryTextAndShowSecondaryTextFalse():Void {
@@ -191,6 +199,7 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(0.0, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(0.0, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithSecondaryHtmlTextAndShowSecondaryTextFalse():Void {
@@ -204,5 +213,24 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(0.0, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(0.0, this._itemRenderer.baseline);
+	}
+
+	public function testMeasurementsWithTextAndIconAndShowTextFalse():Void {
+		var icon = new RectangleSkin();
+		icon.width = 20.0;
+		icon.height = 20.0;
+		this._itemRenderer.icon = icon;
+		this._itemRenderer.text = "Hello World";
+		this._itemRenderer.showText = false;
+		this._itemRenderer.validateNow();
+
+		Assert.equals(20.0, this._itemRenderer.width);
+		Assert.equals(20.0, this._itemRenderer.height);
+		Assert.equals(20.0, this._itemRenderer.minWidth);
+		Assert.equals(20.0, this._itemRenderer.minHeight);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+		Assert.equals(20.0, this._itemRenderer.baseline);
 	}
 }

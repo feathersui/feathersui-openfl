@@ -64,6 +64,7 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(0.0, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
+		Assert.equals(0.0, this._button.baseline);
 	}
 
 	public function testMeasurementsWithRectangleSkinBackgroundSkinAndNoContent():Void {
@@ -76,6 +77,7 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(BACKGROUND_MIN_HEIGHT, this._button.minHeight);
 		Assert.equals(BACKGROUND_MAX_WIDTH, this._button.maxWidth);
 		Assert.equals(BACKGROUND_MAX_HEIGHT, this._button.maxHeight);
+		Assert.equals(BACKGROUND_HEIGHT, this._button.baseline);
 	}
 
 	public function testMeasurementsWithText():Void {
@@ -95,6 +97,7 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(textField.height, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
+		Assert.equals(textField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 
 	public function testMeasurementsWithHtmlText():Void {
@@ -114,6 +117,7 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(textField.height, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
+		Assert.equals(textField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 
 	public function testMeasurementsWithTextAndShowTextFalse():Void {
@@ -127,6 +131,7 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(0.0, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
+		Assert.equals(0.0, this._button.baseline);
 	}
 
 	public function testMeasurementsWithHtmlTextAndShowTextFalse():Void {
@@ -140,5 +145,24 @@ class ButtonMeasurementTest extends Test {
 		Assert.equals(0.0, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
+		Assert.equals(0.0, this._button.baseline);
+	}
+
+	public function testMeasurementsWithTextAndIconAndShowTextFalse():Void {
+		var icon = new RectangleSkin();
+		icon.width = 20.0;
+		icon.height = 20.0;
+		this._button.icon = icon;
+		this._button.text = "Hello World";
+		this._button.showText = false;
+		this._button.validateNow();
+
+		Assert.equals(20.0, this._button.width);
+		Assert.equals(20.0, this._button.height);
+		Assert.equals(20.0, this._button.minWidth);
+		Assert.equals(20.0, this._button.minHeight);
+		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
+		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
+		Assert.equals(20.0, this._button.baseline);
 	}
 }

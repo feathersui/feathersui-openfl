@@ -960,8 +960,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
 		this.promptTextField.autoSize = LEFT;
-		var hasText = this._prompt.length > 0;
-		if (hasText) {
+		var hasPromptText = this._prompt.length > 0;
+		if (hasPromptText) {
 			this.promptTextField.text = this._prompt;
 		} else {
 			this.promptTextField.text = "\u200b"; // zero-width space
@@ -973,7 +973,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this._promptTextMeasuredHeight = this.promptTextField.height;
 		this.promptTextField.autoSize = NONE;
 		this.promptTextField.wordWrap = true;
-		if (!hasText) {
+		if (!hasPromptText) {
 			this.promptTextField.text = "";
 		}
 		this._previousPrompt = this._prompt;
