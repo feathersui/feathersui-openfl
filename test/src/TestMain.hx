@@ -10,7 +10,9 @@ import openfl.display.Sprite;
 import utest.Runner;
 import utest.ui.common.PackageResult;
 import utest.ui.common.ResultAggregator;
+#if (html5 && !headless_html5)
 import utest.ui.text.HtmlReport;
+#end
 
 class TestMain extends Sprite {
 	public function new() {
