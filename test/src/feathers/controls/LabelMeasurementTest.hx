@@ -50,9 +50,11 @@ class LabelMeasurementTest extends Test {
 
 		this._label.validateNow();
 
-		Assert.equals(4.0, this._label.width);
+		Assert.isTrue(this._label.width > 0.0);
+		Assert.isTrue(this._label.height > 0.0);
+		Assert.equals(textField.width, this._label.width);
 		Assert.equals(textField.height, this._label.height);
-		Assert.equals(4.0, this._label.minWidth);
+		Assert.equals(textField.width, this._label.minWidth);
 		Assert.equals(textField.height, this._label.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxHeight);
