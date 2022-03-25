@@ -34,6 +34,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.HScrollBarTest());
 		runner.addCase(new feathers.controls.HSliderTest());
 		runner.addCase(new feathers.controls.dataRenderers.ItemRendererTest());
+		runner.addCase(new feathers.controls.dataRenderers.ItemRendererMeasurementTest());
 		runner.addCase(new feathers.controls.LabelTest());
 		runner.addCase(new feathers.controls.LayoutGroupTest());
 		runner.addCase(new feathers.controls.ListViewTest());
