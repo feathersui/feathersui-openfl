@@ -212,16 +212,30 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private var _customStyleProvider:IStyleProvider = null;
 
 	/**
-		When a component initializes, a style provider may be used to set
-		properties that affect the component's visual appearance.
+		Typically used by the theme to provide styles to each component, but a
+		custom style provider may be provided that will take precedence over the
+		theme's style provider.
 
-		You can set or replace an existing style provider at any time before a
-		component initializes without immediately affecting the component's
-		visual appearance. After the component initializes, the style provider
-		may still be changed, and any properties that were set by the previous
-		style provider will be reset to their default values before applying the
-		new style provider.
+		When a component initializes, its style provider sets properties that
+		affect the component's visual appearance. If the style provider
+		dispatches `StyleProviderEvent.STYLES_CHANGE` after the component has
+		initialized, the original properties set by the style provider will be
+		reset to their default values and before applying the new property
+		values.
 
+		Setting the style provider or replacing an existing style provider
+		before a component initializes will queue up the style changes until after
+		initialization. Once a component initializes, the style provider
+		may be changed, but the changes will be applied immediately. Similarly
+		to when a style provider dispatcches `StyleProviderEvent.STYLES_CHANGE`,
+		any properties that were set by the previous style provider will be
+		reset to their default values before applying the new style provider.
+
+		If the `themeEnabled` property is `false`, the current theme's style
+		provider will be ignored. However, if a custom style provider was
+		provided from outside of the theme, it will still be used.
+
+		@see `FeathersControl.themeEnabled`
 		@see `FeathersControl.variant`
 		@see [Introduction to Feathers UI themes](https://feathersui.com/learn/haxe-openfl/themes/)
 
