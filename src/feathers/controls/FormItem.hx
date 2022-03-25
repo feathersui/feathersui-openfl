@@ -626,7 +626,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 	/**
 		Returns the measured width of the form item's text. Used by `Form` to
-		position all form items correctly.
+		position and size all form items correctly.
 
 		@since 1.0.0
 	**/
@@ -636,6 +636,34 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			result += this.gap + this._currentRequiredSkin.width;
 		}
 		return result;
+	}
+
+	/**
+		Returns the maximum allowed width of the form item's text. Used by
+		`Form` to position and size all form items correctly.
+
+		@since 1.0.0
+	**/
+	public function getTextMeasuredMaxWidth():Float {
+		if (this._explicitWidth != null) {
+			var textMeasuredWidth = this.getTextMeasuredWidth();
+			var maxWidth = this._explicitWidth;
+			if (this._currentContent != null) {
+				if ((this._currentContent is IMeasureObject)) {
+					maxWidth -= cast(this._currentContent, IMeasureObject).minWidth;
+				} else {
+					maxWidth -= this._currentContent.width;
+				}
+				maxWidth -= this.gap;
+			}
+			if (maxWidth < 0.0) {
+				maxWidth = 0.0;
+			}
+			if (textMeasuredWidth > maxWidth) {
+				return maxWidth;
+			}
+		}
+		return 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 	}
 
 	/**
@@ -744,6 +772,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			measureContent = cast(this._currentContent, IMeasureObject);
 		}
 
+		if (this._currentContent != null) {
+			this._contentMeasurements.restore(this._currentContent);
+		}
 		if ((this._currentContent is IValidating)) {
 			cast(this._currentContent, IValidating).validateNow();
 		}
@@ -1118,6 +1149,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			return;
 		}
 		if (oldContent != null) {
+			// we need to restore these values so that they won't be lost the
+			// next time that this content is used for measurement
+			this._contentMeasurements.restore(oldContent);
 			this.removeChild(oldContent);
 		}
 		if (this._currentContent == null) {
@@ -1148,6 +1182,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			cast(this._currentRequiredSkin, IValidating).validateNow();
 		}
 
+		if ((this._currentContent is IValidating)) {
+			cast(this._currentContent, IValidating).validateNow();
+		}
+
 		var requiredOffset = 0.0;
 		if (this._currentRequiredSkin != null) {
 			requiredOffset = this.gap + this._currentRequiredSkin.width;
@@ -1157,10 +1195,16 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
 			textFieldWidth = this._customTextColumnWidth - requiredOffset;
 		}
+		if (textFieldWidth < 0.0) {
+			textFieldWidth = 0.0;
+		}
 		var textFieldHeight = this._textMeasuredHeight;
 		var remainingWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		if (this.textPosition == LEFT || this.textPosition == RIGHT) {
 			remainingWidth -= (this.gap + requiredOffset);
+		}
+		if (remainingWidth < 0.0) {
+			remainingWidth = 0.0;
 		}
 		if (textFieldWidth > remainingWidth) {
 			textFieldWidth = remainingWidth;
@@ -1168,6 +1212,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		var remainingHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 		if (this.textPosition != LEFT && this.textPosition != RIGHT) {
 			remainingHeight -= this.gap;
+		}
+		if (remainingHeight < 0.0) {
+			remainingHeight = 0.0;
 		}
 		if (textFieldHeight > remainingHeight) {
 			textFieldHeight = remainingHeight;

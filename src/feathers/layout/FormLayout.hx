@@ -253,6 +253,8 @@ class FormLayout extends EventDispatcher implements ILayout {
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
 		this.validateItems(items);
 
+		var maxMaxLeftTextWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+		var maxMaxRightTextWidth = 1.0 / 0.0;
 		var maxLeftTextWidth = 0.0;
 		var maxRightTextWidth = 0.0;
 		for (item in items) {
@@ -270,11 +272,20 @@ class FormLayout extends EventDispatcher implements ILayout {
 			switch (formItem.textPosition) {
 				case LEFT:
 					maxLeftTextWidth = Math.max(maxLeftTextWidth, formItem.getTextMeasuredWidth());
+					maxMaxLeftTextWidth = Math.min(maxMaxLeftTextWidth, formItem.getTextMeasuredMaxWidth());
 				case RIGHT:
 					maxRightTextWidth = Math.max(maxRightTextWidth, formItem.getTextMeasuredWidth());
+					maxMaxRightTextWidth = Math.min(maxMaxRightTextWidth, formItem.getTextMeasuredMaxWidth());
 				default:
 					continue;
 			}
+		}
+
+		if (maxLeftTextWidth > maxMaxLeftTextWidth) {
+			maxLeftTextWidth = maxMaxLeftTextWidth;
+		}
+		if (maxRightTextWidth > maxMaxRightTextWidth) {
+			maxRightTextWidth = maxMaxRightTextWidth;
 		}
 
 		var contentWidth = 0.0;
