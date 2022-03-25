@@ -206,21 +206,24 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		if (this.textField == null) {
 			return 0.0;
 		}
-		if (!this.showText || (this._text == null && this._htmlText == null)) {
-			if (this._currentIcon != null) {
-				return this._currentIcon.y + this._currentIcon.height;
-			}
-			return this.actualHeight;
-		}
 		// usually, hasText doesn't check the length, but TextField height may
 		// not be accurate with an empty string
 		var hasText = this._text != null && this._text.length > 0;
 		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
-		if (!hasText && !hasHTMLText) {
+		if (!this.showText || (!hasText && !hasHTMLText)) {
+			var textFieldY = this.textField.y;
+			if (!this.showText || (this._text == null && this._htmlText == null)) {
+				// this is a little strange, but measure the baseline as if
+				// there were text so that instances of the same component have
+				// the same baseline, even if some have text and others do not.
+				if (this._currentIcon != null) {
+					textFieldY = this._currentIcon.y + (this._currentIcon.height - this._textMeasuredHeight) / 2.0;
+				}
+			}
 			this.textField.text = "\u200b";
-			var result = this.textField.y + this.textField.getLineMetrics(0).ascent;
+			var textFieldBaseline = textFieldY + this.textField.getLineMetrics(0).ascent;
 			this.textField.text = "";
-			return result;
+			return textFieldBaseline;
 		}
 		return this.textField.y + this.textField.getLineMetrics(0).ascent;
 	}
