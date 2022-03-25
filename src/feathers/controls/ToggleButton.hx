@@ -834,7 +834,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 
 		var hasText = this.showText && this._text != null;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		if (hasText || hasHTMLText) {
 			this.refreshTextFieldDimensions(true);
 		}
@@ -960,7 +960,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			adjustedGap = this.minGap;
 		}
 		var hasText = this.showText && this._text != null;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
@@ -983,7 +983,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 
 		var hasText = this.showText && this._text != null;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
@@ -1005,7 +1005,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			adjustedGap = this.minGap;
 		}
 		var hasText = this.showText && this._text != null;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentMinWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
@@ -1027,7 +1027,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			adjustedGap = this.minGap;
 		}
 		var hasText = this.showText && this._text != null;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentMinHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
@@ -1079,7 +1079,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		// this is the only place where hasText also checks the length
 		// because TextField height may not be accurate with an empty string
 		var hasText = this.showText && this._text != null && this._text.length > 0;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;
 		if (this._text == this._previousText
 			&& this._htmlText != this._previousHTMLText
@@ -1157,7 +1157,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		this.refreshTextFieldDimensions(false);
 
 		var hasText = this.showText && this._text != null;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var iconIsInLayout = this._currentIcon != null && this.iconPosition != MANUAL;
 		if ((hasText || hasHTMLText) && iconIsInLayout) {
 			this.positionSingleChild(this.textField);
@@ -1190,7 +1190,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
 		var hasText = this.showText && this._text != null;
-		var hasHTMLText = this._htmlText != null && this._htmlText.length > 0;
+		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		if (!hasText && !hasHTMLText) {
 			return;
 		}

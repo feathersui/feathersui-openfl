@@ -8,7 +8,7 @@
 
 package feathers.controls;
 
-import feathers.controls.BasicButton;
+import feathers.controls.BasicToggleButton;
 import feathers.skins.RectangleSkin;
 import openfl.Lib;
 import openfl.display.Shape;
@@ -16,7 +16,7 @@ import utest.Assert;
 import utest.Test;
 
 @:keep
-class BasicButtonMeasurementTest extends Test {
+class BasicToggleButtonMeasurementTest extends Test {
 	private static final SHAPE_WIDTH = 10.0;
 	private static final SHAPE_HEIGHT = 12.0;
 	private static final BACKGROUND_WIDTH = 30.0;
@@ -26,14 +26,14 @@ class BasicButtonMeasurementTest extends Test {
 	private static final BACKGROUND_MAX_WIDTH = 50.0;
 	private static final BACKGROUND_MAX_HEIGHT = 45.0;
 
-	private var _button:BasicButton;
+	private var _button:BasicToggleButton;
 
 	public function new() {
 		super();
 	}
 
 	public function setup():Void {
-		this._button = new BasicButton();
+		this._button = new BasicToggleButton();
 		this._button.themeEnabled = false;
 		Lib.current.addChild(this._button);
 	}

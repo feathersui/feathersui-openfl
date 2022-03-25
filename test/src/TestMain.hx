@@ -21,7 +21,9 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.BasicButtonMeasurementTest());
 		runner.addCase(new feathers.controls.BasicButtonTest());
 		runner.addCase(new feathers.controls.BasicToggleButtonTest());
+		runner.addCase(new feathers.controls.BasicToggleButtonMeasurementTest());
 		runner.addCase(new feathers.controls.ButtonTest());
+		runner.addCase(new feathers.controls.ButtonMeasurementTest());
 		runner.addCase(new feathers.controls.ButtonBarTest());
 		runner.addCase(new feathers.controls.ComboBoxTest());
 		runner.addCase(new feathers.controls.GridViewTest());
@@ -42,6 +44,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.TabBarTest());
 		runner.addCase(new feathers.controls.TextInputTest());
 		runner.addCase(new feathers.controls.ToggleButtonTest());
+		runner.addCase(new feathers.controls.ToggleButtonMeasurementTest());
 		runner.addCase(new feathers.controls.ToggleSwitchTest());
 		runner.addCase(new feathers.controls.TreeViewTest());
 		runner.addCase(new feathers.controls.VProgressBarTest());
