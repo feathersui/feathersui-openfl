@@ -141,4 +141,68 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
 	}
+
+	public function testMeasurementsWithSecondaryText():Void {
+		var text = "Hello World";
+		var textField = new TextField();
+		textField.autoSize = LEFT;
+		textField.text = text;
+
+		this._itemRenderer.secondaryText = text;
+		this._itemRenderer.validateNow();
+
+		Assert.isTrue(this._itemRenderer.width > 0.0);
+		Assert.isTrue(this._itemRenderer.height > 0.0);
+		Assert.equals(textField.width, this._itemRenderer.width);
+		Assert.equals(textField.height, this._itemRenderer.height);
+		Assert.equals(textField.width, this._itemRenderer.minWidth);
+		Assert.equals(textField.height, this._itemRenderer.minHeight);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+	}
+
+	public function testMeasurementsWithSecondaryHtmlText():Void {
+		var htmlText = "<b>Hello</b> <i>World</i>";
+		var textField = new TextField();
+		textField.autoSize = LEFT;
+		textField.htmlText = htmlText;
+
+		this._itemRenderer.secondaryHtmlText = htmlText;
+		this._itemRenderer.validateNow();
+
+		Assert.isTrue(this._itemRenderer.width > 0.0);
+		Assert.isTrue(this._itemRenderer.height > 0.0);
+		Assert.equals(textField.width, this._itemRenderer.width);
+		Assert.equals(textField.height, this._itemRenderer.height);
+		Assert.equals(textField.width, this._itemRenderer.minWidth);
+		Assert.equals(textField.height, this._itemRenderer.minHeight);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+	}
+
+	public function testMeasurementsWithSecondaryTextAndShowSecondaryTextFalse():Void {
+		this._itemRenderer.secondaryText = "Hello World";
+		this._itemRenderer.showSecondaryText = false;
+		this._itemRenderer.validateNow();
+
+		Assert.equals(0.0, this._itemRenderer.width);
+		Assert.equals(0.0, this._itemRenderer.height);
+		Assert.equals(0.0, this._itemRenderer.minWidth);
+		Assert.equals(0.0, this._itemRenderer.minHeight);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+	}
+
+	public function testMeasurementsWithSecondaryHtmlTextAndShowSecondaryTextFalse():Void {
+		this._itemRenderer.secondaryHtmlText = "<b>Hello</b> <i>World</i>";
+		this._itemRenderer.showSecondaryText = false;
+		this._itemRenderer.validateNow();
+
+		Assert.equals(0.0, this._itemRenderer.width);
+		Assert.equals(0.0, this._itemRenderer.height);
+		Assert.equals(0.0, this._itemRenderer.minWidth);
+		Assert.equals(0.0, this._itemRenderer.minHeight);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
+		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
+	}
 }

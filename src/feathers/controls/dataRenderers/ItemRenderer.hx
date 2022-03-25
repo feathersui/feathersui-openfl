@@ -84,9 +84,11 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	private var _secondaryTextMeasuredWidth:Float;
 	private var _secondaryTextMeasuredHeight:Float;
 	private var _previousSecondaryText:String = null;
+	private var _previousSecondaryHTMLText:String = null;
 	private var _previousSecondaryTextFormat:TextFormat = null;
 	private var _previousSecondarySimpleTextFormat:openfl.text.TextFormat = null;
 	private var _updatedSecondaryTextStyles = false;
+
 	private var _secondaryText:String;
 
 	/**
@@ -117,6 +119,40 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		this._secondaryText = value;
 		this.setInvalid(DATA);
 		return this._secondaryText;
+	}
+
+	private var _secondaryHtmlText:String = null;
+
+	/**
+		Secondary text displayed by the button that is parsed as a simple form
+		of HTML.
+
+		The following example sets the button's secondary HTML text:
+
+		```haxe
+		button.secondaryHtmlText = "<b>Hello</b> <i>World</i>";
+		```
+
+		@default null
+
+		@see `ItemRenderer.secondaryText`
+		@see [`openfl.text.TextField.htmlText`](https://api.openfl.org/openfl/text/TextField.html#htmlText)
+
+		@since 1.0.0
+	**/
+	public var secondaryHtmlText(get, set):String;
+
+	private function get_secondaryHtmlText():String {
+		return this._secondaryHtmlText;
+	}
+
+	private function set_secondaryHtmlText(value:String):String {
+		if (this._secondaryHtmlText == value) {
+			return this._secondaryHtmlText;
+		}
+		this._secondaryHtmlText = value;
+		this.setInvalid(DATA);
+		return this._secondaryHtmlText;
 	}
 
 	private var _childFocusEnabled:Bool = true;
@@ -394,7 +430,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	}
 
 	private function refreshSecondaryTextField():Void {
-		if (this._secondaryText == null) {
+		if (this._secondaryText == null && this._secondaryHtmlText == null) {
 			if (this.secondaryTextField != null) {
 				this.removeChild(this.secondaryTextField);
 				this.secondaryTextField = null;
@@ -441,15 +477,21 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			return;
 		}
 		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null && this._secondaryText.length > 0;
-		this.secondaryTextField.visible = hasSecondaryText;
-		if (this._secondaryText == this._previousSecondaryText && !this._updatedSecondaryTextStyles && !forceMeasurement) {
+		var hasSecondaryHTMLText = this.showSecondaryText && this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
+		this.secondaryTextField.visible = (hasSecondaryText || hasSecondaryHTMLText);
+		if (this._secondaryText == this._previousSecondaryText
+			&& this._secondaryHtmlText == this._previousSecondaryHTMLText
+			&& !this._updatedSecondaryTextStyles
+			&& !forceMeasurement) {
 			// nothing to refresh
 			return;
 		}
 		// set autoSize before text because setting text first can trigger an
 		// extra text engine reflow
 		this.secondaryTextField.autoSize = LEFT;
-		if (hasSecondaryText) {
+		if (hasSecondaryHTMLText) {
+			this.secondaryTextField.htmlText = this._secondaryHtmlText;
+		} else if (hasSecondaryText) {
 			this.secondaryTextField.text = this._secondaryText;
 		} else {
 			this.secondaryTextField.text = "\u200b"; // zero-width space
@@ -457,10 +499,11 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		this._secondaryTextMeasuredWidth = this.secondaryTextField.width;
 		this._secondaryTextMeasuredHeight = this.secondaryTextField.height;
 		this.secondaryTextField.autoSize = NONE;
-		if (!hasSecondaryText) {
+		if (!hasSecondaryText && !hasSecondaryHTMLText) {
 			this.secondaryTextField.text = "";
 		}
 		this._previousSecondaryText = this._secondaryText;
+		this._previousSecondaryHTMLText = this._secondaryHtmlText;
 	}
 
 	private function getCurrentSecondaryTextFormat():TextFormat {
@@ -691,7 +734,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
 		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
-		if (hasSecondaryText) {
+		var hasSecondaryHTMLText = this.showSecondaryText && this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
+		if (hasSecondaryText || hasSecondaryHTMLText) {
 			contentWidth = Math.max(contentWidth, this._secondaryTextMeasuredWidth);
 		}
 		if (this.hasAccessoryViewInLayout()) {
@@ -701,14 +745,14 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
-			if (hasText || hasHTMLText || hasSecondaryText) {
+			if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
 				contentWidth += adjustedGap;
 			}
 			contentWidth += this._currentAccessoryView.width;
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (hasText || hasHTMLText || hasSecondaryText || this.hasAccessoryViewInLayout()) {
+				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText || this.hasAccessoryViewInLayout()) {
 					contentWidth += adjustedGap;
 				}
 				contentWidth += this._currentIcon.width;
@@ -730,7 +774,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
 		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
-		if (hasSecondaryText) {
+		var hasSecondaryHTMLText = this.showSecondaryText && this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
+		if (hasSecondaryText || hasSecondaryHTMLText) {
 			contentHeight += this._secondaryTextMeasuredHeight;
 			if (hasText || hasHTMLText) {
 				contentHeight += adjustedGap;
@@ -747,7 +792,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (hasText || hasHTMLText || hasSecondaryText) {
+				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
 					contentHeight += adjustedGap;
 				}
 				contentHeight += this._currentIcon.height;
@@ -768,7 +813,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentMinWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
 		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
-		if (hasSecondaryText) {
+		var hasSecondaryHTMLText = this.showSecondaryText && this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
+		if (hasSecondaryText || hasSecondaryHTMLText) {
 			contentMinWidth = Math.max(contentMinWidth, this._secondaryTextMeasuredWidth);
 		}
 		if (this.hasAccessoryViewInLayout()) {
@@ -778,14 +824,14 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				cast(this._currentAccessoryView, IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
-			if (hasText || hasHTMLText || hasSecondaryText) {
+			if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
 				contentMinWidth += adjustedGap;
 			}
 			contentMinWidth += this._currentAccessoryView.width;
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
-				if (hasText || hasHTMLText || hasSecondaryText || this.hasAccessoryViewInLayout()) {
+				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText || this.hasAccessoryViewInLayout()) {
 					contentMinWidth += adjustedGap;
 				}
 				contentMinWidth += this._currentIcon.width;
@@ -806,7 +852,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentMinHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
 		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
-		if (hasSecondaryText) {
+		var hasSecondaryHTMLText = this.showSecondaryText && this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
+		if (hasSecondaryText || hasSecondaryHTMLText) {
 			contentMinHeight += this._secondaryTextMeasuredHeight;
 			if (hasText || hasHTMLText) {
 				contentMinHeight += adjustedGap;
@@ -823,7 +870,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		if (this._currentIcon != null) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
-				if (hasText || hasHTMLText || hasSecondaryText) {
+				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
 					contentMinHeight += adjustedGap;
 				}
 				contentMinHeight += this._currentIcon.height;
@@ -872,11 +919,12 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var hasText = this.showText && this._text != null;
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
+		var hasSecondaryHTMLText = this.showSecondaryText && this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
 		var availableContentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		var availableContentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 		var totalContentWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
 		var totalContentHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
-		if (hasSecondaryText && this.secondaryTextField != null) {
+		if ((hasSecondaryText || hasSecondaryHTMLText) && this.secondaryTextField != null) {
 			totalContentWidth = Math.max(totalContentWidth, this._secondaryTextMeasuredWidth);
 			totalContentHeight += (this._secondaryTextMeasuredHeight + adjustedGap);
 		}
@@ -890,11 +938,11 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 
 		var flexGapVertical = flexGap
-			&& (hasText || hasHTMLText || hasSecondaryText)
+			&& (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText)
 			&& this._currentIcon != null
 			&& (this.iconPosition == TOP || this.iconPosition == BOTTOM);
 		var flexGapHorizontal = flexGap
-			&& (hasText || hasHTMLText || hasSecondaryText)
+			&& (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText)
 			&& this._currentIcon != null
 			&& (this.iconPosition == LEFT || this.iconPosition == RIGHT);
 
@@ -994,11 +1042,11 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			currentY += this._textMeasuredHeight + adjustedGap;
 			totalTextWidth = Math.max(totalTextWidth, this.textField.width);
 			totalTextHeight += this.textField.height;
-			if (hasSecondaryText) {
+			if (hasSecondaryText || hasSecondaryHTMLText) {
 				totalTextHeight += adjustedGap;
 			}
 		}
-		if (hasSecondaryText && this.secondaryTextField != null) {
+		if ((hasSecondaryText || hasSecondaryHTMLText) && this.secondaryTextField != null) {
 			this.secondaryTextField.x = currentX;
 			this.secondaryTextField.y = currentY;
 			this.secondaryTextField.width = this._secondaryTextMeasuredWidth < availableTextWidth ? this._secondaryTextMeasuredWidth : availableTextWidth;
@@ -1010,18 +1058,18 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			if (hasText || hasHTMLText) {
 				this.textField.x = Math.max(this.textField.x, this.paddingLeft + availableContentWidth - totalTextWidth);
 			}
-			if (hasSecondaryText) {
+			if (hasSecondaryText || hasSecondaryHTMLText) {
 				this.secondaryTextField.x = Math.max(this.secondaryTextField.x, this.paddingLeft + availableContentWidth - totalTextWidth);
 			}
 		} else if (flexGapVertical && this.iconPosition == TOP) {
 			if (hasText || hasHTMLText) {
 				this.textField.y = Math.max(this.textField.y, this.paddingTop + availableContentHeight - totalTextHeight);
 			}
-			if (hasSecondaryText) {
+			if (hasSecondaryText || hasSecondaryHTMLText) {
 				this.secondaryTextField.y = this.paddingTop + availableContentHeight - this.secondaryTextField.height;
 			}
 		}
-		if (hasText || hasHTMLText || hasSecondaryText) {
+		if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
 			currentX += totalTextWidth + adjustedGap;
 		}
 
