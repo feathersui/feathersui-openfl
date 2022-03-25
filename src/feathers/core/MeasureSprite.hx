@@ -120,11 +120,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		}
 		this._explicitWidth = value;
 		if (value == null) {
-			if (this.actualWidth != 0.0) {
-				this.actualWidth = 0.0;
-				this.scaledActualWidth = 0.0;
-				this.setInvalid(SIZE);
-			}
+			this.actualWidth = 0.0;
+			this.scaledActualWidth = 0.0;
+			this.setInvalid(SIZE);
 		} else {
 			var result = this.saveMeasurements(value, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 			if (result) {
@@ -151,11 +149,9 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		}
 		this._explicitHeight = value;
 		if (value == null) {
-			if (this.actualHeight != 0.0) {
-				this.actualHeight = 0.0;
-				this.scaledActualHeight = 0.0;
-				this.setInvalid(SIZE);
-			}
+			this.actualHeight = 0.0;
+			this.scaledActualHeight = 0.0;
+			this.setInvalid(SIZE);
 		} else {
 			var result = this.saveMeasurements(this.actualWidth, value, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 			if (result) {
