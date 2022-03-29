@@ -104,3 +104,33 @@ If adding a listener to another object, format the class name the same. Then, ad
 ```haxe
 private function myComponent_stage_mouseUpHandler(event:MouseEvent):Void {}
 ```
+
+## Programmatic Animation
+
+Feathers UI uses the [Actuate](https://lib.haxe.org/p/actuate) library for programmatic animation. There are a few best practices to remember when using Acutate in the Feathers UI codebase.
+
+If a UI component has animation, the duration and easing function should be exposed as a properties with `@:style` metadata.
+
+The duration property must be of type `Float`, and it must be measured in seconds. The default duration value should generally be quick — under half a second.
+
+```haxe
+@:style
+public var toggleDuration:Float = 0.15;
+```
+
+The easing function should be of type `IEasing` with a default value of `Quart.easeOut`.
+
+```haxe
+@:style
+public var toggleEase:IEasing = Quart.easeOut;
+```
+
+🚨 **Never use `Actuate.tween()`.** Animations created with `Actuate.tween()` will often break when full Dead Code Elimiation (DCE) is enabled in the Haxe compiler.
+
+Instead, always use `Actuate.update()`. The following example demonstrates how to fade out a display object with its `alpha` property.
+
+```haxe
+Actuate.update((alpha:Float) -> {
+    target.alpha = alpha;
+}, duration, [target.alpha], [0.0]);
+```
