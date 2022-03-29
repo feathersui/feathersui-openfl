@@ -78,7 +78,7 @@ private function set_property(value:Int):Int {
 }
 ```
 
-For getters and setters, use `get`, `set`, or `never`. Never use `default` or `null` because it will break compatibility with some supported workflows. Never use `@:isVar`. This means that a `private` backing variable is always required.
+For getters and setters, use `get`, `set`, or `never`. Never use `default` or `null` because it will break compatibility with some supported workflows. Never use `@:isVar`. This means that a `private` _backing variable_ is always required. The backing variable name should match the name of the property, with a single underscore (`_`) character added at the beginning.
 
 In general, `setInvalid()` should be called when the property of a UI component has changed. Always check to see if the value is different before calling `setInvalid()` to avoid updating for no reason. The response to changes to a property should go into the `update()` method.
 
