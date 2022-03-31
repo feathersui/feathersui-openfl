@@ -76,6 +76,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	**/
 	public function new() {
 		super();
+		this.addEventListener(Event.REMOVED_FROM_STAGE, treeGridViewRowRenderer_removedFromStageHandler);
 	}
 
 	private var _defaultStorage:CellRendererStorage = new CellRendererStorage();
@@ -724,6 +725,17 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+	}
+
+	private function treeGridViewRowRenderer_removedFromStageHandler(event:Event):Void {
+		// clean up any existing cell renderers when the row is cleaned up
+		this.refreshInactiveCellRenderers(this._defaultStorage, true);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveCellRenderers(storage, true);
+			}
+		}
 	}
 
 	private function treeGridViewRowRenderer_cellRenderer_touchTapHandler(event:TouchEvent):Void {
