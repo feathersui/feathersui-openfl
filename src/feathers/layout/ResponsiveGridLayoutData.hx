@@ -94,6 +94,29 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 		return this._offset;
 	}
 
+	private var _display:Bool = true;
+
+	/**
+		Indicates if the item should be displayed by the layout or not.
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var display(get, set):Bool;
+
+	private function get_display():Bool {
+		return this._display;
+	}
+
+	private function set_display(value:Bool):Bool {
+		if (this._display == value) {
+			return this._display;
+		}
+		this._display = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._display;
+	}
+
 	private var _smSpan:Int = -1;
 
 	/**
@@ -143,6 +166,33 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 		this._smOffset = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._smOffset;
+	}
+
+	private var _smDisplay:Null<Bool> = null;
+
+	/**
+		Indicates if the item should be displayed by the layout or not when the
+		layout is using the _sm_ breakpoint. Set to `null` to fall back to the
+		default `display`.
+
+		@see `feathers.layout.ResponsiveGridLayout.sm`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var smDisplay(get, set):Null<Bool>;
+
+	private function get_smDisplay():Null<Bool> {
+		return this._smDisplay;
+	}
+
+	private function set_smDisplay(value:Null<Bool>):Null<Bool> {
+		if (this._smDisplay == value) {
+			return this._smDisplay;
+		}
+		this._smDisplay = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._smDisplay;
 	}
 
 	private var _mdSpan:Int = -1;
@@ -196,6 +246,33 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 		return this._mdOffset;
 	}
 
+	private var _mdDisplay:Null<Bool> = null;
+
+	/**
+		Indicates if the item should be displayed by the layout or not when the
+		layout is using the _md_ breakpoint. Set to `null` to fall back to the
+		`smDisplay`.
+
+		@see `feathers.layout.ResponsiveGridLayout.md`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var mdDisplay(get, set):Null<Bool>;
+
+	private function get_mdDisplay():Null<Bool> {
+		return this._mdDisplay;
+	}
+
+	private function set_mdDisplay(value:Null<Bool>):Null<Bool> {
+		if (this._mdDisplay == value) {
+			return this._mdDisplay;
+		}
+		this._mdDisplay = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._mdDisplay;
+	}
+
 	private var _lgSpan:Int = -1;
 
 	/**
@@ -247,6 +324,33 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 		return this._lgOffset;
 	}
 
+	private var _lgDisplay:Null<Bool> = null;
+
+	/**
+		Indicates if the item should be displayed by the layout or not when the
+		layout is using the _lg_ breakpoint. Set to `null` to fall back to the
+		`mdDisplay`.
+
+		@see `feathers.layout.ResponsiveGridLayout.lg`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var lgDisplay(get, set):Null<Bool>;
+
+	private function get_lgDisplay():Null<Bool> {
+		return this._lgDisplay;
+	}
+
+	private function set_lgDisplay(value:Null<Bool>):Null<Bool> {
+		if (this._lgDisplay == value) {
+			return this._lgDisplay;
+		}
+		this._lgDisplay = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._lgDisplay;
+	}
+
 	private var _xlSpan:Int = -1;
 
 	/**
@@ -296,6 +400,33 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 		this._xlOffset = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._xlOffset;
+	}
+
+	private var _xlDisplay:Null<Bool> = null;
+
+	/**
+		Indicates if the item should be displayed by the layout or not when the
+		layout is using the _xl_ breakpoint. Set to `null` to fall back to the
+		`lgDisplay`.
+
+		@see `feathers.layout.ResponsiveGridLayout.xl`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var xlDisplay(get, set):Null<Bool>;
+
+	private function get_xlDisplay():Null<Bool> {
+		return this._xlDisplay;
+	}
+
+	private function set_xlDisplay(value:Null<Bool>):Null<Bool> {
+		if (this._xlDisplay == value) {
+			return this._xlDisplay;
+		}
+		this._xlDisplay = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._xlDisplay;
 	}
 
 	private function getSpan(breakpoint:Breakpoint):Int {
@@ -351,6 +482,35 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 				return this._smOffset;
 			case XS:
 				return this._offset;
+			default:
+				throw new ArgumentError("Unknown ResponseGridLayout breakpoint: " + breakpoint);
+		}
+	}
+
+	private function getDisplay(breakpoint:Breakpoint):Bool {
+		return switch (breakpoint) {
+			case XL:
+				if (this._xlDisplay == null) {
+					return this.getDisplay(LG);
+				}
+				return this._xlDisplay;
+			case LG:
+				if (this._lgDisplay == null) {
+					return this.getDisplay(MD);
+				}
+				return this._lgDisplay;
+			case MD:
+				if (this._mdDisplay == null) {
+					return this.getDisplay(SM);
+				}
+				return this._mdDisplay;
+			case SM:
+				if (this._smDisplay == null) {
+					return this.getDisplay(XS);
+				}
+				return this._smDisplay;
+			case XS:
+				return this._display;
 			default:
 				throw new ArgumentError("Unknown ResponseGridLayout breakpoint: " + breakpoint);
 		}

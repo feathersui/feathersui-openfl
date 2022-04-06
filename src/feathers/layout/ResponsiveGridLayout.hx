@@ -446,6 +446,11 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 			}
+			var display = this.getDisplay(item, breakpoint);
+			item.visible = display;
+			if (!display) {
+				continue;
+			}
 			var span = this.getSpan(item, breakpoint);
 			var offset = this.getOffset(item, span, breakpoint);
 			if (totalOffset + offset + span > this._columnCount) {
@@ -527,6 +532,18 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 			return maxOffset;
 		}
 		return offset;
+	}
+
+	private inline function getDisplay(item:DisplayObject, breakpoint:Breakpoint):Bool {
+		if (!(item is ILayoutObject)) {
+			return true;
+		}
+		var layoutItem = cast(item, ILayoutObject);
+		var layoutData = Std.downcast(layoutItem.layoutData, ResponsiveGridLayoutData);
+		if (layoutData == null) {
+			return true;
+		}
+		return layoutData.getDisplay(breakpoint);
 	}
 }
 
