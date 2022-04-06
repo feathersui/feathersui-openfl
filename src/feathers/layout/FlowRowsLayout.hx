@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
@@ -306,11 +307,8 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 	private var _rowVerticalAlign:VerticalAlign = TOP;
 
 	/**
-		How items in a row are positioned vertically (along the y-axis) if they
-		are smaller than the total height of the row.
-
-		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
-		layout.
+		How items in a row are positioned vertically (along the y-axis) within
+		that row.
 
 		The following example aligns each row's content to the bottom:
 
@@ -323,6 +321,8 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		@see `feathers.layout.VerticalAlign.TOP`
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
+		@see `feathers.layout.VerticalAlign.JUSTIFY`
+		@see `FlowRowsLayout.justifyResetEnabled`
 
 		@since 1.0.0
 	**/
@@ -339,6 +339,31 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		this._rowVerticalAlign = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._rowVerticalAlign;
+	}
+
+	private var _justifyResetEnabled:Bool = false;
+
+	/**
+		Indicates if the height of items should be reset if the
+		`rowVerticalAlign` property is set to `VerticalAlign.JUSTIFY`.
+
+		@see `HorizontalLayout.rowVerticalAlign`
+
+		@since 1.0.0
+	**/
+	public var justifyResetEnabled(get, set):Bool;
+
+	private function get_justifyResetEnabled():Bool {
+		return this._justifyResetEnabled;
+	}
+
+	private function set_justifyResetEnabled(value:Bool):Bool {
+		if (this._justifyResetEnabled == value) {
+			return this._justifyResetEnabled;
+		}
+		this._justifyResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._justifyResetEnabled;
 	}
 
 	/**
@@ -486,6 +511,11 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 				// handle all other vertical alignment values. the y position
 				// of all items is set here.
 				switch (this._rowVerticalAlign) {
+					case JUSTIFY:
+						item.y = positionY;
+						if (item.height != maxItemHeight) {
+							item.height = maxItemHeight;
+						}
 					case BOTTOM:
 						item.y = positionY + maxItemHeight - item.height;
 					case MIDDLE:
@@ -585,6 +615,9 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
+			}
+			if (this._rowVerticalAlign == JUSTIFY && this._justifyResetEnabled && (item is IMeasureObject)) {
+				cast(item, IMeasureObject).resetHeight();
 			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
