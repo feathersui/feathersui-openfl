@@ -312,10 +312,10 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
 		layout.
 
-		The following example aligns the container's content to the bottom:
+		The following example aligns each row's content to the bottom:
 
 		```haxe
-		layout.verticalAlign = BOTTOM;
+		layout.rowVerticalAlign = BOTTOM;
 		```
 
 		@default feathers.layout.VerticalAlign.TOP
