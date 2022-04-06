@@ -37,13 +37,14 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	public function new(columnCount:Int = 12, sm:Float = 576.0, md:Float = 768.0, lg:Float = 992.0, xl:Float = 1200.0) {
+	public function new(columnCount:Int = 12, sm:Float = 576.0, md:Float = 768.0, lg:Float = 992.0, xl:Float = 1200.0, xxl:Float = 1400.0) {
 		super();
 		this._columnCount = columnCount;
 		this._sm = sm;
 		this._md = md;
 		this._lg = lg;
 		this._xl = xl;
+		this._xxl = xxl;
 	}
 
 	private var _columnCount:Int;
@@ -187,6 +188,36 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		this._xl = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._xl;
+	}
+
+	private var _xxl:Float = 1400.0;
+
+	/**
+		The minimum size of the _xxl_ breakpoint, measured in pixels. Must be
+		greater than or equal to the size of the _xl_ breakpoint.
+
+		In the following example, the layout's _xxl_ breakpoint is set to 1000 pixels:
+
+		```hx
+		layout.xxl = 1000.0;
+		```
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var xxl(get, set):Float;
+
+	private function get_xxl():Float {
+		return this._xxl;
+	}
+
+	private function set_xxl(value:Float):Float {
+		if (this._xxl == value) {
+			return this._xxl;
+		}
+		this._xxl = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._xxl;
 	}
 
 	private var _rowGap:Float = 0.0;
@@ -403,6 +434,9 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
+		if (this._xxl < this._xl) {
+			throw new IllegalOperationError("xxl must be greater than xl");
+		}
 		if (this._xl < this._lg) {
 			throw new IllegalOperationError("xl must be greater than lg");
 		}
@@ -479,6 +513,9 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 	}
 
 	private function getBreakpoint(viewPortWidth:Float):Breakpoint {
+		if (viewPortWidth >= this._xxl) {
+			return XXL;
+		}
 		if (viewPortWidth >= this._xl) {
 			return XL;
 		}
@@ -553,4 +590,5 @@ enum Breakpoint {
 	MD;
 	LG;
 	XL;
+	XXL;
 }

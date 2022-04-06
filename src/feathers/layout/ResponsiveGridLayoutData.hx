@@ -429,8 +429,93 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 		return this._xlDisplay;
 	}
 
+	private var _xxlSpan:Int = -1;
+
+	/**
+		The number of columns that this item spans when the layout is using the
+		_xxl_ breakpoint. Set to `-1` to fall back to `xlSpan`.
+
+		@see `feathers.layout.ResponsiveGridLayout.xxl`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var xxlSpan(get, set):Int;
+
+	private function get_xxlSpan():Int {
+		return this._xxlSpan;
+	}
+
+	private function set_xxlSpan(value:Int):Int {
+		if (this._xxlSpan == value) {
+			return this._xxlSpan;
+		}
+		this._xxlSpan = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._xxlSpan;
+	}
+
+	private var _xxlOffset:Int = -1;
+
+	/**
+		The number of empty columns to display before the start of this item
+		when the layout is using the _xxl_ breakpoint. Set to `-1` to fall back
+		to `xlOffset`.
+
+		@see `feathers.layout.ResponsiveGridLayout.xxl`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var xxlOffset(get, set):Int;
+
+	private function get_xxlOffset():Int {
+		return this._xxlOffset;
+	}
+
+	private function set_xxlOffset(value:Int):Int {
+		if (this._xxlOffset == value) {
+			return this._xxlOffset;
+		}
+		this._xxlOffset = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._xxlOffset;
+	}
+
+	private var _xxlDisplay:Null<Bool> = null;
+
+	/**
+		Indicates if the item should be displayed by the layout or not when the
+		layout is using the _xxl_ breakpoint. Set to `null` to fall back to the
+		`xlDisplay`.
+
+		@see `feathers.layout.ResponsiveGridLayout.xxl`
+
+		@since 1.0.0
+	**/
+	@:flash.property
+	public var xxlDisplay(get, set):Null<Bool>;
+
+	private function get_xxlDisplay():Null<Bool> {
+		return this._xxlDisplay;
+	}
+
+	private function set_xxlDisplay(value:Null<Bool>):Null<Bool> {
+		if (this._xxlDisplay == value) {
+			return this._xxlDisplay;
+		}
+		this._xxlDisplay = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._xxlDisplay;
+	}
+
 	private function getSpan(breakpoint:Breakpoint):Int {
 		return switch (breakpoint) {
+			case XXL:
+				if (this._xxlSpan == -1) {
+					return this.getSpan(XL);
+				}
+				return this._xxlSpan;
 			case XL:
 				if (this._xlSpan == -1) {
 					return this.getSpan(LG);
@@ -460,6 +545,11 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 	private function getOffset(breakpoint:Breakpoint):Int {
 		return switch (breakpoint) {
+			case XXL:
+				if (this._xxlOffset == -1) {
+					return this.getOffset(XL);
+				}
+				return this._xxlOffset;
 			case XL:
 				if (this._xlOffset == -1) {
 					return this.getOffset(LG);
@@ -489,6 +579,11 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 	private function getDisplay(breakpoint:Breakpoint):Bool {
 		return switch (breakpoint) {
+			case XXL:
+				if (this._xxlDisplay == null) {
+					return this.getDisplay(XL);
+				}
+				return this._xxlDisplay;
 			case XL:
 				if (this._xlDisplay == null) {
 					return this.getDisplay(LG);
