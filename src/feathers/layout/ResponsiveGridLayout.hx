@@ -8,6 +8,7 @@
 
 package feathers.layout;
 
+import openfl.errors.ArgumentError;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
@@ -400,6 +401,44 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		return this._paddingLeft;
 	}
 
+	private var _rowVerticalAlign:VerticalAlign = TOP;
+
+	/**
+		How items in a row are positioned vertically (along the y-axis) if they
+		are smaller than the total height of the row.
+
+		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by this
+		layout.
+
+		The following example aligns each row's content to the bottom:
+
+		```haxe
+		layout.rowVerticalAlign = BOTTOM;
+		```
+
+		@default feathers.layout.VerticalAlign.TOP
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
+	**/
+	public var rowVerticalAlign(get, set):VerticalAlign;
+
+	private function get_rowVerticalAlign():VerticalAlign {
+		return this._rowVerticalAlign;
+	}
+
+	private function set_rowVerticalAlign(value:VerticalAlign):VerticalAlign {
+		if (this._rowVerticalAlign == value) {
+			return this._rowVerticalAlign;
+		}
+		this._rowVerticalAlign = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._rowVerticalAlign;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -429,6 +468,8 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		this.columnGap = value;
 		this.rowGap = value;
 	}
+
+	private var _rowItems:Array<DisplayObject> = [];
 
 	/**
 		@see `feathers.layout.ILayout.layout()`
@@ -473,6 +514,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		var totalOffset = 0;
 		var yPosition = this._paddingTop;
 		var maxRowHeight = 0.0;
+		this._rowItems.resize(0);
 		for (item in items) {
 			if ((item is ILayoutObject)) {
 				var layoutItem = cast(item, ILayoutObject);
@@ -488,6 +530,8 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 			var span = this.getSpan(item, breakpoint);
 			var offset = this.getOffset(item, span, breakpoint);
 			if (totalOffset + offset + span > this._columnCount) {
+				this.alignRow(yPosition, maxRowHeight);
+				this._rowItems.resize(0);
 				totalOffset = 0;
 				yPosition += maxRowHeight + this._rowGap;
 				maxRowHeight = 0.0;
@@ -496,11 +540,33 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 			this.positionItem(item, span, totalOffset, columnWidth, yPosition);
 			totalOffset += span;
 			maxRowHeight = Math.max(maxRowHeight, item.height);
+			this._rowItems.push(item);
 		}
+		this.alignRow(yPosition, maxRowHeight);
+		// we don't want to keep a reference to any of the items, so clear
+		// this cache
+		this._rowItems.resize(0);
 		if (maxRowHeight == 0.0) {
 			yPosition -= this._rowGap;
 		}
 		return yPosition + maxRowHeight + this._paddingBottom;
+	}
+
+	private function alignRow(positionY:Float, maxItemHeight:Float):Void {
+		for (item in this._rowItems) {
+			// handle all other vertical alignment values. the y position
+			// of all items is set here.
+			switch (this._rowVerticalAlign) {
+				case BOTTOM:
+					item.y = positionY + maxItemHeight - item.height;
+				case MIDDLE:
+					item.y = positionY + ((maxItemHeight - item.height) / 2.0);
+				case TOP:
+					item.y = positionY;
+				default:
+					throw new ArgumentError("Unknown row vertical align: " + this._rowVerticalAlign);
+			}
+		}
 	}
 
 	private inline function positionItem(item:DisplayObject, span:Int, offset:Int, columnWidth:Float, yPosition:Float):Void {
