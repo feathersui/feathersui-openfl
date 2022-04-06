@@ -489,8 +489,6 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 					case BOTTOM:
 						item.y = positionY + maxItemHeight - item.height;
 					case MIDDLE:
-						// round to the nearest pixel when dividing by 2 to
-						// align in the middle
 						item.y = positionY + ((maxItemHeight - item.height) / 2.0);
 					case TOP:
 						item.y = positionY;
