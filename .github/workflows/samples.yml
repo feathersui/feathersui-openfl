@@ -26,8 +26,8 @@ jobs:
         haxelib install actuate --quiet
         haxelib install hxargs --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
-    - name: Build samples/hello-world
-      working-directory: samples/hello-world
+    - name: Build samples/animated-tween-skin
+      working-directory: samples/animated-tween-skin
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
@@ -42,13 +42,6 @@ jobs:
         haxelib run openfl build hl
     - name: Build samples/components-explorer
       working-directory: samples/components-explorer
-      run: |
-        haxelib run openfl build neko
-        haxelib run openfl build html5
-        haxelib run openfl build flash
-        haxelib run openfl build hl
-    - name: Build samples/animated-tween-skin
-      working-directory: samples/animated-tween-skin
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
@@ -70,6 +63,13 @@ jobs:
         haxelib run openfl build hl
     - name: Build samples/custom-theme
       working-directory: samples/custom-theme
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
+    - name: Build samples/hello-world
+      working-directory: samples/hello-world
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
@@ -98,6 +98,20 @@ jobs:
         haxelib run openfl build hl
     - name: Build samples/login-form
       working-directory: samples/login-form
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
+    - name: Build samples/router-navigator-pass-data-between-views
+      working-directory: samples/router-navigator-pass-data-between-views
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
+    - name: Build samples/router-navigator-save-and-restore
+      working-directory: samples/router-navigator-save-and-restore
       run: |
         haxelib run openfl build neko
         haxelib run openfl build html5
@@ -216,12 +230,8 @@ jobs:
         haxelib install hxargs --quiet
         haxelib dev feathersui ${{ github.workspace }} 
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
-    - name: Build samples/hello-world
-      working-directory: samples/hello-world
-      run: |
-        haxelib run openfl build air
-    - name: Build samples/hn-reader
-      working-directory: samples/hn-reader
+    - name: Build samples/animated-tween-skin
+      working-directory: samples/animated-tween-skin
       run: |
         haxelib run openfl build air
     - name: Build samples/calculator
@@ -232,8 +242,24 @@ jobs:
       working-directory: samples/components-explorer
       run: |
         haxelib run openfl build air
+    - name: Build samples/custom-programmatic-skin
+      working-directory: samples/custom-programmatic-skin
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/custom-programmatic-skin-with-states
+      working-directory: samples/custom-programmatic-skin-with-states
+      run: |
+        haxelib run openfl build air
     - name: Build samples/custom-theme
       working-directory: samples/custom-theme
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/hello-world
+      working-directory: samples/hello-world
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/hn-reader
+      working-directory: samples/hn-reader
       run: |
         haxelib run openfl build air
     - name: Build samples/horizontal-layout-percentage-sizing
@@ -246,6 +272,14 @@ jobs:
         haxelib run openfl build air
     - name: Build samples/login-form
       working-directory: samples/login-form
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/router-navigator-pass-data-between-views
+      working-directory: samples/router-navigator-pass-data-between-views
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/router-navigator-save-and-restore
+      working-directory: samples/router-navigator-save-and-restore
       run: |
         haxelib run openfl build air
     - name: Build samples/stack-navigator-pass-data-between-views
