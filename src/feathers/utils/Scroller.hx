@@ -988,7 +988,8 @@ class Scroller extends EventDispatcher {
 		if (targetScrollX == null) {
 			this.completeScroll();
 		} else {
-			this.throwTo(targetScrollX, null, this.elasticSnapDuration, this.bounceEase);
+			var duration = (Math.abs(this._scrollX - targetScrollX) >= 1.0) ? this.elasticSnapDuration : 0.0;
+			this.throwTo(targetScrollX, null, duration, this.bounceEase);
 		}
 	}
 
@@ -1018,7 +1019,8 @@ class Scroller extends EventDispatcher {
 		if (targetScrollY == null) {
 			this.completeScroll();
 		} else {
-			this.throwTo(null, targetScrollY, this.elasticSnapDuration, this.bounceEase);
+			var duration = (Math.abs(this._scrollY - targetScrollY) >= 1.0) ? this.elasticSnapDuration : 0.0;
+			this.throwTo(null, targetScrollY, duration, this.bounceEase);
 		}
 	}
 
