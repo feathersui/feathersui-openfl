@@ -1943,6 +1943,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			rowRenderer = this.inactiveRowRenderers.shift();
 		}
 		this.updateRowRenderer(rowRenderer, state);
+		rowRenderer.gridView = this;
 		rowRenderer.addEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
 		this.rowRendererToRowState.set(rowRenderer, state);
@@ -1951,6 +1952,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function destroyRowRenderer(rowRenderer:GridViewRowRenderer):Void {
+		rowRenderer.gridView = null;
 		this.gridViewPort.removeChild(rowRenderer);
 		if (this._rowRendererRecycler.destroy != null) {
 			this._rowRendererRecycler.destroy(rowRenderer);
@@ -1991,7 +1993,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		rowRenderer.gridView = state.owner;
 		rowRenderer.data = state.data;
 		rowRenderer.rowIndex = state.rowIndex;
 		rowRenderer.selected = state.selected;

@@ -1799,6 +1799,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			rowRenderer = this.inactiveRowRenderers.shift();
 		}
 		this.updateRowRenderer(rowRenderer, state);
+		rowRenderer.treeGridView = this;
 		rowRenderer.addEventListener(TreeGridViewEvent.CELL_TRIGGER, treeGridView_rowRenderer_cellTriggerHandler);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, treeGridView_rowRenderer_triggerHandler);
 		rowRenderer.addEventListener(Event.OPEN, treeGridView_rowRenderer_openHandler);
@@ -1810,6 +1811,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function destroyRowRenderer(rowRenderer:TreeGridViewRowRenderer):Void {
+		rowRenderer.treeGridView = null;
 		this.treeGridViewPort.removeChild(rowRenderer);
 		if (this._rowRendererRecycler.destroy != null) {
 			this._rowRendererRecycler.destroy(rowRenderer);
@@ -1861,7 +1863,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
 		this._ignoreOpenedChange = true;
-		rowRenderer.treeGridView = state.owner;
 		rowRenderer.data = state.data;
 		rowRenderer.rowLocation = state.rowLocation;
 		rowRenderer.layoutIndex = state.layoutIndex;
