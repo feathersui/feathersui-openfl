@@ -27,3 +27,8 @@ jobs:
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Build Flash .swc library
       run: haxelib run openfl build flash -debug
+    - uses: actions/upload-artifact@v3
+      with:
+        name: feathersui-openfl-swc
+        path: bin/flash/bin/feathersui-openfl.swc
+        if-no-files-found: error
