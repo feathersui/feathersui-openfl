@@ -15,11 +15,12 @@ import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 
 /**
-	Allows a component to claim exclusive access to a pointer to avoid dragging,
-	scrolling, or other interaction conflicts. In particular, if objects are
-	nested, and they can be scrolled or dragged, it's better for one to
-	eventually gain exclusive control over the pointer. Multiple objects being
-	controlled by the same pointer often results in unexpected behavior.
+	Allows a component to claim exclusive access to a pointer (a touch point or
+	the mouse cursor) to avoid dragging conflicts, scrolling conflicts, or other
+	interaction conflicts. In particular, if objects are nested, and they can be
+	scrolled or dragged, it's better for one to eventually gain exclusive
+	control over a pointer. Multiple objects being controlled by the same
+	pointer often results in unexpected behavior for user experience.
 
 	@since 1.0.0
 **/
@@ -29,13 +30,8 @@ class ExclusivePointer {
 
 		@since 1.0.0
 	**/
+	@:deprecated('ExclusivePointer.POINTER_ID_MOUSE is deprecated. There are now separate APIs for touch and mouse.')
 	public static final POINTER_ID_MOUSE = -1000;
-
-	// on some platforms, the pointer ID seems to be too large for a signed
-	// integer, so it overflows and becomes negative
-	// as a workaround, we'll use this completely arbitrary threshold to check
-	// for overflow, while still considering some negative values invalid
-	private static final OVERFLOW_POINTER_ID:Int = -1000000;
 
 	private static final stageToObject:Map<Stage, ExclusivePointer> = [];
 
@@ -83,30 +79,36 @@ class ExclusivePointer {
 
 	private var _stage:Stage;
 
-	private var _claims:Map<Int, DisplayObject> = [];
+	private var _mouseClaim:DisplayObject = null;
+	private var _touchClaims:Map<Int, DisplayObject> = [];
+
+	@:deprecated('ExclusivePointer.claimPointer() is deprecated. Use ExclusivePointer.claimTouch() and ExclusivePointer.claimMouse() instead.')
+	public function claimPointer(pointerID:Int, target:DisplayObject):Bool {
+		if (pointerID == POINTER_ID_MOUSE) {
+			return this.claimMouse(target);
+		}
+		return this.claimTouch(pointerID, target);
+	}
 
 	/**
-		Allows a display object to claim a pointer by its ID. Returns `true` if
-		if the pointer is claimed. Returns `false` if the pointer was previously
+		Allows a display object to claim a touch by its ID. Returns `true` if
+		if the touch is claimed. Returns `false` if the touch was previously
 		claimed by another display object.
 
 		@since 1.0.0
 	**/
-	public function claimPointer(pointerID:Int, target:DisplayObject):Bool {
+	public function claimTouch(pointerID:Int, target:DisplayObject):Bool {
 		if (target == null) {
 			throw new ArgumentError("Target cannot be null.");
 		}
 		if (target.stage != this._stage) {
 			throw new ArgumentError("Target cannot claim a pointer on the selected stage because it appears on a different stage.");
 		}
-		if (pointerID < 0 && pointerID > OVERFLOW_POINTER_ID && pointerID != POINTER_ID_MOUSE) {
-			throw new ArgumentError('Invalid pointer ID: ${pointerID}. Pointer ID must be >= 0 or ExclusivePointer.POINTER_ID_MOUSE.');
-		}
-		var existingTarget = this._claims.get(pointerID);
+		var existingTarget = this._touchClaims.get(pointerID);
 		if (existingTarget != null) {
 			return false;
 		}
-		this._claims.set(pointerID, target);
+		this._touchClaims.set(pointerID, target);
 		if (this._stageListenerCount == 0) {
 			this._stage.addEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler, false, 0, true);
 			this._stage.addEventListener(TouchEvent.TOUCH_END, exclusivePointer_stage_touchEndHandler, false, 0, true);
@@ -116,16 +118,50 @@ class ExclusivePointer {
 	}
 
 	/**
-		Removes a claim to the pointer with the specified ID.
+		Allows a display object to claim the mouse. Returns `true` if
+		if the mouse is claimed. Returns `false` if the mouse was previously
+		claimed by another display object.
+
+		@see `ExclusivePointer.claimTouch()`
+	**/
+	public function claimMouse(target:DisplayObject):Bool {
+		if (target == null) {
+			throw new ArgumentError("Target cannot be null.");
+		}
+		if (target.stage != this._stage) {
+			throw new ArgumentError("Target cannot claim a pointer on the selected stage because it appears on a different stage.");
+		}
+		if (this._mouseClaim != null) {
+			return false;
+		}
+		this._mouseClaim = target;
+		if (this._stageListenerCount == 0) {
+			this._stage.addEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler, false, 0, true);
+			this._stage.addEventListener(TouchEvent.TOUCH_END, exclusivePointer_stage_touchEndHandler, false, 0, true);
+		}
+		this._stageListenerCount++;
+		return true;
+	}
+
+	@:deprecated('ExclusivePointer.removeClaim() is deprecated. Use ExclusivePointer.removeTouchClaim() and ExclusivePointer.removeMouseClaim() instead.')
+	public function removeClaim(pointerID:Int):Void {
+		if (pointerID == POINTER_ID_MOUSE) {
+			this.removeMouseClaim();
+		}
+		return this.removeTouchClaim(pointerID);
+	}
+
+	/**
+		Removes a claim to the touch with the specified ID.
 
 		@since 1.0.0
 	 */
-	public function removeClaim(pointerID:Int):Void {
-		var existingTarget = this._claims.get(pointerID);
+	public function removeTouchClaim(pointerID:Int):Void {
+		var existingTarget = this._touchClaims.get(pointerID);
 		if (existingTarget == null) {
 			return;
 		}
-		this._claims.remove(pointerID);
+		this._touchClaims.remove(pointerID);
 		this._stageListenerCount--;
 		if (this._stageListenerCount == 0) {
 			this._stage.removeEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler);
@@ -134,30 +170,63 @@ class ExclusivePointer {
 	}
 
 	/**
-		Gets the display object that has claimed a pointer with the specified
-		ID. If no display object claims the pointer with the specified ID,
+		Removes a claim to the mouse.
+
+		@since 1.0.0
+	 */
+	public function removeMouseClaim():Void {
+		if (this._mouseClaim == null) {
+			return;
+		}
+		this._mouseClaim = null;
+		this._stageListenerCount--;
+		if (this._stageListenerCount == 0) {
+			this._stage.removeEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler);
+			this._stage.removeEventListener(TouchEvent.TOUCH_END, exclusivePointer_stage_touchEndHandler);
+		}
+	}
+
+	@:deprecated('ExclusivePointer.getClaim() is deprecated. Use ExclusivePointer.getTouchClaim() and ExclusivePointer.getMouseClaim() instead.')
+	public function getClaim(pointerID:Int):DisplayObject {
+		if (pointerID == POINTER_ID_MOUSE) {
+			return this.getMouseClaim();
+		}
+		return this.getTouchClaim(pointerID);
+	}
+
+	/**
+		Gets the display object that has claimed a touch with the specified
+		ID. If no display object claims the touch with the specified ID,
 		returns `null`.
 
 		@since 1.0.0
 	**/
-	public function getClaim(pointerID:Int):DisplayObject {
-		if (pointerID < 0 && pointerID > OVERFLOW_POINTER_ID && pointerID != POINTER_ID_MOUSE) {
-			throw new ArgumentError('Invalid pointer ID: ${pointerID}. Pointer ID must be >= 0 or ExclusivePointer.POINTER_ID_MOUSE.');
-		}
-		return this._claims.get(pointerID);
+	public function getTouchClaim(pointerID:Int):DisplayObject {
+		return this._touchClaims.get(pointerID);
+	}
+
+	/**
+		Gets the display object that has claimed the mouse. If no display object
+		claims the mouse, returns `null`.
+
+		@since 1.0.0
+	**/
+	public function getMouseClaim():DisplayObject {
+		return this._mouseClaim;
 	}
 
 	private function dispose():Void {
-		for (pointerID in this._claims.keys()) {
-			this.removeClaim(pointerID);
+		for (pointerID in this._touchClaims.keys()) {
+			this.removeTouchClaim(pointerID);
 		}
+		this.removeMouseClaim();
 	}
 
 	private function exclusivePointer_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.removeClaim(POINTER_ID_MOUSE);
+		this.removeMouseClaim();
 	}
 
 	private function exclusivePointer_stage_touchEndHandler(event:TouchEvent):Void {
-		this.removeClaim(event.touchPointID);
+		this.removeTouchClaim(event.touchPointID);
 	}
 }
