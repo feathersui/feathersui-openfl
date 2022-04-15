@@ -507,6 +507,10 @@ class EdgePuller extends EventDispatcher {
 			// a different touch point is dragging
 			return;
 		}
+		if (this._touchPointIsSimulated != simulatedTouch) {
+			// not actually the same touch point
+			return;
+		}
 
 		var touchPosition = this.getTouchPosition(stageX, stageY);
 		var touchOffset = touchPosition - this._startTouch;
@@ -556,6 +560,10 @@ class EdgePuller extends EventDispatcher {
 		}
 		if (this._touchPointID != touchPointID) {
 			// a different touch point is dragging
+			return;
+		}
+		if (this._touchPointIsSimulated != simulatedTouch) {
+			// not actually the same touch point
 			return;
 		}
 

@@ -1180,6 +1180,10 @@ class Scroller extends EventDispatcher {
 			// a different touch point is dragging
 			return;
 		}
+		if (this._touchPointIsSimulated != simulatedTouch) {
+			// not actually the same touch point
+			return;
+		}
 
 		var touchOffsetX = stageX - this.startTouchX;
 		var touchOffsetY = stageY - this.startTouchY;
@@ -1320,6 +1324,10 @@ class Scroller extends EventDispatcher {
 		}
 		if (this._touchPointID != touchPointID) {
 			// a different touch point is dragging
+			return;
+		}
+		if (this._touchPointIsSimulated != simulatedTouch) {
+			// not actually the same touch point
 			return;
 		}
 
