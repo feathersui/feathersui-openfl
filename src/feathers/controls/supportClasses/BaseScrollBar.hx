@@ -782,7 +782,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}
@@ -824,7 +824,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}

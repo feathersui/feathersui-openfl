@@ -655,10 +655,17 @@ class StackNavigator extends BaseNavigator {
 			event.preventDefault();
 			return;
 		}
-		var pointerID = this._backEdgePuller.pointerID;
-		if (pointerID != -1) {
+		var touchPointID = this._backEdgePuller.touchPointID;
+		if (touchPointID != null) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimPointer(pointerID, this);
+			var result = exclusivePointer.claimTouch(touchPointID, this);
+			if (!result) {
+				event.preventDefault();
+				return;
+			}
+		} else if (this._backEdgePuller.touchPointIsSimulated) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimMouse(this);
 			if (!result) {
 				event.preventDefault();
 				return;

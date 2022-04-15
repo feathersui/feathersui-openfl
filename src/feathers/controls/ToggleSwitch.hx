@@ -610,7 +610,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			return;
 		}
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}

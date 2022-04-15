@@ -59,12 +59,8 @@ import openfl.ui.Multitouch;
 class EdgePuller extends EventDispatcher {
 	private static final MINIMUM_VELOCITY = 0.02;
 
-	/**
-		A special pointer ID for the mouse.
-
-		@since 1.0.0
-	**/
-	public static final POINTER_ID_MOUSE = -1000;
+	// A special pointer ID for the mouse.
+	private static final POINTER_ID_MOUSE:Int = -1000;
 
 	/**
 		Creates a new `EdgePuller` object with the given arguments.
@@ -322,16 +318,40 @@ class EdgePuller extends EventDispatcher {
 		return this._snapDuration;
 	}
 
-	private var _pointerID:Int = -1;
+	private var _touchPointID:Null<Int> = null;
 
 	/**
-		The pointer that is currently dragging the target. Returns `-1`
-		if no pointer is currently associated with the drag.
-	**/
-	public var pointerID(get, never):Int;
+		The touch point that is currently dragging the target. Returns `null` if
+		no touch point is currently associated with the drag.
 
-	private function get_pointerID():Int {
-		return this._pointerID;
+		If `simulateTouch` is `true`, the `touchPointIsSimulated` property will
+		indicate if the mouse is current dragging the target.
+
+		@see `EdgePuller.touchPointIsSimulated`
+
+		@since 1.0.0
+	**/
+	public var touchPointID(get, never):Null<Int>;
+
+	private function get_touchPointID():Null<Int> {
+		return this._touchPointID;
+	}
+
+	private var _touchPointIsSimulated:Bool = false;
+
+	/**
+		Returns `true` if the mouse is dragging the target as a simulated touch
+		point.
+
+		@see `EdgePuller.simulateTouch`
+		@see `EdgePuller.touchPointID`
+
+		@since 1.0.0
+	**/
+	public var touchPointIsSimulated(get, never):Bool;
+
+	private function get_touchPointIsSimulated():Bool {
+		return this._touchPointIsSimulated;
 	}
 
 	private var _restoreMouseChildren:Bool = false;
@@ -434,14 +454,14 @@ class EdgePuller extends EventDispatcher {
 		};
 	}
 
-	private function touchBegin(touchPointID:Int, stageX:Float, stageY:Float, ?simulatedTouch:Bool):Void {
+	private function touchBegin(touchPointID:Int, simulatedTouch:Bool, stageX:Float, stageY:Float):Void {
 		if (!this.enabled) {
 			return;
 		}
 		if (simulatedTouch && !this.simulateTouch) {
 			return;
 		}
-		if (this._pointerID != -1) {
+		if (this._touchPointID != null) {
 			// we already have an active touch, and we can only accept one
 			return;
 		}
@@ -471,17 +491,20 @@ class EdgePuller extends EventDispatcher {
 			}
 		}
 		this._pendingOpened = null;
-		this._pointerID = touchPointID;
+		this._touchPointID = touchPointID;
+		this._touchPointIsSimulated = simulatedTouch;
 		this._startTouch = this.getTouchPosition(stageX, stageY);
 		this._startPullDistance = this._pullDistance;
 		this._savedTouchMoves.resize(0);
 	}
 
-	private function touchMove(touchPointID:Int, stageX:Float, stageY:Float):Void {
-		if (this._opened && this._pointerID == -1) {
+	private function touchMove(touchPointID:Int, simulatedTouch:Bool, stageX:Float, stageY:Float):Void {
+		if (this._touchPointID == null) {
+			// there is no active touch point that is dragging
 			return;
 		}
-		if (this._pointerID != touchPointID) {
+		if (this._touchPointID != touchPointID) {
+			// a different touch point is dragging
 			return;
 		}
 
@@ -526,8 +549,13 @@ class EdgePuller extends EventDispatcher {
 		this._savedTouchMoves.push(openfl.Lib.getTimer());
 	}
 
-	private function touchEnd(touchPointID:Int):Void {
-		if (this._pointerID != touchPointID) {
+	private function touchEnd(touchPointID:Int, simulatedTouch:Bool):Void {
+		if (this._touchPointID == null) {
+			// there is no active touch point that is dragging
+			return;
+		}
+		if (this._touchPointID != touchPointID) {
+			// a different touch point is dragging
 			return;
 		}
 
@@ -627,10 +655,11 @@ class EdgePuller extends EventDispatcher {
 	}
 
 	private function cleanupAfterDrag():Void {
-		if (this._pointerID == -1) {
+		if (this._touchPointID == null) {
 			return;
 		}
-		this._pointerID = -1;
+		this._touchPointID = null;
+		this._touchPointIsSimulated = false;
 		if (this._target.stage != null) {
 			this._target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler);
 			this._target.stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler);
@@ -711,7 +740,7 @@ class EdgePuller extends EventDispatcher {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
-		this.touchBegin(event.touchPointID, event.stageX, event.stageY);
+		this.touchBegin(event.touchPointID, false, event.stageX, event.stageY);
 	}
 
 	private function edgePuller_target_mouseDownCaptureHandler(event:MouseEvent):Void {
@@ -730,43 +759,43 @@ class EdgePuller extends EventDispatcher {
 		if (stage == null) {
 			return;
 		}
-		this.touchBegin(POINTER_ID_MOUSE, stage.mouseX, stage.mouseY, true);
+		this.touchBegin(POINTER_ID_MOUSE, true, stage.mouseX, stage.mouseY);
 	}
 
 	private function edgePuller_target_stage_touchMoveHandler(event:TouchEvent):Void {
-		this.touchMove(event.touchPointID, event.stageX, event.stageY);
+		this.touchMove(event.touchPointID, false, event.stageX, event.stageY);
 	}
 
 	private function edgePuller_target_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var stage = cast(event.currentTarget, Stage);
-		this.touchMove(POINTER_ID_MOUSE, stage.mouseX, stage.mouseY);
+		this.touchMove(POINTER_ID_MOUSE, true, stage.mouseX, stage.mouseY);
 	}
 
 	private function edgePuller_target_stage_touchEndHandler(event:TouchEvent):Void {
-		this.touchEnd(event.touchPointID);
+		this.touchEnd(event.touchPointID, false);
 	}
 
 	private function edgePuller_target_stage_mouseUpHandler(event:MouseEvent):Void {
-		this.touchEnd(POINTER_ID_MOUSE);
+		this.touchEnd(POINTER_ID_MOUSE, true);
 	}
 
 	private function edgePuller_target_stage_touchBeginHandler(event:TouchEvent):Void {
-		if (!this._opened || !this.enabled || this._pointerID != -1) {
+		if (!this._opened || !this.enabled || this._touchPointID != null) {
 			return;
 		}
 		var stage = cast(event.currentTarget, Stage);
 		var maxPullDistance = this.getMaxPullDistance();
 		if (!this.isInActiveBorder(event.stageX, event.stageY, maxPullDistance)) {
-			this._pointerID = event.touchPointID;
+			this._touchPointID = event.touchPointID;
 			stage.addEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2, false, 0, true);
 			stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2, false, 0, true);
 			return;
 		}
-		this.touchBegin(event.touchPointID, event.stageX, event.stageY, false);
+		this.touchBegin(event.touchPointID, false, event.stageX, event.stageY);
 	}
 
 	private function edgePuller_target_stage_touchMoveHandler2(event:TouchEvent):Void {
-		if (event.touchPointID != this._pointerID) {
+		if (this._touchPointID == null || event.touchPointID != this._touchPointID) {
 			return;
 		}
 		var stage = cast(event.currentTarget, Stage);
@@ -795,37 +824,40 @@ class EdgePuller extends EventDispatcher {
 		}
 		stage.removeEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2);
 		stage.removeEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2);
-		this._pointerID = -1;
-		this.touchBegin(event.touchPointID, event.stageX, event.stageY, false);
+		this._touchPointID = null;
+		this._touchPointIsSimulated = false;
+		this.touchBegin(event.touchPointID, false, event.stageX, event.stageY);
 	}
 
 	private function edgePuller_target_stage_touchEndHandler2(event:TouchEvent):Void {
-		if (event.touchPointID != this._pointerID) {
+		if (this._touchPointID == null || event.touchPointID != this._touchPointID) {
 			return;
 		}
 		var stage = cast(event.currentTarget, Stage);
 		stage.removeEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler2);
 		stage.removeEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler2);
-		this._pointerID = -1;
+		this._touchPointID = null;
+		this._touchPointIsSimulated = false;
 	}
 
 	private function edgePuller_target_stage_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._opened || !this.enabled || this._pointerID != -1 || !this.simulateTouch) {
+		if (!this._opened || !this.enabled || this._touchPointID != null || !this.simulateTouch) {
 			return;
 		}
 		var stage = cast(event.currentTarget, Stage);
 		var maxPullDistance = this.getMaxPullDistance();
 		if (!this.isInActiveBorder(stage.mouseX, stage.mouseY, maxPullDistance)) {
-			this._pointerID = POINTER_ID_MOUSE;
+			this._touchPointID = POINTER_ID_MOUSE;
+			this._touchPointIsSimulated = true;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2, false, 0, true);
 			stage.addEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2, false, 0, true);
 			return;
 		}
-		this.touchBegin(POINTER_ID_MOUSE, stage.mouseX, stage.mouseY, true);
+		this.touchBegin(POINTER_ID_MOUSE, true, stage.mouseX, stage.mouseY);
 	}
 
 	private function edgePuller_target_stage_mouseMoveHandler2(event:MouseEvent):Void {
-		if (POINTER_ID_MOUSE != this._pointerID) {
+		if (!this._touchPointIsSimulated || this._touchPointID == null || POINTER_ID_MOUSE != this._touchPointID) {
 			return;
 		}
 		var stage = cast(event.currentTarget, Stage);
@@ -854,17 +886,19 @@ class EdgePuller extends EventDispatcher {
 		}
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
 		stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2);
-		this._pointerID = -1;
-		this.touchBegin(POINTER_ID_MOUSE, stage.mouseX, stage.mouseY, true);
+		this._touchPointID = null;
+		this._touchPointIsSimulated = false;
+		this.touchBegin(POINTER_ID_MOUSE, true, stage.mouseX, stage.mouseY);
 	}
 
 	private function edgePuller_target_stage_mouseUpHandler2(event:MouseEvent):Void {
-		if (POINTER_ID_MOUSE != this._pointerID) {
+		if (!this._touchPointIsSimulated || this._touchPointID == null || POINTER_ID_MOUSE != this._touchPointID) {
 			return;
 		}
 		var stage = cast(event.currentTarget, Stage);
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, edgePuller_target_stage_mouseMoveHandler2);
 		stage.removeEventListener(MouseEvent.MOUSE_UP, edgePuller_target_stage_mouseUpHandler2);
-		this._pointerID = -1;
+		this._touchPointID = null;
+		this._touchPointIsSimulated = false;
 	}
 }

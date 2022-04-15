@@ -97,18 +97,18 @@ class ExclusivePointer {
 
 		@since 1.0.0
 	**/
-	public function claimTouch(pointerID:Int, target:DisplayObject):Bool {
+	public function claimTouch(touchPointID:Int, target:DisplayObject):Bool {
 		if (target == null) {
 			throw new ArgumentError("Target cannot be null.");
 		}
 		if (target.stage != this._stage) {
 			throw new ArgumentError("Target cannot claim a pointer on the selected stage because it appears on a different stage.");
 		}
-		var existingTarget = this._touchClaims.get(pointerID);
+		var existingTarget = this._touchClaims.get(touchPointID);
 		if (existingTarget != null) {
 			return false;
 		}
-		this._touchClaims.set(pointerID, target);
+		this._touchClaims.set(touchPointID, target);
 		if (this._stageListenerCount == 0) {
 			this._stage.addEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler, false, 0, true);
 			this._stage.addEventListener(TouchEvent.TOUCH_END, exclusivePointer_stage_touchEndHandler, false, 0, true);
@@ -156,12 +156,12 @@ class ExclusivePointer {
 
 		@since 1.0.0
 	 */
-	public function removeTouchClaim(pointerID:Int):Void {
-		var existingTarget = this._touchClaims.get(pointerID);
+	public function removeTouchClaim(touchPointID:Int):Void {
+		var existingTarget = this._touchClaims.get(touchPointID);
 		if (existingTarget == null) {
 			return;
 		}
-		this._touchClaims.remove(pointerID);
+		this._touchClaims.remove(touchPointID);
 		this._stageListenerCount--;
 		if (this._stageListenerCount == 0) {
 			this._stage.removeEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler);
@@ -195,7 +195,7 @@ class ExclusivePointer {
 		if (this._mouseClaim != null) {
 			return true;
 		}
-		for (pointerID in this._touchClaims.keys()) {
+		for (touchPointID in this._touchClaims.keys()) {
 			return true;
 		}
 		return false;
@@ -216,8 +216,8 @@ class ExclusivePointer {
 
 		@since 1.0.0
 	**/
-	public function getTouchClaim(pointerID:Int):DisplayObject {
-		return this._touchClaims.get(pointerID);
+	public function getTouchClaim(touchPointID:Int):DisplayObject {
+		return this._touchClaims.get(touchPointID);
 	}
 
 	/**
@@ -236,8 +236,8 @@ class ExclusivePointer {
 		@since 1.0.0
 	**/
 	public function removeAllClaims():Void {
-		for (pointerID in this._touchClaims.keys()) {
-			this.removeTouchClaim(pointerID);
+		for (touchPointID in this._touchClaims.keys()) {
+			this.removeTouchClaim(touchPointID);
 		}
 		this.removeMouseClaim();
 	}

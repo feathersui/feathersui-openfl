@@ -2202,10 +2202,19 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function baseScrollContainer_scroller_scrollStartHandler(event:ScrollEvent):Void {
-		var pointerID = this.scroller.pointerID;
-		if (pointerID != -1) {
+		var touchPointID = this.scroller.touchPointID;
+		if (touchPointID != null) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimPointer(pointerID, this);
+			var result = exclusivePointer.claimTouch(touchPointID, this);
+			if (!result) {
+				this.scroller.stop();
+				return;
+			}
+			this._viewPort.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollContainer_viewPort_mouseDownHandler);
+			this._viewPort.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollContainer_viewPort_touchBeginHandler);
+		} else if (this.scroller.touchPointIsSimulated) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimMouse(this);
 			if (!result) {
 				this.scroller.stop();
 				return;
@@ -2255,27 +2264,36 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
 	}
 
-	private function reclaimPointer(pointerID:Int):Void {
-		if (this.scroller.pointerID != pointerID) {
-			return;
-		}
-		if (pointerID == -1) {
+	private function reclaimMouse():Void {
+		if (!this.scroller.touchPointIsSimulated) {
 			return;
 		}
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var claim = exclusivePointer.getClaim(pointerID);
+		var claim = exclusivePointer.getMouseClaim();
 		if (claim != null) {
 			return;
 		}
-		exclusivePointer.claimPointer(pointerID, this);
+		exclusivePointer.claimMouse(this);
+	}
+
+	private function reclaimTouch(touchPointID:Int):Void {
+		if (this.scroller.touchPointID == null || this.scroller.touchPointID != touchPointID) {
+			return;
+		}
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var claim = exclusivePointer.getTouchClaim(touchPointID);
+		if (claim != null) {
+			return;
+		}
+		exclusivePointer.claimTouch(touchPointID, this);
 	}
 
 	private function baseScrollContainer_viewPort_mouseDownHandler(event:MouseEvent):Void {
-		this.reclaimPointer(Scroller.POINTER_ID_MOUSE);
+		this.reclaimMouse();
 	}
 
 	private function baseScrollContainer_viewPort_touchBeginHandler(event:TouchEvent):Void {
-		this.reclaimPointer(event.touchPointID);
+		this.reclaimTouch(event.touchPointID);
 	}
 
 	private function scrollBarX_changeHandler(event:Event):Void {

@@ -621,7 +621,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}
@@ -659,7 +659,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}

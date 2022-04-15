@@ -1147,7 +1147,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}
@@ -1165,7 +1165,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}
@@ -1178,7 +1178,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}
@@ -1196,7 +1196,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(ExclusivePointer.POINTER_ID_MOUSE, this);
+		var result = exclusivePointer.claimMouse(this);
 		if (!result) {
 			return;
 		}

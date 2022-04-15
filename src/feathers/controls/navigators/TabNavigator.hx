@@ -635,10 +635,17 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			return;
 		}
 
-		var pointerID = this._previousEdgePuller.pointerID;
-		if (pointerID != -1) {
+		var touchPointID = this._previousEdgePuller.touchPointID;
+		if (touchPointID != null) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimPointer(pointerID, this);
+			var result = exclusivePointer.claimTouch(touchPointID, this);
+			if (!result) {
+				event.preventDefault();
+				return;
+			}
+		} else if (this._previousEdgePuller.touchPointIsSimulated) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimMouse(this);
 			if (!result) {
 				event.preventDefault();
 				return;
@@ -697,10 +704,17 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			return;
 		}
 
-		var pointerID = this._nextEdgePuller.pointerID;
-		if (pointerID != -1) {
+		var touchPointID = this._nextEdgePuller.touchPointID;
+		if (touchPointID != null) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimPointer(pointerID, this);
+			var result = exclusivePointer.claimTouch(touchPointID, this);
+			if (!result) {
+				event.preventDefault();
+				return;
+			}
+		} else if (this._nextEdgePuller.touchPointIsSimulated) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimMouse(this);
 			if (!result) {
 				event.preventDefault();
 				return;
