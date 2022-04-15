@@ -186,6 +186,21 @@ class ExclusivePointer {
 		}
 	}
 
+	/**
+		Indicates if there is at least one claim to mouse or touch.
+
+		@since 1.0.0
+	**/
+	public function hasClaim():Bool {
+		if (this._mouseClaim != null) {
+			return true;
+		}
+		for (pointerID in this._touchClaims.keys()) {
+			return true;
+		}
+		return false;
+	}
+
 	@:deprecated('ExclusivePointer.getClaim() is deprecated. Use ExclusivePointer.getTouchClaim() and ExclusivePointer.getMouseClaim() instead.')
 	public function getClaim(pointerID:Int):DisplayObject {
 		if (pointerID == POINTER_ID_MOUSE) {
@@ -215,11 +230,20 @@ class ExclusivePointer {
 		return this._mouseClaim;
 	}
 
-	private function dispose():Void {
+	/**
+		Removes all claims to mouse or touch.
+
+		@since 1.0.0
+	**/
+	public function removeAllClaims():Void {
 		for (pointerID in this._touchClaims.keys()) {
 			this.removeTouchClaim(pointerID);
 		}
 		this.removeMouseClaim();
+	}
+
+	private function dispose():Void {
+		this.removeAllClaims();
 	}
 
 	private function exclusivePointer_stage_mouseUpHandler(event:MouseEvent):Void {
