@@ -85,7 +85,7 @@ class ExclusivePointer {
 
 	@:deprecated('ExclusivePointer.claimPointer() is deprecated. Use ExclusivePointer.claimTouch() and ExclusivePointer.claimMouse() instead.')
 	public function claimPointer(pointerID:Int, target:DisplayObject):Bool {
-		if (pointerID == POINTER_ID_MOUSE) {
+		if (pointerID == -1000) {
 			return this.claimMouse(target);
 		}
 		return this.claimTouch(pointerID, target);
@@ -148,7 +148,7 @@ class ExclusivePointer {
 
 	@:deprecated('ExclusivePointer.removeClaim() is deprecated. Use ExclusivePointer.removeTouchClaim() and ExclusivePointer.removeMouseClaim() instead.')
 	public function removeClaim(pointerID:Int):Void {
-		if (pointerID == POINTER_ID_MOUSE) {
+		if (pointerID == -1000) {
 			this.removeMouseClaim();
 		}
 		return this.removeTouchClaim(pointerID);
@@ -213,7 +213,7 @@ class ExclusivePointer {
 
 	@:deprecated('ExclusivePointer.getClaim() is deprecated. Use ExclusivePointer.getTouchClaim() and ExclusivePointer.getMouseClaim() instead.')
 	public function getClaim(pointerID:Int):DisplayObject {
-		if (pointerID == POINTER_ID_MOUSE) {
+		if (pointerID == -1000) {
 			return this.getMouseClaim();
 		}
 		return this.getTouchClaim(pointerID);
