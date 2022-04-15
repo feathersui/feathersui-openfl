@@ -25,6 +25,7 @@ class ToggleButtonMeasurementTest extends Test {
 	private static final BACKGROUND_MAX_HEIGHT = 45.0;
 
 	private var _button:ToggleButton;
+	private var _measureTextField:TextField;
 
 	public function new() {
 		super();
@@ -41,6 +42,10 @@ class ToggleButtonMeasurementTest extends Test {
 			this._button.parent.removeChild(this._button);
 		}
 		this._button = null;
+		if (this._measureTextField != null && this._measureTextField.parent != null) {
+			this._measureTextField.parent.removeChild(this._measureTextField);
+		}
+		this._measureTextField = null;
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
@@ -68,9 +73,11 @@ class ToggleButtonMeasurementTest extends Test {
 	}
 
 	public function testMeasurementsWithRectangleSkinBackgroundSkinAndNoContent():Void {
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = "\u200b";
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = "\u200b";
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this.addRectangleSkinBackground();
 		this._button.validateNow();
@@ -81,47 +88,51 @@ class ToggleButtonMeasurementTest extends Test {
 		Assert.equals(BACKGROUND_MIN_HEIGHT, this._button.minHeight);
 		Assert.equals(BACKGROUND_MAX_WIDTH, this._button.maxWidth);
 		Assert.equals(BACKGROUND_MAX_HEIGHT, this._button.maxHeight);
-		Assert.equals(((BACKGROUND_HEIGHT - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._button.baseline);
+		Assert.equals(((BACKGROUND_HEIGHT - this._measureTextField.height) / 2.0) + this._measureTextField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 
 	public function testMeasurementsWithText():Void {
 		var text = "Hello World";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = text;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = text;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._button.text = text;
 		this._button.validateNow();
 
 		Assert.isTrue(this._button.width > 0.0);
 		Assert.isTrue(this._button.height > 0.0);
-		Assert.equals(textField.width, this._button.width);
-		Assert.equals(textField.height, this._button.height);
-		Assert.equals(textField.width, this._button.minWidth);
-		Assert.equals(textField.height, this._button.minHeight);
+		Assert.equals(this._measureTextField.width, this._button.width);
+		Assert.equals(this._measureTextField.height, this._button.height);
+		Assert.equals(this._measureTextField.width, this._button.minWidth);
+		Assert.equals(this._measureTextField.height, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._button.baseline);
+		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 
 	public function testMeasurementsWithHtmlText():Void {
 		var htmlText = "<b>Hello</b> <i>World</i>";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.htmlText = htmlText;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.htmlText = htmlText;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._button.htmlText = htmlText;
 		this._button.validateNow();
 
 		Assert.isTrue(this._button.width > 0.0);
 		Assert.isTrue(this._button.height > 0.0);
-		Assert.equals(textField.width, this._button.width);
-		Assert.equals(textField.height, this._button.height);
-		Assert.equals(textField.width, this._button.minWidth);
-		Assert.equals(textField.height, this._button.minHeight);
+		Assert.equals(this._measureTextField.width, this._button.width);
+		Assert.equals(this._measureTextField.height, this._button.height);
+		Assert.equals(this._measureTextField.width, this._button.minWidth);
+		Assert.equals(this._measureTextField.height, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._button.baseline);
+		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 
 	public function testMeasurementsWithTextAndShowTextFalse():Void {
@@ -154,9 +165,11 @@ class ToggleButtonMeasurementTest extends Test {
 
 	public function testMeasurementsWithTextAndIconAndShowTextFalse():Void {
 		var text = "Hello World";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = text;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = text;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		var icon = new RectangleSkin();
 		icon.width = 20.0;
@@ -172,6 +185,6 @@ class ToggleButtonMeasurementTest extends Test {
 		Assert.equals(20.0, this._button.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._button.maxHeight);
-		Assert.equals(((icon.height - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._button.baseline);
+		Assert.equals(((icon.height - this._measureTextField.height) / 2.0) + this._measureTextField.getLineMetrics(0).ascent, this._button.baseline);
 	}
 }

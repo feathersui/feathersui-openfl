@@ -24,6 +24,7 @@ class LabelMeasurementTest extends Test {
 	private static final BACKGROUND_MAX_HEIGHT = 45.0;
 
 	private var _label:Label;
+	private var _measureTextField:TextField;
 
 	public function new() {
 		super();
@@ -40,64 +41,74 @@ class LabelMeasurementTest extends Test {
 			this._label.parent.removeChild(this._label);
 		}
 		this._label = null;
+		if (this._measureTextField != null && this._measureTextField.parent != null) {
+			this._measureTextField.parent.removeChild(this._measureTextField);
+		}
+		this._measureTextField = null;
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
 	public function testMeasurementsWithNoText():Void {
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = "\u200b";
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = "\u200b";
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._label.validateNow();
 
 		Assert.isTrue(this._label.width > 0.0);
 		Assert.isTrue(this._label.height > 0.0);
-		Assert.equals(textField.width, this._label.width);
-		Assert.equals(textField.height, this._label.height);
-		Assert.equals(textField.width, this._label.minWidth);
-		Assert.equals(textField.height, this._label.minHeight);
+		Assert.equals(this._measureTextField.width, this._label.width);
+		Assert.equals(this._measureTextField.height, this._label.height);
+		Assert.equals(this._measureTextField.width, this._label.minWidth);
+		Assert.equals(this._measureTextField.height, this._label.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._label.baseline);
+		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._label.baseline);
 	}
 
 	public function testMeasurementsWithText():Void {
 		var text = "Hello World";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = text;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = text;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._label.text = text;
 		this._label.validateNow();
 
 		Assert.isTrue(this._label.width > 0.0);
 		Assert.isTrue(this._label.height > 0.0);
-		Assert.equals(textField.width, this._label.width);
-		Assert.equals(textField.height, this._label.height);
-		Assert.equals(textField.width, this._label.minWidth);
-		Assert.equals(textField.height, this._label.minHeight);
+		Assert.equals(this._measureTextField.width, this._label.width);
+		Assert.equals(this._measureTextField.height, this._label.height);
+		Assert.equals(this._measureTextField.width, this._label.minWidth);
+		Assert.equals(this._measureTextField.height, this._label.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._label.baseline);
+		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._label.baseline);
 	}
 
 	public function testMeasurementsWithHtmlText():Void {
 		var htmlText = "<b>Hello</b> <i>World</i>";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.htmlText = htmlText;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.htmlText = htmlText;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._label.htmlText = htmlText;
 		this._label.validateNow();
 
 		Assert.isTrue(this._label.width > 0.0);
 		Assert.isTrue(this._label.height > 0.0);
-		Assert.equals(textField.width, this._label.width);
-		Assert.equals(textField.height, this._label.height);
-		Assert.equals(textField.width, this._label.minWidth);
-		Assert.equals(textField.height, this._label.minHeight);
+		Assert.equals(this._measureTextField.width, this._label.width);
+		Assert.equals(this._measureTextField.height, this._label.height);
+		Assert.equals(this._measureTextField.width, this._label.minWidth);
+		Assert.equals(this._measureTextField.height, this._label.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._label.baseline);
+		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._label.baseline);
 	}
 }

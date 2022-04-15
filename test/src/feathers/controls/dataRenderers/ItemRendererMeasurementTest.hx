@@ -25,6 +25,7 @@ class ItemRendererMeasurementTest extends Test {
 	private static final BACKGROUND_MAX_HEIGHT = 45.0;
 
 	private var _itemRenderer:ItemRenderer;
+	private var _measureTextField:TextField;
 
 	public function new() {
 		super();
@@ -41,6 +42,10 @@ class ItemRendererMeasurementTest extends Test {
 			this._itemRenderer.parent.removeChild(this._itemRenderer);
 		}
 		this._itemRenderer = null;
+		if (this._measureTextField != null && this._measureTextField.parent != null) {
+			this._measureTextField.parent.removeChild(this._measureTextField);
+		}
+		this._measureTextField = null;
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
@@ -68,9 +73,11 @@ class ItemRendererMeasurementTest extends Test {
 	}
 
 	public function testMeasurementsWithRectangleSkinBackgroundSkinAndNoContent():Void {
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = "\u200b";
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = "\u200b";
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this.addRectangleSkinBackground();
 		this._itemRenderer.validateNow();
@@ -81,47 +88,52 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(BACKGROUND_MIN_HEIGHT, this._itemRenderer.minHeight);
 		Assert.equals(BACKGROUND_MAX_WIDTH, this._itemRenderer.maxWidth);
 		Assert.equals(BACKGROUND_MAX_HEIGHT, this._itemRenderer.maxHeight);
-		Assert.equals(((BACKGROUND_HEIGHT - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
+		Assert.equals(((BACKGROUND_HEIGHT - this._measureTextField.height) / 2.0) + this._measureTextField.getLineMetrics(0).ascent,
+			this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithText():Void {
 		var text = "Hello World";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = text;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = text;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._itemRenderer.text = text;
 		this._itemRenderer.validateNow();
 
 		Assert.isTrue(this._itemRenderer.width > 0.0);
 		Assert.isTrue(this._itemRenderer.height > 0.0);
-		Assert.equals(textField.width, this._itemRenderer.width);
-		Assert.equals(textField.height, this._itemRenderer.height);
-		Assert.equals(textField.width, this._itemRenderer.minWidth);
-		Assert.equals(textField.height, this._itemRenderer.minHeight);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.width);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.height);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.minWidth);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
+		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithHtmlText():Void {
 		var htmlText = "<b>Hello</b> <i>World</i>";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.htmlText = htmlText;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.htmlText = htmlText;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._itemRenderer.htmlText = htmlText;
 		this._itemRenderer.validateNow();
 
 		Assert.isTrue(this._itemRenderer.width > 0.0);
 		Assert.isTrue(this._itemRenderer.height > 0.0);
-		Assert.equals(textField.width, this._itemRenderer.width);
-		Assert.equals(textField.height, this._itemRenderer.height);
-		Assert.equals(textField.width, this._itemRenderer.minWidth);
-		Assert.equals(textField.height, this._itemRenderer.minHeight);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.width);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.height);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.minWidth);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
-		Assert.equals(textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
+		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 
 	public function testMeasurementsWithTextAndShowTextFalse():Void {
@@ -154,19 +166,21 @@ class ItemRendererMeasurementTest extends Test {
 
 	public function testMeasurementsWithSecondaryText():Void {
 		var text = "Hello World";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = text;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = text;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._itemRenderer.secondaryText = text;
 		this._itemRenderer.validateNow();
 
 		Assert.isTrue(this._itemRenderer.width > 0.0);
 		Assert.isTrue(this._itemRenderer.height > 0.0);
-		Assert.equals(textField.width, this._itemRenderer.width);
-		Assert.equals(textField.height, this._itemRenderer.height);
-		Assert.equals(textField.width, this._itemRenderer.minWidth);
-		Assert.equals(textField.height, this._itemRenderer.minHeight);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.width);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.height);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.minWidth);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
 		// it probably isn't best to ignore secondary text baseline
@@ -175,19 +189,21 @@ class ItemRendererMeasurementTest extends Test {
 
 	public function testMeasurementsWithSecondaryHtmlText():Void {
 		var htmlText = "<b>Hello</b> <i>World</i>";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.htmlText = htmlText;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.htmlText = htmlText;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		this._itemRenderer.secondaryHtmlText = htmlText;
 		this._itemRenderer.validateNow();
 
 		Assert.isTrue(this._itemRenderer.width > 0.0);
 		Assert.isTrue(this._itemRenderer.height > 0.0);
-		Assert.equals(textField.width, this._itemRenderer.width);
-		Assert.equals(textField.height, this._itemRenderer.height);
-		Assert.equals(textField.width, this._itemRenderer.minWidth);
-		Assert.equals(textField.height, this._itemRenderer.minHeight);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.width);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.height);
+		Assert.equals(this._measureTextField.width, this._itemRenderer.minWidth);
+		Assert.equals(this._measureTextField.height, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
 		// it probably isn't best to ignore secondary text baseline
@@ -224,9 +240,11 @@ class ItemRendererMeasurementTest extends Test {
 
 	public function testMeasurementsWithTextAndIconAndShowTextFalse():Void {
 		var text = "Hello World";
-		var textField = new TextField();
-		textField.autoSize = LEFT;
-		textField.text = text;
+		this._measureTextField = new TextField();
+		this._measureTextField.autoSize = LEFT;
+		this._measureTextField.text = text;
+		// swf requires both on stage or both off stage for equal measurement
+		Lib.current.addChild(this._measureTextField);
 
 		var icon = new RectangleSkin();
 		icon.width = 20.0;
@@ -242,6 +260,6 @@ class ItemRendererMeasurementTest extends Test {
 		Assert.equals(20.0, this._itemRenderer.minHeight);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._itemRenderer.maxHeight);
-		Assert.equals(((icon.height - textField.height) / 2.0) + textField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
+		Assert.equals(((icon.height - this._measureTextField.height) / 2.0) + this._measureTextField.getLineMetrics(0).ascent, this._itemRenderer.baseline);
 	}
 }
