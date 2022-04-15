@@ -11,6 +11,7 @@ package feathers.utils;
 import openfl.display.DisplayObject;
 import openfl.display.Stage;
 import openfl.errors.ArgumentError;
+import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 
@@ -109,6 +110,7 @@ class ExclusivePointer {
 			return false;
 		}
 		this._touchClaims.set(touchPointID, target);
+		target.addEventListener(Event.REMOVED_FROM_STAGE, exclusivePointer_target_removedFromStageHandler, false, 0, true);
 		if (this._stageListenerCount == 0) {
 			this._stage.addEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler, false, 0, true);
 			this._stage.addEventListener(TouchEvent.TOUCH_END, exclusivePointer_stage_touchEndHandler, false, 0, true);
@@ -135,6 +137,7 @@ class ExclusivePointer {
 			return false;
 		}
 		this._mouseClaim = target;
+		target.addEventListener(Event.REMOVED_FROM_STAGE, exclusivePointer_target_removedFromStageHandler, false, 0, true);
 		if (this._stageListenerCount == 0) {
 			this._stage.addEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler, false, 0, true);
 			this._stage.addEventListener(TouchEvent.TOUCH_END, exclusivePointer_stage_touchEndHandler, false, 0, true);
@@ -162,6 +165,9 @@ class ExclusivePointer {
 			return;
 		}
 		this._touchClaims.remove(touchPointID);
+		if (!this.hasClaimOn(existingTarget)) {
+			existingTarget.removeEventListener(Event.REMOVED_FROM_STAGE, exclusivePointer_target_removedFromStageHandler);
+		}
 		this._stageListenerCount--;
 		if (this._stageListenerCount == 0) {
 			this._stage.removeEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler);
@@ -175,10 +181,14 @@ class ExclusivePointer {
 		@since 1.0.0
 	 */
 	public function removeMouseClaim():Void {
-		if (this._mouseClaim == null) {
+		var existingTarget = this._mouseClaim;
+		if (existingTarget == null) {
 			return;
 		}
 		this._mouseClaim = null;
+		if (!this.hasClaimOn(existingTarget)) {
+			existingTarget.removeEventListener(Event.REMOVED_FROM_STAGE, exclusivePointer_target_removedFromStageHandler);
+		}
 		this._stageListenerCount--;
 		if (this._stageListenerCount == 0) {
 			this._stage.removeEventListener(MouseEvent.MOUSE_UP, exclusivePointer_stage_mouseUpHandler);
@@ -244,6 +254,30 @@ class ExclusivePointer {
 
 	private function dispose():Void {
 		this.removeAllClaims();
+	}
+
+	private function hasClaimOn(target:DisplayObject):Bool {
+		if (this._mouseClaim == target) {
+			return true;
+		}
+		for (touchPointID => existingTarget in this._touchClaims) {
+			if (existingTarget == target) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private function exclusivePointer_target_removedFromStageHandler(event:Event):Void {
+		var target:DisplayObject = cast(event.currentTarget, DisplayObject);
+		if (this._mouseClaim == target) {
+			this.removeMouseClaim();
+		}
+		for (touchPointID => existingTarget in this._touchClaims) {
+			if (existingTarget == target) {
+				this.removeTouchClaim(touchPointID);
+			}
+		}
 	}
 
 	private function exclusivePointer_stage_mouseUpHandler(event:MouseEvent):Void {
