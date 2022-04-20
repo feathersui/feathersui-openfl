@@ -434,8 +434,8 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function getPathname():String {
-		#if html5
 		var pathname:String = null;
+		#if html5
 		if (this._preferHashRouting || this.htmlWindow.location.protocol == "file:") {
 			pathname = this.htmlWindow.location.hash;
 			if (pathname.length == 0) {
@@ -450,8 +450,10 @@ class RouterNavigator extends BaseNavigator {
 			pathname = pathname.substr(this.basePath.length);
 		}
 		#else
-		var item = this._history[this._history.length - 1];
-		var pathname = item.location.pathname;
+		if (this._history.length > 0) {
+			var item = this._history[this._history.length - 1];
+			pathname = item.location.pathname;
+		}
 		#end
 		return pathname;
 	}
