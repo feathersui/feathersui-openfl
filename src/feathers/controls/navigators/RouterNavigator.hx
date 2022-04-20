@@ -325,6 +325,12 @@ class RouterNavigator extends BaseNavigator {
 		if (n == 0) {
 			return this.activeItemView;
 		}
+		#if !html5
+		if (n < 0 && this._history.length == 1) {
+			// can't go any further back
+			return this.activeItemView;
+		}
+		#end
 		if (transition == null) {
 			transition = (n < 0) ? this.backTransition : this.forwardTransition;
 		}
@@ -340,7 +346,7 @@ class RouterNavigator extends BaseNavigator {
 				this._history.push(item);
 			}
 		} else {
-			for (i in 0...Std.int(Math.min(-n, this._history.length))) {
+			for (i in 0...Std.int(Math.min(-n, this._history.length - 1))) {
 				var item = this._history.pop();
 				this._forwardHistory.unshift(item);
 			}
