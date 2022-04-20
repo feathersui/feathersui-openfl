@@ -293,6 +293,9 @@ class StackItem {
 
 	private function createActionEventListener(action:StackAction, navigator:StackNavigator):(Event) -> Void {
 		var eventListener = function(event:Event):Void {
+			if (navigator.transitionActive) {
+				return;
+			}
 			var current = action;
 			while (current != null) {
 				current = performAction(current, event, navigator);

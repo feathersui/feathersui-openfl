@@ -247,6 +247,9 @@ class Route {
 
 	private function createActionEventListener(action:RouterAction, navigator:RouterNavigator):(Event) -> Void {
 		var eventListener = function(event:Event):Void {
+			if (navigator.transitionActive) {
+				return;
+			}
 			var current = action;
 			while (current != null) {
 				current = performAction(current, event, navigator);
