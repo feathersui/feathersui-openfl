@@ -47,6 +47,9 @@ import openfl.ui.Multitouch;
 **/
 @defaultXmlProperty("xmlContent")
 class BaseDividedBox extends FeathersControl {
+	// A special pointer ID for the mouse.
+	private static final POINTER_ID_MOUSE:Int = -1000;
+
 	private function new() {
 		super();
 		this.addEventListener(Event.ADDED_TO_STAGE, baseDividedBox_addedToStageHandler);
@@ -54,7 +57,7 @@ class BaseDividedBox extends FeathersControl {
 
 	private var resizeCursor:MouseCursor;
 	private var _oldDividerMouseCursor:MouseCursor;
-	private var _resizingTouchID = -1;
+	private var _resizingTouchPointID:Null<Int> = null;
 	private var _resizingDividerIndex = -1;
 
 	private var _autoSizeMode:AutoSizeMode = CONTENT;
@@ -762,24 +765,29 @@ class BaseDividedBox extends FeathersControl {
 		throw new TypeError("Missing override for 'commitResize' in type " + Type.getClassName(Type.getClass(this)));
 	}
 
-	private function resizeTouchBegin(touchID:Int, divider:InteractiveObject, stageX:Float, stageY:Float):Void {
+	private function resizeTouchBegin(touchPointID:Int, isMouse:Bool, divider:InteractiveObject, stageX:Float, stageY:Float):Void {
 		if (!this._enabled || this._resizingDividerIndex != -1 || this.stage == null) {
 			return;
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(touchID, divider);
+		var result = false;
+		if (isMouse) {
+			result = exclusivePointer.claimMouse(divider);
+		} else {
+			result = exclusivePointer.claimTouch(touchPointID, divider);
+		}
 		if (!result) {
 			return;
 		}
 
-		this._resizingTouchID = touchID;
+		this._resizingTouchPointID = touchPointID;
 		this._resizingDividerIndex = this.dividers.indexOf(divider);
 		this.prepareResize(this._resizingDividerIndex, stageX, stageY);
 		if (!this.liveDragging && this._currentResizeDraggingSkin != null) {
 			this._currentResizeDraggingSkin.visible = true;
 		}
-		if (touchID == ExclusivePointer.POINTER_ID_MOUSE) {
+		if (isMouse) {
 			this.stage.addEventListener(MouseEvent.MOUSE_MOVE, baseDividedBox_divider_stage_mouseMoveHandler, false, 0, true);
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, baseDividedBox_divider_stage_mouseUpHandler, false, 0, true);
 		} else {
@@ -788,19 +796,19 @@ class BaseDividedBox extends FeathersControl {
 		}
 	}
 
-	private function resizeTouchMove(touchID:Int, stageX:Float, stageY:Float):Void {
-		if (this._resizingTouchID != touchID) {
+	private function resizeTouchMove(touchPointID:Int, isMouse:Bool, stageX:Float, stageY:Float):Void {
+		if (this._resizingTouchPointID == null || this._resizingTouchPointID != touchPointID) {
 			return;
 		}
 		this.commitResize(this._resizingDividerIndex, stageX, stageY, true);
 	}
 
-	private function resizeTouchEnd(touchID:Int, stageX:Float, stageY:Float):Void {
-		if (this._resizingTouchID != touchID) {
+	private function resizeTouchEnd(touchPointID:Int, isMouse:Bool, stageX:Float, stageY:Float):Void {
+		if (this._resizingTouchPointID == null || this._resizingTouchPointID != touchPointID) {
 			return;
 		}
 
-		if (touchID == ExclusivePointer.POINTER_ID_MOUSE) {
+		if (isMouse) {
 			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, baseDividedBox_divider_stage_mouseMoveHandler);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, baseDividedBox_divider_stage_mouseUpHandler);
 		} else {
@@ -815,7 +823,7 @@ class BaseDividedBox extends FeathersControl {
 			this._currentResizeDraggingSkin.visible = false;
 		}
 
-		this._resizingTouchID = -1;
+		this._resizingTouchPointID = null;
 		this._resizingDividerIndex = -1;
 
 		if (this._oldDividerMouseCursor != null) {
@@ -871,35 +879,35 @@ class BaseDividedBox extends FeathersControl {
 		this._oldDividerMouseCursor = null;
 	}
 
+	private function baseDividedBox_divider_mouseDownHandler(event:MouseEvent):Void {
+		var divider = cast(event.currentTarget, InteractiveObject);
+		this.resizeTouchBegin(POINTER_ID_MOUSE, true, divider, this.stage.mouseX, this.stage.mouseY);
+	}
+
+	private function baseDividedBox_divider_stage_mouseMoveHandler(event:MouseEvent):Void {
+		var stage = cast(event.currentTarget, Stage);
+		this.resizeTouchMove(POINTER_ID_MOUSE, true, stage.mouseX, stage.mouseY);
+	}
+
+	private function baseDividedBox_divider_stage_mouseUpHandler(event:MouseEvent):Void {
+		var stage = cast(event.currentTarget, Stage);
+		this.resizeTouchEnd(POINTER_ID_MOUSE, true, stage.mouseX, stage.mouseY);
+	}
+
 	private function baseDividedBox_divider_touchBeginHandler(event:TouchEvent):Void {
 		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
 		var divider = cast(event.currentTarget, InteractiveObject);
-		this.resizeTouchBegin(event.touchPointID, divider, event.stageX, event.stageY);
-	}
-
-	private function baseDividedBox_divider_mouseDownHandler(event:MouseEvent):Void {
-		var divider = cast(event.currentTarget, InteractiveObject);
-		this.resizeTouchBegin(ExclusivePointer.POINTER_ID_MOUSE, divider, this.stage.mouseX, this.stage.mouseY);
-	}
-
-	private function baseDividedBox_divider_stage_mouseMoveHandler(event:MouseEvent):Void {
-		var stage = cast(event.currentTarget, Stage);
-		this.resizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX, stage.mouseY);
+		this.resizeTouchBegin(event.touchPointID, false, divider, event.stageX, event.stageY);
 	}
 
 	private function baseDividedBox_divider_stage_touchMoveHandler(event:TouchEvent):Void {
-		this.resizeTouchMove(event.touchPointID, event.stageX, event.stageY);
-	}
-
-	private function baseDividedBox_divider_stage_mouseUpHandler(event:MouseEvent):Void {
-		var stage = cast(event.currentTarget, Stage);
-		this.resizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX, stage.mouseY);
+		this.resizeTouchMove(event.touchPointID, false, event.stageX, event.stageY);
 	}
 
 	private function baseDividedBox_divider_stage_touchEndHandler(event:TouchEvent):Void {
-		this.resizeTouchEnd(event.touchPointID, event.stageX, event.stageY);
+		this.resizeTouchEnd(event.touchPointID, false, event.stageX, event.stageY);
 	}
 }

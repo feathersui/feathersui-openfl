@@ -230,6 +230,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private static final RESET_HEADER_STATE = new TreeGridViewHeaderState();
 	private static final RESET_ROW_STATE = new TreeGridViewCellState();
 
+	// A special pointer ID for the mouse.
+	private static final POINTER_ID_MOUSE:Int = -1000;
+
 	private static function defaultUpdateHeaderRenderer(headerRenderer:DisplayObject, state:TreeGridViewHeaderState):Void {
 		if ((headerRenderer is ITextControl)) {
 			var textControl = cast(headerRenderer, ITextControl);
@@ -276,7 +279,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var _headerResizeContainer:Sprite;
 	private var _columnDividerContainer:Sprite;
 	private var _resizingHeaderIndex:Int = -1;
-	private var _resizingHeaderTouchID:Int = -1;
+	private var _resizingHeaderTouchPointID:Null<Int> = null;
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
 
@@ -2447,22 +2450,27 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.setChildIndex(this._currentColumnResizeSkin, this.numChildren - 1);
 	}
 
-	private function headerResizeTouchBegin(touchID:Int, divider:InteractiveObject, stageX:Float):Void {
+	private function headerResizeTouchBegin(touchPointID:Int, isMouse:Bool, divider:InteractiveObject, stageX:Float):Void {
 		if (!this._enabled || !this._resizableColumns || this._resizingHeaderIndex != -1 || this.stage == null) {
 			return;
 		}
 
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
-		var result = exclusivePointer.claimPointer(touchID, divider);
+		var result = false;
+		if (isMouse) {
+			result = exclusivePointer.claimMouse(divider);
+		} else {
+			result = exclusivePointer.claimTouch(touchPointID, divider);
+		}
 		if (!result) {
 			return;
 		}
 
-		this._resizingHeaderTouchID = touchID;
+		this._resizingHeaderTouchPointID = touchPointID;
 		this._resizingHeaderIndex = this._headerDividerLayoutItems.indexOf(divider);
 		this._resizingHeaderStartStageX = stageX;
 		this.layoutColumnResizeSkin(0.0);
-		if (touchID == ExclusivePointer.POINTER_ID_MOUSE) {
+		if (isMouse) {
 			this.stage.addEventListener(MouseEvent.MOUSE_MOVE, treeGridView_headerDivider_stage_mouseMoveHandler, false, 0, true);
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, treeGridView_headerDivider_stage_mouseUpHandler, false, 0, true);
 		} else {
@@ -2471,8 +2479,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 	}
 
-	private function headerResizeTouchMove(touchID:Int, stageX:Float):Void {
-		if (this._resizingHeaderTouchID != touchID) {
+	private function headerResizeTouchMove(touchPointID:Int, isMouse:Bool, stageX:Float):Void {
+		if (this._resizingHeaderTouchPointID == null || this._resizingHeaderTouchPointID != touchPointID) {
 			return;
 		}
 
@@ -2481,12 +2489,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.layoutColumnResizeSkin(offset);
 	}
 
-	private function headerResizeTouchEnd(touchID:Int, stageX:Float):Void {
-		if (this._resizingHeaderTouchID != touchID) {
+	private function headerResizeTouchEnd(touchPointID:Int, isMouse:Bool, stageX:Float):Void {
+		if (this._resizingHeaderTouchPointID == null || this._resizingHeaderTouchPointID != touchPointID) {
 			return;
 		}
 
-		if (touchID == ExclusivePointer.POINTER_ID_MOUSE) {
+		if (isMouse) {
 			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, treeGridView_headerDivider_stage_mouseMoveHandler);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, treeGridView_headerDivider_stage_mouseUpHandler);
 		} else {
@@ -2502,7 +2510,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		offset *= DisplayUtil.getConcatenatedScaleX(this);
 		this.calculateResizedColumnWidth(offset);
 
-		this._resizingHeaderTouchID = -1;
+		this._resizingHeaderTouchPointID = null;
 		this._resizingHeaderIndex = -1;
 
 		if (this._oldHeaderDividerMouseCursor != null) {
@@ -2706,17 +2714,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private function treeGridView_headerDivider_mouseDownHandler(event:MouseEvent):Void {
 		var headerDivider = cast(event.currentTarget, InteractiveObject);
-		this.headerResizeTouchBegin(ExclusivePointer.POINTER_ID_MOUSE, headerDivider, headerDivider.stage.mouseX);
+		this.headerResizeTouchBegin(POINTER_ID_MOUSE, true, headerDivider, headerDivider.stage.mouseX);
 	}
 
 	private function treeGridView_headerDivider_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var stage = cast(event.currentTarget, Stage);
-		this.headerResizeTouchMove(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX);
+		this.headerResizeTouchMove(POINTER_ID_MOUSE, true, stage.mouseX);
 	}
 
 	private function treeGridView_headerDivider_stage_mouseUpHandler(event:MouseEvent):Void {
 		var stage = cast(event.currentTarget, Stage);
-		this.headerResizeTouchEnd(ExclusivePointer.POINTER_ID_MOUSE, stage.mouseX);
+		this.headerResizeTouchEnd(POINTER_ID_MOUSE, true, stage.mouseX);
 	}
 
 	private function treeGridView_headerDivider_touchBeginHandler(event:TouchEvent):Void {
@@ -2726,17 +2734,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 
 		var headerDivider = cast(event.currentTarget, InteractiveObject);
-		this.headerResizeTouchBegin(event.touchPointID, headerDivider, headerDivider.stage.mouseX);
+		this.headerResizeTouchBegin(event.touchPointID, false, headerDivider, headerDivider.stage.mouseX);
 	}
 
 	private function treeGridView_headerDivider_stage_touchMoveHandler(event:TouchEvent):Void {
 		var stage = cast(event.currentTarget, Stage);
-		this.headerResizeTouchMove(event.touchPointID, stage.mouseX);
+		this.headerResizeTouchMove(event.touchPointID, false, stage.mouseX);
 	}
 
 	private function treeGridView_headerDivider_stage_touchEndHandler(event:TouchEvent):Void {
 		var stage = cast(event.currentTarget, Stage);
-		this.headerResizeTouchEnd(event.touchPointID, stage.mouseX);
+		this.headerResizeTouchEnd(event.touchPointID, false, stage.mouseX);
 	}
 
 	private function treeGridView_headerDivider_rollOverHandler(event:MouseEvent):Void {
