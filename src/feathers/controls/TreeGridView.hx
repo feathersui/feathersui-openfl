@@ -8,16 +8,15 @@
 
 package feathers.controls;
 
-import feathers.core.IMeasureObject;
-import feathers.utils.AbstractDisplayObjectRecycler;
-import feathers.controls.dataRenderers.GridViewHeaderRenderer;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.ITreeGridViewHeaderRenderer;
+import feathers.controls.dataRenderers.SortOrderHeaderRenderer;
 import feathers.controls.dataRenderers.TreeGridViewRowRenderer;
 import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
 import feathers.core.IFocusContainer;
+import feathers.core.IMeasureObject;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -43,6 +42,7 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelTreeGridViewStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.utils.DisplayUtil;
@@ -284,7 +284,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
 
-	private var _defaultHeaderStorage:HeaderRendererStorage = new HeaderRendererStorage(DisplayObjectRecycler.withClass(GridViewHeaderRenderer));
+	private var _defaultHeaderStorage:HeaderRendererStorage = new HeaderRendererStorage(DisplayObjectRecycler.withClass(SortOrderHeaderRenderer));
 	private var _unrenderedHeaderData:Array<TreeGridViewColumn> = [];
 	private var _headerLayoutItems:Array<DisplayObject> = [];
 

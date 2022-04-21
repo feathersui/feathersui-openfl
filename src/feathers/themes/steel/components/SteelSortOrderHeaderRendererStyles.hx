@@ -8,9 +8,9 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.TriangleSkin;
-import feathers.controls.dataRenderers.GridViewHeaderRenderer;
+import feathers.controls.dataRenderers.SortOrderHeaderRenderer;
 import feathers.skins.RectangleSkin;
+import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 import feathers.utils.DeviceUtil;
@@ -22,7 +22,7 @@ import feathers.utils.DeviceUtil;
 **/
 @:dox(hide)
 @:access(feathers.themes.steel.BaseSteelTheme)
-class SteelGridViewHeaderRendererStyles {
+class SteelSortOrderHeaderRendererStyles {
 	public static function initialize(?theme:BaseSteelTheme):Void {
 		if (theme == null) {
 			theme = Std.downcast(Theme.fallbackTheme, BaseSteelTheme);
@@ -32,8 +32,8 @@ class SteelGridViewHeaderRendererStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
-		if (styleProvider.getStyleFunction(GridViewHeaderRenderer, null) == null) {
-			styleProvider.setStyleFunction(GridViewHeaderRenderer, null, function(itemRenderer:GridViewHeaderRenderer):Void {
+		if (styleProvider.getStyleFunction(SortOrderHeaderRenderer, null) == null) {
+			styleProvider.setStyleFunction(SortOrderHeaderRenderer, null, function(itemRenderer:SortOrderHeaderRenderer):Void {
 				var isDesktop = DeviceUtil.isDesktop();
 
 				if (itemRenderer.backgroundSkin == null) {
