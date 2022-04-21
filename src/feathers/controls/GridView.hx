@@ -287,6 +287,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _columnDividerContainer:Sprite;
 	private var _resizingHeaderIndex:Int = -1;
 	private var _resizingHeaderTouchPointID:Null<Int> = null;
+	private var _resizingHeaderTouchPointIsMouse:Bool = false;
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
 
@@ -2626,6 +2627,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		this._resizingHeaderTouchPointID = touchPointID;
+		this._resizingHeaderTouchPointIsMouse = isMouse;
 		this._resizingHeaderIndex = this._headerDividerLayoutItems.indexOf(divider);
 		this._resizingHeaderStartStageX = stageX;
 		this.layoutColumnResizeSkin(0.0);
@@ -2639,7 +2641,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function headerResizeTouchMove(touchPointID:Int, isMouse:Bool, stageX:Float):Void {
-		if (this._resizingHeaderTouchPointID == null || this._resizingHeaderTouchPointID != touchPointID) {
+		if (this._resizingHeaderTouchPointID == null
+			|| this._resizingHeaderTouchPointID != touchPointID
+			|| this._resizingHeaderTouchPointIsMouse != isMouse) {
 			return;
 		}
 
@@ -2649,7 +2653,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function headerResizeTouchEnd(touchPointID:Int, isMouse:Bool, stageX:Float):Void {
-		if (this._resizingHeaderTouchPointID == null || this._resizingHeaderTouchPointID != touchPointID) {
+		if (this._resizingHeaderTouchPointID == null
+			|| this._resizingHeaderTouchPointID != touchPointID
+			|| this._resizingHeaderTouchPointIsMouse != isMouse) {
 			return;
 		}
 
@@ -2670,6 +2676,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.calculateResizedColumnWidth(offset);
 
 		this._resizingHeaderTouchPointID = null;
+		this._resizingHeaderTouchPointIsMouse = false;
 		this._resizingHeaderIndex = -1;
 
 		if (this._oldHeaderDividerMouseCursor != null) {

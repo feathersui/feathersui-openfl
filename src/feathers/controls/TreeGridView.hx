@@ -280,6 +280,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var _columnDividerContainer:Sprite;
 	private var _resizingHeaderIndex:Int = -1;
 	private var _resizingHeaderTouchPointID:Null<Int> = null;
+	private var _resizingHeaderTouchPointIsMouse:Bool = false;
 	private var _resizingHeaderStartStageX:Float;
 	private var _customColumnWidths:Array<Float>;
 
@@ -2467,6 +2468,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 
 		this._resizingHeaderTouchPointID = touchPointID;
+		this._resizingHeaderTouchPointIsMouse = isMouse;
 		this._resizingHeaderIndex = this._headerDividerLayoutItems.indexOf(divider);
 		this._resizingHeaderStartStageX = stageX;
 		this.layoutColumnResizeSkin(0.0);
@@ -2480,7 +2482,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function headerResizeTouchMove(touchPointID:Int, isMouse:Bool, stageX:Float):Void {
-		if (this._resizingHeaderTouchPointID == null || this._resizingHeaderTouchPointID != touchPointID) {
+		if (this._resizingHeaderTouchPointID == null
+			|| this._resizingHeaderTouchPointID != touchPointID
+			|| this._resizingHeaderTouchPointIsMouse != isMouse) {
 			return;
 		}
 
@@ -2490,7 +2494,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function headerResizeTouchEnd(touchPointID:Int, isMouse:Bool, stageX:Float):Void {
-		if (this._resizingHeaderTouchPointID == null || this._resizingHeaderTouchPointID != touchPointID) {
+		if (this._resizingHeaderTouchPointID == null
+			|| this._resizingHeaderTouchPointID != touchPointID
+			|| this._resizingHeaderTouchPointIsMouse != isMouse) {
 			return;
 		}
 
@@ -2511,6 +2517,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.calculateResizedColumnWidth(offset);
 
 		this._resizingHeaderTouchPointID = null;
+		this._resizingHeaderTouchPointIsMouse = false;
 		this._resizingHeaderIndex = -1;
 
 		if (this._oldHeaderDividerMouseCursor != null) {

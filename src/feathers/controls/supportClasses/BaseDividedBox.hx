@@ -58,6 +58,7 @@ class BaseDividedBox extends FeathersControl {
 	private var resizeCursor:MouseCursor;
 	private var _oldDividerMouseCursor:MouseCursor;
 	private var _resizingTouchPointID:Null<Int> = null;
+	private var _resizingTouchPointIsMouse:Bool = false;
 	private var _resizingDividerIndex = -1;
 
 	private var _autoSizeMode:AutoSizeMode = CONTENT;
@@ -782,6 +783,7 @@ class BaseDividedBox extends FeathersControl {
 		}
 
 		this._resizingTouchPointID = touchPointID;
+		this._resizingTouchPointIsMouse = isMouse;
 		this._resizingDividerIndex = this.dividers.indexOf(divider);
 		this.prepareResize(this._resizingDividerIndex, stageX, stageY);
 		if (!this.liveDragging && this._currentResizeDraggingSkin != null) {
@@ -797,14 +799,18 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function resizeTouchMove(touchPointID:Int, isMouse:Bool, stageX:Float, stageY:Float):Void {
-		if (this._resizingTouchPointID == null || this._resizingTouchPointID != touchPointID) {
+		if (this._resizingTouchPointID == null
+			|| this._resizingTouchPointID != touchPointID
+			|| this._resizingTouchPointIsMouse != isMouse) {
 			return;
 		}
 		this.commitResize(this._resizingDividerIndex, stageX, stageY, true);
 	}
 
 	private function resizeTouchEnd(touchPointID:Int, isMouse:Bool, stageX:Float, stageY:Float):Void {
-		if (this._resizingTouchPointID == null || this._resizingTouchPointID != touchPointID) {
+		if (this._resizingTouchPointID == null
+			|| this._resizingTouchPointID != touchPointID
+			|| this._resizingTouchPointIsMouse != isMouse) {
 			return;
 		}
 
@@ -824,6 +830,7 @@ class BaseDividedBox extends FeathersControl {
 		}
 
 		this._resizingTouchPointID = null;
+		this._resizingTouchPointIsMouse = false;
 		this._resizingDividerIndex = -1;
 
 		if (this._oldDividerMouseCursor != null) {
