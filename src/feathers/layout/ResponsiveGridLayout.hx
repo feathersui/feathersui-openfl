@@ -19,9 +19,9 @@ import openfl.events.EventDispatcher;
 
 /**
 	Positions items in a grid, with a specific number of columns (defaults to
-	twelve columns). Items may span multiple rows and may be displayed with
-	offsets in between. When a row is "full", items are laid out starting on the
-	next row automatically.
+	twelve columns). Items may span multiple columns and may be displayed with
+	offsets in between. When a row is "full", meaning that all twelve columns
+	have been filled, items are laid out starting on the next row automatically.
 
 	@event openfl.events.Event.CHANGE Dispatched when a property of the layout
 	changes, which triggers the container to invalidate.
