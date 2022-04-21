@@ -55,6 +55,119 @@ All code must be formatted before each commit — use [Haxe Formatter](https://g
 
 ## API Design
 
+### General
+
+- Avoid the use of abbreviations in names of symbols, except for commonly recognized acronyms, such as HTML.
+
+### Classes
+
+Names of classes should use camel case, and every word must start with an uppercase letter.
+
+```haxe
+class ClassNameWithCamelCase {}
+```
+
+If a class or interface name contains an acronym, all letters of the acryonym should be capitalized.
+
+### Interfaces
+
+Names of interfaces should use camel case, and must start with an uppercase letter I. Each additional word must start with an uppercase letter.
+
+```haxe
+interface IInterfaceNameWithCamelCase {}
+```
+
+### Enums
+
+Names of enums should use camel case, and each word must start with an uppercase letter.
+
+```haxe
+enum EnumNameWithCamelCase {
+	ENUM_VALUE_NAME;
+	ANOTHER_ENUM_VALUE_NAME;
+}
+```
+
+Names of enum values should use all uppercase, with underscores separating words.
+
+If any value of an emum will accept parameters, the enum value names should instead use camel case, and each word must start with an uppercase letter.
+
+```haxe
+enum EnumNameWithCamelCase {
+	EnumValueName(paramName:String);
+	AnotherEnumValueName(paramName:Int);
+}
+```
+
+All parameters must follow the same naming rules as local variables, and they must always have a type. 
+
+### Functions
+
+Names of functions should use camel case. The first word starts with a lowercase letter, and each additional word starts with an uppercase letter.
+
+```haxe
+function camelCaseFunctionName(camelCaseParamName:String):Void {}
+```
+
+All parameters must follow the same naming rules as local variables, and they must always have a type. The function's return type must always be specified.
+
+### Constructors
+
+If a constructor accepts parameters that correspond to public properties, the parameter names must match the property names. Use `this.` for assignment in the body of the constructor.
+
+```haxe
+public function new(text:String) {
+	this.text = text;
+}
+```
+
+### Variables
+
+Names of variables should use camel case. The first word starts with a lowercase letter, and each additional word starts with an uppercase letter.
+
+😃 Camel case:
+
+```haxe
+var camelCaseVariableName:Int = 0; // good
+```
+
+😡 Other cases:
+
+```haxe
+var snake_case_variable_name:Int = 0; // bad
+```
+
+If a variable name contains an acronym, all letters of the acryonym should be capitalized, _except_ when the acronym is the first word. Then, all letters of the acronym should be lowercase. For example, `htmlText` and `secondaryHTMLText`.
+
+Local variables may omit the type if they have an initializer that allows the compiler to correctly infer the type. Public member variables must always declare a type. Private member variables may omit the type if it can be inferred, but if the variable is intended to be accessed by subclasses, declaring a type should be considered necessary.
+
+Do not declare all local variables inside a function at the top of the function. Local variables should be declared as close to their first usage as possible.
+
+Do not declare multiple local variables on the same line. Declare them separately.
+
+😃 On separate lines:
+
+```haxe
+var a:Int = 0;
+var b:Int = 1; // good
+```
+
+😡 On one line:
+
+```haxe
+var a:Int = 0, b:Int = 1; // bad
+```
+
+### Constants
+
+Names of constants should use all uppercase, with underscores separating words.
+
+```haxe
+private static final NAME_OF_CONSTANT:Int = 0;
+```
+
+Constants should generally be declared with the `static` keyword.
+
 ### Properties
 
 A typical property on a Feathers UI component will look similar to the code below:
@@ -84,10 +197,19 @@ In general, `setInvalid()` should be called when the property of a UI component 
 
 Do not access children of a UI component in a getter or setter It's often better to simply call `setInvalid()` and handle any changes in `update()`. If you must access a child in a getter or setter, you must handle the case where the child is `null` because it has not been created yet.
 
+### Events
+
+Names of event constants should use all uppercase, with underscores separating words. They should be declared with `inline var` (not `final`) and be of type `EventType<T>`.
+
+```haxe
+public static inline var NAME_OF_EVENT:EventType<FeathersEvent> = "nameOfEvent";
+```
+
+The value should match the name, but with modified casing. The value should use camel case. The first word starts with a lowercase letter, and each additional word starts with an uppercase letter.
+
 ## Event Listeners
 
-Event listeners should be named to avoid collisions in subclasses. Consider the
-class `MyComponent`:
+Event listeners should be named in a way that avoids possible collisions in subclasses. Consider the class `MyComponent`:
 
 ```haxe
 class MyComponent extends FeathersControl {}
@@ -99,7 +221,7 @@ To add a `MouseEvent.MOUSE_DOWN` listener inside this class, start the listener 
 private function myComponent_mouseDownHandler(event:MouseEvent):Void {}
 ```
 
-If adding a listener to another object, format the class name the same. Then, add an extra underscore `_` character followed by the variable or property name of the other object. Finally add another underscore `_` character, followed byu the event string and `Handler`. In the `MyComponent` class, to add a `MouseEvent.MOUSE_UP` listener to the `stage`, the name of the listener should look like this:
+If adding a listener to another object, format the class name the same. Then, add an extra underscore `_` character followed by the variable or property name of the other object. Finally add another underscore `_` character, followed by the event string and `Handler`. In the `MyComponent` class, to add a `MouseEvent.MOUSE_UP` listener to the `stage`, the name of the listener should look like this:
 
 ```haxe
 private function myComponent_stage_mouseUpHandler(event:MouseEvent):Void {}
