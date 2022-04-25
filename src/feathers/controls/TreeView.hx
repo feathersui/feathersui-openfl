@@ -684,6 +684,11 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	private var _ignoreOpenedChange = false;
 	private var _ignoreLayoutChanges = false;
 
+	private var _currentDisplayIndex:Int;
+
+	private var _pendingScrollLocation:Array<Int> = null;
+	private var _pendingScrollDuration:Null<Float> = null;
+
 	/**
 		Converts an item to text to display within tree view. By default, the
 		`toString()` method is called to convert an item to text. This method
@@ -729,47 +734,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		@since 1.0.0
 	**/
 	public function toggleBranch(branch:Dynamic, open:Bool):Void {
-		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+		var location = (this._dataProvider != null) ? this._dataProvider.locationOf(branch) : null;
+		if (location == null) {
 			throw new ArgumentError("Cannot open branch because it is not in the data provider.");
 		}
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
-		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
-			// nothing to change
-			return;
-		}
-		var itemRenderer = this.dataToItemRenderer.get(branch);
-		var state:TreeViewItemState = null;
-		if (itemRenderer != null) {
-			state = this.itemRendererToItemState.get(itemRenderer);
-		}
-		var isTemporary = false;
-		if (state == null) {
-			// if there is no existing state, use a temporary object
-			isTemporary = true;
-			state = this.itemStatePool.get();
-			state.location = this._dataProvider.locationOf(branch);
-			state.layoutIndex = -1;
-		}
-		var location = state.location;
-		var layoutIndex = state.layoutIndex;
-		if (open) {
-			this.openBranches.push(branch);
-			this.populateCurrentItemState(branch, location, layoutIndex, state);
-			insertChildrenIntoVirtualCache(location, layoutIndex);
-			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, state);
-		} else {
-			this.openBranches.remove(branch);
-			this.populateCurrentItemState(branch, location, layoutIndex, state);
-			removeChildrenFromVirtualCache(location, layoutIndex);
-			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, state);
-		}
-		if (isTemporary) {
-			this.itemStatePool.release(state);
-		}
-		this.setInvalid(DATA);
+		this.toggleBranchInternal(branch, location, open);
 	}
 
 	/**
@@ -778,23 +750,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		@since 1.0.0
 	**/
 	public function toggleChildrenOf(branch:Dynamic, open:Bool):Void {
-		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+		var location = (this._dataProvider != null) ? this._dataProvider.locationOf(branch) : null;
+		if (location == null) {
 			throw new ArgumentError("Cannot open branch because it is not in the data provider.");
 		}
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		this.toggleBranch(branch, open);
-		var location = this._dataProvider.locationOf(branch);
-		var itemCount = this._dataProvider.getLength(location);
-		for (i in 0...itemCount) {
-			location.push(i);
-			var child = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(child)) {
-				this.toggleChildrenOf(child, open);
-			}
-			location.pop();
-		}
+		this.toggleChildrenOfInternal(branch, location, open);
 	}
 
 	/**
@@ -849,9 +812,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		var item = this._dataProvider.get(location);
 		return this.dataToItemRenderer.get(item);
 	}
-
-	private var _pendingScrollLocation:Array<Int> = null;
-	private var _pendingScrollDuration:Null<Float> = null;
 
 	/**
 		Scrolls the tree view so that the specified item renderer is completely
@@ -1434,8 +1394,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		return 0;
 	}
 
-	private var _currentDisplayIndex:Int;
-
 	private function displayIndexToLocation(displayIndex:Int):Array<Int> {
 		this._currentDisplayIndex = -1;
 		return this.displayIndexToLocationAtBranch(displayIndex, []);
@@ -1691,6 +1649,56 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			locationOfBranch.push(index);
 		}
 		return true;
+	}
+
+	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, open:Bool):Void {var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
+			// nothing to change
+			return;
+		}
+		var itemRenderer = this.dataToItemRenderer.get(branch);
+		var state:TreeViewItemState = null;
+		if (itemRenderer != null) {
+			state = this.itemRendererToItemState.get(itemRenderer);
+		}
+		var isTemporary = false;
+		if (state == null) {
+			// if there is no existing state, use a temporary object
+			isTemporary = true;
+			state = this.itemStatePool.get();
+			state.location = location;
+			state.layoutIndex = -1;
+		}
+		var location = state.location;
+		var layoutIndex = state.layoutIndex;
+		if (open) {
+			this.openBranches.push(branch);
+			this.populateCurrentItemState(branch, location, layoutIndex, state);
+			insertChildrenIntoVirtualCache(location, layoutIndex);
+			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, state);
+		} else {
+			this.openBranches.remove(branch);
+			this.populateCurrentItemState(branch, location, layoutIndex, state);
+			removeChildrenFromVirtualCache(location, layoutIndex);
+			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, state);
+		}
+		if (isTemporary) {
+			this.itemStatePool.release(state);
+		}
+		this.setInvalid(DATA);
+	}
+
+	private function toggleChildrenOfInternal(branch:Dynamic, location:Array<Int>, open:Bool):Void {
+		this.toggleBranchInternal(branch, location, open);
+		var itemCount = this._dataProvider.getLength(location);
+		for (i in 0...itemCount) {
+			location.push(i);
+			var child = this._dataProvider.get(location);
+			if (this._dataProvider.isBranch(child)) {
+				this.toggleChildrenOfInternal(child, location, open);
+			}
+			location.pop();
+		}
 	}
 
 	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {

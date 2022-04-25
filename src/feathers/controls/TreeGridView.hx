@@ -968,47 +968,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		@since 1.0.0
 	**/
 	public function toggleBranch(branch:Dynamic, open:Bool):Void {
-		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+		var location = (this._dataProvider != null) ? this._dataProvider.locationOf(branch) : null;
+		if (location == null) {
 			throw new ArgumentError("Cannot open branch because it is not in the data provider.");
 		}
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
-		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
-			// nothing to change
-			return;
-		}
-		var itemRenderer = this.dataToRowRenderer.get(branch);
-		var state:TreeGridViewCellState = null;
-		if (itemRenderer != null) {
-			state = this.rowRendererToRowState.get(itemRenderer);
-		}
-		var isTemporary = false;
-		if (state == null) {
-			// if there is no existing state, use a temporary object
-			isTemporary = true;
-			state = this.rowStatePool.get();
-			state.rowLocation = this._dataProvider.locationOf(branch);
-			state.layoutIndex = -1;
-		}
-		var location = state.rowLocation;
-		var layoutIndex = state.layoutIndex;
-		if (open) {
-			this.openBranches.push(branch);
-			this.populateCurrentRowState(branch, location, layoutIndex, state);
-			insertChildrenIntoVirtualCache(location, layoutIndex);
-			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, state);
-		} else {
-			this.openBranches.remove(branch);
-			this.populateCurrentRowState(branch, location, layoutIndex, state);
-			removeChildrenFromVirtualCache(location, layoutIndex);
-			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, state);
-		}
-		if (isTemporary) {
-			this.rowStatePool.release(state);
-		}
-		this.setInvalid(DATA);
+		this.toggleBranchInternal(branch, location, open);
 	}
 
 	/**
@@ -1017,23 +984,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		@since 1.0.0
 	**/
 	public function toggleChildrenOf(branch:Dynamic, open:Bool):Void {
-		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+		var location = (this._dataProvider != null) ? this._dataProvider.locationOf(branch) : null;
+		if (location == null) {
 			throw new ArgumentError("Cannot open branch because it is not in the data provider.");
 		}
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		this.toggleBranch(branch, open);
-		var location = this._dataProvider.locationOf(branch);
-		var itemCount = this._dataProvider.getLength(location);
-		for (i in 0...itemCount) {
-			location.push(i);
-			var child = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(child)) {
-				this.toggleChildrenOf(child, open);
-			}
-			location.pop();
-		}
+		this.toggleChildrenOfInternal(branch, location, open);
 	}
 
 	private function initializeTreeGridViewTheme():Void {
@@ -2150,6 +2108,57 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.scroller.scrollY = targetY;
 		} else {
 			this.scroller.throwTo(targetX, targetY, duration);
+		}
+	}
+
+	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, open:Bool):Void {
+		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
+			// nothing to change
+			return;
+		}
+		var itemRenderer = this.dataToRowRenderer.get(branch);
+		var state:TreeGridViewCellState = null;
+		if (itemRenderer != null) {
+			state = this.rowRendererToRowState.get(itemRenderer);
+		}
+		var isTemporary = false;
+		if (state == null) {
+			// if there is no existing state, use a temporary object
+			isTemporary = true;
+			state = this.rowStatePool.get();
+			state.rowLocation = location;
+			state.layoutIndex = -1;
+		}
+		var location = state.rowLocation;
+		var layoutIndex = state.layoutIndex;
+		if (open) {
+			this.openBranches.push(branch);
+			this.populateCurrentRowState(branch, location, layoutIndex, state);
+			insertChildrenIntoVirtualCache(location, layoutIndex);
+			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, state);
+		} else {
+			this.openBranches.remove(branch);
+			this.populateCurrentRowState(branch, location, layoutIndex, state);
+			removeChildrenFromVirtualCache(location, layoutIndex);
+			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, state);
+		}
+		if (isTemporary) {
+			this.rowStatePool.release(state);
+		}
+		this.setInvalid(DATA);
+	}
+
+	private function toggleChildrenOfInternal(branch:Dynamic, location:Array<Int>, open:Bool):Void {
+		this.toggleBranchInternal(branch, location, open);
+		var itemCount = this._dataProvider.getLength(location);
+		for (i in 0...itemCount) {
+			location.push(i);
+			var child = this._dataProvider.get(location);
+			if (this._dataProvider.isBranch(child)) {
+				this.toggleChildrenOfInternal(child, location, open);
+			}
+			location.pop();
 		}
 	}
 
