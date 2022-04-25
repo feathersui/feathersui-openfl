@@ -975,7 +975,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		this.toggleBranchInternal(branch, location, open);
+		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
+			// nothing to change
+			return;
+		}
+		var layoutIndex = this.locationToDisplayIndex(location, false);
+		this.toggleBranchInternal(branch, location, layoutIndex, open);
 	}
 
 	/**
@@ -991,7 +997,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		this.toggleChildrenOfInternal(branch, location, open);
+		var layoutIndex = this.locationToDisplayIndex(location, false);
+		this.toggleChildrenOfInternal(branch, location, layoutIndex, open);
 	}
 
 	private function initializeTreeGridViewTheme():Void {
@@ -2111,12 +2118,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 	}
 
-	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, open:Bool):Void {
-		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
-		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
-			// nothing to change
-			return;
-		}
+	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, layoutIndex:Int, open:Bool):Int {
 		var itemRenderer = this.dataToRowRenderer.get(branch);
 		var state:TreeGridViewCellState = null;
 		if (itemRenderer != null) {
@@ -2127,17 +2129,16 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			// if there is no existing state, use a temporary object
 			isTemporary = true;
 			state = this.rowStatePool.get();
-			state.rowLocation = location;
-			state.layoutIndex = -1;
 		}
-		var location = state.rowLocation;
-		var layoutIndex = state.layoutIndex;
-		if (open) {
+		state.rowLocation = location;
+		state.layoutIndex = layoutIndex;
+		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		if (open && !alreadyOpen) {
 			this.openBranches.push(branch);
 			this.populateCurrentRowState(branch, location, layoutIndex, state);
-			insertChildrenIntoVirtualCache(location, layoutIndex);
+			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, state);
-		} else {
+		} else if(!open && alreadyOpen) {
 			this.openBranches.remove(branch);
 			this.populateCurrentRowState(branch, location, layoutIndex, state);
 			removeChildrenFromVirtualCache(location, layoutIndex);
@@ -2147,16 +2148,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.rowStatePool.release(state);
 		}
 		this.setInvalid(DATA);
+		return layoutIndex;
 	}
 
-	private function toggleChildrenOfInternal(branch:Dynamic, location:Array<Int>, open:Bool):Void {
-		this.toggleBranchInternal(branch, location, open);
+	private function toggleChildrenOfInternal(branch:Dynamic, location:Array<Int>, layoutIndex:Int, open:Bool):Void {
+		layoutIndex = this.toggleBranchInternal(branch, location, layoutIndex, open);
 		var itemCount = this._dataProvider.getLength(location);
 		for (i in 0...itemCount) {
 			location.push(i);
 			var child = this._dataProvider.get(location);
 			if (this._dataProvider.isBranch(child)) {
-				this.toggleChildrenOfInternal(child, location, open);
+				this.toggleChildrenOfInternal(child, location, layoutIndex, open);
 			}
 			location.pop();
 		}
@@ -2552,7 +2554,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		return result;
 	}
 
-	private function insertChildrenIntoVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
+	private function insertChildrenIntoVirtualCache(location:Array<Int>, layoutIndex:Int):Int {
 		var length = this._dataProvider.getLength(location);
 		for (i in 0...length) {
 			location.push(i);
@@ -2560,22 +2562,23 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._virtualCache.insert(layoutIndex, null);
 			var item = this._dataProvider.get(location);
 			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
-				insertChildrenIntoVirtualCache(location, layoutIndex);
+				layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 			}
 			location.pop();
 		}
+		return layoutIndex;
 	}
 
 	private function removeChildrenFromVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
 		var length = this._dataProvider.getLength(location);
+		layoutIndex++;
 		for (i in 0...length) {
 			location.push(i);
-			layoutIndex++;
-			this._virtualCache.remove(layoutIndex);
 			var item = this._dataProvider.get(location);
 			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				removeChildrenFromVirtualCache(location, layoutIndex);
 			}
+			this._virtualCache.splice(layoutIndex, 1);
 			location.pop();
 		}
 	}
