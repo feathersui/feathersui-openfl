@@ -1476,34 +1476,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return result;
 	}
 
-	private function insertChildrenIntoVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
-		var length = this._dataProvider.getLength(location);
-		for (i in 0...length) {
-			location.push(i);
-			layoutIndex++;
-			this._virtualCache.insert(layoutIndex, null);
-			var item = this._dataProvider.get(location);
-			if (location.length == 1 && this._dataProvider.isBranch(item)) {
-				insertChildrenIntoVirtualCache(location, layoutIndex);
-			}
-			location.pop();
-		}
-	}
-
-	private function removeChildrenFromVirtualCache(location:Array<Int>, layoutIndex:Int):Void {
-		var length = this._dataProvider.getLength(location);
-		for (i in 0...length) {
-			location.push(i);
-			layoutIndex++;
-			this._virtualCache.remove(layoutIndex);
-			var item = this._dataProvider.get(location);
-			if (location.length == 1 && this._dataProvider.isBranch(item)) {
-				removeChildrenFromVirtualCache(location, layoutIndex);
-			}
-			location.pop();
-		}
-	}
-
 	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
 		var null1 = location1 == null;
 		var null2 = location2 == null;
