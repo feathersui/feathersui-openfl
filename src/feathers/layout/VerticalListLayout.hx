@@ -744,6 +744,10 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 					}
 				} else if (estimatedItemHeight != null) {
 					itemHeight = estimatedItemHeight;
+				} else {
+					startIndex = 0;
+					endIndex = 0;
+					break;
 				}
 			}
 			positionY += itemHeight + adjustedGap;

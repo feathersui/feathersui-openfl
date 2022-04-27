@@ -740,6 +740,10 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					}
 				} else if (estimatedItemWidth != null) {
 					itemWidth = estimatedItemWidth;
+				} else {
+					startIndex = 0;
+					endIndex = 0;
+					break;
 				}
 			}
 			positionX += itemWidth + adjustedGap;
