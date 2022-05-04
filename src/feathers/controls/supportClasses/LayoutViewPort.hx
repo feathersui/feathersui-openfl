@@ -233,6 +233,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			return this._scrollX;
 		}
 		this._scrollX = value;
+		if ((this._currentLayout is IScrollLayout)) {
+			this.setInvalid(LAYOUT);
+		}
 		return this._scrollX;
 	}
 
@@ -252,6 +255,9 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			return this._scrollY;
 		}
 		this._scrollY = value;
+		if ((this._currentLayout is IScrollLayout)) {
+			this.setInvalid(LAYOUT);
+		}
 		return this._scrollY;
 	}
 
