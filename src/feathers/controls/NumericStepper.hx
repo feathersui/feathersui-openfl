@@ -1139,6 +1139,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		event.preventDefault();
 		// use the setter
 		this.value = newValue;
+		if (this.textInput.selectionActiveIndex != this.textInput.selectionAnchorIndex) {
+			this.textInput.selectRange(this.textInput.selectionAnchorIndex, this.textInput.selectionAnchorIndex);
+		}
 	}
 
 	private function numericStepper_decrementButton_mouseDownHandler(event:MouseEvent):Void {
