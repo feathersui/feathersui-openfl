@@ -941,6 +941,13 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 			// cancel only when we aren't wrapping, so that focus may be passed
 			// to the browser chrome or to another framework
 			event.preventDefault();
+		} else if ((this._wrapObject is TextField) && cast(this._wrapObject, TextField).type == INPUT) {
+			// special case for input text fields because, if you don't call
+			// preventDefault(), focus could be passed to a random TextField
+			// (or stay on the exact same TextField).
+			// this won't let browser chrome get focus, though.
+			// not sure how to fix that.
+			event.preventDefault();
 		}
 	}
 	#end
