@@ -1028,6 +1028,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		event.preventDefault();
 		// use the setter
 		this.selectedIndex = result;
+		if (this.textInput.selectionActiveIndex != this.textInput.selectionAnchorIndex) {
+			this.textInput.selectRange(this.textInput.selectionAnchorIndex, this.textInput.selectionAnchorIndex);
+		}
 		if (this.open) {
 			// update immediately
 			this.listView.selectedIndex = result;
