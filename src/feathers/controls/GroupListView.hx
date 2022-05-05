@@ -307,7 +307,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		#if hl
+		this._virtualCache.splice(0, this._virtualCache.length);
+		#else
 		this._virtualCache.resize(0);
+		#end
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(Event.CHANGE, groupListView_dataProvider_changeHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, groupListView_dataProvider_addItemHandler);
@@ -982,7 +986,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
+				#if hl
+				this._layoutItems.splice(0, this._layoutItems.length);
+				#else
 				this._layoutItems.resize(0);
+				#end
 				var newSize = this.calculateTotalLayoutCount([]);
 				this._layoutItems.resize(newSize);
 			}
@@ -1184,15 +1192,27 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			}
 			this.destroyItemRenderer(itemRenderer, recycler);
 		}
+		#if hl
+		storage.inactiveItemRenderers.splice(0, storage.inactiveItemRenderers.length);
+		#else
 		storage.inactiveItemRenderers.resize(0);
+		#end
 	}
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
+		#if hl
+		this._layoutItems.splice(0, this._layoutItems.length);
+		#else
 		this._layoutItems.resize(0);
+		#end
 		var newSize = this.calculateTotalLayoutCount([]);
 		this._layoutItems.resize(newSize);
+		#if hl
+		this._layoutHeaderIndices.splice(0, this._layoutHeaderIndices.length);
+		#else
 		this._layoutHeaderIndices.resize(0);
+		#end
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
@@ -1279,7 +1299,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this._layoutHeaderIndices.push(layoutIndex);
 			}
 		}
+		#if hl
+		this._unrenderedLocations.splice(0, this._unrenderedLocations.length);
+		#else
 		this._unrenderedLocations.resize(0);
+		#end
 	}
 
 	private function createItemRenderer(state:GroupListViewItemState):DisplayObject {
@@ -1834,7 +1858,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private function groupListView_dataProvider_changeHandler(event:Event):Void {
 		if (this._virtualCache != null) {
+			#if hl
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
 			this._virtualCache.resize(0);
+			#end
 			var newSize = this.calculateTotalLayoutCount([]);
 			this._virtualCache.resize(newSize);
 		}

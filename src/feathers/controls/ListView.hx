@@ -295,7 +295,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		#if hl
+		this._virtualCache.splice(0, this._virtualCache.length);
+		#else
 		this._virtualCache.resize(0);
+		#end
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(Event.CHANGE, listView_dataProvider_changeHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, listView_dataProvider_addItemHandler);
@@ -357,8 +361,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._selectionAnchorIndex = -1;
 			this._selectedIndex = -1;
 			this._selectedItem = null;
+			#if hl
+			this._selectedIndices.splice(0, this._selectedIndices.length);
+			this._selectedItems.splice(0, this._selectedItems.length);
+			#else
 			this._selectedIndices.resize(0);
 			this._selectedItems.resize(0);
+			#end
 			this.setInvalid(SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 			return this._selectedIndex;
@@ -943,7 +952,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			if (this._previousLayout != this.layout) {
 				// don't keep the old layout's cache because it may not be
 				// compatible with the new layout
+				#if hl
+				this._virtualCache.splice(0, this._virtualCache.length);
+				#else
 				this._virtualCache.resize(0);
+				#end
 				if (this._dataProvider != null) {
 					this._virtualCache.resize(this._dataProvider.length);
 				}
@@ -1099,12 +1112,20 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this.destroyItemRenderer(itemRenderer, recycler);
 		}
+		#if hl
+		storage.inactiveItemRenderers.splice(0, storage.inactiveItemRenderers.length);
+		#else
 		storage.inactiveItemRenderers.resize(0);
+		#end
 	}
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
+		#if hl
+		this._layoutItems.splice(0, this._layoutItems.length);
+		#else
 		this._layoutItems.resize(0);
+		#end
 		this._visibleIndices.start = 0;
 		this._visibleIndices.end = 0;
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
@@ -1221,7 +1242,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this.listViewPort.addChild(itemRenderer);
 			this._layoutItems[index] = itemRenderer;
 		}
+		#if hl
+		this._unrenderedData.splice(0, this._unrenderedData.length);
+		#else
 		this._unrenderedData.resize(0);
+		#end
 	}
 
 	private function createItemRenderer(state:ListViewItemState):DisplayObject {
@@ -1576,7 +1601,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function listView_dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
+			#if hl
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
 			this._virtualCache.resize(0);
+			#end
 		}
 		// use the setter
 		this.selectedIndex = -1;
@@ -1584,7 +1613,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function listView_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
+			#if hl
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
 			this._virtualCache.resize(0);
+			#end
 			this._virtualCache.resize(this._dataProvider.length);
 		}
 		// use the setter
@@ -1595,7 +1628,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
+			#if hl
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
 			this._virtualCache.resize(0);
+			#end
 			this._virtualCache.resize(this._dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();
@@ -1605,7 +1642,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
+			#if hl
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
 			this._virtualCache.resize(0);
+			#end
 			this._virtualCache.resize(this._dataProvider.length);
 		}
 		this.refreshSelectedIndicesAfterFilterOrSort();

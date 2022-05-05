@@ -451,9 +451,17 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		}
 		if (location == null || location.length == 0) {
 			if (this._filterAndSortData != null) {
+				#if hl
+				this._filterAndSortData.splice(0, this._filterAndSortData.length);
+				#else
 				this._filterAndSortData.resize(0);
+				#end
 			}
+			#if hl
+			this._array.splice(0, this._array.length);
+			#else
 			this._array.resize(0);
+			#end
 			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, null);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 			return;
@@ -463,8 +471,16 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			firstChildLocation.push(0);
 			var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, firstChildLocation);
 			var filteredOrSortedBranchChildren = this.findBranchChildren(this._filterAndSortData, filterAndSortDataItemToChildren, firstChildLocation);
+			#if hl
+			filteredOrSortedBranchChildren.splice(0, filteredOrSortedBranchChildren.length);
+			#else
 			filteredOrSortedBranchChildren.resize(0);
+			#end
+			#if hl
+			branchChildren.splice(0, branchChildren.length);
+			#else
 			branchChildren.resize(0);
+			#end
 			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, location);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 			return;
@@ -472,7 +488,11 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		var firstChildLocation = location.copy();
 		firstChildLocation.push(0);
 		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, firstChildLocation);
+		#if hl
+		branchChildren.splice(0, branchChildren.length);
+		#else
 		branchChildren.resize(0);
+		#end
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, location);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
@@ -584,7 +604,11 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			var result = this._filterAndSortData;
 			if (result != null) {
 				// reuse the old array to avoid garbage collection
+				#if hl
+				result.splice(0, result.length);
+				#else
 				result.resize(0);
+				#end
 			} else {
 				result = [];
 			}

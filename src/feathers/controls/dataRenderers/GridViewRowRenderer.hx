@@ -465,7 +465,11 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			var cellRenderer = this.createCellRenderer(state);
 			this.addChild(cellRenderer);
 		}
+		#if hl
+		this._unrenderedData.splice(0, this._unrenderedData.length);
+		#else
 		this._unrenderedData.resize(0);
+		#end
 	}
 
 	private function freeInactiveCellRenderers(storage:CellRendererStorage):Void {
@@ -476,7 +480,11 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			}
 			this.destroyCellRenderer(cellRenderer, cellRendererRecycler);
 		}
+		#if hl
+		storage.inactiveCellRenderers.splice(0, storage.inactiveCellRenderers.length);
+		#else
 		storage.inactiveCellRenderers.resize(0);
+		#end
 	}
 
 	private function createCellRenderer(state:GridViewCellState):DisplayObject {

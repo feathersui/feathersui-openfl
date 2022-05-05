@@ -1245,7 +1245,11 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		if (result == null) {
 			result = [];
 		} else {
+			#if hl
+			result.splice(0, result.length);
+			#else
 			result.resize(0);
+			#end
 		}
 		var itemCount = items.length;
 		if (itemCount == 0) {
@@ -1305,7 +1309,11 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		if (result == null) {
 			result = [];
 		} else {
+			#if hl
+			result.splice(0, result.length);
+			#else
 			result.resize(0);
+			#end
 		}
 		var itemCount = items.length;
 		if (itemCount == 0) {

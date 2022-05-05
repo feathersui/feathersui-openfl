@@ -375,7 +375,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		#if hl
+		this._virtualCache.splice(0, this._virtualCache.length);
+		#else
 		this._virtualCache.resize(0);
+		#end
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(Event.CHANGE, treeGridView_dataProvider_changeHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeGridView_dataProvider_addItemHandler);
@@ -1093,7 +1097,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
+				#if hl
+				this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
+				#else
 				this._rowLayoutItems.resize(0);
+				#end
 				var newSize = this.calculateTotalLayoutCount([]);
 				this._rowLayoutItems.resize(newSize);
 			}
@@ -1408,11 +1416,19 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyHeaderDivider(headerDivider, factory);
 		}
+		#if hl
+		this._defaultHeaderDividerStorage.inactiveHeaderDividers.splice(0, this._defaultHeaderDividerStorage.inactiveHeaderDividers.length);
+		#else
 		this._defaultHeaderDividerStorage.inactiveHeaderDividers.resize(0);
+		#end
 	}
 
 	private function refreshActiveHeaderDividers():Void {
+		#if hl
+		this._headerDividerLayoutItems.splice(0, this._headerDividerLayoutItems.length);
+		#else
 		this._headerDividerLayoutItems.resize(0);
+		#end
 		if (this._defaultHeaderDividerStorage.headerDividerFactory == null) {
 			return;
 		}
@@ -1483,11 +1499,19 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyColumnDivider(headerDivider, factory);
 		}
+		#if hl
+		this._defaultColumnDividerStorage.inactiveColumnDividers.splice(0, this._defaultColumnDividerStorage.inactiveColumnDividers.length);
+		#else
 		this._defaultColumnDividerStorage.inactiveColumnDividers.resize(0);
+		#end
 	}
 
 	private function refreshActiveColumnDividers():Void {
+		#if hl
+		this._columnDividerLayoutItems.splice(0, this._columnDividerLayoutItems.length);
+		#else
 		this._columnDividerLayoutItems.resize(0);
+		#end
 		if (this._defaultColumnDividerStorage.columnDividerFactory == null) {
 			return;
 		}
@@ -1575,12 +1599,20 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyHeaderRenderer(headerRenderer, recycler);
 		}
+		#if hl
+		this._defaultHeaderStorage.inactiveHeaderRenderers.splice(0, this._defaultHeaderStorage.inactiveHeaderRenderers.length);
+		#else
 		this._defaultHeaderStorage.inactiveHeaderRenderers.resize(0);
+		#end
 	}
 
 	private function findUnrenderedHeaderData():Void {
 		// remove all old items, then fill with null
+		#if hl
+		this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
+		#else
 		this._rowLayoutItems.resize(0);
+		#end
 		if (this._columns == null || this._columns.length == 0) {
 			return;
 		}
@@ -1618,7 +1650,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._headerContainer.addChildAt(headerRenderer, index);
 			this._headerLayoutItems[index] = headerRenderer;
 		}
+		#if hl
+		this._unrenderedHeaderData.splice(0, this._unrenderedHeaderData.length);
+		#else
 		this._unrenderedHeaderData.resize(0);
+		#end
 	}
 
 	private function refreshRowRenderers(items:Array<DisplayObject>):Void {
@@ -1674,12 +1710,20 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyRowRenderer(rowRenderer);
 		}
+		#if hl
+		this.inactiveRowRenderers.splice(0, this.inactiveRowRenderers.length);
+		#else
 		this.inactiveRowRenderers.resize(0);
+		#end
 	}
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
+		#if hl
+		this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
+		#else
 		this._rowLayoutItems.resize(0);
+		#end
 		var newSize = this.calculateTotalLayoutCount([]);
 		this._rowLayoutItems.resize(newSize);
 
@@ -1751,7 +1795,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.treeGridViewPort.addChild(rowRenderer);
 			this._rowLayoutItems[layoutIndex] = rowRenderer;
 		}
+		#if hl
+		this._unrenderedLocations.splice(0, this._unrenderedLocations.length);
+		#else
 		this._unrenderedLocations.resize(0);
+		#end
 	}
 
 	private function createRowRenderer(state:TreeGridViewCellState):TreeGridViewRowRenderer {
@@ -2138,7 +2186,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.populateCurrentRowState(branch, location, layoutIndex, state);
 			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, state);
-		} else if(!open && alreadyOpen) {
+		} else if (!open && alreadyOpen) {
 			this.openBranches.remove(branch);
 			this.populateCurrentRowState(branch, location, layoutIndex, state);
 			removeChildrenFromVirtualCache(location, layoutIndex);
@@ -2212,7 +2260,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		if (this._virtualCache != null) {
+			#if hl
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
 			this._virtualCache.resize(0);
+			#end
 			var newSize = this.calculateTotalLayoutCount([]);
 			this._virtualCache.resize(newSize);
 		}

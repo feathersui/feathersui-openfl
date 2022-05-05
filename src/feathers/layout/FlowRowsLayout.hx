@@ -445,7 +445,11 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 			maxItemHeight = 0.0;
 			var positionX = this._paddingLeft;
 			// we save the items in this row to align them later.
+			#if hl
+			this._rowItems.splice(0, this._rowItems.length);
+			#else
 			this._rowItems.resize(0);
+			#end
 
 			// this first loop sets the x position of items, and it calculates
 			// the total width of all items
@@ -529,7 +533,11 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		} while (i < itemCount);
 			// we don't want to keep a reference to any of the items, so clear
 			// this cache
+		#if hl
+		this._rowItems.splice(0, this._rowItems.length);
+		#else
 		this._rowItems.resize(0);
+		#end
 
 		var contentRowWidth = maxRowWidth;
 		if (supportsMultipleRows && (needsWidth || measurements.width < maxRowWidth)) {

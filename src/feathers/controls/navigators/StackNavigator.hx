@@ -164,7 +164,11 @@ class StackNavigator extends BaseNavigator {
 		// displayed, so we need to clear this variable, just in case.
 		this._tempRootItemID = null;
 
+		#if hl
+		this._history.splice(0, this._history.length);
+		#else
 		this._history.resize(0);
+		#end
 
 		if (value == null) {
 			this.clearActiveItemInternal(null);
@@ -300,7 +304,11 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	override public function removeAllItems():Void {
+		#if hl
+		this._history.splice(0, this._history.length);
+		#else
 		this._history.resize(0);
+		#end
 		super.removeAllItems();
 	}
 
@@ -458,7 +466,11 @@ class StackNavigator extends BaseNavigator {
 			transition = this.popTransition;
 		}
 		this._poppedHistoryItems = this._history.copy();
+		#if hl
+		this._history.splice(0, this._history.length);
+		#else
 		this._history.resize(0);
+		#end
 		this.clearActiveItemInternal(transition);
 	}
 

@@ -495,7 +495,11 @@ class EdgePuller extends EventDispatcher {
 		this._touchPointIsSimulated = simulatedTouch;
 		this._startTouch = this.getTouchPosition(stageX, stageY);
 		this._startPullDistance = this._pullDistance;
+		#if hl
+		this._savedTouchMoves.splice(0, this._savedTouchMoves.length);
+		#else
 		this._savedTouchMoves.resize(0);
+		#end
 	}
 
 	private function touchMove(touchPointID:Int, simulatedTouch:Bool, stageX:Float, stageY:Float):Void {

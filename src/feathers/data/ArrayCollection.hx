@@ -298,9 +298,17 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			this.refreshFilterAndSort();
 		}
 		if (this._filterAndSortData != null) {
+			#if hl
+			this._filterAndSortData.splice(0, this._filterAndSortData.length);
+			#else
 			this._filterAndSortData.resize(0);
+			#end
 		}
+		#if hl
+		this._array.splice(0, this._array.length);
+		#else
 		this._array.resize(0);
+		#end
 		if (collection != null) {
 			for (item in collection) {
 				this.addAtInternal(item, this.length, false);
@@ -366,9 +374,17 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			return;
 		}
 		if (this._filterAndSortData != null) {
+			#if hl
+			this._filterAndSortData.splice(0, this._filterAndSortData.length);
+			#else
 			this._filterAndSortData.resize(0);
+			#end
 		}
+		#if hl
+		this._array.splice(0, this._array.length);
+		#else
 		this._array.resize(0);
+		#end
 		FlatCollectionEvent.dispatch(this, FlatCollectionEvent.REMOVE_ALL, -1);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
@@ -554,7 +570,11 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			var result = this._filterAndSortData;
 			if (result != null) {
 				// reuse the old array to avoid garbage collection
+				#if hl
+				result.splice(0, result.length);
+				#else
 				result.resize(0);
+				#end
 			} else {
 				result = [];
 			}

@@ -399,7 +399,11 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 	private function refreshToggleButtons():Void {
 		// remove all old items, then fill with null
+		#if hl
+		this._layoutItems.splice(0, this._layoutItems.length);
+		#else
 		this._layoutItems.resize(0);
+		#end
 		this._layoutItems.resize(this._maxSelectedIndex + 1);
 
 		var buttonsInvalid = this.isInvalid(INVALIDATION_FLAG_TOGGLE_BUTTON_FACTORY);
@@ -460,7 +464,11 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 			}
 			this.destroyToggleButton(button, recycler);
 		}
+		#if hl
+		this.inactiveToggleButtons.splice(0, this.inactiveToggleButtons.length);
+		#else
 		this.inactiveToggleButtons.resize(0);
+		#end
 	}
 
 	private function refreshBackgroundSkin():Void {

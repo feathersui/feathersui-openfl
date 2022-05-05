@@ -252,7 +252,11 @@ class RouterNavigator extends BaseNavigator {
 			state: newHistoryState,
 			viewData: null
 		}));
+		#if hl
+		this._forwardHistory.splice(0, this._forwardHistory.length);
+		#else
 		this._forwardHistory.resize(0);
+		#end
 		#end
 		if (transition == null) {
 			transition = this.forwardTransition;
@@ -302,7 +306,11 @@ class RouterNavigator extends BaseNavigator {
 			state: newHistoryState,
 			viewData: null
 		});
+		#if hl
+		this._forwardHistory.splice(0, this._forwardHistory.length);
+		#else
 		this._forwardHistory.resize(0);
+		#end
 		#end
 		if (transition == null) {
 			transition = this.replaceTransition;

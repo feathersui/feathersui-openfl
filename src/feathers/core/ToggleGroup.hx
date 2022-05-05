@@ -297,7 +297,11 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 				cast(item, IGroupedToggle).toggleGroup = null;
 			}
 		}
+		#if hl
+		this._items.splice(0, this._items.length);
+		#else
 		this._items.resize(0);
+		#end
 		// use the setter
 		this.selectedIndex = -1;
 	}

@@ -705,7 +705,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			}
 			this.destroyTab(tab);
 		}
+		#if hl
+		storage.inactiveTabs.splice(0, storage.inactiveTabs.length);
+		#else
 		storage.inactiveTabs.resize(0);
+		#end
 	}
 
 	private function refreshBackgroundSkin():Void {
@@ -782,7 +786,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
+		#if hl
+		this._layoutItems.splice(0, this._layoutItems.length);
+		#else
 		this._layoutItems.resize(0);
+		#end
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
@@ -825,7 +833,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this.addChildAt(tab, index + depthOffset);
 			this._layoutItems[index] = tab;
 		}
+		#if hl
+		this._unrenderedData.splice(0, this._unrenderedData.length);
+		#else
 		this._unrenderedData.resize(0);
+		#end
 	}
 
 	private function createTab(state:TabBarItemState):ToggleButton {

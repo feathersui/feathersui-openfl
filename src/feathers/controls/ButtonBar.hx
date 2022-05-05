@@ -587,7 +587,11 @@ class ButtonBar extends FeathersControl {
 			}
 			this.destroyButton(button);
 		}
+		#if hl
+		storage.inactiveButtons.splice(0, storage.inactiveButtons.length);
+		#else
 		storage.inactiveButtons.resize(0);
+		#end
 	}
 
 	private function refreshBackgroundSkin():Void {
@@ -664,7 +668,11 @@ class ButtonBar extends FeathersControl {
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
+		#if hl
+		this._layoutItems.splice(0, this._layoutItems.length);
+		#else
 		this._layoutItems.resize(0);
+		#end
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
@@ -707,7 +715,11 @@ class ButtonBar extends FeathersControl {
 			this.addChildAt(button, index + depthOffset);
 			this._layoutItems[index] = button;
 		}
+		#if hl
+		this._unrenderedData.splice(0, this._unrenderedData.length);
+		#else
 		this._unrenderedData.resize(0);
+		#end
 	}
 
 	private function createButton(state:ButtonBarItemState):Button {

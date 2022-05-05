@@ -1408,7 +1408,11 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			}
 		}
 		this._oldWeekdayLabelFactory = null;
+		#if hl
+		this._dayNameLabels.splice(0, this._dayNameLabels.length);
+		#else
 		this._dayNameLabels.resize(0);
+		#end
 
 		var factory = this._weekdayLabelFactory != null ? this._weekdayLabelFactory : defaultWeekdayLabelFactory;
 		var weekdayLabelVariant = this.customWeekdayLabelVariant != null ? this.customWeekdayLabelVariant : CHILD_VARIANT_WEEKDAY_LABEL;
@@ -1502,7 +1506,11 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			}
 			this.destroyDateRenderer(dateRenderer, recycler);
 		}
+		#if hl
+		storage.inactiveDateRenderers.splice(0, storage.inactiveDateRenderers.length);
+		#else
 		storage.inactiveDateRenderers.resize(0);
+		#end
 	}
 
 	private function createDateRenderer(state:DatePickerItemState, storage:DateRendererStorage):DisplayObject {
