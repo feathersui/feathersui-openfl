@@ -193,9 +193,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public static final CHILD_VARIANT_HEADER_RENDERER = "gridView_headerRenderer";
 
-	@:deprecated('GridView.CHILD_VARIANT_HEADER is deprecated. Use GridView.CHILD_VARIANT_HEADER_RENDERER instead.')
-	public static final CHILD_VARIANT_HEADER = CHILD_VARIANT_HEADER_RENDERER;
-
 	/**
 		The variant used to style the column header dividers in a theme.
 
