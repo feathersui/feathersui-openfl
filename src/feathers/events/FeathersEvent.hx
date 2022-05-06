@@ -74,40 +74,6 @@ class FeathersEvent extends Event {
 	public static inline var STATE_CHANGE:EventType<FeathersEvent> = "stateChange";
 
 	/**
-		The `FeathersEvent.TRANSITION_START` event type is dispatched when a
-		navigator start transitioning between items.
-
-		@see `feathers.controls.navigators.StackNavigator`
-
-		@since 1.0.0
-	**/
-	@:deprecated("FeathersEvent.TRANSITION_START replaced by TransitionEvent.TRANSITION_START")
-	public static inline var TRANSITION_START:EventType<FeathersEvent> = "transitionStart";
-
-	/**
-		The `FeathersEvent.TRANSITION_COMPLETE` event type is dispatched when a
-		navigator completes transitioning between items.
-
-		@see `feathers.controls.navigators.StackNavigator`
-
-		@since 1.0.0
-	**/
-	@:deprecated("FeathersEvent.TRANSITION_COMPLETE replaced by TransitionEvent.TRANSITION_COMPLETE")
-	public static inline var TRANSITION_COMPLETE:EventType<FeathersEvent> = "transitionComplete";
-
-	/**
-		The `FeathersEvent.TRANSITION_CANCEL` event type is dispatched when a
-		navigator cancels a transition between items and has restored the
-		previous item.
-
-		@see `feathers.controls.navigators.StackNavigator`
-
-		@since 1.0.0
-	**/
-	@:deprecated("FeathersEvent.TRANSITION_CANCEL replaced by TransitionEvent.TRANSITION_CANCEL")
-	public static inline var TRANSITION_CANCEL:EventType<FeathersEvent> = "transitionCancel";
-
-	/**
 		The `FeathersEvent.OPENING` event type is dispatched when a component
 		starts to open.
 
