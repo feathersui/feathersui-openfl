@@ -25,7 +25,7 @@ import openfl._internal.utils.ObjectPool;
 
 	@since 1.0.0
 **/
-class TransitionEvent extends FeathersEvent {
+class TransitionEvent extends Event {
 	/**
 		The `TransitionEvent.TRANSITION_START` event type is dispatched when a
 		navigator start transitioning between items.
