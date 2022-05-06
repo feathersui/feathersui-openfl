@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
+	<meta title="Feathers UI" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC"/>
+	<app main="feathers.controls.Application" file="feathersui-openfl"/>
 	
-	<meta title="Feathers UI" package="com.feathersui" version="1.0.0" company="Bowler Hat LLC" />
-	<app main="feathers.controls.Application" file="feathersui-openfl" />
+	<source path="src"/>
 	
-	<source path="src" />
-	
-	<haxelib name="openfl" />
-	<haxelib name="actuate" />
+	<haxelib name="openfl"/>
+	<haxelib name="actuate"/>
 
 	<haxeflag name="--macro" value="include('feathers')"/>
 

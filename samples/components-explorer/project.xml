@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	
-	<meta title="Feathers UI" package="com.feathersui.samples.Components" version="1.0.0" company="Bowler Hat LLC" />
+	<meta title="Feathers UI" package="com.feathersui.samples.Components" version="1.0.0" company="Bowler Hat LLC"/>
 	<meta title="Components Explorer — Feathers UI Samples" if="html5"/>
-	<app main="Main" file="Components" />
+	<app main="Main" file="Components"/>
 
 	<!-- needed on Android to avoid hiding the back/home buttons -->
 	<window fullscreen="false" if="android"/>
@@ -12,11 +11,11 @@
 	<window fps="0" if="html5"/>
 	<window background="#F8F8F8"/>
 	
-	<source path="src" />
+	<source path="src"/>
 	
-	<haxelib name="openfl" />
-	<haxelib name="actuate" />
-	<haxelib name="feathersui" />
+	<haxelib name="openfl"/>
+	<haxelib name="actuate"/>
+	<haxelib name="feathersui"/>
 
 	<haxedef name="feathersui_theme_manage_stage_color"/>
 
