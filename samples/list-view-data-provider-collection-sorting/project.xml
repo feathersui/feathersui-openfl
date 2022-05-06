@@ -7,12 +7,15 @@
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>
 	<window fps="0" if="html5"/>
+	<window background="#F8F8F8"/>
 	
 	<source path="src" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
 	<haxelib name="feathersui" />
+
+	<haxedef name="feathersui_theme_manage_stage_color"/>
 
 	<assets id="feathersui-logo" path="assets/img/feathersui-logo.png" embed="false"/>
 	<icon path="assets/icons/feathersui-icon.svg"/>
