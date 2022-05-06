@@ -104,6 +104,6 @@ final class Theme {
 		if (primaryTheme != null) {
 			return primaryTheme;
 		}
-		return _fallbackTheme;
+		return fallbackTheme;
 	}
 }
