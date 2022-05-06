@@ -26,6 +26,27 @@ import js.html.Window;
 /**
 	Base class for the "Steel" theme.
 
+	When using the `Application` component, add the following define to your
+	OpenFL _project.xml_ file to use this theme's preferred background color
+	for the stage's color.
+
+	```xml
+	<haxedef name="feathersui_theme_manage_stage_color"/>
+	```
+
+	You may prefer to set the stage color manually. Add one of the following
+	options to your OpenFL _project.xml_ file to set the initial stage color.
+
+	```xml
+	<!-- light mode -->
+	<window background="#F8F8F8"/>
+	```
+
+	```xml
+	<!-- dark mode -->
+	<window background="#383838"/>
+	```
+
 	@since 1.0.0
 **/
 @:dox(hide)
