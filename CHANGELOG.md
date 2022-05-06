@@ -1,6 +1,32 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.9 (2021-02-25)
+## 1.0.0-beta.10 (2022-05-??)
+
+- AssetLoader: Uses a mask when the `scaleMode` makes the content larger than the bounds of the loader.
+- BaseScrollContainer: Added `ScrollMode.MASKLESS` to allow scrolling without using `mask` or `scrollRect`. May be useful for optimization, but children may appear outside the bounds of the container, so covering the edges is important.
+- CustomScaleManager, LetterboxScaleManager, ScreenDensityScaleManager: Added new properties similar to the constructor arguments to allow further customization after creation.
+- ExclusivePointer: Deprecated `claimPointer()`, `getClaim()`, and `removeClaim()`. Replaced with separate APIs for mouse and touch claims. Required because some environments return negative touch IDs, which were previously treated as either special values or invalid.
+- FadeTransitions: Removed deprecated class. Replaced by `FadeTransitionBuilder` in beta.6.
+- FeathersEvent: Removed deprecated `TRANSITION_START`, `TRANSITION_COMPLETE` and `TRANSITION_CANCEL`. Replaced by `TransitionEvent` in beta.6.
+- FormItem: Can now set `required` property in constructor arguments.
+- GridView: Removed deprecated `CHILD_VARIANT_HEADER` constant. Replaced by `CHILD_VARIANT_HEADER_RENDERER` in beta.4.
+- GridView, TreeGridView: Added missing `customCellRendererVariant` style property.
+- HorizontalLayout, VerticalLayout: Added new `percentWidthResetEnabled` and `percentHeightResetEnabled` properties.
+- ItemRenderer: Added `secondaryHtmlText` property to display secondary text as simple HTML.
+- OverAndUnderlineSkin: Removed deprecated class. Replaced by `TopAndBottomBorderSkin` in beta.3.
+- ResponsiveGridLayout: Added `setGap()` convenience function to set all gap properties.
+- ResponsiveGridLayout: Added new "xxl" breakpoint that defaults to 1400 pixels.
+- ResponsiveGridLayout: Added `rowVerticalAlign` property to adjust the alignment of items within a row, along with `justifyResetEnabled` to customize how it works when `rowVerticalAlign` is set to `JUSTIFY`.
+- ResponsiveGridLayoutData: Added `display` property (and `mdDisplay`, `lgDisplay`, etc.) to allow items to be hidden from certain breakpoints.
+- Scroller: When scroll position is less than minimum or greater than maximum by less than a pixel, snap with no animation duration so that continuous tapping won't make the scroller think it is still scrolling when there's no visual indication that it is anymore.
+- SortOrderHeaderRenderer: Deprecated `GridViewHeaderRenderer` and replaced with `SortOrderHeaderRenderer` because it may be used by other components too.
+- SlideTransitions: Removed deprecated class. Replaced by `SlideTransitionBuilder` in beta.6.
+- TransitionEvent: Extends `openfl.events.Event` instead of `FeathersEvent`.
+- TreeView, TreeGridView: Significant performance optimizations for `toggleBranch()` and `toggleChildrenOf()`.
+- TreeViewItemRenderer: Removed deprecated class. Replaced with `HierarchicalItemRenderer` in beta.8.
+- Themes: Added `feathersui_theme_manage_stage_color` define to allow the theme to set the stage color to match the theme. Disabled by default.
+
+## 1.0.0-beta.9 (2022-02-25)
 
 - BaseScrollContainer: `scrollMode` property defaults to `MASK` instead of `SCROLL_RECT` to avoid forcex pixel rounding.
 - Button, ToggleButton: Does not trigger on space/enter key when a button's child has focus instead of the button itself. This isn't common with simple buttons, but `ItemRenderer` is a subclass, and it may have children that can receive focus.
@@ -27,7 +53,7 @@
 - TreeGridView: Left and right arrow keys behave similarly to `TreeView`, to open and close branches and jump between a branch and its children.
 - ValidatingSprite: Added public `validating` property to indicate if it is currently validating or not.
 
-## 1.0.0-beta.8 (2021-01-06)
+## 1.0.0-beta.8 (2022-01-06)
 
 - TreeGridView: New component that displays a tree of hierarchical data with multiple columns, like a mix between `TreeView` and `GridView`.
 - HierarchicalItemRenderer: New subclass of `ItemRenderer` that is used by both `TreeView` and `TreeGridView`. Includes a toggle button to open and close branches, and an optional branch or leaf icon, in addition to the text, secondary text, icon and accessory provided by `ItemRenderer`. This component replaces `TreeViewItemRenderer`, which is now deprecated and will be removed in a future update.
