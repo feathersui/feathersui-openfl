@@ -166,6 +166,9 @@ class ScreenDensityScaleManager extends EventDispatcher implements IScaleManager
 				this._scaler.addScaleForDensity(640, 4); // xxxhpi
 			}
 			result = this._scaler.getScale(Capabilities.screenDPI);
+			#if (openfl >= "9.2.0" && !openfl_dpi_aware)
+			result /= this._target.stage.window.scale;
+			#end
 		}
 		#end
 		return result;
