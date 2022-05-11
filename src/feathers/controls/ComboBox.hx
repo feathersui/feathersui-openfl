@@ -1002,7 +1002,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			return;
 		}
-		var result = this._selectedIndex;
+		var result = this.open ? this.pendingSelectedIndex : this._selectedIndex;
 		switch (event.keyCode) {
 			case Keyboard.UP:
 				result = result - 1;
