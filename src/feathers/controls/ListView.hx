@@ -1739,6 +1739,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._selectedIndex != -1) {
 			this.scrollToIndex(this._selectedIndex);
 		}
+		// restore focus to the container so that the wrong item renderer
+		// doesn't respond to keyboard events
+		if (this._focusManager != null) {
+			this._focusManager.focus = this;
+		} else if (this.stage != null) {
+			this.stage.focus = this;
+		}
 	}
 
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {

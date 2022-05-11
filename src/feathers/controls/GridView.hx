@@ -2221,6 +2221,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._selectedIndex != -1) {
 			this.scrollToRowIndex(this._selectedIndex);
 		}
+		// restore focus to the container so that the wrong cell renderer
+		// doesn't respond to keyboard events
+		if (this._focusManager != null) {
+			this._focusManager.focus = this;
+		} else if (this.stage != null) {
+			this.stage.focus = this;
+		}
 	}
 
 	private function handleSelectionChange(item:Dynamic, index:Int, ctrlKey:Bool, shiftKey:Bool):Void {

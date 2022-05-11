@@ -1679,6 +1679,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._selectedLocation != null) {
 			this.scrollToLocation(this._selectedLocation);
 		}
+		// restore focus to the container so that the wrong item renderer
+		// doesn't respond to keyboard events
+		if (this._focusManager != null) {
+			this._focusManager.focus = this;
+		} else if (this.stage != null) {
+			this.stage.focus = this;
+		}
 	}
 
 	private function handleSelectionChange(item:Dynamic, location:Array<Int>, ctrlKey:Bool, shiftKey:Bool):Void {

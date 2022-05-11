@@ -2110,6 +2110,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._selectedLocation != null) {
 			this.scrollToLocation(this._selectedLocation);
 		}
+		// restore focus to the container so that the wrong cell renderer
+		// doesn't respond to keyboard events
+		if (this._focusManager != null) {
+			this._focusManager.focus = this;
+		} else if (this.stage != null) {
+			this.stage.focus = this;
+		}
 	}
 
 	private function handlePendingScroll():Void {
