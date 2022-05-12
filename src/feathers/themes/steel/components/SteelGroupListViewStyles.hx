@@ -8,14 +8,13 @@
 
 package feathers.themes.steel.components;
 
-import feathers.controls.dataRenderers.ItemRenderer;
-import feathers.controls.ToggleButtonState;
-import feathers.utils.DeviceUtil;
-import feathers.layout.VerticalListLayout;
 import feathers.controls.GroupListView;
+import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.layout.VerticalListLayout;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `GroupListView` component.

@@ -8,9 +8,9 @@
 
 package feathers.style;
 
+import feathers.themes.steel.DefaultSteelTheme;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
-import feathers.themes.steel.DefaultSteelTheme;
 
 /**
 	Register themes globally in a Feathers UI application. May apply to the

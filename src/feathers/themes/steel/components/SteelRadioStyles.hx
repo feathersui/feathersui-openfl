@@ -8,10 +8,10 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.MultiSkin;
 import feathers.controls.Radio;
 import feathers.controls.ToggleButtonState;
 import feathers.skins.CircleSkin;
+import feathers.skins.MultiSkin;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;

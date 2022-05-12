@@ -8,10 +8,10 @@
 
 package feathers.core;
 
-import openfl.errors.IllegalOperationError;
-import openfl.display.Sprite;
-import openfl.events.Event;
 import feathers.utils.DisplayUtil;
+import openfl.display.Sprite;
+import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
 
 /**
 	An [`openfl.display.Sprite`](https://api.openfl.org/openfl/display/Sprite.html)

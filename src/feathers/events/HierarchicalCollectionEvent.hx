@@ -8,8 +8,8 @@
 
 package feathers.events;
 
-import openfl.events.EventType;
 import openfl.events.Event;
+import openfl.events.EventType;
 import openfl.events.IEventDispatcher;
 #if !flash
 #if (openfl >= "9.1.0")

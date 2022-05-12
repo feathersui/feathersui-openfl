@@ -8,9 +8,9 @@
 
 package feathers.motion.effects.actuate;
 
-import motion.easing.IEasing;
 import motion.actuators.PropertyDetails;
 import motion.actuators.SimpleActuator;
+import motion.easing.IEasing;
 
 /**
 	Extends `SimpleActuator` by adding methods to read the settings after

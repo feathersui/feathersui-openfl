@@ -8,14 +8,14 @@
 
 package feathers.themes;
 
-import feathers.style.IVariantStyleObject;
-import feathers.style.Theme;
 import feathers.events.FeathersEvent;
-import openfl.events.Event;
+import feathers.style.ClassVariantStyleProvider;
 import feathers.style.IStyleObject;
 import feathers.style.IStyleProvider;
-import feathers.style.ClassVariantStyleProvider;
 import feathers.style.ITheme;
+import feathers.style.IVariantStyleObject;
+import feathers.style.Theme;
+import openfl.events.Event;
 
 /**
 	A theme based on `ClassVariantStyleProvider`.

@@ -8,8 +8,8 @@
 
 package feathers.utils;
 
-import openfl.display.DisplayObject;
 import feathers.utils.DisplayObjectRecycler;
+import openfl.display.DisplayObject;
 
 /**
 	An abstract that accepts a `DisplayObjectRecycler`, a function, or a class.

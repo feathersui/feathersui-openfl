@@ -8,27 +8,26 @@
 
 package feathers.controls.navigators;
 
-import feathers.core.IFocusObject;
+import feathers.core.FeathersControl;
 import feathers.core.IFocusContainer;
-import feathers.events.TransitionEvent;
-import feathers.utils.MeasurementsUtil;
-import openfl.display.InteractiveObject;
-import openfl.errors.ArgumentError;
+import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
-import openfl.errors.IllegalOperationError;
-import feathers.layout.Measurements;
-import feathers.core.InvalidationFlag;
+import feathers.events.TransitionEvent;
 import feathers.layout.AutoSizeMode;
-import openfl.events.Event;
-import openfl.display.DisplayObjectContainer;
-import openfl.geom.Point;
-import feathers.motion.effects.NoOpEffectContext;
+import feathers.layout.Measurements;
 import feathers.motion.effects.IEffectContext;
+import feathers.motion.effects.NoOpEffectContext;
+import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
-import feathers.core.FeathersControl;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.InteractiveObject;
+import openfl.errors.ArgumentError;
+import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
+import openfl.geom.Point;
 
 /**
 	Base class for navigator components.

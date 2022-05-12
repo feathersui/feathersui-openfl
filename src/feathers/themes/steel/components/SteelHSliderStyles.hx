@@ -8,12 +8,11 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.TabSkin;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.HSlider;
 import feathers.skins.CircleSkin;
-import feathers.skins.RectangleSkin;
+import feathers.skins.TabSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 

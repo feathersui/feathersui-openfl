@@ -8,11 +8,11 @@
 
 package feathers.events;
 
-import feathers.data.GridViewHeaderState;
-import openfl.events.IEventDispatcher;
 import feathers.data.GridViewCellState;
-import openfl.events.EventType;
+import feathers.data.GridViewHeaderState;
 import openfl.events.Event;
+import openfl.events.EventType;
+import openfl.events.IEventDispatcher;
 #if !flash
 #if (openfl >= "9.1.0")
 import openfl.utils.ObjectPool;

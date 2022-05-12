@@ -8,14 +8,14 @@
 
 package feathers.skins;
 
+import feathers.controls.IToggle;
+import feathers.core.IMeasureObject;
+import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
-import feathers.core.IValidating;
 import feathers.core.IUIControl;
+import feathers.core.IValidating;
 import feathers.layout.Measurements;
 import feathers.utils.MeasurementsUtil;
-import feathers.core.IMeasureObject;
-import feathers.controls.IToggle;
-import feathers.core.IStateContext;
 import openfl.display.DisplayObject;
 
 /**

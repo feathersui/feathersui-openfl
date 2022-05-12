@@ -8,10 +8,10 @@
 
 package feathers.themes.steel.components;
 
-import openfl.display.Shape;
 import feathers.controls.FormItem;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import openfl.display.Shape;
 
 /**
 	Initialize "steel" styles for the `FormItem` component.

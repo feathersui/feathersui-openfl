@@ -8,10 +8,9 @@
 
 package feathers.controls;
 
-import feathers.utils.AbstractDisplayObjectRecycler;
-import feathers.data.SortOrder;
 import feathers.data.GridViewCellState;
-import feathers.utils.DisplayObjectRecycler;
+import feathers.data.SortOrder;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 

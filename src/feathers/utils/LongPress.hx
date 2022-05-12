@@ -8,11 +8,11 @@
 
 package feathers.utils;
 
+import feathers.events.LongPressEvent;
 import feathers.events.TriggerEvent;
 import openfl.Lib;
-import feathers.events.LongPressEvent;
-import openfl.display.Stage;
 import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;

@@ -8,8 +8,8 @@
 
 package feathers.utils;
 
-import openfl.errors.IllegalOperationError;
 import openfl.errors.ArgumentError;
+import openfl.errors.IllegalOperationError;
 
 /**
 	Selects a scale value for the application based on the screen density

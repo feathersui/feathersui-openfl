@@ -8,13 +8,13 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.MultiSkin;
-import openfl.display.Shape;
-import feathers.controls.ToggleButtonState;
-import feathers.skins.RectangleSkin;
 import feathers.controls.Check;
+import feathers.controls.ToggleButtonState;
+import feathers.skins.MultiSkin;
+import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import openfl.display.Shape;
 
 /**
 	Initialize "steel" styles for the `Check` component.

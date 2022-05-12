@@ -8,7 +8,6 @@
 
 package feathers.themes.steel;
 
-import openfl.text.TextFormatAlign;
 import feathers.events.StyleProviderEvent;
 import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
@@ -16,6 +15,7 @@ import feathers.style.ClassVariantStyleProvider;
 import feathers.style.IDarkModeTheme;
 import feathers.text.TextFormat;
 import openfl.display.GradientType;
+import openfl.text.TextFormatAlign;
 #if html5
 import js.Lib;
 import js.html.MediaQueryList;

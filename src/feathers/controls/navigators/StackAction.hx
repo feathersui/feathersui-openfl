@@ -8,9 +8,9 @@
 
 package feathers.controls.navigators;
 
-import openfl.events.Event;
-import openfl.display.DisplayObject;
 import feathers.motion.effects.IEffectContext;
+import openfl.display.DisplayObject;
+import openfl.events.Event;
 
 /**
 	Events dispatched by the active view in `StackNavigator` may trigger

@@ -8,9 +8,9 @@
 
 package feathers.utils;
 
-import openfl.display.Stage;
 import feathers.core.IStateContext;
 import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 

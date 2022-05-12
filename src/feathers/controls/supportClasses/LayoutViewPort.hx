@@ -8,8 +8,8 @@
 
 package feathers.controls.supportClasses;
 
-import feathers.layout.ISnapLayout;
 import feathers.layout.IScrollLayout;
+import feathers.layout.ISnapLayout;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.Sprite;
 import openfl.errors.ArgumentError;

@@ -9,12 +9,12 @@
 package feathers.display;
 
 import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.errors.ArgumentError;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import openfl.errors.ArgumentError;
 import openfl.geom.Rectangle;
-import openfl.display.Sprite;
-import openfl.display.BitmapData;
 
 /**
 	Renders `BitmapData` in nine slices using the `scale9Grid` property.

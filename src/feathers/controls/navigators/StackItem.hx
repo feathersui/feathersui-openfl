@@ -8,9 +8,9 @@
 
 package feathers.controls.navigators;
 
-import openfl.events.Event;
 import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 
 /**
 	An individual item that will be displayed by a `StackNavigator` component.

@@ -8,8 +8,8 @@
 
 package feathers.themes.steel.components;
 
-import feathers.layout.HorizontalLayout;
 import feathers.controls.LayoutGroup;
+import feathers.layout.HorizontalLayout;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;

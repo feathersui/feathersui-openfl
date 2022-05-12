@@ -8,9 +8,9 @@
 
 package feathers.motion.effects.actuate;
 
-import motion.easing.IEasing;
 import motion.actuators.MethodActuator;
 import motion.actuators.PropertyDetails;
+import motion.easing.IEasing;
 
 /**
 	Extends `MethodActuator` by adding methods to read the settings after

@@ -8,8 +8,8 @@
 
 package feathers.themes.steel.components;
 
-import feathers.controls.ButtonState;
 import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;

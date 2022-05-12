@@ -8,11 +8,11 @@
 
 package feathers.layout;
 
-import openfl.events.Event;
-import feathers.events.FeathersEvent;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**

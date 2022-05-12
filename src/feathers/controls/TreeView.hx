@@ -8,8 +8,6 @@
 
 package feathers.controls;
 
-import feathers.core.IMeasureObject;
-import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IHierarchicalDepthItemRenderer;
@@ -19,6 +17,7 @@ import feathers.controls.supportClasses.AdvancedLayoutViewPort;
 import feathers.controls.supportClasses.BaseScrollContainer;
 import feathers.core.IDataSelector;
 import feathers.core.IFocusContainer;
+import feathers.core.IMeasureObject;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
@@ -37,6 +36,7 @@ import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelTreeViewStyles;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;

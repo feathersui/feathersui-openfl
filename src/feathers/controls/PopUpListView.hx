@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
@@ -25,6 +24,7 @@ import feathers.events.ListViewEvent;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelPopUpListViewStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.utils.MeasurementsUtil;

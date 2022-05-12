@@ -8,12 +8,12 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.RectangleSkin;
 import feathers.controls.PageIndicator;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleButtonState;
 import feathers.layout.HorizontalLayout;
 import feathers.skins.CircleSkin;
+import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 

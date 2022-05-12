@@ -8,9 +8,9 @@
 
 package feathers.utils;
 
-import openfl.display.DisplayObjectContainer;
 import feathers.core.PopUpManager;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 
 /**
 	Utility functions for working with the `PopUpManager`.

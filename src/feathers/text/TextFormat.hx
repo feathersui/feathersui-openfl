@@ -8,9 +8,9 @@
 
 package feathers.text;
 
+import feathers.events.FeathersEvent;
 import feathers.utils.TextFormatUtil;
 import openfl.events.Event;
-import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 import openfl.text.TextFormatAlign;
 

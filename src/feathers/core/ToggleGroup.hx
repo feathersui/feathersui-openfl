@@ -9,12 +9,12 @@
 package feathers.core;
 
 import feathers.controls.IGroupedToggle;
-import openfl.errors.IllegalOperationError;
-import openfl.errors.ArgumentError;
-import openfl.events.Event;
-import feathers.events.FeathersEvent;
-import openfl.errors.RangeError;
 import feathers.controls.IToggle;
+import feathers.events.FeathersEvent;
+import openfl.errors.ArgumentError;
+import openfl.errors.IllegalOperationError;
+import openfl.errors.RangeError;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**

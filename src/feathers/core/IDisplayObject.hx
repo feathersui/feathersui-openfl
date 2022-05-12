@@ -8,8 +8,8 @@
 
 package feathers.core;
 
-import openfl.display.Stage;
 import openfl.display.DisplayObjectContainer;
+import openfl.display.Stage;
 import openfl.events.IEventDispatcher;
 
 /**

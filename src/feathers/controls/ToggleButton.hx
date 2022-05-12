@@ -8,8 +8,8 @@
 
 package feathers.controls;
 
-import feathers.core.IHTMLTextControl;
 import feathers.core.IFocusObject;
+import feathers.core.IHTMLTextControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
@@ -29,7 +29,6 @@ import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
 import openfl.ui.Keyboard;
 #if (openfl >= "9.2.0")
 import openfl.text.StyleSheet;

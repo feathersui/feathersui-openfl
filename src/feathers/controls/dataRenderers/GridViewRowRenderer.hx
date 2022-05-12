@@ -8,9 +8,8 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IMeasureObject;
-import feathers.style.IVariantStyleObject;
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.core.IMeasureObject;
 import feathers.core.IPointerDelegate;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
@@ -23,6 +22,7 @@ import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.Measurements;
+import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;

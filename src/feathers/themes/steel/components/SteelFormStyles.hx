@@ -8,8 +8,8 @@
 
 package feathers.themes.steel.components;
 
-import feathers.layout.FormLayout;
 import feathers.controls.Form;
+import feathers.layout.FormLayout;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 

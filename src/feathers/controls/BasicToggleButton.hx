@@ -8,12 +8,10 @@
 
 package feathers.controls;
 
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
-import feathers.core.IStateObserver;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IStateContext;
+import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
@@ -26,6 +24,8 @@ import feathers.utils.PointerToState;
 import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 
 /**
 	A simple toggle button control with selection, pointer states, but no

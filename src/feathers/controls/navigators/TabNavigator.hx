@@ -8,9 +8,9 @@
 
 package feathers.controls.navigators;
 
-import feathers.core.IValidating;
 import feathers.core.IDataSelector;
 import feathers.core.IIndexSelector;
+import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;

@@ -8,8 +8,8 @@
 
 package feathers.controls.popups;
 
-import openfl.events.IEventDispatcher;
 import openfl.display.DisplayObject;
+import openfl.events.IEventDispatcher;
 
 /**
 	Manages the layout and positioning of a pop-up displayed by a component like

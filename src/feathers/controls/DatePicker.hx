@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.core.FeathersControl;
@@ -29,6 +28,7 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelDatePickerStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DateUtil;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;

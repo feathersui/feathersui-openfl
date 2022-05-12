@@ -8,11 +8,11 @@
 
 package feathers.motion.effects;
 
-import openfl.events.Event;
 import feathers.events.FeathersEvent;
 import motion.Actuate;
 import motion.actuators.IGenericActuator;
 import motion.easing.IEasing;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**

@@ -9,9 +9,9 @@
 package feathers.themes.steel.components;
 
 import feathers.controls.TextCallout;
-import feathers.skins.PillSkin;
-import feathers.controls.TextInputState;
 import feathers.controls.TextInput;
+import feathers.controls.TextInputState;
+import feathers.skins.PillSkin;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;

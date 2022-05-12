@@ -12,7 +12,6 @@ import feathers.controls.Button;
 import feathers.controls.ListView;
 import feathers.controls.PopUpListView;
 import feathers.controls.popups.DropDownPopUpAdapter;
-import feathers.layout.VerticalListLayout;
 import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;

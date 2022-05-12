@@ -8,8 +8,8 @@
 
 package feathers.utils;
 
-import openfl.display.DisplayObject;
 import feathers.utils.DisplayObjectFactory;
+import openfl.display.DisplayObject;
 
 /**
 	An abstract that accepts a `DisplayObjectFactory`, a function, a class, or

@@ -8,8 +8,8 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.RectangleSkin;
 import feathers.controls.Header;
+import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 

@@ -8,10 +8,10 @@
 
 package feathers.core;
 
-import openfl.errors.ArgumentError;
+import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Stage;
-import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 
 /**
 	Adds a display object as a pop-up above all other content on the stage.

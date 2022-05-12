@@ -8,10 +8,10 @@
 
 package feathers.layout;
 
+import feathers.events.FeathersEvent;
 import feathers.layout.ResponsiveGridLayout.Breakpoint;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
-import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
 /**

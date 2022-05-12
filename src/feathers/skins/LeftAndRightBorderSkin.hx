@@ -8,8 +8,8 @@
 
 package feathers.skins;
 
-import feathers.graphics.LineStyle;
 import feathers.graphics.FillStyle;
+import feathers.graphics.LineStyle;
 
 /**
 	A skin for Feathers UI components that draws a border on the left and

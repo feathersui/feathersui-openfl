@@ -8,9 +8,9 @@
 
 package feathers.themes.steel.components;
 
-import feathers.skins.CircleSkin;
 import feathers.controls.BasicToggleButton;
 import feathers.controls.ToggleSwitch;
+import feathers.skins.CircleSkin;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;

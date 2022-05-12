@@ -8,8 +8,6 @@
 
 package feathers.controls.navigators;
 
-import openfl.events.Event;
-import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
 
 /**

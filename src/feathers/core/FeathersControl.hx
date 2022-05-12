@@ -8,7 +8,6 @@
 
 package feathers.core;
 
-import openfl.events.FocusEvent;
 import feathers.events.FeathersEvent;
 import feathers.events.StyleProviderEvent;
 import feathers.layout.ILayoutData;
@@ -21,6 +20,7 @@ import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
+import openfl.events.FocusEvent;
 import openfl.geom.Point;
 
 /**

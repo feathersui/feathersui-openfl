@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.controls.popups.IPopUpAdapter;
@@ -25,6 +24,7 @@ import feathers.events.ListViewEvent;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelComboBoxStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;

@@ -8,10 +8,10 @@
 
 package feathers.data;
 
+import feathers.events.FeathersEvent;
+import feathers.events.HierarchicalCollectionEvent;
 import openfl.errors.RangeError;
 import openfl.events.Event;
-import feathers.events.HierarchicalCollectionEvent;
-import feathers.events.FeathersEvent;
 import openfl.events.EventDispatcher;
 
 /**

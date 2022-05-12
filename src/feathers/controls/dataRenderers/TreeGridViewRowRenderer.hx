@@ -8,8 +8,8 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IMeasureObject;
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.core.IMeasureObject;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.IPointerDelegate;
 import feathers.core.ITextControl;

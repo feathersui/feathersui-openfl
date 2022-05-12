@@ -8,12 +8,12 @@
 
 package feathers.layout;
 
-import openfl.errors.ArgumentError;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.KeyboardEvent;

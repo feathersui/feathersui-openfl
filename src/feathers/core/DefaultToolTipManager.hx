@@ -8,8 +8,8 @@
 
 package feathers.core;
 
-import feathers.style.IVariantStyleObject;
 import feathers.controls.Label;
+import feathers.style.IVariantStyleObject;
 import feathers.themes.steel.components.SteelToolTipStyles;
 import openfl.Lib;
 import openfl.display.DisplayObject;

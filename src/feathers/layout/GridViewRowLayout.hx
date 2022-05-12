@@ -8,8 +8,8 @@
 
 package feathers.layout;
 
-import feathers.core.IMeasureObject;
 import feathers.controls.IGridViewColumn;
+import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.data.IFlatCollection;
 import feathers.events.FeathersEvent;

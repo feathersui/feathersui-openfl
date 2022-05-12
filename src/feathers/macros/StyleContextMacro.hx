@@ -9,10 +9,10 @@
 package feathers.macros;
 
 #if macro
-import haxe.macro.Expr.Function;
+import haxe.macro.Context;
 import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
-import haxe.macro.Context;
+import haxe.macro.Expr.Function;
 
 /**
 	Add `@:styleContext` metadata to a Feathers UI component to make it

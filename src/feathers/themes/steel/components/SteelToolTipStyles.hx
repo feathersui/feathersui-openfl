@@ -8,9 +8,9 @@
 
 package feathers.themes.steel.components;
 
+import feathers.controls.Label;
 import feathers.core.DefaultToolTipManager;
 import feathers.skins.RectangleSkin;
-import feathers.controls.Label;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 

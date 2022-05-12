@@ -8,8 +8,8 @@
 
 package feathers.themes.steel.components;
 
-import feathers.layout.RelativePosition;
 import feathers.controls.Callout;
+import feathers.layout.RelativePosition;
 import feathers.skins.RectangleSkin;
 import feathers.skins.TriangleSkin;
 import feathers.style.Theme;

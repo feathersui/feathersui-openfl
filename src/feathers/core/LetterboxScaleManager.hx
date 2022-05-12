@@ -9,9 +9,9 @@
 package feathers.core;
 
 import feathers.events.FeathersEvent;
-import openfl.events.Event;
 import feathers.utils.ScaleUtil;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.geom.Rectangle;
 

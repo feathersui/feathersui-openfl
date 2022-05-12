@@ -8,12 +8,12 @@
 
 package feathers.themes.steel.components;
 
-import feathers.utils.DeviceUtil;
-import feathers.layout.VerticalListLayout;
 import feathers.controls.TreeView;
+import feathers.layout.VerticalListLayout;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `TreeView` component.

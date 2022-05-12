@@ -10,7 +10,6 @@ package feathers.controls;
 
 import feathers.data.TreeGridViewCellState;
 import feathers.utils.AbstractDisplayObjectRecycler;
-import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
 import openfl.events.EventDispatcher;
 

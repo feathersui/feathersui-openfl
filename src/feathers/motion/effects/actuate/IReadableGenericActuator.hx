@@ -8,8 +8,8 @@
 
 package feathers.motion.effects.actuate;
 
-import motion.easing.IEasing;
 import motion.actuators.IGenericActuator;
+import motion.easing.IEasing;
 
 /**
 	An extension to `IGenericActuator` that makes the settings readable after

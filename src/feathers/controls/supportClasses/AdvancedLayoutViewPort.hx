@@ -8,11 +8,10 @@
 
 package feathers.controls.supportClasses;
 
-import feathers.layout.ISnapLayout;
 import feathers.core.FeathersControl;
-import feathers.core.InvalidationFlag;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
+import feathers.layout.ISnapLayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import openfl.display.DisplayObject;

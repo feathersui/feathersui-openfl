@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.events.DatePickerEvent;
 import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.core.FeathersControl;
@@ -16,6 +15,7 @@ import feathers.core.IDateSelector;
 import feathers.core.IFocusObject;
 import feathers.core.IStageFocusDelegate;
 import feathers.core.InvalidationFlag;
+import feathers.events.DatePickerEvent;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.themes.steel.components.SteelPopUpDatePickerStyles;

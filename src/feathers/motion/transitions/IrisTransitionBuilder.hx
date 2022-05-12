@@ -8,8 +8,6 @@
 
 package feathers.motion.transitions;
 
-import openfl.display.Shape;
-import openfl.geom.Point;
 import feathers.motion.effects.EffectInterruptBehavior;
 import feathers.motion.effects.IEffectContext;
 import feathers.motion.effects.actuate.ActuateEffectContext;
@@ -18,7 +16,9 @@ import motion.Actuate;
 import motion.easing.IEasing;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
+import openfl.display.Shape;
 import openfl.errors.ArgumentError;
+import openfl.geom.Point;
 
 /**
 	Creates transitions for view navigators that show or hide a display object

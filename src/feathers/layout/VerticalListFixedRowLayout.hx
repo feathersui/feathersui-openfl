@@ -8,16 +8,16 @@
 
 package feathers.layout;
 
-import openfl.errors.ArgumentError;
-import openfl.ui.Keyboard;
-import openfl.events.KeyboardEvent;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.events.KeyboardEvent;
 import openfl.geom.Point;
+import openfl.ui.Keyboard;
 
 /**
 	A simple list layout that positions items from top to bottom, in a single

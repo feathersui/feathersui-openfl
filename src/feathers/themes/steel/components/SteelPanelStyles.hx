@@ -8,11 +8,11 @@
 
 package feathers.themes.steel.components;
 
-import feathers.utils.DeviceUtil;
 import feathers.controls.Panel;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 
 /**
 	Initialize "steel" styles for the `Panel` component.

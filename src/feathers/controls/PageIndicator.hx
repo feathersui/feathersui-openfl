@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusObject;
 import feathers.core.IIndexSelector;
@@ -24,6 +23,7 @@ import feathers.layout.Measurements;
 import feathers.layout.VerticalLayout;
 import feathers.skins.IProgrammaticSkin;
 import feathers.themes.steel.components.SteelPageIndicatorStyles;
+import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;

@@ -9,8 +9,8 @@
 package feathers.utils;
 
 #if html5
-import js.html.Window;
 import js.Lib;
+import js.html.Window;
 #end
 #if flash
 import openfl.ui.Mouse;

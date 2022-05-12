@@ -8,11 +8,11 @@
 
 package feathers.themes.steel.components;
 
-import openfl.display.Stage;
 import feathers.controls.Application;
 import feathers.core.ScreenDensityScaleManager;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import openfl.display.Stage;
 
 /**
 	Initialize "steel" styles for the `Application` component.

@@ -12,7 +12,6 @@ import feathers.events.FeathersEvent;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.geom.Matrix;
-import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 /**

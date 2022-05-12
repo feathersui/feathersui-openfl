@@ -8,13 +8,13 @@
 
 package feathers.utils;
 
-import openfl.display.DisplayObjectContainer;
 import feathers.core.IFocusContainer;
 import feathers.core.IFocusExtras;
 import feathers.core.IFocusObject;
-import openfl.geom.Point;
-import openfl.errors.ArgumentError;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.errors.ArgumentError;
+import openfl.geom.Point;
 
 /**
 	Focus utility functions.

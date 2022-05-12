@@ -8,9 +8,9 @@
 
 package feathers.utils;
 
-import openfl.geom.Point;
-import openfl.errors.ArgumentError;
 import openfl.display.DisplayObject;
+import openfl.errors.ArgumentError;
+import openfl.geom.Point;
 
 /**
 	Display list utility functions.

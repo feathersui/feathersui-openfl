@@ -8,9 +8,9 @@
 
 package feathers.layout;
 
-import feathers.layout.AnchorLayout.Anchor;
 import feathers.events.FeathersEvent;
 import feathers.layout.AnchorLayout.AbstractAnchor;
+import feathers.layout.AnchorLayout.Anchor;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 

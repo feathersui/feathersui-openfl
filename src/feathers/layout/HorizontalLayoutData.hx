@@ -8,8 +8,8 @@
 
 package feathers.layout;
 
-import openfl.events.Event;
 import feathers.events.FeathersEvent;
+import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**
