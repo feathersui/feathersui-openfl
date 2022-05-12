@@ -6,18 +6,18 @@ Built using the [Haxe](https://haxe.org/) programming language and [OpenFL](http
 
 ---
 
-🚨 **Notice:** This is a **beta** version of Feathers UI for Haxe/OpenFL. Some components and features may still be missing, and occasional bugs should be expected.
+🎉 **Notice:** This is a **release candidate** version of Feathers UI for Haxe/OpenFL. It should be considered ready for production use.
 
 ---
+
+## Minimum requirements
+
+- Haxe 4.0
+- OpenFL 8.9.7
 
 ## Get started
 
 For more detailed instructions, see [Learn: Install Feathers UI for Haxe and OpenFL](https://feathersui.com/learn/haxe-openfl/installation/).
-
-## Minimum Requirements
-
-- Haxe 4.0
-- OpenFL 8.9.7
 
 ### Installation
 
