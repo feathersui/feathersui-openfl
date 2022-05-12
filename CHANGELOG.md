@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.0.0-beta.10 (2022-05-??)
+## 1.0.0-rc.1 (2022-05-12)
 
 - AssetLoader: Uses a mask when the `scaleMode` makes the content larger than the bounds of the loader.
 - BaseScrollContainer: Added `ScrollMode.MASKLESS` to allow scrolling without using `mask` or `scrollRect`. May be useful for optimization, but children may appear outside the bounds of the container, so covering the edges is important.

@@ -1,4 +1,4 @@
-# Feathers UI 1.0.0-beta.9 for OpenFL and Haxe
+# Feathers UI 1.0.0-rc.1 for OpenFL and Haxe
 
 [Feathers UI](https://feathersui.com/) is an open source framework of [graphical user interface (GUI) components](https://feathersui.com/learn/haxe-openfl/ui-components/) for creative, [cross-platform](https://feathersui.com/cross-platform-guis/) frontend projects. It is especially well-suited for games, interactive data visualizations, and other rich, multimedia experiences. With Feathers UI, you can create native apps for a wide range of devices and platforms — including phones, tablets, desktop computers, game consoles… and you can even deploy to web browsers.
 
