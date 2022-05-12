@@ -14,11 +14,14 @@ Built using the [Haxe](https://haxe.org/) programming language and [OpenFL](http
 
 For more detailed instructions, see [Learn: Install Feathers UI for Haxe and OpenFL](https://feathersui.com/learn/haxe-openfl/installation/).
 
-### Prerequisites
+## Minimum Requirements
 
-Requires [Haxe 4.0.0 or newer](https://haxe.org/download/).
+- Haxe 4.0
+- OpenFL 8.9.7
 
 ### Installation
+
+Install [Haxe](https://haxe.org/download/).
 
 Open a terminal, and then install Feathers UI using the following command:
 
@@ -31,8 +34,6 @@ This will also automatically install any additional required dependencies, like 
 ```sh
 haxelib run openfl setup
 ```
-
-Note: The minimum supported version of OpenFL is 8.9.7.
 
 ### Choose a development environment
 
