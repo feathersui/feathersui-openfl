@@ -1233,7 +1233,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		if (!this.needsMeasurement()) {
 			this._viewPort.validateNow();
+			var oldSettingScrollerDimensions = this._settingScrollerDimensions;
+			this._settingScrollerDimensions = true;
 			this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
+			this._settingScrollerDimensions = oldSettingScrollerDimensions;
 			this.restrictScrollAfterRefreshViewPort();
 			return;
 		}
