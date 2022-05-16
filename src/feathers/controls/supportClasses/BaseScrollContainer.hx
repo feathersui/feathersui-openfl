@@ -2238,6 +2238,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 				// dimensions. if it will affect the layout, we have no choice
 				// but to validate again later.
 				this.setInvalid(SCROLL);
+			} else {
+				// the view port should always be updated with scroll changes
+				this._viewPort.scrollX = this.scrollX;
+				this._viewPort.scrollY = this.scrollY;
 			}
 			return;
 		}
