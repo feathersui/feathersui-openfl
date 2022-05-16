@@ -491,6 +491,10 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		this.scroller.snapPositionsY = this.layoutViewPort.snapPositionsY;
 	}
 
+	override private function needsScrollMeasurement():Bool {
+		return (this.layout is IScrollLayout);
+	}
+
 	private function refreshLayout():Void {
 		this.layoutViewPort.layout = this.layout;
 	}
