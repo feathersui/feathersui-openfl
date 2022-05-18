@@ -8,6 +8,7 @@
 
 package feathers.controls.supportClasses;
 
+import openfl.display.DisplayObject;
 import feathers.layout.IScrollLayout;
 import feathers.layout.ISnapLayout;
 import feathers.utils.MeasurementsUtil;
@@ -395,5 +396,49 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			this._snapPositionsX = null;
 			this._snapPositionsY = null;
 		}
+	}
+
+	private var _offscreenRendering:Bool = true;
+
+	/**
+		If the `offscreenRendering` value is `false`, all display objects offscreen the layout will automatically be set to visible false.
+
+		@since 1.0.0
+	**/
+	public var offscreenRendering(get, set):Bool;
+
+	private function get_offscreenRendering():Bool {
+		return this._offscreenRendering;
+	}
+
+	private function set_offscreenRendering(value:Bool):Bool {
+		if(value)
+		{
+			for (child in __children)
+			{
+				child.visible = true;
+			}
+		}
+
+		return this._offscreenRendering = value;
+	}
+
+	@:noCompletion private override function __enterFrame(deltaTime:Int):Void {
+		if(!offscreenRendering)
+			__setRenderable();
+		super.__enterFrame(deltaTime);
+	}
+
+	@:noCompletion private inline function __setRenderable():Void {
+		for (child in __children)
+		{
+			child.visible = !(child.x > scrollX + visibleWidth || child.x + child.width < scrollX || child.y > scrollY + visibleHeight || child.y + child.height < scrollY);
+		}
+	}
+
+	@:noCompletion override public function removeChild(child:DisplayObject):DisplayObject {
+		if(!offscreenRendering)
+			child.visible = true;
+		return super.removeChild(child);
 	}
 }
