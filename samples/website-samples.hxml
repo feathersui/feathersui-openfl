@@ -20,6 +20,8 @@
 --next
 -cmd haxelib run openfl build login-form/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
+-cmd haxelib run openfl build magic-8-ball-chat/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
 -cmd haxelib run openfl build router-navigator-pass-data-between-views/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
 -cmd haxelib run openfl build router-navigator-save-and-restore/project.xml html5 -final -clean --haxedef=feathersui.com

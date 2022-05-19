@@ -1,5 +1,9 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.0.0-rc.2 (2022-??-??)
+
+- magic-8-ball-chat: New sample project that demonstrates how to create a chat client with the `ListView` component.
+
 ## 1.0.0-rc.1 (2022-05-12)
 
 - AssetLoader: Uses a mask when the `scaleMode` makes the content larger than the bounds of the loader.

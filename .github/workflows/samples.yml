@@ -103,6 +103,13 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
+    - name: Build samples/magic-8-ball-chat
+      working-directory: samples/magic-8-ball-chat
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
     - name: Build samples/router-navigator-pass-data-between-views
       working-directory: samples/router-navigator-pass-data-between-views
       run: |
@@ -272,6 +279,10 @@ jobs:
         haxelib run openfl build air
     - name: Build samples/login-form
       working-directory: samples/login-form
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/magic-8-ball-chat
+      working-directory: samples/magic-8-ball-chat
       run: |
         haxelib run openfl build air
     - name: Build samples/router-navigator-pass-data-between-views
