@@ -418,7 +418,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 
 		if(!value)
 		{
-			for (child in __children)
+			for (child in items)
 			{
 				child.visible = true;
 			}
@@ -442,7 +442,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	}
 
 	@:noCompletion private inline function refreshChildVisibility():Void {
-		for (child in __children)
+		for (child in items)
 		{
 			child.visible = !(child.x > scrollX + visibleWidth || child.x + child.width < scrollX || child.y > scrollY + visibleHeight || child.y + child.height < scrollY);
 		}
