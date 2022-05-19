@@ -433,7 +433,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		var sizeInvalid = this.isInvalid(SIZE);
 		var scrollInvalid = this.isInvalid(SCROLL);
 
-		if(layoutInvalid || sizeInvalid || scrollInvalid)
+		if(this._manageChildVisibility && (layoutInvalid || sizeInvalid || scrollInvalid))
 		{
 			refreshChildVisibility();
 		}
