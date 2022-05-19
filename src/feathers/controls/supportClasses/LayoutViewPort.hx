@@ -449,7 +449,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	}
 
 	override public function removeChild(child:DisplayObject):DisplayObject {
-		if(this._manageChildVisibility && child != null && child.parent != this)
+		if(this._manageChildVisibility && child != null)
 		{
 			child.visible = true;
 		}
@@ -460,7 +460,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		if(this._manageChildVisibility)
 		{
 			var child:DisplayObject = getChildAt(index);
-			if(child != null && child.parent != this)
+			if(child != null)
 			{
 				child.visible = true;
 			}
