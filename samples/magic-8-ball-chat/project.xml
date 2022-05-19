@@ -2,7 +2,7 @@
 <project>
 	<meta title="Magic 8 Ball Chat" package="com.feathersui.samples.Magic8Ball" version="1.0.0" company="Bowler Hat LLC"/>
 	<meta title="Magic 8 Ball Chat — Feathers UI Samples" if="html5"/>
-	<app main="com.feathersui.magic8ball.Main" file="HN"/>
+	<app main="com.feathersui.magic8ball.Main" file="Magic8Ball"/>
 
 	<window allow-high-dpi="true"/>
 	<window fps="60"/>
