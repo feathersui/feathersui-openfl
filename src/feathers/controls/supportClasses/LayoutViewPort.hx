@@ -234,7 +234,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			return this._scrollX;
 		}
 		this._scrollX = value;
-		if ((this._currentLayout is IScrollLayout)) {
+		if (this._manageChildVisibility || (this._currentLayout is IScrollLayout)) {
 			this.setInvalid(LAYOUT);
 		}
 		return this._scrollX;
@@ -256,7 +256,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			return this._scrollY;
 		}
 		this._scrollY = value;
-		if ((this._currentLayout is IScrollLayout)) {
+		if (this._manageChildVisibility || (this._currentLayout is IScrollLayout)) {
 			this.setInvalid(LAYOUT);
 		}
 		return this._scrollY;
@@ -398,21 +398,25 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		}
 	}
 
-	private var _offscreenRendering:Bool = true;
+	private var _manageChildVisibility:Bool = false;
 
 	/**
-		If the `offscreenRendering` value is `false`, all display objects offscreen the layout will automatically be set to visible false.
+		If the `manageChildVisibility` value is `true`, all display objects offscreen the layout will automatically be set to visible false.
 
 		@since 1.0.0
 	**/
-	public var offscreenRendering(get, set):Bool;
+	public var manageChildVisibility(get, set):Bool;
 
-	private function get_offscreenRendering():Bool {
-		return this._offscreenRendering;
+	private function get_manageChildVisibility():Bool {
+		return this._manageChildVisibility;
 	}
 
-	private function set_offscreenRendering(value:Bool):Bool {
-		if(value)
+	private function set_manageChildVisibility(value:Bool):Bool {
+		if (this._manageChildVisibility == value) {
+			return this._manageChildVisibility;
+		}
+
+		if(!value)
 		{
 			for (child in __children)
 			{
@@ -420,25 +424,58 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			}
 		}
 
-		return this._offscreenRendering = value;
+		return this._manageChildVisibility = value;
 	}
 
-	@:noCompletion private override function __enterFrame(deltaTime:Int):Void {
-		if(!offscreenRendering)
-			__setRenderable();
-		super.__enterFrame(deltaTime);
+	override private function update():Void
+	{
+		var layoutInvalid = this.isInvalid(LAYOUT);
+		var sizeInvalid = this.isInvalid(SIZE);
+		var scrollInvalid = this.isInvalid(SCROLL);
+
+		if(layoutInvalid || sizeInvalid || scrollInvalid)
+		{
+			refreshChildVisibility();
+		}
+
+		super.update();
 	}
 
-	@:noCompletion private inline function __setRenderable():Void {
+	@:noCompletion private inline function refreshChildVisibility():Void {
 		for (child in __children)
 		{
 			child.visible = !(child.x > scrollX + visibleWidth || child.x + child.width < scrollX || child.y > scrollY + visibleHeight || child.y + child.height < scrollY);
 		}
 	}
 
-	@:noCompletion override public function removeChild(child:DisplayObject):DisplayObject {
-		if(!offscreenRendering)
+	override public function removeChild(child:DisplayObject):DisplayObject {
+		if(this._manageChildVisibility)
+		{
 			child.visible = true;
+			this.setInvalid(LAYOUT);
+		}
 		return super.removeChild(child);
+	}
+
+	override public function removeChildAt(index:Int):DisplayObject {
+		if(this._manageChildVisibility)
+		{
+			var child:DisplayObject = getChildAt(index);
+			if(child != null)
+				return this.removeChild(child);
+		}
+		return super.removeChildAt(index);
+	}
+
+	override public function addChild(child:DisplayObject):DisplayObject {
+		if(this._manageChildVisibility)
+			this.setInvalid(LAYOUT);
+		return super.addChild(child);
+	}
+
+	override public function addChildAt(child:DisplayObject, index:Int):DisplayObject {
+		if(this._manageChildVisibility)
+			this.setInvalid(LAYOUT);
+		return super.addChildAt(child, index);
 	}
 }
