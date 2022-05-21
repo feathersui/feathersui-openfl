@@ -409,22 +409,21 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	}
 
 	private function layoutContent():Void {
-		if (this._activeItemView == null) {
-			return;
-		}
-		this._activeItemView.x = 0.0;
-		this._activeItemView.y = 0.0;
-		// don't set the width or height explicitly unless necessary because if
-		// our explicit dimensions are cleared later, the measurement may not be
-		// accurate anymore
-		if (this._activeItemView.width != this.actualWidth) {
-			this._activeItemView.width = this.actualWidth;
-		}
-		if (this._activeItemView.height != this.actualHeight) {
-			this._activeItemView.height = this.actualHeight;
-		}
-		if ((this._activeItemView is IValidating)) {
-			cast(this._activeItemView, IValidating).validateNow();
+		if (this._activeItemView != null) {
+			this._activeItemView.x = 0.0;
+			this._activeItemView.y = 0.0;
+			// don't set the width or height explicitly unless necessary because if
+			// our explicit dimensions are cleared later, the measurement may not be
+			// accurate anymore
+			if (this._activeItemView.width != this.actualWidth) {
+				this._activeItemView.width = this.actualWidth;
+			}
+			if (this._activeItemView.height != this.actualHeight) {
+				this._activeItemView.height = this.actualHeight;
+			}
+			if ((this._activeItemView is IValidating)) {
+				cast(this._activeItemView, IValidating).validateNow();
+			}
 		}
 		if (this._nextViewInTransition != null) {
 			this._nextViewInTransition.x = 0.0;
