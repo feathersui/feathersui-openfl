@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="copyright">
 			<p ::cond api.isDefined("version"):: style="color:$$getHexValue(::textColor::)">This documentation is generated for version ::api.getValue('version')::</p>
-			<p style="color:$$getHexValue(::textColor::)"><a href="https://feathersui.com/" style="color:$$getHexValue(::textColor::)">Feathers UI</a> — Copyright &copy; ::api.config.date.getFullYear():: Bowler Hat LLC
+			<p style="color:$$getHexValue(::textColor::)"><a href="https://feathersui.com/">Feathers UI</a> — Copyright &copy; ::api.config.date.getFullYear():: Bowler Hat LLC
 			</p>
 		</div>
 	</div>
