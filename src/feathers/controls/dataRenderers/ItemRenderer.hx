@@ -448,8 +448,11 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			this.refreshSecondaryTextField();
 		}
 
-		if (stylesInvalid || stateInvalid) {
+		if (dataInvalid || stylesInvalid || stateInvalid) {
 			this.refreshSecondaryTextStyles();
+		}
+
+		if (stylesInvalid || stateInvalid) {
 			this.refreshAccessoryView();
 		}
 
@@ -491,8 +494,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			// nothing to refresh
 			return;
 		}
-		if (this._previousTextFormat != null) {
-			this._previousTextFormat.removeEventListener(Event.CHANGE, itemRenderer_secondaryTextFormat_changeHandler);
+		if (this._previousSecondaryTextFormat != null) {
+			this._previousSecondaryTextFormat.removeEventListener(Event.CHANGE, itemRenderer_secondaryTextFormat_changeHandler);
 		}
 		if (textFormat != null) {
 			textFormat.addEventListener(Event.CHANGE, itemRenderer_secondaryTextFormat_changeHandler, false, 0, true);
