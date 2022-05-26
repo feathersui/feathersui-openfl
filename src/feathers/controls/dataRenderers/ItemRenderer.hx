@@ -469,6 +469,10 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				this.removeChild(this.secondaryTextField);
 				this.secondaryTextField = null;
 			}
+			this._previousSecondaryText = null;
+			this._previousSecondaryHTMLText = null;
+			this._previousSecondaryTextFormat = null;
+			this._previousSecondarySimpleTextFormat = null;
 			return;
 		}
 		if (this.secondaryTextField != null) {
