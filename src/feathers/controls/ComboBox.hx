@@ -245,7 +245,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			// use the setter
 			this.selectedIndex = -1;
 		} else {
-			// uset the setter
+			// use the setter
 			this.selectedIndex = 0;
 		}
 		// this ensures that Event.CHANGE will dispatch for selectedItem
