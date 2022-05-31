@@ -1222,7 +1222,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			var item = this._dataProvider.get([0]);
 			// use the setter
 			this.columns = new ArrayCollection(Reflect.fields(item)
-				.map((fieldName) -> new TreeGridViewColumn(fieldName, (item) -> Reflect.getProperty(item, fieldName))));
+				.map((fieldName) -> new TreeGridViewColumn(fieldName, (item) -> Std.string(Reflect.getProperty(item, fieldName)))));
 		} else {
 			// use the setter
 			this.columns = new ArrayCollection();
