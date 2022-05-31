@@ -173,9 +173,9 @@ class TreeViewTest extends Test {
 		Assert.equals(true, setSelectedValues[2]);
 
 		Assert.equals(3, setLocationValues.length);
-		Assert.equals(0, compareLocations(itemLocation, setLocationValues[0]));
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[0]));
 		Assert.isNull(setLocationValues[1]);
-		Assert.equals(0, compareLocations(itemLocation, setLocationValues[2]));
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[2]));
 
 		Assert.equals(3, setBranchValues.length);
 		Assert.equals(true, setBranchValues[0]);
@@ -236,12 +236,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.addAt(item3, [0, 0]);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 2], eventLocation));
-		Assert.equals(0, compareLocations([0, 2], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], this._treeView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
@@ -263,12 +263,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.addAt(item3, [0, 1]);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 2], eventLocation));
-		Assert.equals(0, compareLocations([0, 2], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], this._treeView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
@@ -290,12 +290,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.addAt(item3, [0, 2]);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
@@ -317,12 +317,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.removeAt([0, 0]);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 0], eventLocation));
-		Assert.equals(0, compareLocations([0, 0], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], this._treeView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
@@ -344,7 +344,7 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.removeAt([0, 1]);
 		Assert.isTrue(changed);
@@ -371,12 +371,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.removeAt([0, 2]);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
@@ -399,12 +399,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.set([0, 0], item4);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
@@ -427,12 +427,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.set([0, 1], item4);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 1], eventLocation));
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item4, eventItem);
 		Assert.equals(item4, this._treeView.selectedItem);
 	}
@@ -455,12 +455,12 @@ class TreeViewTest extends Test {
 			eventItem = this._treeView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.set([0, 2], item4);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
@@ -580,7 +580,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	private function set_location(value:Array<Int>):Array<Int> {
-		if (compareLocations(_location, value) == 0) {
+		if (CompareLocations.compareLocations(_location, value) == 0) {
 			return _location;
 		}
 		_location = value;
@@ -608,36 +608,38 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 }
 
-private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
-	var null1 = location1 == null;
-	var null2 = location2 == null;
-	if (null1 && null2) {
-		return 0;
-	} else if (null1) {
-		return 1;
-	} else if (null2) {
-		return -1;
-	}
-	var length1 = location1.length;
-	var length2 = location2.length;
-	var min = length1;
-	if (length2 < min) {
-		min = length2;
-	}
-	for (i in 0...min) {
-		var index1 = location1[i];
-		var index2 = location2[i];
-		if (index1 < index2) {
+private class CompareLocations {
+	public static function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
+		var null1 = location1 == null;
+		var null2 = location2 == null;
+		if (null1 && null2) {
+			return 0;
+		} else if (null1) {
+			return 1;
+		} else if (null2) {
 			return -1;
 		}
-		if (index1 > index2) {
+		var length1 = location1.length;
+		var length2 = location2.length;
+		var min = length1;
+		if (length2 < min) {
+			min = length2;
+		}
+		for (i in 0...min) {
+			var index1 = location1[i];
+			var index2 = location2[i];
+			if (index1 < index2) {
+				return -1;
+			}
+			if (index1 > index2) {
+				return 1;
+			}
+		}
+		if (length1 < length2) {
+			return -1;
+		} else if (length1 > length2) {
 			return 1;
 		}
+		return 0;
 	}
-	if (length1 < length2) {
-		return -1;
-	} else if (length1 > length2) {
-		return 1;
-	}
-	return 0;
 }
