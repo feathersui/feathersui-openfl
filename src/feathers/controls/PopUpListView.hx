@@ -717,7 +717,15 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function refreshListViewData():Void {
+		var oldIgnoreListViewChange = this._ignoreListViewChange;
+		this._ignoreListViewChange = true;
+		// changing the data provider can make the ListView reset its selection,
+		// but we already took care of the selection reset in our own
+		// dataProvider setter, so ignore any changes from the ListView. our
+		// selection changes will be propagated in refreshSelection().
 		this.listView.dataProvider = this._dataProvider;
+		this._ignoreListViewChange = oldIgnoreListViewChange;
+
 		this.listView.itemRendererRecycler = this._itemRendererRecycler;
 		this.listView.itemToText = this.itemToText;
 	}

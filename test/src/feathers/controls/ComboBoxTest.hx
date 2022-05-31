@@ -121,11 +121,21 @@ class ComboBoxTest extends Test {
 		this._comboBox.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 		});
+		// validate to ensure that it propagates to the internal ListView
+		this._comboBox.validateNow();
 		Assert.isFalse(changed);
 		var newDataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
 		this._comboBox.dataProvider = newDataProvider;
 		Assert.isTrue(changed);
 		Assert.equals(0, this._comboBox.selectedIndex);
+		Assert.notNull(this._comboBox.selectedItem);
+		Assert.equals(this._comboBox.selectedItem, newDataProvider.get(0));
+		changed = false;
+		// validate to ensure that it propagates to the internal ListView again
+		this._comboBox.validateNow();
+		Assert.isFalse(changed);
+		Assert.equals(0, this._comboBox.selectedIndex);
+		Assert.notNull(this._comboBox.selectedItem);
 		Assert.equals(this._comboBox.selectedItem, newDataProvider.get(0));
 	}
 

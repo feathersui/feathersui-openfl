@@ -121,10 +121,19 @@ class PopUpListViewTest extends Test {
 		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 		});
+		// validate to ensure that it propagates to the internal ListView
+		this._listView.validateNow();
 		Assert.isFalse(changed);
 		var newDataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
 		this._listView.dataProvider = newDataProvider;
 		Assert.isTrue(changed);
+		Assert.equals(0, this._listView.selectedIndex);
+		Assert.notNull(this._listView.selectedItem);
+		Assert.equals(newDataProvider.get(0), this._listView.selectedItem);
+		changed = false;
+		// validate to ensure that it propagates to the internal ListView again
+		this._listView.validateNow();
+		Assert.isFalse(changed);
 		Assert.equals(0, this._listView.selectedIndex);
 		Assert.notNull(this._listView.selectedItem);
 		Assert.equals(newDataProvider.get(0), this._listView.selectedItem);
