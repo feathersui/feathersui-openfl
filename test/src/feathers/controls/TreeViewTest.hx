@@ -270,9 +270,9 @@ class TreeViewTest extends Test {
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.addAt(item3, [0, 2]);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
 
@@ -324,10 +324,10 @@ class TreeViewTest extends Test {
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.removeAt([0, 1]);
 		Assert.isTrue(changed);
-		Assert.equals(null, eventLocation);
-		Assert.equals(null, this._treeView.selectedLocation);
-		Assert.equals(null, eventItem);
-		Assert.equals(null, this._treeView.selectedItem);
+		Assert.isNull(eventLocation);
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(eventItem);
+		Assert.isNull(this._treeView.selectedItem);
 	}
 
 	public function testRemoveItemAfterSelectedLocation():Void {
@@ -351,9 +351,9 @@ class TreeViewTest extends Test {
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.removeAt([0, 2]);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
 
@@ -379,9 +379,9 @@ class TreeViewTest extends Test {
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.set([0, 0], item4);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
 
@@ -435,9 +435,9 @@ class TreeViewTest extends Test {
 		Assert.equals(item2, this._treeView.selectedItem);
 		this._treeView.dataProvider.set([0, 2], item4);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._treeView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
 	}
 }

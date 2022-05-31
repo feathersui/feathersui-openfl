@@ -246,9 +246,9 @@ class GroupListViewTest extends Test {
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.addAt(item3, [0, 2]);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 
@@ -300,10 +300,10 @@ class GroupListViewTest extends Test {
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.removeAt([0, 1]);
 		Assert.isTrue(changed);
-		Assert.equals(null, eventLocation);
-		Assert.equals(null, this._listView.selectedLocation);
-		Assert.equals(null, eventItem);
-		Assert.equals(null, this._listView.selectedItem);
+		Assert.isNull(eventLocation);
+		Assert.isNull(this._listView.selectedLocation);
+		Assert.isNull(eventItem);
+		Assert.isNull(this._listView.selectedItem);
 	}
 
 	public function testRemoveItemAfterSelectedLocation():Void {
@@ -327,9 +327,9 @@ class GroupListViewTest extends Test {
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.removeAt([0, 2]);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 
@@ -355,9 +355,9 @@ class GroupListViewTest extends Test {
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.set([0, 0], item4);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 
@@ -411,9 +411,9 @@ class GroupListViewTest extends Test {
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.set([0, 2], item4);
 		Assert.isFalse(changed);
-		Assert.equals(null, eventLocation);
+		Assert.isNull(eventLocation);
 		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 }

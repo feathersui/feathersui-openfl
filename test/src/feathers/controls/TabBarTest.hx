@@ -222,7 +222,7 @@ class TabBarTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._tabBar.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._tabBar.selectedItem);
 	}
 
@@ -300,7 +300,7 @@ class TabBarTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._tabBar.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._tabBar.selectedItem);
 	}
 
@@ -327,7 +327,7 @@ class TabBarTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._tabBar.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._tabBar.selectedItem);
 	}
 
@@ -381,7 +381,7 @@ class TabBarTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._tabBar.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._tabBar.selectedItem);
 	}
 }

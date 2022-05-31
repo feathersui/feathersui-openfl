@@ -102,7 +102,7 @@ class ListViewTest extends Test {
 		this._listView.dataProvider = null;
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._listView.selectedIndex);
-		Assert.equals(null, this._listView.selectedItem);
+		Assert.isNull(this._listView.selectedItem);
 	}
 
 	public function testResetScrollOnNullDataProvider():Void {
@@ -131,7 +131,7 @@ class ListViewTest extends Test {
 		this._listView.dataProvider.removeAll();
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._listView.selectedIndex);
-		Assert.equals(null, this._listView.selectedItem);
+		Assert.isNull(this._listView.selectedItem);
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
@@ -321,12 +321,12 @@ class ListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._listView.selectedIndices.length == 1);
 		Assert.equals(1, this._listView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._listView.selectedItems.length == 1);
 		Assert.equals(item2, this._listView.selectedItems[0]);
 	}
@@ -403,8 +403,8 @@ class ListViewTest extends Test {
 		Assert.isTrue(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(-1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
-		Assert.equals(null, this._listView.selectedItem);
+		Assert.isNull(eventItem);
+		Assert.isNull(this._listView.selectedItem);
 		Assert.isTrue(eventIndices.length == 0);
 		Assert.isTrue(this._listView.selectedIndices.length == 0);
 		Assert.isTrue(eventItems.length == 0);
@@ -441,12 +441,12 @@ class ListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._listView.selectedIndices.length == 1);
 		Assert.equals(1, this._listView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._listView.selectedItems.length == 1);
 		Assert.equals(item2, this._listView.selectedItems[0]);
 	}
@@ -482,12 +482,12 @@ class ListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._listView.selectedIndices.length == 1);
 		Assert.equals(1, this._listView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._listView.selectedItems.length == 1);
 		Assert.equals(item2, this._listView.selectedItems[0]);
 	}
@@ -566,12 +566,12 @@ class ListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._listView.selectedIndices.length == 1);
 		Assert.equals(1, this._listView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._listView.selectedItems.length == 1);
 		Assert.equals(item2, this._listView.selectedItems[0]);
 	}

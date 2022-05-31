@@ -102,7 +102,7 @@ class GridViewTest extends Test {
 		this._gridView.dataProvider = null;
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._gridView.selectedIndex);
-		Assert.equals(null, this._gridView.selectedItem);
+		Assert.isNull(this._gridView.selectedItem);
 	}
 
 	public function testResetScrollOnNullDataProvider():Void {
@@ -131,7 +131,7 @@ class GridViewTest extends Test {
 		this._gridView.dataProvider.removeAll();
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._gridView.selectedIndex);
-		Assert.equals(null, this._gridView.selectedItem);
+		Assert.isNull(this._gridView.selectedItem);
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
@@ -404,12 +404,12 @@ class GridViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._gridView.selectedIndices.length == 1);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._gridView.selectedItems.length == 1);
 		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
@@ -486,8 +486,8 @@ class GridViewTest extends Test {
 		Assert.isTrue(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(-1, this._gridView.selectedIndex);
-		Assert.equals(null, eventItem);
-		Assert.equals(null, this._gridView.selectedItem);
+		Assert.isNull(eventItem);
+		Assert.isNull(this._gridView.selectedItem);
 		Assert.isTrue(eventIndices.length == 0);
 		Assert.isTrue(this._gridView.selectedIndices.length == 0);
 		Assert.isTrue(eventItems.length == 0);
@@ -524,12 +524,12 @@ class GridViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._gridView.selectedIndices.length == 1);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._gridView.selectedItems.length == 1);
 		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
@@ -565,12 +565,12 @@ class GridViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._gridView.selectedIndices.length == 1);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._gridView.selectedItems.length == 1);
 		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
@@ -648,12 +648,12 @@ class GridViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._gridView.selectedItem);
-		Assert.equals(null, eventIndices);
+		Assert.isNull(eventIndices);
 		Assert.isTrue(this._gridView.selectedIndices.length == 1);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
-		Assert.equals(null, eventItems);
+		Assert.isNull(eventItems);
 		Assert.isTrue(this._gridView.selectedItems.length == 1);
 		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}

@@ -97,7 +97,7 @@ class PopUpListViewTest extends Test {
 		this._listView.dataProvider = null;
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._listView.selectedIndex);
-		Assert.equals(null, this._listView.selectedItem);
+		Assert.isNull(this._listView.selectedItem);
 	}
 
 	public function testDeselectAllOnDataProviderRemoveAll():Void {
@@ -111,7 +111,7 @@ class PopUpListViewTest extends Test {
 		this._listView.dataProvider.removeAll();
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._listView.selectedIndex);
-		Assert.equals(null, this._listView.selectedItem);
+		Assert.isNull(this._listView.selectedItem);
 	}
 
 	public function testOpenListView():Void {
@@ -227,7 +227,7 @@ class PopUpListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 
@@ -279,8 +279,8 @@ class PopUpListViewTest extends Test {
 		Assert.isTrue(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(-1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
-		Assert.equals(null, this._listView.selectedItem);
+		Assert.isNull(eventItem);
+		Assert.isNull(this._listView.selectedItem);
 	}
 
 	public function testRemoveItemAfterSelectedIndex():Void {
@@ -305,7 +305,7 @@ class PopUpListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 
@@ -332,7 +332,7 @@ class PopUpListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 
@@ -386,7 +386,7 @@ class PopUpListViewTest extends Test {
 		Assert.isFalse(changed);
 		Assert.equals(-1, eventIndex);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(null, eventItem);
+		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
 }
