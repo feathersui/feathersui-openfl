@@ -422,6 +422,8 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		implements IGroupListViewItemRenderer {
 	public function new() {
 		super();
+		this.width = 1.0;
+		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];

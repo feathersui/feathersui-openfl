@@ -53,6 +53,57 @@ class GridViewTest extends Test {
 		Assert.pass();
 	}
 
+	public function testValidateWithAutoPopulatedColumns():Void {
+		this._gridView.dataProvider = new ArrayCollection([
+			{
+				a: "Node 1",
+				b: 123.4
+			},
+			{
+				a: "Node 2",
+				b: 567.8
+			},
+			{
+				a: "Node 3",
+				b: 901.2
+			},
+			{
+				a: "Node 4",
+				b: 345.6
+			}
+		]);
+		this._gridView.validateNow();
+		Assert.equals(2, this._gridView.columns.length);
+		Assert.equals("a", this._gridView.columns.get(0).headerText);
+		Assert.equals("b", this._gridView.columns.get(1).headerText);
+	}
+
+	public function testValidateWithNoColumnsAndComplexData():Void {
+		this._gridView.dataProvider = new ArrayCollection([
+			{
+				complex: {text: "Node 1"},
+				children: [
+					{complex: {text: "Node 1A"}},
+					{complex: {text: "Node 1B"}},
+					{complex: {text: "Node 1C"}}
+				]
+			},
+			{
+				complex: {text: "Node 2"},
+				children: [{complex: {text: "Node 2A"}}]
+			},
+			{
+				complex: {text: "Node 3"}
+			},
+			{
+				complex: {text: "Node 4"},
+				children: [{complex: {text: "Node 4A"}}, {complex: {text: "Node 4B"}}]
+			}
+		]);
+		this._gridView.validateNow();
+		Assert.pass();
+	}
+
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.validateNow();
@@ -129,6 +180,20 @@ class GridViewTest extends Test {
 		});
 		Assert.isFalse(changed);
 		this._gridView.dataProvider.removeAll();
+		Assert.isTrue(changed);
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.isNull(this._gridView.selectedItem);
+	}
+
+	public function testDeselectAllOnNewDataProvider():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.selectedIndex = 1;
+		var changed = false;
+		this._gridView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._gridView.dataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
 		Assert.isTrue(changed);
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.isNull(this._gridView.selectedItem);
@@ -663,6 +728,8 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		implements IGridViewCellRenderer {
 	public function new() {
 		super();
+		this.width = 1.0;
+		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];

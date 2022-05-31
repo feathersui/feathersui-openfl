@@ -134,6 +134,20 @@ class ListViewTest extends Test {
 		Assert.isNull(this._listView.selectedItem);
 	}
 
+	public function testDeselectAllOnNewDataProvider():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.selectedIndex = 1;
+		var changed = false;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._listView.dataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		Assert.isTrue(changed);
+		Assert.equals(-1, this._listView.selectedIndex);
+		Assert.isNull(this._listView.selectedItem);
+	}
+
 	public function testUpdateItemSetsInterfaceProperties():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		var itemIndex = 1;
@@ -581,6 +595,8 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		implements IListViewItemRenderer {
 	public function new() {
 		super();
+		this.width = 1.0;
+		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];

@@ -114,6 +114,22 @@ class PopUpListViewTest extends Test {
 		Assert.isNull(this._listView.selectedItem);
 	}
 
+	public function testSelectionOnNewDataProvider():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.selectedIndex = 1;
+		var changed = false;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		var newDataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		this._listView.dataProvider = newDataProvider;
+		Assert.isTrue(changed);
+		Assert.equals(0, this._listView.selectedIndex);
+		Assert.notNull(this._listView.selectedItem);
+		Assert.equals(newDataProvider.get(0), this._listView.selectedItem);
+	}
+
 	public function testOpenListView():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		var dispatchedOpenEvent = false;

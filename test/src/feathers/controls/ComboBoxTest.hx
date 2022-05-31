@@ -114,6 +114,21 @@ class ComboBoxTest extends Test {
 		Assert.isNull(this._comboBox.selectedItem);
 	}
 
+	public function testSelectionOnNewDataProvider():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._comboBox.selectedIndex = 1;
+		var changed = false;
+		this._comboBox.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		var newDataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		this._comboBox.dataProvider = newDataProvider;
+		Assert.isTrue(changed);
+		Assert.equals(0, this._comboBox.selectedIndex);
+		Assert.equals(this._comboBox.selectedItem, newDataProvider.get(0));
+	}
+
 	public function testOpenListView():Void {
 		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		var dispatchedOpenEvent = false;

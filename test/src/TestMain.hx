@@ -50,6 +50,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ToggleButtonTest());
 		runner.addCase(new feathers.controls.ToggleButtonMeasurementTest());
 		runner.addCase(new feathers.controls.ToggleSwitchTest());
+		runner.addCase(new feathers.controls.TreeGridViewTest());
 		runner.addCase(new feathers.controls.TreeViewTest());
 		runner.addCase(new feathers.controls.VProgressBarTest());
 		runner.addCase(new feathers.controls.VScrollBarTest());

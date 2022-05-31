@@ -14,6 +14,7 @@ import feathers.core.IOpenCloseToggle;
 import feathers.data.ArrayHierarchicalCollection;
 import feathers.data.TreeCollection;
 import feathers.data.TreeNode;
+import feathers.events.ScrollEvent;
 import feathers.layout.ILayoutIndexObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
@@ -42,40 +43,6 @@ class TreeViewTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
-		var null1 = location1 == null;
-		var null2 = location2 == null;
-		if (null1 && null2) {
-			return 0;
-		} else if (null1) {
-			return 1;
-		} else if (null2) {
-			return -1;
-		}
-		var length1 = location1.length;
-		var length2 = location2.length;
-		var min = length1;
-		if (length2 < min) {
-			min = length2;
-		}
-		for (i in 0...min) {
-			var index1 = location1[i];
-			var index2 = location2[i];
-			if (index1 < index2) {
-				return -1;
-			}
-			if (index1 > index2) {
-				return 1;
-			}
-		}
-		if (length1 < length2) {
-			return -1;
-		} else if (length1 > length2) {
-			return 1;
-		}
-		return 0;
-	}
-
 	public function testValidateWithNullDataProvider():Void {
 		this._treeView.validateNow();
 		Assert.pass();
@@ -102,6 +69,63 @@ class TreeViewTest extends Test {
 		this._treeView.dataProvider = null;
 		this._treeView.validateNow();
 		Assert.pass();
+	}
+
+	public function testDeselectAllOnNullDataProvider():Void {
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.selectedLocation = [1];
+		var changed = false;
+		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._treeView.dataProvider = null;
+		Assert.isTrue(changed);
+		Assert.equals(null, this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+	}
+
+	public function testResetScrollOnNullDataProvider():Void {
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.scrollX = 10.0;
+		this._treeView.scrollY = 10.0;
+		var scrolled = false;
+		this._treeView.addEventListener(ScrollEvent.SCROLL, function(event:ScrollEvent):Void {
+			scrolled = true;
+		});
+		Assert.isFalse(scrolled);
+		this._treeView.dataProvider = null;
+		Assert.isTrue(scrolled);
+		Assert.equals(0.0, this._treeView.scrollX);
+		Assert.equals(0.0, this._treeView.scrollY);
+	}
+
+	public function testDeselectAllOnDataProviderRemoveAll():Void {
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.selectedLocation = [1];
+		var changed = false;
+		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._treeView.dataProvider.removeAll();
+		Assert.isTrue(changed);
+		Assert.equals(null, this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+	}
+
+	public function testDeselectAllOnNewDataProvider():Void {
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.selectedLocation = [1];
+		var changed = false;
+		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		Assert.isTrue(changed);
+		Assert.equals(null, this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
@@ -446,6 +470,8 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		implements ILayoutIndexObject implements ITreeViewItemRenderer {
 	public function new() {
 		super();
+		this.width = 1.0;
+		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
@@ -554,7 +580,7 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 	}
 
 	private function set_location(value:Array<Int>):Array<Int> {
-		if (_location == value) {
+		if (compareLocations(_location, value) == 0) {
 			return _location;
 		}
 		_location = value;
@@ -580,4 +606,38 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		setTreeViewOwnerValues.push(value);
 		return _treeViewOwner;
 	}
+}
+
+private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
+	var null1 = location1 == null;
+	var null2 = location2 == null;
+	if (null1 && null2) {
+		return 0;
+	} else if (null1) {
+		return 1;
+	} else if (null2) {
+		return -1;
+	}
+	var length1 = location1.length;
+	var length2 = location2.length;
+	var min = length1;
+	if (length2 < min) {
+		min = length2;
+	}
+	for (i in 0...min) {
+		var index1 = location1[i];
+		var index2 = location2[i];
+		if (index1 < index2) {
+			return -1;
+		}
+		if (index1 > index2) {
+			return 1;
+		}
+	}
+	if (length1 < length2) {
+		return -1;
+	} else if (length1 > length2) {
+		return 1;
+	}
+	return 0;
 }

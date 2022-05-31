@@ -105,6 +105,8 @@ class ButtonBarTest extends Test {
 private class CustomRendererWithInterfaces extends Button implements IDataRenderer implements ILayoutIndexObject {
 	public function new() {
 		super();
+		this.width = 1.0;
+		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
