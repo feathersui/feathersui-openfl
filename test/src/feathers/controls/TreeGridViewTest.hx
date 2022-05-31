@@ -94,32 +94,40 @@ import utest.Test;
 		]);
 		this._treeGridView.validateNow();
 		Assert.equals(2, this._treeGridView.columns.length);
-		Assert.equals("a", this._treeGridView.columns.get(0).headerText);
-		Assert.equals("b", this._treeGridView.columns.get(1).headerText);
+		var column0 = this._treeGridView.columns.get(0);
+		var column1 = this._treeGridView.columns.get(1);
+		// order is not guaranteed
+		if (column0.headerText == "a") {
+			Assert.equals("a", column0.headerText);
+			Assert.equals("b", column1.headerText);
+		} else {
+			Assert.equals("b", column0.headerText);
+			Assert.equals("a", column1.headerText);
+		}
 	}
 
 	public function testValidateWithNoColumnsAndComplexData():Void {
-		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection(([
 			{
 				complex: {text: "Node 1"},
-				children: [
+				children: ([
 					{complex: {text: "Node 1A"}},
 					{complex: {text: "Node 1B"}},
 					{complex: {text: "Node 1C"}}
-				]
+				] : Array<Dynamic>)
 			},
 			{
 				complex: {text: "Node 2"},
-				children: [{complex: {text: "Node 2A"}}]
+				children: ([{complex: {text: "Node 2A"}}] : Array<Dynamic>)
 			},
 			{
 				complex: {text: "Node 3"}
 			},
 			{
 				complex: {text: "Node 4"},
-				children: [{complex: {text: "Node 4A"}}, {complex: {text: "Node 4B"}}]
+				children: ([{complex: {text: "Node 4A"}}, {complex: {text: "Node 4B"}}] : Array<Dynamic>)
 			}
-		]);
+		] : Array<Dynamic>));
 		this._treeGridView.validateNow();
 		Assert.pass();
 	}
