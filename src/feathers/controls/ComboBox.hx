@@ -721,7 +721,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
 		}
-		this.pendingSelectedIndex = -1;
+		this.pendingSelectedIndex = this._selectedIndex;
 		this.popUpAdapter.addEventListener(Event.OPEN, comboBox_popUpAdapter_openHandler);
 		this.popUpAdapter.addEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
 		this.popUpAdapter.open(this.listView, this);
