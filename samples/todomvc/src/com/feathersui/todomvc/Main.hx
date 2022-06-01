@@ -249,10 +249,13 @@ class Main extends Application {
 
 	private function clearButton_triggerHandler(event:TriggerEvent):Void {
 		this.todosCollection.filterFunction = null;
-		for (todoItem in this.todosCollection) {
+		var i = this.todosCollection.length - 1;
+		while (i >= 0) {
+			var todoItem = this.todosCollection.get(i);
 			if (todoItem.completed) {
-				this.todosCollection.remove(todoItem);
+				this.todosCollection.removeAt(i);
 			}
+			i--;
 		}
 		this.refreshFilter();
 	}
