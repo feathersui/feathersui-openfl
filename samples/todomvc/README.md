@@ -32,3 +32,10 @@ Check out the following tutorials for creating Feathers UI projects in popular d
 - [HaxeDevelop](https://feathersui.com/learn/haxe-openfl/haxedevelop/)
 - [Moonshine IDE](https://feathersui.com/learn/haxe-openfl/moonshine-ide/)
 - [Visual Studio Code](https://feathersui.com/learn/haxe-openfl/visual-studio-code/)
+
+## Additional Links
+
+Variations of this TodoMVC sample have been created using various frameworks for Feathers UI.
+
+- [Cairngorm](https://github.com/feathersui/feathersui-cairngorm/tree/master/samples/todomvc)
+- [PureMVC](https://github.com/feathersui/puremvc-haxe-feathersui-demos/tree/master/puremvc-haxe-demo-feathersui-todomvc)
