@@ -85,7 +85,14 @@ class TodoItemRenderer extends ItemRenderer {
 	}
 
 	private function commitUserChanges():Void {
+		this.todoItem.text = this.editingTextInput.text;
+		this.cancelUserChanges();
+		this.setInvalid(DATA);
+	}
+
+	private function cancelUserChanges():Void {
 		this.editingTextInput.visible = false;
+		this.editingTextInput.text = "";
 	}
 
 	private function completedCheck_changeHandler(event:Event):Void {
@@ -120,13 +127,21 @@ class TodoItemRenderer extends ItemRenderer {
 	}
 
 	private function editingTextInput_focusOutHandler(event:FocusEvent):Void {
+		if (!this.editingTextInput.visible) {
+			return;
+		}
 		this.commitUserChanges();
 	}
 
 	private function editingTextInput_keyDownHandler(event:KeyboardEvent):Void {
-		if (event.isDefaultPrevented() || event.keyCode != Keyboard.ENTER) {
+		if (event.isDefaultPrevented()) {
 			return;
 		}
-		this.commitUserChanges();
+		switch (event.keyCode) {
+			case Keyboard.ENTER:
+				this.commitUserChanges();
+			case Keyboard.ESCAPE:
+				this.cancelUserChanges();
+		}
 	}
 }
