@@ -468,13 +468,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (!this._selectable || this._dataProvider == null) {
+		if (value == null || !this._selectable || this._dataProvider == null) {
 			// use the setter
 			this.selectedLocation = null;
 			return this._selectedItem;
 		}
-		// use the setter
-		this.selectedLocation = this._dataProvider.locationOf(value);
+		var location = this._dataProvider.locationOf(value);
+		if (this._selectedItem == value && this.compareLocations(this._selectedLocation, location) == 0) {
+			return this._selectedItem;
+		}
+		this._selectedItem = value;
+		this._selectedLocation = location;
+		this.setInvalid(SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedItem;
 	}
 

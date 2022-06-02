@@ -358,13 +358,24 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (this._dataProvider == null) {
+		if (value == null || this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
-		// use the setter
-		this.selectedIndex = this._dataProvider.indexOf(value);
+		var index = this._dataProvider.indexOf(value);
+		if (index == -1) {
+			// use the setter
+			this.selectedIndex = -1;
+			return this._selectedItem;
+		}
+		if (this._selectedItem == value && this._selectedIndex == index) {
+			return this._selectedItem;
+		}
+		this._selectedIndex = index;
+		this._selectedItem = value;
+		this.setInvalid(SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedItem;
 	}
 

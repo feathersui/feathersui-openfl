@@ -281,7 +281,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this.selectedIndex = -1;
 			return this._selectedItem;
 		}
-		if (this._selectedIndex == index) {
+		if (this._selectedItem == value && this._selectedIndex == index) {
 			return this._selectedItem;
 		}
 		this._selectedIndex = index;
