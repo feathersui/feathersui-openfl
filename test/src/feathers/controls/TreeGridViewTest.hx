@@ -561,6 +561,58 @@ import utest.Test;
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeGridView.selectedItem);
 	}
+
+	public function testRemoveItemAtOpenedBranch():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var branch = {text: "Branch", children: [item1, item2, item3]};
+		var dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._treeGridView.dataProvider = dataProvider;
+		this._treeGridView.toggleBranch(branch, true);
+		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		dataProvider.remove(branch);
+		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+	}
+
+	public function testRemoveAllWithOpenedBranch():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var branch = {text: "Branch", children: [item1, item2, item3]};
+		var dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._treeGridView.dataProvider = dataProvider;
+		this._treeGridView.toggleBranch(branch, true);
+		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		dataProvider.removeAll();
+		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+	}
+
+	public function testResetWithOpenedBranch():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var branch = {text: "Branch", children: [item1, item2, item3]};
+		var dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._treeGridView.dataProvider = dataProvider;
+		this._treeGridView.toggleBranch(branch, true);
+		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		dataProvider.array = [];
+		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+	}
+
+	public function testNewDataProviderWithOpenedBranch():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var branch = {text: "Branch", children: [item1, item2, item3]};
+		var dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._treeGridView.dataProvider = dataProvider;
+		this._treeGridView.toggleBranch(branch, true);
+		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([], (item:Dynamic) -> item.children);
+		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer

@@ -380,6 +380,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		#else
 		this._virtualCache.resize(0);
 		#end
+		#if hl
+		this.openBranches.splice(0, this.openBranches.length);
+		#else
+		this.openBranches.resize(0);
+		#end
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(Event.CHANGE, treeGridView_dataProvider_changeHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeGridView_dataProvider_addItemHandler);
@@ -2289,38 +2294,59 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_dataProvider_removeItemHandler(event:HierarchicalCollectionEvent):Void {
-		if (this._selectedLocation == null) {
-			return;
+		var removedItem = event.removedItem;
+		if (removedItem != null) {
+			var index = this.openBranches.indexOf(removedItem);
+			if (index != -1) {
+				this.openBranches.splice(index, 1);
+			}
 		}
-
-		var comparisonResult = this.compareLocations(this._selectedLocation, event.location);
-		if (comparisonResult == 0) {
-			// use the setter
-			this.selectedLocation = null;
-		} else if (comparisonResult > 0) {
-			// use the setter
-			this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
+		if (this._selectedLocation != null) {
+			var comparisonResult = this.compareLocations(this._selectedLocation, event.location);
+			if (comparisonResult == 0) {
+				// use the setter
+				this.selectedLocation = null;
+			} else if (comparisonResult > 0) {
+				// use the setter
+				this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
+			}
 		}
 	}
 
 	private function treeGridView_dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
-		if (this._selectedLocation == null) {
-			return;
+		var removedItem = event.removedItem;
+		if (removedItem != null) {
+			var index = this.openBranches.indexOf(removedItem);
+			if (index != -1) {
+				this.openBranches.splice(index, 1);
+			}
 		}
-		if (this.compareLocations(this._selectedLocation, event.location) == 0) {
-			// unlike when an item is removed, the selected index is kept when
-			// an item is replaced
-			this._selectedItem = this._dataProvider.get(event.location);
-			FeathersEvent.dispatch(this, Event.CHANGE);
+		if (this._selectedLocation != null) {
+			if (this.compareLocations(this._selectedLocation, event.location) == 0) {
+				// unlike when an item is removed, the selected index is kept when
+				// an item is replaced
+				this._selectedItem = this._dataProvider.get(event.location);
+				FeathersEvent.dispatch(this, Event.CHANGE);
+			}
 		}
 	}
 
 	private function treeGridView_dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
+		#if hl
+		this.openBranches.splice(0, this.openBranches.length);
+		#else
+		this.openBranches.resize(0);
+		#end
 		// use the setter
 		this.selectedLocation = null;
 	}
 
 	private function treeGridView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
+		#if hl
+		this.openBranches.splice(0, this.openBranches.length);
+		#else
+		this.openBranches.resize(0);
+		#end
 		// use the setter
 		this.selectedLocation = null;
 	}
