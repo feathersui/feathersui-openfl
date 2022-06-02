@@ -1872,9 +1872,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function treeView_dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
-		var removedItem = event.removedItem;
-		if (removedItem != null) {
-			var index = this.openBranches.indexOf(removedItem);
+		var replacedItem = event.removedItem;
+		if (replacedItem != null && replacedItem != event.addedItem) {
+			var index = this.openBranches.indexOf(replacedItem);
 			if (index != -1) {
 				this.openBranches.splice(index, 1);
 			}
