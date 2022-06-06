@@ -1506,6 +1506,20 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		return result;
 	}
 
+	private function containsLocation(parent:Array<Int>, possibleChild:Array<Int>):Bool {
+		if (parent == null || possibleChild == null || parent.length >= possibleChild.length) {
+			return false;
+		}
+		for (i in 0...parent.length) {
+			var a = parent[i];
+			var b = possibleChild[i];
+			if (a != b) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
 		var null1 = location1 == null;
 		var null2 = location2 == null;
@@ -1893,29 +1907,40 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function groupListView_dataProvider_removeItemHandler(event:HierarchicalCollectionEvent):Void {
-		if (this._selectedLocation == null) {
-			return;
-		}
+		if (this._selectedLocation != null) {
+			if (this.containsLocation(event.location, this._selectedLocation)) {
+				// if the selected location is contained within the removed
+				// location, clear the selection because it is no longer valid
 
-		var comparisonResult = this.compareLocations(this._selectedLocation, event.location);
-		if (comparisonResult == 0) {
-			// use the setter
-			this.selectedLocation = null;
-		} else if (comparisonResult > 0) {
-			// use the setter
-			this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
+				// use the setter
+				this.selectedLocation = null;
+			} else {
+				var comparisonResult = this.compareLocations(this._selectedLocation, event.location);
+				if (comparisonResult == 0) {
+					// use the setter
+					this.selectedLocation = null;
+				} else if (comparisonResult > 0) {
+					// use the setter
+					this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
+				}
+			}
 		}
 	}
 
 	private function groupListView_dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
-		if (this._selectedLocation == null) {
-			return;
-		}
-		if (this.compareLocations(this._selectedLocation, event.location) == 0) {
-			// unlike when an item is removed, the selected index is kept when
-			// an item is replaced
-			this._selectedItem = this._dataProvider.get(event.location);
-			FeathersEvent.dispatch(this, Event.CHANGE);
+		if (this._selectedLocation != null) {
+			if (this.containsLocation(event.location, this._selectedLocation)) {
+				// if the selected location is contained within the replaced
+				// location, clear the selection because it is no longer valid
+
+				// use the setter
+				this.selectedLocation = null;
+			} else if (this.compareLocations(this._selectedLocation, event.location) == 0) {
+				// unlike when an item is removed, the selected location is kept when
+				// an item is replaced
+				this._selectedItem = this._dataProvider.get(event.location);
+				FeathersEvent.dispatch(this, Event.CHANGE);
+			}
 		}
 	}
 

@@ -437,6 +437,34 @@ class TreeViewTest extends Test {
 		Assert.equals(item4, this._treeView.selectedItem);
 	}
 
+	public function testReplaceParentOfSelectedLocation():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var item4 = {text: "Four"};
+		var branch = {text: "Branch", children: [item1, item2, item3]};
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._treeView.selectedLocation = [0, 1];
+		this._treeView.validateNow();
+		var changed = false;
+		var eventLocation:Array<Int> = null;
+		var eventItem = null;
+		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventLocation = this._treeView.selectedLocation;
+			eventItem = this._treeView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
+		Assert.equals(item2, this._treeView.selectedItem);
+		this._treeView.dataProvider.set([0], item4);
+		Assert.isTrue(changed);
+		Assert.isNull(eventLocation);
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(eventItem);
+		Assert.isNull(this._treeView.selectedItem);
+	}
+
 	public function testReplaceItemAfterSelectedLocation():Void {
 		var item1 = {text: "One"};
 		var item2 = {text: "Two"};
@@ -476,6 +504,23 @@ class TreeViewTest extends Test {
 		Assert.isTrue(this._treeView.isBranchOpen(branch));
 		dataProvider.remove(branch);
 		Assert.isFalse(this._treeView.isBranchOpen(branch));
+	}
+
+	public function testRemoveParentOfOpenedBranch():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var childBranch = {text: "Child Branch", children: [item2, item3]}
+		var branch = {text: "Branch", children: [item1, childBranch]};
+		var dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = dataProvider;
+		this._treeView.toggleBranch(branch, true);
+		this._treeView.toggleBranch(childBranch, true);
+		Assert.isTrue(this._treeView.isBranchOpen(branch));
+		Assert.isTrue(this._treeView.isBranchOpen(childBranch));
+		dataProvider.remove(branch);
+		Assert.isFalse(this._treeView.isBranchOpen(branch));
+		Assert.isFalse(this._treeView.isBranchOpen(childBranch));
 	}
 
 	public function testRemoveAllWithOpenedBranch():Void {

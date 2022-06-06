@@ -2230,6 +2230,26 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 	}
 
+	private function refreshOpenBranchesFromDataProviderChange(removedItem:Dynamic, addedItem:Dynamic):Void {
+		if (removedItem == null) {
+			return;
+		}
+		var i = this.openBranches.length - 1;
+		while (i >= 0) {
+			var openBranch = this.openBranches[i];
+			if (openBranch == removedItem && removedItem != addedItem) {
+				this.openBranches.splice(i, 1);
+				continue;
+			}
+			var location = this._dataProvider.locationOf(openBranch);
+			if (location == null) {
+				// remove references to branches that no longer exist
+				this.openBranches.splice(i, 1);
+			}
+			i--;
+		}
+	}
+
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._selectable) {
 			super.baseScrollContainer_keyDownHandler(event);
@@ -2300,36 +2320,38 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_dataProvider_removeItemHandler(event:HierarchicalCollectionEvent):Void {
-		var removedItem = event.removedItem;
-		if (removedItem != null) {
-			var index = this.openBranches.indexOf(removedItem);
-			if (index != -1) {
-				this.openBranches.splice(index, 1);
-			}
-		}
+		this.refreshOpenBranchesFromDataProviderChange(event.removedItem, event.addedItem);
 		if (this._selectedLocation != null) {
-			var comparisonResult = this.compareLocations(this._selectedLocation, event.location);
-			if (comparisonResult == 0) {
+			if (this.containsLocation(event.location, this._selectedLocation)) {
+				// if the selected location is contained within the removed
+				// location, clear the selection because it is no longer valid
+
 				// use the setter
 				this.selectedLocation = null;
-			} else if (comparisonResult > 0) {
-				// use the setter
-				this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
+			} else {
+				var comparisonResult = this.compareLocations(this._selectedLocation, event.location);
+				if (comparisonResult == 0) {
+					// use the setter
+					this.selectedLocation = null;
+				} else if (comparisonResult > 0) {
+					// use the setter
+					this.selectedLocation = this._dataProvider.locationOf(this._selectedItem);
+				}
 			}
 		}
 	}
 
 	private function treeGridView_dataProvider_replaceItemHandler(event:HierarchicalCollectionEvent):Void {
-		var replacedItem = event.removedItem;
-		if (replacedItem != null && replacedItem != event.addedItem) {
-			var index = this.openBranches.indexOf(replacedItem);
-			if (index != -1) {
-				this.openBranches.splice(index, 1);
-			}
-		}
+		this.refreshOpenBranchesFromDataProviderChange(event.removedItem, event.addedItem);
 		if (this._selectedLocation != null) {
-			if (this.compareLocations(this._selectedLocation, event.location) == 0) {
-				// unlike when an item is removed, the selected index is kept when
+			if (this.containsLocation(event.location, this._selectedLocation)) {
+				// if the selected location is contained within the replaced
+				// location, clear the selection because it is no longer valid
+
+				// use the setter
+				this.selectedLocation = null;
+			} else if (this.compareLocations(this._selectedLocation, event.location) == 0) {
+				// unlike when an item is removed, the selected location is kept when
 				// an item is replaced
 				this._selectedItem = this._dataProvider.get(event.location);
 				FeathersEvent.dispatch(this, Event.CHANGE);
@@ -2672,6 +2694,20 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._virtualCache.splice(layoutIndex, 1);
 			location.pop();
 		}
+	}
+
+	private function containsLocation(parent:Array<Int>, possibleChild:Array<Int>):Bool {
+		if (parent == null || possibleChild == null || parent.length >= possibleChild.length) {
+			return false;
+		}
+		for (i in 0...parent.length) {
+			var a = parent[i];
+			var b = possibleChild[i];
+			if (a != b) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {

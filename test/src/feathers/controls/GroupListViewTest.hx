@@ -41,40 +41,6 @@ class GroupListViewTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
-		var null1 = location1 == null;
-		var null2 = location2 == null;
-		if (null1 && null2) {
-			return 0;
-		} else if (null1) {
-			return 1;
-		} else if (null2) {
-			return -1;
-		}
-		var length1 = location1.length;
-		var length2 = location2.length;
-		var min = length1;
-		if (length2 < min) {
-			min = length2;
-		}
-		for (i in 0...min) {
-			var index1 = location1[i];
-			var index2 = location2[i];
-			if (index1 < index2) {
-				return -1;
-			}
-			if (index1 > index2) {
-				return 1;
-			}
-		}
-		if (length1 < length2) {
-			return -1;
-		} else if (length1 > length2) {
-			return 1;
-		}
-		return 0;
-	}
-
 	public function testValidateWithNullDataProvider():Void {
 		this._listView.validateNow();
 		Assert.pass();
@@ -135,9 +101,9 @@ class GroupListViewTest extends Test {
 		Assert.equals(true, setSelectedValues[2]);
 
 		Assert.equals(3, setLocationValues.length);
-		Assert.equals(0, compareLocations(itemLocation, setLocationValues[0]));
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[0]));
 		Assert.isNull(setLocationValues[1]);
-		Assert.equals(0, compareLocations(itemLocation, setLocationValues[2]));
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[2]));
 
 		Assert.equals(3, setGroupListViewOwnerValues.length);
 		Assert.equals(this._listView, setGroupListViewOwnerValues[0]);
@@ -188,12 +154,12 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.addAt(item3, [0, 0]);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 2], eventLocation));
-		Assert.equals(0, compareLocations([0, 2], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], this._listView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
@@ -215,12 +181,12 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.addAt(item3, [0, 1]);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 2], eventLocation));
-		Assert.equals(0, compareLocations([0, 2], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], this._listView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
@@ -242,12 +208,12 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.addAt(item3, [0, 2]);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
@@ -269,12 +235,12 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.removeAt([0, 0]);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 0], eventLocation));
-		Assert.equals(0, compareLocations([0, 0], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], this._listView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
@@ -296,7 +262,7 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.removeAt([0, 1]);
 		Assert.isTrue(changed);
@@ -323,12 +289,12 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.removeAt([0, 2]);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
@@ -351,12 +317,12 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.set([0, 0], item4);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
@@ -379,14 +345,42 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.set([0, 1], item4);
 		Assert.isTrue(changed);
-		Assert.equals(0, compareLocations([0, 1], eventLocation));
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], eventLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item4, eventItem);
 		Assert.equals(item4, this._listView.selectedItem);
+	}
+
+	public function testReplaceParentOfSelectedLocation():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		var item4 = {text: "Four"};
+		var branch = {text: "Branch", children: [item1, item2, item3]};
+		this._listView.dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._listView.selectedLocation = [0, 1];
+		this._listView.validateNow();
+		var changed = false;
+		var eventLocation:Array<Int> = null;
+		var eventItem = null;
+		this._listView.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+			eventLocation = this._listView.selectedLocation;
+			eventItem = this._listView.selectedItem;
+		});
+		Assert.isFalse(changed);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(item2, this._listView.selectedItem);
+		this._listView.dataProvider.set([0], item4);
+		Assert.isTrue(changed);
+		Assert.isNull(eventLocation);
+		Assert.isNull(this._listView.selectedLocation);
+		Assert.isNull(eventItem);
+		Assert.isNull(this._listView.selectedItem);
 	}
 
 	public function testReplaceItemAfterSelectedLocation():Void {
@@ -407,12 +401,12 @@ class GroupListViewTest extends Test {
 			eventItem = this._listView.selectedItem;
 		});
 		Assert.isFalse(changed);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.equals(item2, this._listView.selectedItem);
 		this._listView.dataProvider.set([0, 2], item4);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
-		Assert.equals(0, compareLocations([0, 1], this._listView.selectedLocation));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._listView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
@@ -519,5 +513,41 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		_groupListViewOwner = value;
 		setGroupListViewOwnerValues.push(value);
 		return _groupListViewOwner;
+	}
+}
+
+private class CompareLocations {
+	public static function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
+		var null1 = location1 == null;
+		var null2 = location2 == null;
+		if (null1 && null2) {
+			return 0;
+		} else if (null1) {
+			return 1;
+		} else if (null2) {
+			return -1;
+		}
+		var length1 = location1.length;
+		var length2 = location2.length;
+		var min = length1;
+		if (length2 < min) {
+			min = length2;
+		}
+		for (i in 0...min) {
+			var index1 = location1[i];
+			var index2 = location2[i];
+			if (index1 < index2) {
+				return -1;
+			}
+			if (index1 > index2) {
+				return 1;
+			}
+		}
+		if (length1 < length2) {
+			return -1;
+		} else if (length1 > length2) {
+			return 1;
+		}
+		return 0;
 	}
 }
