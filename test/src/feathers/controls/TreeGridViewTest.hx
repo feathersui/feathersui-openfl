@@ -608,7 +608,7 @@ import utest.Test;
 		var item2 = {text: "Two"};
 		var item3 = {text: "Three"};
 		var childBranch = {text: "Child Branch", children: [item2, item3]}
-		var branch = {text: "Branch", children: [item1, childBranch]};
+		var branch = {text: "Branch", children: ([item1, childBranch] : Array<Dynamic>)};
 		var dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
 		this._treeGridView.dataProvider = dataProvider;
 		this._treeGridView.toggleBranch(branch, true);
