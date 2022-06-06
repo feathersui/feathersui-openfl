@@ -443,7 +443,7 @@ class TreeViewTest extends Test {
 		var item3 = {text: "Three"};
 		var item4 = {text: "Four"};
 		var branch = {text: "Branch", children: [item1, item2, item3]};
-		this._treeView.dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = new ArrayHierarchicalCollection(([branch] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._treeView.selectedLocation = [0, 1];
 		this._treeView.validateNow();
 		var changed = false;

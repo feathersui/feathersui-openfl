@@ -361,7 +361,7 @@ class GroupListViewTest extends Test {
 		var item3 = {text: "Three"};
 		var item4 = {text: "Four"};
 		var branch = {text: "Branch", children: [item1, item2, item3]};
-		this._listView.dataProvider = new ArrayHierarchicalCollection([branch], (item:Dynamic) -> item.children);
+		this._listView.dataProvider = new ArrayHierarchicalCollection(([branch] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._listView.selectedLocation = [0, 1];
 		this._listView.validateNow();
 		var changed = false;
