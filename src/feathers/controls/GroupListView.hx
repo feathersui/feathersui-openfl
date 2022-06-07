@@ -1252,8 +1252,16 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this.findItemRenderer(item, location.copy(), layoutIndex);
 			}
 			layoutIndex++;
+			if (layoutIndex > this._visibleIndices.end) {
+				// don't bother continuing if we're beyond the visible indices
+				break;
+			}
 			if (location.length == 1 && this._dataProvider.isBranch(item)) {
 				layoutIndex = this.findUnrenderedDataForLocation(location, layoutIndex);
+				if (layoutIndex > this._visibleIndices.end) {
+					// don't bother continuing if we're beyond the visible indices
+					break;
+				}
 			}
 			location.pop();
 		}

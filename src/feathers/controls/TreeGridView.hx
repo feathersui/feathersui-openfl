@@ -1769,8 +1769,16 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 				this.findRowRenderer(item, location.copy(), layoutIndex);
 			}
 			layoutIndex++;
+			if (layoutIndex > this._visibleIndices.end) {
+				// don't bother continuing if we're beyond the visible indices
+				break;
+			}
 			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
 				layoutIndex = this.findUnrenderedDataForLocation(location, layoutIndex);
+				if (layoutIndex > this._visibleIndices.end) {
+					// don't bother continuing if we're beyond the visible indices
+					break;
+				}
 			}
 			location.pop();
 		}
