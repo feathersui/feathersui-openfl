@@ -2237,8 +2237,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var i = this.openBranches.length - 1;
 		while (i >= 0) {
 			var openBranch = this.openBranches[i];
-			if (openBranch == removedItem && removedItem != addedItem) {
-				this.openBranches.splice(i, 1);
+			if (openBranch == removedItem) {
+				if (removedItem != addedItem) {
+					this.openBranches.splice(i, 1);
+				}
 				continue;
 			}
 			var location = this._dataProvider.locationOf(openBranch);
