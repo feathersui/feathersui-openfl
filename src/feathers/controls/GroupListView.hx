@@ -993,12 +993,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
 				#if hl
-				this._layoutItems.splice(0, this._layoutItems.length);
+				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
-				this._layoutItems.resize(0);
+				this._virtualCache.resize(0);
 				#end
 				var newSize = this.calculateTotalLayoutCount([]);
-				this._layoutItems.resize(newSize);
+				this._virtualCache.resize(newSize);
 			}
 			this.groupViewPort.layout = this.layout;
 			this._previousLayout = this.layout;

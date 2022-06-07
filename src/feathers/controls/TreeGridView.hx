@@ -1109,12 +1109,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
 				#if hl
-				this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
+				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
-				this._rowLayoutItems.resize(0);
+				this._virtualCache.resize(0);
 				#end
 				var newSize = this.calculateTotalLayoutCount([]);
-				this._rowLayoutItems.resize(newSize);
+				this._virtualCache.resize(newSize);
 			}
 			this.treeGridViewPort.layout = this.layout;
 			this._previousLayout = this.layout;
