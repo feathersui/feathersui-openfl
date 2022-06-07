@@ -354,6 +354,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		#else
 		this._virtualCache.resize(0);
 		#end
+		this._totalLayoutCount = 0;
 		#if hl
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
@@ -371,8 +372,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
-			var newSize = this.calculateTotalLayoutCount([]);
-			this._virtualCache.resize(newSize);
+			this._totalLayoutCount = this.calculateTotalLayoutCount([]);
+			this._virtualCache.resize(this._totalLayoutCount);
 			this._dataProvider.addEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeView_dataProvider_addItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeView_dataProvider_removeItemHandler);
@@ -612,6 +613,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _tempVisibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _layoutItems:Array<DisplayObject> = [];
+	private var _totalLayoutCount:Int = 0;
 
 	private var _selectable:Bool = true;
 
@@ -763,6 +765,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		var layoutIndex = this.locationToDisplayIndex(location, false);
 		this.toggleBranchInternal(branch, location, layoutIndex, open);
+		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 	}
 
 	/**
@@ -780,6 +783,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		var layoutIndex = this.locationToDisplayIndex(location, false);
 		this.toggleChildrenOfInternal(branch, location, layoutIndex, open);
+		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 	}
 
 	/**
@@ -909,13 +913,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
+				// don't keep the old layout's cache because it may not be
+				// compatible with the new layout
 				#if hl
 				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
 				this._virtualCache.resize(0);
 				#end
-				var newSize = this.calculateTotalLayoutCount([]);
-				this._virtualCache.resize(newSize);
+				this._virtualCache.resize(this._totalLayoutCount);
 			}
 			this.treeViewPort.layout = this.layout;
 			this._previousLayout = this.layout;
@@ -1084,8 +1089,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		#else
 		this._layoutItems.resize(0);
 		#end
-		var newSize = this.calculateTotalLayoutCount([]);
-		this._layoutItems.resize(newSize);
+		this._layoutItems.resize(this._totalLayoutCount);
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
@@ -1871,14 +1875,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function treeView_dataProvider_changeHandler(event:Event):Void {
+		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
 			#if hl
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
 			#end
-			var newSize = this.calculateTotalLayoutCount([]);
-			this._virtualCache.resize(newSize);
+			this._virtualCache.resize(this._totalLayoutCount);
 		}
 		this.setInvalid(DATA);
 	}

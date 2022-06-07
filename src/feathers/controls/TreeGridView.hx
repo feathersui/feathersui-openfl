@@ -328,7 +328,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var openBranches:Array<Dynamic> = [];
 
 	private var treeGridViewPort:AdvancedLayoutViewPort;
-	private var _ignoreDataProviderChanges:Bool = false;
 	private var _dataProvider:IHierarchicalCollection<Dynamic>;
 
 	/**
@@ -380,6 +379,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		#else
 		this._virtualCache.resize(0);
 		#end
+		this._totalRowLayoutCount = 0;
 		#if hl
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
@@ -397,8 +397,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
-			var newSize = this.calculateTotalLayoutCount([]);
-			this._virtualCache.resize(newSize);
+			this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
+			this._virtualCache.resize(this._totalRowLayoutCount);
 			this._dataProvider.addEventListener(Event.CHANGE, treeGridView_dataProvider_changeHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, treeGridView_dataProvider_addItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, treeGridView_dataProvider_removeItemHandler);
@@ -832,6 +832,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var _unrenderedLocations:Array<Array<Int>> = [];
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _rowLayoutItems:Array<DisplayObject> = [];
+	private var _totalRowLayoutCount:Int = 0;
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _tempVisibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
@@ -997,6 +998,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 		var layoutIndex = this.locationToDisplayIndex(location, false);
 		this.toggleBranchInternal(branch, location, layoutIndex, open);
+		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
 	}
 
 	/**
@@ -1014,6 +1016,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 		var layoutIndex = this.locationToDisplayIndex(location, false);
 		this.toggleChildrenOfInternal(branch, location, layoutIndex, open);
+		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
 	}
 
 	private function initializeTreeGridViewTheme():Void {
@@ -1108,13 +1111,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
+				// don't keep the old layout's cache because it may not be
+				// compatible with the new layout
 				#if hl
 				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
 				this._virtualCache.resize(0);
 				#end
-				var newSize = this.calculateTotalLayoutCount([]);
-				this._virtualCache.resize(newSize);
+				this._virtualCache.resize(this._totalRowLayoutCount);
 			}
 			this.treeGridViewPort.layout = this.layout;
 			this._previousLayout = this.layout;
@@ -1735,8 +1739,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		#else
 		this._rowLayoutItems.resize(0);
 		#end
-		var newSize = this.calculateTotalLayoutCount([]);
-		this._rowLayoutItems.resize(newSize);
+		this._rowLayoutItems.resize(this._totalRowLayoutCount);
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
@@ -2296,17 +2299,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_dataProvider_changeHandler(event:Event):Void {
-		if (this._ignoreDataProviderChanges) {
-			return;
-		}
+		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
 			#if hl
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
 			#end
-			var newSize = this.calculateTotalLayoutCount([]);
-			this._virtualCache.resize(newSize);
+			this._virtualCache.resize(this._totalRowLayoutCount);
 		}
 		this.setInvalid(DATA);
 	}

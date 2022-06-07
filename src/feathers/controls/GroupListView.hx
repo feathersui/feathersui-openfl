@@ -312,6 +312,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		#else
 		this._virtualCache.resize(0);
 		#end
+		this._totalLayoutCount = 0;
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(Event.CHANGE, groupListView_dataProvider_changeHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.ADD_ITEM, groupListView_dataProvider_addItemHandler);
@@ -324,8 +325,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
-			var newSize = this.calculateTotalLayoutCount([]);
-			this._virtualCache.resize(newSize);
+			this._totalLayoutCount = this.calculateTotalLayoutCount([]);
+			this._virtualCache.resize(this._totalLayoutCount);
 			this._dataProvider.addEventListener(Event.CHANGE, groupListView_dataProvider_changeHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, groupListView_dataProvider_addItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ITEM, groupListView_dataProvider_removeItemHandler);
@@ -677,6 +678,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private var _virtualCache:Array<Dynamic> = [];
 	private var _visibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _tempVisibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
+	private var _totalLayoutCount:Int = 0;
 	private var _layoutItems:Array<DisplayObject> = [];
 	private var _layoutHeaderIndices:Array<Int> = [];
 
@@ -992,13 +994,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		if (layoutInvalid || stylesInvalid) {
 			if (this._previousLayout != this.layout) {
+				// don't keep the old layout's cache because it may not be
+				// compatible with the new layout
 				#if hl
 				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
 				this._virtualCache.resize(0);
 				#end
-				var newSize = this.calculateTotalLayoutCount([]);
-				this._virtualCache.resize(newSize);
+				this._virtualCache.resize(this._totalLayoutCount);
 			}
 			this.groupViewPort.layout = this.layout;
 			this._previousLayout = this.layout;
@@ -1212,8 +1215,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		#else
 		this._layoutItems.resize(0);
 		#end
-		var newSize = this.calculateTotalLayoutCount([]);
-		this._layoutItems.resize(newSize);
+		this._layoutItems.resize(this._totalLayoutCount);
 		#if hl
 		this._layoutHeaderIndices.splice(0, this._layoutHeaderIndices.length);
 		#else
@@ -1884,14 +1886,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function groupListView_dataProvider_changeHandler(event:Event):Void {
+		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
 			#if hl
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
 			#end
-			var newSize = this.calculateTotalLayoutCount([]);
-			this._virtualCache.resize(newSize);
+			this._virtualCache.resize(this._totalLayoutCount);
 		}
 		this.setInvalid(DATA);
 	}
