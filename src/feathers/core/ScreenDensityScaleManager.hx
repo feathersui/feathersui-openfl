@@ -147,11 +147,23 @@ class ScreenDensityScaleManager extends EventDispatcher implements IScaleManager
 		if (this._target == null) {
 			return result;
 		}
-		#if (!flash && (desktop || web) && (openfl < "9.2.0" || openfl_dpi_aware))
+		#if (!flash && (desktop || web))
+		#if (openfl < "9.2.0" || openfl_dpi_aware)
 		result = this._target.stage.window.scale;
-		#if web
-		if (result > 2.0) {
-			result *= (this._target.stage.window.scale / 2.0);
+		#end
+		#if html5
+		var jsWindow = cast(js.Lib.global, js.html.Window);
+		var viewportElement = jsWindow.document.getElementById("viewport");
+		if (viewportElement != null && viewportElement.localName == "meta") {
+			var content = viewportElement.getAttribute("content");
+			if (content.indexOf("user-scalable=no") != -1) {
+				var initialScalePattern = ~/initial-scale=(\d(?:\.\d+)?)/;
+				if (initialScalePattern.match(content)) {
+					var initialScale = Std.parseFloat(initialScalePattern.matched(1));
+					// account for the initial-scale in the index.html template
+					result *= (1.0 / initialScale);
+				}
+			}
 		}
 		#end
 		#else
