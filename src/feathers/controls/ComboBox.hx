@@ -365,6 +365,14 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		var index = this._dataProvider.indexOf(value);
 		if (index == -1) {
+			if (this._allowCustomUserValue) {
+				this._selectedIndex = -1;
+				this._selectedItem = null;
+				this._customSelectedItem = value;
+				this.setInvalid(SELECTION);
+				FeathersEvent.dispatch(this, Event.CHANGE);
+				return this._customSelectedItem;
+			}
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
@@ -374,6 +382,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		this._selectedIndex = index;
 		this._selectedItem = value;
+		this._customSelectedItem = null;
 		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedItem;
