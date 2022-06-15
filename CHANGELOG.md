@@ -1,7 +1,25 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.0.0-rc.2 (2022-??-??)
+## 1.0.0-rc.2 (2022-06-15)
 
+- BaseNavigator: Fixed navigator sometimes failing to resize the "next" view in transition correctly.
+- BaseScrollContainer: Fixed issue where the view port did not receeive updated `scrollX` and `scrollY` values in some situations.
+- CalendarGrid: Removed deprecated class. Replaced by `DatePicker` in beta.9.
+- ComboBox: Fixed duplicate `Event.CHANGE` dispatch when selected item changes.
+- ComboBox: Fixed issue where up and down arrow keys would sometimes go to the wrong index after opening the pop-up `ListView`.
+- ComboBox, PopUpListView: Fixed `selectedIndex` being cleared to `-1` instead of resetting to `0` when `dataProvider` is replaced.
+- Data Containers: Fixed `selectedItem` setter sometimes failing to detect that the `selectedIndex` is different, and `Event.CHANGE` needs to be dispatched.
+- ExclusivePointer: Removed deprecated `claimPointer()`, `getClaim()`, and `removeClaim()`. Replaced with separate APIs for mouse and touch claims in rc.1.
+- GridView, TreeGridView: Fixed non-string values being incorrectly treated as strings when columns are not defined and are auto-populated with reflection instead.
+- GridViewHeaderRenderer: Removed deprecated class. Replaced by `SortOrderHeaderRenderer` in rc.1.
+- GroupListView, TreeView, TreeGridView: Fixed failure to clear selected item after removing or replacing it (or a parent branch, for trees) in the `dataProvider`.
+- GroupListView, TreeView, TreeGridView: Fixed clearing the layout's virtual cache when the layout changes. Was incorrectly clearing a different array.
+- GroupListView, TreeView, TreeGridView: Fixed performance issue caused by calculating the total number of items in the layout too frequently.
+- GroupListView, TreeView, TreeGridView: Fixed performance issue caused by traversing the entire `dataProvider` when it was necessary to loop through only part of it.
+- ItemRenderer: Fixed issue where changing the `secondaryText` to `null` and repopulating later would result in the wrong text format.
+- Route: Removed deprecated `injectState()` and `restoreData()`. Replaced by `updateState()` in beta.9.
+- ScrollContainer: Fixed issue where the view port may not be updated often enough for layouts that implements `IScrollLayout`.
+- TreeView, TreeGridView: Fixed failure to update open branches after removing or replacing an item in the `dataProvider`.
 - magic-8-ball-chat: New sample project that demonstrates how to create a chat client with the `ListView` component.
 
 ## 1.0.0-rc.1 (2022-05-12)
@@ -34,7 +52,7 @@
 
 - BaseScrollContainer: `scrollMode` property defaults to `MASK` instead of `SCROLL_RECT` to avoid forcex pixel rounding.
 - Button, ToggleButton: Does not trigger on space/enter key when a button's child has focus instead of the button itself. This isn't common with simple buttons, but `ItemRenderer` is a subclass, and it may have children that can receive focus.
-- CalendarGrid: Deprecated in favor of `DatePicker`. Hide the items in a `DatePicker` header to make it behave like the old `CalendarPicker`.
+- CalendarGrid: Deprecated in favor of `DatePicker`. Hide the items in a `DatePicker` header to make it behave like the old `CalendarGrid`.
 - General: All haxedefs to change Feathers UI behavior at compile time now start with `feathersui_` to avoid potential conflicts. Example: `disable_default_theme` is now `feathersui_disable_default_theme`.
 - General: More constructor arguments for UI components to automatically add listeners for common events.
 - General: Children of data containers, like `ListView`, can receive tab focus. Data containers now implement `IFocusContainer`.

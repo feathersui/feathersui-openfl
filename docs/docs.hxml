@@ -1,4 +1,4 @@
 -cmd haxelib run openfl build ../project.xml html5 -xml -clean -Dfind_missing_docs
 
 --next
--cmd haxelib run dox -o ../bin/api -i ../bin/html5/types.xml -in feathers --title "Feathers UI API Reference (Haxe/OpenFL)" --toplevel-package feathers -theme ./feathersui-theme -D website "https://feathersui.com" -D source-path "https://github.com/BowlerHatLLC/feathersui-openfl/tree/v1.0.0-rc.1/src/"
+-cmd haxelib run dox -o ../bin/api -i ../bin/html5/types.xml -in feathers --title "Feathers UI API Reference (Haxe/OpenFL)" --toplevel-package feathers -theme ./feathersui-theme -D website "https://feathersui.com" -D source-path "https://github.com/BowlerHatLLC/feathersui-openfl/tree/v1.0.0-rc.2/src/"
