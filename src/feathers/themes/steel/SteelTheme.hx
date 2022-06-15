@@ -12,7 +12,6 @@ import feathers.themes.steel.components.SteelAlertStyles;
 import feathers.themes.steel.components.SteelApplicationStyles;
 import feathers.themes.steel.components.SteelButtonBarStyles;
 import feathers.themes.steel.components.SteelButtonStyles;
-import feathers.themes.steel.components.SteelCalendarGridStyles;
 import feathers.themes.steel.components.SteelCalloutStyles;
 import feathers.themes.steel.components.SteelCheckStyles;
 import feathers.themes.steel.components.SteelComboBoxStyles;
@@ -78,7 +77,6 @@ class SteelTheme extends BaseSteelTheme {
 		SteelApplicationStyles.initialize(this);
 		SteelButtonStyles.initialize(this);
 		SteelButtonBarStyles.initialize(this);
-		SteelCalendarGridStyles.initialize(this);
 		SteelCalloutStyles.initialize(this);
 		SteelCheckStyles.initialize(this);
 		SteelComboBoxStyles.initialize(this);

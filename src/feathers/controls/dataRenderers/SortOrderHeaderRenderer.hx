@@ -36,7 +36,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeGridViewHeaderRendererTheme();
+		initializeSortOrderHeaderRendererTheme();
 		super();
 		this.toggleable = false;
 	}
@@ -68,7 +68,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 		An icon to display when `sortOrder` property is set to
 		`SortOrder.ASCENDING`.
 
-		@see `GridViewHeaderRenderer.sortDescendingIcon`
+		@see `SortOrderHeaderRenderer.sortDescendingIcon`
 
 		@since 1.0.0
 	**/
@@ -79,14 +79,14 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 		An icon to display when `sortOrder` property is set to
 		`SortOrder.DESCENDING`.
 
-		@see `GridViewHeaderRenderer.sortAscendingIcon`
+		@see `SortOrderHeaderRenderer.sortAscendingIcon`
 
 		@since 1.0.0
 	**/
 	@:style
 	public var sortDescendingIcon:DisplayObject = null;
 
-	private function initializeGridViewHeaderRendererTheme():Void {
+	private function initializeSortOrderHeaderRendererTheme():Void {
 		SteelSortOrderHeaderRendererStyles.initialize();
 	}
 

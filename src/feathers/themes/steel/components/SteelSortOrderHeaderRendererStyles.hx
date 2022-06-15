@@ -16,7 +16,7 @@ import feathers.themes.steel.BaseSteelTheme;
 import feathers.utils.DeviceUtil;
 
 /**
-	Initialize "steel" styles for the `GridViewHeaderRenderer` component.
+	Initialize "steel" styles for the `SortOrderHeaderRenderer` component.
 
 	@since 1.0.0
 **/

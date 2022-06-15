@@ -26,14 +26,6 @@ import openfl.events.TouchEvent;
 	@since 1.0.0
 **/
 class ExclusivePointer {
-	/**
-		A special pointer ID for the mouse.
-
-		@since 1.0.0
-	**/
-	@:deprecated('ExclusivePointer.POINTER_ID_MOUSE is deprecated. There are now separate APIs for touch and mouse.')
-	public static final POINTER_ID_MOUSE = -1000;
-
 	private static final stageToObject:Map<Stage, ExclusivePointer> = [];
 
 	/**
@@ -82,14 +74,6 @@ class ExclusivePointer {
 
 	private var _mouseClaim:DisplayObject = null;
 	private var _touchClaims:Map<Int, DisplayObject> = [];
-
-	@:deprecated('ExclusivePointer.claimPointer() is deprecated. Use ExclusivePointer.claimTouch() and ExclusivePointer.claimMouse() instead.')
-	public function claimPointer(pointerID:Int, target:DisplayObject):Bool {
-		if (pointerID == -1000) {
-			return this.claimMouse(target);
-		}
-		return this.claimTouch(pointerID, target);
-	}
 
 	/**
 		Allows a display object to claim a touch by its ID. Returns `true` if
@@ -144,14 +128,6 @@ class ExclusivePointer {
 		}
 		this._stageListenerCount++;
 		return true;
-	}
-
-	@:deprecated('ExclusivePointer.removeClaim() is deprecated. Use ExclusivePointer.removeTouchClaim() and ExclusivePointer.removeMouseClaim() instead.')
-	public function removeClaim(pointerID:Int):Void {
-		if (pointerID == -1000) {
-			this.removeMouseClaim();
-		}
-		return this.removeTouchClaim(pointerID);
 	}
 
 	/**
@@ -209,14 +185,6 @@ class ExclusivePointer {
 			return true;
 		}
 		return false;
-	}
-
-	@:deprecated('ExclusivePointer.getClaim() is deprecated. Use ExclusivePointer.getTouchClaim() and ExclusivePointer.getMouseClaim() instead.')
-	public function getClaim(pointerID:Int):DisplayObject {
-		if (pointerID == -1000) {
-			return this.getMouseClaim();
-		}
-		return this.getTouchClaim(pointerID);
 	}
 
 	/**

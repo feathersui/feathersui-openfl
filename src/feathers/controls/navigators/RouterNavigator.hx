@@ -560,12 +560,6 @@ class RouterNavigator extends BaseNavigator {
 		if (item.updateState != null) {
 			item.updateState(view, routeState);
 		}
-		if (item.injectState != null) {
-			item.injectState(view, routeState.historyState);
-		}
-		if (item.restoreData != null) {
-			item.restoreData(view, routeState.data);
-		}
 		view.addEventListener(TextEvent.LINK, routerNavigator_activeView_linkHandler);
 		return view;
 	}
