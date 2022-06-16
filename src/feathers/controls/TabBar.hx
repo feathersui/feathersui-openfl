@@ -190,6 +190,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ITEM, tabBar_dataProvider_updateItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ALL, tabBar_dataProvider_updateAllHandler);
 		}
+		var oldSelectedIndex = this._selectedIndex;
+		var oldSelectedItem = this._selectedItem;
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
 			this._dataProvider.addEventListener(Event.CHANGE, tabBar_dataProvider_changeHandler);
@@ -203,12 +205,16 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ITEM, tabBar_dataProvider_updateItemHandler);
 			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ALL, tabBar_dataProvider_updateAllHandler);
 		}
-		if (this._selectedIndex == -1 && this._dataProvider != null && this._dataProvider.length > 0) {
-			// use the setter
-			this.selectedIndex = 0;
-		} else if (this._selectedIndex != -1 && (this._dataProvider == null || this._dataProvider.length == 0)) {
-			// use the setter
-			this.selectedIndex = -1;
+		if (this._dataProvider == null || this._dataProvider.length == 0) {
+			this._selectedIndex = -1;
+			this._selectedItem = null;
+		} else {
+			this._selectedIndex = 0;
+			this._selectedItem = this._dataProvider.get(0);
+		}
+		if (this._selectedIndex != oldSelectedIndex || this._selectedItem != oldSelectedItem) {
+			this.setInvalid(SELECTION);
+			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 		this.setInvalid(DATA);
 		return this._dataProvider;

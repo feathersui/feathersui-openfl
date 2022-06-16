@@ -222,15 +222,13 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, popUpListView_dataProvider_removeAllHandler);
 		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
-			// use the setter
-			this.selectedIndex = -1;
+			this._selectedIndex = -1;
+			this._selectedItem = null;
 		} else {
-			// use the setter
-			this.selectedIndex = 0;
+			this._selectedIndex = 0;
+			this._selectedItem = this._dataProvider.get(0);
 		}
-		// this ensures that Event.CHANGE will dispatch for selectedItem
-		// changing, even if selectedIndex has not changed.
-		if (this._selectedIndex == oldSelectedIndex && this._selectedItem != oldSelectedItem) {
+		if (this._selectedIndex != oldSelectedIndex || this._selectedItem != oldSelectedItem) {
 			this.setInvalid(SELECTION);
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
