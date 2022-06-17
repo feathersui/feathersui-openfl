@@ -38,13 +38,16 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.LabelTest());
 		runner.addCase(new feathers.controls.LabelMeasurementTest());
 		runner.addCase(new feathers.controls.LayoutGroupTest());
+		runner.addCase(new feathers.controls.LayoutGroupMeasurementTest());
 		runner.addCase(new feathers.controls.ListViewTest());
 		runner.addCase(new feathers.controls.NumericStepperTest());
 		runner.addCase(new feathers.controls.PageIndicatorTest());
+		runner.addCase(new feathers.controls.PanelMeasurementTest());
 		runner.addCase(new feathers.controls.PopUpListViewTest());
 		runner.addCase(new feathers.controls.RadioTest());
 		runner.addCase(new feathers.controls.navigators.StackNavigatorTest());
 		runner.addCase(new feathers.controls.ScrollContainerTest());
+		runner.addCase(new feathers.controls.ScrollContainerMeasurementTest());
 		runner.addCase(new feathers.controls.TabBarTest());
 		runner.addCase(new feathers.controls.TextInputTest());
 		runner.addCase(new feathers.controls.ToggleButtonTest());
