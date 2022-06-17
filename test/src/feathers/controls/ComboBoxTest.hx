@@ -139,6 +139,31 @@ class ComboBoxTest extends Test {
 		Assert.equals(this._comboBox.selectedItem, newDataProvider.get(0));
 	}
 
+	public function testSelectionOnNewDataProviderWithSelectedIndexAlready0():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._comboBox.selectedIndex = 0;
+		var changed = false;
+		this._comboBox.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		// validate to ensure that it propagates to the internal ListView
+		this._comboBox.validateNow();
+		Assert.isFalse(changed);
+		var newDataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		this._comboBox.dataProvider = newDataProvider;
+		Assert.isTrue(changed);
+		Assert.equals(0, this._comboBox.selectedIndex);
+		Assert.notNull(this._comboBox.selectedItem);
+		Assert.equals(this._comboBox.selectedItem, newDataProvider.get(0));
+		changed = false;
+		// validate to ensure that it propagates to the internal ListView again
+		this._comboBox.validateNow();
+		Assert.isFalse(changed);
+		Assert.equals(0, this._comboBox.selectedIndex);
+		Assert.notNull(this._comboBox.selectedItem);
+		Assert.equals(this._comboBox.selectedItem, newDataProvider.get(0));
+	}
+
 	public function testOpenListView():Void {
 		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		var dispatchedOpenEvent = false;

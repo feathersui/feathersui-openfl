@@ -89,6 +89,84 @@ class TabBarTest extends Test {
 		Assert.equals(1, this._tabBar.selectedIndex);
 	}
 
+	public function testDeselectAllOnNullDataProvider():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.selectedIndex = 1;
+		var changed = false;
+		this._tabBar.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._tabBar.dataProvider = null;
+		Assert.isTrue(changed);
+		Assert.equals(-1, this._tabBar.selectedIndex);
+		Assert.isNull(this._tabBar.selectedItem);
+	}
+
+	public function testDeselectAllOnDataProviderRemoveAll():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.selectedIndex = 1;
+		var changed = false;
+		this._tabBar.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		Assert.isFalse(changed);
+		this._tabBar.dataProvider.removeAll();
+		Assert.isTrue(changed);
+		Assert.equals(-1, this._tabBar.selectedIndex);
+		Assert.isNull(this._tabBar.selectedItem);
+	}
+
+	public function testSelectionOnNewDataProvider():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.selectedIndex = 1;
+		var changed = false;
+		this._tabBar.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		// validate to ensure that it propagates to the internal ListView
+		this._tabBar.validateNow();
+		Assert.isFalse(changed);
+		var newDataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		this._tabBar.dataProvider = newDataProvider;
+		Assert.isTrue(changed);
+		Assert.equals(0, this._tabBar.selectedIndex);
+		Assert.notNull(this._tabBar.selectedItem);
+		Assert.equals(newDataProvider.get(0), this._tabBar.selectedItem);
+		changed = false;
+		// validate to ensure that it propagates to the internal ListView again
+		this._tabBar.validateNow();
+		Assert.isFalse(changed);
+		Assert.equals(0, this._tabBar.selectedIndex);
+		Assert.notNull(this._tabBar.selectedItem);
+		Assert.equals(newDataProvider.get(0), this._tabBar.selectedItem);
+	}
+
+	public function testSelectionOnNewDataProviderWithSelectedIndexAlready0():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.selectedIndex = 0;
+		var changed = false;
+		this._tabBar.addEventListener(Event.CHANGE, function(event:Event):Void {
+			changed = true;
+		});
+		// validate to ensure that it propagates to the internal ListView
+		this._tabBar.validateNow();
+		Assert.isFalse(changed);
+		var newDataProvider = new ArrayCollection([{text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		this._tabBar.dataProvider = newDataProvider;
+		Assert.isTrue(changed);
+		Assert.equals(0, this._tabBar.selectedIndex);
+		Assert.notNull(this._tabBar.selectedItem);
+		Assert.equals(newDataProvider.get(0), this._tabBar.selectedItem);
+		changed = false;
+		// validate to ensure that it propagates to the internal ListView again
+		this._tabBar.validateNow();
+		Assert.isFalse(changed);
+		Assert.equals(0, this._tabBar.selectedIndex);
+		Assert.notNull(this._tabBar.selectedItem);
+		Assert.equals(newDataProvider.get(0), this._tabBar.selectedItem);
+	}
+
 	public function testUpdateItemSetsInterfaceProperties():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		var itemIndex = 1;
