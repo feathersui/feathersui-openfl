@@ -504,6 +504,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private var _ignoreTextInputChange = false;
 	private var _ignoreListViewChange = false;
+	private var _ignoreButtonToggleListView = false;
 
 	/**
 		Manages how the pop-up list is displayed when it is opened and closed.
@@ -1096,7 +1097,17 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		if (this.openListViewOnFocus && !this.open) {
 			this.openListView();
+			// since mouseDown and touchBegin are dispatched after focusIn,
+			// we don't want them to immediately close the list view
+			this._ignoreButtonToggleListView = true;
+			this.addEventListener(Event.ENTER_FRAME, comboBox_focus_enterFrameHandler);
 		}
+	}
+
+	private function comboBox_focus_enterFrameHandler(event:Event):Void {
+		this.removeEventListener(Event.ENTER_FRAME, comboBox_focus_enterFrameHandler);
+		// this is kind of hacky, but clear this flag after one frame
+		this._ignoreButtonToggleListView = false;
 	}
 
 	private function comboBox_textInput_focusOutHandler(event:FocusEvent):Void {
@@ -1110,6 +1121,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_button_mouseDownHandler(event:MouseEvent):Void {
+		if (this.openListViewOnFocus && this.open && this._ignoreButtonToggleListView) {
+			return;
+		}
 		if (!this._enabled) {
 			return;
 		}
@@ -1121,6 +1135,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_button_touchBeginHandler(event:TouchEvent):Void {
+		if (this.openListViewOnFocus && this.open && this._ignoreButtonToggleListView) {
+			return;
+		}
 		if (!this._enabled) {
 			return;
 		}
