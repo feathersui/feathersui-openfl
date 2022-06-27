@@ -2206,25 +2206,23 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function baseScrollContainer_scroller_scrollStartHandler(event:ScrollEvent):Void {
 		var touchPointID = this.scroller.touchPointID;
-		if (touchPointID != null) {
-			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimTouch(touchPointID, this);
-			if (!result) {
-				this.scroller.stop();
-				return;
-			}
-			this._viewPort.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollContainer_viewPort_mouseDownHandler);
-			this._viewPort.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollContainer_viewPort_touchBeginHandler);
-		} else if (this.scroller.touchPointIsSimulated) {
+		if (this.scroller.touchPointIsSimulated) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
 			var result = exclusivePointer.claimMouse(this);
 			if (!result) {
 				this.scroller.stop();
 				return;
 			}
-			this._viewPort.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollContainer_viewPort_mouseDownHandler);
-			this._viewPort.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollContainer_viewPort_touchBeginHandler);
+		} else if (touchPointID != null) {
+			var exclusivePointer = ExclusivePointer.forStage(this.stage);
+			var result = exclusivePointer.claimTouch(touchPointID, this);
+			if (!result) {
+				this.scroller.stop();
+				return;
+			}
 		}
+		this._viewPort.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollContainer_viewPort_mouseDownHandler);
+		this._viewPort.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollContainer_viewPort_touchBeginHandler);
 		this._scrollerDraggingX = false;
 		this._scrollerDraggingY = false;
 		this.checkForRevealScrollBars();
@@ -2284,7 +2282,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function reclaimTouch(touchPointID:Int):Void {
-		if (this.scroller.touchPointID == null || this.scroller.touchPointID != touchPointID) {
+		if (this.scroller.touchPointIsSimulated || this.scroller.touchPointID == null || this.scroller.touchPointID != touchPointID) {
 			return;
 		}
 		var exclusivePointer = ExclusivePointer.forStage(this.stage);
