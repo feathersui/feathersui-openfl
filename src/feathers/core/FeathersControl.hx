@@ -770,7 +770,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		Called the first time that the UI control is added to the stage, and
 		you should override this function to customize the initialization
 		process. Do things like create children and set up event listeners.
-		After this function is called, `Event.INIT` is dispatched.
+		After this function is called, `FeathersEvent.INITIALIZE is dispatched.
 
 		The following example overrides initialization:
 
@@ -782,6 +782,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		```
 
 		@since 1.0.0
+
+		@see `feathers.events.FeathersEvent.INITIALIZE`
 	**/
 	@:dox(show)
 	private function initialize():Void {}
