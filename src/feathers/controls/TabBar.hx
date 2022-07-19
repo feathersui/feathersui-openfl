@@ -602,7 +602,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		this._layoutResult.reset();
-		this.layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
+		if (this.layout != null) {
+			this.layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
+		}
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}
 
