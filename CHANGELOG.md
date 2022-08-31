@@ -1,5 +1,12 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.0.0 (2022-09-01)
+
+- BaseScrollContainer: Fixed touch claim not being cleared when `simulateTouch == true`
+- ComboBox: Fixed pop-up list view closing immediately on button click if `openListViewOnFocus == true`.
+- Various: Fixed exception when `layout` is `null`.
+- Various: Fixed `selectedItem` failing to update after settings new `dataProvider`.
+
 ## 1.0.0-rc.2 (2022-06-15)
 
 - BaseNavigator: Fixed navigator sometimes failing to resize the "next" view in transition correctly.

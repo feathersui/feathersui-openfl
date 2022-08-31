@@ -13,8 +13,8 @@
 		"widgets",
 		"layout"
 	],
-	"description": "Cross-platform user interface components for creative frontend projects built with Haxe and OpenFL",
-	"version": "1.0.0-rc.2",
+	"description": "Cross-platform graphical user interface (GUI) components for creative frontend projects, built with Haxe and OpenFL",
+	"version": "1.0.0",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Release candidate"
+	"releasenote": "First stable major version"
 }
