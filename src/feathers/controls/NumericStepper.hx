@@ -1014,7 +1014,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		if (this.decrementButton.variant == null) {
 			this.decrementButton.variant = this.customDecrementButtonVariant != null ? this.customDecrementButtonVariant : NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON;
 		}
-		this.decrementButton.text = "-";
+		if (this._oldDecrementButtonFactory == defaultDecrementButtonFactory){
+			this.decrementButton.text = "-";
+		}
 		this.decrementButton.addEventListener(MouseEvent.MOUSE_DOWN, numericStepper_decrementButton_mouseDownHandler);
 		this.decrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_decrementButton_touchBeginHandler);
 		this.decrementButton.initializeNow();
@@ -1039,7 +1041,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		if (this.incrementButton.variant == null) {
 			this.incrementButton.variant = this.customIncrementButtonVariant != null ? this.customIncrementButtonVariant : NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON;
 		}
-		this.incrementButton.text = "+";
+		if (this._oldIncrementButtonFactory == defaultIncrementButtonFactory){
+			this.incrementButton.text = "+";
+		}
 		this.incrementButton.addEventListener(MouseEvent.MOUSE_DOWN, numericStepper_incrementButton_mouseDownHandler);
 		this.incrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_incrementButton_touchBeginHandler);
 		this.incrementButton.initializeNow();
