@@ -374,20 +374,28 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._currentTrackSkin.width;
-			if (this._currentSecondaryTrackSkin != null) {
-				newWidth += this._currentSecondaryTrackSkin.width;
+			newWidth = 0.0;
+			if (this._currentTrackSkin != null) {
+				newWidth += this._currentTrackSkin.width;
+				if (this._currentSecondaryTrackSkin != null) {
+					newWidth += this._currentSecondaryTrackSkin.width;
+				}
 			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._currentThumbSkin.height;
-			if (newHeight < this._currentTrackSkin.height) {
-				newHeight = this._currentTrackSkin.height;
+			newHeight = 0.0;
+			if (this._currentThumbSkin != null) {
+				newHeight += this._currentThumbSkin.height;
 			}
-			if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
-				newHeight = this._currentSecondaryTrackSkin.height;
+			if (this._currentTrackSkin != null) {
+				if (newHeight < this._currentTrackSkin.height) {
+					newHeight = this._currentTrackSkin.height;
+				}
+				if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
+					newHeight = this._currentSecondaryTrackSkin.height;
+				}
 			}
 		}
 
@@ -535,6 +543,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function layoutThumb():Void {
+		if (this._currentThumbSkin == null) {
+			return;
+		}
 		if ((this._currentThumbSkin is IValidating)) {
 			cast(this._currentThumbSkin, IValidating).validateNow();
 		}
@@ -561,6 +572,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function layoutSplitTrack():Void {
+		if (this._currentTrackSkin == null || this._currentSecondaryTrackSkin == null) {
+			return;
+		}
 		var location = this._currentThumbSkin.x + this._currentThumbSkin.width / 2.0;
 
 		this._currentTrackSkin.x = 0.0;
