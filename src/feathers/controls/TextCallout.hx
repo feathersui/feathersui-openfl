@@ -249,6 +249,23 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 	@:style
 	public var disabledTextFormat:AbstractTextFormat = null;
 
+	/**
+		Determines if the text is displayed on a single line, or if it wraps.
+
+		In the following example, the callout's text wraps at 150 pixels:
+
+		```haxe
+		callout.width = 150.0;
+		callout.wordWrap = true;
+		```
+
+		@default false
+
+		@since 1.0.0
+	**/
+	@:style
+	public var wordWrap:Bool = false;
+
 	private function initializeTextCalloutTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTextCalloutStyles.initialize();
@@ -281,6 +298,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 	}
 
 	private function refreshTextStyles():Void {
+		this.label.wordWrap = this.wordWrap;
 		this.label.textFormat = this.textFormat;
 		this.label.disabledTextFormat = this.disabledTextFormat;
 		this.label.embedFonts = this.embedFonts;
