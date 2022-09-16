@@ -14,7 +14,7 @@
 		"layout"
 	],
 	"description": "Cross-platform graphical user interface (GUI) components for creative frontend projects, built with Haxe and OpenFL",
-	"version": "1.0.0",
+	"version": "1.1.0-alpha",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
