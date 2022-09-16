@@ -136,6 +136,11 @@ class Radio extends ToggleButton implements IGroupedToggle {
 		if (this._toggleGroup == null) {
 			return;
 		}
+		if (event.keyLocation == 4 /* KeyLocation.D_PAD */) {
+			// if the the key press originated on the d-pad, ignore it
+			// the focus manager will handle it instead
+			return;
+		}
 		var startIndex = this._toggleGroup.getItemIndex(this);
 		if (startIndex == -1) {
 			return;
