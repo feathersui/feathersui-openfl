@@ -89,7 +89,9 @@ class DefaultToolTipManager implements IToolTipManager {
 	}
 
 	private function initializeToolTipStyles():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelToolTipStyles.initialize();
+		#end
 	}
 
 	private function clearTarget():Void {

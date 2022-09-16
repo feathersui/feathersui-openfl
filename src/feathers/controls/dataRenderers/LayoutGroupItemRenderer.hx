@@ -243,7 +243,9 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	}
 
 	private function initializeLayoutGroupItemRendererTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelLayoutGroupItemRendererStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

@@ -460,7 +460,9 @@ class Alert extends Panel {
 	}
 
 	private function initializeAlertTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelAlertStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

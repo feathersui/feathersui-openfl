@@ -44,6 +44,8 @@ class Check extends ToggleButton {
 	}
 
 	private function initializeCheckTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelCheckStyles.initialize();
+		#end
 	}
 }

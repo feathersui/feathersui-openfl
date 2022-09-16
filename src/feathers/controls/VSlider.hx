@@ -53,7 +53,9 @@ class VSlider extends BaseSlider {
 	}
 
 	private function initializeVSliderTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelVSliderStyles.initialize();
+		#end
 	}
 
 	override private function valueToLocation(value:Float):Float {

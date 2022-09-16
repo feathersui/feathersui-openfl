@@ -436,7 +436,9 @@ class ButtonBar extends FeathersControl {
 	}
 
 	private function initializeButtonBarTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelButtonBarStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

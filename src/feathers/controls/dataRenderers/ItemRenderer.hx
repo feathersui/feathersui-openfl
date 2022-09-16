@@ -425,7 +425,9 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	}
 
 	private function initializeItemRendererTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelItemRendererStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

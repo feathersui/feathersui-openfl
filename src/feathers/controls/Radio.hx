@@ -124,7 +124,9 @@ class Radio extends ToggleButton implements IGroupedToggle {
 	}
 
 	private function initializeRadioTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelRadioStyles.initialize();
+		#end
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {

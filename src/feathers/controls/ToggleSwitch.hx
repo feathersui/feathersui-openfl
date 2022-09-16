@@ -312,7 +312,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function initializeToggleSwitchTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelToggleSwitchStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

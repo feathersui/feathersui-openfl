@@ -396,7 +396,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	}
 
 	private function initializeDrawerTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelDrawerStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

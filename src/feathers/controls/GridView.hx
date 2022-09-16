@@ -1200,7 +1200,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function initializeGridViewTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelGridViewStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

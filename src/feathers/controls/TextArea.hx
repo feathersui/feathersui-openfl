@@ -816,7 +816,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function initializeTextAreaTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTextAreaStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

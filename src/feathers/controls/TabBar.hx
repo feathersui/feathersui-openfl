@@ -559,7 +559,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function initializeTabBarTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTabBarStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

@@ -51,7 +51,9 @@ class HDividedBox extends BaseDividedBox {
 	private var _resizeStartWidth2:Float;
 
 	private function initializeHDividedBoxTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelHDividedBoxStyles.initialize();
+		#end
 	}
 
 	override private function addItemAt(child:DisplayObject, index:Int):DisplayObject {

@@ -141,7 +141,9 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function initializeRouterNavigatorTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelRouterNavigatorStyles.initialize();
+		#end
 	}
 
 	/**

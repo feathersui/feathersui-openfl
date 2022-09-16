@@ -773,7 +773,9 @@ class Callout extends FeathersControl {
 	}
 
 	private function initializeCalloutTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelCalloutStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

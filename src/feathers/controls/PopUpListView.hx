@@ -633,7 +633,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function initializePopUpListViewTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPopUpListViewStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

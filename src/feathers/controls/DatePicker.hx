@@ -1105,7 +1105,9 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	public var pointerSelectionEnabled:Bool = true;
 
 	private function initializeDatePickerTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelDatePickerStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

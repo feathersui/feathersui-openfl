@@ -683,7 +683,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	}
 
 	private function initializeFormItemTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelFormItemStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

@@ -528,7 +528,9 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	}
 
 	private function initializeLabelTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelLabelStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

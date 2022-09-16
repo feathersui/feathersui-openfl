@@ -645,7 +645,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function initializeNumericStepperTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelNumericStepperStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

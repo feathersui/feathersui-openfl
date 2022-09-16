@@ -79,7 +79,9 @@ class Form extends LayoutGroup {
 	}
 
 	private function initializeFormTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelFormStyles.initialize();
+		#end
 	}
 
 	private function form_keyDownHandler(event:KeyboardEvent):Void {

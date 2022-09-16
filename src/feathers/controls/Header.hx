@@ -460,7 +460,9 @@ class Header extends FeathersControl implements ITextControl {
 	}
 
 	private function initializeHeaderTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelHeaderStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

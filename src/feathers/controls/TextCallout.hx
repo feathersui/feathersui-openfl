@@ -250,7 +250,9 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 	public var disabledTextFormat:AbstractTextFormat = null;
 
 	private function initializeTextCalloutTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTextCalloutStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

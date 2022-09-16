@@ -808,7 +808,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function initializeToggleButtonTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelToggleButtonStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

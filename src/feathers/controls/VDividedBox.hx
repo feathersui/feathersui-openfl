@@ -81,7 +81,9 @@ class VDividedBox extends BaseDividedBox {
 	}
 
 	private function initializeVDividedBoxTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelVDividedBoxStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

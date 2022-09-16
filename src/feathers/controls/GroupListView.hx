@@ -977,7 +977,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function initializeGroupListViewTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelGroupListViewStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

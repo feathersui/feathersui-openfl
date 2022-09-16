@@ -630,7 +630,9 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	private function initializePopUpDatePickerTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPopUpDatePickerStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

@@ -53,7 +53,9 @@ class HSlider extends BaseSlider {
 	}
 
 	private function initializeHSliderTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelHSliderStyles.initialize();
+		#end
 	}
 
 	override private function valueToLocation(value:Float):Float {

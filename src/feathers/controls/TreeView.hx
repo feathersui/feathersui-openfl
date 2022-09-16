@@ -899,7 +899,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function initializeTreeViewTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTreeViewStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

@@ -781,7 +781,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function initializeComboBoxTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelComboBoxStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

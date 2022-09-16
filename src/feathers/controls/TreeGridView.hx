@@ -1019,7 +1019,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function initializeTreeGridViewTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTreeGridViewStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

@@ -393,7 +393,9 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	}
 
 	private function initializeScrollContainerTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelScrollContainerStyles.initialize();
+		#end
 	}
 
 	override public function dispatchEvent(event:Event):Bool {

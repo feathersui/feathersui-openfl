@@ -1034,7 +1034,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function initializeTextInputTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTextInputStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {

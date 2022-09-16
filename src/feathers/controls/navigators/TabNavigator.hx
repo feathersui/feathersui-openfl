@@ -371,7 +371,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function initializeTabNavigatorTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTabNavigatorStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

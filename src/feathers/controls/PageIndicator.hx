@@ -334,7 +334,9 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function initializePageIndicatorTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPageIndicatorStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

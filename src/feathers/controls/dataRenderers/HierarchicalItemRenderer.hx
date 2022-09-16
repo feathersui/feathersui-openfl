@@ -476,7 +476,9 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	}
 
 	private function initializeHierarchicalItemRendererTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelHierarchicalItemRendererStyles.initialize();
+		#end
 	}
 
 	private function createDisclosureButton():Void {

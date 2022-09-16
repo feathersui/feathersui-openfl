@@ -366,7 +366,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private function initializePageNavigatorTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPageNavigatorStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

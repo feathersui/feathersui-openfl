@@ -936,7 +936,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function initializeListViewTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelListViewStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

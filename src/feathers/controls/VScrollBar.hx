@@ -36,7 +36,9 @@ class VScrollBar extends BaseScrollBar {
 	}
 
 	private function initializeVScrollBarTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelVScrollBarStyles.initialize();
+		#end
 	}
 
 	override private function valueToLocation(value:Float):Float {

@@ -86,7 +86,9 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 	public var sortDescendingIcon:DisplayObject = null;
 
 	private function initializeSortOrderHeaderRendererTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelSortOrderHeaderRendererStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

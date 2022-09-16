@@ -37,7 +37,9 @@ class HScrollBar extends BaseScrollBar {
 	}
 
 	private function initializeHScrollBarTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelHScrollBarStyles.initialize();
+		#end
 	}
 
 	override private function valueToLocation(value:Float):Float {

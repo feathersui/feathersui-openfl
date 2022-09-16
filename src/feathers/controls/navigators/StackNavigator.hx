@@ -265,7 +265,9 @@ class StackNavigator extends BaseNavigator {
 	private var _poppedHistoryItems:Array<HistoryItem> = null;
 
 	private function initializeStackNavigatorTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelStackNavigatorStyles.initialize();
+		#end
 	}
 
 	/**

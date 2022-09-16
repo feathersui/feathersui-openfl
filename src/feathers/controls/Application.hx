@@ -133,7 +133,9 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	#end
 
 	private function initializeApplicationTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelApplicationStyles.initialize();
+		#end
 	}
 
 	override private function update():Void {

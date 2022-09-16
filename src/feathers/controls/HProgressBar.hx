@@ -47,7 +47,9 @@ class HProgressBar extends BaseProgressBar {
 	}
 
 	private function initializeHProgressBarTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelHProgressBarStyles.initialize();
+		#end
 	}
 
 	override private function measure():Bool {

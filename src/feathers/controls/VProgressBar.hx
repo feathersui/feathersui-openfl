@@ -46,7 +46,9 @@ class VProgressBar extends BaseProgressBar {
 	}
 
 	private function initializeVProgressBarTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelVProgressBarStyles.initialize();
+		#end
 	}
 
 	override private function measure():Bool {

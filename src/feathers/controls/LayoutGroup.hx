@@ -381,7 +381,9 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function initializeLayoutGroupTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelLayoutGroupStyles.initialize();
+		#end
 	}
 
 	private function getPrivateIndexForPublicIndex(publicIndex:Int):Int {

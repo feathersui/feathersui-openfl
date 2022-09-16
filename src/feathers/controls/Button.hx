@@ -728,7 +728,9 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	}
 
 	private function initializeButtonTheme():Void {
+		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelButtonStyles.initialize();
+		#end
 	}
 
 	override private function initialize():Void {
