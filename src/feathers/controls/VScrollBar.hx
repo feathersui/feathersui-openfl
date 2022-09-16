@@ -82,9 +82,11 @@ class VScrollBar extends BaseScrollBar {
 			return false;
 		}
 
-		this._thumbSkinMeasurements.restore(this._currentThumbSkin);
-		if ((this._currentThumbSkin is IValidating)) {
-			cast(this._currentThumbSkin, IValidating).validateNow();
+		if (this._currentThumbSkin != null) {
+			this._thumbSkinMeasurements.restore(this._currentThumbSkin);
+			if ((this._currentThumbSkin is IValidating)) {
+				cast(this._currentThumbSkin, IValidating).validateNow();
+			}
 		}
 		if (this._currentTrackSkin != null) {
 			this._trackSkinMeasurements.restore(this._currentTrackSkin);
@@ -101,7 +103,10 @@ class VScrollBar extends BaseScrollBar {
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._currentThumbSkin.width + this.paddingLeft + this.paddingRight;
+			newWidth = this.paddingLeft + this.paddingRight;
+			if (this._currentThumbSkin != null) {
+				newWidth += this._currentThumbSkin.width;
+			}
 			if (this._currentTrackSkin != null) {
 				if (newWidth < this._currentTrackSkin.width) {
 					newWidth = this._currentTrackSkin.width;
@@ -121,7 +126,10 @@ class VScrollBar extends BaseScrollBar {
 					newHeight += this._currentSecondaryTrackSkin.height;
 				}
 			}
-			var thumbHeight = this._currentThumbSkin.height + this.paddingTop + this.paddingBottom;
+			var thumbHeight = this.paddingTop + this.paddingBottom;
+			if (this._currentThumbSkin != null) {
+				thumbHeight += this._currentThumbSkin.height;
+			}
 			if (newHeight < thumbHeight) {
 				newHeight = thumbHeight;
 			}
