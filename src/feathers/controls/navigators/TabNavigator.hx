@@ -19,7 +19,6 @@ import feathers.events.TabBarEvent;
 import feathers.layout.RelativePosition;
 import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
-import feathers.themes.steel.components.SteelTabNavigatorStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.EdgePuller;
@@ -372,7 +371,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function initializeTabNavigatorTheme():Void {
-		SteelTabNavigatorStyles.initialize();
+		feathers.themes.steel.components.SteelTabNavigatorStyles.initialize();
 	}
 
 	override private function update():Void {

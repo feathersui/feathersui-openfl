@@ -18,7 +18,6 @@ import feathers.data.IFlatCollection;
 import feathers.events.ButtonBarEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelAlertStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import openfl.Lib;
@@ -461,7 +460,7 @@ class Alert extends Panel {
 	}
 
 	private function initializeAlertTheme():Void {
-		SteelAlertStyles.initialize();
+		feathers.themes.steel.components.SteelAlertStyles.initialize();
 	}
 
 	override private function update():Void {

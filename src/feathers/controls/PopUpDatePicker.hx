@@ -18,7 +18,6 @@ import feathers.core.InvalidationFlag;
 import feathers.events.DatePickerEvent;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
-import feathers.themes.steel.components.SteelPopUpDatePickerStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import openfl.display.InteractiveObject;
@@ -631,7 +630,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	private function initializePopUpDatePickerTheme():Void {
-		SteelPopUpDatePickerStyles.initialize();
+		feathers.themes.steel.components.SteelPopUpDatePickerStyles.initialize();
 	}
 
 	override private function update():Void {

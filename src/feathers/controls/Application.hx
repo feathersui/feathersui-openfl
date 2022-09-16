@@ -11,7 +11,6 @@ package feathers.controls;
 import feathers.core.IFocusManagerAware;
 import feathers.core.IScaleManager;
 import feathers.core.PopUpManager;
-import feathers.themes.steel.components.SteelApplicationStyles;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -134,7 +133,7 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 	#end
 
 	private function initializeApplicationTheme():Void {
-		SteelApplicationStyles.initialize();
+		feathers.themes.steel.components.SteelApplicationStyles.initialize();
 	}
 
 	override private function update():Void {

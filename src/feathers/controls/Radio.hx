@@ -10,7 +10,6 @@ package feathers.controls;
 
 import feathers.core.IFocusObject;
 import feathers.core.ToggleGroup;
-import feathers.themes.steel.components.SteelRadioStyles;
 import openfl.display.InteractiveObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
@@ -125,7 +124,7 @@ class Radio extends ToggleButton implements IGroupedToggle {
 	}
 
 	private function initializeRadioTheme():Void {
-		SteelRadioStyles.initialize();
+		feathers.themes.steel.components.SteelRadioStyles.initialize();
 	}
 
 	private function navigateWithKeyboard(event:KeyboardEvent):Void {

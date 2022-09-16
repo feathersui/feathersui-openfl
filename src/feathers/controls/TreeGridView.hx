@@ -40,7 +40,6 @@ import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
-import feathers.themes.steel.components.SteelTreeGridViewStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectFactory;
@@ -1020,7 +1019,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function initializeTreeGridViewTheme():Void {
-		SteelTreeGridViewStyles.initialize();
+		feathers.themes.steel.components.SteelTreeGridViewStyles.initialize();
 	}
 
 	override private function initialize():Void {

@@ -41,7 +41,6 @@ import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
-import feathers.themes.steel.components.SteelGridViewStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectFactory;
@@ -1201,7 +1200,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function initializeGridViewTheme():Void {
-		SteelGridViewStyles.initialize();
+		feathers.themes.steel.components.SteelGridViewStyles.initialize();
 	}
 
 	override private function initialize():Void {

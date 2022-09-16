@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.themes.steel.components.SteelCheckStyles;
 import openfl.events.Event;
 
 /**
@@ -45,6 +44,6 @@ class Check extends ToggleButton {
 	}
 
 	private function initializeCheckTheme():Void {
-		SteelCheckStyles.initialize();
+		feathers.themes.steel.components.SteelCheckStyles.initialize();
 	}
 }

@@ -11,7 +11,6 @@ package feathers.controls;
 import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
-import feathers.themes.steel.components.SteelVScrollBarStyles;
 import openfl.events.Event;
 
 /**
@@ -37,7 +36,7 @@ class VScrollBar extends BaseScrollBar {
 	}
 
 	private function initializeVScrollBarTheme():Void {
-		SteelVScrollBarStyles.initialize();
+		feathers.themes.steel.components.SteelVScrollBarStyles.initialize();
 	}
 
 	override private function valueToLocation(value:Float):Float {

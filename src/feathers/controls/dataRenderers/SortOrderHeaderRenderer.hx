@@ -15,7 +15,6 @@ import feathers.data.ISortOrderObserver;
 import feathers.data.SortOrder;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelSortOrderHeaderRendererStyles;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 
@@ -87,7 +86,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 	public var sortDescendingIcon:DisplayObject = null;
 
 	private function initializeSortOrderHeaderRendererTheme():Void {
-		SteelSortOrderHeaderRendererStyles.initialize();
+		feathers.themes.steel.components.SteelSortOrderHeaderRendererStyles.initialize();
 	}
 
 	override private function update():Void {

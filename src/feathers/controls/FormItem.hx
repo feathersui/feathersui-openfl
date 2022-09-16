@@ -21,7 +21,6 @@ import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelFormItemStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
@@ -684,7 +683,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	}
 
 	private function initializeFormItemTheme():Void {
-		SteelFormItemStyles.initialize();
+		feathers.themes.steel.components.SteelFormItemStyles.initialize();
 	}
 
 	override private function initialize():Void {

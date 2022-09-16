@@ -19,7 +19,6 @@ import feathers.layout.ILayoutObject;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelItemRendererStyles;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
@@ -426,7 +425,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	}
 
 	private function initializeItemRendererTheme():Void {
-		SteelItemRendererStyles.initialize();
+		feathers.themes.steel.components.SteelItemRendererStyles.initialize();
 	}
 
 	override private function initialize():Void {

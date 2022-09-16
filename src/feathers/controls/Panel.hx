@@ -13,7 +13,6 @@ import feathers.core.IMeasureObject;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.layout.Measurements;
-import feathers.themes.steel.components.SteelPanelStyles;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 
@@ -151,7 +150,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 	}
 
 	private function initializePanelTheme():Void {
-		SteelPanelStyles.initialize();
+		feathers.themes.steel.components.SteelPanelStyles.initialize();
 	}
 
 	override private function update():Void {

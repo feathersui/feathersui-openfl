@@ -18,7 +18,6 @@ import feathers.events.FeathersEvent;
 import feathers.layout.Direction;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
-import feathers.themes.steel.components.SteelNumericStepperStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.ExclusivePointer;
@@ -646,7 +645,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function initializeNumericStepperTheme():Void {
-		SteelNumericStepperStyles.initialize();
+		feathers.themes.steel.components.SteelNumericStepperStyles.initialize();
 	}
 
 	override private function initialize():Void {

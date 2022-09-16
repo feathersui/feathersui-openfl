@@ -33,7 +33,6 @@ import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
-import feathers.themes.steel.components.SteelGroupListViewStyles;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
@@ -978,7 +977,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function initializeGroupListViewTheme():Void {
-		SteelGroupListViewStyles.initialize();
+		feathers.themes.steel.components.SteelGroupListViewStyles.initialize();
 	}
 
 	override private function update():Void {

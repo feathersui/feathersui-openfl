@@ -12,7 +12,6 @@ import feathers.controls.supportClasses.BaseDividedBox;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.layout.HDividedBoxLayout;
-import feathers.themes.steel.components.SteelHDividedBoxStyles;
 import feathers.utils.DisplayUtil;
 import openfl.display.DisplayObject;
 #if (lime && !flash && !commonjs)
@@ -52,7 +51,7 @@ class HDividedBox extends BaseDividedBox {
 	private var _resizeStartWidth2:Float;
 
 	private function initializeHDividedBoxTheme():Void {
-		SteelHDividedBoxStyles.initialize();
+		feathers.themes.steel.components.SteelHDividedBoxStyles.initialize();
 	}
 
 	override private function addItemAt(child:DisplayObject, index:Int):DisplayObject {

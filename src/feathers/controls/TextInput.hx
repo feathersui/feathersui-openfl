@@ -23,7 +23,6 @@ import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelTextInputStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
@@ -1035,7 +1034,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function initializeTextInputTheme():Void {
-		SteelTextInputStyles.initialize();
+		feathers.themes.steel.components.SteelTextInputStyles.initialize();
 	}
 
 	override private function initialize():Void {

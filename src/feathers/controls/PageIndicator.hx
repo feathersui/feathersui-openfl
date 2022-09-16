@@ -22,7 +22,6 @@ import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.layout.VerticalLayout;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelPageIndicatorStyles;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
@@ -335,7 +334,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function initializePageIndicatorTheme():Void {
-		SteelPageIndicatorStyles.initialize();
+		feathers.themes.steel.components.SteelPageIndicatorStyles.initialize();
 	}
 
 	override private function update():Void {

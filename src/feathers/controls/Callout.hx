@@ -21,7 +21,6 @@ import feathers.layout.RelativePosition;
 import feathers.layout.RelativePositions;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelCalloutStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -774,7 +773,7 @@ class Callout extends FeathersControl {
 	}
 
 	private function initializeCalloutTheme():Void {
-		SteelCalloutStyles.initialize();
+		feathers.themes.steel.components.SteelCalloutStyles.initialize();
 	}
 
 	override private function update():Void {

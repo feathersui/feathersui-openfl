@@ -10,7 +10,6 @@ package feathers.core;
 
 import feathers.controls.Label;
 import feathers.style.IVariantStyleObject;
-import feathers.themes.steel.components.SteelToolTipStyles;
 import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -90,7 +89,7 @@ class DefaultToolTipManager implements IToolTipManager {
 	}
 
 	private function initializeToolTipStyles():Void {
-		SteelToolTipStyles.initialize();
+		feathers.themes.steel.components.SteelToolTipStyles.initialize();
 	}
 
 	private function clearTarget():Void {

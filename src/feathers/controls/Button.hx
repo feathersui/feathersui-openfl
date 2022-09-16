@@ -22,7 +22,6 @@ import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelButtonStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -729,7 +728,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	}
 
 	private function initializeButtonTheme():Void {
-		SteelButtonStyles.initialize();
+		feathers.themes.steel.components.SteelButtonStyles.initialize();
 	}
 
 	override private function initialize():Void {

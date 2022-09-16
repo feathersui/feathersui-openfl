@@ -18,7 +18,6 @@ import feathers.layout.ILayoutObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelLayoutGroupStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -382,7 +381,7 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function initializeLayoutGroupTheme():Void {
-		SteelLayoutGroupStyles.initialize();
+		feathers.themes.steel.components.SteelLayoutGroupStyles.initialize();
 	}
 
 	private function getPrivateIndexForPublicIndex(publicIndex:Int):Int {

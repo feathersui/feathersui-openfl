@@ -10,7 +10,6 @@ package feathers.controls.navigators;
 
 import feathers.data.RouteState;
 import feathers.motion.effects.IEffectContext;
-import feathers.themes.steel.components.SteelRouterNavigatorStyles;
 import feathers.utils.Path2EReg;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
@@ -142,7 +141,7 @@ class RouterNavigator extends BaseNavigator {
 	}
 
 	private function initializeRouterNavigatorTheme():Void {
-		SteelRouterNavigatorStyles.initialize();
+		feathers.themes.steel.components.SteelRouterNavigatorStyles.initialize();
 	}
 
 	/**

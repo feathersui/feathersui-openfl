@@ -16,7 +16,6 @@ import feathers.layout.AutoSizeMode;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutObject;
 import feathers.layout.IScrollLayout;
-import feathers.themes.steel.components.SteelScrollContainerStyles;
 import openfl.display.DisplayObject;
 import openfl.errors.RangeError;
 import openfl.events.Event;
@@ -394,7 +393,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	}
 
 	private function initializeScrollContainerTheme():Void {
-		SteelScrollContainerStyles.initialize();
+		feathers.themes.steel.components.SteelScrollContainerStyles.initialize();
 	}
 
 	override public function dispatchEvent(event:Event):Bool {

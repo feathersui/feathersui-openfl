@@ -35,7 +35,6 @@ import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
-import feathers.themes.steel.components.SteelTreeViewStyles;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
@@ -900,7 +899,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function initializeTreeViewTheme():Void {
-		SteelTreeViewStyles.initialize();
+		feathers.themes.steel.components.SteelTreeViewStyles.initialize();
 	}
 
 	override private function update():Void {

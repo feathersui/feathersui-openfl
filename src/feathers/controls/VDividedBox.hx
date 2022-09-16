@@ -12,7 +12,6 @@ import feathers.controls.supportClasses.BaseDividedBox;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.layout.VDividedBoxLayout;
-import feathers.themes.steel.components.SteelVDividedBoxStyles;
 import feathers.utils.DisplayUtil;
 import openfl.display.DisplayObject;
 #if (lime && !flash && !commonjs)
@@ -82,7 +81,7 @@ class VDividedBox extends BaseDividedBox {
 	}
 
 	private function initializeVDividedBoxTheme():Void {
-		SteelVDividedBoxStyles.initialize();
+		feathers.themes.steel.components.SteelVDividedBoxStyles.initialize();
 	}
 
 	override private function initialize():Void {

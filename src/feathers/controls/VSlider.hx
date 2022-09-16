@@ -10,7 +10,6 @@ package feathers.controls;
 
 import feathers.controls.supportClasses.BaseSlider;
 import feathers.core.IValidating;
-import feathers.themes.steel.components.SteelVSliderStyles;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
@@ -54,7 +53,7 @@ class VSlider extends BaseSlider {
 	}
 
 	private function initializeVSliderTheme():Void {
-		SteelVSliderStyles.initialize();
+		feathers.themes.steel.components.SteelVSliderStyles.initialize();
 	}
 
 	override private function valueToLocation(value:Float):Float {

@@ -18,7 +18,6 @@ import feathers.core.InvalidationFlag;
 import feathers.core.PopUpManager;
 import feathers.events.FeathersEvent;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelTextAreaStyles;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
@@ -817,7 +816,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function initializeTextAreaTheme():Void {
-		SteelTextAreaStyles.initialize();
+		feathers.themes.steel.components.SteelTextAreaStyles.initialize();
 	}
 
 	override private function update():Void {

@@ -11,7 +11,6 @@ package feathers.controls;
 import feathers.controls.supportClasses.BaseProgressBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
-import feathers.themes.steel.components.SteelHProgressBarStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.events.Event;
 
@@ -48,7 +47,7 @@ class HProgressBar extends BaseProgressBar {
 	}
 
 	private function initializeHProgressBarTheme():Void {
-		SteelHProgressBarStyles.initialize();
+		feathers.themes.steel.components.SteelHProgressBarStyles.initialize();
 	}
 
 	override private function measure():Bool {

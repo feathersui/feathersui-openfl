@@ -22,7 +22,6 @@ import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.ListViewEvent;
 import feathers.layout.Measurements;
-import feathers.themes.steel.components.SteelComboBoxStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectFactory;
@@ -782,7 +781,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function initializeComboBoxTheme():Void {
-		SteelComboBoxStyles.initialize();
+		feathers.themes.steel.components.SteelComboBoxStyles.initialize();
 	}
 
 	override private function update():Void {

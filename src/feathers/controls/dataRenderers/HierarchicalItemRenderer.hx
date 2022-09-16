@@ -16,7 +16,6 @@ import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelHierarchicalItemRendererStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import openfl.display.DisplayObject;
@@ -477,7 +476,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	}
 
 	private function initializeHierarchicalItemRendererTheme():Void {
-		SteelHierarchicalItemRendererStyles.initialize();
+		feathers.themes.steel.components.SteelHierarchicalItemRendererStyles.initialize();
 	}
 
 	private function createDisclosureButton():Void {

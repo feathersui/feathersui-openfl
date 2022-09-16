@@ -15,7 +15,6 @@ import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelToggleSwitchStyles;
 import feathers.utils.ExclusivePointer;
 import motion.Actuate;
 import motion.actuators.SimpleActuator;
@@ -313,7 +312,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	private function initializeToggleSwitchTheme():Void {
-		SteelToggleSwitchStyles.initialize();
+		feathers.themes.steel.components.SteelToggleSwitchStyles.initialize();
 	}
 
 	override private function update():Void {

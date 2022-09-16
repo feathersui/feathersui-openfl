@@ -21,7 +21,6 @@ import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelToggleButtonStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -809,7 +808,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	private function initializeToggleButtonTheme():Void {
-		SteelToggleButtonStyles.initialize();
+		feathers.themes.steel.components.SteelToggleButtonStyles.initialize();
 	}
 
 	override private function initialize():Void {

@@ -23,7 +23,6 @@ import feathers.layout.ILayoutIndexObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelButtonBarStyles;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
@@ -437,7 +436,7 @@ class ButtonBar extends FeathersControl {
 	}
 
 	private function initializeButtonBarTheme():Void {
-		SteelButtonBarStyles.initialize();
+		feathers.themes.steel.components.SteelButtonBarStyles.initialize();
 	}
 
 	override private function update():Void {

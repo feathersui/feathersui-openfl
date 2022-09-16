@@ -10,7 +10,6 @@ package feathers.controls;
 
 import feathers.events.FormEvent;
 import feathers.events.TriggerEvent;
-import feathers.themes.steel.components.SteelFormStyles;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
@@ -80,7 +79,7 @@ class Form extends LayoutGroup {
 	}
 
 	private function initializeFormTheme():Void {
-		SteelFormStyles.initialize();
+		feathers.themes.steel.components.SteelFormStyles.initialize();
 	}
 
 	private function form_keyDownHandler(event:KeyboardEvent):Void {

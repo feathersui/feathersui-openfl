@@ -27,7 +27,6 @@ import feathers.layout.ILayoutIndexObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelTabBarStyles;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
@@ -560,7 +559,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	private function initializeTabBarTheme():Void {
-		SteelTabBarStyles.initialize();
+		feathers.themes.steel.components.SteelTabBarStyles.initialize();
 	}
 
 	override private function update():Void {

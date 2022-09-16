@@ -22,7 +22,6 @@ import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.ListViewEvent;
 import feathers.layout.Measurements;
-import feathers.themes.steel.components.SteelPopUpListViewStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectFactory;
@@ -634,7 +633,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function initializePopUpListViewTheme():Void {
-		SteelPopUpListViewStyles.initialize();
+		feathers.themes.steel.components.SteelPopUpListViewStyles.initialize();
 	}
 
 	override private function update():Void {

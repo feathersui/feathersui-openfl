@@ -33,7 +33,6 @@ import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
-import feathers.themes.steel.components.SteelListViewStyles;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
@@ -937,7 +936,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function initializeListViewTheme():Void {
-		SteelListViewStyles.initialize();
+		feathers.themes.steel.components.SteelListViewStyles.initialize();
 	}
 
 	override private function update():Void {

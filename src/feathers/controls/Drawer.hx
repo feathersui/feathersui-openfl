@@ -20,7 +20,6 @@ import feathers.layout.AutoSizeMode;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.skins.IProgrammaticSkin;
-import feathers.themes.steel.components.SteelDrawerStyles;
 import feathers.utils.EdgePuller;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MeasurementsUtil;
@@ -397,7 +396,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	}
 
 	private function initializeDrawerTheme():Void {
-		SteelDrawerStyles.initialize();
+		feathers.themes.steel.components.SteelDrawerStyles.initialize();
 	}
 
 	override private function initialize():Void {

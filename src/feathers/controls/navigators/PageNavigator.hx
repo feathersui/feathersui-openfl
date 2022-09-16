@@ -17,7 +17,6 @@ import feathers.events.FlatCollectionEvent;
 import feathers.layout.RelativePosition;
 import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
-import feathers.themes.steel.components.SteelPageNavigatorStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.DisplayObjectFactory;
 import feathers.utils.EdgePuller;
@@ -367,7 +366,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private function initializePageNavigatorTheme():Void {
-		SteelPageNavigatorStyles.initialize();
+		feathers.themes.steel.components.SteelPageNavigatorStyles.initialize();
 	}
 
 	override private function update():Void {

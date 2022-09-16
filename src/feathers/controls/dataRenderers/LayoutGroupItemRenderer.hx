@@ -14,7 +14,6 @@ import feathers.core.IStateContext;
 import feathers.core.IStateObserver;
 import feathers.events.FeathersEvent;
 import feathers.layout.ILayoutIndexObject;
-import feathers.themes.steel.components.SteelLayoutGroupItemRendererStyles;
 import feathers.utils.PointerToState;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -244,7 +243,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	}
 
 	private function initializeLayoutGroupItemRendererTheme():Void {
-		SteelLayoutGroupItemRendererStyles.initialize();
+		feathers.themes.steel.components.SteelLayoutGroupItemRendererStyles.initialize();
 	}
 
 	override private function initialize():Void {

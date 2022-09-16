@@ -11,7 +11,6 @@ package feathers.controls.navigators;
 import feathers.events.FeathersEvent;
 import feathers.motion.effects.EventToPositionEffectContext;
 import feathers.motion.effects.IEffectContext;
-import feathers.themes.steel.components.SteelStackNavigatorStyles;
 import feathers.utils.EdgePuller;
 import feathers.utils.ExclusivePointer;
 import openfl.display.DisplayObject;
@@ -266,7 +265,7 @@ class StackNavigator extends BaseNavigator {
 	private var _poppedHistoryItems:Array<HistoryItem> = null;
 
 	private function initializeStackNavigatorTheme():Void {
-		SteelStackNavigatorStyles.initialize();
+		feathers.themes.steel.components.SteelStackNavigatorStyles.initialize();
 	}
 
 	/**

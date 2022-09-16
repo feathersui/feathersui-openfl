@@ -12,7 +12,6 @@ import feathers.core.IHTMLTextControl;
 import feathers.core.ITextControl;
 import feathers.layout.RelativePositions;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelTextCalloutStyles;
 import openfl.display.DisplayObject;
 #if (openfl >= "9.2.0")
 import openfl.text.StyleSheet;
@@ -251,7 +250,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 	public var disabledTextFormat:AbstractTextFormat = null;
 
 	private function initializeTextCalloutTheme():Void {
-		SteelTextCalloutStyles.initialize();
+		feathers.themes.steel.components.SteelTextCalloutStyles.initialize();
 	}
 
 	override private function initialize():Void {

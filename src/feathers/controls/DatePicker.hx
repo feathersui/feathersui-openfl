@@ -26,7 +26,6 @@ import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
-import feathers.themes.steel.components.SteelDatePickerStyles;
 import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DateUtil;
@@ -1106,7 +1105,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	public var pointerSelectionEnabled:Bool = true;
 
 	private function initializeDatePickerTheme():Void {
-		SteelDatePickerStyles.initialize();
+		feathers.themes.steel.components.SteelDatePickerStyles.initialize();
 	}
 
 	override private function initialize():Void {

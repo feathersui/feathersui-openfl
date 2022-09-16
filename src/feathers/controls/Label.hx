@@ -20,7 +20,6 @@ import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelLabelStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
@@ -529,7 +528,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	}
 
 	private function initializeLabelTheme():Void {
-		SteelLabelStyles.initialize();
+		feathers.themes.steel.components.SteelLabelStyles.initialize();
 	}
 
 	override private function initialize():Void {

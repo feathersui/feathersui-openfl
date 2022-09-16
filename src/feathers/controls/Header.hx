@@ -17,7 +17,6 @@ import feathers.layout.Measurements;
 import feathers.layout.VerticalAlign;
 import feathers.skins.IProgrammaticSkin;
 import feathers.text.TextFormat;
-import feathers.themes.steel.components.SteelHeaderStyles;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -461,7 +460,7 @@ class Header extends FeathersControl implements ITextControl {
 	}
 
 	private function initializeHeaderTheme():Void {
-		SteelHeaderStyles.initialize();
+		feathers.themes.steel.components.SteelHeaderStyles.initialize();
 	}
 
 	override private function initialize():Void {
