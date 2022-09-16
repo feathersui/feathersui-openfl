@@ -119,39 +119,55 @@ class HSlider extends BaseSlider {
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this._currentTrackSkin.width;
-			if (this._currentSecondaryTrackSkin != null) {
-				newWidth += this._currentSecondaryTrackSkin.width;
+			newWidth = 0.0;
+			if (this._currentTrackSkin != null) {
+				newWidth += this._currentTrackSkin.width;
+				if (this._currentSecondaryTrackSkin != null) {
+					newWidth += this._currentSecondaryTrackSkin.width;
+				}
 			}
 		}
 
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
-			newHeight = this._currentThumbSkin.height;
-			if (newHeight < this._currentTrackSkin.height) {
-				newHeight = this._currentTrackSkin.height;
+			newHeight = 0.0;
+			if (this._currentThumbSkin != null) {
+				newHeight += this._currentThumbSkin.height;
 			}
-			if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
-				newHeight = this._currentSecondaryTrackSkin.height;
+			if (this._currentTrackSkin != null) {
+				if (newHeight < this._currentTrackSkin.height) {
+					newHeight = this._currentTrackSkin.height;
+				}
+				if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
+					newHeight = this._currentSecondaryTrackSkin.height;
+				}
 			}
 		}
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = this._currentTrackSkin.width;
-			if (this._currentSecondaryTrackSkin != null) {
-				newMinWidth += this._secondaryTrackSkinMeasurements.width;
+			newMinWidth = 0.0;
+			if (this._currentTrackSkin != null) {
+				newMinWidth += this._currentTrackSkin.width;
+				if (this._currentSecondaryTrackSkin != null) {
+					newMinWidth += this._secondaryTrackSkinMeasurements.width;
+				}
 			}
 		}
 
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
-			newMinHeight = this._currentThumbSkin.height;
-			if (newMinHeight < this._currentTrackSkin.height) {
-				newMinHeight = this._currentTrackSkin.height;
+			newMinHeight = 0.0;
+			if (this._currentThumbSkin != null) {
+				newMinHeight += this._currentThumbSkin.height;
 			}
-			if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
-				newMinHeight = this._currentSecondaryTrackSkin.height;
+			if (this._currentTrackSkin != null) {
+				if (newMinHeight < this._currentTrackSkin.height) {
+					newMinHeight = this._currentTrackSkin.height;
+				}
+				if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
+					newMinHeight = this._currentSecondaryTrackSkin.height;
+				}
 			}
 		}
 
