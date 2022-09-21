@@ -2,6 +2,7 @@
 <project>
 	<meta title="Feathers UI Tests" package="com.feathersui.tests" version="1.0.0" company="Bowler Hat LLC"/>
 	<app main="TestMain" file="FeathersTests"/>
+	<window hidden="true"/>
 
 	<source path="src"/>
 	<source path="../src"/>
