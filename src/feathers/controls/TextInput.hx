@@ -1044,6 +1044,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (this.textField == null) {
 			this.textField = new TextField();
 			this.textField.tabEnabled = false;
+			// make sure that the TextField type is set right away so that the
+			// TextInput can receive focus
+			this.refreshTextFieldType();
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
 			this.addChild(this.textField);
@@ -1446,12 +1449,16 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
 	}
 
-	private function refreshTextStyles():Void {
+	private function refreshTextFieldType():Void {
 		if (this._enabled && this._editable && this.textField.type != TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.INPUT;
 		} else if ((!this._enabled || !this._editable) && this.textField.type == TextFieldType.INPUT) {
 			this.textField.type = TextFieldType.DYNAMIC;
 		}
+	}
+
+	private function refreshTextStyles():Void {
+		this.refreshTextFieldType();
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
