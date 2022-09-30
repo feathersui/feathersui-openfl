@@ -1045,7 +1045,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.textField = new TextField();
 			this.textField.tabEnabled = false;
 			// make sure that the TextField type is set right away so that the
-			// TextInput can receive focus
+			// TextInput can receive focus in openfl <= 9.2.0
 			this.refreshTextFieldType();
 			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
 			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
