@@ -2213,7 +2213,15 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		} else if (result >= this._dataProvider.length) {
 			result = this._dataProvider.length - 1;
 		}
-		if (result == this._selectedIndex) {
+		var changed = this._selectedIndex != result;
+		if (!changed && result != -1) {
+			var rowRenderer = this.dataToRowRenderer.get(this._dataProvider.get(result));
+			if (rowRenderer == null) {
+				// if we can't find the item renderer, we need to scroll
+				changed = true;
+			}
+		}
+		if (!changed) {
 			return;
 		}
 		event.preventDefault();

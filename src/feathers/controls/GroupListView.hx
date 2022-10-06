@@ -1701,7 +1701,15 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				lastResult = result;
 			}
 		}
-		if (result == startIndex) {
+		var changed = result != startIndex;
+		if (!changed && result != -1) {
+			var itemRenderer = this.itemToItemRenderer(this._dataProvider.get(location));
+			if (itemRenderer == null) {
+				// if we can't find the item renderer, we need to scroll
+				changed = true;
+			}
+		}
+		if (!changed) {
 			return;
 		}
 		event.preventDefault();

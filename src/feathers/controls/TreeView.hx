@@ -1571,12 +1571,25 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		} else if (result >= this._layoutItems.length) {
 			result = this._layoutItems.length - 1;
 		}
-		if (result == startIndex) {
+		var changed = result != startIndex;
+		var pendingLocation:Array<Int> = null;
+		if (!changed && result != -1) {
+			pendingLocation = this.displayIndexToLocation(result);
+			var itemRenderer = this.itemToItemRenderer(this._dataProvider.get(pendingLocation));
+			if (itemRenderer == null) {
+				// if we can't find the item renderer, we need to scroll
+				changed = true;
+			}
+		}
+		if (!changed) {
 			return;
 		}
 		event.preventDefault();
+		if (pendingLocation == null) {
+			pendingLocation = this.displayIndexToLocation(result);
+		}
 		// use the setter
-		this.selectedLocation = this.displayIndexToLocation(result);
+		this.selectedLocation = pendingLocation;
 		if (this._selectedLocation != null) {
 			this.scrollToLocation(this._selectedLocation);
 		}
