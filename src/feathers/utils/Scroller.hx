@@ -618,7 +618,7 @@ class Scroller extends EventDispatcher {
 			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, scroller_target_mouseDownHandler);
 			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, scroller_target_mouseDownCaptureHandler, true);
 			this._target.removeEventListener(MouseEvent.MOUSE_WHEEL, scroller_target_mouseWheelHandler);
-			#if html5
+			#if (html5 && !feathersui_innogames_openfl)
 			var window = cast(Lib.global, js.html.Window);
 			window.removeEventListener("wheel", scroller_window_wheelCaptureHandler, {capture: true});
 			#end
@@ -632,7 +632,7 @@ class Scroller extends EventDispatcher {
 			this._target.addEventListener(MouseEvent.MOUSE_DOWN, scroller_target_mouseDownHandler, false, 0, true);
 			this._target.addEventListener(MouseEvent.MOUSE_DOWN, scroller_target_mouseDownCaptureHandler, true, 0, true);
 			this._target.addEventListener(MouseEvent.MOUSE_WHEEL, scroller_target_mouseWheelHandler, false, 0, true);
-			#if html5
+			#if (html5 && !feathersui_innogames_openfl)
 			var window = cast(Lib.global, js.html.Window);
 			window.addEventListener("wheel", scroller_window_wheelCaptureHandler, {capture: true});
 			#end
@@ -1482,7 +1482,7 @@ class Scroller extends EventDispatcher {
 		this.touchEnd(POINTER_ID_MOUSE, true);
 	}
 
-	#if html5
+	#if (html5 && !feathersui_innogames_openfl)
 	private function scroller_window_wheelCaptureHandler(event:WheelEvent):Void {
 		this._mouseWheelDeltaMode = event.deltaMode;
 	}
