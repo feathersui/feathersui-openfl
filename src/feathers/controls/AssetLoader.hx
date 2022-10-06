@@ -394,11 +394,11 @@ class AssetLoader extends FeathersControl {
 		// if the minimum is not set explicitly, but the maximum is, use the
 		// maximum for the minimum
 		// BowlerHatLLC/feathersui-starling#1541
-		if (needsMinWidth && !needsMaxWidth && minWidth < this.explicitMaxWidth) {
-			minWidth = this.explicitMaxWidth;
+		if (needsMinWidth && !needsMaxWidth && newMinWidth < this.explicitMaxWidth) {
+			newMinWidth = this.explicitMaxWidth;
 		}
-		if (needsMinHeight && !needsMaxHeight && minHeight < this.explicitMaxHeight) {
-			minHeight = this.explicitMaxHeight;
+		if (needsMinHeight && !needsMaxHeight && newMinHeight < this.explicitMaxHeight) {
+			newMinHeight = this.explicitMaxHeight;
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
