@@ -183,23 +183,26 @@ class AssetLoaderTest extends Test {
 	}
 
 	@:timeout(1000)
-	public function testAutoSizeHeightWithScaleModeShowAll(async:Async):Void {
-		this._loader.source = BLUE100x50;
-		this._loader.width = 200;
+	// feathersui/feathersui-openfl#131
+	public function testExplicitMaxWidthAndExplicitMaxHeightMaintainsAspectRatio1(async:Async):Void {
+		var maxWidth = 250.0;
+		var maxHeight = 150.0;
+		this._loader.source = RED200x300;
+		this._loader.maxWidth = maxWidth;
+		this._loader.maxHeight = maxHeight;
 		this._loader.scaleMode = StageScaleMode.SHOW_ALL;
 		this._loader.validateNow();
 		Timer.delay(() -> {
 			this._loader.validateNow();
-			Assert.equals(100, this._loader.height);
-			Assert.equals(100, this._loader.minHeight);
+			Assert.equals(100.0, this._loader.width);
+			Assert.equals(maxHeight, this._loader.height);
 			async.done();
 		}, 800);
 	}
 
-	// BowlerHatLLC/feathersui-starling#1541
-
 	@:timeout(1000)
-	public function testEpxlicitMaxSizeWithLargerMinSize(async:Async):Void {
+	// feathersui/feathersui-openfl#131
+	public function testExplicitMaxWidthAndExplicitMaxHeightMaintainsAspectRatio2(async:Async):Void {
 		var maxWidth = 50.0;
 		var maxHeight = 75.0;
 		this._loader.source = BLUE100x50;
@@ -210,7 +213,7 @@ class AssetLoaderTest extends Test {
 		Timer.delay(() -> {
 			this._loader.validateNow();
 			Assert.equals(maxWidth, this._loader.width);
-			Assert.equals(maxHeight, this._loader.height);
+			Assert.equals(25.0, this._loader.height);
 			async.done();
 		}, 800);
 	}

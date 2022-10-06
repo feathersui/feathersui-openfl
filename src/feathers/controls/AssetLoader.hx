@@ -343,19 +343,6 @@ class AssetLoader extends FeathersControl {
 			}
 		}
 
-		// this ensures that an AssetLoader can recover from width or height
-		// being set to 0.0 by percentWidth or percentHeight
-		if (needsWidth && needsMinWidth) {
-			// if no width values are set, use the original content height
-			// for the minHeight
-			widthScale = 1.0;
-		}
-		if (needsHeight && needsMinHeight) {
-			// if no height values are set, use the original content width
-			// for the minWidth
-			heightScale = 1.0;
-		}
-
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
 			if (this.content != null) {
@@ -389,16 +376,6 @@ class AssetLoader extends FeathersControl {
 			} else {
 				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
-		}
-
-		// if the minimum is not set explicitly, but the maximum is, use the
-		// maximum for the minimum
-		// BowlerHatLLC/feathersui-starling#1541
-		if (needsMinWidth && !needsMaxWidth && newMinWidth < this.explicitMaxWidth) {
-			newMinWidth = this.explicitMaxWidth;
-		}
-		if (needsMinHeight && !needsMaxHeight && newMinHeight < this.explicitMaxHeight) {
-			newMinHeight = this.explicitMaxHeight;
 		}
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
