@@ -186,6 +186,31 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		return this._autoSizeMode;
 	}
 
+	private var _manageChildVisibility:Bool = false;
+
+	/**
+		An optional performance optimization that adjusts the `visible` property
+		of all children when the scroll position changes. The children inside
+		the view port bounds are made visible and the children outside the view
+		port bounds are made invisible.
+
+		@since 1.1.0
+	**/
+	public var manageChildVisibility(get, set):Bool;
+
+	private function get_manageChildVisibility():Bool {
+		return this._manageChildVisibility;
+	}
+
+	private function set_manageChildVisibility(value:Bool):Bool {
+		if (this._manageChildVisibility == value) {
+			return this._manageChildVisibility;
+		}
+		this._manageChildVisibility = value;
+		this.setInvalid(LAYOUT);
+		return this._manageChildVisibility;
+	}
+
 	private var numRawChildren(get, never):Int;
 
 	private function get_numRawChildren():Int {
@@ -497,6 +522,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	}
 
 	private function refreshLayout():Void {
+		this.layoutViewPort.manageChildVisibility = this._manageChildVisibility;
 		this.layoutViewPort.layout = this.layout;
 	}
 
