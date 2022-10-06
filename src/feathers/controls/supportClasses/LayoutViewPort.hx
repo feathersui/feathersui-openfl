@@ -401,9 +401,12 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 	private var _manageChildVisibility:Bool = false;
 
 	/**
-		If the `manageChildVisibility` value is `true`, all display objects offscreen the layout will automatically be set to visible false.
+		An optional performance optimization that adjusts the `visible` property
+		of all children when the scroll position changes. The children inside
+		the view port bounds are made visible and the children outside the view
+		port bounds are made invisible.
 
-		@since 1.0.0
+		@since 1.1.0
 	**/
 	public var manageChildVisibility(get, set):Bool;
 
@@ -416,55 +419,58 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 			return this._manageChildVisibility;
 		}
 
-		if(!value)
-		{
-			for (child in items)
-			{
+		this._manageChildVisibility = value;
+
+		if (this._manageChildVisibility) {
+			this.setInvalid(LAYOUT);
+		} else {
+			// make all children visible immediately
+			// no need to invalidate
+			for (child in items) {
 				child.visible = true;
 			}
 		}
-
-		return this._manageChildVisibility = value;
+		return this._manageChildVisibility;
 	}
 
-	override private function update():Void
-	{
+	override private function update():Void {
 		var layoutInvalid = this.isInvalid(LAYOUT);
 		var sizeInvalid = this.isInvalid(SIZE);
 		var scrollInvalid = this.isInvalid(SCROLL);
 
-		if(this._manageChildVisibility && (layoutInvalid || sizeInvalid || scrollInvalid))
-		{
-			refreshChildVisibility();
-		}
-
 		super.update();
+
+		if (layoutInvalid || sizeInvalid || scrollInvalid) {
+			this.refreshChildVisibility();
+		}
 	}
 
-	@:noCompletion private inline function refreshChildVisibility():Void {
-		for (child in items)
-		{
-			child.visible = !(child.x > scrollX + visibleWidth || child.x + child.width < scrollX || child.y > scrollY + visibleHeight || child.y + child.height < scrollY);
+	private inline function refreshChildVisibility():Void {
+		if (!this._manageChildVisibility) {
+			return;
+		}
+		var maxX = this._scrollX + this._actualVisibleWidth;
+		var maxY = this._scrollY + this._actualVisibleHeight;
+		for (child in items) {
+			child.visible = !((child.x > maxX)
+				|| ((child.x + child.width) < this._scrollX)
+				|| (child.y > maxY)
+				|| ((child.y + child.height) < this._scrollY));
 		}
 	}
 
 	override public function removeChild(child:DisplayObject):DisplayObject {
-		if(this._manageChildVisibility && child != null)
-		{
+		if (this._manageChildVisibility && child != null) {
 			child.visible = true;
 		}
 		return super.removeChild(child);
 	}
 
 	override public function removeChildAt(index:Int):DisplayObject {
-		if(this._manageChildVisibility)
-		{
-			var child:DisplayObject = getChildAt(index);
-			if(child != null)
-			{
-				child.visible = true;
-			}
+		var child = super.removeChildAt(index);
+		if (this._manageChildVisibility && child != null) {
+			child.visible = true;
 		}
-		return super.removeChildAt(index);
+		return child;
 	}
 }
