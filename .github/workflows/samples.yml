@@ -68,6 +68,13 @@ jobs:
         haxelib run openfl build html5
         haxelib run openfl build flash
         haxelib run openfl build hl
+    - name: Build samples/dark-mode
+      working-directory: samples/dark-mode
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
     - name: Build samples/hello-world
       working-directory: samples/hello-world
       run: |
@@ -259,6 +266,10 @@ jobs:
         haxelib run openfl build air
     - name: Build samples/custom-theme
       working-directory: samples/custom-theme
+      run: |
+        haxelib run openfl build air
+    - name: Build samples/dark-mode
+      working-directory: samples/dark-mode
       run: |
         haxelib run openfl build air
     - name: Build samples/hello-world

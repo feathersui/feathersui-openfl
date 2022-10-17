@@ -10,6 +10,8 @@
 --next
 -cmd haxelib run openfl build custom-theme/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
+-cmd haxelib run openfl build dark-mode/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
 -cmd haxelib run openfl build hello-world/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
 -cmd haxelib run openfl build hn-reader/project.xml html5 -final -clean --haxedef=feathersui.com
