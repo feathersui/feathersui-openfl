@@ -63,6 +63,9 @@ class AssetLoaderTest extends Test {
 		this._loader.source = BLUE100x50;
 		this._loader.validateNow();
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			Assert.isTrue(complete);
 			Assert.isFalse(ioError);
 			Assert.isFalse(securityError);
@@ -88,6 +91,9 @@ class AssetLoaderTest extends Test {
 		this._loader.validateNow();
 		// chrome needs a really long delay, for some reason!
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			Assert.isFalse(complete);
 			Assert.isTrue(ioError);
 			Assert.isFalse(securityError);
@@ -104,6 +110,9 @@ class AssetLoaderTest extends Test {
 			resize = true;
 		});
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			this._loader.validateNow();
 			Assert.isTrue(resize);
 			Assert.equals(100, this._loader.width);
@@ -114,7 +123,7 @@ class AssetLoaderTest extends Test {
 		}, 800);
 	}
 
-	@:timeout(1000)
+	@:timeout(2000)
 	public function testResizeWithNewSource(async:Async):Void {
 		var resize = false;
 		this._loader.addEventListener(Event.COMPLETE, function(event:Event):Void {
@@ -130,14 +139,18 @@ class AssetLoaderTest extends Test {
 		this._loader.source = BLUE100x50;
 		this._loader.validateNow();
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			this._loader.validateNow();
+			Assert.equals(RED200x300, this._loader.source);
 			Assert.isTrue(resize);
 			Assert.equals(200, this._loader.width);
 			Assert.equals(300, this._loader.height);
 			Assert.equals(200, this._loader.minWidth);
 			Assert.equals(300, this._loader.minHeight);
 			async.done();
-		}, 800);
+		}, 1500);
 	}
 
 	@:timeout(1000)
@@ -147,6 +160,9 @@ class AssetLoaderTest extends Test {
 		this._loader.scaleMode = StageScaleMode.NO_SCALE;
 		this._loader.validateNow();
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			this._loader.validateNow();
 			Assert.equals(100, this._loader.width);
 			Assert.equals(100, this._loader.minWidth);
@@ -161,6 +177,9 @@ class AssetLoaderTest extends Test {
 		this._loader.scaleMode = StageScaleMode.NO_SCALE;
 		this._loader.validateNow();
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			this._loader.validateNow();
 			Assert.equals(50, this._loader.height);
 			Assert.equals(50, this._loader.minHeight);
@@ -175,6 +194,9 @@ class AssetLoaderTest extends Test {
 		this._loader.scaleMode = StageScaleMode.SHOW_ALL;
 		this._loader.validateNow();
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			this._loader.validateNow();
 			Assert.equals(400, this._loader.width);
 			Assert.equals(400, this._loader.minWidth);
@@ -193,6 +215,9 @@ class AssetLoaderTest extends Test {
 		this._loader.scaleMode = StageScaleMode.SHOW_ALL;
 		this._loader.validateNow();
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			this._loader.validateNow();
 			Assert.equals(100.0, this._loader.width);
 			Assert.equals(maxHeight, this._loader.height);
@@ -211,6 +236,9 @@ class AssetLoaderTest extends Test {
 		this._loader.scaleMode = StageScaleMode.SHOW_ALL;
 		this._loader.validateNow();
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			this._loader.validateNow();
 			Assert.equals(maxWidth, this._loader.width);
 			Assert.equals(25.0, this._loader.height);

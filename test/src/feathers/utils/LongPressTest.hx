@@ -51,6 +51,9 @@ class LongPressTest extends Test {
 		this._control.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
 		Assert.isFalse(longPressed);
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			Assert.isTrue(longPressed);
 			async.done();
 		}, 750);
@@ -66,6 +69,9 @@ class LongPressTest extends Test {
 		this._control.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP));
 		Assert.isFalse(longPressed);
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			Assert.isFalse(longPressed);
 			async.done();
 		}, 750);
@@ -80,6 +86,9 @@ class LongPressTest extends Test {
 		this._control.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_BEGIN));
 		Assert.isFalse(longPressed);
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			Assert.isTrue(longPressed);
 			async.done();
 		}, 750);
@@ -95,6 +104,9 @@ class LongPressTest extends Test {
 		this._control.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_END));
 		Assert.isFalse(longPressed);
 		Timer.delay(() -> {
+			if (async.timedOut) {
+				return;
+			}
 			Assert.isFalse(longPressed);
 			async.done();
 		}, 750);
