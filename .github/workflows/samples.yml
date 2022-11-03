@@ -232,7 +232,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: joshtynjala/setup-adobe-air-action@v1
+    - uses: joshtynjala/setup-adobe-air-action@v2
+      with:
+        air-version: "32.0"
+        accept-license: true
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
