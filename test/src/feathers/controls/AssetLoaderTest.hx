@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.AssetLoader;
 import haxe.Timer;
 import openfl.Lib;
 import openfl.display.StageScaleMode;
@@ -127,11 +128,15 @@ class AssetLoaderTest extends Test {
 	public function testResizeWithNewSource(async:Async):Void {
 		var resize = false;
 		this._loader.addEventListener(Event.COMPLETE, function(event:Event):Void {
-			if (this._loader.source == BLUE100x50) {
-				this._loader.source = RED200x300;
-				this._loader.validateNow();
+			if (async.timedOut) {
+				return;
+			}
+			var loader = cast(event.currentTarget, AssetLoader);
+			if (loader.source == BLUE100x50) {
+				loader.source = RED200x300;
+				loader.validateNow();
 				resize = false;
-				this._loader.addEventListener(Event.RESIZE, function(event:Event):Void {
+				loader.addEventListener(Event.RESIZE, function(event:Event):Void {
 					resize = true;
 				});
 			}
