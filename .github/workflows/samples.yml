@@ -234,7 +234,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: joshtynjala/setup-adobe-air-action@v2
       with:
-        air-version: "32.0"
+        air-version: "33.1"
         accept-license: true
     - uses: krdlab/setup-haxe@v1
       with:
