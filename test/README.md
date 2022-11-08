@@ -57,3 +57,10 @@ To run tests with HTML/JS, run the following command:
 ```sh
 openfl test html5
 ```
+
+To run tests headless in Chromium, WebKit and Firefox, run the following commands:
+
+```sh
+haxelib run openfl build html5 -final -Dheadless_html5
+node playwright-runner.js
+```
