@@ -1493,14 +1493,24 @@ class Scroller extends EventDispatcher {
 			// if we're already scrolling, we need to handle the event, even
 			// if the position doesn't technically change
 
-			// can't use preventDefault(), so don't let it bubble
+			// this is not ideal, but we can't use preventDefault() to inform
+			// parent scrollers that this scroller will handle this event, and
+			// that they should not handle it too. unfortunately, the mouse
+			// wheel event is not cancelable on all targets (in particular,
+			// the flash/air targets). instead, we will stop the event from
+			// bubbling to parent scrollers.
 			event.stopImmediatePropagation();
 			this.stop();
 		}
 		var deltaLines = event.delta;
 		switch (this._mouseWheelDeltaMode) {
 			case 0: // pixels
-				deltaLines = Std.int(deltaLines / 40);
+				// always move at least one line
+				if (deltaLines < 0) {
+					deltaLines = Std.int(Math.min(-1.0, deltaLines / 40));
+				} else {
+					deltaLines = Std.int(Math.max(1.0, deltaLines / 40));
+				}
 			case 2: // pages
 				deltaLines = deltaLines * 16;
 		}
@@ -1532,8 +1542,11 @@ class Scroller extends EventDispatcher {
 		if ((newScrollX == null || newScrollX == this._scrollX) && (newScrollY == null || newScrollY == this._scrollY)) {
 			return;
 		}
+		event.preventDefault();
 		if (!this._scrolling) {
 			// if we weren't scrolling before, we are now
+			// see comment above to understand why we're stopping the event from
+			//  bubbling instead of cancelling it with preventDefault()
 			event.stopImmediatePropagation();
 			this.stop();
 		}
