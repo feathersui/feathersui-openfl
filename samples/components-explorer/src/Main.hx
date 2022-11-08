@@ -1,4 +1,5 @@
 import com.feathersui.components.ViewPaths;
+import com.feathersui.components.views.ActivityIndicatorScreen;
 import com.feathersui.components.views.AlertScreen;
 import com.feathersui.components.views.AssetLoaderScreen;
 import com.feathersui.components.views.ButtonBarScreen;
@@ -86,6 +87,9 @@ class Main extends Application {
 			view.savedScrollY = dataToRestore.savedScrollY;
 		}
 		this._navigator.addRoute(mainMenu);
+
+		var activityIndicator = Route.withClass(ViewPaths.ACTIVITY_INDICATOR, ActivityIndicatorScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(activityIndicator);
 
 		var alert = Route.withClass(ViewPaths.ALERT, AlertScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(alert);

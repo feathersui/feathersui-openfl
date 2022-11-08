@@ -33,6 +33,7 @@ class MainMenu extends Panel {
 		var menuItems = new ArrayHierarchicalCollection([
 			// @formatter:off
 			new MenuItem("Basic Controls", null, [
+				new MenuItem("Activity Indicator", ViewPaths.ACTIVITY_INDICATOR),
 				new MenuItem("Asset Loader", ViewPaths.ASSET_LOADER),
 				new MenuItem("Button", ViewPaths.BUTTON),
 				new MenuItem("Check", ViewPaths.CHECK),
