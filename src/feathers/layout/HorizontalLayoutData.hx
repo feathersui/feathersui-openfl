@@ -208,4 +208,74 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._percentHeight;
 	}
+
+	private var _marginLeft:Null<Float> = null;
+
+	/**
+		Extra space, measured in pixels, that is inserted before this item in
+		the layout.
+
+		This item's `marginLeft` value will be added to the layout's `gap`
+		value and the previous item's `marginRight` value to create the total
+		space between items. If this is the first item in the layout, nothing
+		will be added to this item's `marginLeft` value.
+
+		Negative values are allowed for the margins.
+
+		@default null
+
+		@see `HorizontalLayoutData.marginRight`
+		@see `HorizontalLayout.gap`
+
+		@since 1.1.0
+	**/
+	public var marginLeft(get, set):Null<Float>;
+
+	private function get_marginLeft():Null<Float> {
+		return this._marginLeft;
+	}
+
+	private function set_marginLeft(value:Null<Float>):Null<Float> {
+		if (this._marginLeft == value) {
+			return this._marginLeft;
+		}
+		this._marginLeft = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._marginLeft;
+	}
+
+	private var _marginRight:Null<Float> = null;
+
+	/**
+		Extra space, measured in pixels, that is inserted after this item in
+		the layout.
+
+		This item's `marginRight` value will be added to the layout's `gap`
+		value and the next item's `marginLeft` value to create the total space
+		between items. If this is the last item in the layout, nothing will be
+		added too the `marginRight` value.
+
+		Negative values are allowed for the margins.
+
+		@default null
+
+		@see `HorizontalLayoutData.marginLeft`
+		@see `HorizontalLayout.gap`
+
+		@since 1.1.0
+	**/
+	public var marginRight(get, set):Null<Float>;
+
+	private function get_marginRight():Null<Float> {
+		return this._marginRight;
+	}
+
+	private function set_marginRight(value:Null<Float>):Null<Float> {
+		if (this._marginRight == value) {
+			return this._marginRight;
+		}
+		this._marginRight = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._marginRight;
+	}
 }

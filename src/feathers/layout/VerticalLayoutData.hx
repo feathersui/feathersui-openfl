@@ -208,4 +208,74 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._percentHeight;
 	}
+
+	private var _marginTop:Null<Float> = null;
+
+	/**
+		Extra space, measured in pixels, that is inserted before this item in
+		the layout.
+
+		This item's `marginTop` value will be added to the layout's `gap`
+		value and the previous item's `marginBottom` value to create the total
+		space between items. If this is the first item in the layout, nothing
+		will be added to the `marginTop` value.
+
+		Negative values are allowed for the margins.
+
+		@default null
+
+		@see `VerticalLayoutData.marginBottom`
+		@see `VerticalLayout.gap`
+
+		@since 1.1.0
+	**/
+	public var marginTop(get, set):Null<Float>;
+
+	private function get_marginTop():Null<Float> {
+		return this._marginTop;
+	}
+
+	private function set_marginTop(value:Null<Float>):Null<Float> {
+		if (this._marginTop == value) {
+			return this._marginTop;
+		}
+		this._marginTop = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._marginTop;
+	}
+
+	private var _marginBottom:Null<Float> = null;
+
+	/**
+		Extra space, measured in pixels, that is inserted after this item in
+		the layout.
+
+		This item's `marginBottom` value will be added to the layout's `gap`
+		value and the next item's `marginTop` value to create the total space
+		between items. If this is the last item in the layout, nothing will be
+		added too the `marginBottom` value.
+
+		Negative values are allowed for the margins.
+
+		@default null
+
+		@see `VerticalLayoutData.marginTop`
+		@see `VerticalLayout.gap`
+
+		@since 1.1.0
+	**/
+	public var marginBottom(get, set):Null<Float>;
+
+	private function get_marginBottom():Null<Float> {
+		return this._marginBottom;
+	}
+
+	private function set_marginBottom(value:Null<Float>):Null<Float> {
+		if (this._marginBottom == value) {
+			return this._marginBottom;
+		}
+		this._marginBottom = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._marginBottom;
+	}
 }

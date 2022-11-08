@@ -179,6 +179,9 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 
 		@default 0.0
 
+		@see `VerticalLayoutData.marginTop`
+		@see `VerticalLayoutData.marginBottom`
+
 		@since 1.0.0
 	**/
 	public var gap(get, set):Float;
@@ -425,12 +428,14 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 		var contentWidth = 0.0;
 		var contentHeight = this._paddingTop;
 		for (item in items) {
+			var layoutData:VerticalLayoutData = null;
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
+				layoutData = Std.downcast(layoutObject.layoutData, VerticalLayoutData);
 			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
@@ -438,8 +443,14 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 			if (contentWidth < item.width) {
 				contentWidth = item.width;
 			}
+			if (layoutData != null && layoutData.marginTop != null) {
+				contentHeight += layoutData.marginTop;
+			}
 			item.y = contentHeight;
 			contentHeight += item.height + adjustedGap;
+			if (layoutData != null && layoutData.marginBottom != null) {
+				contentHeight += layoutData.marginBottom;
+			}
 		}
 		var maxItemWidth = contentWidth;
 		contentWidth += this._paddingLeft + this._paddingRight;
@@ -689,6 +700,12 @@ class VerticalLayout extends EventDispatcher implements ILayout {
 							totalMinHeight += measureItem.minHeight;
 						}
 						totalPercentHeight += percentHeight;
+						if (layoutData.marginTop != null) {
+							totalMeasuredHeight += layoutData.marginTop;
+						}
+						if (layoutData.marginBottom != null) {
+							totalMeasuredHeight += layoutData.marginBottom;
+						}
 						totalMeasuredHeight += adjustedGap;
 						pendingItems.push(layoutItem);
 						continue;

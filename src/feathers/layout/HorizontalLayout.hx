@@ -425,21 +425,29 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
 		for (item in items) {
+			var layoutData:HorizontalLayoutData = null;
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
 				layoutObject = cast(item, ILayoutObject);
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
+				layoutData = Std.downcast(layoutObject.layoutData, HorizontalLayoutData);
 			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
+			}
+			if (layoutData != null && layoutData.marginLeft != null) {
+				contentWidth += layoutData.marginLeft;
 			}
 			if (contentHeight < item.height) {
 				contentHeight = item.height;
 			}
 			item.x = contentWidth;
 			contentWidth += item.width + adjustedGap;
+			if (layoutData != null && layoutData.marginRight != null) {
+				contentWidth += layoutData.marginRight;
+			}
 		}
 		var maxItemHeight = contentHeight;
 		contentWidth += this._paddingRight;
@@ -643,6 +651,12 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 							totalMinWidth += measureItem.minWidth;
 						}
 						totalPercentWidth += percentWidth;
+						if (layoutData.marginLeft != null) {
+							totalMeasuredWidth += layoutData.marginLeft;
+						}
+						if (layoutData.marginRight != null) {
+							totalMeasuredWidth += layoutData.marginRight;
+						}
 						totalMeasuredWidth += adjustedGap;
 						pendingItems.push(layoutItem);
 						continue;
