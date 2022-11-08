@@ -30,6 +30,7 @@ import openfl.events.Event;
 
 	@see [Tutorial: How to use the HProgressBar and VProgressBar components](https://feathersui.com/learn/haxe-openfl/progress-bar/)
 	@see `feathers.controls.VProgressBar`
+	@see `feathers.controls.ActivityIndicator`
 
 	@since 1.0.0
 **/

@@ -26,6 +26,18 @@ import openfl.events.Event;
 	indicator is added to the display list — unless its `enabled` property is
 	set to `false`.
 
+	The following example creates an `ActivityIndicator` and adds it to the
+	display list:
+
+	```haxe
+	var activityIndicator = new ActivityIndicator();
+	this.addChild(activityIndicator);
+	```
+
+	@see [Tutorial: How to use the ActivityIndicator component](https://feathersui.com/learn/haxe-openfl/activity-indicator/)
+	@see `feathers.controls.HProgressBar`
+	@see `feathers.controls.VProgressBar`
+
 	@since 1.1.0
 **/
 class ActivityIndicator extends FeathersControl {
