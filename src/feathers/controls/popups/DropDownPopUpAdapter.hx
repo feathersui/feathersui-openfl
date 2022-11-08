@@ -8,6 +8,7 @@
 
 package feathers.controls.popups;
 
+import openfl.events.TouchEvent;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.core.PopUpManager;
@@ -15,11 +16,16 @@ import feathers.core.ValidationQueue;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Stage;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.events.MouseEvent;
 import openfl.geom.Point;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Displays a pop-up like a drop-down, either below or above the source.
@@ -116,6 +122,12 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		return false;
 	}
 
+	/**
+		Determines if the content is closed when a mouse down or touch begin
+		event is dispatched outside of the content's or origin's bounds.
+	**/
+	public var closeOnPointerActiveOutside:Bool = false;
+
 	private var _stage:Stage;
 
 	private var _prevOriginX:Float;
@@ -134,6 +146,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			throw new IllegalOperationError("Pop-up adapter failed to open because the origin is not added to the stage.");
 		}
 		this._stage = origin.stage;
+		this._stage.addEventListener(MouseEvent.MOUSE_DOWN, dropDownPopUpAdapter_stage_mouseDownHandler, false, 0, true);
+		this._stage.addEventListener(TouchEvent.TOUCH_BEGIN, dropDownPopUpAdapter_stage_touchBeginHandler, false, 0, true);
 		this._stage.addEventListener(Event.RESIZE, dropDownPopUpAdapter_stage_resizeHandler, false, 0, true);
 		this.content = content;
 		this.content.addEventListener(Event.ENTER_FRAME, dropDownPopUpAdapter_content_enterFrameHandler, false, 0, true);
@@ -172,6 +186,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			return;
 		}
 		this._stage.removeEventListener(Event.RESIZE, dropDownPopUpAdapter_stage_resizeHandler);
+		this._stage.removeEventListener(MouseEvent.MOUSE_DOWN, dropDownPopUpAdapter_stage_mouseDownHandler);
+		this._stage.addEventListener(TouchEvent.TOUCH_BEGIN, dropDownPopUpAdapter_stage_touchBeginHandler);
 
 		this.content.removeEventListener(Event.ENTER_FRAME, dropDownPopUpAdapter_content_enterFrameHandler);
 		this.content.removeEventListener(Event.RESIZE, dropDownPopUpAdapter_content_resizeHandler);
@@ -299,5 +315,57 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if (originTopLeft.x != this._prevOriginX || originTopLeft.y != this._prevOriginY) {
 			this.layout();
 		}
+	}
+
+	private function dropDownPopUpAdapter_stage_mouseDownHandler(event:MouseEvent):Void {
+		if (!this.closeOnPointerActiveOutside) {
+			return;
+		}
+		var mouseTarget = cast(event.target, DisplayObject);
+		if ((this.content is DisplayObjectContainer)) {
+			var container = cast(this.content, DisplayObjectContainer);
+			if (container.contains(mouseTarget)) {
+				return;
+			}
+		} else if (this.content == mouseTarget) {
+			return;
+		}
+		if ((this.origin is DisplayObjectContainer)) {
+			var container = cast(this.origin, DisplayObjectContainer);
+			if (container.contains(mouseTarget)) {
+				return;
+			}
+		} else if (this.origin == mouseTarget) {
+			return;
+		}
+		this.close();
+	}
+
+	private function dropDownPopUpAdapter_stage_touchBeginHandler(event:TouchEvent):Void {
+		if (!this.closeOnPointerActiveOutside) {
+			return;
+		}
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
+		var mouseTarget = cast(event.target, DisplayObject);
+		if ((this.content is DisplayObjectContainer)) {
+			var container = cast(this.content, DisplayObjectContainer);
+			if (container.contains(mouseTarget)) {
+				return;
+			}
+		} else if (this.content == mouseTarget) {
+			return;
+		}
+		if ((this.origin is DisplayObjectContainer)) {
+			var container = cast(this.origin, DisplayObjectContainer);
+			if (container.contains(mouseTarget)) {
+				return;
+			}
+		} else if (this.origin == mouseTarget) {
+			return;
+		}
+		this.close();
 	}
 }
