@@ -197,6 +197,8 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 
 	private var _wrapObject:InteractiveObject;
 
+	private var _cancelMouseFocusChange:Bool = false;
+
 	/**
 		@see `feathers.core.IFocusManager.dispose()`
 	**/
@@ -819,6 +821,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 
 	private function defaultFocusManager_root_mouseFocusChangeHandler(event:FocusEvent):Void {
 		if (event.isDefaultPrevented()) {
+			this._cancelMouseFocusChange = true;
 			return;
 		}
 		if (!this._enabled) {
@@ -981,6 +984,10 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 
 	private function defaultFocusManager_root_mouseDownCaptureHandler(event:MouseEvent):Void {
 		this._showFocusIndicator = false;
+		if (this._cancelMouseFocusChange) {
+			this._cancelMouseFocusChange = false;
+			return;
+		}
 		if (!this._enabled) {
 			return;
 		}
