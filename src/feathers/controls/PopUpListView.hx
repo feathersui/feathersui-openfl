@@ -925,7 +925,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this.listView.focusManager != null
 			|| event.isDefaultPrevented()
 			|| event.target != this.listView
-			|| !this.listView.contains(event.relatedObject)) {
+			|| (event.relatedObject != null && !this.listView.contains(event.relatedObject))) {
 			return;
 		}
 		event.preventDefault();
