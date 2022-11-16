@@ -281,13 +281,62 @@ class VerticalListLayoutTest extends Test {
 		Assert.equals(0.0, result.contentY);
 	}
 
-	public function testRequestedRowCountWithZeroItems():Void {
+	public function testRequestedRowCountWithZeroItemsAndNullMeasurements():Void {
 		this._layout.requestedRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedRowCountWithZeroItemsPaddingNullMeasurements():Void {
+		this._layout.requestedRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedRowCountWithZeroItemsGapAndNullMeasurements():Void {
+		this._layout.requestedRowCount = 3;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		// view port height needs to include the gap with requested row count
+		Assert.equals(GAP + GAP, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		// but the content is empty, so no gap here
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedRowCountWithZeroItemsPaddingGapAndNullMeasurements():Void {
+		this._layout.requestedRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		// view port height needs to include the gap with requested row count
+		Assert.equals(PADDING_TOP + GAP + GAP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		// but the content is empty, so no gap here
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedRowCountWithFewerItems():Void {
@@ -297,9 +346,11 @@ class VerticalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(180.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedRowCountWithMoreItems():Void {
@@ -309,18 +360,69 @@ class VerticalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testRequestedMinRowCountWithZeroItems():Void {
+	public function testRequestedMinRowCountWithZeroItemsAndNullMeasurements():Void {
 		this._layout.requestedMinRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedMinRowCountWithZeroItemsPaddingAndNullMeasurements():Void {
+		this._layout.requestedMinRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentMinHeight);
+	}
+
+	public function testRequestedMinRowCountWithZeroItemsGapAndNullMeasurements():Void {
+		this._layout.requestedMinRowCount = 3;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		// view port height needs to include the gap with requested row count
+		Assert.equals(GAP + GAP, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		// but the content is empty, so no gap here
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(GAP + GAP, result.contentMinHeight);
+	}
+
+	public function testRequestedMinRowCountWithZeroItemsPaddingGapAndNullMeasurements():Void {
+		this._layout.requestedMinRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		// view port height needs to include the gap with requested row count
+		Assert.equals(PADDING_TOP + GAP + GAP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		// but the content is empty, so no gap here
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(PADDING_TOP + GAP + GAP + PADDING_BOTTOM, result.contentMinHeight);
 	}
 
 	public function testRequestedMinRowCountWithFewerItems():Void {
@@ -330,9 +432,11 @@ class VerticalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(180.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(180.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMinRowCountWithMoreItems():Void {
@@ -342,18 +446,22 @@ class VerticalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(60.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMaxRowCountWithZeroItems():Void {
-		this._layout.requestedMinRowCount = 3;
+		this._layout.requestedMaxRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMaxRowCountWithFewerItems():Void {
@@ -363,9 +471,11 @@ class VerticalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMaxRowCountWithMoreItems():Void {
@@ -375,9 +485,11 @@ class VerticalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testExplicitViewPortWidthLargerThanItemWidth():Void {

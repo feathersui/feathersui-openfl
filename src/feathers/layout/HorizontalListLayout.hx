@@ -588,12 +588,16 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			viewPortWidth = measurements.width;
 		} else {
 			if (this._requestedColumnCount != null) {
-				viewPortWidth = virtualColumnWidth * this._requestedColumnCount;
+				viewPortWidth = this._paddingLeft + this._paddingRight + ((this._requestedColumnCount * (virtualColumnWidth + adjustedGap)) - adjustedGap);
 			} else {
 				if (this._requestedMinColumnCount != null && items.length < this._requestedMinColumnCount) {
-					viewPortWidth = virtualColumnWidth * this._requestedMinColumnCount;
+					viewPortWidth = this._paddingLeft
+						+ this._paddingRight
+						+ ((this._requestedMinColumnCount * (virtualColumnWidth + adjustedGap)) - adjustedGap);
 				} else if (this._requestedMaxColumnCount != null && items.length > this._requestedMaxColumnCount) {
-					viewPortWidth = virtualColumnWidth * this._requestedMaxColumnCount;
+					viewPortWidth = this._paddingLeft
+						+ this._paddingRight
+						+ ((this._requestedMaxColumnCount * (virtualColumnWidth + adjustedGap)) - adjustedGap);
 				}
 			}
 			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
@@ -613,7 +617,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		result.contentWidth = positionX;
 		result.contentHeight = itemHeight + this._paddingTop + this._paddingBottom;
 		if (this._requestedMinColumnCount != null) {
-			result.contentMinWidth = this._requestedMinColumnCount * (virtualColumnWidth + adjustedGap) - adjustedGap;
+			result.contentMinWidth = this._paddingLeft
+				+ this._paddingRight
+				+ ((this._requestedMinColumnCount * (virtualColumnWidth + adjustedGap)) - adjustedGap);
 		}
 		result.viewPortHeight = viewPortHeight;
 		result.viewPortWidth = viewPortWidth;

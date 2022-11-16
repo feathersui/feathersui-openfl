@@ -576,12 +576,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 			viewPortHeight = measurements.height;
 		} else {
 			if (this._requestedRowCount != null) {
-				viewPortHeight = actualRowHeight * this._requestedRowCount;
+				viewPortHeight = this._paddingTop + this._paddingBottom + ((this._requestedRowCount * (actualRowHeight + adjustedGap)) - adjustedGap);
 			} else {
 				if (this._requestedMinRowCount != null && items.length < this._requestedMinRowCount) {
-					viewPortHeight = actualRowHeight * this._requestedMinRowCount;
+					viewPortHeight = this._paddingTop + this._paddingBottom + ((this._requestedMinRowCount * (actualRowHeight + adjustedGap)) - adjustedGap);
 				} else if (this._requestedMaxRowCount != null && items.length > this._requestedMaxRowCount) {
-					viewPortHeight = actualRowHeight * this._requestedMaxRowCount;
+					viewPortHeight = this._paddingTop + this._paddingBottom + ((this._requestedMaxRowCount * (actualRowHeight + adjustedGap)) - adjustedGap);
 				}
 			}
 			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
@@ -601,7 +601,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		result.contentWidth = itemWidth + this._paddingLeft + this._paddingRight;
 		result.contentHeight = positionY;
 		if (this._requestedMinRowCount != null) {
-			result.contentMinHeight = this._requestedMinRowCount * (actualRowHeight + adjustedGap) - adjustedGap;
+			result.contentMinHeight = this._paddingTop + this._paddingBottom + ((this._requestedMinRowCount * (actualRowHeight + adjustedGap)) - adjustedGap);
 		}
 		result.viewPortWidth = viewPortWidth;
 		result.viewPortHeight = viewPortHeight;

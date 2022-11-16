@@ -280,13 +280,62 @@ class HorizontalListLayoutTest extends Test {
 		Assert.equals(0.0, result.contentY);
 	}
 
-	public function testRequestedColumnCountWithZeroItems():Void {
+	public function testRequestedColumnCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.requestedColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedColumnCountWithZeroItemsPaddingAndNullDimensions():Void {
+		this._layout.requestedColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedColumnCountWithZeroItemsGapAndNullDimensions():Void {
+		this._layout.requestedColumnCount = 3;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		// view port width needs to include the gap with requested column count
+		Assert.equals(GAP + GAP, result.viewPortWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		// but the content is empty, so no gap here
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedColumnCountWithZeroItemsPaddingGapAndNullDimensions():Void {
+		this._layout.requestedColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		// view port width needs to include the gap with requested column count
+		Assert.equals(PADDING_LEFT + GAP + GAP + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		// but the content is empty, so no gap here
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedColumnCountWithFewerItems():Void {
@@ -296,9 +345,11 @@ class HorizontalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(300.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedColumnCountWithMoreItems():Void {
@@ -308,18 +359,69 @@ class HorizontalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testRequestedMinColumnCountWithZeroItems():Void {
+	public function testRequestedMinColumnCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.requestedMinColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedMinColumnCountWithZeroItemsPaddingAndNullDimensions():Void {
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedMinColumnCountWithZeroItemsGapAndNullDimensions():Void {
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		// view port width needs to include the gap with requested column count
+		Assert.equals(GAP + GAP, result.viewPortWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		// but the content is empty, so no gap here
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(GAP + GAP, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testRequestedMinColumnCountWithZeroItemsPaddingGapAndNullDimensions():Void {
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.gap = GAP;
+		var result = this._layout.layout([], this._measurements);
+		// view port width needs to include the gap with requested column count
+		Assert.equals(PADDING_LEFT + GAP + GAP + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		// but the content is empty, so no gap here
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(PADDING_LEFT + GAP + GAP + PADDING_RIGHT, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMinColumnCountWithFewerItems():Void {
@@ -329,9 +431,11 @@ class HorizontalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(300.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(300.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMinColumnCountWithMoreItems():Void {
@@ -341,18 +445,22 @@ class HorizontalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(200.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(100.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMaxColumnCountWithZeroItems():Void {
 		this._layout.requestedMaxColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMaxColumnCountWithFewerItems():Void {
@@ -362,9 +470,11 @@ class HorizontalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(200.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testRequestedMaxColumnCountWithMoreItems():Void {
@@ -374,9 +484,11 @@ class HorizontalListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testExplicitViewPortHeightLargerThanItemHeight():Void {
