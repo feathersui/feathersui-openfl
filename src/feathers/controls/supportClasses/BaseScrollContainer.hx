@@ -373,7 +373,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		passed to the container:
 
 		```haxe
-		scroller.scrollBarXFactory = () ->
+		container.scrollBarXFactory = () ->
 		{
 			return new HScrollBar();
 		};
@@ -411,7 +411,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		passed to the container:
 
 		```haxe
-		scroller.scrollBarYFactory = () ->
+		container.scrollBarYFactory = () ->
 		{
 			return new VScrollBar();
 		};
@@ -446,7 +446,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		container:
 
 		```haxe
-		scroller.scrollBarYFactory = () ->
+		container.scrollerFactory = () ->
 		{
 			var scroller = new Scroller();
 			scroller.elasticEdges = false;
