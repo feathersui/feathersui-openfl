@@ -600,6 +600,9 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		result.contentY = 0.0;
 		result.contentWidth = itemWidth + this._paddingLeft + this._paddingRight;
 		result.contentHeight = positionY;
+		if (this._requestedMinRowCount != null) {
+			result.contentMinHeight = this._requestedMinRowCount * (actualRowHeight + adjustedGap) - adjustedGap;
+		}
 		result.viewPortWidth = viewPortWidth;
 		result.viewPortHeight = viewPortHeight;
 		return result;

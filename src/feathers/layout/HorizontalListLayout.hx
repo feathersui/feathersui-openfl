@@ -612,6 +612,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		result.contentY = 0.0;
 		result.contentWidth = positionX;
 		result.contentHeight = itemHeight + this._paddingTop + this._paddingBottom;
+		if (this._requestedMinColumnCount != null) {
+			result.contentMinWidth = this._requestedMinColumnCount * (virtualColumnWidth + adjustedGap) - adjustedGap;
+		}
 		result.viewPortHeight = viewPortHeight;
 		result.viewPortWidth = viewPortWidth;
 		return result;
