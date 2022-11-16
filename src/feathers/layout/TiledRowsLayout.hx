@@ -551,16 +551,43 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
-		if (result == null) {
-			result = new LayoutBoundsResult();
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
 		}
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
 		if (items.length == 0) {
+			if (result == null) {
+				result = new LayoutBoundsResult();
+			}
 			result.contentX = 0.0;
 			result.contentY = 0.0;
 			result.contentWidth = this._paddingLeft + this._paddingRight;
 			result.contentHeight = this._paddingTop + this._paddingBottom;
 			result.viewPortWidth = result.contentWidth;
+			if (this._requestedColumnCount != null) {
+				if (this._requestedColumnCount > 1) {
+					result.viewPortWidth += (this._requestedColumnCount * adjustedHorizontalGap) - adjustedHorizontalGap;
+				}
+			} else if (this._requestedMinColumnCount != null) {
+				if (this._requestedMinColumnCount > 1) {
+					result.viewPortWidth += (this._requestedMinColumnCount * adjustedHorizontalGap) - adjustedHorizontalGap;
+				}
+			}
 			result.viewPortHeight = result.contentHeight;
+			if (this._requestedMinColumnCount != null) {
+				if (this._requestedMinColumnCount > 1) {
+					result.contentMinWidth = this._paddingLeft
+						+ this._paddingRight
+						+ ((this._requestedMinColumnCount * adjustedHorizontalGap) - adjustedHorizontalGap);
+				}
+			}
 			return result;
 		}
 
@@ -583,12 +610,6 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		}
 		if (tileHeight < 0.0) {
 			tileHeight = 0.0;
-		}
-
-		var adjustedHorizontalGap = this._horizontalGap;
-		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
-		if (hasFlexHorizontalGap) {
-			adjustedHorizontalGap = this._minHorizontalGap;
 		}
 
 		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, measurements.width, measurements.maxWidth, adjustedHorizontalGap, items.length);
@@ -647,12 +668,6 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		maxColumnCount = Std.int(Math.max(maxColumnCount, currentColumnCount));
 		yPosition += tileHeight + this.paddingBottom;
 
-		var adjustedVerticalGap = this._verticalGap;
-		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
-		if (hasFlexVerticalGap) {
-			adjustedVerticalGap = this._minVerticalGap;
-		}
-
 		var viewPortHeight = measurements.height;
 		if (viewPortHeight == null) {
 			viewPortHeight = this._paddingTop + this._paddingBottom + rowCount * (tileHeight + adjustedVerticalGap) - adjustedVerticalGap;
@@ -681,6 +696,11 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 		result.contentY = 0.0;
 		result.contentWidth = viewPortWidth;
 		result.contentHeight = yPosition;
+		if (this._requestedMinColumnCount != null) {
+			result.contentMinWidth = this._paddingLeft
+				+ this._paddingRight
+				+ ((this._requestedMinColumnCount * (tileWidth + adjustedHorizontalGap)) - adjustedHorizontalGap);
+		}
 		result.viewPortWidth = viewPortWidth;
 		result.viewPortHeight = viewPortHeight;
 		return result;

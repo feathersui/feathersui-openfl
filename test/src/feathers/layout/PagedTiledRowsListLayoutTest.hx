@@ -72,14 +72,64 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2 = null;
 	}
 
-	public function testHorizontalRequestedRowCountWithZeroItems():Void {
+	public function testHorizontalRequestedRowCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = HORIZONTAL;
 		this._layout.requestedRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedRowCountWithZeroItemsPaddingAndNullMeasurements():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedRowCountWithZeroItemsGapAndNullMeasurements():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedRowCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(VERTICAL_GAP + VERTICAL_GAP, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedRowCountWithZeroItemsPaddingGapAndNullMeasurements():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + VERTICAL_GAP + VERTICAL_GAP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedRowCountWithFewerItems():Void {
@@ -87,9 +137,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedRowCount = 2;
 		var result = this._layout.layout([this._child1], this._measurements);
 		Assert.equals(CHILD1_WIDTH, result.viewPortWidth);
-		Assert.equals(CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(2.0 * CHILD1_HEIGHT, result.viewPortHeight);
+		Assert.equals(CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(2.0 * CHILD1_HEIGHT, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedRowCountWithMoreItems():Void {
@@ -98,19 +150,71 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedRowCount = 1;
 		var result = this._layout.layout([this._child1, this._child2], this._measurements);
 		Assert.equals(CHILD1_WIDTH, result.viewPortWidth);
-		Assert.equals(2.0 * CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(CHILD1_HEIGHT, result.viewPortHeight);
+		Assert.equals(2.0 * CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(CHILD1_HEIGHT, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testHorizontalRequestedMinRowCountWithZeroItems():Void {
+	public function testHorizontalRequestedMinRowCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = HORIZONTAL;
 		this._layout.requestedMinRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedMinRowCountWithZeroItemsPaddingAndNullMeasurements():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedMinRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedMinRowCountWithZeroItemsGapAndNullMeasurements():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedMinRowCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(VERTICAL_GAP + VERTICAL_GAP, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(VERTICAL_GAP + VERTICAL_GAP, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedMinRowCountWithZeroItemsPaddingGapAndNullMeasurements():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedMinRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + VERTICAL_GAP + VERTICAL_GAP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(PADDING_TOP + VERTICAL_GAP + VERTICAL_GAP + PADDING_BOTTOM, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMinRowCountWithFewerItems():Void {
@@ -121,9 +225,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(180.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(180.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMinRowCountWithMoreItems():Void {
@@ -134,9 +240,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMaxRowCountWithZeroItems():Void {
@@ -144,9 +252,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedMinRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMaxRowCountWithFewerItems():Void {
@@ -157,9 +267,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMaxRowCountWithMoreItems():Void {
@@ -170,19 +282,71 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testHorizontalRequestedColumnCountWithZeroItems():Void {
+	public function testHorizontalRequestedColumnCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = HORIZONTAL;
 		this._layout.requestedColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedColumnCountWithZeroItemsPaddingNullDimensions():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedColumnCountWithZeroItemsGapAndNullDimensions():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedColumnCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(HORIZONTAL_GAP + HORIZONTAL_GAP, result.viewPortWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedColumnCountWithZeroItemsPaddingGapAndNullDimensions():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + HORIZONTAL_GAP + HORIZONTAL_GAP + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedColumnCountWithFewerItems():Void {
@@ -192,9 +356,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(300.0, result.viewPortWidth);
-		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedColumnCountWithMoreItems():Void {
@@ -204,19 +370,71 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testHorizontalRequestedMinColumnCountWithZeroItems():Void {
+	public function testHorizontalRequestedMinColumnCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = HORIZONTAL;
 		this._layout.requestedMinColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedMinColumnCountWithZeroItemsPaddingAndNullDimensions():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedMinColumnCountWithZeroItemsGapAndNullDimensions():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(HORIZONTAL_GAP + HORIZONTAL_GAP, result.viewPortWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(HORIZONTAL_GAP + HORIZONTAL_GAP, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testHorizontalRequestedMinColumnCountWithZeroItemsPaddingGapAndNullDimensions():Void {
+		this._layout.pageDirection = HORIZONTAL;
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + HORIZONTAL_GAP + HORIZONTAL_GAP + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(PADDING_LEFT + HORIZONTAL_GAP + HORIZONTAL_GAP + PADDING_RIGHT, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMinColumnCountWithFewerItems():Void {
@@ -226,9 +444,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(300.0, result.viewPortWidth);
-		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMinColumnCountWithMoreItems():Void {
@@ -238,9 +458,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(200.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMaxColumnCountWithZeroItems():Void {
@@ -248,9 +470,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedMaxColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMaxColumnCountWithFewerItems():Void {
@@ -260,9 +484,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(200.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testHorizontalRequestedMaxColumnCountWithMoreItems():Void {
@@ -272,19 +498,71 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testVerticalRequestedRowCountWithZeroItems():Void {
+	public function testVerticalRequestedRowCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = VERTICAL;
 		this._layout.requestedRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedRowCountWithZeroItemsPaddingAndNullMeasurements():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedRowCountWithZeroItemsGapAndNullMeasurements():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedRowCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(VERTICAL_GAP + VERTICAL_GAP, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedRowCountWithZeroItemsPaddingGapAndNullMeasurements():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + VERTICAL_GAP + VERTICAL_GAP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedRowCountWithFewerItems():Void {
@@ -292,9 +570,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedRowCount = 2;
 		var result = this._layout.layout([this._child1], this._measurements);
 		Assert.equals(CHILD1_WIDTH, result.viewPortWidth);
-		Assert.equals(CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(2.0 * CHILD1_HEIGHT, result.viewPortHeight);
+		Assert.equals(CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(2.0 * CHILD1_HEIGHT, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedRowCountWithMoreItems():Void {
@@ -303,19 +583,71 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedRowCount = 1;
 		var result = this._layout.layout([this._child1, this._child2], this._measurements);
 		Assert.equals(CHILD1_WIDTH, result.viewPortWidth);
-		Assert.equals(CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(CHILD1_HEIGHT, result.viewPortHeight);
+		Assert.equals(CHILD1_WIDTH, result.contentWidth);
 		Assert.equals(2.0 * CHILD1_HEIGHT, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testVerticalRequestedMinRowCountWithZeroItems():Void {
+	public function testVerticalRequestedMinRowCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = VERTICAL;
 		this._layout.requestedMinRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedMinRowCountWithZeroItemsPaddingAndNullMeasurements():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedMinRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedMinRowCountWithZeroItemsGapAndNullMeasurements():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedMinRowCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(0.0, result.viewPortWidth);
+		Assert.equals(VERTICAL_GAP + VERTICAL_GAP, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(VERTICAL_GAP + VERTICAL_GAP, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedMinRowCountWithZeroItemsPaddingGapAndNullMeasurements():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedMinRowCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + VERTICAL_GAP + VERTICAL_GAP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(PADDING_TOP + VERTICAL_GAP + VERTICAL_GAP + PADDING_BOTTOM, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMinRowCountWithFewerItems():Void {
@@ -326,9 +658,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(180.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(180.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMinRowCountWithMoreItems():Void {
@@ -339,9 +673,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMaxRowCountWithZeroItems():Void {
@@ -349,9 +685,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedMinRowCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMaxRowCountWithFewerItems():Void {
@@ -362,9 +700,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMaxRowCountWithMoreItems():Void {
@@ -375,19 +715,71 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testVerticalRequestedColumnCountWithZeroItems():Void {
+	public function testVerticalRequestedColumnCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = VERTICAL;
 		this._layout.requestedColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedColumnCountWithZeroItemsPaddingNullDimensions():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedColumnCountWithZeroItemsGapAndNullDimensions():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedColumnCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(HORIZONTAL_GAP + HORIZONTAL_GAP, result.viewPortWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedColumnCountWithZeroItemsPaddingGapAndNullDimensions():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + HORIZONTAL_GAP + HORIZONTAL_GAP + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedColumnCountWithFewerItems():Void {
@@ -397,9 +789,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(300.0, result.viewPortWidth);
-		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedColumnCountWithMoreItems():Void {
@@ -409,19 +803,71 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
-	public function testVerticalRequestedMinColumnCountWithZeroItems():Void {
+	public function testVerticalRequestedMinColumnCountWithZeroItemsAndNullDimensions():Void {
 		this._layout.pageDirection = VERTICAL;
 		this._layout.requestedMinColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedMinColumnCountWithZeroItemsPaddingAndNullDimensions():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedMinColumnCountWithZeroItemsGapAndNullDimensions():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(HORIZONTAL_GAP + HORIZONTAL_GAP, result.viewPortWidth);
+		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
+		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(HORIZONTAL_GAP + HORIZONTAL_GAP, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
+	}
+
+	public function testVerticalRequestedMinColumnCountWithZeroItemsPaddingGapAndNullDimensions():Void {
+		this._layout.pageDirection = VERTICAL;
+		this._layout.requestedMinColumnCount = 3;
+		this._layout.paddingTop = PADDING_TOP;
+		this._layout.paddingRight = PADDING_RIGHT;
+		this._layout.paddingBottom = PADDING_BOTTOM;
+		this._layout.paddingLeft = PADDING_LEFT;
+		this._layout.horizontalGap = HORIZONTAL_GAP;
+		this._layout.verticalGap = VERTICAL_GAP;
+		var result = this._layout.layout([], this._measurements);
+		Assert.equals(PADDING_LEFT + HORIZONTAL_GAP + HORIZONTAL_GAP + PADDING_RIGHT, result.viewPortWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.viewPortHeight);
+		Assert.equals(PADDING_LEFT + PADDING_RIGHT, result.contentWidth);
+		Assert.equals(PADDING_TOP + PADDING_BOTTOM, result.contentHeight);
+		Assert.equals(PADDING_LEFT + HORIZONTAL_GAP + HORIZONTAL_GAP + PADDING_RIGHT, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMinColumnCountWithFewerItems():Void {
@@ -431,9 +877,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(300.0, result.viewPortWidth);
-		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(300.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMinColumnCountWithMoreItems():Void {
@@ -443,9 +891,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(200.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMaxColumnCountWithZeroItems():Void {
@@ -453,9 +903,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._layout.requestedMaxColumnCount = 3;
 		var result = this._layout.layout([], this._measurements);
 		Assert.equals(0.0, result.viewPortWidth);
-		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.viewPortHeight);
+		Assert.equals(0.0, result.contentWidth);
 		Assert.equals(0.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMaxColumnCountWithFewerItems():Void {
@@ -465,9 +917,11 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(200.0, result.viewPortWidth);
-		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.viewPortHeight);
+		Assert.equals(200.0, result.contentWidth);
 		Assert.equals(60.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 
 	public function testVerticalRequestedMaxColumnCountWithMoreItems():Void {
@@ -477,8 +931,10 @@ class PagedTiledRowsListLayoutTest extends Test {
 		this._control2.setSize(100.0, 60.0);
 		var result = this._layout.layout([this._control1, this._control2], this._measurements);
 		Assert.equals(100.0, result.viewPortWidth);
-		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.viewPortHeight);
+		Assert.equals(100.0, result.contentWidth);
 		Assert.equals(120.0, result.contentHeight);
+		Assert.equals(0.0, result.contentMinWidth);
+		Assert.equals(0.0, result.contentMinHeight);
 	}
 }

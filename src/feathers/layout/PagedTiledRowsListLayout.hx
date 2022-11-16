@@ -798,6 +798,17 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		@see `feathers.layout.ILayout.layout()`
 	**/
 	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			adjustedHorizontalGap = this._minHorizontalGap;
+		}
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
 		if (items.length == 0) {
 			if (result == null) {
 				result = new LayoutBoundsResult();
@@ -807,7 +818,39 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			result.contentWidth = this._paddingLeft + this._paddingRight;
 			result.contentHeight = this._paddingTop + this._paddingBottom;
 			result.viewPortWidth = result.contentWidth;
+			if (this._requestedColumnCount != null) {
+				if (this._requestedColumnCount > 1) {
+					result.viewPortWidth += (this._requestedColumnCount * adjustedHorizontalGap) - adjustedHorizontalGap;
+				}
+			} else if (this._requestedMinColumnCount != null) {
+				if (this._requestedMinColumnCount > 1) {
+					result.viewPortWidth += (this._requestedMinColumnCount * adjustedHorizontalGap) - adjustedHorizontalGap;
+				}
+			}
 			result.viewPortHeight = result.contentHeight;
+			if (this._requestedRowCount != null) {
+				if (this._requestedRowCount > 1) {
+					result.viewPortHeight += (this._requestedRowCount * adjustedVerticalGap) - adjustedVerticalGap;
+				}
+			} else if (this._requestedMinRowCount != null) {
+				if (this._requestedMinRowCount > 1) {
+					result.viewPortHeight += (this._requestedMinRowCount * adjustedVerticalGap) - adjustedVerticalGap;
+				}
+			}
+			if (this._requestedMinColumnCount != null) {
+				if (this._requestedMinColumnCount > 1) {
+					result.contentMinWidth = this._paddingLeft
+						+ this._paddingRight
+						+ ((this._requestedMinColumnCount * adjustedHorizontalGap) - adjustedHorizontalGap);
+				}
+			}
+			if (this._requestedMinRowCount != null) {
+				if (this._requestedMinRowCount > 1) {
+					result.contentMinHeight = this._paddingTop
+						+ this._paddingBottom
+						+ ((this._requestedMinRowCount * adjustedVerticalGap) - adjustedVerticalGap);
+				}
+			}
 			return result;
 		}
 
@@ -859,12 +902,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 			}
 		}
 
-		var adjustedHorizontalGap = this._horizontalGap;
-		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
-		if (hasFlexHorizontalGap) {
-			adjustedHorizontalGap = this._minHorizontalGap;
-		}
-
 		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, measurements.width, measurements.maxWidth, adjustedHorizontalGap, items.length);
 
 		var viewPortWidth = measurements.width;
@@ -881,12 +918,6 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		}
 
 		var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
-
-		var adjustedVerticalGap = this._verticalGap;
-		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
-		if (hasFlexVerticalGap) {
-			adjustedVerticalGap = this._minVerticalGap;
-		}
 
 		var verticalTileCount = this.calculateVerticalTileCount(tileHeight, measurements.height, measurements.maxHeight, adjustedVerticalGap, items.length,
 			horizontalTileCount);
@@ -986,6 +1017,16 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		result.contentY = 0.0;
 		result.contentWidth = contentWidth;
 		result.contentHeight = contentHeight;
+		if (this._requestedMinColumnCount != null) {
+			result.contentMinWidth = this._paddingLeft
+				+ this._paddingRight
+				+ ((this._requestedMinColumnCount * (tileWidth + adjustedHorizontalGap)) - adjustedHorizontalGap);
+		}
+		if (this._requestedMinRowCount != null) {
+			result.contentMinHeight = this._paddingTop
+				+ this._paddingBottom
+				+ ((this._requestedMinRowCount * (tileHeight + adjustedVerticalGap)) - adjustedVerticalGap);
+		}
 		result.viewPortWidth = viewPortWidth;
 		result.viewPortHeight = viewPortHeight;
 		return result;
