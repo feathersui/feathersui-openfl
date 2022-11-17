@@ -11,8 +11,11 @@ package feathers.controls;
 import feathers.controls.supportClasses.BaseProgressBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
+import feathers.skins.RectangleSkin;
 import feathers.utils.MeasurementsUtil;
+import openfl.errors.ArgumentError;
 import openfl.events.Event;
+import openfl.geom.Rectangle;
 
 /**
 	Displays the progress of a task in a horizontal direction, from left to
@@ -46,6 +49,8 @@ class HProgressBar extends BaseProgressBar {
 
 		super(value, minimum, maximum, changeListener);
 	}
+
+	private var _currentMask:RectangleSkin;
 
 	private function initializeHProgressBarTheme():Void {
 		#if !feathersui_disable_default_theme
@@ -134,6 +139,7 @@ class HProgressBar extends BaseProgressBar {
 		if (this._currentFillSkin == null) {
 			return;
 		}
+
 		var percentage = 1.0;
 		if (this._minimum != this._maximum) {
 			percentage = (this._value - this._minimum) / (this._maximum - this._minimum);
@@ -144,20 +150,51 @@ class HProgressBar extends BaseProgressBar {
 			}
 		}
 		var calculatedWidth:Float = Math.round(percentage * (this.actualWidth - this.paddingLeft - this.paddingRight));
-		if (this._fillSkinMeasurements.width != null && calculatedWidth < this._fillSkinMeasurements.width) {
-			calculatedWidth = this._fillSkinMeasurements.width;
-			// if the size is too small, and the value is equal to the
-			// minimum, people don't expect to see the fill
-			this._currentFillSkin.visible = this._value > this._minimum;
-		} else {
-			// if it was hidden before, we want to show it again
-			this._currentFillSkin.visible = true;
-		}
 
 		this._currentFillSkin.x = this.paddingLeft;
 		this._currentFillSkin.y = this.paddingTop;
-		this._currentFillSkin.width = calculatedWidth;
 		this._currentFillSkin.height = this.actualHeight - this.paddingTop - this.paddingBottom;
+
+		switch (this.fillMode) {
+			case MASK:
+				this._currentFillSkin.scrollRect = null;
+				if (this._currentMask == null) {
+					this._currentMask = new RectangleSkin(SolidColor(0xff00ff));
+					this.addChild(this._currentMask);
+				}
+				this._currentFillSkin.mask = this._currentMask;
+				this._currentFillSkin.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+				this._currentMask.x = this._currentFillSkin.x;
+				this._currentMask.y = this._currentFillSkin.y;
+				this._currentMask.width = calculatedWidth;
+				this._currentMask.height = this._currentFillSkin.height;
+			case SCROLL_RECT:
+				this._currentFillSkin.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+				this._currentFillSkin.scrollRect = new Rectangle(0.0, 0.0, calculatedWidth, this._currentFillSkin.height);
+			case RESIZE:
+				this._currentFillSkin.mask = null;
+				this._currentFillSkin.scrollRect = null;
+				if (this._currentMask != null) {
+					if (this._currentMask.parent == this) {
+						this.removeChild(this._currentMask);
+					}
+					this._currentMask = null;
+				}
+
+				if (this._fillSkinMeasurements.minWidth != null && calculatedWidth < this._fillSkinMeasurements.minWidth) {
+					calculatedWidth = this._fillSkinMeasurements.minWidth;
+					// if the size is too small, and the value is equal to the
+					// minimum, people don't expect to see the fill
+					this._currentFillSkin.visible = this._value > this._minimum;
+				} else {
+					// if it was hidden before, we want to show it again
+					this._currentFillSkin.visible = true;
+				}
+
+				this._currentFillSkin.width = calculatedWidth;
+			default:
+				throw new ArgumentError("Unknown fill mode: " + this.fillMode);
+		}
 
 		if ((this._currentFillSkin is IValidating)) {
 			cast(this._currentFillSkin, IValidating).validateNow();

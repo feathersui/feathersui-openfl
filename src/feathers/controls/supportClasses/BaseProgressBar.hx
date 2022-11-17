@@ -257,6 +257,20 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	public var disabledFillSkin:DisplayObject = null;
 
 	/**
+		Controls how the fill of the progress bar is rendered.
+
+		In the following example, the fill's mask is resized:
+
+		```haxe
+		progress.fillMode = MASK;
+		```
+
+		@since 1.1.0
+	**/
+	@:style
+	public var fillMode:ProgressBarFillMode = RESIZE;
+
+	/**
 		The minimum space, in pixels, between the progress bar's top edge and the
 		progress bar's fill skin.
 

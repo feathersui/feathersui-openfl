@@ -39,7 +39,7 @@ class SteelHProgressBarStyles {
 					fillSkin.border = theme.getActiveFillBorder();
 					fillSkin.disabledBorder = theme.getDisabledInsetBorder();
 					fillSkin.cornerRadius = 8.0;
-					fillSkin.width = 8.0;
+					fillSkin.minWidth = 8.0;
 					fillSkin.height = 8.0;
 					progress.fillSkin = fillSkin;
 				}
