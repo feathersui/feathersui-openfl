@@ -89,6 +89,24 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	public static final VARIANT_DETAIL = "detail";
 
 	/**
+		A variant used to style the label using an appearance that indicates
+		an error or warning.
+
+		The following example uses this variant:
+
+		```haxe
+		var label = new Label();
+		label.variant = Label.VARIANT_DANGER;
+		```
+
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.1.0
+	**/
+	public static final VARIANT_DANGER = "danger";
+
+	/**
 		Creates a new `Label` object.
 
 		@since 1.0.0

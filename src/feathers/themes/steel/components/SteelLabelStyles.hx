@@ -59,5 +59,15 @@ class SteelLabelStyles {
 				}
 			});
 		}
+		if (styleProvider.getStyleFunction(Label, Label.VARIANT_DANGER) == null) {
+			styleProvider.setStyleFunction(Label, Label.VARIANT_DANGER, function(label:Label):Void {
+				if (label.textFormat == null) {
+					label.textFormat = theme.getDangerTextFormat();
+				}
+				if (label.disabledTextFormat == null) {
+					label.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+			});
+		}
 	}
 }
