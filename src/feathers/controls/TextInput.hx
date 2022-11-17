@@ -233,6 +233,24 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	@:style
 	public var backgroundSkin:DisplayObject = null;
 
+	/**
+		Indicates if the prompt is shown when the length of the text is `0` and
+		the text input is focused. Keeping the prompt visible until the user
+		types something is considered better for usability because the user may
+		look away for a moment and forget the prompt when they return.
+
+		The following example set the prompt to be hidden when focused and the
+		text is empty:
+
+		```haxe
+		input.showPromptWhenEmptyAndFocused = false;
+		```
+
+		@since 1.1.0
+	**/
+	@:style
+	public var showPromptWhenEmptyAndFocused:Bool = true;
+
 	private var _currentLeftView:DisplayObject;
 	private var _leftViewMeasurements:Measurements;
 	private var _ignoreLeftViewResize = false;
@@ -1080,7 +1098,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.refreshRightView();
 		}
 
-		if (dataInvalid) {
+		if (dataInvalid || stateInvalid) {
 			this.refreshPrompt();
 		}
 
@@ -1500,7 +1518,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.promptTextField.selectable = false;
 		this.promptTextField.mouseWheelEnabled = false;
 		this.promptTextField.mouseEnabled = false;
-		this.promptTextField.visible = this._text.length == 0;
+		this.promptTextField.visible = this._text.length == 0
+			&& (this.currentState != TextInputState.FOCUSED || this.showPromptWhenEmptyAndFocused);
 	}
 
 	private function refreshPromptText(sizeInvalid:Bool):Void {

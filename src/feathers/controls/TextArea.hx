@@ -572,6 +572,24 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	public var textPaddingLeft:Float = 0.0;
 
 	/**
+		Indicates if the prompt is shown when the length of the text is `0` and
+		the text input is focused. Keeping the prompt visible until the user
+		types something is considered better for usability because the user may
+		look away for a moment and forget the prompt when they return.
+
+		The following example set the prompt to be hidden when focused and the
+		text is empty:
+
+		```haxe
+		input.showPromptWhenEmptyAndFocused = false;
+		```
+
+		@since 1.1.0
+	**/
+	@:style
+	public var showPromptWhenEmptyAndFocused:Bool = true;
+
+	/**
 		The character position of the anchor part of the selection. If the
 		selection is changed with the arrow keys, the active index changes and
 		the anchor index stays fixed. If both the active index and the anchor
@@ -839,7 +857,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.createErrorCallout();
 		}
 
-		if (dataInvalid) {
+		if (dataInvalid || stateInvalid) {
 			this.refreshPrompt();
 		}
 
@@ -950,7 +968,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.promptTextField.multiline = true;
 			this.addChildAt(this.promptTextField, this.getChildIndex(this.textFieldViewPort));
 		}
-		this.promptTextField.visible = this._text.length == 0;
+		this.promptTextField.visible = this._text.length == 0
+			&& (this.currentState != TextInputState.FOCUSED || this.showPromptWhenEmptyAndFocused);
 	}
 
 	private function refreshPromptText(sizeInvalid:Bool):Void {
