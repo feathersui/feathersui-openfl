@@ -68,6 +68,7 @@ class BaseDelegateEffectContext extends EventDispatcher implements IEffectContex
 	/**
 		@see `feathers.motion.effects.IEffectContext.position`
 	**/
+	@:bindable("change")
 	public var position(get, set):Float;
 
 	private function get_position():Float {

@@ -116,6 +116,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
+	@:bindable("change")
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {

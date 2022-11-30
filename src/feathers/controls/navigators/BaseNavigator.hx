@@ -73,6 +73,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var activeItemID(get, never):String;
 
 	private function get_activeItemID():String {
@@ -87,6 +88,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var activeItemView(get, never):DisplayObject;
 
 	private function get_activeItemView():DisplayObject {

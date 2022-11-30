@@ -53,6 +53,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -84,6 +85,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -115,6 +117,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -146,6 +149,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -181,6 +185,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalGap(get, set):Float;
 
 	private function get_horizontalGap():Float {
@@ -216,6 +221,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minHorizontalGap(get, set):Float;
 
 	private function get_minHorizontalGap():Float {
@@ -251,6 +257,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalGap(get, set):Float;
 
 	private function get_verticalGap():Float {
@@ -286,6 +293,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minVerticalGap(get, set):Float;
 
 	private function get_minVerticalGap():Float {
@@ -324,6 +332,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {
@@ -364,6 +373,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalAlign(get, set):VerticalAlign;
 
 	private function get_verticalAlign():VerticalAlign {
@@ -391,6 +401,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@see `PagedTiledRowsListLayout.horizontalAlign`
 	**/
+	@:bindable("change")
 	public var alignEmptyHorizontalTiles(get, set):Bool;
 
 	private function get_alignEmptyHorizontalTiles():Bool {
@@ -427,6 +438,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedColumnCount(get, set):Null<Int>;
 
 	private function get_requestedColumnCount():Null<Int> {
@@ -464,6 +476,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMinColumnCount(get, set):Null<Int>;
 
 	private function get_requestedMinColumnCount():Null<Int> {
@@ -502,6 +515,7 @@ class TiledRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMaxColumnCount(get, set):Null<Int>;
 
 	private function get_requestedMaxColumnCount():Null<Int> {

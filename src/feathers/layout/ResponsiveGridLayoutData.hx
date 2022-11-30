@@ -54,6 +54,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var span(get, set):Int;
 
 	private function get_span():Int {
@@ -79,6 +80,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var offset(get, set):Int;
 
 	private function get_offset():Int {
@@ -101,7 +103,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var display(get, set):Bool;
 
 	private function get_display():Bool {
@@ -127,6 +129,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var smSpan(get, set):Int;
 
 	private function get_smSpan():Int {
@@ -153,6 +156,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var smOffset(get, set):Int;
 
 	private function get_smOffset():Int {
@@ -179,7 +183,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var smDisplay(get, set):Null<Bool>;
 
 	private function get_smDisplay():Null<Bool> {
@@ -205,6 +209,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var mdSpan(get, set):Int;
 
 	private function get_mdSpan():Int {
@@ -231,6 +236,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var mdOffset(get, set):Int;
 
 	private function get_mdOffset():Int {
@@ -257,7 +263,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var mdDisplay(get, set):Null<Bool>;
 
 	private function get_mdDisplay():Null<Bool> {
@@ -283,6 +289,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var lgSpan(get, set):Int;
 
 	private function get_lgSpan():Int {
@@ -309,6 +316,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var lgOffset(get, set):Int;
 
 	private function get_lgOffset():Int {
@@ -335,7 +343,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var lgDisplay(get, set):Null<Bool>;
 
 	private function get_lgDisplay():Null<Bool> {
@@ -361,6 +369,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var xlSpan(get, set):Int;
 
 	private function get_xlSpan():Int {
@@ -387,6 +396,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var xlOffset(get, set):Int;
 
 	private function get_xlOffset():Int {
@@ -413,7 +423,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var xlDisplay(get, set):Null<Bool>;
 
 	private function get_xlDisplay():Null<Bool> {
@@ -439,7 +449,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var xxlSpan(get, set):Int;
 
 	private function get_xxlSpan():Int {
@@ -466,7 +476,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var xxlOffset(get, set):Int;
 
 	private function get_xxlOffset():Int {
@@ -493,7 +503,7 @@ class ResponsiveGridLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var xxlDisplay(get, set):Null<Bool>;
 
 	private function get_xxlDisplay():Null<Bool> {

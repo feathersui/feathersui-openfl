@@ -50,6 +50,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -75,6 +76,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -100,6 +102,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var columns(get, set):IFlatCollection<IGridViewColumn>;
 
 	private function get_columns():IFlatCollection<IGridViewColumn> {
@@ -125,6 +128,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var customColumnWidths(get, set):Array<Float>;
 
 	private function get_customColumnWidths():Array<Float> {

@@ -292,6 +292,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`selectedItem` to not be `null`. This can happen when a custom value is
 		entered into the text input by the user.
 	**/
+	@:bindable("change")
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -345,6 +346,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		`-1`, the value of `selectedItem` is a custom value entered into the
 		text input by the user.
 	**/
+	@:bindable("change")
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {

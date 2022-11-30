@@ -100,6 +100,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
+	@:bindable("initialize")
 	public var initialized(get, never):Bool;
 
 	private function get_initialized():Bool {
@@ -125,6 +126,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `FeathersEvent.CREATION_COMPLETE`
 		@see `FeathersControl.update()`
 	**/
+	@:bindable("creationComplete")
 	public var created(get, never):Bool;
 
 	private function get_created():Bool {
@@ -293,6 +295,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.layout.ILayoutObject.includeInLayout`
 	**/
+	@:bindable("layoutDataChange")
 	public var includeInLayout(get, set):Bool;
 
 	private function get_includeInLayout():Bool {
@@ -314,6 +317,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `feathers.layout.ILayoutObject.layoutData`
 	**/
 	@style
+	@:bindable("layoutDataChange")
 	public var layoutData(get, set):ILayoutData;
 
 	private function get_layoutData():ILayoutData {

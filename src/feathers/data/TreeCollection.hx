@@ -92,6 +92,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 
 		@since 1.0.0
 	**/
+	@:bindable("reset")
 	public var array(get, set):Array<TreeNode<T>>;
 
 	private function get_array():Array<TreeNode<T>> {
@@ -118,6 +119,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.filterFunction`
 	**/
+	@:bindable("filterChange")
 	public var filterFunction(get, set):(TreeNode<T>) -> Bool;
 
 	private function get_filterFunction():(TreeNode<T>) -> Bool {
@@ -140,6 +142,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.sortCompareFunction`
 	**/
+	@:bindable("sortChange")
 	public var sortCompareFunction(get, set):(TreeNode<T>, TreeNode<T>) -> Int;
 
 	private function get_sortCompareFunction():(TreeNode<T>, TreeNode<T>) -> Int {
@@ -160,6 +163,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.getLength`
 	**/
+	@:bindable("change")
 	public function getLength(?location:Array<Int>):Int {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();
@@ -201,6 +205,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 	/**
 		@see `feathers.data.IHierarchicalCollection.get`
 	**/
+	@:bindable("change")
 	public function get(location:Array<Int>):TreeNode<T> {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();

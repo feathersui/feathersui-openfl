@@ -382,6 +382,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var top(get, set):AbstractAnchor;
 
 	private function get_top():AbstractAnchor {
@@ -430,6 +431,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var right(get, set):AbstractAnchor;
 
 	private function get_right():AbstractAnchor {
@@ -478,6 +480,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var bottom(get, set):AbstractAnchor;
 
 	private function get_bottom():AbstractAnchor {
@@ -526,6 +529,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var left(get, set):AbstractAnchor;
 
 	private function get_left():AbstractAnchor {
@@ -575,6 +579,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalCenter(get, set):Null<Float>;
 
 	private function get_horizontalCenter():Null<Float> {
@@ -616,6 +621,7 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalCenter(get, set):Null<Float>;
 
 	private function get_verticalCenter():Null<Float> {

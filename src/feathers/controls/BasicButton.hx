@@ -86,6 +86,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 
 		@since 1.0.0
 	**/
+	@:bindable("stateChange")
 	public var currentState(get, never):#if flash Dynamic #else ButtonState #end;
 
 	private function get_currentState():#if flash Dynamic #else ButtonState #end {

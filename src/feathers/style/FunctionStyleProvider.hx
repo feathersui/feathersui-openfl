@@ -58,6 +58,7 @@ class FunctionStyleProvider extends EventDispatcher implements IStyleProvider {
 
 		@since 1.0.0
 	**/
+	@:bindable("stylesChange")
 	public var callback(get, set):(Dynamic) -> Void;
 
 	private function get_callback():(Dynamic) -> Void {

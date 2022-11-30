@@ -210,6 +210,7 @@ class EdgePuller extends EventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var pullDistance(get, never):Float;
 
 	private function get_pullDistance():Float {

@@ -174,6 +174,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selectedDate(get, set):Date;
 
 	private function get_selectedDate():Date {

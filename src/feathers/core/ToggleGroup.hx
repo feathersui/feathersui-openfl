@@ -75,6 +75,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -136,6 +137,7 @@ class ToggleGroup extends EventDispatcher implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selectedItem(get, set):#if flash Dynamic #else IToggle #end;
 
 	private function get_selectedItem():#if flash Dynamic #else IToggle #end {

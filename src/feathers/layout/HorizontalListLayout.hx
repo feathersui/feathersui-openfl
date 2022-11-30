@@ -142,6 +142,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedColumnCount(get, set):Null<Float>;
 
 	private function get_requestedColumnCount():Null<Float> {
@@ -176,6 +177,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMinColumnCount(get, set):Null<Float>;
 
 	private function get_requestedMinColumnCount():Null<Float> {
@@ -211,6 +213,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMaxColumnCount(get, set):Null<Float>;
 
 	private function get_requestedMaxColumnCount():Null<Float> {
@@ -242,6 +245,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -273,6 +277,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -304,6 +309,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -335,6 +341,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -369,6 +376,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var gap(get, set):Float;
 
 	private function get_gap():Float {
@@ -403,6 +411,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minGap(get, set):Float;
 
 	private function get_minGap():Float {
@@ -443,6 +452,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {
@@ -469,6 +479,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var contentJustify(get, set):Bool;
 
 	private function get_contentJustify():Bool {
@@ -492,6 +503,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var heightResetEnabled(get, set):Bool;
 
 	private function get_heightResetEnabled():Bool {

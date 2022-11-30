@@ -288,6 +288,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
+	@:bindable("scroll")
 	public var displayedFullYear(get, set):Int;
 
 	private function get_displayedFullYear():Int {
@@ -317,6 +318,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
+	@:bindable("scroll")
 	public var displayedMonth(get, set):Int;
 
 	private function get_displayedMonth():Int {
@@ -368,6 +370,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selectedDate(get, set):Date;
 
 	private function get_selectedDate():Date {

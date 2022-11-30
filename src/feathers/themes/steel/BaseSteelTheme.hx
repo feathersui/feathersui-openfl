@@ -78,6 +78,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private var _darkMode:Bool = false;
 
+	@:bindable("stylesChange")
 	public var darkMode(get, set):Bool;
 
 	private function get_darkMode():Bool {

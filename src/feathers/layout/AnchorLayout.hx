@@ -361,6 +361,7 @@ class Anchor extends EventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var value(get, set):Float;
 
 	private function get_value():Float {
@@ -384,6 +385,7 @@ class Anchor extends EventDispatcher {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var relativeTo(get, set):Null<DisplayObject>;
 
 	private function get_relativeTo():Null<DisplayObject> {

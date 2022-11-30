@@ -67,6 +67,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var value(get, set):Float;
 
 	private function get_value():Float {

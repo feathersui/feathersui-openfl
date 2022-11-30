@@ -135,6 +135,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {

@@ -56,6 +56,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -87,6 +88,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -118,6 +120,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -149,6 +152,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -180,6 +184,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalGap(get, set):Float;
 
 	private function get_horizontalGap():Float {
@@ -211,6 +216,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalGap(get, set):Float;
 
 	private function get_verticalGap():Float {
@@ -249,6 +255,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {
@@ -289,6 +296,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalAlign(get, set):VerticalAlign;
 
 	private function get_verticalAlign():VerticalAlign {
@@ -326,6 +334,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var rowVerticalAlign(get, set):VerticalAlign;
 
 	private function get_rowVerticalAlign():VerticalAlign {
@@ -351,6 +360,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var justifyResetEnabled(get, set):Bool;
 
 	private function get_justifyResetEnabled():Bool {

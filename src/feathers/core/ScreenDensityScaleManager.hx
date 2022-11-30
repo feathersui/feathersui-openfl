@@ -92,6 +92,7 @@ class ScreenDensityScaleManager extends EventDispatcher implements IScaleManager
 	/**
 		@see `feathers.core.IScaleManager.target`
 	**/
+	@:bindable("change")
 	public var target(get, set):DisplayObject;
 
 	private function get_target():DisplayObject {
@@ -124,6 +125,7 @@ class ScreenDensityScaleManager extends EventDispatcher implements IScaleManager
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var scaler(get, set):ScreenDensityScaleCalculator;
 
 	private function get_scaler():ScreenDensityScaleCalculator {

@@ -62,6 +62,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var columnCount(get, set):Int;
 
 	private function get_columnCount():Int {
@@ -90,6 +91,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var sm(get, set):Float;
 
 	private function get_sm():Float {
@@ -119,6 +121,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var md(get, set):Float;
 
 	private function get_md():Float {
@@ -148,6 +151,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var lg(get, set):Float;
 
 	private function get_lg():Float {
@@ -177,6 +181,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var xl(get, set):Float;
 
 	private function get_xl():Float {
@@ -206,7 +211,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
-	@:flash.property
+	@:bindable("change")
 	public var xxl(get, set):Float;
 
 	private function get_xxl():Float {
@@ -235,6 +240,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var rowGap(get, set):Float;
 
 	private function get_rowGap():Float {
@@ -263,6 +269,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var columnGap(get, set):Float;
 
 	private function get_columnGap():Float {
@@ -294,6 +301,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -325,6 +333,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -356,6 +365,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -387,6 +397,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -424,6 +435,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var rowVerticalAlign(get, set):VerticalAlign;
 
 	private function get_rowVerticalAlign():VerticalAlign {
@@ -449,6 +461,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var justifyResetEnabled(get, set):Bool;
 
 	private function get_justifyResetEnabled():Bool {

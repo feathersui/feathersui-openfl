@@ -185,6 +185,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
+	@:bindable("stateChange")
 	public var currentState(get, never):#if flash Dynamic #else TextInputState #end;
 
 	private function get_currentState():#if flash Dynamic #else TextInputState #end {
@@ -218,6 +219,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var text(get, set):String;
 
 	private function get_text():String {

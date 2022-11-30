@@ -74,6 +74,7 @@ class BaseEffectContext extends EventDispatcher implements IEffectContext {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var position(get, set):Float;
 
 	private function get_position():Float {

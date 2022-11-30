@@ -111,6 +111,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 
 		@since 1.0.0
 	**/
+	@:bindable("stylesChange")
 	public function getStyleFunction<T>(type:Class<T>, variant:String):(T) -> Void {
 		return this.getStyleFunctionInternal(type, variant, true);
 	}

@@ -54,6 +54,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -85,6 +86,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -116,6 +118,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -147,6 +150,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -177,6 +181,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var gap(get, set):Float;
 
 	private function get_gap():Float {
@@ -206,6 +211,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var maxItemHeight(get, set):Float;
 
 	private function get_maxItemHeight():Float {
@@ -235,6 +241,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minItemHeight(get, set):Float;
 
 	private function get_minItemHeight():Float {
@@ -271,6 +278,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {

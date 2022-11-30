@@ -147,6 +147,7 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var percentWidth(get, set):Null<Float>;
 
 	private function get_percentWidth():Null<Float> {
@@ -194,6 +195,7 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var percentHeight(get, set):Null<Float>;
 
 	private function get_percentHeight():Null<Float> {
@@ -229,6 +231,7 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.1.0
 	**/
+	@:bindable("change")
 	public var marginLeft(get, set):Null<Float>;
 
 	private function get_marginLeft():Null<Float> {
@@ -264,6 +267,7 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.1.0
 	**/
+	@:bindable("change")
 	public var marginRight(get, set):Null<Float>;
 
 	private function get_marginRight():Null<Float> {

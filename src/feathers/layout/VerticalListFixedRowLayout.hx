@@ -142,6 +142,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var rowHeight(get, set):Null<Float>;
 
 	private function get_rowHeight():Null<Float> {
@@ -174,6 +175,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedRowCount(get, set):Null<Float>;
 
 	private function get_requestedRowCount():Null<Float> {
@@ -208,6 +210,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMinRowCount(get, set):Null<Float>;
 
 	private function get_requestedMinRowCount():Null<Float> {
@@ -243,6 +246,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMaxRowCount(get, set):Null<Float>;
 
 	private function get_requestedMaxRowCount():Null<Float> {
@@ -274,6 +278,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -305,6 +310,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -336,6 +342,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -367,6 +374,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -401,6 +409,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var gap(get, set):Float;
 
 	private function get_gap():Float {
@@ -435,6 +444,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minGap(get, set):Float;
 
 	private function get_minGap():Float {
@@ -475,6 +485,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalAlign(get, set):VerticalAlign;
 
 	private function get_verticalAlign():VerticalAlign {
@@ -501,6 +512,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var contentJustify(get, set):Bool;
 
 	private function get_contentJustify():Bool {

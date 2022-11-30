@@ -96,6 +96,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 
 		@since 1.0.0
 	**/
+	@:bindable("reset")
 	public var array(get, set):Array<T>;
 
 	private function get_array():Array<T> {
@@ -147,6 +148,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	/**
 		@see `feathers.data.IHierarchicalCollection.filterFunction`
 	**/
+	@:bindable("filterChange")
 	public var filterFunction(get, set):(T) -> Bool;
 
 	private function get_filterFunction():(T) -> Bool {
@@ -169,6 +171,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	/**
 		@see `feathers.data.IHierarchicalCollection.sortCompareFunction`
 	**/
+	@:bindable("sortChange")
 	public var sortCompareFunction(get, set):(T, T) -> Int;
 
 	private function get_sortCompareFunction():(T, T) -> Int {
@@ -189,6 +192,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	/**
 		@see `feathers.data.IHierarchicalCollection.getLength`
 	**/
+	@:bindable("change")
 	public function getLength(?location:Array<Int>):Int {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();
@@ -218,6 +222,7 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 	/**
 		@see `feathers.data.IHierarchicalCollection.get`
 	**/
+	@:bindable("change")
 	public function get(location:Array<Int>):T {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();

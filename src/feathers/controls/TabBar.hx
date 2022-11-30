@@ -224,6 +224,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
+	@:bindable("change")
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -268,6 +269,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
+	@:bindable("change")
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {

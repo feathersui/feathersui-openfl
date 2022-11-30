@@ -135,6 +135,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {

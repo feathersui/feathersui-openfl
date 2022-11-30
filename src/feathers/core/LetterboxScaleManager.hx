@@ -53,6 +53,7 @@ class LetterboxScaleManager extends EventDispatcher implements IScaleManager {
 	/**
 		@see `feathers.core.IScaleManager.target`
 	**/
+	@:bindable("change")
 	public var target(get, set):DisplayObject;
 
 	private function get_target():DisplayObject {
@@ -88,6 +89,7 @@ class LetterboxScaleManager extends EventDispatcher implements IScaleManager {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var originalWidth(get, set):Float;
 
 	private function get_originalWidth():Float {
@@ -113,6 +115,7 @@ class LetterboxScaleManager extends EventDispatcher implements IScaleManager {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var originalHeight(get, set):Float;
 
 	private function get_originalHeight():Float {

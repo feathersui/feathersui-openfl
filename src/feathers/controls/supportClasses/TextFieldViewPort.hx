@@ -89,6 +89,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var text(get, set):String;
 
 	private function get_text():String {

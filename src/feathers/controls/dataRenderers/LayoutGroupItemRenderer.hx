@@ -77,6 +77,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 
 		@since 1.0.0
 	**/
+	@:bindable("stateChange")
 	public var currentState(get, never):#if flash Dynamic #else ToggleButtonState #end;
 
 	private function get_currentState():#if flash Dynamic #else ToggleButtonState #end {
@@ -109,6 +110,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	/**
 		@see `feathers.core.IToggle.selected`
 	**/
+	@:bindable("change")
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {

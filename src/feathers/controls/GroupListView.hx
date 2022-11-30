@@ -383,6 +383,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selectedLocation(get, set):Array<Int>;
 
 	private function get_selectedLocation():Array<Int> {
@@ -417,6 +418,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
+	@:bindable("change")
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {

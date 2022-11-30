@@ -92,6 +92,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 
 		@since 1.0.0
 	**/
+	@:bindable("reset")
 	public var array(get, set):Array<T>;
 
 	private function get_array():Array<T> {
@@ -114,6 +115,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 	/**
 		@see `feathers.data.IFlatCollection.length`
 	**/
+	@:bindable("change")
 	public var length(get, never):Int;
 
 	private function get_length():Int {
@@ -133,6 +135,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 	/**
 		@see `feathers.data.IFlatCollection.filterFunction`
 	**/
+	@:bindable("filterChange")
 	public var filterFunction(get, set):(T) -> Bool;
 
 	private function get_filterFunction():(T) -> Bool {
@@ -155,6 +158,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 	/**
 		@see `feathers.data.IFlatCollection.sortCompareFunction`
 	**/
+	@:bindable("sortChange")
 	public var sortCompareFunction(get, set):(T, T) -> Int;
 
 	private function get_sortCompareFunction():(T, T) -> Int {
@@ -175,6 +179,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 	/**
 		@see `feathers.data.IFlatCollection.get`
 	**/
+	@:bindable("change")
 	public function get(index:Int):T {
 		if (this._pendingRefresh) {
 			this.refreshFilterAndSort();

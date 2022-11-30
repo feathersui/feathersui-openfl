@@ -58,6 +58,7 @@ class CustomScaleManager extends EventDispatcher implements IScaleManager {
 	/**
 		@see `feathers.core.IScaleManager.target`
 	**/
+	@:bindable("change")
 	public var target(get, set):DisplayObject;
 
 	private function get_target():DisplayObject {
@@ -90,6 +91,7 @@ class CustomScaleManager extends EventDispatcher implements IScaleManager {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var customScale(get, set):Float;
 
 	private function get_customScale():Float {
@@ -112,6 +114,7 @@ class CustomScaleManager extends EventDispatcher implements IScaleManager {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var customBounds(get, set):Rectangle;
 
 	private function get_customBounds():Rectangle {

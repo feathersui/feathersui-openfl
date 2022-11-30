@@ -500,6 +500,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:bindable("scroll")
 	public var scrollX(get, set):Float;
 
 	private function get_scrollX():Float {
@@ -535,6 +536,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:bindable("scroll")
 	public var restrictedScrollX(get, set):Float;
 
 	private function get_restrictedScrollX():Float {
@@ -579,6 +581,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:bindable("scroll")
 	public var scrollY(get, set):Float;
 
 	private function get_scrollY():Float {
@@ -613,6 +616,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		@since 1.0.0
 	**/
+	@:bindable("scroll")
 	public var restrictedScrollY(get, set):Float;
 
 	private function get_restrictedScrollY():Float {

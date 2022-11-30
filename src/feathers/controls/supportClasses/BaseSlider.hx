@@ -80,6 +80,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var value(get, set):Float;
 
 	private function get_value():Float {

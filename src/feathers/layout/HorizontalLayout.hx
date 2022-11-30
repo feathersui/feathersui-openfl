@@ -54,6 +54,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -85,6 +86,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -116,6 +118,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -147,6 +150,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -181,6 +185,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var gap(get, set):Float;
 
 	private function get_gap():Float {
@@ -215,6 +220,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minGap(get, set):Float;
 
 	private function get_minGap():Float {
@@ -255,6 +261,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {
@@ -291,6 +298,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalAlign(get, set):VerticalAlign;
 
 	private function get_verticalAlign():VerticalAlign {
@@ -317,6 +325,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var justifyResetEnabled(get, set):Bool;
 
 	private function get_justifyResetEnabled():Bool {
@@ -347,6 +356,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var percentWidthResetEnabled(get, set):Bool;
 
 	private function get_percentWidthResetEnabled():Bool {
@@ -377,6 +387,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var percentHeightResetEnabled(get, set):Bool;
 
 	private function get_percentHeightResetEnabled():Bool {

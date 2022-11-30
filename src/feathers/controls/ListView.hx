@@ -343,6 +343,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
+	@:bindable("change")
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -400,6 +401,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		@see `feathers.core.IDataSelector.selectedItem`
 	**/
+	@:bindable("change")
 	public var selectedItem(get, set):Dynamic;
 
 	private function get_selectedItem():Dynamic {
@@ -485,6 +487,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selectedIndices(get, set):Array<Int>;
 
 	private function get_selectedIndices():Array<Int> {
@@ -533,6 +536,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var selectedItems(get, set):Array<Dynamic>;
 
 	private function get_selectedItems():Array<Dynamic> {

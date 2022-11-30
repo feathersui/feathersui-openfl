@@ -137,6 +137,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@see `PagedTiledRowsListLayout.horizontalAlign`
 	**/
+	@:bindable("change")
 	public var alignEmptyHorizontalTiles(get, set):Bool;
 
 	private function get_alignEmptyHorizontalTiles():Bool {
@@ -175,6 +176,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalAlign(get, set):HorizontalAlign;
 
 	private function get_horizontalAlign():HorizontalAlign {
@@ -215,6 +217,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalAlign(get, set):VerticalAlign;
 
 	private function get_verticalAlign():VerticalAlign {
@@ -246,6 +249,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingTop(get, set):Float;
 
 	private function get_paddingTop():Float {
@@ -277,6 +281,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingRight(get, set):Float;
 
 	private function get_paddingRight():Float {
@@ -308,6 +313,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingBottom(get, set):Float;
 
 	private function get_paddingBottom():Float {
@@ -339,6 +345,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var paddingLeft(get, set):Float;
 
 	private function get_paddingLeft():Float {
@@ -374,6 +381,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var horizontalGap(get, set):Float;
 
 	private function get_horizontalGap():Float {
@@ -409,6 +417,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minHorizontalGap(get, set):Float;
 
 	private function get_minHorizontalGap():Float {
@@ -440,6 +449,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var verticalGap(get, set):Float;
 
 	private function get_verticalGap():Float {
@@ -475,6 +485,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var minVerticalGap(get, set):Float;
 
 	private function get_minVerticalGap():Float {
@@ -511,6 +522,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedColumnCount(get, set):Null<Int>;
 
 	private function get_requestedColumnCount():Null<Int> {
@@ -548,6 +560,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMinColumnCount(get, set):Null<Int>;
 
 	private function get_requestedMinColumnCount():Null<Int> {
@@ -586,6 +599,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMaxColumnCount(get, set):Null<Int>;
 
 	private function get_requestedMaxColumnCount():Null<Int> {
@@ -619,6 +633,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedRowCount(get, set):Null<Float>;
 
 	private function get_requestedRowCount():Null<Float> {
@@ -653,6 +668,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMinRowCount(get, set):Null<Float>;
 
 	private function get_requestedMinRowCount():Null<Float> {
@@ -688,6 +704,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		@since 1.0.0
 	**/
+	@:bindable("change")
 	public var requestedMaxRowCount(get, set):Null<Float>;
 
 	private function get_requestedMaxRowCount():Null<Float> {
