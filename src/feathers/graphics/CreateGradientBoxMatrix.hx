@@ -8,6 +8,7 @@
 
 package feathers.graphics;
 
+import openfl.errors.ArgumentError;
 import openfl.geom.Matrix;
 
 /**
@@ -20,7 +21,45 @@ import openfl.geom.Matrix;
 	@since 1.0.0
 **/
 abstract CreateGradientBoxMatrix((Float, Float, ?Float, ?Float,
-		?Float) -> Matrix) from(Float, Float, ?Float, ?Float, ?Float) -> Matrix to(Float, Float, ?Float, ?Float, ?Float) -> Matrix {
+		?Float) -> Matrix) from (Float, Float, ?Float, ?Float, ?Float) -> Matrix to (Float, Float, ?Float, ?Float, ?Float) -> Matrix {
+	@:from
+	public static function fromGradientBoxTransform(transform:GradientBoxTransform):CreateGradientBoxMatrix {
+		switch (transform) {
+			case RotateRadians(rotation):
+				return (defaultWidth:Float, defaultHeight:Float, ?defaultRadians:Float, ?defaultTx:Float, ?defaultTy:Float) -> {
+					var matrix = new Matrix();
+					matrix.createGradientBox(defaultWidth, defaultHeight, rotation, defaultTx, defaultTy);
+					return matrix;
+				}
+			case RotateDegrees(rotation):
+				return (defaultWidth:Float, defaultHeight:Float, ?defaultRadians:Float, ?defaultTx:Float, ?defaultTy:Float) -> {
+					var matrix = new Matrix();
+					matrix.createGradientBox(defaultWidth, defaultHeight, rotation * Math.PI / 180.0, defaultTx, defaultTy);
+					return matrix;
+				}
+			case Translate(tx, ty):
+				return (defaultWidth:Float, defaultHeight:Float, ?defaultRadians:Float, ?defaultTx:Float, ?defaultTy:Float) -> {
+					var matrix = new Matrix();
+					matrix.createGradientBox(defaultWidth, defaultHeight, defaultRadians, tx, ty);
+					return matrix;
+				}
+			case RotateRadiansAndTranslate(rotation, tx, ty):
+				return (defaultWidth:Float, defaultHeight:Float, ?defaultRadians:Float, ?defaultTx:Float, ?defaultTy:Float) -> {
+					var matrix = new Matrix();
+					matrix.createGradientBox(defaultWidth, defaultHeight, rotation, tx, ty);
+					return matrix;
+				}
+			case RotateDegreesAndTranslate(rotation, tx, ty):
+				return (defaultWidth:Float, defaultHeight:Float, ?defaultRadians:Float, ?defaultTx:Float, ?defaultTy:Float) -> {
+					var matrix = new Matrix();
+					matrix.createGradientBox(defaultWidth, defaultHeight, rotation * Math.PI / 180.0, tx, ty);
+					return matrix;
+				}
+			default:
+				throw new ArgumentError("Unknown GradientBoxTransform: " + transform);
+		}
+	}
+
 	/**
 		Converts a `Float` value, measured in radians, to a `CreateGradientBoxMatrix` callback.
 
