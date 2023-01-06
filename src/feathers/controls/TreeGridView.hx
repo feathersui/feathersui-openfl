@@ -416,9 +416,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		// clear the selection for the same reason
 		this.selectedLocation = null;
 
+		// clear any auto-populated columns so that they can be updated
+		if (this._autoPopulatedColumns != null) {
+			this._autoPopulatedColumns = null;
+			this.columns = null;
+		}
+
 		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
+
+	private var _autoPopulatedColumns:IFlatCollection<TreeGridViewColumn> = null;
 
 	private var _columns:IFlatCollection<TreeGridViewColumn> = null;
 
@@ -473,6 +481,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._columns.addEventListener(FlatCollectionEvent.ADD_ITEM, treeGridView_columns_addItemHandler);
 			this._columns.addEventListener(FlatCollectionEvent.REMOVE_ITEM, treeGridView_columns_removeItemHandler);
 		}
+		this._autoPopulatedColumns = null;
 		this.setInvalid(DATA);
 		return this._columns;
 	}
@@ -1236,15 +1245,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._columns != null) {
 			return;
 		}
+		var newColumns:ArrayCollection<TreeGridViewColumn> = null;
 		if (this._dataProvider != null && this._dataProvider.getLength() > 0) {
 			var item = this._dataProvider.get([0]);
-			// use the setter
-			this.columns = new ArrayCollection(Reflect.fields(item)
+			newColumns = new ArrayCollection(Reflect.fields(item)
 				.map((fieldName) -> new TreeGridViewColumn(fieldName, (item) -> Std.string(Reflect.getProperty(item, fieldName)))));
 		} else {
-			// use the setter
-			this.columns = new ArrayCollection();
+			newColumns = new ArrayCollection();
 		}
+		// use the setter
+		this.columns = newColumns;
+		this._autoPopulatedColumns = newColumns;
 	}
 
 	private function layoutHeaders():Void {

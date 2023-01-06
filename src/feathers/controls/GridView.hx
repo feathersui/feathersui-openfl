@@ -416,9 +416,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		// clear the selection for the same reason
 		this.selectedIndex = -1;
 
+		// clear any auto-populated columns so that they can be updated
+		if (this._autoPopulatedColumns != null) {
+			this._autoPopulatedColumns = null;
+			this.columns = null;
+		}
+
 		this.setInvalid(DATA);
 		return this._dataProvider;
 	}
+
+	private var _autoPopulatedColumns:IFlatCollection<GridViewColumn> = null;
 
 	private var _columns:IFlatCollection<GridViewColumn> = null;
 
@@ -473,6 +481,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._columns.addEventListener(FlatCollectionEvent.ADD_ITEM, gridView_columns_addItemHandler);
 			this._columns.addEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_columns_removeItemHandler);
 		}
+		this._autoPopulatedColumns = null;
 		this.setInvalid(DATA);
 		return this._columns;
 	}
@@ -1426,15 +1435,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._columns != null) {
 			return;
 		}
+		var newColumns:ArrayCollection<GridViewColumn> = null;
 		if (this._dataProvider != null && this._dataProvider.length > 0) {
 			var item = this._dataProvider.get(0);
-			// use the setter
-			this.columns = new ArrayCollection(Reflect.fields(item)
+			newColumns = new ArrayCollection(Reflect.fields(item)
 				.map((fieldName) -> new GridViewColumn(fieldName, (item) -> Std.string(Reflect.getProperty(item, fieldName)))));
 		} else {
-			// use the setter
-			this.columns = new ArrayCollection();
+			newColumns = new ArrayCollection();
 		}
+		// use the setter
+		this.columns = newColumns;
+		this._autoPopulatedColumns = newColumns;
 	}
 
 	private function layoutHeaders():Void {
