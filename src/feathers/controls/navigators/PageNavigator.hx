@@ -294,6 +294,8 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	@:style
 	public var gap:Float = 0.0;
 
+	private var _previousCustomPageIndicatorVariant:String = null;
+
 	/**
 		An optional custom variant to use for the page indicator sub-component,
 		instead of `PageNavigator.CHILD_VARIANT_PAGE_INDICATOR`.
@@ -374,6 +376,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
+		if (this._previousCustomPageIndicatorVariant != this.customPageIndicatorVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_PAGE_INDICATOR_FACTORY);
+		}
 		var pageIndicatorInvalid = this.isInvalid(INVALIDATION_FLAG_PAGE_INDICATOR_FACTORY);
 
 		if (pageIndicatorInvalid) {
@@ -391,6 +396,8 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		}
 
 		super.update();
+
+		this._previousCustomPageIndicatorVariant = this.customPageIndicatorVariant;
 	}
 
 	override private function measure():Bool {

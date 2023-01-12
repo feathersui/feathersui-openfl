@@ -298,6 +298,8 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	@:style
 	public var gap:Float = 0.0;
 
+	private var _previousCustomTabBarVariant:String = null;
+
 	/**
 		An optional custom variant to use for the tab bar sub-component,
 		instead of `TabNavigator.CHILD_VARIANT_TAB_BAR`.
@@ -379,6 +381,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
+		if (this._previousCustomTabBarVariant != this.customTabBarVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_TAB_BAR_FACTORY);
+		}
 		var tabBarInvalid = this.isInvalid(INVALIDATION_FLAG_TAB_BAR_FACTORY);
 
 		if (tabBarInvalid) {
@@ -398,6 +403,8 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 
 		super.update();
+
+		this._previousCustomTabBarVariant = this.customTabBarVariant;
 	}
 
 	override private function measure():Bool {

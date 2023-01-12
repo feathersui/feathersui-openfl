@@ -409,6 +409,8 @@ class Alert extends Panel {
 	@:style
 	public var icon:DisplayObject = null;
 
+	private var _previousCustomButtonBarVariant:String = null;
+
 	/**
 		An optional custom variant to use for the alert's button bar, instead of
 		`Alert.CHILD_VARIANT_BUTTON_BAR`.
@@ -423,6 +425,8 @@ class Alert extends Panel {
 	@:style
 	public var customButtonBarVariant:String = null;
 
+	private var _previousCustomHeaderVariant:String = null;
+
 	/**
 		An optional custom variant to use for the alert's header, instead of
 		`Alert.CHILD_VARIANT_HEADER`.
@@ -436,6 +440,8 @@ class Alert extends Panel {
 	**/
 	@:style
 	public var customHeaderVariant:String = null;
+
+	private var _previousCustomMessageLabelVariant:String = null;
 
 	/**
 		An optional custom variant to use for the alert's message label, instead
@@ -469,8 +475,17 @@ class Alert extends Panel {
 		var dataInvalid = this.isInvalid(DATA);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomButtonBarVariant != this.customButtonBarVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_BUTTON_BAR_FACTORY);
+		}
 		var buttonBarInvalid = this.isInvalid(INVALIDATION_FLAG_BUTTON_BAR_FACTORY);
+		if (this._previousCustomHeaderVariant != this.customHeaderVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_HEADER_FACTORY);
+		}
 		var headerInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_FACTORY);
+		if (this._previousCustomMessageLabelVariant != this.customMessageLabelVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_MESSAGE_LABEL_FACTORY);
+		}
 		var messageLabelInvalid = this.isInvalid(INVALIDATION_FLAG_MESSAGE_LABEL_FACTORY);
 
 		if (headerInvalid) {
@@ -502,6 +517,10 @@ class Alert extends Panel {
 		}
 
 		super.update();
+
+		this._previousCustomButtonBarVariant = this.customButtonBarVariant;
+		this._previousCustomHeaderVariant = this.customHeaderVariant;
+		this._previousCustomMessageLabelVariant = this.customMessageLabelVariant;
 	}
 
 	private function createButtonBar():Void {
