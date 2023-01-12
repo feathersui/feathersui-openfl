@@ -707,6 +707,10 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		sizeInvalid = this.measure() || sizeInvalid;
 
 		this.layoutContent();
+
+		this._previousCustomTextInputVariant = this.customTextInputVariant;
+		this._previousCustomDecrementButtonVariant = this.customDecrementButtonVariant;
+		this._previousCustomIncrementButtonVariant = this.customIncrementButtonVariant;
 	}
 
 	private function measure():Bool {

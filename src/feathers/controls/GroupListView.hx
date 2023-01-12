@@ -1019,6 +1019,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		super.update();
 
 		this._previousCustomItemRendererVariant = this.customItemRendererVariant;
+		this._previousCustomHeaderRendererVariant = this.customHeaderRendererVariant;
 
 		this.handlePendingScroll();
 	}

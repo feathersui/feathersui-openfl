@@ -1214,6 +1214,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this._previousCustomDateRendererVariant = this.customDateRendererVariant;
 		this._previousCustomMutedDateRendererVariant = this.customMutedDateRendererVariant;
 		this._previousCustomMonthTitleViewVariant = this.customMonthTitleViewVariant;
+		this._previousCustomWeekdayLabelVariant = this.customWeekdayLabelVariant;
 		this._previousCustomDecrementMonthButtonVariant = this.customDecrementMonthButtonVariant;
 		this._previousCustomIncrementMonthButtonVariant = this.customIncrementMonthButtonVariant;
 		this._previousCustomDecrementYearButtonVariant = this.customDecrementYearButtonVariant;

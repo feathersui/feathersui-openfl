@@ -324,6 +324,8 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		}
 
 		super.update();
+
+		this._previousCustomDisclosureButtonVariant = this.customDisclosureButtonVariant;
 	}
 
 	override private function calculateExplicitWidthForTextMeasurement():Null<Float> {
