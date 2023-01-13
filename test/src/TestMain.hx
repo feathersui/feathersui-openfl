@@ -45,7 +45,9 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.PanelMeasurementTest());
 		runner.addCase(new feathers.controls.PopUpListViewTest());
 		runner.addCase(new feathers.controls.RadioTest());
+		runner.addCase(new feathers.controls.navigators.PageNavigatorTest());
 		runner.addCase(new feathers.controls.navigators.StackNavigatorTest());
+		runner.addCase(new feathers.controls.navigators.TabNavigatorTest());
 		runner.addCase(new feathers.controls.ScrollContainerTest());
 		runner.addCase(new feathers.controls.ScrollContainerMeasurementTest());
 		runner.addCase(new feathers.controls.TabBarTest());

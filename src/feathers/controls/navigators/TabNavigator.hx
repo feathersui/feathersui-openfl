@@ -392,8 +392,13 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		if (dataInvalid || tabBarInvalid) {
 			this.tabBar.itemToText = this.itemToText;
+			var oldIgnoreSelectionChange = this._ignoreSelectionChange;
+			this._ignoreSelectionChange = true;
 			this.tabBar.dataProvider = this._dataProvider;
+			this._ignoreSelectionChange = oldIgnoreSelectionChange;
+		}
 
+		if (dataInvalid) {
 			this._previousEdgePuller.simulateTouch = this._simulateTouch;
 			this._nextEdgePuller.simulateTouch = this._simulateTouch;
 		}

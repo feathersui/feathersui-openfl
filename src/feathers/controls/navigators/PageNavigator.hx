@@ -385,8 +385,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			this.createPageIndicator();
 		}
 
-		if (dataInvalid || pageIndicatorInvalid) {
-			this.pageIndicator.maxSelectedIndex = this.maxSelectedIndex;
+		if (dataInvalid) {
 			this._previousEdgePuller.simulateTouch = this._simulateTouch;
 			this._nextEdgePuller.simulateTouch = this._simulateTouch;
 		}
@@ -505,6 +504,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	private function refreshSelection():Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
+		this.pageIndicator.maxSelectedIndex = this.maxSelectedIndex;
 		this.pageIndicator.selectedIndex = this._selectedIndex;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 
