@@ -51,6 +51,20 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 	**/
 	public var verticalAlign:VerticalAlign = MIDDLE;
 
+	/**
+		Empty space to the left of the horizontal line.
+
+		@since 1.1.0
+	**/
+	public var paddingLeft:Float = 0.0;
+
+	/**
+		Empty space to the right of the horizontal line.
+
+		@since 1.1.0
+	**/
+	public var paddingRight:Float = 0.0;
+
 	override private function draw():Void {
 		var currentBorder = this.getCurrentBorder();
 		var thicknessOffset = getLineThickness(currentBorder) / 2.0;
@@ -62,8 +76,8 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 			this.graphics.endFill();
 		}
 
-		var minLineX = Math.min(this.actualWidth, thicknessOffset);
-		var maxLineX = Math.max(minLineX, this.actualWidth - thicknessOffset);
+		var minLineX = Math.min(this.actualWidth, thicknessOffset + this.paddingLeft);
+		var maxLineX = Math.max(minLineX, this.actualWidth - thicknessOffset - this.paddingLeft - this.paddingRight);
 
 		var positionY = switch (this.verticalAlign) {
 			case TOP: thicknessOffset;

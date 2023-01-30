@@ -51,6 +51,20 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 	**/
 	public var horizontalAlign:HorizontalAlign = CENTER;
 
+	/**
+		Empty space above the vertical line.
+
+		@since 1.1.0
+	**/
+	public var paddingTop:Float = 0.0;
+
+	/**
+		Empty space above the vertical line.
+
+		@since 1.1.0
+	**/
+	public var paddingBottom:Float = 0.0;
+
 	override private function draw():Void {
 		var currentBorder = this.getCurrentBorder();
 		var thicknessOffset = getLineThickness(currentBorder) / 2.0;
@@ -68,8 +82,8 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 			case RIGHT: this.actualWidth - thicknessOffset;
 			default: throw new ArgumentError("Unknown horizontal align: " + this.horizontalAlign);
 		}
-		var minLineY = Math.min(this.actualHeight, thicknessOffset);
-		var maxLineY = Math.max(minLineY, this.actualHeight - thicknessOffset);
+		var minLineY = Math.min(this.actualHeight, thicknessOffset + this.paddingTop);
+		var maxLineY = Math.max(minLineY, this.actualHeight - thicknessOffset - this.paddingTop - this.paddingBottom);
 
 		this.applyLineStyle(currentBorder);
 		this.graphics.moveTo(positionX, minLineY);
