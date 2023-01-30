@@ -1932,10 +1932,26 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 
-		this._currentViewPortMaskSkin.x = this.paddingLeft + this.leftViewPortOffset;
-		this._currentViewPortMaskSkin.y = this.paddingTop + this.topViewPortOffset;
-		this._currentViewPortMaskSkin.width = this._viewPort.visibleWidth;
-		this._currentViewPortMaskSkin.height = this._viewPort.visibleHeight;
+		var maskX = this.paddingLeft + this.leftViewPortOffset;
+		var maskY = this.paddingTop + this.topViewPortOffset;
+		var maskWidth = this._viewPort.visibleWidth;
+		var maskHeight = this._viewPort.visibleHeight;
+		if (this.fixedScrollBars && this.scrollBarY.visible) {
+			maskWidth += this.scrollBarY.width;
+			if (this.scrollBarYPosition == LEFT) {
+				maskX -= this.scrollBarY.width;
+			}
+		}
+		if (this.fixedScrollBars && this.scrollBarX.visible) {
+			maskHeight += this.scrollBarX.height;
+			if (this.scrollBarXPosition == TOP) {
+				maskX -= this.scrollBarX.height;
+			}
+		}
+		this._currentViewPortMaskSkin.x = maskX;
+		this._currentViewPortMaskSkin.y = maskY;
+		this._currentViewPortMaskSkin.width = maskWidth;
+		this._currentViewPortMaskSkin.height = maskHeight;
 		if ((this._currentViewPortMaskSkin is IValidating)) {
 			cast(this._currentViewPortMaskSkin, IValidating).validateNow();
 		}
