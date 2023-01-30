@@ -30,6 +30,8 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 		super(fill, border);
 	}
 
+	private var _horizontalAlign:HorizontalAlign = CENTER;
+
 	/**
 		How the line is positioned horizontally (along the x-axis) within the
 		skin.
@@ -37,7 +39,7 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 		The following example aligns the line to the left:
 
 		```haxe
-		skin.verticalAlign = LEFT;
+		skin.horizontalAlign = LEFT;
 		```
 
 		**Note:** The `HorizontalAlign.JUSTIFY` constant is not supported by this
@@ -49,21 +51,64 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	public var horizontalAlign:HorizontalAlign = CENTER;
+	public var horizontalAlign(get, set):HorizontalAlign;
+
+	private function get_horizontalAlign():HorizontalAlign {
+		return this._horizontalAlign;
+	}
+
+	private function set_horizontalAlign(value:HorizontalAlign):HorizontalAlign {
+		if (this._horizontalAlign == value) {
+			return this._horizontalAlign;
+		}
+		this._horizontalAlign = value;
+		this.setInvalid(STYLES);
+		return this._horizontalAlign;
+	}
+
+	private var _paddingTop:Float = 0.0;
 
 	/**
 		Empty space above the vertical line.
 
 		@since 1.1.0
 	**/
-	public var paddingTop:Float = 0.0;
+	public var paddingTop(get, set):Float;
+
+	private function get_paddingTop():Float {
+		return this._paddingTop;
+	}
+
+	private function set_paddingTop(value:Float):Float {
+		if (this._paddingTop == value) {
+			return this._paddingTop;
+		}
+		this._paddingTop = value;
+		this.setInvalid(STYLES);
+		return this._paddingTop;
+	}
+
+	private var _paddingBottom:Float = 0.0;
 
 	/**
 		Empty space above the vertical line.
 
 		@since 1.1.0
 	**/
-	public var paddingBottom:Float = 0.0;
+	public var paddingBottom(get, set):Float;
+
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
+	}
+
+	private function set_paddingBottom(value:Float):Float {
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
+		}
+		this._paddingBottom = value;
+		this.setInvalid(STYLES);
+		return this._paddingBottom;
+	}
 
 	override private function draw():Void {
 		var currentBorder = this.getCurrentBorder();
@@ -76,14 +121,14 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 			this.graphics.endFill();
 		}
 
-		var positionX = switch (this.horizontalAlign) {
+		var positionX = switch (this._horizontalAlign) {
 			case LEFT: thicknessOffset;
 			case CENTER: this.actualWidth / 2.0;
 			case RIGHT: this.actualWidth - thicknessOffset;
-			default: throw new ArgumentError("Unknown horizontal align: " + this.horizontalAlign);
+			default: throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 		}
-		var minLineY = Math.min(this.actualHeight, thicknessOffset + this.paddingTop);
-		var maxLineY = Math.max(minLineY, this.actualHeight - thicknessOffset - this.paddingTop - this.paddingBottom);
+		var minLineY = Math.min(this.actualHeight, thicknessOffset + this._paddingTop);
+		var maxLineY = Math.max(minLineY, this.actualHeight - thicknessOffset - this._paddingTop - this._paddingBottom);
 
 		this.applyLineStyle(currentBorder);
 		this.graphics.moveTo(positionX, minLineY);

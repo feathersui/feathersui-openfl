@@ -30,6 +30,8 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 		super(fill, border);
 	}
 
+	private var _verticalAlign:VerticalAlign = MIDDLE;
+
 	/**
 		How the line is positioned vertically (along the y-axis) within the
 		skin.
@@ -49,21 +51,64 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 
 		@since 1.0.0
 	**/
-	public var verticalAlign:VerticalAlign = MIDDLE;
+	public var verticalAlign(get, set):VerticalAlign;
+
+	private function get_verticalAlign():VerticalAlign {
+		return this._verticalAlign;
+	}
+
+	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
+		if (this._verticalAlign == value) {
+			return this._verticalAlign;
+		}
+		this._verticalAlign = value;
+		this.setInvalid(STYLES);
+		return this._verticalAlign;
+	}
+
+	private var _paddingLeft:Float = 0.0;
 
 	/**
 		Empty space to the left of the horizontal line.
 
 		@since 1.1.0
 	**/
-	public var paddingLeft:Float = 0.0;
+	public var paddingLeft(get, set):Float;
+
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
+	}
+
+	private function set_paddingLeft(value:Float):Float {
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
+		}
+		this._paddingLeft = value;
+		this.setInvalid(STYLES);
+		return this._paddingLeft;
+	}
+
+	private var _paddingRight:Float = 0.0;
 
 	/**
 		Empty space to the right of the horizontal line.
 
 		@since 1.1.0
 	**/
-	public var paddingRight:Float = 0.0;
+	public var paddingRight(get, set):Float;
+
+	private function get_paddingRight():Float {
+		return this._paddingRight;
+	}
+
+	private function set_paddingRight(value:Float):Float {
+		if (this._paddingRight == value) {
+			return this._paddingRight;
+		}
+		this._paddingRight = value;
+		this.setInvalid(STYLES);
+		return this._paddingRight;
+	}
 
 	override private function draw():Void {
 		var currentBorder = this.getCurrentBorder();
@@ -76,14 +121,14 @@ class HorizontalLineSkin extends BaseGraphicsPathSkin {
 			this.graphics.endFill();
 		}
 
-		var minLineX = Math.min(this.actualWidth, thicknessOffset + this.paddingLeft);
-		var maxLineX = Math.max(minLineX, this.actualWidth - thicknessOffset - this.paddingLeft - this.paddingRight);
+		var minLineX = Math.min(this.actualWidth, thicknessOffset + this._paddingLeft);
+		var maxLineX = Math.max(minLineX, this.actualWidth - thicknessOffset - this._paddingLeft - this._paddingRight);
 
-		var positionY = switch (this.verticalAlign) {
+		var positionY = switch (this._verticalAlign) {
 			case TOP: thicknessOffset;
 			case MIDDLE: this.actualHeight / 2.0;
 			case BOTTOM: this.actualHeight - thicknessOffset;
-			default: throw new ArgumentError("Unknown vertical align: " + this.verticalAlign);
+			default: throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 		}
 
 		this.applyLineStyle(currentBorder);
