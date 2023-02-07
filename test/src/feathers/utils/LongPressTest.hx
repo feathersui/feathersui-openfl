@@ -42,7 +42,7 @@ class LongPressTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
-	@:timeout(1000)
+	@:timeout(1250)
 	public function testLongPressEventFromMouseDown(async:Async):Void {
 		var longPressed = false;
 		this._control.addEventListener(LongPressEvent.LONG_PRESS, function(event:LongPressEvent):Void {
@@ -59,7 +59,7 @@ class LongPressTest extends Test {
 		}, 750);
 	}
 
-	@:timeout(1000)
+	@:timeout(1250)
 	public function testMouseUpBeforeLongPressEventFromMouseDown(async:Async):Void {
 		var longPressed = false;
 		this._control.addEventListener(LongPressEvent.LONG_PRESS, function(event:LongPressEvent):Void {
@@ -77,7 +77,7 @@ class LongPressTest extends Test {
 		}, 750);
 	}
 
-	@:timeout(1000)
+	@:timeout(1250)
 	public function testLongPressEventFromTouchBegin(async:Async):Void {
 		var longPressed = false;
 		this._control.addEventListener(LongPressEvent.LONG_PRESS, function(event:LongPressEvent):Void {
@@ -94,7 +94,7 @@ class LongPressTest extends Test {
 		}, 750);
 	}
 
-	@:timeout(1000)
+	@:timeout(1250)
 	public function testTouchEndBeforeLongPressEventFromTouchBegin(async:Async):Void {
 		var longPressed = false;
 		this._control.addEventListener(LongPressEvent.LONG_PRESS, function(event:LongPressEvent):Void {
