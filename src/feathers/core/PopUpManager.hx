@@ -101,19 +101,19 @@ class PopUpManager {
 
 	/**
 		A convenience method for `PopUpManager.forStage(stage).addPopUp()`.
-		Attempts to use `parent.stage`, but throws an error if `parent.stage` is
+		Attempts to use `owner.stage`, but throws an error if `owner.stage` is
 		`null`.
 
 		@since 1.0.0
 	**/
-	public static function addPopUp(popUp:DisplayObject, parent:DisplayObject, isModal:Bool = true, isCentered:Bool = true,
+	public static function addPopUp(popUp:DisplayObject, owner:DisplayObject, isModal:Bool = true, isCentered:Bool = true,
 			?customOverlayFactory:() -> DisplayObject):DisplayObject {
-		if (parent == null) {
-			throw new ArgumentError("The pop-up's parent must not be null.");
+		if (owner == null) {
+			throw new ArgumentError("The pop-up's owner must not be null.");
 		}
-		var stage = parent.stage;
+		var stage = owner.stage;
 		if (stage == null) {
-			throw new ArgumentError("The stage property of a pop-up's parent must not be null.");
+			throw new ArgumentError("The stage property of a pop-up's owner must not be null.");
 		}
 		var popUpManager = PopUpManager.forStage(stage);
 		return popUpManager.addPopUp(popUp, isModal, isCentered, customOverlayFactory);
