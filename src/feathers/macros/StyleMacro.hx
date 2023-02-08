@@ -97,10 +97,10 @@ class StyleMacro {
 					// generate a setter
 					var setter:Function = {
 						expr: macro {
-							if ($i{backingVarName} == value) {
+							if (!this.setStyle($v{field.name})) {
 								return $i{backingVarName};
 							}
-							if (!this.setStyle($v{field.name})) {
+							if ($i{backingVarName} == value) {
 								return $i{backingVarName};
 							}
 							// in a -final build, this forces the clearStyle
