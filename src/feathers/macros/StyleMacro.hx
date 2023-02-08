@@ -97,6 +97,12 @@ class StyleMacro {
 					// generate a setter
 					var setter:Function = {
 						expr: macro {
+							// must check if style is restricted first,
+							// even if the value is equal.
+							// returning when equal, without doing the
+							// restriction check will allow a theme to replace a
+							// style set outside of the theme, which is the
+							// whole point of restricting styles.
 							if (!this.setStyle($v{field.name})) {
 								return $i{backingVarName};
 							}
