@@ -19,7 +19,11 @@ class TestMain extends Sprite {
 		super();
 
 		var runner = new Runner();
+		#if !flash
+		// these tests often timeout on CI when running in Flash/AIR
 		runner.addCase(new feathers.controls.AssetLoaderTest());
+		runner.addCase(new feathers.utils.LongPressTest());
+		#end
 		runner.addCase(new feathers.controls.BasicButtonMeasurementTest());
 		runner.addCase(new feathers.controls.BasicButtonTest());
 		runner.addCase(new feathers.controls.BasicToggleButtonTest());
@@ -96,7 +100,6 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.ThemeTest());
 		runner.addCase(new feathers.themes.DefaultThemeTest());
 		runner.addCase(new feathers.utils.ExclusivePointerTest());
-		runner.addCase(new feathers.utils.LongPressTest());
 		runner.addCase(new feathers.utils.PointerTriggerTest());
 		runner.addCase(new feathers.utils.PopUpUtilTest());
 		#if (html5 && !headless_html5)
