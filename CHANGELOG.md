@@ -1,5 +1,40 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.1.0 (2022-??-??)
+
+- ActivityIndicator: New component to display indeterminate progress with animation.
+- AssetLoader: Fix calculation of `minWidth` and `minHeight` during measurement.
+- BaseScrollContainer: view port mask extends under scroll bars, if scroll bars are fixed.
+- ComboBox: Fixed issue where `ListView` closes without selection when clicked, if `focusManager` is null.
+- Data Containers: When using arrow keys to navigate, scroll position may be updated, even if selection is not updated.
+- DefaultFocusManager: Respects `isDefaultPrevented()` on `mouseFocusChange` event.
+- DonutSkin: New skin class that is similar to `CircleSkin`, but with an inner radius that is not filled.
+- DropDownPopUpAdapter: Added `closeOnPointerActiveOutside` property to customize behavior.
+- GradientBoxTransform: New enum that may be used to define gradient line/fill styles to skins. Previously, line/fill styles accepted a `Float` rotation value or a `Matrix` only. Those are still supported, but this enum makes customization easier.
+- GridView, TreeGridView: Fixed issue where automatically populated columns were not updated when passing new value to `dataProvider` property.
+- HorizontalLayoutData: Added `marginLeft` and `marginRight` properties to affect gap between individual items.
+- HorizontalLineSkin, VerticalLineSkin: Added padding properties to optionally add extra empty space to the sides of the line.
+- HorizontalLineSkin, VerticalLineSkin: Fixed issue where alignment properties were incorrectly defined as fields instead of getters/setters. They should have invalidated the skin on change.
+- HorizontalListLayout, VerticalListLayout: Fixed minimum column/row count not affecting the calculated minimum width or height of all content.
+- HProgressBar, VProgressBar: Added `fillMode` property, which can be `RESIZE` (default, same as old behavior), but also `SCROLL_RECT` or `MASK`.
+- Label: Added `VARIANT_DANGER` to highlight errors and other important messages.
+- Layouts: Fixed calculation of view port bounds when combining requested column/row count and padding/gap.
+- NumericStepper: Does not override increment and decrement button text if text is already set in button factory.
+- PageNavigator, TabNavigator: Fixed issue where setting `selectedIndex` or `selectedItem` before the first validation was ignored.
+- PopUpListView: Fixed null exception on mouse focus change, if `relatedObject` is missing.
+- Radio: Arrow keys are ignored for selection changes if `keyLocation` is `D_PAD`.
+- Samples: Added new _dark-mode_ sample to demonstrate switching between light and dark mode with the default theme.
+- ScrollContainer: Added `manageChildVisibility` property to allow container to change `visible` property on all children during scrolling to optimize rendering.
+- Scroller: Calls `preventDefault()` when handling mouse wheel event to prevent page from scrolling on html5 target.
+- TextArea, TextInput: Added `showPromptWhenEmptyAndFocused` (default: true) to allow hiding the prompt on focus.
+- TextCallout: Added `wordWrap` property.
+- TextInput: Set `TextField.type` on creation to avoid focus issue in OpenFL 9.2.0 and older.
+- VerticalLayoutData: Added `marginTop` and `marginBottom` properties to affect gap between individual items.
+- Fixed issue in some components where setting a custom child variant would cause children to be recreated on every validation, which wasn't necessary.
+- If `feathersui_disable_default_theme` is defined, default styles will not be initialized at all by components.
+- If `feathersui_innogames_openfl` is defined, some things may behave differently for better compatibility with [innogames/openfl](https://github.com/innogames/openfl) fork.
+- Added `@:bindable` meta to certain properties that dispatch events. Not used for anything now, but available for future enhancements.
+
 ## 1.0.0 (2022-09-01)
 
 - BaseScrollContainer: Fixed touch claim not being cleared when `simulateTouch == true`

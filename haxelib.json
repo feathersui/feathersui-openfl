@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "First stable major version"
+	"releasenote": "ActivityIndicator, HorizontalLayoutData and VerticalLayoutData margins, DonutSkin, GradientBoxTransform, ProgressBar fillMode, bug fixes"
 }
