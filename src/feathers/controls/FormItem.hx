@@ -36,6 +36,9 @@ import flash.text.StyleSheet;
 /**
 	Displays text next to a control in a form.
 
+	@see `feathers.controls.Form`
+	@see [Tutorial: How to use the Form and FormItem components](https://feathersui.com/learn/haxe-openfl/form/)
+
 	@since 1.0.0
 **/
 @defaultXmlProperty("content")

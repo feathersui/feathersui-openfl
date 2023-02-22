@@ -25,6 +25,7 @@ import openfl.ui.Keyboard;
 	form has focus.
 
 	@see `feathers.controls.FormItem`
+	@see [Tutorial: How to use the Form and FormItem components](https://feathersui.com/learn/haxe-openfl/form/)
 
 	@since 1.0.0
 **/
