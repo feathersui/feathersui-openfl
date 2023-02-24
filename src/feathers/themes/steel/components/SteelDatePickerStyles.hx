@@ -81,29 +81,13 @@ class SteelDatePickerStyles {
 
 				if (button.icon == null) {
 					var icon = new Shape();
-					icon.graphics.beginFill(0xff00ff, 0.0);
-					icon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
-					icon.graphics.endFill();
-					icon.graphics.beginFill(theme.textColor);
-					icon.graphics.moveTo(2.0, 4.0);
-					icon.graphics.lineTo(6.0, 0.0);
-					icon.graphics.lineTo(6.0, 8.0);
-					icon.graphics.lineTo(2.0, 4.0);
-					icon.graphics.endFill();
+					drawDecrementMonthIcon(icon, theme.textColor);
 					button.icon = icon;
 				}
 
 				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
-					disabledIcon.graphics.beginFill(0xff00ff, 0.0);
-					disabledIcon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
-					disabledIcon.graphics.endFill();
-					disabledIcon.graphics.beginFill(theme.disabledTextColor);
-					disabledIcon.graphics.moveTo(2.0, 4.0);
-					disabledIcon.graphics.lineTo(6.0, 0.0);
-					disabledIcon.graphics.lineTo(6.0, 8.0);
-					disabledIcon.graphics.lineTo(2.0, 4.0);
-					disabledIcon.graphics.endFill();
+					drawDecrementMonthIcon(disabledIcon, theme.disabledTextColor);
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
@@ -134,29 +118,13 @@ class SteelDatePickerStyles {
 
 				if (button.icon == null) {
 					var icon = new Shape();
-					icon.graphics.beginFill(0xff00ff, 0.0);
-					icon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
-					icon.graphics.endFill();
-					icon.graphics.beginFill(theme.textColor);
-					icon.graphics.moveTo(2.0, 0.0);
-					icon.graphics.lineTo(6.0, 4.0);
-					icon.graphics.lineTo(2.0, 8.0);
-					icon.graphics.lineTo(2.0, 0.0);
-					icon.graphics.endFill();
+					drawIncrementMonthIcon(icon, theme.textColor);
 					button.icon = icon;
 				}
 
 				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
-					disabledIcon.graphics.beginFill(0xff00ff, 0.0);
-					disabledIcon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
-					disabledIcon.graphics.endFill();
-					disabledIcon.graphics.beginFill(theme.disabledTextColor);
-					disabledIcon.graphics.moveTo(2.0, 0.0);
-					disabledIcon.graphics.lineTo(6.0, 4.0);
-					disabledIcon.graphics.lineTo(2.0, 8.0);
-					disabledIcon.graphics.lineTo(2.0, 0.0);
-					disabledIcon.graphics.endFill();
+					drawIncrementMonthIcon(disabledIcon, theme.disabledTextColor);
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
@@ -187,31 +155,13 @@ class SteelDatePickerStyles {
 
 				if (button.icon == null) {
 					var icon = new Shape();
-					icon.graphics.beginFill(theme.textColor);
-					icon.graphics.moveTo(0.0, 4.0);
-					icon.graphics.lineTo(4.0, 0.0);
-					icon.graphics.lineTo(4.0, 8.0);
-					icon.graphics.lineTo(0.0, 4.0);
-					icon.graphics.moveTo(4.0, 4.0);
-					icon.graphics.lineTo(8.0, 0.0);
-					icon.graphics.lineTo(8.0, 8.0);
-					icon.graphics.lineTo(4.0, 4.0);
-					icon.graphics.endFill();
+					drawDecrementYearIcon(icon, theme.textColor);
 					button.icon = icon;
 				}
 
 				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
-					disabledIcon.graphics.beginFill(theme.disabledTextColor);
-					disabledIcon.graphics.moveTo(0.0, 4.0);
-					disabledIcon.graphics.lineTo(4.0, 0.0);
-					disabledIcon.graphics.lineTo(4.0, 8.0);
-					disabledIcon.graphics.lineTo(0.0, 4.0);
-					disabledIcon.graphics.moveTo(4.0, 4.0);
-					disabledIcon.graphics.lineTo(8.0, 0.0);
-					disabledIcon.graphics.lineTo(8.0, 8.0);
-					disabledIcon.graphics.lineTo(4.0, 4.0);
-					disabledIcon.graphics.endFill();
+					drawDecrementYearIcon(disabledIcon, theme.disabledTextColor);
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
@@ -242,31 +192,13 @@ class SteelDatePickerStyles {
 
 				if (button.icon == null) {
 					var icon = new Shape();
-					icon.graphics.beginFill(theme.textColor);
-					icon.graphics.moveTo(0.0, 0.0);
-					icon.graphics.lineTo(4.0, 4.0);
-					icon.graphics.lineTo(0.0, 8.0);
-					icon.graphics.lineTo(0.0, 0.0);
-					icon.graphics.moveTo(4.0, 0.0);
-					icon.graphics.lineTo(8.0, 4.0);
-					icon.graphics.lineTo(4.0, 8.0);
-					icon.graphics.lineTo(4.0, 0.0);
-					icon.graphics.endFill();
+					drawIncrementYearIcon(icon, theme.textColor);
 					button.icon = icon;
 				}
 
 				if (button.getIconForState(ButtonState.DISABLED) == null) {
 					var disabledIcon = new Shape();
-					disabledIcon.graphics.beginFill(theme.disabledTextColor);
-					disabledIcon.graphics.moveTo(0.0, 0.0);
-					disabledIcon.graphics.lineTo(4.0, 4.0);
-					disabledIcon.graphics.lineTo(0.0, 8.0);
-					disabledIcon.graphics.lineTo(0.0, 0.0);
-					disabledIcon.graphics.moveTo(4.0, 0.0);
-					disabledIcon.graphics.lineTo(8.0, 4.0);
-					disabledIcon.graphics.lineTo(4.0, 8.0);
-					disabledIcon.graphics.lineTo(4.0, 0.0);
-					disabledIcon.graphics.endFill();
+					drawIncrementYearIcon(disabledIcon, theme.disabledTextColor);
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
@@ -371,5 +303,55 @@ class SteelDatePickerStyles {
 				dateRenderer.paddingLeft = 2.0;
 			});
 		}
+	}
+
+	private static function drawDecrementMonthIcon(icon:Shape, color:UInt):Void {
+		icon.graphics.beginFill(0xff00ff, 0.0);
+		icon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
+		icon.graphics.endFill();
+		icon.graphics.beginFill(color);
+		icon.graphics.moveTo(2.0, 4.0);
+		icon.graphics.lineTo(6.0, 0.0);
+		icon.graphics.lineTo(6.0, 8.0);
+		icon.graphics.lineTo(2.0, 4.0);
+		icon.graphics.endFill();
+	}
+
+	private static function drawIncrementMonthIcon(icon:Shape, color:UInt):Void {
+		icon.graphics.beginFill(0xff00ff, 0.0);
+		icon.graphics.drawRect(0.0, 0.0, 8.0, 8.0);
+		icon.graphics.endFill();
+		icon.graphics.beginFill(color);
+		icon.graphics.moveTo(2.0, 0.0);
+		icon.graphics.lineTo(6.0, 4.0);
+		icon.graphics.lineTo(2.0, 8.0);
+		icon.graphics.lineTo(2.0, 0.0);
+		icon.graphics.endFill();
+	}
+
+	private static function drawDecrementYearIcon(icon:Shape, color:UInt):Void {
+		icon.graphics.beginFill(color);
+		icon.graphics.moveTo(0.0, 4.0);
+		icon.graphics.lineTo(4.0, 0.0);
+		icon.graphics.lineTo(4.0, 8.0);
+		icon.graphics.lineTo(0.0, 4.0);
+		icon.graphics.moveTo(4.0, 4.0);
+		icon.graphics.lineTo(8.0, 0.0);
+		icon.graphics.lineTo(8.0, 8.0);
+		icon.graphics.lineTo(4.0, 4.0);
+		icon.graphics.endFill();
+	}
+
+	private static function drawIncrementYearIcon(icon:Shape, color:UInt):Void {
+		icon.graphics.beginFill(color);
+		icon.graphics.moveTo(0.0, 0.0);
+		icon.graphics.lineTo(4.0, 4.0);
+		icon.graphics.lineTo(0.0, 8.0);
+		icon.graphics.lineTo(0.0, 0.0);
+		icon.graphics.moveTo(4.0, 0.0);
+		icon.graphics.lineTo(8.0, 4.0);
+		icon.graphics.lineTo(4.0, 8.0);
+		icon.graphics.lineTo(4.0, 0.0);
+		icon.graphics.endFill();
 	}
 }
