@@ -969,7 +969,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this._selectedIndex == -1) {
 			return;
 		}
-		// the index may have changed, possibily even to -1, if the item was
+		// the index may have changed, possibly even to -1, if the item was
 		// filtered out
 		this.selectedIndex = this._dataProvider.indexOf(this._selectedItem); // use the setter
 	}

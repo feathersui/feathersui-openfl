@@ -1363,7 +1363,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (this._selectedLocation == null) {
 			return;
 		}
-		// the location may have changed, possibily even to null, if the item
+		// the location may have changed, possibly even to null, if the item
 		// was filtered out
 		this.selectedLocation = this._dataProvider.locationOf(this._selectedItem); // use the setter
 	}
