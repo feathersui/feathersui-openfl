@@ -391,6 +391,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeGridView_dataProvider_replaceItemHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeGridView_dataProvider_removeAllHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, treeGridView_dataProvider_resetHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.FILTER_CHANGE, treeGridView_dataProvider_filterChangeHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.SORT_CHANGE, treeGridView_dataProvider_sortChangeHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, treeGridView_dataProvider_updateItemHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ALL, treeGridView_dataProvider_updateAllHandler);
 		}
@@ -404,6 +406,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeGridView_dataProvider_replaceItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeGridView_dataProvider_removeAllHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, treeGridView_dataProvider_resetHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.FILTER_CHANGE, treeGridView_dataProvider_filterChangeHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.SORT_CHANGE, treeGridView_dataProvider_sortChangeHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, treeGridView_dataProvider_updateItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ALL, treeGridView_dataProvider_updateAllHandler);
 		}
@@ -2416,6 +2420,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.selectedLocation = null;
 	}
 
+	private function treeGridView_dataProvider_sortChangeHandler(event:HierarchicalCollectionEvent):Void {
+		this.refreshSelectedLocationAfterFilterOrSort();
+	}
+
+	private function treeGridView_dataProvider_filterChangeHandler(event:HierarchicalCollectionEvent):Void {
+		this.refreshSelectedLocationAfterFilterOrSort();
+	}
+
 	@:access(feathers.controls.dataRenderers.TreeGridViewRowRenderer)
 	private function updateRowRendererForLocation(location:Array<Int>):Void {
 		var layoutIndex = this.locationToDisplayIndex(location, false);
@@ -2685,6 +2697,15 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			Mouse.cursor = this._oldHeaderDividerMouseCursor;
 			this._oldHeaderDividerMouseCursor = null;
 		}
+	}
+
+	private function refreshSelectedLocationAfterFilterOrSort():Void {
+		if (this._selectedLocation == null) {
+			return;
+		}
+		// the location may have changed, possibly even to null, if the item
+		// was filtered out
+		this.selectedLocation = this._dataProvider.locationOf(this._selectedItem); // use the setter
 	}
 
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {

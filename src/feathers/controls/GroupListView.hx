@@ -319,6 +319,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, groupListView_dataProvider_replaceItemHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, groupListView_dataProvider_removeAllHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, groupListView_dataProvider_resetHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.FILTER_CHANGE, groupListView_dataProvider_filterChangeHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.SORT_CHANGE, groupListView_dataProvider_sortChangeHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, groupListView_dataProvider_updateItemHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ALL, groupListView_dataProvider_updateAllHandler);
 		}
@@ -332,6 +334,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, groupListView_dataProvider_replaceItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, groupListView_dataProvider_removeAllHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, groupListView_dataProvider_resetHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.FILTER_CHANGE, groupListView_dataProvider_filterChangeHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.SORT_CHANGE, groupListView_dataProvider_sortChangeHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, groupListView_dataProvider_updateItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ALL, groupListView_dataProvider_updateAllHandler);
 		}
@@ -1974,6 +1978,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private function groupListView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
 		// use the setter
 		this.selectedLocation = null;
+	}
+
+	private function groupListView_dataProvider_sortChangeHandler(event:HierarchicalCollectionEvent):Void {
+		this.refreshSelectedLocationAfterFilterOrSort();
+	}
+
+	private function groupListView_dataProvider_filterChangeHandler(event:HierarchicalCollectionEvent):Void {
+		this.refreshSelectedLocationAfterFilterOrSort();
 	}
 
 	private function updateItemRendererForLocation(location:Array<Int>):Void {

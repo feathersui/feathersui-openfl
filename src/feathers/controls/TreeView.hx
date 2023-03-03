@@ -366,6 +366,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.FILTER_CHANGE, treeView_dataProvider_filterChangeHandler);
+			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.SORT_CHANGE, treeView_dataProvider_sortChangeHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, treeView_dataProvider_updateItemHandler);
 			this._dataProvider.removeEventListener(HierarchicalCollectionEvent.UPDATE_ALL, treeView_dataProvider_updateAllHandler);
 		}
@@ -379,6 +381,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, treeView_dataProvider_replaceItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.REMOVE_ALL, treeView_dataProvider_removeAllHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.RESET, treeView_dataProvider_resetHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.FILTER_CHANGE, treeView_dataProvider_filterChangeHandler);
+			this._dataProvider.addEventListener(HierarchicalCollectionEvent.SORT_CHANGE, treeView_dataProvider_sortChangeHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ITEM, treeView_dataProvider_updateItemHandler);
 			this._dataProvider.addEventListener(HierarchicalCollectionEvent.UPDATE_ALL, treeView_dataProvider_updateAllHandler);
 		}
@@ -1981,6 +1985,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		// use the setter
 		this.selectedLocation = null;
+	}
+
+	private function treeView_dataProvider_sortChangeHandler(event:HierarchicalCollectionEvent):Void {
+		this.refreshSelectedLocationAfterFilterOrSort();
+	}
+
+	private function treeView_dataProvider_filterChangeHandler(event:HierarchicalCollectionEvent):Void {
+		this.refreshSelectedLocationAfterFilterOrSort();
 	}
 
 	private function updateItemRendererForLocation(location:Array<Int>):Void {
