@@ -639,6 +639,26 @@ import utest.Test;
 			"Setting item after end of collection returns incorrect location");
 	}
 
+	public function testLocationOfInsideSecondFilterFunction():Void {
+		this._collection.filterFunction = (item:MockItem) -> {
+			var location = this._collection.locationOf(item);
+			if (location.length > 1) {
+				return true;
+			}
+			return location[0] % 2 == 0;
+		};
+		this._collection.get([0]);
+		this._collection.filterFunction = (item:MockItem) -> {
+			var location = this._collection.locationOf(item);
+			Assert.notNull(location, "Collection with filterFunction must not return null for location during filtering");
+			if (location.length > 1) {
+				return true;
+			}
+			return location[0] % 2 == 0;
+		};
+		this._collection.get([0]);
+	}
+
 	//--- sortCompareFunction
 
 	public function testSortCompareFunction():Void {

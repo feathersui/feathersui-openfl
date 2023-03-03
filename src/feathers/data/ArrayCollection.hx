@@ -571,8 +571,11 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 
 	private function refreshFilterAndSort():Void {
 		this._pendingRefresh = false;
+		var oldFilterAndSortData = this._filterAndSortData;
+		// set to null while applying filter so that locationOf() works properly
+		this._filterAndSortData = null;
 		if (this._filterFunction != null) {
-			var result = this._filterAndSortData;
+			var result = oldFilterAndSortData;
 			if (result != null) {
 				// reuse the old array to avoid garbage collection
 				#if hl
@@ -592,7 +595,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			this._filterAndSortData = result;
 		} else if (this._sortCompareFunction != null) // no filter
 		{
-			var result = this._filterAndSortData;
+			var result = oldFilterAndSortData;
 			if (result != null) {
 				result.resize(this._array.length);
 				for (i in 0...this._array.length) {
@@ -603,9 +606,6 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 				result = this._array.slice(0);
 			}
 			this._filterAndSortData = result;
-		} else // no filter or sort
-		{
-			this._filterAndSortData = null;
 		}
 		if (this._sortCompareFunction != null) {
 			this._filterAndSortData.sort(this._sortCompareFunction);

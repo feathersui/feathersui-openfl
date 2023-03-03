@@ -605,8 +605,11 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 
 	private function refreshFilterAndSort():Void {
 		this._pendingRefresh = false;
+		var oldFilterAndSortData = this._filterAndSortData;
+		// set to null while applying filter so that locationOf() works properly
+		this._filterAndSortData = null;
 		if (this._filterFunction != null || this._sortCompareFunction != null) {
-			var result = this._filterAndSortData;
+			var result = oldFilterAndSortData;
 			if (result != null) {
 				// reuse the old array to avoid garbage collection
 				#if hl
@@ -619,9 +622,6 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			}
 			this.refreshFilterAndSortInternal(this._array, result);
 			this._filterAndSortData = result;
-		} else // no filter or sort
-		{
-			this._filterAndSortData = null;
 		}
 		if (this._sortCompareFunction != null) {
 			this.refreshSort(this._filterAndSortData);

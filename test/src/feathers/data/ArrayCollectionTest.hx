@@ -510,6 +510,20 @@ class ArrayCollectionTest extends Test {
 		Assert.equals(expectedUnfilteredIndex, this._collection.indexOf(itemToAdd), "Setting item that is filtered returns incorrect index");
 	}
 
+	public function testIndexOfInsideSecondFilterFunction():Void {
+		this._collection.filterFunction = (item:MockItem) -> {
+			var index = this._collection.indexOf(item);
+			return index % 2 == 0;
+		};
+		this._collection.get(0);
+		this._collection.filterFunction = (item:MockItem) -> {
+			var index = this._collection.indexOf(item);
+			Assert.notEquals(-1, index, "Collection with filterFunction must not return -1 for index during filtering");
+			return index % 2 == 0;
+		};
+		this._collection.get(0);
+	}
+
 	//--- sortCompareFunction
 
 	public function testSortCompareFunction():Void {
