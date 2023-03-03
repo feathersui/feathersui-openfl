@@ -19,6 +19,7 @@ class PackageHaxelib {
 	public static function main():Void {
 		var entries = new List<Entry>();
 		addFile(FileSystem.absolutePath("../haxelib.json"), entries);
+		addFile(FileSystem.absolutePath("../include.xml"), entries);
 		addFile(FileSystem.absolutePath("../README.md"), entries);
 		addFile(FileSystem.absolutePath("../CHANGELOG.md"), entries);
 		addFile(FileSystem.absolutePath("../CONTRIBUTING.md"), entries);

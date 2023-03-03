@@ -21,6 +21,7 @@ jobs:
           src/
           tools/
           haxelib.json
+          include.xml
           README.md
           LICENSE.md
           CHANGELOG.md
