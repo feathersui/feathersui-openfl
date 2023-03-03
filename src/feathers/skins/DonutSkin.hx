@@ -53,10 +53,6 @@ class DonutSkin extends BaseGraphicsPathSkin {
 	override private function drawPath():Void {
 		var radius = this.getRadius();
 		var innerRadius = this.getInnerRadius();
-		if (radius == innerRadius) {
-			// nothing to draw
-			return;
-		}
 		this.graphics.drawCircle(this.actualWidth / 2.0, this.actualHeight / 2.0, radius);
 		if (innerRadius == 0.0) {
 			// just a circle
