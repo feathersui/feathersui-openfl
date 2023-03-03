@@ -622,6 +622,24 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	@:style
 	public var buttonDirection:Direction = HORIZONTAL;
 
+	/**
+		The space, in pixels, between the text input sub-component and other
+		content.
+
+		@since 1.1.0
+	**/
+	@:style
+	public var textInputGap:Float = 0.0;
+
+	/**
+		The space, in pixels, between buttons, if they are positioned next to
+		each other.
+
+		@since 1.1.0
+	**/
+	@:style
+	public var buttonGap:Float = 0.0;
+
 	private var _pendingTextInputChanges:Bool = false;
 
 	override public function showFocus(show:Bool):Void {
@@ -740,10 +758,14 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 				if (this.textInputPosition == CENTER) {
 					newWidth = Math.max(this.textInput.width, buttonWidth);
 				} else {
-					newWidth = this.textInput.width + buttonWidth;
+					newWidth = this.textInput.width + this.textInputGap + buttonWidth;
 				}
 			} else { // HORIZONTAL
-				newWidth = (2.0 * buttonWidth) + this.textInput.width;
+				if (this.textInputPosition == CENTER) {
+					newWidth = (2.0 * (buttonWidth + this.textInputGap)) + this.textInput.width;
+				} else {
+					newWidth = (2.0 * buttonWidth) + this.buttonGap + this.textInputGap + this.textInput.width;
+				}
 			}
 		}
 
@@ -752,9 +774,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			var buttonHeight = Math.max(this.decrementButton.height, this.incrementButton.height);
 			if (this.buttonDirection == VERTICAL) {
 				if (this.textInputPosition == CENTER) {
-					newHeight = (2.0 * buttonHeight) + this.textInput.height;
+					newHeight = (2.0 * (buttonHeight + this.textInputGap)) + this.textInput.height;
 				} else {
-					newHeight = Math.max(this.textInput.height, 2.0 * buttonHeight);
+					newHeight = Math.max(this.textInput.height, (2.0 * buttonHeight) + this.buttonGap);
 				}
 			} else { // HORIZONTAL
 				newHeight = Math.max(this.textInput.height, buttonHeight);
@@ -768,10 +790,14 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 				if (this.textInputPosition == CENTER) {
 					newMinWidth = Math.max(this.textInput.minWidth, buttonWidth);
 				} else {
-					newMinWidth = this.textInput.minWidth + buttonWidth;
+					newMinWidth = this.textInput.minWidth + this.textInputGap + buttonWidth;
 				}
 			} else { // HORIZONTAL
-				newMinWidth = (2.0 * buttonWidth) + this.textInput.minWidth;
+				if (this.textInputPosition == CENTER) {
+					newMinWidth = (2.0 * (buttonWidth + this.textInputGap)) + this.textInput.minWidth;
+				} else {
+					newMinWidth = (2.0 * buttonWidth) + this.buttonGap + this.textInputGap + this.textInput.minWidth;
+				}
 			}
 		}
 
@@ -780,9 +806,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			var buttonHeight = Math.max(this.decrementButton.height, this.incrementButton.height);
 			if (this.buttonDirection == VERTICAL) {
 				if (this.textInputPosition == CENTER) {
-					newMinHeight = this.decrementButton.minHeight + (2.0 * buttonHeight);
+					newMinHeight = (2.0 * (buttonHeight + this.textInputGap)) + this.textInput.minHeight;
 				} else {
-					newMinHeight = Math.max(this.textInput.minHeight, 2.0 * buttonHeight);
+					newMinHeight = Math.max(this.textInput.minHeight, (2.0 * buttonHeight) + this.buttonGap);
 				}
 			} else { // HORIZONTAL
 				newMinHeight = Math.max(this.textInput.minHeight, buttonHeight);
@@ -867,7 +893,13 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private function layoutContentWithHorizontalButtons():Void {
 		var buttonWidth = Math.max(this.decrementButton.width, this.incrementButton.width);
-		var textInputWidth = Math.max(0.0, this.actualWidth - (2.0 * buttonWidth));
+		var textInputWidth = this.actualWidth;
+		if (this.textInputPosition == CENTER) {
+			textInputWidth -= (2.0 * (buttonWidth + this.textInputGap));
+		} else {
+			textInputWidth -= ((2.0 * buttonWidth) + this.buttonGap + this.textInputGap);
+		}
+		textInputWidth = Math.max(0.0, textInputWidth);
 		if (this.textInput.width != textInputWidth) {
 			this.textInput.width = textInputWidth;
 		}
@@ -892,12 +924,12 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 				this.textInput.y = 0.0;
 				this.incrementButton.x = this.actualWidth - buttonWidth;
 				this.incrementButton.y = 0.0;
-				this.decrementButton.x = this.actualWidth - (2.0 * buttonWidth);
+				this.decrementButton.x = this.actualWidth - (2.0 * buttonWidth) - this.buttonGap;
 				this.decrementButton.y = 0.0;
 			case RIGHT:
 				this.decrementButton.x = 0.0;
 				this.decrementButton.y = 0.0;
-				this.incrementButton.x = buttonWidth;
+				this.incrementButton.x = buttonWidth + this.buttonGap;
 				this.incrementButton.y = 0.0;
 				this.textInput.x = this.actualWidth - textInputWidth;
 				this.textInput.y = 0.0;
@@ -906,7 +938,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 				this.decrementButton.y = 0.0;
 				this.incrementButton.x = this.actualWidth - buttonWidth;
 				this.incrementButton.y = 0.0;
-				this.textInput.x = buttonWidth;
+				this.textInput.x = buttonWidth + textInputGap;
 				this.textInput.y = 0.0;
 			default:
 				throw new ArgumentError("Invalid text input position: " + this.textInputPosition);
@@ -917,8 +949,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		switch (this.textInputPosition) {
 			case LEFT:
 				var buttonWidth = Math.max(this.incrementButton.width, this.decrementButton.width);
-				var buttonHeight = this.actualHeight / 2.0;
-				var textInputWidth = Math.max(0.0, this.actualWidth - buttonWidth);
+				var buttonHeight = (this.actualHeight - this.buttonGap) / 2.0;
+				var textInputWidth = Math.max(0.0, this.actualWidth - buttonWidth - this.textInputGap);
 				if (this.textInput.width != textInputWidth) {
 					this.textInput.width = textInputWidth;
 				}
@@ -936,7 +968,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 					this.incrementButton.height = buttonHeight;
 				}
 				this.decrementButton.x = this.actualWidth - buttonWidth;
-				this.decrementButton.y = this.actualHeight = buttonHeight;
+				this.decrementButton.y = this.actualHeight - buttonHeight;
 				if (this.decrementButton.width != buttonWidth) {
 					this.decrementButton.width = buttonWidth;
 				}
@@ -945,15 +977,15 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 				}
 			case RIGHT:
 				var buttonWidth = Math.max(this.incrementButton.width, this.decrementButton.width);
-				var buttonHeight = this.actualHeight / 2.0;
-				var textInputWidth = Math.max(0.0, this.actualWidth - buttonWidth);
+				var buttonHeight = (this.actualHeight - this.buttonGap) / 2.0;
+				var textInputWidth = Math.max(0.0, this.actualWidth - buttonWidth - this.textInputGap);
 				if (this.textInput.width != textInputWidth) {
 					this.textInput.width = textInputWidth;
 				}
 				if (this.textInput.height != this.actualHeight) {
 					this.textInput.height = this.actualHeight;
 				}
-				this.textInput.x = buttonWidth;
+				this.textInput.x = this.actualWidth - textInputWidth;
 				this.textInput.y = 0.0;
 				this.incrementButton.x = 0.0;
 				this.incrementButton.y = 0.0;
@@ -973,7 +1005,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 				}
 			case CENTER:
 				var buttonHeight = Math.max(this.decrementButton.height, this.incrementButton.height);
-				var textInputHeight = Math.max(0.0, this.actualHeight - (2.0 * buttonHeight));
+				var textInputHeight = Math.max(0.0, this.actualHeight - (2.0 * (buttonHeight + this.textInputGap)));
 				this.incrementButton.x = 0.0;
 				this.incrementButton.y = 0.0;
 				if (this.incrementButton.width != this.actualWidth) {
@@ -983,7 +1015,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 					this.incrementButton.height = buttonHeight;
 				}
 				this.textInput.x = 0.0;
-				this.textInput.y = buttonHeight;
+				this.textInput.y = buttonHeight + this.textInputGap;
 				if (this.textInput.width != this.actualWidth) {
 					this.textInput.width = this.actualWidth;
 				}
