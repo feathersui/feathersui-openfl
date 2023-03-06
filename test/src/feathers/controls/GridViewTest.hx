@@ -736,8 +736,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		implements IGridViewCellRenderer {
 	public function new() {
 		super();
-		this.width = 1.0;
-		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
@@ -871,5 +869,9 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		_gridViewOwner = value;
 		setGridViewOwnerValues.push(value);
 		return _gridViewOwner;
+	}
+
+	override private function update():Void {
+		saveMeasurements(1.0, 1.0);
 	}
 }

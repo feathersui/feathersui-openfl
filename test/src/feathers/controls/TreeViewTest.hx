@@ -567,8 +567,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		implements ILayoutIndexObject implements ITreeViewItemRenderer {
 	public function new() {
 		super();
-		this.width = 1.0;
-		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
@@ -702,6 +700,10 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		_treeViewOwner = value;
 		setTreeViewOwnerValues.push(value);
 		return _treeViewOwner;
+	}
+
+	override private function update():Void {
+		saveMeasurements(1.0, 1.0);
 	}
 }
 

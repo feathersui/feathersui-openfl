@@ -467,8 +467,6 @@ class TabBarTest extends Test {
 private class CustomRendererWithInterfaces extends ToggleButton implements IDataRenderer implements ILayoutIndexObject {
 	public function new() {
 		super();
-		this.width = 1.0;
-		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
@@ -518,5 +516,9 @@ private class CustomRendererWithInterfaces extends ToggleButton implements IData
 		super.selected = value;
 		setSelectedValues.push(value);
 		return _selected;
+	}
+
+	override private function update():Void {
+		saveMeasurements(1.0, 1.0);
 	}
 }

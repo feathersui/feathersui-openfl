@@ -595,8 +595,6 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		implements IListViewItemRenderer {
 	public function new() {
 		super();
-		this.width = 1.0;
-		this.height = 1.0;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
@@ -692,5 +690,9 @@ private class CustomRendererWithInterfaces extends LayoutGroup implements IToggl
 		_listViewOwner = value;
 		setListViewOwnerValues.push(value);
 		return _listViewOwner;
+	}
+
+	override private function update():Void {
+		saveMeasurements(1.0, 1.0);
 	}
 }
