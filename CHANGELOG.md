@@ -1,10 +1,11 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.1.0 (2022-??-??)
+## 1.1.0 (2023-03-??)
 
 - ActivityIndicator: New component to display indeterminate progress with animation.
 - AssetLoader: Fix calculation of `minWidth` and `minHeight` during measurement.
 - BaseScrollContainer: view port mask extends under scroll bars, if scroll bars are fixed.
+- Collections: Fixed incorrect results from `indexOf()` and `locationOf()` during filter and sort refresh.
 - ComboBox: Fixed issue where `ListView` closes without selection when clicked, if `focusManager` is null.
 - Data Containers: When using arrow keys to navigate, scroll position may be updated, even if selection is not updated.
 - DefaultFocusManager: Respects `isDefaultPrevented()` on `mouseFocusChange` event.
@@ -13,6 +14,7 @@
 - GradientBoxTransform: New enum that may be used to define gradient line/fill styles to skins. Previously, line/fill styles accepted a `Float` rotation value or a `Matrix` only. Those are still supported, but this enum makes customization easier.
 - GridView: Fixed incorrect height measurement of cells if the content might change after the first validation.
 - GridView, TreeGridView: Fixed issue where automatically populated columns were not updated when passing new value to `dataProvider` property.
+- GroupListView, TreeView, TreeGridView: Fixed missing selection refresh after filter or sort change.
 - HorizontalLayoutData: Added `marginLeft` and `marginRight` properties to affect gap between individual items.
 - HorizontalLineSkin, VerticalLineSkin: Added padding properties to optionally add extra empty space to the sides of the line.
 - HorizontalLineSkin, VerticalLineSkin: Fixed issue where alignment properties were incorrectly defined as fields instead of getters/setters. They should have invalidated the skin on change.
@@ -25,6 +27,7 @@
 - PopUpListView: Fixed null exception on mouse focus change, if `relatedObject` is missing.
 - Radio: Arrow keys are ignored for selection changes if `keyLocation` is `D_PAD`.
 - Samples: Added new _dark-mode_ sample to demonstrate switching between light and dark mode with the default theme.
+- Samples: Added new _numeric-stepper-button-layouts_ sample to demonstrate the different ways that the buttons can be positioned relative to the text input.
 - ScrollContainer: Added `manageChildVisibility` property to allow container to change `visible` property on all children during scrolling to optimize rendering.
 - Scroller: Calls `preventDefault()` when handling mouse wheel event to prevent page from scrolling on html5 target.
 - TextArea, TextInput: Added `showPromptWhenEmptyAndFocused` (default: true) to allow hiding the prompt on focus.
@@ -35,6 +38,7 @@
 - If `feathersui_disable_default_theme` is defined, default styles will not be initialized at all by components.
 - If `feathersui_innogames_openfl` is defined, some things may behave differently for better compatibility with [innogames/openfl](https://github.com/innogames/openfl) fork.
 - Added `@:bindable` meta to certain properties that dispatch events. Not used for anything now, but available for future enhancements.
+- Added _include.xml_ to automatically add **openfl** and **actuate** as depedencies (previously, they needed to be added manually).
 
 ## 1.0.0 (2022-09-01)
 
