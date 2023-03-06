@@ -144,6 +144,30 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		return this._customColumnWidths;
 	}
 
+	private var _heightResetEnabled:Bool = true;
+
+	/**
+		Indicates if the height of items should be reset if the explicit height
+		of the parent container is not set.
+
+		@since 1.0.0
+	**/
+	@:bindable("change")
+	public var heightResetEnabled(get, set):Bool;
+
+	private function get_heightResetEnabled():Bool {
+		return this._heightResetEnabled;
+	}
+
+	private function set_heightResetEnabled(value:Bool):Bool {
+		if (this._heightResetEnabled == value) {
+			return this._heightResetEnabled;
+		}
+		this._heightResetEnabled = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._heightResetEnabled;
+	}
+
 	/**
 		Sets all padding properties to the same value.
 
@@ -166,6 +190,9 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
 		for (item in items) {
+			if (this._heightResetEnabled && measurements.height == null && (item is IMeasureObject)) {
+				cast(item, IMeasureObject).resetHeight();
+			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}

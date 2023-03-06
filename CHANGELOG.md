@@ -11,6 +11,7 @@
 - DonutSkin: New skin class that is similar to `CircleSkin`, but with an inner radius that is not filled.
 - DropDownPopUpAdapter: Added `closeOnPointerActiveOutside` property to customize behavior.
 - GradientBoxTransform: New enum that may be used to define gradient line/fill styles to skins. Previously, line/fill styles accepted a `Float` rotation value or a `Matrix` only. Those are still supported, but this enum makes customization easier.
+- GridView: Fixed incorrect height measurement of cells if the content might change after the first validation.
 - GridView, TreeGridView: Fixed issue where automatically populated columns were not updated when passing new value to `dataProvider` property.
 - HorizontalLayoutData: Added `marginLeft` and `marginRight` properties to affect gap between individual items.
 - HorizontalLineSkin, VerticalLineSkin: Added padding properties to optionally add extra empty space to the sides of the line.
