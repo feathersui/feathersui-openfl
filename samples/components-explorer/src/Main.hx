@@ -9,6 +9,7 @@ import com.feathersui.components.views.CheckScreen;
 import com.feathersui.components.views.CircleSkinScreen;
 import com.feathersui.components.views.ComboBoxScreen;
 import com.feathersui.components.views.DatePickerScreen;
+import com.feathersui.components.views.DonutSkinScreen;
 import com.feathersui.components.views.DrawerScreen;
 import com.feathersui.components.views.EllipseSkinScreen;
 import com.feathersui.components.views.FormScreen;
@@ -16,9 +17,11 @@ import com.feathersui.components.views.GridViewScreen;
 import com.feathersui.components.views.GroupListViewScreen;
 import com.feathersui.components.views.HDividedBoxScreen;
 import com.feathersui.components.views.HeaderScreen;
+import com.feathersui.components.views.HorizontalLineSkinScreen;
 import com.feathersui.components.views.ItemRendererScreen;
 import com.feathersui.components.views.LabelScreen;
 import com.feathersui.components.views.LayoutGroupScreen;
+import com.feathersui.components.views.LeftAndRightBorderSkinScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
 import com.feathersui.components.views.NumericStepperScreen;
@@ -42,10 +45,12 @@ import com.feathersui.components.views.TextAreaScreen;
 import com.feathersui.components.views.TextCalloutScreen;
 import com.feathersui.components.views.TextInputScreen;
 import com.feathersui.components.views.ToggleSwitchScreen;
+import com.feathersui.components.views.TopAndBottomBorderSkinScreen;
 import com.feathersui.components.views.TreeGridViewScreen;
 import com.feathersui.components.views.TreeViewScreen;
 import com.feathersui.components.views.TriangleSkinScreen;
 import com.feathersui.components.views.VDividedBoxScreen;
+import com.feathersui.components.views.VerticalLineSkinScreen;
 import feathers.controls.Application;
 import feathers.controls.navigators.Route;
 import feathers.controls.navigators.RouterAction;
@@ -97,6 +102,12 @@ class Main extends Application {
 		var assetLoader = Route.withClass(ViewPaths.ASSET_LOADER, AssetLoaderScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(assetLoader);
 
+		var topAndBottomBorderSkin = Route.withClass(ViewPaths.TOP_BOTTOM_BORDER_SKIN, TopAndBottomBorderSkinScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(topAndBottomBorderSkin);
+
+		var leftAndRightBorderSkin = Route.withClass(ViewPaths.LEFT_RIGHT_BORDER_SKIN, LeftAndRightBorderSkinScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(leftAndRightBorderSkin);
+
 		var button = Route.withClass(ViewPaths.BUTTON, ButtonScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(button);
 
@@ -117,6 +128,9 @@ class Main extends Application {
 
 		var datePicker = Route.withClass(ViewPaths.DATE_PICKER, DatePickerScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(datePicker);
+
+		var donutSkin = Route.withClass(ViewPaths.DONUT_SKIN, DonutSkinScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(donutSkin);
 
 		var hDividedBox = Route.withClass(ViewPaths.HORIZONTAL_DIVIDED_BOX, HDividedBoxScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(hDividedBox);
@@ -150,6 +164,12 @@ class Main extends Application {
 
 		var layoutGroup = Route.withClass(ViewPaths.LAYOUT_GROUP, LayoutGroupScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(layoutGroup);
+
+		var hLineSkin = Route.withClass(ViewPaths.HORIZONTAL_LINE_SKIN, HorizontalLineSkinScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(hLineSkin);
+
+		var vLineSkin = Route.withClass(ViewPaths.VERTICAL_LINE_SKIN, VerticalLineSkinScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(vLineSkin);
 
 		var listView = Route.withClass(ViewPaths.LIST_VIEW, ListViewScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(listView);

@@ -46,11 +46,16 @@ class ViewPaths {
 
 	// skins
 	public static final CIRCLE_SKIN = "/circle-skin";
+	public static final DONUT_SKIN = "/donut-skin";
 	public static final ELLIPSE_SKIN = "/ellipse-skin";
+	public static final HORIZONTAL_LINE_SKIN = "/horizontal-line-skin";
+	public static final LEFT_RIGHT_BORDER_SKIN = "/left-right-border-skin";
 	public static final PILL_SKIN = "/pill-skin";
 	public static final RECTANGLE_SKIN = "/rectangle-skin";
 	public static final TAB_SKIN = "/tab-skin";
+	public static final TOP_BOTTOM_BORDER_SKIN = "/top-bottom-border-skin";
 	public static final TRIANGLE_SKIN = "/triangle-skin";
+	public static final VERTICAL_LINE_SKIN = "/vertical-line-skin";
 
 	// miscellaneous
 	public static final ACTIVITY_INDICATOR = "/activity-indicator";

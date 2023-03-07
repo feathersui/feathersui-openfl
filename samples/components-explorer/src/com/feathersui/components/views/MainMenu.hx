@@ -76,11 +76,16 @@ class MainMenu extends Panel {
 			]),
 			new MenuItem("Skins", null, [
 				new MenuItem("Circle Skin", ViewPaths.CIRCLE_SKIN),
+				new MenuItem("Donut Skin", ViewPaths.DONUT_SKIN),
 				new MenuItem("Ellipse Skin", ViewPaths.ELLIPSE_SKIN),
+				new MenuItem("Horizontal Line Skin", ViewPaths.HORIZONTAL_LINE_SKIN),
+				new MenuItem("Left & Right Border Skin", ViewPaths.LEFT_RIGHT_BORDER_SKIN),
 				new MenuItem("Pill Skin", ViewPaths.PILL_SKIN),
 				new MenuItem("Rectangle Skin", ViewPaths.RECTANGLE_SKIN),
 				new MenuItem("Tab Skin", ViewPaths.TAB_SKIN),
+				new MenuItem("Top & Bottom Border Skin", ViewPaths.TOP_BOTTOM_BORDER_SKIN),
 				new MenuItem("Triangle Skin", ViewPaths.TRIANGLE_SKIN),
+				new MenuItem("Vertical Line Skin", ViewPaths.VERTICAL_LINE_SKIN),
 			]),
 			new MenuItem("Miscellaneous", null, [
 				new MenuItem("Alert", ViewPaths.ALERT),
