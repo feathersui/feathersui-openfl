@@ -36,9 +36,9 @@
 - VerticalLayoutData: Added `marginTop` and `marginBottom` properties to affect gap between individual items.
 - Fixed issue in some components where setting a custom child variant would cause children to be recreated on every validation, which wasn't necessary.
 - If `feathersui_disable_default_theme` is defined, default styles will not be initialized at all by components.
-- If `feathersui_innogames_openfl` is defined, some things may behave differently for better compatibility with [innogames/openfl](https://github.com/innogames/openfl) fork.
+- If `feathersui_innogames_openfl` is defined, some things may behave differently for better compatibility with the [innogames/openfl](https://github.com/innogames/openfl) fork.
 - Added `@:bindable` meta to certain properties that dispatch events. Not used for anything now, but available for future enhancements.
-- Added _include.xml_ to automatically add **openfl** and **actuate** as depedencies (previously, they needed to be added manually).
+- Added _include.xml_ to automatically add **openfl** and **actuate** as dependencies (previously, they needed to be added manually).
 
 ## 1.0.0 (2022-09-01)
 
