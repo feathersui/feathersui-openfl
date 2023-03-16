@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2022 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -70,8 +70,7 @@ class RevealTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setRadians(angleRadians:Float):RevealTransitionBuilder {
-		return
-		inline setAngle(angleRadians * 180.0 / Math.PI);
+		return inline setAngle(angleRadians * 180.0 / Math.PI);
 	}
 
 	/**
@@ -80,8 +79,7 @@ class RevealTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setUp():RevealTransitionBuilder {
-		return
-		inline setAngle(90.0);
+		return inline setAngle(90.0);
 	}
 
 	/**
@@ -90,8 +88,7 @@ class RevealTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setDown():RevealTransitionBuilder {
-		return
-		inline setAngle(270.0);
+		return inline setAngle(270.0);
 	}
 
 	/**
@@ -100,8 +97,7 @@ class RevealTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setLeft():RevealTransitionBuilder {
-		return
-		inline setAngle(180.0);
+		return inline setAngle(180.0);
 	}
 
 	/**
@@ -110,8 +106,7 @@ class RevealTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setRight():RevealTransitionBuilder {
-		return
-		inline setAngle(0.0);
+		return inline setAngle(0.0);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2022 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -30,8 +30,8 @@ enum LineStyle {
 
 		@since 1.0.0
 	**/
-	SolidColor(?thickness:Float, ?color:Int, ?alpha:Float, ?pixelHinting:Bool, ?scaleMode:LineScaleMode, ?caps:CapsStyle, ?joints:JointStyle, ?miterLimit
-		:Float);
+	SolidColor(?thickness:Float, ?color:Int, ?alpha:Float, ?pixelHinting:Bool, ?scaleMode:LineScaleMode, ?caps:CapsStyle, ?joints:JointStyle,
+		?miterLimit:Float);
 
 	/**
 		The line is rendered as a bitmap.
@@ -49,8 +49,8 @@ enum LineStyle {
 
 		@since 1.0.0
 	**/
-	Gradient(thickness:Float, type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?matrix:CreateGradientBoxMatrix, ?spreadMethod
-		:SpreadMethod, ?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);
+	Gradient(thickness:Float, type:GradientType, colors:Array<Int>, alphas:Array<Float>, ratios:Array<Int>, ?matrix:CreateGradientBoxMatrix,
+		?spreadMethod:SpreadMethod, ?interpolationMethod:InterpolationMethod, ?focalPointRatio:Float);
 
 	/**
 		A line is not drawn.

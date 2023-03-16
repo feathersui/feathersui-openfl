@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2022 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -62,9 +62,7 @@ enum RouterAction {
 
 		@since 1.0.0
 	**/
-	Listener<E:Event>
-
-	(callback : (E) -> Void);
+	Listener<E:Event>(callback:(E) -> Void);
 
 	/**
 		Call a function that creates a new action. The new action will be
@@ -72,7 +70,5 @@ enum RouterAction {
 
 		@since 1.0.0
 	**/
-	NewAction<E:Event>
-
-	(callback : (E) -> RouterAction);
+	NewAction<E:Event>(callback:(E) -> RouterAction);
 }

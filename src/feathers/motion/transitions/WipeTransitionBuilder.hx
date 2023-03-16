@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2022 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -71,8 +71,7 @@ class WipeTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setRadians(angleRadians:Float):WipeTransitionBuilder {
-		return
-		inline setAngle(angleRadians * 180.0 / Math.PI);
+		return inline setAngle(angleRadians * 180.0 / Math.PI);
 	}
 
 	/**
@@ -81,8 +80,7 @@ class WipeTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setUp():WipeTransitionBuilder {
-		return
-		inline setAngle(90.0);
+		return inline setAngle(90.0);
 	}
 
 	/**
@@ -91,8 +89,7 @@ class WipeTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setDown():WipeTransitionBuilder {
-		return
-		inline setAngle(270.0);
+		return inline setAngle(270.0);
 	}
 
 	/**
@@ -101,8 +98,7 @@ class WipeTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setLeft():WipeTransitionBuilder {
-		return
-		inline setAngle(180.0);
+		return inline setAngle(180.0);
 	}
 
 	/**
@@ -111,8 +107,7 @@ class WipeTransitionBuilder {
 		@since 1.0.0
 	**/
 	public function setRight():WipeTransitionBuilder {
-		return
-		inline setAngle(0.0);
+		return inline setAngle(0.0);
 	}
 
 	/**
