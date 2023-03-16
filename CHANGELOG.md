@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.1.0 (2023-03-??)
+## 1.1.0 (2023-03-16)
 
 - ActivityIndicator: New component to display indeterminate progress with animation.
 - AssetLoader: Fix calculation of `minWidth` and `minHeight` during measurement.
