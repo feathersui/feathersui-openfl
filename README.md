@@ -6,8 +6,8 @@ Built using the [Haxe](https://haxe.org/) programming language and [OpenFL](http
 
 ## Minimum requirements
 
-- Haxe 4.0
-- OpenFL 8.9.7 (OpenFL 9.2.0 or newer is recommended)
+- [Haxe](https://haxe.org/) 4.0
+- [OpenFL](https://openfl.org/) 8.9.7 (OpenFL 9.2.0 or newer is recommended)
 
 ## Get started
 
