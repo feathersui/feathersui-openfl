@@ -1224,7 +1224,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function numericStepper_decrementButton_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled || this.stage == null) {
+		if (!this._enabled || !this.decrementButton.enabled || this.stage == null) {
 			return;
 		}
 
@@ -1242,7 +1242,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			return;
 		}
 
-		if (!this._enabled || this.stage == null) {
+		if (!this._enabled || !this.decrementButton.enabled || this.stage == null) {
 			return;
 		}
 
@@ -1255,7 +1255,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function numericStepper_incrementButton_mouseDownHandler(event:MouseEvent):Void {
-		if (!this._enabled || this.stage == null) {
+		if (!this._enabled || !this.incrementButton.enabled || this.stage == null) {
 			return;
 		}
 
@@ -1273,7 +1273,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			return;
 		}
 
-		if (!this._enabled || this.stage == null) {
+		if (!this._enabled || !this.incrementButton.enabled || this.stage == null) {
 			return;
 		}
 
