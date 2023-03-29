@@ -1184,14 +1184,16 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			var itemRenderer = this.dataToItemRenderer.get(item);
 			if (itemRenderer != null) {
 				var state = this.itemRendererToItemState.get(itemRenderer);
-				this.populateCurrentItemState(item, i, state);
+				var changed = this.populateCurrentItemState(item, i, state, false);
 				var oldRecyclerID = state.recyclerID;
 				var storage = this.itemStateToStorage(state);
 				if (storage.id != oldRecyclerID) {
 					this._unrenderedData.push(item);
 					continue;
 				}
-				this.updateItemRenderer(itemRenderer, state, storage);
+				if (changed) {
+					this.updateItemRenderer(itemRenderer, state, storage);
+				}
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				itemRenderer.visible = true;
@@ -1207,13 +1209,36 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function populateCurrentItemState(item:Dynamic, index:Int, state:ListViewItemState):Void {
-		state.owner = this;
-		state.data = item;
-		state.index = index;
-		state.selected = this._selectedIndices.indexOf(index) != -1;
-		state.enabled = this._enabled && itemToEnabled(item);
-		state.text = itemToText(item);
+	private function populateCurrentItemState(item:Dynamic, index:Int, state:ListViewItemState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.data != item) {
+			state.data = item;
+			changed = true;
+		}
+		if (force || state.index != index) {
+			state.index = index;
+			changed = true;
+		}
+		var selected = this._selectedIndices.indexOf(index) != -1;
+		if (force || state.selected != selected) {
+			state.selected = selected;
+			changed = true;
+		}
+		var enabled = this._enabled && itemToEnabled(item);
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		var text = itemToText(item);
+		if (force || state.text != text) {
+			state.text = text;
+			changed = true;
+		}
+		return changed;
 	}
 
 	private function resetItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState, storage:ItemRendererStorage):Void {
@@ -1271,7 +1296,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		for (item in this._unrenderedData) {
 			var index = this._dataProvider.indexOf(item);
 			var state = this.itemStatePool.get();
-			this.populateCurrentItemState(item, index, state);
+			this.populateCurrentItemState(item, index, state, true);
 			var itemRenderer = this.createItemRenderer(state);
 			itemRenderer.visible = true;
 			this.listViewPort.addChild(itemRenderer);
@@ -1700,7 +1725,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		var storage = this.itemStateToStorage(state);
-		this.populateCurrentItemState(item, index, state);
+		this.populateCurrentItemState(item, index, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
@@ -1819,7 +1844,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 					isTemporary = true;
 					state = this.itemStatePool.get();
 				}
-				this.populateCurrentItemState(this._selectedItem, this._selectedIndex, state);
+				this.populateCurrentItemState(this._selectedItem, this._selectedIndex, state, true);
 				ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 				if (isTemporary) {
 					this.itemStatePool.release(state);

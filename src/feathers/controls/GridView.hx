@@ -1845,8 +1845,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var headerRenderer = this.dataToHeaderRenderer.get(column);
 			if (headerRenderer != null) {
 				var state = this.headerRendererToHeaderState.get(headerRenderer);
-				this.populateCurrentHeaderState(column, i, state);
-				this.updateHeaderRenderer(headerRenderer, state);
+				var changed = this.populateCurrentHeaderState(column, i, state, false);
+				if (changed) {
+					this.updateHeaderRenderer(headerRenderer, state);
+				}
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				headerRenderer.visible = true;
@@ -1866,7 +1868,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		for (column in this._unrenderedHeaderData) {
 			var index = this._columns.indexOf(column);
 			var state = this.headerStatePool.get();
-			this.populateCurrentHeaderState(column, index, state);
+			this.populateCurrentHeaderState(column, index, state, true);
 			var headerRenderer = this.createHeaderRenderer(state);
 			headerRenderer.visible = true;
 			this._headerContainer.addChildAt(headerRenderer, index);
@@ -1970,8 +1972,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var rowRenderer = this.dataToRowRenderer.get(item);
 			if (rowRenderer != null) {
 				var state = this.rowRendererToRowState.get(rowRenderer);
-				this.populateCurrentRowState(item, i, state);
-				this.updateRowRenderer(rowRenderer, state);
+				var changed = this.populateCurrentRowState(item, i, state, false);
+				if (changed) {
+					this.updateRowRenderer(rowRenderer, state);
+				}
 				this._rowLayoutItems[i] = rowRenderer;
 				var removed = this.inactiveRowRenderers.remove(rowRenderer);
 				if (!removed) {
@@ -1988,7 +1992,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		for (item in this._unrenderedData) {
 			var rowIndex = this._dataProvider.indexOf(item);
 			var state = this.rowStatePool.get();
-			this.populateCurrentRowState(item, rowIndex, state);
+			this.populateCurrentRowState(item, rowIndex, state, true);
 			var rowRenderer = this.createRowRenderer(state);
 			rowRenderer.visible = true;
 			this.activeRowRenderers.push(rowRenderer);
@@ -2052,15 +2056,35 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);
 	}
 
-	private function populateCurrentRowState(item:Dynamic, rowIndex:Int, state:GridViewCellState):Void {
-		state.owner = this;
-		state.data = item;
-		state.rowIndex = rowIndex;
+	private function populateCurrentRowState(item:Dynamic, rowIndex:Int, state:GridViewCellState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.data != item) {
+			state.data = item;
+			changed = true;
+		}
+		if (force || state.rowIndex != rowIndex) {
+			state.rowIndex = rowIndex;
+			changed = true;
+		}
+		var selected = this._selectedIndices.indexOf(rowIndex) != -1;
+		if (force || state.selected != selected) {
+			state.selected = selected;
+			changed = true;
+		}
+		var enabled = this._enabled;
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		// these are used for cells, but not rows
 		state.columnIndex = -1;
-		state.selected = this._selectedIndices.indexOf(rowIndex) != -1;
 		state.column = null;
 		state.text = null;
-		state.enabled = this._enabled;
+		return changed;
 	}
 
 	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
@@ -2131,12 +2155,31 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function populateCurrentHeaderState(column:GridViewColumn, columnIndex:Int, state:GridViewHeaderState):Void {
-		state.owner = this;
-		state.column = column;
-		state.columnIndex = columnIndex;
-		state.text = column.headerText;
-		state.enabled = this._enabled;
+	private function populateCurrentHeaderState(column:GridViewColumn, columnIndex:Int, state:GridViewHeaderState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.column != column) {
+			state.column = column;
+			changed = true;
+		}
+		if (force || state.columnIndex != columnIndex) {
+			state.columnIndex = columnIndex;
+			changed = true;
+		}
+		var headerText = column.headerText;
+		if (force || state.text != headerText) {
+			state.text = headerText;
+			changed = true;
+		}
+		var enabled = this._enabled;
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		return changed;
 	}
 
 	private function updateHeaderRenderer(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
@@ -2528,7 +2571,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
-		this.populateCurrentRowState(item, index, state);
+		this.populateCurrentRowState(item, index, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.

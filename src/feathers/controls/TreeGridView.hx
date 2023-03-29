@@ -1659,8 +1659,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			var headerRenderer = this.dataToHeaderRenderer.get(column);
 			if (headerRenderer != null) {
 				var state = this.headerRendererToHeaderState.get(headerRenderer);
-				this.populateCurrentHeaderState(column, i, state);
-				this.updateHeaderRenderer(headerRenderer, state);
+				var changed = this.populateCurrentHeaderState(column, i, state, false);
+				if (changed) {
+					this.updateHeaderRenderer(headerRenderer, state);
+				}
 				// if this item renderer used to be the typical layout item, but
 				// it isn't anymore, it may have been set invisible
 				headerRenderer.visible = true;
@@ -1680,7 +1682,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		for (column in this._unrenderedHeaderData) {
 			var index = this._columns.indexOf(column);
 			var state = this.headerStatePool.get();
-			this.populateCurrentHeaderState(column, index, state);
+			this.populateCurrentHeaderState(column, index, state, true);
 			var headerRenderer = this.createHeaderRenderer(state);
 			headerRenderer.visible = true;
 			this._headerContainer.addChildAt(headerRenderer, index);
@@ -1814,8 +1816,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
-		this.populateCurrentRowState(item, location, layoutIndex, state);
-		this.updateRowRenderer(rowRenderer, state);
+		var changed = this.populateCurrentRowState(item, location, layoutIndex, state, false);
+		if (changed) {
+			this.updateRowRenderer(rowRenderer, state);
+		}
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
 		rowRenderer.visible = true;
@@ -1832,7 +1836,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			var layoutIndex = this._unrenderedLayoutIndices.shift();
 			var item = this._dataProvider.get(location);
 			var state = this.rowStatePool.get();
-			this.populateCurrentRowState(item, location, layoutIndex, state);
+			this.populateCurrentRowState(item, location, layoutIndex, state, true);
 			var rowRenderer = this.createRowRenderer(state);
 			rowRenderer.visible = true;
 			this.treeGridViewPort.addChild(rowRenderer);
@@ -1904,18 +1908,49 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);
 	}
 
-	private function populateCurrentRowState(item:Dynamic, location:Array<Int>, layoutIndex:Int, state:TreeGridViewCellState):Void {
-		state.owner = this;
-		state.data = item;
-		state.rowLocation = location;
+	private function populateCurrentRowState(item:Dynamic, location:Array<Int>, layoutIndex:Int, state:TreeGridViewCellState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.data != item) {
+			state.data = item;
+			changed = true;
+		}
+		if (force || state.rowLocation != location) {
+			state.rowLocation = location;
+			changed = true;
+		}
+		if (force || state.layoutIndex != layoutIndex) {
+			state.layoutIndex = layoutIndex;
+			changed = true;
+		}
+		var branch = this._dataProvider != null && this._dataProvider.isBranch(item);
+		if (force || state.branch != branch) {
+			state.branch = branch;
+			changed = true;
+		}
+		var opened = state.branch && (this.openBranches.indexOf(item) != -1);
+		if (force || state.opened != opened) {
+			state.opened = opened;
+			changed = true;
+		}
+		var selected = this.compareLocations(location, this._selectedLocation) == 0;
+		if (force || state.selected != selected) {
+			state.selected = selected;
+			changed = true;
+		}
+		var enabled = this._enabled;
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		// these are used for cells, but not rows
 		state.columnIndex = -1;
-		state.layoutIndex = layoutIndex;
-		state.branch = this._dataProvider != null && this._dataProvider.isBranch(item);
-		state.opened = state.branch && (this.openBranches.indexOf(item) != -1);
-		state.selected = this.compareLocations(location, this._selectedLocation) == 0;
 		state.column = null;
 		state.text = null;
-		state.enabled = this._enabled;
+		return changed;
 	}
 
 	private function refreshRowRendererProperties(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewCellState):Void {
@@ -1993,12 +2028,31 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 	}
 
-	private function populateCurrentHeaderState(column:TreeGridViewColumn, columnIndex:Int, state:TreeGridViewHeaderState):Void {
-		state.owner = this;
-		state.column = column;
-		state.columnIndex = columnIndex;
-		state.text = column.headerText;
-		state.enabled = this._enabled;
+	private function populateCurrentHeaderState(column:TreeGridViewColumn, columnIndex:Int, state:TreeGridViewHeaderState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.column != column) {
+			state.column = column;
+			changed = true;
+		}
+		if (force || state.columnIndex != columnIndex) {
+			state.columnIndex = columnIndex;
+			changed = true;
+		}
+		var headerText = column.headerText;
+		if (force || state.text != headerText) {
+			state.text = headerText;
+			changed = true;
+		}
+		var enabled = this._enabled;
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		return changed;
 	}
 
 	private function updateHeaderRenderer(headerRenderer:DisplayObject, state:TreeGridViewHeaderState):Void {
@@ -2246,12 +2300,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
 		if (open && !alreadyOpen) {
 			this.openBranches.push(branch);
-			this.populateCurrentRowState(branch, location, layoutIndex, state);
+			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, state);
 		} else if (!open && alreadyOpen) {
 			this.openBranches.remove(branch);
-			this.populateCurrentRowState(branch, location, layoutIndex, state);
+			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 			removeChildrenFromVirtualCache(location, layoutIndex);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, state);
 		}
@@ -2445,7 +2499,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
-		this.populateCurrentRowState(item, location, layoutIndex, state);
+		this.populateCurrentRowState(item, location, layoutIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.

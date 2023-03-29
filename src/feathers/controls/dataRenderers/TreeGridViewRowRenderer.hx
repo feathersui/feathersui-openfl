@@ -481,8 +481,10 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			if (cellRenderer != null) {
 				var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 				var state = this._cellRendererToCellState.get(cellRenderer);
-				this.populateCurrentItemState(column, i, state);
-				this.updateCellRenderer(cellRenderer, state, storage);
+				var changed = this.populateCurrentItemState(column, i, state, false);
+				if (changed) {
+					this.updateCellRenderer(cellRenderer, state, storage);
+				}
 				this.setChildIndex(cellRenderer, i);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
 				if (!removed) {
@@ -544,7 +546,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		for (columnIndex in this._unrenderedData) {
 			var column = this._columns.get(columnIndex);
 			var state = this.cellStatePool.get();
-			this.populateCurrentItemState(column, columnIndex, state);
+			this.populateCurrentItemState(column, columnIndex, state, true);
 			var cellRenderer = this.createCellRenderer(state);
 			this.addChild(cellRenderer);
 		}
@@ -644,7 +646,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		var state = this._cellRendererToCellState.get(cellRenderer);
-		this.populateCurrentItemState(column, columnIndex, state);
+		this.populateCurrentItemState(column, columnIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
@@ -652,18 +654,54 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		this.updateCellRenderer(cellRenderer, state, storage);
 	}
 
-	private function populateCurrentItemState(column:TreeGridViewColumn, columnIndex:Int, state:TreeGridViewCellState):Void {
-		state.owner = this._treeGridView;
-		state.data = this._data;
-		state.rowLocation = this._rowLocation;
-		state.columnIndex = columnIndex;
-		state.column = column;
-		state.layoutIndex = this._layoutIndex;
-		state.branch = this._branch;
-		state.opened = this._opened;
-		state.selected = this._selected;
-		state.enabled = this._enabled;
-		state.text = (this._rowLocation != null) ? column.itemToText(this._data) : null;
+	private function populateCurrentItemState(column:TreeGridViewColumn, columnIndex:Int, state:TreeGridViewCellState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this._treeGridView) {
+			state.owner = this._treeGridView;
+			changed = true;
+		}
+		if (force || state.data != this._data) {
+			state.data = this._data;
+			changed = true;
+		}
+		if (force || state.rowLocation != this._rowLocation) {
+			state.rowLocation = this._rowLocation;
+			changed = true;
+		}
+		if (force || state.columnIndex != columnIndex) {
+			state.columnIndex = columnIndex;
+			changed = true;
+		}
+		if (force || state.column != column) {
+			state.column = column;
+			changed = true;
+		}
+		if (force || state.layoutIndex != this._layoutIndex) {
+			state.layoutIndex = this._layoutIndex;
+			changed = true;
+		}
+		if (force || state.branch != this._branch) {
+			state.branch = this._branch;
+			changed = true;
+		}
+		if (force || state.opened != this._opened) {
+			state.opened = this._opened;
+			changed = true;
+		}
+		if (force || state.selected != this._selected) {
+			state.selected = this._selected;
+			changed = true;
+		}
+		if (force || state.enabled != this._enabled) {
+			state.enabled = this._enabled;
+			changed = true;
+		}
+		var text = (this._rowLocation != null) ? column.itemToText(this._data) : null;
+		if (force || state.text != text) {
+			state.text = text;
+			changed = true;
+		}
+		return changed;
 	}
 
 	private function updateCellRenderer(cellRenderer:DisplayObject, state:TreeGridViewCellState, storage:CellRendererStorage):Void {
@@ -862,7 +900,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 				isTemporary = true;
 				state = this.cellStatePool.get();
 			}
-			this.populateCurrentItemState(column, 0, state);
+			this.populateCurrentItemState(column, 0, state, true);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 			if (isTemporary) {
 				this.cellStatePool.release(state);

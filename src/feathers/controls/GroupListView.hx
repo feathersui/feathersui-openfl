@@ -1315,7 +1315,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		var type = location.length == 1 ? HEADER : STANDARD;
 		var state = this.itemRendererToItemState.get(itemRenderer);
-		this.populateCurrentItemState(item, type, location, layoutIndex, state);
+		var changed = this.populateCurrentItemState(item, type, location, layoutIndex, state, false);
 		var oldRecyclerID = state.recyclerID;
 		var storage = this.itemStateToStorage(state);
 		if (storage.id != oldRecyclerID) {
@@ -1323,7 +1323,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._unrenderedLayoutIndices.push(layoutIndex);
 			return;
 		}
-		this.updateItemRenderer(itemRenderer, state, storage);
+		if (changed) {
+			this.updateItemRenderer(itemRenderer, state, storage);
+		}
 		// if this item renderer used to be the typical layout item, but
 		// it isn't anymore, it may have been set invisible
 		itemRenderer.visible = true;
@@ -1344,7 +1346,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			var type = location.length == 1 ? HEADER : STANDARD;
 			var layoutIndex = this._unrenderedLayoutIndices.shift();
 			var state = this.itemStatePool.get();
-			this.populateCurrentItemState(item, type, location, layoutIndex, state);
+			this.populateCurrentItemState(item, type, location, layoutIndex, state, true);
 			var itemRenderer = this.createItemRenderer(state);
 			itemRenderer.visible = true;
 			this.groupViewPort.addChild(itemRenderer);
@@ -1464,16 +1466,45 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			this._additionalItemStorage);
 	}
 
-	private function populateCurrentItemState(item:Dynamic, type:GroupListViewItemType, location:Array<Int>, layoutIndex:Int,
-			state:GroupListViewItemState):Void {
-		state.owner = this;
-		state.type = type;
-		state.data = item;
-		state.location = location;
-		state.layoutIndex = layoutIndex;
-		state.selected = location.length > 1 && item == this._selectedItem;
-		state.enabled = this._enabled && itemToEnabled(item);
-		state.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
+	private function populateCurrentItemState(item:Dynamic, type:GroupListViewItemType, location:Array<Int>, layoutIndex:Int, state:GroupListViewItemState,
+			force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.type != type) {
+			state.type = type;
+			changed = true;
+		}
+		if (force || state.data != item) {
+			state.data = item;
+			changed = true;
+		}
+		if (force || state.location != location) {
+			state.location = location;
+			changed = true;
+		}
+		if (force || state.layoutIndex != layoutIndex) {
+			state.layoutIndex = layoutIndex;
+			changed = true;
+		}
+		var selected = location.length > 1 && item == this._selectedItem;
+		if (force || state.selected != selected) {
+			state.selected = selected;
+			changed = true;
+		}
+		var enabled = this._enabled && itemToEnabled(item);
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		var text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
+		if (force || state.text != text) {
+			state.text = text;
+			changed = true;
+		}
+		return changed;
 	}
 
 	private function updateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState, storage:ItemRendererStorage):Void {
@@ -1858,7 +1889,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				}
 				var type = this._selectedLocation.length == 1 ? HEADER : STANDARD;
 				var layoutIndex = this.locationToDisplayIndex(this._selectedLocation);
-				this.populateCurrentItemState(this._selectedItem, type, this._selectedLocation, layoutIndex, state);
+				this.populateCurrentItemState(this._selectedItem, type, this._selectedLocation, layoutIndex, state, true);
 				GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 				if (isTemporary) {
 					this.itemStatePool.release(state);
@@ -2033,7 +2064,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var type = location.length == 1 ? HEADER : STANDARD;
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		var storage = this.itemStateToStorage(state);
-		this.populateCurrentItemState(item, type, location, layoutIndex, state);
+		this.populateCurrentItemState(item, type, location, layoutIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.

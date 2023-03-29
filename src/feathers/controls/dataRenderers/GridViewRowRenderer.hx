@@ -405,8 +405,10 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			if (cellRenderer != null) {
 				var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 				var state = this._cellRendererToCellState.get(cellRenderer);
-				this.populateCurrentItemState(column, i, state);
-				this.updateCellRenderer(cellRenderer, state, storage);
+				var changed = this.populateCurrentItemState(column, i, state, false);
+				if (changed) {
+					this.updateCellRenderer(cellRenderer, state, storage);
+				}
 				this.setChildIndex(cellRenderer, i);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
 				if (!removed) {
@@ -465,7 +467,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		for (columnIndex in this._unrenderedData) {
 			var column = this._columns.get(columnIndex);
 			var state = this.cellStatePool.get();
-			this.populateCurrentItemState(column, columnIndex, state);
+			this.populateCurrentItemState(column, columnIndex, state, true);
 			var cellRenderer = this.createCellRenderer(state);
 			this.addChild(cellRenderer);
 		}
@@ -561,7 +563,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		var state = this._cellRendererToCellState.get(cellRenderer);
-		this.populateCurrentItemState(column, columnIndex, state);
+		this.populateCurrentItemState(column, columnIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
@@ -569,15 +571,42 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this.updateCellRenderer(cellRenderer, state, storage);
 	}
 
-	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int, state:GridViewCellState):Void {
-		state.owner = this._gridView;
-		state.data = this._data;
-		state.rowIndex = this._rowIndex;
-		state.columnIndex = columnIndex;
-		state.column = column;
-		state.selected = this._selected;
-		state.enabled = this._enabled;
-		state.text = (this._rowIndex != -1) ? column.itemToText(this._data) : null;
+	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int, state:GridViewCellState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this._gridView) {
+			state.owner = this._gridView;
+			changed = true;
+		}
+		if (force || state.data != this._data) {
+			state.data = this._data;
+			changed = true;
+		}
+		if (force || state.rowIndex != this._rowIndex) {
+			state.rowIndex = this._rowIndex;
+			changed = true;
+		}
+		if (force || state.columnIndex != columnIndex) {
+			state.columnIndex = columnIndex;
+			changed = true;
+		}
+		if (force || state.column != column) {
+			state.column = column;
+			changed = true;
+		}
+		if (force || state.selected != this._selected) {
+			state.selected = this._selected;
+			changed = true;
+		}
+		if (force || state.enabled != this._enabled) {
+			state.enabled = this._enabled;
+			changed = true;
+		}
+		var text = (this._rowIndex != -1) ? column.itemToText(this._data) : null;
+		if (force || state.text != text) {
+			state.text = text;
+			changed = true;
+		}
+		return changed;
 	}
 
 	private function updateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState, storage:CellRendererStorage):Void {
@@ -711,7 +740,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 					isTemporary = true;
 					state = this.cellStatePool.get();
 				}
-				this.populateCurrentItemState(column, 0, state);
+				this.populateCurrentItemState(column, 0, state, true);
 				GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 				if (isTemporary) {
 					this.cellStatePool.release(state);

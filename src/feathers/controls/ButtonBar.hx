@@ -717,14 +717,16 @@ class ButtonBar extends FeathersControl {
 			var button = this.dataToButton.get(item);
 			if (button != null) {
 				var state = this.buttonToItemState.get(button);
-				this.populateCurrentItemState(item, i, state);
+				var changed = this.populateCurrentItemState(item, i, state, false);
 				var oldRecyclerID = state.recyclerID;
 				var storage = this.itemStateToStorage(state);
 				if (storage.id != oldRecyclerID) {
 					this._unrenderedData.push(item);
 					continue;
 				}
-				this.updateButton(button, state, storage);
+				if (changed) {
+					this.updateButton(button, state, storage);
+				}
 				this._layoutItems[i] = button;
 				this.setChildIndex(button, i + depthOffset);
 				var removed = storage.inactiveButtons.remove(button);
@@ -743,7 +745,7 @@ class ButtonBar extends FeathersControl {
 		for (item in this._unrenderedData) {
 			var index = this._dataProvider.indexOf(item);
 			var state = this.itemStatePool.get();
-			this.populateCurrentItemState(item, index, state);
+			this.populateCurrentItemState(item, index, state, true);
 			var button = this.createButton(state);
 			this.addChildAt(button, index + depthOffset);
 			this._layoutItems[index] = button;
@@ -817,12 +819,31 @@ class ButtonBar extends FeathersControl {
 		return storage;
 	}
 
-	private function populateCurrentItemState(item:Dynamic, index:Int, state:ButtonBarItemState):Void {
-		state.owner = this;
-		state.data = item;
-		state.index = index;
-		state.enabled = this._enabled && itemToEnabled(item);
-		state.text = itemToText(item);
+	private function populateCurrentItemState(item:Dynamic, index:Int, state:ButtonBarItemState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.data != item) {
+			state.data = item;
+			changed = true;
+		}
+		if (force || state.index != index) {
+			state.index = index;
+			changed = true;
+		}
+		var enabled = this._enabled && itemToEnabled(item);
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		var text = itemToText(item);
+		if (force || state.text != text) {
+			state.text = text;
+			changed = true;
+		}
+		return changed;
 	}
 
 	private function updateButton(button:Button, state:ButtonBarItemState, storage:ButtonStorage):Void {
@@ -886,7 +907,7 @@ class ButtonBar extends FeathersControl {
 		}
 		var state = this.buttonToItemState.get(button);
 		var storage = this.itemStateToStorage(state);
-		this.populateCurrentItemState(item, index, state);
+		this.populateCurrentItemState(item, index, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
