@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGridViewCellRenderer;
 import feathers.data.ArrayCollection;
@@ -51,6 +52,81 @@ class GridViewTest extends Test {
 		this._gridView.dataProvider = null;
 		this._gridView.validateNow();
 		Assert.pass();
+	}
+
+	public function testItemAndColumnToCellRenderer():Void {
+		var collection = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		var columns = new ArrayCollection([new GridViewColumn("A", item -> item.a), new GridViewColumn("B", item -> item.b)]);
+		this._gridView.columns = columns;
+		this._gridView.dataProvider = collection;
+		this._gridView.validateNow();
+		var itemRenderer00 = this._gridView.itemAndColumnToCellRenderer(collection.get(0), columns.get(0));
+		Assert.notNull(itemRenderer00);
+		Assert.isOfType(itemRenderer00, ItemRenderer);
+		var itemRenderer01 = this._gridView.itemAndColumnToCellRenderer(collection.get(0), columns.get(1));
+		Assert.notNull(itemRenderer01);
+		Assert.isOfType(itemRenderer01, ItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer01);
+		var itemRenderer10 = this._gridView.itemAndColumnToCellRenderer(collection.get(1), columns.get(0));
+		Assert.notNull(itemRenderer10);
+		Assert.isOfType(itemRenderer10, ItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer10);
+		Assert.notEquals(itemRenderer01, itemRenderer10);
+		var itemRenderer11 = this._gridView.itemAndColumnToCellRenderer(collection.get(1), columns.get(1));
+		Assert.notNull(itemRenderer11);
+		Assert.isOfType(itemRenderer11, ItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer11);
+		Assert.notEquals(itemRenderer01, itemRenderer11);
+		Assert.notEquals(itemRenderer10, itemRenderer11);
+		var itemRenderer20 = this._gridView.itemAndColumnToCellRenderer(collection.get(2), columns.get(0));
+		Assert.notNull(itemRenderer20);
+		Assert.isOfType(itemRenderer20, ItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer20);
+		Assert.notEquals(itemRenderer01, itemRenderer20);
+		Assert.notEquals(itemRenderer10, itemRenderer20);
+		Assert.notEquals(itemRenderer11, itemRenderer20);
+		var itemRenderer21 = this._gridView.itemAndColumnToCellRenderer(collection.get(2), columns.get(1));
+		Assert.notNull(itemRenderer21);
+		Assert.isOfType(itemRenderer21, ItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer21);
+		Assert.notEquals(itemRenderer01, itemRenderer21);
+		Assert.notEquals(itemRenderer10, itemRenderer21);
+		Assert.notEquals(itemRenderer11, itemRenderer21);
+		Assert.notEquals(itemRenderer20, itemRenderer21);
+	}
+
+	public function testItemToText():Void {
+		var collection = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		var columns = new ArrayCollection([new GridViewColumn("A", item -> item.a), new GridViewColumn("B", item -> item.b)]);
+		this._gridView.columns = columns;
+		this._gridView.dataProvider = collection;
+		this._gridView.validateNow();
+		var itemRenderer00 = this._gridView.itemAndColumnToCellRenderer(collection.get(0), columns.get(0));
+		Assert.notNull(itemRenderer00);
+		Assert.isOfType(itemRenderer00, ItemRenderer);
+		Assert.equals("A0", cast(itemRenderer00, ItemRenderer).text);
+		var itemRenderer01 = this._gridView.itemAndColumnToCellRenderer(collection.get(0), columns.get(1));
+		Assert.notNull(itemRenderer01);
+		Assert.isOfType(itemRenderer01, ItemRenderer);
+		Assert.equals("B0", cast(itemRenderer01, ItemRenderer).text);
+		var itemRenderer10 = this._gridView.itemAndColumnToCellRenderer(collection.get(1), columns.get(0));
+		Assert.notNull(itemRenderer10);
+		Assert.isOfType(itemRenderer10, ItemRenderer);
+		Assert.equals("A1", cast(itemRenderer10, ItemRenderer).text);
+		var itemRenderer11 = this._gridView.itemAndColumnToCellRenderer(collection.get(1), columns.get(1));
+		Assert.notNull(itemRenderer11);
+		Assert.isOfType(itemRenderer11, ItemRenderer);
+		Assert.equals("B1", cast(itemRenderer11, ItemRenderer).text);
+		var itemRenderer20 = this._gridView.itemAndColumnToCellRenderer(collection.get(2), columns.get(0));
+		Assert.notNull(itemRenderer20);
+		Assert.isOfType(itemRenderer20, ItemRenderer);
+		Assert.equals("A2", cast(itemRenderer20, ItemRenderer).text);
+		var itemRenderer21 = this._gridView.itemAndColumnToCellRenderer(collection.get(2), columns.get(1));
+		Assert.notNull(itemRenderer21);
+		Assert.isOfType(itemRenderer21, ItemRenderer);
+		Assert.equals("B2", cast(itemRenderer21, ItemRenderer).text);
+		var itemRendererNull = this._gridView.itemAndColumnToCellRenderer(null, columns.get(0));
+		Assert.isNull(itemRendererNull);
 	}
 
 	public function testValidateWithAutoPopulatedColumns():Void {

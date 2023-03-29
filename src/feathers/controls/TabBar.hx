@@ -429,6 +429,33 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	/**
+		Determines if a tab should be enabled or disabled. By default, all
+		items are enabled, unless the `TabBar` is disabled. This method
+		may be replaced to provide a custom value for `enabled`.
+
+		For example, consider the following item:
+
+		```haxe
+		{ text: "Example Item", disable: true }
+		```
+
+		If the `TabBar` should disable an item if the `disable` field is
+		`true`, a custom implementation of `itemToEnabled()` might look like
+		this:
+
+		```haxe
+		tabBar.itemToEnabled = (item:Dynamic) -> {
+			return !item.disable;
+		};
+		```
+
+		@since 1.2.0
+	**/
+	public dynamic function itemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	/**
 		The layout algorithm used to position and size the tabs.
 
 		By default, if no layout is provided by the time that the tab bar
@@ -919,7 +946,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		state.data = item;
 		state.index = index;
 		state.selected = item == this._selectedItem;
-		state.enabled = this._enabled;
+		state.enabled = this._enabled && itemToEnabled(item);
 		state.text = itemToText(item);
 	}
 

@@ -827,6 +827,33 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	/**
+		Determines if an item should be enabled or disabled. By default, all
+		items are enabled, unless the `ListView` is disabled. This method
+		may be replaced to provide a custom value for `enabled`.
+
+		For example, consider the following item:
+
+		```haxe
+		{ text: "Example Item", disable: true }
+		```
+
+		If the `ListView` should disable an item if the `disable` field is
+		`true`, a custom implementation of `itemToEnabled()` might look like
+		this:
+
+		```haxe
+		listView.itemToEnabled = (item:Dynamic) -> {
+			return !item.disable;
+		};
+		```
+
+		@since 1.2.0
+	**/
+	public dynamic function itemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	/**
 		Scrolls the list view so that the specified item renderer is completely
 		visible. If the item renderer is already completely visible, does not
 		update the scroll position.
@@ -1182,7 +1209,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		state.data = item;
 		state.index = index;
 		state.selected = this._selectedIndices.indexOf(index) != -1;
-		state.enabled = this._enabled;
+		state.enabled = this._enabled && itemToEnabled(item);
 		state.text = itemToText(item);
 	}
 

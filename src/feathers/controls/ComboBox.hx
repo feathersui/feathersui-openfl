@@ -477,6 +477,33 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	/**
+		Determines if an item should be enabled or disabled. By default, all
+		items are enabled, unless the `ComboBox` is disabled. This method
+		may be replaced to provide a custom value for `enabled`.
+
+		For example, consider the following item:
+
+		```haxe
+		{ text: "Example Item", disable: true }
+		```
+
+		If the `ComboBox` should disable an item if the `disable` field is
+		`true`, a custom implementation of `itemToEnabled()` might look like
+		this:
+
+		```haxe
+		comboBox.itemToEnabled = (item:Dynamic) -> {
+			return !item.disable;
+		};
+		```
+
+		@since 1.2.0
+	**/
+	public dynamic function itemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	/**
 		Called when none of the items in the data provider match the custom text
 		typed by the user. By default, returns the original string, without any
 		changes.
@@ -928,6 +955,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this._ignoreListViewChange = oldIgnoreListViewChange;
 
 		this.listView.itemRendererRecycler = this._itemRendererRecycler;
+		this.listView.itemToEnabled = this.itemToEnabled;
 		this.listView.itemToText = this.itemToText;
 	}
 

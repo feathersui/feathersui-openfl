@@ -738,6 +738,33 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	/**
+		Determines if an item should be enabled or disabled. By default, all
+		items are enabled, unless the `TreeView` is disabled. This method
+		may be replaced to provide a custom value for `enabled`.
+
+		For example, consider the following item:
+
+		```haxe
+		{ text: "Example Item", disable: true }
+		```
+
+		If the `TreeView` should disable an item if the `disable` field is
+		`true`, a custom implementation of `itemToEnabled()` might look like
+		this:
+
+		```haxe
+		treeView.itemToEnabled = (item:Dynamic) -> {
+			return !item.disable;
+		};
+		```
+
+		@since 1.2.0
+	**/
+	public dynamic function itemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	/**
 		Indicates if a branch is currently opened or closed. If the object is
 		not a branch, or does not exist in the data provider, returns `false`.
 
@@ -1177,7 +1204,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		state.branch = this._dataProvider != null && this._dataProvider.isBranch(item);
 		state.opened = state.branch && (this.openBranches.indexOf(item) != -1);
 		state.selected = item == this._selectedItem;
-		state.enabled = this._enabled;
+		state.enabled = this._enabled && itemToEnabled(item);
 		state.text = itemToText(item);
 	}
 

@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeGridViewCellRenderer;
 import feathers.core.IOpenCloseToggle;
@@ -71,6 +72,52 @@ import utest.Test;
 		this._treeGridView.dataProvider = null;
 		this._treeGridView.validateNow();
 		Assert.pass();
+	}
+
+	public function testItemAndColumnToCellRenderer():Void {
+		var collection = new ArrayHierarchicalCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		var columns = new ArrayCollection([
+			new TreeGridViewColumn("A", item -> item.a),
+			new TreeGridViewColumn("B", item -> item.b)
+		]);
+		this._treeGridView.columns = columns;
+		this._treeGridView.dataProvider = collection;
+		this._treeGridView.validateNow();
+		var itemRenderer00 = this._treeGridView.itemAndColumnToCellRenderer(collection.get([0]), columns.get(0));
+		Assert.notNull(itemRenderer00);
+		Assert.isOfType(itemRenderer00, HierarchicalItemRenderer);
+		var itemRenderer01 = this._treeGridView.itemAndColumnToCellRenderer(collection.get([0]), columns.get(1));
+		Assert.notNull(itemRenderer01);
+		Assert.isOfType(itemRenderer01, HierarchicalItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer01);
+		var itemRenderer10 = this._treeGridView.itemAndColumnToCellRenderer(collection.get([1]), columns.get(0));
+		Assert.notNull(itemRenderer10);
+		Assert.isOfType(itemRenderer10, HierarchicalItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer10);
+		Assert.notEquals(itemRenderer01, itemRenderer10);
+		var itemRenderer11 = this._treeGridView.itemAndColumnToCellRenderer(collection.get([1]), columns.get(1));
+		Assert.notNull(itemRenderer11);
+		Assert.isOfType(itemRenderer11, HierarchicalItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer11);
+		Assert.notEquals(itemRenderer01, itemRenderer11);
+		Assert.notEquals(itemRenderer10, itemRenderer11);
+		var itemRenderer20 = this._treeGridView.itemAndColumnToCellRenderer(collection.get([2]), columns.get(0));
+		Assert.notNull(itemRenderer20);
+		Assert.isOfType(itemRenderer20, HierarchicalItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer20);
+		Assert.notEquals(itemRenderer01, itemRenderer20);
+		Assert.notEquals(itemRenderer10, itemRenderer20);
+		Assert.notEquals(itemRenderer11, itemRenderer20);
+		var itemRenderer21 = this._treeGridView.itemAndColumnToCellRenderer(collection.get([2]), columns.get(1));
+		Assert.notNull(itemRenderer21);
+		Assert.isOfType(itemRenderer21, HierarchicalItemRenderer);
+		Assert.notEquals(itemRenderer00, itemRenderer21);
+		Assert.notEquals(itemRenderer01, itemRenderer21);
+		Assert.notEquals(itemRenderer10, itemRenderer21);
+		Assert.notEquals(itemRenderer11, itemRenderer21);
+		Assert.notEquals(itemRenderer20, itemRenderer21);
+		var itemRendererNull = this._treeGridView.itemAndColumnToCellRenderer(null, columns.get(0));
+		Assert.isNull(itemRendererNull);
 	}
 
 	public function testValidateWithAutoPopulatedColumns():Void {

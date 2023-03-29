@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
 import feathers.data.ArrayHierarchicalCollection;
@@ -61,6 +62,69 @@ class GroupListViewTest extends Test {
 		this._listView.dataProvider = null;
 		this._listView.validateNow();
 		Assert.pass();
+	}
+
+	public function testItemToItemRenderer():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.validateNow();
+		var itemRenderer0 = this._listView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isOfType(itemRenderer0, ItemRenderer);
+		var itemRenderer1 = this._listView.itemToItemRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isOfType(itemRenderer1, ItemRenderer);
+		Assert.notEquals(itemRenderer0, itemRenderer1);
+		var itemRenderer2 = this._listView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isOfType(itemRenderer2, ItemRenderer);
+		Assert.notEquals(itemRenderer0, itemRenderer2);
+		Assert.notEquals(itemRenderer1, itemRenderer2);
+		var itemRendererNull = this._listView.itemToItemRenderer(null);
+		Assert.isNull(itemRendererNull);
+	}
+
+	public function testItemToText():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.itemToHeaderText = item -> item.text;
+		this._listView.itemToText = item -> item.text;
+		this._listView.validateNow();
+		var itemRenderer0 = this._listView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isOfType(itemRenderer0, ItemRenderer);
+		Assert.equals("One", cast(itemRenderer0, ItemRenderer).text);
+		var itemRenderer1 = this._listView.itemToItemRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isOfType(itemRenderer1, ItemRenderer);
+		Assert.equals("Two", cast(itemRenderer1, ItemRenderer).text);
+		var itemRenderer2 = this._listView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isOfType(itemRenderer2, ItemRenderer);
+		Assert.equals("Three", cast(itemRenderer2, ItemRenderer).text);
+	}
+
+	public function testItemToEnabled():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One", disable: false},
+			{text: "Two", disable: true},
+			{text: "Three", disable: false}
+		]);
+		this._listView.dataProvider = collection;
+		this._listView.itemToEnabled = item -> !item.disable;
+		this._listView.validateNow();
+		var itemRenderer0 = this._listView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isOfType(itemRenderer0, ItemRenderer);
+		Assert.isTrue(cast(itemRenderer0, ItemRenderer).enabled);
+		var itemRenderer1 = this._listView.itemToItemRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isOfType(itemRenderer1, ItemRenderer);
+		Assert.isFalse(cast(itemRenderer1, ItemRenderer).enabled);
+		var itemRenderer2 = this._listView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isOfType(itemRenderer2, ItemRenderer);
+		Assert.isTrue(cast(itemRenderer2, ItemRenderer).enabled);
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {

@@ -800,6 +800,33 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	/**
+		Determines if an item should be enabled or disabled. By default, all
+		items are enabled, unless the `GroupListView` is disabled. This method
+		may be replaced to provide a custom value for `enabled`.
+
+		For example, consider the following item:
+
+		```haxe
+		{ text: "Example Item", disable: true }
+		```
+
+		If the `GroupListView` should disable an item if the `disable` field is
+		`true`, a custom implementation of `itemToEnabled()` might look like
+		this:
+
+		```haxe
+		groupListView.itemToEnabled = (item:Dynamic) -> {
+			return !item.disable;
+		};
+		```
+
+		@since 1.2.0
+	**/
+	public dynamic function itemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	/**
 		Converts an group to text to display within a group list view header. By
 		default, the `toString()` method is called to convert an item to text.
 		This method may be replaced to provide custom text.
@@ -1442,7 +1469,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		state.location = location;
 		state.layoutIndex = layoutIndex;
 		state.selected = location.length > 1 && item == this._selectedItem;
-		state.enabled = this._enabled;
+		state.enabled = this._enabled && itemToEnabled(item);
 		state.text = type == HEADER ? itemToHeaderText(item) : itemToText(item);
 	}
 

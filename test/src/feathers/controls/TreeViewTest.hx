@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
 import feathers.core.IOpenCloseToggle;
@@ -22,8 +23,7 @@ import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
-@:keep
-class TreeViewTest extends Test {
+@:keep class TreeViewTest extends Test {
 	private var _treeView:TreeView;
 
 	public function new() {
@@ -69,6 +69,68 @@ class TreeViewTest extends Test {
 		this._treeView.dataProvider = null;
 		this._treeView.validateNow();
 		Assert.pass();
+	}
+
+	public function testItemToItemRenderer():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.validateNow();
+		var itemRenderer0 = this._treeView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isOfType(itemRenderer0, HierarchicalItemRenderer);
+		var itemRenderer1 = this._treeView.itemToItemRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isOfType(itemRenderer1, HierarchicalItemRenderer);
+		Assert.notEquals(itemRenderer0, itemRenderer1);
+		var itemRenderer2 = this._treeView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isOfType(itemRenderer2, HierarchicalItemRenderer);
+		Assert.notEquals(itemRenderer0, itemRenderer2);
+		Assert.notEquals(itemRenderer1, itemRenderer2);
+		var itemRendererNull = this._treeView.itemToItemRenderer(null);
+		Assert.isNull(itemRendererNull);
+	}
+
+	public function testItemToText():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.itemToText = item -> item.text;
+		this._treeView.validateNow();
+		var itemRenderer0 = this._treeView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isOfType(itemRenderer0, HierarchicalItemRenderer);
+		Assert.equals("One", cast(itemRenderer0, HierarchicalItemRenderer).text);
+		var itemRenderer1 = this._treeView.itemToItemRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isOfType(itemRenderer1, HierarchicalItemRenderer);
+		Assert.equals("Two", cast(itemRenderer1, HierarchicalItemRenderer).text);
+		var itemRenderer2 = this._treeView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isOfType(itemRenderer2, HierarchicalItemRenderer);
+		Assert.equals("Three", cast(itemRenderer2, HierarchicalItemRenderer).text);
+	}
+
+	public function testItemToEnabled():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One", disable: false},
+			{text: "Two", disable: true},
+			{text: "Three", disable: false}
+		]);
+		this._treeView.dataProvider = collection;
+		this._treeView.itemToEnabled = item -> !item.disable;
+		this._treeView.validateNow();
+		var itemRenderer0 = this._treeView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isOfType(itemRenderer0, HierarchicalItemRenderer);
+		Assert.isTrue(cast(itemRenderer0, HierarchicalItemRenderer).enabled);
+		var itemRenderer1 = this._treeView.itemToItemRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isOfType(itemRenderer1, HierarchicalItemRenderer);
+		Assert.isFalse(cast(itemRenderer1, HierarchicalItemRenderer).enabled);
+		var itemRenderer2 = this._treeView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isOfType(itemRenderer2, HierarchicalItemRenderer);
+		Assert.isTrue(cast(itemRenderer2, HierarchicalItemRenderer).enabled);
 	}
 
 	public function testDeselectAllOnNullDataProvider():Void {

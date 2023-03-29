@@ -50,6 +50,68 @@ class ButtonBarTest extends Test {
 		Assert.pass();
 	}
 
+	public function testItemToButton():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.validateNow();
+		var button0 = this._buttonBar.itemToButton(collection.get(0));
+		Assert.notNull(button0);
+		Assert.isOfType(button0, Button);
+		var button1 = this._buttonBar.itemToButton(collection.get(1));
+		Assert.notNull(button1);
+		Assert.isOfType(button1, Button);
+		Assert.notEquals(button0, button1);
+		var button2 = this._buttonBar.itemToButton(collection.get(2));
+		Assert.notNull(button2);
+		Assert.isOfType(button2, Button);
+		Assert.notEquals(button0, button2);
+		Assert.notEquals(button1, button2);
+		var buttonNull = this._buttonBar.itemToButton(null);
+		Assert.isNull(buttonNull);
+	}
+
+	public function testItemToText():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.itemToText = item -> item.text;
+		this._buttonBar.validateNow();
+		var button0 = this._buttonBar.itemToButton(collection.get(0));
+		Assert.notNull(button0);
+		Assert.isOfType(button0, Button);
+		Assert.equals("One", cast(button0, Button).text);
+		var button1 = this._buttonBar.itemToButton(collection.get(1));
+		Assert.notNull(button1);
+		Assert.isOfType(button1, Button);
+		Assert.equals("Two", cast(button1, Button).text);
+		var button2 = this._buttonBar.itemToButton(collection.get(2));
+		Assert.notNull(button2);
+		Assert.isOfType(button2, Button);
+		Assert.equals("Three", cast(button2, Button).text);
+	}
+
+	public function testItemToEnabled():Void {
+		var collection = new ArrayCollection([
+			{text: "One", disable: false},
+			{text: "Two", disable: true},
+			{text: "Three", disable: false}
+		]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.itemToEnabled = item -> !item.disable;
+		this._buttonBar.validateNow();
+		var button0 = this._buttonBar.itemToButton(collection.get(0));
+		Assert.notNull(button0);
+		Assert.isOfType(button0, Button);
+		Assert.isTrue(cast(button0, Button).enabled);
+		var button1 = this._buttonBar.itemToButton(collection.get(1));
+		Assert.notNull(button1);
+		Assert.isOfType(button1, Button);
+		Assert.isFalse(cast(button1, Button).enabled);
+		var button2 = this._buttonBar.itemToButton(collection.get(2));
+		Assert.notNull(button2);
+		Assert.isOfType(button2, Button);
+		Assert.isTrue(cast(button2, Button).enabled);
+	}
+
 	public function testUpdateItemSetsInterfaceProperties():Void {
 		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		var itemIndex = 1;

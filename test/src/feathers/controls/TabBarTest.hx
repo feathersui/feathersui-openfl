@@ -51,6 +51,68 @@ class TabBarTest extends Test {
 		Assert.pass();
 	}
 
+	public function testItemToTab():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.validateNow();
+		var tab0 = this._tabBar.itemToTab(collection.get(0));
+		Assert.notNull(tab0);
+		Assert.isOfType(tab0, ToggleButton);
+		var tab1 = this._tabBar.itemToTab(collection.get(1));
+		Assert.notNull(tab1);
+		Assert.isOfType(tab1, ToggleButton);
+		Assert.notEquals(tab0, tab1);
+		var tab2 = this._tabBar.itemToTab(collection.get(2));
+		Assert.notNull(tab2);
+		Assert.isOfType(tab2, ToggleButton);
+		Assert.notEquals(tab0, tab2);
+		Assert.notEquals(tab1, tab2);
+		var tabNull = this._tabBar.itemToTab(null);
+		Assert.isNull(tabNull);
+	}
+
+	public function testItemToText():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.itemToText = item -> item.text;
+		this._tabBar.validateNow();
+		var tab0 = this._tabBar.itemToTab(collection.get(0));
+		Assert.notNull(tab0);
+		Assert.isOfType(tab0, ToggleButton);
+		Assert.equals("One", cast(tab0, ToggleButton).text);
+		var tab1 = this._tabBar.itemToTab(collection.get(1));
+		Assert.notNull(tab1);
+		Assert.isOfType(tab1, ToggleButton);
+		Assert.equals("Two", cast(tab1, ToggleButton).text);
+		var tab2 = this._tabBar.itemToTab(collection.get(2));
+		Assert.notNull(tab2);
+		Assert.isOfType(tab2, ToggleButton);
+		Assert.equals("Three", cast(tab2, ToggleButton).text);
+	}
+
+	public function testItemToEnabled():Void {
+		var collection = new ArrayCollection([
+			{text: "One", disable: false},
+			{text: "Two", disable: true},
+			{text: "Three", disable: false}
+		]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.itemToEnabled = item -> !item.disable;
+		this._tabBar.validateNow();
+		var tab0 = this._tabBar.itemToTab(collection.get(0));
+		Assert.notNull(tab0);
+		Assert.isOfType(tab0, ToggleButton);
+		Assert.isTrue(cast(tab0, ToggleButton).enabled);
+		var tab1 = this._tabBar.itemToTab(collection.get(1));
+		Assert.notNull(tab1);
+		Assert.isOfType(tab1, ToggleButton);
+		Assert.isFalse(cast(tab1, ToggleButton).enabled);
+		var tab2 = this._tabBar.itemToTab(collection.get(2));
+		Assert.notNull(tab2);
+		Assert.isOfType(tab2, ToggleButton);
+		Assert.isTrue(cast(tab2, ToggleButton).enabled);
+	}
+
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._tabBar.validateNow();

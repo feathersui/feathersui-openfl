@@ -304,6 +304,33 @@ class ButtonBar extends FeathersControl {
 	}
 
 	/**
+		Determines if a button should be enabled or disabled. By default, all
+		items are enabled, unless the `ButtonBar` is disabled. This method
+		may be replaced to provide a custom value for `enabled`.
+
+		For example, consider the following item:
+
+		```haxe
+		{ text: "Example Item", disable: true }
+		```
+
+		If the `ButtonBar` should disable an item if the `disable` field is
+		`true`, a custom implementation of `itemToEnabled()` might look like
+		this:
+
+		```haxe
+		buttonBar.itemToEnabled = (item:Dynamic) -> {
+			return !item.disable;
+		};
+		```
+
+		@since 1.2.0
+	**/
+	public dynamic function itemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	/**
 		The layout algorithm used to position and size the buttons.
 
 		By default, if no layout is provided by the time that the button bar
@@ -791,7 +818,7 @@ class ButtonBar extends FeathersControl {
 		state.owner = this;
 		state.data = item;
 		state.index = index;
-		state.enabled = this._enabled;
+		state.enabled = this._enabled && itemToEnabled(item);
 		state.text = itemToText(item);
 	}
 

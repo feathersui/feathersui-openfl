@@ -403,6 +403,33 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	/**
+		Determines if an item should be enabled or disabled. By default, all
+		items are enabled, unless the `PopUpListView` is disabled. This method
+		may be replaced to provide a custom value for `enabled`.
+
+		For example, consider the following item:
+
+		```haxe
+		{ text: "Example Item", disable: true }
+		```
+
+		If the `PopUpListView` should disable an item if the `disable` field is
+		`true`, a custom implementation of `itemToEnabled()` might look like
+		this:
+
+		```haxe
+		listView.itemToEnabled = (item:Dynamic) -> {
+			return !item.disable;
+		};
+		```
+
+		@since 1.2.0
+	**/
+	public dynamic function itemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	/**
 		Manages how the list view is displayed when it is opened and closed.
 
 		In the following example, a custom pop-up adapter is provided:
@@ -739,6 +766,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this._ignoreListViewChange = oldIgnoreListViewChange;
 
 		this.listView.itemRendererRecycler = this._itemRendererRecycler;
+		this.listView.itemToEnabled = this.itemToEnabled;
 		this.listView.itemToText = this.itemToText;
 	}
 
