@@ -968,6 +968,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		for (flag in this._invalidationFlags.keys()) {
 			this.treeViewPort.setInvalid(flag);
 		}
+		if (this._allInvalid) {
+			this.treeViewPort.setInvalid();
+		}
 
 		super.update();
 
@@ -1031,7 +1034,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			}
 		}
 
-		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		var itemRendererInvalid = this.treeViewPort.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(this._defaultStorage, itemRendererInvalid);
 		if (this._additionalStorage != null) {
 			for (i in 0...this._additionalStorage.length) {

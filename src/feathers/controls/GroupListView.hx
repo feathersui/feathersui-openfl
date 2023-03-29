@@ -1049,6 +1049,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		for (flag in this._invalidationFlags.keys()) {
 			this.groupViewPort.setInvalid(flag);
 		}
+		if (this._allInvalid) {
+			this.groupViewPort.setInvalid();
+		}
 
 		super.update();
 
@@ -1130,8 +1133,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			}
 		}
 
-		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
-		var headerRendererInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
+		var itemRendererInvalid = this.groupViewPort.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		var headerRendererInvalid = this.groupViewPort.isInvalid(INVALIDATION_FLAG_HEADER_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(this._defaultItemStorage, itemRendererInvalid);
 		if (this._additionalItemStorage != null) {
 			for (i in 0...this._additionalItemStorage.length) {

@@ -1005,6 +1005,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		for (flag in this._invalidationFlags.keys()) {
 			this.listViewPort.setInvalid(flag);
 		}
+		if (this._allInvalid) {
+			this.listViewPort.setInvalid();
+		}
 
 		super.update();
 
@@ -1068,7 +1071,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 		}
 
-		var itemRendererInvalid = this.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
+		var itemRendererInvalid = this.listViewPort.isInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		this.refreshInactiveItemRenderers(this._defaultStorage, itemRendererInvalid);
 		if (this._additionalStorage != null) {
 			for (i in 0...this._additionalStorage.length) {
