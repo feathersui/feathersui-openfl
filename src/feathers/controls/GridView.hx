@@ -1178,6 +1178,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	public function itemAndColumnToCellRenderer(item:Dynamic, column:GridViewColumn):DisplayObject {
+		if (item == null) {
+			return null;
+		}
 		var rowRenderer = this.dataToRowRenderer.get(item);
 		if (rowRenderer == null) {
 			return null;

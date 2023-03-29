@@ -309,6 +309,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	public function columnToCellRenderer(column:GridViewColumn):DisplayObject {
+		if (column == null) {
+			return null;
+		}
 		return this._columnToCellRenderer.get(column);
 	}
 

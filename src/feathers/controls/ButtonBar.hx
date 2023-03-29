@@ -403,6 +403,9 @@ class ButtonBar extends FeathersControl {
 		@since 1.0.0
 	**/
 	public function itemToButton(item:Dynamic):Button {
+		if (item == null) {
+			return null;
+		}
 		return this.dataToButton.get(item);
 	}
 

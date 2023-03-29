@@ -945,6 +945,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		@since 1.0.0
 	**/
 	public function itemAndColumnToCellRenderer(item:Dynamic, column:TreeGridViewColumn):DisplayObject {
+		if (item == null) {
+			return null;
+		}
 		var rowRenderer = this.dataToRowRenderer.get(item);
 		if (rowRenderer == null) {
 			return null;

@@ -528,6 +528,9 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		@since 1.0.0
 	**/
 	public function itemToTab(item:Dynamic):ToggleButton {
+		if (item == null) {
+			return null;
+		}
 		return this.dataToTab.get(item);
 	}
 

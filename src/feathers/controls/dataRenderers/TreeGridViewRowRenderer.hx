@@ -385,6 +385,9 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	}
 
 	public function columnToCellRenderer(column:TreeGridViewColumn):DisplayObject {
+		if (column == null) {
+			return null;
+		}
 		return this._columnToCellRenderer.get(column);
 	}
 
