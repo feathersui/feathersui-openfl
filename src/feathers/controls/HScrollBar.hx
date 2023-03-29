@@ -12,7 +12,6 @@ import feathers.controls.supportClasses.BaseScrollBar;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import openfl.events.Event;
-import openfl.geom.Point;
 
 /**
 	A horizontal scroll bar, for use with scrolling containers like
@@ -56,7 +55,7 @@ class HScrollBar extends BaseScrollBar {
 		var percentage = 0.0;
 		var trackScrollableWidth = this.actualWidth - this.paddingLeft - this.paddingRight - this._currentThumbSkin.width;
 		var xOffset = x - this._pointerStartX;
-		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
+		var xPosition = Math.min(Math.max(0.0, this._thumbStartX - this.paddingLeft + xOffset), trackScrollableWidth);
 		percentage = xPosition / trackScrollableWidth;
 		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
