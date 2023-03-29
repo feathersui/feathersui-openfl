@@ -367,6 +367,40 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		return this._editable;
 	}
 
+	private var _enableButtonsAtRangeLimits:Bool = true;
+
+	/**
+		Indicates if the decrement button is disabled when the value is equal to
+		minimum, and if the increment button is disabled when the value is equal
+		to the maximum.
+
+		If the buttons remain enabled, and the user attempts to decrement beyond
+		the minimum, or increment beyond the maximum, triggering the button will
+		have no effect, except visually.
+
+		The following example disables the buttons at range limits
+
+		```haxe
+		textInput.enableButtonsAtRangeLimits = false;
+		```
+
+		@since 1.0.0
+	**/
+	public var enableButtonsAtRangeLimits(get, set):Bool;
+
+	private function get_enableButtonsAtRangeLimits():Bool {
+		return this._enableButtonsAtRangeLimits;
+	}
+
+	private function set_enableButtonsAtRangeLimits(value:Bool):Bool {
+		if (this._enableButtonsAtRangeLimits == value) {
+			return this._enableButtonsAtRangeLimits;
+		}
+		this._enableButtonsAtRangeLimits = value;
+		this.setInvalid(STATE);
+		return this._enableButtonsAtRangeLimits;
+	}
+
 	private var _valueFormatFunction:(Float) -> String;
 
 	/**
@@ -709,8 +743,11 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			this.createTextInput();
 		}
 
-		if (stateInvalid) {
+		if (stateInvalid || dataInvalid) {
 			this.refreshEnabled();
+		}
+
+		if (stateInvalid) {
 			this.refreshEditable();
 		}
 
@@ -842,8 +879,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function refreshEnabled():Void {
-		this.decrementButton.enabled = this._enabled;
-		this.incrementButton.enabled = this._enabled;
+		this.decrementButton.enabled = this._enabled && (this._enableButtonsAtRangeLimits || this._value != this._minimum);
+		this.incrementButton.enabled = this._enabled && (this._enableButtonsAtRangeLimits || this._value != this._maximum);
 		this.textInput.enabled = this._enabled;
 	}
 
