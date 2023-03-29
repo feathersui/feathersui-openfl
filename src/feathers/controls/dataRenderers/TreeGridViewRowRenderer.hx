@@ -664,7 +664,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			state.data = this._data;
 			changed = true;
 		}
-		if (force || state.rowLocation != this._rowLocation) {
+		if (force || (state.rowLocation != this._rowLocation && this.compareLocations(state.rowLocation, this._rowLocation) != 0)) {
 			state.rowLocation = this._rowLocation;
 			changed = true;
 		}
@@ -783,6 +783,40 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
+	}
+
+	private function compareLocations(location1:Array<Int>, location2:Array<Int>):Int {
+		var null1 = location1 == null;
+		var null2 = location2 == null;
+		if (null1 && null2) {
+			return 0;
+		} else if (null1) {
+			return 1;
+		} else if (null2) {
+			return -1;
+		}
+		var length1 = location1.length;
+		var length2 = location2.length;
+		var min = length1;
+		if (length2 < min) {
+			min = length2;
+		}
+		for (i in 0...min) {
+			var index1 = location1[i];
+			var index2 = location2[i];
+			if (index1 < index2) {
+				return -1;
+			}
+			if (index1 > index2) {
+				return 1;
+			}
+		}
+		if (length1 < length2) {
+			return -1;
+		} else if (length1 > length2) {
+			return 1;
+		}
+		return 0;
 	}
 
 	private function treeGridViewRowRenderer_cellRenderer_touchTapHandler(event:TouchEvent):Void {

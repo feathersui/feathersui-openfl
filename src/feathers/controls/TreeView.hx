@@ -1214,7 +1214,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			state.data = item;
 			changed = true;
 		}
-		if (force || state.location != location) {
+		if (force || (state.location != location && this.compareLocations(state.location, location) != 0)) {
 			state.location = location;
 			changed = true;
 		}

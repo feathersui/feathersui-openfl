@@ -1921,7 +1921,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			state.data = item;
 			changed = true;
 		}
-		if (force || state.rowLocation != location) {
+		if (force || (state.rowLocation != location && this.compareLocations(state.rowLocation, location) != 0)) {
 			state.rowLocation = location;
 			changed = true;
 		}
