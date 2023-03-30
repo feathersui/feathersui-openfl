@@ -66,25 +66,34 @@ import openfl.ui.Multitouch;
 	```haxe
 	var groupListView = new GroupListView();
 
-	groupListView.dataProvider = new TreeCollection([
-		new TreeNode({text: "Group A"}, [
-			new TreeNode({text: "Node A1"}),
-			new TreeNode({text: "Node A2"}),
-			new TreeNode({text: "Node A3"}),
-			new TreeNode({text: "Node A4"})
-		]),
-		new TreeNode({text: "Group B"}, [
-			new TreeNode({text: "Node B1"}),
-			new TreeNode({text: "Node B2"}),
-			new TreeNode({text: "Node B3"})
-		]),
-		new TreeNode({text: "Group C"}, [
-			new TreeNode({text: "Node C1"})
-		])
-	]);
+	groupListView.dataProvider = new ArrayHierarchicalCollection([
+		{
+			text: "Group A",
+			children: [
+				{text: "Node A1"},
+				{text: "Node A2"},
+				{text: "Node A3"},
+				{text: "Node A4"}
+			]
+		},
+		{
+			text: "Group B",
+			children: [
+				{text: "Node B1"},
+				{text: "Node B2"},
+				{text: "Node B3"}
+			]
+		},
+		{
+			text: "Group C",
+			children: [
+				{text: "Node C1"}
+			]
+		}
+	], (item:Dynamic) -> item.children);
 
-	groupListView.itemToText = (item:TreeNode<Dynamic>) -> {
-		return item.data.text;
+	groupListView.itemToText = (item:Dynamic) -> {
+		return item.text;
 	};
 
 	groupListView.addEventListener(Event.CHANGE, (event:Event) -> {
@@ -270,22 +279,31 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		renderer how to interpret the data:
 
 		```haxe
-		groupListView.dataProvider = new TreeCollection([
-			new TreeNode({text: "Group A"}, [
-				new TreeNode({text: "Node A1"}),
-				new TreeNode({text: "Node A2"}),
-				new TreeNode({text: "Node A3"}),
-				new TreeNode({text: "Node A4"})
-			]),
-			new TreeNode({text: "Group B"}, [
-				new TreeNode({text: "Node B1"}),
-				new TreeNode({text: "Node B2"}),
-				new TreeNode({text: "Node B3"})
-			]),
-			new TreeNode({text: "Group C"}, [
-				new TreeNode({text: "Node C1"})
-			])
-		]);
+		groupListView.dataProvider = new ArrayHierarchicalCollection([
+			{
+				text: "Group A",
+				children: [
+					{text: "Node A1"},
+					{text: "Node A2"},
+					{text: "Node A3"},
+					{text: "Node A4"}
+				]
+			},
+			{
+				text: "Group B",
+				children: [
+					{text: "Node B1"},
+					{text: "Node B2"},
+					{text: "Node B3"}
+				]
+			},
+			{
+				text: "Group C",
+				children: [
+					{text: "Node C1"}
+				]
+			}
+		], (item:Dynamic) -> item.children);
 
 		groupListView.itemToText = (item:Dynamic) -> {
 			return item.text;
