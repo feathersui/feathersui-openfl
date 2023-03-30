@@ -22,7 +22,7 @@ class TreeViewScreen extends Panel {
 
 		this.treeView = new TreeView();
 		this.treeView.variant = TreeView.VARIANT_BORDERLESS;
-		this.treeView.dataProvider = new ArrayHierarchicalCollection([
+		this.treeView.dataProvider = new ArrayHierarchicalCollection<Dynamic>([
 			{
 				text: "Node 1",
 				children: [

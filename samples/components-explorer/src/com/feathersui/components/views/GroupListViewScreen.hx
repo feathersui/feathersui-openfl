@@ -19,7 +19,7 @@ class GroupListViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var data = new ArrayHierarchicalCollection([
+		var data = new ArrayHierarchicalCollection<Dynamic>([
 			{
 				text: "A",
 				children: [
