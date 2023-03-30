@@ -130,6 +130,7 @@ class ButtonBarTest extends Test {
 		});
 		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}]);
 		this._buttonBar.dataProvider = collection;
+		this._buttonBar.itemToText = item -> item.text;
 		this._buttonBar.validateNow();
 		Assert.equals(2, createCount);
 		Assert.equals(2, updateCount);

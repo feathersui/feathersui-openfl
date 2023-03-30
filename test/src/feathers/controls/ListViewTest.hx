@@ -134,6 +134,7 @@ class ListViewTest extends Test {
 		});
 		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}]);
 		this._listView.dataProvider = collection;
+		this._listView.itemToText = item -> item.text;
 		this._listView.validateNow();
 		Assert.equals(2, createCount);
 		Assert.equals(2, updateCount);

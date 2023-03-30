@@ -131,6 +131,7 @@ class TabBarTest extends Test {
 		});
 		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}]);
 		this._tabBar.dataProvider = collection;
+		this._tabBar.itemToText = item -> item.text;
 		this._tabBar.validateNow();
 		Assert.equals(2, createCount);
 		Assert.equals(2, updateCount);
