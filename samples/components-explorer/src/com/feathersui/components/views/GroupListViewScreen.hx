@@ -19,7 +19,7 @@ class GroupListViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var data = new ArrayHierarchicalCollection<Dynamic>([
+		var data:Array<ItemType> = [
 			{
 				text: "A",
 				children: [
@@ -147,14 +147,14 @@ class GroupListViewScreen extends Panel {
 					}
 				]
 			},
-		], (item:Dynamic) -> item.children);
+		];
 		this.groupListView = new GroupListView();
 		this.groupListView.variant = GroupListView.VARIANT_BORDERLESS;
-		this.groupListView.dataProvider = data;
-		this.groupListView.itemToText = (item) -> {
+		this.groupListView.dataProvider = new ArrayHierarchicalCollection(data, item -> item.children);
+		this.groupListView.itemToText = (item:ItemType) -> {
 			return item.text;
 		};
-		this.groupListView.itemToHeaderText = (item) -> {
+		this.groupListView.itemToHeaderText = (item:ItemType) -> {
 			return item.text;
 		};
 		this.groupListView.layoutData = AnchorLayoutData.fill();
@@ -182,3 +182,5 @@ class GroupListViewScreen extends Panel {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }
+
+private typedef ItemType = {text:String, ?children:Array<ItemType>};

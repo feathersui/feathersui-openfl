@@ -20,9 +20,7 @@ class TreeViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		this.treeView = new TreeView();
-		this.treeView.variant = TreeView.VARIANT_BORDERLESS;
-		this.treeView.dataProvider = new ArrayHierarchicalCollection<Dynamic>([
+		var data:Array<ItemType> = [
 			{
 				text: "Node 1",
 				children: [
@@ -54,8 +52,12 @@ class TreeViewScreen extends Panel {
 					{text: "Node 4E"}
 				]
 			}
-		], (item:Dynamic) -> item.children);
-		this.treeView.itemToText = (item) -> {
+		];
+
+		this.treeView = new TreeView();
+		this.treeView.variant = TreeView.VARIANT_BORDERLESS;
+		this.treeView.dataProvider = new ArrayHierarchicalCollection(data, item -> item.children);
+		this.treeView.itemToText = (item:ItemType) -> {
 			return item.text;
 		};
 		this.treeView.layoutData = AnchorLayoutData.fill();
@@ -88,3 +90,5 @@ class TreeViewScreen extends Panel {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }
+
+private typedef ItemType = {text:String, ?children:Array<ItemType>};
