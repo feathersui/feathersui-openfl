@@ -1,12 +1,12 @@
 package com.feathersui.components.views;
 
-import feathers.data.ArrayHierarchicalCollection;
 import feathers.controls.Button;
-import feathers.controls.TreeGridView;
-import feathers.controls.TreeGridViewColumn;
 import feathers.controls.Header;
 import feathers.controls.Panel;
+import feathers.controls.TreeGridView;
+import feathers.controls.TreeGridViewColumn;
 import feathers.data.ArrayCollection;
+import feathers.data.ArrayHierarchicalCollection;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
@@ -52,7 +52,7 @@ class TreeGridViewScreen extends Panel {
 					{item: "Broccoli", dept: "Produce", price: "2.99"},
 				]
 			},
-		], (item:Dynamic) -> return item.children);
+		], (item:Dynamic) -> item.children);
 		this.treeGridView.columns = new ArrayCollection([
 			new TreeGridViewColumn("Department", (data) -> data.dept),
 			new TreeGridViewColumn("Item", (data) -> data.item),
