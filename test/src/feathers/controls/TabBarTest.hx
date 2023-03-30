@@ -10,6 +10,7 @@ package feathers.controls;
 
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.data.ArrayCollection;
+import feathers.data.TabBarItemState;
 import feathers.layout.ILayoutIndexObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
@@ -111,6 +112,54 @@ class TabBarTest extends Test {
 		Assert.notNull(tab2);
 		Assert.isOfType(tab2, ToggleButton);
 		Assert.isTrue(cast(tab2, ToggleButton).enabled);
+	}
+
+	public function testTabRecycler():Void {
+		var createCount = 0;
+		var updateCount = 0;
+		var resetCount = 0;
+		var destroyCount = 0;
+		this._tabBar.tabRecycler = DisplayObjectRecycler.withFunction(() -> {
+			createCount++;
+			return new ToggleButton();
+		}, (target:ToggleButton, state:TabBarItemState) -> {
+			updateCount++;
+		}, (target:ToggleButton, state:TabBarItemState) -> {
+			resetCount++;
+		}, (target:ToggleButton) -> {
+			destroyCount++;
+		});
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.validateNow();
+		Assert.equals(2, createCount);
+		Assert.equals(2, updateCount);
+		Assert.equals(0, resetCount);
+		Assert.equals(0, destroyCount);
+		collection.removeAt(1);
+		this._tabBar.validateNow();
+		Assert.equals(2, createCount);
+		Assert.equals(2, updateCount);
+		Assert.equals(1, resetCount);
+		Assert.equals(1, destroyCount);
+		collection.add({text: "New"});
+		this._tabBar.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(3, updateCount);
+		Assert.equals(1, resetCount);
+		Assert.equals(1, destroyCount);
+		collection.set(1, {text: "New 2"});
+		this._tabBar.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(2, resetCount);
+		Assert.equals(1, destroyCount);
+		this._tabBar.dataProvider = null;
+		this._tabBar.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(4, resetCount);
+		Assert.equals(3, destroyCount);
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {

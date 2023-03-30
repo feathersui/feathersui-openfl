@@ -10,6 +10,7 @@ package feathers.controls;
 
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.data.ArrayCollection;
+import feathers.data.ButtonBarItemState;
 import feathers.layout.ILayoutIndexObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
@@ -110,6 +111,54 @@ class ButtonBarTest extends Test {
 		Assert.notNull(button2);
 		Assert.isOfType(button2, Button);
 		Assert.isTrue(cast(button2, Button).enabled);
+	}
+
+	public function testButtonRecycler():Void {
+		var createCount = 0;
+		var updateCount = 0;
+		var resetCount = 0;
+		var destroyCount = 0;
+		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withFunction(() -> {
+			createCount++;
+			return new Button();
+		}, (target:Button, state:ButtonBarItemState) -> {
+			updateCount++;
+		}, (target:Button, state:ButtonBarItemState) -> {
+			resetCount++;
+		}, (target:Button) -> {
+			destroyCount++;
+		});
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.validateNow();
+		Assert.equals(2, createCount);
+		Assert.equals(2, updateCount);
+		Assert.equals(0, resetCount);
+		Assert.equals(0, destroyCount);
+		collection.removeAt(1);
+		this._buttonBar.validateNow();
+		Assert.equals(2, createCount);
+		Assert.equals(2, updateCount);
+		Assert.equals(1, resetCount);
+		Assert.equals(1, destroyCount);
+		collection.add({text: "New"});
+		this._buttonBar.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(3, updateCount);
+		Assert.equals(1, resetCount);
+		Assert.equals(1, destroyCount);
+		collection.set(1, {text: "New 2"});
+		this._buttonBar.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(2, resetCount);
+		Assert.equals(1, destroyCount);
+		this._buttonBar.dataProvider = null;
+		this._buttonBar.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(4, resetCount);
+		Assert.equals(3, destroyCount);
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {

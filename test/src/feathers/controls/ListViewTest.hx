@@ -8,10 +8,11 @@
 
 package feathers.controls;
 
-import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
+import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.data.ArrayCollection;
+import feathers.data.ListViewItemState;
 import feathers.events.ScrollEvent;
 import feathers.layout.ILayoutIndexObject;
 import feathers.utils.DisplayObjectRecycler;
@@ -114,6 +115,54 @@ class ListViewTest extends Test {
 		Assert.notNull(itemRenderer2);
 		Assert.isOfType(itemRenderer2, ItemRenderer);
 		Assert.isTrue(cast(itemRenderer2, ItemRenderer).enabled);
+	}
+
+	public function testItemRendererRecycler():Void {
+		var createCount = 0;
+		var updateCount = 0;
+		var resetCount = 0;
+		var destroyCount = 0;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			createCount++;
+			return new ItemRenderer();
+		}, (target:ItemRenderer, state:ListViewItemState) -> {
+			updateCount++;
+		}, (target:ItemRenderer, state:ListViewItemState) -> {
+			resetCount++;
+		}, (target:ItemRenderer) -> {
+			destroyCount++;
+		});
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}]);
+		this._listView.dataProvider = collection;
+		this._listView.validateNow();
+		Assert.equals(2, createCount);
+		Assert.equals(2, updateCount);
+		Assert.equals(0, resetCount);
+		Assert.equals(0, destroyCount);
+		collection.removeAt(1);
+		this._listView.validateNow();
+		Assert.equals(2, createCount);
+		Assert.equals(2, updateCount);
+		Assert.equals(1, resetCount);
+		Assert.equals(1, destroyCount);
+		collection.add({text: "New"});
+		this._listView.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(3, updateCount);
+		Assert.equals(1, resetCount);
+		Assert.equals(1, destroyCount);
+		collection.set(1, {text: "New 2"});
+		this._listView.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(2, resetCount);
+		Assert.equals(1, destroyCount);
+		this._listView.dataProvider = null;
+		this._listView.validateNow();
+		Assert.equals(3, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(4, resetCount);
+		Assert.equals(3, destroyCount);
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {
