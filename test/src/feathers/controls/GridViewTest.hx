@@ -12,6 +12,7 @@ import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGridViewCellRenderer;
 import feathers.data.ArrayCollection;
+import feathers.data.GridViewCellState;
 import feathers.events.ScrollEvent;
 import feathers.layout.ILayoutIndexObject;
 import feathers.utils.DisplayObjectRecycler;
@@ -127,6 +128,56 @@ class GridViewTest extends Test {
 		Assert.equals("B2", cast(itemRenderer21, ItemRenderer).text);
 		var itemRendererNull = this._gridView.itemAndColumnToCellRenderer(null, columns.get(0));
 		Assert.isNull(itemRendererNull);
+	}
+
+	public function testCellRendererRecycler():Void {
+		var createCount = 0;
+		var updateCount = 0;
+		var resetCount = 0;
+		var destroyCount = 0;
+		this._gridView.cellRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			createCount++;
+			return new ItemRenderer();
+		}, (target:ItemRenderer, state:GridViewCellState) -> {
+			updateCount++;
+		}, (target:ItemRenderer, state:GridViewCellState) -> {
+			resetCount++;
+		}, (target:ItemRenderer) -> {
+			destroyCount++;
+		});
+		var collection = new ArrayCollection([{a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		var columns = new ArrayCollection([new GridViewColumn("A", data -> data.a), new GridViewColumn("B", data -> data.b)]);
+		this._gridView.dataProvider = collection;
+		this._gridView.columns = columns;
+		this._gridView.validateNow();
+		Assert.equals(4, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(0, resetCount);
+		Assert.equals(0, destroyCount);
+		collection.removeAt(1);
+		this._gridView.validateNow();
+		Assert.equals(4, createCount);
+		Assert.equals(4, updateCount);
+		Assert.equals(2, resetCount);
+		Assert.equals(2, destroyCount);
+		collection.add({a: "New A1", b: "New B1"});
+		this._gridView.validateNow();
+		Assert.equals(6, createCount);
+		Assert.equals(6, updateCount);
+		Assert.equals(2, resetCount);
+		Assert.equals(2, destroyCount);
+		collection.set(1, {a: "New A2", b: "New B2"});
+		this._gridView.validateNow();
+		Assert.equals(6, createCount);
+		Assert.equals(8, updateCount);
+		Assert.equals(2, resetCount);
+		Assert.equals(2, destroyCount);
+		this._gridView.dataProvider = null;
+		this._gridView.validateNow();
+		Assert.equals(6, createCount);
+		Assert.equals(8, updateCount);
+		Assert.equals(6, resetCount);
+		Assert.equals(6, destroyCount);
 	}
 
 	public function testValidateWithAutoPopulatedColumns():Void {
