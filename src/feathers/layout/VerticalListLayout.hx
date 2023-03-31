@@ -589,7 +589,12 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				if (cacheItem != null && cacheItem.itemHeight != itemHeight) {
 					cacheItem.itemHeight = itemHeight;
 					this._virtualCache[i] = cacheItem;
-					FeathersEvent.dispatch(this, Event.CHANGE);
+					// if the height matches the estimated height, no need to
+					// dispatch anything. if it doesn't match, that could affect
+					// the number of visible items, so dispatch Event.CHANGE.
+					if (itemHeight != virtualRowHeight) {
+						FeathersEvent.dispatch(this, Event.CHANGE);
+					}
 				}
 			}
 			positionY += itemHeight + adjustedGap;

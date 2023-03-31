@@ -585,7 +585,12 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 				if (cacheItem != null && cacheItem.itemWidth != itemWidth) {
 					cacheItem.itemWidth = itemWidth;
 					this._virtualCache[i] = cacheItem;
-					FeathersEvent.dispatch(this, Event.CHANGE);
+					// if the width matches the estimated width, no need to
+					// dispatch anything. if it doesn't match, that could affect
+					// the number of visible items, so dispatch Event.CHANGE.
+					if (itemWidth != virtualColumnWidth) {
+						FeathersEvent.dispatch(this, Event.CHANGE);
+					}
 				}
 			}
 			positionX += itemWidth + adjustedGap;
