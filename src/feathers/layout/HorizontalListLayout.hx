@@ -729,7 +729,16 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
-			return item.width;
+			var itemWidth = item.width;
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem != null && cacheItem.itemWidth != itemWidth) {
+					cacheItem.itemWidth = itemWidth;
+					this._virtualCache[i] = cacheItem;
+					FeathersEvent.dispatch(this, Event.CHANGE);
+				}
+			}
+			return itemWidth;
 		}
 		return 0.0;
 	}

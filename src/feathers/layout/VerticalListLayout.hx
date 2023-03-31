@@ -727,7 +727,16 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
-			return item.height;
+			var itemHeight = item.height;
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem != null && cacheItem.itemHeight != itemHeight) {
+					cacheItem.itemHeight = itemHeight;
+					this._virtualCache[i] = cacheItem;
+					FeathersEvent.dispatch(this, Event.CHANGE);
+				}
+			}
+			return itemHeight;
 		}
 		return 0.0;
 	}
