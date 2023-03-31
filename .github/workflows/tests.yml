@@ -46,8 +46,9 @@ jobs:
         haxelib dev feathersui $GITHUB_WORKSPACE
     - name: Run Tests
       working-directory: test
-      run: haxelib run openfl test neko
-      run: haxelib run openfl test neko -Dfeathersui_strict_set_invalid
+      run: |
+        haxelib run openfl test neko
+        haxelib run openfl test neko -Dfeathersui_strict_set_invalid
   test-hashlink:
     strategy:
       matrix:
