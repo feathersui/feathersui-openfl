@@ -162,6 +162,28 @@ class ValidatingSprite extends Sprite implements IValidating {
 		this._ignoreInvalidationFlags = oldIgnoreValidation;
 	}
 
+	@:noCompletion
+	private var _setInvalidationFlagsOnly = false;
+
+	/**
+		Calls a function that temporarily limits `setInvalid()` calls to
+		setting invalidation flags only, and the control will not be added to
+		the validation queue. In other words, `setInvalid()` calls will work
+		similarly to `setInvalidationFlag()` instead.
+
+		Typically, this method should be called only during validation. If
+		called outside of `update()`, the component's validation may be delayed
+		until a future call to `setInvalid()`.
+
+		@since 1.0.0
+	**/
+	public function runWithInvalidationFlagsOnly(callback:() -> Void):Void {
+		var oldValue = this._setInvalidationFlagsOnly;
+		this._setInvalidationFlagsOnly = true;
+		callback();
+		this._setInvalidationFlagsOnly = oldValue;
+	}
+
 	/**
 		Call this function to tell the UI control that a redraw is pending.
 		The redraw will happen immediately before OpenFL renders the UI
@@ -186,6 +208,14 @@ class ValidatingSprite extends Sprite implements IValidating {
 	**/
 	public function setInvalid(?flag:InvalidationFlag):Void {
 		if (this._ignoreInvalidationFlags) {
+			return;
+		}
+		if (this._setInvalidationFlagsOnly) {
+			if (flag == null) {
+				this._allInvalid = true;
+			} else {
+				this.setInvalidationFlag(flag);
+			}
 			return;
 		}
 		var alreadyInvalid = this.isInvalid();
