@@ -461,8 +461,18 @@ class Alert extends Panel {
 		throw new IllegalOperationError("Alert header must be created with headerFactory");
 	}
 
+	@:noCompletion
+	private function _set_header(value:DisplayObject):DisplayObject {
+		return super.header = value;
+	}
+
 	override private function set_footer(value:DisplayObject):DisplayObject {
 		throw new IllegalOperationError("Alert footer must be created with buttonBarFactory");
+	}
+
+	@:noCompletion
+	private function _set_footer(value:DisplayObject):DisplayObject {
+		return super.footer = value;
 	}
 
 	private function initializeAlertTheme():Void {
@@ -531,7 +541,9 @@ class Alert extends Panel {
 			}
 			this._oldButtonBarFactory = null;
 			this.buttonBar = null;
-			super.footer = null;
+			this.runWithInvalidationFlagsOnly(() -> {
+				this._set_footer(null);
+			});
 		}
 		var factory = this._buttonBarFactory != null ? this._buttonBarFactory : defaultButtonBarFactory;
 		this._oldButtonBarFactory = factory;
@@ -540,7 +552,9 @@ class Alert extends Panel {
 			this.buttonBar.variant = this.customButtonBarVariant != null ? this.customButtonBarVariant : Alert.CHILD_VARIANT_BUTTON_BAR;
 		}
 		this.buttonBar.addEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
-		super.footer = this.buttonBar;
+		this.runWithInvalidationFlagsOnly(() -> {
+			this._set_footer(this.buttonBar);
+		});
 	}
 
 	private function createHeader():Void {
@@ -550,7 +564,9 @@ class Alert extends Panel {
 			}
 			this._oldHeaderFactory = null;
 			this.alertHeader = null;
-			super.header = null;
+			this.runWithInvalidationFlagsOnly(() -> {
+				this._set_header(null);
+			});
 		}
 		var factory = this._headerFactory != null ? this._headerFactory : defaultHeaderFactory;
 		this._oldHeaderFactory = factory;
@@ -558,7 +574,9 @@ class Alert extends Panel {
 		if (this.alertHeader.variant == null) {
 			this.alertHeader.variant = this.customHeaderVariant != null ? this.customHeaderVariant : Alert.CHILD_VARIANT_HEADER;
 		}
-		super.header = this.alertHeader;
+		this.runWithInvalidationFlagsOnly(() -> {
+			this._set_header(this.alertHeader);
+		});
 	}
 
 	private function createMessageLabel():Void {
