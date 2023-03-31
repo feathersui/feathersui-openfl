@@ -300,12 +300,38 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	override private function update():Void {
 		this.refreshLayoutMeasurements();
 		this.refreshLayoutProperties();
+		#if feathersui_strict_set_invalid
+		this.runWithInvalidationFlagsOnly(() -> {
+			var loopCount = 0;
+			do {
+				if (loopCount == 2) {
+					// allow one free invalidation caused by the layout
+					// dispatching Event.CHANGE
+					// this ensures that virtual items get measured properly
+					#if feathersui_strict_set_invalid
+					throw new openfl.errors.IllegalOperationError("feathersui_strict_set_invalid requires no calls to setInvalid() during update()");
+					#end
+					this._validationQueue.addControl(this);
+					return;
+				}
+				this._invalidationFlags.clear();
+				this._allInvalid = false;
+				this.refreshLayout();
+				loopCount++;
+			} while (this.isInvalid());
+		});
+		#else
+		this.refreshLayout();
+		#end
+		this.handleLayoutResult();
+	}
+
+	private function refreshLayout():Void {
 		this.refreshChildren(this._layoutItems);
 		this._layoutResult.reset();
 		if (this._layout != null) {
 			this._layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
 		}
-		this.handleLayoutResult();
 	}
 
 	private function refreshLayoutProperties():Void {
