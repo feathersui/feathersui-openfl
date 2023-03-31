@@ -260,7 +260,11 @@ class LayoutGroup extends FeathersControl {
 		if ((child is ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler, false, 0, true);
 		}
-		this.setInvalid(LAYOUT);
+		if (this._ignoreChangesButSetFlags) {
+			this.setInvalidationFlag(LAYOUT);
+		} else {
+			this.setInvalid(LAYOUT);
+		}
 		return result;
 	}
 
@@ -290,7 +294,11 @@ class LayoutGroup extends FeathersControl {
 		if ((child is ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
 		}
-		this.setInvalid(LAYOUT);
+		if (this._ignoreChangesButSetFlags) {
+			this.setInvalidationFlag(LAYOUT);
+		} else {
+			this.setInvalid(LAYOUT);
+		}
 		return result;
 	}
 
@@ -365,7 +373,11 @@ class LayoutGroup extends FeathersControl {
 		this._setChildIndex(child, this.getPrivateIndexForPublicIndex(index));
 		this.items.remove(child);
 		this.items.insert(index, child);
-		this.setInvalid(LAYOUT);
+		if (this._ignoreChangesButSetFlags) {
+			this.setInvalidationFlag(LAYOUT);
+		} else {
+			this.setInvalid(LAYOUT);
+		}
 	}
 
 	private function _setChildIndex(child:DisplayObject, index:Int):Void {
