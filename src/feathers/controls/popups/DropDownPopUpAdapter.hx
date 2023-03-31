@@ -134,6 +134,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	private var _prevOriginY:Float;
 
 	private var _contentMeasurements:Measurements = new Measurements();
+	private var _ignoreContentResizing:Bool = false;
+	private var _ignoreOriginResizing:Bool = false;
 
 	/**
 		@see `feathers.controls.popups.IPopUpAdapter.open`
@@ -164,7 +166,10 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		}
 
 		if ((this.content is IValidating)) {
+			var oldIgnoreContentResizing = this._ignoreContentResizing;
+			this._ignoreContentResizing = true;
 			cast(this.content, IValidating).validateNow();
+			this._ignoreContentResizing = oldIgnoreContentResizing;
 		}
 		this._contentMeasurements.save(this.content);
 
@@ -210,7 +215,10 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 	private function layout():Void {
 		if ((this.origin is IValidating)) {
+			var oldIgnoreOriginResizing = this._ignoreOriginResizing;
+			this._ignoreOriginResizing = true;
 			cast(this.origin, IValidating).validateNow();
+			this._ignoreOriginResizing = oldIgnoreOriginResizing;
 		}
 
 		var popUpRoot = PopUpManager.forStage(this._stage).root;
@@ -236,12 +244,15 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 				hasSetMinWidth = true;
 			}
 		}
+		var oldIgnoreContentResizing = this._ignoreContentResizing;
+		this._ignoreContentResizing = true;
 		if ((this.content is IValidating)) {
 			cast(this.content, IValidating).validateNow();
 		}
 		if (this._fitContentToOriginWidth && !hasSetMinWidth && this.content.width < originWidth) {
 			this.content.width = originWidth;
 		}
+		this._ignoreContentResizing = oldIgnoreContentResizing;
 
 		var stageTopLeft = popUpRoot.globalToLocal(new Point());
 		var stageBottomRight = popUpRoot.globalToLocal(new Point(this._stage.stageWidth, this._stage.stageHeight));
@@ -286,14 +297,14 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	}
 
 	private function dropDownPopUpAdapter_content_resizeHandler(event:Event):Void {
-		if (!this.active) {
+		if (!this.active || this._ignoreContentResizing) {
 			return;
 		}
 		this.layout();
 	}
 
 	private function dropDownPopUpAdapter_origin_resizeHandler(event:Event):Void {
-		if (!this.active) {
+		if (!this.active || this._ignoreOriginResizing) {
 			return;
 		}
 		this.layout();
