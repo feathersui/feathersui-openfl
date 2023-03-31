@@ -191,6 +191,9 @@ class ValidatingSprite extends Sprite implements IValidating {
 		var alreadyInvalid = this.isInvalid();
 		var alreadyDelayedInvalid = false;
 		if (this._validating) {
+			#if feathersui_strict_set_invalid
+			throw new openfl.errors.IllegalOperationError("feathersui_strict_set_invalid requires no calls to setInvalid() during update()");
+			#end
 			for (otherFlag in this._delayedInvalidationFlags.keys()) {
 				alreadyDelayedInvalid = true;
 				break;
