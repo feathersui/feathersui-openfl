@@ -797,7 +797,10 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		}
 
 		if ((this._currentIcon is IValidating)) {
+			var oldIgnoreIconResizes = this._ignoreIconResizes;
+			this._ignoreIconResizes = true;
 			cast(this._currentIcon, IValidating).validateNow();
+			this._ignoreIconResizes = oldIgnoreIconResizes;
 		}
 
 		var newWidth = this.explicitWidth;

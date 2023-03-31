@@ -877,7 +877,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 
 		if ((this._currentIcon is IValidating)) {
+			var oldIgnoreIconResizes = this._ignoreIconResizes;
+			this._ignoreIconResizes = true;
 			cast(this._currentIcon, IValidating).validateNow();
+			this._ignoreIconResizes = oldIgnoreIconResizes;
 		}
 
 		var newWidth = this.explicitWidth;
