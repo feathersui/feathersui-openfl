@@ -161,7 +161,12 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		}
 		if (this._currentScaleManager != null) {
 			this._currentScaleManager.addEventListener(Event.CHANGE, application_scaleManager_changeHandler, false, 0, true);
-			this._currentScaleManager.target = this;
+			this.runWithInvalidationFlagsOnly(() -> {
+				// this will probably result in a call to refreshDimensions(),
+				// which will set properties that call setInvalid(), but it's
+				// okay to simply set the flags instead.
+				this._currentScaleManager.target = this;
+			});
 		}
 	}
 
