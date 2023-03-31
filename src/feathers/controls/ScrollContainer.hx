@@ -257,7 +257,11 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		if ((child is ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler, false, 0, true);
 		}
-		this.setInvalid(LAYOUT);
+		if (this._ignoreChangesButSetFlags) {
+			this.setInvalidationFlag(LAYOUT);
+		} else {
+			this.setInvalid(LAYOUT);
+		}
 		return result;
 	}
 
@@ -276,7 +280,11 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		if ((child is ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler);
 		}
-		this.setInvalid(LAYOUT);
+		if (this._ignoreChangesButSetFlags) {
+			this.setInvalidationFlag(LAYOUT);
+		} else {
+			this.setInvalid(LAYOUT);
+		}
 		return result;
 	}
 
