@@ -541,7 +541,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 					if (oldIndex != -1 && oldIndex != this._selectedIndex) {
 						transition = (oldIndex < this._selectedIndex) ? this.nextTransition : this.previousTransition;
 					}
-					this.showItemInternal(this._selectedItem.internalID, transition);
+					this.runWithInvalidationFlagsOnly(() -> {
+						this.showItemInternal(this._selectedItem.internalID, transition);
+					});
 				}
 			}
 		}
