@@ -1264,7 +1264,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			newColumns = new ArrayCollection();
 		}
 		// use the setter
-		this.columns = newColumns;
+		this.runWithInvalidationFlagsOnly(() -> {
+			this.columns = newColumns;
+		});
 		this._autoPopulatedColumns = newColumns;
 	}
 

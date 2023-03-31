@@ -1450,7 +1450,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			newColumns = new ArrayCollection();
 		}
 		// use the setter
-		this.columns = newColumns;
+		this.runWithInvalidationFlagsOnly(() -> {
+			this.columns = newColumns;
+		});
 		this._autoPopulatedColumns = newColumns;
 	}
 
