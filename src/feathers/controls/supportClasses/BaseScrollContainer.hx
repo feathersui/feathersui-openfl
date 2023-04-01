@@ -1310,18 +1310,25 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		// in fixed mode, if we determine that scrolling is required, we
 		// remember the offsets for later. if scrolling is not needed, then
 		// we will ignore the offsets from here forward
-		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && this.scrollPolicyX != OFF, useActualBounds);
-		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars && this.showScrollBars && this.scrollPolicyY != OFF, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars, useActualBounds);
+		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars, useActualBounds);
 		// we need to double check the horizontal scroll bar if the scroll
 		// bars are fixed because adding a vertical scroll bar may require a
 		// horizontal one too.
 		if (this.fixedScrollBars && this.showScrollBarY && !this.showScrollBarX) {
-			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars && this.showScrollBars && this.scrollPolicyX != OFF, useActualBounds);
+			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars, useActualBounds);
 		}
 	}
 
 	private function calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars:Bool, useActualBounds:Bool):Void {
-		if (this.scrollBarX != null && (this.measureViewPort || useActualBounds)) {
+		this.showScrollBarX = false;
+		if (!this.showScrollBars || this.scrollPolicyX == OFF || this.scrollBarX == null) {
+			// the scroll bar is never displayed in any of these cases
+			// (even when "forced" for measurement)
+			return;
+		}
+		var needsScrollBarX = forceScrollBars || this.scrollPolicyX == ON;
+		if (!needsScrollBarX && this.scrollPolicyX == AUTO && (this.measureViewPort || useActualBounds)) {
 			var availableWidth = useActualBounds ? this.actualWidth : this.explicitWidth;
 			if (availableWidth != null) {
 				availableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
@@ -1329,47 +1336,53 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 					availableWidth = 0.0;
 				}
 			}
-			if (!useActualBounds && !forceScrollBars && availableWidth == null) {
+			if (availableWidth == null && !useActualBounds) {
 				// even if explicitWidth is null, the view port might measure
 				// a view port width smaller than its content width
 				availableWidth = this._viewPort.visibleWidth;
 			}
-			var maxAvailableWidth = this.explicitMaxWidth;
-			if (maxAvailableWidth != null) {
-				maxAvailableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
-				if (maxAvailableWidth < 0.0) {
-					maxAvailableWidth = 0.0;
-				}
-			}
-			if (!this.showScrollBars) {
-				this.showScrollBarX = false;
-				return;
-			}
 			var totalContentWidth = this._viewPort.width;
-			if (forceScrollBars
-				|| this._scrollPolicyX == ON
-				|| (((totalContentWidth > availableWidth && !MathUtil.fuzzyEquals(totalContentWidth, availableWidth))
-					|| (maxAvailableWidth != null && totalContentWidth > maxAvailableWidth)
-					&& !MathUtil.fuzzyEquals(totalContentWidth, maxAvailableWidth))
-					&& this._scrollPolicyX != OFF)) {
-				this.showScrollBarX = true;
-				if (this.fixedScrollBars) {
-					if (this.scrollBarXPosition == TOP) {
-						this.topViewPortOffset += this.scrollBarX.height;
-					} else {
-						this.bottomViewPortOffset += this.scrollBarX.height;
+			needsScrollBarX = availableWidth != null
+				&& totalContentWidth > availableWidth
+				&& !MathUtil.fuzzyEquals(totalContentWidth, availableWidth);
+			if (!needsScrollBarX) {
+				var maxAvailableWidth = this.explicitMaxWidth;
+				if (maxAvailableWidth != null) {
+					maxAvailableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
+					if (maxAvailableWidth < 0.0) {
+						maxAvailableWidth = 0.0;
 					}
 				}
-			} else {
-				this.showScrollBarX = false;
+				needsScrollBarX = maxAvailableWidth != null
+					&& totalContentWidth > maxAvailableWidth
+					&& !MathUtil.fuzzyEquals(totalContentWidth, maxAvailableWidth);
 			}
+		}
+		if (!needsScrollBarX) {
+			return;
+		}
+		this.showScrollBarX = true;
+		if (!this.fixedScrollBars) {
+			// offsets aren't affected if the scroll bars are not fixed
+			// because the content appears under the floating scroll bars
+			return;
+		}
+		if (this.scrollBarXPosition == TOP) {
+			this.topViewPortOffset += this.scrollBarX.height;
 		} else {
-			this.showScrollBarX = false;
+			this.bottomViewPortOffset += this.scrollBarX.height;
 		}
 	}
 
 	private function calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars:Bool, useActualBounds:Bool):Void {
-		if (this.scrollBarY != null && (this.measureViewPort || useActualBounds)) {
+		this.showScrollBarY = false;
+		if (!this.showScrollBars || this.scrollPolicyY == OFF || this.scrollBarY == null) {
+			// the scroll bar is never displayed in any of these cases
+			// (even when "forced" for measurement)
+			return;
+		}
+		var needsScrollBarY = forceScrollBars || this.scrollPolicyY == ON;
+		if (!needsScrollBarY && this.scrollPolicyY == AUTO && (this.measureViewPort || useActualBounds)) {
 			var availableHeight = useActualBounds ? this.actualHeight : this.explicitHeight;
 			if (availableHeight != null) {
 				availableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
@@ -1377,43 +1390,41 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 					availableHeight = 0.0;
 				}
 			}
-			if (!useActualBounds && !forceScrollBars && availableHeight == null) {
+			if (availableHeight == null && !useActualBounds) {
 				// even if explicitHeight is null, the view port might measure
 				// a view port height smaller than its content height
 				availableHeight = this._viewPort.visibleHeight;
 			}
-			var maxAvailableHeight = this.explicitMaxHeight;
-			if (maxAvailableHeight != null) {
-				maxAvailableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
-				if (maxAvailableHeight < 0.0) {
-					maxAvailableHeight = 0.0;
-				}
-			}
-			if (!this.showScrollBars) {
-				this.showScrollBarY = false;
-				return;
-			}
 			var totalContentHeight = this._viewPort.height;
-			if (forceScrollBars
-				|| this._scrollPolicyY == ON
-				|| (((totalContentHeight > availableHeight && !MathUtil.fuzzyEquals(totalContentHeight, availableHeight))
-					|| (maxAvailableHeight != null
-						&& totalContentHeight > maxAvailableHeight
-						&& !MathUtil.fuzzyEquals(totalContentHeight, maxAvailableHeight)))
-					&& this._scrollPolicyY != OFF)) {
-				this.showScrollBarY = true;
-				if (this.fixedScrollBars) {
-					if (this.scrollBarYPosition == LEFT) {
-						this.leftViewPortOffset += this.scrollBarY.width;
-					} else {
-						this.rightViewPortOffset += this.scrollBarY.width;
+			needsScrollBarY = availableHeight != null
+				&& totalContentHeight > availableHeight
+				&& !MathUtil.fuzzyEquals(totalContentHeight, availableHeight);
+			if (!needsScrollBarY) {
+				var maxAvailableHeight = this.explicitMaxHeight;
+				if (maxAvailableHeight != null) {
+					maxAvailableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
+					if (maxAvailableHeight < 0.0) {
+						maxAvailableHeight = 0.0;
 					}
 				}
-			} else {
-				this.showScrollBarY = false;
+				needsScrollBarY = maxAvailableHeight != null
+					&& totalContentHeight > maxAvailableHeight
+					&& !MathUtil.fuzzyEquals(totalContentHeight, maxAvailableHeight);
 			}
+		}
+		if (!needsScrollBarY) {
+			return;
+		}
+		this.showScrollBarY = true;
+		if (!this.fixedScrollBars) {
+			// offsets aren't affected if the scroll bars are not fixed
+			// because the content appears under the floating scroll bars
+			return;
+		}
+		if (this.scrollBarYPosition == LEFT) {
+			this.leftViewPortOffset += this.scrollBarY.width;
 		} else {
-			this.showScrollBarY = false;
+			this.rightViewPortOffset += this.scrollBarY.width;
 		}
 	}
 
