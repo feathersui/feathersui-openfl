@@ -223,11 +223,11 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 			return this._layout;
 		}
 		if (this._layout != null) {
-			this._layout.removeEventListener(Event.CHANGE, layout_changeHandler);
+			this._layout.removeEventListener(Event.CHANGE, advancedLayoutViewPort_layout_changeHandler);
 		}
 		this._layout = value;
 		if (this._layout != null) {
-			this._layout.addEventListener(Event.CHANGE, layout_changeHandler);
+			this._layout.addEventListener(Event.CHANGE, advancedLayoutViewPort_layout_changeHandler);
 		}
 		this.setInvalid(LAYOUT);
 		return this._layout;
@@ -303,9 +303,9 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	override private function update():Void {
 		this.refreshLayoutMeasurements();
 		this.refreshLayoutProperties();
-		#if feathersui_strict_set_invalid
-		// allow the layout to dispatch Event.CHANGE when virtual item sizing,
-		// or other factors, might cause the number of visible items to change
+		// allow the layout to dispatch Event.CHANGE for virtual item cache,
+		// which may change the number of visible items. in that case, the
+		// layout result won't be accurate unless the layout gets run again.
 		this.runWithInvalidationFlagsOnly(() -> {
 			this._layoutActive = true;
 			var loopCount = 0;
@@ -317,20 +317,13 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 				loopCount++;
 				if (loopCount >= 10) {
 					this._layoutActive = false;
-					// if it still fails after ten tries, we've probably entered
-					// an infinite loop. it could be things like rounding errors,
-					// layout issues, or custom item renderers that don't measure
-					// correctly
-					throw new openfl.errors.IllegalOperationError(Type.getClassName(Type.getClass(this.parent))
-						+
-						" stuck in an infinite loop during measurement and validation. This may be an issue with the layout or children, such as custom item renderers.");
+					var parentClassName = Type.getClassName(Type.getClass(this.parent));
+					var layoutClassName = this._layout != null ? Type.getClassName(Type.getClass(this._layout)) : "The layout";
+					throw new openfl.errors.IllegalOperationError('${parentClassName} is stuck in an infinite loop during layout. ${layoutClassName} may be dispatching Event.CHANGE too often.');
 				}
 			} while (this._layoutChanged);
 			this._layoutActive = false;
 		});
-		#else
-		this.refreshLayout();
-		#end
 	}
 
 	private function refreshLayout():Void {
@@ -409,7 +402,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		}
 	}
 
-	private function layout_changeHandler(event:Event):Void {
+	private function advancedLayoutViewPort_layout_changeHandler(event:Event):Void {
 		if (this._ignoreLayoutChanges) {
 			return;
 		}
