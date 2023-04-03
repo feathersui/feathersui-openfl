@@ -35,7 +35,6 @@ import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
-import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
@@ -973,10 +972,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private var _ignoreScrollerChanges = false;
 	private var _settingScrollerDimensions = false;
-	private var _viewPortBoundsChanged = false;
 	private var _ignoreViewPortResizing = false;
-	private var _previousViewPortWidth = 0.0;
-	private var _previousViewPortHeight = 0.0;
 
 	private var measureViewPort(get, never):Bool;
 
@@ -1245,59 +1241,85 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 
-		// it's possible that the view port's size from the previous update is
-		// no longer appropriate for calculating offsets (example: when the
-		// explicit size of the container is made smaller between updates).
-		// when this happens, the container may display the scroll bars when
-		// they're not actually required.
-		// calling refreshViewPortBoundsForMeasurement() before the loop will
-		// ensure that the view port size is initialized to a valid range.
+		this.resetViewPortOffsets();
+		this.calculateViewPortOffsets(false, false);
 		this.refreshViewPortBoundsForMeasurement();
-		var loopCount = 0;
-		do {
-			this._viewPortBoundsChanged = false;
-			// if we don't need to do any measurement, we can skip
-			// this stuff and improve performance
-			if (this.measureViewPort) {
-				this.resetViewPortOffsets();
-				this.calculateViewPortOffsets(true, false);
+		if (this.scrollPolicyX == AUTO) {
+			var oldShowScrollBarX = this.showScrollBarX;
+			this.calculateViewPortOffsetsForFixedScrollBarX(false);
+			if (this.fixedScrollBars && this.showScrollBarX != oldShowScrollBarX) {
 				this.refreshViewPortBoundsForMeasurement();
 			}
-			this.resetViewPortOffsets();
-			this.calculateViewPortOffsets(false, false);
-
-			this.measure();
-
-			// just in case measure() is overridden, we need to call
-			// this again and use actualWidth/Height instead of
-			// explicitWidth/Height.
-			this.resetViewPortOffsets();
-			this.calculateViewPortOffsets(false, true);
-
-			this.refreshViewPortBoundsForLayout();
-
-			loopCount++;
-			if (loopCount >= 10) {
-				// if it still fails after ten tries, we've probably entered
-				// an infinite loop. it could be things like rounding errors,
-				// layout issues, or custom item renderers that don't measure
-				// correctly
-				throw new IllegalOperationError(Type.getClassName(Type.getClass(this))
-					+
-					" stuck in an infinite loop during measurement and validation. This may be an issue with the layout or children, such as custom item renderers.");
+		}
+		if (this.scrollPolicyY == AUTO) {
+			var oldShowScrollBarY = this.showScrollBarY;
+			this.calculateViewPortOffsetsForFixedScrollBarY(false);
+			if (this.fixedScrollBars && this.showScrollBarY != oldShowScrollBarY) {
+				this.refreshViewPortBoundsForMeasurement();
 			}
-		} while (this._viewPortBoundsChanged);
+		}
+		if (this.fixedScrollBars && !this.showScrollBarX && this.showScrollBarY && this.scrollPolicyX == AUTO && this.scrollPolicyY == AUTO) {
+			var oldShowScrollBarX = this.showScrollBarX;
+			this.calculateViewPortOffsetsForFixedScrollBarX(false);
+			if (this.showScrollBarX != oldShowScrollBarX) {
+				this.refreshViewPortBoundsForMeasurement();
+			}
+		}
 
-		this._previousViewPortWidth = this._viewPort.width;
-		this._previousViewPortHeight = this._viewPort.height;
+		var oldSettingScrollerDimensions = this._settingScrollerDimensions;
+		this._settingScrollerDimensions = true;
+		this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
+		this._settingScrollerDimensions = oldSettingScrollerDimensions;
+
+		this.measure();
+
+		this.resetViewPortOffsets();
+		this.calculateViewPortOffsets(false, true);
+		this.refreshViewPortBoundsForLayout();
+		if (this.scrollPolicyX == AUTO) {
+			var oldShowScrollBarX = this.showScrollBarX;
+			this.calculateViewPortOffsetsForFixedScrollBarX(true);
+			if (this.fixedScrollBars && this.showScrollBarX != oldShowScrollBarX) {
+				this.refreshViewPortBoundsForLayout();
+			}
+		}
+		if (this.scrollPolicyY == AUTO) {
+			var oldShowScrollBarY = this.showScrollBarY;
+			this.calculateViewPortOffsetsForFixedScrollBarY(true);
+			if (this.fixedScrollBars && this.showScrollBarY != oldShowScrollBarY) {
+				this.refreshViewPortBoundsForLayout();
+			}
+		}
+		if (this.fixedScrollBars && !this.showScrollBarX && this.showScrollBarY && this.scrollPolicyX == AUTO && this.scrollPolicyY == AUTO) {
+			var oldShowScrollBarX = this.showScrollBarX;
+			this.calculateViewPortOffsetsForFixedScrollBarX(true);
+			if (this.showScrollBarX != oldShowScrollBarX) {
+				this.refreshViewPortBoundsForLayout();
+			}
+		}
+
+		var oldSettingScrollerDimensions = this._settingScrollerDimensions;
+		this._settingScrollerDimensions = true;
+		this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
+		this._settingScrollerDimensions = oldSettingScrollerDimensions;
+
 		this.restrictScrollAfterRefreshViewPort();
 	}
 
 	private function resetViewPortOffsets():Void {
-		this.topViewPortOffset = 0.0;
-		this.rightViewPortOffset = 0.0;
-		this.bottomViewPortOffset = 0.0;
-		this.leftViewPortOffset = 0.0;
+		// if scrolling was already required from a previous update, chances are
+		// that it will be required in this update. default to keeping it the
+		// same because that's much better for performance. in the uncommon case
+		// where this assumption is incorrect, it will be fixed during view port
+		// measurement.
+		this.showScrollBarX = this.showScrollBars
+			&& (this._scrollPolicyX == ON || (this._scrollPolicyX == AUTO && this.scroller.minScrollX != this.scroller.maxScrollX));
+		this.showScrollBarY = this.showScrollBars
+			&& (this._scrollPolicyX == ON || (this._scrollPolicyY == AUTO && this.scroller.minScrollY != this.scroller.maxScrollY));
+		this.topViewPortOffset = (this.fixedScrollBars && this.showScrollBarX && this.scrollBarXPosition == TOP) ? this.scrollBarX.height : 0.0;
+		this.bottomViewPortOffset = (this.fixedScrollBars && this.showScrollBarX && this.scrollBarXPosition == BOTTOM) ? this.scrollBarX.height : 0.0;
+		this.leftViewPortOffset = (this.fixedScrollBars && this.showScrollBarY && this.scrollBarYPosition == LEFT) ? this.scrollBarY.width : 0.0;
+		this.rightViewPortOffset = (this.fixedScrollBars && this.showScrollBarY && this.scrollBarYPosition == RIGHT) ? this.scrollBarY.width : 0.0;
 		this.chromeMeasuredWidth = 0.0;
 		this.chromeMeasuredMinWidth = 0.0;
 		this.chromeMeasuredMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
@@ -1306,125 +1328,121 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.chromeMeasuredMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 	}
 
-	private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
-		// in fixed mode, if we determine that scrolling is required, we
-		// remember the offsets for later. if scrolling is not needed, then
-		// we will ignore the offsets from here forward
-		this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars, useActualBounds);
-		this.calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars, useActualBounds);
-		// we need to double check the horizontal scroll bar if the scroll
-		// bars are fixed because adding a vertical scroll bar may require a
-		// horizontal one too.
-		if (this.fixedScrollBars && this.showScrollBarY && !this.showScrollBarX) {
-			this.calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars, useActualBounds);
-		}
-	}
+	private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {}
 
-	private function calculateViewPortOffsetsForFixedScrollBarX(forceScrollBars:Bool, useActualBounds:Bool):Void {
-		this.showScrollBarX = false;
-		if (!this.showScrollBars || this.scrollPolicyX == OFF || this.scrollBarX == null) {
-			// the scroll bar is never displayed in any of these cases
-			// (even when "forced" for measurement)
+	private function calculateViewPortOffsetsForFixedScrollBarX(useActualBounds:Bool):Void {
+		if (this.scrollBarX == null) {
 			return;
 		}
-		var needsScrollBarX = forceScrollBars || this.scrollPolicyX == ON;
-		if (!needsScrollBarX && this.scrollPolicyX == AUTO && (this.measureViewPort || useActualBounds)) {
-			var availableWidth = useActualBounds ? this.actualWidth : this.explicitWidth;
-			if (availableWidth != null) {
-				availableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
-				if (availableWidth < 0.0) {
-					availableWidth = 0.0;
-				}
-			}
-			if (availableWidth == null && !useActualBounds) {
-				// even if explicitWidth is null, the view port might measure
-				// a view port width smaller than its content width
-				availableWidth = this._viewPort.visibleWidth;
-			}
-			var totalContentWidth = this._viewPort.width;
-			needsScrollBarX = availableWidth != null
-				&& totalContentWidth > availableWidth
-				&& !MathUtil.fuzzyEquals(totalContentWidth, availableWidth);
-			if (!needsScrollBarX) {
-				var maxAvailableWidth = this.explicitMaxWidth;
-				if (maxAvailableWidth != null) {
-					maxAvailableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
-					if (maxAvailableWidth < 0.0) {
-						maxAvailableWidth = 0.0;
+		var newShowScrollBarX = false;
+		if (this.showScrollBars && this.scrollPolicyX != OFF) {
+			newShowScrollBarX = this.scrollPolicyX == ON;
+			if (!newShowScrollBarX && this.scrollPolicyX == AUTO) {
+				var availableWidth = useActualBounds ? this.actualWidth : this.explicitWidth;
+				if (availableWidth != null) {
+					availableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
+					if (availableWidth < 0.0) {
+						availableWidth = 0.0;
 					}
 				}
-				needsScrollBarX = maxAvailableWidth != null
-					&& totalContentWidth > maxAvailableWidth
-					&& !MathUtil.fuzzyEquals(totalContentWidth, maxAvailableWidth);
+				if (availableWidth == null && !useActualBounds) {
+					// even if explicitWidth is null, the view port might measure
+					// a view port width smaller than its content width
+					availableWidth = this._viewPort.visibleWidth;
+				}
+				var totalContentWidth = this._viewPort.width;
+				newShowScrollBarX = availableWidth != null
+					&& totalContentWidth > availableWidth
+					&& !MathUtil.fuzzyEquals(totalContentWidth, availableWidth);
+				if (!newShowScrollBarX) {
+					var maxAvailableWidth = this.explicitMaxWidth;
+					if (maxAvailableWidth != null) {
+						maxAvailableWidth -= (this.paddingLeft + this.paddingRight + this.leftViewPortOffset + this.rightViewPortOffset);
+						if (maxAvailableWidth < 0.0) {
+							maxAvailableWidth = 0.0;
+						}
+					}
+					newShowScrollBarX = maxAvailableWidth != null
+						&& totalContentWidth > maxAvailableWidth
+						&& !MathUtil.fuzzyEquals(totalContentWidth, maxAvailableWidth);
+				}
 			}
 		}
-		if (!needsScrollBarX) {
+		if (this.showScrollBarX == newShowScrollBarX) {
 			return;
 		}
-		this.showScrollBarX = true;
+		this.showScrollBarX = newShowScrollBarX;
 		if (!this.fixedScrollBars) {
 			// offsets aren't affected if the scroll bars are not fixed
 			// because the content appears under the floating scroll bars
 			return;
+		}
+		var offset = this.scrollBarX.height;
+		if (!this.showScrollBarX) {
+			offset = -offset;
 		}
 		if (this.scrollBarXPosition == TOP) {
-			this.topViewPortOffset += this.scrollBarX.height;
+			this.topViewPortOffset += offset;
 		} else {
-			this.bottomViewPortOffset += this.scrollBarX.height;
+			this.bottomViewPortOffset += offset;
 		}
 	}
 
-	private function calculateViewPortOffsetsForFixedScrollBarY(forceScrollBars:Bool, useActualBounds:Bool):Void {
-		this.showScrollBarY = false;
-		if (!this.showScrollBars || this.scrollPolicyY == OFF || this.scrollBarY == null) {
-			// the scroll bar is never displayed in any of these cases
-			// (even when "forced" for measurement)
+	private function calculateViewPortOffsetsForFixedScrollBarY(useActualBounds:Bool):Void {
+		if (this.scrollBarY == null) {
 			return;
 		}
-		var needsScrollBarY = forceScrollBars || this.scrollPolicyY == ON;
-		if (!needsScrollBarY && this.scrollPolicyY == AUTO && (this.measureViewPort || useActualBounds)) {
-			var availableHeight = useActualBounds ? this.actualHeight : this.explicitHeight;
-			if (availableHeight != null) {
-				availableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
-				if (availableHeight < 0.0) {
-					availableHeight = 0.0;
-				}
-			}
-			if (availableHeight == null && !useActualBounds) {
-				// even if explicitHeight is null, the view port might measure
-				// a view port height smaller than its content height
-				availableHeight = this._viewPort.visibleHeight;
-			}
-			var totalContentHeight = this._viewPort.height;
-			needsScrollBarY = availableHeight != null
-				&& totalContentHeight > availableHeight
-				&& !MathUtil.fuzzyEquals(totalContentHeight, availableHeight);
-			if (!needsScrollBarY) {
-				var maxAvailableHeight = this.explicitMaxHeight;
-				if (maxAvailableHeight != null) {
-					maxAvailableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
-					if (maxAvailableHeight < 0.0) {
-						maxAvailableHeight = 0.0;
+		var newShowScrollBarY = false;
+		if (this.showScrollBars && this.scrollPolicyY != OFF) {
+			newShowScrollBarY = this.scrollPolicyY == ON;
+			if (!newShowScrollBarY && this.scrollPolicyY == AUTO) {
+				var availableHeight = useActualBounds ? this.actualHeight : this.explicitHeight;
+				if (availableHeight != null) {
+					availableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
+					if (availableHeight < 0.0) {
+						availableHeight = 0.0;
 					}
 				}
-				needsScrollBarY = maxAvailableHeight != null
-					&& totalContentHeight > maxAvailableHeight
-					&& !MathUtil.fuzzyEquals(totalContentHeight, maxAvailableHeight);
+				if (availableHeight == null && !useActualBounds) {
+					// even if explicitHeight is null, the view port might measure
+					// a view port height smaller than its content height
+					availableHeight = this._viewPort.visibleHeight;
+				}
+				var totalContentHeight = this._viewPort.height;
+				newShowScrollBarY = availableHeight != null
+					&& totalContentHeight > availableHeight
+					&& !MathUtil.fuzzyEquals(totalContentHeight, availableHeight);
+				if (!newShowScrollBarY) {
+					var maxAvailableHeight = this.explicitMaxHeight;
+					if (maxAvailableHeight != null) {
+						maxAvailableHeight -= (this.paddingTop + this.paddingBottom + this.topViewPortOffset + this.bottomViewPortOffset);
+						if (maxAvailableHeight < 0.0) {
+							maxAvailableHeight = 0.0;
+						}
+					}
+					newShowScrollBarY = maxAvailableHeight != null
+						&& totalContentHeight > maxAvailableHeight
+						&& !MathUtil.fuzzyEquals(totalContentHeight, maxAvailableHeight);
+				}
 			}
 		}
-		if (!needsScrollBarY) {
+		if (this.showScrollBarY == newShowScrollBarY) {
 			return;
 		}
-		this.showScrollBarY = true;
+		this.showScrollBarY = newShowScrollBarY;
 		if (!this.fixedScrollBars) {
 			// offsets aren't affected if the scroll bars are not fixed
 			// because the content appears under the floating scroll bars
 			return;
 		}
+		var offset = this.scrollBarY.width;
+		if (!this.showScrollBarY) {
+			offset = -offset;
+		}
 		if (this.scrollBarYPosition == LEFT) {
-			this.leftViewPortOffset += this.scrollBarY.width;
+			this.leftViewPortOffset += offset;
 		} else {
-			this.rightViewPortOffset += this.scrollBarY.width;
+			this.rightViewPortOffset += offset;
 		}
 	}
 
@@ -1571,14 +1589,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		// this time, we care whether a resize event is dispatched while the
 		// view port is validating because it means we'll need to try another
 		// measurement pass. we restore the flag before calling validate().
-		this._ignoreViewPortResizing = oldIgnoreViewPortResizing;
 
 		this._viewPort.validateNow();
-
-		var oldSettingScrollerDimensions = this._settingScrollerDimensions;
-		this._settingScrollerDimensions = true;
-		this.scroller.setDimensions(this._viewPort.visibleWidth, this._viewPort.visibleHeight, this._viewPort.width, this._viewPort.height);
-		this._settingScrollerDimensions = oldSettingScrollerDimensions;
+		this._ignoreViewPortResizing = oldIgnoreViewPortResizing;
 	}
 
 	private function refreshScrollerValues():Void {
@@ -2413,19 +2426,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function viewPort_resizeHandler(event:Event):Void {
-		// using fuzzy comparison here because floating point errors can creep
-		// in and cause an infinite loop
-		if (this._ignoreViewPortResizing
-			|| (MathUtil.fuzzyEquals(this._viewPort.width, this._previousViewPortWidth)
-				&& MathUtil.fuzzyEquals(this._viewPort.height, this._previousViewPortHeight))) {
+		if (this._ignoreViewPortResizing) {
 			return;
 		}
-		this._previousViewPortWidth = this._viewPort.width;
-		this._previousViewPortHeight = this._viewPort.height;
-		if (this._validating) {
-			this._viewPortBoundsChanged = true;
-		} else {
-			this.setInvalid(SIZE);
-		}
+		this.setInvalid(SIZE);
 	}
 }

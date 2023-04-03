@@ -310,4 +310,334 @@ class ScrollContainerFixedScrollBarsTest extends Test {
 		Assert.equals(0.0, this._container.minScrollY);
 		Assert.equals(15.0 + this._scrollBarX.height, this._container.maxScrollY);
 	}
+
+	public function testLargerContainerWidthThenSetSmallerContainerWidth():Void {
+		var child = new LayoutGroup();
+		child.width = 100.0;
+		child.height = 75.0;
+		this._container.addChild(child);
+		this._container.width = 110.0;
+		this._container.validateNow();
+		Assert.equals(110.0, this._container.width);
+		Assert.equals(75.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+		this._container.width = 90.0;
+		this._container.validateNow();
+		Assert.equals(90.0, this._container.width);
+		Assert.equals(75.0 + this._scrollBarX.height, this._container.height);
+		Assert.isTrue(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(10.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testLargerContainerHeightThenSetSmallerContainerHeight():Void {
+		var child = new LayoutGroup();
+		child.width = 100.0;
+		child.height = 75.0;
+		this._container.addChild(child);
+		this._container.height = 90.0;
+		this._container.validateNow();
+		Assert.equals(100.0, this._container.width);
+		Assert.equals(90.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+		this._container.height = 60.0;
+		this._container.validateNow();
+		Assert.equals(100.0 + this._scrollBarY.width, this._container.width);
+		Assert.equals(60.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isTrue(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(15.0, this._container.maxScrollY);
+	}
+
+	public function testLargerContainerWidthAndHeightThenSetSmallerContainerWidthAndHeight():Void {
+		var child = new LayoutGroup();
+		child.width = 100.0;
+		child.height = 75.0;
+		this._container.addChild(child);
+		this._container.width = 110.0;
+		this._container.height = 90.0;
+		this._container.validateNow();
+		Assert.equals(110.0, this._container.width);
+		Assert.equals(90.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+		this._container.width = 90.0;
+		this._container.height = 60.0;
+		this._container.validateNow();
+		Assert.equals(90.0, this._container.width);
+		Assert.equals(60.0, this._container.height);
+		Assert.isTrue(this._scrollBarX.visible);
+		Assert.isTrue(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(10.0 + this._scrollBarY.width, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(15.0 + this._scrollBarX.height, this._container.maxScrollY);
+	}
+
+	public function testSmallerContainerWidthThenSetLargerContainerWidth():Void {
+		var child = new LayoutGroup();
+		child.width = 100.0;
+		child.height = 75.0;
+		this._container.addChild(child);
+		this._container.width = 90.0;
+		this._container.validateNow();
+		Assert.equals(90.0, this._container.width);
+		Assert.equals(75.0 + this._scrollBarX.height, this._container.height);
+		Assert.isTrue(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(10.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+		this._container.width = 110.0;
+		this._container.validateNow();
+		Assert.equals(110.0, this._container.width);
+		Assert.equals(75.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testSmallerContainerHeightThenSetLargerContainerHeight():Void {
+		var child = new LayoutGroup();
+		child.width = 100.0;
+		child.height = 75.0;
+		this._container.addChild(child);
+		this._container.height = 60.0;
+		this._container.validateNow();
+		Assert.equals(100.0 + this._scrollBarY.width, this._container.width);
+		Assert.equals(60.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isTrue(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(15.0, this._container.maxScrollY);
+		this._container.height = 90.0;
+		this._container.validateNow();
+		Assert.equals(100.0, this._container.width);
+		Assert.equals(90.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testSmallerContainerWidthAndHeightThenSetLargerContainerWidthAndHeight():Void {
+		var child = new LayoutGroup();
+		child.width = 100.0;
+		child.height = 75.0;
+		this._container.addChild(child);
+		this._container.width = 90.0;
+		this._container.height = 60.0;
+		this._container.validateNow();
+		Assert.equals(90.0, this._container.width);
+		Assert.equals(60.0, this._container.height);
+		Assert.isTrue(this._scrollBarX.visible);
+		Assert.isTrue(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(10.0 + this._scrollBarY.width, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(15.0 + this._scrollBarX.height, this._container.maxScrollY);
+		this._container.width = 110.0;
+		this._container.height = 90.0;
+		this._container.validateNow();
+		Assert.equals(110.0, this._container.width);
+		Assert.equals(90.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testSetSmallerChildWidthIncreasesChildHeight():Void {
+		var child = new ResizingHeightBox();
+		child.layoutData = HorizontalLayoutData.fillHorizontal();
+		this._container.width = 200.0;
+		this._container.layout = new HorizontalLayout();
+		this._container.addChild(child);
+		this._container.validateNow();
+		Assert.equals(200.0, child.width);
+		Assert.equals(150.0, child.height);
+		Assert.equals(200.0, this._container.width);
+		Assert.equals(150.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+		this._container.height = 100.0;
+		this._container.validateNow();
+		Assert.equals(200.0 - this._scrollBarY.width, child.width);
+		Assert.equals(1000.0, child.height);
+		Assert.equals(200.0, this._container.width);
+		Assert.equals(100.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isTrue(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(900.0, this._container.maxScrollY);
+	}
+
+	public function testSetLargerChildWidthDecreasesChildHeight():Void {
+		var child = new ResizingHeightBox();
+		child.layoutData = HorizontalLayoutData.fillHorizontal();
+		this._container.width = 200.0;
+		this._container.height = 100.0;
+		this._container.layout = new HorizontalLayout();
+		this._container.addChild(child);
+		this._container.validateNow();
+		Assert.equals(200.0 - this._scrollBarY.width, child.width);
+		Assert.equals(1000.0, child.height);
+		Assert.equals(200.0, this._container.width);
+		Assert.equals(100.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isTrue(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(900.0, this._container.maxScrollY);
+		this._container.resetHeight();
+		this._container.validateNow();
+		Assert.equals(200.0, child.width);
+		Assert.equals(150.0, child.height);
+		Assert.equals(200.0, this._container.width);
+		Assert.equals(150.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testSetSmallerChildHeightIncreasesChildWidth():Void {
+		var child = new ResizingWidthBox();
+		child.layoutData = VerticalLayoutData.fillVertical();
+		this._container.height = 200.0;
+		this._container.layout = new VerticalLayout();
+		this._container.addChild(child);
+		this._container.validateNow();
+		Assert.equals(150.0, child.width);
+		Assert.equals(200.0, child.height);
+		Assert.equals(150.0, this._container.width);
+		Assert.equals(200.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+		this._container.width = 100.0;
+		this._container.validateNow();
+		Assert.equals(1000.0, child.width);
+		Assert.equals(200.0 - this._scrollBarX.height, child.height);
+		Assert.equals(100.0, this._container.width);
+		Assert.equals(200.0, this._container.height);
+		Assert.isTrue(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(900.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testSetLargerChildHeightDecreasesChildWidth():Void {
+		var child = new ResizingWidthBox();
+		child.layoutData = VerticalLayoutData.fillVertical();
+		this._container.width = 100.0;
+		this._container.height = 200.0;
+		this._container.layout = new VerticalLayout();
+		this._container.addChild(child);
+		this._container.validateNow();
+		Assert.equals(1000.0, child.width);
+		Assert.equals(200.0 - this._scrollBarX.height, child.height);
+		Assert.equals(100.0, this._container.width);
+		Assert.equals(200.0, this._container.height);
+		Assert.isTrue(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(900.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+		this._container.resetWidth();
+		this._container.validateNow();
+		Assert.equals(150.0, child.width);
+		Assert.equals(200.0, child.height);
+		Assert.equals(150.0, this._container.width);
+		Assert.equals(200.0, this._container.height);
+		Assert.isFalse(this._scrollBarX.visible);
+		Assert.isFalse(this._scrollBarY.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+}
+
+private class ResizingHeightBox extends FeathersControl {
+	public function new() {
+		super();
+	}
+
+	override private function update():Void {
+		super.update();
+		var w = this.explicitWidth;
+		if (w == null) {
+			w = 200.0;
+		}
+		var h = 150.0;
+		if (w != 200.0) {
+			h = 1000.0;
+		}
+		this.saveMeasurements(w, h);
+	}
+}
+
+private class ResizingWidthBox extends FeathersControl {
+	public function new() {
+		super();
+	}
+
+	override private function update():Void {
+		super.update();
+		var h = this.explicitHeight;
+		if (h == null) {
+			h = 200.0;
+		}
+		var w = 150.0;
+		if (h != 200.0) {
+			w = 1000.0;
+		}
+		this.saveMeasurements(w, h);
+	}
 }
