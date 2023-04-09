@@ -25,82 +25,100 @@ interface IDisplayObject extends IEventDispatcher {
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#x
 	**/
-	#if flash
+	#if (flash && haxe_ver < 4.3)
 	public var x:Float;
 	#else
+	#if flash @:flash.property #end
 	public var x(get, set):Float;
 	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#y
 	**/
-	#if flash
+	#if (flash && haxe_ver < 4.3)
 	public var y:Float;
 	#else
+	#if flash @:flash.property #end
 	public var y(get, set):Float;
+	#end
+
+	/**
+		@see https://api.openfl.org/openfl/display/DisplayObject.html#alpha
+	**/
+	#if (flash && haxe_ver < 4.3)
+	public var alpha:Float;
+	#else
+	#if flash @:flash.property #end
+	public var alpha(get, set):Float;
 	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#width
 	**/
-	#if flash
+	#if (flash && haxe_ver < 4.3)
 	public var width:Float;
 	#else
+	#if flash @:flash.property #end
 	public var width(get, set):Float;
 	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#height
 	**/
-	#if flash
+	#if (flash && haxe_ver < 4.3)
 	public var height:Float;
 	#else
+	#if flash @:flash.property #end
 	public var height(get, set):Float;
 	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#scaleX
 	**/
-	#if flash
+	#if (flash && haxe_ver < 4.3)
 	public var scaleX:Float;
 	#else
+	#if flash @:flash.property #end
 	public var scaleX(get, set):Float;
 	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#scaleY
 	**/
-	#if flash
+	#if (flash && haxe_ver < 4.3)
 	public var scaleY:Float;
 	#else
+	#if flash @:flash.property #end
 	public var scaleY(get, set):Float;
-	#end
-
-	/**
-		@see https://api.openfl.org/openfl/display/DisplayObject.html#alpha
-	**/
-	#if flash
-	public var alpha:Float;
-	#else
-	public var alpha(get, set):Float;
 	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#visible
 	**/
-	#if flash
+	#if (flash && haxe_ver < 4.3)
 	public var visible:Bool;
 	#else
+	#if flash @:flash.property #end
 	public var visible(get, set):Bool;
 	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#parent
 	**/
+	#if (!flash || haxe_ver < 4.3)
 	public var parent(default, never):DisplayObjectContainer;
+	#else
+	#if flash @:flash.property #end
+	public var parent(get, never):DisplayObjectContainer;
+	#end
 
 	/**
 		@see https://api.openfl.org/openfl/display/DisplayObject.html#stage
 	**/
+	#if (!flash || haxe_ver < 4.3)
 	public var stage(default, never):Stage;
+	#else
+	#if flash @:flash.property #end
+	public var stage(get, never):Stage;
+	#end
 }

@@ -136,7 +136,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private var chromeMeasuredMinHeight:Float = 0.0;
 	private var chromeMeasuredMaxHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
-	@:getter(tabEnabled)
+	#if (flash && haxe_ver < 4.3) @:getter(tabEnabled) #end
 	override private function get_tabEnabled():Bool {
 		return (this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX) && this.rawTabEnabled;
 	}

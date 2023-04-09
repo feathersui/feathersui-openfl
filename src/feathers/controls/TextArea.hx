@@ -114,7 +114,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	private var _promptTextMeasuredWidth:Float;
 	private var _promptTextMeasuredHeight:Float;
 
-	@:getter(tabEnabled)
+	#if (flash && haxe_ver < 4.3) @:getter(tabEnabled) #end
 	override private function get_tabEnabled():Bool {
 		return this._enabled && this.rawTabEnabled;
 	}

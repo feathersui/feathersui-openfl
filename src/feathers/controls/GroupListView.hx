@@ -236,7 +236,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private var groupViewPort:AdvancedLayoutViewPort;
 
-	@:getter(tabEnabled)
+	#if (flash && haxe_ver < 4.3) @:getter(tabEnabled) #end
 	override private function get_tabEnabled():Bool {
 		return (this._selectable || this.maxScrollY != this.minScrollY || this.maxScrollX != this.minScrollX)
 			&& this._enabled

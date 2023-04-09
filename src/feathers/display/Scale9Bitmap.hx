@@ -77,42 +77,38 @@ class Scale9Bitmap extends Sprite {
 
 	private var _width:Float = 0.0;
 
-	@:getter(width)
-	#if !flash override #end private function get_width():Float {
+	#if (flash && haxe_ver < 4.3) @:getter(width) #else override #end private function get_width():Float {
 		return this._width;
 	}
 
-	@:setter(width)
-	#if !flash override #end private function set_width(value:Float):#if !flash Float #else Void #end {
+	#if (flash && haxe_ver < 4.3) @:setter(width) #else override #end private function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		if (this._width == value) {
-			return #if !flash this._width #end;
+			return #if (!flash || haxe_ver >= 4.3) this._width #end;
 		}
 		this._width = value;
 		if (this._allowRefresh) {
 			this.draw();
 		}
-		#if !flash
+		#if (!flash || haxe_ver >= 4.3)
 		return this._width;
 		#end
 	}
 
 	private var _height:Float = 0.0;
 
-	@:getter(height)
-	#if !flash override #end private function get_height():Float {
+	#if (flash && haxe_ver < 4.3) @:getter(height) #else override #end private function get_height():Float {
 		return this._height;
 	}
 
-	@:setter(height)
-	#if !flash override #end private function set_height(value:Float):#if !flash Float #else Void #end {
+	#if (flash && haxe_ver < 4.3) @:setter(height) #else override #end private function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		if (this._height == value) {
-			return #if !flash this._height #end;
+			return #if (!flash || haxe_ver >= 4.3) this._height #end;
 		}
 		this._height = value;
 		if (this._allowRefresh) {
 			this.draw();
 		}
-		#if !flash
+		#if (!flash || haxe_ver >= 4.3)
 		return this._height;
 		#end
 	}
@@ -175,22 +171,20 @@ class Scale9Bitmap extends Sprite {
 
 	private var _scale9Grid:Rectangle;
 
-	@:getter(scale9Grid)
-	#if !flash override #end private function get_scale9Grid():Rectangle {
+	#if (flash && haxe_ver < 4.3) @:getter(scale9Grid) #else override #end private function get_scale9Grid():Rectangle {
 		return this._scale9Grid;
 	}
 
-	@:setter(scale9Grid)
-	#if !flash override #end private function set_scale9Grid(value:Rectangle):#if !flash Rectangle #else Void #end {
+	#if (flash && haxe_ver < 4.3) @:setter(scale9Grid) #else override #end private function set_scale9Grid(value:Rectangle):#if (!flash || haxe_ver >= 4.3) Rectangle #else Void #end {
 		if (this._scale9Grid == value || (this._scale9Grid != null && this._scale9Grid.equals(value))) {
-			return #if !flash this._scale9Grid #end;
+			return #if (!flash || haxe_ver >= 4.3) this._scale9Grid #end;
 		}
 		this._scale9Grid = value;
 		if (this._allowRefresh) {
 			this.refreshSubBitmapData();
 			this.draw();
 		}
-		#if !flash
+		#if (!flash || haxe_ver >= 4.3)
 		return this._scale9Grid;
 		#end
 	}

@@ -337,23 +337,15 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	private var _explicitAlpha:Float = 1.0;
 
-	#if flash
-	@:setter(alpha)
-	private function set_alpha(value:Float):Void {
+	#if (flash && haxe_ver < 4.3) @:setter(alpha) #else override #end private function set_alpha(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		this._explicitAlpha = value;
 		if (this._enabled || this.disabledAlpha == null) {
 			super.alpha = value;
 		}
-	}
-	#else
-	override private function set_alpha(value:Float):Float {
-		this._explicitAlpha = value;
-		if (this._enabled || this.disabledAlpha == null) {
-			super.alpha = value;
-		}
+		#if (!flash || haxe_ver >= 4.3)
 		return this._explicitAlpha;
+		#end
 	}
-	#end
 
 	/**
 		When `disabledAlpha` is not `null`, sets the `alpha` property to this
@@ -431,8 +423,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._focusEnabled;
 	}
 
-	@:getter(tabEnabled)
-	#if !flash override #end private function get_tabEnabled():Bool {
+	#if (flash && haxe_ver < 4.3) @:getter(tabEnabled) #else override #end private function get_tabEnabled():Bool {
 		return this._enabled && super.tabEnabled;
 	}
 

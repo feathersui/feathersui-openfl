@@ -48,56 +48,100 @@ class MeasureSprite extends ValidatingSprite implements IMeasureObject {
 		super();
 	}
 
-	@:getter(width)
-	#if !flash override #end private function get_width():Float {
+	// workaround for VerifyError in Flash
+	// without this, Haxe doesn't realize that subclasses need to mark getter
+	// and setter functions from IDisplayObject as overridden in the bytecode
+	// manually adding these functions as a workaround doesn't add any
+	// performance overhead, though, because Haxe automatically generates the
+	// get_ and set_ functions when they are missing.
+	// Note: width, height, scaleX, and scaleY are actually overridden,
+	// so they don't appear in this block
+	#if (flash && haxe_ver >= 4.3)
+	override private function get_x():Float {
+		return super.x;
+	}
+
+	override private function set_x(value:Float):Float {
+		return super.x = value;
+	}
+
+	override private function get_y():Float {
+		return super.y;
+	}
+
+	override private function set_y(value:Float):Float {
+		return super.y = value;
+	}
+
+	override private function get_alpha():Float {
+		return super.alpha;
+	}
+
+	override private function set_alpha(value:Float):Float {
+		return super.alpha = value;
+	}
+
+	override private function get_visible():Bool {
+		return super.visible;
+	}
+
+	override private function set_visible(value:Bool):Bool {
+		return super.visible = value;
+	}
+
+	override private function get_parent():openfl.display.DisplayObjectContainer {
+		return super.parent;
+	}
+
+	override private function get_stage():openfl.display.Stage {
+		return super.stage;
+	}
+	#end
+
+	#if (flash && haxe_ver < 4.3) @:getter(width) #else override #end private function get_width():Float {
 		return this.scaledActualWidth;
 	}
 
-	@:setter(width)
-	#if !flash override #end private function set_width(value:Float):#if !flash Float #else Void #end {
+	#if (flash && haxe_ver < 4.3) @:setter(width) #else override #end private function set_width(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		if (this.scaleX != 1.0) {
 			value /= this.scaleX;
 		}
 		// use the setter here
 		this.explicitWidth = value;
-		#if !flash
+		#if (!flash || haxe_ver >= 4.3)
 		return this.scaledActualWidth;
 		#end
 	}
 
-	@:getter(height)
-	#if !flash override #end private function get_height():Float {
+	#if (flash && haxe_ver < 4.3) @:getter(height) #else override #end private function get_height():Float {
 		return this.scaledActualHeight;
 	}
 
-	@:setter(height)
-	#if !flash override #end private function set_height(value:Float):#if !flash Float #else Void #end {
+	#if (flash && haxe_ver < 4.3) @:setter(height) #else override #end private function set_height(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		if (this.scaleY != 1.0) {
 			value /= this.scaleY;
 		}
 		// use the setter here
 		this.explicitHeight = value;
-		#if !flash
+		#if (!flash || haxe_ver >= 4.3)
 		return this.scaledActualHeight;
 		#end
 	}
 
-	@:setter(scaleX)
-	#if !flash override #end private function set_scaleX(value:Float):#if !flash Float #else Void #end {
+	#if (flash && haxe_ver < 4.3) @:setter(scaleX) #else override #end private function set_scaleX(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		super.scaleX = value;
 		this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 		// no need to set invalid because the layout will be the same
-		#if !flash
+		#if (!flash || haxe_ver >= 4.3)
 		return this.scaleX;
 		#end
 	}
 
-	@:setter(scaleY)
-	#if !flash override #end private function set_scaleY(value:Float):#if !flash Float #else Void #end {
+	#if (flash && haxe_ver < 4.3) @:setter(scaleY) #else override #end private function set_scaleY(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		super.scaleY = value;
 		this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight, this.actualMaxWidth, this.actualMaxHeight);
 		// no need to set invalid because the layout will be the same
-		#if !flash
+		#if (!flash || haxe_ver >= 4.3)
 		return this.scaleY;
 		#end
 	}

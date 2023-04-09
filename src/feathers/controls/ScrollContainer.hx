@@ -221,8 +221,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		return result;
 	}
 
-	@:getter(numChildren)
-	#if !flash override #end private function get_numChildren():Int {
+	#if (flash && haxe_ver < 4.3) @:getter(numChildren) #else override #end private function get_numChildren():Int {
 		if (!this._displayListBypassEnabled) {
 			return super.numChildren;
 		}

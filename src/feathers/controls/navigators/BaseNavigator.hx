@@ -109,7 +109,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		return this._transitionActive;
 	}
 
-	@:getter(tabEnabled)
+	#if (flash && haxe_ver < 4.3) @:getter(tabEnabled) #end
 	override private function get_tabEnabled():Bool {
 		return false;
 	}
