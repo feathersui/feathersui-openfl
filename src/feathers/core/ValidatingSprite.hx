@@ -175,7 +175,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 		called outside of `update()`, the component's validation may be delayed
 		until a future call to `setInvalid()`.
 
-		@since 1.0.0
+		@since 1.2.0
 	**/
 	public function runWithInvalidationFlagsOnly(callback:() -> Void):Void {
 		var oldValue = this._setInvalidationFlagsOnly;
