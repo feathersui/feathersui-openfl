@@ -8,15 +8,22 @@
 
 package feathers.controls;
 
-import feathers.layout.VerticalLayoutData;
-import feathers.layout.VerticalLayout;
-import feathers.layout.HorizontalLayoutData;
-import feathers.layout.HorizontalLayout;
-import feathers.core.FeathersControl;
-import feathers.controls.VScrollBar;
 import feathers.controls.HScrollBar;
 import feathers.controls.LayoutGroup;
+import feathers.controls.VScrollBar;
+import feathers.core.FeathersControl;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.HorizontalLayoutData;
+import feathers.layout.ILayout;
+import feathers.layout.LayoutBoundsResult;
+import feathers.layout.Measurements;
+import feathers.layout.VerticalLayout;
+import feathers.layout.VerticalLayoutData;
+import flash.events.EventDispatcher;
 import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.errors.IllegalOperationError;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -602,6 +609,15 @@ class ScrollContainerFixedScrollBarsTest extends Test {
 		Assert.equals(0.0, this._container.minScrollY);
 		Assert.equals(0.0, this._container.maxScrollY);
 	}
+
+	public function testLayoutDispatchingChangeTooOften():Void {
+		this._container.width = 100.0;
+		this._container.height = 100.0;
+		this._container.layout = new LayoutThatDispatchesChangeTooOften();
+		Assert.raises(() -> {
+			this._container.validateNow();
+		}, IllegalOperationError);
+	}
 }
 
 private class ResizingHeightBox extends FeathersControl {
@@ -639,5 +655,25 @@ private class ResizingWidthBox extends FeathersControl {
 			w = 1000.0;
 		}
 		this.saveMeasurements(w, h);
+	}
+}
+
+class LayoutThatDispatchesChangeTooOften extends EventDispatcher implements ILayout {
+	public function layout(items:Array<DisplayObject>, measurements:Measurements, ?result:LayoutBoundsResult):LayoutBoundsResult {
+		if (result == null) {
+			result = new LayoutBoundsResult();
+		}
+		this.dispatchEvent(new Event(Event.CHANGE));
+		result.viewPortWidth = measurements.width;
+		result.viewPortHeight = measurements.height;
+		result.contentX = 0.0;
+		result.contentY = 0.0;
+		result.contentWidth = measurements.width;
+		result.contentHeight = measurements.height;
+		result.contentMinWidth = 0.0;
+		result.contentMinHeight = 0.0;
+		result.contentMaxWidth = Math.POSITIVE_INFINITY;
+		result.contentMaxHeight = Math.POSITIVE_INFINITY;
+		return result;
 	}
 }

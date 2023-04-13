@@ -435,6 +435,9 @@ class LayoutGroup extends FeathersControl {
 		return this._xmlContent;
 	}
 
+	private var _layoutActive = false;
+	private var _layoutChanged = false;
+
 	override public function validateNow():Void {
 		// for the start of validation, we're going to ignore when children
 		// resize or dispatch changes to layout data. this allows subclasses
@@ -468,12 +471,25 @@ class LayoutGroup extends FeathersControl {
 
 		if (sizeInvalid || layoutInvalid || stylesInvalid || stateInvalid) {
 			this.refreshViewPortBounds();
-			if (this._currentLayout != null) {
-				this.handleCustomLayout();
-			} else {
-				this.handleManualLayout();
-			}
-			this.handleLayoutResult();
+			// if a layout needs another pass because an assumption has changed,
+			// allow it to dispatch Event.CHANGE, and run again, but don't let
+			// it get into an infinite loop.
+			this.runWithInvalidationFlagsOnly(() -> {
+				this._layoutActive = true;
+				var loopCount = 0;
+				do {
+					this._layoutChanged = false;
+					this.handleLayout();
+					loopCount++;
+					if (loopCount >= 10) {
+						this._layoutActive = false;
+						var className = Type.getClassName(Type.getClass(this));
+						var layoutClassName = this.layout != null ? Type.getClassName(Type.getClass(this.layout)) : "The layout";
+						throw new openfl.errors.IllegalOperationError('${className} is stuck in an infinite loop during layout. ${layoutClassName} may be dispatching Event.CHANGE too frequently.');
+					}
+				} while (this._layoutChanged);
+				this._layoutActive = false;
+			});
 			this.refreshBackgroundLayout();
 			this.refreshDisabledOverlay();
 			this.refreshMaskLayout();
@@ -693,6 +709,15 @@ class LayoutGroup extends FeathersControl {
 		this._layoutMeasurements.maxHeight = viewPortMaxHeight;
 	}
 
+	private function handleLayout():Void {
+		if (this._currentLayout != null) {
+			this.handleCustomLayout();
+		} else {
+			this.handleManualLayout();
+		}
+		this.handleLayoutResult();
+	}
+
 	private function handleCustomLayout():Void {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
@@ -852,6 +877,10 @@ class LayoutGroup extends FeathersControl {
 
 	private function layoutGroup_layout_changeHandler(event:Event):Void {
 		if (this._ignoreLayoutChanges) {
+			return;
+		}
+		if (this._layoutActive) {
+			this._layoutChanged = true;
 			return;
 		}
 		if (this._ignoreChangesButSetFlags) {
