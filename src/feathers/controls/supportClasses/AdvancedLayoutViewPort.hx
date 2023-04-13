@@ -319,7 +319,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 					this._layoutActive = false;
 					var parentClassName = Type.getClassName(Type.getClass(this.parent));
 					var layoutClassName = this._layout != null ? Type.getClassName(Type.getClass(this._layout)) : "The layout";
-					throw new openfl.errors.IllegalOperationError('${parentClassName} is stuck in an infinite loop during layout. ${layoutClassName} may be dispatching Event.CHANGE too often.');
+					throw new openfl.errors.IllegalOperationError('${parentClassName} is stuck in an infinite loop during layout. ${layoutClassName} may be dispatching Event.CHANGE too frequently.');
 				}
 			} while (this._layoutChanged);
 			this._layoutActive = false;
