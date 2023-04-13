@@ -227,7 +227,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private static final INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("columnDividerFactory");
 
 	private static final RESET_HEADER_STATE = new TreeGridViewHeaderState();
-	private static final RESET_ROW_STATE = new TreeGridViewCellState();
+	private static final RESET_ROW_STATE = new TreeGridViewRowState();
 
 	// A special pointer ID for the mouse.
 	private static final POINTER_ID_MOUSE:Int = -1000;
@@ -840,9 +840,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var inactiveRowRenderers:Array<TreeGridViewRowRenderer> = [];
 	private var activeRowRenderers:Array<TreeGridViewRowRenderer> = [];
 	private var dataToRowRenderer = new ObjectMap<Dynamic, TreeGridViewRowRenderer>();
-	private var rowRendererToRowState = new ObjectMap<TreeGridViewRowRenderer, TreeGridViewCellState>();
+	private var rowRendererToRowState = new ObjectMap<TreeGridViewRowRenderer, TreeGridViewRowState>();
 	private var headerStatePool = new ObjectPool(() -> new TreeGridViewHeaderState());
-	private var rowStatePool = new ObjectPool(() -> new TreeGridViewCellState());
+	private var rowStatePool = new ObjectPool(() -> new TreeGridViewRowState());
 	private var _unrenderedLocations:Array<Array<Int>> = [];
 	private var _unrenderedLayoutIndices:Array<Int> = [];
 	private var _rowLayoutItems:Array<DisplayObject> = [];
@@ -1854,7 +1854,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		#end
 	}
 
-	private function createRowRenderer(state:TreeGridViewCellState):TreeGridViewRowRenderer {
+	private function createRowRenderer(state:TreeGridViewRowState):TreeGridViewRowRenderer {
 		var rowRenderer:TreeGridViewRowRenderer = null;
 		if (this.inactiveRowRenderers.length == 0) {
 			rowRenderer = this._rowRendererRecycler.create();
@@ -1887,7 +1887,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 	}
 
-	private function updateRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewCellState):Void {
+	private function updateRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
@@ -1900,7 +1900,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.refreshRowRendererProperties(rowRenderer, state);
 	}
 
-	private function resetRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewCellState):Void {
+	private function resetRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
@@ -1913,7 +1913,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);
 	}
 
-	private function populateCurrentRowState(item:Dynamic, location:Array<Int>, layoutIndex:Int, state:TreeGridViewCellState, force:Bool):Bool {
+	private function populateCurrentRowState(item:Dynamic, location:Array<Int>, layoutIndex:Int, state:TreeGridViewRowState, force:Bool):Bool {
 		var changed = false;
 		if (force || state.owner != this) {
 			state.owner = this;
@@ -1951,14 +1951,90 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			state.enabled = enabled;
 			changed = true;
 		}
-		// these are used for cells, but not rows
-		state.columnIndex = -1;
-		state.column = null;
-		state.text = null;
+		var columns = this._columns;
+		if (force || state.columns != columns) {
+			state.columns = columns;
+			changed = true;
+		}
+		var selectable = this._selectable;
+		if (force || state.selectable != selectable) {
+			state.selectable = selectable;
+			changed = true;
+		}
+		var cellRendererRecycler = this._cellRendererRecycler;
+		if (force || state.cellRendererRecycler != cellRendererRecycler) {
+			state.cellRendererRecycler = cellRendererRecycler;
+			changed = true;
+		}
+		var customColumnWidths = this._customColumnWidths;
+		if (force || state.customColumnWidths != customColumnWidths) {
+			state.customColumnWidths = customColumnWidths;
+			changed = true;
+		}
+		var customCellRendererVariant = this.customCellRendererVariant;
+		if (force || state.customCellRendererVariant != customCellRendererVariant) {
+			state.customCellRendererVariant = customCellRendererVariant;
+			changed = true;
+		}
 		return changed;
 	}
 
-	private function refreshRowRendererProperties(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewCellState):Void {
+	private function populateCurrentRowCellState(item:Dynamic, location:Array<Int>, column:TreeGridViewColumn, columnIndex:Int, layoutIndex:Int,
+			state:TreeGridViewCellState, force:Bool):Bool {
+		var changed = false;
+		if (force || state.owner != this) {
+			state.owner = this;
+			changed = true;
+		}
+		if (force || state.data != item) {
+			state.data = item;
+			changed = true;
+		}
+		if (force || (state.rowLocation != location && this.compareLocations(state.rowLocation, location) != 0)) {
+			state.rowLocation = location;
+			changed = true;
+		}
+		if (force || state.columnIndex != columnIndex) {
+			state.columnIndex = columnIndex;
+			changed = true;
+		}
+		if (force || state.column != column) {
+			state.column = column;
+			changed = true;
+		}
+		if (force || state.layoutIndex != layoutIndex) {
+			state.layoutIndex = layoutIndex;
+			changed = true;
+		}
+		var branch = this._dataProvider != null && this._dataProvider.isBranch(item);
+		if (force || state.branch != branch) {
+			state.branch = branch;
+			changed = true;
+		}
+		var opened = state.branch && (this.openBranches.indexOf(item) != -1);
+		if (force || state.opened != opened) {
+			state.opened = opened;
+			changed = true;
+		}
+		var selected = this.compareLocations(location, this._selectedLocation) == 0;
+		if (force || state.selected != selected) {
+			state.selected = selected;
+			changed = true;
+		}
+		var enabled = this._enabled;
+		if (force || state.enabled != enabled) {
+			state.enabled = enabled;
+			changed = true;
+		}
+		var text = (column != null) ? column.itemToText(item) : null;
+		if (force || state.text != text) {
+			state.text = text;
+			changed = true;
+		}
+		return changed;
+	}
+
+	private function refreshRowRendererProperties(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
@@ -1970,11 +2046,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		rowRenderer.opened = state.opened;
 		rowRenderer.selected = state.selected;
 		rowRenderer.enabled = state.enabled;
-		rowRenderer.columns = (state.rowLocation == null) ? null : this._columns;
-		rowRenderer.selectable = (state.rowLocation == null) ? false : this._selectable;
-		rowRenderer.cellRendererRecycler = (state.rowLocation == null) ? null : this._cellRendererRecycler;
-		rowRenderer.customCellRendererVariant = (state.rowLocation == null) ? null : this.customCellRendererVariant;
-		rowRenderer.customColumnWidths = (state.rowLocation == null) ? null : this._customColumnWidths;
+		rowRenderer.columns = state.columns;
+		rowRenderer.selectable = state.selectable;
+		rowRenderer.cellRendererRecycler = state.cellRendererRecycler;
+		rowRenderer.customCellRendererVariant = state.customCellRendererVariant;
+		rowRenderer.customColumnWidths = state.customColumnWidths;
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
@@ -2290,7 +2366,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, layoutIndex:Int, open:Bool):Int {
 		var itemRenderer = this.dataToRowRenderer.get(branch);
-		var state:TreeGridViewCellState = null;
+		var state:TreeGridViewRowState = null;
 		if (itemRenderer != null) {
 			state = this.rowRendererToRowState.get(itemRenderer);
 		}
@@ -2307,12 +2383,16 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.openBranches.push(branch);
 			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
-			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, state);
+			var cellState = new TreeGridViewCellState();
+			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
+			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, cellState);
 		} else if (!open && alreadyOpen) {
 			this.openBranches.remove(branch);
 			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 			removeChildrenFromVirtualCache(location, layoutIndex);
-			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, state);
+			var cellState = new TreeGridViewCellState();
+			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
+			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, cellState);
 		}
 		if (isTemporary) {
 			this.rowStatePool.release(state);
@@ -3068,4 +3148,22 @@ private class ColumnDividerStorage {
 	public var columnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject>;
 	public var activeColumnDividers:Array<InteractiveObject> = [];
 	public var inactiveColumnDividers:Array<InteractiveObject> = [];
+}
+
+class TreeGridViewRowState {
+	public function new() {}
+
+	public var owner:TreeGridView;
+	public var data:Dynamic;
+	public var rowLocation:Array<Int> = null;
+	public var layoutIndex:Int = -1;
+	public var branch:Bool = false;
+	public var opened:Bool = false;
+	public var selected:Bool = false;
+	public var enabled:Bool = true;
+	public var columns:IFlatCollection<TreeGridViewColumn>;
+	public var selectable:Bool = false;
+	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
+	public var customColumnWidths:Array<Float>;
+	public var customCellRendererVariant:String;
 }

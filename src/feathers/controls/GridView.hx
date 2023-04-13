@@ -219,7 +219,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private static final INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("columnDividerFactory");
 
 	private static final RESET_HEADER_STATE = new GridViewHeaderState();
-	private static final RESET_ROW_STATE = new GridViewCellState();
+	private static final RESET_ROW_STATE = new GridViewRowState();
 
 	// A special pointer ID for the mouse.
 	private static final POINTER_ID_MOUSE:Int = -1000;
@@ -1079,9 +1079,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var inactiveRowRenderers:Array<GridViewRowRenderer> = [];
 	private var activeRowRenderers:Array<GridViewRowRenderer> = [];
 	private var dataToRowRenderer = new ObjectMap<Dynamic, GridViewRowRenderer>();
-	private var rowRendererToRowState = new ObjectMap<GridViewRowRenderer, GridViewCellState>();
+	private var rowRendererToRowState = new ObjectMap<GridViewRowRenderer, GridViewRowState>();
 	private var headerStatePool = new ObjectPool(() -> new GridViewHeaderState());
-	private var rowStatePool = new ObjectPool(() -> new GridViewCellState());
+	private var rowStatePool = new ObjectPool(() -> new GridViewRowState());
 	private var _unrenderedData:Array<Dynamic> = [];
 	private var _rowLayoutItems:Array<DisplayObject> = [];
 	private var _virtualCache:Array<Dynamic> = [];
@@ -2011,7 +2011,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		#end
 	}
 
-	private function createRowRenderer(state:GridViewCellState):GridViewRowRenderer {
+	private function createRowRenderer(state:GridViewRowState):GridViewRowRenderer {
 		var rowRenderer:GridViewRowRenderer = null;
 		if (this.inactiveRowRenderers.length == 0) {
 			rowRenderer = this._rowRendererRecycler.create();
@@ -2041,7 +2041,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function updateRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
+	private function updateRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this._rowRendererRecycler.update != null) {
@@ -2051,7 +2051,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.refreshRowRendererProperties(rowRenderer, state);
 	}
 
-	private function resetRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
+	private function resetRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if (this._rowRendererRecycler.reset != null) {
@@ -2061,7 +2061,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);
 	}
 
-	private function populateCurrentRowState(item:Dynamic, rowIndex:Int, state:GridViewCellState, force:Bool):Bool {
+	private function populateCurrentRowState(item:Dynamic, rowIndex:Int, state:GridViewRowState, force:Bool):Bool {
 		var changed = false;
 		if (force || state.owner != this) {
 			state.owner = this;
@@ -2085,25 +2085,46 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			state.enabled = enabled;
 			changed = true;
 		}
-		// these are used for cells, but not rows
-		state.columnIndex = -1;
-		state.column = null;
-		state.text = null;
+		var columns = this._columns;
+		if (force || state.columns != columns) {
+			state.columns = columns;
+			changed = true;
+		}
+		var selectable = this._selectable;
+		if (force || state.selectable != selectable) {
+			state.selectable = selectable;
+			changed = true;
+		}
+		var cellRendererRecycler = this._cellRendererRecycler;
+		if (force || state.cellRendererRecycler != cellRendererRecycler) {
+			state.cellRendererRecycler = cellRendererRecycler;
+			changed = true;
+		}
+		var customColumnWidths = this._customColumnWidths;
+		if (force || state.customColumnWidths != customColumnWidths) {
+			state.customColumnWidths = customColumnWidths;
+			changed = true;
+		}
+		var customCellRendererVariant = this.customCellRendererVariant;
+		if (force || state.customCellRendererVariant != customCellRendererVariant) {
+			state.customCellRendererVariant = customCellRendererVariant;
+			changed = true;
+		}
 		return changed;
 	}
 
-	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, state:GridViewCellState):Void {
+	private function refreshRowRendererProperties(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		rowRenderer.data = state.data;
 		rowRenderer.rowIndex = state.rowIndex;
 		rowRenderer.selected = state.selected;
 		rowRenderer.enabled = state.enabled;
-		rowRenderer.columns = (state.rowIndex == -1) ? null : this._columns;
-		rowRenderer.selectable = (state.rowIndex == -1) ? false : this._selectable;
-		rowRenderer.cellRendererRecycler = (state.rowIndex == -1) ? null : this._cellRendererRecycler;
-		rowRenderer.customColumnWidths = (state.rowIndex == -1) ? null : this._customColumnWidths;
-		rowRenderer.customCellRendererVariant = (state.rowIndex == -1) ? null : this.customCellRendererVariant;
+		rowRenderer.columns = state.columns;
+		rowRenderer.selectable = state.selectable;
+		rowRenderer.cellRendererRecycler = state.cellRendererRecycler;
+		rowRenderer.customColumnWidths = state.customColumnWidths;
+		rowRenderer.customCellRendererVariant = state.customCellRendererVariant;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
@@ -3087,4 +3108,19 @@ private class ColumnDividerStorage {
 	public var columnDividerFactory:DisplayObjectFactory<Dynamic, DisplayObject>;
 	public var activeColumnDividers:Array<InteractiveObject> = [];
 	public var inactiveColumnDividers:Array<InteractiveObject> = [];
+}
+
+class GridViewRowState {
+	public function new() {}
+
+	public var owner:GridView;
+	public var data:Dynamic;
+	public var rowIndex:Int = -1;
+	public var selected:Bool = false;
+	public var enabled:Bool = true;
+	public var columns:IFlatCollection<GridViewColumn>;
+	public var selectable:Bool = false;
+	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
+	public var customColumnWidths:Array<Float>;
+	public var customCellRendererVariant:String;
 }
