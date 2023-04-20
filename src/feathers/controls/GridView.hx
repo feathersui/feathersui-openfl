@@ -1952,7 +1952,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			var state = this.rowRendererToRowState.get(rowRenderer);
 			if (state == null) {
-				return;
+				continue;
 			}
 			var item = state.data;
 			this.rowRendererToRowState.remove(rowRenderer);

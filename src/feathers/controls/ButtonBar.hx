@@ -637,7 +637,7 @@ class ButtonBar extends FeathersControl {
 			}
 			var state = this.buttonToItemState.get(button);
 			if (state == null) {
-				return;
+				continue;
 			}
 			var item = state.data;
 			this.buttonToItemState.remove(button);

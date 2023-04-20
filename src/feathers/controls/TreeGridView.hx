@@ -1766,7 +1766,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			var state = this.rowRendererToRowState.get(rowRenderer);
 			if (state == null) {
-				return;
+				continue;
 			}
 			var item = state.data;
 			this.rowRendererToRowState.remove(rowRenderer);

@@ -762,7 +762,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			}
 			var state = this.tabToItemState.get(tab);
 			if (state == null) {
-				return;
+				continue;
 			}
 			var item = state.data;
 			this.tabToItemState.remove(tab);

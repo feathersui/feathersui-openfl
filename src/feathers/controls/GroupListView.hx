@@ -1268,7 +1268,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			}
 			var state = this.itemRendererToItemState.get(itemRenderer);
 			if (state == null) {
-				return;
+				continue;
 			}
 			var item = state.data;
 			this.itemRendererToItemState.remove(itemRenderer);
