@@ -404,6 +404,10 @@ class GridViewTest extends Test {
 		var updatedRows:Array<Int> = [];
 		var updatedColumns:Array<Int> = [];
 		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
 		this._gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GridViewCellState) -> {
 			updatedRows.push(state.rowIndex);
 			updatedColumns.push(state.columnIndex);

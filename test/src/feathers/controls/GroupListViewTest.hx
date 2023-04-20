@@ -180,6 +180,8 @@ class GroupListViewTest extends Test {
 		var updatedLocations:Array<Array<Int>> = [];
 		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
 			(item:Dynamic) -> item.children);
+		this._listView.itemToText = item -> item.text;
+		this._listView.itemToHeaderText = item -> item.text;
 		this._listView.headerRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
 			updatedLocations.push(state.location);
 		});
@@ -201,6 +203,8 @@ class GroupListViewTest extends Test {
 		var updatedLocations:Array<Array<Int>> = [];
 		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
 			(item:Dynamic) -> item.children);
+		this._listView.itemToText = item -> item.text;
+		this._listView.itemToHeaderText = item -> item.text;
 		this._listView.headerRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
 			updatedLocations.push(state.location);
 		});

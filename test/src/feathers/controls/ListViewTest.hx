@@ -311,6 +311,7 @@ class ListViewTest extends Test {
 	public function testDefaultItemStateUpdate():Void {
 		var updatedIndices:Array<Int> = [];
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.itemToText = item -> item.text;
 		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:ListViewItemState) -> {
 			updatedIndices.push(state.index);
 		});
@@ -327,6 +328,7 @@ class ListViewTest extends Test {
 	public function testForceItemStateUpdate():Void {
 		var updatedIndices:Array<Int> = [];
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.itemToText = item -> item.text;
 		this._listView.forceItemStateUpdate = true;
 		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:ListViewItemState) -> {
 			updatedIndices.push(state.index);

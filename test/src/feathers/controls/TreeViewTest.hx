@@ -259,6 +259,7 @@ import utest.Test;
 	public function testDefaultItemStateUpdate():Void {
 		var updatedLocations:Array<Array<Int>> = [];
 		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.itemToText = item -> item.text;
 		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeViewItemState) -> {
 			updatedLocations.push(state.location);
 		});
@@ -275,6 +276,7 @@ import utest.Test;
 	public function testForceItemStateUpdate():Void {
 		var updatedLocations:Array<Array<Int>> = [];
 		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.itemToText = item -> item.text;
 		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeViewItemState) -> {
 			updatedLocations.push(state.location);
 		});

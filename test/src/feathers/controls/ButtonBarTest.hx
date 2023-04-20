@@ -190,6 +190,7 @@ class ButtonBarTest extends Test {
 	public function testDefaultItemStateUpdate():Void {
 		var updatedIndices:Array<Int> = [];
 		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.itemToText = item -> item.text;
 		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withClass(Button, (target, state:ButtonBarItemState) -> {
 			updatedIndices.push(state.index);
 		});
@@ -206,6 +207,7 @@ class ButtonBarTest extends Test {
 	public function testForceItemStateUpdate():Void {
 		var updatedIndices:Array<Int> = [];
 		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.itemToText = item -> item.text;
 		this._buttonBar.forceItemStateUpdate = true;
 		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withClass(Button, (target, state:ButtonBarItemState) -> {
 			updatedIndices.push(state.index);

@@ -324,6 +324,10 @@ import utest.Test;
 			updatedLocations.push(state.rowLocation);
 			updatedColumns.push(state.columnIndex);
 		});
+		this._treeGridView.columns = new ArrayCollection([
+			new TreeGridViewColumn("A", item -> item.a),
+			new TreeGridViewColumn("B", item -> item.b),
+		]);
 		this._treeGridView.validateNow();
 		Assert.equals(6, updatedLocations.length);
 		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));

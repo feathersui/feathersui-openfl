@@ -315,6 +315,7 @@ class TabBarTest extends Test {
 	public function testDefaultItemStateUpdate():Void {
 		var updatedIndices:Array<Int> = [];
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.itemToText = item -> item.text;
 		this._tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton, (target, state:TabBarItemState) -> {
 			updatedIndices.push(state.index);
 		});
@@ -331,6 +332,7 @@ class TabBarTest extends Test {
 	public function testForceItemStateUpdate():Void {
 		var updatedIndices:Array<Int> = [];
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.itemToText = item -> item.text;
 		this._tabBar.forceItemStateUpdate = true;
 		this._tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton, (target, state:TabBarItemState) -> {
 			updatedIndices.push(state.index);
