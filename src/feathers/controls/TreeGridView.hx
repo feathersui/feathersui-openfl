@@ -614,6 +614,43 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(TreeGridViewRowRenderer);
 	private var _rowRendererMeasurements:Measurements;
 
+	private var _forceItemStateUpdate:Bool = false;
+
+	/**
+		Forces the `cellRendererRecycler.update()` method to be called with the
+		`TreeGridViewCellState` when a row validates, and forces the
+		`headerRendererRecycler.update()` method to be called with the
+		`TreeGridViewHeaderState` when the grid view validates, even if the cell
+		or header's state has not changed since the previous validation.
+
+		Before Feathers UI 1.2, `update()` was called more frequently, and this
+		property is provided to enable backwards compatibility, temporarily, to
+		assist in migration from earlier versions of Feathers UI.
+
+		In general, when this property needs to be enabled, its often because of
+		a missed call to `dataProvider.updateAt()` (preferred) or
+		`dataProvider.updateAll()` (less common).
+
+		The `forceItemStateUpdate` property may be removed in a future major
+		version, so it is best to avoid relying on it as a long-term solution.
+
+		@since 1.2.0
+	**/
+	public var forceItemStateUpdate(get, set):Bool;
+
+	private function get_forceItemStateUpdate():Bool {
+		return this._forceItemStateUpdate;
+	}
+
+	private function set_forceItemStateUpdate(value:Bool):Bool {
+		if (this._forceItemStateUpdate == value) {
+			return this._forceItemStateUpdate;
+		}
+		this._forceItemStateUpdate = value;
+		this.setInvalid(DATA);
+		return this._forceItemStateUpdate;
+	}
+
 	private var _selectedLocation:Array<Int> = null;
 
 	/**
@@ -1664,7 +1701,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			var headerRenderer = this.dataToHeaderRenderer.get(column);
 			if (headerRenderer != null) {
 				var state = this.headerRendererToHeaderState.get(headerRenderer);
-				var changed = this.populateCurrentHeaderState(column, i, state, false);
+				var changed = this.populateCurrentHeaderState(column, i, state, this._forceItemStateUpdate);
 				if (changed) {
 					this.updateHeaderRenderer(headerRenderer, state);
 				}
@@ -1821,7 +1858,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
-		var changed = this.populateCurrentRowState(item, location, layoutIndex, state, false);
+		var changed = this.populateCurrentRowState(item, location, layoutIndex, state, this._forceItemStateUpdate);
 		if (changed) {
 			this.updateRowRenderer(rowRenderer, state);
 		}
@@ -1976,6 +2013,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			state.customCellRendererVariant = customCellRendererVariant;
 			changed = true;
 		}
+		var forceItemStateUpdate = this._forceItemStateUpdate;
+		if (force || state.forceItemStateUpdate != forceItemStateUpdate) {
+			state.forceItemStateUpdate = forceItemStateUpdate;
+			changed = true;
+		}
 		return changed;
 	}
 
@@ -2051,6 +2093,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		rowRenderer.cellRendererRecycler = state.cellRendererRecycler;
 		rowRenderer.customCellRendererVariant = state.customCellRendererVariant;
 		rowRenderer.customColumnWidths = state.customColumnWidths;
+		rowRenderer.forceCellStateUpdate = state.forceItemStateUpdate;
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
@@ -3166,4 +3209,5 @@ class TreeGridViewRowState {
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 	public var customColumnWidths:Array<Float>;
 	public var customCellRendererVariant:String;
+	public var forceItemStateUpdate:Bool;
 }

@@ -308,6 +308,44 @@ class ListViewTest extends Test {
 		Assert.equals(this._listView, setListViewOwnerValues[2]);
 	}
 
+	public function testDefaultItemStateUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:ListViewItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._listView.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._listView.setInvalid(DATA);
+		this._listView.validateNow();
+		Assert.equals(3, updatedIndices.length);
+	}
+
+	public function testForceItemStateUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.forceItemStateUpdate = true;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:ListViewItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._listView.validateNow();
+		Assert.equals(4, updatedIndices.length);
+		// once for measurement
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(0, updatedIndices[1]);
+		Assert.equals(1, updatedIndices[2]);
+		Assert.equals(2, updatedIndices[3]);
+		this._listView.setInvalid(DATA);
+		this._listView.validateNow();
+		Assert.equals(7, updatedIndices.length);
+		Assert.equals(0, updatedIndices[4]);
+		Assert.equals(1, updatedIndices[5]);
+		Assert.equals(2, updatedIndices[6]);
+	}
+
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {
 		var item1 = {text: "One"};
 		var item2 = {text: "Two"};

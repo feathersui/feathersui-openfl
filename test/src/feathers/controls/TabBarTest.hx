@@ -312,6 +312,42 @@ class TabBarTest extends Test {
 		Assert.equals(true, setSelectedValues[2]);
 	}
 
+	public function testDefaultItemStateUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton, (target, state:TabBarItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._tabBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._tabBar.setInvalid(DATA);
+		this._tabBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+	}
+
+	public function testForceItemStateUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.forceItemStateUpdate = true;
+		this._tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton, (target, state:TabBarItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._tabBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._tabBar.setInvalid(DATA);
+		this._tabBar.validateNow();
+		Assert.equals(6, updatedIndices.length);
+		Assert.equals(0, updatedIndices[3]);
+		Assert.equals(1, updatedIndices[4]);
+		Assert.equals(2, updatedIndices[5]);
+	}
+
 	public function testAddItemToDataProviderCreatesNewTab():Void {
 		var item1 = {text: "One"};
 		var item2 = {text: "Two"};

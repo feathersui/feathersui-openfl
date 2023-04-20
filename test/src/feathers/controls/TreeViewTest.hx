@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.TreeViewItemState;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
@@ -253,6 +254,43 @@ import utest.Test;
 		Assert.equals(this._treeView, setTreeViewOwnerValues[0]);
 		Assert.isNull(setTreeViewOwnerValues[1]);
 		Assert.equals(this._treeView, setTreeViewOwnerValues[2]);
+	}
+
+	public function testDefaultItemStateUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._treeView.validateNow();
+		Assert.equals(3, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[2]));
+		this._treeView.setInvalid(DATA);
+		this._treeView.validateNow();
+		Assert.equals(3, updatedLocations.length);
+	}
+
+	public function testForceItemStateUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._treeView.forceItemStateUpdate = true;
+		this._treeView.validateNow();
+		Assert.equals(4, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[2]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[3]));
+		this._treeView.setInvalid(DATA);
+		this._treeView.validateNow();
+		Assert.equals(7, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[4]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[5]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[6]));
 	}
 
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {

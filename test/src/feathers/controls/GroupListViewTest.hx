@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.GroupListViewItemState;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
@@ -173,6 +174,51 @@ class GroupListViewTest extends Test {
 		Assert.equals(this._listView, setGroupListViewOwnerValues[0]);
 		Assert.isNull(setGroupListViewOwnerValues[1]);
 		Assert.equals(this._listView, setGroupListViewOwnerValues[2]);
+	}
+
+	public function testDefaultItemStateUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.headerRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.validateNow();
+		Assert.equals(4, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[2]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[3]));
+		this._listView.setInvalid(DATA);
+		this._listView.validateNow();
+		Assert.equals(4, updatedLocations.length);
+	}
+
+	public function testForceItemStateUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.headerRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.forceItemStateUpdate = true;
+		this._listView.validateNow();
+		// the exactly number of updates on the first pass isn't checked
+		// GroupListView is currently not as strict as ListView
+		var prevLength = updatedLocations.length;
+		this._listView.setInvalid(DATA);
+		this._listView.validateNow();
+		Assert.equals(prevLength + 4, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[prevLength + 0]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[prevLength + 1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[prevLength + 2]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[prevLength + 3]));
 	}
 
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {

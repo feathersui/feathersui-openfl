@@ -187,6 +187,42 @@ class ButtonBarTest extends Test {
 		Assert.equals(itemIndex, setLayoutIndexValues[2]);
 	}
 
+	public function testDefaultItemStateUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withClass(Button, (target, state:ButtonBarItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._buttonBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._buttonBar.setInvalid(DATA);
+		this._buttonBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+	}
+
+	public function testForceItemStateUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.forceItemStateUpdate = true;
+		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withClass(Button, (target, state:ButtonBarItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._buttonBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._buttonBar.setInvalid(DATA);
+		this._buttonBar.validateNow();
+		Assert.equals(6, updatedIndices.length);
+		Assert.equals(0, updatedIndices[3]);
+		Assert.equals(1, updatedIndices[4]);
+		Assert.equals(2, updatedIndices[5]);
+	}
+
 	public function testAddItemToDataProviderCreatesNewButton():Void {
 		var item1 = {text: "One"};
 		var item2 = {text: "Two"};

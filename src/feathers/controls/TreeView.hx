@@ -560,6 +560,41 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		return this._defaultStorage.itemRendererRecycler;
 	}
 
+	private var _forceItemStateUpdate:Bool = false;
+
+	/**
+		Forces the `itemRendererRecycler.update()` method to be called with the
+		`TreeViewItemState` when the tree view validates, even if the item's
+		state has not changed since the previous validation.
+
+		Before Feathers UI 1.2, `update()` was called more frequently, and this
+		property is provided to enable backwards compatibility, temporarily, to
+		assist in migration from earlier versions of Feathers UI.
+
+		In general, when this property needs to be enabled, its often because of
+		a missed call to `dataProvider.updateAt()` (preferred) or
+		`dataProvider.updateAll()` (less common).
+
+		The `forceItemStateUpdate` property may be removed in a future major
+		version, so it is best to avoid relying on it as a long-term solution.
+
+		@since 1.2.0
+	**/
+	public var forceItemStateUpdate(get, set):Bool;
+
+	private function get_forceItemStateUpdate():Bool {
+		return this._forceItemStateUpdate;
+	}
+
+	private function set_forceItemStateUpdate(value:Bool):Bool {
+		if (this._forceItemStateUpdate == value) {
+			return this._forceItemStateUpdate;
+		}
+		this._forceItemStateUpdate = value;
+		this.setInvalid(DATA);
+		return this._forceItemStateUpdate;
+	}
+
 	private var _recyclerMap:Map<String, DisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>> = null;
 
 	private var _itemRendererRecyclerIDFunction:(state:TreeViewItemState) -> String;
@@ -1182,7 +1217,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
-		var changed = this.populateCurrentItemState(item, location, layoutIndex, state, false);
+		var changed = this.populateCurrentItemState(item, location, layoutIndex, state, this._forceItemStateUpdate);
 		var oldRecyclerID = state.recyclerID;
 		var storage = this.itemStateToStorage(state);
 		if (storage.id != oldRecyclerID) {

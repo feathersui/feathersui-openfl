@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.data.TreeGridViewCellState;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeGridViewCellRenderer;
@@ -313,6 +314,35 @@ import utest.Test;
 		Assert.equals(this._treeGridView, setTreeGridViewOwnerValues[0]);
 		Assert.isNull(setTreeGridViewOwnerValues[1]);
 		Assert.equals(this._treeGridView, setTreeGridViewOwnerValues[2]);
+	}
+
+	public function testDefaultItemStateUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		var updatedColumns:Array<Int> = [];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._treeGridView.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeGridViewCellState) -> {
+			updatedLocations.push(state.rowLocation);
+			updatedColumns.push(state.columnIndex);
+		});
+		this._treeGridView.validateNow();
+		Assert.equals(6, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[2]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[3]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[4]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[5]));
+		Assert.equals(6, updatedColumns.length);
+		Assert.equals(0, updatedColumns[0]);
+		Assert.equals(1, updatedColumns[1]);
+		Assert.equals(0, updatedColumns[2]);
+		Assert.equals(1, updatedColumns[3]);
+		Assert.equals(0, updatedColumns[4]);
+		Assert.equals(1, updatedColumns[5]);
+		this._treeGridView.setInvalid(DATA);
+		this._treeGridView.validateNow();
+		Assert.equals(6, updatedLocations.length);
+		Assert.equals(6, updatedColumns.length);
 	}
 
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {

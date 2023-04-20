@@ -339,6 +339,23 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		return this._defaultStorage.cellRendererRecycler;
 	}
 
+	private var _forceCellStateUpdate:Bool = false;
+
+	public var forceCellStateUpdate(get, set):Bool;
+
+	private function get_forceCellStateUpdate():Bool {
+		return this._forceCellStateUpdate;
+	}
+
+	private function set_forceCellStateUpdate(value:Bool):Bool {
+		if (this._forceCellStateUpdate == value) {
+			return this._forceCellStateUpdate;
+		}
+		this._forceCellStateUpdate = value;
+		this.setInvalid(DATA);
+		return this._forceCellStateUpdate;
+	}
+
 	private var _customCellRendererVariant:String = null;
 
 	public var customCellRendererVariant(get, set):String;
@@ -481,7 +498,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			if (cellRenderer != null) {
 				var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 				var state = this._cellRendererToCellState.get(cellRenderer);
-				var changed = this.populateCurrentItemState(column, i, state, false);
+				var changed = this.populateCurrentItemState(column, i, state, this._forceCellStateUpdate);
 				if (changed) {
 					this.updateCellRenderer(cellRenderer, state, storage);
 				}
