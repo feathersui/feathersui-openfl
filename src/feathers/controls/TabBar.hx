@@ -1210,14 +1210,19 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return;
 		}
 		var state = this.tabToItemState.get(tab);
+		if (state.owner == null) {
+			// a previous update is already pending
+			return;
+		}
 		var storage = this.itemStateToStorage(state);
 		this.populateCurrentItemState(item, index, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
 		this.resetTab(tab, state);
-		this.updateTab(tab, state, storage);
-		this.setInvalid(LAYOUT);
+		// ensures that the change is detected when we validate later
+		state.owner = null;
+		this.setInvalid(DATA);
 	}
 
 	private function tabBar_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {

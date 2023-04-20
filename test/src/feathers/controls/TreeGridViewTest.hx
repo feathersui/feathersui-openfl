@@ -279,6 +279,7 @@ import utest.Test;
 		Assert.equals(1, setTreeGridViewOwnerValues.length);
 
 		this._treeGridView.dataProvider.updateAt(itemLocation);
+		this._treeGridView.validateNow();
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -347,6 +348,88 @@ import utest.Test;
 		this._treeGridView.validateNow();
 		Assert.equals(6, updatedLocations.length);
 		Assert.equals(6, updatedColumns.length);
+	}
+
+	public function testUpdateItemCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		var updatedColumns:Array<Int> = [];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._treeGridView.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeGridViewCellState) -> {
+			updatedLocations.push(state.rowLocation);
+			updatedColumns.push(state.columnIndex);
+		});
+		this._treeGridView.columns = new ArrayCollection([
+			new TreeGridViewColumn("A", item -> item.a),
+			new TreeGridViewColumn("B", item -> item.b),
+		]);
+		this._treeGridView.validateNow();
+		Assert.equals(6, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[2]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[3]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[4]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[5]));
+		Assert.equals(6, updatedColumns.length);
+		Assert.equals(0, updatedColumns[0]);
+		Assert.equals(1, updatedColumns[1]);
+		Assert.equals(0, updatedColumns[2]);
+		Assert.equals(1, updatedColumns[3]);
+		Assert.equals(0, updatedColumns[4]);
+		Assert.equals(1, updatedColumns[5]);
+		this._treeGridView.dataProvider.updateAt([1]);
+		this._treeGridView.validateNow();
+		Assert.equals(8, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[6]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[7]));
+		Assert.equals(8, updatedColumns.length);
+		Assert.equals(0, updatedColumns[6]);
+		Assert.equals(1, updatedColumns[7]);
+	}
+
+	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		var updatedColumns:Array<Int> = [];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._treeGridView.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeGridViewCellState) -> {
+			updatedLocations.push(state.rowLocation);
+			updatedColumns.push(state.columnIndex);
+		});
+		this._treeGridView.columns = new ArrayCollection([
+			new TreeGridViewColumn("A", item -> item.a),
+			new TreeGridViewColumn("B", item -> item.b),
+		]);
+		this._treeGridView.validateNow();
+		Assert.equals(6, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[2]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[3]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[4]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[5]));
+		Assert.equals(6, updatedColumns.length);
+		Assert.equals(0, updatedColumns[0]);
+		Assert.equals(1, updatedColumns[1]);
+		Assert.equals(0, updatedColumns[2]);
+		Assert.equals(1, updatedColumns[3]);
+		Assert.equals(0, updatedColumns[4]);
+		Assert.equals(1, updatedColumns[5]);
+		this._treeGridView.dataProvider.updateAll();
+		this._treeGridView.validateNow();
+		Assert.equals(12, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[6]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[7]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[8]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[9]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[10]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[11]));
+		Assert.equals(12, updatedColumns.length);
+		Assert.equals(0, updatedColumns[6]);
+		Assert.equals(1, updatedColumns[7]);
+		Assert.equals(0, updatedColumns[8]);
+		Assert.equals(1, updatedColumns[9]);
+		Assert.equals(0, updatedColumns[10]);
+		Assert.equals(1, updatedColumns[11]);
 	}
 
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {

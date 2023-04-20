@@ -149,6 +149,7 @@ class GroupListViewTest extends Test {
 		Assert.equals(1, setGroupListViewOwnerValues.length);
 
 		this._listView.dataProvider.updateAt(itemLocation);
+		this._listView.validateNow();
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -223,6 +224,57 @@ class GroupListViewTest extends Test {
 		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[prevLength + 1]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[prevLength + 2]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[prevLength + 3]));
+	}
+
+	public function testUpdateItemCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.itemToText = item -> item.text;
+		this._listView.itemToHeaderText = item -> item.text;
+		this._listView.headerRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.validateNow();
+		Assert.equals(4, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[2]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[3]));
+		this._listView.dataProvider.updateAt([0, 1]);
+		this._listView.validateNow();
+		Assert.equals(5, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[4]));
+	}
+
+	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedLocations:Array<Array<Int>> = [];
+		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.itemToText = item -> item.text;
+		this._listView.itemToHeaderText = item -> item.text;
+		this._listView.headerRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GroupListViewItemState) -> {
+			updatedLocations.push(state.location);
+		});
+		this._listView.validateNow();
+		Assert.equals(4, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[2]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[3]));
+		this._listView.dataProvider.updateAll();
+		this._listView.validateNow();
+		Assert.equals(8, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[4]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[5]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[6]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[7]));
 	}
 
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {

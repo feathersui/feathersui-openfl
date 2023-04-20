@@ -580,12 +580,18 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state.owner == null) {
+			// a previous update is already pending
+			return;
+		}
 		this.populateCurrentItemState(column, columnIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
 		this.resetCellRenderer(cellRenderer, state, storage);
-		this.updateCellRenderer(cellRenderer, state, storage);
+		// ensures that the change is detected when we validate later
+		state.owner = null;
+		this.setInvalid(DATA);
 	}
 
 	private function populateCurrentItemState(column:GridViewColumn, columnIndex:Int, state:GridViewCellState, force:Bool):Bool {

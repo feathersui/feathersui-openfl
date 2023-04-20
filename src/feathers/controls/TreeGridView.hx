@@ -2627,6 +2627,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
+		if (state.owner == null) {
+			// a previous update is already pending
+			return;
+		}
+		rowRenderer.updateCells();
 		this.populateCurrentRowState(item, location, layoutIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
@@ -2635,9 +2640,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._rowRendererMeasurements != null) {
 			this._rowRendererMeasurements.restore(rowRenderer);
 		}
-		this.updateRowRenderer(rowRenderer, state);
-		rowRenderer.updateCells();
-		this.setInvalid(LAYOUT);
+		// ensures that the change is detected when we validate later
+		state.owner = null;
+		this.setInvalid(DATA);
 	}
 
 	private function validateCustomColumnWidths():Void {

@@ -363,6 +363,7 @@ class GridViewTest extends Test {
 		Assert.equals(1, setGridViewOwnerValues.length);
 
 		this._gridView.dataProvider.updateAt(rowIndex);
+		this._gridView.validateNow();
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -431,6 +432,88 @@ class GridViewTest extends Test {
 		this._gridView.validateNow();
 		Assert.equals(6, updatedRows.length);
 		Assert.equals(6, updatedColumns.length);
+	}
+
+	public function testUpdateItemCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedRows:Array<Int> = [];
+		var updatedColumns:Array<Int> = [];
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+		this._gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GridViewCellState) -> {
+			updatedRows.push(state.rowIndex);
+			updatedColumns.push(state.columnIndex);
+		});
+		this._gridView.validateNow();
+		Assert.equals(6, updatedRows.length);
+		Assert.equals(0, updatedRows[0]);
+		Assert.equals(0, updatedRows[1]);
+		Assert.equals(1, updatedRows[2]);
+		Assert.equals(1, updatedRows[3]);
+		Assert.equals(2, updatedRows[4]);
+		Assert.equals(2, updatedRows[5]);
+		Assert.equals(6, updatedColumns.length);
+		Assert.equals(0, updatedColumns[0]);
+		Assert.equals(1, updatedColumns[1]);
+		Assert.equals(0, updatedColumns[2]);
+		Assert.equals(1, updatedColumns[3]);
+		Assert.equals(0, updatedColumns[4]);
+		Assert.equals(1, updatedColumns[5]);
+		this._gridView.dataProvider.updateAt(1);
+		this._gridView.validateNow();
+		Assert.equals(8, updatedRows.length);
+		Assert.equals(1, updatedRows[6]);
+		Assert.equals(1, updatedRows[7]);
+		Assert.equals(8, updatedColumns.length);
+		Assert.equals(0, updatedColumns[6]);
+		Assert.equals(1, updatedColumns[7]);
+	}
+
+	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedRows:Array<Int> = [];
+		var updatedColumns:Array<Int> = [];
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+		this._gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GridViewCellState) -> {
+			updatedRows.push(state.rowIndex);
+			updatedColumns.push(state.columnIndex);
+		});
+		this._gridView.validateNow();
+		Assert.equals(6, updatedRows.length);
+		Assert.equals(0, updatedRows[0]);
+		Assert.equals(0, updatedRows[1]);
+		Assert.equals(1, updatedRows[2]);
+		Assert.equals(1, updatedRows[3]);
+		Assert.equals(2, updatedRows[4]);
+		Assert.equals(2, updatedRows[5]);
+		Assert.equals(6, updatedColumns.length);
+		Assert.equals(0, updatedColumns[0]);
+		Assert.equals(1, updatedColumns[1]);
+		Assert.equals(0, updatedColumns[2]);
+		Assert.equals(1, updatedColumns[3]);
+		Assert.equals(0, updatedColumns[4]);
+		Assert.equals(1, updatedColumns[5]);
+		this._gridView.dataProvider.updateAll();
+		this._gridView.validateNow();
+		Assert.equals(12, updatedRows.length);
+		Assert.equals(0, updatedRows[6]);
+		Assert.equals(0, updatedRows[7]);
+		Assert.equals(1, updatedRows[8]);
+		Assert.equals(1, updatedRows[9]);
+		Assert.equals(2, updatedRows[10]);
+		Assert.equals(2, updatedRows[11]);
+		Assert.equals(12, updatedColumns.length);
+		Assert.equals(0, updatedColumns[6]);
+		Assert.equals(1, updatedColumns[7]);
+		Assert.equals(0, updatedColumns[8]);
+		Assert.equals(1, updatedColumns[9]);
+		Assert.equals(0, updatedColumns[10]);
+		Assert.equals(1, updatedColumns[11]);
 	}
 
 	public function testAddItemToDataProviderCreatesNewCellRenderer():Void {

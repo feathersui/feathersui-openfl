@@ -941,14 +941,19 @@ class ButtonBar extends FeathersControl {
 			return;
 		}
 		var state = this.buttonToItemState.get(button);
+		if (state.owner == null) {
+			// a previous update is already pending
+			return;
+		}
 		var storage = this.itemStateToStorage(state);
 		this.populateCurrentItemState(item, index, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
 		this.resetButton(button, state);
-		this.updateButton(button, state, storage);
-		this.setInvalid(LAYOUT);
+		// ensures that the change is detected when we validate later
+		state.owner = null;
+		this.setInvalid(DATA);
 	}
 
 	private function buttonBar_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {

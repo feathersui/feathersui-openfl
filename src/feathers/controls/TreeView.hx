@@ -2106,23 +2106,26 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		var item = this._dataProvider.get(location);
 		var itemRenderer = this.dataToItemRenderer.get(item);
-
 		if (itemRenderer == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
 		} else {
 			var state = this.itemRendererToItemState.get(itemRenderer);
-			var storage = this.itemStateToStorage(state);
-			this.populateCurrentItemState(item, location, layoutIndex, state, true);
-			// in order to display the same item with modified properties, this
-			// hack tricks the item renderer into thinking that it has been given
-			// a different item to render.
-			this.resetItemRenderer(itemRenderer, state, storage);
-			if (storage.measurements != null) {
-				storage.measurements.restore(itemRenderer);
+			// a previous update may already be pending
+			if (state.owner != null) {
+				var storage = this.itemStateToStorage(state);
+				this.populateCurrentItemState(item, location, layoutIndex, state, true);
+				// in order to display the same item with modified properties, this
+				// hack tricks the item renderer into thinking that it has been given
+				// a different item to render.
+				this.resetItemRenderer(itemRenderer, state, storage);
+				if (storage.measurements != null) {
+					storage.measurements.restore(itemRenderer);
+				}
+				// ensures that the change is detected when we validate later
+				state.owner = null;
+				this.setInvalid(DATA);
 			}
-			this.updateItemRenderer(itemRenderer, state, storage);
-			this.setInvalid(LAYOUT);
 		}
 		if (this._dataProvider.isBranch(item)) {
 			for (i in 0...this._dataProvider.getLength(location)) {

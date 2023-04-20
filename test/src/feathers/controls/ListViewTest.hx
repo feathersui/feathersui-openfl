@@ -281,6 +281,7 @@ class ListViewTest extends Test {
 		Assert.equals(1, setListViewOwnerValues.length);
 
 		this._listView.dataProvider.updateAt(itemIndex);
+		this._listView.validateNow();
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -346,6 +347,44 @@ class ListViewTest extends Test {
 		Assert.equals(0, updatedIndices[4]);
 		Assert.equals(1, updatedIndices[5]);
 		Assert.equals(2, updatedIndices[6]);
+	}
+
+	public function testUpdateItemCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.itemToText = item -> item.text;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:ListViewItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._listView.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._listView.dataProvider.updateAt(1);
+		this._listView.validateNow();
+		Assert.equals(4, updatedIndices.length);
+		Assert.equals(1, updatedIndices[3]);
+	}
+
+	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.itemToText = item -> item.text;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:ListViewItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._listView.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._listView.dataProvider.updateAll();
+		this._listView.validateNow();
+		Assert.equals(6, updatedIndices.length);
+		Assert.equals(0, updatedIndices[3]);
+		Assert.equals(1, updatedIndices[4]);
+		Assert.equals(2, updatedIndices[5]);
 	}
 
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {

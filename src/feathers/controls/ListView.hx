@@ -1762,6 +1762,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state.owner == null) {
+			// a previous update is already pending
+			return;
+		}
 		var storage = this.itemStateToStorage(state);
 		this.populateCurrentItemState(item, index, state, true);
 		// in order to display the same item with modified properties, this
@@ -1771,8 +1775,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (storage.measurements != null) {
 			storage.measurements.restore(itemRenderer);
 		}
-		this.updateItemRenderer(itemRenderer, state, storage);
-		this.setInvalid(LAYOUT);
+		// ensures that the change is detected when we validate later
+		state.owner = null;
+		this.setInvalid(DATA);
 	}
 
 	private function listView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {

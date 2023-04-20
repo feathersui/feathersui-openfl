@@ -295,6 +295,7 @@ class TabBarTest extends Test {
 		Assert.equals(1, setSelectedValues.length);
 
 		this._tabBar.dataProvider.updateAt(itemIndex);
+		this._tabBar.validateNow();
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -343,6 +344,44 @@ class TabBarTest extends Test {
 		Assert.equals(1, updatedIndices[1]);
 		Assert.equals(2, updatedIndices[2]);
 		this._tabBar.setInvalid(DATA);
+		this._tabBar.validateNow();
+		Assert.equals(6, updatedIndices.length);
+		Assert.equals(0, updatedIndices[3]);
+		Assert.equals(1, updatedIndices[4]);
+		Assert.equals(2, updatedIndices[5]);
+	}
+
+	public function testUpdateItemCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.itemToText = item -> item.text;
+		this._tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton, (target, state:TabBarItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._tabBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._tabBar.dataProvider.updateAt(1);
+		this._tabBar.validateNow();
+		Assert.equals(4, updatedIndices.length);
+		Assert.equals(1, updatedIndices[3]);
+	}
+
+	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
+		var updatedIndices:Array<Int> = [];
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.itemToText = item -> item.text;
+		this._tabBar.tabRecycler = DisplayObjectRecycler.withClass(ToggleButton, (target, state:TabBarItemState) -> {
+			updatedIndices.push(state.index);
+		});
+		this._tabBar.validateNow();
+		Assert.equals(3, updatedIndices.length);
+		Assert.equals(0, updatedIndices[0]);
+		Assert.equals(1, updatedIndices[1]);
+		Assert.equals(2, updatedIndices[2]);
+		this._tabBar.dataProvider.updateAll();
 		this._tabBar.validateNow();
 		Assert.equals(6, updatedIndices.length);
 		Assert.equals(0, updatedIndices[3]);
