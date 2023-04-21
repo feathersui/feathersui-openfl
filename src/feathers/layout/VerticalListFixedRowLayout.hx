@@ -564,7 +564,8 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		}
 		var actualRowHeight = this.calculateRowHeight(items, itemWidth);
 		var positionY = this._paddingTop;
-		for (item in items) {
+		for (i in 0...items.length) {
+			var item = items[i];
 			if (item != null) {
 				if ((item is ILayoutObject)) {
 					if (!cast(item, ILayoutObject).includeInLayout) {
@@ -575,6 +576,16 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				item.y = positionY;
 				item.width = itemWidth;
 				item.height = actualRowHeight;
+				if (this._virtualCache != null) {
+					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+					if (cacheItem != null && cacheItem.itemHeight != actualRowHeight) {
+						// we don't need to dispatch Event.CHANGE here, like
+						// other layouts do, because the height of each item in
+						// this layout is exactly the same. it won't affect the
+						// number of visible items.
+						cacheItem.itemHeight = actualRowHeight;
+					}
+				}
 			}
 			positionY += actualRowHeight + adjustedGap;
 		}
@@ -714,12 +725,10 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 					if (cacheItem != null && cacheItem.itemHeight != actualRowHeight) {
 						cacheItem.itemHeight = actualRowHeight;
-						this._virtualCache[i] = cacheItem;
+						// this new measurement may cause the number of visible
+						// items to change, so we need to notify the container
 						FeathersEvent.dispatch(this, Event.CHANGE);
 					}
-					// changing the item height in the cache may affect the
-					// number of items that are visible, so we dispatch
-					// Event.CHANGE need to check that again
 				}
 				break;
 			}
@@ -741,7 +750,14 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		if (this._rowHeight != null) {
 			itemHeight = this._rowHeight;
 		} else if (this._virtualCache != null) {
-			for (cacheItem in this._virtualCache) {
+			// to avoid performance issues, we should avoid looping
+			// through all items, because there could be hundreds,
+			// thousands, or even millions of them. we need a limit.
+			// the limit should be greater than 1, to avoid an expensive
+			// recovery when the height of the first item is cleared
+			// from the cache by dataProvider.updateAt() or something.
+			for (i in 0...6) {
+				var cacheItem = this._virtualCache[i];
 				if (cacheItem != null) {
 					itemHeight = cacheItem.itemHeight;
 					break;

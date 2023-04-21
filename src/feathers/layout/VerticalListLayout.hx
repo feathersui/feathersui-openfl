@@ -588,11 +588,11 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem != null && cacheItem.itemHeight != itemHeight) {
 					cacheItem.itemHeight = itemHeight;
-					this._virtualCache[i] = cacheItem;
 					// if the height matches the estimated height, no need to
-					// dispatch anything. if it doesn't match, that could affect
-					// the number of visible items, so dispatch Event.CHANGE.
+					// dispatch anything
 					if (itemHeight != virtualRowHeight) {
+						// this new measurement may cause the number of visible
+						// items to change, so we need to notify the container
 						FeathersEvent.dispatch(this, Event.CHANGE);
 					}
 				}
@@ -732,7 +732,8 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem != null && cacheItem.itemHeight != itemHeight) {
 					cacheItem.itemHeight = itemHeight;
-					this._virtualCache[i] = cacheItem;
+					// this new measurement may cause the number of visible
+					// items to change, so we need to notify the container
 					FeathersEvent.dispatch(this, Event.CHANGE);
 				}
 			}
@@ -761,6 +762,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		}
 		var minItems = 0;
 		var maxY = scrollY + height;
+		var skippedMissingItems = 0;
 		for (i in 0...itemCount) {
 			var itemHeight = 0.0;
 			if (this._virtualCache != null) {
@@ -770,10 +772,40 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 					if (estimatedItemHeight == null) {
 						estimatedItemHeight = itemHeight;
 						minItems = Math.ceil(height / (estimatedItemHeight + adjustedGap)) + 1;
+						if (skippedMissingItems > 0) {
+							// include the heights of any items that were missing
+							for (j in 0...skippedMissingItems) {
+								positionY += estimatedItemHeight + adjustedGap;
+								if (startIndex == -1 && positionY >= scrollY) {
+									startIndex = j;
+								}
+								if (startIndex != -1) {
+									endIndex = j;
+									if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
+										break;
+									}
+								}
+							}
+							skippedMissingItems = 0;
+						}
 					}
 				} else if (estimatedItemHeight != null) {
 					itemHeight = estimatedItemHeight;
 				} else {
+					// to avoid performance issues, we should avoid looping
+					// through all items, because there could be hundreds,
+					// thousands, or even millions of them. we need a limit.
+					// the limit should be greater than 1, to avoid an expensive
+					// recovery when the height of the first item is cleared
+					// from the cache by dataProvider.updateAt() or something.
+					if (skippedMissingItems < 5) {
+						skippedMissingItems++;
+						continue;
+					}
+					// if we can't find an estimated height, we return a range
+					// where only the first item is visible. this allows the
+					// first item to be measured, and the container can
+					// request the visible items again using that measurement
 					startIndex = 0;
 					endIndex = 0;
 					break;
