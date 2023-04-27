@@ -21,7 +21,6 @@ import openfl.events.EventDispatcher;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 #if html5
-import js.Lib;
 import js.html.WheelEvent;
 #end
 #if air
@@ -591,8 +590,6 @@ class Scroller extends EventDispatcher {
 	private var savedScrollMoves:Array<Float> = [];
 	private var animateScrollX:SimpleActuator<Dynamic, Dynamic> = null;
 	private var animateScrollY:SimpleActuator<Dynamic, Dynamic> = null;
-	private var _animateScrollXEase:IEasing = null;
-	private var _animateScrollYEase:IEasing = null;
 	private var animateScrollXEndRatio:Float = 1.0;
 	private var animateScrollYEndRatio:Float = 1.0;
 	private var targetScrollX:Float = 0.0;
@@ -623,7 +620,7 @@ class Scroller extends EventDispatcher {
 			this._target.removeEventListener(MouseEvent.MOUSE_DOWN, scroller_target_mouseDownCaptureHandler, true);
 			this._target.removeEventListener(MouseEvent.MOUSE_WHEEL, scroller_target_mouseWheelHandler);
 			#if (html5 && !feathersui_innogames_openfl)
-			var window = cast(Lib.global, js.html.Window);
+			var window = cast(js.Lib.global, js.html.Window);
 			window.removeEventListener("wheel", scroller_window_wheelCaptureHandler, {capture: true});
 			#end
 			this._target.removeEventListener(TouchEvent.TOUCH_BEGIN, scroller_target_touchBeginHandler);
@@ -637,7 +634,7 @@ class Scroller extends EventDispatcher {
 			this._target.addEventListener(MouseEvent.MOUSE_DOWN, scroller_target_mouseDownCaptureHandler, true, 0, true);
 			this._target.addEventListener(MouseEvent.MOUSE_WHEEL, scroller_target_mouseWheelHandler, false, 0, true);
 			#if (html5 && !feathersui_innogames_openfl)
-			var window = cast(Lib.global, js.html.Window);
+			var window = cast(js.Lib.global, js.html.Window);
 			window.addEventListener("wheel", scroller_window_wheelCaptureHandler, {capture: true});
 			#end
 			this._target.addEventListener(TouchEvent.TOUCH_BEGIN, scroller_target_touchBeginHandler, false, 0, true);
@@ -737,17 +734,67 @@ class Scroller extends EventDispatcher {
 		if (this.animateScrollX != null) {
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
-			this._animateScrollXEase = null;
 		}
 		if (this.animateScrollY != null) {
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
-			this._animateScrollYEase = null;
 		}
 		this.cleanupAfterDrag();
 		this._draggingX = false;
 		this._draggingY = false;
 		this.completeScroll();
+	}
+
+	/**
+		An advanced method used to adjust the current scroll position and the
+		target scroll position of `throwTo()` if there is a shift in the
+		content's layout. For example, this may be used by containers with
+		virtual layouts, where the dimensions of items might change from an
+		estimated size to their actual rendered size.
+
+		@since 1.2.0
+	**/
+	public function applyLayoutShift(x:Null<Float>, y:Null<Float>):Void {
+		if (x != null) {
+			var animateScrollX = this.animateScrollX;
+			this.animateScrollX = null;
+			if (animateScrollX != null) {
+				Actuate.stop(animateScrollX, null, false, false);
+			}
+			this.startScrollX += x;
+			this.scrollX += x;
+			var i = 0;
+			while (i < this.savedScrollMoves.length) {
+				this.savedScrollMoves[i] += x;
+				i += 3;
+			}
+			if (animateScrollX != null) {
+				var newTargetScrollX = this.targetScrollX + x;
+				var position = (openfl.Lib.getTimer() / 1000.0) - animateScrollX.startTime;
+				var newDuration = animateScrollX.duration - position;
+				this.throwTo(newTargetScrollX, null, newDuration, animateScrollX._ease);
+			}
+		}
+		if (y != null) {
+			var animateScrollY = this.animateScrollY;
+			this.animateScrollY = null;
+			if (animateScrollY != null) {
+				Actuate.stop(animateScrollY, null, false, false);
+			}
+			this.startScrollY += y;
+			this.scrollY += y;
+			var i = 1;
+			while (i < this.savedScrollMoves.length) {
+				this.savedScrollMoves[i] += y;
+				i += 3;
+			}
+			if (animateScrollY != null) {
+				var newTargetScrollY = this.targetScrollY + y;
+				var position = (openfl.Lib.getTimer() / 1000.0) - animateScrollY.startTime;
+				var newDuration = animateScrollY.duration - position;
+				this.throwTo(null, newTargetScrollY, newDuration, animateScrollY._ease);
+			}
+		}
 	}
 
 	/**
@@ -769,7 +816,6 @@ class Scroller extends EventDispatcher {
 			if (this.animateScrollX != null) {
 				Actuate.stop(this.animateScrollX, null, false, false);
 				this.animateScrollX = null;
-				this._animateScrollXEase = null;
 			}
 			if (this._scrollX != scrollX) {
 				scrollChanged = true;
@@ -780,7 +826,6 @@ class Scroller extends EventDispatcher {
 				} else {
 					this.startScrollX = this._scrollX;
 					this.targetScrollX = scrollX;
-					this._animateScrollXEase = ease;
 					var tween = Actuate.update((scrollX:Null<Float>) -> {
 						if (scrollX == null) {
 							// workaround for jgranick/actuate#108
@@ -790,7 +835,7 @@ class Scroller extends EventDispatcher {
 						this.scrollX = scrollX;
 					}, duration, [this._scrollX], [this.targetScrollX], true);
 					this.animateScrollX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
-					this.animateScrollX.ease(this._animateScrollXEase);
+					this.animateScrollX.ease(ease);
 					this.animateScrollX.onComplete(this.animateScrollX_onComplete);
 					this.refreshAnimateScrollXEndRatio();
 				}
@@ -802,7 +847,6 @@ class Scroller extends EventDispatcher {
 			if (this.animateScrollY != null) {
 				Actuate.stop(this.animateScrollY, null, false, false);
 				this.animateScrollY = null;
-				this._animateScrollYEase = null;
 			}
 			if (this._scrollY != scrollY) {
 				scrollChanged = true;
@@ -813,7 +857,6 @@ class Scroller extends EventDispatcher {
 				} else {
 					this.startScrollY = this._scrollY;
 					this.targetScrollY = scrollY;
-					this._animateScrollYEase = ease;
 					var tween = Actuate.update((scrollY:Null<Float>) -> {
 						if (scrollY == null) {
 							// workaround for jgranick/actuate#108
@@ -823,7 +866,7 @@ class Scroller extends EventDispatcher {
 						this.scrollY = scrollY;
 					}, duration, [this._scrollY], [this.targetScrollY], true);
 					this.animateScrollY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
-					this.animateScrollY.ease(this._animateScrollYEase);
+					this.animateScrollY.ease(ease);
 					this.animateScrollY.onComplete(this.animateScrollY_onComplete);
 					this.refreshAnimateScrollYEndRatio();
 				}
@@ -1052,7 +1095,10 @@ class Scroller extends EventDispatcher {
 		var time = (openfl.Lib.getTimer() / 1000.0);
 		var currentTime = time - this.animateScrollX.startTime;
 		var ratio = currentTime / this.animateScrollX.duration;
-		ratio = this._animateScrollXEase.calculate(ratio);
+		var ease = this.animateScrollX._ease;
+		if (ease != null) {
+			ratio = ease.calculate(ratio);
+		}
 		if (ratio >= this.animateScrollXEndRatio && currentTime < this.animateScrollX.duration) {
 			// check that the currentTime is less than totalTime because if
 			// the tween is complete, we don't want it set to null before
@@ -1068,7 +1114,6 @@ class Scroller extends EventDispatcher {
 			}
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
-			this._animateScrollXEase = null;
 			this.finishScrollX();
 			return;
 		}
@@ -1076,7 +1121,6 @@ class Scroller extends EventDispatcher {
 
 	private function animateScrollX_onComplete():Void {
 		this.animateScrollX = null;
-		this._animateScrollXEase = null;
 		this.finishScrollX();
 	}
 
@@ -1084,7 +1128,10 @@ class Scroller extends EventDispatcher {
 		var time = (openfl.Lib.getTimer() / 1000.0);
 		var currentTime = time - this.animateScrollY.startTime;
 		var ratio = currentTime / this.animateScrollY.duration;
-		ratio = this._animateScrollYEase.calculate(ratio);
+		var ease = this.animateScrollY._ease;
+		if (ease != null) {
+			ratio = ease.calculate(ratio);
+		}
 		if (ratio >= this.animateScrollYEndRatio && currentTime < this.animateScrollY.duration) {
 			// check that the currentTime is less than totalTime because if
 			// the tween is complete, we don't want it set to null before
@@ -1100,7 +1147,6 @@ class Scroller extends EventDispatcher {
 			}
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
-			this._animateScrollYEase = null;
 			this.finishScrollY();
 			return;
 		}
@@ -1108,7 +1154,6 @@ class Scroller extends EventDispatcher {
 
 	private function animateScrollY_onComplete():Void {
 		this.animateScrollY = null;
-		this._animateScrollYEase = null;
 		this.finishScrollY();
 	}
 
@@ -1144,12 +1189,10 @@ class Scroller extends EventDispatcher {
 		if (this.animateScrollX != null) {
 			Actuate.stop(this.animateScrollX, null, false, false);
 			this.animateScrollX = null;
-			this._animateScrollXEase = null;
 		}
 		if (this.animateScrollY != null) {
 			Actuate.stop(this.animateScrollY, null, false, false);
 			this.animateScrollY = null;
-			this._animateScrollYEase = null;
 		}
 
 		this._target.addEventListener(Event.REMOVED_FROM_STAGE, scroller_target_removedFromStageHandler, false, 0, true);
