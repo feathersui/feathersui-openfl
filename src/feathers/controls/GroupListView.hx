@@ -1143,8 +1143,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var oldEnd = this._visibleIndices.end;
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
 			var virtualLayout = cast(this.layout, IVirtualLayout);
-			virtualLayout.scrollX = this.scrollX;
-			virtualLayout.scrollY = this.scrollY;
+			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
+			this._ignoreLayoutChanges = true;
+			virtualLayout.scrollX = this.scroller.scrollX;
+			virtualLayout.scrollY = this.scroller.scrollY;
+			this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 			virtualLayout.getVisibleIndices(this._layoutItems.length, this.groupViewPort.visibleWidth, this.groupViewPort.visibleHeight,
 				this._tempVisibleIndices);
 		} else {
@@ -1326,6 +1329,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			var virtualLayout = cast(this.layout, IVirtualLayout);
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
+			virtualLayout.scrollX = this.scroller.scrollX;
+			virtualLayout.scrollY = this.scroller.scrollY;
 			virtualLayout.virtualCache = this._virtualCache;
 			this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
 			virtualLayout.getVisibleIndices(this._layoutItems.length, this.groupViewPort.visibleWidth, this.groupViewPort.visibleHeight, this._visibleIndices);
