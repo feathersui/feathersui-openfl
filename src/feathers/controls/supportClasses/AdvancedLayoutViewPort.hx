@@ -438,5 +438,10 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 			return;
 		}
 		this._scroller.applyLayoutShift(event.x, event.y);
+		if (this._layoutActive) {
+			this._layoutChanged = true;
+			return;
+		}
+		this.setInvalid(LAYOUT);
 	}
 }
