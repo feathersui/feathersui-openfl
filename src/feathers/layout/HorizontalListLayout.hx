@@ -804,7 +804,6 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 						skippedMissingItems++;
 						continue;
 					}
-					trace("fallback!");
 					// if we can't find an estimated height, we return a range
 					// where only the first item is visible. this allows the
 					// first item to be measured, and the container can
