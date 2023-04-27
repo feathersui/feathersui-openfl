@@ -11,6 +11,7 @@ package feathers.layout;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
+import feathers.events.ScrollEvent;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
@@ -591,6 +592,14 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 					// if the height matches the estimated height, no need to
 					// dispatch anything
 					if (itemHeight != virtualRowHeight) {
+						if (positionY < scrollY) {
+							// attempt to adjust the scroll position so that it
+							// appears that we're scrolling smoothly after this
+							// item resizes
+							var offsetY = itemHeight - virtualRowHeight;
+							ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, 0.0, offsetY);
+						}
+
 						// this new measurement may cause the number of visible
 						// items to change, so we need to notify the container
 						FeathersEvent.dispatch(this, Event.CHANGE);

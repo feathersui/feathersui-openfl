@@ -11,6 +11,7 @@ package feathers.layout;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
+import feathers.events.ScrollEvent;
 import feathers.layout.IVirtualLayout.VirtualLayoutRange;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
@@ -587,6 +588,14 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					// if the width matches the estimated width, no need to
 					// dispatch anything
 					if (itemWidth != virtualColumnWidth) {
+						if (positionX < scrollX) {
+							// attempt to adjust the scroll position so that it
+							// appears that we're scrolling smoothly after this
+							// item resizes
+							var offsetX = itemWidth - virtualColumnWidth;
+							ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, offsetX, 0.0);
+						}
+
 						// this new measurement may cause the number of visible
 						// items to change, so we need to notify the container
 						FeathersEvent.dispatch(this, Event.CHANGE);
