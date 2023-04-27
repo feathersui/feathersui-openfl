@@ -2418,10 +2418,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, layoutIndex:Int, open:Bool):Int {
-		var itemRenderer = this.dataToRowRenderer.get(branch);
+		var rowRenderer = this.dataToRowRenderer.get(branch);
 		var state:TreeGridViewRowState = null;
-		if (itemRenderer != null) {
-			state = this.rowRendererToRowState.get(itemRenderer);
+		if (rowRenderer != null) {
+			state = this.rowRendererToRowState.get(rowRenderer);
 		}
 		var isTemporary = false;
 		if (state == null) {
@@ -2436,6 +2436,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.openBranches.push(branch);
 			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
+			if (rowRenderer != null) {
+				this.updateRowRenderer(rowRenderer, state);
+			}
 			var cellState = new TreeGridViewCellState();
 			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, cellState);
@@ -2443,6 +2446,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.openBranches.remove(branch);
 			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 			removeChildrenFromVirtualCache(location, layoutIndex);
+			if (rowRenderer != null) {
+				this.updateRowRenderer(rowRenderer, state);
+			}
 			var cellState = new TreeGridViewCellState();
 			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, cellState);

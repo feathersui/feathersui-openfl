@@ -1876,11 +1876,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this.openBranches.push(branch);
 			this.populateCurrentItemState(branch, location, layoutIndex, state, true);
 			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
+			if (itemRenderer != null) {
+				var storage = this.itemStateToStorage(state);
+				this.updateItemRenderer(itemRenderer, state, storage);
+			}
 			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, state);
 		} else if (!open && alreadyOpen) {
 			this.openBranches.remove(branch);
 			this.populateCurrentItemState(branch, location, layoutIndex, state, true);
 			removeChildrenFromVirtualCache(location, layoutIndex);
+			if (itemRenderer != null) {
+				var storage = this.itemStateToStorage(state);
+				this.updateItemRenderer(itemRenderer, state, storage);
+			}
 			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, state);
 		}
 		if (isTemporary) {
