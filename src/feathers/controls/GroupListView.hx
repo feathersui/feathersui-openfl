@@ -1115,6 +1115,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this.handlePendingScroll();
 	}
 
+	override private function createScroller():Void {
+		super.createScroller();
+		this.groupViewPort.scroller = this.scroller;
+	}
+
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {

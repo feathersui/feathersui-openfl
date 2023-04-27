@@ -1386,6 +1386,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.handlePendingScroll();
 	}
 
+	override private function createScroller():Void {
+		super.createScroller();
+		this.gridViewPort.scroller = this.scroller;
+	}
+
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {

@@ -1051,6 +1051,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.handlePendingScroll();
 	}
 
+	override private function createScroller():Void {
+		super.createScroller();
+		this.listViewPort.scroller = this.scroller;
+	}
+
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {

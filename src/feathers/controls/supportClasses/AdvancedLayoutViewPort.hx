@@ -9,11 +9,13 @@
 package feathers.controls.supportClasses;
 
 import feathers.core.FeathersControl;
+import feathers.events.ScrollEvent;
 import feathers.layout.ILayout;
 import feathers.layout.IScrollLayout;
 import feathers.layout.ISnapLayout;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
+import feathers.utils.Scroller;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
@@ -224,10 +226,12 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		}
 		if (this._layout != null) {
 			this._layout.removeEventListener(Event.CHANGE, advancedLayoutViewPort_layout_changeHandler);
+			this._layout.removeEventListener(ScrollEvent.SCROLL, advancedLayoutViewPort_layout_scrollHandler);
 		}
 		this._layout = value;
 		if (this._layout != null) {
 			this._layout.addEventListener(Event.CHANGE, advancedLayoutViewPort_layout_changeHandler);
+			this._layout.addEventListener(ScrollEvent.SCROLL, advancedLayoutViewPort_layout_scrollHandler);
 		}
 		this.setInvalid(LAYOUT);
 		return this._layout;
@@ -293,6 +297,22 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 
 	private function get_snapPositionsY():Array<Float> {
 		return this._snapPositionsY;
+	}
+
+	private var _scroller:Scroller;
+
+	public var scroller(get, set):Scroller;
+
+	private function get_scroller():Scroller {
+		return this._scroller;
+	}
+
+	private function set_scroller(value:Scroller):Scroller {
+		if (this._scroller == value) {
+			return this._scroller;
+		}
+		this._scroller = value;
+		return this._scroller;
 	}
 
 	private var _layoutActive = false;
@@ -411,5 +431,12 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 			return;
 		}
 		this.setInvalid(LAYOUT);
+	}
+
+	private function advancedLayoutViewPort_layout_scrollHandler(event:ScrollEvent):Void {
+		if (this._scroller == null || !this._scroller.scrolling) {
+			return;
+		}
+		this._scroller.applyLayoutShift(event.x, event.y);
 	}
 }
