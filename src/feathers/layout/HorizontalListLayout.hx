@@ -562,7 +562,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 				var itemWidth = virtualColumnWidth;
 				if (this._virtualCache != null) {
 					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-					if (cacheItem != null) {
+					if (cacheItem != null && cacheItem.itemWidth != null) {
 						itemWidth = cacheItem.itemWidth;
 					}
 				}
@@ -584,18 +584,18 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem != null && cacheItem.itemWidth != itemWidth) {
+					var cachedWidth = cacheItem.itemWidth;
 					cacheItem.itemWidth = itemWidth;
-					// if the width matches the estimated width, no need to
-					// dispatch anything
-					if (itemWidth != virtualColumnWidth) {
-						if (positionX < scrollX) {
-							// attempt to adjust the scroll position so that it
-							// appears that we're scrolling smoothly after this
-							// item resizes
-							var offsetX = itemWidth - virtualColumnWidth;
-							ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, offsetX, 0.0);
-						}
-
+					if (cachedWidth == null && positionX < scrollX) {
+						// attempt to adjust the scroll position so that it
+						// appears that we're scrolling smoothly after this
+						// item resizes
+						var offsetX = itemWidth - virtualColumnWidth;
+						ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, offsetX, 0.0);
+					}
+					// if there was no cached width, and the new width matches
+					// the estimated width, no need to dispatch Event.CHANGE
+					if (cachedWidth != null || itemWidth != virtualColumnWidth) {
 						// this new measurement may cause the number of visible
 						// items to change, so we need to notify the container
 						FeathersEvent.dispatch(this, Event.CHANGE);
@@ -694,7 +694,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					}
 					// save the original measured height in the cache to be used
 					// again in future calculations
-					cacheItem = new VirtualCacheItem(0.0, itemHeight);
+					cacheItem = new VirtualCacheItem(null, itemHeight);
 					this._virtualCache[i] = cacheItem;
 				}
 			}
@@ -723,7 +723,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					continue;
 				}
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem == null) {
+				if (cacheItem == null || cacheItem.itemWidth == null) {
 					continue;
 				}
 				// use the last known column width, if available
@@ -741,7 +741,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			var itemWidth = item.width;
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemWidth != itemWidth) {
+				if (cacheItem != null && (cacheItem.itemWidth == null || cacheItem.itemWidth != itemWidth)) {
 					cacheItem.itemWidth = itemWidth;
 					// this new measurement may cause the number of visible
 					// items to change, so we need to notify the container
@@ -778,7 +778,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			var itemWidth = 0.0;
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null) {
+				if (cacheItem != null && cacheItem.itemWidth != null) {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
 						estimatedItemWidth = itemWidth;
@@ -847,7 +847,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 				var itemWidth = 0.0;
 				if (this._virtualCache != null) {
 					var cacheItem = Std.downcast(this._virtualCache[startIndex], VirtualCacheItem);
-					if (cacheItem != null) {
+					if (cacheItem != null && cacheItem.itemWidth != null) {
 						itemWidth = cacheItem.itemWidth;
 						if (estimatedItemWidth == null) {
 							estimatedItemWidth = itemWidth;
@@ -902,7 +902,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			var itemWidth = 0.0;
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null) {
+				if (cacheItem != null && cacheItem.itemWidth != null) {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
 						estimatedItemWidth = itemWidth;
@@ -953,7 +953,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			var itemWidth = 0.0;
 			if (this._virtualCache != null) {
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null) {
+				if (cacheItem != null && cacheItem.itemWidth != null) {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
 						estimatedItemWidth = itemWidth;
@@ -999,7 +999,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 						if (item == null) {
 							if (this._virtualCache != null) {
 								var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-								if (cacheItem != null) {
+								if (cacheItem != null && cacheItem.itemWidth != null) {
 									itemWidth = cacheItem.itemWidth;
 								}
 							}
@@ -1028,7 +1028,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 						if (item == null) {
 							if (this._virtualCache != null) {
 								var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-								if (cacheItem != null) {
+								if (cacheItem != null && cacheItem.itemWidth != null) {
 									itemWidth = cacheItem.itemWidth;
 								}
 							}
@@ -1141,11 +1141,11 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 @:dox(hide)
 private class VirtualCacheItem {
-	public function new(itemWidth:Float, itemHeight:Float) {
+	public function new(itemWidth:Null<Float>, itemHeight:Float) {
 		this.itemWidth = itemWidth;
 		this.itemHeight = itemHeight;
 	}
 
-	public var itemWidth:Float;
+	public var itemWidth:Null<Float>;
 	public var itemHeight:Float;
 }
