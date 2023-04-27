@@ -519,7 +519,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.scroller == null) {
 			this._temporaryScrollX = value;
 			this._temporaryRestrictedScrollX = null;
-			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._temporaryScrollX, this._temporaryScrollY);
 			return this._temporaryScrollX;
 		}
 		this.scroller.scrollX = value;
@@ -549,7 +549,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.scroller == null) {
 			this._temporaryRestrictedScrollX = value;
 			this._temporaryScrollX = null;
-			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._temporaryScrollX, this._temporaryScrollY);
 			return this._temporaryRestrictedScrollX;
 		}
 		this.scroller.restrictedScrollX = value;
@@ -600,7 +600,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.scroller == null) {
 			this._temporaryScrollY = value;
 			this._temporaryRestrictedScrollY = null;
-			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._temporaryScrollX, this._temporaryScrollY);
 			return this._temporaryScrollY;
 		}
 		this.scroller.scrollY = value;
@@ -629,7 +629,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (this.scroller == null) {
 			this._temporaryRestrictedScrollY = value;
 			this._temporaryScrollY = null;
-			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._temporaryScrollX, this._temporaryScrollY);
 			return this._temporaryRestrictedScrollY;
 		}
 		this.scroller.restrictedScrollY = value;
@@ -2270,7 +2270,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._scrollerDraggingX = false;
 		this._scrollerDraggingY = false;
 		this.checkForRevealScrollBars();
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START, false, false, this.scroller.scrollX, this.scroller.scrollY);
 	}
 
 	private function baseScrollContainer_scroller_scrollHandler(event:Event):Void {
@@ -2296,7 +2296,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this.refreshScrollRect();
 			this.refreshScrollBarValues();
 		}
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this.scroller.scrollX, this.scroller.scrollY);
 	}
 
 	private function baseScrollContainer_scroller_scrollCompleteHandler(event:ScrollEvent):Void {
@@ -2310,7 +2310,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (!this._scrollBarYHover && !this.fixedScrollBars && this.autoHideScrollBars) {
 			this.hideScrollBarY();
 		}
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE, false, false, this.scroller.scrollX, this.scroller.scrollY);
 	}
 
 	private function reclaimMouse():Void {
@@ -2392,7 +2392,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	private function scrollBarX_scrollStartHandler(event:ScrollEvent):Void {
 		this.scroller.stop();
 		this._scrollerDraggingX = true;
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START, false, false, this.scroller.scrollX, this.scroller.scrollY);
 	}
 
 	private function scrollBarX_scrollCompleteHandler(event:ScrollEvent):Void {
@@ -2400,13 +2400,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (!this._scrollBarXHover && !this.fixedScrollBars && this.autoHideScrollBars) {
 			this.hideScrollBarX();
 		}
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE, false, false, this.scroller.scrollX, this.scroller.scrollY);
 	}
 
 	private function scrollBarY_scrollStartHandler(event:ScrollEvent):Void {
 		this.scroller.stop();
 		this._scrollerDraggingY = true;
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START, false, false, this.scroller.scrollX, this.scroller.scrollY);
 	}
 
 	private function scrollBarY_scrollCompleteHandler(event:ScrollEvent):Void {
@@ -2414,7 +2414,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (!this._scrollBarYHover && !this.fixedScrollBars && this.autoHideScrollBars) {
 			this.hideScrollBarY();
 		}
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE, false, false, this.scroller.scrollX, this.scroller.scrollY);
 	}
 
 	private function hideScrollBarX_onComplete():Void {

@@ -69,15 +69,18 @@ class ScrollEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static function dispatch(dispatcher:IEventDispatcher, type:String, bubbles:Bool = false, cancelable:Bool = false):Bool {
+	public static function dispatch(dispatcher:IEventDispatcher, type:String, bubbles:Bool = false, cancelable:Bool = false, x:Float = 0.0,
+			y:Float = 0.0):Bool {
 		#if flash
-		var event = new ScrollEvent(type, bubbles, cancelable);
+		var event = new ScrollEvent(type, bubbles, cancelable, x, y);
 		return dispatcher.dispatchEvent(event);
 		#else
 		var event = _pool.get();
 		event.type = type;
 		event.bubbles = bubbles;
 		event.cancelable = cancelable;
+		event.x = x;
+		event.y = y;
 		var result = dispatcher.dispatchEvent(event);
 		_pool.release(event);
 		return result;
@@ -91,11 +94,27 @@ class ScrollEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public function new(type:String, bubbles:Bool = false, cancelable:Bool = false) {
+	public function new(type:String, bubbles:Bool = false, cancelable:Bool = false, x:Float = 0.0, y:Float = 0.0) {
 		super(type, bubbles, cancelable);
+		this.x = x;
+		this.y = y;
 	}
 
+	/**
+		The current x position when the event was dispatched.
+
+		@since 1.2.0
+	**/
+	public var x:Float;
+
+	/**
+		The current y position when the event was dispatched.
+
+		@since 1.2.0
+	**/
+	public var y:Float;
+
 	override public function clone():Event {
-		return new ScrollEvent(this.type, this.bubbles, this.cancelable);
+		return new ScrollEvent(this.type, this.bubbles, this.cancelable, this.x, this.y);
 	}
 }

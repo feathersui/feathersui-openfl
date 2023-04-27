@@ -102,7 +102,7 @@ class Scroller extends EventDispatcher {
 			return this._scrollX;
 		}
 		this._scrollX = value;
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._scrollX, this._scrollY);
 		return this._scrollX;
 	}
 
@@ -131,7 +131,7 @@ class Scroller extends EventDispatcher {
 			return this._scrollY;
 		}
 		this._scrollY = value;
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._scrollX, this._scrollY);
 		return this._scrollY;
 	}
 
@@ -158,7 +158,7 @@ class Scroller extends EventDispatcher {
 			return this._scrollX;
 		}
 		this._scrollX = value;
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._scrollX, this._scrollY);
 		return this._scrollX;
 	}
 
@@ -185,7 +185,7 @@ class Scroller extends EventDispatcher {
 			return this._scrollY;
 		}
 		this._scrollY = value;
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._scrollX, this._scrollY);
 		return this._scrollY;
 	}
 
@@ -724,7 +724,7 @@ class Scroller extends EventDispatcher {
 			scrollChanged = true;
 		}
 		if (scrollChanged) {
-			ScrollEvent.dispatch(this, ScrollEvent.SCROLL);
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this._scrollX, this._scrollY);
 		}
 	}
 
@@ -971,7 +971,7 @@ class Scroller extends EventDispatcher {
 			this.restoreMouseChildren = container.mouseChildren;
 			container.mouseChildren = false;
 		}
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_START, false, false, this._scrollX, this._scrollY);
 	}
 
 	private function completeScroll():Void {
@@ -983,7 +983,7 @@ class Scroller extends EventDispatcher {
 			var container = cast(this._target, DisplayObjectContainer);
 			container.mouseChildren = this.restoreMouseChildren;
 		}
-		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE);
+		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE, false, false, this._scrollX, this._scrollY);
 	}
 
 	private function finishScrollX():Void {
