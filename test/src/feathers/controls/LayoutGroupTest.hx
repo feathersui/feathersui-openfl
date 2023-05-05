@@ -8,10 +8,14 @@
 
 package feathers.controls;
 
+import feathers.controls.Button;
 import feathers.layout.VerticalLayout;
 import feathers.skins.RectangleSkin;
 import openfl.Lib;
+import openfl.display.DisplayObject;
 import openfl.display.Shape;
+import openfl.display.Sprite;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -105,5 +109,47 @@ class LayoutGroupTest extends Test {
 		Assert.isFalse(this._group.isInvalid());
 		layout.gap = 1234.5;
 		Assert.isTrue(this._group.isInvalid());
+	}
+
+	// this test ensures that the new child index is calculated correctly
+	public function testPassBottomChildToAddChild():Void {
+		var child1 = new Sprite();
+		var child2 = new Sprite();
+		var child3 = new Sprite();
+		this._group.addChild(child1);
+		this._group.addChild(child2);
+		this._group.addChild(child3);
+		Assert.equals(0, this._group.getChildIndex(child1));
+		Assert.equals(1, this._group.getChildIndex(child2));
+		Assert.equals(2, this._group.getChildIndex(child3));
+		this._group.addChild(child1);
+		Assert.equals(2, this._group.getChildIndex(child1));
+		Assert.equals(0, this._group.getChildIndex(child2));
+		Assert.equals(1, this._group.getChildIndex(child3));
+	}
+
+	public function testGetChildIndexInAddedListener():Void {
+		var child1 = new Sprite();
+		this._group.addChild(child1);
+		var child2 = new Sprite();
+		this._group.addEventListener(Event.ADDED, event -> {
+			var target = cast(event.target, DisplayObject);
+			var index = this._group.getChildIndex(target);
+			Assert.equals(1, index);
+		});
+		this._group.addChild(child2);
+	}
+
+	public function testGetChildIndexInRemovedListener():Void {
+		var child1 = new Sprite();
+		this._group.addChild(child1);
+		var child2 = new Sprite();
+		this._group.addChild(child2);
+		this._group.addEventListener(Event.REMOVED, event -> {
+			var target = cast(event.target, DisplayObject);
+			var index = this._group.getChildIndex(target);
+			Assert.equals(-1, index);
+		});
+		this._group.removeChild(child2);
 	}
 }
