@@ -245,20 +245,26 @@ class LayoutGroup extends FeathersControl {
 		if (oldIndex == index) {
 			return child;
 		}
-		if (oldIndex >= 0) {
-			this.items.remove(child);
-		}
+
+		// remove from array after calculating private index because when the
+		// first child is re-added at a higher index, the offset would be wrong
 		var privateIndex = this.getPrivateIndexForPublicIndex(index);
+		if (oldIndex >= 0) {
+			this.items.splice(oldIndex, 1);
+		}
+
 		// insert into the array before adding as a child, so that display list
 		// APIs work in an Event.ADDED listener
 		this.items.insert(index, child);
 		var result = this._addChildAt(child, privateIndex);
+
 		// add listeners or access properties after adding a child
 		// because adding the child may result in better errors (like for null)
 		child.addEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
 		if ((child is ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler, false, 0, true);
 		}
+
 		if (this._ignoreChangesButSetFlags) {
 			this.setInvalidationFlag(LAYOUT);
 		} else {
