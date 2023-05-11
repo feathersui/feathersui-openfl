@@ -743,17 +743,18 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		var touchPointID = this._edgePuller.touchPointID;
 		if (touchPointID != null) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimTouch(touchPointID, this);
-			if (!result) {
-				event.preventDefault();
-				return;
-			}
-		} else if (this._edgePuller.touchPointIsSimulated) {
-			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimMouse(this);
-			if (!result) {
-				event.preventDefault();
-				return;
+			if (this._edgePuller.touchPointIsSimulated) {
+				var result = exclusivePointer.claimMouse(this);
+				if (!result) {
+					event.preventDefault();
+					return;
+				}
+			} else {
+				var result = exclusivePointer.claimTouch(touchPointID, this);
+				if (!result) {
+					event.preventDefault();
+					return;
+				}
 			}
 		}
 		var result = FeathersEvent.dispatch(this, FeathersEvent.OPENING);

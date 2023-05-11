@@ -653,17 +653,18 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		var touchPointID = this._previousEdgePuller.touchPointID;
 		if (touchPointID != null) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimTouch(touchPointID, this);
-			if (!result) {
-				event.preventDefault();
-				return;
-			}
-		} else if (this._previousEdgePuller.touchPointIsSimulated) {
-			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimMouse(this);
-			if (!result) {
-				event.preventDefault();
-				return;
+			if (this._previousEdgePuller.touchPointIsSimulated) {
+				var result = exclusivePointer.claimMouse(this);
+				if (!result) {
+					event.preventDefault();
+					return;
+				}
+			} else {
+				var result = exclusivePointer.claimTouch(touchPointID, this);
+				if (!result) {
+					event.preventDefault();
+					return;
+				}
 			}
 		}
 
@@ -722,17 +723,18 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		var touchPointID = this._nextEdgePuller.touchPointID;
 		if (touchPointID != null) {
 			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimTouch(touchPointID, this);
-			if (!result) {
-				event.preventDefault();
-				return;
-			}
-		} else if (this._nextEdgePuller.touchPointIsSimulated) {
-			var exclusivePointer = ExclusivePointer.forStage(this.stage);
-			var result = exclusivePointer.claimMouse(this);
-			if (!result) {
-				event.preventDefault();
-				return;
+			if (this._nextEdgePuller.touchPointIsSimulated) {
+				var result = exclusivePointer.claimMouse(this);
+				if (!result) {
+					event.preventDefault();
+					return;
+				}
+			} else {
+				var result = exclusivePointer.claimTouch(touchPointID, this);
+				if (!result) {
+					event.preventDefault();
+					return;
+				}
 			}
 		}
 
