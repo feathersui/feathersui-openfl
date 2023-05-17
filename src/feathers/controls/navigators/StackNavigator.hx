@@ -14,6 +14,7 @@ import feathers.motion.effects.IEffectContext;
 import feathers.utils.EdgePuller;
 import feathers.utils.ExclusivePointer;
 import openfl.display.DisplayObject;
+import openfl.errors.RangeError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 #if flash
@@ -390,6 +391,7 @@ class StackNavigator extends BaseNavigator {
 		@see `StackNavigator.popToRootItem()`
 		@see `StackNavigator.popAll()`
 		@see `StackNavigator.popToRootItemAndReplace()`
+		@see `StackNavigator.popMultipleItems()`
 
 		@since 1.0.0
 	**/
@@ -408,6 +410,46 @@ class StackNavigator extends BaseNavigator {
 			}
 		}
 		this._poppedHistoryItems = [this._history.pop()];
+		var item = this._history[this._history.length - 1];
+		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, item.viewData, true);
+	}
+
+	/**
+		Pops a specific number of items from the top of the history stack,
+		restoring the previous item from the history as the new active item. If
+		the "root" item is visible, popping has no effect and the root item will
+		remain visible. To remove all items from the history stack, including
+		the root item, use `popAll()` instead.
+
+		An optional transition may be specified. If `null`, the value of the
+		`popTransition` property will be used instead.
+
+		Returns a reference to the new view, unless a transition is already
+		active when `popMultipleItems()` is called. In that case, the new item
+		will be queued until the previous transition has completed, and
+		`popMultipleItems()` will return `null`.
+
+		@see `StackNavigator.popTransition`
+		@see `StackNavigator.popItem()`
+	**/
+	public function popMultipleItems(count:Int, ?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
+		if (count <= 0) {
+			throw new RangeError("popMultipleItems() must be called with a value greater than zero");
+		}
+		if (transition == null) {
+			var item = this.getItem(this.activeItemID);
+			if (item != null && item.popTransition != null) {
+				transition = item.popTransition;
+			} else {
+				transition = this.popTransition;
+			}
+		}
+		var newHistoryLength = this._history.length - count;
+		if (newHistoryLength < 1) {
+			throw new RangeError('popMultipleItems() called with value larger than available history. Received $count. Expected less than ${this._history.length}.');
+		}
+		this._poppedHistoryItems = this._history.slice(newHistoryLength);
+		this._history.resize(newHistoryLength);
 		var item = this._history[this._history.length - 1];
 		return this.showItemWithInjectAndReturnedObject(item.id, transition, item.inject, returnedObject, item.viewData, true);
 	}

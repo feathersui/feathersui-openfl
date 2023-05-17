@@ -271,6 +271,10 @@ class StackItem {
 				{
 					navigator.popItem(returnedObject, transition);
 				}
+			case PopMultiple(count, returnedObject, transition):
+				{
+					navigator.popMultipleItems(count, returnedObject, transition);
+				}
 			case PopToRoot(returnedObject, transition):
 				{
 					navigator.popToRootItem(returnedObject, transition);

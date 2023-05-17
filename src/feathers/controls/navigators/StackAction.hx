@@ -45,6 +45,14 @@ enum StackAction {
 	Pop(?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
 
 	/**
+		Pop a specific number of views and navigate to the previous item in the
+		history stack.
+
+		@since 1.2.0
+	**/
+	PopMultiple(count:Int, ?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext);
+
+	/**
 		Pop all items from the history stack, except for the first item.
 
 		@since 1.0.0
