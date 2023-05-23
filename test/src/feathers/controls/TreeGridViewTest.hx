@@ -822,6 +822,17 @@ import utest.Test;
 		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([], (item:Dynamic) -> item.children);
 		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
 	}
+
+	public function testDefaultTextUpdateForAdditionalRecyclers():Void {
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}]);
+		var column1 = new TreeGridViewColumn("1", item -> item.text);
+		column1.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer);
+		this._treeGridView.columns = new ArrayCollection([column1]);
+		this._treeGridView.validateNow();
+		var itemRenderer = cast(this._treeGridView.itemAndColumnToCellRenderer(this._treeGridView.dataProvider.get([0]), column1), HierarchicalItemRenderer);
+		Assert.notNull(itemRenderer);
+		Assert.equals("One", itemRenderer.text);
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer

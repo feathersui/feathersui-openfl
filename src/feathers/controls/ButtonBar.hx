@@ -573,13 +573,15 @@ class ButtonBar extends FeathersControl {
 				this.buttonRecycler.reset = defaultResetButton;
 			}
 		}
-		if (this._additionalStorage != null) {
-			for (i in 0...this._additionalStorage.length) {
-				var storage = this._additionalStorage[i];
-				if (storage.buttonRecycler.update == null) {
-					storage.buttonRecycler.update = defaultUpdateButton;
-					if (storage.buttonRecycler.reset == null) {
-						storage.buttonRecycler.reset = defaultResetButton;
+		if (this._recyclerMap != null) {
+			for (recycler in this._recyclerMap) {
+				if (recycler.update == null) {
+					if (recycler.update == null) {
+						recycler.update = defaultUpdateButton;
+						// don't replace reset if we didn't replace update too
+						if (recycler.reset == null) {
+							recycler.reset = defaultResetButton;
+						}
 					}
 				}
 			}

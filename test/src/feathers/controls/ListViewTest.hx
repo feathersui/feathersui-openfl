@@ -781,6 +781,19 @@ class ListViewTest extends Test {
 		Assert.isTrue(this._listView.selectedItems.length == 1);
 		Assert.equals(item2, this._listView.selectedItems[0]);
 	}
+
+	public function testDefaultTextUpdateForAdditionalRecyclers():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}]);
+		this._listView.itemToText = item -> item.text;
+		this._listView.setItemRendererRecycler("other", DisplayObjectRecycler.withClass(ItemRenderer));
+		this._listView.itemRendererRecyclerIDFunction = (state) -> {
+			return "other";
+		};
+		this._listView.validateNow();
+		var itemRenderer = cast(this._listView.itemToItemRenderer(this._listView.dataProvider.get(0)), ItemRenderer);
+		Assert.notNull(itemRenderer);
+		Assert.equals("One", itemRenderer.text);
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

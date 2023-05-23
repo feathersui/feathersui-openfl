@@ -973,6 +973,17 @@ class GridViewTest extends Test {
 		Assert.isTrue(this._gridView.selectedItems.length == 1);
 		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
+
+	public function testDefaultTextUpdateForAdditionalRecyclers():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}]);
+		var column1 = new GridViewColumn("1", item -> item.text);
+		column1.cellRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
+		this._gridView.columns = new ArrayCollection([column1]);
+		this._gridView.validateNow();
+		var itemRenderer = cast(this._gridView.itemAndColumnToCellRenderer(this._gridView.dataProvider.get(0), column1), ItemRenderer);
+		Assert.notNull(itemRenderer);
+		Assert.equals("One", itemRenderer.text);
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

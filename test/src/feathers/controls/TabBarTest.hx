@@ -651,6 +651,19 @@ class TabBarTest extends Test {
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._tabBar.selectedItem);
 	}
+
+	public function testDefaultTextUpdateForAdditionalRecyclers():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}]);
+		this._tabBar.itemToText = item -> item.text;
+		this._tabBar.setTabRecycler("other", DisplayObjectRecycler.withClass(ToggleButton));
+		this._tabBar.tabRecyclerIDFunction = (state) -> {
+			return "other";
+		};
+		this._tabBar.validateNow();
+		var tab = cast(this._tabBar.itemToTab(this._tabBar.dataProvider.get(0)), ToggleButton);
+		Assert.notNull(tab);
+		Assert.equals("One", tab.text);
+	}
 }
 
 private class CustomRendererWithInterfaces extends ToggleButton implements IDataRenderer implements ILayoutIndexObject {

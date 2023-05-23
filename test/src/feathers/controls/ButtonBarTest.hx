@@ -289,6 +289,19 @@ class ButtonBarTest extends Test {
 		Assert.notNull(this._buttonBar.itemToButton(item1));
 		Assert.isNull(this._buttonBar.itemToButton(item2));
 	}
+
+	public function testDefaultTextUpdateForAdditionalRecyclers():Void {
+		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}]);
+		this._buttonBar.itemToText = item -> item.text;
+		this._buttonBar.setButtonRecycler("other", DisplayObjectRecycler.withClass(Button));
+		this._buttonBar.buttonRecyclerIDFunction = (state) -> {
+			return "other";
+		};
+		this._buttonBar.validateNow();
+		var button = cast(this._buttonBar.itemToButton(this._buttonBar.dataProvider.get(0)), Button);
+		Assert.notNull(button);
+		Assert.equals("One", button.text);
+	}
 }
 
 private class CustomRendererWithInterfaces extends Button implements IDataRenderer implements ILayoutIndexObject {

@@ -429,13 +429,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 				this._defaultStorage.cellRendererRecycler.reset = defaultResetCellRenderer;
 			}
 		}
-		if (this._additionalStorage != null) {
-			for (i in 0...this._additionalStorage.length) {
-				var storage = this._additionalStorage[i];
-				if (storage.cellRendererRecycler.update == null) {
-					storage.cellRendererRecycler.update = defaultUpdateCellRenderer;
-					if (storage.cellRendererRecycler.reset == null) {
-						storage.cellRendererRecycler.reset = defaultResetCellRenderer;
+		for (column in this._columns) {
+			if (column.cellRendererRecycler != null) {
+				if (column.cellRendererRecycler.update == null) {
+					column.cellRendererRecycler.update = defaultUpdateCellRenderer;
+					// don't replace reset if we didn't replace update too
+					if (column.cellRendererRecycler.reset == null) {
+						column.cellRendererRecycler.reset = defaultResetCellRenderer;
 					}
 				}
 			}

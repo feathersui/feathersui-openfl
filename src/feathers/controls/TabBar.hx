@@ -698,13 +698,15 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 				this.tabRecycler.reset = defaultResetTab;
 			}
 		}
-		if (this._additionalStorage != null) {
-			for (i in 0...this._additionalStorage.length) {
-				var storage = this._additionalStorage[i];
-				if (storage.tabRecycler.update == null) {
-					storage.tabRecycler.update = defaultUpdateTab;
-					if (storage.tabRecycler.reset == null) {
-						storage.tabRecycler.reset = defaultResetTab;
+		if (this._recyclerMap != null) {
+			for (recycler in this._recyclerMap) {
+				if (recycler.update == null) {
+					if (recycler.update == null) {
+						recycler.update = defaultUpdateTab;
+						// don't replace reset if we didn't replace update too
+						if (recycler.reset == null) {
+							recycler.reset = defaultResetTab;
+						}
 					}
 				}
 			}

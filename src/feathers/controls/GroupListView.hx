@@ -1172,24 +1172,28 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this._defaultHeaderStorage.itemRendererRecycler.reset = defaultResetItemRenderer;
 			}
 		}
-		if (this._additionalItemStorage != null) {
-			for (i in 0...this._additionalItemStorage.length) {
-				var storage = this._additionalItemStorage[i];
-				if (storage.itemRendererRecycler.update == null) {
-					storage.itemRendererRecycler.update = defaultUpdateItemRenderer;
-					if (storage.itemRendererRecycler.reset == null) {
-						storage.itemRendererRecycler.reset = defaultResetItemRenderer;
+		if (this._itemRendererRecyclerMap != null) {
+			for (recycler in this._itemRendererRecyclerMap) {
+				if (recycler.update == null) {
+					if (recycler.update == null) {
+						recycler.update = defaultUpdateItemRenderer;
+						// don't replace reset if we didn't replace update too
+						if (recycler.reset == null) {
+							recycler.reset = defaultResetItemRenderer;
+						}
 					}
 				}
 			}
 		}
-		if (this._additionalHeaderStorage != null) {
-			for (i in 0...this._additionalHeaderStorage.length) {
-				var storage = this._additionalHeaderStorage[i];
-				if (storage.itemRendererRecycler.update == null) {
-					storage.itemRendererRecycler.update = defaultUpdateItemRenderer;
-					if (storage.itemRendererRecycler.reset == null) {
-						storage.itemRendererRecycler.reset = defaultResetItemRenderer;
+		if (this._headerRendererRecyclerMap != null) {
+			for (recycler in this._headerRendererRecyclerMap) {
+				if (recycler.update == null) {
+					if (recycler.update == null) {
+						recycler.update = defaultUpdateItemRenderer;
+						// don't replace reset if we didn't replace update too
+						if (recycler.reset == null) {
+							recycler.reset = defaultResetItemRenderer;
+						}
 					}
 				}
 			}
