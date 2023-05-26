@@ -1,10 +1,10 @@
 package com.feathersui.hn.views.controls;
 
-import feathers.skins.UnderlineSkin;
 import com.feathersui.hn.vo.Item;
 import feathers.controls.Label;
 import feathers.controls.dataRenderers.LayoutGroupItemRenderer;
 import feathers.layout.VerticalLayout;
+import feathers.skins.UnderlineSkin;
 
 class ItemHeaderItemRenderer extends LayoutGroupItemRenderer {
 	public function new() {
@@ -15,6 +15,9 @@ class ItemHeaderItemRenderer extends LayoutGroupItemRenderer {
 	private var _title:Label;
 	private var _meta:Label;
 	private var _description:Label;
+	#if !html5
+	private var _homeLink:Label;
+	#end
 
 	override private function initialize():Void {
 		super.initialize();
@@ -26,6 +29,12 @@ class ItemHeaderItemRenderer extends LayoutGroupItemRenderer {
 		viewLayout.gap = 8.0;
 		viewLayout.setPadding(8.0);
 		layout = viewLayout;
+
+		#if !html5
+		_homeLink = new Label();
+		_homeLink.htmlText = '<u><a href="event:router:/">Return Home</a></u>';
+		addChild(_homeLink);
+		#end
 
 		_title = new Label();
 		_title.variant = Label.VARIANT_HEADING;
