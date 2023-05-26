@@ -804,5 +804,10 @@ class Location {
 	public function get_href():String {
 		return this.origin + this.pathname + this.search + this.hash;
 	}
+
+	@:dox(hide)
+	public function toString():String {
+		return this.href;
+	}
 }
 #end
