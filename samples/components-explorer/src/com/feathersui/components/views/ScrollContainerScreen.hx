@@ -1,5 +1,8 @@
 package com.feathersui.components.views;
 
+import feathers.data.ArrayCollection;
+import feathers.layout.HorizontalLayout;
+import feathers.controls.PopUpListView;
 import feathers.layout.VerticalLayout;
 import feathers.skins.RectangleSkin;
 import feathers.controls.Button;
@@ -13,9 +16,23 @@ import openfl.events.Event;
 
 class ScrollContainerScreen extends Panel {
 	private var container:ScrollContainer;
+	private var layoutListView:PopUpListView;
+	private var verticalLayout:VerticalLayout;
+	private var horizontalLayout:HorizontalLayout;
 
 	override private function initialize():Void {
 		super.initialize();
+
+		this.verticalLayout = new VerticalLayout();
+		this.verticalLayout.gap = 10.0;
+		this.verticalLayout.setPadding(10.0);
+		this.verticalLayout.horizontalAlign = CENTER;
+
+		this.horizontalLayout = new HorizontalLayout();
+		this.horizontalLayout.gap = 10.0;
+		this.horizontalLayout.setPadding(10.0);
+		this.horizontalLayout.horizontalAlign = CENTER;
+
 		this.createHeader();
 
 		this.layout = new AnchorLayout();
@@ -47,9 +64,22 @@ class ScrollContainerScreen extends Panel {
 		backButton.text = "Back";
 		backButton.addEventListener(TriggerEvent.TRIGGER, backButton_triggerHandler);
 		header.leftView = backButton;
+
+		this.layoutListView = new PopUpListView();
+		this.layoutListView.dataProvider = new ArrayCollection([
+			{text: "Vertical", layout: this.verticalLayout},
+			{text: "Horizontal", layout: this.horizontalLayout},
+		]);
+		this.layoutListView.itemToText = item -> item.text;
+		this.layoutListView.addEventListener(Event.CHANGE, layoutListView_changeHandler);
+		header.rightView = this.layoutListView;
 	}
 
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
+	}
+
+	private function layoutListView_changeHandler(event:Event):Void {
+		this.container.layout = this.layoutListView.selectedItem.layout;
 	}
 }
