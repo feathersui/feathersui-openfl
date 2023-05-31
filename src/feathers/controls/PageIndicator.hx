@@ -611,12 +611,12 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 				if (event.keyLocation == 4 /* KeyLocation.D_PAD */) {
 					return;
 				}
-				result = result - 1;
+				result = result + 1;
 			case Keyboard.DOWN:
 				if (event.keyLocation == 4 /* KeyLocation.D_PAD */) {
 					return;
 				}
-				result = result + 1;
+				result = result - 1;
 			case Keyboard.LEFT:
 				result = result - 1;
 			case Keyboard.RIGHT:

@@ -19,6 +19,7 @@
 - LayoutGroup: Fixed exception where calling `addChild()` with an existing child at index 0 could result in an exception.
 - NumericStepper: Added new `enableButtonsAtRangeLimits` property to automatically disable decrement button at minimum value and increment button at maximum value.
 - NumericStepper: Fixed issue where decrement and increment buttons might not be ignored when disabled.
+- PageIndicator: Fixed up and down arrow keys changing value in wrong direction.
 - RouterNavigator: `Location` object on non-html5 targets now has a `toString()` method to match the behavior of html5.
 - ScrollEvent: Added new `x` and `y` properties.
 - Scroller: Added new `applyLayoutShift()` method (advanced) that may be used with containers that support virtual layouts to adjust the layout after a virtual item's size is calculated to adjust from the previous estimated size.
