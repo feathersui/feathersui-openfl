@@ -186,137 +186,171 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 			}
 		}
 		var viewPortWidth = 0.0;
-		if (measurements.width != null) {
-			viewPortWidth = measurements.width;
-		} else {
-			viewPortWidth = maxX;
-			if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
-				viewPortWidth = measurements.minWidth;
-			} else if (measurements.maxWidth != null && viewPortWidth > measurements.maxWidth) {
-				viewPortWidth = measurements.maxWidth;
-			}
-		}
 		var viewPortHeight = 0.0;
-		if (measurements.height != null) {
-			viewPortHeight = measurements.height;
-		} else {
-			viewPortHeight = maxY;
-			if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
-				viewPortHeight = measurements.minHeight;
-			} else if (measurements.maxHeight != null && viewPortHeight > measurements.maxHeight) {
-				viewPortHeight = measurements.maxHeight;
-			}
-		}
-		#if hl
-		doneItems.splice(0, doneItems.length);
-		#else
-		doneItems.resize(0);
-		#end
-		while (doneItems.length < items.length) {
-			var oldDoneCount = doneItems.length;
-			for (item in items) {
-				if (doneItems.indexOf(item) != -1) {
-					// already done
-					continue;
+		var needsAnotherPass = true;
+		while (needsAnotherPass) {
+			needsAnotherPass = false;
+			if (measurements.width != null) {
+				viewPortWidth = measurements.width;
+			} else {
+				viewPortWidth = maxX;
+				if (measurements.minWidth != null && viewPortWidth < measurements.minWidth) {
+					viewPortWidth = measurements.minWidth;
+				} else if (measurements.maxWidth != null && viewPortWidth > measurements.maxWidth) {
+					viewPortWidth = measurements.maxWidth;
 				}
-				var layoutObject:ILayoutObject = null;
-				if ((item is ILayoutObject)) {
-					layoutObject = cast(item, ILayoutObject);
-					if (!layoutObject.includeInLayout) {
+			}
+			if (measurements.height != null) {
+				viewPortHeight = measurements.height;
+			} else {
+				viewPortHeight = maxY;
+				if (measurements.minHeight != null && viewPortHeight < measurements.minHeight) {
+					viewPortHeight = measurements.minHeight;
+				} else if (measurements.maxHeight != null && viewPortHeight > measurements.maxHeight) {
+					viewPortHeight = measurements.maxHeight;
+				}
+			}
+			#if hl
+			doneItems.splice(0, doneItems.length);
+			#else
+			doneItems.resize(0);
+			#end
+			while (doneItems.length < items.length) {
+				var oldDoneCount = doneItems.length;
+				for (item in items) {
+					if (doneItems.indexOf(item) != -1) {
+						// already done
+						continue;
+					}
+					var layoutObject:ILayoutObject = null;
+					if ((item is ILayoutObject)) {
+						layoutObject = cast(item, ILayoutObject);
+						if (!layoutObject.includeInLayout) {
+							doneItems.push(item);
+							continue;
+						}
+					}
+					var layoutData:AnchorLayoutData = null;
+					if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
+						layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
+					}
+					if (layoutData == null) {
 						doneItems.push(item);
 						continue;
 					}
-				}
-				var layoutData:AnchorLayoutData = null;
-				if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
-					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
-				}
-				if (layoutData == null) {
+					if (layoutData.top != null) {
+						var top = layoutData.top;
+						var relativeTo = top.relativeTo;
+						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							continue;
+						}
+						var y = top.value;
+						if (relativeTo != null) {
+							y += relativeTo.y + relativeTo.height;
+						}
+						item.y = y;
+					}
+					if (layoutData.left != null) {
+						var left = layoutData.left;
+						var relativeTo = left.relativeTo;
+						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							continue;
+						}
+						var x = left.value;
+						if (relativeTo != null) {
+							x += relativeTo.x + relativeTo.width;
+						}
+						item.x = x;
+					}
+					if (layoutData.bottom != null) {
+						var bottom = layoutData.bottom;
+						var relativeTo = bottom.relativeTo;
+						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							continue;
+						}
+						var bottomPixels = bottom.value;
+						var bottomEdge = viewPortHeight;
+						if (relativeTo != null) {
+							bottomEdge = relativeTo.y;
+						}
+						if (layoutData.top == null) {
+							item.y = bottomEdge - bottomPixels - item.height;
+						} else {
+							var itemHeight = bottomEdge - bottomPixels - item.y;
+							if (itemHeight < 0.0) {
+								itemHeight = 0.0;
+							}
+							if (item.height != itemHeight) {
+								// to ensure that the item can continue to auto-size
+								// itself, don't set the explicit size unless needed
+								item.height = itemHeight;
+								if (measurements.width == null && (item is IValidating)) {
+									cast(item, IValidating).validateNow();
+									// for some components, setting one dimension
+									// may cause the other dimension to change.
+									// for example, resizing the width of word
+									// wrapped text can affect its height.
+									// this may affect the view port dimensions
+									// which means that we need to start over!
+									var maxItemX = item.x + item.width;
+									if (maxX < maxItemX) {
+										maxX = maxItemX;
+										needsAnotherPass = true;
+										break;
+									}
+								}
+							}
+						}
+					} else if (layoutData.verticalCenter != null) {
+						item.y = layoutData.verticalCenter + (viewPortHeight - item.height) / 2.0;
+					}
+					if (layoutData.right != null) {
+						var right = layoutData.right;
+						var relativeTo = right.relativeTo;
+						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							continue;
+						}
+						var rightPixels = right.value;
+						var rightEdge = viewPortWidth;
+						if (relativeTo != null) {
+							rightEdge = relativeTo.x;
+						}
+						if (layoutData.left == null) {
+							item.x = rightEdge - rightPixels - item.width;
+						} else {
+							var itemWidth = rightEdge - rightPixels - item.x;
+							if (itemWidth < 0.0) {
+								itemWidth = 0.0;
+							}
+							if (item.width != itemWidth) {
+								// to ensure that the item can continue to auto-size
+								// itself, don't set the explicit size unless needed
+								item.width = itemWidth;
+								if (measurements.height == null && (item is IValidating)) {
+									cast(item, IValidating).validateNow();
+									// for some components, setting one dimension
+									// may cause the other dimension to change.
+									// for example, resizing the width of word
+									// wrapped text can affect its height.
+									// this may affect the view port dimensions
+									// which means that we need to start over!
+									var maxItemY = item.y + item.height;
+									if (maxY < maxItemY) {
+										maxY = maxItemY;
+										needsAnotherPass = true;
+										break;
+									}
+								}
+							}
+						}
+					} else if (layoutData.horizontalCenter != null) {
+						item.x = layoutData.horizontalCenter + (viewPortWidth - item.width) / 2.0;
+					}
 					doneItems.push(item);
-					continue;
 				}
-				if (layoutData.top != null) {
-					var top = layoutData.top;
-					var relativeTo = top.relativeTo;
-					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
-						continue;
-					}
-					var y = top.value;
-					if (relativeTo != null) {
-						y += relativeTo.y + relativeTo.height;
-					}
-					item.y = y;
+				if (!needsAnotherPass && oldDoneCount == doneItems.length) {
+					throw new IllegalOperationError("AnchorLayout failed.");
 				}
-				if (layoutData.left != null) {
-					var left = layoutData.left;
-					var relativeTo = left.relativeTo;
-					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
-						continue;
-					}
-					var x = left.value;
-					if (relativeTo != null) {
-						x += relativeTo.x + relativeTo.width;
-					}
-					item.x = x;
-				}
-				if (layoutData.bottom != null) {
-					var bottom = layoutData.bottom;
-					var relativeTo = bottom.relativeTo;
-					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
-						continue;
-					}
-					var bottomPixels = bottom.value;
-					var bottomEdge = viewPortHeight;
-					if (relativeTo != null) {
-						bottomEdge = relativeTo.y;
-					}
-					if (layoutData.top == null) {
-						item.y = bottomEdge - bottomPixels - item.height;
-					} else {
-						var itemHeight = bottomEdge - bottomPixels - item.y;
-						if (itemHeight < 0.0) {
-							itemHeight = 0.0;
-						}
-						if (item.height != itemHeight) {
-							// to ensure that the item can continue to auto-size
-							// itself, don't set the explicit size unless needed
-							item.height = itemHeight;
-						}
-					}
-				} else if (layoutData.verticalCenter != null) {
-					item.y = layoutData.verticalCenter + (viewPortHeight - item.height) / 2.0;
-				}
-				if (layoutData.right != null) {
-					var right = layoutData.right;
-					var relativeTo = right.relativeTo;
-					if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
-						continue;
-					}
-					var rightPixels = right.value;
-					var rightEdge = viewPortWidth;
-					if (relativeTo != null) {
-						rightEdge = relativeTo.x;
-					}
-					if (layoutData.left == null) {
-						item.x = rightEdge - rightPixels - item.width;
-					} else {
-						var itemWidth = rightEdge - rightPixels - item.x;
-						if (itemWidth < 0.0) {
-							itemWidth = 0.0;
-						}
-						if (item.width != itemWidth) {
-							// to ensure that the item can continue to auto-size
-							// itself, don' t set the explicit size unless needed item.width = itemWidth;
-							item.width = itemWidth;
-						}
-					}
-				} else if (layoutData.horizontalCenter != null) {
-					item.x = layoutData.horizontalCenter + (viewPortWidth - item.width) / 2.0;
-				}
-				doneItems.push(item);
-			}
-			if (oldDoneCount == doneItems.length) {
-				throw new IllegalOperationError("AnchorLayout failed.");
 			}
 		}
 		if (result == null) {

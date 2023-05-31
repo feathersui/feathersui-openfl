@@ -4,6 +4,7 @@
 
 - General: Haxe 4.3 compatibility. When upgrading to Haxe 4.3, you should also upgrade to OpenFL 9.2.2 and Lime 8.0.2.
 - General: Improved performance by fixing a number of unnecessary `setInvalid()` calls that threw exceptions when `feathersui_strict_set_invalid` was defined.
+- AnchorLayout: Fix measurement of items where setting width or height causes the other dimension to resize too.
 - BaseScrollContainer: Improved performance by refactoring the code that determines if scroll bars are necessary.
 - Data Containers: Added new `itemToEnabled` function, which may be used to customized the `enabled` property of item renderers.
 - Data Containers: Improved performance by avoiding calls to `DisplayObjectRecycler.update` and `DisplayObjectRecycler.reset` when item state has not changed. To restore the original behavior temporarily, set the new `forceItemStateUpdate` property to `true`.
