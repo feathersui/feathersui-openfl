@@ -14,7 +14,7 @@
 		"layout"
 	],
 	"description": "Cross-platform graphical user interface (GUI) components for creative frontend projects, built with Haxe and OpenFL",
-	"version": "1.2.0-alpha",
+	"version": "1.2.0",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "ActivityIndicator, HorizontalLayoutData and VerticalLayoutData margins, DonutSkin, GradientBoxTransform, ProgressBar fillMode, bug fixes"
+	"releasenote": "Major performance improvements, Haxe 4.3 compatibility, and more"
 }

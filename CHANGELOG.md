@@ -1,5 +1,31 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.2.0 (2023-06-01)
+
+- General: Haxe 4.3 compatibility. When upgrading to Haxe 4.3, you should also upgrade to OpenFL 9.2.2 and Lime 8.0.2.
+- General: Improved performance by fixing a number of unnecessary `setInvalid()` calls that threw exceptions when `feathersui_strict_set_invalid` was defined.
+- BaseScrollContainer: Improved performance by refactoring the code that determines if scroll bars are necessary.
+- Data Containers: Added new `itemToEnabled` function, which may be used to customized the `enabled` property of item renderers.
+- Data Containers: Improved performance by avoiding calls to `DisplayObjectRecycler.update` and `DisplayObjectRecycler.reset` when item state has not changed. To restore the original behavior temporarily, set the new `forceItemStateUpdate` property to `true`.
+- Data Containers: Improved performance by fixing an issue where item renderers were sometimes destroyed and recreated on first validation.
+- Data Containers: Improved performance of `updateAt()` and `updateAll()` collection event handling.
+- Data Containers: Fixed issue where view port scroll positions weren't always updated.
+- Data Containers: Fixed issue where additional recyclers added with `setItemRendererRecycler()` didn't always receive the default `DisplayObjectRecycler.update` and `DisplayObjectRecycler.reset` methods.
+- Drawer, PageNavigator, TabNavigator: Fixed `simulateTouch` not working properly after first touch simulated by a mouse event.
+- HorizontalListLayout, VerticalListLayout: Improved performance by allowing up to 5 "cache misses" when calculating the estimated size of items that are not visible, which helps to avoid destroying and recreating items unnecessarily in some situations.
+- HorizontalListLayout, VerticalListLayout: Dispatch `ScrollEvent.SCROLL` when a layout shift is needed after replacing a virtual item with a real item.
+- HScrollBar, VScrollBar: Fixed drag behavior of track when padding is used.
+- LayoutGroup: Now detects if layouts dispatch `Event.CHANGE` during their `layout()` method, where previously, it listened only between validations.
+- LayoutGroup: Fixed exception where calling `addChild()` with an existing child at index 0 could result in an exception.
+- NumericStepper: Added new `enableButtonsAtRangeLimits` property to automatically disable decrement button at minimum value and increment button at maximum value.
+- NumericStepper: Fixed issue where decrement and increment buttons might not be ignored when disabled.
+- RouterNavigator: `Location` object on non-html5 targets now has a `toString()` method to match the behavior of html5.
+- ScrollEvent: Added new `x` and `y` properties.
+- Scroller: Added new `applyLayoutShift()` method (advanced) that may be used with containers that support virtual layouts to adjust the layout after a virtual item's size is calculated to adjust from the previous estimated size.
+- StackNavigator: Added new `popMultipleItems()` method to allow popping to any arbitrary position in the history, instead of only one item or to the root.
+- ValidatingSprite: Added new `runWithInvalidationFlagsOnly()` method to run some code where `setInvalid()` calls will be redirected to `setInvalidationFlag()` instead, to avoid multiple validations.
+- Defines: Added new `feathersui_strict_set_invalid` define that will throw an exception if `setInvalid()` is called during validation. Useful when developing custom components or item renderers to find performance issues. See also: `runWithInvalidationFlagsOnly()` or `runWithoutInvalidation()`.
+
 ## 1.1.0 (2023-03-16)
 
 - ActivityIndicator: New component to display indeterminate progress with animation.
