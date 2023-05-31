@@ -2,4 +2,9 @@
 <project>
 	<haxelib name="openfl"/>
 	<haxelib name="actuate"/>
+
+	<!-- Haxe 4.3 made Flash externs more strict -->
+	<log error="OpenFL version ${openfl} is not compatible with Feathers UI ${feathersui} when targeting flash or air with Haxe 4.3+ (expected OpenFL version 9.2.2+)"
+		if="${haxe_ver >= 4.3} ${openfl < 9.2.2} flash"/>
+
 </project>
