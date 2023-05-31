@@ -384,7 +384,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		textInput.enableButtonsAtRangeLimits = false;
 		```
 
-		@since 1.0.0
+		@since 1.2.0
 	**/
 	public var enableButtonsAtRangeLimits(get, set):Bool;
 

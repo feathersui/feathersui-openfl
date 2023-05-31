@@ -431,6 +431,8 @@ class StackNavigator extends BaseNavigator {
 
 		@see `StackNavigator.popTransition`
 		@see `StackNavigator.popItem()`
+
+		@since 1.2.0
 	**/
 	public function popMultipleItems(count:Int, ?returnedObject:Dynamic, ?transition:(DisplayObject, DisplayObject) -> IEffectContext):DisplayObject {
 		if (count <= 0) {
