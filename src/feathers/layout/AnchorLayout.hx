@@ -187,6 +187,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 		}
 		var viewPortWidth = 0.0;
 		var viewPortHeight = 0.0;
+		var loopCount = 0;
 		var needsAnotherPass = true;
 		while (needsAnotherPass) {
 			needsAnotherPass = false;
@@ -350,6 +351,12 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 				}
 				if (!needsAnotherPass && oldDoneCount == doneItems.length) {
 					throw new IllegalOperationError("AnchorLayout failed.");
+				}
+			}
+			if (needsAnotherPass) {
+				loopCount++;
+				if (loopCount > items.length) {
+					throw new IllegalOperationError('AnchorLayout is stuck in an infinite loop.');
 				}
 			}
 		}
