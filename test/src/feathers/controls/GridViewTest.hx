@@ -984,6 +984,31 @@ class GridViewTest extends Test {
 		Assert.notNull(itemRenderer);
 		Assert.equals("One", itemRenderer.text);
 	}
+
+	// ensures that the new index of the existing column doesn't result in a range error
+	// and that columns are displayed in the correct order
+	public function testInsertExtraColumnAtBeginning():Void {
+		this._gridView.dataProvider = new ArrayCollection([{one: "One", two: "Two"}]);
+		var column1 = new GridViewColumn("1", item -> item.one);
+		var column2 = new GridViewColumn("2", item -> item.two);
+		this._gridView.columns = new ArrayCollection([column1]);
+		this._gridView.validateNow();
+		var itemRenderer1 = cast(this._gridView.itemAndColumnToCellRenderer(this._gridView.dataProvider.get(0), column1), ItemRenderer);
+		Assert.notNull(itemRenderer1);
+		Assert.equals("One", itemRenderer1.text);
+		Assert.equals(0, itemRenderer1.parent.getChildIndex(itemRenderer1));
+
+		this._gridView.columns.addAt(column2, 0);
+		this._gridView.validateNow();
+		var itemRenderer2 = cast(this._gridView.itemAndColumnToCellRenderer(this._gridView.dataProvider.get(0), column2), ItemRenderer);
+		Assert.notNull(itemRenderer2);
+		Assert.equals("Two", itemRenderer2.text);
+		var itemRenderer1 = cast(this._gridView.itemAndColumnToCellRenderer(this._gridView.dataProvider.get(0), column1), ItemRenderer);
+		Assert.notNull(itemRenderer1);
+		Assert.equals("One", itemRenderer1.text);
+		Assert.equals(0, itemRenderer2.parent.getChildIndex(itemRenderer2));
+		Assert.equals(1, itemRenderer1.parent.getChildIndex(itemRenderer1));
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

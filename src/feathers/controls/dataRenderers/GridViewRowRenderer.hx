@@ -416,6 +416,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function findUnrenderedData():Void {
+		var currentChildIndex = 0;
 		for (i in 0...this._columns.length) {
 			var column = this._columns.get(i);
 			var cellRenderer = this._columnToCellRenderer.get(column);
@@ -426,12 +427,18 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 				if (changed) {
 					this.updateCellRenderer(cellRenderer, state, storage);
 				}
-				this.setChildIndex(cellRenderer, i);
+				// we can't set the child index to i here because we may need to
+				// skip columns that don't have cell renderers yet
+				// this can result in a range error if i > numChildren
+				// when we insert the skipped columns later, this cell renderer
+				// will be moved to the correct index
+				this.setChildIndex(cellRenderer, currentChildIndex);
 				var removed = storage.inactiveCellRenderers.remove(cellRenderer);
 				if (!removed) {
 					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: cell renderer map contains bad data for item at row index ${this._rowIndex} and column index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
 				}
 				storage.activeCellRenderers.push(cellRenderer);
+				currentChildIndex++;
 			} else {
 				this._unrenderedData.push(i);
 			}

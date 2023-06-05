@@ -833,6 +833,32 @@ import utest.Test;
 		Assert.notNull(itemRenderer);
 		Assert.equals("One", itemRenderer.text);
 	}
+
+	// ensures that the new index of the existing column doesn't result in a range error
+	// and that columns are displayed in the correct order
+	public function testInsertExtraColumnAtBeginning():Void {
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{one: "One", two: "Two"}]);
+		var column1 = new TreeGridViewColumn("1", item -> item.one);
+		var column2 = new TreeGridViewColumn("2", item -> item.two);
+		column1.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer);
+		this._treeGridView.columns = new ArrayCollection([column1]);
+		this._treeGridView.validateNow();
+		var itemRenderer1 = cast(this._treeGridView.itemAndColumnToCellRenderer(this._treeGridView.dataProvider.get([0]), column1), HierarchicalItemRenderer);
+		Assert.notNull(itemRenderer1);
+		Assert.equals("One", itemRenderer1.text);
+		Assert.equals(0, itemRenderer1.parent.getChildIndex(itemRenderer1));
+
+		this._treeGridView.columns.addAt(column2, 0);
+		this._treeGridView.validateNow();
+		var itemRenderer2 = cast(this._treeGridView.itemAndColumnToCellRenderer(this._treeGridView.dataProvider.get([0]), column2), HierarchicalItemRenderer);
+		Assert.notNull(itemRenderer2);
+		Assert.equals("Two", itemRenderer2.text);
+		var itemRenderer1 = cast(this._treeGridView.itemAndColumnToCellRenderer(this._treeGridView.dataProvider.get([0]), column1), HierarchicalItemRenderer);
+		Assert.notNull(itemRenderer1);
+		Assert.equals("One", itemRenderer1.text);
+		Assert.equals(0, itemRenderer2.parent.getChildIndex(itemRenderer2));
+		Assert.equals(1, itemRenderer1.parent.getChildIndex(itemRenderer1));
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer
