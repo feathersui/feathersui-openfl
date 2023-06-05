@@ -486,7 +486,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			var state = this.cellStatePool.get();
 			this.populateCurrentItemState(column, columnIndex, state, true);
 			var cellRenderer = this.createCellRenderer(state);
-			this.addChild(cellRenderer);
+			this.addChildAt(cellRenderer, columnIndex);
 		}
 		#if hl
 		this._unrenderedData.splice(0, this._unrenderedData.length);
