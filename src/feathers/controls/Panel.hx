@@ -150,8 +150,12 @@ class Panel extends ScrollContainer implements IFocusExtras {
 	}
 
 	override public function dispose():Void {
-		this.header = null;
-		this.footer = null;
+		if (this._header != null) {
+			this.header = null;
+		}
+		if (this._footer != null) {
+			this.footer = null;
+		}
 		super.dispose();
 	}
 

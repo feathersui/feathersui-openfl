@@ -80,7 +80,9 @@ class Form extends LayoutGroup {
 	}
 
 	override public function dispose():Void {
-		this.submitButton = null;
+		if (this._submitButton != null) {
+			this.submitButton = null;
+		}
 		super.dispose();
 	}
 

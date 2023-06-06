@@ -773,8 +773,12 @@ class Callout extends FeathersControl {
 	}
 
 	override public function dispose():Void {
-		this.content = null;
-		this.origin = null;
+		if (this._content != null) {
+			this.content = null;
+		}
+		if (this._origin != null) {
+			this.origin = null;
+		}
 		super.dispose();
 	}
 

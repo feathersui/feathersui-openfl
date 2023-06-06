@@ -124,7 +124,9 @@ class Radio extends ToggleButton implements IGroupedToggle {
 	}
 
 	override public function dispose():Void {
-		this.toggleGroup = null;
+		if (this._toggleGroup != null) {
+			this.toggleGroup = null;
+		}
 		super.dispose();
 	}
 

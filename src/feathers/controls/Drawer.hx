@@ -396,8 +396,12 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	}
 
 	override public function dispose():Void {
-		this.content = null;
-		this.drawer = null;
+		if (this._content != null) {
+			this.content = null;
+		}
+		if (this._drawer != null) {
+			this.drawer = null;
+		}
 		super.dispose();
 	}
 
