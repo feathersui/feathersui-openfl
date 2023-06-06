@@ -211,7 +211,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					viewPortHeight = measurements.maxHeight;
 				}
 			}
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			doneItems.splice(0, doneItems.length);
 			#else
 			doneItems.resize(0);

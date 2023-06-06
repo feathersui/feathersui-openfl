@@ -496,7 +496,7 @@ class EdgePuller extends EventDispatcher {
 		this._touchPointIsSimulated = simulatedTouch;
 		this._startTouch = this.getTouchPosition(stageX, stageY);
 		this._startPullDistance = this._pullDistance;
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._savedTouchMoves.splice(0, this._savedTouchMoves.length);
 		#else
 		this._savedTouchMoves.resize(0);

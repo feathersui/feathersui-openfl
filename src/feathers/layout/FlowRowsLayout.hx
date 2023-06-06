@@ -455,7 +455,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 			maxItemHeight = 0.0;
 			var positionX = this._paddingLeft;
 			// we save the items in this row to align them later.
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._rowItems.splice(0, this._rowItems.length);
 			#else
 			this._rowItems.resize(0);
@@ -543,7 +543,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		} while (i < itemCount);
 			// we don't want to keep a reference to any of the items, so clear
 			// this cache
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._rowItems.splice(0, this._rowItems.length);
 		#else
 		this._rowItems.resize(0);

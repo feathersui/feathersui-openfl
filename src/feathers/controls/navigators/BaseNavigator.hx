@@ -223,7 +223,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 			FeathersEvent.dispatch(this, Event.CLEAR);
 		}
 		this._addedItems.clear();
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._addedItemIDs.splice(0, this._addedItemIDs.length);
 		#else
 		this._addedItemIDs.resize(0);

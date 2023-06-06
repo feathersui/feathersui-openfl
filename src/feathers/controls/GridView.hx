@@ -376,7 +376,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
 		this._virtualCache.resize(0);
@@ -669,7 +669,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._selectionAnchorIndex = -1;
 			this._selectedIndex = -1;
 			this._selectedItem = null;
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._selectedIndices.splice(0, this._selectedIndices.length);
 			this._selectedItems.splice(0, this._selectedItems.length);
 			#else
@@ -1363,7 +1363,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			if (this._previousLayout != this.layout) {
 				// don't keep the old layout's cache because it may not be
 				// compatible with the new layout
-				#if hl
+				#if (hl && haxe_ver < 4.3)
 				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
 				this._virtualCache.resize(0);
@@ -1698,7 +1698,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this.destroyHeaderDivider(headerDivider, factory);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._defaultHeaderDividerStorage.inactiveHeaderDividers.splice(0, this._defaultHeaderDividerStorage.inactiveHeaderDividers.length);
 		#else
 		this._defaultHeaderDividerStorage.inactiveHeaderDividers.resize(0);
@@ -1706,7 +1706,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshActiveHeaderDividers():Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._headerDividerLayoutItems.splice(0, this._headerDividerLayoutItems.length);
 		#else
 		this._headerDividerLayoutItems.resize(0);
@@ -1781,7 +1781,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this.destroyColumnDivider(headerDivider, factory);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._defaultColumnDividerStorage.inactiveColumnDividers.splice(0, this._defaultColumnDividerStorage.inactiveColumnDividers.length);
 		#else
 		this._defaultColumnDividerStorage.inactiveColumnDividers.resize(0);
@@ -1789,7 +1789,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshActiveColumnDividers():Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._columnDividerLayoutItems.splice(0, this._columnDividerLayoutItems.length);
 		#else
 		this._columnDividerLayoutItems.resize(0);
@@ -1881,7 +1881,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this.destroyHeaderRenderer(headerRenderer, recycler);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._defaultHeaderStorage.inactiveHeaderRenderers.splice(0, this._defaultHeaderStorage.inactiveHeaderRenderers.length);
 		#else
 		this._defaultHeaderStorage.inactiveHeaderRenderers.resize(0);
@@ -1890,7 +1890,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function findUnrenderedHeaderData():Void {
 		// remove all old items, then fill with null
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
 		#else
 		this._rowLayoutItems.resize(0);
@@ -1934,7 +1934,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._headerContainer.addChildAt(headerRenderer, index);
 			this._headerLayoutItems[index] = headerRenderer;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedHeaderData.splice(0, this._unrenderedHeaderData.length);
 		#else
 		this._unrenderedHeaderData.resize(0);
@@ -1992,7 +1992,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this.destroyRowRenderer(rowRenderer);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.inactiveRowRenderers.splice(0, this.inactiveRowRenderers.length);
 		#else
 		this.inactiveRowRenderers.resize(0);
@@ -2001,7 +2001,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
 		#else
 		this._rowLayoutItems.resize(0);
@@ -2061,7 +2061,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.gridViewPort.addChild(rowRenderer);
 			this._rowLayoutItems[rowIndex] = rowRenderer;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedData.splice(0, this._unrenderedData.length);
 		#else
 		this._unrenderedData.resize(0);
@@ -2600,7 +2600,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_dataProvider_removeAllHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
@@ -2612,7 +2612,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_dataProvider_resetHandler(event:FlatCollectionEvent):Void {
 		if (this._virtualCache != null) {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
@@ -2627,7 +2627,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
@@ -2641,7 +2641,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			// we don't know exactly which indices have changed, so reset the
 			// whole cache.
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);

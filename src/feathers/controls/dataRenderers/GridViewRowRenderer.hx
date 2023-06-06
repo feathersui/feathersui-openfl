@@ -506,7 +506,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			var cellRenderer = this.createCellRenderer(state);
 			this.addChildAt(cellRenderer, columnIndex);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedData.splice(0, this._unrenderedData.length);
 		#else
 		this._unrenderedData.resize(0);
@@ -521,7 +521,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			}
 			this.destroyCellRenderer(cellRenderer, cellRendererRecycler);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		storage.inactiveCellRenderers.splice(0, storage.inactiveCellRenderers.length);
 		#else
 		storage.inactiveCellRenderers.resize(0);

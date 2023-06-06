@@ -1305,7 +1305,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		if (result == null) {
 			result = [];
 		} else {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			result.splice(0, result.length);
 			#else
 			result.resize(0);
@@ -1369,7 +1369,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		if (result == null) {
 			result = [];
 		} else {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			result.splice(0, result.length);
 			#else
 			result.resize(0);

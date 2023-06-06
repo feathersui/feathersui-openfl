@@ -1215,7 +1215,7 @@ class Scroller extends EventDispatcher {
 		this.startTouchY = stageY;
 		this.startScrollX = this._scrollX;
 		this.startScrollY = this._scrollY;
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.savedScrollMoves.splice(0, this.savedScrollMoves.length);
 		#else
 		this.savedScrollMoves.resize(0);

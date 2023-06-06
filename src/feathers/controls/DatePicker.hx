@@ -1452,7 +1452,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			}
 		}
 		this._oldWeekdayLabelFactory = null;
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._dayNameLabels.splice(0, this._dayNameLabels.length);
 		#else
 		this._dayNameLabels.resize(0);
@@ -1550,7 +1550,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			}
 			this.destroyDateRenderer(dateRenderer, recycler);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		storage.inactiveDateRenderers.splice(0, storage.inactiveDateRenderers.length);
 		#else
 		storage.inactiveDateRenderers.resize(0);

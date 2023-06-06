@@ -348,13 +348,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
 		this._virtualCache.resize(0);
 		#end
 		this._totalLayoutCount = 0;
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
 		this.openBranches.resize(0);
@@ -999,7 +999,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			if (this._previousLayout != this.layout) {
 				// don't keep the old layout's cache because it may not be
 				// compatible with the new layout
-				#if hl
+				#if (hl && haxe_ver < 4.3)
 				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
 				this._virtualCache.resize(0);
@@ -1172,7 +1172,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			}
 			this.destroyItemRenderer(itemRenderer, recycler);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		storage.inactiveItemRenderers.splice(0, storage.inactiveItemRenderers.length);
 		#else
 		storage.inactiveItemRenderers.resize(0);
@@ -1181,7 +1181,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._layoutItems.splice(0, this._layoutItems.length);
 		#else
 		this._layoutItems.resize(0);
@@ -1392,7 +1392,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this.treeViewPort.addChild(itemRenderer);
 			this._layoutItems[layoutIndex] = itemRenderer;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedLocations.splice(0, this._unrenderedLocations.length);
 		#else
 		this._unrenderedLocations.resize(0);
@@ -2044,7 +2044,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	private function treeView_dataProvider_changeHandler(event:Event):Void {
 		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
@@ -2105,7 +2105,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function treeView_dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
 		this.openBranches.resize(0);
@@ -2116,7 +2116,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function treeView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
 		this.openBranches.resize(0);

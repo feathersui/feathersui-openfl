@@ -373,13 +373,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
 		this._virtualCache.resize(0);
 		#end
 		this._totalRowLayoutCount = 0;
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
 		this.openBranches.resize(0);
@@ -1179,7 +1179,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			if (this._previousLayout != this.layout) {
 				// don't keep the old layout's cache because it may not be
 				// compatible with the new layout
-				#if hl
+				#if (hl && haxe_ver < 4.3)
 				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
 				this._virtualCache.resize(0);
@@ -1512,7 +1512,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyHeaderDivider(headerDivider, factory);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._defaultHeaderDividerStorage.inactiveHeaderDividers.splice(0, this._defaultHeaderDividerStorage.inactiveHeaderDividers.length);
 		#else
 		this._defaultHeaderDividerStorage.inactiveHeaderDividers.resize(0);
@@ -1520,7 +1520,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function refreshActiveHeaderDividers():Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._headerDividerLayoutItems.splice(0, this._headerDividerLayoutItems.length);
 		#else
 		this._headerDividerLayoutItems.resize(0);
@@ -1595,7 +1595,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyColumnDivider(headerDivider, factory);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._defaultColumnDividerStorage.inactiveColumnDividers.splice(0, this._defaultColumnDividerStorage.inactiveColumnDividers.length);
 		#else
 		this._defaultColumnDividerStorage.inactiveColumnDividers.resize(0);
@@ -1603,7 +1603,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function refreshActiveColumnDividers():Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._columnDividerLayoutItems.splice(0, this._columnDividerLayoutItems.length);
 		#else
 		this._columnDividerLayoutItems.resize(0);
@@ -1695,7 +1695,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyHeaderRenderer(headerRenderer, recycler);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._defaultHeaderStorage.inactiveHeaderRenderers.splice(0, this._defaultHeaderStorage.inactiveHeaderRenderers.length);
 		#else
 		this._defaultHeaderStorage.inactiveHeaderRenderers.resize(0);
@@ -1704,7 +1704,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private function findUnrenderedHeaderData():Void {
 		// remove all old items, then fill with null
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
 		#else
 		this._rowLayoutItems.resize(0);
@@ -1748,7 +1748,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._headerContainer.addChildAt(headerRenderer, index);
 			this._headerLayoutItems[index] = headerRenderer;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedHeaderData.splice(0, this._unrenderedHeaderData.length);
 		#else
 		this._unrenderedHeaderData.resize(0);
@@ -1808,7 +1808,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			}
 			this.destroyRowRenderer(rowRenderer);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.inactiveRowRenderers.splice(0, this.inactiveRowRenderers.length);
 		#else
 		this.inactiveRowRenderers.resize(0);
@@ -1817,7 +1817,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._rowLayoutItems.splice(0, this._rowLayoutItems.length);
 		#else
 		this._rowLayoutItems.resize(0);
@@ -1904,7 +1904,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.treeGridViewPort.addChild(rowRenderer);
 			this._rowLayoutItems[layoutIndex] = rowRenderer;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedLocations.splice(0, this._unrenderedLocations.length);
 		#else
 		this._unrenderedLocations.resize(0);
@@ -2555,7 +2555,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private function treeGridView_dataProvider_changeHandler(event:Event):Void {
 		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);
@@ -2616,7 +2616,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
 		this.openBranches.resize(0);
@@ -2626,7 +2626,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this.openBranches.splice(0, this.openBranches.length);
 		#else
 		this.openBranches.resize(0);

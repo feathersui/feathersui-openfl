@@ -552,7 +552,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		var totalOffset = 0;
 		var yPosition = this._paddingTop;
 		var maxRowHeight = 0.0;
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._rowItems.splice(0, this._rowItems.length);
 		#else
 		this._rowItems.resize(0);
@@ -573,7 +573,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 			var offset = this.getOffset(item, span, breakpoint);
 			if (totalOffset + offset + span > this._columnCount) {
 				this.alignRow(yPosition, maxRowHeight);
-				#if hl
+				#if (hl && haxe_ver < 4.3)
 				this._rowItems.splice(0, this._rowItems.length);
 				#else
 				this._rowItems.resize(0);
@@ -591,7 +591,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		this.alignRow(yPosition, maxRowHeight);
 		// we don't want to keep a reference to any of the items, so clear
 		// this cache
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._rowItems.splice(0, this._rowItems.length);
 		#else
 		this._rowItems.resize(0);

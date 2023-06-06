@@ -164,7 +164,7 @@ class StackNavigator extends BaseNavigator {
 		// displayed, so we need to clear this variable, just in case.
 		this._tempRootItemID = null;
 
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._history.splice(0, this._history.length);
 		#else
 		this._history.resize(0);
@@ -306,7 +306,7 @@ class StackNavigator extends BaseNavigator {
 	}
 
 	override public function removeAllItems():Void {
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._history.splice(0, this._history.length);
 		#else
 		this._history.resize(0);
@@ -511,7 +511,7 @@ class StackNavigator extends BaseNavigator {
 			transition = this.popTransition;
 		}
 		this._poppedHistoryItems = this._history.copy();
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._history.splice(0, this._history.length);
 		#else
 		this._history.resize(0);

@@ -253,7 +253,7 @@ class RouterNavigator extends BaseNavigator {
 			state: newHistoryState,
 			viewData: null
 		}));
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._forwardHistory.splice(0, this._forwardHistory.length);
 		#else
 		this._forwardHistory.resize(0);
@@ -307,7 +307,7 @@ class RouterNavigator extends BaseNavigator {
 			state: newHistoryState,
 			viewData: null
 		});
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._forwardHistory.splice(0, this._forwardHistory.length);
 		#else
 		this._forwardHistory.resize(0);

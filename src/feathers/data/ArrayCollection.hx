@@ -303,13 +303,13 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			this.refreshFilterAndSort();
 		}
 		if (this._filterAndSortData != null) {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._filterAndSortData.splice(0, this._filterAndSortData.length);
 			#else
 			this._filterAndSortData.resize(0);
 			#end
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._array.splice(0, this._array.length);
 		#else
 		this._array.resize(0);
@@ -379,13 +379,13 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			return;
 		}
 		if (this._filterAndSortData != null) {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._filterAndSortData.splice(0, this._filterAndSortData.length);
 			#else
 			this._filterAndSortData.resize(0);
 			#end
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._array.splice(0, this._array.length);
 		#else
 		this._array.resize(0);
@@ -578,7 +578,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			var result = oldFilterAndSortData;
 			if (result != null) {
 				// reuse the old array to avoid garbage collection
-				#if hl
+				#if (hl && haxe_ver < 4.3)
 				result.splice(0, result.length);
 				#else
 				result.resize(0);

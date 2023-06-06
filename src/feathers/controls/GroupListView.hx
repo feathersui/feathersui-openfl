@@ -324,7 +324,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
 		this._virtualCache.resize(0);
@@ -1106,7 +1106,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			if (this._previousLayout != this.layout) {
 				// don't keep the old layout's cache because it may not be
 				// compatible with the new layout
-				#if hl
+				#if (hl && haxe_ver < 4.3)
 				this._virtualCache.splice(0, this._virtualCache.length);
 				#else
 				this._virtualCache.resize(0);
@@ -1327,7 +1327,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			}
 			this.destroyItemRenderer(itemRenderer, recycler);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		storage.inactiveItemRenderers.splice(0, storage.inactiveItemRenderers.length);
 		#else
 		storage.inactiveItemRenderers.resize(0);
@@ -1336,13 +1336,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._layoutItems.splice(0, this._layoutItems.length);
 		#else
 		this._layoutItems.resize(0);
 		#end
 		this._layoutItems.resize(this._totalLayoutCount);
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._layoutHeaderIndices.splice(0, this._layoutHeaderIndices.length);
 		#else
 		this._layoutHeaderIndices.resize(0);
@@ -1445,7 +1445,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this._layoutHeaderIndices.push(layoutIndex);
 			}
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedLocations.splice(0, this._unrenderedLocations.length);
 		#else
 		this._unrenderedLocations.resize(0);
@@ -2066,7 +2066,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private function groupListView_dataProvider_changeHandler(event:Event):Void {
 		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
-			#if hl
+			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
 			this._virtualCache.resize(0);

@@ -795,7 +795,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			}
 			this.destroyTab(tab);
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		storage.inactiveTabs.splice(0, storage.inactiveTabs.length);
 		#else
 		storage.inactiveTabs.resize(0);
@@ -876,7 +876,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 	private function findUnrenderedData():Void {
 		// remove all old items, then fill with null
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._layoutItems.splice(0, this._layoutItems.length);
 		#else
 		this._layoutItems.resize(0);
@@ -925,7 +925,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this.addChildAt(tab, index + depthOffset);
 			this._layoutItems[index] = tab;
 		}
-		#if hl
+		#if (hl && haxe_ver < 4.3)
 		this._unrenderedData.splice(0, this._unrenderedData.length);
 		#else
 		this._unrenderedData.resize(0);
