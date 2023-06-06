@@ -111,4 +111,19 @@ class LabelMeasurementTest extends Test {
 		Assert.equals(Math.POSITIVE_INFINITY, this._label.maxHeight);
 		Assert.equals(this._measureTextField.getLineMetrics(0).ascent, this._label.baseline);
 	}
+
+	public function testIncreasedHeightAfterSettingWordWrapAndWidth():Void {
+		this._label.text = "I am the very model of a modern major general";
+		this._label.wordWrap = true;
+		this._label.validateNow();
+
+		Assert.isTrue(this._label.width > 0.0);
+		Assert.isTrue(this._label.height > 0.0);
+
+		var oldHeight = this._label.height;
+		this._label.width = 50.0;
+		this._label.validateNow();
+
+		Assert.isTrue(this._label.height > oldHeight);
+	}
 }

@@ -190,6 +190,13 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			if (this._headerMeasurements != null) {
 				this._headerMeasurements.restore(this._header);
 			}
+			// the header's height might change with different width values,
+			// so if the panel's width is known, set the header width
+			if (useActualBounds) {
+				this._header.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+			} else if (this.explicitWidth != null) {
+				this._header.width = this.explicitWidth - this.paddingLeft - this.paddingRight;
+			}
 			if ((this._header is IValidating)) {
 				cast(this._header, IValidating).validateNow();
 			}
@@ -206,6 +213,13 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			this._ignoreFooterResize = true;
 			if (this._footerMeasurements != null) {
 				this._footerMeasurements.restore(this._footer);
+			}
+			// the footer's height might change with different width values,
+			// so if the panel's width is known, set the footer width
+			if (useActualBounds) {
+				this._footer.width = this.actualWidth - this.paddingLeft - this.paddingRight;
+			} else if (this.explicitWidth != null) {
+				this._footer.width = this.explicitWidth - this.paddingLeft - this.paddingRight;
 			}
 			if ((this._footer is IValidating)) {
 				cast(this._footer, IValidating).validateNow();

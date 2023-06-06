@@ -475,4 +475,28 @@ class PanelMeasurementTest extends Test {
 		Assert.equals(Math.POSITIVE_INFINITY, this._panel.maxWidth);
 		Assert.equals(Math.POSITIVE_INFINITY, this._panel.maxHeight);
 	}
+
+	public function testAutoSizeHeightWithWrappingHeader():Void {
+		var header = new Label();
+		header.wordWrap = true;
+		header.text = "I am the very model of a modern major general";
+		this._panel.header = header;
+		this._panel.validateNow();
+		var oldPanelHeight = this._panel.height;
+		this._panel.width = 100.0;
+		this._panel.validateNow();
+		Assert.isTrue(this._panel.height > oldPanelHeight);
+	}
+
+	public function testAutoSizeHeightWithWrappingFooter():Void {
+		var footer = new Label();
+		footer.wordWrap = true;
+		footer.text = "I am the very model of a modern major general";
+		this._panel.footer = footer;
+		this._panel.validateNow();
+		var oldPanelHeight = this._panel.height;
+		this._panel.width = 100.0;
+		this._panel.validateNow();
+		Assert.isTrue(this._panel.height > oldPanelHeight);
+	}
 }
