@@ -73,6 +73,20 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> extends DisplayObjectFactor
 		the display object to its original state from when it was returned by
 		`create()`.
 
+		_Warning:_ This method is not guaranteed to be called by the parent
+		component when that component is removed from stage (or later when it is
+		garbage collected). If this method must be called to clean up something
+		that would cause a memory leak, you should manually update the
+		appropriate property on the parent component that will cause all 
+		instances to be removed, and then validate the parent component. For
+		example, on a `ListView`, you would set the `dataProvider` property to
+		`null` before calling `validateNow()`.
+
+		```haxe
+		listView.dataProvider = null;
+		listView.validateNow();
+		```
+
 		@since 1.0.0
 	**/
 	public dynamic function reset(target:T, state:S):Void {}
