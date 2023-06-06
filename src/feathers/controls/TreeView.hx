@@ -969,6 +969,18 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveItemRenderers(this._defaultStorage, true);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveItemRenderers(storage, true);
+			}
+		}
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	private function initializeTreeViewTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTreeViewStyles.initialize();
@@ -1445,6 +1457,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		this.treeViewPort.removeChild(itemRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(itemRenderer);
+		}
+		if ((itemRenderer is IUIControl)) {
+			cast(itemRenderer, IUIControl).dispose();
 		}
 	}
 

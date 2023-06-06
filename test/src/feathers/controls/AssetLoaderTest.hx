@@ -47,6 +47,13 @@ class AssetLoaderTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._loader.validateNow();
+		this._loader.dispose();
+		this._loader.dispose();
+		Assert.pass();
+	}
+
 	@:timeout(1000)
 	public function testCompleteEvent(async:Async):Void {
 		var complete = false;

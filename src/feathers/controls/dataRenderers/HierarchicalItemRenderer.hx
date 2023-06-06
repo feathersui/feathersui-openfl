@@ -294,6 +294,17 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		return this._disclosureButtonFactory;
 	}
 
+	override public function dispose():Void {
+		this.disposeDisclosureButton();
+		super.dispose();
+	}
+
+	private function initializeHierarchicalItemRendererTheme():Void {
+		#if !feathersui_disable_default_theme
+		feathers.themes.steel.components.SteelHierarchicalItemRendererStyles.initialize();
+		#end
+	}
+
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var stateInvalid = this.isInvalid(STATE);
@@ -477,22 +488,8 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		}
 	}
 
-	private function initializeHierarchicalItemRendererTheme():Void {
-		#if !feathersui_disable_default_theme
-		feathers.themes.steel.components.SteelHierarchicalItemRendererStyles.initialize();
-		#end
-	}
-
 	private function createDisclosureButton():Void {
-		if (this.disclosureButton != null) {
-			this.disclosureButton.removeEventListener(Event.CHANGE, hierarchicalItemRenderer_disclosureButton_changeHandler);
-			this.removeChild(this.disclosureButton);
-			if (this._oldDisclosureButtonFactory.destroy != null) {
-				this._oldDisclosureButtonFactory.destroy(this.disclosureButton);
-			}
-			this._oldDisclosureButtonFactory = null;
-			this.disclosureButton = null;
-		}
+		this.disposeDisclosureButton();
 		var factory = this._disclosureButtonFactory != null ? this._disclosureButtonFactory : defaultDisclosureButtonFactory;
 		this._oldDisclosureButtonFactory = factory;
 		this.disclosureButton = factory.create();
@@ -503,6 +500,20 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		this.disclosureButton.addEventListener(Event.CHANGE, hierarchicalItemRenderer_disclosureButton_changeHandler);
 		this.disclosureButton.initializeNow();
 		this.addChild(this.disclosureButton);
+	}
+
+	private function disposeDisclosureButton():Void {
+		if (this.disclosureButton == null) {
+			return;
+		}
+		this.disclosureButton.removeEventListener(Event.CHANGE, hierarchicalItemRenderer_disclosureButton_changeHandler);
+		this.removeChild(this.disclosureButton);
+		if (this._oldDisclosureButtonFactory.destroy != null) {
+			this._oldDisclosureButtonFactory.destroy(this.disclosureButton);
+		}
+		this._oldDisclosureButtonFactory = null;
+		this.disclosureButton.dispose();
+		this.disclosureButton = null;
 	}
 
 	private function refreshBranchOrLeafIcon():Void {

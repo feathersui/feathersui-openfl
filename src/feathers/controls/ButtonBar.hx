@@ -500,6 +500,18 @@ class ButtonBar extends FeathersControl {
 		this.setInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveButtons(this._defaultStorage, true);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveButtons(storage, true);
+			}
+		}
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	private function initializeButtonBarTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelButtonBarStyles.initialize();
@@ -823,6 +835,7 @@ class ButtonBar extends FeathersControl {
 		if (this.buttonRecycler.destroy != null) {
 			this.buttonRecycler.destroy(button);
 		}
+		button.dispose();
 	}
 
 	private function itemStateToStorage(state:ButtonBarItemState):ButtonStorage {

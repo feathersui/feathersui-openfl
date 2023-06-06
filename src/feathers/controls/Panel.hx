@@ -149,6 +149,12 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		return this._focusExtrasAfter;
 	}
 
+	override public function dispose():Void {
+		this.header = null;
+		this.footer = null;
+		super.dispose();
+	}
+
 	private function initializePanelTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPanelStyles.initialize();

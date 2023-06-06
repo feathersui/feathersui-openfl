@@ -34,6 +34,13 @@ class LabelTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._label.validateNow();
+		this._label.dispose();
+		this._label.dispose();
+		Assert.pass();
+	}
+
 	public function testRemoveSkinAfterSetToNewValue():Void {
 		var skin1 = new Shape();
 		var skin2 = new Shape();

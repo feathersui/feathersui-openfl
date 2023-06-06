@@ -71,4 +71,14 @@ interface IUIControl extends IDisplayObject {
 		@since 1.0.0
 	**/
 	public function initializeNow():Void;
+
+	/**
+		May be called manually to clear the component's data and dispose
+		sub-components, if appropriate.
+
+		In most cases, calling `dispose()` is _not_ required to ensure that a
+		component may be garbage collected. This method is provided for advanced
+		use cases where some extra cleanup may benefit memory usage.
+	**/
+	public function dispose():Void;
 }

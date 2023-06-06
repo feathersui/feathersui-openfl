@@ -123,6 +123,11 @@ class Radio extends ToggleButton implements IGroupedToggle {
 		return this._toggleGroup;
 	}
 
+	override public function dispose():Void {
+		this.toggleGroup = null;
+		super.dispose();
+	}
+
 	private function initializeRadioTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelRadioStyles.initialize();

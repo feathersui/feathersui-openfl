@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.core.IUIControl;
 import feathers.motion.effects.IEffectContext;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -241,6 +242,9 @@ class StackItem {
 		var viewListeners:Array<ViewListener> = this._viewToEvents.get(view);
 		this.removeEventsFromView(view, viewListeners);
 		this._viewToEvents.remove(view);
+		if (this.viewClass != null && (view is IUIControl)) {
+			cast(view, IUIControl).dispose();
+		}
 	}
 
 	private function addActionListeners(view:DisplayObject, navigator:StackNavigator):Array<ViewListener> {

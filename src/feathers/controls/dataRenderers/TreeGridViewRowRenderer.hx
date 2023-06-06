@@ -392,6 +392,17 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private var _rowLayout:GridViewRowLayout;
 
+	override public function dispose():Void {
+		this.refreshInactiveCellRenderers(this._defaultStorage, true);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveCellRenderers(storage, true);
+			}
+		}
+		super.dispose();
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 

@@ -35,6 +35,13 @@ class ButtonTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._button.validateNow();
+		this._button.dispose();
+		this._button.dispose();
+		Assert.pass();
+	}
+
 	public function testRemoveIconAfterSetToNewValue():Void {
 		var icon1 = new Shape();
 		var icon2 = new Shape();

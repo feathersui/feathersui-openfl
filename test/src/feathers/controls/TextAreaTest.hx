@@ -36,6 +36,13 @@ class TextAreaTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._textArea.validateNow();
+		this._textArea.dispose();
+		this._textArea.dispose();
+		Assert.pass();
+	}
+
 	public function testDispatchChangeEventOnSetTextProgramatically():Void {
 		this._textArea.validateNow();
 		var changed = false;

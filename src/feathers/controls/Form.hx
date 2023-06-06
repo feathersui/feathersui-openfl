@@ -79,6 +79,11 @@ class Form extends LayoutGroup {
 		FormEvent.dispatch(this, FormEvent.SUBMIT);
 	}
 
+	override public function dispose():Void {
+		this.submitButton = null;
+		super.dispose();
+	}
+
 	private function initializeFormTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelFormStyles.initialize();

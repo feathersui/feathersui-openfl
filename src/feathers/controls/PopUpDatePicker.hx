@@ -630,6 +630,13 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		this.popUpAdapter.close();
 	}
 
+	override public function dispose():Void {
+		this.disposeButton();
+		this.disposeTextInput();
+		this.disposeDatePicker();
+		super.dispose();
+	}
+
 	private function initializePopUpDatePickerTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPopUpDatePickerStyles.initialize();
@@ -688,16 +695,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	private function createButton():Void {
-		if (this.button != null) {
-			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpDatePicker_button_mouseDownHandler);
-			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpDatePicker_button_touchBeginHandler);
-			this.removeChild(this.button);
-			if (this._oldButtonFactory.destroy != null) {
-				this._oldButtonFactory.destroy(this.button);
-			}
-			this._oldButtonFactory = null;
-			this.button = null;
-		}
+		this.disposeButton();
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this._oldButtonFactory = factory;
 		this.button = factory.create();
@@ -712,26 +710,22 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		this.addChild(this.button);
 	}
 
-	private function refreshLocale():Void {
-		#if (flash || (openfl >= "9.2.0" && !neko))
-		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
-		this._currentDateFormatter = new DateTimeFormatter(localeID, SHORT, NONE);
-		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
-		#else
-		this._actualLocaleIDName = "en-US";
-		#end
+	private function disposeButton():Void {
+		if (this.button == null) {
+			return;
+		}
+		this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpDatePicker_button_mouseDownHandler);
+		this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpDatePicker_button_touchBeginHandler);
+		this.removeChild(this.button);
+		if (this._oldButtonFactory.destroy != null) {
+			this._oldButtonFactory.destroy(this.button);
+		}
+		this._oldButtonFactory = null;
+		this.button = null;
 	}
 
 	private function createTextInput():Void {
-		if (this.textInput != null) {
-			this.textInput.removeEventListener(MouseEvent.MOUSE_DOWN, popUpDatePicker_textInput_mouseDownHandler);
-			this.removeChild(this.textInput);
-			if (this._oldTextInputFactory.destroy != null) {
-				this._oldTextInputFactory.destroy(this.textInput);
-			}
-			this._oldTextInputFactory = null;
-			this.textInput = null;
-		}
+		this.disposeTextInput();
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
 		this._oldTextInputFactory = factory;
 		this.textInput = factory.create();
@@ -745,17 +739,22 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		this.addChild(this.textInput);
 	}
 
-	private function createDatePicker():Void {
-		if (this.datePicker != null) {
-			this.datePicker.removeEventListener(Event.CHANGE, popUpDatePicker_datePicker_changeHandler);
-			this.datePicker.removeEventListener(DatePickerEvent.ITEM_TRIGGER, popUpDatePicker_datePicker_itemTriggerHandler);
-			this.datePicker.focusOwner = null;
-			if (this._oldDatePickerFactory.destroy != null) {
-				this._oldDatePickerFactory.destroy(this.datePicker);
-			}
-			this._oldDatePickerFactory = null;
-			this.datePicker = null;
+	private function disposeTextInput():Void {
+		if (this.textInput == null) {
+			return;
 		}
+		this.textInput.removeEventListener(MouseEvent.MOUSE_DOWN, popUpDatePicker_textInput_mouseDownHandler);
+		this.removeChild(this.textInput);
+		if (this._oldTextInputFactory.destroy != null) {
+			this._oldTextInputFactory.destroy(this.textInput);
+		}
+		this._oldTextInputFactory = null;
+		this.textInput.dispose();
+		this.textInput = null;
+	}
+
+	private function createDatePicker():Void {
+		this.disposeDatePicker();
 		var factory = this._datePickerFactory != null ? this._datePickerFactory : defaultDatePickerFactory;
 		this._oldDatePickerFactory = factory;
 		this.datePicker = factory.create();
@@ -766,6 +765,30 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		}
 		this.datePicker.addEventListener(Event.CHANGE, popUpDatePicker_datePicker_changeHandler);
 		this.datePicker.addEventListener(DatePickerEvent.ITEM_TRIGGER, popUpDatePicker_datePicker_itemTriggerHandler);
+	}
+
+	private function disposeDatePicker():Void {
+		if (this.datePicker == null) {
+			return;
+		}
+		this.datePicker.removeEventListener(Event.CHANGE, popUpDatePicker_datePicker_changeHandler);
+		this.datePicker.removeEventListener(DatePickerEvent.ITEM_TRIGGER, popUpDatePicker_datePicker_itemTriggerHandler);
+		this.datePicker.focusOwner = null;
+		if (this._oldDatePickerFactory.destroy != null) {
+			this._oldDatePickerFactory.destroy(this.datePicker);
+		}
+		this._oldDatePickerFactory = null;
+		this.datePicker = null;
+	}
+
+	private function refreshLocale():Void {
+		#if (flash || (openfl >= "9.2.0" && !neko))
+		var localeID = this._requestedLocaleIDName != null ? this._requestedLocaleIDName : LocaleID.DEFAULT;
+		this._currentDateFormatter = new DateTimeFormatter(localeID, SHORT, NONE);
+		this._actualLocaleIDName = this._currentDateFormatter.actualLocaleIDName;
+		#else
+		this._actualLocaleIDName = "en-US";
+		#end
 	}
 
 	private function refreshDatePickerData():Void {

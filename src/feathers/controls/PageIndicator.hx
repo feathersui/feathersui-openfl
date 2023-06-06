@@ -334,6 +334,12 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		return this.activeToggleButtons[index];
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveToggleButtons(true);
+		this.maxSelectedIndex = -1;
+		super.dispose();
+	}
+
 	private function initializePageIndicatorTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPageIndicatorStyles.initialize();

@@ -1252,6 +1252,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		return state.column;
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveHeaderRenderers(true);
+		this.refreshInactiveRowRenderers();
+		this.recoverInactiveRowRenderers();
+		this.freeInactiveRowRenderers();
+		this.dataProvider = null;
+		this.columns = null;
+		super.dispose();
+	}
+
 	private function initializeGridViewTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelGridViewStyles.initialize();
@@ -2086,6 +2096,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._rowRendererRecycler.destroy != null) {
 			this._rowRendererRecycler.destroy(rowRenderer);
 		}
+		rowRenderer.dispose();
 	}
 
 	private function updateRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
@@ -2231,6 +2242,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerContainer.removeChild(headerRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(headerRenderer);
+		}
+		if ((headerRenderer is IUIControl)) {
+			cast(headerRenderer, IUIControl).dispose();
 		}
 	}
 

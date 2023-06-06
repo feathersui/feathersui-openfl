@@ -625,6 +625,18 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		this.setInvalid(INVALIDATION_FLAG_TAB_FACTORY);
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveTabs(this._defaultStorage, true);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveTabs(storage, true);
+			}
+		}
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	private function initializeTabBarTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTabBarStyles.initialize();
@@ -950,6 +962,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this.tabRecycler.destroy != null) {
 			this.tabRecycler.destroy(tab);
 		}
+		tab.dispose();
 	}
 
 	private function itemStateToStorage(state:TabBarItemState):TabStorage {

@@ -1107,6 +1107,17 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	**/
 	public var pointerSelectionEnabled:Bool = true;
 
+	override public function dispose():Void {
+		this.disposeMonthTitleView();
+		this.disposeDecrementMonthButton();
+		this.disposeIncrementMonthButton();
+		this.disposeDecrementYearButton();
+		this.disposeIncrementYearButton();
+		this.refreshInactiveDateRenderers(this._defaultStorage, true);
+		this.refreshInactiveDateRenderers(this._mutedStorage, true);
+		super.dispose();
+	}
+
 	private function initializeDatePickerTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelDatePickerStyles.initialize();
@@ -1222,13 +1233,6 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	}
 
 	private function createMonthTitleView():Void {
-		if (this.monthTitleView != null) {
-			if (this._oldMonthTitleViewFactory.destroy != null) {
-				this._oldMonthTitleViewFactory.destroy(this.monthTitleView);
-			}
-			this._oldMonthTitleViewFactory = null;
-			this.monthTitleView = null;
-		}
 		var factory = this._monthTitleViewFactory != null ? this._monthTitleViewFactory : defaultMonthTitleViewFactory;
 		this._oldMonthTitleViewFactory = factory;
 		this.monthTitleView = factory.create();
@@ -1240,15 +1244,20 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.addChild(this.monthTitleView);
 	}
 
-	private function createDecrementMonthButton():Void {
-		if (this.decrementMonthButton != null) {
-			this.decrementMonthButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_decrementMonthButton_triggerHandler);
-			if (this._oldDecrementMonthButtonFactory.destroy != null) {
-				this._oldDecrementMonthButtonFactory.destroy(this.decrementMonthButton);
-			}
-			this._oldDecrementMonthButtonFactory = null;
-			this.decrementMonthButton = null;
+	private function disposeMonthTitleView():Void {
+		if (this.monthTitleView == null) {
+			return;
 		}
+		if (this._oldMonthTitleViewFactory.destroy != null) {
+			this._oldMonthTitleViewFactory.destroy(this.monthTitleView);
+		}
+		this._oldMonthTitleViewFactory = null;
+		this.monthTitleView.dispose();
+		this.monthTitleView = null;
+	}
+
+	private function createDecrementMonthButton():Void {
+		this.disposeDecrementMonthButton();
 		var factory = this._decrementMonthButtonFactory != null ? this._decrementMonthButtonFactory : defaultDecrementMonthButtonFactory;
 		this._oldDecrementMonthButtonFactory = factory;
 		this.decrementMonthButton = factory.create();
@@ -1261,15 +1270,21 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.decrementMonthButton.addEventListener(TriggerEvent.TRIGGER, datePicker_decrementMonthButton_triggerHandler);
 	}
 
-	private function createIncrementMonthButton():Void {
-		if (this.incrementMonthButton != null) {
-			this.incrementMonthButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_incrementMonthButton_triggerHandler);
-			if (this._oldIncrementMonthButtonFactory.destroy != null) {
-				this._oldIncrementMonthButtonFactory.destroy(this.incrementMonthButton);
-			}
-			this._oldIncrementMonthButtonFactory = null;
-			this.incrementMonthButton = null;
+	private function disposeDecrementMonthButton():Void {
+		if (this.decrementMonthButton == null) {
+			return;
 		}
+		this.decrementMonthButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_decrementMonthButton_triggerHandler);
+		if (this._oldDecrementMonthButtonFactory.destroy != null) {
+			this._oldDecrementMonthButtonFactory.destroy(this.decrementMonthButton);
+		}
+		this._oldDecrementMonthButtonFactory = null;
+		this.decrementMonthButton.dispose();
+		this.decrementMonthButton = null;
+	}
+
+	private function createIncrementMonthButton():Void {
+		this.disposeIncrementMonthButton();
 		var factory = this._incrementMonthButtonFactory != null ? this._incrementMonthButtonFactory : defaultIncrementMonthButtonFactory;
 		this._oldIncrementMonthButtonFactory = factory;
 		this.incrementMonthButton = factory.create();
@@ -1282,15 +1297,21 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.incrementMonthButton.addEventListener(TriggerEvent.TRIGGER, datePicker_incrementMonthButton_triggerHandler);
 	}
 
-	private function createDecrementYearButton():Void {
-		if (this.decrementYearButton != null) {
-			this.decrementYearButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_decrementYearButton_triggerHandler);
-			if (this._oldDecrementYearButtonFactory.destroy != null) {
-				this._oldDecrementYearButtonFactory.destroy(this.decrementYearButton);
-			}
-			this._oldDecrementYearButtonFactory = null;
-			this.decrementYearButton = null;
+	private function disposeIncrementMonthButton():Void {
+		if (this.incrementMonthButton == null) {
+			return;
 		}
+		this.incrementMonthButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_incrementMonthButton_triggerHandler);
+		if (this._oldIncrementMonthButtonFactory.destroy != null) {
+			this._oldIncrementMonthButtonFactory.destroy(this.incrementMonthButton);
+		}
+		this._oldIncrementMonthButtonFactory = null;
+		this.incrementMonthButton.dispose();
+		this.incrementMonthButton = null;
+	}
+
+	private function createDecrementYearButton():Void {
+		this.disposeDecrementYearButton();
 		var factory = this._decrementYearButtonFactory != null ? this._decrementYearButtonFactory : defaultDecrementYearButtonFactory;
 		this._oldDecrementYearButtonFactory = factory;
 		this.decrementYearButton = factory.create();
@@ -1303,15 +1324,21 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.decrementYearButton.addEventListener(TriggerEvent.TRIGGER, datePicker_decrementYearButton_triggerHandler);
 	}
 
-	private function createIncrementYearButton():Void {
-		if (this.incrementYearButton != null) {
-			this.incrementYearButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_incrementYearButton_triggerHandler);
-			if (this._oldIncrementYearButtonFactory.destroy != null) {
-				this._oldIncrementYearButtonFactory.destroy(this.incrementYearButton);
-			}
-			this._oldIncrementYearButtonFactory = null;
-			this.incrementYearButton = null;
+	private function disposeDecrementYearButton():Void {
+		if (this.decrementYearButton == null) {
+			return;
 		}
+		this.decrementYearButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_decrementYearButton_triggerHandler);
+		if (this._oldDecrementYearButtonFactory.destroy != null) {
+			this._oldDecrementYearButtonFactory.destroy(this.decrementYearButton);
+		}
+		this._oldDecrementYearButtonFactory = null;
+		this.decrementYearButton.dispose();
+		this.decrementYearButton = null;
+	}
+
+	private function createIncrementYearButton():Void {
+		this.disposeIncrementYearButton();
 		var factory = this._incrementYearButtonFactory != null ? this._incrementYearButtonFactory : defaultIncrementYearButtonFactory;
 		this._oldIncrementYearButtonFactory = factory;
 		this.incrementYearButton = factory.create();
@@ -1322,6 +1349,18 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.incrementYearButtonMeasurements.save(this.incrementYearButton);
 		this.addChild(this.incrementYearButton);
 		this.incrementYearButton.addEventListener(TriggerEvent.TRIGGER, datePicker_incrementYearButton_triggerHandler);
+	}
+
+	private function disposeIncrementYearButton():Void {
+		if (this.incrementYearButton == null) {
+			return;
+		}
+		this.incrementYearButton.removeEventListener(TriggerEvent.TRIGGER, datePicker_incrementYearButton_triggerHandler);
+		if (this._oldIncrementYearButtonFactory.destroy != null) {
+			this._oldIncrementYearButtonFactory.destroy(this.incrementYearButton);
+		}
+		this._oldIncrementYearButtonFactory = null;
+		this.incrementYearButton = null;
 	}
 
 	private function measure():Bool {

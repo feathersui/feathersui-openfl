@@ -49,6 +49,13 @@ import utest.Test;
 		Assert.pass();
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._treeView.validateNow();
+		this._treeView.dispose();
+		this._treeView.dispose();
+		Assert.pass();
+	}
+
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._treeView.dataProvider = new TreeCollection([
 			new TreeNode({text: "Node 1"},

@@ -1066,6 +1066,25 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this.setInvalid(SCROLL);
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveItemRenderers(this._defaultItemStorage, true);
+		if (this._additionalItemStorage != null) {
+			for (i in 0...this._additionalItemStorage.length) {
+				var storage = this._additionalItemStorage[i];
+				this.refreshInactiveItemRenderers(storage, true);
+			}
+		}
+		this.refreshInactiveItemRenderers(this._defaultHeaderStorage, true);
+		if (this._additionalHeaderStorage != null) {
+			for (i in 0...this._additionalHeaderStorage.length) {
+				var storage = this._additionalHeaderStorage[i];
+				this.refreshInactiveItemRenderers(storage, true);
+			}
+		}
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	private function initializeGroupListViewTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelGroupListViewStyles.initialize();
@@ -1492,6 +1511,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this.groupViewPort.removeChild(itemRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(itemRenderer);
+		}
+		if ((itemRenderer is IUIControl)) {
+			cast(itemRenderer, IUIControl).dispose();
 		}
 	}
 

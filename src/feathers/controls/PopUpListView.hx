@@ -661,6 +661,13 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 	}
 
+	override public function dispose():Void {
+		this.disposeButton();
+		this.disposeListView();
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	private function initializePopUpListViewTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelPopUpListViewStyles.initialize();
@@ -707,17 +714,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function createButton():Void {
-		if (this.button != null) {
-			this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
-			this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
-			this.button.removeEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
-			this.removeChild(this.button);
-			if (this._oldButtonFactory.destroy != null) {
-				this._oldButtonFactory.destroy(this.button);
-			}
-			this._oldButtonFactory = null;
-			this.button = null;
-		}
+		this.disposeButton();
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this._oldButtonFactory = factory;
 		this.button = factory.create();
@@ -732,17 +729,24 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.addChild(this.button);
 	}
 
-	private function createListView():Void {
-		if (this.listView != null) {
-			this.listView.removeEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
-			this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);
-			this.listView.removeEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
-			if (this._oldListViewFactory.destroy != null) {
-				this._oldListViewFactory.destroy(this.listView);
-			}
-			this._oldListViewFactory = null;
-			this.listView = null;
+	private function disposeButton():Void {
+		if (this.button == null) {
+			return;
 		}
+		this.button.removeEventListener(MouseEvent.MOUSE_DOWN, popUpListView_button_mouseDownHandler);
+		this.button.removeEventListener(TouchEvent.TOUCH_BEGIN, popUpListView_button_touchBeginHandler);
+		this.button.removeEventListener(KeyboardEvent.KEY_DOWN, popUpListView_button_keyDownHandler);
+		this.removeChild(this.button);
+		if (this._oldButtonFactory.destroy != null) {
+			this._oldButtonFactory.destroy(this.button);
+		}
+		this._oldButtonFactory = null;
+		this.button.dispose();
+		this.button = null;
+	}
+
+	private function createListView():Void {
+		this.disposeListView();
 		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this._oldListViewFactory = factory;
 		this.listView = factory.create();
@@ -753,6 +757,21 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.listView.addEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
 		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);
 		this.listView.addEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
+	}
+
+	private function disposeListView():Void {
+		if (this.listView == null) {
+			return;
+		}
+		this.listView.removeEventListener(Event.CHANGE, popUpListView_listView_changeHandler);
+		this.listView.removeEventListener(ListViewEvent.ITEM_TRIGGER, popUpListView_listView_itemTriggerHandler);
+		this.listView.removeEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
+		if (this._oldListViewFactory.destroy != null) {
+			this._oldListViewFactory.destroy(this.listView);
+		}
+		this._oldListViewFactory = null;
+		this.listView.dispose();
+		this.listView = null;
 	}
 
 	private function refreshListViewData():Void {

@@ -34,6 +34,18 @@ class ItemRendererTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testValidateWithNoData():Void {
+		this._itemRenderer.validateNow();
+		Assert.pass();
+	}
+
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._itemRenderer.validateNow();
+		this._itemRenderer.dispose();
+		this._itemRenderer.dispose();
+		Assert.pass();
+	}
+
 	public function testRemoveAccessoryAfterSetToNewValue():Void {
 		var accessory1 = new Shape();
 		var accessory2 = new Shape();

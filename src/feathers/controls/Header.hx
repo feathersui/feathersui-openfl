@@ -459,6 +459,12 @@ class Header extends FeathersControl implements ITextControl {
 		return this._rightView;
 	}
 
+	override public function dispose():Void {
+		this.leftView = null;
+		this.rightView = null;
+		super.dispose();
+	}
+
 	private function initializeHeaderTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelHeaderStyles.initialize();

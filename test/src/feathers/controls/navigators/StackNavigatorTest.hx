@@ -39,6 +39,13 @@ class StackNavigatorTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._navigator.validateNow();
+		this._navigator.dispose();
+		this._navigator.dispose();
+		Assert.pass();
+	}
+
 	public function testInject_withPushItemMethod():Void {
 		var injected = false;
 		var inject = (view:View1) -> {

@@ -350,6 +350,12 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 	private var _dragTransitionContext:EventToPositionEffectContext;
 
+	override public function dispose():Void {
+		this.disposePageIndicator();
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 
@@ -432,15 +438,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private function createPageIndicator():Void {
-		if (this.pageIndicator != null) {
-			this.pageIndicator.removeEventListener(Event.CHANGE, pageNavigator_pageIndicator_changeHandler);
-			this.removeChild(this.pageIndicator);
-			if (this._oldPageIndicatorFactory.destroy != null) {
-				this._oldPageIndicatorFactory.destroy(this.pageIndicator);
-			}
-			this._oldPageIndicatorFactory = null;
-			this.pageIndicator = null;
-		}
+		this.disposePageIndicator();
 		var factory = this._pageIndicatorFactory != null ? this._pageIndicatorFactory : defaultPageIndicatorFactory;
 		this._oldPageIndicatorFactory = factory;
 		this.pageIndicator = factory.create();
@@ -449,6 +447,20 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		}
 		this.pageIndicator.addEventListener(Event.CHANGE, pageNavigator_pageIndicator_changeHandler);
 		this.addChild(this.pageIndicator);
+	}
+
+	private function disposePageIndicator():Void {
+		if (this.pageIndicator == null) {
+			return;
+		}
+		this.pageIndicator.removeEventListener(Event.CHANGE, pageNavigator_pageIndicator_changeHandler);
+		this.removeChild(this.pageIndicator);
+		if (this._oldPageIndicatorFactory.destroy != null) {
+			this._oldPageIndicatorFactory.destroy(this.pageIndicator);
+		}
+		this._oldPageIndicatorFactory = null;
+		this.pageIndicator.dispose();
+		this.pageIndicator = null;
 	}
 
 	override private function layoutContent():Void {

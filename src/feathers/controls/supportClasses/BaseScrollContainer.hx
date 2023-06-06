@@ -1042,6 +1042,13 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return result;
 	}
 
+	override public function dispose():Void {
+		this.disposeScroller();
+		this.disposeScrollBarX();
+		this.disposeScrollBarY();
+		super.dispose();
+	}
+
 	override private function update():Void {
 		var stylesInvalid = this.isInvalid(STYLES);
 		var sizeInvalid = this.isInvalid(SIZE);
@@ -1115,51 +1122,36 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function createScroller():Void {
-		if (this.scroller != null) {
-			this._temporaryScrollX = this.scroller.scrollX;
-			this._temporaryScrollY = this.scroller.scrollY;
-			this._temporaryRestrictedScrollX = null;
-			this._temporaryRestrictedScrollY = null;
-			this.scroller.target = null;
-			this.scroller.removeEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
-			this.scroller.removeEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
-			this.scroller.removeEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
-			this.scroller = null;
-		}
-
+		this.disposeScroller();
 		this.scroller = (this._scrollerFactory != null) ? this._scrollerFactory() : new Scroller();
 		this.scroller.addEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
 	}
 
+	private function disposeScroller():Void {
+		if (this.scroller == null) {
+			return;
+		}
+		this._temporaryScrollX = this.scroller.scrollX;
+		this._temporaryScrollY = this.scroller.scrollY;
+		this._temporaryRestrictedScrollX = null;
+		this._temporaryRestrictedScrollY = null;
+		this.scroller.target = null;
+		this.scroller.removeEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
+		this.scroller.removeEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
+		this.scroller.removeEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
+		this.scroller = null;
+		this.setInvalidationFlag(INVALIDATION_FLAG_SCROLLER_FACTORY);
+	}
+
 	private function createScrollBars():Void {
-		if (this.scrollBarX != null) {
-			this.scrollBarX.removeEventListener(Event.CHANGE, scrollBarX_changeHandler);
-			this.scrollBarX.removeEventListener(MouseEvent.ROLL_OVER, scrollBarX_rollOverHandler);
-			this.scrollBarX.removeEventListener(MouseEvent.ROLL_OUT, scrollBarX_rollOutHandler);
-			this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_START, scrollBarX_scrollStartHandler);
-			this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
-			this.removeChild(cast(this.scrollBarX, DisplayObject));
-			if (this._oldScrollBarXFactory.destroy != null) {
-				this._oldScrollBarXFactory.destroy(this.scrollBarX);
-			}
-			this._oldScrollBarXFactory = null;
-			this.scrollBarX = null;
-		}
-		if (this.scrollBarY != null) {
-			this.scrollBarY.removeEventListener(Event.CHANGE, scrollBarY_changeHandler);
-			this.scrollBarY.removeEventListener(MouseEvent.ROLL_OVER, scrollBarY_rollOverHandler);
-			this.scrollBarY.removeEventListener(MouseEvent.ROLL_OUT, scrollBarY_rollOutHandler);
-			this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_START, scrollBarY_scrollStartHandler);
-			this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarY_scrollCompleteHandler);
-			this.removeChild(cast(this.scrollBarY, DisplayObject));
-			if (this._oldScrollBarYFactory.destroy != null) {
-				this._oldScrollBarYFactory.destroy(this.scrollBarY);
-			}
-			this._oldScrollBarYFactory = null;
-			this.scrollBarY = null;
-		}
+		this.createScrollBarX();
+		this.createScrollBarY();
+	}
+
+	private function createScrollBarX():Void {
+		this.disposeScrollBarX();
 		var factory = this._scrollBarXFactory != null ? this._scrollBarXFactory : defaultScrollBarXFactory;
 		this._oldScrollBarXFactory = factory;
 		this.scrollBarX = factory.create();
@@ -1172,7 +1164,28 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.scrollBarX.addEventListener(ScrollEvent.SCROLL_START, scrollBarX_scrollStartHandler);
 		this.scrollBarX.addEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
 		this.addChild(cast(this.scrollBarX, DisplayObject));
+	}
 
+	private function disposeScrollBarX():Void {
+		if (this.scrollBarX == null) {
+			return;
+		}
+		this.scrollBarX.removeEventListener(Event.CHANGE, scrollBarX_changeHandler);
+		this.scrollBarX.removeEventListener(MouseEvent.ROLL_OVER, scrollBarX_rollOverHandler);
+		this.scrollBarX.removeEventListener(MouseEvent.ROLL_OUT, scrollBarX_rollOutHandler);
+		this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_START, scrollBarX_scrollStartHandler);
+		this.scrollBarX.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarX_scrollCompleteHandler);
+		this.removeChild(cast(this.scrollBarX, DisplayObject));
+		if (this._oldScrollBarXFactory.destroy != null) {
+			this._oldScrollBarXFactory.destroy(this.scrollBarX);
+		}
+		this._oldScrollBarXFactory = null;
+		this.scrollBarX.dispose();
+		this.scrollBarX = null;
+	}
+
+	private function createScrollBarY():Void {
+		this.disposeScrollBarY();
 		var factory = this._scrollBarYFactory != null ? this._scrollBarYFactory : defaultScrollBarYFactory;
 		this._oldScrollBarYFactory = factory;
 		this.scrollBarY = factory.create();
@@ -1185,6 +1198,24 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.scrollBarY.addEventListener(ScrollEvent.SCROLL_START, scrollBarY_scrollStartHandler);
 		this.scrollBarY.addEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarY_scrollCompleteHandler);
 		this.addChild(cast(this.scrollBarY, DisplayObject));
+	}
+
+	private function disposeScrollBarY():Void {
+		if (this.scrollBarY == null) {
+			return;
+		}
+		this.scrollBarY.removeEventListener(Event.CHANGE, scrollBarY_changeHandler);
+		this.scrollBarY.removeEventListener(MouseEvent.ROLL_OVER, scrollBarY_rollOverHandler);
+		this.scrollBarY.removeEventListener(MouseEvent.ROLL_OUT, scrollBarY_rollOutHandler);
+		this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_START, scrollBarY_scrollStartHandler);
+		this.scrollBarY.removeEventListener(ScrollEvent.SCROLL_COMPLETE, scrollBarY_scrollCompleteHandler);
+		this.removeChild(cast(this.scrollBarY, DisplayObject));
+		if (this._oldScrollBarYFactory.destroy != null) {
+			this._oldScrollBarYFactory.destroy(this.scrollBarY);
+		}
+		this._oldScrollBarYFactory = null;
+		this.scrollBarY.dispose();
+		this.scrollBarY = null;
 	}
 
 	private function refreshEnabled():Void {

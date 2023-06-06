@@ -430,6 +430,13 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		#end
 	}
 
+	override public function dispose():Void {
+		this.data = null;
+		this.layoutIndex = -1;
+		this.pointerTarget = null;
+		super.dispose();
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 		this._pointerToState.customHitTest = this.customHitTest;

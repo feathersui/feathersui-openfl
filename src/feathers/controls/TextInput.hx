@@ -1054,6 +1054,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 	}
 
+	override public function dispose():Void {
+		this.disposeErrorCallout();
+		super.dispose();
+	}
+
 	private function initializeTextInputTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTextInputStyles.initialize();
@@ -1755,13 +1760,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function createErrorCallout():Void {
-		if (this.errorStringCallout != null) {
-			if (this.errorStringCallout.parent != null) {
-				this.errorStringCallout.parent.removeChild(this.errorStringCallout);
-			}
-			this.errorStringCallout = null;
-		}
-
+		this.disposeErrorCallout();
 		if (this._errorString == null || this._errorString.length == 0) {
 			return;
 		}
@@ -1771,6 +1770,17 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		this.errorStringCallout.origin = this;
 		this.errorStringCallout.closeOnPointerOutside = false;
+	}
+
+	private function disposeErrorCallout():Void {
+		if (this.errorStringCallout == null) {
+			return;
+		}
+		if (this.errorStringCallout.parent != null) {
+			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+		}
+		this.errorStringCallout.dispose();
+		this.errorStringCallout = null;
 	}
 
 	private function changeState(state:TextInputState):Void {

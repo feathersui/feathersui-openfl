@@ -41,6 +41,13 @@ class BasicButtonTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._button.validateNow();
+		this._button.dispose();
+		this._button.dispose();
+		Assert.pass();
+	}
+
 	public function testDispatchTriggerOnClick():Void {
 		var triggered = false;
 		this._button.addEventListener(TriggerEvent.TRIGGER, function(event:Event):Void {

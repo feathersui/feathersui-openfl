@@ -1073,6 +1073,16 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveHeaderRenderers(true);
+		this.refreshInactiveRowRenderers();
+		this.recoverInactiveRowRenderers();
+		this.freeInactiveRowRenderers();
+		this.dataProvider = null;
+		this.columns = null;
+		super.dispose();
+	}
+
 	private function initializeTreeGridViewTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTreeGridViewStyles.initialize();
@@ -1932,6 +1942,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._rowRendererRecycler.destroy != null) {
 			this._rowRendererRecycler.destroy(rowRenderer);
 		}
+		rowRenderer.dispose();
 	}
 
 	private function updateRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
@@ -2159,6 +2170,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this._headerContainer.removeChild(headerRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(headerRenderer);
+		}
+		if ((headerRenderer is IUIControl)) {
+			cast(headerRenderer, IUIControl).dispose();
 		}
 	}
 

@@ -772,6 +772,12 @@ class Callout extends FeathersControl {
 		this.paddingLeft = value;
 	}
 
+	override public function dispose():Void {
+		this.content = null;
+		this.origin = null;
+		super.dispose();
+	}
+
 	private function initializeCalloutTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelCalloutStyles.initialize();

@@ -36,6 +36,13 @@ class TextInputTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._input.validateNow();
+		this._input.dispose();
+		this._input.dispose();
+		Assert.pass();
+	}
+
 	public function testDispatchChangeEventOnSetTextProgramatically():Void {
 		this._input.validateNow();
 		var changed = false;

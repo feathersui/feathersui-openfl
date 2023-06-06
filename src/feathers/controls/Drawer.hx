@@ -395,6 +395,12 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		return this._swipeOpenEnabled;
 	}
 
+	override public function dispose():Void {
+		this.content = null;
+		this.drawer = null;
+		super.dispose();
+	}
+
 	private function initializeDrawerTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelDrawerStyles.initialize();

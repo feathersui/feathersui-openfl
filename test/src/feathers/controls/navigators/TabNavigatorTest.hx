@@ -33,6 +33,13 @@ class TabNavigatorTest extends Test {
 		Assert.isNull(this._navigator.activeItemView);
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._navigator.validateNow();
+		this._navigator.dispose();
+		this._navigator.dispose();
+		Assert.pass();
+	}
+
 	public function testDefaultSelectedIndex():Void {
 		var one = new LayoutGroup();
 		var two = new LayoutGroup();

@@ -35,6 +35,13 @@ class PopUpListViewTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._listView.validateNow();
+		this._listView.dispose();
+		this._listView.dispose();
+		Assert.pass();
+	}
+
 	public function testValidateWithNullDataProvider():Void {
 		this._listView.validateNow();
 		Assert.pass();

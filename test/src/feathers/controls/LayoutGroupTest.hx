@@ -40,6 +40,13 @@ class LayoutGroupTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._group.validateNow();
+		this._group.dispose();
+		this._group.dispose();
+		Assert.pass();
+	}
+
 	public function testMeasureSkinWidthAndHeight():Void {
 		var backgroundSkin = new RectangleSkin();
 		backgroundSkin.width = 100.0;

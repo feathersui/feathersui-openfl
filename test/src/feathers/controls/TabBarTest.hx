@@ -44,6 +44,13 @@ class TabBarTest extends Test {
 		Assert.pass();
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._tabBar.validateNow();
+		this._tabBar.dispose();
+		this._tabBar.dispose();
+		Assert.pass();
+	}
+
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._tabBar.validateNow();

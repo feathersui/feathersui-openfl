@@ -34,6 +34,13 @@ class HScrollBarTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._scrollBar.validateNow();
+		this._scrollBar.dispose();
+		this._scrollBar.dispose();
+		Assert.pass();
+	}
+
 	public function testDispatchChangeEventOnSetValue():Void {
 		this._scrollBar.value = 0.5;
 		var changed = false;

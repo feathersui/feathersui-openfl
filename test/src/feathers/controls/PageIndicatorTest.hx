@@ -38,6 +38,13 @@ class PageIndicatorTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._pageIndicator.validateNow();
+		this._pageIndicator.dispose();
+		this._pageIndicator.dispose();
+		Assert.pass();
+	}
+
 	public function testValidateWithNoMaximum():Void {
 		this._pageIndicator.maxSelectedIndex = -1;
 		this._pageIndicator.validateNow();

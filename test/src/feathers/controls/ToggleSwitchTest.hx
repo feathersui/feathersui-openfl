@@ -37,6 +37,13 @@ class ToggleSwitchTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._toggle.validateNow();
+		this._toggle.dispose();
+		this._toggle.dispose();
+		Assert.pass();
+	}
+
 	public function testProgrammaticSelectionChange():Void {
 		this._toggle.selected = false;
 		var changed = false;

@@ -285,6 +285,11 @@ class AssetLoader extends FeathersControl {
 		return this._scaleMode;
 	}
 
+	override public function dispose():Void {
+		this.source = null;
+		super.dispose();
+	}
+
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var layoutInvalid = this.isInvalid(LAYOUT);

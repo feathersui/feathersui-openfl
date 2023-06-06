@@ -351,6 +351,12 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 	private var _ignoreSelectionChange = false;
 
+	override public function dispose():Void {
+		this.disposeTabBar();
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 
@@ -445,16 +451,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function createTabBar():Void {
-		if (this.tabBar != null) {
-			this.tabBar.removeEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
-			this.tabBar.removeEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
-			this.removeChild(this.tabBar);
-			if (this._oldTabBarFactory.destroy != null) {
-				this._oldTabBarFactory.destroy(this.tabBar);
-			}
-			this._oldTabBarFactory = null;
-			this.tabBar = null;
-		}
+		this.disposeTabBar();
 		var factory = this._tabBarFactory != null ? this._tabBarFactory : defaultTabBarFactory;
 		this._oldTabBarFactory = factory;
 		this.tabBar = factory.create();
@@ -464,6 +461,21 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		this.tabBar.addEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
 		this.tabBar.addEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
 		this.addChild(this.tabBar);
+	}
+
+	private function disposeTabBar():Void {
+		if (this.tabBar == null) {
+			return;
+		}
+		this.tabBar.removeEventListener(TabBarEvent.ITEM_TRIGGER, tabNavigator_tabBar_itemTriggerHandler);
+		this.tabBar.removeEventListener(Event.CHANGE, tabNavigator_tabBar_changeHandler);
+		this.removeChild(this.tabBar);
+		if (this._oldTabBarFactory.destroy != null) {
+			this._oldTabBarFactory.destroy(this.tabBar);
+		}
+		this._oldTabBarFactory = null;
+		this.tabBar.dispose();
+		this.tabBar = null;
 	}
 
 	override private function layoutContent():Void {

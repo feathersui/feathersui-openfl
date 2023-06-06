@@ -47,6 +47,13 @@ class GridViewTest extends Test {
 		Assert.pass();
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._gridView.validateNow();
+		this._gridView.dispose();
+		this._gridView.dispose();
+		Assert.pass();
+	}
+
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._gridView.validateNow();

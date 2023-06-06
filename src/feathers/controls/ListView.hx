@@ -1004,6 +1004,18 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 	}
 
+	override public function dispose():Void {
+		this.refreshInactiveItemRenderers(this._defaultStorage, true);
+		if (this._additionalStorage != null) {
+			for (i in 0...this._additionalStorage.length) {
+				var storage = this._additionalStorage[i];
+				this.refreshInactiveItemRenderers(storage, true);
+			}
+		}
+		this.dataProvider = null;
+		super.dispose();
+	}
+
 	private function initializeListViewTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelListViewStyles.initialize();
@@ -1413,6 +1425,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.listViewPort.removeChild(itemRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(itemRenderer);
+		}
+		if ((itemRenderer is IUIControl)) {
+			cast(itemRenderer, IUIControl).dispose();
 		}
 	}
 

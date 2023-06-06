@@ -40,6 +40,13 @@ class ComboBoxTest extends Test {
 		Assert.pass();
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._comboBox.validateNow();
+		this._comboBox.dispose();
+		this._comboBox.dispose();
+		Assert.pass();
+	}
+
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._comboBox.validateNow();

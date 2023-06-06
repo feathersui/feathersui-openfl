@@ -762,6 +762,13 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	/**
+		@see `feathers.core.IUIControl.dispose`
+	**/
+	public function dispose():Void {
+		this.clearStyles();
+	}
+
+	/**
 		Called the first time that the UI control is added to the stage, and
 		you should override this function to customize the initialization
 		process. Do things like create children and set up event listeners.

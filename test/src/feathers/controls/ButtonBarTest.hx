@@ -43,6 +43,13 @@ class ButtonBarTest extends Test {
 		Assert.pass();
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._buttonBar.validateNow();
+		this._buttonBar.dispose();
+		this._buttonBar.dispose();
+		Assert.pass();
+	}
+
 	public function testValidateWithFilledDataProviderAndThenNullDataProvider():Void {
 		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._buttonBar.validateNow();

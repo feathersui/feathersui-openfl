@@ -475,6 +475,13 @@ class Alert extends Panel {
 		return super.footer = value;
 	}
 
+	override public function dispose():Void {
+		this.disposeButtonBar();
+		this.disposeHeader();
+		this.disposeMessageLabel();
+		super.dispose();
+	}
+
 	private function initializeAlertTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelAlertStyles.initialize();
@@ -534,17 +541,7 @@ class Alert extends Panel {
 	}
 
 	private function createButtonBar():Void {
-		if (this.buttonBar != null) {
-			this.buttonBar.removeEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
-			if (this._oldButtonBarFactory.destroy != null) {
-				this._oldButtonBarFactory.destroy(this.buttonBar);
-			}
-			this._oldButtonBarFactory = null;
-			this.buttonBar = null;
-			this.runWithInvalidationFlagsOnly(() -> {
-				this._set_footer(null);
-			});
-		}
+		this.disposeButtonBar();
 		var factory = this._buttonBarFactory != null ? this._buttonBarFactory : defaultButtonBarFactory;
 		this._oldButtonBarFactory = factory;
 		this.buttonBar = factory.create();
@@ -557,17 +554,24 @@ class Alert extends Panel {
 		});
 	}
 
-	private function createHeader():Void {
-		if (this.alertHeader != null) {
-			if (this._oldHeaderFactory.destroy != null) {
-				this._oldHeaderFactory.destroy(this.alertHeader);
-			}
-			this._oldHeaderFactory = null;
-			this.alertHeader = null;
-			this.runWithInvalidationFlagsOnly(() -> {
-				this._set_header(null);
-			});
+	private function disposeButtonBar():Void {
+		if (this.buttonBar == null) {
+			return;
 		}
+		this.buttonBar.removeEventListener(ButtonBarEvent.ITEM_TRIGGER, alert_buttonBar_itemTriggerHandler);
+		if (this._oldButtonBarFactory.destroy != null) {
+			this._oldButtonBarFactory.destroy(this.buttonBar);
+		}
+		this._oldButtonBarFactory = null;
+		this.buttonBar.dispose();
+		this.buttonBar = null;
+		this.runWithInvalidationFlagsOnly(() -> {
+			this._set_footer(null);
+		});
+	}
+
+	private function createHeader():Void {
+		this.disposeHeader();
 		var factory = this._headerFactory != null ? this._headerFactory : defaultHeaderFactory;
 		this._oldHeaderFactory = factory;
 		this.alertHeader = factory.create();
@@ -579,15 +583,23 @@ class Alert extends Panel {
 		});
 	}
 
-	private function createMessageLabel():Void {
-		if (this.messageLabel != null) {
-			this.removeChild(this.messageLabel);
-			if (this._oldMessageLabelFactory.destroy != null) {
-				this._oldMessageLabelFactory.destroy(this.messageLabel);
-			}
-			this._oldMessageLabelFactory = null;
-			this.messageLabel = null;
+	private function disposeHeader():Void {
+		if (this.alertHeader == null) {
+			return;
 		}
+		if (this._oldHeaderFactory.destroy != null) {
+			this._oldHeaderFactory.destroy(this.alertHeader);
+		}
+		this._oldHeaderFactory = null;
+		this.alertHeader.dispose();
+		this.alertHeader = null;
+		this.runWithInvalidationFlagsOnly(() -> {
+			this._set_header(null);
+		});
+	}
+
+	private function createMessageLabel():Void {
+		this.disposeMessageLabel();
 		var factory = this._messageLabelFactory != null ? this._messageLabelFactory : defaultMessageLabelFactory;
 		this._oldMessageLabelFactory = factory;
 		this.messageLabel = factory.create();
@@ -595,6 +607,19 @@ class Alert extends Panel {
 			this.messageLabel.variant = this.customMessageLabelVariant != null ? this.customMessageLabelVariant : Alert.CHILD_VARIANT_MESSAGE_LABEL;
 		}
 		this.addChild(this.messageLabel);
+	}
+
+	private function disposeMessageLabel():Void {
+		if (this.messageLabel == null) {
+			return;
+		}
+		this.removeChild(this.messageLabel);
+		if (this._oldMessageLabelFactory.destroy != null) {
+			this._oldMessageLabelFactory.destroy(this.messageLabel);
+		}
+		this._oldMessageLabelFactory = null;
+		this.messageLabel.dispose();
+		this.messageLabel = null;
 	}
 
 	private function refreshButtons():Void {

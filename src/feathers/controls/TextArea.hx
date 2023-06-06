@@ -835,6 +835,11 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 	}
 
+	override public function dispose():Void {
+		this.disposeErrorCallout();
+		super.dispose();
+	}
+
 	private function initializeTextAreaTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTextAreaStyles.initialize();
@@ -1096,13 +1101,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	}
 
 	private function createErrorCallout():Void {
-		if (this.errorStringCallout != null) {
-			if (this.errorStringCallout.parent != null) {
-				this.errorStringCallout.parent.removeChild(this.errorStringCallout);
-			}
-			this.errorStringCallout = null;
-		}
-
+		this.disposeErrorCallout();
 		if (this._errorString == null || this._errorString.length == 0) {
 			return;
 		}
@@ -1112,6 +1111,17 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 		this.errorStringCallout.origin = this;
 		this.errorStringCallout.closeOnPointerOutside = false;
+	}
+
+	private function disposeErrorCallout():Void {
+		if (this.errorStringCallout == null) {
+			return;
+		}
+		if (this.errorStringCallout.parent != null) {
+			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
+		}
+		this.errorStringCallout.dispose();
+		this.errorStringCallout = null;
 	}
 
 	private function changeState(state:TextInputState):Void {

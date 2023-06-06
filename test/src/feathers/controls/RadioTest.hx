@@ -34,6 +34,13 @@ class RadioTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._radio.validateNow();
+		this._radio.dispose();
+		this._radio.dispose();
+		Assert.pass();
+	}
+
 	public function testDefaultToggleGroup():Void {
 		Assert.equals(Radio.defaultRadioGroup, this._radio.toggleGroup,
 			"toggleGroup property must be equal to Radio.defaultRadioGroup if not yet added to another group.");

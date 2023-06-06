@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.core.IUIControl;
 import openfl.display.DisplayObject;
 
 /**
@@ -94,5 +95,9 @@ class PageItem {
 	}
 
 	// called internally by PageNavigator to clean up this item's view
-	private function returnView(view:DisplayObject):Void {}
+	private function returnView(view:DisplayObject):Void {
+		if (this.viewClass != null && (view is IUIControl)) {
+			cast(view, IUIControl).dispose();
+		}
+	}
 }

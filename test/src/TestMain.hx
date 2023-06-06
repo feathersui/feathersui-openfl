@@ -24,6 +24,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.AssetLoaderTest());
 		runner.addCase(new feathers.utils.LongPressTest());
 		#end
+		runner.addCase(new feathers.controls.AlertTest());
 		runner.addCase(new feathers.controls.BasicButtonMeasurementTest());
 		runner.addCase(new feathers.controls.BasicButtonTest());
 		runner.addCase(new feathers.controls.BasicToggleButtonTest());
@@ -31,12 +32,17 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ButtonTest());
 		runner.addCase(new feathers.controls.ButtonMeasurementTest());
 		runner.addCase(new feathers.controls.ButtonBarTest());
+		runner.addCase(new feathers.controls.CalloutTest());
 		runner.addCase(new feathers.controls.ComboBoxTest());
+		runner.addCase(new feathers.controls.DrawerTest());
+		runner.addCase(new feathers.controls.FormTest());
 		runner.addCase(new feathers.controls.GridViewTest());
 		runner.addCase(new feathers.controls.GroupListViewTest());
+		runner.addCase(new feathers.controls.HeaderTest());
 		runner.addCase(new feathers.controls.HProgressBarTest());
 		runner.addCase(new feathers.controls.HScrollBarTest());
 		runner.addCase(new feathers.controls.HSliderTest());
+		runner.addCase(new feathers.controls.dataRenderers.HierarchicalItemRendererTest());
 		runner.addCase(new feathers.controls.dataRenderers.ItemRendererTest());
 		runner.addCase(new feathers.controls.dataRenderers.ItemRendererMeasurementTest());
 		runner.addCase(new feathers.controls.LabelTest());
@@ -46,6 +52,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ListViewTest());
 		runner.addCase(new feathers.controls.NumericStepperTest());
 		runner.addCase(new feathers.controls.PageIndicatorTest());
+		runner.addCase(new feathers.controls.PanelTest());
 		runner.addCase(new feathers.controls.PanelMeasurementTest());
 		runner.addCase(new feathers.controls.PopUpListViewTest());
 		runner.addCase(new feathers.controls.RadioTest());

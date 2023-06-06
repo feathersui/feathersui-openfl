@@ -34,6 +34,13 @@ class NumericStepperTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._stepper.validateNow();
+		this._stepper.dispose();
+		this._stepper.dispose();
+		Assert.pass();
+	}
+
 	public function testDispatchChangeEventOnSetValue():Void {
 		this._stepper.value = 0.5;
 		var changed = false;

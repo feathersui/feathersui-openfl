@@ -697,6 +697,13 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this.value = this.restrictValue(this._value);
 	}
 
+	override public function dispose():Void {
+		this.disposeDecrementButton();
+		this.disposeIncrementButton();
+		this.disposeTextInput();
+		super.dispose();
+	}
+
 	private function initializeNumericStepperTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelNumericStepperStyles.initialize();
@@ -1073,16 +1080,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function createDecrementButton():Void {
-		if (this.decrementButton != null) {
-			this.decrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, numericStepper_decrementButton_mouseDownHandler);
-			this.decrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_decrementButton_touchBeginHandler);
-			this.removeChild(this.decrementButton);
-			if (this._oldDecrementButtonFactory.destroy != null) {
-				this._oldDecrementButtonFactory.destroy(this.decrementButton);
-			}
-			this._oldDecrementButtonFactory = null;
-			this.decrementButton = null;
-		}
+		this.disposeDecrementButton();
 		var factory = this._decrementButtonFactory != null ? this._decrementButtonFactory : defaultDecrementButtonFactory;
 		this._oldDecrementButtonFactory = factory;
 		this.decrementButton = factory.create();
@@ -1099,17 +1097,23 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this.addChild(this.decrementButton);
 	}
 
-	private function createIncrementButton():Void {
-		if (this.incrementButton != null) {
-			this.incrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, numericStepper_incrementButton_mouseDownHandler);
-			this.incrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_incrementButton_touchBeginHandler);
-			this.removeChild(this.incrementButton);
-			if (this._oldIncrementButtonFactory.destroy != null) {
-				this._oldIncrementButtonFactory.destroy(this.incrementButton);
-			}
-			this._oldIncrementButtonFactory = null;
-			this.incrementButton = null;
+	private function disposeDecrementButton():Void {
+		if (this.decrementButton == null) {
+			return;
 		}
+		this.decrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, numericStepper_decrementButton_mouseDownHandler);
+		this.decrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_decrementButton_touchBeginHandler);
+		this.removeChild(this.decrementButton);
+		if (this._oldDecrementButtonFactory.destroy != null) {
+			this._oldDecrementButtonFactory.destroy(this.decrementButton);
+		}
+		this._oldDecrementButtonFactory = null;
+		this.decrementButton.dispose();
+		this.decrementButton = null;
+	}
+
+	private function createIncrementButton():Void {
+		this.disposeIncrementButton();
 		var factory = this._incrementButtonFactory != null ? this._incrementButtonFactory : defaultIncrementButtonFactory;
 		this._oldIncrementButtonFactory = factory;
 		this.incrementButton = factory.create();
@@ -1126,19 +1130,23 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this.addChild(this.incrementButton);
 	}
 
-	private function createTextInput():Void {
-		if (this.textInput != null) {
-			this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, numericStepper_textInput_keyDownHandler);
-			this.textInput.removeEventListener(Event.CHANGE, numericStepper_textInput_changeHandler);
-			this.textInput.removeEventListener(FocusEvent.FOCUS_IN, numericStepper_textInput_focusInHandler);
-			this.textInput.removeEventListener(FocusEvent.FOCUS_OUT, numericStepper_textInput_focusOutHandler);
-			this.removeChild(this.textInput);
-			if (this._oldTextInputFactory.destroy != null) {
-				this._oldTextInputFactory.destroy(this.textInput);
-			}
-			this._oldTextInputFactory = null;
-			this.textInput = null;
+	private function disposeIncrementButton():Void {
+		if (this.incrementButton == null) {
+			return;
 		}
+		this.incrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, numericStepper_incrementButton_mouseDownHandler);
+		this.incrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, numericStepper_incrementButton_touchBeginHandler);
+		this.removeChild(this.incrementButton);
+		if (this._oldIncrementButtonFactory.destroy != null) {
+			this._oldIncrementButtonFactory.destroy(this.incrementButton);
+		}
+		this._oldIncrementButtonFactory = null;
+		this.incrementButton.dispose();
+		this.incrementButton = null;
+	}
+
+	private function createTextInput():Void {
+		this.disposeTextInput();
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
 		this._oldTextInputFactory = factory;
 		this.textInput = factory.create();
@@ -1152,6 +1160,22 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this.textInput.initializeNow();
 		this.textInputMeasurements.save(this.textInput);
 		this.addChild(this.textInput);
+	}
+
+	private function disposeTextInput():Void {
+		if (this.textInput == null) {
+			return;
+		}
+		this.textInput.removeEventListener(KeyboardEvent.KEY_DOWN, numericStepper_textInput_keyDownHandler);
+		this.textInput.removeEventListener(Event.CHANGE, numericStepper_textInput_changeHandler);
+		this.textInput.removeEventListener(FocusEvent.FOCUS_IN, numericStepper_textInput_focusInHandler);
+		this.textInput.removeEventListener(FocusEvent.FOCUS_OUT, numericStepper_textInput_focusOutHandler);
+		this.removeChild(this.textInput);
+		if (this._oldTextInputFactory.destroy != null) {
+			this._oldTextInputFactory.destroy(this.textInput);
+		}
+		this._oldTextInputFactory = null;
+		this.textInput = null;
 	}
 
 	private function restrictValue(value:Float):Float {

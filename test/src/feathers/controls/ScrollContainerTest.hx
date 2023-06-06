@@ -34,6 +34,13 @@ class ScrollContainerTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testNoExceptionOnDoubleDispose():Void {
+		this._container.validateNow();
+		this._container.dispose();
+		this._container.dispose();
+		Assert.pass();
+	}
+
 	public function testRemoveSkinAfterSetToNewValue():Void {
 		var skin1 = new Shape();
 		var skin2 = new Shape();

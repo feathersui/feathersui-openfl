@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.core.IUIControl;
 import feathers.data.RouteState;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -171,6 +172,9 @@ class Route {
 		var viewListeners:Array<ViewListener> = this._viewToEvents.get(view);
 		this.removeEventsFromView(view, viewListeners);
 		this._viewToEvents.remove(view);
+		if (this.viewClass != null && (view is IUIControl)) {
+			cast(view, IUIControl).dispose();
+		}
 	}
 
 	private function addActionListeners(view:DisplayObject, navigator:RouterNavigator):Array<ViewListener> {
