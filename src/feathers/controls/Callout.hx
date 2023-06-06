@@ -1256,6 +1256,11 @@ class Callout extends FeathersControl {
 
 	private function checkForOriginMoved():Bool {
 		if (this._origin == null) {
+			if (this._lastPopUpOriginBounds == null) {
+				this._lastPopUpOriginBounds = new Rectangle();
+			} else {
+				this._lastPopUpOriginBounds.setEmpty();
+			}
 			return false;
 		}
 		var popUpRoot = PopUpManager.forStage(this.stage).root;

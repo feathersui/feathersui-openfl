@@ -35,6 +35,11 @@ class CalloutTest extends Test {
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
+	public function testValidateWithNoContentOrOrigin():Void {
+		this._callout.validateNow();
+		Assert.pass();
+	}
+
 	public function testNoExceptionOnDoubleDispose():Void {
 		this._callout.validateNow();
 		this._callout.dispose();
