@@ -2147,11 +2147,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			state.columns = columns;
 			changed = true;
 		}
-		var selectable = this._selectable;
-		if (force || state.selectable != selectable) {
-			state.selectable = selectable;
-			changed = true;
-		}
 		var cellRendererRecycler = this._cellRendererRecycler;
 		if (force || state.cellRendererRecycler != cellRendererRecycler) {
 			state.cellRendererRecycler = cellRendererRecycler;
@@ -2183,7 +2178,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.selected = state.selected;
 		rowRenderer.enabled = state.enabled;
 		rowRenderer.columns = state.columns;
-		rowRenderer.selectable = state.selectable;
 		rowRenderer.cellRendererRecycler = state.cellRendererRecycler;
 		rowRenderer.customColumnWidths = state.customColumnWidths;
 		rowRenderer.customCellRendererVariant = state.customCellRendererVariant;
@@ -3178,7 +3172,7 @@ private class ColumnDividerStorage {
 	public var inactiveColumnDividers:Array<InteractiveObject> = [];
 }
 
-class GridViewRowState {
+private class GridViewRowState {
 	public function new() {}
 
 	public var owner:GridView;
@@ -3187,7 +3181,6 @@ class GridViewRowState {
 	public var selected:Bool = false;
 	public var enabled:Bool = true;
 	public var columns:IFlatCollection<GridViewColumn>;
-	public var selectable:Bool = false;
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject>;
 	public var customColumnWidths:Array<Float>;
 	public var customCellRendererVariant:String;

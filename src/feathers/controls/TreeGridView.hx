@@ -2013,11 +2013,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			state.columns = columns;
 			changed = true;
 		}
-		var selectable = this._selectable;
-		if (force || state.selectable != selectable) {
-			state.selectable = selectable;
-			changed = true;
-		}
 		var cellRendererRecycler = this._cellRendererRecycler;
 		if (force || state.cellRendererRecycler != cellRendererRecycler) {
 			state.cellRendererRecycler = cellRendererRecycler;
@@ -2109,7 +2104,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		rowRenderer.selected = state.selected;
 		rowRenderer.enabled = state.enabled;
 		rowRenderer.columns = state.columns;
-		rowRenderer.selectable = state.selectable;
 		rowRenderer.cellRendererRecycler = state.cellRendererRecycler;
 		rowRenderer.customCellRendererVariant = state.customCellRendererVariant;
 		rowRenderer.customColumnWidths = state.customColumnWidths;
@@ -3224,7 +3218,7 @@ private class ColumnDividerStorage {
 	public var inactiveColumnDividers:Array<InteractiveObject> = [];
 }
 
-class TreeGridViewRowState {
+private class TreeGridViewRowState {
 	public function new() {}
 
 	public var owner:TreeGridView;
@@ -3236,7 +3230,6 @@ class TreeGridViewRowState {
 	public var selected:Bool = false;
 	public var enabled:Bool = true;
 	public var columns:IFlatCollection<TreeGridViewColumn>;
-	public var selectable:Bool = false;
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 	public var customColumnWidths:Array<Float>;
 	public var customCellRendererVariant:String;

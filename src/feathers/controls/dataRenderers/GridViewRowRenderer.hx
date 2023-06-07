@@ -11,6 +11,8 @@ package feathers.controls.dataRenderers;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.IMeasureObject;
 import feathers.core.IPointerDelegate;
+import feathers.core.IStateContext;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.InvalidationFlag;
@@ -23,7 +25,11 @@ import feathers.layout.GridViewRowLayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
+import feathers.utils.KeyToState;
+import feathers.utils.PointerToState;
+import feathers.utils.PointerTrigger;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
@@ -48,9 +54,8 @@ import openfl._internal.utils.ObjectPool;
 
 	@since 1.0.0
 **/
-@:dox(hide)
 @:access(feathers.data.GridViewCellState)
-class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer {
+class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer implements IStateContext<ToggleButtonState> {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static final RESET_CELL_STATE = new GridViewCellState();
@@ -84,6 +89,39 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	private var _columnToCellRenderer = new ObjectMap<GridViewColumn, DisplayObject>();
 	private var _cellRendererToCellState = new ObjectMap<DisplayObject, GridViewCellState>();
 	private var cellStatePool = new ObjectPool(() -> new GridViewCellState());
+
+	private var _currentState:ToggleButtonState = UP(false);
+
+	/**
+		The current state of the row renderer.
+
+		When the value of the `currentState` property changes, the button will
+		dispatch an event of type `FeathersEvent.STATE_CHANGE`.
+
+		@see `feathers.controls.ToggleButtonState`
+		@see `feathers.events.FeathersEvent.STATE_CHANGE`
+
+		@since 1.3.0
+	**/
+	public var currentState(get, never):#if flash Dynamic #else ToggleButtonState #end;
+
+	private function get_currentState():#if flash Dynamic #else ToggleButtonState #end {
+		return this._currentState;
+	}
+
+	override private function set_enabled(value:Bool):Bool {
+		super.enabled = value;
+		if (this._enabled) {
+			switch (this._currentState) {
+				case DISABLED(selected):
+					this.changeState(UP(selected));
+				default: // do nothing
+			}
+		} else {
+			this.changeState(DISABLED(this._selected));
+		}
+		return this._enabled;
+	}
 
 	private var _gridView:GridView;
 
@@ -153,8 +191,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private var _ignoreSelectionChange = false;
-
-	public var selectable:Bool = true;
 
 	private var _rowIndex:Int = -1;
 
@@ -238,7 +274,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	/**
-		Manages cell renderers used by the column.
+		Manages cell renderers used by the row.
 
 		_This special property must be set by the `GridView`, and it should not
 		be modified externally._
@@ -265,6 +301,16 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private var _forceCellStateUpdate:Bool = false;
 
+	/**
+		Manages cell state updates for the column.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@see `feathers.controls.GridView.forceItemStateUpdate`
+
+		@since 1.2.0
+	**/
 	public var forceCellStateUpdate(get, set):Bool;
 
 	private function get_forceCellStateUpdate():Bool {
@@ -282,6 +328,16 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private var _customCellRendererVariant:String = null;
 
+	/**
+		Manages cell renderer variants for the column.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@see `feathers.controls.GridView.customCellRendererVariant`
+
+		@since 1.0.0
+	**/
 	public var customCellRendererVariant(get, set):String;
 
 	private function get_customCellRendererVariant():String {
@@ -299,6 +355,14 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private var _customColumnWidths:Array<Float>;
 
+	/**
+		Manages custom column width values used by the row.
+
+		_This special property must be set by the `GridView`, and it should not
+		be modified externally._
+
+		@since 1.0.0
+	**/
 	public var customColumnWidths(get, set):Array<Float>;
 
 	private function get_customColumnWidths():Array<Float> {
@@ -316,6 +380,10 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private var _rowLayout:GridViewRowLayout;
 
+	private var _pointerToState:PointerToState<ToggleButtonState>;
+	private var _keyToState:KeyToState<ToggleButtonState>;
+	private var _pointerTrigger:PointerTrigger;
+
 	override public function dispose():Void {
 		this.refreshInactiveCellRenderers(this._defaultStorage, true);
 		if (this._additionalStorage != null) {
@@ -327,8 +395,36 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		super.dispose();
 	}
 
+	/**
+		Returns the current cell renderer used to render a specific column from
+		this row. May return `null` if a column doesn't currently have a cell
+		renderer.
+
+		@see `feathers.controls.GridView.itemAndColumnToCellRenderer`
+
+		@since 1.0.0
+	**/
+	public function columnToCellRenderer(column:GridViewColumn):DisplayObject {
+		if (column == null) {
+			return null;
+		}
+		return this._columnToCellRenderer.get(column);
+	}
+
 	override private function initialize():Void {
 		super.initialize();
+
+		if (this._pointerToState == null) {
+			this._pointerToState = new PointerToState(this, this.changeState, UP(false), DOWN(false), HOVER(false));
+		}
+
+		if (this._keyToState == null) {
+			this._keyToState = new KeyToState(this, this.changeState, UP(false), DOWN(false));
+		}
+
+		if (this._pointerTrigger == null) {
+			this._pointerTrigger = new PointerTrigger(this);
+		}
 
 		if (this.layout == null) {
 			this._rowLayout = new GridViewRowLayout();
@@ -336,11 +432,58 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		}
 	}
 
-	public function columnToCellRenderer(column:GridViewColumn):DisplayObject {
-		if (column == null) {
-			return null;
+	private function changeState(state:ToggleButtonState):Void {
+		var toggleState = cast(state, ToggleButtonState);
+		if (!this._enabled) {
+			toggleState = DISABLED(this._selected);
 		}
-		return this._columnToCellRenderer.get(column);
+		switch (toggleState) {
+			case UP(selected):
+				if (this._selected != selected) {
+					toggleState = UP(this._selected);
+				}
+			case DOWN(selected):
+				if (this._selected != selected) {
+					toggleState = DOWN(this._selected);
+				}
+			case HOVER(selected):
+				if (this._selected != selected) {
+					toggleState = HOVER(this._selected);
+				}
+			case DISABLED(selected):
+				if (this._selected != selected) {
+					toggleState = DISABLED(this._selected);
+				}
+			default: // do nothing
+		}
+		if (this._currentState == toggleState) {
+			return;
+		}
+		this._currentState = toggleState;
+		this.setInvalid(STATE);
+		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
+	override private function addCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			super.addCurrentBackgroundSkin(skin);
+			return;
+		}
+		if ((skin is IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = this;
+		}
+		super.addCurrentBackgroundSkin(skin);
+	}
+
+	override private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			super.removeCurrentBackgroundSkin(skin);
+			return;
+		}
+		if ((skin is IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = null;
+		}
+		super.removeCurrentBackgroundSkin(skin);
 	}
 
 	private function updateCells():Void {
@@ -714,7 +857,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
-		TriggerEvent.dispatchFromTouchEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
@@ -724,7 +866,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (!this._enabled) {
 			return;
 		}
-		TriggerEvent.dispatchFromMouseEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
@@ -734,7 +875,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (!this._enabled) {
 			return;
 		}
-		this.dispatchEvent(event.clone());
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);

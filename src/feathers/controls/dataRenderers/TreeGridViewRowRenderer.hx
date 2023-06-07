@@ -8,6 +8,8 @@
 
 package feathers.controls.dataRenderers;
 
+import feathers.core.IStateObserver;
+import feathers.core.IStateContext;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.IMeasureObject;
 import feathers.core.IOpenCloseToggle;
@@ -25,6 +27,9 @@ import feathers.layout.ILayoutIndexObject;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
+import feathers.utils.KeyToState;
+import feathers.utils.PointerToState;
+import feathers.utils.PointerTrigger;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
@@ -49,8 +54,8 @@ import openfl._internal.utils.ObjectPool;
 
 	@since 1.0.0
 **/
-@:dox(hide)
-class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer {
+class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer
+		implements IStateContext<ToggleButtonState> {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static final RESET_CELL_STATE = new TreeGridViewCellState();
@@ -85,13 +90,46 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	private var _cellRendererToCellState = new ObjectMap<DisplayObject, TreeGridViewCellState>();
 	private var cellStatePool = new ObjectPool(() -> new TreeGridViewCellState());
 
+	private var _currentState:ToggleButtonState = UP(false);
+
+	/**
+		The current state of the row renderer.
+
+		When the value of the `currentState` property changes, the button will
+		dispatch an event of type `FeathersEvent.STATE_CHANGE`.
+
+		@see `feathers.controls.ToggleButtonState`
+		@see `feathers.events.FeathersEvent.STATE_CHANGE`
+
+		@since 1.3.0
+	**/
+	public var currentState(get, never):#if flash Dynamic #else ToggleButtonState #end;
+
+	private function get_currentState():#if flash Dynamic #else ToggleButtonState #end {
+		return this._currentState;
+	}
+
+	override private function set_enabled(value:Bool):Bool {
+		super.enabled = value;
+		if (this._enabled) {
+			switch (this._currentState) {
+				case DISABLED(selected):
+					this.changeState(UP(selected));
+				default: // do nothing
+			}
+		} else {
+			this.changeState(DISABLED(this._selected));
+		}
+		return this._enabled;
+	}
+
 	private var _treeGridView:TreeGridView;
 
 	/**
 		The `TreeGridView` component that contains this row.
 
-		_This special property must be set by the `TreeGridView`, and it should not
-		be modified externally._
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
 
 		@since 1.0.0
 	**/
@@ -130,8 +168,8 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	/**
 		Indicates if the row is selected or not.
 
-		_This special property must be set by the `TreeGridView`, and it should not
-		be modified externally._
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
 
 		@since 1.0.0
 	**/
@@ -155,15 +193,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	private var _ignoreSelectionChange = false;
 	private var _ignoreOpenedChange = false;
 
-	public var selectable:Bool = true;
-
 	private var _rowLocation:Array<Int> = null;
 
 	/**
 		The vertical position of the row within the `TreeGridView`.
 
-		_This special property must be set by the `TreeGridView`, and it should not
-		be modified externally._
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
 
 		@since 1.0.0
 	**/
@@ -187,8 +223,8 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	/**
 		Returns the location of the item in the `TreeGridView` layout.
 
-		_This special property must be set by the `TreeGridView`, and it should not
-		be modified externally._
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
 
 		@since 1.0.0
 	**/
@@ -212,8 +248,8 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	/**
 		Returns whether the item is a branch or a leaf.
 
-		_This special property must be set by the `TreeGridView`, and it should not
-		be modified externally._
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
 
 		@since 1.0.0
 	**/
@@ -237,8 +273,8 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	/**
 		Returns whether the branch is opened or closed.
 
-		_This special property must be set by the `TreeGridView`, and it should not
-		be modified externally._
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
 
 		@since 1.0.0
 	**/
@@ -262,8 +298,8 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	/**
 		The item from the data provider that is rendered by this row.
 
-		_This special property must be set by the `TreeGridView`, and it should not
-		be modified externally._
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
 
 		@since 1.0.0
 	**/
@@ -341,6 +377,16 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private var _forceCellStateUpdate:Bool = false;
 
+	/**
+		Manages cell state updates for the column.
+
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
+
+		@see `feathers.controls.TreeGridView.forceItemStateUpdate`
+
+		@since 1.2.0
+	**/
 	public var forceCellStateUpdate(get, set):Bool;
 
 	private function get_forceCellStateUpdate():Bool {
@@ -358,6 +404,16 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private var _customCellRendererVariant:String = null;
 
+	/**
+
+
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
+
+		@see `feathers.controls.TreeGridView.customCellRendererVariant`
+
+		@since 1.0.0
+	**/
 	public var customCellRendererVariant(get, set):String;
 
 	private function get_customCellRendererVariant():String {
@@ -375,6 +431,14 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private var _customColumnWidths:Array<Float>;
 
+	/**
+		Manages custom column width values used by the row.
+
+		_This special property must be set by the `TreeGridView`, and it should
+		not be modified externally._
+
+		@since 1.0.0
+	**/
 	public var customColumnWidths(get, set):Array<Float>;
 
 	private function get_customColumnWidths():Array<Float> {
@@ -392,6 +456,10 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private var _rowLayout:GridViewRowLayout;
 
+	private var _pointerToState:PointerToState<ToggleButtonState>;
+	private var _keyToState:KeyToState<ToggleButtonState>;
+	private var _pointerTrigger:PointerTrigger;
+
 	override public function dispose():Void {
 		this.refreshInactiveCellRenderers(this._defaultStorage, true);
 		if (this._additionalStorage != null) {
@@ -403,8 +471,36 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		super.dispose();
 	}
 
+	/**
+		Returns the current cell renderer used to render a specific column from
+		this row. May return `null` if a column doesn't currently have a cell
+		renderer.
+
+		@see `feathers.controls.GridView.itemAndColumnToCellRenderer`
+
+		@since 1.0.0
+	**/
+	public function columnToCellRenderer(column:TreeGridViewColumn):DisplayObject {
+		if (column == null) {
+			return null;
+		}
+		return this._columnToCellRenderer.get(column);
+	}
+
 	override private function initialize():Void {
 		super.initialize();
+
+		if (this._pointerToState == null) {
+			this._pointerToState = new PointerToState(this, this.changeState, UP(false), DOWN(false), HOVER(false));
+		}
+
+		if (this._keyToState == null) {
+			this._keyToState = new KeyToState(this, this.changeState, UP(false), DOWN(false));
+		}
+
+		if (this._pointerTrigger == null) {
+			this._pointerTrigger = new PointerTrigger(this);
+		}
 
 		if (this.layout == null) {
 			this._rowLayout = new GridViewRowLayout();
@@ -412,11 +508,58 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 	}
 
-	public function columnToCellRenderer(column:TreeGridViewColumn):DisplayObject {
-		if (column == null) {
-			return null;
+	private function changeState(state:ToggleButtonState):Void {
+		var toggleState = cast(state, ToggleButtonState);
+		if (!this._enabled) {
+			toggleState = DISABLED(this._selected);
 		}
-		return this._columnToCellRenderer.get(column);
+		switch (toggleState) {
+			case UP(selected):
+				if (this._selected != selected) {
+					toggleState = UP(this._selected);
+				}
+			case DOWN(selected):
+				if (this._selected != selected) {
+					toggleState = DOWN(this._selected);
+				}
+			case HOVER(selected):
+				if (this._selected != selected) {
+					toggleState = HOVER(this._selected);
+				}
+			case DISABLED(selected):
+				if (this._selected != selected) {
+					toggleState = DISABLED(this._selected);
+				}
+			default: // do nothing
+		}
+		if (this._currentState == toggleState) {
+			return;
+		}
+		this._currentState = toggleState;
+		this.setInvalid(STATE);
+		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
+	override private function addCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			super.addCurrentBackgroundSkin(skin);
+			return;
+		}
+		if ((skin is IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = this;
+		}
+		super.addCurrentBackgroundSkin(skin);
+	}
+
+	override private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			super.removeCurrentBackgroundSkin(skin);
+			return;
+		}
+		if ((skin is IStateObserver)) {
+			cast(skin, IStateObserver).stateContext = null;
+		}
+		super.removeCurrentBackgroundSkin(skin);
 	}
 
 	private function updateCells():Void {
@@ -868,7 +1011,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
-		TriggerEvent.dispatchFromTouchEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
@@ -878,7 +1020,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (!this._enabled) {
 			return;
 		}
-		TriggerEvent.dispatchFromMouseEvent(this, event);
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
@@ -888,7 +1029,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (!this._enabled) {
 			return;
 		}
-		this.dispatchEvent(event.clone());
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
