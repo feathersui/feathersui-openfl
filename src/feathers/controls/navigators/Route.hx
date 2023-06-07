@@ -8,6 +8,7 @@
 
 package feathers.controls.navigators;
 
+import feathers.utils.DisplayObjectFactory;
 import feathers.core.IUIControl;
 import feathers.data.RouteState;
 import feathers.utils.AbstractDisplayObjectFactory;
@@ -57,7 +58,7 @@ class Route {
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewFactory = viewClass;
+		item.viewFactory = DisplayObjectFactory.withClass(viewClass);
 		item.actions = actions;
 		item.updateState = updateState;
 		item.saveData = saveData;
@@ -74,7 +75,7 @@ class Route {
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewFactory = viewFunction;
+		item.viewFactory = DisplayObjectFactory.withFunction(viewFunction);
 		item.actions = actions;
 		item.updateState = updateState;
 		item.saveData = saveData;
@@ -91,7 +92,7 @@ class Route {
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewFactory = viewInstance;
+		item.viewFactory = DisplayObjectFactory.withDisplayObject(viewInstance);
 		item.actions = actions;
 		item.updateState = updateState;
 		item.saveData = saveData;
@@ -104,11 +105,11 @@ class Route {
 
 		@since 1.3.0
 	**/
-	public static function withFactory<T:DisplayObject>(path:String, viewInstance:T, ?actions:Map<String, RouterAction>,
-			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
+	public static function withFactory<T:DisplayObject>(path:String, viewFactory:AbstractDisplayObjectFactory<T, DisplayObject>,
+			?actions:Map<String, RouterAction>, ?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewFactory = viewInstance;
+		item.viewFactory = viewFactory;
 		item.actions = actions;
 		item.updateState = updateState;
 		item.saveData = saveData;
