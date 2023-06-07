@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import feathers.core.IUIControl;
 import openfl.display.DisplayObject;
 
 /**
@@ -30,6 +31,14 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> extends DisplayObjectFactor
 	**/
 	public static function withClass<T:B, S, B:DisplayObject>(displayObjectType:Class<T>, ?update:(target:T, state:S) -> Void,
 			?reset:(target:T, state:S) -> Void, ?destroy:(T) -> Void):DisplayObjectRecycler<T, S, B> {
+		if (destroy == null) {
+			// since we create the instance, we can safely dispose it
+			destroy = (target) -> {
+				if ((target is IUIControl)) {
+					cast(target, IUIControl).dispose();
+				}
+			}
+		}
 		var item = new DisplayObjectRecycler<T, S, B>();
 		item.create = () -> {
 			Type.createInstance(displayObjectType, []);

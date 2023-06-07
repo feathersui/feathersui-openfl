@@ -8,6 +8,7 @@
 
 package feathers.utils;
 
+import feathers.core.IUIControl;
 import openfl.display.DisplayObject;
 
 /**
@@ -46,6 +47,14 @@ class DisplayObjectFactory<T:B, B:DisplayObject> {
 		arguments, use `DisplayObjectFactory.withFunction()` instead.
 	**/
 	public static function withClass<T:B, B:DisplayObject>(displayObjectType:Class<T>, ?destroy:(T) -> Void):DisplayObjectFactory<T, B> {
+		if (destroy == null) {
+			// since we create the instance, we can safely dispose it
+			destroy = (target) -> {
+				if ((target is IUIControl)) {
+					cast(target, IUIControl).dispose();
+				}
+			}
+		}
 		var item = new DisplayObjectFactory<T, B>();
 		item.create = () -> {
 			Type.createInstance(displayObjectType, []);
