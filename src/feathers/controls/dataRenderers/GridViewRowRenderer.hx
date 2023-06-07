@@ -55,7 +55,6 @@ import openfl._internal.utils.ObjectPool;
 	@since 1.0.0
 **/
 @:styleContext
-@:access(feathers.data.GridViewCellState)
 class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer implements IStateContext<ToggleButtonState> {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
