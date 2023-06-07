@@ -662,8 +662,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	override public function dispose():Void {
-		this.disposeButton();
-		this.disposeListView();
+		this.destroyButton();
+		this.destroyListView();
 		this.dataProvider = null;
 		super.dispose();
 	}
@@ -714,7 +714,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	private function createButton():Void {
-		this.disposeButton();
+		this.destroyButton();
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this._oldButtonFactory = factory;
 		this.button = factory.create();
@@ -729,7 +729,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.addChild(this.button);
 	}
 
-	private function disposeButton():Void {
+	private function destroyButton():Void {
 		if (this.button == null) {
 			return;
 		}
@@ -741,12 +741,11 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this._oldButtonFactory.destroy(this.button);
 		}
 		this._oldButtonFactory = null;
-		this.button.dispose();
 		this.button = null;
 	}
 
 	private function createListView():Void {
-		this.disposeListView();
+		this.destroyListView();
 		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this._oldListViewFactory = factory;
 		this.listView = factory.create();
@@ -759,7 +758,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this.listView.addEventListener(KeyboardEvent.KEY_UP, popUpListView_listView_keyUpHandler);
 	}
 
-	private function disposeListView():Void {
+	private function destroyListView():Void {
 		if (this.listView == null) {
 			return;
 		}
@@ -770,7 +769,6 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this._oldListViewFactory.destroy(this.listView);
 		}
 		this._oldListViewFactory = null;
-		this.listView.dispose();
 		this.listView = null;
 	}
 

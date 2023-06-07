@@ -810,9 +810,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	override public function dispose():Void {
-		this.disposeButton();
-		this.disposeTextInput();
-		this.disposeListView();
+		this.destroyButton();
+		this.destroyTextInput();
+		this.destroyListView();
 		this.dataProvider = null;
 		super.dispose();
 	}
@@ -875,7 +875,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function createButton():Void {
-		this.disposeButton();
+		this.destroyButton();
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this._oldButtonFactory = factory;
 		this.button = factory.create();
@@ -890,7 +890,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.addChild(this.button);
 	}
 
-	private function disposeButton():Void {
+	private function destroyButton():Void {
 		if (this.button == null) {
 			return;
 		}
@@ -901,12 +901,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this._oldButtonFactory.destroy(this.button);
 		}
 		this._oldButtonFactory = null;
-		this.button.dispose();
 		this.button = null;
 	}
 
 	private function createTextInput():Void {
-		this.disposeTextInput();
+		this.destroyTextInput();
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
 		this._oldTextInputFactory = factory;
 		this.textInput = factory.create();
@@ -923,7 +922,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.addChild(this.textInput);
 	}
 
-	private function disposeTextInput():Void {
+	private function destroyTextInput():Void {
 		if (this.textInput == null) {
 			return;
 		}
@@ -937,12 +936,11 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this._oldTextInputFactory.destroy(this.textInput);
 		}
 		this._oldTextInputFactory = null;
-		this.textInput.dispose();
 		this.textInput = null;
 	}
 
 	private function createListView():Void {
-		this.disposeListView();
+		this.destroyListView();
 		var factory = this._listViewFactory != null ? this._listViewFactory : defaultListViewFactory;
 		this._oldListViewFactory = factory;
 		this.listView = factory.create();
@@ -955,7 +953,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.listView.addEventListener(ListViewEvent.ITEM_TRIGGER, comboBox_listView_itemTriggerHandler);
 	}
 
-	private function disposeListView():Void {
+	private function destroyListView():Void {
 		if (this.listView == null) {
 			return;
 		}
@@ -966,7 +964,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this._oldListViewFactory.destroy(this.listView);
 		}
 		this._oldListViewFactory = null;
-		this.listView.dispose();
 		this.listView = null;
 	}
 

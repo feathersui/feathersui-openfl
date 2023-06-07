@@ -295,7 +295,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	}
 
 	override public function dispose():Void {
-		this.disposeDisclosureButton();
+		this.destroyDisclosureButton();
 		super.dispose();
 	}
 
@@ -489,7 +489,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	}
 
 	private function createDisclosureButton():Void {
-		this.disposeDisclosureButton();
+		this.destroyDisclosureButton();
 		var factory = this._disclosureButtonFactory != null ? this._disclosureButtonFactory : defaultDisclosureButtonFactory;
 		this._oldDisclosureButtonFactory = factory;
 		this.disclosureButton = factory.create();
@@ -502,7 +502,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		this.addChild(this.disclosureButton);
 	}
 
-	private function disposeDisclosureButton():Void {
+	private function destroyDisclosureButton():Void {
 		if (this.disclosureButton == null) {
 			return;
 		}
@@ -512,7 +512,6 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 			this._oldDisclosureButtonFactory.destroy(this.disclosureButton);
 		}
 		this._oldDisclosureButtonFactory = null;
-		this.disclosureButton.dispose();
 		this.disclosureButton = null;
 	}
 

@@ -2096,7 +2096,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._rowRendererRecycler.destroy != null) {
 			this._rowRendererRecycler.destroy(rowRenderer);
 		}
-		rowRenderer.dispose();
 	}
 
 	private function updateRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
@@ -2242,9 +2241,6 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._headerContainer.removeChild(headerRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(headerRenderer);
-		}
-		if ((headerRenderer is IUIControl)) {
-			cast(headerRenderer, IUIControl).dispose();
 		}
 	}
 

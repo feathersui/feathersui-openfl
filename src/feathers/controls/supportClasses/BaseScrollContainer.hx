@@ -1043,9 +1043,9 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	override public function dispose():Void {
-		this.disposeScroller();
-		this.disposeScrollBarX();
-		this.disposeScrollBarY();
+		this.destroyScroller();
+		this.destroyScrollBarX();
+		this.destroyScrollBarY();
 		super.dispose();
 	}
 
@@ -1122,14 +1122,14 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function createScroller():Void {
-		this.disposeScroller();
+		this.destroyScroller();
 		this.scroller = (this._scrollerFactory != null) ? this._scrollerFactory() : new Scroller();
 		this.scroller.addEventListener(Event.SCROLL, baseScrollContainer_scroller_scrollHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_START, baseScrollContainer_scroller_scrollStartHandler);
 		this.scroller.addEventListener(ScrollEvent.SCROLL_COMPLETE, baseScrollContainer_scroller_scrollCompleteHandler);
 	}
 
-	private function disposeScroller():Void {
+	private function destroyScroller():Void {
 		if (this.scroller == null) {
 			return;
 		}
@@ -1151,7 +1151,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	}
 
 	private function createScrollBarX():Void {
-		this.disposeScrollBarX();
+		this.destroyScrollBarX();
 		var factory = this._scrollBarXFactory != null ? this._scrollBarXFactory : defaultScrollBarXFactory;
 		this._oldScrollBarXFactory = factory;
 		this.scrollBarX = factory.create();
@@ -1166,7 +1166,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.addChild(cast(this.scrollBarX, DisplayObject));
 	}
 
-	private function disposeScrollBarX():Void {
+	private function destroyScrollBarX():Void {
 		if (this.scrollBarX == null) {
 			return;
 		}
@@ -1180,12 +1180,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this._oldScrollBarXFactory.destroy(this.scrollBarX);
 		}
 		this._oldScrollBarXFactory = null;
-		this.scrollBarX.dispose();
 		this.scrollBarX = null;
 	}
 
 	private function createScrollBarY():Void {
-		this.disposeScrollBarY();
+		this.destroyScrollBarY();
 		var factory = this._scrollBarYFactory != null ? this._scrollBarYFactory : defaultScrollBarYFactory;
 		this._oldScrollBarYFactory = factory;
 		this.scrollBarY = factory.create();
@@ -1200,7 +1199,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this.addChild(cast(this.scrollBarY, DisplayObject));
 	}
 
-	private function disposeScrollBarY():Void {
+	private function destroyScrollBarY():Void {
 		if (this.scrollBarY == null) {
 			return;
 		}
@@ -1214,7 +1213,6 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this._oldScrollBarYFactory.destroy(this.scrollBarY);
 		}
 		this._oldScrollBarYFactory = null;
-		this.scrollBarY.dispose();
 		this.scrollBarY = null;
 	}
 

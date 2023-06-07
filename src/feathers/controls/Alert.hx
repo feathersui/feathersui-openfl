@@ -476,9 +476,9 @@ class Alert extends Panel {
 	}
 
 	override public function dispose():Void {
-		this.disposeButtonBar();
-		this.disposeHeader();
-		this.disposeMessageLabel();
+		this.destroyButtonBar();
+		this.destroyHeader();
+		this.destroyMessageLabel();
 		super.dispose();
 	}
 
@@ -541,7 +541,7 @@ class Alert extends Panel {
 	}
 
 	private function createButtonBar():Void {
-		this.disposeButtonBar();
+		this.destroyButtonBar();
 		var factory = this._buttonBarFactory != null ? this._buttonBarFactory : defaultButtonBarFactory;
 		this._oldButtonBarFactory = factory;
 		this.buttonBar = factory.create();
@@ -554,7 +554,7 @@ class Alert extends Panel {
 		});
 	}
 
-	private function disposeButtonBar():Void {
+	private function destroyButtonBar():Void {
 		if (this.buttonBar == null) {
 			return;
 		}
@@ -563,7 +563,6 @@ class Alert extends Panel {
 			this._oldButtonBarFactory.destroy(this.buttonBar);
 		}
 		this._oldButtonBarFactory = null;
-		this.buttonBar.dispose();
 		this.buttonBar = null;
 		this.runWithInvalidationFlagsOnly(() -> {
 			this._set_footer(null);
@@ -571,7 +570,7 @@ class Alert extends Panel {
 	}
 
 	private function createHeader():Void {
-		this.disposeHeader();
+		this.destroyHeader();
 		var factory = this._headerFactory != null ? this._headerFactory : defaultHeaderFactory;
 		this._oldHeaderFactory = factory;
 		this.alertHeader = factory.create();
@@ -583,7 +582,7 @@ class Alert extends Panel {
 		});
 	}
 
-	private function disposeHeader():Void {
+	private function destroyHeader():Void {
 		if (this.alertHeader == null) {
 			return;
 		}
@@ -591,7 +590,6 @@ class Alert extends Panel {
 			this._oldHeaderFactory.destroy(this.alertHeader);
 		}
 		this._oldHeaderFactory = null;
-		this.alertHeader.dispose();
 		this.alertHeader = null;
 		this.runWithInvalidationFlagsOnly(() -> {
 			this._set_header(null);
@@ -599,7 +597,7 @@ class Alert extends Panel {
 	}
 
 	private function createMessageLabel():Void {
-		this.disposeMessageLabel();
+		this.destroyMessageLabel();
 		var factory = this._messageLabelFactory != null ? this._messageLabelFactory : defaultMessageLabelFactory;
 		this._oldMessageLabelFactory = factory;
 		this.messageLabel = factory.create();
@@ -609,7 +607,7 @@ class Alert extends Panel {
 		this.addChild(this.messageLabel);
 	}
 
-	private function disposeMessageLabel():Void {
+	private function destroyMessageLabel():Void {
 		if (this.messageLabel == null) {
 			return;
 		}
@@ -618,7 +616,6 @@ class Alert extends Panel {
 			this._oldMessageLabelFactory.destroy(this.messageLabel);
 		}
 		this._oldMessageLabelFactory = null;
-		this.messageLabel.dispose();
 		this.messageLabel = null;
 	}
 

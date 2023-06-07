@@ -698,9 +698,9 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	override public function dispose():Void {
-		this.disposeDecrementButton();
-		this.disposeIncrementButton();
-		this.disposeTextInput();
+		this.destroyDecrementButton();
+		this.destroyIncrementButton();
+		this.destroyTextInput();
 		super.dispose();
 	}
 
@@ -1080,7 +1080,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 	}
 
 	private function createDecrementButton():Void {
-		this.disposeDecrementButton();
+		this.destroyDecrementButton();
 		var factory = this._decrementButtonFactory != null ? this._decrementButtonFactory : defaultDecrementButtonFactory;
 		this._oldDecrementButtonFactory = factory;
 		this.decrementButton = factory.create();
@@ -1097,7 +1097,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this.addChild(this.decrementButton);
 	}
 
-	private function disposeDecrementButton():Void {
+	private function destroyDecrementButton():Void {
 		if (this.decrementButton == null) {
 			return;
 		}
@@ -1108,12 +1108,11 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			this._oldDecrementButtonFactory.destroy(this.decrementButton);
 		}
 		this._oldDecrementButtonFactory = null;
-		this.decrementButton.dispose();
 		this.decrementButton = null;
 	}
 
 	private function createIncrementButton():Void {
-		this.disposeIncrementButton();
+		this.destroyIncrementButton();
 		var factory = this._incrementButtonFactory != null ? this._incrementButtonFactory : defaultIncrementButtonFactory;
 		this._oldIncrementButtonFactory = factory;
 		this.incrementButton = factory.create();
@@ -1130,7 +1129,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this.addChild(this.incrementButton);
 	}
 
-	private function disposeIncrementButton():Void {
+	private function destroyIncrementButton():Void {
 		if (this.incrementButton == null) {
 			return;
 		}
@@ -1141,12 +1140,11 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 			this._oldIncrementButtonFactory.destroy(this.incrementButton);
 		}
 		this._oldIncrementButtonFactory = null;
-		this.incrementButton.dispose();
 		this.incrementButton = null;
 	}
 
 	private function createTextInput():Void {
-		this.disposeTextInput();
+		this.destroyTextInput();
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
 		this._oldTextInputFactory = factory;
 		this.textInput = factory.create();
@@ -1162,7 +1160,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		this.addChild(this.textInput);
 	}
 
-	private function disposeTextInput():Void {
+	private function destroyTextInput():Void {
 		if (this.textInput == null) {
 			return;
 		}

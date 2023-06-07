@@ -1458,9 +1458,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(itemRenderer);
 		}
-		if ((itemRenderer is IUIControl)) {
-			cast(itemRenderer, IUIControl).dispose();
-		}
 	}
 
 	private function itemStateToStorage(state:TreeViewItemState):ItemRendererStorage {

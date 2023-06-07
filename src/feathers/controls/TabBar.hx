@@ -962,7 +962,6 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (this.tabRecycler.destroy != null) {
 			this.tabRecycler.destroy(tab);
 		}
-		tab.dispose();
 	}
 
 	private function itemStateToStorage(state:TabBarItemState):TabStorage {

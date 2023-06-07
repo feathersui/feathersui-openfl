@@ -1055,7 +1055,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	override public function dispose():Void {
-		this.disposeErrorCallout();
+		this.destroyErrorCallout();
 		super.dispose();
 	}
 
@@ -1760,7 +1760,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function createErrorCallout():Void {
-		this.disposeErrorCallout();
+		this.destroyErrorCallout();
 		if (this._errorString == null || this._errorString.length == 0) {
 			return;
 		}
@@ -1772,14 +1772,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this.errorStringCallout.closeOnPointerOutside = false;
 	}
 
-	private function disposeErrorCallout():Void {
+	private function destroyErrorCallout():Void {
 		if (this.errorStringCallout == null) {
 			return;
 		}
 		if (this.errorStringCallout.parent != null) {
 			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
 		}
-		this.errorStringCallout.dispose();
 		this.errorStringCallout = null;
 	}
 

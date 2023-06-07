@@ -835,7 +835,6 @@ class ButtonBar extends FeathersControl {
 		if (this.buttonRecycler.destroy != null) {
 			this.buttonRecycler.destroy(button);
 		}
-		button.dispose();
 	}
 
 	private function itemStateToStorage(state:ButtonBarItemState):ButtonStorage {

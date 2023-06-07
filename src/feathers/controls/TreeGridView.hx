@@ -1942,7 +1942,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._rowRendererRecycler.destroy != null) {
 			this._rowRendererRecycler.destroy(rowRenderer);
 		}
-		rowRenderer.dispose();
 	}
 
 	private function updateRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
@@ -2170,9 +2169,6 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this._headerContainer.removeChild(headerRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(headerRenderer);
-		}
-		if ((headerRenderer is IUIControl)) {
-			cast(headerRenderer, IUIControl).dispose();
 		}
 	}
 

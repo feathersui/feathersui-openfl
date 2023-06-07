@@ -631,9 +631,9 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	override public function dispose():Void {
-		this.disposeButton();
-		this.disposeTextInput();
-		this.disposeDatePicker();
+		this.destroyButton();
+		this.destroyTextInput();
+		this.destroyDatePicker();
 		super.dispose();
 	}
 
@@ -695,7 +695,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	private function createButton():Void {
-		this.disposeButton();
+		this.destroyButton();
 		var factory = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
 		this._oldButtonFactory = factory;
 		this.button = factory.create();
@@ -710,7 +710,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		this.addChild(this.button);
 	}
 
-	private function disposeButton():Void {
+	private function destroyButton():Void {
 		if (this.button == null) {
 			return;
 		}
@@ -725,7 +725,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	private function createTextInput():Void {
-		this.disposeTextInput();
+		this.destroyTextInput();
 		var factory = this._textInputFactory != null ? this._textInputFactory : defaultTextInputFactory;
 		this._oldTextInputFactory = factory;
 		this.textInput = factory.create();
@@ -739,7 +739,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		this.addChild(this.textInput);
 	}
 
-	private function disposeTextInput():Void {
+	private function destroyTextInput():Void {
 		if (this.textInput == null) {
 			return;
 		}
@@ -749,12 +749,11 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 			this._oldTextInputFactory.destroy(this.textInput);
 		}
 		this._oldTextInputFactory = null;
-		this.textInput.dispose();
 		this.textInput = null;
 	}
 
 	private function createDatePicker():Void {
-		this.disposeDatePicker();
+		this.destroyDatePicker();
 		var factory = this._datePickerFactory != null ? this._datePickerFactory : defaultDatePickerFactory;
 		this._oldDatePickerFactory = factory;
 		this.datePicker = factory.create();
@@ -767,7 +766,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		this.datePicker.addEventListener(DatePickerEvent.ITEM_TRIGGER, popUpDatePicker_datePicker_itemTriggerHandler);
 	}
 
-	private function disposeDatePicker():Void {
+	private function destroyDatePicker():Void {
 		if (this.datePicker == null) {
 			return;
 		}

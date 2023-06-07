@@ -352,7 +352,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	private var _ignoreSelectionChange = false;
 
 	override public function dispose():Void {
-		this.disposeTabBar();
+		this.destroyTabBar();
 		this.dataProvider = null;
 		super.dispose();
 	}
@@ -451,7 +451,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function createTabBar():Void {
-		this.disposeTabBar();
+		this.destroyTabBar();
 		var factory = this._tabBarFactory != null ? this._tabBarFactory : defaultTabBarFactory;
 		this._oldTabBarFactory = factory;
 		this.tabBar = factory.create();
@@ -463,7 +463,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		this.addChild(this.tabBar);
 	}
 
-	private function disposeTabBar():Void {
+	private function destroyTabBar():Void {
 		if (this.tabBar == null) {
 			return;
 		}
@@ -474,7 +474,6 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this._oldTabBarFactory.destroy(this.tabBar);
 		}
 		this._oldTabBarFactory = null;
-		this.tabBar.dispose();
 		this.tabBar = null;
 	}
 

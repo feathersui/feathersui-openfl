@@ -1512,9 +1512,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(itemRenderer);
 		}
-		if ((itemRenderer is IUIControl)) {
-			cast(itemRenderer, IUIControl).dispose();
-		}
 	}
 
 	private function itemOrHeaderStateToStorage(state:GroupListViewItemState, recyclerIDFunction:(GroupListViewItemState) -> String,
