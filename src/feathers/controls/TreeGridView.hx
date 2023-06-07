@@ -520,9 +520,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._rowRendererFactory == value) {
 			return this._rowRendererFactory;
 		}
-		this._oldRowRendererRecycler = this._rowRendererRecycler;
+		this._oldRowRendererFactory = this._rowRendererFactory;
 		this._rowRendererFactory = value;
-		this._rowRendererRecycler = DisplayObjectRecycler.withFactory(value);
 		this.setInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
 		return this._rowRendererFactory;
 	}
@@ -649,8 +648,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	public var customColumnDividerVariant:String = null;
 
 	private var _rowRendererFactory:DisplayObjectFactory<Dynamic, TreeGridViewRowRenderer>;
-	private var _oldRowRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewRowState, TreeGridViewRowRenderer>;
-	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewRowState, TreeGridViewRowRenderer>;
+	private var _oldRowRendererFactory:DisplayObjectFactory<Dynamic, TreeGridViewRowRenderer>;
 	private var _rowRendererMeasurements:Measurements;
 
 	private var _forceItemStateUpdate:Bool = false;
@@ -1816,7 +1814,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (factoryInvalid) {
 			this.recoverInactiveRowRenderers();
 			this.freeInactiveRowRenderers();
-			this._oldRowRendererRecycler = null;
+			this._oldRowRendererFactory = null;
 		}
 	}
 
@@ -1957,12 +1955,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private function createRowRenderer(state:TreeGridViewRowState):TreeGridViewRowRenderer {
 		var rowRenderer:TreeGridViewRowRenderer = null;
 		if (this.inactiveRowRenderers.length == 0) {
-			rowRenderer = this._rowRendererRecycler.create();
+			rowRenderer = this._rowRendererFactory.create();
 			if (this._rowRendererMeasurements == null) {
 				this._rowRendererMeasurements = new Measurements(rowRenderer);
 			}
-			// for consistency, initialize before passing to the recycler's
-			// update function
+			// for consistency, initialize immediately
 			rowRenderer.initializeNow();
 		} else {
 			rowRenderer = this.inactiveRowRenderers.shift();
@@ -1980,38 +1977,19 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function destroyRowRenderer(rowRenderer:TreeGridViewRowRenderer):Void {
-		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
+		var factory = this._oldRowRendererFactory != null ? this._oldRowRendererFactory : this._rowRendererFactory;
 		rowRenderer.treeGridView = null;
 		this.treeGridViewPort.removeChild(rowRenderer);
-		if (recycler.destroy != null) {
-			recycler.destroy(rowRenderer);
+		if (factory.destroy != null) {
+			factory.destroy(rowRenderer);
 		}
 	}
 
 	private function updateRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
-		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-		this._ignoreSelectionChange = true;
-		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
-		this._ignoreOpenedChange = true;
-		if (this._rowRendererRecycler.update != null) {
-			this._rowRendererRecycler.update(rowRenderer, state);
-		}
-		this._ignoreOpenedChange = oldIgnoreOpenedChange;
-		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshRowRendererProperties(rowRenderer, state);
 	}
 
 	private function resetRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
-		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
-		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-		this._ignoreSelectionChange = true;
-		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
-		this._ignoreOpenedChange = true;
-		if (recycler.reset != null) {
-			recycler.reset(rowRenderer, state);
-		}
-		this._ignoreOpenedChange = oldIgnoreOpenedChange;
-		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);
 	}
 

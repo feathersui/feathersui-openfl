@@ -516,9 +516,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._rowRendererFactory == value) {
 			return this._rowRendererFactory;
 		}
-		this._oldRowRendererRecycler = this._rowRendererRecycler;
+		this._oldRowRendererFactory = this._rowRendererFactory;
 		this._rowRendererFactory = value;
-		this._rowRendererRecycler = DisplayObjectRecycler.withFactory(value);
 		this.setInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
 		return this._rowRendererFactory;
 	}
@@ -682,8 +681,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	public var customColumnDividerVariant:String = null;
 
 	private var _rowRendererFactory:DisplayObjectFactory<Dynamic, GridViewRowRenderer>;
-	private var _oldRowRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewRowState, GridViewRowRenderer>;
-	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewRowState, GridViewRowRenderer>;
+	private var _oldRowRendererFactory:DisplayObjectFactory<Dynamic, GridViewRowRenderer>;
 	private var _rowRendererMeasurements:Measurements;
 	private var _selectedIndex:Int = -1;
 
@@ -2002,7 +2000,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (factoryInvalid) {
 			this.recoverInactiveRowRenderers();
 			this.freeInactiveRowRenderers();
-			this._oldRowRendererRecycler = null;
+			this._oldRowRendererFactory = null;
 		}
 	}
 
@@ -2114,12 +2112,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private function createRowRenderer(state:GridViewRowState):GridViewRowRenderer {
 		var rowRenderer:GridViewRowRenderer = null;
 		if (this.inactiveRowRenderers.length == 0) {
-			rowRenderer = this._rowRendererRecycler.create();
+			rowRenderer = this._rowRendererFactory.create();
 			if (this._rowRendererMeasurements == null) {
 				this._rowRendererMeasurements = new Measurements(rowRenderer);
 			}
-			// for consistency, initialize before passing to the recycler's
-			// update function
+			// for consistency, initialize immediately
 			rowRenderer.initializeNow();
 		} else {
 			rowRenderer = this.inactiveRowRenderers.shift();
@@ -2134,32 +2131,19 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function destroyRowRenderer(rowRenderer:GridViewRowRenderer):Void {
-		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
+		var factory = this._oldRowRendererFactory != null ? this._oldRowRendererFactory : this._rowRendererFactory;
 		rowRenderer.gridView = null;
 		this.gridViewPort.removeChild(rowRenderer);
-		if (recycler.destroy != null) {
-			recycler.destroy(rowRenderer);
+		if (factory.destroy != null) {
+			factory.destroy(rowRenderer);
 		}
 	}
 
 	private function updateRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
-		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-		this._ignoreSelectionChange = true;
-		if (this._rowRendererRecycler.update != null) {
-			this._rowRendererRecycler.update(rowRenderer, state);
-		}
-		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshRowRendererProperties(rowRenderer, state);
 	}
 
 	private function resetRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
-		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
-		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
-		this._ignoreSelectionChange = true;
-		if (recycler.reset != null) {
-			recycler.reset(rowRenderer, state);
-		}
-		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);
 	}
 
