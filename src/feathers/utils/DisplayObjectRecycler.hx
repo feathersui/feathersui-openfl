@@ -28,6 +28,8 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> extends DisplayObjectFactor
 
 		To instantiate an object with one or more required constructor
 		arguments, use `DisplayObjectRecycler.withFunction()` instead.
+
+		@since 1.0.0
 	**/
 	public static function withClass<T:B, S, B:DisplayObject>(displayObjectType:Class<T>, ?update:(target:T, state:S) -> Void,
 			?reset:(target:T, state:S) -> Void, ?destroy:(T) -> Void):DisplayObjectRecycler<T, S, B> {
@@ -52,6 +54,8 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> extends DisplayObjectFactor
 	/**
 		Creates a `DisplayObjectRecycler` that instantiates a display object by
 		calling the specified function.
+
+		@since 1.0.0
 	**/
 	public static function withFunction<T:B, S, B:DisplayObject>(create:() -> T, ?update:(target:T, state:S) -> Void, ?reset:(target:T, state:S) -> Void,
 			?destroy:(T) -> Void):DisplayObjectRecycler<T, S, B> {
@@ -60,6 +64,22 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> extends DisplayObjectFactor
 		item.update = update;
 		item.reset = reset;
 		item.destroy = destroy;
+		return item;
+	}
+
+	/**
+		Creates a `DisplayObjectRecycler` that instantiates a display object 
+		from a `DisplayObjectFactory`.
+
+		@since 1.3.0
+	**/
+	public static function withFactory<T:B, S, B:DisplayObject>(factory:DisplayObjectFactory<T, B>, ?update:(target:T, state:S) -> Void,
+			?reset:(target:T, state:S) -> Void):DisplayObjectRecycler<T, S, B> {
+		var item = new DisplayObjectRecycler<T, S, B>();
+		item.create = factory.create;
+		item.update = update;
+		item.reset = reset;
+		item.destroy = factory.destroy;
 		return item;
 	}
 
