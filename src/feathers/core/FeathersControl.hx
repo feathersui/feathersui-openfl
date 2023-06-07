@@ -938,10 +938,10 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	private function feathersControl_removedFromStageHandler(event:Event):Void {
 		this.showFocus(false);
-		// since there's no concept of disposing a Feathers UI component, we
-		// need to clear the style provider here so that there are no memory
-		// leaks. the style provider holds a reference to the component through
-		// an event listener.
+		// since there's no strict requirement to dispose a Feathers UI
+		// component, we need to clear the style provider here so that there are
+		// no memory leaks. the style provider holds a reference to the
+		// component through an event listener.
 		this.clearStyleProvider();
 	}
 
