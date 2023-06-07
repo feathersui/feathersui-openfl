@@ -214,6 +214,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public static final CHILD_VARIANT_COLUMN_DIVIDER = "gridView_columnDivider";
 
+	private static final INVALIDATION_FLAG_ROW_RENDERER_FACTORY = InvalidationFlag.CUSTOM("rowRendererFactory");
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
 	private static final INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("headerDividerFactory");
 	private static final INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("columnDividerFactory");
@@ -259,6 +260,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		initializeGridViewTheme();
 
 		super();
+
+		if (this._rowRendererFactory == null) {
+			this.rowRendererFactory = DisplayObjectFactory.withClass(GridViewRowRenderer);
+		}
 
 		this.dataProvider = dataProvider;
 		this.columns = columns;
@@ -487,6 +492,38 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	/**
+		Manages row renderers used by the grid view.
+
+		In the following example, the grid view uses a custom row renderer
+		class:
+
+		```haxe
+		gridView.rowRendererFactory = DisplayObjectRecycler.withFunction(() -> {
+			return new GridViewRowRenderer();
+		});
+		```
+
+		@since 1.3.0
+	**/
+	public var rowRendererFactory(get, set):AbstractDisplayObjectFactory<Dynamic, GridViewRowRenderer>;
+
+	private function get_rowRendererFactory():AbstractDisplayObjectFactory<Dynamic, GridViewRowRenderer> {
+		return this._rowRendererFactory;
+	}
+
+	private function set_rowRendererFactory(value:AbstractDisplayObjectFactory<Dynamic, GridViewRowRenderer>):AbstractDisplayObjectFactory<Dynamic,
+		GridViewRowRenderer> {
+		if (this._rowRendererFactory == value) {
+			return this._rowRendererFactory;
+		}
+		this._oldRowRendererRecycler = this._rowRendererRecycler;
+		this._rowRendererFactory = value;
+		this._rowRendererRecycler = DisplayObjectRecycler.withFactory(value);
+		this.setInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
+		return this._rowRendererFactory;
+	}
+
+	/**
 		Manages header renderers used by the grid view.
 
 		In the following example, the grid view uses a custom header renderer
@@ -644,7 +681,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	@:style
 	public var customColumnDividerVariant:String = null;
 
-	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(GridViewRowRenderer);
+	private var _rowRendererFactory:DisplayObjectFactory<Dynamic, GridViewRowRenderer>;
+	private var _oldRowRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewRowState, GridViewRowRenderer>;
+	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, GridViewRowState, GridViewRowRenderer>;
 	private var _rowRendererMeasurements:Measurements;
 	private var _selectedIndex:Int = -1;
 
@@ -1254,9 +1293,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	override public function dispose():Void {
 		this.refreshInactiveHeaderRenderers(true);
-		this.refreshInactiveRowRenderers();
-		this.recoverInactiveRowRenderers();
-		this.freeInactiveRowRenderers();
+		this.refreshInactiveRowRenderers(true);
 		this.dataProvider = null;
 		this.columns = null;
 		super.dispose();
@@ -1944,7 +1981,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private function refreshRowRenderers(items:Array<DisplayObject>):Void {
 		this._rowLayoutItems = items;
 
-		this.refreshInactiveRowRenderers();
+		var rowRendererInvalid = this.gridViewPort.isInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
+		this.refreshInactiveRowRenderers(rowRendererInvalid);
 		this.findUnrenderedData();
 		this.recoverInactiveRowRenderers();
 		this.renderUnrenderedData();
@@ -1954,12 +1992,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
-	private function refreshInactiveRowRenderers():Void {
+	private function refreshInactiveRowRenderers(factoryInvalid:Bool):Void {
 		var temp = this.inactiveRowRenderers;
 		this.inactiveRowRenderers = this.activeRowRenderers;
 		this.activeRowRenderers = temp;
 		if (this.activeRowRenderers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active row renderers should be empty before updating.');
+		}
+		if (factoryInvalid) {
+			this.recoverInactiveRowRenderers();
+			this.freeInactiveRowRenderers();
+			this._oldRowRendererRecycler = null;
 		}
 	}
 
@@ -2091,10 +2134,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function destroyRowRenderer(rowRenderer:GridViewRowRenderer):Void {
+		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
 		rowRenderer.gridView = null;
 		this.gridViewPort.removeChild(rowRenderer);
-		if (this._rowRendererRecycler.destroy != null) {
-			this._rowRendererRecycler.destroy(rowRenderer);
+		if (recycler.destroy != null) {
+			recycler.destroy(rowRenderer);
 		}
 	}
 
@@ -2109,10 +2153,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function resetRowRenderer(rowRenderer:GridViewRowRenderer, state:GridViewRowState):Void {
+		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this._rowRendererRecycler.reset != null) {
-			this._rowRendererRecycler.reset(rowRenderer, state);
+		if (recycler.reset != null) {
+			recycler.reset(rowRenderer, state);
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshRowRendererProperties(rowRenderer, RESET_ROW_STATE);

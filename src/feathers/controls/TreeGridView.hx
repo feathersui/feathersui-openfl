@@ -222,6 +222,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	**/
 	public static final CHILD_VARIANT_COLUMN_DIVIDER = "treeGridView_columnDivider";
 
+	private static final INVALIDATION_FLAG_ROW_RENDERER_FACTORY = InvalidationFlag.CUSTOM("rowRendererFactory");
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
 	private static final INVALIDATION_FLAG_HEADER_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("headerDividerFactory");
 	private static final INVALIDATION_FLAG_COLUMN_DIVIDER_FACTORY = InvalidationFlag.CUSTOM("columnDividerFactory");
@@ -255,6 +256,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		initializeTreeGridViewTheme();
 
 		super();
+
+		if (this._rowRendererFactory == null) {
+			this.rowRendererFactory = DisplayObjectRecycler.withClass(TreeGridViewRowRenderer);
+		}
 
 		this.dataProvider = dataProvider;
 		this.columns = columns;
@@ -491,6 +496,38 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	/**
+		Manages row renderers used by the grid view.
+
+		In the following example, the grid view uses a custom row renderer
+		class:
+
+		```haxe
+		treeGridView.rowRendererFactory = DisplayObjectRecycler.withFunction(() -> {
+			return new TreeGridViewRowRenderer();
+		});
+		```
+
+		@since 1.3.0
+	**/
+	public var rowRendererFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TreeGridViewRowRenderer>;
+
+	private function get_rowRendererFactory():AbstractDisplayObjectFactory<Dynamic, TreeGridViewRowRenderer> {
+		return this._rowRendererFactory;
+	}
+
+	private function set_rowRendererFactory(value:AbstractDisplayObjectFactory<Dynamic, TreeGridViewRowRenderer>):AbstractDisplayObjectFactory<Dynamic,
+		TreeGridViewRowRenderer> {
+		if (this._rowRendererFactory == value) {
+			return this._rowRendererFactory;
+		}
+		this._oldRowRendererRecycler = this._rowRendererRecycler;
+		this._rowRendererFactory = value;
+		this._rowRendererRecycler = DisplayObjectRecycler.withFactory(value);
+		this.setInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
+		return this._rowRendererFactory;
+	}
+
+	/**
 		Manages header renderers used by the tree grid view.
 
 		In the following example, the tree grid view uses a custom header
@@ -611,7 +648,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	@:style
 	public var customColumnDividerVariant:String = null;
 
-	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, Dynamic, DisplayObject> = DisplayObjectRecycler.withClass(TreeGridViewRowRenderer);
+	private var _rowRendererFactory:DisplayObjectFactory<Dynamic, TreeGridViewRowRenderer>;
+	private var _oldRowRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewRowState, TreeGridViewRowRenderer>;
+	private var _rowRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewRowState, TreeGridViewRowRenderer>;
 	private var _rowRendererMeasurements:Measurements;
 
 	private var _forceItemStateUpdate:Bool = false;
@@ -1075,9 +1114,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	override public function dispose():Void {
 		this.refreshInactiveHeaderRenderers(true);
-		this.refreshInactiveRowRenderers();
-		this.recoverInactiveRowRenderers();
-		this.freeInactiveRowRenderers();
+		this.refreshInactiveRowRenderers(true);
 		this.dataProvider = null;
 		this.columns = null;
 		super.dispose();
@@ -1758,7 +1795,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private function refreshRowRenderers(items:Array<DisplayObject>):Void {
 		this._rowLayoutItems = items;
 
-		this.refreshInactiveRowRenderers();
+		var rowRendererInvalid = this.treeGridViewPort.isInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
+		this.refreshInactiveRowRenderers(rowRendererInvalid);
 		this.findUnrenderedData();
 		this.recoverInactiveRowRenderers();
 		this.renderUnrenderedData();
@@ -1768,12 +1806,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 	}
 
-	private function refreshInactiveRowRenderers():Void {
+	private function refreshInactiveRowRenderers(factoryInvalid:Bool):Void {
 		var temp = this.inactiveRowRenderers;
 		this.inactiveRowRenderers = this.activeRowRenderers;
 		this.activeRowRenderers = temp;
 		if (this.activeRowRenderers.length > 0) {
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active row renderers should be empty before updating.');
+		}
+		if (factoryInvalid) {
+			this.recoverInactiveRowRenderers();
+			this.freeInactiveRowRenderers();
+			this._oldRowRendererRecycler = null;
 		}
 	}
 
@@ -1937,10 +1980,11 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function destroyRowRenderer(rowRenderer:TreeGridViewRowRenderer):Void {
+		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
 		rowRenderer.treeGridView = null;
 		this.treeGridViewPort.removeChild(rowRenderer);
-		if (this._rowRendererRecycler.destroy != null) {
-			this._rowRendererRecycler.destroy(rowRenderer);
+		if (recycler.destroy != null) {
+			recycler.destroy(rowRenderer);
 		}
 	}
 
@@ -1958,12 +2002,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function resetRowRenderer(rowRenderer:TreeGridViewRowRenderer, state:TreeGridViewRowState):Void {
+		var recycler = this._oldRowRendererRecycler != null ? this._oldRowRendererRecycler : this._rowRendererRecycler;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
 		this._ignoreOpenedChange = true;
-		if (this._rowRendererRecycler.reset != null) {
-			this._rowRendererRecycler.reset(rowRenderer, state);
+		if (recycler.reset != null) {
+			recycler.reset(rowRenderer, state);
 		}
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
