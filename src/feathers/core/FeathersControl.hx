@@ -766,6 +766,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	**/
 	public function dispose():Void {
 		this.clearStyles();
+		for (i in 0...this.numChildren) {
+			var child = this.getChildAt(i);
+			if ((child is IUIControl)) {
+				cast(child, IUIControl).dispose();
+			}
+		}
 	}
 
 	/**
