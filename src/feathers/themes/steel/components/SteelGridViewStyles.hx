@@ -8,6 +8,8 @@
 
 package feathers.themes.steel.components;
 
+import feathers.controls.ToggleButtonState;
+import feathers.skins.UnderlineSkin;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.GridView;
@@ -135,6 +137,33 @@ class SteelGridViewStyles {
 		}
 		if (styleProvider.getStyleFunction(GridView, GridView.VARIANT_BORDERLESS) == null) {
 			styleProvider.setStyleFunction(GridView, GridView.VARIANT_BORDERLESS, styleGridViewWithBorderlessVariant);
+		}
+
+		if (styleProvider.getStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_CELL_RENDERER) == null) {
+			styleProvider.setStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_CELL_RENDERER, function(itemRenderer:ItemRenderer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+				if (itemRenderer.backgroundSkin == null) {
+					// a transparent background skin ensures that CELL_TRIGGER
+					// gets dispatched
+					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
+					backgroundSkin.border = None;
+					if (isDesktop) {
+						backgroundSkin.width = 32.0;
+						backgroundSkin.height = 32.0;
+						backgroundSkin.minWidth = 32.0;
+						backgroundSkin.minHeight = 32.0;
+					} else {
+						backgroundSkin.width = 44.0;
+						backgroundSkin.height = 44.0;
+						backgroundSkin.minWidth = 44.0;
+						backgroundSkin.minHeight = 44.0;
+					}
+					itemRenderer.backgroundSkin = backgroundSkin;
+				}
+				// except for the background skin, use other default styles
+				theme.styleProvider.getStyleFunction(ItemRenderer, null)(itemRenderer);
+			});
 		}
 
 		if (styleProvider.getStyleFunction(ItemRenderer, GridView.CHILD_VARIANT_HEADER_RENDERER) == null) {
