@@ -9,6 +9,7 @@
 package feathers.controls.navigators;
 
 import feathers.core.IUIControl;
+import feathers.utils.AbstractDisplayObjectFactory;
 import openfl.display.DisplayObject;
 
 /**
@@ -41,7 +42,7 @@ class TabItem {
 	public static function withClass(text:String, viewClass:Class<DisplayObject>):TabItem {
 		var item = new TabItem();
 		item.text = text;
-		item.viewClass = viewClass;
+		item.viewFactory = viewClass;
 		return item;
 	}
 
@@ -54,7 +55,7 @@ class TabItem {
 	public static function withFunction(text:String, viewFunction:() -> DisplayObject):TabItem {
 		var item = new TabItem();
 		item.text = text;
-		item.viewFunction = viewFunction;
+		item.viewFactory = viewFunction;
 		return item;
 	}
 
@@ -67,7 +68,20 @@ class TabItem {
 	public static function withDisplayObject(text:String, viewInstance:DisplayObject):TabItem {
 		var item = new TabItem();
 		item.text = text;
-		item.viewInstance = viewInstance;
+		item.viewFactory = viewInstance;
+		return item;
+	}
+
+	/**
+		Creates a `TabItem` using a `DisplayObjectFactory` when the
+		`TabNavigator` requests the item's view.
+
+		@since 1.3.0
+	**/
+	public static function withFactory(text:String, viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>):TabItem {
+		var item = new TabItem();
+		item.text = text;
+		item.viewFactory = viewFactory;
 		return item;
 	}
 
@@ -87,27 +101,18 @@ class TabItem {
 	**/
 	public var text:String;
 
-	private var viewClass:Class<DisplayObject>;
-	private var viewFunction:() -> DisplayObject;
-	private var viewInstance:DisplayObject;
+	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
 
 	// called internally by TabNavigator to get this item's view
 	private function getView(navigator:TabNavigator):DisplayObject {
-		var view:DisplayObject = this.viewInstance;
-		if (view == null && this.viewClass != null) {
-			view = Type.createInstance(this.viewClass, []);
-		}
-		if (view == null && this.viewFunction != null) {
-			view = this.viewFunction();
-		}
-
+		var view:DisplayObject = this.viewFactory.create();
 		return view;
 	}
 
 	// called internally by TabNavigator to clean up this item's view
 	private function returnView(view:DisplayObject):Void {
-		if (this.viewClass != null && (view is IUIControl)) {
-			cast(view, IUIControl).dispose();
+		if (this.viewFactory.destroy != null) {
+			this.viewFactory.destroy(view);
 		}
 	}
 }

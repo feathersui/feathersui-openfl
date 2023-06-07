@@ -8,7 +8,7 @@
 
 package feathers.controls.navigators;
 
-import feathers.core.IUIControl;
+import feathers.utils.AbstractDisplayObjectFactory;
 import openfl.display.DisplayObject;
 
 /**
@@ -40,7 +40,7 @@ class PageItem {
 	**/
 	public static function withClass(viewClass:Class<DisplayObject>):PageItem {
 		var item = new PageItem();
-		item.viewClass = viewClass;
+		item.viewFactory = viewClass;
 		return item;
 	}
 
@@ -52,7 +52,7 @@ class PageItem {
 	**/
 	public static function withFunction(viewFunction:() -> DisplayObject):PageItem {
 		var item = new PageItem();
-		item.viewFunction = viewFunction;
+		item.viewFactory = viewFunction;
 		return item;
 	}
 
@@ -64,7 +64,19 @@ class PageItem {
 	**/
 	public static function withDisplayObject(viewInstance:DisplayObject):PageItem {
 		var item = new PageItem();
-		item.viewInstance = viewInstance;
+		item.viewFactory = viewInstance;
+		return item;
+	}
+
+	/**
+		Creates a `PageItem` using a `DisplayObjectFactory` when the
+		`PageNavigator` requests the item's view.
+
+		@since 1.3.0
+	**/
+	public static function withFactory(viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>):PageItem {
+		var item = new PageItem();
+		item.viewFactory = viewFactory;
 		return item;
 	}
 
@@ -77,27 +89,18 @@ class PageItem {
 
 	private var internalID:String;
 
-	private var viewClass:Class<DisplayObject>;
-	private var viewFunction:() -> DisplayObject;
-	private var viewInstance:DisplayObject;
+	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
 
 	// called internally by PageNavigator to get this item's view
 	private function getView(navigator:PageNavigator):DisplayObject {
-		var view:DisplayObject = this.viewInstance;
-		if (view == null && this.viewClass != null) {
-			view = Type.createInstance(this.viewClass, []);
-		}
-		if (view == null && this.viewFunction != null) {
-			view = this.viewFunction();
-		}
-
+		var view:DisplayObject = this.viewFactory.create();
 		return view;
 	}
 
 	// called internally by PageNavigator to clean up this item's view
 	private function returnView(view:DisplayObject):Void {
-		if (this.viewClass != null && (view is IUIControl)) {
-			cast(view, IUIControl).dispose();
+		if (this.viewFactory.destroy != null) {
+			this.viewFactory.destroy(view);
 		}
 	}
 }

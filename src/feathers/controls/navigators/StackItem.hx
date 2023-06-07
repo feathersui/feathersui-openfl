@@ -8,8 +8,8 @@
 
 package feathers.controls.navigators;
 
-import feathers.core.IUIControl;
 import feathers.motion.effects.IEffectContext;
+import feathers.utils.AbstractDisplayObjectFactory;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 
@@ -45,13 +45,15 @@ class StackItem {
 	/**
 		Creates a `StackItem` that instantiates a view from a class that extends
 		`DisplayObject` when the `StackNavigator` requests the item's view.
+
+		@since 1.0.0
 	**/
 	public static function withClass(id:String, viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
 			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
 		var item = new StackItem();
 		item.id = id;
-		item.viewClass = viewClass;
+		item.viewFactory = viewClass;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
 		item.saveData = saveData;
@@ -62,13 +64,15 @@ class StackItem {
 	/**
 		Creates a `StackItem` that calls a function that returns a
 		`DisplayObject` when the `StackNavigator` requests the item's view.
+
+		@since 1.0.0
 	**/
 	public static function withFunction(id:String, viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
 			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
 		var item = new StackItem();
 		item.id = id;
-		item.viewFunction = viewFunction;
+		item.viewFactory = viewFunction;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
 		item.saveData = saveData;
@@ -79,13 +83,34 @@ class StackItem {
 	/**
 		Creates a `StackItem` that always returns the same `DisplayObject`
 		instance when the `StackNavigator` requests the item's view.
+
+		@since 1.0.0
 	**/
 	public static function withDisplayObject(id:String, viewInstance:DisplayObject, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
 			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
 		var item = new StackItem();
 		item.id = id;
-		item.viewInstance = viewInstance;
+		item.viewFactory = viewInstance;
+		item.actions = actions;
+		item.returnHandlers = returnHandlers;
+		item.saveData = saveData;
+		item.restoreData = restoreData;
+		return item;
+	}
+
+	/**
+		Creates a `StackItem` with a `DisplayObjectFactory` when the
+		`StackNavigator` requests the item's view.
+
+		@since 1.3.0
+	**/
+	public static function withFactory(id:String, viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>, ?actions:Map<String, StackAction>,
+			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
+			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
+		var item = new StackItem();
+		item.id = id;
+		item.viewFactory = viewFactory;
 		item.actions = actions;
 		item.returnHandlers = returnHandlers;
 		item.saveData = saveData;
@@ -102,9 +127,7 @@ class StackItem {
 	**/
 	public var id:String;
 
-	private var viewClass:Class<DisplayObject>;
-	private var viewFunction:() -> DisplayObject;
-	private var viewInstance:DisplayObject;
+	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
 	private var actions:Map<String, StackAction>;
 	private var returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>;
 
@@ -223,17 +246,9 @@ class StackItem {
 
 	// called internally by StackNavigator to get this item's view
 	private function getView(navigator:StackNavigator):DisplayObject {
-		var view:DisplayObject = this.viewInstance;
-		if (view == null && this.viewClass != null) {
-			view = Type.createInstance(this.viewClass, []);
-		}
-		if (view == null && this.viewFunction != null) {
-			view = this.viewFunction();
-		}
-
+		var view:DisplayObject = this.viewFactory.create();
 		var listeners = this.addActionListeners(view, navigator);
 		this._viewToEvents.set(view, listeners);
-
 		return view;
 	}
 
@@ -242,8 +257,8 @@ class StackItem {
 		var viewListeners:Array<ViewListener> = this._viewToEvents.get(view);
 		this.removeEventsFromView(view, viewListeners);
 		this._viewToEvents.remove(view);
-		if (this.viewClass != null && (view is IUIControl)) {
-			cast(view, IUIControl).dispose();
+		if (this.viewFactory.destroy != null) {
+			this.viewFactory.destroy(view);
 		}
 	}
 

@@ -10,6 +10,7 @@ package feathers.controls.navigators;
 
 import feathers.core.IUIControl;
 import feathers.data.RouteState;
+import feathers.utils.AbstractDisplayObjectFactory;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 
@@ -49,12 +50,14 @@ class Route {
 	/**
 		Creates a `Route` that instantiates a view from a class that extends
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
+
+		@since 1.0.0
 	**/
 	public static function withClass<T:DisplayObject>(path:String, viewClass:Class<T>, ?actions:Map<String, RouterAction>,
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewClass = cast viewClass;
+		item.viewFactory = viewClass;
 		item.actions = actions;
 		item.updateState = updateState;
 		item.saveData = saveData;
@@ -64,12 +67,14 @@ class Route {
 	/**
 		Creates a `Route` that calls a function that returns a
 		`DisplayObject` when the `RouterNavigator` requests the item's view.
+
+		@since 1.0.0
 	**/
 	public static function withFunction<T:DisplayObject>(path:String, viewFunction:() -> T, ?actions:Map<String, RouterAction>,
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewFunction = viewFunction;
+		item.viewFactory = viewFunction;
 		item.actions = actions;
 		item.updateState = updateState;
 		item.saveData = saveData;
@@ -79,12 +84,31 @@ class Route {
 	/**
 		Creates a `Route` that always returns the same `DisplayObject`
 		instance when the `RouterNavigator` requests the item's view.
+
+		@since 1.0.0
 	**/
 	public static function withDisplayObject<T:DisplayObject>(path:String, viewInstance:T, ?actions:Map<String, RouterAction>,
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
 		item.path = path;
-		item.viewInstance = viewInstance;
+		item.viewFactory = viewInstance;
+		item.actions = actions;
+		item.updateState = updateState;
+		item.saveData = saveData;
+		return item;
+	}
+
+	/**
+		Creates a `Route` that with a `DisplayObjectFactory` when the
+		`RouterNavigator` requests the item's view.
+
+		@since 1.3.0
+	**/
+	public static function withFactory<T:DisplayObject>(path:String, viewInstance:T, ?actions:Map<String, RouterAction>,
+			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
+		var item = new Route();
+		item.path = path;
+		item.viewFactory = viewInstance;
 		item.actions = actions;
 		item.updateState = updateState;
 		item.saveData = saveData;
@@ -126,9 +150,7 @@ class Route {
 		return null;
 	}
 
-	private var viewClass:Class<DisplayObject>;
-	private var viewFunction:() -> DisplayObject;
-	private var viewInstance:DisplayObject;
+	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
 	private var redirectTo:String;
 	private var actions:Map<String, RouterAction>;
 
@@ -153,17 +175,9 @@ class Route {
 
 	// called internally by RouterNavigator to get this item's view
 	private function getView(navigator:RouterNavigator):DisplayObject {
-		var view:DisplayObject = this.viewInstance;
-		if (view == null && this.viewClass != null) {
-			view = Type.createInstance(this.viewClass, []);
-		}
-		if (view == null && this.viewFunction != null) {
-			view = this.viewFunction();
-		}
-
+		var view:DisplayObject = this.viewFactory.create();
 		var listeners = this.addActionListeners(view, navigator);
 		this._viewToEvents.set(view, listeners);
-
 		return view;
 	}
 
@@ -172,8 +186,8 @@ class Route {
 		var viewListeners:Array<ViewListener> = this._viewToEvents.get(view);
 		this.removeEventsFromView(view, viewListeners);
 		this._viewToEvents.remove(view);
-		if (this.viewClass != null && (view is IUIControl)) {
-			cast(view, IUIControl).dispose();
+		if (this.viewFactory.destroy != null) {
+			this.viewFactory.destroy(view);
 		}
 	}
 
