@@ -77,6 +77,8 @@ class ChooseContactView extends Panel {
 	}
 
 	private function doneButton_triggerHandler(event:TriggerEvent):Void {
+		// dispatch a custom event to pop back to ComposeMessageView,
+		// and we'll pass back the contact that was selected
 		this.dispatchEvent(new ContactEvent(ContactEvent.CHOOSE_CONTACT, this.selectedContact));
 	}
 

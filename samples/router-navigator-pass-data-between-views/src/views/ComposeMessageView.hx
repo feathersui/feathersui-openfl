@@ -67,6 +67,9 @@ class ComposeMessageView extends Panel {
 	}
 
 	private function addRecipientButton_triggerHandler(event:TriggerEvent):Void {
+		// dispatch a custom event to request a contact from ChooseContactView.
+		// if the user has already selected a contact, pass it back to the
+		// ChooseContactView so that it is selected by default.
 		this.dispatchEvent(new ContactEvent(ContactEvent.REQUEST_CONTACT, this.recipient));
 	}
 }
