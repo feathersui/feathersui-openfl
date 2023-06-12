@@ -9,13 +9,13 @@
 package feathers.core;
 
 /**
-	Flags that are used internally with `FeathersControl.invalidate()`
+	Flags that are used internally with `FeathersControl.setInvalid()`
 	to track of which parts of the component need to be updated. These flags are
 	merely suggestions, and custom components may support custom flags.
 
 	Generally, invalidation flags are not considered part of the public API
 	for any component. They're meant to be used internally. With that in mind,
-	calling `invalidate()` with a flag from outside the component means that
+	calling `setInvalid()` with a flag from outside the component means that
 	you're probably doing something wrong.
 
 	@since 1.0.0
