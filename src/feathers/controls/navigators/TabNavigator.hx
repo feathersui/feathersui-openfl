@@ -119,8 +119,12 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REPLACE_ITEM, tabNavigator_dataProvider_replaceItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, tabNavigator_dataProvider_removeAllHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.RESET, tabNavigator_dataProvider_resetHandler);
-			for (item in this._dataProvider) {
-				this.removeItemInternal(item.internalID);
+			if (value == null) {
+				this.removeAllItems();
+			} else {
+				for (item in this._dataProvider) {
+					this.removeItemInternal(item.internalID);
+				}
 			}
 		}
 		this._dataProvider = value;
