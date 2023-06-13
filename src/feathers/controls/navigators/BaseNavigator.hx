@@ -148,6 +148,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	private var _waitingForDelayedTransition:Bool = false;
 	private var _waitingTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 	private var _waitingForTransitionFrameCount:Int = 0;
+	private var _activeTransition:IEffectContext;
 
 	private var _autoSizeMode:AutoSizeMode = STAGE;
 
@@ -207,14 +208,22 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	private var bottomContentOffset:Float = 0.0;
 	private var leftContentOffset:Float = 0.0;
 
+	override public function dispose():Void {
+		this.removeAllItems();
+		super.dispose();
+	}
+
 	/**
 		Removes all items that were added with `addItem()`.
 
 		@since 1.0.0
 	**/
 	public function removeAllItems():Void {
-		if (this._transitionActive) {
-			throw new IllegalOperationError("Cannot remove all items while a transition is active.");
+		if (this._activeTransition != null) {
+			this._clearAfterTransition = false;
+			this._pendingItemID = null;
+			this._pendingItemTransition = null;
+			this._activeTransition.toEnd();
 		}
 		if (this._activeItemView != null) {
 			// if someone meant to have a transition, they would have called
@@ -595,6 +604,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 			this._nextViewInTransition = null;
 			this._nextViewInTransitionID = null;
 			this._transitionActive = false;
+			this._activeTransition = null;
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		} else {
 			this.startTransition(transition);
@@ -649,10 +659,10 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 				// the view may have been hidden if the transition was delayed
 				this._nextViewInTransition.visible = true;
 			}
-			var transitionContext = defaultTransition(this._previousViewInTransition, this._nextViewInTransition);
-			transitionContext.addEventListener(Event.COMPLETE, transition_completeHandler);
-			transitionContext.addEventListener(Event.CANCEL, transition_cancelHandler);
-			transitionContext.play();
+			this._activeTransition = defaultTransition(this._previousViewInTransition, this._nextViewInTransition);
+			this._activeTransition.addEventListener(Event.COMPLETE, transition_completeHandler);
+			this._activeTransition.addEventListener(Event.CANCEL, transition_cancelHandler);
+			this._activeTransition.play();
 		}
 	}
 
@@ -666,10 +676,10 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		var transition = this._waitingTransition;
 		this._waitingTransition = null;
-		var transitionContext = transition(this._previousViewInTransition, this._nextViewInTransition);
-		transitionContext.addEventListener(Event.COMPLETE, transition_completeHandler);
-		transitionContext.addEventListener(Event.CANCEL, transition_cancelHandler);
-		transitionContext.play();
+		this._activeTransition = transition(this._previousViewInTransition, this._nextViewInTransition);
+		this._activeTransition.addEventListener(Event.COMPLETE, transition_completeHandler);
+		this._activeTransition.addEventListener(Event.CANCEL, transition_cancelHandler);
+		this._activeTransition.play();
 	}
 
 	private function baseNavigator_addedToStageHandler(event:Event):Void {
@@ -713,6 +723,8 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	}
 
 	private function transition_completeHandler(event:Event):Void {
+		this._activeTransition = null;
+
 		// consider the transition still active if something is already
 		// queued up to happen next. if an event listener asks to show a new
 		// item, it needs to replace what is queued up.
@@ -770,6 +782,8 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	}
 
 	private function transition_cancelHandler(event:Event):Void {
+		this._activeTransition = null;
+
 		// consider the transition still active if something is already
 		// queued up to happen next. if an event listener asks to show a new
 		// item, it needs to replace what is queued up.
