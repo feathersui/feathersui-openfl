@@ -51,7 +51,11 @@ class FindMissingDocs {
 			}
 
 			for (symbolAndPos in result) {
-				Context.warning('Missing documentation: ${symbolAndPos.symbol}', symbolAndPos.pos);
+				if (symbolAndPos.tag != null) {
+					Context.warning('Missing tag @${symbolAndPos.tag}: ${symbolAndPos.symbol}', symbolAndPos.pos);
+				} else {
+					Context.warning('Missing documentation: ${symbolAndPos.symbol}', symbolAndPos.pos);
+				}
 			}
 		});
 	}
@@ -83,6 +87,8 @@ class FindMissingDocs {
 				return;
 			}
 			result.push({symbol: '${classType.name}.${field.name}', pos: field.pos});
+		} else if (field.doc.indexOf("@since ") == -1 && !StringTools.startsWith(StringTools.trim(field.doc), "@see ")) {
+			result.push({symbol: '${classType.name}.${field.name}', pos: field.pos, tag: "since"});
 		}
 	}
 
@@ -100,6 +106,7 @@ class FindMissingDocs {
 
 private typedef SymbolAndPosition = {
 	symbol:String,
-	pos:Position
+	pos:Position,
+	?tag:String
 }
 #end
