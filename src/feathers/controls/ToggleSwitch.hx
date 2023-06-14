@@ -289,6 +289,8 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		Changes the `selected` property and animates the position of the thumb.
 
 		@see `ToggleSwitch.selected`
+
+		@since 1.0.0
 	**/
 	public function setSelectionWithAnimation(selected:Bool):Bool {
 		if (this._selected == selected) {

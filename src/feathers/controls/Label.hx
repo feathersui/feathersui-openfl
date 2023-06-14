@@ -465,6 +465,8 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		@see `feathers.layout.VerticalAlign.TOP`
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
 	**/
 	@:style
 	public var verticalAlign:VerticalAlign = TOP;

@@ -109,6 +109,8 @@ class ExclusivePointer {
 		claimed by another display object.
 
 		@see `ExclusivePointer.claimTouch()`
+
+		@since 1.0.0
 	**/
 	public function claimMouse(target:DisplayObject):Bool {
 		if (target == null) {

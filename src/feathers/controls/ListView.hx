@@ -765,6 +765,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@see `ListView.selectedItem`
 		@see `ListView.selectedIndex`
+
+		@since 1.0.0
 	**/
 	public var selectable(get, set):Bool;
 

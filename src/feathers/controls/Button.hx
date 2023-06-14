@@ -433,6 +433,8 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		@see `feathers.layout.HorizontalAlign.LEFT`
 		@see `feathers.layout.HorizontalAlign.CENTER`
 		@see `feathers.layout.HorizontalAlign.RIGHT`
+
+		@since 1.0.0
 	**/
 	@:style
 	public var horizontalAlign:HorizontalAlign = CENTER;
@@ -453,6 +455,8 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		@see `feathers.layout.VerticalAlign.TOP`
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
 	**/
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;

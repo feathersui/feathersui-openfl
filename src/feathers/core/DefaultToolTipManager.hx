@@ -45,6 +45,8 @@ class DefaultToolTipManager implements IToolTipManager {
 
 	/**
 		Creates a new `DefaultToolTipManager` object with the given arguments.
+
+		@since 1.0.0
 	**/
 	public function new(root:DisplayObject) {
 		initializeToolTipStyles();

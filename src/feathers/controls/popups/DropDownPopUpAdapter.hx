@@ -66,6 +66,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 	/**
 		The gap, measured in pixels, between the origin and the content.
+
+		@since 1.0.0
 	**/
 	public var gap(get, set):Float;
 
@@ -86,6 +88,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 	/**
 		Determines if the content is displayed modally on the pop-up manager.
+
+		@since 1.0.0
 	**/
 	public var modal:Bool = false;
 
@@ -95,6 +99,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		Determines if the `width` or `minWidth` of the content is adjusted to
 		match the width of the origin, when the content is smaller than the
 		origin.
+
+		@since 1.0.0
 	**/
 	public var fitContentToOriginWidth(get, set):Bool;
 
@@ -125,6 +131,8 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	/**
 		Determines if the content is closed when a mouse down or touch begin
 		event is dispatched outside of the content's or origin's bounds.
+
+		@since 1.1.0
 	**/
 	public var closeOnPointerActiveOutside:Bool = false;
 

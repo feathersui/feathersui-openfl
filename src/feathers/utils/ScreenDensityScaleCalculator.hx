@@ -38,6 +38,8 @@ class ScreenDensityScaleCalculator {
 		calculator.addScaleForDensity(320, 2);
 		calculator.addScaleForDensity(480, 3);
 		```
+
+		@since 1.0.0
 	**/
 	public function addScaleForDensity(density:Float, scale:Float):Void {
 		var i = this._buckets.length;
@@ -61,6 +63,8 @@ class ScreenDensityScaleCalculator {
 		```
 
 		@see `ScreenDensityScaleCalculator.addScaleForDensity()`
+
+		@since 1.0.0
 	**/
 	public function removeScaleForDensity(density:Float):Void {
 		for (bucket in this._buckets) {
@@ -73,6 +77,8 @@ class ScreenDensityScaleCalculator {
 
 	/**
 		Returns the ideal scale for the specified screen density.
+
+		@since 1.0.0
 	**/
 	public function getScale(density:Float):Float {
 		if (this._buckets.length == 0) {

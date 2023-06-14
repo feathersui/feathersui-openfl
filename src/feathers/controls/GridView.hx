@@ -1030,6 +1030,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@see `feathers.controls.GridViewColumn.sortCompareFunction`
 
 		@default false
+
+		@since 1.0.0
 	**/
 	public var sortableColumns(get, set):Bool;
 
@@ -1059,6 +1061,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@see `GridView.columnResizeSkin`
 
 		@default false
+
+		@since 1.0.0
 	**/
 	public var resizableColumns(get, set):Bool;
 
@@ -1179,6 +1183,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@see `GridView.selectedItem`
 		@see `GridView.selectedIndex`
+
+		@since 1.0.0
 	**/
 	public var selectable(get, set):Bool;
 
@@ -1210,6 +1216,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	/**
 		Determines if header dividers are visible only when `resizableColumns`
 		is `true`.
+
+		@since 1.0.0
 	**/
 	@:style
 	public var showHeaderDividersOnlyWhenResizable:Bool = false;

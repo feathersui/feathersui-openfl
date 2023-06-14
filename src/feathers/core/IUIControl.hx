@@ -79,6 +79,8 @@ interface IUIControl extends IDisplayObject {
 		In most cases, calling `dispose()` is _not_ required to ensure that a
 		component may be garbage collected. This method is provided for advanced
 		use cases where some extra cleanup may benefit memory usage.
+
+		@since 1.3.0
 	**/
 	public function dispose():Void;
 }

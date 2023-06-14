@@ -436,6 +436,8 @@ class TextFormat extends EventDispatcher {
 
 	/**
 		Returns an `openfl.text.TextFormat` object.
+
+		@since 1.0.0
 	**/
 	public function toSimpleTextFormat():openfl.text.TextFormat {
 		return this._textFormat;

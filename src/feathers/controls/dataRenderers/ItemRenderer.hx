@@ -342,6 +342,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		```haxe
 		itemRenderer.accessoryView = new Button("Info");
 		```
+
+		@since 1.0.0
 	**/
 	@:style
 	public var accessoryView:DisplayObject = null;

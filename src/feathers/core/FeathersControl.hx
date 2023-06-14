@@ -125,6 +125,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@see `FeathersEvent.CREATION_COMPLETE`
 		@see `FeathersControl.update()`
+
+		@since 1.0.0
 	**/
 	@:bindable("creationComplete")
 	public var created(get, never):Bool;

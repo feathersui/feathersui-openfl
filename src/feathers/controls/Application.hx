@@ -86,6 +86,8 @@ class Application extends LayoutGroup implements IFocusManagerAware {
 		The application's scaling factor on the current device. One pixel in
 		application coordinates is equal to this number of pixels in screen
 		coordinates.
+
+		@since 1.0.0
 	**/
 	public var scaleFactor(get, never):Float;
 

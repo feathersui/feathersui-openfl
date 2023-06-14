@@ -673,6 +673,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@see `TreeView.selectedItem`
 		@see `TreeView.selectedIndex`
+
+		@since 1.0.0
 	**/
 	public var selectable(get, set):Bool;
 

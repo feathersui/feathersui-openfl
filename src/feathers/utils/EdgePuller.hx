@@ -304,6 +304,8 @@ class EdgePuller extends EventDispatcher {
 		The duration of the snap animation, measured in seconds.
 
 		@default 0.5
+
+		@since 1.0.0
 	**/
 	public var snapDuration(get, set):Float;
 

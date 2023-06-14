@@ -52,6 +52,8 @@ interface IVirtualLayout extends IScrollLayout {
 class VirtualLayoutRange {
 	/**
 		Creates a `VirtualLayoutRange` object with the given arguments.
+
+		@since 1.0.0
 	**/
 	public function new(start:Int, end:Int) {
 		this.start = start;

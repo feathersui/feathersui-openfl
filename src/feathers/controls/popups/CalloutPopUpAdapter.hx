@@ -56,6 +56,8 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 	/**
 		Determines if the content is displayed modally on the pop-up manager.
+
+		@since 1.0.0
 	**/
 	public var modal:Bool = false;
 
@@ -65,6 +67,8 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		Determines if the `width` or `minWidth` of the content is adjusted to
 		match the width of the origin, when the content is smaller than the
 		origin.
+
+		@since 1.0.0
 	**/
 	public var fitContentToOriginWidth(get, set):Bool;
 

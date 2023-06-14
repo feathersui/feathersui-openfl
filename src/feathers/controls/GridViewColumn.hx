@@ -134,6 +134,8 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 		@see `feathers.data.SortOrder.ASCENDING`
 		@see `feathers.data.SortOrder.DESCENDING`
 		@see `feathers.data.SortOrder.NONE`
+
+		@since 1.0.0
 	**/
 	public var defaultSortOrder:SortOrder = ASCENDING;
 

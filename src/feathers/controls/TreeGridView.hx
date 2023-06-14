@@ -881,6 +881,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		@see `TreeGridView.columnResizeSkin`
 
 		@default false
+
+		@since 1.0.0
 	**/
 	public var resizableColumns(get, set):Bool;
 
@@ -942,6 +944,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@see `TreeGridView.selectedItem`
 		@see `TreeGridView.selectedLocation`
+
+		@since 1.0.0
 	**/
 	public var selectable(get, set):Bool;
 
@@ -973,6 +977,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	/**
 		Determines if header dividers are visible only when `resizableColumns`
 		is `true`.
+
+		@since 1.0.0
 	**/
 	@:style
 	public var showHeaderDividersOnlyWhenResizable:Bool = false;

@@ -751,6 +751,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
 		@see `feathers.layout.VerticalAlign.JUSTIFY`
+
+		@since 1.0.0
 	**/
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;

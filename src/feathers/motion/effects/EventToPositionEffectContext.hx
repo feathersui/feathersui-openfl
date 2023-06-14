@@ -34,6 +34,8 @@ class EventToPositionEffectContext extends BaseDelegateEffectContext {
 
 	/**
 		The object that dispatches `eventType`.
+
+		@since 1.0.0
 	**/
 	public var dispatcher(get, set):IEventDispatcher;
 

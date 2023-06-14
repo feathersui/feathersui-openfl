@@ -385,6 +385,8 @@ class Header extends FeathersControl implements ITextControl {
 		@see `feathers.layout.VerticalAlign.TOP`
 		@see `feathers.layout.VerticalAlign.MIDDLE`
 		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
 	**/
 	@:style
 	public var verticalAlign:VerticalAlign = MIDDLE;

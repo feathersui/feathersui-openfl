@@ -760,6 +760,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@see `GroupListView.selectedItem`
 		@see `GroupListView.selectedIndex`
+
+		@since 1.0.0
 	**/
 	public var selectable(get, set):Bool;
 
