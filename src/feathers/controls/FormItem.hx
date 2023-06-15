@@ -15,6 +15,7 @@ import feathers.core.IMeasureObject;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
@@ -104,6 +105,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 		this._text = value;
 		this.setInvalid(DATA);
+		if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+			// ensure that form updates its layout because this change could
+			// affect other form items too
+			FeathersEvent.dispatch(this, Event.RESIZE);
+		}
 		return this._text;
 	}
 
@@ -297,6 +303,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 		this._required = value;
 		this.setInvalid(SELECTION);
+		if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
+			// ensure that form updates its layout because this change could
+			// affect other form items too
+			FeathersEvent.dispatch(this, Event.RESIZE);
+		}
 		return this._required;
 	}
 
