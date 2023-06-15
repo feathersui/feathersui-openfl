@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.FeathersEvent;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusManagerAware;
 import feathers.core.IFocusObject;
@@ -15,7 +16,6 @@ import feathers.core.IMeasureObject;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.events.FeathersEvent;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
@@ -725,7 +725,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this.refreshBackgroundSkin();
 		}
 
-		if (stylesInvalid || stateInvalid) {
+		if (stylesInvalid || selectionInvalid) {
 			this.refreshRequiredSkin();
 		}
 
