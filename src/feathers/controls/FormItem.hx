@@ -788,10 +788,45 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 
 		if (this._currentContent != null) {
-			this._contentMeasurements.restore(this._currentContent);
-		}
-		if ((this._currentContent is IValidating)) {
-			cast(this._currentContent, IValidating).validateNow();
+			var textWidthOffset = 0.0;
+			var textHeightOffset = 0.0;
+			if (this.textPosition == TOP || this.textPosition == BOTTOM) {
+				textHeightOffset = this._textMeasuredHeight + this.gap;
+			} else {
+				if (this._customTextColumnWidth != null) {
+					textWidthOffset = this._customTextColumnWidth + this.gap;
+				} else {
+					textWidthOffset = this._textMeasuredWidth + this.gap;
+					if (this._currentRequiredSkin != null) {
+						textWidthOffset += this._currentRequiredSkin.width + this.gap;
+					}
+				}
+			}
+			if (this.horizontalAlign == JUSTIFY || this.verticalAlign == JUSTIFY) {
+				var justifyWidth:Null<Float> = null;
+				var justifyHeight:Null<Float> = null;
+				var justifyMinWidth:Null<Float> = null;
+				var justifyMinHeight:Null<Float> = null;
+				var justifyMaxWidth:Null<Float> = null;
+				var justifyMaxHeight:Null<Float> = null;
+				if (this.horizontalAlign == JUSTIFY) {
+					justifyWidth = this.explicitWidth != null ? this.explicitWidth - textWidthOffset - this.paddingLeft - this.paddingRight : null;
+					justifyMinWidth = this.explicitMinWidth != null ? this.explicitMinWidth - textWidthOffset - this.paddingLeft - this.paddingRight : null;
+					justifyMaxWidth = this.explicitMaxWidth != null ? this.explicitMaxWidth - textWidthOffset - this.paddingLeft - this.paddingRight : null;
+				}
+				if (this.verticalAlign == JUSTIFY) {
+					justifyHeight = this.explicitHeight != null ? this.explicitHeight - textHeightOffset - this.paddingTop - this.paddingBottom : null;
+					justifyMinHeight = this.explicitMinHeight != null ? this.explicitMinHeight - textHeightOffset - this.paddingLeft - this.paddingRight : null;
+					justifyMaxHeight = this.explicitMaxHeight != null ? this.explicitMaxHeight - textHeightOffset - this.paddingLeft - this.paddingRight : null;
+				}
+				MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this._currentContent, justifyWidth, justifyHeight, justifyMinWidth,
+					justifyMinHeight, justifyMaxWidth, justifyMaxHeight);
+			} else {
+				this._contentMeasurements.restore(this._currentContent);
+			}
+			if ((this._currentContent is IValidating)) {
+				cast(this._currentContent, IValidating).validateNow();
+			}
 		}
 
 		var newWidth = this.explicitWidth;
@@ -814,7 +849,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				newWidth = Math.max(this._currentBackgroundSkin.width, newWidth);
 			}
 		}
-
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			newHeight = this._textMeasuredHeight;
@@ -835,7 +869,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			}
 		}
 		var newMinWidth = this.explicitMinWidth;
-
 		if (needsMinWidth) {
 			newMinWidth = this._textMeasuredWidth;
 			if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
@@ -898,7 +931,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			}
 		}
 		var newMaxWidth = this.explicitMaxWidth;
-
 		if (needsMaxWidth) {
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
