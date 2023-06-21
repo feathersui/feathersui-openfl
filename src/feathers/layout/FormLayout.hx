@@ -376,6 +376,10 @@ class FormLayout extends EventDispatcher implements ILayout {
 
 	private inline function validateItems(items:Array<DisplayObject>) {
 		for (item in items) {
+			var formItem = Std.downcast(item, FormItem);
+			if (formItem != null) {
+				formItem.customTextColumnWidth = null;
+			}
 			if ((item is IValidating)) {
 				cast(item, IValidating).validateNow();
 			}
