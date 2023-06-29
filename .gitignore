@@ -3,6 +3,9 @@
 .vscode/
 *.code-workspace
 
+.idea/
+*.iml
+
 bin/
 dist/
 
