@@ -24,6 +24,13 @@ jobs:
         haxelib install actuate --quiet
         haxelib install hxargs --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
+    - name: Build samples/anchor-layout-three-column-header-and-footer
+      working-directory: samples/anchor-layout-three-column-header-and-footer
+      run: |
+        haxelib run openfl build neko
+        haxelib run openfl build html5
+        haxelib run openfl build flash
+        haxelib run openfl build hl
     - name: Build samples/animated-tween-skin
       working-directory: samples/animated-tween-skin
       run: |
@@ -252,6 +259,10 @@ jobs:
         haxelib install hxargs --quiet
         haxelib dev feathersui ${{ github.workspace }} 
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
+    - name: Build samples/anchor-layout-three-column-header-and-footer
+      working-directory: samples/anchor-layout-three-column-header-and-footer
+      run: |
+        haxelib run openfl build air
     - name: Build samples/animated-tween-skin
       working-directory: samples/animated-tween-skin
       run: |

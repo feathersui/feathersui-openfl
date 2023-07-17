@@ -1,3 +1,5 @@
+-cmd haxelib run openfl build anchor-layout-three-column-header-and-footer/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
 -cmd haxelib run openfl build animated-tween-skin/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
 -cmd haxelib run openfl build calculator/project.xml html5 -final -clean --haxedef=feathersui.com
