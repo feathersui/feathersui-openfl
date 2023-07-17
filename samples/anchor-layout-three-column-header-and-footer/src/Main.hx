@@ -54,7 +54,6 @@ class Main extends Application {
 
 		var centerColumn = new LayoutGroup();
 		centerColumn.backgroundSkin = new RectangleSkin(SolidColor(0xffffff));
-		centerColumn.alpha = 0.5;
 		var centerColumnLayoutData = new AnchorLayoutData();
 		centerColumnLayoutData.top = new Anchor(0.0, header);
 		centerColumnLayoutData.bottom = new Anchor(0.0, footer);
