@@ -224,10 +224,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 			#if feathersui_strict_set_invalid
 			throw new openfl.errors.IllegalOperationError("feathersui_strict_set_invalid requires no calls to setInvalid() during update()");
 			#end
-			for (otherFlag in this._delayedInvalidationFlags.keys()) {
-				alreadyDelayedInvalid = true;
-				break;
-			}
+			alreadyDelayedInvalid = this._delayedInvalidationFlags.keys().hasNext();
 		}
 		if (flag == null) {
 			if (this._validating) {
@@ -290,19 +287,13 @@ class ValidatingSprite extends Sprite implements IValidating {
 		}
 		this._validating = true;
 		this.update();
-		for (flag in this._invalidationFlags.keys()) {
-			this._invalidationFlags.remove(flag);
-		}
 		this._allInvalid = this._allInvalidDelayed;
 		this._allInvalidDelayed = false;
+		this._invalidationFlags.clear();
 		for (flag in this._delayedInvalidationFlags.keys()) {
-			if (flag == null) {
-				this._allInvalid = true;
-			} else {
-				this._invalidationFlags.set(flag, true);
-			}
-			this._delayedInvalidationFlags.remove(flag);
+			this._invalidationFlags.set(flag, true);
 		}
+		this._delayedInvalidationFlags.clear();
 		this._validating = false;
 	}
 
