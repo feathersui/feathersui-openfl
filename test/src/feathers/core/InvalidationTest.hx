@@ -17,7 +17,7 @@ import utest.Test;
 @:keep
 class InvalidationTest extends Test {
 	private var _control:LayoutGroup;
-	private var _control2:InvalidationControl;
+	private var _control2:SetInvalidDuringValidation;
 
 	public function new() {
 		super();
@@ -104,16 +104,42 @@ class InvalidationTest extends Test {
 	}
 
 	public function testInfiniteInvalidateDuringValidation() {
-		this._control2 = new InvalidationControl();
+		this._control2 = new SetInvalidDuringValidation();
 		Lib.current.addChild(this._control2);
 
 		Assert.raises(() -> {
 			ValidationQueue.forStage(this._control2.stage).validateNow();
 		}, Error);
 	}
+
+	public function testSingleInvalidateDuringValidation() {
+		this._control2 = new SetInvalidDuringValidation();
+		this._control2.numTimes = 1;
+		Lib.current.addChild(this._control2);
+		this._control2.validateNow();
+		Assert.isTrue(this._control2.isInvalid());
+		this._control2.validateNow();
+		Assert.isFalse(this._control2.isInvalid());
+	}
 }
 
-class InvalidationControl extends LayoutGroup {
+class SetInvalidDuringValidation extends LayoutGroup {
+	public var numTimes = 0;
+
+	private var actualNumTimes = 0;
+
+	public var flag:InvalidationFlag = null;
+
+	override private function update():Void {
+		super.update();
+		if (numTimes == 0 || actualNumTimes < numTimes) {
+			this.setInvalid(flag);
+		}
+		actualNumTimes++;
+	}
+}
+
+class SingleInvalidationControl extends LayoutGroup {
 	override private function update():Void {
 		super.update();
 		this.setInvalid();

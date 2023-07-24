@@ -294,6 +294,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 			this._invalidationFlags.remove(flag);
 		}
 		this._allInvalid = this._allInvalidDelayed;
+		this._allInvalidDelayed = false;
 		for (flag in this._delayedInvalidationFlags.keys()) {
 			if (flag == null) {
 				this._allInvalid = true;
