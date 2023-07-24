@@ -103,6 +103,7 @@ class InvalidationTest extends Test {
 			"Feathers component must not be invalid with flag after setInvalid() with different flag");
 	}
 
+	#if !feathersui_strict_set_invalid
 	public function testInfiniteInvalidateDuringValidation() {
 		this._control2 = new SetInvalidDuringValidation();
 		Lib.current.addChild(this._control2);
@@ -121,6 +122,7 @@ class InvalidationTest extends Test {
 		this._control2.validateNow();
 		Assert.isFalse(this._control2.isInvalid());
 	}
+	#end
 }
 
 class SetInvalidDuringValidation extends LayoutGroup {
