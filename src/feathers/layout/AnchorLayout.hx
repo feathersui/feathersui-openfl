@@ -388,7 +388,7 @@ class Anchor extends EventDispatcher {
 
 		@since 1.0.0
 	**/
-	public function new(value:Float, ?relativeTo:DisplayObject) {
+	public function new(value:Float = 0.0, ?relativeTo:DisplayObject) {
 		super();
 		this._value = value;
 		this._relativeTo = relativeTo;
