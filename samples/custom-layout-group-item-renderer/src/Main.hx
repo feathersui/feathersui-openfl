@@ -7,7 +7,7 @@ import feathers.data.ArrayCollection;
 import feathers.data.ListViewItemState;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
-import feathers.layout.TiledRowsLayout;
+import feathers.layout.TiledRowsListLayout;
 import feathers.layout.VerticalLayout;
 import feathers.utils.DisplayObjectRecycler;
 
@@ -27,7 +27,7 @@ class Main extends Application {
 		this.listView.itemToText = (item:ListItem) -> {
 			return item.name;
 		};
-		this.listView.layout = new TiledRowsLayout();
+		this.listView.layout = new TiledRowsListLayout();
 		this.listView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
 			var itemRenderer = new LayoutGroupItemRenderer();
 			var layout = new VerticalLayout();
@@ -60,14 +60,4 @@ class Main extends Application {
 	}
 
 	private var listView:ListView;
-}
-
-class ListItem {
-	public function new(name:String, icon:String) {
-		this.name = name;
-		this.icon = icon;
-	}
-
-	public var name:String;
-	public var icon:String;
 }
