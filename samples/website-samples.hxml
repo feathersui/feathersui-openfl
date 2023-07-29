@@ -6,6 +6,8 @@
 --next
 -cmd haxelib run openfl build components-explorer/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
+-cmd haxelib run openfl build custom-layout-group-item-renderer/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
 -cmd haxelib run openfl build custom-programmatic-skin/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
 -cmd haxelib run openfl build custom-programmatic-skin-with-states/project.xml html5 -final -clean --haxedef=feathersui.com

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="LayoutGroup Item Renderer" package="com.feathersui.samples.CustomLayoutGroupItemRenderer" version="1.0.0" company="Bowler Hat LLC"/>
+	<meta title="Custom LayoutGroupItemRenderer with ListView — Feathers UI Samples" if="html5"/>
+	<app main="Main" file="CustomLayoutGroupItemRenderer"/>
+
+	<window allow-high-dpi="true"/>
+	<window fps="60"/>
+	<window fps="0" if="html5"/>
+	<window background="#F8F8F8"/>
+	
+	<source path="src"/>
+	
+	<haxelib name="openfl"/>
+	<haxelib name="actuate"/>
+	<haxelib name="feathersui"/>
+
+	<haxedef name="feathersui_theme_manage_stage_color"/>
+
+	<assets path="assets/img/haxe.png"/>
+	<assets path="assets/img/lime.png"/>
+	<assets path="assets/img/openfl.png"/>
+	<assets path="assets/img/feathersui.png"/>
+
+	<icon path="assets/icons/feathersui-icon.svg"/>
+</project>
