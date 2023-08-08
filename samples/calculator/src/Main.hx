@@ -27,7 +27,7 @@ class Main extends Application {
 		this.createDisplay();
 		this.createButtons();
 
-		this.stage.addEventListener(KeyboardEvent.KEY_DOWN, state_keyDownHandler);
+		this.stage.addEventListener(KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
 
 		this.clear();
 	}
@@ -264,7 +264,7 @@ class Main extends Application {
 		this.equals();
 	}
 
-	private function state_keyDownHandler(event:KeyboardEvent):Void {
+	private function stage_keyDownHandler(event:KeyboardEvent):Void {
 		if (event.isDefaultPrevented()) {
 			return;
 		}
