@@ -39,6 +39,7 @@ class TabItem {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withClass(text:String, viewClass:Class<DisplayObject>):TabItem {
 		var item = new TabItem();
 		item.text = text;
@@ -52,6 +53,7 @@ class TabItem {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withFunction(text:String, viewFunction:() -> DisplayObject):TabItem {
 		var item = new TabItem();
 		item.text = text;
@@ -65,6 +67,7 @@ class TabItem {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withDisplayObject(text:String, viewInstance:DisplayObject):TabItem {
 		var item = new TabItem();
 		item.text = text;
@@ -78,6 +81,7 @@ class TabItem {
 
 		@since 1.3.0
 	**/
+	@:pure
 	public static function withFactory(text:String, viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>):TabItem {
 		var item = new TabItem();
 		item.text = text;

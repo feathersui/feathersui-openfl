@@ -38,6 +38,7 @@ class PageItem {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withClass(viewClass:Class<DisplayObject>):PageItem {
 		var item = new PageItem();
 		item.viewFactory = viewClass;
@@ -50,6 +51,7 @@ class PageItem {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withFunction(viewFunction:() -> DisplayObject):PageItem {
 		var item = new PageItem();
 		item.viewFactory = viewFunction;
@@ -62,6 +64,7 @@ class PageItem {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withDisplayObject(viewInstance:DisplayObject):PageItem {
 		var item = new PageItem();
 		item.viewFactory = viewInstance;
@@ -74,6 +77,7 @@ class PageItem {
 
 		@since 1.3.0
 	**/
+	@:pure
 	public static function withFactory(viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>):PageItem {
 		var item = new PageItem();
 		item.viewFactory = viewFactory;

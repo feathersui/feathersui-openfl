@@ -30,6 +30,7 @@ class DeviceUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function isDesktop():Bool {
 		#if mobile
 		return false;
@@ -50,6 +51,7 @@ class DeviceUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function isMobile():Bool {
 		#if mobile
 		return true;

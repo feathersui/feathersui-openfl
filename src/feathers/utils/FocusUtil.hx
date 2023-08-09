@@ -24,6 +24,7 @@ import openfl.geom.Point;
 	@since 1.0.0
 **/
 class FocusUtil {
+	@:pure
 	public static function findAllFocusableObjects(target:DisplayObject, ?result:Array<IFocusObject>):Array<IFocusObject> {
 		if (result == null) {
 			result = [];

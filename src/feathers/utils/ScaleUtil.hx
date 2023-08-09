@@ -23,6 +23,7 @@ class ScaleUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function fitRectangle(original:Rectangle, into:Rectangle, ?result:Rectangle):Rectangle {
 		var width = original.width;
 		var height = original.height;
@@ -48,6 +49,7 @@ class ScaleUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function fillRectangle(original:Rectangle, into:Rectangle, ?result:Rectangle):Rectangle {
 		var width = original.width;
 		var height = original.height;
@@ -73,6 +75,7 @@ class ScaleUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function scaleToFit(originalWidth:Float, originalHeight:Float, targetWidth:Float, targetHeight:Float):Float {
 		var widthRatio = targetWidth / originalWidth;
 		var heightRatio = targetHeight / originalHeight;
@@ -89,6 +92,7 @@ class ScaleUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function scaleToFill(originalWidth:Float, originalHeight:Float, targetWidth:Float, targetHeight:Float):Float {
 		var widthRatio = targetWidth / originalWidth;
 		var heightRatio = targetHeight / originalHeight;

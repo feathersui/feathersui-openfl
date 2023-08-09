@@ -21,6 +21,7 @@ class TextFormatUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function clone(original:TextFormat):TextFormat {
 		var clone = new TextFormat(original.font, original.size, original.color, original.bold, original.italic, original.underline, original.url,
 			original.target, original.align, original.leftMargin, original.rightMargin, original.indent, original.leading);

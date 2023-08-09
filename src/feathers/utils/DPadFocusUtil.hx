@@ -37,6 +37,7 @@ class DPadFocusUtil {
 
 		@see feathers.layout.RelativePosition
 	**/
+	@:pure
 	public static function isBetterFocusForRelativePosition(object1:DisplayObject, object2:DisplayObject, focusedRect:Rectangle,
 			relativePosition:RelativePosition):Bool {
 		var rect:Rectangle = object1.getBounds(object1.stage);

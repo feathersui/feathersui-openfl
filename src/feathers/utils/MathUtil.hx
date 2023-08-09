@@ -21,6 +21,7 @@ class MathUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function roundDownToNearest(number:Float, nearest:Float = 1.0):Float {
 		if (nearest == 0) {
 			return number;
@@ -43,6 +44,7 @@ class MathUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function roundUpToNearest(number:Float, nearest:Float = 1.0):Float {
 		if (nearest == 0) {
 			return number;
@@ -65,6 +67,7 @@ class MathUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function roundToNearest(number:Float, nearest:Float = 1.0):Float {
 		if (nearest == 0) {
 			return number;
@@ -82,6 +85,7 @@ class MathUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function roundToPrecision(number:Float, precision:Int = 0):Float {
 		var decimalPlaces = Math.pow(10, precision);
 		return Math.fround(decimalPlaces * number) / decimalPlaces;
@@ -98,6 +102,7 @@ class MathUtil {
 		@param		maxDifference	the maximum difference between the two numbers to be considered equal
 		@return		true if the numbers are considered equal
 	**/
+	@:pure
 	public static function fuzzyEquals(n1:Float, n2:Float, maxDifference:Float = 0.000001):Bool {
 		return Math.abs(n1 - n2) <= maxDifference;
 	}

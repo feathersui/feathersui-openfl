@@ -23,6 +23,7 @@ class DateUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function getDaysInMonth(month:Int, ?year:Int):Int {
 		if (month == 1 && year != null && isLeapYear(year)) {
 			return FEBRUARY_NUMBER_OF_DAYS_LEAP_YEAR;
@@ -35,6 +36,7 @@ class DateUtil {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function isLeapYear(year:Int):Bool {
 		if (year % 100 == 0) {
 			return year % 400 == 0;

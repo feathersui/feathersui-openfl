@@ -54,6 +54,7 @@ class Route {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withClass<T:DisplayObject>(path:String, viewClass:Class<T>, ?actions:Map<String, RouterAction>,
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
@@ -71,6 +72,7 @@ class Route {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withFunction<T:DisplayObject>(path:String, viewFunction:() -> T, ?actions:Map<String, RouterAction>,
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
@@ -88,6 +90,7 @@ class Route {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function withDisplayObject<T:DisplayObject>(path:String, viewInstance:T, ?actions:Map<String, RouterAction>,
 			?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
@@ -105,6 +108,7 @@ class Route {
 
 		@since 1.3.0
 	**/
+	@:pure
 	public static function withFactory<T:DisplayObject>(path:String, viewFactory:AbstractDisplayObjectFactory<T, DisplayObject>,
 			?actions:Map<String, RouterAction>, ?updateState:(view:T, state:RouteState) -> Void, ?saveData:(view:T) -> Dynamic):Route {
 		var item = new Route();
@@ -119,6 +123,7 @@ class Route {
 	/**
 		Creates a `Route` that redirects to a different path.
 	**/
+	@:pure
 	public static function withRedirect(path:String, redirectTo:String):Route {
 		var item = new Route();
 		item.path = path;
