@@ -47,6 +47,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function fill():VerticalLayoutData {
 		return new VerticalLayoutData(100.0, 100.0);
 	}
@@ -72,6 +73,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function fillHorizontal(percentWidth:Float = 100.0):VerticalLayoutData {
 		return new VerticalLayoutData(percentWidth, null);
 	}
@@ -97,6 +99,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
+	@:pure
 	public static function fillVertical(percentHeight:Float = 100.0):VerticalLayoutData {
 		return new VerticalLayoutData(null, percentHeight);
 	}
