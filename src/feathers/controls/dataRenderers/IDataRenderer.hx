@@ -22,5 +22,6 @@ interface IDataRenderer extends IUIControl {
 
 		@since 1.0.0
 	**/
+	@:bindable("dataChange")
 	public var data(get, set):Dynamic;
 }

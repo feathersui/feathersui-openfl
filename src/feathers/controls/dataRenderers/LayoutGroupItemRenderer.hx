@@ -49,6 +49,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	/**
 		@see `feathers.controls.dataRenderers.IDataRenderer.data`
 	**/
+	@:bindable("dataChange")
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -61,6 +62,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 		}
 		this._data = value;
 		this.setInvalid(DATA);
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._data;
 	}
 

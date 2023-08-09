@@ -14,6 +14,7 @@ import feathers.core.IPointerDelegate;
 import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.ILayoutObject;
 import feathers.layout.Measurements;
@@ -64,6 +65,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	/**
 		@see `feathers.controls.dataRenderers.IDataRenderer.data`
 	**/
+	@:bindable("dataChange")
 	public var data(get, set):Dynamic;
 
 	private function get_data():Dynamic {
@@ -76,6 +78,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		this._data = value;
 		this.setInvalid(DATA);
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._data;
 	}
 
