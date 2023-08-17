@@ -49,7 +49,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function center(x:Null<Float> = 0.0, y:Null<Float> = 0.0):AnchorLayoutData {
 		return new AnchorLayoutData(null, null, null, null, x, y);
 	}
@@ -78,7 +77,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function fill(padding:Float = 0.0):AnchorLayoutData {
 		return new AnchorLayoutData(padding, padding, padding, padding);
 	}
@@ -105,7 +103,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function fillHorizontal(padding:Float = 0.0):AnchorLayoutData {
 		return new AnchorLayoutData(null, padding, null, padding);
 	}
@@ -132,7 +129,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function fillVertical(padding:Float = 0.0):AnchorLayoutData {
 		return new AnchorLayoutData(padding, null, padding, null);
 	}
@@ -159,7 +155,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function topLeft(top:Float = 0.0, left:Float = 0.0) {
 		return new AnchorLayoutData(top, null, null, left);
 	}
@@ -186,7 +181,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function topCenter(top:Float = 0.0, horizontalCenter:Float = 0.0) {
 		return new AnchorLayoutData(top, null, null, null, horizontalCenter);
 	}
@@ -213,7 +207,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function topRight(top:Float = 0.0, right:Float = 0.0) {
 		return new AnchorLayoutData(top, right);
 	}
@@ -240,7 +233,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function middleLeft(verticalCenter:Float = 0.0, left:Float = 0.0) {
 		return new AnchorLayoutData(null, null, null, left, null, verticalCenter);
 	}
@@ -267,7 +259,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function middleRight(verticalCenter:Float = 0.0, right:Float = 0.0) {
 		return new AnchorLayoutData(null, right, null, null, null, verticalCenter);
 	}
@@ -294,7 +285,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function bottomLeft(bottom:Float = 0.0, left:Float = 0.0) {
 		return new AnchorLayoutData(null, null, bottom, left);
 	}
@@ -321,7 +311,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function bottomCenter(bottom:Float = 0.0, horizontalCenter:Float = 0.0) {
 		return new AnchorLayoutData(null, null, bottom, null, horizontalCenter);
 	}
@@ -348,7 +337,6 @@ class AnchorLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function bottomRight(bottom:Float = 0.0, right:Float = 0.0) {
 		return new AnchorLayoutData(null, right, bottom);
 	}

@@ -47,7 +47,6 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function fill():HorizontalLayoutData {
 		return new HorizontalLayoutData(100.0, 100.0);
 	}
@@ -73,7 +72,6 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function fillHorizontal(percentWidth:Float = 100.0):HorizontalLayoutData {
 		return new HorizontalLayoutData(percentWidth, null);
 	}
@@ -99,7 +97,6 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function fillVertical(percentHeight:Float = 100.0):HorizontalLayoutData {
 		return new HorizontalLayoutData(null, percentHeight);
 	}
