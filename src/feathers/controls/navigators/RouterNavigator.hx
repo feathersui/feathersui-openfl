@@ -681,7 +681,6 @@ class Location {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function fromString(value:String):Location {
 		var pathname = value;
 		var search = "";

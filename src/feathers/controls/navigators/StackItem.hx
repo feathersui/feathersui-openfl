@@ -48,7 +48,6 @@ class StackItem {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function withClass(id:String, viewClass:Class<DisplayObject>, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
 			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
@@ -68,7 +67,6 @@ class StackItem {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function withFunction(id:String, viewFunction:() -> DisplayObject, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
 			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
@@ -88,7 +86,6 @@ class StackItem {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function withDisplayObject(id:String, viewInstance:DisplayObject, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
 			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {
@@ -108,7 +105,6 @@ class StackItem {
 
 		@since 1.3.0
 	**/
-	@:pure
 	public static function withFactory(id:String, viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>, ?actions:Map<String, StackAction>,
 			?returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>, ?saveData:(view:Dynamic) -> Dynamic,
 			?restoreData:(view:Dynamic, data:Dynamic) -> Void):StackItem {

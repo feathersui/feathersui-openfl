@@ -28,7 +28,6 @@ class DisplayUtil {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function getDisplayObjectDepthFromStage(target:DisplayObject):Int {
 		if (target.stage == null) {
 			return -1;
@@ -47,7 +46,6 @@ class DisplayUtil {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function getConcatenatedScaleX(target:DisplayObject):Float {
 		if (target == null) {
 			throw new ArgumentError("getConcatenatedScaleX target must not be null");
@@ -67,7 +65,6 @@ class DisplayUtil {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function getConcatenatedScaleY(target:DisplayObject):Float {
 		if (target == null) {
 			throw new ArgumentError("getConcatenatedScaleY target must not be null");
@@ -87,7 +84,6 @@ class DisplayUtil {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function getConcatenatedScale(target:DisplayObject, ?result:Point):Point {
 		if (target == null) {
 			throw new ArgumentError("getConcatenatedScale target must not be null");

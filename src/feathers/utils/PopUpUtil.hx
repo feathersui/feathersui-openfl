@@ -24,7 +24,6 @@ class PopUpUtil {
 
 		@since 1.0.0
 	**/
-	@:pure
 	public static function isTopLevelPopUpOrIsContainedByTopLevelPopUp(target:DisplayObject):Bool {
 		if (target.stage == null) {
 			return false;
