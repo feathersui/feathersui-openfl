@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.FeathersEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
@@ -148,6 +149,7 @@ class ButtonBar extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@:bindable("dataChange")
 	public var dataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_dataProvider():IFlatCollection<Dynamic> {
@@ -170,6 +172,7 @@ class ButtonBar extends FeathersControl {
 			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ALL, buttonBar_dataProvider_updateAllHandler);
 		}
 		this.setInvalid(DATA);
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._dataProvider;
 	}
 

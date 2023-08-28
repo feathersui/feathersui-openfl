@@ -201,6 +201,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
+	@:bindable("dataChange")
 	public var dataProvider(get, set):IFlatCollection<Dynamic>;
 
 	private function get_dataProvider():IFlatCollection<Dynamic> {
@@ -232,6 +233,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
 		this.setInvalid(DATA);
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._dataProvider;
 	}
 

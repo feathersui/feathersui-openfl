@@ -314,6 +314,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
+	@:bindable("dataChange")
 	public var dataProvider(get, set):IHierarchicalCollection<Dynamic>;
 
 	private function get_dataProvider():IHierarchicalCollection<Dynamic> {
@@ -367,6 +368,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this.selectedLocation = null;
 
 		this.setInvalid(DATA);
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._dataProvider;
 	}
 

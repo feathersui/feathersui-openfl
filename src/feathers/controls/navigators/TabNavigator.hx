@@ -103,6 +103,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		@since 1.0.0
 	**/
+	@:bindable("dataChange")
 	public var dataProvider(get, set):IFlatCollection<TabItem>;
 
 	private function get_dataProvider():IFlatCollection<TabItem> {
@@ -146,6 +147,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			// use the setter
 			this.selectedIndex = 0;
 		}
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._dataProvider;
 	}
 

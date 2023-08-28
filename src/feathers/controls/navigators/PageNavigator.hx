@@ -101,6 +101,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		@since 1.0.0
 	**/
+	@:bindable("dataChange")
 	public var dataProvider(get, set):IFlatCollection<PageItem>;
 
 	private function get_dataProvider():IFlatCollection<PageItem> {
@@ -144,6 +145,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			// use the setter
 			this.selectedIndex = 0;
 		}
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._dataProvider;
 	}
 

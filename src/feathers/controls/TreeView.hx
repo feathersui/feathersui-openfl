@@ -338,6 +338,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@since 1.0.0
 	**/
+	@:bindable("dataChange")
 	public var dataProvider(get, set):IHierarchicalCollection<Dynamic>;
 
 	private function get_dataProvider():IHierarchicalCollection<Dynamic> {
@@ -396,6 +397,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		this.selectedLocation = null;
 
 		this.setInvalid(DATA);
+		FeathersEvent.dispatch(this, "dataChange");
 		return this._dataProvider;
 	}
 
