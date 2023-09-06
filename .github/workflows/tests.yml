@@ -39,8 +39,8 @@ jobs:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
       run: |
-        haxelib install lime 7.9.0 --quiet
-        haxelib install openfl 9.1.0 --quiet
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
@@ -61,8 +61,8 @@ jobs:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
       run: |
-        haxelib install lime 7.9.0 --quiet
-        haxelib install openfl 9.1.0 --quiet
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
@@ -84,8 +84,8 @@ jobs:
         node-version: '16'
     - name: Set up Haxelib dependencies
       run: |
-        haxelib install lime 7.9.0 --quiet
-        haxelib install openfl 9.1.0 --quiet
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
         haxelib dev feathersui $GITHUB_WORKSPACE
@@ -114,8 +114,8 @@ jobs:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
       run: |
-        haxelib install lime 7.9.0 --quiet
-        haxelib install openfl 9.1.0 --quiet
+        haxelib install lime --quiet
+        haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
         haxelib dev feathersui ${{ github.workspace }} 
