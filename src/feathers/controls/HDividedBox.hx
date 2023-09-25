@@ -14,6 +14,7 @@ import feathers.core.IValidating;
 import feathers.layout.HDividedBoxLayout;
 import feathers.utils.DisplayUtil;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 #if (lime && !flash && !commonjs)
 import lime.ui.MouseCursor as LimeMouseCursor;
 #end
@@ -180,6 +181,30 @@ class HDividedBox extends BaseDividedBox {
 
 		this._customItemWidths[dividerIndex] = firstItemWidth;
 		this._customItemWidths[dividerIndex + 1] = secondItemWidth;
+		this.setInvalid(LAYOUT);
+	}
+
+	override private function baseDividedBox_child_resizeHandler(event:Event):Void {
+		if (this._ignoreChildChanges) {
+			return;
+		}
+		var child:DisplayObject = cast event.currentTarget;
+		var index = this.items.indexOf(child);
+		if (index == -1) {
+			return;
+		}
+		var explicitWidth:Null<Float> = null;
+		if ((child is IMeasureObject)) {
+			var measureChild = cast(child, IMeasureObject);
+			explicitWidth = measureChild.explicitWidth;
+		}
+		this._customItemWidths[index] = explicitWidth;
+		var layoutIndex = this._layoutItems.indexOf(child);
+		if (explicitWidth == null) {
+			if (this._fallbackFluidIndex == -1 || layoutIndex > this._fallbackFluidIndex) {
+				this._fallbackFluidIndex = layoutIndex;
+			}
+		}
 		this.setInvalid(LAYOUT);
 	}
 }
