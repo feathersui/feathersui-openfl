@@ -1141,6 +1141,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		if (this._headerContainerLayout == null) {
 			this._headerContainerLayout = new GridViewRowLayout();
+			// allow the header renderer factory to set the height of headers
+			this._headerContainerLayout.heightResetEnabled = false;
 		}
 
 		if (this._headerContainer == null) {
