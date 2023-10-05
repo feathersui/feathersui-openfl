@@ -107,7 +107,7 @@ class Panel extends ScrollContainer implements IFocusExtras {
 			return this._footer;
 		}
 		if (this._footer != null) {
-			this._header.removeEventListener(Event.RESIZE, panel_header_resizeHandler);
+			this._footer.removeEventListener(Event.RESIZE, panel_footer_resizeHandler);
 			this._focusExtrasAfter.remove(this._footer);
 			this.removeRawChild(this._footer);
 		}
