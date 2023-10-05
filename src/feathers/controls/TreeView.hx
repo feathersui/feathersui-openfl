@@ -981,6 +981,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				this.refreshInactiveItemRenderers(storage, true);
 			}
 		}
+		// manually clear the selection so that removing the data provider
+		// doesn't result in Event.CHANGE getting dispatched
+		this._selectedItem = null;
+		this._selectedLocation = null;
 		this.dataProvider = null;
 		super.dispose();
 	}

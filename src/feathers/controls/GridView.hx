@@ -1302,6 +1302,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	override public function dispose():Void {
 		this.refreshInactiveHeaderRenderers(true);
 		this.refreshInactiveRowRenderers(true);
+		// manually clear the selection so that removing the data provider
+		// doesn't result in Event.CHANGE getting dispatched
+		this._selectedItem = null;
+		this._selectedIndex = -1;
 		this.dataProvider = null;
 		this.columns = null;
 		super.dispose();

@@ -1121,6 +1121,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	override public function dispose():Void {
 		this.refreshInactiveHeaderRenderers(true);
 		this.refreshInactiveRowRenderers(true);
+		// manually clear the selection so that removing the data provider
+		// doesn't result in Event.CHANGE getting dispatched
+		this._selectedItem = null;
+		this._selectedLocation = null;
 		this.dataProvider = null;
 		this.columns = null;
 		super.dispose();
@@ -2189,8 +2193,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		return headerRenderer;
 	}
 
-	private function destroyHeaderRenderer(headerRenderer:DisplayObject,
-			recycler:DisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject>):Void {
+	private function destroyHeaderRenderer(headerRenderer:DisplayObject, recycler:DisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject>):Void {
 		this._headerContainer.removeChild(headerRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(headerRenderer);

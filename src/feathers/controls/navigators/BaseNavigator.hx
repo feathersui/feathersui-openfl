@@ -209,6 +209,18 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	private var leftContentOffset:Float = 0.0;
 
 	override public function dispose():Void {
+		this._pendingItemID = null;
+		this._pendingItemTransition = null;
+		this._transitionActive = false;
+		if (this._activeTransition != null) {
+			this._activeTransition.removeEventListener(Event.COMPLETE, transition_completeHandler);
+			this._activeTransition.removeEventListener(Event.CANCEL, transition_cancelHandler);
+			this._activeTransition.stop();
+		}
+		// manually clear the active view so that removing all items
+		// doesn't result in Event.CHANGE getting dispatched
+		this._activeItemID = null;
+		this._activeItemView = null;
 		this.removeAllItems();
 		super.dispose();
 	}
