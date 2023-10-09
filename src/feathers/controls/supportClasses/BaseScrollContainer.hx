@@ -1232,15 +1232,22 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 		// by checking for the minimum or maximum changing, ensures that
 		// scrollX/Y can be set out of range on purpose
-		if (this._prevMinScrollX != this.scroller.minScrollX && this.scroller.scrollX < this.scroller.minScrollX) {
-			this.scroller.restrictedScrollX = this.scroller.scrollX;
-		} else if (this._prevMaxScrollX != this.scroller.maxScrollX && this.scroller.scrollX > this.scroller.maxScrollX) {
-			this.scroller.restrictedScrollX = this.scroller.scrollX;
+		var currentScrollX = this.scroller.scrollX;
+		var currentScrollY = this.scroller.scrollY;
+		if (this._prevMinScrollX != this.scroller.minScrollX && currentScrollX < this.scroller.minScrollX) {
+			this.scroller.restrictedScrollX = currentScrollX;
+		} else if (this._prevMaxScrollX != this.scroller.maxScrollX && currentScrollX > this.scroller.maxScrollX) {
+			this.scroller.restrictedScrollX = currentScrollX;
 		}
-		if (this._prevMinScrollY != this.scroller.minScrollY && this.scroller.scrollY < this.scroller.minScrollY) {
-			this.scroller.restrictedScrollY = this.scroller.scrollY;
-		} else if (this._prevMaxScrollY != this.scroller.maxScrollY && this.scroller.scrollY > this.scroller.maxScrollY) {
-			this.scroller.restrictedScrollY = this.scroller.scrollY;
+		if (this._prevMinScrollY != this.scroller.minScrollY && currentScrollY < this.scroller.minScrollY) {
+			this.scroller.restrictedScrollY = currentScrollY;
+		} else if (this._prevMaxScrollY != this.scroller.maxScrollY && currentScrollY > this.scroller.maxScrollY) {
+			this.scroller.restrictedScrollY = currentScrollY;
+		}
+		if (currentScrollX != this.scroller.scrollX || currentScrollY != this.scroller.scrollY) {
+			// the scroll event from the scroller will be ignored at this point
+			// so we need to manually dispatch it
+			ScrollEvent.dispatch(this, ScrollEvent.SCROLL, false, false, this.scroller.scrollX, this.scroller.scrollY);
 		}
 	}
 

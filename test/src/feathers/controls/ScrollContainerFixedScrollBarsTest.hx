@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.events.ScrollEvent;
 import feathers.controls.HScrollBar;
 import feathers.controls.LayoutGroup;
 import feathers.controls.VScrollBar;
@@ -617,6 +618,46 @@ class ScrollContainerFixedScrollBarsTest extends Test {
 		Assert.raises(() -> {
 			this._container.validateNow();
 		}, IllegalOperationError);
+	}
+
+	public function testAutomaticRestrictScrollXToMaxScrollX():Void {
+		this._container.width = 100.0;
+		this._container.height = 100.0;
+		var child = new LayoutGroup();
+		child.width = 200.0;
+		child.height = 75.0;
+		this._container.addChild(child);
+		this._container.scrollX = 50.0;
+		this._container.validateNow();
+		child.width = 50.0;
+		var dispatchedScrollEvent = false;
+		this._container.addEventListener(ScrollEvent.SCROLL, function(event:ScrollEvent):Void {
+			dispatchedScrollEvent = true;
+		});
+		Assert.equals(50.0, this._container.scrollX);
+		this._container.validateNow();
+		Assert.equals(0.0, this._container.scrollX);
+		Assert.isTrue(dispatchedScrollEvent);
+	}
+
+	public function testAutomaticRestrictScrollYToMaxScrollY():Void {
+		this._container.width = 100.0;
+		this._container.height = 100.0;
+		var child = new LayoutGroup();
+		child.width = 75.0;
+		child.height = 200.0;
+		this._container.addChild(child);
+		this._container.scrollY = 50.0;
+		this._container.validateNow();
+		child.height = 50.0;
+		var dispatchedScrollEvent = false;
+		this._container.addEventListener(ScrollEvent.SCROLL, function(event:ScrollEvent):Void {
+			dispatchedScrollEvent = true;
+		});
+		Assert.equals(50.0, this._container.scrollY);
+		this._container.validateNow();
+		Assert.equals(0.0, this._container.scrollY);
+		Assert.isTrue(dispatchedScrollEvent);
 	}
 }
 
