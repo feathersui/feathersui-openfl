@@ -289,8 +289,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._prompt;
 	}
 
-	// for some reason, naming this _restrict fails in hxcpp
-	private var __restrict:String;
+	// for some reason, naming this _restrict fails in hxcpp, and __restrict
+	// fails in hl/c. how many underscores to work everywhere?
+	private var ___restrict:String;
 
 	/**
 		Limits the set of characters that may be typed into the `TextArea`.
@@ -311,16 +312,16 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	public var restrict(get, set):String;
 
 	private function get_restrict():String {
-		return this.__restrict;
+		return this.___restrict;
 	}
 
 	private function set_restrict(value:String):String {
-		if (this.__restrict == value) {
-			return this.__restrict;
+		if (this.___restrict == value) {
+			return this.___restrict;
 		}
-		this.__restrict = value;
+		this.___restrict = value;
 		this.setInvalid(DATA);
-		return this.__restrict;
+		return this.___restrict;
 	}
 
 	private var _displayAsPassword:Bool = false;
@@ -892,7 +893,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this._ignoreViewPortTextChange = true;
 			this.textFieldViewPort.text = this._text;
 			this._ignoreViewPortTextChange = oldIgnoreViewPortTextChange;
-			this.textFieldViewPort.restrict = this.__restrict;
+			this.textFieldViewPort.restrict = this.___restrict;
 			this.textFieldViewPort.maxChars = this._maxChars;
 			this.textFieldViewPort.displayAsPassword = this._displayAsPassword;
 			if (this._editable) {

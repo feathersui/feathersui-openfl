@@ -474,8 +474,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._prompt;
 	}
 
-	// for some reason, naming this _restrict fails in hxcpp
-	private var __restrict:String;
+	// for some reason, naming this _restrict fails in hxcpp, and __restrict
+	// fails in hl/c. how many underscores to work everywhere?
+	private var ___restrict:String;
 
 	/**
 		Limits the set of characters that may be typed into the `TextInput`.
@@ -496,16 +497,16 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	public var restrict(get, set):String;
 
 	private function get_restrict():String {
-		return this.__restrict;
+		return this.___restrict;
 	}
 
 	private function set_restrict(value:String):String {
-		if (this.__restrict == value) {
-			return this.__restrict;
+		if (this.___restrict == value) {
+			return this.___restrict;
 		}
-		this.__restrict = value;
+		this.___restrict = value;
 		this.setInvalid(DATA);
-		return this.__restrict;
+		return this.___restrict;
 	}
 
 	private var _displayAsPassword:Bool = false;
@@ -1590,7 +1591,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	private function refreshText(forceMeasurement:Bool):Void {
-		this.textField.restrict = this.__restrict;
+		this.textField.restrict = this.___restrict;
 		this.textField.maxChars = this._maxChars;
 		if (this._editable) {
 			this.textField.selectable = this._enabled;

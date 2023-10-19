@@ -172,8 +172,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		return this._multiline;
 	}
 
-	// for some reason, naming this _restrict fails in hxcpp
-	private var __restrict:String;
+	// for some reason, naming this _restrict fails in hxcpp, and __restrict
+	// fails in hl/c. how many underscores to work everywhere?
+	private var ___restrict:String;
 
 	/**
 		Limits the set of characters that may be typed with the keyboard.
@@ -183,16 +184,16 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	public var restrict(get, set):String;
 
 	private function get_restrict():String {
-		return this.__restrict;
+		return this.___restrict;
 	}
 
 	private function set_restrict(value:String):String {
-		if (this.__restrict == value) {
-			return this.__restrict;
+		if (this.___restrict == value) {
+			return this.___restrict;
 		}
-		this.__restrict = value;
+		this.___restrict = value;
 		this.setInvalid(DATA);
-		return this.__restrict;
+		return this.___restrict;
 	}
 
 	private var _displayAsPassword:Bool = false;
@@ -868,7 +869,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			this._textField.multiline = this._multiline;
 			this._updatedTextStyles = true;
 		}
-		this._textField.restrict = this.__restrict;
+		this._textField.restrict = this.___restrict;
 		this._textField.displayAsPassword = this._displayAsPassword;
 		this._textField.maxChars = this._maxChars;
 		this._textField.selectable = this._selectable;
