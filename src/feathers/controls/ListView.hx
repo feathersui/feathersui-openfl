@@ -634,6 +634,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
+		@see `feathers.controls.dataRenderers.ItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
+
 		@since 1.0.0
 	**/
 	public var itemRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, ListViewItemState, DisplayObject>;

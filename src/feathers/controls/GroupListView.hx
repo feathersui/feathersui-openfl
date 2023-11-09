@@ -571,6 +571,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		groupListView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
+		@see `feathers.controls.dataRenderers.ItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
+
 		@since 1.0.0
 	**/
 	public var itemRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, GroupListViewItemState, DisplayObject>;
@@ -602,6 +605,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		```
 
 		@default null
+
+		@see `feathers.controls.dataRenderers.ItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
 
 		@since 1.0.0
 	**/

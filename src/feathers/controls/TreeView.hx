@@ -542,6 +542,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
+		@see `feathers.controls.dataRenderers.HierarchicalItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
+
 		@since 1.0.0
 	**/
 	public var itemRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, TreeViewItemState, DisplayObject>;

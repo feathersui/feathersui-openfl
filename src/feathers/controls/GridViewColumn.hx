@@ -88,6 +88,8 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 		```
 
 		@see `feathers.controls.GridView.cellRendererRecycler`
+		@see `feathers.controls.dataRenderers.ItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
 
 		@since 1.0.0
 	**/

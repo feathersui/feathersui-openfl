@@ -87,6 +87,8 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 		```
 
 		@see `feathers.controls.TreeGridView.cellRendererRecycler`
+		@see `feathers.controls.dataRenderers.HierarchicalItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
 
 		@since 1.0.0
 	**/

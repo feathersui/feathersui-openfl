@@ -538,6 +538,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		treeGridView.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
 		```
 
+		@see `feathers.controls.dataRenderers.SortOrderHeaderRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
+
 		@since 1.0.0
 	**/
 	public var headerRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject>;
@@ -849,6 +852,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		```
 
 		@see `feathers.controls.TreeGridViewColumn.cellRendererRecycler`
+		@see `feathers.controls.dataRenderers.HierarchicalItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
 
 		@since 1.0.0
 	**/

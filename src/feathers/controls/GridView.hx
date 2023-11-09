@@ -534,6 +534,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		gridView.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
 		```
 
+		@see `feathers.controls.dataRenderers.SortOrderHeaderRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
+
 		@since 1.0.0
 	**/
 	public var headerRendererRecycler(get, set):AbstractDisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject>;
@@ -994,6 +997,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		```
 
 		@see `feathers.controls.GridViewColumn.cellRendererRecycler`
+		@see `feathers.controls.dataRenderers.ItemRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
 
 		@since 1.0.0
 	**/
