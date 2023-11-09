@@ -2307,6 +2307,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			state.enabled = enabled;
 			changed = true;
 		}
+		var sortOrder = (column == this._sortedColumn) ? this._sortOrder : SortOrder.NONE;
+		if (force || state.sortOrder != sortOrder) {
+			state.sortOrder = sortOrder;
+			changed = true;
+		}
 		return changed;
 	}
 
@@ -2338,11 +2343,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		if ((headerRenderer is ISortOrderObserver)) {
 			var sortObject = cast(headerRenderer, ISortOrderObserver);
-			if (this._sortedColumn == state.column) {
-				sortObject.sortOrder = this._sortOrder;
-			} else {
-				sortObject.sortOrder = NONE;
-			}
+			sortObject.sortOrder = state.sortOrder;
 		}
 		if ((headerRenderer is ILayoutIndexObject)) {
 			var layoutObject = cast(headerRenderer, ILayoutIndexObject);

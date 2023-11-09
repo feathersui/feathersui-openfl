@@ -72,4 +72,14 @@ class GridViewHeaderState {
 		@since 1.0.0
 	**/
 	public var enabled:Bool = true;
+
+	/**
+		Returns whether the column is sorted or not.
+
+		@see `feathers.controls.GridView.sortedColumn`
+		@see `feathers.controls.GridView.sortOrder`
+
+		@since 1.2.0
+	**/
+	public var sortOrder:SortOrder = NONE;
 }
