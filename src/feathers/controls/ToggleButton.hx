@@ -1113,7 +1113,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		this.textField.visible = hasText || hasHTMLText;
 		if (this._text == this._previousText
-			&& this._htmlText != this._previousHTMLText
+			&& this._htmlText == this._previousHTMLText
 			&& !this._updatedTextStyles
 			&& !forceMeasurement) {
 			// nothing to refresh
