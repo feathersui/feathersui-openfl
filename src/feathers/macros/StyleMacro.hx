@@ -142,6 +142,16 @@ class StyleMacro {
 						pos: field.pos,
 						meta: [
 							{
+								name: ":haxe.warning",
+								params: [
+									{
+										expr: EConst(CString("-WDeprecated")),
+										pos: field.pos
+									}
+								],
+								pos: field.pos
+							},
+							{
 								name: ":noCompletion",
 								pos: field.pos
 							},
