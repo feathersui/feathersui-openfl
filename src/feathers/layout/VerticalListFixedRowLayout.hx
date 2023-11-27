@@ -693,45 +693,47 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 
 	private function calculateRowHeight(items:Array<DisplayObject>, itemWidth:Float):Float {
 		var actualRowHeight = 0.0;
-		if (this._rowHeight != null) {
-			actualRowHeight = this._rowHeight;
-		} else {
-			// find the height of the first existing item
-			for (i in 0...items.length) {
-				var item = items[i];
-				if (item == null) {
-					if (this._virtualCache == null || this._virtualCache.length <= i) {
-						continue;
-					}
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-					if (cacheItem == null) {
-						continue;
-					}
-					// use the last known row height, if available
-					actualRowHeight = cacheItem.itemHeight;
-					break;
+		// find the height of the first existing item
+		// if rowHeight is set, we still need to look for a real item so that
+		// Event.CHANGE gets dispatched, and getVisibleItems() is called again
+		for (i in 0...items.length) {
+			var item = items[i];
+			if (item == null) {
+				if (this._virtualCache == null || this._virtualCache.length <= i) {
+					continue;
 				}
-				if ((item is ILayoutObject)) {
-					if (!cast(item, ILayoutObject).includeInLayout) {
-						continue;
-					}
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem == null) {
+					continue;
 				}
-				item.width = itemWidth;
+				// use the last known row height, if available
+				actualRowHeight = cacheItem.itemHeight;
+				break;
+			}
+			if ((item is ILayoutObject)) {
+				if (!cast(item, ILayoutObject).includeInLayout) {
+					continue;
+				}
+			}
+			item.width = itemWidth;
+			if (this._rowHeight != null) {
+				item.height = this._rowHeight;
+			} else {
 				if ((item is IValidating)) {
 					cast(item, IValidating).validateNow();
 				}
-				actualRowHeight = item.height;
-				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-					if (cacheItem != null && cacheItem.itemHeight != actualRowHeight) {
-						cacheItem.itemHeight = actualRowHeight;
-						// this new measurement may cause the number of visible
-						// items to change, so we need to notify the container
-						FeathersEvent.dispatch(this, Event.CHANGE);
-					}
-				}
-				break;
 			}
+			actualRowHeight = item.height;
+			if (this._virtualCache != null) {
+				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				if (cacheItem != null && cacheItem.itemHeight != actualRowHeight) {
+					cacheItem.itemHeight = actualRowHeight;
+					// this new measurement may cause the number of visible
+					// items to change, so we need to notify the container
+					FeathersEvent.dispatch(this, Event.CHANGE);
+				}
+			}
+			break;
 		}
 		return actualRowHeight;
 	}
