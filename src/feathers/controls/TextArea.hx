@@ -869,7 +869,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.refreshPrompt();
 		}
 
-		if (stylesInvalid || stateInvalid) {
+		if (dataInvalid || stylesInvalid || stateInvalid) {
 			this.refreshPromptStyles();
 		}
 
@@ -980,8 +980,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			&& (this.currentState != TextInputState.FOCUSED || this.showPromptWhenEmptyAndFocused);
 	}
 
-	private function refreshPromptText(sizeInvalid:Bool):Void {
-		if (this._prompt == null || this._prompt == this._previousPrompt && !this._updatedPromptStyles && !sizeInvalid) {
+	private function refreshPromptText(forceMeasurement:Bool):Void {
+		if (this._prompt == null || (this._prompt == this._previousPrompt && !this._updatedPromptStyles && !forceMeasurement)) {
 			// nothing to refresh
 			return;
 		}
