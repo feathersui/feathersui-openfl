@@ -1150,7 +1150,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this._oldErrorCalloutFactory = factory;
 		this.errorStringCallout = factory.create();
 		if (this.errorStringCallout.variant == null) {
-			this.errorStringCallout.variant = this.customErrorCalloutVariant != null ? this.customErrorCalloutVariant : TextInput.CHILD_VARIANT_ERROR_CALLOUT;
+			this.errorStringCallout.variant = this.customErrorCalloutVariant != null ? this.customErrorCalloutVariant : TextArea.CHILD_VARIANT_ERROR_CALLOUT;
 		}
 		this.errorStringCallout.origin = this;
 		this.errorStringCallout.closeOnPointerOutside = false;
