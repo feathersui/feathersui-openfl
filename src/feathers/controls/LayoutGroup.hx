@@ -397,6 +397,19 @@ class LayoutGroup extends FeathersControl {
 		return super.getChildAt(index);
 	}
 
+	/**
+		Readjusts the layout of the group according to its current content.
+		Call this method when changes to the content cannot be automatically
+		detected by the container. For instance, Feathers UI components dispatch
+		`Event.RESIZE` when their `width` and `height` values change, but
+		standard OpenFL display objects like `Sprite` do not.
+
+		@since 1.3.0
+	 */
+	public function readjustLayout():Void {
+		this.setInvalid(LAYOUT);
+	}
+
 	private function initializeLayoutGroupTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelLayoutGroupStyles.initialize();
