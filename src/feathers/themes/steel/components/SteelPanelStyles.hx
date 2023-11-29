@@ -43,6 +43,12 @@ class SteelPanelStyles {
 					backgroundSkin.fill = theme.getContainerFill();
 					panel.backgroundSkin = backgroundSkin;
 				}
+
+				if (panel.scrollBarsCornerSkin == null) {
+					var scrollBarsCornerSkin = new RectangleSkin();
+					scrollBarsCornerSkin.fill = theme.getContainerFill();
+					panel.scrollBarsCornerSkin = scrollBarsCornerSkin;
+				}
 			});
 		}
 	}

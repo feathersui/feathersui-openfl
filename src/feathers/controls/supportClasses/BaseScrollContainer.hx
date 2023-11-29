@@ -298,6 +298,27 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	@:style
 	public var viewPortMaskSkin:DisplayObject = null;
 
+	private var _currentScrollBarsCornerSkin:DisplayObject;
+
+	/**
+		An optional skin to display between the scroll bars, when both are
+		visible. Appears in the bottom right corner when `scrollBarYPosition` is
+		`RIGHT`, and the bottom left corner when `scrollBarYPosition` is `LEFT`.
+
+		The following example passes a bitmap for the container to use as a
+		background skin:
+
+		```haxe
+		group.scrollBarsCornerSkin = new Bitmap(bitmapData);
+		```
+
+		@see `BaseScrollContainer.scrollBarYPosition`
+
+		@since 1.3.0
+	**/
+	@:style
+	public var scrollBarsCornerSkin:DisplayObject = null;
+
 	private var scrollBarX:IScrollBar;
 	private var scrollBarY:IScrollBar;
 
@@ -1070,6 +1091,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		if (stylesInvalid) {
 			this.refreshMaskSkin();
 			this.refreshViewPortMaskSkin();
+			this.refreshScrollBarsCornerSkin();
 		}
 
 		if (scrollBarFactoryInvalid) {
@@ -1945,6 +1967,45 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		cast(this._viewPort, DisplayObject).mask = null;
 	}
 
+	private function refreshScrollBarsCornerSkin():Void {
+		var oldSkin = this._currentScrollBarsCornerSkin;
+		this._currentScrollBarsCornerSkin = this.getCurrentScrollBarsCornerSkin();
+		if (this._currentScrollBarsCornerSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentScrollBarsCornerSkin(oldSkin);
+		this.addCurrentScrollBarsCornerSkin(this._currentScrollBarsCornerSkin);
+	}
+
+	private function getCurrentScrollBarsCornerSkin():DisplayObject {
+		return this.scrollBarsCornerSkin;
+	}
+
+	private function addCurrentScrollBarsCornerSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IUIControl)) {
+			cast(skin, IUIControl).initializeNow();
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = this;
+		}
+		this.addChild(skin);
+	}
+
+	private function removeCurrentScrollBarsCornerSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		if (skin.parent == this) {
+			this.removeChild(skin);
+		}
+	}
+
 	private function layoutChildren():Void {
 		this.layoutBackgroundSkin();
 		this.layoutMaskSkin();
@@ -2078,6 +2139,18 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 				}
 			} else {
 				this.scrollBarY.height = visibleHeight;
+			}
+		}
+
+		if (this._currentScrollBarsCornerSkin != null) {
+			if (this.fixedScrollBars && this.scrollBarX != null && this.scrollBarY != null && this.scrollBarX.visible && this.scrollBarY.visible) {
+				this._currentScrollBarsCornerSkin.x = this.scrollBarY.x;
+				this._currentScrollBarsCornerSkin.width = this.scrollBarY.width;
+				this._currentScrollBarsCornerSkin.y = this.scrollBarX.y;
+				this._currentScrollBarsCornerSkin.height = this.scrollBarX.height;
+				this._currentScrollBarsCornerSkin.visible = true;
+			} else {
+				this._currentScrollBarsCornerSkin.visible = false;
 			}
 		}
 	}

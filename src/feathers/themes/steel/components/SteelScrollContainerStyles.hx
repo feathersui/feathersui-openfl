@@ -44,6 +44,12 @@ class SteelScrollContainerStyles {
 					container.backgroundSkin = backgroundSkin;
 				}
 
+				if (container.scrollBarsCornerSkin == null) {
+					var scrollBarsCornerSkin = new RectangleSkin();
+					scrollBarsCornerSkin.fill = theme.getContainerFill();
+					container.scrollBarsCornerSkin = scrollBarsCornerSkin;
+				}
+
 				if (container.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
