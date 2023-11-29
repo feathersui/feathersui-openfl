@@ -1098,6 +1098,19 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	@:style
 	public var columnResizeSkin:DisplayObject = null;
 
+	private var _currentHeaderCornerSkin:DisplayObject;
+
+	/**
+		The skin to display next to the headers when the vertical scroll bar is
+		displayed, and `extendedScrollBarY` is `false`.
+
+		@see `GridView.extendedScrollBarY`
+
+		@since 1.3.0
+	**/
+	@:style
+	public var headerCornerSkin:DisplayObject = null;
+
 	private var _sortOrder:SortOrder = NONE;
 
 	/**
@@ -1390,6 +1403,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.refreshSortedColumn(sortInvalid);
 		}
 
+		if (stylesInvalid) {
+			this.refreshHeaderCornerSkin();
+		}
+
 		if (stylesInvalid || layoutInvalid) {
 			this.refreshColumnResizeSkin();
 		}
@@ -1603,6 +1620,18 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		} else {
 			this._headerContainer.scrollRect = null;
 		}
+
+		if (this._currentHeaderCornerSkin != null) {
+			if (this.fixedScrollBars && !this.extendedScrollBarY && this.scrollBarY != null && this.scrollBarY.visible) {
+				this._currentHeaderCornerSkin.x = this.scrollBarY.x;
+				this._currentHeaderCornerSkin.width = this.scrollBarY.width;
+				this._currentHeaderCornerSkin.y = this._headerContainer.y;
+				this._currentHeaderCornerSkin.height = this._headerContainer.height;
+				this._currentHeaderCornerSkin.visible = true;
+			} else {
+				this._currentHeaderCornerSkin.visible = false;
+			}
+		}
 	}
 
 	private function layoutHeaderDividers():Void {
@@ -1645,6 +1674,45 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.topViewPortOffset = 0.0;
 		super.layoutScrollBars();
 		this.topViewPortOffset = oldTopViewPortOffset;
+	}
+
+	private function refreshHeaderCornerSkin():Void {
+		var oldSkin = this._currentHeaderCornerSkin;
+		this._currentHeaderCornerSkin = this.getCurrentHeaderCornerSkin();
+		if (this._currentHeaderCornerSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentHeaderCornerSkin(oldSkin);
+		this.addCurrentHeaderCornerSkin(this._currentHeaderCornerSkin);
+	}
+
+	private function getCurrentHeaderCornerSkin():DisplayObject {
+		return this.headerCornerSkin;
+	}
+
+	private function addCurrentHeaderCornerSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IUIControl)) {
+			cast(skin, IUIControl).initializeNow();
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = this;
+		}
+		this.addChild(skin);
+	}
+
+	private function removeCurrentHeaderCornerSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IProgrammaticSkin)) {
+			cast(skin, IProgrammaticSkin).uiContext = null;
+		}
+		if (skin.parent == this) {
+			this.removeChild(skin);
+		}
 	}
 
 	private function refreshColumnResizeSkin():Void {

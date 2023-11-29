@@ -67,6 +67,12 @@ class SteelGridViewStyles {
 				gridView.columnResizeSkin = columnResizeSkin;
 			}
 
+			if (gridView.headerCornerSkin == null) {
+				var headerCornerSkin = new RectangleSkin();
+				headerCornerSkin.fill = theme.getSubHeadingFill();
+				gridView.headerCornerSkin = headerCornerSkin;
+			}
+
 			if (gridView.focusRectSkin == null) {
 				var focusRectSkin = new RectangleSkin();
 				focusRectSkin.fill = null;
@@ -109,6 +115,12 @@ class SteelGridViewStyles {
 				columnResizeSkin.width = 2.0;
 				columnResizeSkin.height = 2.0;
 				gridView.columnResizeSkin = columnResizeSkin;
+			}
+
+			if (gridView.headerCornerSkin == null) {
+				var headerCornerSkin = new RectangleSkin();
+				headerCornerSkin.fill = theme.getSubHeadingFill();
+				gridView.headerCornerSkin = headerCornerSkin;
 			}
 
 			if (gridView.focusRectSkin == null) {
