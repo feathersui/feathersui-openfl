@@ -18,6 +18,8 @@ import feathers.core.InvalidationFlag;
 import feathers.core.PopUpManager;
 import feathers.events.FeathersEvent;
 import feathers.text.TextFormat;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
@@ -66,6 +68,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_ERROR_CALLOUT = "textArea_errorCallout";
+
+	private static final defaultErrorCalloutFactory = DisplayObjectFactory.withClass(TextCallout);
 
 	/**
 		Creates a new `TextArea` object.
@@ -655,6 +659,42 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._maxChars;
 	}
 
+	private var _oldErrorCalloutFactory:DisplayObjectFactory<Dynamic, TextCallout>;
+
+	private var _errorCalloutFactory:DisplayObjectFactory<Dynamic, TextCallout>;
+
+	/**
+		Creates the error callout, which must be of type
+		`feathers.controls.TextCallout`.
+
+		In the following example, a custom error callout factory is provided:
+
+		```haxe
+		textArea.errorCalloutFactory = () ->
+		{
+			return new TextCallout();
+		};
+		```
+
+		@see `feathers.controls.TextCallout`
+
+		@since 1.3.0
+	**/
+	public var errorCalloutFactory(get, set):AbstractDisplayObjectFactory<Dynamic, TextCallout>;
+
+	private function get_errorCalloutFactory():AbstractDisplayObjectFactory<Dynamic, TextCallout> {
+		return this._errorCalloutFactory;
+	}
+
+	private function set_errorCalloutFactory(value:AbstractDisplayObjectFactory<Dynamic, TextCallout>):AbstractDisplayObjectFactory<Dynamic, TextCallout> {
+		if (this._errorCalloutFactory == value) {
+			return this._errorCalloutFactory;
+		}
+		this._errorCalloutFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_ERROR_CALLOUT_FACTORY);
+		return this._errorCalloutFactory;
+	}
+
 	private var _previousCustomErrorCalloutVariant:String = null;
 
 	/**
@@ -1106,7 +1146,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (this._errorString == null || this._errorString.length == 0) {
 			return;
 		}
-		this.errorStringCallout = new TextCallout();
+		var factory = this._errorCalloutFactory != null ? this._errorCalloutFactory : defaultErrorCalloutFactory;
+		this._oldErrorCalloutFactory = factory;
+		this.errorStringCallout = factory.create();
 		if (this.errorStringCallout.variant == null) {
 			this.errorStringCallout.variant = this.customErrorCalloutVariant != null ? this.customErrorCalloutVariant : TextInput.CHILD_VARIANT_ERROR_CALLOUT;
 		}
@@ -1121,6 +1163,10 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (this.errorStringCallout.parent != null) {
 			this.errorStringCallout.parent.removeChild(this.errorStringCallout);
 		}
+		if (this._oldErrorCalloutFactory.destroy != null) {
+			this._oldErrorCalloutFactory.destroy(this.errorStringCallout);
+		}
+		this._oldErrorCalloutFactory = null;
 		this.errorStringCallout = null;
 	}
 
