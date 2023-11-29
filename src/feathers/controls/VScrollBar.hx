@@ -25,6 +25,34 @@ import openfl.events.Event;
 @:styleContext
 class VScrollBar extends BaseScrollBar {
 	/**
+		The variant used to style the decrement `Button` child component in a theme.
+
+		To override this default variant, set the
+		`BaseScrollBar.customDecrementButtonVariant` property.
+
+		@see `BaseScrollBar.customDecrementButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.3.0
+	**/
+	public static final CHILD_VARIANT_DECREMENT_BUTTON = "vScrollBar_decrementButton";
+
+	/**
+		The variant used to style the increment `Button` child component in a theme.
+
+		To override this default variant, set the
+		`BaseScrollBar.customIncrementButtonVariant` property.
+
+		@see `BaseScrollBar.customIncrementButtonVariant`
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.3.0
+	**/
+	public static final CHILD_VARIANT_INCREMENT_BUTTON = "vScrollBar_incrementButton";
+
+	/**
 		Creates a new `VScrollBar` object.
 
 		@since 1.0.0
@@ -46,16 +74,32 @@ class VScrollBar extends BaseScrollBar {
 		if ((this._currentThumbSkin is IValidating)) {
 			cast(this._currentThumbSkin, IValidating).validateNow();
 		}
+		if (this.showDecrementAndIncrementButtons) {
+			this.decrementButton.validateNow();
+			this.incrementButton.validateNow();
+		}
 		var normalized = this.normalizeValue(value);
 		var trackScrollableHeight = this.actualHeight - this.paddingTop - this.paddingBottom - this._currentThumbSkin.height;
-		return this.paddingTop + (trackScrollableHeight * normalized);
+		if (this.showDecrementAndIncrementButtons) {
+			trackScrollableHeight -= (this.decrementButton.height + this.incrementButton.height);
+		}
+		var result = this.paddingTop + (trackScrollableHeight * normalized);
+		if (this.showDecrementAndIncrementButtons) {
+			result += this.decrementButton.height;
+		}
+		return result;
 	}
 
 	override private function locationToValue(x:Float, y:Float):Float {
 		var percentage = 0.0;
+		var minYPosition = this.paddingTop;
 		var trackScrollableHeight = this.actualHeight - this.paddingTop - this.paddingBottom - this._currentThumbSkin.height;
+		if (this.showDecrementAndIncrementButtons) {
+			minYPosition += this.decrementButton.height;
+			trackScrollableHeight -= (this.decrementButton.height + this.incrementButton.height);
+		}
 		var yOffset = y - this._pointerStartY;
-		var yPosition = Math.min(Math.max(0.0, this._thumbStartY - this.paddingTop + yOffset), trackScrollableHeight);
+		var yPosition = Math.min(Math.max(0.0, this._thumbStartY + yOffset - minYPosition), trackScrollableHeight);
 		percentage = yPosition / trackScrollableHeight;
 		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
@@ -80,6 +124,16 @@ class VScrollBar extends BaseScrollBar {
 		var needsMaxHeight = this.explicitMaxHeight == null;
 		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
 			return false;
+		}
+
+		if (this.decrementButton != null) {
+			this.decrementButtonMeasurements.restore(this.decrementButton);
+			this.decrementButton.validateNow();
+		}
+
+		if (this.incrementButton != null) {
+			this.incrementButtonMeasurements.restore(this.incrementButton);
+			this.incrementButton.validateNow();
 		}
 
 		if (this._currentThumbSkin != null) {
@@ -115,6 +169,12 @@ class VScrollBar extends BaseScrollBar {
 					newWidth = this._currentSecondaryTrackSkin.width;
 				}
 			}
+			if (this.showDecrementAndIncrementButtons) {
+				var buttonWidth = Math.max(this.decrementButton.width, this.incrementButton.width);
+				if (newWidth < buttonWidth) {
+					newWidth = buttonWidth;
+				}
+			}
 		}
 
 		var newHeight = this.explicitHeight;
@@ -133,6 +193,9 @@ class VScrollBar extends BaseScrollBar {
 			if (newHeight < thumbHeight) {
 				newHeight = thumbHeight;
 			}
+			if (this.showDecrementAndIncrementButtons) {
+				newHeight += this.decrementButton.height + this.incrementButton.height;
+			}
 		}
 
 		// TODO: calculate min and max
@@ -141,6 +204,23 @@ class VScrollBar extends BaseScrollBar {
 		var newMaxWidth = newWidth;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, null);
+	}
+
+	override private function layoutButtons():Void {
+		if (!this.showDecrementAndIncrementButtons) {
+			return;
+		}
+		if (this.decrementButton != null) {
+			this.decrementButton.validateNow();
+		}
+		this.decrementButton.x = (this.actualWidth - this.decrementButton.width) / 2.0;
+		this.decrementButton.y = 0.0;
+
+		if (this.incrementButton != null) {
+			this.incrementButton.validateNow();
+		}
+		this.incrementButton.x = (this.actualWidth - this.incrementButton.width) / 2.0;
+		this.incrementButton.y = this.actualHeight - this.incrementButton.height;
 	}
 
 	override private function layoutSplitTrack():Void {
@@ -152,11 +232,18 @@ class VScrollBar extends BaseScrollBar {
 			location += Math.round(this._currentThumbSkin.height / 2.0);
 		}
 
-		this._currentSecondaryTrackSkin.y = 0.0;
+		var minTrackY = 0.0;
+		var maxTrackY = this.actualHeight;
+		if (this.showDecrementAndIncrementButtons) {
+			minTrackY = this.decrementButton.height;
+			maxTrackY -= this.incrementButton.height;
+		}
+
+		this._currentSecondaryTrackSkin.y = minTrackY;
 		this._currentSecondaryTrackSkin.height = location;
 
 		this._currentTrackSkin.y = location;
-		this._currentTrackSkin.height = this.actualHeight - location;
+		this._currentTrackSkin.height = maxTrackY - location;
 
 		if ((this._currentSecondaryTrackSkin is IValidating)) {
 			cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
@@ -174,8 +261,15 @@ class VScrollBar extends BaseScrollBar {
 			return;
 		}
 
-		this._currentTrackSkin.y = 0.0;
-		this._currentTrackSkin.height = this.actualHeight;
+		var minTrackY = 0.0;
+		var maxTrackY = this.actualHeight;
+		if (this.showDecrementAndIncrementButtons) {
+			minTrackY = this.decrementButton.height;
+			maxTrackY -= this.incrementButton.height;
+		}
+
+		this._currentTrackSkin.y = minTrackY;
+		this._currentTrackSkin.height = maxTrackY - minTrackY;
 
 		if ((this._currentTrackSkin is IValidating)) {
 			cast(this._currentTrackSkin, IValidating).validateNow();

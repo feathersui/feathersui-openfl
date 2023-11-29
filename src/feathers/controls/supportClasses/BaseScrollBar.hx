@@ -10,10 +10,13 @@ package feathers.controls.supportClasses;
 
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
+import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
 import feathers.events.ScrollEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
+import feathers.utils.AbstractDisplayObjectFactory;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
 import openfl.display.InteractiveObject;
@@ -21,6 +24,10 @@ import openfl.display.Stage;
 import openfl.errors.TypeError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
+#if air
+import openfl.ui.Multitouch;
+#end
 
 /**
 	Base class for scroll bar components.
@@ -43,6 +50,12 @@ import openfl.events.MouseEvent;
 @:event(feathers.events.ScrollEvent.SCROLL_START)
 @:event(feathers.events.ScrollEvent.SCROLL_COMPLETE)
 class BaseScrollBar extends FeathersControl implements IScrollBar {
+	private static final INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY = InvalidationFlag.CUSTOM("decrementButtonFactory");
+	private static final INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY = InvalidationFlag.CUSTOM("incrementButtonFactory");
+
+	private static final defaultDecrementButtonFactory = DisplayObjectFactory.withClass(Button);
+	private static final defaultIncrementButtonFactory = DisplayObjectFactory.withClass(Button);
+
 	private function new(value:Float = 0.0, minimum:Float = 0.0, maximum:Float = 1.0, ?changeListener:(Event) -> Void) {
 		super();
 
@@ -57,6 +70,12 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			this.addEventListener(Event.CHANGE, changeListener);
 		}
 	}
+
+	private var decrementButton:BasicButton;
+	private var incrementButton:BasicButton;
+
+	private var decrementButtonMeasurements = new Measurements();
+	private var incrementButtonMeasurements = new Measurements();
 
 	private var _isDefaultValue = true;
 
@@ -320,6 +339,161 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	**/
 	public var liveDragging:Bool = true;
 
+	private var _enableButtonsAtRangeLimits:Bool = true;
+
+	/**
+		Indicates if the decrement button is disabled when the value is equal to
+		minimum, and if the increment button is disabled when the value is equal
+		to the maximum.
+
+		If the buttons remain enabled, and the user attempts to decrement beyond
+		the minimum, or increment beyond the maximum, triggering the button will
+		have no effect, except visually.
+
+		The following example disables the buttons at range limits:
+
+		```haxe
+		scrollBar.enableButtonsAtRangeLimits = false;
+		```
+
+		@since 1.3.0
+	**/
+	public var enableButtonsAtRangeLimits(get, set):Bool;
+
+	private function get_enableButtonsAtRangeLimits():Bool {
+		return this._enableButtonsAtRangeLimits;
+	}
+
+	private function set_enableButtonsAtRangeLimits(value:Bool):Bool {
+		if (this._enableButtonsAtRangeLimits == value) {
+			return this._enableButtonsAtRangeLimits;
+		}
+		this._enableButtonsAtRangeLimits = value;
+		this.setInvalid(STATE);
+		return this._enableButtonsAtRangeLimits;
+	}
+
+	/**
+		Shows or hides the decrement and increment buttons. If the buttons are
+		hidden, they will not affect the layout of other children, such as the
+		track and thumb.
+
+		@since 1.3.0
+	**/
+	public var showDecrementAndIncrementButtons:Bool = false;
+
+	private var _oldDecrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+
+	private var _decrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+
+	/**
+		Creates the decrement button, which must be of type
+		`feathers.controls.BasicButton`.
+
+		In the following example, a custom decrement button factory is provided:
+
+		```haxe
+		stepper.decrementButtonFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.BasicButton`
+		@see `feathers.controls.Button`
+
+		@since 1.3.0
+	**/
+	public var decrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, BasicButton>;
+
+	private function get_decrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+		return this._decrementButtonFactory;
+	}
+
+	private function set_decrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, BasicButton>):AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+		if (this._decrementButtonFactory == value) {
+			return this._decrementButtonFactory;
+		}
+		this._decrementButtonFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY);
+		return this._decrementButtonFactory;
+	}
+
+	private var _oldIncrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+
+	private var _incrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+
+	/**
+		Creates the increment button, which must be of type
+		`feathers.controls.BasicButton`.
+
+		In the following example, a custom increment button factory is provided:
+
+		```haxe
+		stepper.incrementButtonFactory = () ->
+		{
+			return new Button();
+		};
+		```
+
+		@see `feathers.controls.BasicButton`
+		@see `feathers.controls.Button`
+
+		@since 1.3.0
+	**/
+	public var incrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, BasicButton>;
+
+	private function get_incrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+		return this._incrementButtonFactory;
+	}
+
+	private function set_incrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, BasicButton>):AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+		if (this._incrementButtonFactory == value) {
+			return this._incrementButtonFactory;
+		}
+		this._incrementButtonFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY);
+		return this._incrementButtonFactory;
+	}
+
+	private var _previousCustomDecrementButtonVariant:String = null;
+
+	/**
+		A custom variant to set on the decrement button, instead of
+		`HScrollBar.CHILD_VARIANT_DECREMENT_BUTTON` or
+		`VScrollBar.CHILD_VARIANT_DECREMENT_BUTTON`.
+
+		The `customDecrementButtonVariant` will be not be used if the result of
+		`decrementButtonFactory` already has a variant set.
+
+		@see `HScrollBar.CHILD_VARIANT_DECREMENT_BUTTON`
+		@see `VScrollBar.CHILD_VARIANT_DECREMENT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
+
+		@since 1.0.0
+	**/
+	@:style
+	public var customDecrementButtonVariant:String = null;
+
+	private var _previousCustomIncrementButtonVariant:String = null;
+
+	/**
+		A custom variant to set on the increment button, instead of
+		`HScrollBar.CHILD_VARIANT_INCREMENT_BUTTON` or
+		`VScrollBar.CHILD_VARIANT_INCREMENT_BUTTON`.
+
+		The `customIncrementButtonVariant` will be not be used if the result of
+		`incrementButtonFactory` already has a variant set.
+
+		@see `HScrollBar.CHILD_VARIANT_INCREMENT_BUTTON`
+		@see `VScrollBar.CHILD_VARIANT_INCREMENT_BUTTON`
+		@see `feathers.style.IVariantStyleObject.variant`
+
+		@since 1.3.0
+	**/
+	@:style
+	public var customIncrementButtonVariant:String = null;
+
 	private var _currentThumbSkin:InteractiveObject = null;
 	private var _thumbSkinMeasurements:Measurements = null;
 
@@ -413,8 +587,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	public var fixedThumbSize:Bool = false;
 
 	/**
-		The minimum space, in pixels, between the scroll bar's top edge and the
-		scroll bar's thumb.
+		The minimum space, in pixels, between the scroll bar track's top edge
+		and the scroll bar's thumb.
 
 		In the following example, the scroll bar's top padding is set to 20
 		pixels:
@@ -433,8 +607,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	public var paddingTop:Float = 0.0;
 
 	/**
-		The minimum space, in pixels, between the scroll bar's right edge and
-		the scroll bar's thumb.
+		The minimum space, in pixels, between the scroll bar track's right edge
+		and the scroll bar's thumb.
 
 		In the following example, the scroll bar's right padding is set to 20
 		pixels:
@@ -453,8 +627,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	public var paddingRight:Float = 0.0;
 
 	/**
-		The minimum space, in pixels, between the scroll bar's bottom edge and
-		the scroll bar's thumb.
+		The minimum space, in pixels, between the scroll bar track's bottom edge
+		and the scroll bar's thumb.
 
 		In the following example, the scroll bar's bottom padding is set to 20
 		pixels:
@@ -473,8 +647,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	public var paddingBottom:Float = 0.0;
 
 	/**
-		The minimum space, in pixels, between the scroll bar's left edge and the
-		scroll bar's thumb.
+		The minimum space, in pixels, between the scroll bar track's left edge
+		and the scroll bar's thumb.
 
 		In the following example, the scroll bar's left padding is set to 20
 		pixels:
@@ -548,6 +722,12 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.value = this.restrictValue(this._value);
 	}
 
+	override public function dispose():Void {
+		this.destroyDecrementButton();
+		this.destroyIncrementButton();
+		super.dispose();
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 		// if the user hasn't changed the value, automatically restrict it based
@@ -564,11 +744,26 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
+		if (this._previousCustomDecrementButtonVariant != this.customDecrementButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY);
+		}
+		if (this._previousCustomIncrementButtonVariant != this.customIncrementButtonVariant) {
+			this.setInvalidationFlag(INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY);
+		}
+		var decrementButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY);
+		var incrementButtonFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY);
 
 		if (stylesInvalid) {
 			this.refreshThumb();
 			this.refreshTrack();
 			this.refreshSecondaryTrack();
+		}
+
+		if (decrementButtonFactoryInvalid) {
+			this.createDecrementButton();
+		}
+		if (incrementButtonFactoryInvalid) {
+			this.createIncrementButton();
 		}
 
 		if (stateInvalid || stylesInvalid) {
@@ -578,6 +773,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		sizeInvalid = this.measure() || sizeInvalid;
 
 		this.layoutContent();
+
+		this._previousCustomDecrementButtonVariant = this.customDecrementButtonVariant;
+		this._previousCustomIncrementButtonVariant = this.customIncrementButtonVariant;
 	}
 
 	private function measure():Bool {
@@ -689,9 +887,16 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		if ((this._currentThumbSkin is IUIControl)) {
 			cast(this._currentThumbSkin, IUIControl).enabled = this._enabled;
 		}
+		if (this.decrementButton != null) {
+			this.decrementButton.enabled = this._enabled && (this._enableButtonsAtRangeLimits || this._value != this._minimum);
+		}
+		if (this.incrementButton != null) {
+			this.incrementButton.enabled = this._enabled && (this._enableButtonsAtRangeLimits || this._value != this._maximum);
+		}
 	}
 
 	private function layoutContent():Void {
+		this.layoutButtons();
 		if (this._currentTrackSkin != null && this._currentSecondaryTrackSkin != null) {
 			this.graphics.clear();
 			this.layoutSplitTrack();
@@ -704,6 +909,13 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this.layoutThumb();
 	}
 
+	private function layoutButtons():Void {
+		if (!this.showDecrementAndIncrementButtons) {
+			return;
+		}
+		throw new TypeError("Missing override for 'layoutButtons' in type " + Type.getClassName(Type.getClass(this)));
+	}
+
 	private function layoutSplitTrack():Void {
 		throw new TypeError("Missing override for 'layoutSplitTrack' in type " + Type.getClassName(Type.getClass(this)));
 	}
@@ -714,6 +926,86 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 
 	private function layoutThumb():Void {
 		throw new TypeError("Missing override for 'layoutThumb' in type " + Type.getClassName(Type.getClass(this)));
+	}
+
+	private function createDecrementButton():Void {
+		this.destroyDecrementButton();
+		if (!this.showDecrementAndIncrementButtons) {
+			return;
+		}
+		var factory = this._decrementButtonFactory != null ? this._decrementButtonFactory : defaultDecrementButtonFactory;
+		this._oldDecrementButtonFactory = factory;
+		this.decrementButton = factory.create();
+		if (this.decrementButton.variant == null) {
+			var defaultVariant = this.customDecrementButtonVariant;
+			if (defaultVariant == null) {
+				if ((this is VScrollBar)) {
+					defaultVariant = VScrollBar.CHILD_VARIANT_DECREMENT_BUTTON;
+				} else if ((this is HScrollBar)) {
+					defaultVariant = HScrollBar.CHILD_VARIANT_DECREMENT_BUTTON;
+				}
+			}
+			this.decrementButton.variant = defaultVariant;
+		}
+		this.decrementButton.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollBar_decrementButton_mouseDownHandler);
+		this.decrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollBar_decrementButton_touchBeginHandler);
+		this.decrementButton.initializeNow();
+		this.decrementButtonMeasurements.save(this.decrementButton);
+		this.addChild(this.decrementButton);
+	}
+
+	private function destroyDecrementButton():Void {
+		if (this.decrementButton == null) {
+			return;
+		}
+		this.decrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, baseScrollBar_decrementButton_mouseDownHandler);
+		this.decrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, baseScrollBar_decrementButton_touchBeginHandler);
+		this.removeChild(this.decrementButton);
+		if (this._oldDecrementButtonFactory.destroy != null) {
+			this._oldDecrementButtonFactory.destroy(this.decrementButton);
+		}
+		this._oldDecrementButtonFactory = null;
+		this.decrementButton = null;
+	}
+
+	private function createIncrementButton():Void {
+		this.destroyIncrementButton();
+		if (!this.showDecrementAndIncrementButtons) {
+			return;
+		}
+		var factory = this._incrementButtonFactory != null ? this._incrementButtonFactory : defaultIncrementButtonFactory;
+		this._oldIncrementButtonFactory = factory;
+		this.incrementButton = factory.create();
+		if (this.incrementButton.variant == null) {
+			var defaultVariant = this.customIncrementButtonVariant;
+			if (defaultVariant == null) {
+				if ((this is VScrollBar)) {
+					defaultVariant = VScrollBar.CHILD_VARIANT_INCREMENT_BUTTON;
+				} else if ((this is HScrollBar)) {
+					defaultVariant = HScrollBar.CHILD_VARIANT_INCREMENT_BUTTON;
+				}
+			}
+			this.incrementButton.variant = defaultVariant;
+		}
+		this.incrementButton.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollBar_incrementButton_mouseDownHandler);
+		this.incrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollBar_incrementButton_touchBeginHandler);
+		this.incrementButton.initializeNow();
+		this.incrementButtonMeasurements.save(this.incrementButton);
+		this.addChild(this.incrementButton);
+	}
+
+	private function destroyIncrementButton():Void {
+		if (this.incrementButton == null) {
+			return;
+		}
+		this.incrementButton.removeEventListener(MouseEvent.MOUSE_DOWN, baseScrollBar_incrementButton_mouseDownHandler);
+		this.incrementButton.removeEventListener(TouchEvent.TOUCH_BEGIN, baseScrollBar_incrementButton_touchBeginHandler);
+		this.removeChild(this.incrementButton);
+		if (this._oldIncrementButtonFactory.destroy != null) {
+			this._oldIncrementButtonFactory.destroy(this.incrementButton);
+		}
+		this._oldIncrementButtonFactory = null;
+		this.incrementButton = null;
 	}
 
 	private function drawFallbackTrack():Void {
@@ -775,6 +1067,18 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			adjustedPage = range;
 		}
 		return adjustedPage;
+	}
+
+	private function decrement():Void {
+		var newValue = this._value - this._step;
+		newValue = this.restrictValue(newValue);
+		this.value = newValue;
+	}
+
+	private function increment():Void {
+		var newValue = this._value + this._step;
+		newValue = this.restrictValue(newValue);
+		this.value = newValue;
 	}
 
 	private function thumbSkin_mouseDownHandler(event:MouseEvent):Void {
@@ -861,5 +1165,67 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		if (!this.liveDragging) {
 			FeathersEvent.dispatch(this, Event.CHANGE);
 		}
+	}
+
+	private function baseScrollBar_decrementButton_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled || !this.decrementButton.enabled || this.stage == null) {
+			return;
+		}
+
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimMouse(this);
+		if (!result) {
+			return;
+		}
+		this.decrement();
+	}
+
+	private function baseScrollBar_decrementButton_touchBeginHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
+
+		if (!this._enabled || !this.decrementButton.enabled || this.stage == null) {
+			return;
+		}
+
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimMouse(this);
+		if (!result) {
+			return;
+		}
+		this.decrement();
+	}
+
+	private function baseScrollBar_incrementButton_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled || !this.incrementButton.enabled || this.stage == null) {
+			return;
+		}
+
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimMouse(this);
+		if (!result) {
+			return;
+		}
+		this.increment();
+	}
+
+	private function baseScrollBar_incrementButton_touchBeginHandler(event:TouchEvent):Void {
+		if (event.isPrimaryTouchPoint #if air && Multitouch.mapTouchToMouse #end) {
+			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
+			return;
+		}
+
+		if (!this._enabled || !this.incrementButton.enabled || this.stage == null) {
+			return;
+		}
+
+		var exclusivePointer = ExclusivePointer.forStage(this.stage);
+		var result = exclusivePointer.claimMouse(this);
+		if (!result) {
+			return;
+		}
+		this.increment();
 	}
 }

@@ -9,8 +9,11 @@
 package feathers.themes.steel.components;
 
 import feathers.controls.BasicButton;
+import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.HScrollBar;
 import feathers.skins.RectangleSkin;
+import feathers.skins.TriangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
 import feathers.utils.DeviceUtil;
@@ -68,6 +71,72 @@ class SteelHScrollBarStyles {
 				scrollBar.paddingRight = 2.0;
 				scrollBar.paddingBottom = 2.0;
 				scrollBar.paddingLeft = 2.0;
+			});
+		}
+
+		if (styleProvider.getStyleFunction(Button, HScrollBar.CHILD_VARIANT_DECREMENT_BUTTON) == null) {
+			styleProvider.setStyleFunction(Button, HScrollBar.CHILD_VARIANT_DECREMENT_BUTTON, function(button:Button):Void {
+				if (button.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = theme.getControlFill();
+					skin.disabledFill = theme.getControlDisabledFill();
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
+					skin.border = None;
+					skin.width = 12.0;
+					skin.height = 12.0;
+					button.backgroundSkin = skin;
+				}
+
+				if (button.icon == null) {
+					var icon = new TriangleSkin();
+					icon.pointPosition = LEFT;
+					icon.fill = SolidColor(theme.scrollBarThumbFillColor);
+					icon.disabledFill = SolidColor(theme.scrollBarThumbDisabledFillColor);
+					icon.width = 4.0;
+					icon.height = 8.0;
+					button.icon = icon;
+				}
+
+				button.showText = false;
+
+				button.paddingTop = 2.0;
+				button.paddingRight = 2.0;
+				button.paddingBottom = 2.0;
+				button.paddingLeft = 2.0;
+				button.gap = 2.0;
+			});
+		}
+
+		if (styleProvider.getStyleFunction(Button, HScrollBar.CHILD_VARIANT_INCREMENT_BUTTON) == null) {
+			styleProvider.setStyleFunction(Button, HScrollBar.CHILD_VARIANT_INCREMENT_BUTTON, function(button:Button):Void {
+				if (button.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = theme.getControlFill();
+					skin.disabledFill = theme.getControlDisabledFill();
+					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
+					skin.border = None;
+					skin.width = 12.0;
+					skin.height = 12.0;
+					button.backgroundSkin = skin;
+				}
+
+				if (button.icon == null) {
+					var icon = new TriangleSkin();
+					icon.pointPosition = RIGHT;
+					icon.fill = SolidColor(theme.scrollBarThumbFillColor);
+					icon.disabledFill = SolidColor(theme.scrollBarThumbDisabledFillColor);
+					icon.width = 4.0;
+					icon.height = 8.0;
+					button.icon = icon;
+				}
+
+				button.showText = false;
+
+				button.paddingTop = 2.0;
+				button.paddingRight = 2.0;
+				button.paddingBottom = 2.0;
+				button.paddingLeft = 2.0;
+				button.gap = 2.0;
 			});
 		}
 	}
