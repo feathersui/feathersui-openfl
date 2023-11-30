@@ -39,4 +39,56 @@ class AlertTest extends Test {
 		this._alert.dispose();
 		Assert.pass();
 	}
+
+	public function testButtonBarDefaultVariant():Void {
+		var buttonBar:ButtonBar = null;
+		this._alert.buttonBarFactory = () -> {
+			buttonBar = new ButtonBar();
+			return buttonBar;
+		}
+		this._alert.validateNow();
+		Assert.notNull(buttonBar);
+		Assert.equals(Alert.CHILD_VARIANT_BUTTON_BAR, buttonBar.variant);
+	}
+
+	public function testButtonBarCustomVariant1():Void {
+		final customVariant = "custom";
+		this._alert.customButtonBarVariant = customVariant;
+		var buttonBar:ButtonBar = null;
+		this._alert.buttonBarFactory = () -> {
+			buttonBar = new ButtonBar();
+			return buttonBar;
+		}
+		this._alert.validateNow();
+		Assert.notNull(buttonBar);
+		Assert.equals(customVariant, buttonBar.variant);
+	}
+
+	public function testButtonBarCustomVariant2():Void {
+		final customVariant = "custom";
+		var buttonBar:ButtonBar = null;
+		this._alert.buttonBarFactory = () -> {
+			buttonBar = new ButtonBar();
+			buttonBar.variant = customVariant;
+			return buttonBar;
+		}
+		this._alert.validateNow();
+		Assert.notNull(buttonBar);
+		Assert.equals(customVariant, buttonBar.variant);
+	}
+
+	public function testButtonBarCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._alert.customButtonBarVariant = customVariant1;
+		var buttonBar:ButtonBar = null;
+		this._alert.buttonBarFactory = () -> {
+			buttonBar = new ButtonBar();
+			buttonBar.variant = customVariant2;
+			return buttonBar;
+		}
+		this._alert.validateNow();
+		Assert.notNull(buttonBar);
+		Assert.equals(customVariant2, buttonBar.variant);
+	}
 }

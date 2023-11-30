@@ -92,4 +92,52 @@ class PageIndicatorTest extends Test {
 		Assert.notNull(this._pageIndicator.indexToToggleButton(0));
 		Assert.isNull(this._pageIndicator.indexToToggleButton(1));
 	}
+
+	public function testToggleButtonDefaultVariant():Void {
+		this._pageIndicator.maxSelectedIndex = 2;
+		this._pageIndicator.validateNow();
+		var toggleButton:ToggleButton = this._pageIndicator.indexToToggleButton(0);
+		Assert.notNull(toggleButton);
+		Assert.equals(PageIndicator.CHILD_VARIANT_TOGGLE_BUTTON, toggleButton.variant);
+	}
+
+	public function testToggleButtonCustomVariant1():Void {
+		final customVariant = "custom";
+		this._pageIndicator.customToggleButtonVariant = customVariant;
+		this._pageIndicator.maxSelectedIndex = 2;
+		this._pageIndicator.validateNow();
+		var toggleButton:ToggleButton = this._pageIndicator.indexToToggleButton(0);
+		Assert.notNull(toggleButton);
+		Assert.equals(customVariant, toggleButton.variant);
+	}
+
+	public function testToggleButtonCustomVariant2():Void {
+		final customVariant = "custom";
+		this._pageIndicator.maxSelectedIndex = 2;
+		this._pageIndicator.toggleButtonRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var toggleButton = new ToggleButton();
+			toggleButton.variant = customVariant;
+			return toggleButton;
+		});
+		this._pageIndicator.validateNow();
+		var toggleButton:ToggleButton = this._pageIndicator.indexToToggleButton(0);
+		Assert.notNull(toggleButton);
+		Assert.equals(customVariant, toggleButton.variant);
+	}
+
+	public function testToggleButtonCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._pageIndicator.customToggleButtonVariant = customVariant1;
+		this._pageIndicator.maxSelectedIndex = 2;
+		this._pageIndicator.toggleButtonRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var toggleButton = new ToggleButton();
+			toggleButton.variant = customVariant2;
+			return toggleButton;
+		});
+		this._pageIndicator.validateNow();
+		var toggleButton:ToggleButton = this._pageIndicator.indexToToggleButton(0);
+		Assert.notNull(toggleButton);
+		Assert.equals(customVariant2, toggleButton.variant);
+	}
 }

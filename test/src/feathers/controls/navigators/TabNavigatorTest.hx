@@ -94,4 +94,56 @@ class TabNavigatorTest extends Test {
 		Assert.isNull(this._navigator.selectedItem);
 		Assert.isNull(this._navigator.activeItemView);
 	}
+
+	public function testTabBarDefaultVariant():Void {
+		var tabBar:TabBar = null;
+		this._navigator.tabBarFactory = () -> {
+			tabBar = new TabBar();
+			return tabBar;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(tabBar);
+		Assert.equals(TabNavigator.CHILD_VARIANT_TAB_BAR, tabBar.variant);
+	}
+
+	public function testTabBarCustomVariant1():Void {
+		final customVariant = "custom";
+		this._navigator.customTabBarVariant = customVariant;
+		var tabBar:TabBar = null;
+		this._navigator.tabBarFactory = () -> {
+			tabBar = new TabBar();
+			return tabBar;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(tabBar);
+		Assert.equals(customVariant, tabBar.variant);
+	}
+
+	public function testTabBarCustomVariant2():Void {
+		final customVariant = "custom";
+		var tabBar:TabBar = null;
+		this._navigator.tabBarFactory = () -> {
+			tabBar = new TabBar();
+			tabBar.variant = customVariant;
+			return tabBar;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(tabBar);
+		Assert.equals(customVariant, tabBar.variant);
+	}
+
+	public function testTabBarCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._navigator.customTabBarVariant = customVariant1;
+		var tabBar:TabBar = null;
+		this._navigator.tabBarFactory = () -> {
+			tabBar = new TabBar();
+			tabBar.variant = customVariant2;
+			return tabBar;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(tabBar);
+		Assert.equals(customVariant2, tabBar.variant);
+	}
 }

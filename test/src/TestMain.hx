@@ -34,6 +34,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ButtonBarTest());
 		runner.addCase(new feathers.controls.CalloutTest());
 		runner.addCase(new feathers.controls.ComboBoxTest());
+		runner.addCase(new feathers.controls.DatePickerTest());
 		runner.addCase(new feathers.controls.DrawerTest());
 		runner.addCase(new feathers.controls.FormTest());
 		runner.addCase(new feathers.controls.GridViewTest());
@@ -54,6 +55,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.PageIndicatorTest());
 		runner.addCase(new feathers.controls.PanelTest());
 		runner.addCase(new feathers.controls.PanelMeasurementTest());
+		runner.addCase(new feathers.controls.PopUpDatePickerTest());
 		runner.addCase(new feathers.controls.PopUpListViewTest());
 		runner.addCase(new feathers.controls.RadioTest());
 		runner.addCase(new feathers.controls.navigators.PageNavigatorTest());

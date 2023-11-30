@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.data.TreeViewItemState;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
@@ -16,8 +15,10 @@ import feathers.core.IOpenCloseToggle;
 import feathers.data.ArrayHierarchicalCollection;
 import feathers.data.TreeCollection;
 import feathers.data.TreeNode;
+import feathers.data.TreeViewItemState;
 import feathers.events.ScrollEvent;
 import feathers.layout.ILayoutIndexObject;
+import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
 import openfl.events.Event;
@@ -721,6 +722,58 @@ import utest.Test;
 		var itemRenderer = cast(this._treeView.itemToItemRenderer(this._treeView.dataProvider.get([0])), HierarchicalItemRenderer);
 		Assert.notNull(itemRenderer);
 		Assert.equals("One", itemRenderer.text);
+	}
+
+	public function testItemRendererDefaultVariant():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._treeView.locationToItemRenderer([0]);
+		Assert.notNull(itemRenderer);
+		Assert.equals(TreeView.CHILD_VARIANT_ITEM_RENDERER, itemRenderer.variant);
+	}
+
+	public function testItemRendererCustomVariant1():Void {
+		final customVariant = "custom";
+		this._treeView.customItemRendererVariant = customVariant;
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._treeView.locationToItemRenderer([0]);
+		Assert.notNull(itemRenderer);
+		Assert.equals(customVariant, itemRenderer.variant);
+	}
+
+	public function testItemRendererCustomVariant2():Void {
+		final customVariant = "custom";
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new HierarchicalItemRenderer();
+			itemRenderer.variant = customVariant;
+			return itemRenderer;
+		});
+		this._treeView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._treeView.locationToItemRenderer([0]);
+		Assert.notNull(itemRenderer);
+		Assert.equals(customVariant, itemRenderer.variant);
+	}
+
+	public function testItemRendererCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._treeView.customItemRendererVariant = customVariant1;
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new HierarchicalItemRenderer();
+			itemRenderer.variant = customVariant2;
+			return itemRenderer;
+		});
+		this._treeView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._treeView.locationToItemRenderer([0]);
+		Assert.notNull(itemRenderer);
+		Assert.equals(customVariant2, itemRenderer.variant);
 	}
 }
 

@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.controls.Button;
 import feathers.layout.VerticalLayout;
 import feathers.skins.RectangleSkin;
 import openfl.Lib;
@@ -158,5 +157,30 @@ class LayoutGroupTest extends Test {
 			Assert.equals(-1, index);
 		});
 		this._group.removeChild(child2);
+	}
+
+	public function testReadjustLayout():Void {
+		var child = new Shape();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0.0, 0.0, 150.0, 100.0);
+		child.graphics.endFill();
+		this._group.addChild(child);
+		this._group.validateNow();
+		var originalWidth = child.width;
+		var originalHeight = child.height;
+		Assert.equals(originalWidth, this._group.width);
+		Assert.equals(originalHeight, this._group.height);
+		child.graphics.clear();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0.0, 0.0, 200.0, 250.0);
+		child.graphics.endFill();
+		Assert.equals(originalWidth, this._group.width);
+		Assert.equals(originalHeight, this._group.height);
+		this._group.readjustLayout();
+		Assert.equals(originalWidth, this._group.width);
+		Assert.equals(originalHeight, this._group.height);
+		this._group.validateNow();
+		Assert.equals(child.width, this._group.width);
+		Assert.equals(child.height, this._group.height);
 	}
 }

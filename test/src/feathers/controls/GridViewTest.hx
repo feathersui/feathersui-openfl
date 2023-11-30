@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.skins.RectangleSkin;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGridViewCellRenderer;
@@ -1015,6 +1016,95 @@ class GridViewTest extends Test {
 		Assert.equals("One", itemRenderer1.text);
 		Assert.equals(0, itemRenderer2.parent.getChildIndex(itemRenderer2));
 		Assert.equals(1, itemRenderer1.parent.getChildIndex(itemRenderer1));
+	}
+
+	public function testHeaderCornerSkinHiddenWhenNoScrollingRequired():Void {
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+
+		var headerCornerSkin = new RectangleSkin();
+		headerCornerSkin.width = 10;
+		headerCornerSkin.height = 10;
+		this._gridView.headerCornerSkin = headerCornerSkin;
+		this._gridView.fixedScrollBars = true;
+		this._gridView.extendedScrollBarY = false;
+		this._gridView.validateNow();
+		// exactly how the skin is hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(headerCornerSkin.parent == null || !headerCornerSkin.visible);
+		Assert.equals(0.0, this._gridView.minScrollY);
+		Assert.equals(0.0, this._gridView.maxScrollY);
+	}
+
+	public function testHeaderCornerSkinVisibleWhenVerticalScrollingRequired():Void {
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+		this._gridView.height = 50.0;
+
+		var headerCornerSkin = new RectangleSkin();
+		headerCornerSkin.width = 10;
+		headerCornerSkin.height = 10;
+		this._gridView.headerCornerSkin = headerCornerSkin;
+		this._gridView.fixedScrollBars = true;
+		this._gridView.extendedScrollBarY = false;
+		this._gridView.validateNow();
+		Assert.notNull(headerCornerSkin.parent);
+		Assert.isTrue(headerCornerSkin.visible);
+		Assert.equals(0.0, this._gridView.minScrollY);
+		Assert.isTrue(this._gridView.maxScrollY > 0.0);
+	}
+
+	public function testHeaderCornerSkinVisibleWhenVerticalScrollingRequiredAndScrollBarYIsExtended():Void {
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+		this._gridView.height = 50.0;
+
+		var headerCornerSkin = new RectangleSkin();
+		headerCornerSkin.width = 10;
+		headerCornerSkin.height = 10;
+		this._gridView.headerCornerSkin = headerCornerSkin;
+		this._gridView.fixedScrollBars = true;
+		this._gridView.extendedScrollBarY = true;
+		this._gridView.validateNow();
+		// exactly how the skin is hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(headerCornerSkin.parent == null || !headerCornerSkin.visible);
+		Assert.equals(0.0, this._gridView.minScrollY);
+		Assert.isTrue(this._gridView.maxScrollY > 0.0);
+	}
+
+	public function testHeaderCornerSkinVisibleWhenVerticalScrollingRequiredAndScrollBarsNotFixed():Void {
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+		this._gridView.height = 50.0;
+
+		var headerCornerSkin = new RectangleSkin();
+		headerCornerSkin.width = 10;
+		headerCornerSkin.height = 10;
+		this._gridView.headerCornerSkin = headerCornerSkin;
+		this._gridView.fixedScrollBars = false;
+		this._gridView.extendedScrollBarY = false;
+		this._gridView.validateNow();
+		// exactly how the skin is hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(headerCornerSkin.parent == null || !headerCornerSkin.visible);
+		Assert.equals(0.0, this._gridView.minScrollY);
+		Assert.isTrue(this._gridView.maxScrollY > 0.0);
 	}
 }
 

@@ -671,6 +671,58 @@ class TabBarTest extends Test {
 		Assert.notNull(tab);
 		Assert.equals("One", tab.text);
 	}
+
+	public function testTabDefaultVariant():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.validateNow();
+		var tab:ToggleButton = this._tabBar.indexToTab(0);
+		Assert.notNull(tab);
+		Assert.equals(TabBar.CHILD_VARIANT_TAB, tab.variant);
+	}
+
+	public function testTabCustomVariant1():Void {
+		final customVariant = "custom";
+		this._tabBar.customTabVariant = customVariant;
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.validateNow();
+		var tab:ToggleButton = this._tabBar.indexToTab(0);
+		Assert.notNull(tab);
+		Assert.equals(customVariant, tab.variant);
+	}
+
+	public function testTabCustomVariant2():Void {
+		final customVariant = "custom";
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.tabRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var tab = new ToggleButton();
+			tab.variant = customVariant;
+			return tab;
+		});
+		this._tabBar.validateNow();
+		var tab:ToggleButton = this._tabBar.indexToTab(0);
+		Assert.notNull(tab);
+		Assert.equals(customVariant, tab.variant);
+	}
+
+	public function testTabCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._tabBar.customTabVariant = customVariant1;
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.dataProvider = collection;
+		this._tabBar.tabRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var tab = new ToggleButton();
+			tab.variant = customVariant2;
+			return tab;
+		});
+		this._tabBar.validateNow();
+		var tab:ToggleButton = this._tabBar.indexToTab(0);
+		Assert.notNull(tab);
+		Assert.equals(customVariant2, tab.variant);
+	}
 }
 
 private class CustomRendererWithInterfaces extends ToggleButton implements IDataRenderer implements ILayoutIndexObject {

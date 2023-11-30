@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.skins.RectangleSkin;
 import openfl.Lib;
 import openfl.display.Shape;
 import utest.Assert;
@@ -81,5 +82,139 @@ class ScrollContainerTest extends Test {
 		this._container.validateNow();
 		Assert.isNull(skin1.parent);
 		Assert.equals(this._container, skin2.parent);
+	}
+
+	public function testScrollBarsCornerSkinHiddenWhenNoScrollingRequired():Void {
+		var child = new LayoutGroup();
+		child.width = 150.0;
+		child.height = 200.0;
+		this._container.addChild(child);
+		var scrollBarsCornerSkin = new RectangleSkin();
+		scrollBarsCornerSkin.width = 10;
+		scrollBarsCornerSkin.height = 10;
+		this._container.scrollBarsCornerSkin = scrollBarsCornerSkin;
+		this._container.fixedScrollBars = true;
+		this._container.validateNow();
+		// exactly how the skin is hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(scrollBarsCornerSkin.parent == null || !scrollBarsCornerSkin.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testScrollBarsCornerSkinHiddenWhenOnlyHorizontalScrollingRequired():Void {
+		var child = new LayoutGroup();
+		child.width = 150.0;
+		child.height = 200.0;
+		this._container.addChild(child);
+		this._container.width = 100.0;
+		var scrollBarsCornerSkin = new RectangleSkin();
+		scrollBarsCornerSkin.width = 10;
+		scrollBarsCornerSkin.height = 10;
+		this._container.scrollBarsCornerSkin = scrollBarsCornerSkin;
+		this._container.fixedScrollBars = true;
+		this._container.validateNow();
+		// exactly how the skin is hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(scrollBarsCornerSkin.parent == null || !scrollBarsCornerSkin.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.isTrue(this._container.maxScrollX > 0.0);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.equals(0.0, this._container.maxScrollY);
+	}
+
+	public function testScrollBarsCornerSkinHiddenWhenOnlyVerticalScrollingRequired():Void {
+		var child = new LayoutGroup();
+		child.width = 150.0;
+		child.height = 200.0;
+		this._container.addChild(child);
+		this._container.height = 100.0;
+		var scrollBarsCornerSkin = new RectangleSkin();
+		scrollBarsCornerSkin.width = 10;
+		scrollBarsCornerSkin.height = 10;
+		this._container.scrollBarsCornerSkin = scrollBarsCornerSkin;
+		this._container.fixedScrollBars = true;
+		this._container.validateNow();
+		// exactly how the skin is hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(scrollBarsCornerSkin.parent == null || !scrollBarsCornerSkin.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.equals(0.0, this._container.maxScrollX);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.isTrue(this._container.maxScrollY > 0.0);
+	}
+
+	public function testScrollBarsCornerSkinVisibleWhenScrollingInBothDirectionsRequired():Void {
+		var child = new LayoutGroup();
+		child.width = 150.0;
+		child.height = 200.0;
+		this._container.addChild(child);
+		this._container.width = 100.0;
+		this._container.height = 100.0;
+		var scrollBarsCornerSkin = new RectangleSkin();
+		scrollBarsCornerSkin.width = 10;
+		scrollBarsCornerSkin.height = 10;
+		this._container.scrollBarsCornerSkin = scrollBarsCornerSkin;
+		this._container.fixedScrollBars = true;
+		this._container.validateNow();
+		Assert.notNull(scrollBarsCornerSkin.parent);
+		Assert.isTrue(scrollBarsCornerSkin.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.isTrue(this._container.maxScrollX > 0.0);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.isTrue(this._container.maxScrollY > 0.0);
+	}
+
+	public function testScrollBarsCornerSkinVisibleWhenScrollingInBothDirectionsRequiredAndScrollBarsNotFixed():Void {
+		var child = new LayoutGroup();
+		child.width = 150.0;
+		child.height = 200.0;
+		this._container.addChild(child);
+		this._container.width = 100.0;
+		this._container.height = 100.0;
+		var scrollBarsCornerSkin = new RectangleSkin();
+		scrollBarsCornerSkin.width = 10;
+		scrollBarsCornerSkin.height = 10;
+		this._container.scrollBarsCornerSkin = scrollBarsCornerSkin;
+		this._container.fixedScrollBars = false;
+		this._container.validateNow();
+		// exactly how the skin is hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(scrollBarsCornerSkin.parent == null || !scrollBarsCornerSkin.visible);
+		Assert.equals(0.0, this._container.minScrollX);
+		Assert.isTrue(this._container.maxScrollX > 0.0);
+		Assert.equals(0.0, this._container.minScrollY);
+		Assert.isTrue(this._container.maxScrollY > 0.0);
+	}
+
+	public function testReadjustLayout():Void {
+		var child = new Shape();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0.0, 0.0, 150.0, 100.0);
+		child.graphics.endFill();
+		this._container.addChild(child);
+		this._container.validateNow();
+		var originalWidth = child.width;
+		var originalHeight = child.height;
+		Assert.equals(originalWidth, this._container.width);
+		Assert.equals(originalHeight, this._container.height);
+		child.graphics.clear();
+		child.graphics.beginFill(0xff00ff);
+		child.graphics.drawRect(0.0, 0.0, 200.0, 250.0);
+		child.graphics.endFill();
+		Assert.equals(originalWidth, this._container.width);
+		Assert.equals(originalHeight, this._container.height);
+		this._container.readjustLayout();
+		Assert.equals(originalWidth, this._container.width);
+		Assert.equals(originalHeight, this._container.height);
+		this._container.validateNow();
+		Assert.equals(child.width, this._container.width);
+		Assert.equals(child.height, this._container.height);
 	}
 }

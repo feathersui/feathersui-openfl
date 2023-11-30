@@ -77,4 +77,137 @@ class VScrollBarTest extends Test {
 		this._scrollBar.applyValueRestrictions();
 		Assert.equals(-1.0, this._scrollBar.value);
 	}
+
+	public function testDecrementAndIncrementButtonDefaultVariants():Void {
+		var decrementButton:Button = null;
+		var incrementButton:Button = null;
+		this._scrollBar.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			return decrementButton;
+		}
+		this._scrollBar.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			return incrementButton;
+		}
+		this._scrollBar.showDecrementAndIncrementButtons = true;
+		this._scrollBar.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(VScrollBar.CHILD_VARIANT_DECREMENT_BUTTON, decrementButton.variant);
+		Assert.notNull(incrementButton);
+		Assert.equals(VScrollBar.CHILD_VARIANT_INCREMENT_BUTTON, incrementButton.variant);
+	}
+
+	public function testDecrementAndIncrementButtonCustomVariants1():Void {
+		var decrementButton:Button = null;
+		var incrementButton:Button = null;
+		final customDecrementVariant = "custom1";
+		final customIncrementVariant = "custom2";
+		this._scrollBar.customDecrementButtonVariant = customDecrementVariant;
+		this._scrollBar.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			return decrementButton;
+		}
+		this._scrollBar.customIncrementButtonVariant = customIncrementVariant;
+		this._scrollBar.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			return incrementButton;
+		}
+		this._scrollBar.showDecrementAndIncrementButtons = true;
+		this._scrollBar.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(customDecrementVariant, decrementButton.variant);
+		Assert.notNull(incrementButton);
+		Assert.equals(customIncrementVariant, incrementButton.variant);
+	}
+
+	public function testDecrementAndIncrementButtonCustomVariants2():Void {
+		var decrementButton:Button = null;
+		var incrementButton:Button = null;
+		final customDecrementVariant = "custom1";
+		final customIncrementVariant = "custom2";
+		this._scrollBar.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			decrementButton.variant = customDecrementVariant;
+			return decrementButton;
+		}
+		this._scrollBar.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			incrementButton.variant = customIncrementVariant;
+			return incrementButton;
+		}
+		this._scrollBar.showDecrementAndIncrementButtons = true;
+		this._scrollBar.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(customDecrementVariant, decrementButton.variant);
+		Assert.notNull(incrementButton);
+		Assert.equals(customIncrementVariant, incrementButton.variant);
+	}
+
+	public function testDecrementAndIncrementButtonCustomVariants3():Void {
+		var decrementButton:Button = null;
+		var incrementButton:Button = null;
+		final customDecrementVariant1 = "custom1";
+		final customIncrementVariant1 = "custom2";
+		final customDecrementVariant2 = "custom3";
+		final customIncrementVariant2 = "custom4";
+		this._scrollBar.customDecrementButtonVariant = customDecrementVariant1;
+		this._scrollBar.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			decrementButton.variant = customDecrementVariant2;
+			return decrementButton;
+		}
+		this._scrollBar.customIncrementButtonVariant = customIncrementVariant1;
+		this._scrollBar.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			incrementButton.variant = customIncrementVariant2;
+			return incrementButton;
+		}
+		this._scrollBar.showDecrementAndIncrementButtons = true;
+		this._scrollBar.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(customDecrementVariant2, decrementButton.variant);
+		Assert.notNull(incrementButton);
+		Assert.equals(customIncrementVariant2, incrementButton.variant);
+	}
+
+	public function testShowDecrementAndIncrementButtons():Void {
+		var decrementButton:Button = null;
+		var incrementButton:Button = null;
+		this._scrollBar.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			return decrementButton;
+		}
+		this._scrollBar.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			return incrementButton;
+		}
+		this._scrollBar.showDecrementAndIncrementButtons = true;
+		this._scrollBar.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.notNull(decrementButton.parent);
+		Assert.isTrue(decrementButton.visible);
+		Assert.notNull(incrementButton);
+		Assert.notNull(incrementButton.parent);
+		Assert.isTrue(incrementButton.visible);
+	}
+
+	public function testHideDecrementAndIncrementButtons():Void {
+		var decrementButton:Button = null;
+		var incrementButton:Button = null;
+		this._scrollBar.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			return decrementButton;
+		}
+		this._scrollBar.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			return incrementButton;
+		}
+		this._scrollBar.showDecrementAndIncrementButtons = false;
+		this._scrollBar.validateNow();
+		// exactly how the buttons are hidden is an implementation detail,
+		// but one of these cases should be true. alpha is not included because
+		// the alpha value should be allowed to be customized in themes.
+		Assert.isTrue(decrementButton == null || decrementButton.parent == null || !decrementButton.visible);
+		Assert.isTrue(incrementButton == null || incrementButton.parent == null || !incrementButton.visible);
+	}
 }

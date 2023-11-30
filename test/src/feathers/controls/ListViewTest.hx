@@ -15,6 +15,7 @@ import feathers.data.ArrayCollection;
 import feathers.data.ListViewItemState;
 import feathers.events.ScrollEvent;
 import feathers.layout.ILayoutIndexObject;
+import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
 import openfl.events.Event;
@@ -800,6 +801,58 @@ class ListViewTest extends Test {
 		var itemRenderer = cast(this._listView.itemToItemRenderer(this._listView.dataProvider.get(0)), ItemRenderer);
 		Assert.notNull(itemRenderer);
 		Assert.equals("One", itemRenderer.text);
+	}
+
+	public function testItemRendererDefaultVariant():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._listView.indexToItemRenderer(0);
+		Assert.notNull(itemRenderer);
+		Assert.equals(ListView.CHILD_VARIANT_ITEM_RENDERER, itemRenderer.variant);
+	}
+
+	public function testItemRendererCustomVariant1():Void {
+		final customVariant = "custom";
+		this._listView.customItemRendererVariant = customVariant;
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._listView.indexToItemRenderer(0);
+		Assert.notNull(itemRenderer);
+		Assert.equals(customVariant, itemRenderer.variant);
+	}
+
+	public function testItemRendererCustomVariant2():Void {
+		final customVariant = "custom";
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new ItemRenderer();
+			itemRenderer.variant = customVariant;
+			return itemRenderer;
+		});
+		this._listView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._listView.indexToItemRenderer(0);
+		Assert.notNull(itemRenderer);
+		Assert.equals(customVariant, itemRenderer.variant);
+	}
+
+	public function testItemRendererCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._listView.customItemRendererVariant = customVariant1;
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new ItemRenderer();
+			itemRenderer.variant = customVariant2;
+			return itemRenderer;
+		});
+		this._listView.validateNow();
+		var itemRenderer:IVariantStyleObject = cast this._listView.indexToItemRenderer(0);
+		Assert.notNull(itemRenderer);
+		Assert.equals(customVariant2, itemRenderer.variant);
 	}
 }
 

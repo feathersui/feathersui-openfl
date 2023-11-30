@@ -94,4 +94,56 @@ class PageNavigatorTest extends Test {
 		Assert.isNull(this._navigator.selectedItem);
 		Assert.isNull(this._navigator.activeItemView);
 	}
+
+	public function testPageIndicatorDefaultVariant():Void {
+		var pageIndicator:PageIndicator = null;
+		this._navigator.pageIndicatorFactory = () -> {
+			pageIndicator = new PageIndicator();
+			return pageIndicator;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(pageIndicator);
+		Assert.equals(PageNavigator.CHILD_VARIANT_PAGE_INDICATOR, pageIndicator.variant);
+	}
+
+	public function testPageIndicatorCustomVariant1():Void {
+		final customVariant = "custom";
+		this._navigator.customPageIndicatorVariant = customVariant;
+		var pageIndicator:PageIndicator = null;
+		this._navigator.pageIndicatorFactory = () -> {
+			pageIndicator = new PageIndicator();
+			return pageIndicator;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(pageIndicator);
+		Assert.equals(customVariant, pageIndicator.variant);
+	}
+
+	public function testPageIndicatorCustomVariant2():Void {
+		final customVariant = "custom";
+		var pageIndicator:PageIndicator = null;
+		this._navigator.pageIndicatorFactory = () -> {
+			pageIndicator = new PageIndicator();
+			pageIndicator.variant = customVariant;
+			return pageIndicator;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(pageIndicator);
+		Assert.equals(customVariant, pageIndicator.variant);
+	}
+
+	public function testPageIndicatorCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._navigator.customPageIndicatorVariant = customVariant1;
+		var pageIndicator:PageIndicator = null;
+		this._navigator.pageIndicatorFactory = () -> {
+			pageIndicator = new PageIndicator();
+			pageIndicator.variant = customVariant2;
+			return pageIndicator;
+		}
+		this._navigator.validateNow();
+		Assert.notNull(pageIndicator);
+		Assert.equals(customVariant2, pageIndicator.variant);
+	}
 }

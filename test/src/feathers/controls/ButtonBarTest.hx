@@ -309,6 +309,58 @@ class ButtonBarTest extends Test {
 		Assert.notNull(button);
 		Assert.equals("One", button.text);
 	}
+
+	public function testButtonDefaultVariant():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.validateNow();
+		var button:Button = this._buttonBar.indexToButton(0);
+		Assert.notNull(button);
+		Assert.equals(ButtonBar.CHILD_VARIANT_BUTTON, button.variant);
+	}
+
+	public function testButtonCustomVariant1():Void {
+		final customVariant = "custom";
+		this._buttonBar.customButtonVariant = customVariant;
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.validateNow();
+		var button:Button = this._buttonBar.indexToButton(0);
+		Assert.notNull(button);
+		Assert.equals(customVariant, button.variant);
+	}
+
+	public function testButtonCustomVariant2():Void {
+		final customVariant = "custom";
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var button = new Button();
+			button.variant = customVariant;
+			return button;
+		});
+		this._buttonBar.validateNow();
+		var button:Button = this._buttonBar.indexToButton(0);
+		Assert.notNull(button);
+		Assert.equals(customVariant, button.variant);
+	}
+
+	public function testButtonCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._buttonBar.customButtonVariant = customVariant1;
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var button = new Button();
+			button.variant = customVariant2;
+			return button;
+		});
+		this._buttonBar.validateNow();
+		var button:Button = this._buttonBar.indexToButton(0);
+		Assert.notNull(button);
+		Assert.equals(customVariant2, button.variant);
+	}
 }
 
 private class CustomRendererWithInterfaces extends Button implements IDataRenderer implements ILayoutIndexObject {

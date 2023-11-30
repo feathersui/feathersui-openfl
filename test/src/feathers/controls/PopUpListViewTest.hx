@@ -446,4 +446,56 @@ class PopUpListViewTest extends Test {
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._listView.selectedItem);
 	}
+
+	public function testButtonDefaultVariant():Void {
+		var button:Button = null;
+		this._listView.buttonFactory = () -> {
+			button = new Button();
+			return button;
+		}
+		this._listView.validateNow();
+		Assert.notNull(button);
+		Assert.equals(PopUpListView.CHILD_VARIANT_BUTTON, button.variant);
+	}
+
+	public function testButtonCustomVariant1():Void {
+		final customVariant = "custom";
+		this._listView.customButtonVariant = customVariant;
+		var button:Button = null;
+		this._listView.buttonFactory = () -> {
+			button = new Button();
+			return button;
+		}
+		this._listView.validateNow();
+		Assert.notNull(button);
+		Assert.equals(customVariant, button.variant);
+	}
+
+	public function testButtonCustomVariant2():Void {
+		final customVariant = "custom";
+		var button:Button = null;
+		this._listView.buttonFactory = () -> {
+			button = new Button();
+			button.variant = customVariant;
+			return button;
+		}
+		this._listView.validateNow();
+		Assert.notNull(button);
+		Assert.equals(customVariant, button.variant);
+	}
+
+	public function testButtonCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._listView.customButtonVariant = customVariant1;
+		var button:Button = null;
+		this._listView.buttonFactory = () -> {
+			button = new Button();
+			button.variant = customVariant2;
+			return button;
+		}
+		this._listView.validateNow();
+		Assert.notNull(button);
+		Assert.equals(customVariant2, button.variant);
+	}
 }

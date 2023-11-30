@@ -77,4 +77,160 @@ class NumericStepperTest extends Test {
 		this._stepper.applyValueRestrictions();
 		Assert.equals(-1.0, this._stepper.value);
 	}
+
+	public function testTextInputDefaultVariant():Void {
+		var textInput:TextInput = null;
+		this._stepper.textInputFactory = () -> {
+			textInput = new TextInput();
+			return textInput;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(textInput);
+		Assert.equals(NumericStepper.CHILD_VARIANT_TEXT_INPUT, textInput.variant);
+	}
+
+	public function testTextInputCustomVariant1():Void {
+		final customVariant = "custom";
+		this._stepper.customTextInputVariant = customVariant;
+		var textInput:TextInput = null;
+		this._stepper.textInputFactory = () -> {
+			textInput = new TextInput();
+			return textInput;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(textInput);
+		Assert.equals(customVariant, textInput.variant);
+	}
+
+	public function testTextInputCustomVariant2():Void {
+		final customVariant = "custom";
+		var textInput:TextInput = null;
+		this._stepper.textInputFactory = () -> {
+			textInput = new TextInput();
+			textInput.variant = customVariant;
+			return textInput;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(textInput);
+		Assert.equals(customVariant, textInput.variant);
+	}
+
+	public function testTextInputCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._stepper.customTextInputVariant = customVariant1;
+		var textInput:TextInput = null;
+		this._stepper.textInputFactory = () -> {
+			textInput = new TextInput();
+			textInput.variant = customVariant2;
+			return textInput;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(textInput);
+		Assert.equals(customVariant2, textInput.variant);
+	}
+
+	public function testDecrementButtonDefaultVariant():Void {
+		var decrementButton:Button = null;
+		this._stepper.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			return decrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON, decrementButton.variant);
+	}
+
+	public function testDecrementButtonCustomVariant1():Void {
+		final customVariant = "custom";
+		this._stepper.customDecrementButtonVariant = customVariant;
+		var decrementButton:Button = null;
+		this._stepper.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			return decrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(customVariant, decrementButton.variant);
+	}
+
+	public function testDecrementButtonCustomVariant2():Void {
+		final customVariant = "custom";
+		var decrementButton:Button = null;
+		this._stepper.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			decrementButton.variant = customVariant;
+			return decrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(customVariant, decrementButton.variant);
+	}
+
+	public function testDecrementButtonCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._stepper.customDecrementButtonVariant = customVariant1;
+		var decrementButton:Button = null;
+		this._stepper.decrementButtonFactory = () -> {
+			decrementButton = new Button();
+			decrementButton.variant = customVariant2;
+			return decrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(decrementButton);
+		Assert.equals(customVariant2, decrementButton.variant);
+	}
+
+	public function testIncrementButtonDefaultVariant():Void {
+		var incrementButton:Button = null;
+		this._stepper.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			return incrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(incrementButton);
+		Assert.equals(NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON, incrementButton.variant);
+	}
+
+	public function testIncrementButtonCustomVariant1():Void {
+		final customVariant = "custom";
+		this._stepper.customIncrementButtonVariant = customVariant;
+		var incrementButton:Button = null;
+		this._stepper.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			return incrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(incrementButton);
+		Assert.equals(customVariant, incrementButton.variant);
+	}
+
+	public function testIncrementButtonCustomVariant2():Void {
+		final customVariant = "custom";
+		var incrementButton:Button = null;
+		this._stepper.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			incrementButton.variant = customVariant;
+			return incrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(incrementButton);
+		Assert.equals(customVariant, incrementButton.variant);
+	}
+
+	public function testIncrementButtonCustomVariant3():Void {
+		final customVariant1 = "custom1";
+		final customVariant2 = "custom2";
+		this._stepper.customIncrementButtonVariant = customVariant1;
+		var incrementButton:Button = null;
+		this._stepper.incrementButtonFactory = () -> {
+			incrementButton = new Button();
+			incrementButton.variant = customVariant2;
+			return incrementButton;
+		}
+		this._stepper.validateNow();
+		Assert.notNull(incrementButton);
+		Assert.equals(customVariant2, incrementButton.variant);
+	}
 }
