@@ -60,6 +60,7 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 import openfl.geom.Rectangle;
+import openfl.text.TextField;
 import openfl.ui.Keyboard;
 import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
@@ -2615,6 +2616,15 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
+		}
+		if (this.stage != null && (this.stage.focus is TextField)) {
+			var textField:TextField = cast this.stage.focus;
+			if (textField.type == INPUT) {
+				// if an input TextField has focus, don't scroll because the
+				// TextField should have precedence, and the TextFeeld won't
+				// call preventDefault() on the event.
+				return;
+			}
 		}
 		this.navigateWithKeyboard(event);
 	}

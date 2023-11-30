@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.text.TextField;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IHierarchicalDepthItemRenderer;
@@ -1808,6 +1809,15 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		if (!this._enabled || event.isDefaultPrevented() || this._dataProvider == null) {
 			return;
+		}
+		if (this.stage != null && (this.stage.focus is TextField)) {
+			var textField:TextField = cast this.stage.focus;
+			if (textField.type == INPUT) {
+				// if an input TextField has focus, don't scroll because the
+				// TextField should have precedence, and the TextFeeld won't
+				// call preventDefault() on the event.
+				return;
+			}
 		}
 		if (event.keyCode == Keyboard.LEFT) {
 			if (this._dataProvider.isBranch(this._selectedItem)) {
