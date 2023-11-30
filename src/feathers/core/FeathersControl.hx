@@ -771,7 +771,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		for (i in 0...this.numChildren) {
 			var child = this.getChildAt(i);
 			if ((child is IUIControl)) {
-				cast(child, IUIControl).dispose();
+				(cast child : IUIControl).dispose();
 			}
 		}
 	}
@@ -950,7 +950,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private function feathersControl_focusInHandler(event:FocusEvent):Void {
 		var focusThis:IFocusObject = null;
 		if ((this is IFocusObject)) {
-			focusThis = cast(this, IFocusObject);
+			focusThis = cast this;
 		}
 		if (this._focusManager == null || !this._focusManager.showFocusIndicator || this._focusManager.focus != focusThis) {
 			return;

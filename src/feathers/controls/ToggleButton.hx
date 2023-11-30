@@ -873,17 +873,17 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		if ((this._currentIcon is IValidating)) {
 			var oldIgnoreIconResizes = this._ignoreIconResizes;
 			this._ignoreIconResizes = true;
-			cast(this._currentIcon, IValidating).validateNow();
+			(cast this._currentIcon : IValidating).validateNow();
 			this._ignoreIconResizes = oldIgnoreIconResizes;
 		}
 
@@ -973,7 +973,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if ((this._currentIcon is IValidating)) {
-					cast(this._currentIcon, IValidating).validateNow();
+					(cast this._currentIcon : IValidating).validateNow();
 				}
 				textFieldExplicitWidth -= (this._currentIcon.width + adjustedGap);
 			}
@@ -1217,7 +1217,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		var oldIgnoreIconResizes = this._ignoreIconResizes;
 		this._ignoreIconResizes = true;
 		if ((this._currentIcon is IValidating)) {
-			cast(this._currentIcon, IValidating).validateNow();
+			(cast this._currentIcon : IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
 		var hasText = this.showText && this._text != null;
@@ -1413,7 +1413,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			return;
 		}
 		if ((icon is IUIControl)) {
-			cast(icon, IUIControl).initializeNow();
+			(cast icon : IUIControl).initializeNow();
 		}
 		if (this._iconMeasurements == null) {
 			this._iconMeasurements = new Measurements(icon);
@@ -1421,10 +1421,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			this._iconMeasurements.save(icon);
 		}
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = this;
+			(cast icon : IProgrammaticSkin).uiContext = this;
 		}
 		if ((icon is IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = this;
+			(cast icon : IStateObserver).stateContext = this;
 		}
 		icon.addEventListener(Event.RESIZE, toggleButton_icon_resizeHandler, false, 0, true);
 		var index = this.getChildIndex(this.textField);
@@ -1438,10 +1438,10 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 		icon.removeEventListener(Event.RESIZE, toggleButton_icon_resizeHandler);
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = null;
+			(cast icon : IProgrammaticSkin).uiContext = null;
 		}
 		if ((icon is IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = null;
+			(cast icon : IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this icon is used for measurement

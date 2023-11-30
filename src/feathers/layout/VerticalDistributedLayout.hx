@@ -322,13 +322,13 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			if (contentWidth < item.width) {
 				contentWidth = item.width;
@@ -388,7 +388,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 	private inline function validateItems(items:Array<DisplayObject>) {
 		for (item in items) {
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}
@@ -400,17 +400,17 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		var itemsInLayoutCount = 0;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutObject = cast(item, ILayoutObject);
+				var layoutObject:ILayoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			var itemMinHeight = 0.0;
 			if ((item is IMeasureObject)) {
-				var measureItem = cast(item, IMeasureObject);
+				var measureItem:IMeasureObject = cast item;
 				itemMinHeight = measureItem.minHeight;
 			} else {
 				itemMinHeight = item.height;
@@ -439,7 +439,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		var percentToPixels = remainingHeight / totalPercentHeight;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutObject = cast(item, ILayoutObject);
+				var layoutObject:ILayoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
@@ -455,7 +455,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 				// changing the width of the item may cause its height
 				// to change, so we need to validate. the height is
 				// needed for measurement.
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}
@@ -464,7 +464,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}

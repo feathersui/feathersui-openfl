@@ -611,11 +611,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;
@@ -829,7 +829,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -837,7 +837,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -847,7 +847,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -911,7 +911,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 

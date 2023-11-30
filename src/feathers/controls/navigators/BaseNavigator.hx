@@ -312,7 +312,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		var measureView:IMeasureObject = null;
 		if ((this._activeItemView is IMeasureObject)) {
-			measureView = cast(this._activeItemView, IMeasureObject);
+			measureView = cast this._activeItemView;
 		}
 
 		if (this._activeItemView != null) {
@@ -334,7 +334,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		}
 
 		if ((this._activeItemView is IValidating)) {
-			cast(this._activeItemView, IValidating).validateNow();
+			(cast this._activeItemView : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;
@@ -445,7 +445,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 				this._activeItemView.height = this.actualHeight;
 			}
 			if ((this._activeItemView is IValidating)) {
-				cast(this._activeItemView, IValidating).validateNow();
+				(cast this._activeItemView : IValidating).validateNow();
 			}
 		}
 		if (this._nextViewInTransition != null) {
@@ -458,11 +458,11 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 				this._nextViewInTransition.height = this.actualHeight;
 			}
 			if ((this._nextViewInTransition is IValidating)) {
-				cast(this._nextViewInTransition, IValidating).validateNow();
+				(cast this._nextViewInTransition : IValidating).validateNow();
 			}
 		}
 		if (this._viewsContainer != this && (this._viewsContainer is IValidating)) {
-			cast(this._viewsContainer, IValidating).validateNow();
+			(cast this._viewsContainer : IValidating).validateNow();
 		}
 	}
 
@@ -541,10 +541,10 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 				return;
 			}
 			if ((this._previousViewInTransition is IFocusObject)
-				&& this._focusManager.focus == cast(this._previousViewInTransition, IFocusObject)) {
+				&& this._focusManager.focus == (cast this._previousViewInTransition : IFocusObject)) {
 				this._focusManager.focus = null;
 			} else if ((this._previousViewInTransition is DisplayObjectContainer)
-				&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(cast(this._focusManager.focus, DisplayObject))) {
+				&& (cast this._previousViewInTransition : DisplayObjectContainer).contains(cast(this._focusManager.focus, DisplayObject))) {
 				this._focusManager.focus = null;
 			}
 		}
@@ -554,7 +554,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		}
 		if (this.stage.focus == this._previousViewInTransition
 			|| ((this._previousViewInTransition is DisplayObjectContainer)
-				&& cast(this._previousViewInTransition, DisplayObjectContainer).contains(this.stage.focus))) {
+				&& (cast this._previousViewInTransition : DisplayObjectContainer).contains(this.stage.focus))) {
 			this.stage.focus = this.stage;
 		}
 	}
@@ -590,7 +590,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		this._viewsContainer.addChild(this._nextViewInTransition);
 		if ((this._nextViewInTransition is IUIControl)) {
 			// initialize so that we can save the measurements
-			cast(this._nextViewInTransition, IUIControl).initializeNow();
+			(cast this._nextViewInTransition : IUIControl).initializeNow();
 		}
 
 		this.setInvalid(SELECTION);

@@ -31,7 +31,7 @@ final class MeasurementsUtil {
 			return;
 		}
 		if ((target is IMeasureObject)) {
-			var measureTarget = cast(target, IMeasureObject);
+			var measureTarget:IMeasureObject = cast target;
 
 			var width = parentExplicitWidth;
 			if (width == null) {

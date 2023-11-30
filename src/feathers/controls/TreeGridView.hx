@@ -236,14 +236,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private static function defaultUpdateHeaderRenderer(headerRenderer:DisplayObject, state:TreeGridViewHeaderState):Void {
 		if ((headerRenderer is ITextControl)) {
-			var textControl = cast(headerRenderer, ITextControl);
+			var textControl:ITextControl = cast headerRenderer;
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetHeaderRenderer(headerRenderer:DisplayObject, state:TreeGridViewHeaderState):Void {
 		if ((headerRenderer is ITextControl)) {
-			var textControl = cast(headerRenderer, ITextControl);
+			var textControl:ITextControl = cast headerRenderer;
 			textControl.text = null;
 		}
 	}
@@ -1290,7 +1290,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
 			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
@@ -1309,7 +1309,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var oldStart = this._visibleIndices.start;
 		var oldEnd = this._visibleIndices.end;
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -1454,7 +1454,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			var headerDivider = this._headerDividerLayoutItems[i];
 			headerDivider.visible = !this.showHeaderDividersOnlyWhenResizable || this.resizableColumns;
 			if ((headerDivider is IValidating)) {
-				cast(headerDivider, IValidating).validateNow();
+				(cast headerDivider : IValidating).validateNow();
 			}
 			var headerRenderer = this._headerLayoutItems[i];
 			headerDivider.x = headerRenderer.x + headerRenderer.width - (headerDivider.width / 2.0);
@@ -1469,7 +1469,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		for (i in 0...this._columnDividerLayoutItems.length) {
 			var columnDivider = this._columnDividerLayoutItems[i];
 			if ((columnDivider is IValidating)) {
-				cast(columnDivider, IValidating).validateNow();
+				(cast columnDivider : IValidating).validateNow();
 			}
 			var headerRenderer = this._headerLayoutItems[i];
 			columnDivider.x = headerRenderer.x + headerRenderer.width - (columnDivider.width / 2.0);
@@ -1508,10 +1508,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(skin);
 	}
@@ -1521,7 +1521,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this.removeChild(skin);
@@ -1539,17 +1539,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		if ((this._currentColumnResizeSkin is IUIControl)) {
-			cast(this._currentColumnResizeSkin, IUIControl).initializeNow();
+			(cast this._currentColumnResizeSkin : IUIControl).initializeNow();
 		}
 		if ((this._currentColumnResizeSkin is IProgrammaticSkin)) {
-			cast(this._currentColumnResizeSkin, IProgrammaticSkin).uiContext = this;
+			(cast this._currentColumnResizeSkin : IProgrammaticSkin).uiContext = this;
 		}
 		this._currentColumnResizeSkin.visible = false;
 		if ((this._currentColumnResizeSkin is InteractiveObject)) {
-			cast(this._currentColumnResizeSkin, InteractiveObject).mouseEnabled = false;
+			(cast this._currentColumnResizeSkin : InteractiveObject).mouseEnabled = false;
 		}
 		if ((this._currentColumnResizeSkin is DisplayObjectContainer)) {
-			cast(this._currentColumnResizeSkin, DisplayObjectContainer).mouseChildren = false;
+			(cast this._currentColumnResizeSkin : DisplayObjectContainer).mouseChildren = false;
 		}
 		this.addChildAt(this._currentColumnResizeSkin, 0);
 	}
@@ -1563,7 +1563,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this.removeChild(skin);
@@ -1665,14 +1665,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._defaultHeaderDividerStorage.inactiveHeaderDividers.length == 0) {
 			headerDivider = this._defaultHeaderDividerStorage.headerDividerFactory.create();
 			if ((headerDivider is IVariantStyleObject)) {
-				var variantHeaderDivider = cast(headerDivider, IVariantStyleObject);
+				var variantHeaderDivider:IVariantStyleObject = cast headerDivider;
 				if (variantHeaderDivider.variant == null) {
 					var variant = (this.customHeaderDividerVariant != null) ? this.customHeaderDividerVariant : CHILD_VARIANT_HEADER_DIVIDER;
 					variantHeaderDivider.variant = variant;
 				}
 			}
 			if ((headerDivider is IUIControl)) {
-				cast(headerDivider, IUIControl).initializeNow();
+				(cast headerDivider : IUIControl).initializeNow();
 			}
 			headerDivider.addEventListener(MouseEvent.ROLL_OVER, treeGridView_headerDivider_rollOverHandler);
 			headerDivider.addEventListener(MouseEvent.ROLL_OUT, treeGridView_headerDivider_rollOutHandler);
@@ -1748,14 +1748,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._defaultColumnDividerStorage.inactiveColumnDividers.length == 0) {
 			columnDivider = this._defaultColumnDividerStorage.columnDividerFactory.create();
 			if ((columnDivider is IVariantStyleObject)) {
-				var variantColumnDivider = cast(columnDivider, IVariantStyleObject);
+				var variantColumnDivider:IVariantStyleObject = cast columnDivider;
 				if (variantColumnDivider.variant == null) {
 					var variant = (this.customColumnDividerVariant != null) ? this.customColumnDividerVariant : CHILD_VARIANT_COLUMN_DIVIDER;
 					variantColumnDivider.variant = variant;
 				}
 			}
 			if ((columnDivider is IUIControl)) {
-				cast(columnDivider, IUIControl).initializeNow();
+				(cast columnDivider : IUIControl).initializeNow();
 			}
 			this._columnDividerContainer.addChildAt(columnDivider, columnIndex);
 		} else {
@@ -1954,7 +1954,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this._rowLayoutItems.resize(this._totalRowLayoutCount);
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -2228,7 +2228,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._defaultHeaderStorage.inactiveHeaderRenderers.length == 0) {
 			headerRenderer = this._defaultHeaderStorage.headerRendererRecycler.create();
 			if ((headerRenderer is IVariantStyleObject)) {
-				var variantHeaderRenderer = cast(headerRenderer, IVariantStyleObject);
+				var variantHeaderRenderer:IVariantStyleObject = cast headerRenderer;
 				if (variantHeaderRenderer.variant == null) {
 					var variant = (this.customHeaderRendererVariant != null) ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER_RENDERER;
 					variantHeaderRenderer.variant = variant;
@@ -2239,7 +2239,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((headerRenderer is IUIControl)) {
-				cast(headerRenderer, IUIControl).initializeNow();
+				(cast headerRenderer : IUIControl).initializeNow();
 			}
 			// save measurements after initialize, because width/height could be
 			// set explicitly there, and we want to restore those values
@@ -2320,17 +2320,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, state:TreeGridViewHeaderState):Void {
 		if ((headerRenderer is IUIControl)) {
-			var uiControl = cast(headerRenderer, IUIControl);
+			var uiControl:IUIControl = cast headerRenderer;
 			uiControl.enabled = state.enabled;
 		}
 		if ((headerRenderer is ITreeGridViewHeaderRenderer)) {
-			var header = cast(headerRenderer, ITreeGridViewHeaderRenderer);
+			var header:ITreeGridViewHeaderRenderer = cast headerRenderer;
 			header.column = state.column;
 			header.columnIndex = state.columnIndex;
 			header.treeGridViewOwner = state.owner;
 		}
 		if ((headerRenderer is ILayoutIndexObject)) {
-			var layoutObject = cast(headerRenderer, ILayoutIndexObject);
+			var layoutObject:ILayoutIndexObject = cast headerRenderer;
 			layoutObject.layoutIndex = state.columnIndex;
 		}
 	}
@@ -2416,7 +2416,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 				&& event.keyCode != Keyboard.PAGE_UP && event.keyCode != Keyboard.PAGE_DOWN && event.keyCode != Keyboard.HOME && event.keyCode != Keyboard.END) {
 				return;
 			}
-			result = cast(this.layout, IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._rowLayoutItems, null,
+			result = (cast this.layout : IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._rowLayoutItems, null,
 				this.treeGridViewPort.visibleWidth, this.treeGridViewPort.visibleHeight);
 		} else {
 			switch (event.keyCode) {
@@ -2494,7 +2494,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var targetY = this.scrollY;
 		if ((this.layout is IScrollLayout)) {
 			var displayIndex = this.locationToDisplayIndex(location, true);
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			var result = scrollLayout.getNearestScrollPositionForIndex(displayIndex, this._rowLayoutItems.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);
 			targetX = result.x;

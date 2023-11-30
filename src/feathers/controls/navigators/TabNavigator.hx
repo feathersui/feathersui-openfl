@@ -535,7 +535,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 
 		if ((this._viewsContainer is IValidating)) {
-			cast(this._viewsContainer, IValidating).validateNow();
+			(cast this._viewsContainer : IValidating).validateNow();
 		}
 	}
 

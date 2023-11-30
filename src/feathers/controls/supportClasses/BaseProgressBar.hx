@@ -408,7 +408,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -416,7 +416,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -426,7 +426,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -448,7 +448,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			return;
 		}
 		if ((this._currentFillSkin is IUIControl)) {
-			cast(this._currentFillSkin, IUIControl).initializeNow();
+			(cast this._currentFillSkin : IUIControl).initializeNow();
 		}
 		if (this._fillSkinMeasurements == null) {
 			this._fillSkinMeasurements = new Measurements(this._currentFillSkin);
@@ -456,7 +456,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			this._fillSkinMeasurements.save(this._currentFillSkin);
 		}
 		if ((this._currentFillSkin is IProgrammaticSkin)) {
-			cast(this._currentFillSkin, IProgrammaticSkin).uiContext = this;
+			(cast this._currentFillSkin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(this._currentFillSkin);
 	}
@@ -473,7 +473,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement

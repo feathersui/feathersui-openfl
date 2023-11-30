@@ -359,19 +359,19 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		if (this._currentThumbSkin != null) {
 			this._thumbSkinMeasurements.restore(this._currentThumbSkin);
 			if ((this._currentThumbSkin is IValidating)) {
-				cast(this._currentThumbSkin, IValidating).validateNow();
+				(cast this._currentThumbSkin : IValidating).validateNow();
 			}
 		}
 		if (this._currentTrackSkin != null) {
 			this._trackSkinMeasurements.restore(this._currentTrackSkin);
 			if ((this._currentTrackSkin is IValidating)) {
-				cast(this._currentTrackSkin, IValidating).validateNow();
+				(cast this._currentTrackSkin : IValidating).validateNow();
 			}
 		}
 		if (this._currentSecondaryTrackSkin != null) {
 			this._secondaryTrackSkinMeasurements.restore(this._currentSecondaryTrackSkin);
 			if ((this._currentSecondaryTrackSkin is IValidating)) {
-				cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
+				(cast this._currentSecondaryTrackSkin : IValidating).validateNow();
 			}
 		}
 
@@ -419,13 +419,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 		if (oldSkin != null && oldSkin.parent == this) {
 			if ((oldSkin is IProgrammaticSkin)) {
-				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+				(cast oldSkin : IProgrammaticSkin).uiContext = null;
 			}
 			this.removeChild(oldSkin);
 		}
 		if (this._currentThumbSkin != null) {
 			if ((this._currentThumbSkin is IUIControl)) {
-				cast(this._currentThumbSkin, IUIControl).initializeNow();
+				(cast this._currentThumbSkin : IUIControl).initializeNow();
 			}
 			if (this._thumbSkinMeasurements == null) {
 				this._thumbSkinMeasurements = new Measurements(this._currentThumbSkin);
@@ -433,7 +433,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this._thumbSkinMeasurements.save(this._currentThumbSkin);
 			}
 			if ((this._currentThumbSkin is IProgrammaticSkin)) {
-				cast(this._currentThumbSkin, IProgrammaticSkin).uiContext = this;
+				(cast this._currentThumbSkin : IProgrammaticSkin).uiContext = this;
 			}
 			// add it above the trackSkin and secondaryTrackSkin
 			this.addChild(this._currentThumbSkin);
@@ -450,13 +450,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 		if (oldSkin != null && oldSkin.parent == this) {
 			if ((oldSkin is IProgrammaticSkin)) {
-				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+				(cast oldSkin : IProgrammaticSkin).uiContext = null;
 			}
 			this.removeChild(oldSkin);
 		}
 		if (this._currentTrackSkin != null) {
 			if ((this._currentTrackSkin is IUIControl)) {
-				cast(this._currentTrackSkin, IUIControl).initializeNow();
+				(cast this._currentTrackSkin : IUIControl).initializeNow();
 			}
 			if (this._trackSkinMeasurements == null) {
 				this._trackSkinMeasurements = new Measurements(this._currentTrackSkin);
@@ -464,7 +464,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this._trackSkinMeasurements.save(this._currentTrackSkin);
 			}
 			if ((this._currentTrackSkin is IProgrammaticSkin)) {
-				cast(this._currentTrackSkin, IProgrammaticSkin).uiContext = this;
+				(cast this._currentTrackSkin : IProgrammaticSkin).uiContext = this;
 			}
 			// always on the bottom
 			this.addChildAt(this._currentTrackSkin, 0);
@@ -481,13 +481,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 		if (oldSkin != null && oldSkin.parent == this) {
 			if ((oldSkin is IProgrammaticSkin)) {
-				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+				(cast oldSkin : IProgrammaticSkin).uiContext = null;
 			}
 			this.removeChild(oldSkin);
 		}
 		if (this._currentSecondaryTrackSkin != null) {
 			if ((this._currentSecondaryTrackSkin is IUIControl)) {
-				cast(this._currentSecondaryTrackSkin, IUIControl).initializeNow();
+				(cast this._currentSecondaryTrackSkin : IUIControl).initializeNow();
 			}
 			if (this._secondaryTrackSkinMeasurements == null) {
 				this._secondaryTrackSkinMeasurements = new Measurements(this._currentSecondaryTrackSkin);
@@ -495,7 +495,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this._secondaryTrackSkinMeasurements.save(this._currentSecondaryTrackSkin);
 			}
 			if ((this._currentSecondaryTrackSkin is IProgrammaticSkin)) {
-				cast(this._currentSecondaryTrackSkin, IProgrammaticSkin).uiContext = this;
+				(cast this._currentSecondaryTrackSkin : IProgrammaticSkin).uiContext = this;
 			}
 
 			// on the bottom or above the trackSkin
@@ -508,13 +508,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 	private function refreshSelection():Void {
 		if ((this._currentThumbSkin is IToggle)) {
-			cast(this._currentThumbSkin, IToggle).selected = this._selected;
+			(cast this._currentThumbSkin : IToggle).selected = this._selected;
 		}
 		if ((this._currentTrackSkin is IToggle)) {
-			cast(this._currentTrackSkin, IToggle).selected = this._selected;
+			(cast this._currentTrackSkin : IToggle).selected = this._selected;
 		}
 		if ((this._currentSecondaryTrackSkin is IToggle)) {
-			cast(this._currentSecondaryTrackSkin, IToggle).selected = this._selected;
+			(cast this._currentSecondaryTrackSkin : IToggle).selected = this._selected;
 		}
 
 		// stop the tween, no matter what
@@ -526,13 +526,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 	private function refreshEnabled():Void {
 		if ((this._currentThumbSkin is IUIControl)) {
-			cast(this._currentThumbSkin, IUIControl).enabled = this._enabled;
+			(cast this._currentThumbSkin : IUIControl).enabled = this._enabled;
 		}
 		if ((this._currentTrackSkin is IUIControl)) {
-			cast(this._currentTrackSkin, IUIControl).enabled = this._enabled;
+			(cast this._currentTrackSkin : IUIControl).enabled = this._enabled;
 		}
 		if ((this._currentSecondaryTrackSkin is IUIControl)) {
-			cast(this._currentSecondaryTrackSkin, IUIControl).enabled = this._enabled;
+			(cast this._currentSecondaryTrackSkin : IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -550,7 +550,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			return;
 		}
 		if ((this._currentThumbSkin is IValidating)) {
-			cast(this._currentThumbSkin, IValidating).validateNow();
+			(cast this._currentThumbSkin : IValidating).validateNow();
 		}
 
 		var xPosition = this.paddingLeft;
@@ -562,7 +562,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			var tween = Actuate.update((x:Float) -> {
 				this._currentThumbSkin.x = x;
 			}, this.toggleDuration, [this._currentThumbSkin.x], [xPosition], true);
-			this._toggleTween = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+			this._toggleTween = cast tween;
 			this._toggleTween.ease(this.toggleEase);
 			this._toggleTween.onUpdate(this.toggleTween_onUpdate);
 			this._toggleTween.onComplete(this.toggleTween_onComplete);
@@ -587,10 +587,10 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		this._currentSecondaryTrackSkin.width = this.actualWidth - location;
 
 		if ((this._currentTrackSkin is IValidating)) {
-			cast(this._currentTrackSkin, IValidating).validateNow();
+			(cast this._currentTrackSkin : IValidating).validateNow();
 		}
 		if ((this._currentSecondaryTrackSkin is IValidating)) {
-			cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
+			(cast this._currentSecondaryTrackSkin : IValidating).validateNow();
 		}
 
 		this._currentTrackSkin.y = (this.actualHeight - this._currentTrackSkin.height) / 2.0;
@@ -605,7 +605,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		this._currentTrackSkin.width = this.actualWidth;
 
 		if ((this._currentTrackSkin is IValidating)) {
-			cast(this._currentTrackSkin, IValidating).validateNow();
+			(cast this._currentTrackSkin : IValidating).validateNow();
 		}
 
 		this._currentTrackSkin.y = (this.actualHeight - this._currentTrackSkin.height) / 2.0;

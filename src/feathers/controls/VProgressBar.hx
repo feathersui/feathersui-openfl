@@ -74,11 +74,11 @@ class VProgressBar extends BaseProgressBar {
 
 		var measureBackgroundSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureBackgroundSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureBackgroundSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;
@@ -130,7 +130,7 @@ class VProgressBar extends BaseProgressBar {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 
@@ -198,7 +198,7 @@ class VProgressBar extends BaseProgressBar {
 				throw new ArgumentError("Unknown fill mode: " + this.fillMode);
 		}
 		if ((this._currentFillSkin is IValidating)) {
-			cast(this._currentFillSkin, IValidating).validateNow();
+			(cast this._currentFillSkin : IValidating).validateNow();
 		}
 	}
 }

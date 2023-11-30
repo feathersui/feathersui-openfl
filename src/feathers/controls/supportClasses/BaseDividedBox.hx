@@ -541,7 +541,7 @@ class BaseDividedBox extends FeathersControl {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -549,7 +549,7 @@ class BaseDividedBox extends FeathersControl {
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addRawChildAt(skin, 0);
 	}
@@ -559,7 +559,7 @@ class BaseDividedBox extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -580,17 +580,17 @@ class BaseDividedBox extends FeathersControl {
 			return;
 		}
 		if ((this._currentResizeDraggingSkin is IUIControl)) {
-			cast(this._currentResizeDraggingSkin, IUIControl).initializeNow();
+			(cast this._currentResizeDraggingSkin : IUIControl).initializeNow();
 		}
 		if ((this._currentResizeDraggingSkin is IProgrammaticSkin)) {
-			cast(this._currentResizeDraggingSkin, IProgrammaticSkin).uiContext = this;
+			(cast this._currentResizeDraggingSkin : IProgrammaticSkin).uiContext = this;
 		}
 		this._currentResizeDraggingSkin.visible = false;
 		if ((this._currentResizeDraggingSkin is InteractiveObject)) {
-			cast(this._currentResizeDraggingSkin, InteractiveObject).mouseEnabled = false;
+			(cast this._currentResizeDraggingSkin : InteractiveObject).mouseEnabled = false;
 		}
 		if ((this._currentResizeDraggingSkin is DisplayObjectContainer)) {
-			cast(this._currentResizeDraggingSkin, DisplayObjectContainer).mouseChildren = false;
+			(cast this._currentResizeDraggingSkin : DisplayObjectContainer).mouseChildren = false;
 		}
 		this.addRawChild(this._currentResizeDraggingSkin);
 	}
@@ -604,7 +604,7 @@ class BaseDividedBox extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this.removeRawChild(skin);
@@ -642,7 +642,7 @@ class BaseDividedBox extends FeathersControl {
 		if (this._currentBackgroundSkin != null) {
 			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 			if ((this._currentBackgroundSkin is IValidating)) {
-				cast(this._currentBackgroundSkin, IValidating).validateNow();
+				(cast this._currentBackgroundSkin : IValidating).validateNow();
 			}
 		}
 
@@ -745,14 +745,14 @@ class BaseDividedBox extends FeathersControl {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 
 	private function validateChildren():Void {
 		for (layoutItem in this._layoutItems) {
 			if ((layoutItem is IValidating)) {
-				cast(layoutItem, IValidating).validateNow();
+				(cast layoutItem : IValidating).validateNow();
 			}
 		}
 	}

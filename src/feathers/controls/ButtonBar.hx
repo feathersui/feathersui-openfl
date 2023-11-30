@@ -577,7 +577,7 @@ class ButtonBar extends FeathersControl {
 			if (!(button is IValidating)) {
 				return;
 			}
-			cast(button, IValidating).validateNow();
+			(cast button : IValidating).validateNow();
 		}
 	}
 
@@ -702,7 +702,7 @@ class ButtonBar extends FeathersControl {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -710,7 +710,7 @@ class ButtonBar extends FeathersControl {
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -720,7 +720,7 @@ class ButtonBar extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -747,7 +747,7 @@ class ButtonBar extends FeathersControl {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 
@@ -923,16 +923,16 @@ class ButtonBar extends FeathersControl {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if ((button is IUIControl)) {
-			var uiControl = cast(button, IUIControl);
+			var uiControl:IUIControl = cast button;
 			uiControl.enabled = state.enabled;
 		}
 		if ((button is IDataRenderer)) {
-			var dataRenderer = cast(button, IDataRenderer);
+			var dataRenderer:IDataRenderer = cast button;
 			// if the button is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
 		if ((button is ILayoutIndexObject)) {
-			var layoutObject = cast(button, ILayoutIndexObject);
+			var layoutObject:ILayoutIndexObject = cast button;
 			layoutObject.layoutIndex = state.index;
 		}
 		button.enabled = state.enabled;

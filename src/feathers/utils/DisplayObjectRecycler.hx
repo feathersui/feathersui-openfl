@@ -37,7 +37,7 @@ class DisplayObjectRecycler<T:B, S, B:DisplayObject> extends DisplayObjectFactor
 			// since we create the instance, we can safely dispose it
 			destroy = (target) -> {
 				if ((target is IUIControl)) {
-					cast(target, IUIControl).dispose();
+					(cast target : IUIControl).dispose();
 				}
 			}
 		}

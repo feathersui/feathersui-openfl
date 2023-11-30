@@ -203,14 +203,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
+			var textControl:ITextControl = cast itemRenderer;
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:TreeViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
+			var textControl:ITextControl = cast itemRenderer;
 			textControl.text = null;
 		}
 	}
@@ -1046,7 +1046,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
 			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
@@ -1065,7 +1065,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		var oldStart = this._visibleIndices.start;
 		var oldEnd = this._visibleIndices.end;
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -1201,7 +1201,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		this._layoutItems.resize(this._totalLayoutCount);
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -1355,38 +1355,38 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
 		this._ignoreOpenedChange = true;
 		if ((itemRenderer is IUIControl)) {
-			var uiControl = cast(itemRenderer, IUIControl);
+			var uiControl:IUIControl = cast itemRenderer;
 			uiControl.enabled = state.enabled;
 		}
 		if ((itemRenderer is IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			var dataRenderer:IDataRenderer = cast itemRenderer;
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
 		if ((itemRenderer is IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
+			var toggle:IToggle = cast itemRenderer;
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
 		if ((itemRenderer is IHierarchicalItemRenderer)) {
-			var hierarchicalItem = cast(itemRenderer, IHierarchicalItemRenderer);
+			var hierarchicalItem:IHierarchicalItemRenderer = cast itemRenderer;
 			hierarchicalItem.branch = state.branch;
 		}
 		if ((itemRenderer is IHierarchicalDepthItemRenderer)) {
-			var depthItem = cast(itemRenderer, IHierarchicalDepthItemRenderer);
+			var depthItem:IHierarchicalDepthItemRenderer = cast itemRenderer;
 			depthItem.hierarchyDepth = (state.location != null) ? (state.location.length - 1) : 0;
 		}
 		if ((itemRenderer is ITreeViewItemRenderer)) {
-			var treeItem = cast(itemRenderer, ITreeViewItemRenderer);
+			var treeItem:ITreeViewItemRenderer = cast itemRenderer;
 			treeItem.location = state.location;
 			treeItem.treeViewOwner = state.owner;
 		}
 		if ((itemRenderer is ILayoutIndexObject)) {
-			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+			var layoutIndexObject:ILayoutIndexObject = cast itemRenderer;
 			layoutIndexObject.layoutIndex = state.layoutIndex;
 		}
 		if ((itemRenderer is IOpenCloseToggle)) {
-			var openCloseItem = cast(itemRenderer, IOpenCloseToggle);
+			var openCloseItem:IOpenCloseToggle = cast itemRenderer;
 			openCloseItem.opened = state.opened;
 		}
 		this._ignoreOpenedChange = oldIgnoreOpenedChange;
@@ -1417,7 +1417,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
 			if ((itemRenderer is IVariantStyleObject)) {
-				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				var variantItemRenderer:IVariantStyleObject = cast itemRenderer;
 				if (variantItemRenderer.variant == null) {
 					var variant = (this.customItemRendererVariant != null) ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 					variantItemRenderer.variant = variant;
@@ -1428,7 +1428,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((itemRenderer is IUIControl)) {
-				cast(itemRenderer, IUIControl).initializeNow();
+				(cast itemRenderer : IUIControl).initializeNow();
 			}
 			// save measurements after initialize, because width/height could be
 			// set explicitly there, and we want to restore those values
@@ -1687,7 +1687,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				&& event.keyCode != Keyboard.PAGE_UP && event.keyCode != Keyboard.PAGE_DOWN && event.keyCode != Keyboard.HOME && event.keyCode != Keyboard.END) {
 				return;
 			}
-			result = cast(this.layout, IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._layoutItems, null,
+			result = (cast this.layout : IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._layoutItems, null,
 				this.treeViewPort.visibleWidth, this.treeViewPort.visibleHeight);
 		} else {
 			switch (event.keyCode) {
@@ -1765,7 +1765,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		var targetY = this.scrollY;
 		if ((this.layout is IScrollLayout)) {
 			var displayIndex = this.locationToDisplayIndex(location, true);
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			var result = scrollLayout.getNearestScrollPositionForIndex(displayIndex, this._layoutItems.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);
 			targetX = result.x;

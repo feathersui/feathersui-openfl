@@ -267,7 +267,7 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 		var tileHeight = 0.0;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -321,7 +321,7 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 		for (i in 0...items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -362,13 +362,13 @@ class CalendarGridLayout extends EventDispatcher implements ILayout {
 	private inline function validateItems(items:Array<DisplayObject>, measurements:Measurements) {
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}

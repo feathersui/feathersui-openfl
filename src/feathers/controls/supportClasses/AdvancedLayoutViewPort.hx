@@ -359,7 +359,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 		this._ignoreLayoutChanges = true;
 		if ((this._layout is IScrollLayout)) {
-			var scrollLayout = cast(this._layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this._layout;
 			scrollLayout.scrollX = this._scrollX;
 			scrollLayout.scrollY = this._scrollY;
 		}
@@ -413,7 +413,7 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this._viewPortBackground.height = Math.max(this.actualHeight, this._actualVisibleHeight);
 
 		if ((this.layout is ISnapLayout)) {
-			var snapLayout = cast(this.layout, ISnapLayout);
+			var snapLayout:ISnapLayout = cast this.layout;
 			this._snapPositionsX = snapLayout.getSnapPositionsX(this._layoutItems, this._actualVisibleWidth, this._actualVisibleHeight, this._snapPositionsX);
 			this._snapPositionsY = snapLayout.getSnapPositionsY(this._layoutItems, this._actualVisibleWidth, this._actualVisibleHeight, this._snapPositionsY);
 		} else {

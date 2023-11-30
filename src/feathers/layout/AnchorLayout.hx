@@ -45,13 +45,13 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 				var layoutData:AnchorLayoutData = null;
 				if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
-					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
+					layoutData = cast layoutObject.layoutData;
 				}
 				if (layoutData != null) {
 					// optimization: if width and height are known, set them before
@@ -73,7 +73,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 
@@ -88,7 +88,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 				}
 				var layoutObject:ILayoutObject = null;
 				if ((item is ILayoutObject)) {
-					layoutObject = cast(item, ILayoutObject);
+					layoutObject = cast item;
 					if (!layoutObject.includeInLayout) {
 						doneItems.push(item);
 						continue;
@@ -96,11 +96,11 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 				}
 				var layoutData:AnchorLayoutData = null;
 				if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
-					layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
+					layoutData = cast layoutObject.layoutData;
 				}
 
 				if ((item is IValidating)) {
-					cast(item, IValidating).validateNow();
+					(cast item : IValidating).validateNow();
 				}
 
 				if (layoutData == null) {
@@ -225,7 +225,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					}
 					var layoutObject:ILayoutObject = null;
 					if ((item is ILayoutObject)) {
-						layoutObject = cast(item, ILayoutObject);
+						layoutObject = cast item;
 						if (!layoutObject.includeInLayout) {
 							doneItems.push(item);
 							continue;
@@ -233,7 +233,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					}
 					var layoutData:AnchorLayoutData = null;
 					if (layoutObject != null && (layoutObject.layoutData is AnchorLayoutData)) {
-						layoutData = cast(layoutObject.layoutData, AnchorLayoutData);
+						layoutData = cast layoutObject.layoutData;
 					}
 					if (layoutData == null) {
 						doneItems.push(item);
@@ -286,7 +286,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 								// itself, don't set the explicit size unless needed
 								item.height = itemHeight;
 								if (measurements.width == null && (item is IValidating)) {
-									cast(item, IValidating).validateNow();
+									(cast item : IValidating).validateNow();
 									// for some components, setting one dimension
 									// may cause the other dimension to change.
 									// for example, resizing the width of word
@@ -328,7 +328,7 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 								// itself, don't set the explicit size unless needed
 								item.width = itemWidth;
 								if (measurements.height == null && (item is IValidating)) {
-									cast(item, IValidating).validateNow();
+									(cast item : IValidating).validateNow();
 									// for some components, setting one dimension
 									// may cause the other dimension to change.
 									// for example, resizing the width of word

@@ -131,21 +131,22 @@ class DefaultToolTipManager implements IToolTipManager {
 			this._toolTip = toolTip;
 		}
 		if ((this._toolTip is InteractiveObject)) {
-			cast(this._toolTip, InteractiveObject).mouseEnabled = false;
-			cast(this._toolTip, InteractiveObject).tabEnabled = false;
+			var interactiveToolTip:InteractiveObject = cast this._toolTip;
+			interactiveToolTip.mouseEnabled = false;
+			interactiveToolTip.tabEnabled = false;
 		}
 		if ((this._toolTip is DisplayObjectContainer)) {
-			cast(this._toolTip, DisplayObjectContainer).mouseChildren = false;
+			(cast this._toolTip : DisplayObjectContainer).mouseChildren = false;
 		}
 		if ((this._toolTip is IVariantStyleObject)) {
-			var variantToolTip = cast(this._toolTip, IVariantStyleObject);
+			var variantToolTip:IVariantStyleObject = cast this._toolTip;
 			if (variantToolTip.variant == null) {
 				variantToolTip.variant = CHILD_VARIANT_TOOL_TIP;
 			}
 		}
 		this._toolTip.text = this._target.toolTip;
 		if ((this._toolTip is IValidating)) {
-			cast(this._toolTip, IValidating).validateNow();
+			(cast this._toolTip : IValidating).validateNow();
 		}
 
 		var stage = this._target.stage;
@@ -182,7 +183,7 @@ class DefaultToolTipManager implements IToolTipManager {
 			this.clearTarget();
 			return;
 		}
-		var uiTarget = cast(eventTarget, IUIControl);
+		var uiTarget:IUIControl = cast eventTarget;
 		if (this._target == uiTarget) {
 			this._toolTipStageX = event.stageX;
 			this._toolTipStageY = event.stageY;

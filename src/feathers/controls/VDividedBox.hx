@@ -55,7 +55,7 @@ class VDividedBox extends BaseDividedBox {
 		var result = super.addItemAt(child, index);
 		var explicitHeight:Null<Float> = null;
 		if ((child is IMeasureObject)) {
-			var measureChild = cast(child, IMeasureObject);
+			var measureChild:IMeasureObject = cast child;
 			explicitHeight = measureChild.explicitHeight;
 		}
 		this._customItemHeights.insert(index, explicitHeight);
@@ -118,7 +118,7 @@ class VDividedBox extends BaseDividedBox {
 			this._currentResizeDraggingSkin.x = divider.x;
 			this._currentResizeDraggingSkin.width = divider.width;
 			if ((this._currentResizeDraggingSkin is IValidating)) {
-				cast(this._currentResizeDraggingSkin, IValidating).validateNow();
+				(cast this._currentResizeDraggingSkin : IValidating).validateNow();
 			}
 			this._currentResizeDraggingSkin.y = divider.y + (divider.height - this._currentResizeDraggingSkin.height) / 2.0;
 		}
@@ -134,7 +134,7 @@ class VDividedBox extends BaseDividedBox {
 				this._currentResizeDraggingSkin.x = divider.x;
 				this._currentResizeDraggingSkin.width = divider.width;
 				if ((this._currentResizeDraggingSkin is IValidating)) {
-					cast(this._currentResizeDraggingSkin, IValidating).validateNow();
+					(cast this._currentResizeDraggingSkin : IValidating).validateNow();
 				}
 				this._currentResizeDraggingSkin.y = divider.y + offsetY + (divider.height - this._currentResizeDraggingSkin.height) / 2.0;
 			}
@@ -148,7 +148,7 @@ class VDividedBox extends BaseDividedBox {
 
 		var secondItemHeight = this._resizeStartHeight2 - offsetY;
 		if ((secondItem is IMeasureObject)) {
-			var secondMeasureItem = cast(secondItem, IMeasureObject);
+			var secondMeasureItem:IMeasureObject = cast secondItem;
 			if (secondMeasureItem.explicitMinHeight != null && secondItemHeight < secondMeasureItem.explicitMinHeight) {
 				secondItemHeight = secondMeasureItem.explicitMinHeight;
 			} else if (secondMeasureItem.explicitMaxHeight != null && secondItemHeight > secondMeasureItem.explicitMaxHeight) {
@@ -164,7 +164,7 @@ class VDividedBox extends BaseDividedBox {
 		// prefer the first item's restrictions by applying them last
 		var firstItemHeight = totalHeight - secondItemHeight;
 		if ((firstItem is IMeasureObject)) {
-			var firstMeasureItem = cast(firstItem, IMeasureObject);
+			var firstMeasureItem:IMeasureObject = cast firstItem;
 			if (firstMeasureItem.explicitMinHeight != null && firstItemHeight < firstMeasureItem.explicitMinHeight) {
 				firstItemHeight = firstMeasureItem.explicitMinHeight;
 			} else if (firstMeasureItem.explicitMaxHeight != null && firstItemHeight > firstMeasureItem.explicitMaxHeight) {
@@ -195,7 +195,7 @@ class VDividedBox extends BaseDividedBox {
 		}
 		var explicitHeight:Null<Float> = null;
 		if ((child is IMeasureObject)) {
-			var measureChild = cast(child, IMeasureObject);
+			var measureChild:IMeasureObject = cast child;
 			explicitHeight = measureChild.explicitHeight;
 		}
 		this._customItemHeights[index] = explicitHeight;

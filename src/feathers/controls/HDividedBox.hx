@@ -61,7 +61,7 @@ class HDividedBox extends BaseDividedBox {
 		var result = super.addItemAt(child, index);
 		var explicitWidth:Null<Float> = null;
 		if ((child is IMeasureObject)) {
-			var measureChild = cast(child, IMeasureObject);
+			var measureChild:IMeasureObject = cast child;
 			explicitWidth = measureChild.explicitWidth;
 		}
 		this._customItemWidths.insert(index, explicitWidth);
@@ -118,7 +118,7 @@ class HDividedBox extends BaseDividedBox {
 			this._currentResizeDraggingSkin.y = divider.y;
 			this._currentResizeDraggingSkin.height = divider.height;
 			if ((this._currentResizeDraggingSkin is IValidating)) {
-				cast(this._currentResizeDraggingSkin, IValidating).validateNow();
+				(cast this._currentResizeDraggingSkin : IValidating).validateNow();
 			}
 			this._currentResizeDraggingSkin.x = divider.x + (divider.width - this._currentResizeDraggingSkin.width) / 2.0;
 		}
@@ -134,7 +134,7 @@ class HDividedBox extends BaseDividedBox {
 				this._currentResizeDraggingSkin.y = divider.y;
 				this._currentResizeDraggingSkin.height = divider.height;
 				if ((this._currentResizeDraggingSkin is IValidating)) {
-					cast(this._currentResizeDraggingSkin, IValidating).validateNow();
+					(cast this._currentResizeDraggingSkin : IValidating).validateNow();
 				}
 				this._currentResizeDraggingSkin.x = divider.x + offsetX + (divider.width - this._currentResizeDraggingSkin.width) / 2.0;
 			}
@@ -148,7 +148,7 @@ class HDividedBox extends BaseDividedBox {
 
 		var secondItemWidth = this._resizeStartWidth2 - offsetX;
 		if ((secondItem is IMeasureObject)) {
-			var secondMeasureItem = cast(secondItem, IMeasureObject);
+			var secondMeasureItem:IMeasureObject = cast secondItem;
 			if (secondMeasureItem.explicitMinWidth != null && secondItemWidth < secondMeasureItem.explicitMinWidth) {
 				secondItemWidth = secondMeasureItem.explicitMinWidth;
 			} else if (secondMeasureItem.explicitMaxWidth != null && secondItemWidth > secondMeasureItem.explicitMaxWidth) {
@@ -164,7 +164,7 @@ class HDividedBox extends BaseDividedBox {
 		// prefer the first item's restrictions by applying them last
 		var firstItemWidth = totalWidth - secondItemWidth;
 		if ((firstItem is IMeasureObject)) {
-			var firstMeasureItem = cast(firstItem, IMeasureObject);
+			var firstMeasureItem:IMeasureObject = cast firstItem;
 			if (firstMeasureItem.explicitMinWidth != null && firstItemWidth < firstMeasureItem.explicitMinWidth) {
 				firstItemWidth = firstMeasureItem.explicitMinWidth;
 			} else if (firstMeasureItem.explicitMaxWidth != null && firstItemWidth > firstMeasureItem.explicitMaxWidth) {
@@ -195,7 +195,7 @@ class HDividedBox extends BaseDividedBox {
 		}
 		var explicitWidth:Null<Float> = null;
 		if ((child is IMeasureObject)) {
-			var measureChild = cast(child, IMeasureObject);
+			var measureChild:IMeasureObject = cast child;
 			explicitWidth = measureChild.explicitWidth;
 		}
 		this._customItemWidths[index] = explicitWidth;

@@ -169,7 +169,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 		var contentBaseline = 0.0;
 		if ((this._currentContent is ITextControl)) {
-			contentBaseline = this._currentContent.y + cast(this._currentContent, ITextControl).baseline;
+			contentBaseline = this._currentContent.y + (cast this._currentContent : ITextControl).baseline;
 		}
 		return Math.max(textFieldBaseline, contentBaseline);
 	}
@@ -663,7 +663,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			var maxWidth = this._explicitWidth;
 			if (this._currentContent != null) {
 				if ((this._currentContent is IMeasureObject)) {
-					maxWidth -= cast(this._currentContent, IMeasureObject).minWidth;
+					maxWidth -= (cast this._currentContent : IMeasureObject).minWidth;
 				} else {
 					maxWidth -= this._currentContent.width;
 				}
@@ -771,20 +771,20 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		if ((this._currentRequiredSkin is IValidating)) {
-			cast(this._currentRequiredSkin, IValidating).validateNow();
+			(cast this._currentRequiredSkin : IValidating).validateNow();
 		}
 
 		var measureContent:IMeasureObject = null;
 		if ((this._currentContent is IMeasureObject)) {
-			measureContent = cast(this._currentContent, IMeasureObject);
+			measureContent = cast this._currentContent;
 		}
 
 		if (this._currentContent != null) {
@@ -825,7 +825,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				this._contentMeasurements.restore(this._currentContent);
 			}
 			if ((this._currentContent is IValidating)) {
-				cast(this._currentContent, IValidating).validateNow();
+				(cast this._currentContent : IValidating).validateNow();
 			}
 		}
 
@@ -1056,7 +1056,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this.content != null) {
 			if (this.textPosition == LEFT || this.textPosition == RIGHT) {
 				if ((this._content is IValidating)) {
-					cast(this._content, IValidating).validateNow();
+					(cast this._content : IValidating).validateNow();
 				}
 				textFieldExplicitWidth -= (this._content.width + this.gap);
 			}
@@ -1110,7 +1110,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -1118,7 +1118,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -1128,7 +1128,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -1161,7 +1161,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._requiredSkinMeasurements == null) {
 			this._requiredSkinMeasurements = new Measurements(skin);
@@ -1169,7 +1169,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this._requiredSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(skin);
 	}
@@ -1179,7 +1179,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -1206,7 +1206,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			return;
 		}
 		if ((this._currentContent is IUIControl)) {
-			cast(this._currentContent, IUIControl).initializeNow();
+			(cast this._currentContent : IUIControl).initializeNow();
 		}
 		if (this._contentMeasurements == null) {
 			this._contentMeasurements = new Measurements(this._currentContent);
@@ -1218,7 +1218,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 	private function refreshEnabled():Void {
 		if (this._currentContent != null && (this._currentContent is IUIControl)) {
-			cast(this._currentContent, IUIControl).enabled = this._enabled;
+			(cast this._currentContent : IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -1226,11 +1226,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		this.layoutBackgroundSkin();
 
 		if ((this._currentRequiredSkin is IValidating)) {
-			cast(this._currentRequiredSkin, IValidating).validateNow();
+			(cast this._currentRequiredSkin : IValidating).validateNow();
 		}
 
 		if ((this._currentContent is IValidating)) {
-			cast(this._currentContent, IValidating).validateNow();
+			(cast this._currentContent : IValidating).validateNow();
 		}
 
 		var requiredOffset = 0.0;
@@ -1349,7 +1349,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				if ((this._currentContent is ITextControl)) {
 					var textFieldLineMetrics = this.textField.getLineMetrics(0);
 					var textFieldBaseline = textFieldLineMetrics.ascent + 2.0; // extra 2 pixels for gutter
-					var contentBaseline = cast(this._currentContent, ITextControl).baseline;
+					var contentBaseline = (cast this._currentContent : ITextControl).baseline;
 					var maxBaseline = Math.max(contentBaseline, textFieldBaseline);
 					var startY = this._currentContent.y;
 					this.textField.y = startY + (maxBaseline - textFieldBaseline);
@@ -1395,7 +1395,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 
@@ -1409,7 +1409,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 		var newFocus:IFocusObject = null;
 		if ((this._currentContent is IFocusObject)) {
-			newFocus = cast(this._currentContent, IFocusObject);
+			newFocus = cast this._currentContent;
 		}
 		this._focusManager.focus = newFocus;
 	}

@@ -591,10 +591,10 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 		view.removeEventListener(Event.RESIZE, itemRenderer_accessoryView_resizeHandler);
 		if ((view is IProgrammaticSkin)) {
-			cast(view, IProgrammaticSkin).uiContext = null;
+			(cast view : IProgrammaticSkin).uiContext = null;
 		}
 		if ((view is IStateObserver)) {
-			cast(view, IStateObserver).stateContext = null;
+			(cast view : IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -610,7 +610,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			return;
 		}
 		if ((view is IUIControl)) {
-			cast(view, IUIControl).initializeNow();
+			(cast view : IUIControl).initializeNow();
 		}
 		if (this._accessoryViewMeasurements == null) {
 			this._accessoryViewMeasurements = new Measurements(view);
@@ -618,10 +618,10 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			this._accessoryViewMeasurements.save(view);
 		}
 		if ((view is IProgrammaticSkin)) {
-			cast(view, IProgrammaticSkin).uiContext = this;
+			(cast view : IProgrammaticSkin).uiContext = this;
 		}
 		if ((view is IStateObserver)) {
-			cast(view, IStateObserver).stateContext = this;
+			(cast view : IStateObserver).stateContext = this;
 		}
 		view.addEventListener(Event.RESIZE, itemRenderer_accessoryView_resizeHandler, false, 0, true);
 		this.addChild(view);
@@ -642,14 +642,14 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				if (pointerTargetContainer.contains(lastObject)) {
 					while (lastObject != null && lastObject != pointerTargetContainer) {
 						if ((lastObject is InteractiveObject)) {
-							var interactive = cast(lastObject, InteractiveObject);
+							var interactive:InteractiveObject = cast lastObject;
 							if (!interactive.mouseEnabled) {
 								lastObject = lastObject.parent;
 								continue;
 							}
 						}
 						if ((lastObject is IFocusObject)) {
-							var focusable = cast(lastObject, IFocusObject);
+							var focusable:IFocusObject = cast lastObject;
 							if (focusable.parent != this._pointerTarget && focusable.focusEnabled) {
 								return false;
 							}
@@ -666,13 +666,13 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var oldIgnoreIconResizes = this._ignoreIconResizes;
 		this._ignoreIconResizes = true;
 		if ((this._currentIcon is IValidating)) {
-			cast(this._currentIcon, IValidating).validateNow();
+			(cast this._currentIcon : IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
 		var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 		this._ignoreAccessoryResizes = true;
 		if ((this._currentAccessoryView is IValidating)) {
-			cast(this._currentAccessoryView, IValidating).validateNow();
+			(cast this._currentAccessoryView : IValidating).validateNow();
 		}
 		this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 		var hasText = this.showText && this._text != null;
@@ -764,7 +764,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
-				cast(this._currentAccessoryView, IValidating).validateNow();
+				(cast this._currentAccessoryView : IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			textFieldExplicitWidth -= (this._currentAccessoryView.width + adjustedGap);
@@ -793,7 +793,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
-				cast(this._currentAccessoryView, IValidating).validateNow();
+				(cast this._currentAccessoryView : IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
@@ -836,7 +836,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
-				cast(this._currentAccessoryView, IValidating).validateNow();
+				(cast this._currentAccessoryView : IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			contentHeight = Math.max(contentHeight, this._currentAccessoryView.height);
@@ -872,7 +872,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
-				cast(this._currentAccessoryView, IValidating).validateNow();
+				(cast this._currentAccessoryView : IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
@@ -914,7 +914,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			var oldIgnoreAccessoryResizes = this._ignoreAccessoryResizes;
 			this._ignoreAccessoryResizes = true;
 			if ((this._currentAccessoryView is IValidating)) {
-				cast(this._currentAccessoryView, IValidating).validateNow();
+				(cast this._currentAccessoryView : IValidating).validateNow();
 			}
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			contentMinHeight = Math.max(contentMinHeight, this._currentAccessoryView.height);
@@ -937,7 +937,7 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			return false;
 		}
 		if ((this._currentAccessoryView is ILayoutObject)) {
-			return cast(this._currentAccessoryView, ILayoutObject).includeInLayout;
+			return (cast this._currentAccessoryView : ILayoutObject).includeInLayout;
 		}
 		return true;
 	}

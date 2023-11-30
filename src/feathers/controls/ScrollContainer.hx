@@ -532,7 +532,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
 			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;

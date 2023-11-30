@@ -826,12 +826,12 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 					continue;
 				} else {
 					if ((item is ILayoutObject)) {
-						if (!cast(item, ILayoutObject).includeInLayout) {
+						if (!(cast item : ILayoutObject).includeInLayout) {
 							continue;
 						}
 					}
 					if ((item is IValidating)) {
-						cast(item, IValidating).validateNow();
+						(cast item : IValidating).validateNow();
 					}
 					tileWidth = item.width;
 					tileHeight = item.height;
@@ -883,7 +883,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		for (i in 0...items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -1144,8 +1144,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 
 		var result = startIndex;
 		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, viewPortWidth, null, adjustedHorizontalGap, itemCount);
-		var verticalTileCount = Std.int(this.calculateVerticalTileCount(tileHeight, viewPortHeight, null, adjustedVerticalGap, itemCount,
-			horizontalTileCount));
+		var verticalTileCount = Std.int(this.calculateVerticalTileCount(tileHeight, viewPortHeight, null, adjustedVerticalGap, itemCount, horizontalTileCount));
 		var numRows = Math.ceil(itemCount / horizontalTileCount);
 		var rowIndex = Std.int(startIndex / horizontalTileCount);
 		var columnIndex = Std.int(startIndex % horizontalTileCount);
@@ -1426,7 +1425,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		for (i in startIndex...endIndex) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -1464,7 +1463,7 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		for (i in 0...items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}

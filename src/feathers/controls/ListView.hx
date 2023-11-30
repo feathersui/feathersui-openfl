@@ -182,14 +182,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
+			var textControl:ITextControl = cast itemRenderer;
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
+			var textControl:ITextControl = cast itemRenderer;
 			textControl.text = null;
 		}
 	}
@@ -1083,7 +1083,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
 			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
@@ -1102,7 +1102,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var oldStart = this._visibleIndices.start;
 		var oldEnd = this._visibleIndices.end;
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -1241,7 +1241,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this._layoutItems.resize(this._dataProvider.length);
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -1341,25 +1341,25 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if ((itemRenderer is IUIControl)) {
-			var uiControl = cast(itemRenderer, IUIControl);
+			var uiControl:IUIControl = cast itemRenderer;
 			uiControl.enabled = state.enabled;
 		}
 		if ((itemRenderer is IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			var dataRenderer:IDataRenderer = cast itemRenderer;
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
 		if ((itemRenderer is IListViewItemRenderer)) {
-			var listRenderer = cast(itemRenderer, IListViewItemRenderer);
+			var listRenderer:IListViewItemRenderer = cast itemRenderer;
 			listRenderer.index = state.index;
 			listRenderer.listViewOwner = state.owner;
 		}
 		if ((itemRenderer is ILayoutIndexObject)) {
-			var layoutIndexObject = cast(itemRenderer, ILayoutIndexObject);
+			var layoutIndexObject:ILayoutIndexObject = cast itemRenderer;
 			layoutIndexObject.layoutIndex = state.index;
 		}
 		if ((itemRenderer is IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
+			var toggle:IToggle = cast itemRenderer;
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
@@ -1389,7 +1389,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
 			if ((itemRenderer is IVariantStyleObject)) {
-				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				var variantItemRenderer:IVariantStyleObject = cast itemRenderer;
 				if (variantItemRenderer.variant == null) {
 					var variant = (this.customItemRendererVariant != null) ? this.customItemRendererVariant : CHILD_VARIANT_ITEM_RENDERER;
 					variantItemRenderer.variant = variant;
@@ -1400,7 +1400,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((itemRenderer is IUIControl)) {
-				cast(itemRenderer, IUIControl).initializeNow();
+				(cast itemRenderer : IUIControl).initializeNow();
 			}
 			// save measurements after initialize, because width/height could be
 			// set explicitly there, and we want to restore those values
@@ -1546,7 +1546,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var targetX = this.scrollX;
 		var targetY = this.scrollY;
 		if ((this.layout is IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			var result = scrollLayout.getNearestScrollPositionForIndex(index, this._dataProvider.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);
 			targetX = result.x;

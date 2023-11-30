@@ -72,7 +72,7 @@ class VScrollBar extends BaseScrollBar {
 	override private function valueToLocation(value:Float):Float {
 		// this will auto-size the thumb, if needed
 		if ((this._currentThumbSkin is IValidating)) {
-			cast(this._currentThumbSkin, IValidating).validateNow();
+			(cast this._currentThumbSkin : IValidating).validateNow();
 		}
 		if (this.showDecrementAndIncrementButtons) {
 			this.decrementButton.validateNow();
@@ -139,19 +139,19 @@ class VScrollBar extends BaseScrollBar {
 		if (this._currentThumbSkin != null) {
 			this._thumbSkinMeasurements.restore(this._currentThumbSkin);
 			if ((this._currentThumbSkin is IValidating)) {
-				cast(this._currentThumbSkin, IValidating).validateNow();
+				(cast this._currentThumbSkin : IValidating).validateNow();
 			}
 		}
 		if (this._currentTrackSkin != null) {
 			this._trackSkinMeasurements.restore(this._currentTrackSkin);
 			if ((this._currentTrackSkin is IValidating)) {
-				cast(this._currentTrackSkin, IValidating).validateNow();
+				(cast this._currentTrackSkin : IValidating).validateNow();
 			}
 		}
 		if (this._currentSecondaryTrackSkin != null) {
 			this._secondaryTrackSkinMeasurements.restore(this._currentSecondaryTrackSkin);
 			if ((this._currentSecondaryTrackSkin is IValidating)) {
-				cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
+				(cast this._currentSecondaryTrackSkin : IValidating).validateNow();
 			}
 		}
 
@@ -227,7 +227,7 @@ class VScrollBar extends BaseScrollBar {
 		var location = this.valueToLocation(value);
 		if (this._currentThumbSkin != null) {
 			if ((this._currentThumbSkin is IValidating)) {
-				cast(this._currentThumbSkin, IValidating).validateNow();
+				(cast this._currentThumbSkin : IValidating).validateNow();
 			}
 			location += Math.round(this._currentThumbSkin.height / 2.0);
 		}
@@ -246,10 +246,10 @@ class VScrollBar extends BaseScrollBar {
 		this._currentTrackSkin.height = maxTrackY - location;
 
 		if ((this._currentSecondaryTrackSkin is IValidating)) {
-			cast(this._currentSecondaryTrackSkin, IValidating).validateNow();
+			(cast this._currentSecondaryTrackSkin : IValidating).validateNow();
 		}
 		if ((this._currentTrackSkin is IValidating)) {
-			cast(this._currentTrackSkin, IValidating).validateNow();
+			(cast this._currentTrackSkin : IValidating).validateNow();
 		}
 
 		this._currentSecondaryTrackSkin.x = (this.actualWidth - this._currentSecondaryTrackSkin.width) / 2.0;
@@ -272,7 +272,7 @@ class VScrollBar extends BaseScrollBar {
 		this._currentTrackSkin.height = maxTrackY - minTrackY;
 
 		if ((this._currentTrackSkin is IValidating)) {
-			cast(this._currentTrackSkin, IValidating).validateNow();
+			(cast this._currentTrackSkin : IValidating).validateNow();
 		}
 
 		this._currentTrackSkin.x = (this.actualWidth - this._currentTrackSkin.width) / 2.0;
@@ -290,7 +290,7 @@ class VScrollBar extends BaseScrollBar {
 		}
 
 		if ((this._currentThumbSkin is IValidating)) {
-			cast(this._currentThumbSkin, IValidating).validateNow();
+			(cast this._currentThumbSkin : IValidating).validateNow();
 		}
 
 		var valueOffset = 0.0;
@@ -323,7 +323,7 @@ class VScrollBar extends BaseScrollBar {
 					thumbHeight = this._thumbSkinMeasurements.minHeight;
 				}
 			} else if ((this._currentThumbSkin is IMeasureObject)) {
-				var measureSkin = cast(this._currentThumbSkin, IMeasureObject);
+				var measureSkin:IMeasureObject = cast this._currentThumbSkin;
 				if (thumbHeight < measureSkin.minHeight) {
 					thumbHeight = measureSkin.minHeight;
 				}

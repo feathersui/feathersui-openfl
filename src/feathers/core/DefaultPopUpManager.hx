@@ -235,7 +235,7 @@ class DefaultPopUpManager implements IPopUpManager {
 		}
 		if (isCentered) {
 			if ((popUp is IMeasureObject)) {
-				var measurePopUp = cast(popUp, IMeasureObject);
+				var measurePopUp:IMeasureObject = cast popUp;
 				measurePopUp.addEventListener(Event.RESIZE, defaultPopUpManager_popUp_resizeHandler);
 			}
 			this._centeredPopUps.push(popUp);
@@ -278,7 +278,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	**/
 	public function centerPopUp(popUp:DisplayObject):Void {
 		if ((popUp is IValidating)) {
-			cast(popUp, IValidating).validateNow();
+			(cast popUp : IValidating).validateNow();
 		}
 		var stage = this._root.stage;
 		var stageTopLeft = this._root.globalToLocal(new Point());

@@ -465,7 +465,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 			// the total width of all items
 			while (i < itemCount) {
 				var item = items[i];
-				if ((item is ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+				if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
 					continue;
 				}
 				var itemWidth = item.width;
@@ -510,7 +510,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 				}
 				if (horizontalAlignOffsetX != 0.0) {
 					for (item in this._rowItems) {
-						if ((item is ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+						if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
 							continue;
 						}
 						item.x += horizontalAlignOffsetX;
@@ -519,7 +519,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 			}
 
 			for (item in this._rowItems) {
-				if ((item is ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+				if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
 					continue;
 				}
 				// handle all other vertical alignment values. the y position
@@ -568,7 +568,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 			}
 			if (horizontalAlignOffsetX != 0.0) {
 				for (item in items) {
-					if ((item is ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+					if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
 						continue;
 					}
 					// previously, we used the maxWidth for alignment,
@@ -606,7 +606,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 			}
 			if (verticalAlignOffset != 0.0) {
 				for (item in items) {
-					if ((item is ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+					if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
 						continue;
 					}
 					item.y += verticalAlignOffset;
@@ -629,16 +629,16 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 	private inline function validateItems(items:Array<DisplayObject>, measurements:Measurements) {
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
 			}
 			if (this._rowVerticalAlign == JUSTIFY && this._justifyResetEnabled && (item is IMeasureObject)) {
-				cast(item, IMeasureObject).resetHeight();
+				(cast item : IMeasureObject).resetHeight();
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}

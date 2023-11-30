@@ -191,10 +191,10 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		var contentHeight = 0.0;
 		for (item in items) {
 			if (this._heightResetEnabled && measurements.height == null && (item is IMeasureObject)) {
-				cast(item, IMeasureObject).resetHeight();
+				(cast item : IMeasureObject).resetHeight();
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			if (contentHeight < item.height) {
 				contentHeight = item.height;
@@ -257,7 +257,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 				item.width = this._customColumnWidths[i];
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}
@@ -268,8 +268,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		}
 	}
 
-	private function applyColumnWidths(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
-			explicitMaxWidth:Null<Float>):Void {
+	private function applyColumnWidths(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>, explicitMaxWidth:Null<Float>):Void {
 		var pendingIndices:Array<Int> = [];
 		var totalMeasuredWidth = 0.0;
 		var totalPercentWidth = 0.0;
@@ -284,7 +283,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
-					cast(item, IValidating).validateNow();
+					(cast item : IValidating).validateNow();
 				}
 			} else if (this._customColumnWidths != null && i < this._customColumnWidths.length) {
 				item.width = this._customColumnWidths[i];
@@ -292,16 +291,16 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
-					cast(item, IValidating).validateNow();
+					(cast item : IValidating).validateNow();
 				}
 			} else {
 				var percentWidth = 100.0;
 				var itemMinWidth = 0.0;
 				if ((item is IMeasureObject)) {
 					if ((item is IValidating)) {
-						cast(item, IValidating).validateNow();
+						(cast item : IValidating).validateNow();
 					}
-					itemMinWidth = cast(item, IMeasureObject).minWidth;
+					itemMinWidth = (cast item : IMeasureObject).minWidth;
 				}
 				itemMinWidth = Math.max(column.minWidth, itemMinWidth);
 				maxMinWidth = Math.max(itemMinWidth, maxMinWidth);
@@ -364,7 +363,7 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
-					cast(item, IValidating).validateNow();
+					(cast item : IValidating).validateNow();
 				}
 				widthSum += itemWidth;
 			}

@@ -137,7 +137,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	private function getStyleContext(target:IStyleObject):Class<IStyleObject> {
 		var styleContext:Class<IStyleObject> = null;
 		if ((target is IVariantStyleObject)) {
-			var variantObject = cast(target, IVariantStyleObject);
+			var variantObject:IVariantStyleObject = cast target;
 			styleContext = variantObject.styleContext;
 		}
 		if (styleContext == null) {
@@ -149,7 +149,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	private function getVariant(target:IStyleObject):String {
 		var variant:String = null;
 		if ((target is IVariantStyleObject)) {
-			var variantObject = cast(target, IVariantStyleObject);
+			var variantObject:IVariantStyleObject = cast target;
 			variant = variantObject.variant;
 		}
 		return variant;

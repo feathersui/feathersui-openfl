@@ -35,7 +35,7 @@ class PopUpUtil {
 				return true;
 			}
 			if ((popUp is DisplayObjectContainer)) {
-				var popUpContainer = cast(popUp, DisplayObjectContainer);
+				var popUpContainer:DisplayObjectContainer = cast popUp;
 				if (popUpContainer.contains(target)) {
 					return true;
 				}

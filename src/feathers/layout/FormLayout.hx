@@ -266,7 +266,7 @@ class FormLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
@@ -299,7 +299,7 @@ class FormLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
@@ -315,7 +315,7 @@ class FormLayout extends EventDispatcher implements ILayout {
 						formItem.customTextColumnWidth = null;
 				}
 				if ((item is IValidating)) {
-					cast(item, IValidating).validateNow();
+					(cast item : IValidating).validateNow();
 				}
 			}
 			if (contentWidth < item.width) {
@@ -381,7 +381,7 @@ class FormLayout extends EventDispatcher implements ILayout {
 				formItem.customTextColumnWidth = null;
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}
@@ -390,7 +390,7 @@ class FormLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
@@ -416,7 +416,7 @@ class FormLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}

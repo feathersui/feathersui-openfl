@@ -129,7 +129,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 			this._drawer.visible = false;
 			this.addChild(this._drawer);
 			if ((this._drawer is IUIControl)) {
-				cast(this._drawer, IUIControl).initializeNow();
+				(cast this._drawer : IUIControl).initializeNow();
 			}
 			if (this._drawerMeasurements == null) {
 				this._drawerMeasurements = new Measurements(this._drawer);
@@ -173,7 +173,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		if (this._content != null) {
 			this.addChildAt(this._content, 0);
 			if ((this._content is IUIControl)) {
-				cast(this._content, IUIControl).initializeNow();
+				(cast this._content : IUIControl).initializeNow();
 			}
 			if (this._contentMeasurements == null) {
 				this._contentMeasurements = new Measurements(this._content);
@@ -483,7 +483,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		var measureContent:IMeasureObject = null;
 		if ((this._content is IMeasureObject)) {
-			measureContent = cast(this._content, IMeasureObject);
+			measureContent = cast this._content;
 		}
 		if (this._content != null) {
 			var oldIgnoreContentResize = this._ignoreContentResize;
@@ -491,7 +491,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this._content, this.explicitWidth, this.explicitHeight,
 				this.explicitMinWidth, this.explicitMinHeight, this.explicitMaxWidth, this.explicitMaxHeight);
 			if ((this._content is IValidating)) {
-				cast(this._content, IValidating).validateNow();
+				(cast this._content : IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;
 		}
@@ -551,10 +551,10 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 			&& this._drawer != null
 			&& ((this._opened && this._swipeCloseEnabled) || (!this._opened && this._swipeOpenEnabled));
 		if ((this._content is IUIControl)) {
-			cast(this._content, IUIControl).enabled = this._enabled;
+			(cast this._content : IUIControl).enabled = this._enabled;
 		}
 		if ((this._drawer is IUIControl)) {
-			cast(this._drawer, IUIControl).enabled = this._enabled;
+			(cast this._drawer : IUIControl).enabled = this._enabled;
 		}
 	}
 
@@ -570,7 +570,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 			return;
 		}
 		if ((this._currentOverlaySkin is IUIControl)) {
-			cast(this._currentOverlaySkin, IUIControl).initializeNow();
+			(cast this._currentOverlaySkin : IUIControl).initializeNow();
 		}
 		if (this._overlaySkinMeasurements == null) {
 			this._overlaySkinMeasurements = new Measurements(this._currentOverlaySkin);
@@ -579,7 +579,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		}
 		this._overlaySkinAlpha = this._currentOverlaySkin.alpha;
 		if ((this._currentOverlaySkin is IProgrammaticSkin)) {
-			cast(this._currentOverlaySkin, IProgrammaticSkin).uiContext = this;
+			(cast this._currentOverlaySkin : IProgrammaticSkin).uiContext = this;
 		}
 		this._currentOverlaySkin.addEventListener(MouseEvent.MOUSE_DOWN, drawer_overlaySkin_mouseDownHandler, false, 0, true);
 		this._currentOverlaySkin.addEventListener(MouseEvent.CLICK, drawer_overlaySkin_clickHandler, false, 0, true);
@@ -618,7 +618,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		skin.removeEventListener(TouchEvent.TOUCH_BEGIN, drawer_overlaySkin_touchBeginHandler);
 		skin.removeEventListener(TouchEvent.TOUCH_TAP, drawer_overlaySkin_touchTapHandler);
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -642,7 +642,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 				this._content.height = this.actualHeight;
 			}
 			if ((this._content is IValidating)) {
-				cast(this._content, IValidating).validateNow();
+				(cast this._content : IValidating).validateNow();
 			}
 		}
 		this._ignoreContentResize = oldIgnoreContentResize;
@@ -673,7 +673,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 					throw new ArgumentError("Unknown pullable edge position: " + this._pullableEdge);
 			}
 			if ((this._drawer is IValidating)) {
-				cast(this._drawer, IValidating).validateNow();
+				(cast this._drawer : IValidating).validateNow();
 			}
 			var maxPullDistance = 0.0;
 			if (this._drawer != null) {
@@ -732,10 +732,10 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 			if (this._focusManager.focus == null) {
 				return;
 			}
-			if ((this._content is IFocusObject) && this._focusManager.focus == cast(this._content, IFocusObject)) {
+			if ((this._content is IFocusObject) && this._focusManager.focus == (cast this._content : IFocusObject)) {
 				this._focusManager.focus = null;
 			} else if ((this._content is DisplayObjectContainer)
-				&& cast(this._content, DisplayObjectContainer).contains(cast(this._focusManager.focus, DisplayObject))) {
+				&& (cast this._content : DisplayObjectContainer).contains((cast this._focusManager.focus : DisplayObject))) {
 				this._focusManager.focus = null;
 			}
 		}
@@ -744,7 +744,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 			return;
 		}
 		if (this.stage.focus == this._content
-			|| ((this._content is DisplayObjectContainer) && cast(this._content, DisplayObjectContainer).contains(this.stage.focus))) {
+			|| ((this._content is DisplayObjectContainer) && (cast this._content : DisplayObjectContainer).contains(this.stage.focus))) {
 			this.stage.focus = this.stage;
 		}
 	}

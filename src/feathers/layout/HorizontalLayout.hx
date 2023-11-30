@@ -439,14 +439,14 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			var layoutData:HorizontalLayoutData = null;
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 				layoutData = Std.downcast(layoutObject.layoutData, HorizontalLayoutData);
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			if (layoutData != null && layoutData.marginLeft != null) {
 				contentWidth += layoutData.marginLeft;
@@ -525,7 +525,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			var percentWidth:Null<Float> = null;
 			var percentHeight:Null<Float> = null;
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -539,7 +539,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				if (explicitContentHeight != null) {
 					item.height = explicitContentHeight;
 				} else if (this._justifyResetEnabled && (item is IMeasureObject)) {
-					cast(item, IMeasureObject).resetHeight();
+					(cast item : IMeasureObject).resetHeight();
 				}
 			} else if (explicitContentHeight != null) {
 				if (percentHeight != null) {
@@ -551,20 +551,20 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 					item.height = explicitContentHeight * (percentHeight / 100.0);
 				}
 			} else if (percentHeight != null && this._percentHeightResetEnabled && (item is IMeasureObject)) {
-				cast(item, IMeasureObject).resetHeight();
+				(cast item : IMeasureObject).resetHeight();
 			}
 			if (percentWidth != null && this._percentWidthResetEnabled && explicitContentWidth == null && (item is IMeasureObject)) {
-				cast(item, IMeasureObject).resetWidth();
+				(cast item : IMeasureObject).resetWidth();
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			if (isJustified && explicitContentHeight == null && measurements.maxHeight != null) {
 				var maxExplicitContentHeight = measurements.maxHeight - this._paddingTop - this._paddingBottom;
 				if (item.height > maxExplicitContentHeight) {
 					item.height = maxExplicitContentHeight;
 					if ((item is IValidating)) {
-						cast(item, IValidating).validateNow();
+						(cast item : IValidating).validateNow();
 					}
 				}
 			}
@@ -575,7 +575,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
@@ -628,7 +628,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
@@ -646,7 +646,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		var totalPercentWidth = 0.0;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -658,7 +658,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 							percentWidth = 0.0;
 						}
 						if ((layoutItem is IMeasureObject)) {
-							var measureItem = cast(layoutItem, IMeasureObject);
+							var measureItem:IMeasureObject = cast layoutItem;
 							totalMinWidth += measureItem.minWidth;
 						}
 						totalPercentWidth += percentWidth;
@@ -708,7 +708,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 				}
 				var itemWidth = percentToPixels * percentWidth;
 				if ((layoutItem is IMeasureObject)) {
-					var measureItem = cast(layoutItem, IMeasureObject);
+					var measureItem:IMeasureObject = cast layoutItem;
 					var itemMinWidth = measureItem.explicitMinWidth;
 					if (itemMinWidth != null && itemMinWidth > remainingWidth) {
 						// we try to respect the item's minimum width, but if
@@ -732,7 +732,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
-					cast(layoutItem, IValidating).validateNow();
+					(cast layoutItem : IValidating).validateNow();
 				}
 			}
 		}
@@ -744,7 +744,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			if (!(item is ILayoutObject)) {
 				continue;
 			}
-			var layoutItem = cast(item, ILayoutObject);
+			var layoutItem:ILayoutObject = cast item;
 			if (!layoutItem.includeInLayout) {
 				continue;
 			}
@@ -763,7 +763,7 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 			}
 			var itemHeight = availableHeight * percentHeight / 100.0;
 			if ((item is IMeasureObject)) {
-				var measureItem = cast(item, IMeasureObject);
+				var measureItem:IMeasureObject = cast item;
 				var itemMinHeight = measureItem.explicitMinHeight;
 				if (itemMinHeight != null) {
 					// we try to respect the minHeight, but not

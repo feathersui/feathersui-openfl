@@ -365,7 +365,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 		this._ignoreLayoutChanges = true;
 		if ((this._currentLayout is IScrollLayout)) {
-			var scrollLayout = cast(this._currentLayout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this._currentLayout;
 			scrollLayout.scrollX = this._scrollX;
 			scrollLayout.scrollY = this._scrollY;
 		}
@@ -389,7 +389,7 @@ class LayoutViewPort extends LayoutGroup implements IViewPort {
 		this._viewPortBackground.height = Math.max(this.actualHeight, this._actualVisibleHeight);
 
 		if ((this.layout is ISnapLayout)) {
-			var snapLayout = cast(this.layout, ISnapLayout);
+			var snapLayout:ISnapLayout = cast this.layout;
 			this._snapPositionsX = snapLayout.getSnapPositionsX(this.items, this._actualVisibleWidth, this._actualVisibleHeight, this._snapPositionsX);
 			this._snapPositionsY = snapLayout.getSnapPositionsY(this.items, this._actualVisibleWidth, this._actualVisibleHeight, this._snapPositionsY);
 		} else {

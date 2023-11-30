@@ -287,14 +287,14 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 				if (pointerTargetContainer.contains(lastObject)) {
 					while (lastObject != null && lastObject != pointerTargetContainer) {
 						if ((lastObject is InteractiveObject)) {
-							var interactive = cast(lastObject, InteractiveObject);
+							var interactive:InteractiveObject = cast lastObject;
 							if (!interactive.mouseEnabled) {
 								lastObject = lastObject.parent;
 								continue;
 							}
 						}
 						if ((lastObject is IFocusObject)) {
-							var focusable = cast(lastObject, IFocusObject);
+							var focusable:IFocusObject = cast lastObject;
 							if (focusable.parent != this._pointerTarget && focusable.focusEnabled) {
 								return false;
 							}
@@ -308,7 +308,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	}
 
 	private function changeState(state:ToggleButtonState):Void {
-		var toggleState = cast(state, ToggleButtonState);
+		var toggleState = state;
 		if (!this._enabled) {
 			toggleState = DISABLED(this._selected);
 		}
@@ -359,7 +359,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	override private function addCurrentBackgroundSkin(skin:DisplayObject):Void {
 		if (skin != null) {
 			if ((skin is IStateObserver)) {
-				cast(skin, IStateObserver).stateContext = this;
+				(cast skin : IStateObserver).stateContext = this;
 			}
 		}
 		super.addCurrentBackgroundSkin(skin);
@@ -368,7 +368,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	override private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
 		if (skin != null) {
 			if ((skin is IStateObserver)) {
-				cast(skin, IStateObserver).stateContext = null;
+				(cast skin : IStateObserver).stateContext = null;
 			}
 		}
 		super.removeCurrentBackgroundSkin(skin);

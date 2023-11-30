@@ -568,7 +568,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 			var item = items[i];
 			if (item != null) {
 				if ((item is ILayoutObject)) {
-					if (!cast(item, ILayoutObject).includeInLayout) {
+					if (!(cast item : ILayoutObject).includeInLayout) {
 						continue;
 					}
 				}
@@ -651,12 +651,12 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				continue;
 			}
 			if ((item is ILayoutObject)) {
-				if (!cast(item, ILayoutObject).includeInLayout) {
+				if (!(cast item : ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			var itemWidth = item.width;
 			if (maxItemWidth < itemWidth) {
@@ -666,7 +666,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem == null) {
 					if ((item is IValidating)) {
-						cast(item, IValidating).validateNow();
+						(cast item : IValidating).validateNow();
 					}
 					// save the original measured width in the cache to be used
 					// again in future calculations
@@ -711,7 +711,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				break;
 			}
 			if ((item is ILayoutObject)) {
-				if (!cast(item, ILayoutObject).includeInLayout) {
+				if (!(cast item : ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
@@ -720,7 +720,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 				item.height = this._rowHeight;
 			} else {
 				if ((item is IValidating)) {
-					cast(item, IValidating).validateNow();
+					(cast item : IValidating).validateNow();
 				}
 			}
 			actualRowHeight = item.height;
@@ -1000,7 +1000,7 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}

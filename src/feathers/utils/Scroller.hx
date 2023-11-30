@@ -834,7 +834,7 @@ class Scroller extends EventDispatcher {
 						// use the setter
 						this.scrollX = scrollX;
 					}, duration, [this._scrollX], [this.targetScrollX], true);
-					this.animateScrollX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+					this.animateScrollX = cast tween;
 					this.animateScrollX.ease(ease);
 					this.animateScrollX.onComplete(this.animateScrollX_onComplete);
 					this.refreshAnimateScrollXEndRatio();
@@ -865,7 +865,7 @@ class Scroller extends EventDispatcher {
 						// use the setter
 						this.scrollY = scrollY;
 					}, duration, [this._scrollY], [this.targetScrollY], true);
-					this.animateScrollY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+					this.animateScrollY = cast tween;
 					this.animateScrollY.ease(ease);
 					this.animateScrollY.onComplete(this.animateScrollY_onComplete);
 					this.refreshAnimateScrollYEndRatio();
@@ -1010,7 +1010,7 @@ class Scroller extends EventDispatcher {
 		}
 		this._scrolling = true;
 		if ((this._target is DisplayObjectContainer)) {
-			var container = cast(this._target, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this._target;
 			this.restoreMouseChildren = container.mouseChildren;
 			container.mouseChildren = false;
 		}
@@ -1023,7 +1023,7 @@ class Scroller extends EventDispatcher {
 		}
 		this._scrolling = false;
 		if ((this._target is DisplayObjectContainer)) {
-			var container = cast(this._target, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this._target;
 			container.mouseChildren = this.restoreMouseChildren;
 		}
 		ScrollEvent.dispatch(this, ScrollEvent.SCROLL_COMPLETE, false, false, this._scrollX, this._scrollY);
@@ -1201,7 +1201,7 @@ class Scroller extends EventDispatcher {
 		this._target.stage.addEventListener(TouchEvent.TOUCH_MOVE, scroller_target_stage_touchMoveHandler, false, 0, true);
 		this._target.stage.addEventListener(TouchEvent.TOUCH_END, scroller_target_stage_touchEndHandler, false, 0, true);
 		if ((this._target is DisplayObjectContainer)) {
-			var container = cast(this._target, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this._target;
 			// if we were already scrolling, disable the pointer immediately.
 			// otherwise, wait until dragging starts
 			if (this._scrolling) {

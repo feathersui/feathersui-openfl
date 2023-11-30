@@ -176,7 +176,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if ((this.content is IValidating)) {
 			var oldIgnoreContentResizing = this._ignoreContentResizing;
 			this._ignoreContentResizing = true;
-			cast(this.content, IValidating).validateNow();
+			(cast this.content : IValidating).validateNow();
 			this._ignoreContentResizing = oldIgnoreContentResizing;
 		}
 		this._contentMeasurements.save(this.content);
@@ -225,7 +225,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if ((this.origin is IValidating)) {
 			var oldIgnoreOriginResizing = this._ignoreOriginResizing;
 			this._ignoreOriginResizing = true;
-			cast(this.origin, IValidating).validateNow();
+			(cast this.origin : IValidating).validateNow();
 			this._ignoreOriginResizing = oldIgnoreOriginResizing;
 		}
 
@@ -246,7 +246,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 
 		var hasSetMinWidth = false;
 		if (this._fitContentToOriginWidth && (this.content is IMeasureObject)) {
-			var measureContent = cast(this.content, IMeasureObject);
+			var measureContent:IMeasureObject = cast this.content;
 			if (measureContent.minWidth < originWidth) {
 				measureContent.minWidth = originWidth;
 				hasSetMinWidth = true;
@@ -255,7 +255,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		var oldIgnoreContentResizing = this._ignoreContentResizing;
 		this._ignoreContentResizing = true;
 		if ((this.content is IValidating)) {
-			cast(this.content, IValidating).validateNow();
+			(cast this.content : IValidating).validateNow();
 		}
 		if (this._fitContentToOriginWidth && !hasSetMinWidth && this.content.width < originWidth) {
 			this.content.width = originWidth;
@@ -342,7 +342,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		}
 		var mouseTarget = cast(event.target, DisplayObject);
 		if ((this.content is DisplayObjectContainer)) {
-			var container = cast(this.content, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this.content;
 			if (container.contains(mouseTarget)) {
 				return;
 			}
@@ -350,7 +350,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			return;
 		}
 		if ((this.origin is DisplayObjectContainer)) {
-			var container = cast(this.origin, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this.origin;
 			if (container.contains(mouseTarget)) {
 				return;
 			}
@@ -370,7 +370,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		}
 		var mouseTarget = cast(event.target, DisplayObject);
 		if ((this.content is DisplayObjectContainer)) {
-			var container = cast(this.content, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this.content;
 			if (container.contains(mouseTarget)) {
 				return;
 			}
@@ -378,7 +378,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			return;
 		}
 		if ((this.origin is DisplayObjectContainer)) {
-			var container = cast(this.origin, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this.origin;
 			if (container.contains(mouseTarget)) {
 				return;
 			}

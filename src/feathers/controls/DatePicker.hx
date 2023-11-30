@@ -236,14 +236,14 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 
 	private static function defaultUpdateDateRenderer(dateRenderer:DisplayObject, state:DatePickerItemState):Void {
 		if ((dateRenderer is ITextControl)) {
-			var textControl = cast(dateRenderer, ITextControl);
+			var textControl:ITextControl = cast dateRenderer;
 			textControl.text = Std.string(state.date.getDate());
 		}
 	}
 
 	private static function defaultResetDateRenderer(dateRenderer:DisplayObject, state:DatePickerItemState):Void {
 		if ((dateRenderer is ITextControl)) {
-			var textControl = cast(dateRenderer, ITextControl);
+			var textControl:ITextControl = cast dateRenderer;
 			textControl.text = null;
 		}
 	}
@@ -1558,7 +1558,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		if (storage.inactiveDateRenderers.length == 0) {
 			dateRenderer = storage.dateRendererRecycler.create();
 			if ((dateRenderer is IVariantStyleObject)) {
-				var variantItemRenderer = cast(dateRenderer, IVariantStyleObject);
+				var variantItemRenderer:IVariantStyleObject = cast dateRenderer;
 				if (variantItemRenderer.variant == null) {
 					if (storage == this._mutedStorage) {
 						var variant = (this.customMutedDateRendererVariant != null) ? this.customMutedDateRendererVariant : CHILD_VARIANT_MUTED_DATE_RENDERER;
@@ -1574,7 +1574,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((dateRenderer is IUIControl)) {
-				cast(dateRenderer, IUIControl).initializeNow();
+				(cast dateRenderer : IUIControl).initializeNow();
 			}
 			// save measurements after initialize, because width/height could be
 			// set explicitly there, and we want to restore those values
@@ -1652,15 +1652,15 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if ((dateRenderer is IUIControl)) {
-			var uiControl = cast(dateRenderer, IUIControl);
+			var uiControl:IUIControl = cast dateRenderer;
 			uiControl.enabled = state.enabled;
 		}
 		if ((dateRenderer is IDataRenderer)) {
-			var dataRenderer = cast(dateRenderer, IDataRenderer);
+			var dataRenderer:IDataRenderer = cast dateRenderer;
 			dataRenderer.data = state.date;
 		}
 		if ((dateRenderer is IToggle)) {
-			var toggle = cast(dateRenderer, IToggle);
+			var toggle:IToggle = cast dateRenderer;
 			toggle.selected = state.selected;
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
@@ -1772,7 +1772,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -1780,7 +1780,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -1790,7 +1790,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -1946,7 +1946,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 

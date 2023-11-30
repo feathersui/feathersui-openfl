@@ -389,7 +389,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	override public function showFocus(show:Bool):Void {
 		super.showFocus(show);
 		if ((this._currentThumbSkin is IFocusObject)) {
-			var focusThumb = cast(this._currentThumbSkin, IFocusObject);
+			var focusThumb:IFocusObject = cast this._currentThumbSkin;
 			if (focusThumb.focusEnabled) {
 				focusThumb.showFocus(show);
 			}
@@ -454,14 +454,14 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		}
 		if (oldSkin != null) {
 			if ((oldSkin is IProgrammaticSkin)) {
-				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+				(cast oldSkin : IProgrammaticSkin).uiContext = null;
 			}
 			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
 			this.removeChild(oldSkin);
 		}
 		if (this._currentThumbSkin != null) {
 			if ((this._currentThumbSkin is IUIControl)) {
-				cast(this._currentThumbSkin, IUIControl).initializeNow();
+				(cast this._currentThumbSkin : IUIControl).initializeNow();
 			}
 			if (this._thumbSkinMeasurements == null) {
 				this._thumbSkinMeasurements = new Measurements(this._currentThumbSkin);
@@ -472,7 +472,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			this.addChild(this._currentThumbSkin);
 			this._currentThumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
 			if ((this._currentThumbSkin is IProgrammaticSkin)) {
-				cast(this._currentThumbSkin, IProgrammaticSkin).uiContext = this;
+				(cast this._currentThumbSkin : IProgrammaticSkin).uiContext = this;
 			}
 		} else {
 			this._thumbSkinMeasurements = null;
@@ -487,14 +487,14 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		}
 		if (oldSkin != null) {
 			if ((oldSkin is IProgrammaticSkin)) {
-				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+				(cast oldSkin : IProgrammaticSkin).uiContext = null;
 			}
 			this.removeChild(oldSkin);
 			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentTrackSkin != null) {
 			if ((this._currentTrackSkin is IUIControl)) {
-				cast(this._currentTrackSkin, IUIControl).initializeNow();
+				(cast this._currentTrackSkin : IUIControl).initializeNow();
 			}
 			if (this._trackSkinMeasurements == null) {
 				this._trackSkinMeasurements = new Measurements(this._currentTrackSkin);
@@ -505,7 +505,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			this.addChildAt(this._currentTrackSkin, 0);
 			this._currentTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 			if ((this._currentTrackSkin is IProgrammaticSkin)) {
-				cast(this._currentTrackSkin, IProgrammaticSkin).uiContext = this;
+				(cast this._currentTrackSkin : IProgrammaticSkin).uiContext = this;
 			}
 		} else {
 			this._trackSkinMeasurements = null;
@@ -520,14 +520,14 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		}
 		if (oldSkin != null) {
 			if ((oldSkin is IProgrammaticSkin)) {
-				cast(oldSkin, IProgrammaticSkin).uiContext = null;
+				(cast oldSkin : IProgrammaticSkin).uiContext = null;
 			}
 			this.removeChild(oldSkin);
 			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentSecondaryTrackSkin != null) {
 			if ((this._currentSecondaryTrackSkin is IUIControl)) {
-				cast(this._currentSecondaryTrackSkin, IUIControl).initializeNow();
+				(cast this._currentSecondaryTrackSkin : IUIControl).initializeNow();
 			}
 			if (this._secondaryTrackSkinMeasurements == null) {
 				this._secondaryTrackSkinMeasurements = new Measurements(this._currentSecondaryTrackSkin);
@@ -539,7 +539,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			this.addChildAt(this._currentSecondaryTrackSkin, index);
 			this._currentSecondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 			if ((this._currentSecondaryTrackSkin is IProgrammaticSkin)) {
-				cast(this._currentSecondaryTrackSkin, IProgrammaticSkin).uiContext = this;
+				(cast this._currentSecondaryTrackSkin : IProgrammaticSkin).uiContext = this;
 			}
 		} else {
 			this._secondaryTrackSkinMeasurements = null;
@@ -548,13 +548,13 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 	private function refreshEnabled():Void {
 		if ((this._currentThumbSkin is IUIControl)) {
-			cast(this._currentThumbSkin, IUIControl).enabled = this._enabled;
+			(cast this._currentThumbSkin : IUIControl).enabled = this._enabled;
 		}
 		if ((this._currentTrackSkin is IUIControl)) {
-			cast(this._currentTrackSkin, IUIControl).enabled = this._enabled;
+			(cast this._currentTrackSkin : IUIControl).enabled = this._enabled;
 		}
 		if ((this._currentSecondaryTrackSkin is IUIControl)) {
-			cast(this._currentSecondaryTrackSkin, IUIControl).enabled = this._enabled;
+			(cast this._currentSecondaryTrackSkin : IUIControl).enabled = this._enabled;
 		}
 	}
 

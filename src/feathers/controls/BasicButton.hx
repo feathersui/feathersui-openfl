@@ -270,7 +270,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -278,10 +278,10 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		if ((skin is IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = this;
+			(cast skin : IStateObserver).stateContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -291,10 +291,10 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if ((skin is IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+			(cast skin : IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -321,11 +321,11 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;
@@ -410,7 +410,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 

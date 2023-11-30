@@ -1276,10 +1276,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 	private function refreshViewPort():Void {
 		if ((this.scrollBarX is IValidating)) {
-			cast(this.scrollBarX, IValidating).validateNow();
+			(cast this.scrollBarX : IValidating).validateNow();
 		}
 		if ((this.scrollBarY is IValidating)) {
-			cast(this.scrollBarY, IValidating).validateNow();
+			(cast this.scrollBarY : IValidating).validateNow();
 		}
 
 		this._viewPort.scrollX = this.scrollX;
@@ -1719,11 +1719,11 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;
@@ -1849,7 +1849,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -1857,7 +1857,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -1867,7 +1867,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -1896,10 +1896,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(skin);
 		this.mask = skin;
@@ -1910,7 +1910,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this.removeChild(skin);
@@ -1946,10 +1946,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(skin);
 		cast(this._viewPort, DisplayObject).mask = skin;
@@ -1960,7 +1960,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this.removeChild(skin);
@@ -1987,10 +1987,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(skin);
 	}
@@ -2000,7 +2000,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this.removeChild(skin);
@@ -2031,7 +2031,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 
@@ -2045,7 +2045,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._currentMaskSkin.width = this.actualWidth;
 		this._currentMaskSkin.height = this.actualHeight;
 		if ((this._currentMaskSkin is IValidating)) {
-			cast(this._currentMaskSkin, IValidating).validateNow();
+			(cast this._currentMaskSkin : IValidating).validateNow();
 		}
 	}
 
@@ -2075,7 +2075,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		this._currentViewPortMaskSkin.width = maskWidth;
 		this._currentViewPortMaskSkin.height = maskHeight;
 		if ((this._currentViewPortMaskSkin is IValidating)) {
-			cast(this._currentViewPortMaskSkin, IValidating).validateNow();
+			(cast this._currentViewPortMaskSkin : IValidating).validateNow();
 		}
 	}
 
@@ -2090,10 +2090,10 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		}
 
 		if (this.scrollBarX != null && (this.scrollBarX is IValidating)) {
-			cast(this.scrollBarX, IValidating).validateNow();
+			(cast this.scrollBarX : IValidating).validateNow();
 		}
 		if (this.scrollBarY != null && (this.scrollBarY is IValidating)) {
-			cast(this.scrollBarY, IValidating).validateNow();
+			(cast this.scrollBarY : IValidating).validateNow();
 		}
 
 		if (this.scrollBarX != null) {
@@ -2232,7 +2232,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		var tween = Actuate.update((alpha:Float) -> {
 			this.scrollBarX.alpha = alpha;
 		}, this.hideScrollBarDuration, [this.scrollBarX.alpha], [0.0], true);
-		this._hideScrollBarX = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+		this._hideScrollBarX = cast tween;
 		this._hideScrollBarX.ease(this.hideScrollBarEase);
 		this._hideScrollBarX.autoVisible(false);
 		var visibleTime = (Lib.getTimer() - this._scrollBarXRevealTime) / 1000.0;
@@ -2257,7 +2257,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		var tween = Actuate.update((alpha:Float) -> {
 			this.scrollBarY.alpha = alpha;
 		}, this.hideScrollBarDuration, [this.scrollBarY.alpha], [0.0], true);
-		this._hideScrollBarY = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+		this._hideScrollBarY = cast tween;
 		this._hideScrollBarY.ease(this.hideScrollBarEase);
 		this._hideScrollBarY.autoVisible(false);
 		var visibleTime = (Lib.getTimer() - this._scrollBarYRevealTime) / 1000.0;

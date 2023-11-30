@@ -793,17 +793,17 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		if ((this._currentIcon is IValidating)) {
 			var oldIgnoreIconResizes = this._ignoreIconResizes;
 			this._ignoreIconResizes = true;
-			cast(this._currentIcon, IValidating).validateNow();
+			(cast this._currentIcon : IValidating).validateNow();
 			this._ignoreIconResizes = oldIgnoreIconResizes;
 		}
 
@@ -894,7 +894,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		if (this._currentIcon != null) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if ((this._currentIcon is IValidating)) {
-					cast(this._currentIcon, IValidating).validateNow();
+					(cast this._currentIcon : IValidating).validateNow();
 				}
 				textFieldExplicitWidth -= (this._currentIcon.width + adjustedGap);
 			}
@@ -1134,7 +1134,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		var oldIgnoreIconResizes = this._ignoreIconResizes;
 		this._ignoreIconResizes = true;
 		if ((this._currentIcon is IValidating)) {
-			cast(this._currentIcon, IValidating).validateNow();
+			(cast this._currentIcon : IValidating).validateNow();
 		}
 		this._ignoreIconResizes = oldIgnoreIconResizes;
 		var hasText = this.showText && this._text != null;
@@ -1314,7 +1314,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 			return;
 		}
 		if ((icon is IUIControl)) {
-			cast(icon, IUIControl).initializeNow();
+			(cast icon : IUIControl).initializeNow();
 		}
 		if (this._iconMeasurements == null) {
 			this._iconMeasurements = new Measurements(icon);
@@ -1322,10 +1322,10 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 			this._iconMeasurements.save(icon);
 		}
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = this;
+			(cast icon : IProgrammaticSkin).uiContext = this;
 		}
 		if ((icon is IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = this;
+			(cast icon : IStateObserver).stateContext = this;
 		}
 		icon.addEventListener(Event.RESIZE, button_icon_resizeHandler, false, 0, true);
 		var index = this.getChildIndex(this.textField);
@@ -1347,10 +1347,10 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		}
 		icon.removeEventListener(Event.RESIZE, button_icon_resizeHandler);
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = null;
+			(cast icon : IProgrammaticSkin).uiContext = null;
 		}
 		if ((icon is IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = null;
+			(cast icon : IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this icon is used for measurement

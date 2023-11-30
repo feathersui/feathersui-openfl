@@ -357,7 +357,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 			var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
 			this._ignoreBranchOrLeafIconResizes = true;
 			if ((this._currentBranchOrLeafIcon is IValidating)) {
-				cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+				(cast this._currentBranchOrLeafIcon : IValidating).validateNow();
 			}
 			this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 			textFieldExplicitWidth -= (this._currentBranchOrLeafIcon.width + adjustedGap);
@@ -377,7 +377,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
 		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
-			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+			(cast this._currentBranchOrLeafIcon : IValidating).validateNow();
 		}
 		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
@@ -402,7 +402,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
 		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
-			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+			(cast this._currentBranchOrLeafIcon : IValidating).validateNow();
 		}
 		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var adjustedGap = this.gap;
@@ -427,7 +427,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		var oldgnoreBranchOrLeafIconResizes = this._ignoreBranchOrLeafIconResizes;
 		this._ignoreBranchOrLeafIconResizes = true;
 		if ((this._currentBranchOrLeafIcon is IValidating)) {
-			cast(this._currentBranchOrLeafIcon, IValidating).validateNow();
+			(cast this._currentBranchOrLeafIcon : IValidating).validateNow();
 		}
 		this._ignoreBranchOrLeafIconResizes = oldgnoreBranchOrLeafIconResizes;
 		var paddingLeft = this.paddingLeft;
@@ -547,10 +547,10 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 		}
 		icon.removeEventListener(Event.RESIZE, hierarchicalItemRenderer_branchOrLeafIcon_resizeHandler);
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = null;
+			(cast icon : IProgrammaticSkin).uiContext = null;
 		}
 		if ((icon is IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = null;
+			(cast icon : IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this icon is used for measurement
@@ -566,7 +566,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 			return;
 		}
 		if ((icon is IUIControl)) {
-			cast(icon, IUIControl).initializeNow();
+			(cast icon : IUIControl).initializeNow();
 		}
 		if (this._branchOrLeafIconMeasurements == null) {
 			this._branchOrLeafIconMeasurements = new Measurements(icon);
@@ -574,10 +574,10 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 			this._branchOrLeafIconMeasurements.save(icon);
 		}
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = this;
+			(cast icon : IProgrammaticSkin).uiContext = this;
 		}
 		if ((icon is IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = this;
+			(cast icon : IStateObserver).stateContext = this;
 		}
 		icon.addEventListener(Event.RESIZE, hierarchicalItemRenderer_branchOrLeafIcon_resizeHandler, false, 0, true);
 		this.addChild(icon);

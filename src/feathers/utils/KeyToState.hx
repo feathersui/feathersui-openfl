@@ -189,7 +189,7 @@ class KeyToState<T> {
 	private function changeState(value:T):Void {
 		var oldState = this._currentState;
 		if ((this._target is IStateContext)) {
-			oldState = cast(this._target, IStateContext<Dynamic>).currentState;
+			oldState = (cast this._target : IStateContext<Dynamic>).currentState;
 		}
 		this._currentState = value;
 		if (oldState == value) {
@@ -219,7 +219,7 @@ class KeyToState<T> {
 
 	private function keyToState_target_keyDownHandler(event:KeyboardEvent):Void {
 		if ((this._target is IFocusObject)) {
-			var focusObject = cast(this._target, IFocusObject);
+			var focusObject:IFocusObject = cast this._target;
 			var focusManager = focusObject.focusManager;
 			if (focusManager != null && focusManager.focus != focusObject) {
 				return;

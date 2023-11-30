@@ -43,7 +43,7 @@ class Measurements {
 			return;
 		}
 		if ((target is IMeasureObject)) {
-			var measureTarget = cast(target, IMeasureObject);
+			var measureTarget:IMeasureObject = cast target;
 			this.width = measureTarget.explicitWidth;
 			this.height = measureTarget.explicitHeight;
 			this.minWidth = measureTarget.explicitMinWidth;
@@ -67,7 +67,7 @@ class Measurements {
 	**/
 	public function restore(target:DisplayObject):Void {
 		if ((target is IMeasureObject)) {
-			var measureTarget = cast(target, IMeasureObject);
+			var measureTarget:IMeasureObject = cast target;
 			if (this.width == null) {
 				measureTarget.resetWidth();
 			} else {

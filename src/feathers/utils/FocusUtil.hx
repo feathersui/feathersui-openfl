@@ -29,13 +29,13 @@ class FocusUtil {
 			result = [];
 		}
 		if ((target is IFocusObject)) {
-			var focusableObject = cast(target, IFocusObject);
+			var focusableObject:IFocusObject = cast target;
 			if (focusableObject.focusEnabled) {
 				result.push(focusableObject);
 			}
 		}
 		if ((target is IFocusExtras)) {
-			var focusExtras = cast(target, IFocusExtras);
+			var focusExtras:IFocusExtras = cast target;
 			var extras = focusExtras.focusExtrasBefore;
 			if (extras != null) {
 				for (i in 0...extras.length) {
@@ -45,7 +45,7 @@ class FocusUtil {
 			}
 		}
 		if ((target is IFocusObject)) {
-			if ((target is IFocusContainer) && cast(target, IFocusContainer).childFocusEnabled) {
+			if ((target is IFocusContainer) && (cast target : IFocusContainer).childFocusEnabled) {
 				var otherContainer = cast(target, DisplayObjectContainer);
 				for (i in 0...otherContainer.numChildren) {
 					var childOfTarget = otherContainer.getChildAt(i);
@@ -53,14 +53,14 @@ class FocusUtil {
 				}
 			}
 		} else if ((target is DisplayObjectContainer)) {
-			var otherContainer = cast(target, DisplayObjectContainer);
+			var otherContainer:DisplayObjectContainer = cast target;
 			for (i in 0...otherContainer.numChildren) {
 				var childOfTarget = otherContainer.getChildAt(i);
 				findAllFocusableObjects(childOfTarget, result);
 			}
 		}
 		if ((target is IFocusExtras)) {
-			var focusExtras = cast(target, IFocusExtras);
+			var focusExtras:IFocusExtras = cast target;
 			var extras = focusExtras.focusExtrasAfter;
 			if (extras != null) {
 				for (i in 0...extras.length) {

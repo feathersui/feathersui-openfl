@@ -132,11 +132,11 @@ class ActivityIndicator extends FeathersControl {
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentActivitySkin is IMeasureObject)) {
-			measureSkin = cast(this._currentActivitySkin, IMeasureObject);
+			measureSkin = cast this._currentActivitySkin;
 		}
 
 		if ((this._currentActivitySkin is IValidating)) {
-			cast(this._currentActivitySkin, IValidating).validateNow();
+			(cast this._currentActivitySkin : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;
@@ -209,7 +209,7 @@ class ActivityIndicator extends FeathersControl {
 		this._currentActivitySkin.x = (this.actualWidth - diameter) / 2.0;
 		this._currentActivitySkin.y = (this.actualHeight - diameter) / 2.0;
 		if ((this._currentActivitySkin is IValidating)) {
-			cast(this._currentActivitySkin, IValidating).validateNow();
+			(cast this._currentActivitySkin : IValidating).validateNow();
 		}
 	}
 
@@ -233,7 +233,7 @@ class ActivityIndicator extends FeathersControl {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._activitySkinMeasurements == null) {
 			this._activitySkinMeasurements = new Measurements(skin);
@@ -242,7 +242,7 @@ class ActivityIndicator extends FeathersControl {
 		}
 		this._savedSkinAlpha = skin.alpha;
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -252,7 +252,7 @@ class ActivityIndicator extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement

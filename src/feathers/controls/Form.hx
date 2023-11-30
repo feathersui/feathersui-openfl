@@ -105,7 +105,7 @@ class Form extends LayoutGroup {
 		var current = cast(event.target, DisplayObject);
 		while (current != this && current != null) {
 			if ((current is FormItem)) {
-				var formItem = cast(current, FormItem);
+				var formItem:FormItem = cast current;
 				if (!formItem.submitOnEnterEnabled) {
 					return;
 				}

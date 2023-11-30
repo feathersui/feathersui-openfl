@@ -1005,7 +1005,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this._ignoreTextInputChange = true;
 		var item = (this._customSelectedItem != null) ? this._customSelectedItem : this._selectedItem;
 		if (item != null) {
-			this.textInput.text = (item is String) ? cast(item, String) : this.itemToText(item);
+			this.textInput.text = (item is String) ? cast item : this.itemToText(item);
 		} else {
 			this.textInput.text = "";
 		}
@@ -1022,7 +1022,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._filterText == null || this._filterText.length == 0) {
 			return true;
 		}
-		var itemText = (item is String) ? cast(item, String) : this.itemToText(item);
+		var itemText:String = (item is String) ? cast item : this.itemToText(item);
 		itemText = itemText.toLowerCase();
 		return itemText.indexOf(this._filterText.toLowerCase()) != -1;
 	}
@@ -1349,7 +1349,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			var filterText = this._filterText.toLowerCase();
 			if (this._dataProvider != null && this._dataProvider.length > 0) {
 				for (item in this._dataProvider) {
-					var itemText = (item is String) ? cast(item, String) : this.itemToText(item);
+					var itemText:String = (item is String) ? cast item : this.itemToText(item);
 					itemText = itemText.toLowerCase();
 					if (itemText == filterText) {
 						// if the filtered data contains a match, use it

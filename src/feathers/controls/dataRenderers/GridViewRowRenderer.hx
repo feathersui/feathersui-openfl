@@ -62,14 +62,14 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private static function defaultUpdateCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
 		if ((cellRenderer is ITextControl)) {
-			var textControl = cast(cellRenderer, ITextControl);
+			var textControl:ITextControl = cast cellRenderer;
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetCellRenderer(cellRenderer:DisplayObject, state:GridViewCellState):Void {
 		if ((cellRenderer is ITextControl)) {
-			var textControl = cast(cellRenderer, ITextControl);
+			var textControl:ITextControl = cast cellRenderer;
 			textControl.text = null;
 		}
 	}
@@ -440,7 +440,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function changeState(state:ToggleButtonState):Void {
-		var toggleState = cast(state, ToggleButtonState);
+		var toggleState = state;
 		if (!this._enabled) {
 			toggleState = DISABLED(this._selected);
 		}
@@ -477,7 +477,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return;
 		}
 		if ((skin is IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = this;
+			(cast skin : IStateObserver).stateContext = this;
 		}
 		super.addCurrentBackgroundSkin(skin);
 	}
@@ -488,7 +488,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return;
 		}
 		if ((skin is IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+			(cast skin : IStateObserver).stateContext = null;
 		}
 		super.removeCurrentBackgroundSkin(skin);
 	}
@@ -685,7 +685,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (storage.inactiveCellRenderers.length == 0) {
 			cellRenderer = storage.cellRendererRecycler.create();
 			if ((cellRenderer is IVariantStyleObject)) {
-				var variantCellRenderer = cast(cellRenderer, IVariantStyleObject);
+				var variantCellRenderer:IVariantStyleObject = cast cellRenderer;
 				if (variantCellRenderer.variant == null) {
 					var variant = (this.customCellRendererVariant != null) ? this.customCellRendererVariant : GridView.CHILD_VARIANT_CELL_RENDERER;
 					variantCellRenderer.variant = variant;
@@ -696,7 +696,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((cellRenderer is IUIControl)) {
-				cast(cellRenderer, IUIControl).initializeNow();
+				(cast cellRenderer : IUIControl).initializeNow();
 			}
 			// save measurements after initialize, because width/height could be
 			// set explicitly there, and we want to restore those values
@@ -825,32 +825,32 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if ((cellRenderer is IUIControl)) {
-			var uiControl = cast(cellRenderer, IUIControl);
+			var uiControl:IUIControl = cast cellRenderer;
 			uiControl.enabled = state.enabled;
 		}
 		if ((cellRenderer is IDataRenderer)) {
-			var dataRenderer = cast(cellRenderer, IDataRenderer);
+			var dataRenderer:IDataRenderer = cast cellRenderer;
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
 		if ((cellRenderer is IToggle)) {
-			var toggle = cast(cellRenderer, IToggle);
+			var toggle:IToggle = cast cellRenderer;
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
 		if ((cellRenderer is IGridViewCellRenderer)) {
-			var gridCell = cast(cellRenderer, IGridViewCellRenderer);
+			var gridCell:IGridViewCellRenderer = cast cellRenderer;
 			gridCell.column = state.column;
 			gridCell.columnIndex = state.columnIndex;
 			gridCell.rowIndex = state.rowIndex;
 			gridCell.gridViewOwner = state.owner;
 		}
 		if ((cellRenderer is ILayoutIndexObject)) {
-			var layoutIndexObject = cast(cellRenderer, ILayoutIndexObject);
+			var layoutIndexObject:ILayoutIndexObject = cast cellRenderer;
 			layoutIndexObject.layoutIndex = state.rowIndex;
 		}
 		if ((cellRenderer is IPointerDelegate)) {
-			var pointerDelgate = cast(cellRenderer, IPointerDelegate);
+			var pointerDelgate:IPointerDelegate = cast cellRenderer;
 			pointerDelgate.pointerTarget = state.rowIndex == -1 ? null : this;
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;

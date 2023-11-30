@@ -644,7 +644,7 @@ class Alert extends Panel {
 			return;
 		}
 		if ((this._currentIcon is IUIControl)) {
-			cast(this._currentIcon, IUIControl).initializeNow();
+			(cast this._currentIcon : IUIControl).initializeNow();
 		}
 		if (this._iconMeasurements == null) {
 			this._iconMeasurements = new Measurements(this._currentIcon);
@@ -652,7 +652,7 @@ class Alert extends Panel {
 			this._iconMeasurements.save(this._currentIcon);
 		}
 		if ((this._currentIcon is IProgrammaticSkin)) {
-			cast(this._currentIcon, IProgrammaticSkin).uiContext = this;
+			(cast this._currentIcon : IProgrammaticSkin).uiContext = this;
 		}
 		var index = this.getChildIndex(this.messageLabel);
 		// the icon should be below the text
@@ -668,7 +668,7 @@ class Alert extends Panel {
 			return;
 		}
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = null;
+			(cast icon : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this icon is used for measurement

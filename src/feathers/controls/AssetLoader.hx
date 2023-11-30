@@ -199,7 +199,7 @@ class AssetLoader extends FeathersControl {
 					this.loader.load(new URLRequest(this._source));
 				} catch (e:Dynamic) {
 					if ((e is SecurityError)) {
-						var securityError = cast(e, SecurityError);
+						var securityError:SecurityError = cast e;
 						this.dispatchEvent(new SecurityErrorEvent(SecurityErrorEvent.SECURITY_ERROR, false, false, securityError.message,
 							securityError.errorID));
 					}
@@ -403,7 +403,7 @@ class AssetLoader extends FeathersControl {
 				this.content.y = 0.0;
 				this._contentMeasurements.restore(this.content);
 				if ((this.content is IValidating)) {
-					cast(this.content, IValidating).validateNow();
+					(cast this.content : IValidating).validateNow();
 				}
 				needsMask = this.content.width > this.actualWidth || this.content.height > this.actualHeight;
 			case StageScaleMode.NO_BORDER:

@@ -80,10 +80,10 @@ final class Theme {
 	**/
 	public static function getTheme(?object:IStyleObject):ITheme {
 		if ((object is DisplayObject)) {
-			var current = cast(object, DisplayObject);
+			var current:DisplayObject = cast object;
 			while (current != null) {
 				if ((current is IStyleObject)) {
-					var currentStylable = cast(current, IStyleObject);
+					var currentStylable:IStyleObject = cast current;
 					if (!currentStylable.themeEnabled) {
 						return null;
 					}
@@ -91,7 +91,7 @@ final class Theme {
 				current = current.parent;
 			}
 			if (roots != null) {
-				var displayObject = cast(object, DisplayObject);
+				var displayObject:DisplayObject = cast object;
 				for (root in roots) {
 					if (root.contains(displayObject)) {
 						return rootToTheme.get(root);

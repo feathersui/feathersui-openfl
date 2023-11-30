@@ -889,12 +889,12 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 					continue;
 				} else {
 					if ((item is ILayoutObject)) {
-						if (!cast(item, ILayoutObject).includeInLayout) {
+						if (!(cast item : ILayoutObject).includeInLayout) {
 							continue;
 						}
 					}
 					if ((item is IValidating)) {
-						cast(item, IValidating).validateNow();
+						(cast item : IValidating).validateNow();
 					}
 					tileWidth = item.width;
 					tileHeight = item.height;
@@ -963,7 +963,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		for (i in 0...items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -1606,7 +1606,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		for (i in startIndex...endIndex) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -1653,7 +1653,7 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		for (i in startIndex...endIndex) {
 			var item = items[i];
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}

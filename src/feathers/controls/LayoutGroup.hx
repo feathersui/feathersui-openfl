@@ -576,7 +576,7 @@ class LayoutGroup extends FeathersControl {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -584,7 +584,7 @@ class LayoutGroup extends FeathersControl {
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this._addChildAt(skin, 0);
 	}
@@ -594,7 +594,7 @@ class LayoutGroup extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -623,10 +623,10 @@ class LayoutGroup extends FeathersControl {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this._addChild(skin);
 		this.mask = skin;
@@ -637,7 +637,7 @@ class LayoutGroup extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this._removeChild(skin);
@@ -656,7 +656,7 @@ class LayoutGroup extends FeathersControl {
 		if (this._currentBackgroundSkin != null) {
 			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
 			if ((this._currentBackgroundSkin is IValidating)) {
-				cast(this._currentBackgroundSkin, IValidating).validateNow();
+				(cast this._currentBackgroundSkin : IValidating).validateNow();
 			}
 		}
 
@@ -757,11 +757,11 @@ class LayoutGroup extends FeathersControl {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		for (item in this.items) {
-			if ((item is ILayoutObject) && !cast(item, ILayoutObject).includeInLayout) {
+			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
 				continue;
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			var itemMaxX = item.x + item.width;
 			var itemMaxY = item.y + item.height;
@@ -815,7 +815,7 @@ class LayoutGroup extends FeathersControl {
 		this._currentMaskSkin.width = this.actualWidth;
 		this._currentMaskSkin.height = this.actualHeight;
 		if ((this._currentMaskSkin is IValidating)) {
-			cast(this._currentMaskSkin, IValidating).validateNow();
+			(cast this._currentMaskSkin : IValidating).validateNow();
 		}
 	}
 
@@ -836,17 +836,17 @@ class LayoutGroup extends FeathersControl {
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 
 	private function validateChildren():Void {
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 		for (item in this.items) {
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}

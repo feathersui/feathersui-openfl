@@ -966,7 +966,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	override private function addCurrentBackgroundSkin(skin:DisplayObject):Void {
 		if (skin != null) {
 			if ((skin is IStateObserver)) {
-				cast(skin, IStateObserver).stateContext = this;
+				(cast skin : IStateObserver).stateContext = this;
 			}
 		}
 		super.addCurrentBackgroundSkin(skin);
@@ -977,7 +977,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			return;
 		}
 		if ((skin is IStateObserver)) {
-			cast(skin, IStateObserver).stateContext = null;
+			(cast skin : IStateObserver).stateContext = null;
 		}
 		super.removeCurrentBackgroundSkin(skin);
 	}

@@ -195,14 +195,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
+			var textControl:ITextControl = cast itemRenderer;
 			textControl.text = state.text;
 		}
 	}
 
 	private static function defaultResetItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
-			var textControl = cast(itemRenderer, ITextControl);
+			var textControl:ITextControl = cast itemRenderer;
 			textControl.text = null;
 		}
 	}
@@ -1157,7 +1157,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	override private function refreshScrollerValues():Void {
 		super.refreshScrollerValues();
 		if ((this.layout is IScrollLayout)) {
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			this.scroller.forceElasticTop = scrollLayout.elasticTop;
 			this.scroller.forceElasticRight = scrollLayout.elasticRight;
 			this.scroller.forceElasticBottom = scrollLayout.elasticBottom;
@@ -1176,7 +1176,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var oldStart = this._visibleIndices.start;
 		var oldEnd = this._visibleIndices.end;
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -1364,7 +1364,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		#end
 
 		if (this._virtualLayout && (this.layout is IVirtualLayout)) {
-			var virtualLayout = cast(this.layout, IVirtualLayout);
+			var virtualLayout:IVirtualLayout = cast this.layout;
 			var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
 			this._ignoreLayoutChanges = true;
 			virtualLayout.scrollX = this.scroller.scrollX;
@@ -1473,7 +1473,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (storage.inactiveItemRenderers.length == 0) {
 			itemRenderer = storage.itemRendererRecycler.create();
 			if ((itemRenderer is IVariantStyleObject)) {
-				var variantItemRenderer = cast(itemRenderer, IVariantStyleObject);
+				var variantItemRenderer:IVariantStyleObject = cast itemRenderer;
 				if (variantItemRenderer.variant == null) {
 					if (state.type == HEADER) {
 						var variant = (this.customHeaderRendererVariant != null) ? this.customHeaderRendererVariant : CHILD_VARIANT_HEADER_RENDERER;
@@ -1489,7 +1489,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			// correctly handle property changes in update() instead of trying
 			// to access them too early in initialize().
 			if ((itemRenderer is IUIControl)) {
-				cast(itemRenderer, IUIControl).initializeNow();
+				(cast itemRenderer : IUIControl).initializeNow();
 			}
 			// save measurements after initialize, because width/height could be
 			// set explicitly there, and we want to restore those values
@@ -1638,26 +1638,26 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if ((itemRenderer is IUIControl)) {
-			var uiControl = cast(itemRenderer, IUIControl);
+			var uiControl:IUIControl = cast itemRenderer;
 			uiControl.enabled = state.enabled;
 		}
 		if ((itemRenderer is IDataRenderer)) {
-			var dataRenderer = cast(itemRenderer, IDataRenderer);
+			var dataRenderer:IDataRenderer = cast itemRenderer;
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
 		if ((itemRenderer is ILayoutIndexObject)) {
-			var layoutRenderer = cast(itemRenderer, ILayoutIndexObject);
+			var layoutRenderer:ILayoutIndexObject = cast itemRenderer;
 			// if the renderer is an ILayoutIndexObject, this cannot be overridden
 			layoutRenderer.layoutIndex = state.layoutIndex;
 		}
 		if ((itemRenderer is IGroupListViewItemRenderer)) {
-			var groupListRenderer = cast(itemRenderer, IGroupListViewItemRenderer);
+			var groupListRenderer:IGroupListViewItemRenderer = cast itemRenderer;
 			groupListRenderer.location = state.location;
 			groupListRenderer.groupListViewOwner = state.owner;
 		}
 		if ((itemRenderer is IToggle)) {
-			var toggle = cast(itemRenderer, IToggle);
+			var toggle:IToggle = cast itemRenderer;
 			// if the renderer is an IToggle, this cannot be overridden
 			toggle.selected = state.selected;
 		}
@@ -1821,7 +1821,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				&& event.keyCode != Keyboard.PAGE_UP && event.keyCode != Keyboard.PAGE_DOWN && event.keyCode != Keyboard.HOME && event.keyCode != Keyboard.END) {
 				return;
 			}
-			result = cast(this.layout, IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._layoutItems, this._layoutHeaderIndices,
+			result = (cast this.layout : IKeyboardNavigationLayout).findNextKeyboardIndex(result, event, false, this._layoutItems, this._layoutHeaderIndices,
 				this.groupViewPort.visibleWidth, this.groupViewPort.visibleHeight);
 			location = this.displayIndexToLocation(result);
 			if (location == null || location.length != 2) {
@@ -1927,7 +1927,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		var targetY = this.scrollY;
 		if ((this.layout is IScrollLayout)) {
 			var displayIndex = this.locationToDisplayIndex(location);
-			var scrollLayout = cast(this.layout, IScrollLayout);
+			var scrollLayout:IScrollLayout = cast this.layout;
 			var result = scrollLayout.getNearestScrollPositionForIndex(displayIndex, this._layoutItems.length, this.viewPort.visibleWidth,
 				this.viewPort.visibleHeight);
 			targetX = result.x;

@@ -183,7 +183,7 @@ class MultiSkin extends ProgrammaticSkin {
 			return;
 		}
 		if ((this._currentView is IUIControl)) {
-			cast(this._currentView, IUIControl).initializeNow();
+			(cast this._currentView : IUIControl).initializeNow();
 		}
 		if (this._currentViewMeasurements == null) {
 			this._currentViewMeasurements = new Measurements(this._currentView);
@@ -191,10 +191,10 @@ class MultiSkin extends ProgrammaticSkin {
 			this._currentViewMeasurements.save(this._currentView);
 		}
 		if ((this._currentView is IProgrammaticSkin)) {
-			cast(this._currentView, IProgrammaticSkin).uiContext = this._uiContext;
+			(cast this._currentView : IProgrammaticSkin).uiContext = this._uiContext;
 		}
 		if ((this._currentView is IStateObserver)) {
-			cast(this._currentView, IStateObserver).stateContext = this._stateContext;
+			(cast this._currentView : IStateObserver).stateContext = this._stateContext;
 		}
 		this.addChild(this._currentView);
 	}
@@ -204,10 +204,10 @@ class MultiSkin extends ProgrammaticSkin {
 			return;
 		}
 		if ((view is IProgrammaticSkin)) {
-			cast(view, IProgrammaticSkin).uiContext = null;
+			(cast view : IProgrammaticSkin).uiContext = null;
 		}
 		if ((view is IStateObserver)) {
-			cast(view, IStateObserver).stateContext = null;
+			(cast view : IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -239,7 +239,7 @@ class MultiSkin extends ProgrammaticSkin {
 	private function getCurrentViewWithoutCache():DisplayObject {
 		var stateContext = this._stateContext;
 		if (stateContext == null && (this._uiContext is IStateContext)) {
-			stateContext = cast(this._uiContext, IStateContext<Dynamic>);
+			stateContext = cast this._uiContext;
 		}
 		if (this._stateToView != null && stateContext != null) {
 			var result = this._stateToView.get(stateContext.currentState);
@@ -256,7 +256,7 @@ class MultiSkin extends ProgrammaticSkin {
 			}
 		}
 		if (this._selectedView != null && (this._uiContext is IToggle)) {
-			var toggle = cast(this._uiContext, IToggle);
+			var toggle:IToggle = cast this._uiContext;
 			if (toggle.selected) {
 				return this._selectedView;
 			}
@@ -281,11 +281,11 @@ class MultiSkin extends ProgrammaticSkin {
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentView is IMeasureObject)) {
-			measureSkin = cast(this._currentView, IMeasureObject);
+			measureSkin = cast this._currentView;
 		}
 
 		if ((this._currentView is IValidating)) {
-			cast(this._currentView, IValidating).validateNow();
+			(cast this._currentView : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;

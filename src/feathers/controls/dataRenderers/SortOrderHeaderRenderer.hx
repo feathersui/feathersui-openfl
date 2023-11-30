@@ -115,7 +115,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 		}
 		if (this._currentSortOrderIcon != null) {
 			if ((this._currentSortOrderIcon is IValidating)) {
-				cast(this._currentSortOrderIcon, IValidating).validateNow();
+				(cast this._currentSortOrderIcon : IValidating).validateNow();
 			}
 			textFieldExplicitWidth -= (this._currentSortOrderIcon.width + adjustedGap);
 		}
@@ -128,7 +128,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 	override private function measureContentWidth():Float {
 		var contentWidth = super.measureContentWidth();
 		if ((this._currentSortOrderIcon is IValidating)) {
-			cast(this._currentSortOrderIcon, IValidating).validateNow();
+			(cast this._currentSortOrderIcon : IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround for swf
@@ -144,7 +144,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 	override private function measureContentMinWidth():Float {
 		var contentMinWidth = super.measureContentMinWidth();
 		if ((this._currentSortOrderIcon is IValidating)) {
-			cast(this._currentSortOrderIcon, IValidating).validateNow();
+			(cast this._currentSortOrderIcon : IValidating).validateNow();
 		}
 		var adjustedGap = this.gap;
 		// Math.POSITIVE_INFINITY bug workaround for swf
@@ -159,7 +159,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 
 	override private function layoutChildren():Void {
 		if ((this._currentSortOrderIcon is IValidating)) {
-			cast(this._currentSortOrderIcon, IValidating).validateNow();
+			(cast this._currentSortOrderIcon : IValidating).validateNow();
 		}
 		var paddingRight = this.paddingRight;
 		var adjustedGap = this.gap;
@@ -211,7 +211,7 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 			return;
 		}
 		if ((this._currentSortOrderIcon is IUIControl)) {
-			cast(this._currentSortOrderIcon, IUIControl).initializeNow();
+			(cast this._currentSortOrderIcon : IUIControl).initializeNow();
 		}
 		if (this._sortOrderIconMeasurements == null) {
 			this._sortOrderIconMeasurements = new Measurements(this._currentSortOrderIcon);
@@ -219,10 +219,10 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 			this._sortOrderIconMeasurements.save(this._currentSortOrderIcon);
 		}
 		if ((this._currentSortOrderIcon is IProgrammaticSkin)) {
-			cast(this._currentSortOrderIcon, IProgrammaticSkin).uiContext = this;
+			(cast this._currentSortOrderIcon : IProgrammaticSkin).uiContext = this;
 		}
 		if ((this._currentSortOrderIcon is IStateObserver)) {
-			cast(this._currentSortOrderIcon, IStateObserver).stateContext = this;
+			(cast this._currentSortOrderIcon : IStateObserver).stateContext = this;
 		}
 		this.addChild(this._currentSortOrderIcon);
 	}
@@ -243,10 +243,10 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 			return;
 		}
 		if ((icon is IProgrammaticSkin)) {
-			cast(icon, IProgrammaticSkin).uiContext = null;
+			(cast icon : IProgrammaticSkin).uiContext = null;
 		}
 		if ((icon is IStateObserver)) {
-			cast(icon, IStateObserver).stateContext = null;
+			(cast icon : IStateObserver).stateContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this icon is used for measurement

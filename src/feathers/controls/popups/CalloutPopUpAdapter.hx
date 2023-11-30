@@ -173,7 +173,7 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 			hasSetMinWidth = true;
 		}
 		if ((this.callout is IValidating)) {
-			cast(this.callout, IValidating).validateNow();
+			(cast this.callout : IValidating).validateNow();
 		}
 		if (this._fitContentToOriginWidth && !hasSetMinWidth && this.content.width < originWidth) {
 			this.callout.width = originWidth;

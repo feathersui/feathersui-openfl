@@ -559,7 +559,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		#end
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutItem = cast(item, ILayoutObject);
+				var layoutItem:ILayoutObject = cast item;
 				if (!layoutItem.includeInLayout) {
 					continue;
 				}
@@ -629,10 +629,10 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		item.y = yPosition;
 		item.width = (span != 0) ? ((columnWidth + this._columnGap) * span) - this._columnGap : columnWidth;
 		if (this._rowVerticalAlign == JUSTIFY && this._justifyResetEnabled && (item is IMeasureObject)) {
-			cast(item, IMeasureObject).resetHeight();
+			(cast item : IMeasureObject).resetHeight();
 		}
 		if ((item is IValidating)) {
-			cast(item, IValidating).validateNow();
+			(cast item : IValidating).validateNow();
 		}
 	}
 
@@ -659,7 +659,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		if (!(item is ILayoutObject)) {
 			return 1;
 		}
-		var layoutItem = cast(item, ILayoutObject);
+		var layoutItem:ILayoutObject = cast item;
 		if (!layoutItem.includeInLayout) {
 			return 0;
 		}
@@ -679,7 +679,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		if (!(item is ILayoutObject)) {
 			return 0;
 		}
-		var layoutItem = cast(item, ILayoutObject);
+		var layoutItem:ILayoutObject = cast item;
 		if (!layoutItem.includeInLayout) {
 			return 0;
 		}
@@ -699,7 +699,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 		if (!(item is ILayoutObject)) {
 			return true;
 		}
-		var layoutItem = cast(item, ILayoutObject);
+		var layoutItem:ILayoutObject = cast item;
 		var layoutData = Std.downcast(layoutItem.layoutData, ResponsiveGridLayoutData);
 		if (layoutData == null) {
 			return true;

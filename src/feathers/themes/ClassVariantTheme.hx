@@ -40,7 +40,7 @@ class ClassVariantTheme implements ITheme {
 		var styleContext:Class<IStyleObject> = null;
 		var variant:String = null;
 		if ((target is IVariantStyleObject)) {
-			var variantObject = cast(target, IVariantStyleObject);
+			var variantObject:IVariantStyleObject = cast target;
 			styleContext = variantObject.styleContext;
 			variant = variantObject.variant;
 		}

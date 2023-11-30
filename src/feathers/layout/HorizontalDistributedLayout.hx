@@ -322,13 +322,13 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			if (contentHeight < item.height) {
 				contentHeight = item.height;
@@ -391,17 +391,17 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		var itemsInLayoutCount = 0;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutObject = cast(item, ILayoutObject);
+				var layoutObject:ILayoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			var itemMinWidth = 0.0;
 			if ((item is IMeasureObject)) {
-				var measureItem = cast(item, IMeasureObject);
+				var measureItem:IMeasureObject = cast item;
 				itemMinWidth = measureItem.minWidth;
 			} else {
 				itemMinWidth = item.width;
@@ -430,7 +430,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		var percentToPixels = remainingWidth / totalPercentWidth;
 		for (item in items) {
 			if ((item is ILayoutObject)) {
-				var layoutObject = cast(item, ILayoutObject);
+				var layoutObject:ILayoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}
@@ -446,7 +446,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 				// changing the width of the item may cause its height
 				// to change, so we need to validate. the height is
 				// needed for measurement.
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}
@@ -455,7 +455,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}

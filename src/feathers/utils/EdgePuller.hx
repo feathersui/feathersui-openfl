@@ -486,7 +486,7 @@ class EdgePuller extends EventDispatcher {
 		this._target.stage.addEventListener(TouchEvent.TOUCH_MOVE, edgePuller_target_stage_touchMoveHandler, false, 0, true);
 		this._target.stage.addEventListener(TouchEvent.TOUCH_END, edgePuller_target_stage_touchEndHandler, false, 0, true);
 		if ((this._target is DisplayObjectContainer)) {
-			var container = cast(this._target, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this._target;
 			// if we were already scrolling, disable the pointer immediately.
 			// otherwise, wait until dragging starts
 			if (this._active) {
@@ -623,7 +623,7 @@ class EdgePuller extends EventDispatcher {
 			return false;
 		}
 		if ((this._target is DisplayObjectContainer)) {
-			var container = cast(this._target, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this._target;
 			this._restoreMouseChildren = container.mouseChildren;
 			container.mouseChildren = false;
 		}
@@ -642,7 +642,7 @@ class EdgePuller extends EventDispatcher {
 		}
 		this._active = false;
 		if ((this._target is DisplayObjectContainer)) {
-			var container = cast(this._target, DisplayObjectContainer);
+			var container:DisplayObjectContainer = cast this._target;
 			container.mouseChildren = this._restoreMouseChildren;
 		}
 		var oldOpened = this._opened;
@@ -715,7 +715,7 @@ class EdgePuller extends EventDispatcher {
 						this.setPullDistance(pullDistance);
 					}, this._snapDuration, [this._startPullDistance], [this._targetPullDistance],
 						true);
-					this._animatePull = cast(tween, SimpleActuator<Dynamic, Dynamic>);
+					this._animatePull = cast tween;
 					this._animatePull.ease(this.ease);
 					this._animatePull.onComplete(this.animatePull_onComplete);
 				} else {

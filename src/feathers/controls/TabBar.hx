@@ -705,7 +705,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			if (!(tab is IValidating)) {
 				return;
 			}
-			cast(tab, IValidating).validateNow();
+			(cast tab : IValidating).validateNow();
 		}
 	}
 
@@ -831,7 +831,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -839,7 +839,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -849,7 +849,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -876,7 +876,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			this._currentBackgroundSkin.height = this.actualHeight;
 		}
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 	}
 
@@ -1058,16 +1058,16 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		if ((tab is IUIControl)) {
-			var uiControl = cast(tab, IUIControl);
+			var uiControl:IUIControl = cast tab;
 			uiControl.enabled = state.enabled;
 		}
 		if ((tab is IDataRenderer)) {
-			var dataRenderer = cast(tab, IDataRenderer);
+			var dataRenderer:IDataRenderer = cast tab;
 			// if the tab is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
 		}
 		if ((tab is ILayoutIndexObject)) {
-			var layoutObject = cast(tab, ILayoutIndexObject);
+			var layoutObject:ILayoutIndexObject = cast tab;
 			layoutObject.layoutIndex = state.index;
 		}
 		tab.selected = state.selected;

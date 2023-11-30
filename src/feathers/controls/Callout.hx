@@ -327,7 +327,7 @@ class Callout extends FeathersControl {
 			this._content.addEventListener(Event.RESIZE, callout_content_resizeHandler, false, 0, true);
 			this.addChild(this._content);
 			if ((this._content is IUIControl)) {
-				cast(this._content, IUIControl).initializeNow();
+				(cast this._content : IUIControl).initializeNow();
 			}
 			if (this._contentMeasurements == null) {
 				this._contentMeasurements = new Measurements(this._content);
@@ -875,24 +875,24 @@ class Callout extends FeathersControl {
 
 		var measureSkin:IMeasureObject = null;
 		if ((this._currentBackgroundSkin is IMeasureObject)) {
-			measureSkin = cast(this._currentBackgroundSkin, IMeasureObject);
+			measureSkin = cast this._currentBackgroundSkin;
 		}
 
 		if ((this._currentBackgroundSkin is IValidating)) {
-			cast(this._currentBackgroundSkin, IValidating).validateNow();
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		if ((this.topArrowSkin is IValidating)) {
-			cast(this.topArrowSkin, IValidating).validateNow();
+			(cast this.topArrowSkin : IValidating).validateNow();
 		}
 		if ((this.rightArrowSkin is IValidating)) {
-			cast(this.rightArrowSkin, IValidating).validateNow();
+			(cast this.rightArrowSkin : IValidating).validateNow();
 		}
 		if ((this.bottomArrowSkin is IValidating)) {
-			cast(this.bottomArrowSkin, IValidating).validateNow();
+			(cast this.bottomArrowSkin : IValidating).validateNow();
 		}
 		if ((this.leftArrowSkin is IValidating)) {
-			cast(this.leftArrowSkin, IValidating).validateNow();
+			(cast this.leftArrowSkin : IValidating).validateNow();
 		}
 
 		var leftOrRightArrowWidth = 0.0;
@@ -918,7 +918,7 @@ class Callout extends FeathersControl {
 
 		var measureContent:IMeasureObject = null;
 		if ((this._content is IMeasureObject)) {
-			measureContent = cast(this._content, IMeasureObject);
+			measureContent = cast this._content;
 		}
 		if (this._content != null) {
 			var oldIgnoreContentResize = this._ignoreContentResize;
@@ -949,7 +949,7 @@ class Callout extends FeathersControl {
 				- this.paddingLeft
 				- this.paddingRight : null);
 			if ((this._content is IValidating)) {
-				cast(this._content, IValidating).validateNow();
+				(cast this._content : IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;
 		}
@@ -1068,7 +1068,7 @@ class Callout extends FeathersControl {
 			return;
 		}
 		if ((skin is IUIControl)) {
-			cast(skin, IUIControl).initializeNow();
+			(cast skin : IUIControl).initializeNow();
 		}
 		if (this._backgroundSkinMeasurements == null) {
 			this._backgroundSkinMeasurements = new Measurements(skin);
@@ -1076,7 +1076,7 @@ class Callout extends FeathersControl {
 			this._backgroundSkinMeasurements.save(skin);
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
 	}
@@ -1086,7 +1086,7 @@ class Callout extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = this;
+			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		// we need to restore these values so that they won't be lost the
 		// next time that this skin is used for measurement
@@ -1104,7 +1104,7 @@ class Callout extends FeathersControl {
 		}
 		this.removeCurrentArrowSkin(oldArrowSkin);
 		if ((this._currentArrowSkin is IProgrammaticSkin)) {
-			cast(this._currentArrowSkin, IProgrammaticSkin).uiContext = this;
+			(cast this._currentArrowSkin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChild(this._currentArrowSkin);
 	}
@@ -1123,7 +1123,7 @@ class Callout extends FeathersControl {
 			return;
 		}
 		if ((skin is IProgrammaticSkin)) {
-			cast(skin, IProgrammaticSkin).uiContext = null;
+			(cast skin : IProgrammaticSkin).uiContext = null;
 		}
 		if (skin.parent == this) {
 			this.removeChild(skin);
@@ -1132,13 +1132,13 @@ class Callout extends FeathersControl {
 
 	private function refreshEnabled():Void {
 		if ((this._content is IUIControl)) {
-			cast(this._content, IUIControl).enabled = this._enabled;
+			(cast this._content : IUIControl).enabled = this._enabled;
 		}
 	}
 
 	private function layoutChildren():Void {
 		if ((this._currentArrowSkin is IValidating)) {
-			cast(this._currentArrowSkin, IValidating).validateNow();
+			(cast this._currentArrowSkin : IValidating).validateNow();
 		}
 		var xPosition = 0.0;
 		var yPosition = 0.0;
@@ -1252,7 +1252,7 @@ class Callout extends FeathersControl {
 			this._content.width = backgroundWidth - this.paddingLeft - this.paddingRight;
 			this._content.height = backgroundHeight - this.paddingTop - this.paddingBottom;
 			if ((this._content is IValidating)) {
-				cast(this._content, IValidating).validateNow();
+				(cast this._content : IValidating).validateNow();
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;
 		}

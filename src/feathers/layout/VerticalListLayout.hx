@@ -574,7 +574,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				continue;
 			}
 			if ((item is ILayoutObject)) {
-				if (!cast(item, ILayoutObject).includeInLayout) {
+				if (!(cast item : ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
@@ -582,7 +582,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			item.y = positionY;
 			item.width = itemWidth;
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			var itemHeight = item.height;
 			if (this._virtualCache != null) {
@@ -667,15 +667,15 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				continue;
 			}
 			if ((item is ILayoutObject)) {
-				if (!cast(item, ILayoutObject).includeInLayout) {
+				if (!(cast item : ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
 			if (this._widthResetEnabled && measurements.width == null && (item is IMeasureObject)) {
-				cast(item, IMeasureObject).resetWidth();
+				(cast item : IMeasureObject).resetWidth();
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			var itemWidth = item.width;
 			if (maxItemWidth < itemWidth) {
@@ -685,7 +685,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
 				if (cacheItem == null) {
 					if ((item is IValidating)) {
-						cast(item, IValidating).validateNow();
+						(cast item : IValidating).validateNow();
 					}
 					// save the original measured width in the cache to be used
 					// again in future calculations
@@ -725,13 +725,13 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				return cacheItem.itemHeight;
 			}
 			if ((item is ILayoutObject)) {
-				if (!cast(item, ILayoutObject).includeInLayout) {
+				if (!(cast item : ILayoutObject).includeInLayout) {
 					continue;
 				}
 			}
 			item.width = itemWidth;
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			var itemHeight = item.height;
 			if (this._virtualCache != null) {
@@ -1121,7 +1121,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
-				layoutObject = cast(item, ILayoutObject);
+				layoutObject = cast item;
 				if (!layoutObject.includeInLayout) {
 					continue;
 				}

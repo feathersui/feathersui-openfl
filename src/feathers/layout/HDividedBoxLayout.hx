@@ -277,7 +277,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		for (item in items) {
 			if ((item is IValidating)) {
 				// the width might have changed after the initial validation
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 			if (contentHeight < item.height) {
 				contentHeight = item.height;
@@ -344,7 +344,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				}
 			}
 			if ((item is IValidating)) {
-				cast(item, IValidating).validateNow();
+				(cast item : IValidating).validateNow();
 			}
 		}
 	}
@@ -372,8 +372,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		}
 	}
 
-	private function applyPercentWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>,
-			explicitMaxWidth:Null<Float>):Void {
+	private function applyPercentWidth(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>, explicitMaxWidth:Null<Float>):Void {
 		var customWidthIndices:Array<Int> = [];
 		var pendingIndices:Array<Int> = [];
 		var totalMeasuredWidth = 0.0;
@@ -395,14 +394,14 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 							// changing the width of the item may cause its height
 							// to change, so we need to validate. the height is
 							// needed for measurement.
-							cast(item, IValidating).validateNow();
+							(cast item : IValidating).validateNow();
 						}
 					}
 				}
 				if (needsPercentWidth) {
 					var percentWidth = 100.0;
 					if ((item is IMeasureObject)) {
-						var measureItem = cast(item, IMeasureObject);
+						var measureItem:IMeasureObject = cast item;
 						var columnExplicitMinWidth = measureItem.explicitMinWidth;
 						if (columnExplicitMinWidth != null) {
 							totalMinWidth += columnExplicitMinWidth;
@@ -445,7 +444,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				var itemWidth = Math.ffloor(percentToPixels * percentWidth);
 				var columnMinWidth:Null<Float> = null;
 				if ((item is IMeasureObject)) {
-					var measureItem = cast(item, IMeasureObject);
+					var measureItem:IMeasureObject = cast item;
 					columnMinWidth = measureItem.explicitMinWidth;
 				}
 
@@ -469,7 +468,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 					// changing the width of the item may cause its height
 					// to change, so we need to validate. the height is
 					// needed for measurement.
-					cast(item, IValidating).validateNow();
+					(cast item : IValidating).validateNow();
 				}
 				widthSum += itemWidth;
 			}
@@ -530,7 +529,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 			var item = items[i];
 			var itemHeight = availableHeight;
 			if ((item is IMeasureObject)) {
-				var measureItem = cast(item, IMeasureObject);
+				var measureItem:IMeasureObject = cast item;
 				var itemMinHeight = measureItem.explicitMinHeight;
 				if (itemMinHeight != null) {
 					// we try to respect the minHeight, but not
