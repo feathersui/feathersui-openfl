@@ -71,8 +71,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		}
 	}
 
-	private var decrementButton:BasicButton;
-	private var incrementButton:BasicButton;
+	private var decrementButton:Button;
+	private var incrementButton:Button;
 
 	private var decrementButtonMeasurements = new Measurements();
 	private var incrementButtonMeasurements = new Measurements();
@@ -382,13 +382,13 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	**/
 	public var showDecrementAndIncrementButtons:Bool = false;
 
-	private var _oldDecrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+	private var _oldDecrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
-	private var _decrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+	private var _decrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
 	/**
 		Creates the decrement button, which must be of type
-		`feathers.controls.BasicButton`.
+		`feathers.controls.Button`.
 
 		In the following example, a custom decrement button factory is provided:
 
@@ -399,18 +399,17 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		};
 		```
 
-		@see `feathers.controls.BasicButton`
 		@see `feathers.controls.Button`
 
 		@since 1.3.0
 	**/
-	public var decrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, BasicButton>;
+	public var decrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
-	private function get_decrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+	private function get_decrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
 		return this._decrementButtonFactory;
 	}
 
-	private function set_decrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, BasicButton>):AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+	private function set_decrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, Button>):AbstractDisplayObjectFactory<Dynamic, Button> {
 		if (this._decrementButtonFactory == value) {
 			return this._decrementButtonFactory;
 		}
@@ -419,13 +418,13 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		return this._decrementButtonFactory;
 	}
 
-	private var _oldIncrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+	private var _oldIncrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
-	private var _incrementButtonFactory:DisplayObjectFactory<Dynamic, BasicButton>;
+	private var _incrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
 	/**
 		Creates the increment button, which must be of type
-		`feathers.controls.BasicButton`.
+		`feathers.controls.Button`.
 
 		In the following example, a custom increment button factory is provided:
 
@@ -436,18 +435,17 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		};
 		```
 
-		@see `feathers.controls.BasicButton`
 		@see `feathers.controls.Button`
 
 		@since 1.3.0
 	**/
-	public var incrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, BasicButton>;
+	public var incrementButtonFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Button>;
 
-	private function get_incrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+	private function get_incrementButtonFactory():AbstractDisplayObjectFactory<Dynamic, Button> {
 		return this._incrementButtonFactory;
 	}
 
-	private function set_incrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, BasicButton>):AbstractDisplayObjectFactory<Dynamic, BasicButton> {
+	private function set_incrementButtonFactory(value:AbstractDisplayObjectFactory<Dynamic, Button>):AbstractDisplayObjectFactory<Dynamic, Button> {
 		if (this._incrementButtonFactory == value) {
 			return this._incrementButtonFactory;
 		}
