@@ -20,7 +20,7 @@ class TestMain extends Sprite {
 
 		var runner = new Runner();
 		#if !flash
-		// // these tests often timeout on CI when running in Flash/AIR
+		// these tests often timeout on CI when running in Flash/AIR
 		runner.addCase(new feathers.controls.AssetLoaderTest());
 		runner.addCase(new feathers.utils.LongPressTest());
 		#end
@@ -59,8 +59,11 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.PopUpListViewTest());
 		runner.addCase(new feathers.controls.RadioTest());
 		runner.addCase(new feathers.controls.navigators.PageNavigatorTest());
+		runner.addCase(new feathers.controls.navigators.PageNavigatorMeasurementTest());
 		runner.addCase(new feathers.controls.navigators.StackNavigatorTest());
+		runner.addCase(new feathers.controls.navigators.StackNavigatorMeasurementTest());
 		runner.addCase(new feathers.controls.navigators.TabNavigatorTest());
+		runner.addCase(new feathers.controls.navigators.TabNavigatorMeasurementTest());
 		runner.addCase(new feathers.controls.ScrollContainerTest());
 		runner.addCase(new feathers.controls.ScrollContainerFixedScrollBarsTest());
 		runner.addCase(new feathers.controls.ScrollContainerFloatingScrollBarsTest());

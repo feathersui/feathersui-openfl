@@ -20,7 +20,6 @@ import feathers.layout.AutoSizeMode;
 import feathers.layout.Measurements;
 import feathers.motion.effects.IEffectContext;
 import feathers.motion.effects.NoOpEffectContext;
-import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
@@ -139,8 +138,10 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	private var _addedItems:Map<String, Dynamic> = new Map();
 	private var _previousViewInTransition:DisplayObject;
 	private var _previousViewInTransitionID:String;
+	private var _previousViewInTransitionMeasurements:Measurements = new Measurements();
 	private var _nextViewInTransition:DisplayObject;
 	private var _nextViewInTransitionID:String;
+	private var _nextViewInTransitionMeasurements:Measurements = new Measurements();
 	private var _pendingItemID:String;
 	private var _pendingItemTransition:(DisplayObject, DisplayObject) -> IEffectContext;
 	private var _clearAfterTransition:Bool = false;
@@ -207,6 +208,12 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	private var rightContentOffset:Float = 0.0;
 	private var bottomContentOffset:Float = 0.0;
 	private var leftContentOffset:Float = 0.0;
+	private var chromeMeasuredWidth:Float = 0.0;
+	private var chromeMeasuredMinWidth:Float = 0.0;
+	private var chromeMeasuredMaxWidth:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+	private var chromeMeasuredHeight:Float = 0.0;
+	private var chromeMeasuredMinHeight:Float = 0.0;
+	private var chromeMeasuredMaxHeight:Float = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 
 	override public function dispose():Void {
 		this._pendingItemID = null;
@@ -284,6 +291,12 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		this.rightContentOffset = 0.0;
 		this.bottomContentOffset = 0.0;
 		this.leftContentOffset = 0.0;
+		this.chromeMeasuredWidth = 0.0;
+		this.chromeMeasuredMinWidth = 0.0;
+		this.chromeMeasuredMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+		this.chromeMeasuredHeight = 0.0;
+		this.chromeMeasuredMinHeight = 0.0;
+		this.chromeMeasuredMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 		sizeInvalid = this.measure() || sizeInvalid;
 		this.layoutContent();
 	}
@@ -310,40 +323,123 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 			stageHeight = bottomRight.y - topLeft.y;
 		}
 
-		var measureView:IMeasureObject = null;
+		var measureActiveView:IMeasureObject = null;
 		if ((this._activeItemView is IMeasureObject)) {
-			measureView = cast this._activeItemView;
+			measureActiveView = cast this._activeItemView;
+		}
+		var measurePrevView:IMeasureObject = null;
+		var measureNextView:IMeasureObject = null;
+		if (this._transitionActive) {
+			if ((this._previousViewInTransition is IMeasureObject)) {
+				measurePrevView = cast this._previousViewInTransition;
+			}
+			if ((this._nextViewInTransition is IMeasureObject)) {
+				measureNextView = cast this._nextViewInTransition;
+			}
 		}
 
-		if (this._activeItemView != null) {
+		if (this._transitionActive) {
 			if (needsToMeasureContent) {
-				MeasurementsUtil.resetFluidlyWithParent(this._activeViewMeasurements, this._activeItemView, this);
+				if (this._previousViewInTransition != null) {
+					this._previousViewInTransitionMeasurements.restore(this._previousViewInTransition);
+				}
+				if (this._nextViewInTransition != null) {
+					this._nextViewInTransitionMeasurements.restore(this._nextViewInTransition);
+				}
 			}
 			// optimization: pass down explicit width and height to active view
 			// as soon as possible to avoid expensive validation measurement
-			if (!needsWidth && this._activeItemView.width != this.explicitWidth) {
-				this._activeItemView.width = this.explicitWidth;
-			} else if (!needsToMeasureContent && this._activeItemView.width != stageWidth) {
-				this._activeItemView.width = stageWidth;
+			if (!needsWidth) {
+				var viewWidth = this.explicitWidth - this.leftContentOffset - this.rightContentOffset;
+				if (this._previousViewInTransition != null && this._previousViewInTransition.width != viewWidth) {
+					this._previousViewInTransition.width = viewWidth;
+				}
+				if (this._nextViewInTransition != null && this._nextViewInTransition.width != viewWidth) {
+					this._nextViewInTransition.width = viewWidth;
+				}
+			} else if (!needsToMeasureContent) {
+				var viewWidth = stageWidth - this.leftContentOffset - this.rightContentOffset;
+				if (this._previousViewInTransition != null && this._previousViewInTransition.width != viewWidth) {
+					this._previousViewInTransition.width = viewWidth;
+				}
+				if (this._nextViewInTransition != null && this._nextViewInTransition.width != viewWidth) {
+					this._nextViewInTransition.width = viewWidth;
+				}
 			}
-			if (!needsHeight && this._activeItemView.height != this.explicitHeight) {
-				this._activeItemView.height = this.explicitHeight;
-			} else if (!needsToMeasureContent && this._activeItemView.height != stageHeight) {
-				this._activeItemView.height = stageHeight;
+			if (!needsHeight) {
+				var viewHeight = this.explicitHeight - this.topContentOffset - this.leftContentOffset;
+				if (this._previousViewInTransition != null && this._previousViewInTransition.height != viewHeight) {
+					this._previousViewInTransition.height = viewHeight;
+				}
+				if (this._nextViewInTransition != null && this._nextViewInTransition.height != viewHeight) {
+					this._nextViewInTransition.height = viewHeight;
+				}
+			} else if (!needsToMeasureContent) {
+				var viewHeight = stageHeight - this.topContentOffset - this.leftContentOffset;
+				if (this._previousViewInTransition != null && this._previousViewInTransition.height != viewHeight) {
+					this._previousViewInTransition.height = viewHeight;
+				}
+				if (this._nextViewInTransition != null && this._nextViewInTransition.height != viewHeight) {
+					this._nextViewInTransition.height = viewHeight;
+				}
+			}
+		} else if (this._activeItemView != null) {
+			if (needsToMeasureContent) {
+				this._activeViewMeasurements.restore(this._activeItemView);
+			}
+			// optimization: pass down explicit width and height to active view
+			// as soon as possible to avoid expensive validation measurement
+			if (!needsWidth) {
+				var viewWidth = this.explicitWidth - this.leftContentOffset - this.rightContentOffset;
+				if (this._activeItemView.width != viewWidth) {
+					this._activeItemView.width = viewWidth;
+				}
+			} else if (!needsToMeasureContent) {
+				var viewWidth = stageWidth - this.leftContentOffset - this.rightContentOffset;
+				if (this._activeItemView.width != viewWidth) {
+					this._activeItemView.width = viewWidth;
+				}
+			}
+			if (!needsHeight) {
+				var viewHeight = this.explicitHeight - this.topContentOffset - this.leftContentOffset;
+				if (this._activeItemView.height != viewHeight) {
+					this._activeItemView.height = viewHeight;
+				}
+			} else if (!needsToMeasureContent) {
+				var viewHeight = stageHeight - this.topContentOffset - this.leftContentOffset;
+				if (this._activeItemView.height != viewHeight) {
+					this._activeItemView.height = viewHeight;
+				}
 			}
 		}
 
-		if ((this._activeItemView is IValidating)) {
+		if (this._transitionActive) {
+			if ((this._previousViewInTransition is IValidating)) {
+				(cast this._previousViewInTransition : IValidating).validateNow();
+			}
+			if ((this._nextViewInTransition is IValidating)) {
+				(cast this._nextViewInTransition : IValidating).validateNow();
+			}
+		} else if ((this._activeItemView is IValidating)) {
 			(cast this._activeItemView : IValidating).validateNow();
 		}
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
 			if (needsToMeasureContent) {
-				if (this._activeItemView != null) {
+				newWidth = 0.0;
+				if (this._transitionActive) {
+					if (this._previousViewInTransition != null && newWidth < this._previousViewInTransition.width) {
+						newWidth = this._previousViewInTransition.width;
+					}
+					if (this._nextViewInTransition != null && newWidth < this._nextViewInTransition.width) {
+						newWidth = this._nextViewInTransition.width;
+					}
+				} else if (this._activeItemView != null) {
 					newWidth = this._activeItemView.width;
-				} else {
-					newWidth = 0.0;
+				}
+				if (newWidth < this.chromeMeasuredWidth) {
+					newWidth = this.chromeMeasuredWidth;
 				}
 				newWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
@@ -354,74 +450,134 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			if (needsToMeasureContent) {
-				if (this._activeItemView != null) {
+				newHeight = 0.0;
+				if (this._transitionActive) {
+					if (this._previousViewInTransition != null && newHeight < this._previousViewInTransition.height) {
+						newHeight = this._previousViewInTransition.height;
+					}
+					if (this._nextViewInTransition != null && newHeight < this._nextViewInTransition.height) {
+						newHeight = this._nextViewInTransition.height;
+					}
+				} else if (this._activeItemView != null) {
 					newHeight = this._activeItemView.height;
-				} else {
-					newHeight = 0.0;
+				}
+				if (newHeight < this.chromeMeasuredHeight) {
+					newHeight = this.chromeMeasuredHeight;
 				}
 				newHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {
 				newHeight = stageHeight;
 			}
 		}
-
 		var newMinWidth = this.explicitMinWidth;
+
 		if (needsMinWidth) {
 			if (needsToMeasureContent) {
-				if (measureView != null) {
-					newMinWidth = measureView.minWidth;
+				newMinWidth = 0.0;
+				if (this._transitionActive) {
+					if (measurePrevView != null && newMinWidth < measurePrevView.minWidth) {
+						newMinWidth = measurePrevView.minWidth;
+					} else if (this._previousViewInTransition != null && newMinWidth < this._previousViewInTransition.width) {
+						newMinWidth = this._previousViewInTransition.width;
+					}
+					if (measureNextView != null && newMinWidth < measureNextView.minWidth) {
+						newMinWidth = measureNextView.minWidth;
+					} else if (this._nextViewInTransition != null && newMinWidth < this._nextViewInTransition.width) {
+						newMinWidth = this._nextViewInTransition.width;
+					}
+				} else if (measureActiveView != null) {
+					newMinWidth = measureActiveView.minWidth;
 				} else if (this._activeItemView != null) {
 					newMinWidth = this._activeItemView.width;
-				} else {
-					newMinWidth = 0.0;
+				}
+				if (newMinWidth < this.chromeMeasuredMinWidth) {
+					newMinWidth = this.chromeMeasuredMinWidth;
 				}
 				newMinWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
 				newMinWidth = stageWidth;
 			}
 		}
-
 		var newMinHeight = this.explicitMinHeight;
+
 		if (needsMinHeight) {
 			if (needsToMeasureContent) {
-				if (measureView != null) {
-					newMinHeight = measureView.minHeight;
+				newMinHeight = 0.0;
+				if (this._transitionActive) {
+					if (measurePrevView != null && newMinHeight < measurePrevView.minHeight) {
+						newMinHeight = measurePrevView.minHeight;
+					} else if (this._previousViewInTransition != null && newMinHeight < this._previousViewInTransition.height) {
+						newMinHeight = this._previousViewInTransition.height;
+					}
+					if (measureNextView != null && newMinHeight < measureNextView.minHeight) {
+						newMinHeight = measureNextView.minHeight;
+					} else if (this._nextViewInTransition != null && newMinHeight < this._nextViewInTransition.height) {
+						newMinHeight = this._nextViewInTransition.height;
+					}
+				} else if (measureActiveView != null) {
+					newMinHeight = measureActiveView.minHeight;
 				} else if (this._activeItemView != null) {
 					newMinHeight = this._activeItemView.height;
-				} else {
-					newMinHeight = 0.0;
+				}
+				if (newMinHeight < this.chromeMeasuredMinHeight) {
+					newMinHeight = this.chromeMeasuredMinHeight;
 				}
 				newMinHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {
 				newMinHeight = stageHeight;
 			}
 		}
-
 		var newMaxWidth = this.explicitMaxWidth;
+
 		if (needsMaxWidth) {
 			if (needsToMeasureContent) {
-				if (measureView != null) {
-					newMaxWidth = measureView.maxWidth;
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+				if (this._transitionActive) {
+					if (measurePrevView != null && newMaxWidth < measurePrevView.maxWidth) {
+						newMaxWidth = measurePrevView.maxWidth;
+					} else if (this._previousViewInTransition != null && newMaxWidth < this._previousViewInTransition.width) {
+						newMaxWidth = this._previousViewInTransition.width;
+					}
+					if (measureNextView != null && newMaxWidth < measureNextView.maxWidth) {
+						newMaxWidth = measureNextView.maxWidth;
+					} else if (this._nextViewInTransition != null && newMaxWidth < this._nextViewInTransition.width) {
+						newMaxWidth = this._nextViewInTransition.width;
+					}
+				} else if (measureActiveView != null) {
+					newMaxWidth = measureActiveView.maxWidth;
 				} else if (this._activeItemView != null) {
 					newMaxWidth = this._activeItemView.width;
-				} else {
-					newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+				}
+				if (newMaxWidth > this.chromeMeasuredMaxWidth) {
+					newMaxWidth = this.chromeMeasuredMaxWidth;
 				}
 				newMaxWidth += this.rightContentOffset + this.leftContentOffset;
 			} else {
 				newMaxWidth = stageWidth;
 			}
 		}
-
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
 			if (needsToMeasureContent) {
-				if (measureView != null) {
-					newMaxHeight = measureView.maxHeight;
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+				if (this._transitionActive) {
+					if (measurePrevView != null && newMaxHeight > measurePrevView.maxHeight) {
+						newMaxHeight = measurePrevView.maxHeight;
+					} else if (this._previousViewInTransition != null && newMaxHeight > this._previousViewInTransition.height) {
+						newMaxHeight = this._previousViewInTransition.height;
+					}
+					if (measureNextView != null && newMaxHeight > measureNextView.maxHeight) {
+						newMaxHeight = measureNextView.maxHeight;
+					} else if (this._nextViewInTransition != null && newMaxHeight > this._nextViewInTransition.height) {
+						newMaxHeight = this._nextViewInTransition.height;
+					}
+				} else if (measureActiveView != null) {
+					newMaxHeight = measureActiveView.maxHeight;
 				} else if (this._activeItemView != null) {
 					newMaxHeight = this._activeItemView.height;
-				} else {
-					newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+				}
+				if (newMaxHeight > this.chromeMeasuredMaxHeight) {
+					newMaxHeight = this.chromeMeasuredMaxHeight;
 				}
 				newMaxHeight += this.topContentOffset + this.bottomContentOffset;
 			} else {
@@ -432,30 +588,48 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 	}
 
 	private function layoutContent():Void {
+		var viewWidth = this.actualWidth - this.leftContentOffset - this.rightContentOffset;
+		var viewHeight = this.actualHeight - this.topContentOffset - this.bottomContentOffset;
+		if (this._viewsContainer != null && this._viewsContainer != this) {
+			this._viewsContainer.x = this.leftContentOffset;
+			this._viewsContainer.y = this.topContentOffset;
+			this._viewsContainer.width = viewWidth;
+			this._viewsContainer.height = viewHeight;
+		}
 		if (this._activeItemView != null) {
-			this._activeItemView.x = 0.0;
-			this._activeItemView.y = 0.0;
+			if (this._viewsContainer != null && this._viewsContainer != this) {
+				this._activeItemView.x = 0.0;
+				this._activeItemView.y = 0.0;
+			} else {
+				this._activeItemView.x = this.leftContentOffset;
+				this._activeItemView.y = this.topContentOffset;
+			}
 			// don't set the width or height explicitly unless necessary because if
 			// our explicit dimensions are cleared later, the measurement may not be
 			// accurate anymore
-			if (this._activeItemView.width != this.actualWidth) {
-				this._activeItemView.width = this.actualWidth;
+			if (this._activeItemView.width != viewWidth) {
+				this._activeItemView.width = viewWidth;
 			}
-			if (this._activeItemView.height != this.actualHeight) {
-				this._activeItemView.height = this.actualHeight;
+			if (this._activeItemView.height != viewHeight) {
+				this._activeItemView.height = viewHeight;
 			}
 			if ((this._activeItemView is IValidating)) {
 				(cast this._activeItemView : IValidating).validateNow();
 			}
 		}
 		if (this._nextViewInTransition != null) {
-			this._nextViewInTransition.x = 0.0;
-			this._nextViewInTransition.y = 0.0;
-			if (this._nextViewInTransition.width != this.actualWidth) {
-				this._nextViewInTransition.width = this.actualWidth;
+			if (this._viewsContainer != null && this._viewsContainer != this) {
+				this._nextViewInTransition.x = 0.0;
+				this._nextViewInTransition.y = 0.0;
+			} else {
+				this._nextViewInTransition.x = this.leftContentOffset;
+				this._nextViewInTransition.y = this.topContentOffset;
 			}
-			if (this._nextViewInTransition.height != this.actualHeight) {
-				this._nextViewInTransition.height = this.actualHeight;
+			if (this._nextViewInTransition.width != viewWidth) {
+				this._nextViewInTransition.width = viewWidth;
+			}
+			if (this._nextViewInTransition.height != viewHeight) {
+				this._nextViewInTransition.height = viewHeight;
 			}
 			if ((this._nextViewInTransition is IValidating)) {
 				(cast this._nextViewInTransition : IValidating).validateNow();
@@ -572,6 +746,9 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		this._previousViewInTransition = this._activeItemView;
 		this._previousViewInTransitionID = this._activeItemID;
+		var tempMeasurements = this._previousViewInTransitionMeasurements;
+		this._previousViewInTransitionMeasurements = this._activeViewMeasurements;
+		this._activeViewMeasurements = tempMeasurements;
 
 		this.clearFocusFromPreviousView();
 
@@ -579,6 +756,7 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		var item = this._addedItems.get(id);
 		this._nextViewInTransition = this.getView(id);
+		this._nextViewInTransitionMeasurements.save(this._nextViewInTransition);
 		if (this._nextViewInTransition == null) {
 			throw new IllegalOperationError('Failed to display navigator item with id \'$id\'. Call to getView() incorrectly returned null.');
 		}
@@ -610,11 +788,15 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 			// so skip the transition!
 			this._activeItemView = this._nextViewInTransition;
 			this._activeItemID = this._nextViewInTransitionID;
-			this._activeViewMeasurements.save(this._activeItemView);
+			var tempMeasurements = this._activeViewMeasurements;
+			this._activeViewMeasurements = this._nextViewInTransitionMeasurements;
+			this._nextViewInTransitionMeasurements = tempMeasurements;
+
 			this._previousViewInTransition = null;
 			this._previousViewInTransitionID = null;
 			this._nextViewInTransition = null;
 			this._nextViewInTransitionID = null;
+
 			this._transitionActive = false;
 			this._activeTransition = null;
 			FeathersEvent.dispatch(this, Event.CHANGE);
@@ -643,6 +825,10 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 		this._previousViewInTransition = this._activeItemView;
 		this._previousViewInTransitionID = this._activeItemID;
+		var tempMeasurements = this._previousViewInTransitionMeasurements;
+		this._previousViewInTransitionMeasurements = this._activeViewMeasurements;
+		this._activeViewMeasurements = tempMeasurements;
+
 		this._nextViewInTransition = null;
 		this._nextViewInTransitionID = null;
 
@@ -746,29 +932,37 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		// overrides have one last chance to access them
 		this.transitionComplete();
 
+		if (this._previousViewInTransition != null) {
+			this._previousViewInTransition.removeEventListener(Event.RESIZE, activeItemView_resizeHandler);
+			this._viewsContainer.removeChild(this._previousViewInTransition);
+			this._previousViewInTransitionMeasurements.restore(this._previousViewInTransition);
+			this.disposeView(this._previousViewInTransitionID, this._previousViewInTransition);
+		}
+
 		// we need to save these in local variables because a new
 		// transition may be started in the listeners for the transition
-		// complete events, and that will overwrite them.
+		// cancel event, and that will overwrite them. however, we still need
+		// to reference these values after the event is dispatched.
 		var nextView = this._nextViewInTransition;
 		var nextItemID = this._nextViewInTransitionID;
 		var previousView = this._previousViewInTransition;
 		var previousItemID:String = this._previousViewInTransitionID;
+
 		this._previousViewInTransition = null;
 		this._previousViewInTransitionID = null;
 		this._nextViewInTransition = null;
 		this._nextViewInTransitionID = null;
 
-		if (previousView != null) {
-			previousView.removeEventListener(Event.RESIZE, activeItemView_resizeHandler);
-			this._viewsContainer.removeChild(previousView);
-			this.disposeView(previousItemID, previousView);
-		}
-
 		// similar to above, make sure that these are populated before the
 		// events are dispatched
 		this._activeItemView = nextView;
 		this._activeItemID = nextItemID;
-		this._activeViewMeasurements.save(nextView);
+		var tempMeasurements = this._activeViewMeasurements;
+		this._activeViewMeasurements = this._nextViewInTransitionMeasurements;
+		this._nextViewInTransitionMeasurements = tempMeasurements;
+
+		// all "active" properties must be populated before the event is
+		// dispatched because the listener might need them
 		TransitionEvent.dispatch(this, TransitionEvent.TRANSITION_COMPLETE, previousItemID, previousView, nextItemID, nextView);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 
@@ -801,28 +995,38 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		// item, it needs to replace what is queued up.
 		this._transitionActive = this._clearAfterTransition || (this._pendingItemID != null);
 
+		if (this._nextViewInTransition != null) {
+			this._viewsContainer.removeChild(this._nextViewInTransition);
+			this._nextViewInTransitionMeasurements.restore(this._nextViewInTransition);
+			this.disposeView(this._nextViewInTransitionID, this._nextViewInTransition);
+		}
+
 		// we need to save these in local variables because a new
 		// transition may be started in the listeners for the transition
-		// complete events, and that will overwrite them.
+		// complete event, and that will overwrite them. however, we still need
+		// to reference these values after the event is dispatched.
 		var nextView = this._nextViewInTransition;
 		var nextItemID = this._nextViewInTransitionID;
 		var previousView = this._previousViewInTransition;
 		var previousItemID:String = this._previousViewInTransitionID;
+
 		this._previousViewInTransition = null;
 		this._previousViewInTransitionID = null;
 		this._nextViewInTransition = null;
 		this._nextViewInTransitionID = null;
 
-		if (nextView != null) {
-			this._viewsContainer.removeChild(nextView);
-			this._activeViewMeasurements.restore(nextView);
-			this.disposeView(nextItemID, nextView);
-		}
-
+		// similar to above, make sure that these are populated before the
+		// events are dispatched
 		this._activeItemView = previousView;
 		this._activeItemID = previousItemID;
-		this._activeViewMeasurements.save(previousView);
+		var tempMeasurements = this._activeViewMeasurements;
+		this._activeViewMeasurements = this._previousViewInTransitionMeasurements;
+		this._previousViewInTransitionMeasurements = tempMeasurements;
+
 		this.transitionCancel();
+
+		// all "active" properties must be populated before the event is
+		// dispatched because the listener might need them
 		TransitionEvent.dispatch(this, TransitionEvent.TRANSITION_CANCEL, previousItemID, previousView, nextItemID, nextView);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 

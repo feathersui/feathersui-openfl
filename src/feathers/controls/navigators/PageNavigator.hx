@@ -424,34 +424,24 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	override private function measure():Bool {
-		var needsWidth = this.explicitWidth == null;
-		var needsHeight = this.explicitHeight == null;
-		var needsMinWidth = this.explicitMinWidth == null;
-		var needsMinHeight = this.explicitMinHeight == null;
-		var needsMaxWidth = this.explicitMaxWidth == null;
-		var needsMaxHeight = this.explicitMaxHeight == null;
-		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
-			return false;
+		if (this.explicitWidth != null) {
+			this.pageIndicator.width = this.explicitWidth;
+		} else if (this._autoSizeMode == STAGE && this.stage != null) {
+			this.pageIndicator.width = this.stage.stageWidth;
+		} else {
+			this.pageIndicator.resetWidth();
+		}
+		this.pageIndicator.validateNow();
+		this.chromeMeasuredWidth = Math.max(this.chromeMeasuredWidth, this.pageIndicator.width);
+		switch (this.pageIndicatorPosition) {
+			case TOP:
+				this.topContentOffset += this.pageIndicator.height + this.gap;
+			case BOTTOM:
+				this.bottomContentOffset += this.pageIndicator.height + this.gap;
+			default:
+				throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
 		}
 
-		var needsToMeasureContent = this._autoSizeMode == CONTENT || this.stage == null;
-
-		if (needsToMeasureContent) {
-			if (this.explicitWidth != null) {
-				this.pageIndicator.width = this.explicitWidth;
-			} else {
-				this.pageIndicator.resetWidth();
-			}
-			this.pageIndicator.validateNow();
-			switch (this.pageIndicatorPosition) {
-				case TOP:
-					this.topContentOffset = this.pageIndicator.height + this.gap;
-				case BOTTOM:
-					this.bottomContentOffset = this.pageIndicator.height + this.gap;
-				default:
-					throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
-			}
-		}
 		return super.measure();
 	}
 
@@ -492,32 +482,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			default:
 				throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
 		}
-
-		this._viewsContainer.x = 0.0;
-		switch (this.pageIndicatorPosition) {
-			case TOP:
-				this._viewsContainer.y = this.pageIndicator.height + this.gap;
-			case BOTTOM:
-				this._viewsContainer.y = 0.0;
-			default:
-				throw new ArgumentError('Invalid pageIndicatorPosition ${this.pageIndicatorPosition}');
-		}
-		this._viewsContainer.width = this.actualWidth;
-		this._viewsContainer.height = this.actualHeight - this.pageIndicator.height - this.gap;
-
-		if (this._activeItemView != null) {
-			this._activeItemView.x = 0.0;
-			this._activeItemView.y = 0.0;
-			this._activeItemView.width = this._viewsContainer.width;
-			this._activeItemView.height = this._viewsContainer.height;
-		}
-
-		if (this._nextViewInTransition != null) {
-			this._nextViewInTransition.x = 0.0;
-			this._nextViewInTransition.y = 0.0;
-			this._nextViewInTransition.width = this._viewsContainer.width;
-			this._nextViewInTransition.height = this._viewsContainer.height;
-		}
+		super.layoutContent();
 	}
 
 	override private function getView(id:String):DisplayObject {
