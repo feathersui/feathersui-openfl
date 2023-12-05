@@ -696,6 +696,11 @@ class Header extends FeathersControl implements ITextControl {
 			textFieldWidth = this.explicitMaxWidth;
 		}
 		if (textFieldWidth != null) {
+			if (textFieldWidth < 0.0) {
+				// flash may sometimes render a TextField with negative width
+				// so make sure it is never smaller than 0.0
+				textFieldWidth = 0.0;
+			}
 			this.textField.width = textFieldWidth;
 		}
 		this._textMeasuredWidth = this.textField.width;
@@ -819,12 +824,20 @@ class Header extends FeathersControl implements ITextControl {
 		if (textFieldWidth > textFieldMaxWidth) {
 			textFieldWidth = textFieldMaxWidth;
 		}
+		if (textFieldWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
+			textFieldWidth = 0.0;
+		}
 		this.textField.width = textFieldWidth;
 		textFieldMaxX -= textFieldWidth;
 
 		var textFieldHeight = this._textMeasuredHeight;
 		if (textFieldHeight > maxContentHeight) {
 			textFieldHeight = maxContentHeight;
+		}
+		if (textFieldHeight < 0.0) {
+			textFieldHeight = 0.0;
 		}
 		this.textField.height = textFieldHeight;
 

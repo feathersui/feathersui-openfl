@@ -876,6 +876,9 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		var calculatedWidth = this._explicitVisibleWidth;
 		if (calculatedWidth != null) {
 			calculatedWidth -= (this._paddingLeft + this._paddingRight);
+			if (calculatedWidth < 0.0) {
+				calculatedWidth = 0.0;
+			}
 		}
 		if (this._text == this._previousText && !this._updatedTextStyles && calculatedWidth == this._previousWidth) {
 			// nothing to refresh
@@ -923,14 +926,34 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 			this._textField.y = this._paddingTop;
 			var calculatedWidth = Math.max(this.actualWidth, this._actualVisibleWidth);
 			var calculatedHeight = Math.max(this.actualHeight, this._actualVisibleHeight);
-			this._textField.width = calculatedWidth - this._paddingLeft - this._paddingRight;
-			this._textField.height = calculatedHeight - this._paddingTop - this._paddingBottom;
+			var textFieldWidth = calculatedWidth - this._paddingLeft - this._paddingRight;
+			if (textFieldWidth < 0.0) {
+				// flash may sometimes render a TextField with negative width
+				// so make sure it is never smaller than 0.0
+				textFieldWidth = 0.0;
+			}
+			this._textField.width = textFieldWidth;
+			var textFieldHeight = calculatedHeight - this._paddingTop - this._paddingBottom;
+			if (textFieldHeight < 0.0) {
+				textFieldHeight = 0.0;
+			}
+			this._textField.height = textFieldHeight;
 			this._textField.scrollV = 1;
 		} else {
 			this._textField.x = this._paddingLeft + this._scrollX;
 			this._textField.y = this._paddingTop + this._scrollY;
-			this._textField.width = this._actualVisibleWidth - this._paddingLeft - this._paddingRight;
-			this._textField.height = this._actualVisibleHeight - this._paddingTop - this._paddingBottom;
+			var textFieldWidth = this._actualVisibleWidth - this._paddingLeft - this._paddingRight;
+			if (textFieldWidth < 0.0) {
+				// flash may sometimes render a TextField with negative width
+				// so make sure it is never smaller than 0.0
+				textFieldWidth = 0.0;
+			}
+			this._textField.width = textFieldWidth;
+			var textFieldHeight = this._actualVisibleHeight - this._paddingTop - this._paddingBottom;
+			if (textFieldHeight < 0.0) {
+				textFieldHeight = 0.0;
+			}
+			this._textField.height = textFieldHeight;
 			// for some reason, in flash, after changing the TextField's height,
 			// you need to access textHeight to get a valid maxScrollV
 			var textFieldHeight = this._textField.textHeight;

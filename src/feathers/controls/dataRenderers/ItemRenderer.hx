@@ -722,17 +722,19 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		if (this.secondaryTextField != null) {
 			calculatedHeight -= (this._secondaryTextMeasuredHeight + adjustedGap);
 		}
-		if (calculatedWidth < 0.0) {
-			calculatedWidth = 0.0;
-		}
-		if (calculatedHeight < 0.0) {
-			calculatedHeight = 0.0;
-		}
 		if (calculatedWidth > this._textMeasuredWidth) {
 			calculatedWidth = this._textMeasuredWidth;
 		}
 		if (calculatedHeight > this._textMeasuredHeight) {
 			calculatedHeight = this._textMeasuredHeight;
+		}
+		if (calculatedWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
+			calculatedWidth = 0.0;
+		}
+		if (calculatedHeight < 0.0) {
+			calculatedHeight = 0.0;
 		}
 		this.textField.width = calculatedWidth;
 		var wordWrap = this.wordWrap;
@@ -770,6 +772,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			textFieldExplicitWidth -= (this._currentAccessoryView.width + adjustedGap);
 		}
 		if (textFieldExplicitWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
 			textFieldExplicitWidth = 0.0;
 		}
 		return textFieldExplicitWidth;
@@ -1100,9 +1104,15 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		if ((hasSecondaryText || hasSecondaryHTMLText) && this.secondaryTextField != null) {
 			this.secondaryTextField.x = currentX;
 			this.secondaryTextField.y = currentY;
-			this.secondaryTextField.width = this._secondaryTextMeasuredWidth < availableTextWidth ? this._secondaryTextMeasuredWidth : availableTextWidth;
+			var secondaryTextWidth = this._secondaryTextMeasuredWidth < availableTextWidth ? this._secondaryTextMeasuredWidth : availableTextWidth;
+			if (secondaryTextWidth < 0.0) {
+				// flash may sometimes render a TextField with negative width
+				// so make sure it is never smaller than 0.0
+				secondaryTextWidth = 0.0;
+			}
+			this.secondaryTextField.width = secondaryTextWidth;
 			currentY += this._secondaryTextMeasuredHeight + adjustedGap;
-			totalTextWidth = Math.max(totalTextWidth, this.secondaryTextField.width);
+			totalTextWidth = Math.max(totalTextWidth, secondaryTextWidth);
 			totalTextHeight += this.secondaryTextField.height;
 		}
 		if (flexGapHorizontal && this.iconPosition == LEFT) {

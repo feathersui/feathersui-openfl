@@ -1062,6 +1062,8 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			}
 		}
 		if (textFieldExplicitWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
 			textFieldExplicitWidth = 0.0;
 		}
 		return textFieldExplicitWidth;
@@ -1242,9 +1244,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
 			textFieldWidth = this._customTextColumnWidth - requiredOffset;
 		}
-		if (textFieldWidth < 0.0) {
-			textFieldWidth = 0.0;
-		}
 		var textFieldHeight = this._textMeasuredHeight;
 		var remainingWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		if (this.textPosition == LEFT || this.textPosition == RIGHT) {
@@ -1256,15 +1255,23 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (textFieldWidth > remainingWidth) {
 			textFieldWidth = remainingWidth;
 		}
+		if (textFieldWidth < 0.0) {
+			textFieldWidth = 0.0;
+		}
 		var remainingHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 		if (this.textPosition != LEFT && this.textPosition != RIGHT) {
 			remainingHeight -= this.gap;
 		}
 		if (remainingHeight < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
 			remainingHeight = 0.0;
 		}
 		if (textFieldHeight > remainingHeight) {
 			textFieldHeight = remainingHeight;
+		}
+		if (textFieldHeight < 0.0) {
+			textFieldHeight = 0.0;
 		}
 
 		switch (this.textPosition) {

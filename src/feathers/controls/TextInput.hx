@@ -1713,6 +1713,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (textFieldHeight > maxHeight || this.verticalAlign == JUSTIFY) {
 			textFieldHeight = maxHeight;
 		}
+		if (textFieldHeight < 0.0) {
+			textFieldHeight = 0.0;
+		}
 		this.textField.height = textFieldHeight;
 
 		var leftViewOffset = 0.0;
@@ -1735,6 +1738,11 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 
 		var textFieldWidth = this.actualWidth - this.paddingLeft - this.paddingRight - leftViewOffset - rightViewOffset;
+		if (textFieldWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
+			textFieldWidth = 0.0;
+		}
 		this.textField.width = textFieldWidth;
 
 		this.textField.x = this.paddingLeft + leftViewOffset;
@@ -1746,6 +1754,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			var textFieldHeight = this._promptTextMeasuredHeight;
 			if (textFieldHeight > maxHeight || this.verticalAlign == JUSTIFY) {
 				textFieldHeight = maxHeight;
+			}
+			if (textFieldHeight < 0.0) {
+				textFieldHeight = 0.0;
 			}
 			this.promptTextField.height = textFieldHeight;
 

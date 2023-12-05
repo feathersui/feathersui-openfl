@@ -120,6 +120,8 @@ class SortOrderHeaderRenderer extends ItemRenderer implements ISortOrderObserver
 			textFieldExplicitWidth -= (this._currentSortOrderIcon.width + adjustedGap);
 		}
 		if (textFieldExplicitWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
 			textFieldExplicitWidth = 0.0;
 		}
 		return textFieldExplicitWidth;

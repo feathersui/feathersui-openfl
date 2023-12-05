@@ -1103,6 +1103,11 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this.promptTextField.y = this.topViewPortOffset + this.textPaddingTop;
 
 		var maxPromptWidth = this.viewPort.visibleWidth - this.textPaddingLeft - this.textPaddingRight;
+		if (maxPromptWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
+			maxPromptWidth = 0.0;
+		}
 		if (this._promptTextMeasuredWidth > maxPromptWidth) {
 			#if flash
 			this.promptTextField.autoSize = NONE;
@@ -1119,7 +1124,11 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			#end
 			this.promptTextField.width = this._promptTextMeasuredWidth;
 		}
-		this.promptTextField.height = this.viewPort.visibleHeight - this.textPaddingTop - this.textPaddingBottom;
+		var promptHeight = this.viewPort.visibleHeight - this.textPaddingTop - this.textPaddingBottom;
+		if (promptHeight < 0.0) {
+			promptHeight = 0.0;
+		}
+		this.promptTextField.height = promptHeight;
 	}
 
 	override private function getCurrentBackgroundSkin():DisplayObject {

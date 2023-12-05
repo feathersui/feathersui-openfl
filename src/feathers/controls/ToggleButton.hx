@@ -979,6 +979,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			}
 		}
 		if (textFieldExplicitWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
 			textFieldExplicitWidth = 0.0;
 		}
 		return textFieldExplicitWidth;
@@ -1261,17 +1263,19 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 				calculatedHeight -= (this._currentIcon.height + adjustedGap);
 			}
 		}
-		if (calculatedWidth < 0.0) {
-			calculatedWidth = 0.0;
-		}
-		if (calculatedHeight < 0.0) {
-			calculatedHeight = 0.0;
-		}
 		if (calculatedWidth > this._textMeasuredWidth) {
 			calculatedWidth = this._textMeasuredWidth;
 		}
 		if (calculatedHeight > this._textMeasuredHeight) {
 			calculatedHeight = this._textMeasuredHeight;
+		}
+		if (calculatedWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
+			calculatedWidth = 0.0;
+		}
+		if (calculatedHeight < 0.0) {
+			calculatedHeight = 0.0;
 		}
 		this.textField.width = calculatedWidth;
 		var wordWrap = this.wordWrap;

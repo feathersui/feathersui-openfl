@@ -783,6 +783,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			return textFieldExplicitWidth;
 		}
 		textFieldExplicitWidth -= (this.paddingLeft + this.paddingRight);
+		if (textFieldExplicitWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
+			textFieldExplicitWidth = 0.0;
+		}
 		return textFieldExplicitWidth;
 	}
 
@@ -861,6 +866,11 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		this.layoutBackgroundSkin();
 
 		var textFieldLayoutWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (textFieldLayoutWidth < 0.0) {
+			// flash may sometimes render a TextField with negative width
+			// so make sure it is never smaller than 0.0
+			textFieldLayoutWidth = 0.0;
+		}
 		this.textField.x = this.paddingLeft;
 		this.textField.width = textFieldLayoutWidth;
 		var wordWrap = this.wordWrap;
@@ -879,6 +889,9 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
 		if (textFieldHeight > maxHeight) {
 			textFieldHeight = maxHeight;
+		}
+		if (textFieldHeight < 0.0) {
+			textFieldHeight = 0.0;
 		}
 		this.textField.height = textFieldHeight;
 
