@@ -205,7 +205,7 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 
 		In the following example, the layout's _xxl_ breakpoint is set to 1000 pixels:
 
-		```hx
+		```haxe
 		layout.xxl = 1000.0;
 		```
 
