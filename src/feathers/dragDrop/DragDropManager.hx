@@ -8,15 +8,17 @@
 
 package feathers.dragDrop;
 
-import openfl.geom.Point;
-import openfl.events.MouseEvent;
-import openfl.display.Stage;
 import feathers.core.PopUpManager;
 import feathers.events.DragDropEvent;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
 
 /**
 	Handles drag and drop operations that originate with display objects that
@@ -53,6 +55,7 @@ class DragDropManager {
 		return dragData != null;
 	}
 
+	private static var _dragSourceBitmapData:BitmapData;
 	private static var _dragSourceStage:Stage;
 	private static var _dropTargetLocalX = 0.0;
 	private static var _dropTargetLocalY = 0.0;
@@ -109,13 +112,20 @@ class DragDropManager {
 		dragAvatar = avatar;
 		_dragAvatarOffsetX = dragAvatarOffsetX;
 		_dragAvatarOffsetY = dragAvatarOffsetY;
-		_dragSourceStage = cast(source, DisplayObject).stage;
-		if (dragAvatar != null) {
-			if ((dragAvatar is InteractiveObject)) {
-				_oldDragAvatarMouseEnabled = (cast dragAvatar : InteractiveObject).mouseEnabled;
-			}
-			PopUpManager.addPopUp(avatar, _dragSourceStage, false, false);
+
+		var displaySource = cast(source, DisplayObject);
+		_dragSourceStage = displaySource.stage;
+
+		if (dragAvatar == null) {
+			_dragSourceBitmapData = new BitmapData(Math.ceil(displaySource.width), Math.ceil(displaySource.height));
+			_dragSourceBitmapData.draw(displaySource);
+			dragAvatar = new Bitmap(_dragSourceBitmapData);
+			dragAvatar.alpha = 0.75;
 		}
+		if ((dragAvatar is InteractiveObject)) {
+			_oldDragAvatarMouseEnabled = (cast dragAvatar : InteractiveObject).mouseEnabled;
+		}
+		PopUpManager.addPopUp(dragAvatar, _dragSourceStage, false, false);
 		_dragSourceStage.addEventListener(MouseEvent.MOUSE_MOVE, dragDropManager_stage_mouseMoveHandler, false, 0, true);
 		_dragSourceStage.addEventListener(MouseEvent.MOUSE_UP, dragDropManager_stage_mouseUpHandler, false, 0, true);
 		DragDropEvent.dispatch(dragSource, DragDropEvent.DRAG_START, data, false, null, null, dragSource);
@@ -163,6 +173,10 @@ class DragDropManager {
 			_dragSourceStage.removeEventListener(MouseEvent.MOUSE_UP, dragDropManager_stage_mouseUpHandler);
 			_dragSourceStage = null;
 		}
+		if (_dragSourceBitmapData != null) {
+			_dragSourceBitmapData.dispose();
+			_dragSourceBitmapData = null;
+		}
 		if (dragAvatar != null) {
 			// may have been removed from parent already in the drop listener
 			if (PopUpManager.isPopUp(dragAvatar)) {
@@ -172,9 +186,9 @@ class DragDropManager {
 				(cast dragAvatar : InteractiveObject).mouseEnabled = _oldDragAvatarMouseEnabled;
 			}
 			dragAvatar = null;
-			dragSource = null;
-			dragData = null;
 		}
+		dragSource = null;
+		dragData = null;
 	}
 
 	private static function updateDropTarget(stage:Stage, globalX:Float, globalY:Float):Void {
