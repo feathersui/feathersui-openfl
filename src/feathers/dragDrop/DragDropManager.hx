@@ -60,7 +60,26 @@ class DragDropManager {
 	private static var _dropTargetLocalX = 0.0;
 	private static var _dropTargetLocalY = 0.0;
 	private static var _dragAvatarOffsetX = 0.0;
-	private static var _dragAvatarOffsetY = 0.0;
+
+	/**
+		The x position offset for the drag avatar that was passed into the
+		`startDrag()` method.
+
+		@see `DragDropManager.dragAvatar`
+
+		@since 1.3.0
+	**/
+	public static var dragAvatarOffsetX(default, null):Float = 1.0;
+
+	/**
+		The y position offset for the drag avatar that was passed into the
+		`startDrag()` method.
+
+		@see `DragDropManager.dragAvatar`
+
+		@since 1.3.0
+	**/
+	public static var dragAvatarOffsetY(default, null):Float = 1.0;
 
 	/**
 		Returns the drop target that has accepted the current drag action, or
@@ -96,8 +115,8 @@ class DragDropManager {
 
 		@since 1.3.0
 	**/
-	public static function startDrag(source:IDragSource, data:DragData, avatar:DisplayObject = null, dragAvatarOffsetX:Float = 0.0,
-			dragAvatarOffsetY:Float = 0.0):Void {
+	public static function startDrag(source:IDragSource, data:DragData, avatar:DisplayObject = null, avatarOffsetX:Float = 0.0,
+			avatarOffsetY:Float = 0.0):Void {
 		if (dragging) {
 			cancelDrag();
 		}
@@ -110,8 +129,8 @@ class DragDropManager {
 		dragSource = source;
 		dragData = data;
 		dragAvatar = avatar;
-		_dragAvatarOffsetX = dragAvatarOffsetX;
-		_dragAvatarOffsetY = dragAvatarOffsetY;
+		dragAvatarOffsetX = avatarOffsetX;
+		dragAvatarOffsetY = avatarOffsetY;
 
 		var displaySource = cast(source, DisplayObject);
 		_dragSourceStage = displaySource.stage;
@@ -125,6 +144,8 @@ class DragDropManager {
 		if ((dragAvatar is InteractiveObject)) {
 			_oldDragAvatarMouseEnabled = (cast dragAvatar : InteractiveObject).mouseEnabled;
 		}
+		dragAvatar.x = _dragSourceStage.mouseX + dragAvatarOffsetX;
+		dragAvatar.y = _dragSourceStage.mouseY + dragAvatarOffsetY;
 		PopUpManager.addPopUp(dragAvatar, _dragSourceStage, false, false);
 		_dragSourceStage.addEventListener(MouseEvent.MOUSE_MOVE, dragDropManager_stage_mouseMoveHandler, false, 0, true);
 		_dragSourceStage.addEventListener(MouseEvent.MOUSE_UP, dragDropManager_stage_mouseUpHandler, false, 0, true);
@@ -239,8 +260,8 @@ class DragDropManager {
 	private static function dragDropManager_stage_mouseMoveHandler(event:MouseEvent):Void {
 		var stage = cast(event.currentTarget, Stage);
 		if (dragAvatar != null) {
-			dragAvatar.x = stage.mouseX + _dragAvatarOffsetX;
-			dragAvatar.y = stage.mouseY + _dragAvatarOffsetY;
+			dragAvatar.x = stage.mouseX + dragAvatarOffsetX;
+			dragAvatar.y = stage.mouseY + dragAvatarOffsetY;
 		}
 		updateDropTarget(stage, stage.mouseX, stage.mouseY);
 	}
