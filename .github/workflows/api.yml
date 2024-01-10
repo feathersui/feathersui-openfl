@@ -23,7 +23,7 @@ jobs:
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
         haxelib install dox --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib dev feathersui ${{ github.workspace }}
     - name: Build API reference
       working-directory: docs
       run: haxe docs.hxml

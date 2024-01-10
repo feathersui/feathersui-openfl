@@ -23,7 +23,7 @@ jobs:
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib dev feathersui ${{ github.workspace }}
     - name: Run Tests
       working-directory: test
       run: haxelib run openfl test neko
@@ -43,7 +43,7 @@ jobs:
         haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib dev feathersui ${{ github.workspace }}
     - name: Run Tests
       working-directory: test
       run: |
@@ -65,7 +65,7 @@ jobs:
         haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib dev feathersui ${{ github.workspace }}
     - name: Run Tests
       working-directory: test
       run: haxelib run openfl test hl
@@ -88,7 +88,7 @@ jobs:
         haxelib install openfl --quiet
         haxelib install actuate --quiet
         haxelib install utest --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib dev feathersui ${{ github.workspace }}
     - name: Set up Node.js dependencies
       working-directory: test
       run: |

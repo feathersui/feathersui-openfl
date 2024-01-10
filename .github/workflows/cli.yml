@@ -23,7 +23,7 @@ jobs:
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
         haxelib install hxargs --quiet
-        haxelib dev feathersui $GITHUB_WORKSPACE
+        haxelib dev feathersui ${{ github.workspace }}
     - name: Run CLI
       run: |
         haxelib run feathersui new-project MyProject
