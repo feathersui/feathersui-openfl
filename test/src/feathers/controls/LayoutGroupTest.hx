@@ -183,4 +183,23 @@ class LayoutGroupTest extends Test {
 		Assert.equals(child.width, this._group.width);
 		Assert.equals(child.height, this._group.height);
 	}
+
+	// children may sometimes be removed without calling our overrides of
+	// removeChild() or removeChildAt(), so this test ensures that we have
+	// properly detected the automatic removal by listening for Event.REMOVED
+	// and updating the container's internal state
+	public function testAddChildToADifferentParent():Void {
+		var child1 = new Sprite();
+		this._group.addChild(child1);
+		Assert.equals(this._group, child1.parent);
+		Assert.equals(1, this._group.numChildren);
+		Assert.equals(0, this._group.getChildIndex(child1));
+		var otherGroup = new LayoutGroup();
+		Lib.current.addChild(otherGroup);
+		otherGroup.addChild(child1);
+		Assert.equals(otherGroup, child1.parent);
+		Assert.equals(0, this._group.numChildren);
+		Assert.equals(-1, this._group.getChildIndex(child1));
+		Lib.current.removeChild(otherGroup);
+	}
 }

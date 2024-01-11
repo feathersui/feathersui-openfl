@@ -72,6 +72,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 
 	private var layoutViewPort:LayoutViewPort;
 
+	private var _ignoreRemovedEvent = false;
 	private var _ignoreChildChanges:Bool = false;
 	private var _ignoreChangesButSetFlags:Bool = false;
 	private var _displayListBypassEnabled = true;
@@ -256,6 +257,9 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		if ((child is ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler, false, 0, true);
 		}
+		// in some situations, removal happens automtically without calling our
+		// overrides, so we need to detect the event that gets dispatched
+		child.addEventListener(Event.REMOVED, scrollContainer_child_removedHandler);
 		if (this._ignoreChangesButSetFlags) {
 			this.setInvalidationFlag(LAYOUT);
 		} else {
@@ -265,6 +269,10 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 	}
 
 	override public function removeChild(child:DisplayObject):DisplayObject {
+		return this.removeChildInternal(child, true);
+	}
+
+	private function removeChildInternal(child:DisplayObject, removeFromViewPort:Bool):DisplayObject {
 		if (!this._displayListBypassEnabled) {
 			return super.removeChild(child);
 		}
@@ -272,13 +280,22 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			return child;
 		}
 		this.items.remove(child);
-		var result = this.layoutViewPort.removeChild(child);
+
+		var result = child;
+		if (removeFromViewPort) {
+			var oldIgnoreRemovedEvent = this._ignoreRemovedEvent;
+			this._ignoreRemovedEvent = true;
+			result = this.layoutViewPort.removeChild(child);
+			this._ignoreRemovedEvent = oldIgnoreRemovedEvent;
+		}
+
 		// remove listeners or access properties after removing a child
 		// because removing the child may result in better errors (like for null)
 		child.removeEventListener(Event.RESIZE, scrollContainer_child_resizeHandler);
 		if ((child is ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, scrollContainer_child_layoutDataChangeHandler);
 		}
+		child.removeEventListener(Event.REMOVED, scrollContainer_child_removedHandler);
 		if (this._ignoreChangesButSetFlags) {
 			this.setInvalidationFlag(LAYOUT);
 		} else {
@@ -597,5 +614,13 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 			return;
 		}
 		this.setInvalid(LAYOUT);
+	}
+
+	private function scrollContainer_child_removedHandler(event:Event):Void {
+		if (this._ignoreRemovedEvent || event.target != event.currentTarget) {
+			return;
+		}
+		var child = cast(event.currentTarget, DisplayObject);
+		this.removeChildInternal(child, false);
 	}
 }

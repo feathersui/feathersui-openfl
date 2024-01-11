@@ -11,6 +11,7 @@ package feathers.controls;
 import feathers.skins.RectangleSkin;
 import openfl.Lib;
 import openfl.display.Shape;
+import openfl.display.Sprite;
 import utest.Assert;
 import utest.Test;
 
@@ -216,5 +217,24 @@ class ScrollContainerTest extends Test {
 		this._container.validateNow();
 		Assert.equals(child.width, this._container.width);
 		Assert.equals(child.height, this._container.height);
+	}
+
+	// children may sometimes be removed without calling our overrides of
+	// removeChild() or removeChildAt(), so this test ensures that we have
+	// properly detected the automatic removal by listening for Event.REMOVED
+	// and updating the container's internal state
+	public function testAddChildToADifferentParent():Void {
+		var child1 = new Sprite();
+		this._container.addChild(child1);
+		Assert.equals(this._container, child1.parent.parent);
+		Assert.equals(1, this._container.numChildren);
+		Assert.equals(0, this._container.getChildIndex(child1));
+		var otherContainer = new ScrollContainer();
+		Lib.current.addChild(otherContainer);
+		otherContainer.addChild(child1);
+		Assert.equals(otherContainer, child1.parent.parent);
+		Assert.equals(0, this._container.numChildren);
+		Assert.equals(-1, this._container.getChildIndex(child1));
+		Lib.current.removeChild(otherContainer);
 	}
 }

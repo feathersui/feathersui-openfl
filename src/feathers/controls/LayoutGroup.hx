@@ -115,6 +115,9 @@ class LayoutGroup extends FeathersControl {
 	private var _ignoreLayoutChanges:Bool = false;
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
+	#if flash
+	private var _ignoreFlashRemovedEvent = false;
+	#end
 
 	/**
 		The default background skin to display behind all content added to the
@@ -264,6 +267,11 @@ class LayoutGroup extends FeathersControl {
 		if ((child is ILayoutObject)) {
 			child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler, false, 0, true);
 		}
+		#if flash
+		// in some situations, removal happens automtically without calling our
+		// overrides, so we need to detect the event that gets dispatched
+		child.addEventListener(Event.REMOVED, flash_layoutGroup_child_removedHandler);
+		#end
 
 		if (this._ignoreChangesButSetFlags) {
 			this.setInvalidationFlag(LAYOUT);
@@ -287,18 +295,39 @@ class LayoutGroup extends FeathersControl {
 		return super.addChildAt(child, index);
 	}
 
+	#if flash
 	override public function removeChild(child:DisplayObject):DisplayObject {
+		return this.removeChildInternal(child, true);
+	}
+
+	private function removeChildInternal(child:DisplayObject, removeSuper:Bool):DisplayObject
+	#else
+	override public function removeChild(child:DisplayObject):DisplayObject
+	#end
+
+	{
 		if (child == null || child.parent != this) {
 			return child;
 		}
 		this.items.remove(child);
+		#if flash
+		var result = child;
+		if (removeSuper) {
+			result = this._removeChild(child);
+		}
+		#else
 		var result = this._removeChild(child);
+		#end
+
 		// remove listeners or access properties after removing a child
 		// because removing the child may result in better errors (like for null)
 		child.removeEventListener(Event.RESIZE, layoutGroup_child_resizeHandler);
 		if ((child is ILayoutObject)) {
 			child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, layoutGroup_child_layoutDataChangeHandler);
 		}
+		#if flash
+		child.removeEventListener(Event.REMOVED, flash_layoutGroup_child_removedHandler);
+		#end
 		if (this._ignoreChangesButSetFlags) {
 			this.setInvalidationFlag(LAYOUT);
 		} else {
@@ -306,9 +335,16 @@ class LayoutGroup extends FeathersControl {
 		}
 		return result;
 	}
-
 	private function _removeChild(child:DisplayObject):DisplayObject {
+		#if flash
+		var oldIgnoreFlashRemovedEvent = this._ignoreFlashRemovedEvent;
+		this._ignoreFlashRemovedEvent = true;
+		var result = super.removeChild(child);
+		this._ignoreFlashRemovedEvent = oldIgnoreFlashRemovedEvent;
+		return result;
+		#else
 		return super.removeChild(child);
+		#end
 	}
 
 	override public function removeChildAt(index:Int):DisplayObject {
@@ -319,7 +355,15 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function _removeChildAt(index:Int):DisplayObject {
+		#if flash
+		var oldIgnoreFlashRemovedEvent = this._ignoreFlashRemovedEvent;
+		this._ignoreFlashRemovedEvent = true;
+		var result = super.removeChildAt(index);
+		this._ignoreFlashRemovedEvent = oldIgnoreFlashRemovedEvent;
+		return result;
+		#else
 		return super.removeChildAt(index);
+		#end
 	}
 
 	override public function getChildIndex(child:DisplayObject):Int {
@@ -366,7 +410,14 @@ class LayoutGroup extends FeathersControl {
 	}
 
 	private function _removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
+		#if flash
+		var oldIgnoreFlashRemovedEvent = this._ignoreFlashRemovedEvent;
+		this._ignoreFlashRemovedEvent = true;
 		super.removeChildren(beginIndex, endIndex);
+		this._ignoreFlashRemovedEvent = oldIgnoreFlashRemovedEvent;
+		#else
+		super.removeChildren(beginIndex, endIndex);
+		#end
 	}
 
 	override public function setChildIndex(child:DisplayObject, index:Int):Void {
@@ -908,4 +959,14 @@ class LayoutGroup extends FeathersControl {
 		}
 		this.setInvalid(LAYOUT);
 	}
+
+	#if flash
+	private function flash_layoutGroup_child_removedHandler(event:Event):Void {
+		if (this._ignoreFlashRemovedEvent || event.target != event.currentTarget) {
+			return;
+		}
+		var child = cast(event.currentTarget, DisplayObject);
+		this.removeChildInternal(child, false);
+	}
+	#end
 }
