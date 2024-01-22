@@ -13,6 +13,7 @@ import feathers.events.DragDropEvent;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
 import openfl.display.Stage;
 import openfl.errors.ArgumentError;
@@ -99,6 +100,7 @@ class DragDropManager {
 	public static var dropAccepted(default, null):Bool = false;
 
 	private static var _oldDragAvatarMouseEnabled = false;
+	private static var _oldDragAvatarMouseChildren = false;
 
 	/**
 		The avatar displayed for the current drag action, or `null` if no drag
@@ -142,7 +144,14 @@ class DragDropManager {
 			dragAvatar.alpha = 0.75;
 		}
 		if ((dragAvatar is InteractiveObject)) {
-			_oldDragAvatarMouseEnabled = (cast dragAvatar : InteractiveObject).mouseEnabled;
+			var interactiveAvatar:InteractiveObject = cast dragAvatar;
+			_oldDragAvatarMouseEnabled = interactiveAvatar.mouseEnabled;
+			interactiveAvatar.mouseEnabled = false;
+		}
+		if ((dragAvatar is DisplayObjectContainer)) {
+			var containerAvatar:DisplayObjectContainer = cast dragAvatar;
+			_oldDragAvatarMouseChildren = containerAvatar.mouseChildren;
+			containerAvatar.mouseChildren = false;
 		}
 		dragAvatar.x = _dragSourceStage.mouseX + dragAvatarOffsetX;
 		dragAvatar.y = _dragSourceStage.mouseY + dragAvatarOffsetY;
@@ -205,6 +214,9 @@ class DragDropManager {
 			}
 			if ((dragAvatar is InteractiveObject)) {
 				(cast dragAvatar : InteractiveObject).mouseEnabled = _oldDragAvatarMouseEnabled;
+			}
+			if ((dragAvatar is DisplayObjectContainer)) {
+				(cast dragAvatar : DisplayObjectContainer).mouseChildren = _oldDragAvatarMouseChildren;
 			}
 			dragAvatar = null;
 		}
