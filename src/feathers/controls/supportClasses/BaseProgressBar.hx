@@ -12,7 +12,9 @@ import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
+import feathers.skins.IIndeterminateSkin;
 import feathers.skins.IProgrammaticSkin;
+import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.errors.TypeError;
 import openfl.events.Event;
@@ -162,6 +164,43 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		return this._maximum;
 	}
 
+	private var _indeterminateActive:Bool = false;
+	private var _lastIndeterminateUpdateTime:Int;
+	private var _reversedIndeterminate:Bool = false;
+	private var _savedIndeterminateSkinAlpha:Float;
+
+	private var _indeterminate:Bool = false;
+
+	/**
+		Indicates if a progress bar has a determinate or indeterminate
+		appearance. Typically, an indeterminate progress bar will be animated,
+		and will appear as if it has no specific value.
+
+		In the following example, the progress bar is made indeterminate:
+
+		```haxe
+		progress.indeterminate = true;
+		```
+
+		@default false
+
+		@since 1.3.0
+	**/
+	public var indeterminate(get, set):Bool;
+
+	private function get_indeterminate():Bool {
+		return this._indeterminate;
+	}
+
+	private function set_indeterminate(value:Bool):Bool {
+		if (this._indeterminate == value) {
+			return this._indeterminate;
+		}
+		this._indeterminate = value;
+		this.setInvalid(STATE);
+		return this._indeterminate;
+	}
+
 	private var _backgroundSkinMeasurements:Measurements = null;
 	private var _currentBackgroundSkin:DisplayObject = null;
 
@@ -270,6 +309,37 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	**/
 	@:style
 	public var fillMode:ProgressBarFillMode = RESIZE;
+
+	/**
+		The indeterminate skin to display. This skin will be animated when the
+		progress bar is added to the display list, unless the activity
+		indicator isn't in indeterminate mode.
+
+		If the skin implements the `IIndeterminateSkin` interface, its
+		`indeterminatePosition` property will be updated every frame with a
+		value between `0.0` and `1.0`, based on the `indeterminateDuration`
+		property. If the skin does not implement `IIndeterminateSkin`, its
+		`alpha` property will be animated to fade in and out repeatedly.
+
+		The following example passes a bitmap for the activity indicator to use
+		as a skin:
+
+		```haxe
+		progressBar.indeterminateSkin = new Bitmap(bitmapData);
+		```
+
+		@since 1.3.0
+	**/
+	@:style
+	public var indeterminateSkin:DisplayObject = null;
+
+	/**
+		The duration of the indeterminate effect, measured in seconds.
+
+		@since 1.3.0
+	**/
+	@:style
+	public var indeterminateDuration:Float = 0.75;
 
 	/**
 		The minimum space, in pixels, between the progress bar's top edge and the
@@ -399,6 +469,9 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		if (!this._enabled && this.disabledBackgroundSkin != null) {
 			return this.disabledBackgroundSkin;
 		}
+		if (this._indeterminate && this.indeterminateSkin != null) {
+			return this.indeterminateSkin;
+		}
 		return this.backgroundSkin;
 	}
 
@@ -419,6 +492,12 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
+		if (this._indeterminate && !this._indeterminateActive) {
+			this._savedIndeterminateSkinAlpha = skin.alpha;
+			this._indeterminateActive = true;
+			this._lastIndeterminateUpdateTime = Lib.getTimer();
+			this.addEventListener(Event.ENTER_FRAME, baseProgressBar_enterFrameHandler);
+		}
 	}
 
 	private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
@@ -433,6 +512,11 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		this._backgroundSkinMeasurements.restore(skin);
 		if (skin.parent == this) {
 			this.removeChild(skin);
+		}
+		if (!this._indeterminate && this._indeterminateActive) {
+			skin.alpha = this._savedIndeterminateSkinAlpha;
+			this._indeterminateActive = false;
+			this.removeEventListener(Event.ENTER_FRAME, baseProgressBar_enterFrameHandler);
 		}
 	}
 
@@ -462,6 +546,9 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	}
 
 	private function getCurrentFillSkin():DisplayObject {
+		if (this._indeterminate) {
+			return null;
+		}
 		if (!this._enabled && this.disabledFillSkin != null) {
 			return this.disabledFillSkin;
 		}
@@ -493,5 +580,24 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 	private function layoutFill():Void {
 		throw new TypeError("Missing override for 'layoutFill' in type " + Type.getClassName(Type.getClass(this)));
+	}
+
+	private function baseProgressBar_enterFrameHandler(event:Event):Void {
+		if (!this._enabled || !this.visible || !this._indeterminate) {
+			return;
+		}
+		var currentTime = Lib.getTimer();
+		var ratio = (currentTime - this._lastIndeterminateUpdateTime) / (this.indeterminateDuration * 1000.0);
+		if (ratio >= 1.0) {
+			ratio -= Math.ffloor(ratio);
+			this._lastIndeterminateUpdateTime = currentTime;
+			this._reversedIndeterminate = !this._reversedIndeterminate;
+		}
+		if ((this._currentBackgroundSkin is IIndeterminateSkin)) {
+			var activitySkin:IIndeterminateSkin = cast this._currentBackgroundSkin;
+			activitySkin.indeterminatePosition = ratio;
+		} else {
+			this._currentBackgroundSkin.alpha = this._savedIndeterminateSkinAlpha * (this._reversedIndeterminate ? 1.0 - ratio : ratio);
+		}
 	}
 }
