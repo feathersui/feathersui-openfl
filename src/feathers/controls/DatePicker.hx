@@ -37,8 +37,11 @@ import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.text.TextField;
+import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -256,6 +259,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	public function new() {
 		initializeDatePickerTheme();
 		super();
+		this.addEventListener(KeyboardEvent.KEY_DOWN, datePicker_keyDownHandler);
 	}
 
 	private var dateContainer:LayoutGroup;
@@ -1982,6 +1986,60 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		#end
 	}
 
+	private function navigateWithKeyboard(event:KeyboardEvent):Void {
+		if (event.isDefaultPrevented()) {
+			return;
+		}
+		var result:Date = null;
+		if (this._selectedDate == null) {
+			result = Date.now();
+		} else {
+			var resultMonth = this._selectedDate.getMonth();
+			var resultDate = this._selectedDate.getDate();
+			switch (event.keyCode) {
+				case Keyboard.UP:
+					resultDate = resultDate - 7;
+				case Keyboard.DOWN:
+					resultDate = resultDate + 7;
+				case Keyboard.LEFT:
+					resultDate = resultDate - 1;
+				case Keyboard.RIGHT:
+					resultDate = resultDate + 1;
+				case Keyboard.PAGE_UP:
+					resultMonth = resultMonth - 1;
+				case Keyboard.PAGE_DOWN:
+					resultMonth = resultMonth + 1;
+				case Keyboard.HOME:
+					var currentDay = this._selectedDate.getDay();
+					if (currentDay != 0) {
+						resultDate -= currentDay;
+					}
+				case Keyboard.END:
+					var currentDay = this._selectedDate.getDay();
+					if (currentDay != 6) {
+						resultDate += 6 - currentDay;
+					}
+				default:
+					// not keyboard navigation
+					return;
+			}
+
+			// if the result month or date is out of range, the Date constructor
+			// will automatically make adjustments to that field, and whichever
+			// other fields will be affected, to get a valid date.
+			result = new Date(this._selectedDate.getFullYear(), resultMonth, resultDate, this._selectedDate.getHours(), this._selectedDate.getMinutes(),
+				this._selectedDate.getSeconds());
+		}
+		if (this._selectedDate != null && this._selectedDate.getTime() == result.getTime()) {
+			return;
+		}
+		event.preventDefault();
+		// use the setter
+		this.selectedDate = result;
+		this.displayedFullYear = this.selectedDate.getFullYear();
+		this.displayedMonth = this.selectedDate.getMonth();
+	}
+
 	private function datePicker_decrementMonthButton_triggerHandler(event:TriggerEvent):Void {
 		var displayedMonth = this._displayedMonth;
 		var displayedFullYear = this._displayedFullYear;
@@ -2083,6 +2141,22 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		// if we get here, the selected property of the renderer changed
 		// unexpectedly, and we need to restore its proper state
 		this.setInvalid(SELECTION);
+	}
+
+	private function datePicker_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		if (this.stage != null && (this.stage.focus is TextField)) {
+			var textField:TextField = cast this.stage.focus;
+			if (textField.type == INPUT) {
+				// if an input TextField has focus, don't scroll because the
+				// TextField should have precedence, and the TextFeeld won't
+				// call preventDefault() on the event.
+				return;
+			}
+		}
+		this.navigateWithKeyboard(event);
 	}
 }
 

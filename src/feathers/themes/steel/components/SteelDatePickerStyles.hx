@@ -45,6 +45,18 @@ class SteelDatePickerStyles {
 					datePicker.backgroundSkin = backgroundSkin;
 				}
 
+				if (datePicker.focusRectSkin == null) {
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = null;
+					focusRectSkin.border = theme.getFocusBorder();
+					datePicker.focusRectSkin = focusRectSkin;
+				}
+
+				datePicker.focusPaddingTop = 3.0;
+				datePicker.focusPaddingRight = 3.0;
+				datePicker.focusPaddingBottom = 3.0;
+				datePicker.focusPaddingLeft = 3.0;
+
 				datePicker.headerGap = 2.0;
 			});
 		}

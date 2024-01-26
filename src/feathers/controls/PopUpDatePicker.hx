@@ -600,6 +600,11 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 		this.datePicker.addEventListener(Event.REMOVED_FROM_STAGE, popUpDatePicker_datePicker_removedFromStageHandler);
 		this.stage.addEventListener(MouseEvent.MOUSE_DOWN, popUpDatePicker_stage_mouseDownHandler, false, 0, true);
 		this.stage.addEventListener(TouchEvent.TOUCH_BEGIN, popUpDatePicker_stage_touchBeginHandler, false, 0, true);
+		if (this.datePicker.focusManager != null) {
+			this.datePicker.focusManager.focus = this.datePicker;
+		} else {
+			this.stage.focus = this.datePicker;
+		}
 	}
 
 	/**
