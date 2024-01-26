@@ -2454,6 +2454,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			if (itemRenderer == null) {
 				// if we can't find the item renderer, we need to scroll
 				changed = true;
+			} else if ((this.layout is IScrollLayout)) {
+				var scrollLayout:IScrollLayout = cast this.layout;
+				var nearestScrollPosition = scrollLayout.getNearestScrollPositionForIndex(result, this._rowLayoutItems.length, this.viewPort.visibleWidth,
+					this.viewPort.visibleHeight);
+				if (this.scrollX != nearestScrollPosition.x || this.scrollY != nearestScrollPosition.y) {
+					changed = true;
+				}
 			}
 		}
 		if (!changed) {
