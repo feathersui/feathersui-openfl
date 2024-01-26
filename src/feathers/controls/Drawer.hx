@@ -217,6 +217,7 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	}
 
 	private var _pendingOpened:Null<Bool> = null;
+	private var _pendingAnimation:Bool = false;
 
 	private var _opened:Bool = false;
 
@@ -233,15 +234,15 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	}
 
 	private function set_opened(value:Bool):Bool {
-		if (this._pendingOpened == value) {
+		if (value) {
+			this.openDrawer(true);
+		} else {
+			this.closeDrawer(true);
+		}
+		if (this._pendingOpened != null) {
 			return this._pendingOpened;
 		}
-		this._pendingOpened = value;
-		if (value && this._drawer == null) {
-			throw new ArgumentError("Cannot set opened property to true because drawer property is null");
-		}
-		this.setInvalid(DATA);
-		return this._pendingOpened;
+		return this._opened;
 	}
 
 	private var _autoSizeMode:AutoSizeMode = STAGE;
@@ -405,6 +406,30 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		super.dispose();
 	}
 
+	public function openDrawer(animate:Bool = true):Void {
+		this._pendingAnimation = animate;
+		if (this._pendingOpened != null && this._pendingOpened) {
+			return;
+		}
+		this._pendingOpened = true;
+		if (this._drawer == null) {
+			throw new ArgumentError("Cannot set opened property to true because drawer property is null");
+		}
+		this.setInvalid(DATA);
+	}
+
+	public function closeDrawer(animate:Bool = true):Void {
+		this._pendingAnimation = animate;
+		if (this._pendingOpened != null && !this._pendingOpened) {
+			return;
+		}
+		this._pendingOpened = false;
+		if (this._drawer == null) {
+			throw new ArgumentError("Cannot set opened property to true because drawer property is null");
+		}
+		this.setInvalid(DATA);
+	}
+
 	private function initializeDrawerTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelDrawerStyles.initialize();
@@ -450,7 +475,14 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 		if (dataInvalid) {
 			if (this._pendingOpened != null) {
+				var savedSnapDuration = this._edgePuller.snapDuration;
+				if (!this._pendingAnimation) {
+					this._edgePuller.snapDuration = 0.0;
+				}
 				this._edgePuller.opened = this._pendingOpened;
+				if (!this._pendingAnimation) {
+					this._edgePuller.snapDuration = savedSnapDuration;
+				}
 				this._pendingOpened = null;
 			} else {
 				this._edgePuller.opened = this._opened;
