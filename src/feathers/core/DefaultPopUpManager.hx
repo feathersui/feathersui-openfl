@@ -13,6 +13,7 @@ import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.display.Stage;
 import openfl.errors.ArgumentError;
+import openfl.errors.Error;
 import openfl.events.Event;
 import openfl.geom.Point;
 
@@ -285,6 +286,21 @@ class DefaultPopUpManager implements IPopUpManager {
 		var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));
 		popUp.x = stageTopLeft.x + (stageBottomRight.x - stageTopLeft.x - popUp.width) / 2.0;
 		popUp.y = stageTopLeft.y + (stageBottomRight.y - stageTopLeft.y - popUp.height) / 2.0;
+	}
+
+	/**
+		@see `feathers.core.IPopUpManager.bringToFront`
+	**/
+	public function bringToFront(popUp:DisplayObject):Void {
+		if (!this.popUps.remove(popUp)) {
+			throw new Error("Not a popup");
+		}
+		this.popUps.push(popUp);
+		var overlay = this._popUpToOverlay.get(popUp);
+		if (overlay != null) {
+			this._root.setChildIndex(overlay, this._root.numChildren - 1);
+		}
+		this._root.setChildIndex(popUp, this._root.numChildren - 1);
 	}
 
 	private function cleanupOverlay(popUp:DisplayObject):Void {

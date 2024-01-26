@@ -161,6 +161,22 @@ class PopUpManager {
 	}
 
 	/**
+		A convenience method for `PopUpManager.forStage(stage).bringToFront()`.
+		Attempts to use `target.stage`, but throws an error if `target.stage` is
+		`null`.
+
+		@since 1.0.0
+	**/
+	public static function bringToFront(target:DisplayObject):Void {
+		var stage = target.stage;
+		if (stage == null) {
+			throw new ArgumentError("A pop-up's stage property must not be null.");
+		}
+		var popUpManager = PopUpManager.forStage(stage);
+		popUpManager.bringToFront(target);
+	}
+
+	/**
 		A convenience method for `PopUpManager.forStage(stage).isPopUp()`.
 		Attempts to use `target.stage`, but returns `false` if `target.stage` is
 		`null`.

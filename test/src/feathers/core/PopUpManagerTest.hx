@@ -278,4 +278,36 @@ class PopUpManagerTest extends Test {
 		Assert.equals(this._customRoot, this._popUp1.parent);
 		Assert.equals(this._customRoot, this._popUp2.parent);
 	}
+
+	public function testBringToFrontNonModal():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		PopUpManager.addPopUp(this._popUp1, Lib.current, false, false);
+		PopUpManager.addPopUp(this._popUp2, Lib.current, false, false);
+		var childIndex1 = this._popUp1.parent.getChildIndex(this._popUp1);
+		var childIndex2 = this._popUp2.parent.getChildIndex(this._popUp2);
+		Assert.isTrue(childIndex1 < childIndex2);
+		PopUpManager.bringToFront(this._popUp1);
+		var childIndex1 = this._popUp1.parent.getChildIndex(this._popUp1);
+		var childIndex2 = this._popUp2.parent.getChildIndex(this._popUp2);
+		Assert.isTrue(childIndex1 > childIndex2);
+	}
+
+	public function testBringToFrontModal():Void {
+		this.createPopUp1();
+		this.createPopUp2();
+		PopUpManager.addPopUp(this._popUp1, Lib.current, true, false);
+		PopUpManager.addPopUp(this._popUp2, Lib.current, true, false);
+		var childIndex1 = this._popUp1.parent.getChildIndex(this._popUp1);
+		var childIndex2 = this._popUp2.parent.getChildIndex(this._popUp2);
+		Assert.isTrue(childIndex1 < childIndex2);
+		Assert.isFalse(PopUpManager.isTopLevelPopUp(this._popUp1));
+		Assert.isTrue(PopUpManager.isTopLevelPopUp(this._popUp2));
+		PopUpManager.bringToFront(this._popUp1);
+		var childIndex1 = this._popUp1.parent.getChildIndex(this._popUp1);
+		var childIndex2 = this._popUp2.parent.getChildIndex(this._popUp2);
+		Assert.isTrue(childIndex1 > childIndex2);
+		Assert.isTrue(PopUpManager.isTopLevelPopUp(this._popUp1));
+		Assert.isFalse(PopUpManager.isTopLevelPopUp(this._popUp2));
+	}
 }

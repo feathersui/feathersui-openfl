@@ -114,4 +114,11 @@ interface IPopUpManager {
 		@since 1.0.0
 	**/
 	public function centerPopUp(popUp:DisplayObject):Void;
+
+	/**
+		Brings the specified popup to the front.
+
+		@since 1.3.0
+	**/
+	public function bringToFront(popUp:DisplayObject):Void;
 }
