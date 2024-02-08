@@ -406,6 +406,11 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		super.dispose();
 	}
 
+	/**
+		Opens the drawer, if it is currently closed.
+
+		@since 1.3.0
+	**/
 	public function openDrawer(animate:Bool = true):Void {
 		this._pendingAnimation = animate;
 		if (this._pendingOpened != null && this._pendingOpened) {
@@ -418,6 +423,11 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		this.setInvalid(DATA);
 	}
 
+	/**
+		Closes the drawer, if it is currently open.
+
+		@since 1.3.0
+	**/
 	public function closeDrawer(animate:Bool = true):Void {
 		this._pendingAnimation = animate;
 		if (this._pendingOpened != null && !this._pendingOpened) {
