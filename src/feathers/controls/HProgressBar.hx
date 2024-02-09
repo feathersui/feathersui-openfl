@@ -149,7 +149,8 @@ class HProgressBar extends BaseProgressBar {
 				percentage = 1.0;
 			}
 		}
-		var calculatedWidth:Float = Math.round(percentage * (this.actualWidth - this.paddingLeft - this.paddingRight));
+		var maxWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		var calculatedWidth:Float = this._indeterminate ? maxWidth : Math.round(percentage * maxWidth);
 
 		this._currentFillSkin.x = this.paddingLeft;
 		this._currentFillSkin.y = this.paddingTop;

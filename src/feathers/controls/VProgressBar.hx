@@ -148,7 +148,8 @@ class VProgressBar extends BaseProgressBar {
 				percentage = 1.0;
 			}
 		}
-		var calculatedHeight:Float = Math.round(percentage * (this.actualHeight - this.paddingTop - this.paddingBottom));
+		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		var calculatedHeight:Float = this._indeterminate ? maxHeight : Math.round(percentage * maxHeight);
 
 		this._currentFillSkin.x = this.paddingLeft;
 		this._currentFillSkin.width = this.actualWidth - this.paddingLeft - this.paddingRight;

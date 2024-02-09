@@ -167,7 +167,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 	private var _indeterminateActive:Bool = false;
 	private var _lastIndeterminateUpdateTime:Int;
 	private var _reversedIndeterminate:Bool = false;
-	private var _savedIndeterminateSkinAlpha:Float;
+	private var _savedIndeterminateFillSkinAlpha:Float;
 
 	private var _indeterminate:Bool = false;
 
@@ -325,13 +325,13 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		as a skin:
 
 		```haxe
-		progressBar.indeterminateSkin = new Bitmap(bitmapData);
+		progressBar.indeterminateFillSkin = new Bitmap(bitmapData);
 		```
 
 		@since 1.3.0
 	**/
 	@:style
-	public var indeterminateSkin:DisplayObject = null;
+	public var indeterminateFillSkin:DisplayObject = null;
 
 	/**
 		The duration of the indeterminate effect, measured in seconds.
@@ -469,9 +469,6 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		if (!this._enabled && this.disabledBackgroundSkin != null) {
 			return this.disabledBackgroundSkin;
 		}
-		if (this._indeterminate && this.indeterminateSkin != null) {
-			return this.indeterminateSkin;
-		}
 		return this.backgroundSkin;
 	}
 
@@ -492,12 +489,6 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			(cast skin : IProgrammaticSkin).uiContext = this;
 		}
 		this.addChildAt(skin, 0);
-		if (this._indeterminate && !this._indeterminateActive) {
-			this._savedIndeterminateSkinAlpha = skin.alpha;
-			this._indeterminateActive = true;
-			this._lastIndeterminateUpdateTime = Lib.getTimer();
-			this.addEventListener(Event.ENTER_FRAME, baseProgressBar_enterFrameHandler);
-		}
 	}
 
 	private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
@@ -513,46 +504,54 @@ class BaseProgressBar extends FeathersControl implements IRange {
 		if (skin.parent == this) {
 			this.removeChild(skin);
 		}
-		if (!this._indeterminate && this._indeterminateActive) {
-			skin.alpha = this._savedIndeterminateSkinAlpha;
-			this._indeterminateActive = false;
-			this.removeEventListener(Event.ENTER_FRAME, baseProgressBar_enterFrameHandler);
-		}
 	}
 
 	private function refreshFillSkin():Void {
 		var oldSkin = this._currentFillSkin;
 		this._currentFillSkin = this.getCurrentFillSkin();
-		if (this._currentFillSkin == oldSkin) {
-			return;
+		if (this._currentFillSkin != oldSkin) {
+			this.removeCurrentFillSkin(oldSkin);
+			this.addCurrentFillSkin(this._currentFillSkin);
 		}
-		this.removeCurrentFillSkin(oldSkin);
-		if (this._currentFillSkin == null) {
-			this._fillSkinMeasurements = null;
-			return;
+		if (!this._indeterminate && this._indeterminateActive && oldSkin != null) {
+			oldSkin.alpha = this._savedIndeterminateFillSkinAlpha;
+			this._indeterminateActive = false;
+			this.removeEventListener(Event.ENTER_FRAME, baseProgressBar_enterFrameHandler);
+		} else if (this._indeterminate && !this._indeterminateActive && this._currentFillSkin != null) {
+			this._savedIndeterminateFillSkinAlpha = this._currentFillSkin.alpha;
+			this._indeterminateActive = true;
+			this._lastIndeterminateUpdateTime = Lib.getTimer();
+			this.addEventListener(Event.ENTER_FRAME, baseProgressBar_enterFrameHandler);
 		}
-		if ((this._currentFillSkin is IUIControl)) {
-			(cast this._currentFillSkin : IUIControl).initializeNow();
-		}
-		if (this._fillSkinMeasurements == null) {
-			this._fillSkinMeasurements = new Measurements(this._currentFillSkin);
-		} else {
-			this._fillSkinMeasurements.save(this._currentFillSkin);
-		}
-		if ((this._currentFillSkin is IProgrammaticSkin)) {
-			(cast this._currentFillSkin : IProgrammaticSkin).uiContext = this;
-		}
-		this.addChild(this._currentFillSkin);
 	}
 
 	private function getCurrentFillSkin():DisplayObject {
-		if (this._indeterminate) {
-			return null;
-		}
 		if (!this._enabled && this.disabledFillSkin != null) {
 			return this.disabledFillSkin;
 		}
+		if (this._indeterminate && this.indeterminateFillSkin != null) {
+			return this.indeterminateFillSkin;
+		}
 		return this.fillSkin;
+	}
+
+	private function addCurrentFillSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			this._fillSkinMeasurements = null;
+			return;
+		}
+		if ((skin is IUIControl)) {
+			(cast skin : IUIControl).initializeNow();
+		}
+		if (this._fillSkinMeasurements == null) {
+			this._fillSkinMeasurements = new Measurements(skin);
+		} else {
+			this._fillSkinMeasurements.save(skin);
+		}
+		if ((skin is IProgrammaticSkin)) {
+			(cast skin : IProgrammaticSkin).uiContext = this;
+		}
+		this.addChild(skin);
 	}
 
 	private function removeCurrentFillSkin(skin:DisplayObject):Void {
@@ -593,11 +592,11 @@ class BaseProgressBar extends FeathersControl implements IRange {
 			this._lastIndeterminateUpdateTime = currentTime;
 			this._reversedIndeterminate = !this._reversedIndeterminate;
 		}
-		if ((this._currentBackgroundSkin is IIndeterminateSkin)) {
-			var activitySkin:IIndeterminateSkin = cast this._currentBackgroundSkin;
+		if ((this._currentFillSkin is IIndeterminateSkin)) {
+			var activitySkin:IIndeterminateSkin = cast this._currentFillSkin;
 			activitySkin.indeterminatePosition = ratio;
 		} else {
-			this._currentBackgroundSkin.alpha = this._savedIndeterminateSkinAlpha * (this._reversedIndeterminate ? 1.0 - ratio : ratio);
+			this._currentFillSkin.alpha = this._savedIndeterminateFillSkinAlpha * (this._reversedIndeterminate ? 1.0 - ratio : ratio);
 		}
 	}
 }
