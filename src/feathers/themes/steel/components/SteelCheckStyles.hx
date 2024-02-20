@@ -123,7 +123,7 @@ class SteelCheckStyles {
 				}
 
 				check.horizontalAlign = LEFT;
-				check.gap = 4.0;
+				check.gap = theme.smallPadding;
 			});
 		}
 	}

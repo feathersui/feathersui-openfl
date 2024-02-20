@@ -63,11 +63,11 @@ class SteelToggleButtonStyles {
 					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
-				button.paddingTop = 4.0;
-				button.paddingRight = 10.0;
-				button.paddingBottom = 4.0;
-				button.paddingLeft = 10.0;
-				button.gap = 4.0;
+				button.paddingTop = theme.smallPadding;
+				button.paddingRight = theme.largePadding;
+				button.paddingBottom = theme.smallPadding;
+				button.paddingLeft = theme.largePadding;
+				button.gap = theme.smallPadding;
 			});
 		}
 	}

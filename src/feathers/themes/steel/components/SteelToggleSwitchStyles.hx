@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.BasicToggleButton;
 import feathers.controls.ToggleSwitch;
 import feathers.skins.CircleSkin;
@@ -34,13 +35,22 @@ class SteelToggleSwitchStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(ToggleSwitch, null) == null) {
 			styleProvider.setStyleFunction(ToggleSwitch, null, function(toggle:ToggleSwitch):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (toggle.trackSkin == null) {
 					var trackSkin = new RectangleSkin();
-					trackSkin.width = 64.0;
-					trackSkin.height = 32.0;
-					trackSkin.minWidth = 64.0;
-					trackSkin.minHeight = 32.0;
-					trackSkin.cornerRadius = 16.0;
+					if (isDesktop) {
+						trackSkin.width = 48.0;
+						trackSkin.height = 24.0;
+						trackSkin.minWidth = 48.0;
+						trackSkin.minHeight = 24.0;
+						trackSkin.cornerRadius = 12.0;
+					} else {
+						trackSkin.width = 64.0;
+						trackSkin.height = 32.0;
+						trackSkin.minWidth = 64.0;
+						trackSkin.minHeight = 32.0;
+						trackSkin.cornerRadius = 16.0;
+					}
 					trackSkin.border = theme.getInsetBorder();
 					trackSkin.disabledBorder = theme.getInsetBorder();
 					trackSkin.selectedBorder = theme.getSelectedInsetBorder();
@@ -56,10 +66,17 @@ class SteelToggleSwitchStyles {
 				}
 				if (toggle.thumbSkin == null) {
 					var thumbSkin = new CircleSkin();
-					thumbSkin.width = 32.0;
-					thumbSkin.height = 32.0;
-					thumbSkin.minWidth = 32.0;
-					thumbSkin.minHeight = 32.0;
+					if (isDesktop) {
+						thumbSkin.width = 24.0;
+						thumbSkin.height = 24.0;
+						thumbSkin.minWidth = 24.0;
+						thumbSkin.minHeight = 24.0;
+					} else {
+						thumbSkin.width = 32.0;
+						thumbSkin.height = 32.0;
+						thumbSkin.minWidth = 32.0;
+						thumbSkin.minHeight = 32.0;
+					}
 					thumbSkin.border = theme.getBorder();
 					thumbSkin.disabledBorder = theme.getBorder();
 					thumbSkin.fill = theme.getButtonFill();
@@ -75,7 +92,11 @@ class SteelToggleSwitchStyles {
 					var focusRectSkin = new RectangleSkin();
 					focusRectSkin.fill = null;
 					focusRectSkin.border = theme.getFocusBorder();
-					focusRectSkin.cornerRadius = 16.0;
+					if (isDesktop) {
+						focusRectSkin.cornerRadius = 12.0;
+					} else {
+						focusRectSkin.cornerRadius = 16.0;
+					}
 					toggle.focusRectSkin = focusRectSkin;
 				}
 			});

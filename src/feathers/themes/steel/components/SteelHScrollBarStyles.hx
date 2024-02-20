@@ -67,10 +67,10 @@ class SteelHScrollBarStyles {
 					scrollBar.trackSkin = trackSkin;
 				}
 
-				scrollBar.paddingTop = 2.0;
-				scrollBar.paddingRight = 2.0;
-				scrollBar.paddingBottom = 2.0;
-				scrollBar.paddingLeft = 2.0;
+				scrollBar.paddingTop = theme.xsmallPadding;
+				scrollBar.paddingRight = theme.xsmallPadding;
+				scrollBar.paddingBottom = theme.xsmallPadding;
+				scrollBar.paddingLeft = theme.xsmallPadding;
 			});
 		}
 
@@ -99,11 +99,11 @@ class SteelHScrollBarStyles {
 
 				button.showText = false;
 
-				button.paddingTop = 2.0;
-				button.paddingRight = 2.0;
-				button.paddingBottom = 2.0;
-				button.paddingLeft = 2.0;
-				button.gap = 2.0;
+				button.paddingTop = theme.xsmallPadding;
+				button.paddingRight = theme.xsmallPadding;
+				button.paddingBottom = theme.xsmallPadding;
+				button.paddingLeft = theme.xsmallPadding;
+				button.gap = theme.xsmallPadding;
 			});
 		}
 
@@ -132,11 +132,11 @@ class SteelHScrollBarStyles {
 
 				button.showText = false;
 
-				button.paddingTop = 2.0;
-				button.paddingRight = 2.0;
-				button.paddingBottom = 2.0;
-				button.paddingLeft = 2.0;
-				button.gap = 2.0;
+				button.paddingTop = theme.xsmallPadding;
+				button.paddingRight = theme.xsmallPadding;
+				button.paddingBottom = theme.xsmallPadding;
+				button.paddingLeft = theme.xsmallPadding;
+				button.gap = theme.xsmallPadding;
 			});
 		}
 	}

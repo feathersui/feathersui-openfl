@@ -63,11 +63,11 @@ class SteelPopUpDatePickerStyles {
 					}
 				}
 
-				button.paddingTop = 4.0;
-				button.paddingRight = 10.0;
-				button.paddingBottom = 4.0;
-				button.paddingLeft = 10.0;
-				button.gap = 4.0;
+				button.paddingTop = theme.smallPadding;
+				button.paddingRight = theme.largePadding;
+				button.paddingBottom = theme.smallPadding;
+				button.paddingLeft = theme.largePadding;
+				button.gap = theme.smallPadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(TextInput, PopUpDatePicker.CHILD_VARIANT_TEXT_INPUT) == null) {
@@ -95,10 +95,10 @@ class SteelPopUpDatePickerStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = 6.0;
-				input.paddingRight = 10.0;
-				input.paddingBottom = 6.0;
-				input.paddingLeft = 10.0;
+				input.paddingTop = theme.mediumPadding;
+				input.paddingRight = theme.largePadding;
+				input.paddingBottom = theme.mediumPadding;
+				input.paddingLeft = theme.largePadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(DatePicker, PopUpDatePicker.CHILD_VARIANT_DATE_PICKER) == null) {
@@ -111,8 +111,8 @@ class SteelPopUpDatePickerStyles {
 					datePicker.backgroundSkin = backgroundSkin;
 				}
 
-				datePicker.setPadding(6.0);
-				datePicker.headerGap = 2.0;
+				datePicker.setPadding(theme.mediumPadding);
+				datePicker.headerGap = theme.xsmallPadding;
 			});
 		}
 	}

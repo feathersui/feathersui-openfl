@@ -137,11 +137,11 @@ class SteelGroupListViewStyles {
 					itemRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
 				}
 
-				itemRenderer.paddingTop = 4.0;
-				itemRenderer.paddingRight = 10.0;
-				itemRenderer.paddingBottom = 4.0;
-				itemRenderer.paddingLeft = 10.0;
-				itemRenderer.gap = 4.0;
+				itemRenderer.paddingTop = theme.smallPadding;
+				itemRenderer.paddingRight = theme.largePadding;
+				itemRenderer.paddingBottom = theme.smallPadding;
+				itemRenderer.paddingLeft = theme.largePadding;
+				itemRenderer.gap = theme.smallPadding;
 
 				itemRenderer.horizontalAlign = LEFT;
 			});

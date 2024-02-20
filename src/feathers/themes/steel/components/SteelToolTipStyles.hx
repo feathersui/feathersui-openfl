@@ -50,10 +50,10 @@ class SteelToolTipStyles {
 
 				label.wordWrap = true;
 
-				label.paddingTop = 2.0;
-				label.paddingRight = 2.0;
-				label.paddingBottom = 2.0;
-				label.paddingLeft = 2.0;
+				label.paddingTop = theme.xsmallPadding;
+				label.paddingRight = theme.xsmallPadding;
+				label.paddingBottom = theme.xsmallPadding;
+				label.paddingLeft = theme.xsmallPadding;
 			});
 		}
 	}

@@ -57,7 +57,7 @@ class SteelDatePickerStyles {
 				datePicker.focusPaddingBottom = 3.0;
 				datePicker.focusPaddingLeft = 3.0;
 
-				datePicker.headerGap = 2.0;
+				datePicker.headerGap = theme.xsmallPadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(Label, DatePicker.CHILD_VARIANT_MONTH_TITLE_VIEW) == null) {
@@ -103,8 +103,8 @@ class SteelDatePickerStyles {
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
-				button.setPadding(4.0);
-				button.gap = 4.0;
+				button.setPadding(theme.smallPadding);
+				button.gap = theme.smallPadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(Button, DatePicker.CHILD_VARIANT_INCREMENT_MONTH_BUTTON) == null) {
@@ -140,8 +140,8 @@ class SteelDatePickerStyles {
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
-				button.setPadding(4.0);
-				button.gap = 4.0;
+				button.setPadding(theme.smallPadding);
+				button.gap = theme.smallPadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(Button, DatePicker.CHILD_VARIANT_DECREMENT_YEAR_BUTTON) == null) {
@@ -177,8 +177,8 @@ class SteelDatePickerStyles {
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
-				button.setPadding(4.0);
-				button.gap = 4.0;
+				button.setPadding(theme.smallPadding);
+				button.gap = theme.smallPadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(Button, DatePicker.CHILD_VARIANT_INCREMENT_YEAR_BUTTON) == null) {
@@ -214,8 +214,8 @@ class SteelDatePickerStyles {
 					button.setIconForState(ButtonState.DISABLED, disabledIcon);
 				}
 
-				button.setPadding(4.0);
-				button.gap = 4.0;
+				button.setPadding(theme.smallPadding);
+				button.gap = theme.smallPadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(Label, DatePicker.CHILD_VARIANT_WEEKDAY_LABEL) == null) {
@@ -266,10 +266,10 @@ class SteelDatePickerStyles {
 				dateRenderer.horizontalAlign = CENTER;
 				dateRenderer.verticalAlign = MIDDLE;
 
-				dateRenderer.paddingTop = 2.0;
-				dateRenderer.paddingRight = 2.0;
-				dateRenderer.paddingBottom = 2.0;
-				dateRenderer.paddingLeft = 2.0;
+				dateRenderer.paddingTop = theme.xsmallPadding;
+				dateRenderer.paddingRight = theme.xsmallPadding;
+				dateRenderer.paddingBottom = theme.xsmallPadding;
+				dateRenderer.paddingLeft = theme.xsmallPadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(ItemRenderer, DatePicker.CHILD_VARIANT_MUTED_DATE_RENDERER) == null) {
@@ -309,10 +309,10 @@ class SteelDatePickerStyles {
 				dateRenderer.horizontalAlign = CENTER;
 				dateRenderer.verticalAlign = MIDDLE;
 
-				dateRenderer.paddingTop = 2.0;
-				dateRenderer.paddingRight = 2.0;
-				dateRenderer.paddingBottom = 2.0;
-				dateRenderer.paddingLeft = 2.0;
+				dateRenderer.paddingTop = theme.xsmallPadding;
+				dateRenderer.paddingRight = theme.xsmallPadding;
+				dateRenderer.paddingBottom = theme.xsmallPadding;
+				dateRenderer.paddingLeft = theme.xsmallPadding;
 			});
 		}
 	}

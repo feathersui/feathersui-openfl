@@ -67,9 +67,9 @@ class SteelTextAreaStyles {
 				textArea.paddingBottom = 1.0;
 				textArea.paddingLeft = 1.0;
 
-				textArea.textPaddingTop = 4.0;
+				textArea.textPaddingTop = theme.smallPadding;
 				textArea.textPaddingRight = 9.0;
-				textArea.textPaddingBottom = 5.0;
+				textArea.textPaddingBottom = theme.smallPadding + 1;
 				textArea.textPaddingLeft = 9.0;
 			});
 		}

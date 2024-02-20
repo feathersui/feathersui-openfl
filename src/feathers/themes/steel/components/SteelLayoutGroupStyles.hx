@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.LayoutGroup;
 import feathers.layout.HorizontalLayout;
 import feathers.skins.RectangleSkin;
@@ -33,23 +34,30 @@ class SteelLayoutGroupStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR) == null) {
 			styleProvider.setStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR, function(group:LayoutGroup):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (group.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getHeaderFill();
-					backgroundSkin.width = 44.0;
-					backgroundSkin.height = 44.0;
-					backgroundSkin.minHeight = 44.0;
+					if (isDesktop) {
+						backgroundSkin.width = 32.0;
+						backgroundSkin.height = 32.0;
+						backgroundSkin.minHeight = 32.0;
+					} else {
+						backgroundSkin.width = 44.0;
+						backgroundSkin.height = 44.0;
+						backgroundSkin.minHeight = 44.0;
+					}
 					group.backgroundSkin = backgroundSkin;
 				}
 				if (group.layout == null) {
 					var layout = new HorizontalLayout();
 					layout.horizontalAlign = LEFT;
 					layout.verticalAlign = MIDDLE;
-					layout.paddingTop = 4.0;
-					layout.paddingRight = 10.0;
-					layout.paddingBottom = 4.0;
-					layout.paddingLeft = 10.0;
-					layout.gap = 4.0;
+					layout.paddingTop = theme.smallPadding;
+					layout.paddingRight = theme.largePadding;
+					layout.paddingBottom = theme.smallPadding;
+					layout.paddingLeft = theme.largePadding;
+					layout.gap = theme.smallPadding;
 					group.layout = layout;
 				}
 			});

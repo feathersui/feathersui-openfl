@@ -57,7 +57,7 @@ class SteelFormItemStyles {
 					formItem.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
-				formItem.gap = 6.0;
+				formItem.gap = theme.mediumPadding;
 			});
 		}
 	}

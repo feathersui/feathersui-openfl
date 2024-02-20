@@ -58,11 +58,11 @@ class SteelNumericStepperStyles {
 					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
-				button.paddingTop = 4.0;
-				button.paddingRight = 10.0;
-				button.paddingBottom = 4.0;
-				button.paddingLeft = 10.0;
-				button.gap = 4.0;
+				button.paddingTop = theme.smallPadding;
+				button.paddingRight = theme.largePadding;
+				button.paddingBottom = theme.smallPadding;
+				button.paddingLeft = theme.largePadding;
+				button.gap = theme.smallPadding;
 			});
 		}
 
@@ -88,11 +88,11 @@ class SteelNumericStepperStyles {
 					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
-				button.paddingTop = 4.0;
-				button.paddingRight = 10.0;
-				button.paddingBottom = 4.0;
-				button.paddingLeft = 10.0;
-				button.gap = 4.0;
+				button.paddingTop = theme.smallPadding;
+				button.paddingRight = theme.largePadding;
+				button.paddingBottom = theme.smallPadding;
+				button.paddingLeft = theme.largePadding;
+				button.gap = theme.smallPadding;
 			});
 		}
 
@@ -118,10 +118,10 @@ class SteelNumericStepperStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = 6.0;
-				input.paddingRight = 10.0;
-				input.paddingBottom = 6.0;
-				input.paddingLeft = 10.0;
+				input.paddingTop = theme.mediumPadding;
+				input.paddingRight = theme.largePadding;
+				input.paddingBottom = theme.mediumPadding;
+				input.paddingLeft = theme.largePadding;
 			});
 		}
 	}

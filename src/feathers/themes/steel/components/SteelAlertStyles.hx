@@ -51,11 +51,11 @@ class SteelAlertStyles {
 				}
 				if (alert.layout == null) {
 					var layout = new HorizontalLayout();
-					layout.paddingTop = 10.0;
-					layout.paddingRight = 10.0;
-					layout.paddingBottom = 10.0;
-					layout.paddingLeft = 10.0;
-					layout.gap = 6.0;
+					layout.paddingTop = theme.largePadding;
+					layout.paddingRight = theme.largePadding;
+					layout.paddingBottom = theme.largePadding;
+					layout.paddingLeft = theme.largePadding;
+					layout.gap = theme.mediumPadding;
 					layout.percentWidthResetEnabled = true;
 					alert.layout = layout;
 				}
@@ -66,11 +66,11 @@ class SteelAlertStyles {
 			styleProvider.setStyleFunction(ButtonBar, Alert.CHILD_VARIANT_BUTTON_BAR, function(buttonBar:ButtonBar):Void {
 				if (buttonBar.layout == null) {
 					var layout = new HorizontalDistributedLayout();
-					layout.paddingTop = 10.0;
-					layout.paddingRight = 10.0;
-					layout.paddingBottom = 10.0;
-					layout.paddingLeft = 10.0;
-					layout.gap = 6.0;
+					layout.paddingTop = theme.largePadding;
+					layout.paddingRight = theme.largePadding;
+					layout.paddingBottom = theme.largePadding;
+					layout.paddingLeft = theme.largePadding;
+					layout.gap = theme.mediumPadding;
 					buttonBar.layout = layout;
 				}
 			});

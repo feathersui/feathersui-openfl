@@ -112,7 +112,7 @@ class SteelRadioStyles {
 				}
 
 				radio.horizontalAlign = LEFT;
-				radio.gap = 4.0;
+				radio.gap = theme.smallPadding;
 			});
 		}
 	}

@@ -46,11 +46,11 @@ class SteelPageIndicatorStyles {
 				}
 				if (pages.layout == null) {
 					var layout = new HorizontalLayout();
-					layout.gap = 10.0;
-					layout.paddingTop = 4.0;
-					layout.paddingRight = 4.0;
-					layout.paddingBottom = 4.0;
-					layout.paddingLeft = 4.0;
+					layout.gap = theme.largePadding;
+					layout.paddingTop = theme.smallPadding;
+					layout.paddingRight = theme.smallPadding;
+					layout.paddingBottom = theme.smallPadding;
+					layout.paddingLeft = theme.smallPadding;
 					layout.horizontalAlign = CENTER;
 					layout.verticalAlign = MIDDLE;
 					pages.layout = layout;

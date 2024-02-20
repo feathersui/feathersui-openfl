@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.Header;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
@@ -32,12 +33,19 @@ class SteelHeaderStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(Header, null) == null) {
 			styleProvider.setStyleFunction(Header, null, function(header:Header):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (header.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getHeaderFill();
-					backgroundSkin.width = 44.0;
-					backgroundSkin.height = 44.0;
-					backgroundSkin.minHeight = 44.0;
+					if (isDesktop) {
+						backgroundSkin.width = 32.0;
+						backgroundSkin.height = 32.0;
+						backgroundSkin.minHeight = 32.0;
+					} else {
+						backgroundSkin.width = 44.0;
+						backgroundSkin.height = 44.0;
+						backgroundSkin.minHeight = 44.0;
+					}
 					header.backgroundSkin = backgroundSkin;
 				}
 				if (header.textFormat == null) {
@@ -47,11 +55,19 @@ class SteelHeaderStyles {
 					header.disabledTextFormat = theme.getDisabledHeaderTextFormat();
 				}
 
-				header.paddingTop = 10.0;
-				header.paddingRight = 10.0;
-				header.paddingBottom = 10.0;
-				header.paddingLeft = 10.0;
-				header.minGap = 10.0;
+				if (isDesktop) {
+					header.paddingTop = theme.mediumPadding;
+					header.paddingRight = theme.largePadding;
+					header.paddingBottom = theme.mediumPadding;
+					header.paddingLeft = theme.largePadding;
+					header.minGap = theme.mediumPadding;
+				} else {
+					header.paddingTop = theme.largePadding;
+					header.paddingRight = theme.largePadding;
+					header.paddingBottom = theme.largePadding;
+					header.paddingLeft = theme.largePadding;
+					header.minGap = theme.largePadding;
+				}
 			});
 		}
 	}

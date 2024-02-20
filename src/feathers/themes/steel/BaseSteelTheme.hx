@@ -8,6 +8,7 @@
 
 package feathers.themes.steel;
 
+import feathers.utils.DeviceUtil;
 import feathers.events.StyleProviderEvent;
 import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
@@ -58,6 +59,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		this.customDarkThemeColor = darkThemeColor;
 		this.refreshColors();
 		this.refreshFonts();
+		this.refreshPaddings();
 		this.styleProvider = new ClassVariantStyleProvider();
 		// there are no calls to setStyleFunction() in the theme by default.
 		// instead, component classes must call setStyleFunction() to keep
@@ -131,6 +133,11 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var fontSize:Int;
 	private var headerFontSize:Int;
 	private var detailFontSize:Int;
+	private var xsmallPadding:Float;
+	private var smallPadding:Float;
+	private var mediumPadding:Float;
+	private var largePadding:Float;
+	private var xlargePadding:Float;
 
 	#if html5
 	@:dox(hide)
@@ -226,9 +233,31 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	}
 
 	private function refreshFontSizes():Void {
-		this.fontSize = 14;
-		this.headerFontSize = 18;
-		this.detailFontSize = 12;
+		if (DeviceUtil.isDesktop()) {
+			this.fontSize = 13;
+			this.headerFontSize = 14;
+			this.detailFontSize = 11;
+		} else {
+			this.fontSize = 14;
+			this.headerFontSize = 18;
+			this.detailFontSize = 12;
+		}
+	}
+
+	private function refreshPaddings():Void {
+		if (DeviceUtil.isDesktop()) {
+			this.xsmallPadding = 2.0;
+			this.smallPadding = 4.0;
+			this.mediumPadding = 6.0;
+			this.largePadding = 10.0;
+			this.xlargePadding = 14.0;
+		} else {
+			this.xsmallPadding = 1.0;
+			this.smallPadding = 2.0;
+			this.mediumPadding = 4.0;
+			this.largePadding = 8.0;
+			this.xlargePadding = 10.0;
+		}
 	}
 
 	private function getThemeFill():FillStyle {
@@ -453,6 +482,8 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	#if html5
 	private function mediaQueryList_changeHandler(event:MediaQueryListEvent):Void {
+		this.refreshFontSizes();
+		this.refreshPaddings();
 		StyleProviderEvent.dispatch(this.styleProvider, StyleProviderEvent.STYLES_CHANGE);
 	}
 	#end

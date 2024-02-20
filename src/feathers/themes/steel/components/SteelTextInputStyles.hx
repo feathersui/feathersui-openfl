@@ -57,10 +57,10 @@ class SteelTextInputStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = 6.0;
-				input.paddingRight = 10.0;
-				input.paddingBottom = 6.0;
-				input.paddingLeft = 10.0;
+				input.paddingTop = theme.mediumPadding;
+				input.paddingRight = theme.largePadding;
+				input.paddingBottom = theme.mediumPadding;
+				input.paddingLeft = theme.largePadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(TextInput, TextInput.VARIANT_SEARCH) == null) {
@@ -86,10 +86,10 @@ class SteelTextInputStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = 6.0;
-				input.paddingRight = 10.0;
-				input.paddingBottom = 6.0;
-				input.paddingLeft = 10.0;
+				input.paddingTop = theme.mediumPadding;
+				input.paddingRight = theme.largePadding;
+				input.paddingBottom = theme.mediumPadding;
+				input.paddingLeft = theme.largePadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(TextCallout, TextInput.CHILD_VARIANT_ERROR_CALLOUT) == null) {

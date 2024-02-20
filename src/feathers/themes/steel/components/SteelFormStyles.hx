@@ -34,7 +34,7 @@ class SteelFormStyles {
 			styleProvider.setStyleFunction(Form, null, function(form:Form):Void {
 				if (form.layout == null) {
 					var layout = new FormLayout();
-					layout.gap = 6.0;
+					layout.gap = theme.mediumPadding;
 					form.layout = layout;
 				}
 			});

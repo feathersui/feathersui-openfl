@@ -48,7 +48,7 @@ class SteelPopUpListViewStyles {
 
 				button.horizontalAlign = LEFT;
 				button.gap = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
-				button.minGap = 6.0;
+				button.minGap = theme.mediumPadding;
 
 				if (button.icon == null) {
 					var icon = new TriangleSkin();
