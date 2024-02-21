@@ -246,17 +246,17 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function refreshPaddings():Void {
 		if (DeviceUtil.isDesktop()) {
-			this.xsmallPadding = 2.0;
-			this.smallPadding = 4.0;
-			this.mediumPadding = 6.0;
-			this.largePadding = 10.0;
-			this.xlargePadding = 14.0;
-		} else {
 			this.xsmallPadding = 1.0;
 			this.smallPadding = 2.0;
 			this.mediumPadding = 4.0;
 			this.largePadding = 8.0;
 			this.xlargePadding = 10.0;
+		} else {
+			this.xsmallPadding = 2.0;
+			this.smallPadding = 4.0;
+			this.mediumPadding = 6.0;
+			this.largePadding = 10.0;
+			this.xlargePadding = 14.0;
 		}
 	}
 
