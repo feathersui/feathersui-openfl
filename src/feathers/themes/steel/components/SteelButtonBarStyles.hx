@@ -32,11 +32,11 @@ class SteelButtonBarStyles {
 		var styleProvider = theme.styleProvider;
 
 		if (styleProvider.getStyleFunction(ButtonBar, null) == null) {
-			styleProvider.setStyleFunction(ButtonBar, null, function(tabBar:ButtonBar):Void {
-				if (tabBar.layout == null) {
+			styleProvider.setStyleFunction(ButtonBar, null, function(buttonBar:ButtonBar):Void {
+				if (buttonBar.layout == null) {
 					var layout = new HorizontalLayout();
 					layout.gap = theme.mediumPadding;
-					tabBar.layout = layout;
+					buttonBar.layout = layout;
 				}
 			});
 		}
