@@ -177,7 +177,7 @@ class SteelTreeGridViewStyles {
 						itemRenderer.backgroundSkin = backgroundSkin;
 					}
 					// except for the background skin, use other default styles
-					theme.styleProvider.getStyleFunction(ItemRenderer, null)(itemRenderer);
+					theme.styleProvider.getStyleFunction(HierarchicalItemRenderer, null)(itemRenderer);
 				});
 		}
 
