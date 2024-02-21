@@ -1068,13 +1068,21 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function decrement():Void {
-		var newValue = this._value - this._step;
+		var step = this._step;
+		if (step <= 0.0) {
+			step = 1.0;
+		}
+		var newValue = this._value - step;
 		newValue = this.restrictValue(newValue);
 		this.value = newValue;
 	}
 
 	private function increment():Void {
-		var newValue = this._value + this._step;
+		var step = this._step;
+		if (step <= 0.0) {
+			step = 1.0;
+		}
+		var newValue = this._value + step;
 		newValue = this.restrictValue(newValue);
 		this.value = newValue;
 	}
