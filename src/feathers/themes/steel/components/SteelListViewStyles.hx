@@ -54,7 +54,7 @@ class SteelListViewStyles {
 
 			if (listView.focusRectSkin == null) {
 				var focusRectSkin = new RectangleSkin();
-				focusRectSkin.fill = null;
+				focusRectSkin.fill = None;
 				focusRectSkin.border = theme.getFocusBorder();
 				listView.focusRectSkin = focusRectSkin;
 			}
@@ -80,6 +80,7 @@ class SteelListViewStyles {
 			if (listView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
+				backgroundSkin.border = None;
 				backgroundSkin.width = 10.0;
 				backgroundSkin.height = 10.0;
 				listView.backgroundSkin = backgroundSkin;
@@ -87,7 +88,7 @@ class SteelListViewStyles {
 
 			if (listView.focusRectSkin == null) {
 				var focusRectSkin = new RectangleSkin();
-				focusRectSkin.fill = null;
+				focusRectSkin.fill = None;
 				focusRectSkin.border = theme.getFocusBorder();
 				listView.focusRectSkin = focusRectSkin;
 			}

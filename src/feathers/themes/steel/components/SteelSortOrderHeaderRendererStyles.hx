@@ -39,6 +39,7 @@ class SteelSortOrderHeaderRendererStyles {
 				if (itemRenderer.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getSubHeadingFill();
+					skin.border = None;
 					if (isDesktop) {
 						skin.width = 22.0;
 						skin.height = 22.0;

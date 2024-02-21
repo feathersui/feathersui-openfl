@@ -60,7 +60,7 @@ class SteelTreeGridViewStyles {
 			if (gridView.columnResizeSkin == null) {
 				var columnResizeSkin = new RectangleSkin();
 				columnResizeSkin.fill = theme.getThemeFill();
-				columnResizeSkin.border = null;
+				columnResizeSkin.border = None;
 				columnResizeSkin.width = 2.0;
 				columnResizeSkin.height = 2.0;
 				gridView.columnResizeSkin = columnResizeSkin;
@@ -69,12 +69,13 @@ class SteelTreeGridViewStyles {
 			if (gridView.headerCornerSkin == null) {
 				var headerCornerSkin = new RectangleSkin();
 				headerCornerSkin.fill = theme.getSubHeadingFill();
+				headerCornerSkin.border = None;
 				gridView.headerCornerSkin = headerCornerSkin;
 			}
 
 			if (gridView.focusRectSkin == null) {
 				var focusRectSkin = new RectangleSkin();
-				focusRectSkin.fill = null;
+				focusRectSkin.fill = None;
 				focusRectSkin.border = theme.getFocusBorder();
 				gridView.focusRectSkin = focusRectSkin;
 			}
@@ -102,6 +103,7 @@ class SteelTreeGridViewStyles {
 			if (gridView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
+				backgroundSkin.border = None;
 				backgroundSkin.width = 10.0;
 				backgroundSkin.height = 10.0;
 				gridView.backgroundSkin = backgroundSkin;
@@ -110,7 +112,7 @@ class SteelTreeGridViewStyles {
 			if (gridView.columnResizeSkin == null) {
 				var columnResizeSkin = new RectangleSkin();
 				columnResizeSkin.fill = theme.getThemeFill();
-				columnResizeSkin.border = null;
+				columnResizeSkin.border = None;
 				columnResizeSkin.width = 2.0;
 				columnResizeSkin.height = 2.0;
 				gridView.columnResizeSkin = columnResizeSkin;
@@ -119,12 +121,13 @@ class SteelTreeGridViewStyles {
 			if (gridView.headerCornerSkin == null) {
 				var headerCornerSkin = new RectangleSkin();
 				headerCornerSkin.fill = theme.getSubHeadingFill();
+				headerCornerSkin.border = None;
 				gridView.headerCornerSkin = headerCornerSkin;
 			}
 
 			if (gridView.focusRectSkin == null) {
 				var skin = new RectangleSkin();
-				skin.fill = null;
+				skin.fill = None;
 				skin.border = theme.getFocusBorder();
 				gridView.focusRectSkin = skin;
 			}
@@ -185,6 +188,7 @@ class SteelTreeGridViewStyles {
 				if (itemRenderer.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getSubHeadingFill();
+					skin.border = None;
 					if (isDesktop) {
 						skin.width = 22.0;
 						skin.height = 22.0;
@@ -228,8 +232,8 @@ class SteelTreeGridViewStyles {
 
 				if (headerDivider.backgroundSkin == null) {
 					var skin = new VerticalLineSkin();
-					skin.border = theme.getSubHeadingDividerBorder();
 					skin.fill = SolidColor(0xff00ff, 0.0);
+					skin.border = theme.getSubHeadingDividerBorder();
 					skin.setBorderForState(HOVER, theme.getThemeBorder());
 					if (isDesktop) {
 						skin.width = 6.0;

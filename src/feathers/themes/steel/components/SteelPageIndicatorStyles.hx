@@ -39,7 +39,7 @@ class SteelPageIndicatorStyles {
 			styleProvider.setStyleFunction(PageIndicator, null, function(pages:PageIndicator):Void {
 				if (pages.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					focusRectSkin.cornerRadius = 3.0;
 					pages.focusRectSkin = focusRectSkin;

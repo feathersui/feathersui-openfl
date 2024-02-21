@@ -45,7 +45,7 @@ class SteelCheckStyles {
 				if (check.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = SolidColor(0x000000, 0.0);
-					backgroundSkin.border = null;
+					backgroundSkin.border = None;
 					check.backgroundSkin = backgroundSkin;
 				}
 
@@ -111,7 +111,7 @@ class SteelCheckStyles {
 
 				if (check.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					focusRectSkin.cornerRadius = 3.0;
 					check.focusRectSkin = focusRectSkin;

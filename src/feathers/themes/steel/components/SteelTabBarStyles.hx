@@ -45,11 +45,12 @@ class SteelTabBarStyles {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getControlFill();
 					skin.disabledFill = theme.getControlDisabledFill();
+					skin.border = None;
 					tabBar.backgroundSkin = skin;
 				}
 				if (tabBar.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					tabBar.focusRectSkin = focusRectSkin;
 				}

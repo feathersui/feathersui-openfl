@@ -54,7 +54,7 @@ class SteelTreeViewStyles {
 
 			if (treeView.focusRectSkin == null) {
 				var focusRectSkin = new RectangleSkin();
-				focusRectSkin.fill = null;
+				focusRectSkin.fill = None;
 				focusRectSkin.border = theme.getFocusBorder();
 				treeView.focusRectSkin = focusRectSkin;
 			}
@@ -78,6 +78,7 @@ class SteelTreeViewStyles {
 			if (treeView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
+				backgroundSkin.border = None;
 				backgroundSkin.width = 10.0;
 				backgroundSkin.height = 10.0;
 				treeView.backgroundSkin = backgroundSkin;
@@ -85,7 +86,7 @@ class SteelTreeViewStyles {
 
 			if (treeView.focusRectSkin == null) {
 				var skin = new RectangleSkin();
-				skin.fill = null;
+				skin.fill = None;
 				skin.border = theme.getFocusBorder();
 				treeView.focusRectSkin = skin;
 			}

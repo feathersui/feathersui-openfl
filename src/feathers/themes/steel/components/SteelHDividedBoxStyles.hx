@@ -35,7 +35,7 @@ class SteelHDividedBoxStyles {
 				if (dividedBox.resizeDraggingSkin == null) {
 					var resizeDraggingSkin = new RectangleSkin();
 					resizeDraggingSkin.fill = theme.getThemeFill();
-					resizeDraggingSkin.border = null;
+					resizeDraggingSkin.border = None;
 					resizeDraggingSkin.width = 2.0;
 					resizeDraggingSkin.height = 2.0;
 					dividedBox.resizeDraggingSkin = resizeDraggingSkin;

@@ -41,13 +41,14 @@ class SteelDatePickerStyles {
 			styleProvider.setStyleFunction(DatePicker, null, function(datePicker:DatePicker):Void {
 				if (datePicker.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.border = None;
 					backgroundSkin.fill = theme.getContainerFill();
 					datePicker.backgroundSkin = backgroundSkin;
 				}
 
 				if (datePicker.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					datePicker.focusRectSkin = focusRectSkin;
 				}
@@ -237,6 +238,7 @@ class SteelDatePickerStyles {
 					backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
 					backgroundSkin.selectedFill = theme.getActiveThemeFill();
 					backgroundSkin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
+					backgroundSkin.border = None;
 					backgroundSkin.selectedBorder = theme.getSelectedBorder();
 					backgroundSkin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
 					if (isDesktop) {
@@ -280,6 +282,7 @@ class SteelDatePickerStyles {
 					backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
 					backgroundSkin.selectedFill = theme.getActiveThemeFill();
 					backgroundSkin.setFillForState(ToggleButtonState.DOWN(false), theme.getReversedActiveThemeFill());
+					backgroundSkin.border = None;
 					backgroundSkin.selectedBorder = theme.getSelectedBorder();
 					backgroundSkin.setBorderForState(ToggleButtonState.DOWN(false), theme.getActiveFillBorder());
 					if (isDesktop) {

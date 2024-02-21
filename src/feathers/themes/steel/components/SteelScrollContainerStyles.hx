@@ -41,18 +41,20 @@ class SteelScrollContainerStyles {
 				if (container.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getContainerFill();
+					backgroundSkin.border = None;
 					container.backgroundSkin = backgroundSkin;
 				}
 
 				if (container.scrollBarsCornerSkin == null) {
 					var scrollBarsCornerSkin = new RectangleSkin();
 					scrollBarsCornerSkin.fill = theme.getContainerFill();
+					scrollBarsCornerSkin.border = None;
 					container.scrollBarsCornerSkin = scrollBarsCornerSkin;
 				}
 
 				if (container.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					container.focusRectSkin = focusRectSkin;
 				}

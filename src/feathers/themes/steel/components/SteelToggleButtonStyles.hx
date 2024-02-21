@@ -50,7 +50,7 @@ class SteelToggleButtonStyles {
 
 				if (button.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					focusRectSkin.cornerRadius = 3.0;
 					button.focusRectSkin = focusRectSkin;

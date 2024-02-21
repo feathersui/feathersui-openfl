@@ -43,6 +43,7 @@ class SteelHScrollBarStyles {
 					var thumbSkin = new RectangleSkin();
 					thumbSkin.fill = theme.getScrollBarThumbFill();
 					thumbSkin.disabledFill = theme.getScrollBarThumbDisabledFill();
+					thumbSkin.border = None;
 					var size = isDesktop ? 6.0 : 4.0;
 					thumbSkin.width = size;
 					thumbSkin.height = size;
@@ -60,6 +61,7 @@ class SteelHScrollBarStyles {
 					var trackSkin = new RectangleSkin();
 					trackSkin.fill = theme.getControlFill();
 					trackSkin.disabledFill = theme.getControlDisabledFill();
+					trackSkin.border = None;
 					trackSkin.width = 12.0;
 					trackSkin.height = 12.0;
 					trackSkin.minWidth = 12.0;

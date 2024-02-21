@@ -46,7 +46,7 @@ class SteelRadioStyles {
 				if (radio.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = SolidColor(0x000000, 0.0);
-					backgroundSkin.border = null;
+					backgroundSkin.border = None;
 					radio.backgroundSkin = backgroundSkin;
 				}
 
@@ -100,7 +100,7 @@ class SteelRadioStyles {
 
 				if (radio.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					focusRectSkin.cornerRadius = 3.0;
 					radio.focusRectSkin = focusRectSkin;

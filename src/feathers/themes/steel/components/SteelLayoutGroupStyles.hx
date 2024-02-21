@@ -38,6 +38,7 @@ class SteelLayoutGroupStyles {
 				if (group.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getHeaderFill();
+					backgroundSkin.border = None;
 					if (isDesktop) {
 						backgroundSkin.width = 32.0;
 						backgroundSkin.height = 32.0;

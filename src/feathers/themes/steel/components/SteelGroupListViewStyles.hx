@@ -55,7 +55,7 @@ class SteelGroupListViewStyles {
 
 			if (listView.focusRectSkin == null) {
 				var focusRectSkin = new RectangleSkin();
-				focusRectSkin.fill = null;
+				focusRectSkin.fill = None;
 				focusRectSkin.border = theme.getFocusBorder();
 				listView.focusRectSkin = focusRectSkin;
 			}
@@ -81,6 +81,7 @@ class SteelGroupListViewStyles {
 			if (listView.backgroundSkin == null) {
 				var backgroundSkin = new RectangleSkin();
 				backgroundSkin.fill = theme.getContainerFill();
+				backgroundSkin.border = None;
 				backgroundSkin.width = 10.0;
 				backgroundSkin.height = 10.0;
 				listView.backgroundSkin = backgroundSkin;
@@ -88,7 +89,7 @@ class SteelGroupListViewStyles {
 
 			if (listView.focusRectSkin == null) {
 				var skin = new RectangleSkin();
-				skin.fill = null;
+				skin.fill = None;
 				skin.border = theme.getFocusBorder();
 				listView.focusRectSkin = skin;
 			}
@@ -117,6 +118,7 @@ class SteelGroupListViewStyles {
 				if (itemRenderer.backgroundSkin == null) {
 					var skin = new RectangleSkin();
 					skin.fill = theme.getSubHeadingFill();
+					skin.border = None;
 					skin.width = 22.0;
 					skin.height = 22.0;
 					skin.minWidth = 22.0;

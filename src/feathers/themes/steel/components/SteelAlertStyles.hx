@@ -45,6 +45,7 @@ class SteelAlertStyles {
 
 				if (alert.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
+					backgroundSkin.border = None;
 					backgroundSkin.fill = theme.getContainerFill();
 					backgroundSkin.maxWidth = 276.0;
 					alert.backgroundSkin = backgroundSkin;

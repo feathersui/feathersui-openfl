@@ -50,7 +50,7 @@ class SteelHSliderStyles {
 					thumb.backgroundSkin = backgroundSkin;
 
 					var focusRectSkin = new CircleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					thumb.focusRectSkin = focusRectSkin;
 

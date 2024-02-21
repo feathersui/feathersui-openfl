@@ -41,12 +41,14 @@ class SteelPanelStyles {
 				if (panel.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.fill = theme.getContainerFill();
+					backgroundSkin.border = None;
 					panel.backgroundSkin = backgroundSkin;
 				}
 
 				if (panel.scrollBarsCornerSkin == null) {
 					var scrollBarsCornerSkin = new RectangleSkin();
 					scrollBarsCornerSkin.fill = theme.getContainerFill();
+					scrollBarsCornerSkin.border = None;
 					panel.scrollBarsCornerSkin = scrollBarsCornerSkin;
 				}
 			});

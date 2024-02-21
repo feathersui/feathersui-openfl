@@ -90,7 +90,7 @@ class SteelToggleSwitchStyles {
 				}
 				if (toggle.focusRectSkin == null) {
 					var focusRectSkin = new RectangleSkin();
-					focusRectSkin.fill = null;
+					focusRectSkin.fill = None;
 					focusRectSkin.border = theme.getFocusBorder();
 					if (isDesktop) {
 						focusRectSkin.cornerRadius = 12.0;

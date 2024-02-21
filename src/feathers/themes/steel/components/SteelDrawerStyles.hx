@@ -35,7 +35,7 @@ class SteelDrawerStyles {
 				if (drawer.overlaySkin == null) {
 					var overlaySkin = new RectangleSkin();
 					overlaySkin.fill = theme.getOverlayFill();
-					overlaySkin.border = null;
+					overlaySkin.border = None;
 					overlaySkin.width = 1.0;
 					overlaySkin.height = 1.0;
 					drawer.overlaySkin = overlaySkin;
