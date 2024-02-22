@@ -1627,6 +1627,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	private function getCurrentPromptTextFormat():TextFormat {
 		var textFormat = this.promptTextFormat;
+		if (!this._enabled && this.disabledTextFormat != null) {
+			textFormat = this.disabledTextFormat;
+		}
 		if (textFormat == null) {
 			textFormat = this.textFormat;
 		}

@@ -1075,6 +1075,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 	private function getCurrentPromptTextFormat():TextFormat {
 		var textFormat = this.promptTextFormat;
+		if (!this._enabled && this.disabledTextFormat != null) {
+			textFormat = this.disabledTextFormat;
+		}
 		if (textFormat == null) {
 			textFormat = this.textFormat;
 		}
