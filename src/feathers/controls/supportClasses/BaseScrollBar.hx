@@ -202,6 +202,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		return this._maximum;
 	}
 
+	// this should not be 0.0 by default because 0.0 breaks keyboard events
 	private var _step:Float = 0.01;
 
 	/**
@@ -1068,21 +1069,13 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	private function decrement():Void {
-		var step = this._step;
-		if (step <= 0.0) {
-			step = 1.0;
-		}
-		var newValue = this._value - step;
+		var newValue = this._value - this._step;
 		newValue = this.restrictValue(newValue);
 		this.value = newValue;
 	}
 
 	private function increment():Void {
-		var step = this._step;
-		if (step <= 0.0) {
-			step = 1.0;
-		}
-		var newValue = this._value + step;
+		var newValue = this._value + this._step;
 		newValue = this.restrictValue(newValue);
 		this.value = newValue;
 	}

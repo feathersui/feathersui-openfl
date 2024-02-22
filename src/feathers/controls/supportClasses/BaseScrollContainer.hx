@@ -754,7 +754,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return this.scroller.maxScrollY;
 	}
 
-	private var _scrollStepX:Float = 0.0;
+	private var _scrollStepX:Float = 1.0;
 
 	/**
 		The number of pixels the horizontal scroll position can be adjusted by
@@ -784,7 +784,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 		return this._scrollStepX;
 	}
 
-	private var _scrollStepY:Float = 0.0;
+	private var _scrollStepY:Float = 1.0;
 
 	/**
 		The number of pixels the vertical scroll position can be adjusted by
