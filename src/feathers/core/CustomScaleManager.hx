@@ -18,7 +18,7 @@ import openfl.geom.Rectangle;
 /**
 	Allows the application's scale to be set manually to a specific value,
 	instead of calculating it automatically, like other scale managers. Defaults
-	to automtically calculating the application dimensions to fill the stage
+	to automatically calculating the application dimensions to fill the stage
 	dimensions, but can optionally accept custom application dimensions too.
 
 	The following example creates a `CustomScaleManager` with a scale value of
