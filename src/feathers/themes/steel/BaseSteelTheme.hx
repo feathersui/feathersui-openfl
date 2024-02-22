@@ -129,10 +129,13 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var dangerFillColor:Int;
 	private var offsetDangerFillColor:Int;
 	private var dangerBorderColor:Int;
+
 	private var fontName:String;
 	private var fontSize:Int;
 	private var headerFontSize:Int;
 	private var detailFontSize:Int;
+
+	private var borderThickness:Float;
 	private var xsmallPadding:Float;
 	private var smallPadding:Float;
 	private var mediumPadding:Float;
@@ -246,12 +249,14 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function refreshPaddings():Void {
 		if (DeviceUtil.isDesktop()) {
+			this.borderThickness = 1.0;
 			this.xsmallPadding = 1.0;
 			this.smallPadding = 2.0;
 			this.mediumPadding = 4.0;
 			this.largePadding = 8.0;
 			this.xlargePadding = 10.0;
 		} else {
+			this.borderThickness = 1.0;
 			this.xsmallPadding = 2.0;
 			this.smallPadding = 4.0;
 			this.mediumPadding = 6.0;

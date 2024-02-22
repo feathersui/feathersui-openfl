@@ -59,10 +59,10 @@ class SteelTreeViewStyles {
 				treeView.focusRectSkin = focusRectSkin;
 			}
 
-			treeView.paddingTop = 1.0;
-			treeView.paddingRight = 1.0;
-			treeView.paddingBottom = 1.0;
-			treeView.paddingLeft = 1.0;
+			treeView.paddingTop = theme.borderThickness;
+			treeView.paddingRight = theme.borderThickness;
+			treeView.paddingBottom = theme.borderThickness;
+			treeView.paddingLeft = theme.borderThickness;
 		}
 
 		function styleTreeViewWithBorderlessVariant(treeView:TreeView):Void {

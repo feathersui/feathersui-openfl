@@ -82,10 +82,10 @@ class SteelTreeGridViewStyles {
 
 			gridView.showHeaderDividersOnlyWhenResizable = true;
 
-			gridView.paddingTop = 1.0;
-			gridView.paddingRight = 1.0;
-			gridView.paddingBottom = 1.0;
-			gridView.paddingLeft = 1.0;
+			gridView.paddingTop = theme.borderThickness;
+			gridView.paddingRight = theme.borderThickness;
+			gridView.paddingBottom = theme.borderThickness;
+			gridView.paddingLeft = theme.borderThickness;
 		}
 
 		function styleGridViewWithBorderlessVariant(gridView:TreeGridView):Void {

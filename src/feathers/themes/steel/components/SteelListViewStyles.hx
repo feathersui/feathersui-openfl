@@ -59,10 +59,10 @@ class SteelListViewStyles {
 				listView.focusRectSkin = focusRectSkin;
 			}
 
-			listView.paddingTop = 1.0;
-			listView.paddingRight = 1.0;
-			listView.paddingBottom = 1.0;
-			listView.paddingLeft = 1.0;
+			listView.paddingTop = theme.borderThickness;
+			listView.paddingRight = theme.borderThickness;
+			listView.paddingBottom = theme.borderThickness;
+			listView.paddingLeft = theme.borderThickness;
 		}
 
 		function styleListViewWithBorderlessVariant(listView:ListView):Void {

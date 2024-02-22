@@ -62,10 +62,10 @@ class SteelTextAreaStyles {
 					textArea.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				textArea.paddingTop = 1.0;
-				textArea.paddingRight = 1.0;
-				textArea.paddingBottom = 1.0;
-				textArea.paddingLeft = 1.0;
+				textArea.paddingTop = theme.borderThickness;
+				textArea.paddingRight = theme.borderThickness;
+				textArea.paddingBottom = theme.borderThickness;
+				textArea.paddingLeft = theme.borderThickness;
 
 				textArea.textPaddingTop = theme.mediumPadding;
 				textArea.textPaddingRight = theme.largePadding;

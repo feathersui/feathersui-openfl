@@ -86,20 +86,20 @@ class SteelTextCalloutStyles {
 					callout.leftArrowSkin = leftArrowSkin;
 				}
 
-				callout.topArrowGap = -1.0;
-				callout.rightArrowGap = -1.0;
-				callout.bottomArrowGap = -1.0;
-				callout.leftArrowGap = -1.0;
+				callout.topArrowGap = -theme.borderThickness;
+				callout.rightArrowGap = -theme.borderThickness;
+				callout.bottomArrowGap = -theme.borderThickness;
+				callout.leftArrowGap = -theme.borderThickness;
 
-				callout.paddingTop = 1.0;
-				callout.paddingRight = 1.0;
-				callout.paddingBottom = 1.0;
-				callout.paddingLeft = 1.0;
+				callout.paddingTop = theme.borderThickness;
+				callout.paddingRight = theme.borderThickness;
+				callout.paddingBottom = theme.borderThickness;
+				callout.paddingLeft = theme.borderThickness;
 
-				callout.marginTop = 10.0;
-				callout.marginRight = 10.0;
-				callout.marginBottom = 10.0;
-				callout.marginLeft = 10.0;
+				callout.marginTop = theme.xlargePadding;
+				callout.marginRight = theme.xlargePadding;
+				callout.marginBottom = theme.xlargePadding;
+				callout.marginLeft = theme.xlargePadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(TextCallout, TextCallout.VARIANT_DANGER) == null) {
@@ -157,20 +157,20 @@ class SteelTextCalloutStyles {
 					callout.leftArrowSkin = leftArrowSkin;
 				}
 
-				callout.topArrowGap = -1.0;
-				callout.rightArrowGap = -1.0;
-				callout.bottomArrowGap = -1.0;
-				callout.leftArrowGap = -1.0;
+				callout.topArrowGap = -theme.borderThickness;
+				callout.rightArrowGap = -theme.borderThickness;
+				callout.bottomArrowGap = -theme.borderThickness;
+				callout.leftArrowGap = -theme.borderThickness;
 
-				callout.paddingTop = 1.0;
-				callout.paddingRight = 1.0;
-				callout.paddingBottom = 1.0;
-				callout.paddingLeft = 1.0;
+				callout.paddingTop = theme.borderThickness;
+				callout.paddingRight = theme.borderThickness;
+				callout.paddingBottom = theme.borderThickness;
+				callout.paddingLeft = theme.borderThickness;
 
-				callout.marginTop = 10.0;
-				callout.marginRight = 10.0;
-				callout.marginBottom = 10.0;
-				callout.marginLeft = 10.0;
+				callout.marginTop = theme.xlargePadding;
+				callout.marginRight = theme.xlargePadding;
+				callout.marginBottom = theme.xlargePadding;
+				callout.marginLeft = theme.xlargePadding;
 			});
 		}
 	}
