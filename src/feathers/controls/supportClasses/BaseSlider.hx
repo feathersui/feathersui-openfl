@@ -182,6 +182,9 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		Indicates the amount that `value` is changed when the slider has focus
 		and one of the arrow keys is pressed.
 
+		The value should always be greater than `0.0` to ensure that the slider
+		reacts to keyboard events when focused.
+
 		In the following example, the step is changed to `1.0`:
 
 		```haxe

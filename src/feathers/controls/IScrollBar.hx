@@ -26,6 +26,11 @@ interface IScrollBar extends IRange {
 	/**
 		The amount the value must change to increment or decrement by a "step".
 
+		The value should always be greater than `0.0` to ensure that the scroll
+		bar reacts to keyboard events when focused, and to ensure that the
+		increment and decrement buttons change the value when they are
+		triggered.
+
 		@since 1.0.0
 	**/
 	public var step(get, set):Float;

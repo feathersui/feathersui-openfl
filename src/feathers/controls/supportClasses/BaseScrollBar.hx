@@ -209,6 +209,11 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		When the scroll bar's increment/decrement buttons are triggered, the
 		`value` is modified by adding or subtracting `step`.
 
+		The value should always be greater than `0.0` to ensure that the scroll
+		bar reacts to keyboard events when focused, and to ensure that the
+		increment and decrement buttons change the value when they are
+		triggered.
+
 		In the following example, the step is changed to `1.0`:
 
 		```haxe

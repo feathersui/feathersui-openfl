@@ -268,6 +268,11 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		Indicates the amount that `value` is changed when the stepper has focus
 		and one of the arrow keys is pressed.
 
+		The value should always be greater than `0.0` to ensure that the numeric
+		stepper reacts to keyboard events when focused, and to ensure that the
+		increment and decrement buttons change the value when they are
+		triggered.
+
 		In the following example, the step is changed to `1.0`:
 
 		```haxe
