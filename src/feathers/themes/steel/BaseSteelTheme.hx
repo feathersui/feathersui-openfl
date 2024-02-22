@@ -402,35 +402,35 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	}
 
 	private function getTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.textColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.fontSize, this.textColor, false, false, false, null, null, align);
 	}
 
 	private function getDisabledTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.disabledTextColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.fontSize, this.disabledTextColor, false, false, false, null, null, align);
 	}
 
 	private function getSecondaryTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.secondaryTextColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.fontSize, this.secondaryTextColor, false, false, false, null, null, align);
 	}
 
 	private function getDangerTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.fontSize, this.dangerTextColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.fontSize, this.dangerTextColor, false, false, false, null, null, align);
 	}
 
 	private function getHeaderTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.headerFontSize, this.textColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.headerFontSize, this.textColor, false, false, false, null, null, align);
 	}
 
 	private function getDisabledHeaderTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.headerFontSize, this.disabledTextColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.headerFontSize, this.disabledTextColor, false, false, false, null, null, align);
 	}
 
 	private function getDetailTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.detailFontSize, this.secondaryTextColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.detailFontSize, this.secondaryTextColor, false, false, false, null, null, align);
 	}
 
 	private function getDisabledDetailTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.detailFontSize, this.disabledTextColor, null, null, null, null, null, align);
+		return new TextFormat(this.fontName, this.detailFontSize, this.disabledTextColor, false, false, false, null, null, align);
 	}
 
 	private function getHeaderFill():FillStyle {
