@@ -786,6 +786,10 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if ((this._currentContent is IMeasureObject)) {
 			measureContent = cast this._currentContent;
 		}
+		var measureRequiredSkin:IMeasureObject = null;
+		if ((this._currentRequiredSkin is IMeasureObject)) {
+			measureRequiredSkin = cast this._currentRequiredSkin;
+		}
 
 		if (this._currentContent != null) {
 			var textWidthOffset = 0.0;
@@ -834,7 +838,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			newWidth = this._textMeasuredWidth;
 			if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
 				newWidth = this._customTextColumnWidth;
-			} else if (this._requiredSkinMeasurements != null) {
+			} else if (measureRequiredSkin != null) {
+				newWidth += this.gap + measureRequiredSkin.width;
+			} else if (this._requiredSkinMeasurements != null && this._requiredSkinMeasurements.width != null) {
 				newWidth += this.gap + this._requiredSkinMeasurements.width;
 			}
 			newWidth += this.paddingLeft + this.paddingRight;
@@ -852,7 +858,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		var newHeight = this.explicitHeight;
 		if (needsHeight) {
 			newHeight = this._textMeasuredHeight;
-			if (this._requiredSkinMeasurements != null) {
+			if (measureRequiredSkin != null) {
+				newHeight = Math.max(newHeight, measureRequiredSkin.height);
+			} else if (this._requiredSkinMeasurements != null && this._requiredSkinMeasurements.height != null) {
 				newHeight = Math.max(newHeight, this._requiredSkinMeasurements.height);
 			}
 			if (this._currentContent != null) {
@@ -873,7 +881,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			newMinWidth = this._textMeasuredWidth;
 			if (this._customTextColumnWidth != null && (this.textPosition == LEFT || this.textPosition == RIGHT)) {
 				newMinWidth = this._customTextColumnWidth;
-			} else if (this._requiredSkinMeasurements != null) {
+			} else if (measureRequiredSkin != null) {
+				newMinWidth += this.gap + measureRequiredSkin.width;
+			} else if (this._requiredSkinMeasurements != null && this._requiredSkinMeasurements.width != null) {
 				newMinWidth += this.gap + this._requiredSkinMeasurements.width;
 			}
 			newMinWidth += this.paddingLeft + this.paddingRight;
@@ -903,7 +913,9 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
 			newMinHeight = this._textMeasuredHeight;
-			if (this._requiredSkinMeasurements != null) {
+			if (measureRequiredSkin != null) {
+				newMinHeight = Math.max(newMinHeight, measureRequiredSkin.height);
+			} else if (this._requiredSkinMeasurements != null && this._requiredSkinMeasurements.height != null) {
 				newMinHeight = Math.max(newMinHeight, this._requiredSkinMeasurements.height);
 			}
 			if (this._currentContent != null) {
