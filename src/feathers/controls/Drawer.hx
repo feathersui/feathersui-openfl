@@ -556,32 +556,40 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		if (needsMinWidth) {
 			if (measureContent != null) {
 				newMinWidth = measureContent.minWidth;
-			} else if (this._contentMeasurements != null) {
+			} else if (this._contentMeasurements != null && this._contentMeasurements.minWidth != null) {
 				newMinWidth = this._contentMeasurements.minWidth;
+			} else {
+				newMinWidth = 0.0;
 			}
 		}
 		var newMinHeight = this.explicitMinHeight;
 		if (needsMinHeight) {
 			if (measureContent != null) {
 				newMinHeight = measureContent.minHeight;
-			} else if (this._contentMeasurements != null) {
+			} else if (this._contentMeasurements != null && this._contentMeasurements.minHeight != null) {
 				newMinHeight = this._contentMeasurements.minHeight;
+			} else {
+				newMinHeight = 0.0;
 			}
 		}
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
 			if (measureContent != null) {
 				newMaxWidth = measureContent.maxWidth;
-			} else if (this._contentMeasurements != null) {
+			} else if (this._contentMeasurements != null && this._contentMeasurements.maxWidth != null) {
 				newMaxWidth = this._contentMeasurements.maxWidth;
+			} else {
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
 			if (measureContent != null) {
 				newMaxHeight = measureContent.maxHeight;
-			} else if (this._contentMeasurements != null) {
+			} else if (this._contentMeasurements != null && this._contentMeasurements.maxHeight != null) {
 				newMaxHeight = this._contentMeasurements.maxHeight;
+			} else {
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 

@@ -309,7 +309,7 @@ class MultiSkin extends ProgrammaticSkin {
 			newMinWidth = 0.0;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
-			} else if (this._currentViewMeasurements != null) {
+			} else if (this._currentViewMeasurements != null && this._currentViewMeasurements.minWidth != null) {
 				newMinWidth = Math.max(this._currentViewMeasurements.minWidth, newMinWidth);
 			}
 		}
@@ -319,27 +319,29 @@ class MultiSkin extends ProgrammaticSkin {
 			newMinHeight = 0.0;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
-			} else if (this._currentViewMeasurements != null) {
+			} else if (this._currentViewMeasurements != null && this._currentViewMeasurements.minHeight != null) {
 				newMinHeight = Math.max(this._currentViewMeasurements.minHeight, newMinHeight);
 			}
 		}
 		var newMaxWidth = this.explicitMaxWidth;
 		if (needsMaxWidth) {
-			newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
-			} else if (this._currentViewMeasurements != null) {
+			} else if (this._currentViewMeasurements != null && this._currentViewMeasurements.maxWidth != null) {
 				newMaxWidth = this._currentViewMeasurements.maxWidth;
+			} else {
+				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 
 		var newMaxHeight = this.explicitMaxHeight;
 		if (needsMaxHeight) {
-			newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			if (measureSkin != null) {
 				newMaxHeight = measureSkin.maxHeight;
-			} else if (this._currentViewMeasurements != null) {
+			} else if (this._currentViewMeasurements != null && this._currentViewMeasurements.maxHeight != null) {
 				newMaxHeight = this._currentViewMeasurements.maxHeight;
+			} else {
+				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
 			}
 		}
 

@@ -160,7 +160,7 @@ class ActivityIndicator extends FeathersControl {
 			newMinWidth = 0.0;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
-			} else if (this._activitySkinMeasurements != null) {
+			} else if (this._activitySkinMeasurements != null && this._activitySkinMeasurements.minWidth != null) {
 				newMinWidth = Math.max(this._activitySkinMeasurements.minWidth, newMinWidth);
 			}
 		}
@@ -170,7 +170,7 @@ class ActivityIndicator extends FeathersControl {
 			newMinHeight = 0.0;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
-			} else if (this._activitySkinMeasurements != null) {
+			} else if (this._activitySkinMeasurements != null && this._activitySkinMeasurements.minHeight != null) {
 				newMinHeight = Math.max(this._activitySkinMeasurements.minHeight, newMinHeight);
 			}
 		}
@@ -178,7 +178,7 @@ class ActivityIndicator extends FeathersControl {
 		if (needsMaxWidth) {
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
-			} else if (this._activitySkinMeasurements != null) {
+			} else if (this._activitySkinMeasurements != null && this._activitySkinMeasurements.maxWidth != null) {
 				newMaxWidth = this._activitySkinMeasurements.maxWidth;
 			} else {
 				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
@@ -189,7 +189,7 @@ class ActivityIndicator extends FeathersControl {
 		if (needsMaxHeight) {
 			if (measureSkin != null) {
 				newMaxHeight = measureSkin.maxHeight;
-			} else if (this._activitySkinMeasurements != null) {
+			} else if (this._activitySkinMeasurements != null && this._activitySkinMeasurements.maxHeight != null) {
 				newMaxHeight = this._activitySkinMeasurements.maxHeight;
 			} else {
 				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf

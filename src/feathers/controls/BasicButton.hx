@@ -350,7 +350,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		if (needsMinWidth) {
 			if (measureSkin != null) {
 				newMinWidth = measureSkin.minWidth;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minWidth != null) {
 				newMinWidth = this._backgroundSkinMeasurements.minWidth;
 			} else {
 				newMinWidth = 0.0;
@@ -361,7 +361,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		if (needsMinHeight) {
 			if (measureSkin != null) {
 				newMinHeight = measureSkin.minHeight;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minHeight != null) {
 				newMinHeight = this._backgroundSkinMeasurements.minHeight;
 			} else {
 				newMinHeight = 0.0;
@@ -372,7 +372,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		if (needsMaxWidth) {
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
 				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
@@ -383,7 +383,7 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 		if (needsMaxHeight) {
 			if (measureSkin != null) {
 				newMaxHeight = measureSkin.maxHeight;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxHeight != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
 				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf

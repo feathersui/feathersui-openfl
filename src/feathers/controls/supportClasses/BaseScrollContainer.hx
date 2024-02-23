@@ -1768,7 +1768,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(newMinWidth, measureSkin.minWidth);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minWidth != null) {
 				newMinWidth = Math.max(newMinWidth, this._backgroundSkinMeasurements.minWidth);
 			}
 		}
@@ -1785,7 +1785,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(newMinHeight, measureSkin.minHeight);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minHeight != null) {
 				newMinHeight = Math.max(newMinHeight, this._backgroundSkinMeasurements.minHeight);
 			}
 		}
@@ -1801,7 +1801,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			newMaxWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
 				newMaxWidth = Math.min(newMaxWidth, measureSkin.maxWidth);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
 				newMaxWidth = Math.min(newMaxWidth, this._backgroundSkinMeasurements.maxWidth);
 			}
 		}
@@ -1818,7 +1818,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 			newMaxHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMaxHeight = Math.min(newMaxHeight, measureSkin.maxHeight);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxHeight != null) {
 				newMaxHeight = Math.min(newMaxHeight, this._backgroundSkinMeasurements.maxHeight);
 			}
 		}

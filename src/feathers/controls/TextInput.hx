@@ -1409,12 +1409,12 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			}
 			if (measureLeftView != null) {
 				newWidth += measureLeftView.width + this.leftViewGap;
-			} else if (this._leftViewMeasurements != null) {
+			} else if (this._leftViewMeasurements != null && this._leftViewMeasurements.width != null) {
 				newWidth += this._leftViewMeasurements.width + this.leftViewGap;
 			}
 			if (measureRightView != null) {
 				newWidth += measureRightView.width + this.rightViewGap;
-			} else if (this._rightViewMeasurements != null) {
+			} else if (this._rightViewMeasurements != null && this._rightViewMeasurements.width != null) {
 				newWidth += this._rightViewMeasurements.width + this.rightViewGap;
 			}
 			newWidth += this.paddingLeft + this.paddingRight;
@@ -1457,18 +1457,18 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			}
 			if (measureLeftView != null) {
 				newMinWidth += measureLeftView.minWidth + this.leftViewGap;
-			} else if (this._leftViewMeasurements != null) {
+			} else if (this._leftViewMeasurements != null && this._leftViewMeasurements.minWidth != null) {
 				newMinWidth += this._leftViewMeasurements.minWidth + this.leftViewGap;
 			}
 			if (measureRightView != null) {
 				newMinWidth += measureRightView.minWidth + this.rightViewGap;
-			} else if (this._rightViewMeasurements != null) {
+			} else if (this._rightViewMeasurements != null && this._rightViewMeasurements.minWidth != null) {
 				newMinWidth += this._rightViewMeasurements.minWidth + this.rightViewGap;
 			}
 			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minWidth != null) {
 				newMinWidth = Math.max(this._backgroundSkinMeasurements.minWidth, newMinWidth);
 			}
 		}
@@ -1492,7 +1492,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minHeight != null) {
 				newMinHeight = Math.max(this._backgroundSkinMeasurements.minHeight, newMinHeight);
 			}
 		}
@@ -1500,7 +1500,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (needsMaxWidth) {
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
 				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
@@ -1511,7 +1511,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		if (needsMaxHeight) {
 			if (measureSkin != null) {
 				newMaxHeight = measureSkin.maxHeight;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxHeight != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
 				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf

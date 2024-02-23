@@ -911,7 +911,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			newMinWidth += this.paddingLeft + this.paddingRight;
 			if (measureSkin != null) {
 				newMinWidth = Math.max(measureSkin.minWidth, newMinWidth);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minWidth != null) {
 				newMinWidth = Math.max(this._backgroundSkinMeasurements.minWidth, newMinWidth);
 			}
 		}
@@ -922,7 +922,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			newMinHeight += this.paddingTop + this.paddingBottom;
 			if (measureSkin != null) {
 				newMinHeight = Math.max(measureSkin.minHeight, newMinHeight);
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minHeight != null) {
 				newMinHeight = Math.max(this._backgroundSkinMeasurements.minHeight, newMinHeight);
 			}
 		}
@@ -930,7 +930,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (needsMaxWidth) {
 			if (measureSkin != null) {
 				newMaxWidth = measureSkin.maxWidth;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
 				newMaxWidth = this._backgroundSkinMeasurements.maxWidth;
 			} else {
 				newMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
@@ -941,7 +941,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (needsMaxHeight) {
 			if (measureSkin != null) {
 				newMaxHeight = measureSkin.maxHeight;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxHeight != null) {
 				newMaxHeight = this._backgroundSkinMeasurements.maxHeight;
 			} else {
 				newMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf

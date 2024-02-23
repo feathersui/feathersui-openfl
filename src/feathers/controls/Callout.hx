@@ -995,7 +995,7 @@ class Callout extends FeathersControl {
 			var contentMinWidth = 0.0;
 			if (measureContent != null) {
 				contentMinWidth = measureContent.minWidth;
-			} else if (this._contentMeasurements != null) {
+			} else if (this._contentMeasurements != null && this._contentMeasurements.minWidth != null) {
 				contentMinWidth = this._contentMeasurements.minWidth;
 			}
 			if (contentMinWidth < topOrBottomArrowWidth) {
@@ -1005,7 +1005,7 @@ class Callout extends FeathersControl {
 			var backgroundMinWidth = 0.0;
 			if (measureSkin != null) {
 				backgroundMinWidth = measureSkin.minWidth;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minWidth != null) {
 				backgroundMinWidth = this._backgroundSkinMeasurements.minWidth;
 			}
 			if (newMinWidth < backgroundMinWidth) {
@@ -1021,7 +1021,7 @@ class Callout extends FeathersControl {
 			var contentMinHeight = 0.0;
 			if (measureContent != null) {
 				contentMinHeight = measureContent.minWidth;
-			} else if (this._contentMeasurements != null) {
+			} else if (this._contentMeasurements != null && this._contentMeasurements.minHeight != null) {
 				contentMinHeight = this._contentMeasurements.minHeight;
 			}
 			if (contentMinHeight < leftOrRightArrowHeight) {
@@ -1031,7 +1031,7 @@ class Callout extends FeathersControl {
 			var backgroundMinHeight = 0.0;
 			if (measureSkin != null) {
 				backgroundMinHeight = measureSkin.minHeight;
-			} else if (this._backgroundSkinMeasurements != null) {
+			} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minHeight != null) {
 				backgroundMinHeight = this._backgroundSkinMeasurements.minHeight;
 			}
 			if (newMinHeight < backgroundMinHeight) {
