@@ -461,6 +461,23 @@ class Header extends FeathersControl implements ITextControl {
 		return this._rightView;
 	}
 
+	/**
+		Sets all four padding properties to the same value.
+
+		@see `Header.paddingTop`
+		@see `Header.paddingRight`
+		@see `Header.paddingBottom`
+		@see `Header.paddingLeft`
+
+		@since 1.3.0
+	**/
+	public function setPadding(value:Float):Void {
+		this.paddingTop = value;
+		this.paddingRight = value;
+		this.paddingBottom = value;
+		this.paddingLeft = value;
+	}
+
 	override public function dispose():Void {
 		this.leftView = null;
 		this.rightView = null;
