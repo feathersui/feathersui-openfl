@@ -42,6 +42,7 @@ class SteelToggleButtonStyles {
 					skin.setFillForState(DOWN(false), theme.getReversedActiveThemeFill());
 					skin.border = theme.getButtonBorder();
 					skin.selectedBorder = theme.getSelectedBorder();
+					skin.disabledBorder = theme.getButtonBorder();
 					skin.setBorderForState(DOWN(false), theme.getActiveFillBorder());
 					skin.setBorderForState(DOWN(true), theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
