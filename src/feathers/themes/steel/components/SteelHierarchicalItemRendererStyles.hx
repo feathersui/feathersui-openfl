@@ -85,51 +85,74 @@ class SteelHierarchicalItemRendererStyles {
 		}
 		if (styleProvider.getStyleFunction(ToggleButton, HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON) == null) {
 			styleProvider.setStyleFunction(ToggleButton, HierarchicalItemRenderer.CHILD_VARIANT_DISCLOSURE_BUTTON, function(button:ToggleButton):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.icon == null) {
 					var icon = new MultiSkin();
 					button.icon = icon;
 
 					var defaultIcon = new Shape();
-					drawDisclosureClosedIcon(defaultIcon, theme.textColor);
+					drawDisclosureClosedIcon(defaultIcon, theme.textColor, isDesktop);
 					icon.defaultView = defaultIcon;
 
 					var disabledIcon = new Shape();
-					drawDisclosureClosedIcon(disabledIcon, theme.disabledTextColor);
+					drawDisclosureClosedIcon(disabledIcon, theme.disabledTextColor, isDesktop);
 					icon.disabledView = disabledIcon;
 
 					var selectedIcon = new Shape();
-					drawDisclosureOpenIcon(selectedIcon, theme.textColor);
+					drawDisclosureOpenIcon(selectedIcon, theme.textColor, isDesktop);
 					icon.selectedView = selectedIcon;
 
 					var selectedDisabledIcon = new Shape();
-					drawDisclosureOpenIcon(selectedDisabledIcon, theme.disabledTextColor);
+					drawDisclosureOpenIcon(selectedDisabledIcon, theme.disabledTextColor, isDesktop);
 					icon.setViewForState(DISABLED(true), selectedDisabledIcon);
 				}
 			});
 		}
 	}
 
-	private static function drawDisclosureClosedIcon(icon:Shape, color:UInt):Void {
+	private static function drawDisclosureClosedIcon(icon:Shape, color:UInt, isDesktop:Bool):Void {
 		icon.graphics.beginFill(0xff00ff, 0.0);
-		icon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+		if (isDesktop) {
+			icon.graphics.drawRect(0.0, 0.0, 16.0, 16.0);
+		} else {
+			icon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+		}
 		icon.graphics.endFill();
 		icon.graphics.beginFill(color);
-		icon.graphics.moveTo(4.0, 4.0);
-		icon.graphics.lineTo(16.0, 10.0);
-		icon.graphics.lineTo(4.0, 16.0);
-		icon.graphics.lineTo(4.0, 4.0);
+		if (isDesktop) {
+			icon.graphics.moveTo(4.0, 4.0);
+			icon.graphics.lineTo(12.0, 8.0);
+			icon.graphics.lineTo(4.0, 12.0);
+			icon.graphics.lineTo(4.0, 4.0);
+		} else {
+			icon.graphics.moveTo(4.0, 4.0);
+			icon.graphics.lineTo(16.0, 10.0);
+			icon.graphics.lineTo(4.0, 16.0);
+			icon.graphics.lineTo(4.0, 4.0);
+		}
 		icon.graphics.endFill();
 	}
 
-	private static function drawDisclosureOpenIcon(icon:Shape, color:UInt):Void {
+	private static function drawDisclosureOpenIcon(icon:Shape, color:UInt, isDesktop:Bool):Void {
 		icon.graphics.beginFill(0xff00ff, 0.0);
-		icon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+		if (isDesktop) {
+			icon.graphics.drawRect(0.0, 0.0, 16.0, 16.0);
+		} else {
+			icon.graphics.drawRect(0.0, 0.0, 20.0, 20.0);
+		}
 		icon.graphics.endFill();
 		icon.graphics.beginFill(color);
-		icon.graphics.moveTo(4.0, 4.0);
-		icon.graphics.lineTo(16.0, 4.0);
-		icon.graphics.lineTo(10.0, 16.0);
-		icon.graphics.lineTo(4.0, 4.0);
+		if (isDesktop) {
+			icon.graphics.moveTo(4.0, 4.0);
+			icon.graphics.lineTo(12.0, 4.0);
+			icon.graphics.lineTo(8.0, 12.0);
+			icon.graphics.lineTo(4.0, 4.0);
+		} else {
+			icon.graphics.moveTo(4.0, 4.0);
+			icon.graphics.lineTo(16.0, 4.0);
+			icon.graphics.lineTo(10.0, 16.0);
+			icon.graphics.lineTo(4.0, 4.0);
+		}
 		icon.graphics.endFill();
 	}
 }
