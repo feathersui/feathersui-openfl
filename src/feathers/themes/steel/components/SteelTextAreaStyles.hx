@@ -43,8 +43,13 @@ class SteelTextAreaStyles {
 				if (textArea.backgroundSkin == null) {
 					var backgroundSkin = new RectangleSkin();
 					backgroundSkin.cornerRadius = 3.0;
-					backgroundSkin.width = 160.0;
-					backgroundSkin.height = 120.0;
+					if (isDesktop) {
+						backgroundSkin.width = 120.0;
+						backgroundSkin.height = 100.0;
+					} else {
+						backgroundSkin.width = 160.0;
+						backgroundSkin.height = 120.0;
+					}
 					backgroundSkin.fill = theme.getInsetFill();
 					backgroundSkin.border = theme.getInsetBorder();
 					backgroundSkin.setBorderForState(FOCUSED, theme.getThemeBorder());
@@ -67,10 +72,17 @@ class SteelTextAreaStyles {
 				textArea.paddingBottom = theme.borderThickness;
 				textArea.paddingLeft = theme.borderThickness;
 
-				textArea.textPaddingTop = theme.mediumPadding;
-				textArea.textPaddingRight = theme.largePadding;
-				textArea.textPaddingBottom = theme.mediumPadding + 1;
-				textArea.textPaddingLeft = theme.largePadding;
+				if (isDesktop) {
+					textArea.textPaddingTop = theme.smallPadding;
+					textArea.textPaddingRight = theme.mediumPadding;
+					textArea.textPaddingBottom = theme.smallPadding + 1;
+					textArea.textPaddingLeft = theme.mediumPadding;
+				} else {
+					textArea.textPaddingTop = theme.mediumPadding;
+					textArea.textPaddingRight = theme.largePadding;
+					textArea.textPaddingBottom = theme.mediumPadding + 1;
+					textArea.textPaddingLeft = theme.largePadding;
+				}
 			});
 		}
 		if (styleProvider.getStyleFunction(TextCallout, TextArea.CHILD_VARIANT_ERROR_CALLOUT) == null) {

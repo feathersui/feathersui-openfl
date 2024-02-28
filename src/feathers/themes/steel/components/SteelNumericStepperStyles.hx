@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.NumericStepper;
@@ -100,6 +101,7 @@ class SteelNumericStepperStyles {
 
 		if (styleProvider.getStyleFunction(TextInput, NumericStepper.CHILD_VARIANT_TEXT_INPUT) == null) {
 			styleProvider.setStyleFunction(TextInput, NumericStepper.CHILD_VARIANT_TEXT_INPUT, function(input:TextInput):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (input.backgroundSkin == null) {
 					var inputSkin = new RectangleSkin();
 					inputSkin.width = 3.0;
@@ -121,10 +123,17 @@ class SteelNumericStepperStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = theme.mediumPadding;
-				input.paddingRight = theme.largePadding;
-				input.paddingBottom = theme.mediumPadding;
-				input.paddingLeft = theme.largePadding;
+				if (isDesktop) {
+					input.paddingTop = theme.smallPadding;
+					input.paddingRight = theme.mediumPadding;
+					input.paddingBottom = theme.smallPadding;
+					input.paddingLeft = theme.mediumPadding;
+				} else {
+					input.paddingTop = theme.mediumPadding;
+					input.paddingRight = theme.largePadding;
+					input.paddingBottom = theme.mediumPadding;
+					input.paddingLeft = theme.largePadding;
+				}
 			});
 		}
 	}

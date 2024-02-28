@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.TextCallout;
 import feathers.controls.TextInput;
 import feathers.controls.TextInputState;
@@ -35,10 +36,15 @@ class SteelTextInputStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(TextInput, null) == null) {
 			styleProvider.setStyleFunction(TextInput, null, function(input:TextInput):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (input.backgroundSkin == null) {
 					var inputSkin = new RectangleSkin();
 					inputSkin.cornerRadius = 3.0;
-					inputSkin.width = 160.0;
+					if (isDesktop) {
+						inputSkin.width = 120.0;
+					} else {
+						inputSkin.width = 160.0;
+					}
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
@@ -57,18 +63,30 @@ class SteelTextInputStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = theme.mediumPadding;
-				input.paddingRight = theme.largePadding;
-				input.paddingBottom = theme.mediumPadding;
-				input.paddingLeft = theme.largePadding;
+				if (isDesktop) {
+					input.paddingTop = theme.smallPadding;
+					input.paddingRight = theme.mediumPadding;
+					input.paddingBottom = theme.smallPadding;
+					input.paddingLeft = theme.mediumPadding;
+				} else {
+					input.paddingTop = theme.mediumPadding;
+					input.paddingRight = theme.largePadding;
+					input.paddingBottom = theme.mediumPadding;
+					input.paddingLeft = theme.largePadding;
+				}
 			});
 		}
 		if (styleProvider.getStyleFunction(TextInput, TextInput.VARIANT_SEARCH) == null) {
 			styleProvider.setStyleFunction(TextInput, TextInput.VARIANT_SEARCH, function(input:TextInput):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (input.backgroundSkin == null) {
 					var inputSkin = new PillSkin();
 					inputSkin.capDirection = HORIZONTAL;
-					inputSkin.width = 160.0;
+					if (isDesktop) {
+						inputSkin.width = 120.0;
+					} else {
+						inputSkin.width = 160.0;
+					}
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.border = theme.getInsetBorder();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
@@ -86,10 +104,17 @@ class SteelTextInputStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = theme.mediumPadding;
-				input.paddingRight = theme.largePadding;
-				input.paddingBottom = theme.mediumPadding;
-				input.paddingLeft = theme.largePadding;
+				if (isDesktop) {
+					input.paddingTop = theme.smallPadding;
+					input.paddingRight = theme.largePadding;
+					input.paddingBottom = theme.smallPadding;
+					input.paddingLeft = theme.largePadding;
+				} else {
+					input.paddingTop = theme.mediumPadding;
+					input.paddingRight = theme.largePadding;
+					input.paddingBottom = theme.mediumPadding;
+					input.paddingLeft = theme.largePadding;
+				}
 			});
 		}
 		if (styleProvider.getStyleFunction(TextCallout, TextInput.CHILD_VARIANT_ERROR_CALLOUT) == null) {

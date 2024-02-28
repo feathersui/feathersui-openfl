@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.ComboBox;
@@ -72,12 +73,17 @@ class SteelComboBoxStyles {
 
 		if (styleProvider.getStyleFunction(TextInput, ComboBox.CHILD_VARIANT_TEXT_INPUT) == null) {
 			styleProvider.setStyleFunction(TextInput, ComboBox.CHILD_VARIANT_TEXT_INPUT, function(input:TextInput):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (input.backgroundSkin == null) {
 					var inputSkin = new TabSkin();
 					inputSkin.cornerRadiusPosition = LEFT;
 					inputSkin.cornerRadius = 3.0;
 					inputSkin.drawBaseBorder = false;
-					inputSkin.width = 160.0;
+					if (isDesktop) {
+						inputSkin.width = 120.0;
+					} else {
+						inputSkin.width = 160.0;
+					}
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
 					inputSkin.border = theme.getInsetBorder();
@@ -96,10 +102,17 @@ class SteelComboBoxStyles {
 					input.promptTextFormat = theme.getSecondaryTextFormat();
 				}
 
-				input.paddingTop = theme.mediumPadding;
-				input.paddingRight = theme.largePadding;
-				input.paddingBottom = theme.mediumPadding;
-				input.paddingLeft = theme.largePadding;
+				if (isDesktop) {
+					input.paddingTop = theme.smallPadding;
+					input.paddingRight = theme.mediumPadding;
+					input.paddingBottom = theme.smallPadding;
+					input.paddingLeft = theme.mediumPadding;
+				} else {
+					input.paddingTop = theme.mediumPadding;
+					input.paddingRight = theme.largePadding;
+					input.paddingBottom = theme.mediumPadding;
+					input.paddingLeft = theme.largePadding;
+				}
 			});
 		}
 
