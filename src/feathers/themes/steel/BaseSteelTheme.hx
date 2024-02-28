@@ -286,7 +286,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	}
 
 	private function getButtonDisabledFill():FillStyle {
-		return SolidColor(this.controlDisabledFillColor, 0.7);
+		return SolidColor(this.controlDisabledFillColor);
 	}
 
 	private function getScrollBarThumbFill():FillStyle {
@@ -303,6 +303,10 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 
 	private function getButtonBorder(thickness:Float = 1.0):LineStyle {
 		return SolidColor(thickness, this.borderColor);
+	}
+
+	private function getButtonDisabledBorder(thickness:Float = 1.0):LineStyle {
+		return SolidColor(thickness, this.disabledInsetBorderColor);
 	}
 
 	private function getInsetBorder(thickness:Float = 1.0):LineStyle {

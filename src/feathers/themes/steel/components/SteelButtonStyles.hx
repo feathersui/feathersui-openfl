@@ -39,6 +39,7 @@ class SteelButtonStyles {
 					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
 					skin.border = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
@@ -74,7 +75,7 @@ class SteelButtonStyles {
 					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
 					skin.border = theme.getActiveFillBorder();
-					skin.disabledBorder = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
 				}
@@ -109,7 +110,7 @@ class SteelButtonStyles {
 					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.setFillForState(DOWN, theme.getReversedDangerFill());
 					skin.border = theme.getDangerBorder();
-					skin.disabledBorder = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
 				}

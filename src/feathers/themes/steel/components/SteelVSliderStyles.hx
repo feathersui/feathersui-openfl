@@ -42,9 +42,10 @@ class SteelVSliderStyles {
 
 					var backgroundSkin = new CircleSkin();
 					backgroundSkin.fill = theme.getButtonFill();
-					backgroundSkin.border = theme.getButtonBorder();
+					backgroundSkin.disabledFill = theme.getButtonDisabledFill();
 					backgroundSkin.setFillForState(ButtonState.DOWN, theme.getButtonDownFill());
-					backgroundSkin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
+					backgroundSkin.border = theme.getButtonBorder();
+					backgroundSkin.disabledBorder = theme.getButtonDisabledBorder();
 					backgroundSkin.width = 24.0;
 					backgroundSkin.height = 24.0;
 					thumb.backgroundSkin = backgroundSkin;
@@ -60,7 +61,9 @@ class SteelVSliderStyles {
 				if (slider.trackSkin == null) {
 					var trackSkin = new TabSkin();
 					trackSkin.fill = theme.getActiveThemeFill();
+					trackSkin.disabledFill = theme.getControlDisabledFill();
 					trackSkin.border = theme.getActiveFillBorder();
+					trackSkin.disabledBorder = theme.getDisabledInsetBorder();
 					trackSkin.cornerRadius = 8.0;
 					trackSkin.cornerRadiusPosition = BOTTOM;
 					trackSkin.width = 8.0;
@@ -72,7 +75,9 @@ class SteelVSliderStyles {
 					if (slider.secondaryTrackSkin == null) {
 						var secondaryTrackSkin = new TabSkin();
 						secondaryTrackSkin.fill = theme.getInsetFill();
+						secondaryTrackSkin.disabledFill = theme.getDisabledInsetFill();
 						secondaryTrackSkin.border = theme.getInsetBorder();
+						secondaryTrackSkin.disabledBorder = theme.getDisabledInsetBorder();
 						secondaryTrackSkin.cornerRadius = 8.0;
 						secondaryTrackSkin.cornerRadiusPosition = TOP;
 						secondaryTrackSkin.width = 8.0;

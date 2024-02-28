@@ -46,6 +46,7 @@ class SteelPopUpDatePickerStyles {
 					skin.disabledFill = theme.getButtonDisabledFill();
 					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
 					skin.border = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					button.backgroundSkin = skin;
@@ -81,6 +82,7 @@ class SteelPopUpDatePickerStyles {
 					inputSkin.fill = theme.getInsetFill();
 					inputSkin.disabledFill = theme.getDisabledInsetFill();
 					inputSkin.border = theme.getInsetBorder();
+					inputSkin.disabledBorder = theme.getDisabledInsetBorder();
 					inputSkin.setBorderForState(TextInputState.FOCUSED, theme.getThemeBorder());
 					input.backgroundSkin = inputSkin;
 				}

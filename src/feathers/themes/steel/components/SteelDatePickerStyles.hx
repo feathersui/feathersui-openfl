@@ -80,6 +80,7 @@ class SteelDatePickerStyles {
 					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
 					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
@@ -117,6 +118,7 @@ class SteelDatePickerStyles {
 					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
 					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
@@ -154,6 +156,7 @@ class SteelDatePickerStyles {
 					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
 					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
@@ -191,6 +194,7 @@ class SteelDatePickerStyles {
 					skin.setFillForState(ButtonState.DOWN, theme.getReversedActiveThemeFill());
 					skin.setFillForState(ButtonState.DISABLED, theme.getButtonDisabledFill());
 					skin.border = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
 					if (isDesktop) {
