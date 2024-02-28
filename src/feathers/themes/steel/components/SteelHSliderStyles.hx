@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.utils.DeviceUtil;
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.HSlider;
@@ -35,6 +36,7 @@ class SteelHSliderStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(HSlider, null) == null) {
 			styleProvider.setStyleFunction(HSlider, null, function(slider:HSlider):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (slider.thumbSkin == null) {
 					var thumb = new Button();
 					thumb.styleProvider = null;
@@ -46,8 +48,13 @@ class SteelHSliderStyles {
 					backgroundSkin.setFillForState(ButtonState.DOWN, theme.getButtonDownFill());
 					backgroundSkin.border = theme.getButtonBorder();
 					backgroundSkin.disabledBorder = theme.getButtonDisabledBorder();
-					backgroundSkin.width = 24.0;
-					backgroundSkin.height = 24.0;
+					if (isDesktop) {
+						backgroundSkin.width = 20.0;
+						backgroundSkin.height = 20.0;
+					} else {
+						backgroundSkin.width = 24.0;
+						backgroundSkin.height = 24.0;
+					}
 					thumb.backgroundSkin = backgroundSkin;
 
 					var focusRectSkin = new CircleSkin();
