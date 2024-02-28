@@ -63,7 +63,7 @@ class SteelItemRendererStyles {
 					itemRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 				if (itemRenderer.secondaryTextFormat == null) {
-					itemRenderer.secondaryTextFormat = theme.getDetailTextFormat();
+					itemRenderer.secondaryTextFormat = theme.getSecondaryDetailTextFormat();
 				}
 				if (itemRenderer.disabledSecondaryTextFormat == null) {
 					itemRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();

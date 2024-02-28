@@ -430,11 +430,15 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	}
 
 	private function getDetailTextFormat(align:TextFormatAlign = LEFT):TextFormat {
-		return new TextFormat(this.fontName, this.detailFontSize, this.secondaryTextColor, false, false, false, null, null, align);
+		return new TextFormat(this.fontName, this.detailFontSize, this.textColor, false, false, false, null, null, align);
 	}
 
 	private function getDisabledDetailTextFormat(align:TextFormatAlign = LEFT):TextFormat {
 		return new TextFormat(this.fontName, this.detailFontSize, this.disabledTextColor, false, false, false, null, null, align);
+	}
+
+	private function getSecondaryDetailTextFormat(align:TextFormatAlign = LEFT):TextFormat {
+		return new TextFormat(this.fontName, this.detailFontSize, this.secondaryTextColor, false, false, false, null, null, align);
 	}
 
 	private function getHeaderFill():FillStyle {

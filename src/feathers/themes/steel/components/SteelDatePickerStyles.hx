@@ -263,7 +263,7 @@ class SteelDatePickerStyles {
 					dateRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 				if (dateRenderer.secondaryTextFormat == null) {
-					dateRenderer.secondaryTextFormat = theme.getDetailTextFormat();
+					dateRenderer.secondaryTextFormat = theme.getSecondaryDetailTextFormat();
 				}
 				if (dateRenderer.disabledSecondaryTextFormat == null) {
 					dateRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
@@ -307,7 +307,7 @@ class SteelDatePickerStyles {
 					dateRenderer.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 				if (dateRenderer.secondaryTextFormat == null) {
-					dateRenderer.secondaryTextFormat = theme.getDetailTextFormat();
+					dateRenderer.secondaryTextFormat = theme.getSecondaryDetailTextFormat();
 				}
 				if (dateRenderer.disabledSecondaryTextFormat == null) {
 					dateRenderer.disabledSecondaryTextFormat = theme.getDisabledDetailTextFormat();
