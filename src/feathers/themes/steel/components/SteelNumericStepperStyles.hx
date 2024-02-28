@@ -39,6 +39,7 @@ class SteelNumericStepperStyles {
 
 		if (styleProvider.getStyleFunction(Button, NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON, function(button:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var skin = new TabSkin();
 					skin.cornerRadiusPosition = LEFT;
@@ -50,6 +51,8 @@ class SteelNumericStepperStyles {
 					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
+					skin.minWidth = 22.0;
+					skin.minHeight = 22.0;
 					button.backgroundSkin = skin;
 				}
 
@@ -60,16 +63,24 @@ class SteelNumericStepperStyles {
 					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
-				button.paddingTop = theme.smallPadding;
-				button.paddingRight = theme.largePadding;
-				button.paddingBottom = theme.smallPadding;
-				button.paddingLeft = theme.largePadding;
+				if (isDesktop) {
+					button.paddingTop = theme.smallPadding;
+					button.paddingRight = theme.mediumPadding;
+					button.paddingBottom = theme.smallPadding;
+					button.paddingLeft = theme.mediumPadding;
+				} else {
+					button.paddingTop = theme.smallPadding;
+					button.paddingRight = theme.largePadding;
+					button.paddingBottom = theme.smallPadding;
+					button.paddingLeft = theme.largePadding;
+				}
 				button.gap = theme.smallPadding;
 			});
 		}
 
 		if (styleProvider.getStyleFunction(Button, NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, NumericStepper.CHILD_VARIANT_INCREMENT_BUTTON, function(button:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var skin = new TabSkin();
 					skin.cornerRadiusPosition = RIGHT;
@@ -81,6 +92,8 @@ class SteelNumericStepperStyles {
 					skin.disabledBorder = theme.getButtonDisabledBorder();
 					skin.setBorderForState(ButtonState.DOWN, theme.getActiveFillBorder());
 					skin.cornerRadius = 3.0;
+					skin.minWidth = 22.0;
+					skin.minHeight = 22.0;
 					button.backgroundSkin = skin;
 				}
 
@@ -91,10 +104,17 @@ class SteelNumericStepperStyles {
 					button.disabledTextFormat = theme.getDisabledTextFormat();
 				}
 
-				button.paddingTop = theme.smallPadding;
-				button.paddingRight = theme.largePadding;
-				button.paddingBottom = theme.smallPadding;
-				button.paddingLeft = theme.largePadding;
+				if (isDesktop) {
+					button.paddingTop = theme.smallPadding;
+					button.paddingRight = theme.mediumPadding;
+					button.paddingBottom = theme.smallPadding;
+					button.paddingLeft = theme.mediumPadding;
+				} else {
+					button.paddingTop = theme.smallPadding;
+					button.paddingRight = theme.largePadding;
+					button.paddingBottom = theme.smallPadding;
+					button.paddingLeft = theme.largePadding;
+				}
 				button.gap = theme.smallPadding;
 			});
 		}

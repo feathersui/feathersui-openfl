@@ -40,6 +40,7 @@ class SteelPopUpDatePickerStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(Button, PopUpDatePicker.CHILD_VARIANT_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, PopUpDatePicker.CHILD_VARIANT_BUTTON, function(button:Button):Void {
+				var isDesktop = DeviceUtil.isDesktop();
 				if (button.backgroundSkin == null) {
 					var skin = new TabSkin();
 					skin.cornerRadiusPosition = RIGHT;
@@ -65,10 +66,17 @@ class SteelPopUpDatePickerStyles {
 					}
 				}
 
-				button.paddingTop = theme.smallPadding;
-				button.paddingRight = theme.largePadding;
-				button.paddingBottom = theme.smallPadding;
-				button.paddingLeft = theme.largePadding;
+				if (isDesktop) {
+					button.paddingTop = theme.smallPadding;
+					button.paddingRight = theme.mediumPadding;
+					button.paddingBottom = theme.smallPadding;
+					button.paddingLeft = theme.mediumPadding;
+				} else {
+					button.paddingTop = theme.smallPadding;
+					button.paddingRight = theme.largePadding;
+					button.paddingBottom = theme.smallPadding;
+					button.paddingLeft = theme.largePadding;
+				}
 				button.gap = theme.smallPadding;
 			});
 		}
