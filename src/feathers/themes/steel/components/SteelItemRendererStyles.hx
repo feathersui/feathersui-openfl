@@ -43,10 +43,10 @@ class SteelItemRendererStyles {
 					skin.selectedFill = theme.getActiveThemeFill();
 					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getActiveThemeFill());
 					if (isDesktop) {
-						skin.width = 32.0;
-						skin.height = 32.0;
-						skin.minWidth = 32.0;
-						skin.minHeight = 32.0;
+						skin.width = 26.0;
+						skin.height = 26.0;
+						skin.minWidth = 26.0;
+						skin.minHeight = 26.0;
 					} else {
 						skin.width = 44.0;
 						skin.height = 44.0;

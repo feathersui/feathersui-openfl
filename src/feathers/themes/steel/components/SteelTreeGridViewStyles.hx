@@ -164,10 +164,10 @@ class SteelTreeGridViewStyles {
 						backgroundSkin.fill = SolidColor(0xff00ff, 0.0);
 						backgroundSkin.border = None;
 						if (isDesktop) {
-							backgroundSkin.width = 32.0;
-							backgroundSkin.height = 32.0;
-							backgroundSkin.minWidth = 32.0;
-							backgroundSkin.minHeight = 32.0;
+							backgroundSkin.width = 26.0;
+							backgroundSkin.height = 26.0;
+							backgroundSkin.minWidth = 26.0;
+							backgroundSkin.minHeight = 26.0;
 						} else {
 							backgroundSkin.width = 44.0;
 							backgroundSkin.height = 44.0;
