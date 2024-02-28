@@ -14,6 +14,7 @@ import feathers.skins.MultiSkin;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 import openfl.display.Shape;
 
 /**
@@ -35,6 +36,8 @@ class SteelCheckStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(Check, null) == null) {
 			styleProvider.setStyleFunction(Check, null, function(check:Check):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
 				if (check.textFormat == null) {
 					check.textFormat = theme.getTextFormat();
 				}
@@ -54,10 +57,17 @@ class SteelCheckStyles {
 					check.icon = icon;
 
 					var defaultIcon = new RectangleSkin();
-					defaultIcon.width = 20.0;
-					defaultIcon.height = 20.0;
-					defaultIcon.minWidth = 20.0;
-					defaultIcon.minHeight = 20.0;
+					if (isDesktop) {
+						defaultIcon.width = 16.0;
+						defaultIcon.height = 16.0;
+						defaultIcon.minWidth = 16.0;
+						defaultIcon.minHeight = 16.0;
+					} else {
+						defaultIcon.width = 20.0;
+						defaultIcon.height = 20.0;
+						defaultIcon.minWidth = 20.0;
+						defaultIcon.minHeight = 20.0;
+					}
 					defaultIcon.border = theme.getInsetBorder();
 					defaultIcon.disabledBorder = theme.getDisabledInsetBorder();
 					defaultIcon.setBorderForState(DOWN(false), theme.getSelectedInsetBorder());
@@ -66,25 +76,43 @@ class SteelCheckStyles {
 					icon.defaultView = defaultIcon;
 
 					var selectedIcon = new RectangleSkin();
-					selectedIcon.width = 20.0;
-					selectedIcon.height = 20.0;
-					selectedIcon.minWidth = 20.0;
-					selectedIcon.minHeight = 20.0;
+					if (isDesktop) {
+						selectedIcon.width = 16.0;
+						selectedIcon.height = 16.0;
+						selectedIcon.minWidth = 16.0;
+						selectedIcon.minHeight = 16.0;
+					} else {
+						selectedIcon.width = 20.0;
+						selectedIcon.height = 20.0;
+						selectedIcon.minWidth = 20.0;
+						selectedIcon.minHeight = 20.0;
+					}
 					selectedIcon.border = theme.getSelectedInsetBorder();
 					selectedIcon.disabledBorder = theme.getDisabledInsetBorder();
 					selectedIcon.setBorderForState(DOWN(true), theme.getSelectedInsetBorder());
 					selectedIcon.fill = theme.getReversedActiveThemeFill();
 					selectedIcon.disabledFill = theme.getDisabledInsetFill();
 					var checkMark = new Shape();
-					checkMark.graphics.beginFill(theme.textColor);
-					checkMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
-					checkMark.graphics.endFill();
-					checkMark.graphics.beginFill(theme.textColor);
-					checkMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
-					checkMark.graphics.endFill();
+					if (isDesktop) {
+						checkMark.graphics.beginFill(theme.textColor);
+						checkMark.graphics.drawRect(-1.0, -8.0, 3.0, 11.0);
+						checkMark.graphics.endFill();
+						checkMark.graphics.beginFill(theme.textColor);
+						checkMark.graphics.drawRect(-4.0, 0.0, 5.0, 3.0);
+						checkMark.graphics.endFill();
+						checkMark.x = 7.0;
+						checkMark.y = 9.0;
+					} else {
+						checkMark.graphics.beginFill(theme.textColor);
+						checkMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
+						checkMark.graphics.endFill();
+						checkMark.graphics.beginFill(theme.textColor);
+						checkMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
+						checkMark.graphics.endFill();
+						checkMark.x = 10.0;
+						checkMark.y = 10.0;
+					}
 					checkMark.rotation = 45.0;
-					checkMark.x = 10.0;
-					checkMark.y = 10.0;
 					selectedIcon.addChild(checkMark);
 					icon.selectedView = selectedIcon;
 

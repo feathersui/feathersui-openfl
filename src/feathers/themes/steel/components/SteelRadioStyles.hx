@@ -15,6 +15,7 @@ import feathers.skins.MultiSkin;
 import feathers.skins.RectangleSkin;
 import feathers.style.Theme;
 import feathers.themes.steel.BaseSteelTheme;
+import feathers.utils.DeviceUtil;
 import openfl.display.Shape;
 
 /**
@@ -36,6 +37,8 @@ class SteelRadioStyles {
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(Radio, null) == null) {
 			styleProvider.setStyleFunction(Radio, null, function(radio:Radio):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
 				if (radio.textFormat == null) {
 					radio.textFormat = theme.getTextFormat();
 				}
@@ -55,10 +58,17 @@ class SteelRadioStyles {
 					radio.icon = icon;
 
 					var defaultIcon = new CircleSkin();
-					defaultIcon.width = 20.0;
-					defaultIcon.height = 20.0;
-					defaultIcon.minWidth = 20.0;
-					defaultIcon.minHeight = 20.0;
+					if (isDesktop) {
+						defaultIcon.width = 16.0;
+						defaultIcon.height = 16.0;
+						defaultIcon.minWidth = 16.0;
+						defaultIcon.minHeight = 16.0;
+					} else {
+						defaultIcon.width = 20.0;
+						defaultIcon.height = 20.0;
+						defaultIcon.minWidth = 20.0;
+						defaultIcon.minHeight = 20.0;
+					}
 					defaultIcon.border = theme.getInsetBorder();
 					defaultIcon.disabledBorder = theme.getDisabledInsetBorder();
 					defaultIcon.setBorderForState(DOWN(false), theme.getSelectedInsetBorder());
@@ -67,10 +77,17 @@ class SteelRadioStyles {
 					icon.defaultView = defaultIcon;
 
 					var selectedIcon = new CircleSkin();
-					selectedIcon.width = 20.0;
-					selectedIcon.height = 20.0;
-					selectedIcon.minWidth = 20.0;
-					selectedIcon.minHeight = 20.0;
+					if (isDesktop) {
+						selectedIcon.width = 16.0;
+						selectedIcon.height = 16.0;
+						selectedIcon.minWidth = 16.0;
+						selectedIcon.minHeight = 16.0;
+					} else {
+						selectedIcon.width = 20.0;
+						selectedIcon.height = 20.0;
+						selectedIcon.minWidth = 20.0;
+						selectedIcon.minHeight = 20.0;
+					}
 					selectedIcon.border = theme.getSelectedInsetBorder();
 					selectedIcon.disabledBorder = theme.getDisabledInsetBorder();
 					selectedIcon.setBorderForState(DOWN(true), theme.getSelectedInsetBorder());
@@ -78,7 +95,11 @@ class SteelRadioStyles {
 					selectedIcon.disabledFill = theme.getDisabledInsetFill();
 					var symbol = new Shape();
 					symbol.graphics.beginFill(theme.textColor);
-					symbol.graphics.drawCircle(10.0, 10.0, 4.0);
+					if (isDesktop) {
+						symbol.graphics.drawCircle(8.0, 8.0, 3.0);
+					} else {
+						symbol.graphics.drawCircle(10.0, 10.0, 4.0);
+					}
 					symbol.graphics.endFill();
 					selectedIcon.addChild(symbol);
 					icon.selectedView = selectedIcon;
