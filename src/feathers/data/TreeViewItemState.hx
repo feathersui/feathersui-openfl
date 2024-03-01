@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2024 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -24,8 +24,7 @@ class TreeViewItemState {
 
 		@since 1.0.0
 	**/
-	public function new(data:Dynamic = null, location:Array<Int> = null, layoutIndex:Int = -1, branch:Bool = false, selected:Bool = false,
-			text:String = null) {
+	public function new(data:Dynamic = null, location:Array<Int> = null, layoutIndex:Int = -1, branch:Bool = false, selected:Bool = false, text:String = null) {
 		this.data = data;
 		this.location = location;
 		this.layoutIndex = layoutIndex;

@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2024 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -165,8 +165,7 @@ class HierarchicalCollectionEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public function new(type:String, location:Array<Int>, addedItem:Dynamic = null, removedItem:Dynamic = null, bubbles:Bool = false,
-			cancelable:Bool = false) {
+	public function new(type:String, location:Array<Int>, addedItem:Dynamic = null, removedItem:Dynamic = null, bubbles:Bool = false, cancelable:Bool = false) {
 		super(type, bubbles, cancelable);
 		this.location = location;
 		this.addedItem = addedItem;

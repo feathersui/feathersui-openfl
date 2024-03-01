@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2024 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -102,8 +102,7 @@ class MinAndMaxDimensionsTest extends Test {
 		this._control.maxHeight = MAX_SIZE;
 		this._control.height = EXPLICIT_SIZE_LARGER_THAN_MAX_SIZE;
 		this._control.validateNow();
-		Assert.equals(EXPLICIT_SIZE_LARGER_THAN_MAX_SIZE, this._control.height,
-			"The maxHeight of a component must be ignored if the height is set explicitly");
+		Assert.equals(EXPLICIT_SIZE_LARGER_THAN_MAX_SIZE, this._control.height, "The maxHeight of a component must be ignored if the height is set explicitly");
 	}
 
 	public function testNoInvalidationWhenSettingMinWidthWithExplicitWidth():Void {
@@ -128,8 +127,7 @@ class MinAndMaxDimensionsTest extends Test {
 		this._control.addChild(child);
 		this._control.validateNow();
 		this._control.minWidth = MIN_SIZE;
-		Assert.isFalse(this._control.isInvalid(),
-			"The component incorrectly invalidated when setting minWidth, but component actualWidth is currently larger");
+		Assert.isFalse(this._control.isInvalid(), "The component incorrectly invalidated when setting minWidth, but component actualWidth is currently larger");
 	}
 
 	public function testNoInvalidationWhenSettingMinHeightWithLargerActualHeight():Void {

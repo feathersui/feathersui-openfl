@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2023 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2024 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -35,8 +35,7 @@ class TextFormat extends EventDispatcher {
 			underline:Null<Bool> = null, url:String = null, target:String = null, align:TextFormatAlign = null, leftMargin:Null<Int> = null,
 			rightMargin:Null<Int> = null, indent:Null<Int> = null, leading:Null<Int> = null) {
 		super();
-		this._textFormat = new openfl.text.TextFormat(font, size, color, bold, italic, underline, url, target, align, leftMargin, rightMargin, indent,
-			leading);
+		this._textFormat = new openfl.text.TextFormat(font, size, color, bold, italic, underline, url, target, align, leftMargin, rightMargin, indent, leading);
 	}
 
 	private var _textFormat:openfl.text.TextFormat;
