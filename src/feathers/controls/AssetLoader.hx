@@ -86,6 +86,37 @@ class AssetLoader extends FeathersControl {
 
 	private var _pendingFuture:Future<Dynamic>;
 
+	private var _sourceScale:Float = 1.0;
+
+	/**
+		Scales the source content for measurement. For example, if assets are
+		designed for a scale factor of 2.0, they can be displayed at 0.5
+		scale to appear crisp (because displays bitmaps at the original
+		dimensions, as if the scale factor were 1.0).
+
+		```haxe
+		loader.sourceScale = 0.5;
+		```
+
+		@default 1.0
+
+		@since 1.3.0
+	**/
+	public var sourceScale(get, set):Float;
+
+	private function get_sourceScale():Float {
+		return this._sourceScale;
+	}
+
+	private function set_sourceScale(value:Float):Float {
+		if (this._sourceScale == value) {
+			return this._sourceScale;
+		}
+		this._sourceScale = value;
+		this.setInvalid(SIZE);
+		return this._sourceScale;
+	}
+
 	private var _source:String;
 
 	/**
@@ -311,6 +342,10 @@ class AssetLoader extends FeathersControl {
 
 		var contentWidth = this._contentMeasurements.width;
 		var contentHeight = this._contentMeasurements.height;
+		if (this._sourceScale != 1.0) {
+			contentWidth *= this._sourceScale;
+			contentHeight *= this._sourceScale;
+		}
 		var widthScale = 1.0;
 		var heightScale = 1.0;
 		if (this.content != null && this._scaleMode != StageScaleMode.NO_SCALE) {
