@@ -2558,6 +2558,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			// use the setter
 			this.selectedItem = item;
 		}
+		if (index != -1) {
+			this.scrollToRowIndex(index);
+		}
 	}
 
 	private function handlePendingScroll():Void {

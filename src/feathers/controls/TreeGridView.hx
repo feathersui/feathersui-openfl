@@ -2644,6 +2644,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var state = this.rowRendererToRowState.get(rowRenderer);
 		// use the setter
 		this.selectedLocation = state.rowLocation.copy();
+		if (this._selectedLocation != null) {
+			this.scrollToLocation(this._selectedLocation);
+		}
 	}
 
 	private function treeGridView_rowRenderer_cellTriggerHandler(event:TreeGridViewEvent<TreeGridViewCellState>):Void {

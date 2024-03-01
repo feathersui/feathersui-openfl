@@ -1915,6 +1915,9 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		// use the setter
 		this.selectedLocation = location;
+		if (location != null) {
+			this.scrollToLocation(location);
+		}
 	}
 
 	private function handlePendingScroll():Void {

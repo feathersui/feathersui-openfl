@@ -1993,6 +1993,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		// use the setter
 		this.selectedLocation = state.location.copy();
+		if (this._selectedLocation != null) {
+			this.scrollToLocation(this._selectedLocation);
+		}
 	}
 
 	private function treeView_itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -2008,6 +2011,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		// use the setter
 		this.selectedLocation = state.location.copy();
+		if (this._selectedLocation != null) {
+			this.scrollToLocation(this._selectedLocation);
+		}
 	}
 
 	private function treeView_itemRenderer_triggerHandler(event:TriggerEvent):Void {
@@ -2023,6 +2029,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		// use the setter
 		this.selectedLocation = state.location.copy();
+		if (this._selectedLocation != null) {
+			this.scrollToLocation(this._selectedLocation);
+		}
 	}
 
 	private function treeView_itemRenderer_resizeHandler(event:Event):Void {
