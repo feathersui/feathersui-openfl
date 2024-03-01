@@ -32,6 +32,7 @@ class AssetLoaderScreen extends Panel {
 		// uses openfl.Assets.getBitmapData() to get an embedded asset by ID
 		// <assets id="haxe" path="assets/img/haxe.png"/>
 		this.syncAssetLoader.source = "haxe";
+		this.syncAssetLoader.sourceScale = 0.5;
 		this.addChild(this.syncAssetLoader);
 		var syncLabel = new Label();
 		syncLabel.text = "Asset (Sync)";
@@ -41,6 +42,7 @@ class AssetLoaderScreen extends Panel {
 		// uses openfl.Assets.loadBitmap() to get a non-embedded asset by ID
 		// <assets id="openfl" path="assets/img/openfl.png" embed="false"/>
 		this.asyncAssetLoader.source = "openfl";
+		this.asyncAssetLoader.sourceScale = 0.5;
 		this.asyncAssetLoader.addEventListener(Event.COMPLETE, asyncAssetLoader_completeHandler);
 		this.addChild(this.asyncAssetLoader);
 		var asyncLabel = new Label();
@@ -50,6 +52,7 @@ class AssetLoaderScreen extends Panel {
 		this.urlAssetLoader = new AssetLoader();
 		// uses openfl.display.Loader to load an image from the web
 		this.urlAssetLoader.source = "https://feathersui.com/samples/haxe-openfl/components-explorer/images/feathersui-icon.png";
+		this.urlAssetLoader.sourceScale = 0.5;
 		this.urlAssetLoader.addEventListener(Event.COMPLETE, urlAssetLoader_completeHandler);
 		this.addChild(this.urlAssetLoader);
 		var urlLabel = new Label();
