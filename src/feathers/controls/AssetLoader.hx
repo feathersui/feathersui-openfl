@@ -342,8 +342,10 @@ class AssetLoader extends FeathersControl {
 
 		var contentWidth = this._contentMeasurements.width;
 		var contentHeight = this._contentMeasurements.height;
-		if (this._sourceScale != 1.0) {
+		if (contentWidth != null && this._sourceScale != 1.0) {
 			contentWidth *= this._sourceScale;
+		}
+		if (contentHeight != null && this._sourceScale != 1.0) {
 			contentHeight *= this._sourceScale;
 		}
 		var widthScale = 1.0;
