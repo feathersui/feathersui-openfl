@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.RangeError;
 import feathers.skins.RectangleSkin;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
@@ -245,6 +246,20 @@ class GridViewTest extends Test {
 		] : Array<Dynamic>));
 		this._gridView.validateNow();
 		Assert.pass();
+	}
+
+	public function testExceptionOnInvalidNegativeSelectedIndex():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._gridView.selectedIndex = -2;
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidTooLargeSelectedIndex():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._gridView.selectedIndex = 3;
+		}, RangeError);
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {

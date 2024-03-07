@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.RangeError;
 import feathers.data.ArrayCollection;
 import openfl.Lib;
 import openfl.events.Event;
@@ -53,6 +54,20 @@ class ComboBoxTest extends Test {
 		this._comboBox.dataProvider = null;
 		this._comboBox.validateNow();
 		Assert.pass();
+	}
+
+	public function testExceptionOnInvalidNegativeSelectedIndex():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._comboBox.selectedIndex = -2;
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidTooLargeSelectedIndex():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._comboBox.selectedIndex = 3;
+		}, RangeError);
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {

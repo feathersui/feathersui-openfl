@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import openfl.errors.ArgumentError;
+import openfl.errors.RangeError;
 import feathers.data.GroupListViewItemState;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
@@ -71,6 +73,42 @@ class GroupListViewTest extends Test {
 		this._listView.dataProvider = null;
 		this._listView.validateNow();
 		Assert.pass();
+	}
+
+	public function testExceptionOnInvalidNegativeSelectedLocation():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._listView.selectedLocation = [0, -1];
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidTooLargeSelectedLocation():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._listView.selectedLocation = [0, 3];
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidArrayTooSmallSelectionLocation1():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._listView.selectedLocation = [0];
+		}, ArgumentError);
+	}
+
+	public function testExceptionOnInvalidArrayTooSmallSelectionLocation2():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._listView.selectedLocation = [];
+		}, ArgumentError);
 	}
 
 	public function testItemToItemRenderer():Void {

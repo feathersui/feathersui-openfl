@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.data.ArrayCollection;
 import feathers.data.TabBarItemState;
@@ -168,6 +169,20 @@ class TabBarTest extends Test {
 		Assert.equals(4, updateCount);
 		Assert.equals(4, resetCount);
 		Assert.equals(3, destroyCount);
+	}
+
+	public function testExceptionOnInvalidNegativeSelectedIndex():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._tabBar.selectedIndex = -2;
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidTooLargeSelectedIndex():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._tabBar.selectedIndex = 3;
+		}, RangeError);
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {

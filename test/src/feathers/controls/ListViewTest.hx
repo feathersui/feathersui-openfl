@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -172,6 +173,20 @@ class ListViewTest extends Test {
 		Assert.equals(4, updateCount);
 		Assert.equals(4, resetCount);
 		Assert.equals(3, destroyCount);
+	}
+
+	public function testExceptionOnInvalidNegativeSelectedIndex():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._listView.selectedIndex = -2;
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidTooLargeSelectedIndex():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.raises(() -> {
+			this._listView.selectedIndex = 3;
+		}, RangeError);
 	}
 
 	public function testDispatchChangeEventAfterSetSelectedIndex():Void {

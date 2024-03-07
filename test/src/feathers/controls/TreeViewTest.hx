@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
@@ -78,6 +79,22 @@ import utest.Test;
 		this._treeView.dataProvider = null;
 		this._treeView.validateNow();
 		Assert.pass();
+	}
+
+	public function testExceptionOnInvalidNegativeSelectedLocation():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._treeView.selectedLocation = [-1];
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidTooLargeSelectedLocation():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._treeView.selectedLocation = [3];
+		}, RangeError);
 	}
 
 	public function testItemToItemRenderer():Void {
