@@ -258,13 +258,14 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		if (this._selectedIndex == value) {
 			return this._selectedIndex;
 		}
-		this._selectedIndex = value;
 		// using variable because if we were to call the selectedItem setter,
 		// then this change wouldn't be saved properly
-		if (this._selectedIndex == -1) {
+		if (value < 0 || value >= this._dataProvider.length) {
+			this._selectedIndex = -1;
 			this._selectedItem = null;
 		} else {
-			this._selectedItem = this._dataProvider.get(this._selectedIndex);
+			this._selectedIndex = value;
+			this._selectedItem = this._dataProvider.get(value);
 		}
 		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
