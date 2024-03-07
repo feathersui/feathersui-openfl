@@ -337,6 +337,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		@default null
 
+		@see `feathers.data.ArrayHierarchicalCollection`
+
 		@since 1.0.0
 	**/
 	@:bindable("dataChange")

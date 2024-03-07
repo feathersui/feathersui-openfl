@@ -389,7 +389,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		@default null
 
-		@see `feathers.data.ArrayCollection`
+		@see `feathers.data.ArrayHierarchicalCollection`
 
 		@since 1.0.0
 	**/
