@@ -89,15 +89,39 @@ import openfl._internal.utils.ObjectPool;
 	var treeGridView = new TreeGridView();
 
 	treeGridView.dataProvider = new ArrayHierarchicalCollection([
-		{ item: "Chicken breast", dept: "Meat", price: "5.90" },
-		{ item: "Butter", dept: "Dairy", price: "4.69" },
-		{ item: "Broccoli", dept: "Produce", price: "2.99" },
-		{ item: "Whole Wheat Bread", dept: "Bakery", price: "2.49" }
-	]);
+		{
+			dept: "Bakery",
+			children: [
+				{item: "Whole Wheat Bread", dept: "Bakery", price: "2.49"},
+				{item: "English Muffins", dept: "Bakery", price: "2.99"},
+			]
+		},
+		{
+			dept: "Dairy",
+			children: [
+				{item: "2% Milk", dept: "Dairy", price: "2.49"},
+				{item: "Butter", dept: "Dairy", price: "4.69"},
+			]
+		},
+		{
+			dept: "Meat",
+			children: [
+				{item: "Chicken breast", dept: "Meat", price: "5.90"},
+				{item: "Bacon", dept: "Meat", price: "4.49"},
+			]
+		},
+		{
+			dept: "Produce",
+			children: [
+				{item: "Lettuce", dept: "Produce", price: "1.29"},
+				{item: "Broccoli", dept: "Produce", price: "2.99"},
+			]
+		},
+	], (item:Dynamic) -> item.children);
 	treeGridView.columns = new ArrayCollection([
-		new TreeGridViewColumn("Item", (data) -> data.item),
 		new TreeGridViewColumn("Department", (data) -> data.dept),
-		new TreeGridViewColumn("Price", (data) -> data.price)
+		new TreeGridViewColumn("Item", (data) -> data.item),
+		new TreeGridViewColumn("Unit Price", (data) -> data.price)
 	]);
 
 	treeGridView.addEventListener(Event.CHANGE, (event:Event) -> {
