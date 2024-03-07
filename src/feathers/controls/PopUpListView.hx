@@ -66,11 +66,11 @@ import lime.ui.KeyCode;
 	};
 
 	listView.addEventListener(Event.CHANGE, (event:Event) -> {
-		var list = cast(event.currentTarget, PopUpListView);
+		var listView = cast(event.currentTarget, PopUpListView);
 		trace("PopUpListView changed: " + listView.selectedIndex + " " + listView.selectedItem.text);
 	});
 
-	this.addChild(list);
+	this.addChild(listView);
 	```
 
 	@event openfl.events.Event.CHANGE Dispatched when either
