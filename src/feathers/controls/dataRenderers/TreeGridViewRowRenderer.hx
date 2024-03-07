@@ -8,12 +8,13 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IStateObserver;
-import feathers.core.IStateContext;
 import feathers.controls.dataRenderers.IDataRenderer;
+import feathers.core.IFocusObject;
 import feathers.core.IMeasureObject;
 import feathers.core.IOpenCloseToggle;
 import feathers.core.IPointerDelegate;
+import feathers.core.IStateContext;
+import feathers.core.IStateObserver;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.InvalidationFlag;
@@ -32,11 +33,13 @@ import feathers.utils.PointerToState;
 import feathers.utils.PointerTrigger;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.geom.Point;
 import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
@@ -500,6 +503,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		if (this._pointerToState == null) {
 			this._pointerToState = new PointerToState(this, this.changeState, UP(false), DOWN(false), HOVER(false));
+			this._pointerToState.customHitTest = this.customHitTest;
 		}
 
 		if (this._keyToState == null) {
@@ -508,6 +512,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 		if (this._pointerTrigger == null) {
 			this._pointerTrigger = new PointerTrigger(this);
+			this._pointerTrigger.customHitTest = this.customHitTest;
 		}
 
 		if (this.layout == null) {
@@ -1009,6 +1014,38 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			return 1;
 		}
 		return 0;
+	}
+
+	private function customHitTest(stageX:Float, stageY:Float):Bool {
+		var pointerTargetContainer = this;
+		if (pointerTargetContainer.stage == null) {
+			return false;
+		}
+		if (pointerTargetContainer.mouseChildren) {
+			var objects = pointerTargetContainer.stage.getObjectsUnderPoint(new Point(stageX, stageY));
+			if (objects.length > 0) {
+				var lastObject = objects[objects.length - 1];
+				if (pointerTargetContainer.contains(lastObject)) {
+					while (lastObject != null && lastObject != pointerTargetContainer) {
+						if ((lastObject is InteractiveObject)) {
+							var interactive:InteractiveObject = cast lastObject;
+							if (!interactive.mouseEnabled) {
+								lastObject = lastObject.parent;
+								continue;
+							}
+						}
+						if ((lastObject is IFocusObject)) {
+							var focusable:IFocusObject = cast lastObject;
+							if (focusable.parent != pointerTargetContainer && focusable.focusEnabled) {
+								return false;
+							}
+						}
+						lastObject = lastObject.parent;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	private function treeGridViewRowRenderer_cellRenderer_touchTapHandler(event:TouchEvent):Void {
