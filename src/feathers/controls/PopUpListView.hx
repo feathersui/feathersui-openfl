@@ -441,7 +441,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		In the following example, a custom pop-up adapter is provided:
 
 		```haxe
-		comboBox.popUpAdapter = new DropDownPopUpAdapter();
+		listView.popUpAdapter = new DropDownPopUpAdapter();
 		```
 
 		@since 1.0.0
