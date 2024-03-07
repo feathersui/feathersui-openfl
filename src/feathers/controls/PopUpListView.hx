@@ -52,25 +52,25 @@ import lime.ui.KeyCode;
 	selection changes:
 
 	```haxe
-	var listView = new PopUpListView();
+	var popUpListView = new PopUpListView();
 
-	listView.dataProvider = new ArrayCollection([
+	popUpListView.dataProvider = new ArrayCollection([
 		{ text: "Milk" },
 		{ text: "Eggs" },
 		{ text: "Bread" },
 		{ text: "Steak" },
 	]);
 
-	listView.itemToText = (item:Dynamic) -> {
+	popUpListView.itemToText = (item:Dynamic) -> {
 		return item.text;
 	};
 
-	listView.addEventListener(Event.CHANGE, (event:Event) -> {
-		var listView = cast(event.currentTarget, PopUpListView);
-		trace("PopUpListView changed: " + listView.selectedIndex + " " + listView.selectedItem.text);
+	popUpListView.addEventListener(Event.CHANGE, (event:Event) -> {
+		var popUpListView = cast(event.currentTarget, PopUpListView);
+		trace("PopUpListView changed: " + popUpListView.selectedIndex + " " + popUpListView.selectedItem.text);
 	});
 
-	this.addChild(listView);
+	this.addChild(popUpListView);
 	```
 
 	@event openfl.events.Event.CHANGE Dispatched when either
@@ -183,14 +183,14 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		renderer how to interpret the data:
 
 		```haxe
-		listView.dataProvider = new ArrayCollection([
+		popUpListView.dataProvider = new ArrayCollection([
 			{ text: "Milk" },
 			{ text: "Eggs" },
 			{ text: "Bread" },
 			{ text: "Chicken" },
 		]);
 
-		listView.itemToText = (item:Dynamic) -> {
+		popUpListView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```
@@ -326,7 +326,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		The following example sets the pop-up list view's prompt:
 
 		```haxe
-		listView.prompt = "Select an item";
+		popUpListView.prompt = "Select an item";
 		```
 
 		@default null
@@ -357,7 +357,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		renderer class:
 
 		```haxe
-		listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
+		popUpListView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomItemRenderer);
 		```
 
 		@see `feathers.controls.dataRenderers.ItemRenderer`
@@ -397,7 +397,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		implementation of `itemToText()` might look like this:
 
 		```haxe
-		listView.itemToText = (item:Dynamic) -> {
+		popUpListView.itemToText = (item:Dynamic) -> {
 			return item.text;
 		};
 		```
@@ -424,7 +424,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		this:
 
 		```haxe
-		listView.itemToEnabled = (item:Dynamic) -> {
+		popUpListView.itemToEnabled = (item:Dynamic) -> {
 			return !item.disable;
 		};
 		```
@@ -441,7 +441,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		In the following example, a custom pop-up adapter is provided:
 
 		```haxe
-		listView.popUpAdapter = new DropDownPopUpAdapter();
+		popUpListView.popUpAdapter = new DropDownPopUpAdapter();
 		```
 
 		@since 1.0.0
@@ -493,7 +493,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		In the following example, a custom button factory is provided:
 
 		```haxe
-		listView.buttonFactory = () ->
+		popUpListView.buttonFactory = () ->
 		{
 			return new Button();
 		};
@@ -529,7 +529,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		In the following example, a custom list view factory is provided:
 
 		```haxe
-		listView.listViewFactory = () ->
+		popUpListView.listViewFactory = () ->
 		{
 			return new ListView();
 		};
@@ -581,9 +581,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		The following example opens the pop-up list:
 
 		```haxe
-		if(!listView.open)
+		if(!popUpListView.open)
 		{
-			listView.openListView();
+			popUpListView.openListView();
 		}
 		```
 
@@ -631,9 +631,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		The following example closes the pop-up list:
 
 		```haxe
-		if(listView.open)
+		if(popUpListView.open)
 		{
-			listView.closeListView();
+			popUpListView.closeListView();
 		}
 		```
 
