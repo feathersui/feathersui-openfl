@@ -861,16 +861,15 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function customHitTest(stageX:Float, stageY:Float):Bool {
-		var pointerTargetContainer = this;
-		if (pointerTargetContainer.stage == null) {
+		if (this.stage == null) {
 			return false;
 		}
-		if (pointerTargetContainer.mouseChildren) {
-			var objects = pointerTargetContainer.stage.getObjectsUnderPoint(new Point(stageX, stageY));
+		if (this.mouseChildren) {
+			var objects = this.stage.getObjectsUnderPoint(new Point(stageX, stageY));
 			if (objects.length > 0) {
 				var lastObject = objects[objects.length - 1];
-				if (pointerTargetContainer.contains(lastObject)) {
-					while (lastObject != null && lastObject != pointerTargetContainer) {
+				if (this.contains(lastObject)) {
+					while (lastObject != null && lastObject != this) {
 						if ((lastObject is InteractiveObject)) {
 							var interactive:InteractiveObject = cast lastObject;
 							if (!interactive.mouseEnabled) {
@@ -880,7 +879,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 						}
 						if ((lastObject is IFocusObject)) {
 							var focusable:IFocusObject = cast lastObject;
-							if (focusable.parent != pointerTargetContainer && focusable.focusEnabled) {
+							if (focusable.parent != this && focusable.focusEnabled) {
 								return false;
 							}
 						}

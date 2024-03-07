@@ -650,7 +650,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 						}
 						if ((lastObject is IFocusObject)) {
 							var focusable:IFocusObject = cast lastObject;
-							if (focusable.parent != this._pointerTarget && focusable.focusEnabled) {
+							// this check is meant to use _pointerTarget and not pointerTargetContainer!
+							if ((this._pointerTarget == null || focusable.parent != this._pointerTarget) && focusable.focusEnabled) {
 								return false;
 							}
 						}
