@@ -650,7 +650,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			return;
 		}
 		if (this._focusManager == null) {
-			this.stage.focus = this;
+			if (this.stage != null) {
+				this.stage.focus = this;
+			}
 			// removing focus from the ListView might cause closeListView()
 			// to be called recursively, so check again whether it is open
 			// before continuing
@@ -992,7 +994,9 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			return;
 		}
 		event.preventDefault();
-		this.stage.focus = this.button;
+		if (this.stage != null) {
+			this.stage.focus = this.button;
+		}
 	}
 
 	private function popUpListView_listView_focusOutHandler(event:FocusEvent):Void {
