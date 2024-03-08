@@ -29,7 +29,6 @@ import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import feathers.utils.KeyToState;
 import feathers.utils.PointerToState;
-import feathers.utils.PointerTrigger;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
@@ -385,7 +384,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private var _pointerToState:PointerToState<ToggleButtonState>;
 	private var _keyToState:KeyToState<ToggleButtonState>;
-	private var _pointerTrigger:PointerTrigger;
 
 	override public function dispose():Void {
 		this.refreshInactiveCellRenderers(this._defaultStorage, true);
@@ -430,11 +428,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 		if (this._keyToState == null) {
 			this._keyToState = new KeyToState(this, this.changeState, UP(false), DOWN(false));
-		}
-
-		if (this._pointerTrigger == null) {
-			this._pointerTrigger = new PointerTrigger(this);
-			this._pointerTrigger.customHitTest = this.customHitTest;
 		}
 
 		if (this.layout == null) {
@@ -899,27 +892,39 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
+		if (!this.customHitTest(event.stageX, event.stageY)) {
+			return;
+		}
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+		TriggerEvent.dispatchFromTouchEvent(this, event);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_clickHandler(event:MouseEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
+		if (!this.customHitTest(event.stageX, event.stageY)) {
+			return;
+		}
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+		TriggerEvent.dispatchFromMouseEvent(this, event);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_triggerHandler(event:TriggerEvent):Void {
 		if (!this._enabled) {
 			return;
 		}
+		if (!this.customHitTest(event.stageX, event.stageY)) {
+			return;
+		}
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+		this.dispatchEvent(event);
 	}
 
 	private function gridViewRowRenderer_cellRenderer_resizeHandler(event:Event):Void {
