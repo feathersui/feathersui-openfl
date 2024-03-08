@@ -109,7 +109,7 @@ import openfl._internal.utils.ObjectPool;
 	};
 	treeView.dataProvider = collection;
 
-	treeView.itemToText = (item:TreeNode<Dynamic>) -> {
+	treeView.itemToText = (item:Dynamic) -> {
 		return item.text;
 	};
 
