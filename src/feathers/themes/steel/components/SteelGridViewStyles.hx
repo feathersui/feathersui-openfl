@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.ToggleButtonState;
 import feathers.skins.UnderlineSkin;
 import feathers.controls.Button;
@@ -247,6 +248,32 @@ class SteelGridViewStyles {
 						skin.minHeight = 1.0;
 					}
 					headerDivider.backgroundSkin = skin;
+				}
+			});
+		}
+
+		if (styleProvider.getStyleFunction(GridViewRowRenderer, null) == null) {
+			styleProvider.setStyleFunction(GridViewRowRenderer, null, function(rowRenderer:GridViewRowRenderer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
+				if (rowRenderer.backgroundSkin == null) {
+					var skin = new UnderlineSkin();
+					skin.fill = theme.getContainerFill();
+					skin.border = theme.getDividerBorder();
+					skin.selectedFill = theme.getActiveThemeFill();
+					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getActiveThemeFill());
+					if (isDesktop) {
+						skin.width = 26.0;
+						skin.height = 26.0;
+						skin.minWidth = 26.0;
+						skin.minHeight = 26.0;
+					} else {
+						skin.width = 44.0;
+						skin.height = 44.0;
+						skin.minWidth = 44.0;
+						skin.minHeight = 44.0;
+					}
+					rowRenderer.backgroundSkin = skin;
 				}
 			});
 		}

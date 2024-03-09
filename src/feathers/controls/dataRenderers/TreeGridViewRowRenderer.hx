@@ -83,7 +83,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeTreeGridViewRowRendererTheme();
 		super();
 	}
 
@@ -488,12 +487,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			return null;
 		}
 		return this._columnToCellRenderer.get(column);
-	}
-
-	private function initializeTreeGridViewRowRendererTheme():Void {
-		#if !feathersui_disable_default_theme
-		feathers.themes.steel.components.SteelTreeGridViewRowRendererStyles.initialize();
-		#end
 	}
 
 	override private function initialize():Void {

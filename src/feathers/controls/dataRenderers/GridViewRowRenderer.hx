@@ -81,7 +81,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		@since 1.0.0
 	**/
 	public function new() {
-		initializeGridViewRowRendererTheme();
 		super();
 	}
 
@@ -410,12 +409,6 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return null;
 		}
 		return this._columnToCellRenderer.get(column);
-	}
-
-	private function initializeGridViewRowRendererTheme():Void {
-		#if !feathersui_disable_default_theme
-		feathers.themes.steel.components.SteelGridViewRowRendererStyles.initialize();
-		#end
 	}
 
 	override private function initialize():Void {
