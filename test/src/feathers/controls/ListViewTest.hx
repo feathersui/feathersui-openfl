@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
+import feathers.events.ListViewEvent;
+import openfl.events.MouseEvent;
+import feathers.events.TriggerEvent;
 import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
@@ -868,6 +872,36 @@ class ListViewTest extends Test {
 		var itemRenderer:IVariantStyleObject = cast this._listView.indexToItemRenderer(0);
 		Assert.notNull(itemRenderer);
 		Assert.equals(customVariant2, itemRenderer.variant);
+	}
+
+	private function testDispatchItemTriggerFromMouseClick():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var item = this._listView.dataProvider.get(1);
+		this._listView.validateNow();
+		var itemRenderer = cast(this._listView.itemToItemRenderer(item), ItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._listView.addEventListener(ListViewEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.index, 1);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromMouseEvent(itemRenderer, new MouseEvent(MouseEvent.CLICK));
+		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testDispatchItemTriggerFromTouchTap():Void {
+		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var item = this._listView.dataProvider.get(1);
+		this._listView.validateNow();
+		var itemRenderer = cast(this._listView.itemToItemRenderer(item), ItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._listView.addEventListener(ListViewEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.index, 1);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromTouchEvent(itemRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.equals(1, dispatchedTriggerCount);
 	}
 }
 

@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
+import openfl.events.MouseEvent;
+import feathers.events.TriggerEvent;
+import feathers.events.GridViewEvent;
 import openfl.errors.RangeError;
 import feathers.skins.RectangleSkin;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -1120,6 +1124,49 @@ class GridViewTest extends Test {
 		Assert.isTrue(headerCornerSkin.parent == null || !headerCornerSkin.visible);
 		Assert.equals(0.0, this._gridView.minScrollY);
 		Assert.isTrue(this._gridView.maxScrollY > 0.0);
+	}
+
+	private function testDispatchItemTriggerFromMouseClick():Void {
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+		var item = this._gridView.dataProvider.get(1);
+		var column = this._gridView.columns.get(0);
+		this._gridView.validateNow();
+		var cellRenderer = cast(this._gridView.itemAndColumnToCellRenderer(item, column), ItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._gridView.addEventListener(GridViewEvent.CELL_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.rowIndex, 1);
+			Assert.equals(event.state.columnIndex, 0);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromMouseEvent(cellRenderer, new MouseEvent(MouseEvent.CLICK));
+		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testDispatchItemTriggerFromTouchTap():Void {
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.columns = new ArrayCollection([
+			new GridViewColumn("A", item -> item.a),
+			new GridViewColumn("B", item -> item.b),
+		]);
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var item = this._gridView.dataProvider.get(1);
+		var column = this._gridView.columns.get(0);
+		this._gridView.validateNow();
+		var cellRenderer = cast(this._gridView.itemAndColumnToCellRenderer(item, column), ItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._gridView.addEventListener(GridViewEvent.CELL_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.rowIndex, 1);
+			Assert.equals(event.state.columnIndex, 0);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromTouchEvent(cellRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.equals(1, dispatchedTriggerCount);
 	}
 }
 

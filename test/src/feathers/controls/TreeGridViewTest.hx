@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import openfl.events.MouseEvent;
+import feathers.events.TriggerEvent;
+import openfl.events.TouchEvent;
+import feathers.events.TreeGridViewEvent;
 import openfl.errors.RangeError;
 import feathers.data.TreeGridViewCellState;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
@@ -882,6 +886,49 @@ import utest.Test;
 		Assert.equals("One", itemRenderer1.text);
 		Assert.equals(0, itemRenderer2.parent.getChildIndex(itemRenderer2));
 		Assert.equals(1, itemRenderer1.parent.getChildIndex(itemRenderer1));
+	}
+
+	private function testDispatchItemTriggerFromMouseClick():Void {
+		var item1 = {a: "A0-a"};
+		var item2 = {a: "A0-b"};
+		var item3 = {a: "A0-c"};
+		var branch = {a: "A0", children: [item1, item2, item3]};
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([branch, {a: "A1"}], (item:Dynamic) -> item.children);
+		this._treeGridView.columns = new ArrayCollection([new TreeGridViewColumn("A", item -> item.a)]);
+		var item = this._treeGridView.dataProvider.get([1]);
+		var column = this._treeGridView.columns.get(0);
+		this._treeGridView.validateNow();
+		var itemRenderer = cast(this._treeGridView.itemAndColumnToCellRenderer(item, column), HierarchicalItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._treeGridView.addEventListener(TreeGridViewEvent.CELL_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(1, event.state.rowLocation.length);
+			Assert.equals(1, event.state.rowLocation[0]);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromMouseEvent(itemRenderer, new MouseEvent(MouseEvent.CLICK));
+		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testDispatchItemTriggerFromTouchTap():Void {
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([
+			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
+			{text: "B"}
+		], (item:Dynamic) -> item.children);
+		this._treeGridView.columns = new ArrayCollection([new TreeGridViewColumn("A", item -> item.a)]);
+		var item = this._treeGridView.dataProvider.get([1]);
+		var column = this._treeGridView.columns.get(0);
+		this._treeGridView.validateNow();
+		var itemRenderer = cast(this._treeGridView.itemAndColumnToCellRenderer(item, column), HierarchicalItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._treeGridView.addEventListener(TreeGridViewEvent.CELL_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(1, event.state.rowLocation.length);
+			Assert.equals(1, event.state.rowLocation[0]);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromTouchEvent(itemRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.equals(1, dispatchedTriggerCount);
 	}
 }
 

@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import feathers.events.TriggerEvent;
+import openfl.events.TouchEvent;
+import openfl.events.MouseEvent;
+import feathers.events.TreeViewEvent;
 import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
@@ -791,6 +795,44 @@ import utest.Test;
 		var itemRenderer:IVariantStyleObject = cast this._treeView.locationToItemRenderer([0]);
 		Assert.notNull(itemRenderer);
 		Assert.equals(customVariant2, itemRenderer.variant);
+	}
+
+	private function testDispatchItemTriggerFromMouseClick():Void {
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([
+			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
+			{text: "B"}
+		], (item:Dynamic) -> item.children);
+		var item = this._treeView.dataProvider.get([1]);
+		this._treeView.validateNow();
+		var itemRenderer = cast(this._treeView.itemToItemRenderer(item), HierarchicalItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._treeView.addEventListener(TreeViewEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(1, event.state.location.length);
+			Assert.equals(1, event.state.location[0]);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromMouseEvent(itemRenderer, new MouseEvent(MouseEvent.CLICK));
+		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testDispatchItemTriggerFromTouchTap():Void {
+		this._treeView.dataProvider = new ArrayHierarchicalCollection([
+			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
+			{text: "B"}
+		], (item:Dynamic) -> item.children);
+		var item = this._treeView.dataProvider.get([1]);
+		this._treeView.validateNow();
+		var itemRenderer = cast(this._treeView.itemToItemRenderer(item), HierarchicalItemRenderer);
+		var dispatchedTriggerCount = 0;
+		this._treeView.addEventListener(TreeViewEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(1, event.state.location.length);
+			Assert.equals(1, event.state.location[0]);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromTouchEvent(itemRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.equals(1, dispatchedTriggerCount);
 	}
 }
 

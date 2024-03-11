@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
+import feathers.events.TriggerEvent;
+import openfl.events.MouseEvent;
+import feathers.events.TabBarEvent;
 import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.data.ArrayCollection;
@@ -737,6 +741,36 @@ class TabBarTest extends Test {
 		var tab:ToggleButton = this._tabBar.indexToTab(0);
 		Assert.notNull(tab);
 		Assert.equals(customVariant2, tab.variant);
+	}
+
+	private function testDispatchItemTriggerFromMouseClick():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var item = this._tabBar.dataProvider.get(1);
+		this._tabBar.validateNow();
+		var tab = cast(this._tabBar.itemToTab(item), ToggleButton);
+		var dispatchedTriggerCount = 0;
+		this._tabBar.addEventListener(TabBarEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.index, 1);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromMouseEvent(tab, new MouseEvent(MouseEvent.CLICK));
+		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testDispatchItemTriggerFromTouchTap():Void {
+		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var item = this._tabBar.dataProvider.get(1);
+		this._tabBar.validateNow();
+		var tab = cast(this._tabBar.itemToTab(item), ToggleButton);
+		var dispatchedTriggerCount = 0;
+		this._tabBar.addEventListener(TabBarEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.index, 1);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromTouchEvent(tab, new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.equals(1, dispatchedTriggerCount);
 	}
 }
 

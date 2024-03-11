@@ -8,6 +8,10 @@
 
 package feathers.controls;
 
+import openfl.events.TouchEvent;
+import feathers.events.TriggerEvent;
+import openfl.events.MouseEvent;
+import feathers.events.ButtonBarEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.data.ArrayCollection;
 import feathers.data.ButtonBarItemState;
@@ -360,6 +364,36 @@ class ButtonBarTest extends Test {
 		var button:Button = this._buttonBar.indexToButton(0);
 		Assert.notNull(button);
 		Assert.equals(customVariant2, button.variant);
+	}
+
+	private function testDispatchItemTriggerFromMouseClick():Void {
+		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var item = this._buttonBar.dataProvider.get(1);
+		this._buttonBar.validateNow();
+		var button = cast(this._buttonBar.itemToButton(item), Button);
+		var dispatchedTriggerCount = 0;
+		this._buttonBar.addEventListener(ButtonBarEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.index, 1);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromMouseEvent(button, new MouseEvent(MouseEvent.CLICK));
+		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testDispatchItemTriggerFromTouchTap():Void {
+		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var item = this._buttonBar.dataProvider.get(1);
+		this._buttonBar.validateNow();
+		var button = cast(this._buttonBar.itemToButton(item), Button);
+		var dispatchedTriggerCount = 0;
+		this._buttonBar.addEventListener(ButtonBarEvent.ITEM_TRIGGER, event -> {
+			dispatchedTriggerCount++;
+			Assert.equals(event.state.index, 1);
+		});
+		Assert.equals(0, dispatchedTriggerCount);
+		TriggerEvent.dispatchFromTouchEvent(button, new TouchEvent(TouchEvent.TOUCH_TAP));
+		Assert.equals(1, dispatchedTriggerCount);
 	}
 }
 
