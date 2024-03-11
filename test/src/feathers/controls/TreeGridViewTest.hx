@@ -892,8 +892,10 @@ import utest.Test;
 		var item1 = {a: "A0-a"};
 		var item2 = {a: "A0-b"};
 		var item3 = {a: "A0-c"};
-		var branch = {a: "A0", children: [item1, item2, item3]};
-		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([branch, {a: "A1"}], (item:Dynamic) -> item.children);
+		var children:Array<Dynamic> = [item1, item2, item3];
+		var branch = {a: "A0", children: children};
+		var items:Array<Dynamic> = [branch, {a: "A1"}];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
 		this._treeGridView.columns = new ArrayCollection([new TreeGridViewColumn("A", item -> item.a)]);
 		var item = this._treeGridView.dataProvider.get([1]);
 		var column = this._treeGridView.columns.get(0);
@@ -911,10 +913,13 @@ import utest.Test;
 	}
 
 	private function testDispatchItemTriggerFromTouchTap():Void {
-		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([
-			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
-			{text: "B"}
-		], (item:Dynamic) -> item.children);
+		var item1 = {a: "A0-a"};
+		var item2 = {a: "A0-b"};
+		var item3 = {a: "A0-c"};
+		var children:Array<Dynamic> = [item1, item2, item3];
+		var branch = {a: "A0", children: children};
+		var items:Array<Dynamic> = [branch, {a: "A1"}];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
 		this._treeGridView.columns = new ArrayCollection([new TreeGridViewColumn("A", item -> item.a)]);
 		var item = this._treeGridView.dataProvider.get([1]);
 		var column = this._treeGridView.columns.get(0);

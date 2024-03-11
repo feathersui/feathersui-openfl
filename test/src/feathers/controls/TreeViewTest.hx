@@ -798,10 +798,9 @@ import utest.Test;
 	}
 
 	private function testDispatchItemTriggerFromMouseClick():Void {
-		this._treeView.dataProvider = new ArrayHierarchicalCollection([
-			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
-			{text: "B"}
-		], (item:Dynamic) -> item.children);
+		var children:Array<Dynamic> = [{text: "One"}, {text: "Two"}, {text: "Three"}];
+		var items:Array<Dynamic> = [{text: "A", children: children}, {text: "B"}];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
 		var item = this._treeView.dataProvider.get([1]);
 		this._treeView.validateNow();
 		var itemRenderer = cast(this._treeView.itemToItemRenderer(item), HierarchicalItemRenderer);
@@ -817,10 +816,9 @@ import utest.Test;
 	}
 
 	private function testDispatchItemTriggerFromTouchTap():Void {
-		this._treeView.dataProvider = new ArrayHierarchicalCollection([
-			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
-			{text: "B"}
-		], (item:Dynamic) -> item.children);
+		var children:Array<Dynamic> = [{text: "One"}, {text: "Two"}, {text: "Three"}];
+		var items:Array<Dynamic> = [{text: "A", children: children}, {text: "B"}];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
 		var item = this._treeView.dataProvider.get([1]);
 		this._treeView.validateNow();
 		var itemRenderer = cast(this._treeView.itemToItemRenderer(item), HierarchicalItemRenderer);
