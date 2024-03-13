@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v4
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
