@@ -14,16 +14,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.3.4
+    - name: Package Haxelib
+      working-directory: haxelib
+      run: haxe haxelib.hxml
     - uses: actions/upload-artifact@v3
       with:
         name: feathersui-haxelib
-        path: |
-          src/
-          tools/
-          haxelib.json
-          include.xml
-          README.md
-          LICENSE.md
-          CHANGELOG.md
-          CONTRIBUTING.md
+        path: bin/haxelib/
         if-no-files-found: error
