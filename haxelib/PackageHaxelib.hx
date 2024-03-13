@@ -17,15 +17,23 @@ import sys.io.File;
 
 class PackageHaxelib {
 	public static function main():Void {
+		final destDir = FileSystem.absolutePath("../bin/haxelib");
+		if (FileSystem.exists(destDir)) {
+			deleteDir(destDir);
+		}
+		FileSystem.createDirectory(destDir);
+
+		copyFile(FileSystem.absolutePath("../haxelib.json"), destDir);
+		copyFile(FileSystem.absolutePath("../include.xml"), destDir);
+		copyFile(FileSystem.absolutePath("../README.md"), destDir);
+		copyFile(FileSystem.absolutePath("../CHANGELOG.md"), destDir);
+		copyFile(FileSystem.absolutePath("../CONTRIBUTING.md"), destDir);
+		copyFile(FileSystem.absolutePath("../LICENSE.md"), destDir);
+		copyDir(FileSystem.absolutePath("../src"), destDir);
+		copyDir(FileSystem.absolutePath("../tools"), destDir);
+
 		var entries = new List<Entry>();
-		addFile(FileSystem.absolutePath("../haxelib.json"), entries);
-		addFile(FileSystem.absolutePath("../include.xml"), entries);
-		addFile(FileSystem.absolutePath("../README.md"), entries);
-		addFile(FileSystem.absolutePath("../CHANGELOG.md"), entries);
-		addFile(FileSystem.absolutePath("../CONTRIBUTING.md"), entries);
-		addFile(FileSystem.absolutePath("../LICENSE.md"), entries);
-		addDirectory(FileSystem.absolutePath("../src"), true, entries);
-		addDirectory(FileSystem.absolutePath("../tools"), true, entries);
+		addDirectory(destDir, entries);
 
 		var jsonContent = File.getContent("../haxelib.json");
 		var json = Json.parse(jsonContent);
@@ -46,12 +54,47 @@ class PackageHaxelib {
 		zip.write(entries);
 	}
 
+	private static function copyFile(filePath:String, destDir:String):Void {
+		var fileName = Path.withoutDirectory(filePath);
+		File.copy(filePath, Path.join([destDir, fileName]));
+	}
+
+	private static function copyDir(directoryPath:String, destParentDir:String):Void {
+		var dirName = Path.withoutDirectory(directoryPath);
+		var destDirPath = Path.join([destParentDir, dirName]);
+		FileSystem.createDirectory(destDirPath);
+		for (fileName in FileSystem.readDirectory(directoryPath)) {
+			var filePath = Path.join([directoryPath, fileName]);
+			if (FileSystem.isDirectory(filePath)) {
+				copyDir(filePath, destDirPath);
+			} else {
+				// extra files on macOS that should be skipped
+				if (fileName == ".DS_Store") {
+					continue;
+				}
+				copyFile(filePath, destDirPath);
+			}
+		}
+	}
+
+	private static function deleteDir(directoryPath:String):Void {
+		for (fileName in FileSystem.readDirectory(directoryPath)) {
+			var filePath = Path.join([directoryPath, fileName]);
+			if (FileSystem.isDirectory(filePath)) {
+				deleteDir(filePath);
+			} else {
+				FileSystem.deleteFile(filePath);
+			}
+		}
+		FileSystem.deleteDirectory(directoryPath);
+	}
+
 	private static function addFile(filePath:String, result:List<Entry>):Void {
 		addFileInternal(filePath, Path.directory(filePath), result);
 	}
 
-	private static function addDirectory(directoryPath:String, recursive:Bool, result:List<Entry>):Void {
-		addDirectoryInternal(directoryPath, Path.directory(directoryPath), recursive, result);
+	private static function addDirectory(directoryPath:String, result:List<Entry>):Void {
+		addDirectoryInternal(directoryPath, directoryPath, result);
 	}
 
 	private static function addFileInternal(filePath:String, relativeToDirPath:String, result:List<Entry>):Void {
@@ -68,18 +111,12 @@ class PackageHaxelib {
 		});
 	}
 
-	private static function addDirectoryInternal(directoryPath:String, relativeTo:String, recursive:Bool, result:List<Entry>):Void {
+	private static function addDirectoryInternal(directoryPath:String, relativeTo:String, result:List<Entry>):Void {
 		for (fileName in FileSystem.readDirectory(directoryPath)) {
 			var filePath = Path.join([directoryPath, fileName]);
 			if (FileSystem.isDirectory(filePath)) {
-				if (recursive) {
-					addDirectoryInternal(filePath, relativeTo, true, result);
-				}
+				addDirectoryInternal(filePath, relativeTo, result);
 			} else {
-				// extra files on macOS that should be skipped
-				if (fileName == ".DS_Store") {
-					continue;
-				}
 				addFileInternal(filePath, relativeTo, result);
 			}
 		}
