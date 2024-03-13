@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
@@ -25,7 +25,7 @@ jobs:
         haxelib dev feathersui ${{ github.workspace }}
     - name: Build Flash .swc library
       run: haxelib run openfl build flash -debug
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: feathersui-openfl-swc
         path: bin/flash/bin/feathersui-openfl.swc
