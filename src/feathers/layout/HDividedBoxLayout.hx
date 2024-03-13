@@ -275,6 +275,9 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
 		for (item in items) {
+			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				continue;
+			}
 			if ((item is IValidating)) {
 				// the width might have changed after the initial validation
 				(cast item : IValidating).validateNow();
@@ -334,6 +337,9 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 	private inline function validateItems(items:Array<DisplayObject>) {
 		for (i in 0...items.length) {
 			var item = items[i];
+			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				continue;
+			}
 			var isDivider = i % 2 == 1;
 			if (!isDivider) {
 				if (this._customItemWidths != null && i < this._customItemWidths.length) {
@@ -356,6 +362,9 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				continue;
 			}
 			var item = items[i];
+			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				continue;
+			}
 			switch (this._verticalAlign) {
 				case BOTTOM:
 					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - item.height);
@@ -378,10 +387,15 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		var totalMeasuredWidth = 0.0;
 		var totalMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
+		var fallbackItemIndex = -1;
 		for (i in 0...items.length) {
 			var item = items[i];
+			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				continue;
+			}
 			var isDivider = i % 2 == 1;
 			if (!isDivider) {
+				fallbackItemIndex = i;
 				var nonDividerIndex = Math.floor(i / 2);
 				var needsPercentWidth = true;
 				if (this._customItemWidths != null && nonDividerIndex < this._customItemWidths.length) {
@@ -493,7 +507,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		var index = this._fallbackFluidIndex;
 		if (index == -1) {
-			index = items.length - 1;
+			index = fallbackItemIndex;
 		}
 		if (index != -1) {
 			var fallbackItem = items[index];
@@ -527,6 +541,9 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				continue;
 			}
 			var item = items[i];
+			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				continue;
+			}
 			var itemHeight = availableHeight;
 			if ((item is IMeasureObject)) {
 				var measureItem:IMeasureObject = cast item;
