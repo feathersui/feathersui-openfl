@@ -235,9 +235,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 
 	private function set_opened(value:Bool):Bool {
 		if (value) {
-			this.openDrawer(true);
+			this.openDrawer(this._animateOpenedProperty);
 		} else {
-			this.closeDrawer(true);
+			this.closeDrawer(this._animateOpenedProperty);
 		}
 		if (this._pendingOpened != null) {
 			return this._pendingOpened;
@@ -394,6 +394,29 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 		this._swipeOpenEnabled = value;
 		this.setInvalid(STATE);
 		return this._swipeOpenEnabled;
+	}
+
+	private var _animateOpenedProperty:Bool = true;
+
+	/**
+		Indicates if setting the `opened` property causes the drawer to animate
+		open and closed, or if it causes the drawer to open and close instantly.
+
+		@see `Drawer.opened`
+		@see `Drawer.openDrawer()`
+		@see `Drawer.closeDrawer()`
+
+		@since 1.3.0
+	**/
+	public var animateOpenedProperty(get, set):Bool;
+
+	private function get_animateOpenedProperty():Bool {
+		return this._animateOpenedProperty;
+	}
+
+	private function set_animateOpenedProperty(value:Bool):Bool {
+		this._animateOpenedProperty = value;
+		return this._animateOpenedProperty;
 	}
 
 	override public function dispose():Void {
