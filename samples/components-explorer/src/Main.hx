@@ -7,6 +7,7 @@ import com.feathersui.components.views.ButtonScreen;
 import com.feathersui.components.views.CalloutScreen;
 import com.feathersui.components.views.CheckScreen;
 import com.feathersui.components.views.CircleSkinScreen;
+import com.feathersui.components.views.CollapsibleScreen;
 import com.feathersui.components.views.ComboBoxScreen;
 import com.feathersui.components.views.DatePickerScreen;
 import com.feathersui.components.views.DonutSkinScreen;
@@ -122,6 +123,9 @@ class Main extends Application {
 
 		var circleSkin = Route.withClass(ViewPaths.CIRCLE_SKIN, CircleSkinScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(circleSkin);
+
+		var collapsible = Route.withClass(ViewPaths.COLLAPSIBLE, CollapsibleScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(collapsible);
 
 		var comboBox = Route.withClass(ViewPaths.COMBO_BOX, ComboBoxScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(comboBox);
