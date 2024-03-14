@@ -8,9 +8,6 @@
 
 package feathers.controls;
 
-import openfl.geom.Rectangle;
-import openfl.events.Event;
-import feathers.events.FeathersEvent;
 import feathers.core.FeathersControl;
 import feathers.core.IMeasureObject;
 import feathers.core.IOpenCloseToggle;
@@ -18,6 +15,7 @@ import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.core.InvalidationFlag;
+import feathers.events.FeathersEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
@@ -26,8 +24,12 @@ import feathers.utils.DisplayObjectFactory;
 import feathers.utils.MeasurementsUtil;
 import motion.Actuate;
 import motion.actuators.SimpleActuator;
+import motion.easing.IEasing;
+import motion.easing.Quart;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.geom.Rectangle;
 
 /**
 	A container that displays primary `content` that may be collapsed and
@@ -266,6 +268,35 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	@:style
 	public var customHeaderVariant:String = null;
 
+	/**
+		The easing function to use when animating open or closed.
+
+		@default motion.easing.Quart.easeOut
+
+		@since 1.3.0
+
+		@see `Collapsible.openCloseDuration`
+	**/
+	public var openCloseEase:IEasing = Quart.easeOut;
+
+	/**
+		The duration, measured in seconds, of the animation when the content
+		opens and closes.
+
+		In the following example, the duration of the animation that toggles the
+		thumb is set to 500 milliseconds:
+
+		```haxe
+		collapsible.openCloseDuration = 0.5;
+		```
+
+		@since 1.3.0
+
+		@see `Collapsible.openCloseEase`
+	**/
+	@:style
+	public var openCloseDuration:Float = 0.2;
+
 	override public function dispose():Void {
 		if (this._collapseActuator != null) {
 			Actuate.stop(this._collapseActuator);
@@ -451,11 +482,12 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 					var tween = Actuate.update((height:Float) -> {
 						this._pendingHeight = height;
 						this.setInvalid(SIZE);
-					}, 0.5, [this.actualHeight], [targetHeight]).onComplete(() -> {
-						this._pendingHeight = null;
-						this.setInvalid(SIZE);
-						FeathersEvent.dispatch(this, Event.OPEN);
-					});
+					}, this.openCloseDuration, [this.actualHeight],
+						[targetHeight]).ease(this.openCloseEase).onComplete(() -> {
+							this._pendingHeight = null;
+							this.setInvalid(SIZE);
+							FeathersEvent.dispatch(this, Event.OPEN);
+						});
 					this._collapseActuator = cast tween;
 				} else {
 					if (this._content != null) {
@@ -464,14 +496,15 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 					var tween = Actuate.update((height:Float) -> {
 						this._pendingHeight = height;
 						this.setInvalid(SIZE);
-					}, 0.5, [this.actualHeight], [this.header.height]).onComplete(() -> {
-						this._pendingHeight = null;
-						if (this._content != null) {
-							this._content.visible = false;
-						}
-						this.setInvalid(SIZE);
-						FeathersEvent.dispatch(this, Event.CLOSE);
-					});
+					}, this.openCloseDuration, [this.actualHeight],
+						[this.header.height]).ease(this.openCloseEase).onComplete(() -> {
+							this._pendingHeight = null;
+							if (this._content != null) {
+								this._content.visible = false;
+							}
+							this.setInvalid(SIZE);
+							FeathersEvent.dispatch(this, Event.CLOSE);
+						});
 					this._collapseActuator = cast tween;
 				}
 			} else {
