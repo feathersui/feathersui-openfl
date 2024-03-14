@@ -104,6 +104,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	private var _scrollRect2:Rectangle = new Rectangle();
 
 	private var _contentMeasurements:Measurements = new Measurements();
+	private var _contentOriginalAlpha:Float = 1.0;
 	private var _content:DisplayObject;
 
 	/**
@@ -122,6 +123,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 			return this._content;
 		}
 		if (this._content != null) {
+			this._content.alpha = this._contentOriginalAlpha;
 			this._contentMeasurements.restore(this._content);
 			this.removeChild(this._content);
 		}
@@ -129,6 +131,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 		if (this._content != null) {
 			this.addChild(this._content);
 			this._contentMeasurements.save(this._content);
+			this._contentOriginalAlpha = this._content.alpha;
 		}
 		setInvalid(DATA);
 		return this._content;
@@ -296,6 +299,21 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	**/
 	@:style
 	public var openCloseDuration:Float = 0.2;
+
+	/**
+		Optionally fades the `alpha` value of the content when opening and
+		closing.
+
+		In the following example, the alpha value fades on open and close:
+
+		```haxe
+		collapsible.animateContentAlpha = true;
+		```
+
+		@since 1.3.0
+	**/
+	@:style
+	public var animateContentAlpha:Bool = false;
 
 	override public function dispose():Void {
 		if (this._collapseActuator != null) {
@@ -479,11 +497,15 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 					if (this._content != null) {
 						targetHeight += this._content.height;
 					}
-					var tween = Actuate.update((height:Float) -> {
+					var tween = Actuate.update((height:Float, alpha:Float) -> {
+						if (this.animateContentAlpha && this._content != null) {
+							this._content.alpha = alpha;
+						}
 						this._pendingHeight = height;
 						this.setInvalid(SIZE);
-					}, this.openCloseDuration, [this.actualHeight],
-						[targetHeight]).ease(this.openCloseEase).onComplete(() -> {
+					},
+						this.openCloseDuration, [this.actualHeight, this._content != null ? this._content.alpha : 0.0],
+						[targetHeight, this._contentOriginalAlpha]).ease(this.openCloseEase).onComplete(() -> {
 							this._pendingHeight = null;
 							this.setInvalid(SIZE);
 							FeathersEvent.dispatch(this, Event.OPEN);
@@ -493,11 +515,15 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 					if (this._content != null) {
 						this._content.visible = true;
 					}
-					var tween = Actuate.update((height:Float) -> {
+					var tween = Actuate.update((height:Float, alpha:Float) -> {
+						if (this.animateContentAlpha && this._content != null) {
+							this._content.alpha = alpha;
+						}
 						this._pendingHeight = height;
 						this.setInvalid(SIZE);
-					}, this.openCloseDuration, [this.actualHeight],
-						[this.header.height]).ease(this.openCloseEase).onComplete(() -> {
+					},
+						this.openCloseDuration, [this.actualHeight, this._content != null ? this._content.alpha : 1.0],
+						[this.header.height, 0.0]).ease(this.openCloseEase).onComplete(() -> {
 							this._pendingHeight = null;
 							if (this._content != null) {
 								this._content.visible = false;
