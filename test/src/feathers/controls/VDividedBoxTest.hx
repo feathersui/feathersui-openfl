@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import openfl.Lib;
+import openfl.display.InteractiveObject;
 import utest.Assert;
 import utest.Test;
 
@@ -34,7 +35,7 @@ class VDividedBoxTest extends Test {
 
 	public function setup():Void {
 		this._dividedBox = new VDividedBox();
-		this._dividedBox.dividerFactory = () -> {
+		this._dividedBox.dividerFactory = function():InteractiveObject {
 			var divider = new LayoutGroup();
 			divider.width = DIVIDER_SIZE;
 			divider.height = DIVIDER_SIZE;
