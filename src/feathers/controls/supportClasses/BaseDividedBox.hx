@@ -11,6 +11,7 @@ package feathers.controls.supportClasses;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.AutoSizeMode;
 import feathers.layout.ILayout;
 import feathers.layout.LayoutBoundsResult;
@@ -314,6 +315,7 @@ class BaseDividedBox extends FeathersControl {
 		// add listeners or access properties after adding a child
 		// because adding the child may result in better errors (like for null)
 		child.addEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
+		child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, baseDividedBox_child_layoutDataChangeHandler);
 		this.setInvalid(LAYOUT);
 		return result;
 	}
@@ -329,6 +331,7 @@ class BaseDividedBox extends FeathersControl {
 		// remove listeners or access properties after removing a child
 		// because removing the child may result in better errors (like for null)
 		child.removeEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
+		child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, baseDividedBox_child_layoutDataChangeHandler);
 		this.setInvalid(LAYOUT);
 		return result;
 	}
@@ -839,6 +842,13 @@ class BaseDividedBox extends FeathersControl {
 	}
 
 	private function baseDividedBox_child_resizeHandler(event:Event):Void {
+		if (this._ignoreChildChanges) {
+			return;
+		}
+		this.setInvalid(LAYOUT);
+	}
+
+	private function baseDividedBox_child_layoutDataChangeHandler(event:FeathersEvent):Void {
 		if (this._ignoreChildChanges) {
 			return;
 		}
