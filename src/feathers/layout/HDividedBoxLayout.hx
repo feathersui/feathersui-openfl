@@ -274,9 +274,24 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 
 		var contentWidth = this._paddingLeft;
 		var contentHeight = 0.0;
-		for (item in items) {
+		var i = 0;
+		while (i < items.length) {
+			var item = items[i];
+			var divider:DisplayObject = null;
+			if (i > 0) {
+				divider = items[i - 1];
+			}
 			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				// also skip the divider because this item is skipped
+				i += 2;
 				continue;
+			}
+			if ((divider is IValidating)) {
+				(cast divider : IValidating).validateNow();
+			}
+			if (divider != null && divider.visible) {
+				divider.x = contentWidth;
+				contentWidth += divider.width;
 			}
 			if ((item is IValidating)) {
 				// the width might have changed after the initial validation
@@ -287,6 +302,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 			}
 			item.x = contentWidth;
 			contentWidth += item.width;
+			i += 2;
 		}
 		contentWidth += this._paddingRight;
 		contentHeight += this._paddingTop + this._paddingBottom;
@@ -335,49 +351,59 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function validateItems(items:Array<DisplayObject>) {
-		for (i in 0...items.length) {
+		var i = 0;
+		while (i < items.length) {
 			var item = items[i];
+			var divider:DisplayObject = null;
+			if (i > 0) {
+				divider = items[i - 1];
+			}
 			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				i += 2;
 				continue;
 			}
-			var isDivider = i % 2 == 1;
-			if (!isDivider) {
-				if (this._customItemWidths != null && i < this._customItemWidths.length) {
-					var itemWidth = this._customItemWidths[i];
-					if (itemWidth != null) {
-						item.width = itemWidth;
-					}
+			if (this._customItemWidths != null && i < this._customItemWidths.length) {
+				var itemWidth = this._customItemWidths[i];
+				if (itemWidth != null) {
+					item.width = itemWidth;
 				}
 			}
 			if ((item is IValidating)) {
 				(cast item : IValidating).validateNow();
 			}
+			if ((divider is IValidating)) {
+				(cast divider : IValidating).validateNow();
+			}
+			i += 2;
 		}
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, viewPortHeight:Float):Void {
-		for (i in 0...items.length) {
-			var isDivider = i % 2 == 1;
-			if (!isDivider) {
-				continue;
+		var i = 0;
+		while (i < items.length) {
+			var divider:DisplayObject = null;
+			if (i > 0) {
+				divider = items[i - 1];
 			}
-			var item = items[i];
-			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+			if (divider == null) {
+				i += 2;
 				continue;
 			}
 			switch (this._verticalAlign) {
 				case BOTTOM:
-					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - item.height);
+					divider.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - divider.height);
 				case MIDDLE:
-					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom - item.height) / 2.0);
+					divider.y = Math.max(this._paddingTop, this._paddingTop
+						+ (viewPortHeight - this._paddingTop - this._paddingBottom - divider.height) / 2.0);
 				case TOP:
-					item.y = this._paddingTop;
+					divider.y = this._paddingTop;
 				case JUSTIFY:
-					item.y = this._paddingTop;
-					item.height = viewPortHeight - this._paddingTop - this._paddingBottom;
+					divider.y = this._paddingTop;
+					divider.height = viewPortHeight - this._paddingTop - this._paddingBottom;
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
+			i += 2;
 		}
 	}
 
@@ -388,45 +414,53 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		var totalMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
 		var fallbackItemIndex = -1;
-		for (i in 0...items.length) {
+		var i = 0;
+		while (i < items.length) {
 			var item = items[i];
+			var divider:DisplayObject = null;
+			if (i > 0) {
+				divider = items[i - 1];
+			}
 			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				i += 2;
 				continue;
 			}
-			var isDivider = i % 2 == 1;
-			if (!isDivider) {
-				fallbackItemIndex = i;
-				var nonDividerIndex = Math.floor(i / 2);
-				var needsPercentWidth = true;
-				if (this._customItemWidths != null && nonDividerIndex < this._customItemWidths.length) {
-					var itemWidth = this._customItemWidths[nonDividerIndex];
-					if (itemWidth != null) {
-						needsPercentWidth = false;
-						item.width = itemWidth;
-						customWidthIndices.push(i);
-						if ((item is IValidating)) {
-							// changing the width of the item may cause its height
-							// to change, so we need to validate. the height is
-							// needed for measurement.
-							(cast item : IValidating).validateNow();
-						}
+			if (divider != null && divider.visible) {
+				totalMeasuredWidth += divider.width;
+			}
+			fallbackItemIndex = i;
+			var nonDividerIndex = Math.floor(i / 2);
+			var needsPercentWidth = true;
+			if (this._customItemWidths != null && nonDividerIndex < this._customItemWidths.length) {
+				var itemWidth = this._customItemWidths[nonDividerIndex];
+				if (itemWidth != null) {
+					needsPercentWidth = false;
+					item.width = itemWidth;
+					customWidthIndices.push(i);
+					if ((item is IValidating)) {
+						// changing the width of the item may cause its height
+						// to change, so we need to validate. the height is
+						// needed for measurement.
+						(cast item : IValidating).validateNow();
 					}
-				}
-				if (needsPercentWidth) {
-					var percentWidth = 100.0;
-					if ((item is IMeasureObject)) {
-						var measureItem:IMeasureObject = cast item;
-						var columnExplicitMinWidth = measureItem.explicitMinWidth;
-						if (columnExplicitMinWidth != null) {
-							totalMinWidth += columnExplicitMinWidth;
-						}
-					}
-					totalPercentWidth += percentWidth;
-					pendingIndices.push(i);
-					continue;
 				}
 			}
+			if (needsPercentWidth) {
+				var percentWidth = 100.0;
+				if ((item is IMeasureObject)) {
+					var measureItem:IMeasureObject = cast item;
+					var columnExplicitMinWidth = measureItem.explicitMinWidth;
+					if (columnExplicitMinWidth != null) {
+						totalMinWidth += columnExplicitMinWidth;
+					}
+				}
+				totalPercentWidth += percentWidth;
+				pendingIndices.push(i);
+				i += 2;
+				continue;
+			}
 			totalMeasuredWidth += item.width;
+			i += 2;
 		}
 
 		totalMeasuredWidth += this._paddingLeft + this._paddingRight;
@@ -535,13 +569,11 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 
 	private function applyPercentHeight(items:Array<DisplayObject>, viewPortHeight:Float):Void {
 		var availableHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
-		for (i in 0...items.length) {
-			var isDivider = i % 2 == 1;
-			if (isDivider) {
-				continue;
-			}
+		var i = 0;
+		while (i < items.length) {
 			var item = items[i];
 			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				i += 2;
 				continue;
 			}
 			var itemHeight = availableHeight;
@@ -564,6 +596,7 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				}
 			}
 			item.height = itemHeight;
+			i += 2;
 		}
 	}
 }

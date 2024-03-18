@@ -14,6 +14,7 @@ import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.AutoSizeMode;
 import feathers.layout.ILayout;
+import feathers.layout.ILayoutObject;
 import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
@@ -721,6 +722,30 @@ class BaseDividedBox extends FeathersControl {
 		var oldIgnoreChildChanges = this._ignoreChildChanges;
 		this._ignoreChildChanges = true;
 		this._layoutResult.reset();
+		var index0Included = true;
+		var i = 0;
+		while (i < this._layoutItems.length) {
+			var item = this.items[i];
+			var divider:DisplayObject = null;
+			if (i > 0) {
+				divider = this.dividers[i - 1];
+			}
+			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				if (i == 0) {
+					index0Included = false;
+				}
+				if (divider != null) {
+					// also hide the divider because this item is skipped
+					divider.visible = false;
+				}
+				i += 2;
+				continue;
+			}
+			if (divider != null) {
+				divider.visible = i > 2 || index0Included;
+			}
+			i += 2;
+		}
 		this.layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}

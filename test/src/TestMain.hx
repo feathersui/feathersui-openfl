@@ -40,6 +40,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.GridViewTest());
 		runner.addCase(new feathers.controls.GroupListViewTest());
 		runner.addCase(new feathers.controls.HeaderTest());
+		runner.addCase(new feathers.controls.HDividedBoxTest());
 		runner.addCase(new feathers.controls.HProgressBarTest());
 		runner.addCase(new feathers.controls.HScrollBarTest());
 		runner.addCase(new feathers.controls.HSliderTest());
@@ -75,6 +76,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ToggleSwitchTest());
 		runner.addCase(new feathers.controls.TreeGridViewTest());
 		runner.addCase(new feathers.controls.TreeViewTest());
+		runner.addCase(new feathers.controls.VDividedBoxTest());
 		runner.addCase(new feathers.controls.VProgressBarTest());
 		runner.addCase(new feathers.controls.VScrollBarTest());
 		runner.addCase(new feathers.controls.VSliderTest());
