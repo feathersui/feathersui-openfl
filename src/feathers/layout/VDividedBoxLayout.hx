@@ -414,7 +414,8 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 		var totalMeasuredHeight = 0.0;
 		var totalMinHeight = 0.0;
 		var totalPercentHeight = 0.0;
-		var fallbackItemIndex = -1;
+		var fallbackFluidIndex = this._fallbackFluidIndex;
+		var fallbackFallbackFluidIndex = -1;
 		var i = 0;
 		while (i < items.length) {
 			var item = items[i];
@@ -423,10 +424,14 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 				divider = items[i - 1];
 			}
 			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				if (fallbackFluidIndex == i) {
+					// no longer valid (probably a bug in VDividedBox)
+					fallbackFluidIndex = -1;
+				}
 				i += 2;
 				continue;
 			}
-			fallbackItemIndex = i;
+			fallbackFallbackFluidIndex = i;
 			if (divider != null && divider.visible) {
 				totalMeasuredHeight += divider.height;
 			}
@@ -540,17 +545,19 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			return;
 		}
 
-		var index = this._fallbackFluidIndex;
-		if (index == -1) {
-			index = fallbackItemIndex;
+		// if there is no fallback specified by VDividedBox,
+		// or we never encountered the one that it specified,
+		// use the last one that we discovered
+		if (fallbackFluidIndex == -1 || fallbackFallbackFluidIndex < fallbackFluidIndex) {
+			fallbackFluidIndex = fallbackFallbackFluidIndex;
 		}
-		if (index != -1) {
-			var fallbackItem = items[index];
+		if (fallbackFluidIndex != -1) {
+			var fallbackItem = items[fallbackFluidIndex];
 			var itemHeight = fallbackItem.height + remainingHeight;
 			if (itemHeight < 0.0) {
 				remainingHeight = itemHeight;
 				itemHeight = 0.0;
-				customHeightIndices.remove(index);
+				customHeightIndices.remove(fallbackFluidIndex);
 			} else {
 				remainingHeight = 0.0;
 			}

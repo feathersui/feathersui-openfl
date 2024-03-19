@@ -413,7 +413,8 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 		var totalMeasuredWidth = 0.0;
 		var totalMinWidth = 0.0;
 		var totalPercentWidth = 0.0;
-		var fallbackItemIndex = -1;
+		var fallbackFluidIndex = this._fallbackFluidIndex;
+		var fallbackFallbackFluidIndex = -1;
 		var i = 0;
 		while (i < items.length) {
 			var item = items[i];
@@ -422,13 +423,17 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				divider = items[i - 1];
 			}
 			if ((item is ILayoutObject) && !(cast item : ILayoutObject).includeInLayout) {
+				if (fallbackFluidIndex == i) {
+					// no longer valid (probably a bug in HDividedBox)
+					fallbackFluidIndex = -1;
+				}
 				i += 2;
 				continue;
 			}
 			if (divider != null && divider.visible) {
 				totalMeasuredWidth += divider.width;
 			}
-			fallbackItemIndex = i;
+			fallbackFallbackFluidIndex = i;
 			var nonDividerIndex = Math.floor(i / 2);
 			var needsPercentWidth = true;
 			if (this._customItemWidths != null && nonDividerIndex < this._customItemWidths.length) {
@@ -539,17 +544,19 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 			return;
 		}
 
-		var index = this._fallbackFluidIndex;
-		if (index == -1) {
-			index = fallbackItemIndex;
+		// if there is no fallback specified by HDividedBox,
+		// or we never encountered the one that it specified,
+		// use the last one that we discovered
+		if (fallbackFluidIndex == -1 || fallbackFallbackFluidIndex < fallbackFluidIndex) {
+			fallbackFluidIndex = fallbackFallbackFluidIndex;
 		}
-		if (index != -1) {
-			var fallbackItem = items[index];
+		if (fallbackFluidIndex != -1) {
+			var fallbackItem = items[fallbackFluidIndex];
 			var itemWidth = fallbackItem.width + remainingWidth;
 			if (itemWidth < 0.0) {
 				remainingWidth = itemWidth;
 				itemWidth = 0.0;
-				customWidthIndices.remove(index);
+				customWidthIndices.remove(fallbackFluidIndex);
 			} else {
 				remainingWidth = 0.0;
 			}
