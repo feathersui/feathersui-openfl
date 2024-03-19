@@ -11,7 +11,9 @@ package feathers.controls;
 import feathers.controls.supportClasses.BaseDividedBox;
 import feathers.core.IMeasureObject;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.HDividedBoxLayout;
+import feathers.layout.ILayoutObject;
 import feathers.utils.DisplayUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
@@ -182,6 +184,15 @@ class HDividedBox extends BaseDividedBox {
 		this._customItemWidths[dividerIndex] = firstItemWidth;
 		this._customItemWidths[dividerIndex + 1] = secondItemWidth;
 		this.setInvalid(LAYOUT);
+	}
+
+	override private function baseDividedBox_child_layoutDataChangeHandler(event:FeathersEvent):Void {
+		super.baseDividedBox_child_layoutDataChangeHandler(event);
+		var layoutObject = cast(event.currentTarget, ILayoutObject);
+		var layoutIndex = this._layoutItems.indexOf(cast layoutObject);
+		if (!layoutObject.includeInLayout && this._fallbackFluidIndex == layoutIndex) {
+			this._fallbackFluidIndex = -1;
+		}
 	}
 
 	override private function baseDividedBox_child_resizeHandler(event:Event):Void {
