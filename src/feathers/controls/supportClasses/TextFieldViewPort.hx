@@ -725,10 +725,10 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		this._textField.selectable = true;
 		this._textField.tabEnabled = false;
 		this._textField.mouseWheelEnabled = false;
-		this._textField.addEventListener(Event.CHANGE, textField_changeHandler);
-		this._textField.addEventListener(Event.SCROLL, textField_scrollHandler);
-		this._textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
-		this._textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
+		this._textField.addEventListener(Event.CHANGE, textFieldViewPort_textField_changeHandler);
+		this._textField.addEventListener(Event.SCROLL, textFieldViewPort_textField_scrollHandler);
+		this._textField.addEventListener(FocusEvent.FOCUS_IN, textFieldViewPort_textField_focusInHandler);
+		this._textField.addEventListener(FocusEvent.FOCUS_OUT, textFieldViewPort_textField_focusOutHandler);
 	}
 
 	override private function update():Void {
@@ -972,7 +972,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		}
 	}
 
-	private function textField_changeHandler(event:Event):Void {
+	private function textFieldViewPort_textField_changeHandler(event:Event):Void {
 		// don't let this event bubble. Feathers UI components don't bubble their
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
@@ -1045,15 +1045,15 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		}
 	}
 
-	private function textField_focusInHandler(event:FocusEvent):Void {
+	private function textFieldViewPort_textField_focusInHandler(event:FocusEvent):Void {
 		this._textFieldHasFocus = true;
 	}
 
-	private function textField_focusOutHandler(event:FocusEvent):Void {
+	private function textFieldViewPort_textField_focusOutHandler(event:FocusEvent):Void {
 		this._textFieldHasFocus = false;
 	}
 
-	private function textField_scrollHandler(event:Event):Void {
+	private function textFieldViewPort_textField_scrollHandler(event:Event):Void {
 		if (this._ignoreTextFieldScroll || this._smoothScrolling) {
 			return;
 		}

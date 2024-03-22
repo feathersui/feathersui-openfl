@@ -1116,8 +1116,8 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			// make sure that the TextField type is set right away so that the
 			// TextInput can receive focus in openfl <= 9.2.0
 			this.refreshTextFieldType();
-			this.textField.addEventListener(Event.CHANGE, textField_changeHandler);
-			this.textField.addEventListener(Event.SCROLL, textField_scrollHandler);
+			this.textField.addEventListener(Event.CHANGE, textInput_textField_changeHandler);
+			this.textField.addEventListener(Event.SCROLL, textInput_textField_scrollHandler);
 			this.addChild(this.textField);
 		}
 	}
@@ -1878,7 +1878,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 	}
 
-	private function textField_changeHandler(event:Event):Void {
+	private function textInput_textField_changeHandler(event:Event):Void {
 		// don't let this event bubble. Feathers UI components don't bubble their
 		// events — especially not Event.CHANGE!
 		event.stopPropagation();
@@ -1913,7 +1913,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
 
-	private function textField_scrollHandler(event:Event):Void {
+	private function textInput_textField_scrollHandler(event:Event):Void {
 		// no need to invalidate here. just store the new scroll position.
 		this._scrollX = this.textField.scrollH;
 		// but the event still needs to be dispatched
