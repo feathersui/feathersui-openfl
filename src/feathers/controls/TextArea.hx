@@ -396,7 +396,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		this._errorString = value;
 		this.refreshState();
 		this.setInvalid(DATA);
-		return this._text;
+		return this._errorString;
 	}
 
 	/**

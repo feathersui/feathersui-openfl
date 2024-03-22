@@ -581,7 +581,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._errorString = value;
 		this.refreshState();
 		this.setInvalid(DATA);
-		return this._text;
+		return this._errorString;
 	}
 
 	/**
