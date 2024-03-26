@@ -438,14 +438,6 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout imple
 		return result;
 	}
 
-	private inline function validateItems(items:Array<DisplayObject>) {
-		for (item in items) {
-			if ((item is IValidating)) {
-				(cast item : IValidating).validateNow();
-			}
-		}
-	}
-
 	private function applyDistributedHeight(items:Array<DisplayObject>, explicitHeight:Null<Float>, explicitMinHeight:Null<Float>,
 			explicitMaxHeight:Null<Float>):Void {
 		var maxMinHeight = 0.0;

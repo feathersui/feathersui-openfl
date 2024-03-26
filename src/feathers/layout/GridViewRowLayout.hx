@@ -246,22 +246,6 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 		return result;
 	}
 
-	private inline function validateItems(items:Array<DisplayObject>) {
-		for (i in 0...this._columns.length) {
-			var column = this._columns.get(i);
-			var item = items[i];
-			var columnWidth = column.width;
-			if (columnWidth != null) {
-				item.width = columnWidth;
-			} else if (this._customColumnWidths != null && i < this._customColumnWidths.length) {
-				item.width = this._customColumnWidths[i];
-			}
-			if ((item is IValidating)) {
-				(cast item : IValidating).validateNow();
-			}
-		}
-	}
-
 	private inline function applyViewPortHeight(items:Array<DisplayObject>, viewPortHeight:Float):Void {
 		for (item in items) {
 			item.height = viewPortHeight;
