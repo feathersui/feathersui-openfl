@@ -15,6 +15,7 @@ import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.geom.Rectangle;
 
 /**
 	Positions items from left to right in a single row.
@@ -28,7 +29,7 @@ import openfl.events.EventDispatcher;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class HorizontalLayout extends EventDispatcher implements ILayout {
+class HorizontalLayout extends EventDispatcher implements ILayout implements IDragDropLayout {
 	/**
 		Creates a new `HorizontalLayout` object.
 
@@ -508,6 +509,70 @@ class HorizontalLayout extends EventDispatcher implements ILayout {
 		result.contentHeight = contentHeight;
 		result.viewPortWidth = viewPortWidth;
 		result.viewPortHeight = viewPortHeight;
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.IDragDropLayout.getDragDropIndex()`
+
+		@since 1.3.0
+	**/
+	public function getDragDropIndex(items:Array<DisplayObject>, x:Float, y:Float, width:Float, height:Float):Int {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
+		var positionX = this._paddingLeft;
+		for (i in 0...items.length) {
+			var item = items[i];
+			if ((item is IValidating)) {
+				(cast item : IValidating).validateNow();
+			}
+			var itemWidth = item.width;
+			if (x < (positionX + (itemWidth / 2.0))) {
+				return i;
+			}
+			positionX += itemWidth + adjustedGap;
+		}
+		return items.length;
+	}
+
+	/**
+		@see `feathers.layout.IDragDropLayout.getDragDropRegion()`
+
+		@since 1.3.0
+	**/
+	public function getDragDropRegion(items:Array<DisplayObject>, dropIndex:Int, x:Float, y:Float, width:Float, height:Float,
+			result:Rectangle = null):Rectangle {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
+		var maxIndex = dropIndex;
+		if (maxIndex < 0) {
+			maxIndex = 0;
+		} else if (maxIndex > items.length) {
+			maxIndex = items.length;
+		}
+
+		var positionX = this._paddingLeft;
+		for (i in 0...maxIndex) {
+			var item = items[i];
+			if ((item is IValidating)) {
+				(cast item : IValidating).validateNow();
+			}
+			positionX += item.width + adjustedGap;
+		}
+
+		if (result == null) {
+			result = new Rectangle(positionX, 0.0, 0.0, height);
+		} else {
+			result.setTo(positionX, 0.0, 0.0, height);
+		}
 		return result;
 	}
 

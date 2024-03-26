@@ -17,6 +17,7 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 
 /**
@@ -32,7 +33,7 @@ import openfl.ui.Keyboard;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout {
+class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements IDragDropLayout {
 	/**
 		Creates a new `VerticalListFixedRowLayout` object.
 
@@ -831,6 +832,88 @@ class VerticalListFixedRowLayout extends EventDispatcher implements IVirtualLayo
 		}
 		result.x = this._scrollX;
 		result.y = targetY;
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.IDragDropLayout.getDragDropIndex()`
+
+		@since 1.3.0
+	**/
+	public function getDragDropIndex(items:Array<DisplayObject>, x:Float, y:Float, width:Float, height:Float):Int {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
+		var rowHeight = 0.0;
+		if (this._rowHeight != null) {
+			rowHeight = this._rowHeight;
+		} else if (this._virtualCache != null) {
+			for (cacheItem in this._virtualCache) {
+				if (cacheItem != null) {
+					rowHeight = cacheItem.itemHeight;
+					break;
+				}
+			}
+		}
+		rowHeight += adjustedGap;
+
+		var index = Std.int(y / rowHeight);
+		if (y > ((index * rowHeight) + (rowHeight / 2.0))) {
+			index++;
+		}
+		var lastItemIndex = items.length - 1;
+		if (index > lastItemIndex) {
+			index = lastItemIndex;
+		} else if (index < 0) {
+			index = 0;
+		}
+
+		return index;
+	}
+
+	/**
+		@see `feathers.layout.IDragDropLayout.getDragDropRegion()`
+
+		@since 1.3.0
+	**/
+	public function getDragDropRegion(items:Array<DisplayObject>, dropIndex:Int, x:Float, y:Float, width:Float, height:Float,
+			result:Rectangle = null):Rectangle {
+		var adjustedGap = this._gap;
+		var hasFlexGap = this._gap == (1.0 / 0.0);
+		if (hasFlexGap) {
+			adjustedGap = this._minGap;
+		}
+
+		var maxIndex = dropIndex;
+		if (maxIndex < 0) {
+			maxIndex = 0;
+		} else if (maxIndex > items.length) {
+			maxIndex = items.length;
+		}
+
+		var rowHeight = 0.0;
+		if (this._rowHeight != null) {
+			rowHeight = this._rowHeight;
+		} else if (this._virtualCache != null) {
+			for (cacheItem in this._virtualCache) {
+				if (cacheItem != null) {
+					rowHeight = cacheItem.itemHeight;
+					break;
+				}
+			}
+		}
+		rowHeight += adjustedGap;
+
+		var positionY = rowHeight * maxIndex;
+
+		if (result == null) {
+			result = new Rectangle(0.0, positionY, width, 0.0);
+		} else {
+			result.setTo(0.0, positionY, width, 0.0);
+		}
 		return result;
 	}
 
