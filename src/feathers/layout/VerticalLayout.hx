@@ -530,6 +530,12 @@ class VerticalLayout extends EventDispatcher implements ILayout implements IDrag
 		var positionY = this._paddingTop;
 		for (i in 0...items.length) {
 			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem:ILayoutObject = cast item;
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
 			if ((item is IValidating)) {
 				(cast item : IValidating).validateNow();
 			}
@@ -565,6 +571,12 @@ class VerticalLayout extends EventDispatcher implements ILayout implements IDrag
 		var positionY = this._paddingTop;
 		for (i in 0...maxIndex) {
 			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem:ILayoutObject = cast item;
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
 			if ((item is IValidating)) {
 				(cast item : IValidating).validateNow();
 			}

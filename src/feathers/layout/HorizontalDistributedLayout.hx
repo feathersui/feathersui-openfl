@@ -394,6 +394,12 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout imp
 		var positionX = this._paddingLeft;
 		for (i in 0...items.length) {
 			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem:ILayoutObject = cast item;
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
 			if ((item is IValidating)) {
 				(cast item : IValidating).validateNow();
 			}
@@ -423,6 +429,12 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout imp
 		var positionX = this._paddingLeft;
 		for (i in 0...maxIndex) {
 			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem:ILayoutObject = cast item;
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
 			if ((item is IValidating)) {
 				(cast item : IValidating).validateNow();
 			}
