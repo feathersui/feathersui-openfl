@@ -59,6 +59,11 @@ interface IScrollLayout extends ILayout {
 	var elasticLeft(get, never):Bool;
 
 	/**
+		Returns the scroll position nearest to the current scroll position to
+		completely display the item's bounds within the view port's bounds. If
+		the item is already completely displayed, this method returns the
+		current scroll position unmodified.
+
 		@since 1.0.0
 	**/
 	function getNearestScrollPositionForIndex(index:Int, itemCount:Int, width:Float, height:Float, ?result:Point):Point;
