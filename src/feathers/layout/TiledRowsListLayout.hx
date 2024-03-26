@@ -17,6 +17,7 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 
 /**
@@ -31,7 +32,7 @@ import openfl.ui.Keyboard;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout {
+class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements IDragDropLayout {
 	/**
 		Creates a new `TiledRowsListLayout` object.
 
@@ -1095,6 +1096,168 @@ class TiledRowsListLayout extends EventDispatcher implements IVirtualLayout impl
 		}
 		result.x = 0.0;
 		result.y = resultY;
+		return result;
+	}
+
+	/**
+		@see `feathers.layout.IDragDropLayout.getDragDropIndex()`
+
+		@since 1.3.0
+	**/
+	public function getDragDropIndex(items:Array<DisplayObject>, x:Float, y:Float, width:Float, height:Float):Int {
+		var tileWidth = 0.0;
+		var tileHeight = 0.0;
+		if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				tileWidth = cacheItem.itemWidth;
+				tileHeight = cacheItem.itemHeight;
+			}
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			var availableRowWidth = width - this.paddingLeft - this.paddingRight;
+			adjustedHorizontalGap = this._minHorizontalGap;
+			var maxContentWidth = items.length * (tileWidth + adjustedHorizontalGap);
+			if (items.length > 0) {
+				maxContentWidth -= adjustedHorizontalGap;
+			}
+			if (availableRowWidth > maxContentWidth) {
+				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (items.length - 1);
+			}
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, width, null, adjustedHorizontalGap, items.length);
+
+		var columnIndex = 0;
+		var rowIndex = 0;
+		var lastColumnIndex = horizontalTileCount - 1;
+		var lastRowIndex = Math.ceil(items.length / horizontalTileCount) - 1;
+		var xPosition = this._paddingLeft;
+		var yPosition = this._paddingTop;
+		for (i in 0...items.length) {
+			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem:ILayoutObject = cast item;
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
+
+			if (x < (xPosition + (tileWidth / 2.0))) {
+				if (y < (yPosition + tileHeight) || rowIndex == lastRowIndex) {
+					return i;
+				}
+			} else if (columnIndex == lastColumnIndex) {
+				if (y < (yPosition + tileHeight) || rowIndex == lastRowIndex) {
+					// this is the last column, but we're beyond the halfway
+					// point of the current tile.
+					// go to the start of the next row.
+					return i + 1;
+				}
+			}
+
+			xPosition += tileWidth + adjustedHorizontalGap;
+			columnIndex++;
+			if (columnIndex >= horizontalTileCount) {
+				xPosition = this._paddingLeft;
+				yPosition += tileHeight;
+				rowIndex++;
+				columnIndex = 0;
+			}
+		}
+
+		return items.length;
+	}
+
+	/**
+		@see `feathers.layout.IDragDropLayout.getDragDropRegion()`
+
+		@since 1.3.0
+	**/
+	public function getDragDropRegion(items:Array<DisplayObject>, dropIndex:Int, x:Float, y:Float, width:Float, height:Float,
+			result:Rectangle = null):Rectangle {
+		var tileWidth = 0.0;
+		var tileHeight = 0.0;
+		if (this._virtualCache != null && this._virtualCache.length != 0) {
+			var cacheItem = Std.downcast(this._virtualCache[0], VirtualCacheItem);
+			if (cacheItem != null) {
+				tileWidth = cacheItem.itemWidth;
+				tileHeight = cacheItem.itemHeight;
+			}
+		}
+
+		var adjustedHorizontalGap = this._horizontalGap;
+		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
+		if (hasFlexHorizontalGap) {
+			var availableRowWidth = width - this.paddingLeft - this.paddingRight;
+			adjustedHorizontalGap = this._minHorizontalGap;
+			var maxContentWidth = items.length * (tileWidth + adjustedHorizontalGap);
+			if (items.length > 0) {
+				maxContentWidth -= adjustedHorizontalGap;
+			}
+			if (availableRowWidth > maxContentWidth) {
+				adjustedHorizontalGap += (availableRowWidth - maxContentWidth) / (items.length - 1);
+			}
+		}
+
+		var adjustedVerticalGap = this._verticalGap;
+		var hasFlexVerticalGap = this._verticalGap == (1.0) / 0.0;
+		if (hasFlexVerticalGap) {
+			adjustedVerticalGap = this._minVerticalGap;
+		}
+
+		var horizontalTileCount = this.calculateHorizontalTileCount(tileWidth, width, null, adjustedHorizontalGap, items.length);
+
+		var maxIndex = dropIndex;
+		if (maxIndex < 0) {
+			maxIndex = 0;
+		} else if (maxIndex > items.length) {
+			maxIndex = items.length;
+		}
+
+		var columnIndex = 0;
+		var xPosition = this._paddingLeft;
+		var yPosition = this._paddingTop;
+		for (i in 0...maxIndex) {
+			var item = items[i];
+			if ((item is ILayoutObject)) {
+				var layoutItem:ILayoutObject = cast item;
+				if (!layoutItem.includeInLayout) {
+					continue;
+				}
+			}
+
+			xPosition += tileWidth + adjustedHorizontalGap;
+			columnIndex++;
+			if (columnIndex >= horizontalTileCount) {
+				xPosition = this._paddingLeft;
+				yPosition += tileHeight + adjustedVerticalGap;
+				columnIndex = 0;
+			}
+		}
+
+		// based on the x and y mouse position, go back to the end of the
+		// previous row (it's the same index, but this position is more visually
+		// pleasing)
+		if (x > (xPosition + tileWidth) && y < yPosition) {
+			xPosition = horizontalTileCount * (tileWidth + adjustedHorizontalGap) - adjustedHorizontalGap;
+			yPosition -= (tileHeight + adjustedVerticalGap);
+		}
+
+		if (result == null) {
+			result = new Rectangle(xPosition, yPosition, 0.0, tileHeight);
+		} else {
+			result.setTo(xPosition, yPosition, 0.0, tileHeight);
+		}
 		return result;
 	}
 
