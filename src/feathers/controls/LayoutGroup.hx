@@ -508,6 +508,21 @@ class LayoutGroup extends FeathersControl {
 	private var _layoutActive = false;
 	private var _layoutChanged = false;
 
+	/**
+		Collects all children in an array.
+
+		@since 1.3.0
+	**/
+	public function collectChildren(result:Array<DisplayObject> = null):Array<DisplayObject> {
+		if (result == null) {
+			return this.items.copy();
+		}
+		for (item in this.items) {
+			result.push(item);
+		}
+		return result;
+	}
+
 	override public function validateNow():Void {
 		// for the start of validation, we're going to ignore when children
 		// resize or dispatch changes to layout data. this allows subclasses

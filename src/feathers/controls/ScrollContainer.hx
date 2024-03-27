@@ -470,6 +470,21 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		#end
 	}
 
+	/**
+		Collects all children in an array.
+
+		@since 1.3.0
+	**/
+	public function collectChildren(result:Array<DisplayObject> = null):Array<DisplayObject> {
+		if (result == null) {
+			return this.items.copy();
+		}
+		for (item in this.items) {
+			result.push(item);
+		}
+		return result;
+	}
+
 	override public function dispatchEvent(event:Event):Bool {
 		var oldBypass = this._displayListBypassEnabled;
 		this._displayListBypassEnabled = true;
