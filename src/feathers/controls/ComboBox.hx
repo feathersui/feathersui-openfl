@@ -1137,6 +1137,10 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.navigateWithKeyboard(event);
 		if (event.keyCode == Keyboard.ENTER) {
 			event.preventDefault();
+			var itemState = this.listView.itemToItemState(this.listView.selectedItem);
+			if (itemState != null) {
+				ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, itemState);
+			}
 			this.closeListView();
 		}
 	}
