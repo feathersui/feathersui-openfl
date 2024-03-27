@@ -587,6 +587,30 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 	}
 
 	/**
+		Returns a `TabBarItemState` representing a specific item.
+
+		@since 1.3.0
+	**/
+	public function itemToItemState(item:Dynamic):TabBarItemState {
+		if (item == null) {
+			return null;
+		}
+		var itemState:TabBarItemState = null;
+		var tab = this.dataToTab.get(item);
+		if (tab != null) {
+			itemState = this.tabToItemState.get(tab);
+		} else {
+			var index = this._dataProvider.indexOf(item);
+			if (index == -1) {
+				return null;
+			}
+			itemState = new TabBarItemState();
+			this.populateCurrentItemState(item, index, itemState, false);
+		}
+		return itemState;
+	}
+
+	/**
 		Returns the tab recycler associated with a specific ID. Returns `null`
 		if no recycler is associated with the ID.
 

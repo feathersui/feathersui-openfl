@@ -1077,6 +1077,32 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		this.setInvalid(SCROLL);
 	}
 
+	/**
+		Returns a `GroupListViewItemState` representing a specific item.
+
+		@since 1.3.0
+	**/
+	public function itemToItemState(item:Dynamic):GroupListViewItemState {
+		if (item == null) {
+			return null;
+		}
+		var itemState:GroupListViewItemState = null;
+		var itemRenderer = this.dataToItemRenderer.get(item);
+		if (itemRenderer != null) {
+			itemState = this.itemRendererToItemState.get(itemRenderer);
+		} else {
+			var location = this._dataProvider.locationOf(item);
+			if (location == null) {
+				return null;
+			}
+			itemState = new GroupListViewItemState();
+			var type = location.length == 1 ? HEADER : STANDARD;
+			var layoutIndex = this.locationToDisplayIndex(location);
+			this.populateCurrentItemState(item, type, location, layoutIndex, itemState, false);
+		}
+		return itemState;
+	}
+
 	override public function dispose():Void {
 		this.refreshInactiveItemRenderers(this._defaultItemStorage, true);
 		if (this._additionalItemStorage != null) {

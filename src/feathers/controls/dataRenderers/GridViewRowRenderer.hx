@@ -411,6 +411,32 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		return this._columnToCellRenderer.get(column);
 	}
 
+	/**
+		Returns a `GridViewCellState` representing a specific column.
+
+		@see `feathers.controls.GridView.itemAndColumnToCellState`
+
+		@since 1.3.0
+	**/
+	public function columnToCellState(column:GridViewColumn):GridViewCellState {
+		if (column == null) {
+			return null;
+		}
+		var cellState:GridViewCellState = null;
+		var cellRenderer = this._columnToCellRenderer.get(column);
+		if (cellRenderer != null) {
+			cellState = this._cellRendererToCellState.get(cellRenderer);
+		} else {
+			var columnIndex = this._columns.indexOf(column);
+			if (columnIndex == -1) {
+				return null;
+			}
+			cellState = new GridViewCellState();
+			this.populateCurrentItemState(column, columnIndex, cellState, false);
+		}
+		return cellState;
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 

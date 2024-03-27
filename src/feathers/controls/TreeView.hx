@@ -979,6 +979,31 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 	}
 
+	/**
+		Returns a `TreeViewItemState` representing a specific item.
+
+		@since 1.3.0
+	**/
+	public function itemToItemState(item:Dynamic):TreeViewItemState {
+		if (item == null) {
+			return null;
+		}
+		var itemState:TreeViewItemState = null;
+		var itemRenderer = this.dataToItemRenderer.get(item);
+		if (itemRenderer != null) {
+			itemState = this.itemRendererToItemState.get(itemRenderer);
+		} else {
+			var location = this._dataProvider.locationOf(item);
+			if (location == null) {
+				return null;
+			}
+			itemState = new TreeViewItemState();
+			var layoutIndex = this.locationToDisplayIndex(location, false);
+			this.populateCurrentItemState(item, location, layoutIndex, itemState, false);
+		}
+		return itemState;
+	}
+
 	override public function dispose():Void {
 		this.refreshInactiveItemRenderers(this._defaultStorage, true);
 		if (this._additionalStorage != null) {

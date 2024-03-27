@@ -489,6 +489,32 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		return this._columnToCellRenderer.get(column);
 	}
 
+	/**
+		Returns a `TreeGridViewCellState` representing a specific column.
+
+		@see `feathers.controls.TreeGridView.itemAndColumnToCellState`
+
+		@since 1.3.0
+	**/
+	public function columnToCellState(column:TreeGridViewColumn):TreeGridViewCellState {
+		if (column == null) {
+			return null;
+		}
+		var cellState:TreeGridViewCellState = null;
+		var cellRenderer = this._columnToCellRenderer.get(column);
+		if (cellRenderer != null) {
+			cellState = this._cellRendererToCellState.get(cellRenderer);
+		} else {
+			var columnIndex = this._columns.indexOf(column);
+			if (columnIndex == -1) {
+				return null;
+			}
+			cellState = new TreeGridViewCellState();
+			this.populateCurrentItemState(column, columnIndex, cellState, false);
+		}
+		return cellState;
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 

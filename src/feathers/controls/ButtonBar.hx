@@ -463,6 +463,30 @@ class ButtonBar extends FeathersControl {
 	}
 
 	/**
+		Returns a `ButtonBarItemState` representing a specific item.
+
+		@since 1.3.0
+	**/
+	public function itemToItemState(item:Dynamic):ButtonBarItemState {
+		if (item == null) {
+			return null;
+		}
+		var itemState:ButtonBarItemState = null;
+		var tab = this.dataToButton.get(item);
+		if (tab != null) {
+			itemState = this.buttonToItemState.get(tab);
+		} else {
+			var index = this._dataProvider.indexOf(item);
+			if (index == -1) {
+				return null;
+			}
+			itemState = new ButtonBarItemState();
+			this.populateCurrentItemState(item, index, itemState, false);
+		}
+		return itemState;
+	}
+
+	/**
 		Returns the button recycler associated with a specific ID. Returns
 		`null` if no recycler is associated with the ID.
 

@@ -1012,6 +1012,30 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 	}
 
+	/**
+		Returns a `ListViewItemState` representing a specific item.
+
+		@since 1.3.0
+	**/
+	public function itemToItemState(item:Dynamic):ListViewItemState {
+		if (item == null) {
+			return null;
+		}
+		var itemState:ListViewItemState = null;
+		var itemRenderer = this.dataToItemRenderer.get(item);
+		if (itemRenderer != null) {
+			itemState = this.itemRendererToItemState.get(itemRenderer);
+		} else {
+			var index = this._dataProvider.indexOf(item);
+			if (index == -1) {
+				return null;
+			}
+			itemState = new ListViewItemState();
+			this.populateCurrentItemState(item, index, itemState, false);
+		}
+		return itemState;
+	}
+
 	override public function dispose():Void {
 		this.refreshInactiveItemRenderers(this._defaultStorage, true);
 		if (this._additionalStorage != null) {

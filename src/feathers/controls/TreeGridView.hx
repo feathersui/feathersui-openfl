@@ -1161,6 +1161,22 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
 	}
 
+	/**
+		Returns a `TreeGridViewCellState` representing a specific item and column.
+
+		@since 1.3.0
+	**/
+	public function itemAndColumnToCellState(item:Dynamic, column:TreeGridViewColumn):TreeGridViewCellState {
+		if (item == null) {
+			return null;
+		}
+		var rowRenderer = this.dataToRowRenderer.get(item);
+		if (rowRenderer == null) {
+			return null;
+		}
+		return rowRenderer.columnToCellState(column);
+	}
+
 	override public function dispose():Void {
 		this.refreshInactiveHeaderRenderers(true);
 		this.refreshInactiveRowRenderers(true);
