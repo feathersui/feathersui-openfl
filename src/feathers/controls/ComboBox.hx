@@ -381,6 +381,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._selectedItem == value && this._selectedIndex == index) {
 			return this._selectedItem;
 		}
+		if (this.open) {
+			this.pendingSelectedIndex = index;
+		}
 		this._selectedIndex = index;
 		this._selectedItem = value;
 		this._customSelectedItem = null;
