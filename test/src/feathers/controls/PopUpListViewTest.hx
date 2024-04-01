@@ -513,4 +513,40 @@ class PopUpListViewTest extends Test {
 		Assert.notNull(button);
 		Assert.equals(customVariant2, button.variant);
 	}
+
+	public function testSetSelectedIndexInCloseListener():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		var oldSelectedIndex = 2;
+		var newSelectedIndex = 1;
+		this._listView.selectedIndex = oldSelectedIndex;
+		this._listView.addEventListener(Event.CLOSE, event -> {
+			this._listView.selectedIndex = newSelectedIndex;
+		});
+		this._listView.validateNow();
+		this._listView.openListView();
+		Assert.equals(oldSelectedIndex, this._listView.selectedIndex);
+		this._listView.closeListView();
+		Assert.equals(newSelectedIndex, this._listView.selectedIndex);
+	}
+
+	public function testSetSelectedItemInCloseListener():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2, item3]);
+		var oldSelectedItem = item2;
+		var newSelectedItem = item3;
+		this._listView.selectedItem = oldSelectedItem;
+		this._listView.addEventListener(Event.CLOSE, event -> {
+			this._listView.selectedItem = newSelectedItem;
+		});
+		this._listView.validateNow();
+		this._listView.openListView();
+		Assert.equals(oldSelectedItem, this._listView.selectedItem);
+		this._listView.closeListView();
+		Assert.equals(newSelectedItem, this._listView.selectedItem);
+	}
 }

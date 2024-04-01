@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.events.Event;
 import openfl.Lib;
 import utest.Assert;
 import utest.Test;
@@ -142,5 +143,19 @@ class PopUpDatePickerTest extends Test {
 		this._popUpDatePicker.validateNow();
 		Assert.notNull(textInput);
 		Assert.equals(customVariant2, textInput.variant);
+	}
+
+	public function testSetSelectedDateInCloseListener():Void {
+		var oldDate = new Date(2011, 0, 1, 0, 0, 0);
+		var newDate = new Date(2012, 0, 1, 0, 0, 0);
+		this._popUpDatePicker.selectedDate = oldDate;
+		this._popUpDatePicker.addEventListener(Event.CLOSE, event -> {
+			this._popUpDatePicker.selectedDate = newDate;
+		});
+		this._popUpDatePicker.validateNow();
+		this._popUpDatePicker.openDatePicker();
+		Assert.equals(oldDate, this._popUpDatePicker.selectedDate);
+		this._popUpDatePicker.closeDatePicker();
+		Assert.equals(newDate, this._popUpDatePicker.selectedDate);
 	}
 }

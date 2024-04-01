@@ -565,4 +565,40 @@ class ComboBoxTest extends Test {
 		Assert.notNull(textInput);
 		Assert.equals(customVariant2, textInput.variant);
 	}
+
+	public function testSetSelectedIndexInCloseListener():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._comboBox.dataProvider = new ArrayCollection([item1, item2, item3]);
+		var oldSelectedIndex = 2;
+		var newSelectedIndex = 1;
+		this._comboBox.selectedIndex = oldSelectedIndex;
+		this._comboBox.addEventListener(Event.CLOSE, event -> {
+			this._comboBox.selectedIndex = newSelectedIndex;
+		});
+		this._comboBox.validateNow();
+		this._comboBox.openListView();
+		Assert.equals(oldSelectedIndex, this._comboBox.selectedIndex);
+		this._comboBox.closeListView();
+		Assert.equals(newSelectedIndex, this._comboBox.selectedIndex);
+	}
+
+	public function testSetSelectedItemInCloseListener():Void {
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		var item3 = {text: "Three"};
+		this._comboBox.dataProvider = new ArrayCollection([item1, item2, item3]);
+		var oldSelectedItem = item2;
+		var newSelectedItem = item3;
+		this._comboBox.selectedItem = oldSelectedItem;
+		this._comboBox.addEventListener(Event.CLOSE, event -> {
+			this._comboBox.selectedItem = newSelectedItem;
+		});
+		this._comboBox.validateNow();
+		this._comboBox.openListView();
+		Assert.equals(oldSelectedItem, this._comboBox.selectedItem);
+		this._comboBox.closeListView();
+		Assert.equals(newSelectedItem, this._comboBox.selectedItem);
+	}
 }

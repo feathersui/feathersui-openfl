@@ -1347,11 +1347,21 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	private function comboBox_popUpAdapter_closeHandler(event:Event):Void {
 		this.popUpAdapter.removeEventListener(Event.OPEN, comboBox_popUpAdapter_openHandler);
 		this.popUpAdapter.removeEventListener(Event.CLOSE, comboBox_popUpAdapter_closeHandler);
+		var pendingSelectedIndex = this.pendingSelectedIndex;
+		var filterText = this._filterText;
+		this.pendingSelectedIndex = -1;
+		this._filterText = null;
+		var oldSelectedIndex = this._selectedIndex;
 		FeathersEvent.dispatch(this, Event.CLOSE);
+		if (this._selectedIndex != oldSelectedIndex) {
+			// it was changed in the Event.CLOSE listener, so it takes
+			// precendence over pendingSelectedIndex
+			pendingSelectedIndex = this._selectedIndex;
+		}
 
 		var newSelectedItem:Dynamic = null;
-		if (this.pendingSelectedIndex != -1) {
-			newSelectedItem = this._dataProvider.get(this.pendingSelectedIndex);
+		if (pendingSelectedIndex != -1) {
+			newSelectedItem = this._dataProvider.get(pendingSelectedIndex);
 		} else if (this._filterText != null) {
 			var filterText = this._filterText.toLowerCase();
 			if (this._dataProvider != null && this._dataProvider.length > 0) {
@@ -1371,11 +1381,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return;
 		}
 		var customSelectedItem:Dynamic = null;
-		if (this._allowCustomUserValue && newSelectedItem == null && this._filterText != null && this._filterText.length > 0) {
-			customSelectedItem = this.textToItem(this._filterText);
+		if (this._allowCustomUserValue && newSelectedItem == null && filterText != null && filterText.length > 0) {
+			customSelectedItem = this.textToItem(filterText);
 		}
-		this._filterText = null;
-		this.pendingSelectedIndex = -1;
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
 		}
