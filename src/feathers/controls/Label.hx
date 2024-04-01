@@ -314,6 +314,10 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		return this._selectable && this._enabled && this.rawTabEnabled;
 	}
 
+	override private function get_focusEnabled():Bool {
+		return this._selectable && super.focusEnabled;
+	}
+
 	@:dox(hide)
 	public var stageFocusTarget(get, never):InteractiveObject;
 
