@@ -19,6 +19,7 @@ import openfl.display.Stage;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.MouseEvent;
+import openfl.geom.Matrix;
 import openfl.geom.Point;
 
 /**
@@ -138,10 +139,16 @@ class DragDropManager {
 		_dragSourceStage = displaySource.stage;
 
 		if (dragAvatar == null) {
-			_dragSourceBitmapData = new BitmapData(Math.ceil(displaySource.width), Math.ceil(displaySource.height));
-			_dragSourceBitmapData.draw(displaySource);
+			// there's a bug in OpenFL where scale doesn't work correctly
+			var scale = #if flash _dragSourceStage.contentsScaleFactor #else 1.0 #end;
+			_dragSourceBitmapData = new BitmapData(Math.ceil(displaySource.width * scale), Math.ceil(displaySource.height * scale));
+			var matrix = new Matrix();
+			matrix.scale(scale, scale);
+			_dragSourceBitmapData.draw(displaySource, matrix);
 			dragAvatar = new Bitmap(_dragSourceBitmapData);
 			dragAvatar.alpha = 0.75;
+			dragAvatar.scaleX = 1.0 / scale;
+			dragAvatar.scaleY = 1.0 / scale;
 		}
 		if ((dragAvatar is InteractiveObject)) {
 			var interactiveAvatar:InteractiveObject = cast dragAvatar;
