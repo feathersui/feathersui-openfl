@@ -59,6 +59,15 @@ class SteelListViewStyles {
 				listView.focusRectSkin = focusRectSkin;
 			}
 
+			if (listView.dragDropIndicatorSkin == null) {
+				var dragDropIndicatorSkin = new RectangleSkin();
+				dragDropIndicatorSkin.fill = theme.getActiveThemeFill();
+				dragDropIndicatorSkin.border = None;
+				dragDropIndicatorSkin.width = 2.0;
+				dragDropIndicatorSkin.height = 2.0;
+				listView.dragDropIndicatorSkin = dragDropIndicatorSkin;
+			}
+
 			listView.paddingTop = theme.borderThickness;
 			listView.paddingRight = theme.borderThickness;
 			listView.paddingBottom = theme.borderThickness;
