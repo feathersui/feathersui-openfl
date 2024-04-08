@@ -105,6 +105,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 
 	private var _contentMeasurements:Measurements = new Measurements();
 	private var _contentOriginalAlpha:Float = 1.0;
+	private var _ignoreContentResize:Bool = false;
 	private var _content:DisplayObject;
 
 	/**
@@ -123,6 +124,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 			return this._content;
 		}
 		if (this._content != null) {
+			this._content.removeEventListener(Event.RESIZE, collapsible_content_resizeHandler);
 			this._content.alpha = this._contentOriginalAlpha;
 			this._contentMeasurements.restore(this._content);
 			this.removeChild(this._content);
@@ -132,6 +134,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 			this.addChild(this._content);
 			this._contentMeasurements.save(this._content);
 			this._contentOriginalAlpha = this._content.alpha;
+			this._content.addEventListener(Event.RESIZE, collapsible_content_resizeHandler);
 		}
 		setInvalid(DATA);
 		return this._content;
@@ -596,6 +599,8 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 		}
 
 		if (this._content != null) {
+			var oldIgnoreContentResize = this._ignoreContentResize;
+			this._ignoreContentResize = true;
 			this._content.x = 0.0;
 			this._content.y = this.header.height;
 			if (this._content.width != this.actualWidth) {
@@ -622,6 +627,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 				this._currentScrollRect = null;
 				this._content.scrollRect = null;
 			}
+			this._ignoreContentResize = oldIgnoreContentResize;
 		}
 	}
 
@@ -639,5 +645,9 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 		} else {
 			this.openContent(true);
 		}
+	}
+
+	private function collapsible_content_resizeHandler(event:Event):Void {
+		setInvalid(LAYOUT);
 	}
 }
