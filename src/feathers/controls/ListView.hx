@@ -63,7 +63,9 @@ import openfl._internal.utils.ObjectPool;
 
 /**
 	Displays a one-dimensional list of items. Supports scrolling, custom item
-	renderers, and custom layouts.
+	renderers, custom layouts, and the ability to drag and drop items to new
+	positions within the list view (along with moving items between different
+	list views).
 
 	Layouts may be, and are highly encouraged to be, _virtual_, meaning that the
 	list view is capable of creating a limited number of item renderers to
@@ -190,7 +192,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.3.0
 	**/
-	public static final DEFAULT_DRAG_FORMAT = "listView_dragFormat";
+	public static final DEFAULT_DRAG_FORMAT_ITEMS = "items";
 
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
 
@@ -881,7 +883,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	@:style
 	public var dragDropIndicatorSkin:DisplayObject = null;
 
-	private var _dragFormat:String = DEFAULT_DRAG_FORMAT;
+	private var _dragFormat:String = DEFAULT_DRAG_FORMAT_ITEMS;
 
 	/**
 		Drag and drop is restricted between components, unless they specify the
@@ -907,7 +909,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function set_dragFormat(value:String):String {
 		if (value == null) {
-			value = DEFAULT_DRAG_FORMAT;
+			value = DEFAULT_DRAG_FORMAT_ITEMS;
 		}
 		if (this._dragFormat == value) {
 			return this._dragFormat;
@@ -964,7 +966,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		Indicates if this list view can accept items that are dragged and
 		dropped over the list view's view port.
 
-		In the following example, items may be dropped on the list view:</p>
+		In the following example, items may be dropped on the list view:
 
 		```haxe
 		listView.dropEnabled = true;
@@ -1005,8 +1007,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _removeOnDragDropComplete = false;
 
 	/**
-		Indicates whether a dragged item should be removed from this list view's
-		data provider, if it is successfully dropped somewhere else.
+		Indicates whether dragged items should be removed from this list view's
+		data provider, if they are successfully dropped somewhere else.
 
 		@since 1.3.0
 
@@ -1029,6 +1031,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _dragDropLocalY = 0.0;
 	private var _dragMinDistance = 0.0;
 	private var _dragItem:Dynamic = null;
+	private var _dragIndex:Int = -1;
 	private var _dragItemRenderer:DisplayObject;
 	private var _droppedOnSelf = false;
 	private var _dragDropLastUpdateTime = -1;
@@ -1824,15 +1827,15 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		// convert to view port coordinates
-		var dropX = this.scrollX + this._dragDropLocalX;
-		var dropY = this.scrollY + this._dragDropLocalY;
+		var dropX = this.scrollX + this._dragDropLocalX - this.leftViewPortOffset;
+		var dropY = this.scrollY + this._dragDropLocalY - this.topViewPortOffset;
 		var dropDropLayout:IDragDropLayout = cast this.layout;
 		var dragDropIndex = dropDropLayout.getDragDropIndex(this._layoutItems, dropX, dropY, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
 		var dragDropRegion = dropDropLayout.getDragDropRegion(this._layoutItems, dragDropIndex, dropX, dropY, this._viewPort.visibleWidth,
 			this._viewPort.visibleHeight);
 		// convert back to list view coordinates
-		this.dragDropIndicatorSkin.x = dragDropRegion.x - this.scrollX;
-		this.dragDropIndicatorSkin.y = dragDropRegion.y - this.scrollY;
+		this.dragDropIndicatorSkin.x = dragDropRegion.x - this.scrollX + this.leftViewPortOffset;
+		this.dragDropIndicatorSkin.y = dragDropRegion.y - this.scrollY + this.topViewPortOffset;
 		if (dragDropRegion.width == 0.0) {
 			this.dragDropIndicatorSkin.height = dragDropRegion.height;
 		} else {
@@ -1924,6 +1927,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this._dragItemRenderer = itemRenderer;
 		this._dragItem = state.data;
+		this._dragIndex = state.index;
 		this._dragDropLocalX = this.mouseX;
 		this._dragDropLocalY = this.mouseY;
 		this._dragMinDistance = 6.0;
@@ -1939,19 +1943,27 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, listView_stage_pressAndMove_mouseMoveHandler);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, listView_stage_pressAndMove_mouseUpHandler);
 
-			var dragData = new DragData();
-			dragData.set(this._dragFormat, this._dragItem);
+			var items:Array<Dynamic> = [];
+			var draggedIndices = this._selectedIndices.copy();
+			if (draggedIndices.indexOf(this._dragIndex) == -1) {
+				draggedIndices.push(this._dragIndex);
+			}
+			draggedIndices.sort((a, b) -> {
+				if (a < b) {
+					return -1;
+				}
+				if (a > b) {
+					return 1;
+				}
+				return 0;
+			});
+			for (dragIndex in draggedIndices) {
+				items.push(this._dataProvider.get(dragIndex));
+			}
 
-			// there's a bug in OpenFL where scale doesn't work correctly
-			// var scale = #if flash stage.contentsScaleFactor #else 1 #end;
-			// var dragItemRendererBitmapData = new BitmapData(Math.ceil(this._dragItemRenderer.width * scale), Math.ceil(this._dragItemRenderer.height * scale));
-			// var matrix = new Matrix();
-			// matrix.scale(scale, scale);
-			// dragItemRendererBitmapData.draw(this._dragItemRenderer, matrix);
-			// var dragAvatar = new Bitmap(dragItemRendererBitmapData);
-			// dragAvatar.alpha = 0.75;
-			// dragAvatar.scaleX = 1.0 / scale;
-			// dragAvatar.scaleY = 1.0 / scale;
+			var dragData = new DragData();
+			dragData.set(this._dragFormat, items);
+
 			var itemState = this.itemRendererToItemState.get(this._dragItemRenderer);
 			var storage = this.itemStateToStorage(itemState);
 			var itemRenderer = storage.itemRendererRecycler.create();
@@ -1968,6 +1980,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, listView_stage_pressAndMove_mouseMoveHandler);
 		stage.removeEventListener(MouseEvent.MOUSE_UP, listView_stage_pressAndMove_mouseUpHandler);
 		this._dragItem = null;
+		this._dragIndex = -1;
+		this._dragItemRenderer = null;
 	}
 
 	private function listView_dragCompleteHandler(event:DragDropEvent):Void {
@@ -1982,8 +1996,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (!this._removeOnDragDropComplete) {
 			return;
 		}
-		var droppedItem = event.dragData.get(this._dragFormat);
-		this._dataProvider.remove(droppedItem);
+		var droppedItems = cast(event.dragData.get(this._dragFormat), Array<Dynamic>);
+		for (droppedItem in droppedItems) {
+			this._dataProvider.remove(droppedItem);
+		}
 	}
 
 	private function listView_dragEnterHandler(event:DragDropEvent):Void {
@@ -2016,12 +2032,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		var passedTime = currentTime - this._dragDropLastUpdateTime;
 		this._dragDropLastUpdateTime = currentTime;
 
+		var dragX = this._dragDropLocalX - this.leftViewPortOffset;
+		var dragY = this._dragDropLocalY - this.topViewPortOffset;
 		var velocity = passedTime / 2.0;
 		if (this.maxScrollY > this.minScrollY) {
-			if (this.scrollY < this.maxScrollY && this._dragDropLocalY > (this._viewPort.visibleHeight - this.edgeAutoScrollDistance)) {
-				velocity *= (1.0 - ((this._viewPort.visibleHeight - this._dragDropLocalY) / this.edgeAutoScrollDistance));
-			} else if (this.scrollY > this.minScrollY && this._dragDropLocalY < this.edgeAutoScrollDistance) {
-				velocity *= -(1.0 - (this._dragDropLocalY / this.edgeAutoScrollDistance));
+			if (this.scrollY < this.maxScrollY && dragY > (this._viewPort.visibleHeight - this.edgeAutoScrollDistance)) {
+				velocity *= (1.0 - ((this._viewPort.visibleHeight - dragY) / this.edgeAutoScrollDistance));
+			} else if (this.scrollY > this.minScrollY && dragY < this.edgeAutoScrollDistance) {
+				velocity *= -(1.0 - (dragY / this.edgeAutoScrollDistance));
 			} else {
 				velocity = 0.0;
 			}
@@ -2036,10 +2054,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 		}
 		if (this.maxScrollX > this.minScrollX) {
-			if (this.scrollX < this.maxScrollX && this._dragDropLocalX > (this._viewPort.visibleWidth - this.edgeAutoScrollDistance)) {
-				velocity *= (1.0 - ((this._viewPort.visibleWidth - this._dragDropLocalX) / this.edgeAutoScrollDistance));
-			} else if (this.scrollX > this.minScrollX && this._dragDropLocalX < this.edgeAutoScrollDistance) {
-				velocity *= -(1.0 - (this._dragDropLocalX / this.edgeAutoScrollDistance));
+			if (this.scrollX < this.maxScrollX && dragX > (this._viewPort.visibleWidth - this.edgeAutoScrollDistance)) {
+				velocity *= (1.0 - ((this._viewPort.visibleWidth - dragX) / this.edgeAutoScrollDistance));
+			} else if (this.scrollX > this.minScrollX && dragX < this.edgeAutoScrollDistance) {
+				velocity *= -(1.0 - (dragX / this.edgeAutoScrollDistance));
 			} else {
 				velocity = 0.0;
 			}
@@ -2077,26 +2095,32 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (!this._enabled || !this._dropEnabled || !event.dragData.exists(this._dragFormat)) {
 			return;
 		}
-		var droppedItem:Dynamic = event.dragData.get(this._dragFormat);
+		var droppedItems = cast(event.dragData.get(this._dragFormat), Array<Dynamic>);
 		var dragDropIndex = this._dataProvider.length;
 		if ((this.layout is IDragDropLayout)) {
 			var dragDropLayout:IDragDropLayout = cast this.layout;
-			dragDropIndex = dragDropLayout.getDragDropIndex(this._layoutItems, this.scrollX + event.localX, this.scrollY + event.localY,
-				this._viewPort.visibleWidth, this._viewPort.visibleHeight);
+			var dropX = this.scrollX + event.localX - this.leftViewPortOffset;
+			var dropY = this.scrollY + event.localY - this.topViewPortOffset;
+			dragDropIndex = dragDropLayout.getDragDropIndex(this._layoutItems, dropX, dropY, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
 		}
 		var dropOffset = 0;
 		if (event.dragSource == this) {
-			var oldIndex = this._dataProvider.indexOf(droppedItem);
-			if (oldIndex < dragDropIndex) {
-				dropOffset = -1;
-			}
+			for (droppedItem in droppedItems) {
+				var oldIndex = this._dataProvider.indexOf(droppedItem);
+				if (oldIndex < dragDropIndex) {
+					dropOffset--;
+				}
 
-			// if we wait to remove this item in the dragComplete handler,
-			// the wrong index might be removed.
-			this._dataProvider.removeAt(oldIndex);
+				// if we wait to remove this item in the dragComplete handler,
+				// the wrong index might be removed.
+				this._dataProvider.removeAt(oldIndex);
+			}
 			this._droppedOnSelf = true;
 		}
-		this._dataProvider.addAt(droppedItem, dragDropIndex + dropOffset);
+		for (i in 0...droppedItems.length) {
+			var droppedItem = droppedItems[i];
+			this._dataProvider.addAt(droppedItem, dragDropIndex + dropOffset + i);
+		}
 	}
 
 	private function listView_dataProvider_changeHandler(event:Event):Void {
