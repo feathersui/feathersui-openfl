@@ -8,6 +8,13 @@
 
 package feathers.controls;
 
+import feathers.dragDrop.DragDropManager;
+import feathers.dragDrop.DragData;
+import feathers.dragDrop.IDropTarget;
+import feathers.dragDrop.IDragSource;
+import openfl.Lib;
+import feathers.layout.IDragDropLayout;
+import feathers.events.DragDropEvent;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -131,7 +138,8 @@ import openfl._internal.utils.ObjectPool;
 @:access(feathers.data.GridViewHeaderState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusContainer {
+class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusContainer implements IDragSource
+		implements IDropTarget {
 	/**
 		A variant used to style the grid view without a border. The variant is
 		used by default on mobile.
@@ -214,6 +222,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@since 1.0.0
 	**/
 	public static final CHILD_VARIANT_COLUMN_DIVIDER = "gridView_columnDivider";
+
+	/**
+		The default value used for the `dragFormat` property.
+
+		@since 1.3.0
+	**/
+	public static final DEFAULT_DRAG_FORMAT_ITEMS = "items";
 
 	private static final INVALIDATION_FLAG_ROW_RENDERER_FACTORY = InvalidationFlag.CUSTOM("rowRendererFactory");
 	private static final INVALIDATION_FLAG_HEADER_RENDERER_FACTORY = InvalidationFlag.CUSTOM("headerRendererFactory");
@@ -941,14 +956,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		initializes, a default layout that displays items vertically will be
 		created.
 
-		The following example tells the list view to use a horizontal layout:
+		The following example tells the grid view to use a horizontal layout:
 
 		```haxe
 		var layout = new VerticalListLayout();
 		layout.requestedRowCount = 5.0;
 		layout.gap = 20.0;
 		layout.padding = 20.0;
-		listView.layout = layout;
+		gridView.layout = layout;
 		```
 
 		@since 1.0.0
@@ -1248,6 +1263,189 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _ignoreHeaderLayoutChanges = false;
 	private var _pendingScrollRowIndex:Int = -1;
 	private var _pendingScrollDuration:Null<Float> = null;
+
+	private var _dragDropIndicatorSkinMeasurements:Measurements;
+
+	/**
+		A skin to indicate where an item being dragged will be dropped within
+		the layout, relative to the current mouse position. For this skin to be
+		displayed, the `enabled` and `dropEnabled` properties must be `true`,
+		and the grid view must have accepted the drop in a
+		`DragDropEvent.DRAG_ENTER` event listener.
+
+		In the following example, the grid view's index drag drop indicator skin is
+		provided:
+
+		```haxe
+		gridView.dragDropIndicatorSkin = new Bitmap(bitmapData);
+		```
+		@since 1.3.0
+
+		@see `GridView.dropEnabled`
+	**/
+	@:style
+	public var dragDropIndicatorSkin:DisplayObject = null;
+
+	private var _dragFormat:String = DEFAULT_DRAG_FORMAT_ITEMS;
+
+	/**
+		Drag and drop is restricted between components, unless they specify the
+		same `dragFormat`.
+
+		In the following example, the drag format of two grid views is customized:
+
+		```haxe
+		gridView1.dragFormat = "my-custom-format";
+		gridView2.dragFormat = "my-custom-format";
+		```
+
+		@since 1.3.0
+
+		@see `GridView.dragEnabled`
+		@see `GridView.dropEnabled`
+	**/
+	public var dragFormat(get, set):String;
+
+	private function get_dragFormat():String {
+		return this._dragFormat;
+	}
+
+	private function set_dragFormat(value:String):String {
+		if (value == null) {
+			value = DEFAULT_DRAG_FORMAT_ITEMS;
+		}
+		if (this._dragFormat == value) {
+			return this._dragFormat;
+		}
+		this._dragFormat = value;
+		return this._dragFormat;
+	}
+
+	private var _dragEnabled = false;
+
+	/**
+		Indicates if this grid view can initiate drag and drop operations with
+		mouse or touch. The `dragEnabled` property enables dragging items, but
+		dropping items on the same grid view must be enabled separately with the
+		`dropEnabled` property. The `removeOnDragDropComplete` indicates if the
+		initiating grid view should remove the item from the data provider if it
+		was successfully dropped somewhere else.
+
+		In the following example, a grid view's items may be dragged:
+
+		```haxe
+		gridView.dragEnabled = true;
+		```
+
+		@since 1.3.0
+
+		@see `GridView.dropEnabled`
+		@see `GridView.removeOnDragDropComplete`
+		@see `GridView.dragFormat`
+	**/
+	public var dragEnabled(get, set):Bool;
+
+	private function get_dragEnabled():Bool {
+		return this._dragEnabled;
+	}
+
+	private function set_dragEnabled(value:Bool):Bool {
+		if (this._dragEnabled == value) {
+			return this._dragEnabled;
+		}
+		if (this._dragEnabled) {
+			this.removeEventListener(DragDropEvent.DRAG_COMPLETE, gridView_dragCompleteHandler);
+		}
+		this._dragEnabled = value;
+		if (this._dragEnabled) {
+			this.addEventListener(DragDropEvent.DRAG_COMPLETE, gridView_dragCompleteHandler);
+		}
+		return this._dragEnabled;
+	}
+
+	private var _dropEnabled = false;
+
+	/**
+		Indicates if this grid view can accept items that are dragged and
+		dropped over the grid view's view port.
+
+		In the following example, items may be dropped on the grid view:
+
+		```haxe
+		gridView.dropEnabled = true;
+		```
+
+		@since 1.3.0
+
+		@see `GridView.dragEnabled`
+		@see `GridView.removeOnDragDropComplete`
+		@see `GridView.dragFormat`
+	**/
+	public var dropEnabled(get, set):Bool;
+
+	private function get_dropEnabled():Bool {
+		return this._dropEnabled;
+	}
+
+	private function set_dropEnabled(value:Bool):Bool {
+		if (this._dropEnabled == value) {
+			return this._dropEnabled;
+		}
+		if (this._dropEnabled) {
+			this.removeEventListener(DragDropEvent.DRAG_ENTER, gridView_dragEnterHandler);
+			this.removeEventListener(DragDropEvent.DRAG_EXIT, gridView_dragExitHandler);
+			this.removeEventListener(DragDropEvent.DRAG_MOVE, gridView_dragMoveHandler);
+			this.removeEventListener(DragDropEvent.DRAG_DROP, gridView_dragDropHandler);
+		}
+		this._dropEnabled = value;
+		if (this._dropEnabled) {
+			this.addEventListener(DragDropEvent.DRAG_ENTER, gridView_dragEnterHandler);
+			this.addEventListener(DragDropEvent.DRAG_EXIT, gridView_dragExitHandler);
+			this.addEventListener(DragDropEvent.DRAG_MOVE, gridView_dragMoveHandler);
+			this.addEventListener(DragDropEvent.DRAG_DROP, gridView_dragDropHandler);
+		}
+		return this._dropEnabled;
+	}
+
+	private var _removeOnDragDropComplete = false;
+
+	/**
+		Indicates whether dragged items should be removed from this grid view's
+		data provider, if they are successfully dropped somewhere else.
+
+		@since 1.3.0
+
+		@see `GridView.dragEnabled`
+		@see `GridView.dropEnabled`
+		@see `GridView.dragFormat`
+	**/
+	public var removeOnDragDropComplete(get, set):Bool;
+
+	private function get_removeOnDragDropComplete():Bool {
+		return this._removeOnDragDropComplete;
+	}
+
+	private function set_removeOnDragDropComplete(value:Bool):Bool {
+		this._removeOnDragDropComplete = value;
+		return this._removeOnDragDropComplete;
+	}
+
+	private var _dragDropLocalX = 0.0;
+	private var _dragDropLocalY = 0.0;
+	private var _dragMinDistance = 0.0;
+	private var _dragItem:Dynamic = null;
+	private var _dragRowIndex:Int = -1;
+	private var _dragRowRenderer:GridViewRowRenderer;
+	private var _droppedOnSelf = false;
+	private var _dragDropLastUpdateTime = -1;
+
+	/**
+		The distance from the edge of the container where it may auto-scroll,
+		such as if a drag and drop operation is active.
+
+		@since 1.3.0
+	**/
+	public var edgeAutoScrollDistance:Float = 8.0;
 
 	/**
 		Scrolls the grid view so that the specified row is completely visible.
@@ -2124,6 +2322,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this.dataToRowRenderer.remove(item);
 			rowRenderer.removeEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
+			rowRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_rowRenderer_mouseDownHandler);
 			this.resetRowRenderer(rowRenderer, state);
 			if (this._rowRendererMeasurements != null) {
 				this._rowRendererMeasurements.restore(rowRenderer);
@@ -2231,6 +2430,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.gridView = this;
 		rowRenderer.addEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
+		rowRenderer.addEventListener(MouseEvent.MOUSE_DOWN, gridView_rowRenderer_mouseDownHandler);
 		this.rowRendererToRowState.set(rowRenderer, state);
 		this.dataToRowRenderer.set(state.data, rowRenderer);
 		return rowRenderer;
@@ -2632,6 +2832,37 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 	}
 
+	private function refreshDragDropIndexIndicator():Void {
+		if (this.dragDropIndicatorSkin == null || !(this.layout is IDragDropLayout)) {
+			return;
+		}
+		if ((this.dragDropIndicatorSkin is IUIControl)) {
+			(cast this.dragDropIndicatorSkin : IUIControl).initializeNow();
+		}
+		if (this._dragDropIndicatorSkinMeasurements == null) {
+			this._dragDropIndicatorSkinMeasurements = new Measurements(this.dragDropIndicatorSkin);
+		} else {
+			this._dragDropIndicatorSkinMeasurements.save(this.dragDropIndicatorSkin);
+		}
+
+		// convert to view port coordinates
+		var dropX = this.scrollX + this._dragDropLocalX - this.leftViewPortOffset;
+		var dropY = this.scrollY + this._dragDropLocalY - this.topViewPortOffset;
+		var dropDropLayout:IDragDropLayout = cast this.layout;
+		var dragDropIndex = dropDropLayout.getDragDropIndex(this._rowLayoutItems, dropX, dropY, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
+		var dragDropRegion = dropDropLayout.getDragDropRegion(this._rowLayoutItems, dragDropIndex, dropX, dropY, this._viewPort.visibleWidth,
+			this._viewPort.visibleHeight);
+		// convert back to grid view coordinates
+		this.dragDropIndicatorSkin.x = dragDropRegion.x - this.scrollX + this.leftViewPortOffset;
+		this.dragDropIndicatorSkin.y = dragDropRegion.y - this.scrollY + this.topViewPortOffset;
+		if (dragDropRegion.width == 0.0) {
+			this.dragDropIndicatorSkin.height = dragDropRegion.height;
+		} else {
+			this.dragDropIndicatorSkin.width = dragDropRegion.width;
+		}
+		this.addChild(this.dragDropIndicatorSkin);
+	}
+
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._selectable) {
 			super.baseScrollContainer_keyDownHandler(event);
@@ -2660,6 +2891,73 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_rowRenderer_cellTriggerHandler(event:GridViewEvent<GridViewCellState>):Void {
 		this.dispatchEvent(event.clone());
+	}
+
+	private function gridView_rowRenderer_mouseDownHandler(event:MouseEvent):Void {
+		if (!this._enabled || !this._dragEnabled || this.stage == null) {
+			return;
+		}
+		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
+		var state = this.rowRendererToRowState.get(rowRenderer);
+		if (state == null) {
+			return;
+		}
+		this._dragRowRenderer = rowRenderer;
+		this._dragItem = state.data;
+		this._dragRowIndex = state.rowIndex;
+		this._dragDropLocalX = this.mouseX;
+		this._dragDropLocalY = this.mouseY;
+		this._dragMinDistance = 6.0;
+		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, gridView_stage_pressAndMove_mouseMoveHandler, false, 0, true);
+		this.stage.addEventListener(MouseEvent.MOUSE_UP, gridView_stage_pressAndMove_mouseUpHandler, false, 0, true);
+	}
+
+	private function gridView_stage_pressAndMove_mouseMoveHandler(event:MouseEvent):Void {
+		var offsetX = this.mouseX - this._dragDropLocalX;
+		var offsetY = this.mouseY - this._dragDropLocalY;
+		if (offsetX > this._dragMinDistance || offsetY > this._dragMinDistance) {
+			var stage = cast(event.currentTarget, Stage);
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, gridView_stage_pressAndMove_mouseMoveHandler);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, gridView_stage_pressAndMove_mouseUpHandler);
+
+			var items:Array<Dynamic> = [];
+			var draggedIndices = this._selectedIndices.copy();
+			if (draggedIndices.indexOf(this._dragRowIndex) == -1) {
+				draggedIndices.push(this._dragRowIndex);
+			}
+			draggedIndices.sort((a, b) -> {
+				if (a < b) {
+					return -1;
+				}
+				if (a > b) {
+					return 1;
+				}
+				return 0;
+			});
+			for (dragIndex in draggedIndices) {
+				items.push(this._dataProvider.get(dragIndex));
+			}
+
+			var dragData = new DragData();
+			dragData.set(this._dragFormat, items);
+
+			var rowState = this.rowRendererToRowState.get(this._dragRowRenderer);
+			var rowRenderer = this._rowRendererFactory.create();
+			this.updateRowRenderer(rowRenderer, rowState);
+			rowRenderer.width = this._dragRowRenderer.width;
+			rowRenderer.height = this._dragRowRenderer.height;
+
+			DragDropManager.startDrag(this, dragData, rowRenderer, -this._dragRowRenderer.mouseX, -this._dragRowRenderer.mouseY);
+		}
+	}
+
+	private function gridView_stage_pressAndMove_mouseUpHandler(event:MouseEvent):Void {
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, gridView_stage_pressAndMove_mouseMoveHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, gridView_stage_pressAndMove_mouseUpHandler);
+		this._dragItem = null;
+		this._dragRowIndex = -1;
+		this._dragRowRenderer = null;
 	}
 
 	private function gridView_dataProvider_changeHandler(event:Event):Void {
@@ -3288,6 +3586,145 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		Mouse.cursor = this._oldHeaderDividerMouseCursor;
 		this._oldHeaderDividerMouseCursor = null;
+	}
+
+	private function gridView_dragCompleteHandler(event:DragDropEvent):Void {
+		if (!event.dropped) {
+			return;
+		}
+		if (this._droppedOnSelf) {
+			// already modified the data provider in the dragDrop handler
+			this._droppedOnSelf = false;
+			return;
+		}
+		if (!this._removeOnDragDropComplete) {
+			return;
+		}
+		var droppedItems = cast(event.dragData.get(this._dragFormat), Array<Dynamic>);
+		for (droppedItem in droppedItems) {
+			this._dataProvider.remove(droppedItem);
+		}
+	}
+
+	private function gridView_dragEnterHandler(event:DragDropEvent):Void {
+		if (!this._enabled || !this._dropEnabled || !event.dragData.exists(this._dragFormat)) {
+			return;
+		}
+		event.acceptDrag(this);
+		this.showFocus(true);
+		this._dragDropLocalX = event.localX;
+		this._dragDropLocalY = event.localY;
+		this.refreshDragDropIndexIndicator();
+		this._dragDropLastUpdateTime = Lib.getTimer();
+		this.addEventListener(Event.ENTER_FRAME, gridView_dragScroll_enterFrameHandler);
+	}
+
+	private function gridView_dragExitHandler(event:DragDropEvent):Void {
+		if (this.dragDropIndicatorSkin != null) {
+			this._dragDropIndicatorSkinMeasurements.restore(this.dragDropIndicatorSkin);
+			if (this.dragDropIndicatorSkin.parent == this) {
+				this.removeChild(this.dragDropIndicatorSkin);
+			}
+		}
+		this.showFocus(false);
+		this._dragDropLastUpdateTime = -1;
+		this.removeEventListener(Event.ENTER_FRAME, gridView_dragScroll_enterFrameHandler);
+	}
+
+	private function gridView_dragScroll_enterFrameHandler(event:Event):Void {
+		var currentTime = Lib.getTimer();
+		var passedTime = currentTime - this._dragDropLastUpdateTime;
+		this._dragDropLastUpdateTime = currentTime;
+
+		var dragX = this._dragDropLocalX - this.leftViewPortOffset;
+		var dragY = this._dragDropLocalY - this.topViewPortOffset;
+		var velocity = passedTime / 2.0;
+		if (this.maxScrollY > this.minScrollY) {
+			if (this.scrollY < this.maxScrollY && dragY > (this._viewPort.visibleHeight - this.edgeAutoScrollDistance)) {
+				velocity *= (1.0 - ((this._viewPort.visibleHeight - dragY) / this.edgeAutoScrollDistance));
+			} else if (this.scrollY > this.minScrollY && dragY < this.edgeAutoScrollDistance) {
+				velocity *= -(1.0 - (dragY / this.edgeAutoScrollDistance));
+			} else {
+				velocity = 0.0;
+			}
+			if (velocity != 0.0) {
+				var newScrollY = this.scrollY + velocity;
+				if (newScrollY > this.maxScrollY) {
+					newScrollY = this.maxScrollY;
+				} else if (newScrollY < this.minScrollY) {
+					newScrollY = this.minScrollY;
+				}
+				this.scrollY = newScrollY;
+			}
+		}
+		if (this.maxScrollX > this.minScrollX) {
+			if (this.scrollX < this.maxScrollX && dragX > (this._viewPort.visibleWidth - this.edgeAutoScrollDistance)) {
+				velocity *= (1.0 - ((this._viewPort.visibleWidth - dragX) / this.edgeAutoScrollDistance));
+			} else if (this.scrollX > this.minScrollX && dragX < this.edgeAutoScrollDistance) {
+				velocity *= -(1.0 - (dragX / this.edgeAutoScrollDistance));
+			} else {
+				velocity = 0.0;
+			}
+			if (velocity != 0.0) {
+				var newScrollX = this.scrollX + velocity;
+				if (newScrollX > this.maxScrollX) {
+					newScrollX = this.maxScrollX;
+				} else if (newScrollX < this.minScrollX) {
+					newScrollX = this.minScrollX;
+				}
+				this.scrollX = newScrollX;
+			}
+		}
+		this.refreshDragDropIndexIndicator();
+	};
+
+	private function gridView_dragMoveHandler(event:DragDropEvent):Void {
+		if (!this._enabled || !this._dropEnabled || !event.dragData.exists(this._dragFormat)) {
+			return;
+		}
+		this._dragDropLocalX = event.localX;
+		this._dragDropLocalY = event.localY;
+		this.refreshDragDropIndexIndicator();
+	}
+
+	private function gridView_dragDropHandler(event:DragDropEvent):Void {
+		if (this.dragDropIndicatorSkin != null && this.dragDropIndicatorSkin.parent == this) {
+			this._dragDropIndicatorSkinMeasurements.restore(this.dragDropIndicatorSkin);
+			this.removeChild(this.dragDropIndicatorSkin);
+		}
+		this.showFocus(false);
+		this._dragDropLastUpdateTime = -1;
+		this.removeEventListener(Event.ENTER_FRAME, gridView_dragScroll_enterFrameHandler);
+		this._droppedOnSelf = false;
+		if (!this._enabled || !this._dropEnabled || !event.dragData.exists(this._dragFormat)) {
+			return;
+		}
+		var droppedItems = cast(event.dragData.get(this._dragFormat), Array<Dynamic>);
+		var dragDropIndex = this._dataProvider.length;
+		if ((this.layout is IDragDropLayout)) {
+			var dragDropLayout:IDragDropLayout = cast this.layout;
+			var dropX = this.scrollX + event.localX - this.leftViewPortOffset;
+			var dropY = this.scrollY + event.localY - this.topViewPortOffset;
+			dragDropIndex = dragDropLayout.getDragDropIndex(this._rowLayoutItems, dropX, dropY, this._viewPort.visibleWidth, this._viewPort.visibleHeight);
+		}
+		var dropOffset = 0;
+		if (event.dragSource == this) {
+			for (droppedItem in droppedItems) {
+				var oldIndex = this._dataProvider.indexOf(droppedItem);
+				if (oldIndex < dragDropIndex) {
+					dropOffset--;
+				}
+
+				// if we wait to remove this item in the dragComplete handler,
+				// the wrong index might be removed.
+				this._dataProvider.removeAt(oldIndex);
+			}
+			this._droppedOnSelf = true;
+		}
+		for (i in 0...droppedItems.length) {
+			var droppedItem = droppedItems[i];
+			this._dataProvider.addAt(droppedItem, dragDropIndex + dropOffset + i);
+		}
 	}
 }
 

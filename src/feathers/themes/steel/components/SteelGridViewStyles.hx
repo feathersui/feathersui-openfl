@@ -82,6 +82,15 @@ class SteelGridViewStyles {
 				gridView.focusRectSkin = focusRectSkin;
 			}
 
+			if (gridView.dragDropIndicatorSkin == null) {
+				var dragDropIndicatorSkin = new RectangleSkin();
+				dragDropIndicatorSkin.fill = theme.getActiveThemeFill();
+				dragDropIndicatorSkin.border = None;
+				dragDropIndicatorSkin.width = 2.0;
+				dragDropIndicatorSkin.height = 2.0;
+				gridView.dragDropIndicatorSkin = dragDropIndicatorSkin;
+			}
+
 			gridView.showHeaderDividersOnlyWhenResizable = true;
 
 			gridView.paddingTop = theme.borderThickness;
