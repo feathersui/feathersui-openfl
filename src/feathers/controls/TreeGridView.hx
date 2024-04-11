@@ -2891,7 +2891,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var column = this._columns.get(this._resizingHeaderIndex);
 		// clear the explicit width because the user resized it
 		column.width = null;
-		var headerRenderer = this._headerLayoutItems[this._resizingHeaderIndex];
+		var headerRenderer = this.dataToHeaderRenderer.get(column);
 		var column = this._columns.get(this._resizingHeaderIndex);
 		var minX = this._headerContainer.x + headerRenderer.x + column.minWidth;
 		var maxX = this.actualWidth - this.rightViewPortOffset;
@@ -2913,7 +2913,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 				// however, we're not setting the width property on the
 				// DataGridColumn because we want them to be able to resize
 				// later if the whole DataGrid resizes.
-				headerRenderer = this._headerLayoutItems[i];
+				headerRenderer = this.dataToHeaderRenderer.get(currentColumn);
 				this._customColumnWidths[i] = headerRenderer.width;
 				totalMinWidth += headerRenderer.width;
 			} else {
@@ -2922,7 +2922,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 					continue;
 				}
 				totalMinWidth += currentColumn.minWidth;
-				headerRenderer = this._headerLayoutItems[i];
+				headerRenderer = this.dataToHeaderRenderer.get(currentColumn);
 				var columnWidth = headerRenderer.width;
 				totalWidthAfter += columnWidth;
 				this._customColumnWidths[i] = columnWidth;
@@ -2965,9 +2965,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			var i = indices.length - 1;
 			while (i >= 0) {
 				var index = indices[i];
-				var headerRenderer = this._headerLayoutItems[index];
-				var columnWidth = headerRenderer.width;
 				var column = this._columns.get(index);
+				var headerRenderer = this.dataToHeaderRenderer.get(column);
+				var columnWidth = headerRenderer.width;
 				var percent = columnWidth / totalWidthOfIndices;
 				var offset = widthToDistribute * percent;
 				var newWidth = this._customColumnWidths[index] + offset;
@@ -2998,8 +2998,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._currentColumnResizeSkin == null) {
 			return;
 		}
-		var headerRenderer = this._headerLayoutItems[this._resizingHeaderIndex];
 		var column = this._columns.get(this._resizingHeaderIndex);
+		var headerRenderer = this.dataToHeaderRenderer.get(column);
 		var minX = this._headerContainer.x + headerRenderer.x + column.minWidth;
 		var maxX = this.actualWidth - this.rightViewPortOffset;
 		var originalX = this._headerContainer.x + headerRenderer.x + headerRenderer.width;
