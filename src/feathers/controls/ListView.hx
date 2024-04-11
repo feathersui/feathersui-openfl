@@ -1944,7 +1944,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			stage.removeEventListener(MouseEvent.MOUSE_UP, listView_stage_pressAndMove_mouseUpHandler);
 
 			var items:Array<Dynamic> = [];
-			var draggedIndices = this._selectedIndices.copy();
+			var draggedIndices = this._allowMultipleSelection ? this._selectedIndices.copy() : [];
 			if (draggedIndices.indexOf(this._dragIndex) == -1) {
 				draggedIndices.push(this._dragIndex);
 			}
