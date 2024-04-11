@@ -505,6 +505,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			this._columns.addEventListener(FlatCollectionEvent.REMOVE_ITEM, gridView_columns_removeItemHandler);
 		}
 		this._autoPopulatedColumns = null;
+		this._customColumnWidths = null;
 		this.setInvalid(DATA);
 		return this._columns;
 	}

@@ -518,6 +518,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._columns.addEventListener(FlatCollectionEvent.REMOVE_ITEM, treeGridView_columns_removeItemHandler);
 		}
 		this._autoPopulatedColumns = null;
+		this._customColumnWidths = null;
 		this.setInvalid(DATA);
 		return this._columns;
 	}
