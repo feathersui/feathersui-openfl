@@ -15,6 +15,8 @@ import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
+import feathers.text.TextFormat.AbstractTextFormat;
+import feathers.text.TextFormat;
 import feathers.utils.ExclusivePointer;
 import motion.Actuate;
 import motion.actuators.SimpleActuator;
@@ -26,6 +28,7 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.text.TextField;
 import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
@@ -96,6 +99,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		}
 	}
 
+	private var onTextField:TextField;
+	private var offTextField:TextField;
+
 	private var _selected:Bool = false;
 
 	/**
@@ -134,6 +140,142 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		this.setInvalid(SELECTION);
 		return this._selected;
 	}
+
+	private var _onText:String = null;
+
+	/**
+		The text displayed by the toggle switch when it is toggled on. If
+		`null`, no text is displayed.
+
+		The following example sets the label's on text:
+
+		```haxe
+		label.onText = "ON";
+		```
+
+		@default null
+
+		@see `Label.offText`
+		@see `Label.textFormat`
+
+		@since 1.3.0
+	**/
+	public var onText(get, set):String;
+
+	private function get_onText():String {
+		return this._onText;
+	}
+
+	private function set_onText(value:String):String {
+		if (this._onText == value) {
+			return this._onText;
+		}
+		this._onText = value;
+		this.setInvalid(DATA);
+		return this._onText;
+	}
+
+	private var _offText:String = null;
+
+	/**
+		The text displayed by the toggle switch when it is toggled off. If
+		`null`, no text is displayed.
+
+		The following example sets the label's off text:
+
+		```haxe
+		label.offText = "OFF";
+		```
+
+		@default null
+
+		@see `Label.onText`
+		@see `Label.textFormat`
+
+		@since 1.3.0
+	**/
+	public var offText(get, set):String;
+
+	private function get_offText():String {
+		return this._offText;
+	}
+
+	private function set_offText(value:String):String {
+		if (this._offText == value) {
+			return this._offText;
+		}
+		this._offText = value;
+		this.setInvalid(DATA);
+		return this._offText;
+	}
+
+	private var _previousOnText:String = null;
+	private var _previousOffText:String = null;
+	private var _previousOnTextFormat:TextFormat = null;
+	private var _previousOnSimpleTextFormat:openfl.text.TextFormat = null;
+	private var _previousOffTextFormat:TextFormat = null;
+	private var _previousOffSimpleTextFormat:openfl.text.TextFormat = null;
+	private var _updatedOnTextStyles = false;
+	private var _updatedOffTextStyles = false;
+	private var _onTextMeasuredWidth = 0.0;
+	private var _onTextMeasuredHeight = 0.0;
+	private var _offTextMeasuredWidth = 0.0;
+	private var _offTextMeasuredHeight = 0.0;
+
+	/**
+		The font styles used to render the toggle switch's text.
+
+		In the following example, the toggle switch's text formatting is
+		customized:
+
+		```haxe
+		toggleSwitch.textFormat = new TextFormat("Helvetica", 20, 0xcc0000);
+		```
+
+		@see `ToggleSwitch.onText`
+		@see `ToggleSwitch.offText`
+		@see `ToggleSwitch.disabledTextFormat`
+		@see `ToggleSwitch.embedFonts`
+
+		@since 1.3.0
+	**/
+	@:style
+	public var textFormat:AbstractTextFormat = null;
+
+	/**
+		The font styles used to render the toggle switch's text when the toggle
+		switch is disabled.
+
+		In the following example, the toggle switch's disabled text formatting
+		is customized:
+
+		```haxe
+		toggleSwitch.enabled = false;
+		toggleSwitch.disabledTextFormat = new TextFormat("Helvetica", 20, 0xee0000);
+		```
+
+		@see `ToggleSwitch.textFormat`
+
+		@since 1.3.0
+	**/
+	@:style
+	public var disabledTextFormat:AbstractTextFormat = null;
+
+	/**
+		Determines if an embedded font is used or not.
+
+		In the following example, the toggle switch uses embedded fonts:
+
+		```haxe
+		toggleSwitch.embedFonts = true;
+		```
+
+		@see `ToggleSwitch.textFormat`
+
+		@since 1.3.0
+	**/
+	@:style
+	public var embedFonts:Bool = false;
 
 	private var _currentThumbSkin:DisplayObject = null;
 	private var _thumbSkinMeasurements:Measurements = null;
@@ -262,7 +404,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		@since 1.0.0
 	**/
 	@:style
-	public var toggleDuration:Float = 0.15;
+	public var toggleDuration:Float = 0.25;
 
 	/**
 		The easing function used for the animation when the toggle switch is
@@ -321,15 +463,32 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	}
 
 	override private function update():Void {
+		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
 		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
 
+		this._updatedOnTextStyles = false;
+		this._updatedOffTextStyles = false;
+
 		if (stylesInvalid) {
 			this.refreshThumb();
 			this.refreshTrack();
 			this.refreshSecondaryTrack();
+		}
+
+		if (dataInvalid) {
+			this.refreshTextFields();
+		}
+
+		if (dataInvalid || stylesInvalid || stateInvalid) {
+			this.refreshTextStyles();
+		}
+
+		if (dataInvalid || stylesInvalid || stateInvalid || sizeInvalid) {
+			this.refreshOnText(sizeInvalid);
+			this.refreshOffText(sizeInvalid);
 		}
 
 		if (selectionInvalid || stylesInvalid) {
@@ -384,6 +543,24 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 					newWidth += this._currentSecondaryTrackSkin.width;
 				}
 			}
+			if (this.onTextField != null) {
+				var onTextAndThumbWidth = this._onTextMeasuredWidth;
+				if (this._currentThumbSkin != null) {
+					onTextAndThumbWidth += this._currentThumbSkin.width;
+				}
+				if (newWidth < onTextAndThumbWidth) {
+					newWidth = onTextAndThumbWidth;
+				}
+			}
+			if (this.offTextField != null) {
+				var offTextAndThumbWidth = this._offTextMeasuredWidth;
+				if (this._currentThumbSkin != null) {
+					offTextAndThumbWidth += this._currentThumbSkin.width;
+				}
+				if (newWidth < offTextAndThumbWidth) {
+					newWidth = offTextAndThumbWidth;
+				}
+			}
 		}
 
 		var newHeight = this.explicitHeight;
@@ -400,6 +577,12 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 					newHeight = this._currentSecondaryTrackSkin.height;
 				}
 			}
+			if (this.onTextField != null && newHeight < this._onTextMeasuredHeight) {
+				newHeight = this._onTextMeasuredHeight;
+			}
+			if (this.offTextField != null && newHeight < this._offTextMeasuredHeight) {
+				newHeight = this._offTextMeasuredHeight;
+			}
 		}
 
 		// TODO: calculate min and max
@@ -409,6 +592,159 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		var newMaxHeight = newHeight;
 
 		return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight, newMaxWidth, newMaxHeight);
+	}
+
+	private function refreshTextFields():Void {
+		if (this._onText == null) {
+			if (this.onTextField != null) {
+				this.removeChild(this.onTextField);
+				this.onTextField = null;
+			}
+		} else if (this.onTextField == null) {
+			var index = 0;
+			if (this._currentSecondaryTrackSkin != null) {
+				index = 2;
+			} else if (this._currentTrackSkin != null) {
+				index = 1;
+			}
+			this.onTextField = new TextField();
+			this.addChildAt(this.onTextField, index);
+		}
+		if (this._offText == null) {
+			if (this.offTextField != null) {
+				this.removeChild(this.offTextField);
+				this.offTextField = null;
+			}
+		} else if (this.offTextField == null) {
+			var index = 0;
+			if (this._currentSecondaryTrackSkin != null) {
+				index = 2;
+			} else if (this._currentTrackSkin != null) {
+				index = 1;
+			}
+			this.offTextField = new TextField();
+			this.addChildAt(this.offTextField, index);
+		}
+	}
+
+	private function refreshTextStyles():Void {
+		var textFormat = this.getCurrentTextFormat();
+		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
+		if (this.offTextField != null) {
+			if (this.offTextField.embedFonts != this.embedFonts) {
+				this.offTextField.embedFonts = this.embedFonts;
+				this._updatedOffTextStyles = true;
+			}
+			if (simpleTextFormat != this._previousOffSimpleTextFormat) {
+				if (this._previousOffTextFormat != null) {
+					this._previousOffTextFormat.removeEventListener(Event.CHANGE, toggleSwitch_offTextFormat_changeHandler);
+				}
+				// clear the selection before setting defaultTextFormat because any
+				// selection seems to prevent the defaultTextFormat from fully applying
+				if (this.offTextField.caretIndex != -1 && this.offTextField.selectionBeginIndex != this.offTextField.selectionEndIndex) {
+					// check for caretIndex != -1 first due to a bug in OpenFL
+					this.offTextField.setSelection(0, 0);
+				}
+				if (textFormat != null) {
+					textFormat.addEventListener(Event.CHANGE, toggleSwitch_offTextFormat_changeHandler, false, 0, true);
+					this.offTextField.defaultTextFormat = simpleTextFormat;
+					this._updatedOffTextStyles = true;
+				}
+				this._previousOffTextFormat = textFormat;
+				this._previousOffSimpleTextFormat = simpleTextFormat;
+			}
+		}
+		if (this.onTextField != null) {
+			if (this.onTextField.embedFonts != this.embedFonts) {
+				this.onTextField.embedFonts = this.embedFonts;
+				this._updatedOnTextStyles = true;
+			}
+			if (simpleTextFormat != this._previousOnSimpleTextFormat) {
+				if (this._previousOnTextFormat != null) {
+					this._previousOnTextFormat.removeEventListener(Event.CHANGE, toggleSwitch_onTextFormat_changeHandler);
+				}
+				// clear the selection before setting defaultTextFormat because any
+				// selection seems to prevent the defaultTextFormat from fully applying
+				if (this.onTextField.caretIndex != -1 && this.onTextField.selectionBeginIndex != this.onTextField.selectionEndIndex) {
+					// check for caretIndex != -1 first due to a bug in OpenFL
+					this.onTextField.setSelection(0, 0);
+				}
+				if (textFormat != null) {
+					textFormat.addEventListener(Event.CHANGE, toggleSwitch_onTextFormat_changeHandler, false, 0, true);
+					this.onTextField.defaultTextFormat = simpleTextFormat;
+					this._updatedOnTextStyles = true;
+				}
+				this._previousOnTextFormat = textFormat;
+				this._previousOnSimpleTextFormat = simpleTextFormat;
+			}
+		}
+	}
+
+	private function refreshOnText(forceMeasurement:Bool):Void {
+		if (this.onTextField == null) {
+			return;
+		}
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
+		var hasText = this._onText != null && this._onText.length > 0;
+		if (this._onText == this._previousOnText && !this._updatedOnTextStyles && !forceMeasurement) {
+			// nothing to refresh
+			return;
+		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.onTextField.autoSize = LEFT;
+		if (hasText) {
+			this.onTextField.text = this._onText;
+		} else {
+			// zero-width space results in a more accurate height measurement
+			// than we'd get with an empty string
+			this.onTextField.text = "\u200b";
+		}
+		this._onTextMeasuredWidth = this.onTextField.textWidth + 4;
+		this._onTextMeasuredHeight = this.onTextField.height;
+		this.onTextField.autoSize = NONE;
+		if (!hasText) {
+			this.onTextField.text = "";
+		}
+		this._previousOnText = this._onText;
+	}
+
+	private function refreshOffText(forceMeasurement:Bool):Void {
+		if (this.offTextField == null) {
+			return;
+		}
+		// usually, hasText doesn't check the length, but TextField height may
+		// not be accurate with an empty string
+		var hasText = this._offText != null && this._offText.length > 0;
+		if (this._offText == this._previousOffText && !this._updatedOffTextStyles && !forceMeasurement) {
+			// nothing to refresh
+			return;
+		}
+		// set autoSize before text because setting text first can trigger an
+		// extra text engine reflow
+		this.offTextField.autoSize = LEFT;
+		if (hasText) {
+			this.offTextField.text = this._offText;
+		} else {
+			// zero-width space results in a more accurate height measurement
+			// than we'd get with an empty string
+			this.offTextField.text = "\u200b";
+		}
+		this._offTextMeasuredWidth = this.offTextField.textWidth + 4;
+		this._offTextMeasuredHeight = this.offTextField.height;
+		this.offTextField.autoSize = NONE;
+		if (!hasText) {
+			this.offTextField.text = "";
+		}
+		this._previousOffText = this._offText;
+	}
+
+	private function getCurrentTextFormat():TextFormat {
+		if (!this._enabled && this.disabledTextFormat != null) {
+			return this.disabledTextFormat;
+		}
+		return this.textFormat;
 	}
 
 	private function refreshThumb():Void {
@@ -542,6 +878,42 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			this.layoutSplitTrack();
 		} else {
 			this.layoutSingleTrack();
+		}
+		this.layoutText();
+	}
+
+	private function layoutText():Void {
+		if (this.onTextField != null) {
+			var availableWidth = this.actualWidth - this._currentThumbSkin.width - this.paddingLeft - this.paddingRight;
+			var onWidth = this._onTextMeasuredWidth;
+			if (onWidth > availableWidth) {
+				onWidth = availableWidth;
+			}
+			this.onTextField.width = onWidth;
+			this.onTextField.x = this.paddingLeft + (availableWidth - onWidth) / 2.0;
+			var onY = (this.actualHeight - this._onTextMeasuredHeight) / 2.0;
+			if (onY < 0.0) {
+				onY = 0.0;
+			}
+			this.onTextField.y = onY;
+			// TODO: not ideal. should probably use scrollRect instead.
+			this.onTextField.visible = this._currentThumbSkin.x >= this.onTextField.x;
+		}
+		if (this.offTextField != null) {
+			var availableWidth = this.actualWidth - this._currentThumbSkin.width - this.paddingLeft - this.paddingRight;
+			var offWidth = this._offTextMeasuredWidth;
+			if (offWidth > availableWidth) {
+				offWidth = availableWidth;
+			}
+			this.offTextField.width = offWidth;
+			this.offTextField.x = this.actualWidth - this.paddingRight - availableWidth + (availableWidth - offWidth) / 2.0;
+			var offY = (this.actualHeight - this._offTextMeasuredHeight) / 2.0;
+			if (offY < 0.0) {
+				offY = 0.0;
+			}
+			this.offTextField.y = offY;
+			// TODO: not ideal. should probably use scrollRect instead.
+			this.offTextField.visible = (this._currentThumbSkin.x + this._currentThumbSkin.width) <= (this.offTextField.x + offWidth);
 		}
 	}
 
@@ -688,5 +1060,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 	private function toggleTween_onComplete():Void {
 		this._toggleTween = null;
+	}
+
+	private function toggleSwitch_onTextFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
+	}
+
+	private function toggleSwitch_offTextFormat_changeHandler(event:Event):Void {
+		this.setInvalid(STYLES);
 	}
 }
