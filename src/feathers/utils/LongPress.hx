@@ -16,6 +16,7 @@ import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.geom.Point;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -131,6 +132,27 @@ class LongPress {
 		return this._enabled;
 	}
 
+	private var _maxMoveDistance:Float = 10.0;
+
+	/**
+		The maximum distance, measured in pixels, that the point can move
+		between start and end to be recognized as a long press.
+
+		@default 10.0
+
+		@since 1.3.0
+	**/
+	public var maxMoveDistance(get, set):Float;
+
+	private function get_maxMoveDistance():Float {
+		return this._maxMoveDistance;
+	}
+
+	private function set_maxMoveDistance(value:Float):Float {
+		this._maxMoveDistance = value;
+		return this._maxMoveDistance;
+	}
+
 	private var _customHitTest:(stageX:Float, stageY:Float) -> Bool;
 
 	/**
@@ -158,6 +180,8 @@ class LongPress {
 
 	private var _savedMouseEvent:MouseEvent;
 	private var _savedTouchEvent:TouchEvent;
+	private var _savedStageXY:Point = new Point();
+	private var _updatedStageXY:Point = new Point();
 	private var _startTime:Float;
 	private var _stopNextTrigger:Bool = false;
 
@@ -196,13 +220,17 @@ class LongPress {
 		if (!this._enabled) {
 			return;
 		}
-		if (this._customHitTest != null && !this._customHitTest(event.stageX, event.stageY)) {
+		var stage:Stage = this._target.stage;
+		if (stage == null) {
+			return;
+		}
+		if (this._customHitTest != null && !this._customHitTest(stage.mouseX, stage.mouseY)) {
 			return;
 		}
 		this._startTime = Lib.getTimer();
 		this._stopNextTrigger = false;
 		this._savedMouseEvent = event.clone();
-		var stage:Stage = this._target.stage;
+		this._savedStageXY.setTo(stage.mouseX, stage.mouseY);
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, longPress_target_stage_mouseMoveHandler, false, 0, true);
 		stage.addEventListener(MouseEvent.MOUSE_UP, longPress_target_stage_mouseUpHandler, false, 0, true);
 		this._target.addEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
@@ -216,13 +244,17 @@ class LongPress {
 			// ignore the primary one because MouseEvent.MOUSE_DOWN will catch it
 			return;
 		}
-		if (this._customHitTest != null && !this._customHitTest(event.stageX, event.stageY)) {
+		var stage:Stage = this._target.stage;
+		if (stage == null) {
+			return;
+		}
+		if (this._customHitTest != null && !this._customHitTest(stage.mouseX, stage.mouseY)) {
 			return;
 		}
 		this._startTime = Lib.getTimer();
 		this._stopNextTrigger = false;
 		this._savedTouchEvent = event.clone();
-		var stage:Stage = this._target.stage;
+		this._savedStageXY.setTo(stage.mouseX, stage.mouseY);
 		stage.addEventListener(TouchEvent.TOUCH_MOVE, longPress_target_stage_touchMoveHandler, false, 0, true);
 		stage.addEventListener(TouchEvent.TOUCH_END, longPress_target_stage_touchEndHandler, false, 0, true);
 		this._target.addEventListener(Event.ENTER_FRAME, longPress_target_enterFrameHandler);
@@ -231,8 +263,10 @@ class LongPress {
 	private function longPress_target_stage_mouseMoveHandler(event:MouseEvent):Void {
 		this._savedMouseEvent.localX = event.localX;
 		this._savedMouseEvent.localY = event.localY;
+		#if !flash
 		this._savedMouseEvent.stageX = event.stageX;
 		this._savedMouseEvent.stageY = event.stageY;
+		#end
 		this._savedMouseEvent.altKey = event.altKey;
 		this._savedMouseEvent.ctrlKey = event.ctrlKey;
 		#if flash
@@ -251,8 +285,10 @@ class LongPress {
 		}
 		this._savedTouchEvent.localX = event.localX;
 		this._savedTouchEvent.localY = event.localY;
+		#if !flash
 		this._savedTouchEvent.stageX = event.stageX;
 		this._savedTouchEvent.stageY = event.stageY;
+		#end
 		this._savedTouchEvent.altKey = event.altKey;
 		this._savedTouchEvent.ctrlKey = event.ctrlKey;
 		#if flash
@@ -285,6 +321,18 @@ class LongPress {
 	}
 
 	private function longPress_target_enterFrameHandler(event:Event):Void {
+		var stage = this._target.stage;
+		if (stage == null) {
+			return;
+		}
+		if (this._maxMoveDistance != -1) {
+			this._updatedStageXY.setTo(stage.mouseX, stage.mouseY);
+			if (Math.abs(Point.distance(this._savedStageXY, this._updatedStageXY)) >= this._maxMoveDistance) {
+				this.cleanupMouseEvents();
+				this.cleanupTouchEvents();
+				return;
+			}
+		}
 		var accumulatedTime = (Lib.getTimer() - this._startTime) / 1000.0;
 		if (accumulatedTime < this.duration) {
 			return;
