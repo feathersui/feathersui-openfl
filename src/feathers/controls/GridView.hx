@@ -3130,6 +3130,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 
+		if (this._customColumnWidths.length > this._columns.length) {
+			this._customColumnWidths.resize(this._columns.length);
+		}
+
 		var minContainerWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
 		// same width as the viewPort so that the columns line up
 		var totalContainerWidth = Math.max(this._viewPort.width + this._headerContainerLayout.paddingLeft + this._headerContainerLayout.paddingRight,
