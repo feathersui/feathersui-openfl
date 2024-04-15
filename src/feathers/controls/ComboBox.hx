@@ -186,6 +186,22 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this.textInput;
 	}
 
+	/**
+		The text representing the currently selected item, or an empty string,
+		if no item is currently selected.
+
+		@since 1.3.0
+	**/
+	public var text(get, never):String;
+
+	private function get_text():String {
+		var item = (this._customSelectedItem != null) ? this._customSelectedItem : this._selectedItem;
+		if (item != null) {
+			return (item is String) ? cast item : this.itemToText(item);
+		}
+		return "";
+	}
+
 	private var _dataProvider:IFlatCollection<Dynamic>;
 
 	/**
