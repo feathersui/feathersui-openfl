@@ -1378,8 +1378,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		var newSelectedItem:Dynamic = null;
 		if (pendingSelectedIndex != -1) {
 			newSelectedItem = this._dataProvider.get(pendingSelectedIndex);
-		} else if (this._filterText != null) {
-			var filterText = this._filterText.toLowerCase();
+		} else if (filterText != null) {
+			var filterText = filterText.toLowerCase();
 			if (this._dataProvider != null && this._dataProvider.length > 0) {
 				for (item in this._dataProvider) {
 					var itemText:String = (item is String) ? cast item : this.itemToText(item);
