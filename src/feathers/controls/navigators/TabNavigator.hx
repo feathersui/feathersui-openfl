@@ -157,6 +157,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
+	@:inspectable
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {

@@ -711,6 +711,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
 	@:bindable("change")
+	@:inspectable(defaultValue = "-1")
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {

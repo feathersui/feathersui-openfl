@@ -137,6 +137,7 @@ class AssetLoader extends FeathersControl {
 
 		@since 1.0.0
 	**/
+	@:inspectable
 	public var source(get, set):String;
 
 	private function get_source():String {

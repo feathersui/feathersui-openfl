@@ -152,6 +152,7 @@ class BasicToggleButton extends FeathersControl implements ITriggerView implemen
 		@since 1.0.0
 	**/
 	@:bindable("change")
+	@:inspectable(defaultValue = "false")
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {

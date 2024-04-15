@@ -156,6 +156,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 
 		@since 1.3.0
 	**/
+	@:inspectable
 	public var text(get, set):String;
 
 	private function get_text():String {

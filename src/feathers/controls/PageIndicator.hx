@@ -117,6 +117,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
 	@:bindable("change")
+	@:inspectable
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -142,6 +143,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 	/**
 		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
+	@:inspectable
 	public var maxSelectedIndex(get, set):Int;
 
 	private function get_maxSelectedIndex():Int {

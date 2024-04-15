@@ -121,6 +121,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 
 		@since 1.0.0
 	**/
+	@:inspectable
 	public var text(get, set):String;
 
 	private function get_text():String {

@@ -224,6 +224,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		@since 1.0.0
 	**/
 	@:bindable("change")
+	@:inspectable
 	public var text(get, set):String;
 
 	private function get_text():String {
@@ -278,6 +279,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		@since 1.0.0
 	**/
+	@:inspectable
 	public var prompt(get, set):String;
 
 	private function get_prompt():String {

@@ -81,6 +81,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		@since 1.0.0
 	**/
 	@:bindable("change")
+	@:inspectable(defaultValue = "0.0")
 	public var value(get, set):Float;
 
 	private function get_value():Float {
@@ -124,6 +125,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
+	@:inspectable(defaultValue = "0.0")
 	public var minimum(get, set):Float;
 
 	private function get_minimum():Float {
@@ -160,6 +162,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
+	@:inspectable(defaultValue = "1.0")
 	public var maximum(get, set):Float;
 
 	private function get_maximum():Float {
@@ -241,6 +244,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
+	@:inspectable(defaultValue = "0.0")
 	public var snapInterval(get, set):Float;
 
 	private function get_snapInterval():Float {
@@ -271,6 +275,7 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 
 		@since 1.0.0
 	**/
+	@:inspectable
 	public var liveDragging:Bool = true;
 
 	private var _currentThumbSkin:InteractiveObject = null;

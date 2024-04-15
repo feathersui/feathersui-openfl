@@ -245,6 +245,7 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
 	@:bindable("change")
+	@:inspectable
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {

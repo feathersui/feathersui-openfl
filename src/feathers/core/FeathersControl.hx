@@ -140,6 +140,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	/**
 		@see `feathers.core.IUIControl.enabled`
 	**/
+	@:inspectable(defaultValue = "true")
 	public var enabled(get, set):Bool;
 
 	private function get_enabled():Bool {

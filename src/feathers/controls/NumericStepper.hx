@@ -169,6 +169,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		@since 1.0.0
 	**/
 	@:bindable("change")
+	@:inspectable(defaultValue = "0.0")
 	public var value(get, set):Float;
 
 	private function get_value():Float {
@@ -210,6 +211,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
+	@:inspectable(defaultValue = "0.0")
 	public var minimum(get, set):Float;
 
 	private function get_minimum():Float {
@@ -246,6 +248,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
+	@:inspectable(defaultValue = "1.0")
 	public var maximum(get, set):Float;
 
 	private function get_maximum():Float {
@@ -291,6 +294,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 		@since 1.0.0
 	**/
+	@:inspectable(defaultValue = "0.01")
 	public var step(get, set):Float;
 
 	private function get_step():Float {

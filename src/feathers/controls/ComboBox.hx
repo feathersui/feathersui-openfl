@@ -311,6 +311,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		entered into the text input by the user.
 	**/
 	@:bindable("change")
+	@:inspectable(defaultValue = "-1")
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
@@ -423,6 +424,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		@since 1.0.0
 	**/
+	@:inspectable
 	public var prompt(get, set):String;
 
 	private function get_prompt():String {

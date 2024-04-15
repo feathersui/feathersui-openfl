@@ -94,6 +94,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		@since 1.0.0
 	**/
+	@:inspectable
 	public var text(get, set):String;
 
 	private function get_text():String {

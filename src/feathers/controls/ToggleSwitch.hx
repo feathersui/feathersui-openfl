@@ -124,6 +124,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		@since 1.0.0
 	**/
 	@:bindable("change")
+	@:inspectable(defaultValue = "false")
 	public var selected(get, set):Bool;
 
 	private function get_selected():Bool {

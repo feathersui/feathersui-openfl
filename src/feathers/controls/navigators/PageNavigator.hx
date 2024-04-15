@@ -156,6 +156,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	/**
 		@see `feathers.core.IIndexSelector.selectedIndex`
 	**/
+	@:inspectable
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
