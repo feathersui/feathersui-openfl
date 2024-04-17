@@ -42,6 +42,7 @@ import feathers.style.IVariantStyleObject;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Stage;
@@ -763,7 +764,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(ItemRenderer));
 	private var _additionalStorage:Array<ItemRendererStorage> = null;
-	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
+	private var objectDataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
+	private var stringDataToItemRenderer = new StringMap<DisplayObject>();
 	private var itemRendererToItemState = new ObjectMap<DisplayObject, ListViewItemState>();
 	private var itemStatePool = new ObjectPool(() -> new ListViewItemState());
 	private var _unrenderedData:Array<Dynamic> = [];
@@ -1133,7 +1135,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (item == null) {
 			return null;
 		}
-		return this.dataToItemRenderer.get(item);
+		if ((item is String)) {
+			return this.stringDataToItemRenderer.get(cast item);
+		}
+		return this.objectDataToItemRenderer.get(item);
 	}
 
 	/**
@@ -1170,7 +1175,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return null;
 		}
 		var item = this._dataProvider.get(index);
-		return this.dataToItemRenderer.get(item);
+		if ((item is String)) {
+			return this.stringDataToItemRenderer.get(cast item);
+		}
+		return this.objectDataToItemRenderer.get(item);
 	}
 
 	/**
@@ -1224,7 +1232,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return null;
 		}
 		var itemState:ListViewItemState = null;
-		var itemRenderer = this.dataToItemRenderer.get(item);
+		var itemRenderer:DisplayObject = null;
+		if ((item is String)) {
+			itemRenderer = this.stringDataToItemRenderer.get(item);
+		} else {
+			itemRenderer = this.objectDataToItemRenderer.get(item);
+		}
 		if (itemRenderer != null) {
 			itemState = this.itemRendererToItemState.get(itemRenderer);
 		} else {
@@ -1423,7 +1436,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			var item = state.data;
 			this.itemRendererToItemState.remove(itemRenderer);
-			this.dataToItemRenderer.remove(item);
+			if ((item is String)) {
+				this.stringDataToItemRenderer.remove(cast item);
+			} else {
+				this.objectDataToItemRenderer.remove(item);
+			}
 			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, listView_itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
@@ -1482,7 +1499,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
 			var item = this._dataProvider.get(i);
-			var itemRenderer = this.dataToItemRenderer.get(item);
+			var itemRenderer:DisplayObject = null;
+			if ((item is String)) {
+				itemRenderer = this.stringDataToItemRenderer.get(cast item);
+			} else {
+				itemRenderer = this.objectDataToItemRenderer.get(item);
+			}
 			if (itemRenderer != null) {
 				var state = this.itemRendererToItemState.get(itemRenderer);
 				var changed = this.populateCurrentItemState(item, i, state, this._forceItemStateUpdate);
@@ -1656,7 +1678,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		itemRenderer.addEventListener(MouseEvent.MOUSE_DOWN, listView_itemRenderer_mouseDownHandler);
 		this.itemRendererToItemState.set(itemRenderer, state);
-		this.dataToItemRenderer.set(state.data, itemRenderer);
+		var item = state.data;
+		if ((item is String)) {
+			this.stringDataToItemRenderer.set(cast item, itemRenderer);
+		} else {
+			this.objectDataToItemRenderer.set(state.data, itemRenderer);
+		}
 		storage.activeItemRenderers.push(itemRenderer);
 		return itemRenderer;
 	}
@@ -1784,7 +1811,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			targetY = result.y;
 		} else {
 			var item = this._dataProvider.get(index);
-			var itemRenderer = this.dataToItemRenderer.get(item);
+			var itemRenderer:DisplayObject = null;
+			if ((item is String)) {
+				itemRenderer = this.stringDataToItemRenderer.get(cast item);
+			} else {
+				itemRenderer = this.objectDataToItemRenderer.get(item);
+			}
 			if (itemRenderer == null) {
 				return;
 			}
@@ -2260,7 +2292,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			this._virtualCache[index] = null;
 		}
 		var item = this._dataProvider.get(index);
-		var itemRenderer = this.dataToItemRenderer.get(item);
+		var itemRenderer:DisplayObject = null;
+		if ((item is String)) {
+			itemRenderer = this.stringDataToItemRenderer.get(cast item);
+		} else {
+			itemRenderer = this.objectDataToItemRenderer.get(item);
+		}
 		if (itemRenderer == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
@@ -2397,7 +2434,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
-				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
+				var itemRenderer:DisplayObject = null;
+				if ((this._selectedItem is String)) {
+					itemRenderer = this.stringDataToItemRenderer.get(cast this._selectedItem);
+				} else {
+					itemRenderer = this.objectDataToItemRenderer.get(this._selectedItem);
+				}
 				var state:ListViewItemState = null;
 				if (itemRenderer != null) {
 					state = this.itemRendererToItemState.get(itemRenderer);

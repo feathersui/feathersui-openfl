@@ -30,6 +30,7 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
@@ -432,7 +433,8 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 	private var _defaultStorage:TabStorage = new TabStorage(null, DisplayObjectRecycler.withClass(ToggleButton));
 	private var _additionalStorage:Array<TabStorage> = null;
-	private var dataToTab = new ObjectMap<Dynamic, ToggleButton>();
+	private var objectDataToTab = new ObjectMap<Dynamic, ToggleButton>();
+	private var stringDataToTab = new StringMap<ToggleButton>();
 	private var tabToItemState = new ObjectMap<ToggleButton, TabBarItemState>();
 	private var itemStatePool = new ObjectPool(() -> new TabBarItemState());
 	private var _unrenderedData:Array<Dynamic> = [];
@@ -569,7 +571,10 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (item == null) {
 			return null;
 		}
-		return this.dataToTab.get(item);
+		if ((item is String)) {
+			return this.stringDataToTab.get(cast item);
+		}
+		return this.objectDataToTab.get(item);
 	}
 
 	/**
@@ -584,7 +589,10 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return null;
 		}
 		var item = this._dataProvider.get(index);
-		return this.dataToTab.get(item);
+		if ((item is String)) {
+			return this.stringDataToTab.get(cast item);
+		}
+		return this.objectDataToTab.get(item);
 	}
 
 	/**
@@ -597,7 +605,12 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return null;
 		}
 		var itemState:TabBarItemState = null;
-		var tab = this.dataToTab.get(item);
+		var tab:ToggleButton = null;
+		if ((item is String)) {
+			tab = this.stringDataToTab.get(cast item);
+		} else {
+			tab = this.objectDataToTab.get(item);
+		}
 		if (tab != null) {
 			itemState = this.tabToItemState.get(tab);
 		} else {
@@ -811,7 +824,11 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			}
 			var item = state.data;
 			this.tabToItemState.remove(tab);
-			this.dataToTab.remove(item);
+			if ((item is String)) {
+				this.stringDataToTab.remove(cast item);
+			} else {
+				this.objectDataToTab.remove(item);
+			}
 			tab.removeEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);
 			tab.removeEventListener(Event.CHANGE, tabBar_tab_changeHandler);
 			this.resetTab(tab, state);
@@ -920,7 +937,12 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		for (i in 0...this._dataProvider.length) {
 			var item = this._dataProvider.get(i);
-			var tab = this.dataToTab.get(item);
+			var tab:ToggleButton = null;
+			if ((item is String)) {
+				tab = this.stringDataToTab.get(cast item);
+			} else {
+				tab = this.objectDataToTab.get(item);
+			}
 			if (tab != null) {
 				var state = this.tabToItemState.get(tab);
 				var changed = this.populateCurrentItemState(item, i, state, this._forceItemStateUpdate);
@@ -983,7 +1005,13 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		tab.addEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);
 		tab.addEventListener(Event.CHANGE, tabBar_tab_changeHandler);
 		this.tabToItemState.set(tab, state);
-		this.dataToTab.set(state.data, tab);
+		var item = state.data;
+		if ((item is String)) {
+			this.stringDataToTab.set(cast item, tab);
+		} else {
+			this.objectDataToTab.set(item, tab);
+		}
+
 		storage.activeTabs.push(tab);
 		return tab;
 	}
@@ -1248,7 +1276,12 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 	private function updateTabForIndex(index:Int):Void {
 		var item = this._dataProvider.get(index);
-		var tab = this.dataToTab.get(item);
+		var tab:ToggleButton = null;
+		if ((item is String)) {
+			tab = this.stringDataToTab.get(cast item);
+		} else {
+			tab = this.objectDataToTab.get(item);
+		}
 		if (tab == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);

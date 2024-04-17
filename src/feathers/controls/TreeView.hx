@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import openfl.text.TextField;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IHierarchicalDepthItemRenderer;
@@ -39,6 +38,7 @@ import feathers.style.IVariantStyleObject;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
@@ -46,6 +46,7 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.text.TextField;
 import openfl.ui.Keyboard;
 #if air
 import openfl.ui.Multitouch;
@@ -652,7 +653,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(HierarchicalItemRenderer));
 	private var _additionalStorage:Array<ItemRendererStorage> = null;
-	private var dataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
+	private var objectDataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
+	private var stringDataToItemRenderer = new StringMap<DisplayObject>();
 	private var itemRendererToItemState = new ObjectMap<DisplayObject, TreeViewItemState>();
 	private var itemStatePool = new ObjectPool(() -> new TreeViewItemState());
 	private var _unrenderedLocations:Array<Array<Int>> = [];
@@ -879,7 +881,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (item == null) {
 			return null;
 		}
-		return this.dataToItemRenderer.get(item);
+		if ((item is String)) {
+			return this.stringDataToItemRenderer.get(cast item);
+		}
+		return this.objectDataToItemRenderer.get(item);
 	}
 
 	/**
@@ -916,7 +921,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return null;
 		}
 		var item = this._dataProvider.get(location);
-		return this.dataToItemRenderer.get(item);
+		if ((item is String)) {
+			return this.stringDataToItemRenderer.get(cast item);
+		}
+		return this.objectDataToItemRenderer.get(item);
 	}
 
 	/**
@@ -989,7 +997,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return null;
 		}
 		var itemState:TreeViewItemState = null;
-		var itemRenderer = this.dataToItemRenderer.get(item);
+		var itemRenderer:DisplayObject = null;
+		if ((item is String)) {
+			itemRenderer = this.stringDataToItemRenderer.get(cast item);
+		} else {
+			itemRenderer = this.objectDataToItemRenderer.get(item);
+		}
 		if (itemRenderer != null) {
 			itemState = this.itemRendererToItemState.get(itemRenderer);
 		} else {
@@ -1187,7 +1200,11 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			}
 			var item = state.data;
 			this.itemRendererToItemState.remove(itemRenderer);
-			this.dataToItemRenderer.remove(item);
+			if ((item is String)) {
+				this.stringDataToItemRenderer.remove(cast item);
+			} else {
+				this.objectDataToItemRenderer.remove(item);
+			}
 			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, treeView_itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
@@ -1273,7 +1290,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function findItemRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
-		var itemRenderer = this.dataToItemRenderer.get(item);
+		var itemRenderer:DisplayObject = null;
+		if ((item is String)) {
+			itemRenderer = this.stringDataToItemRenderer.get(cast item);
+		} else {
+			itemRenderer = this.objectDataToItemRenderer.get(item);
+		}
 		if (itemRenderer == null) {
 			this._unrenderedLocations.push(location);
 			this._unrenderedLayoutIndices.push(layoutIndex);
@@ -1487,7 +1509,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			itemRenderer.addEventListener(Event.CLOSE, treeView_itemRenderer_closeHandler);
 		}
 		this.itemRendererToItemState.set(itemRenderer, state);
-		this.dataToItemRenderer.set(state.data, itemRenderer);
+		var item = state.data;
+		if ((item is String)) {
+			this.stringDataToItemRenderer.set(cast item, itemRenderer);
+		} else {
+			this.objectDataToItemRenderer.set(item, itemRenderer);
+		}
 		storage.activeItemRenderers.push(itemRenderer);
 		return itemRenderer;
 	}
@@ -1806,7 +1833,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			targetY = result.y;
 		} else {
 			var item = this._dataProvider.get(location);
-			var itemRenderer = this.dataToItemRenderer.get(item);
+			var itemRenderer:DisplayObject = null;
+			if ((item is String)) {
+				itemRenderer = this.stringDataToItemRenderer.get(cast item);
+			} else {
+				itemRenderer = this.objectDataToItemRenderer.get(item);
+			}
 			if (itemRenderer == null) {
 				return;
 			}
@@ -1882,7 +1914,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		if (event.keyCode == Keyboard.ENTER) {
 			if (this._selectedItem != null) {
-				var itemRenderer = this.dataToItemRenderer.get(this._selectedItem);
+				var itemRenderer:DisplayObject = null;
+				if ((this._selectedItem is String)) {
+					itemRenderer = this.stringDataToItemRenderer.get(cast this._selectedItem);
+				} else {
+					itemRenderer = this.objectDataToItemRenderer.get(this._selectedItem);
+				}
 				var state:TreeViewItemState = null;
 				if (itemRenderer != null) {
 					state = this.itemRendererToItemState.get(itemRenderer);
@@ -1927,7 +1964,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, layoutIndex:Int, open:Bool):Int {
-		var itemRenderer = this.dataToItemRenderer.get(branch);
+		var itemRenderer:DisplayObject = null;
+		if ((branch is String)) {
+			// a branch can't really be a string, but let's be consistent in how
+			// we look up item renderers
+			itemRenderer = this.stringDataToItemRenderer.get(cast branch);
+		} else {
+			itemRenderer = this.objectDataToItemRenderer.get(branch);
+		}
 		var state:TreeViewItemState = null;
 		if (itemRenderer != null) {
 			state = this.itemRendererToItemState.get(itemRenderer);
@@ -2201,7 +2245,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this._virtualCache[layoutIndex] = null;
 		}
 		var item = this._dataProvider.get(location);
-		var itemRenderer = this.dataToItemRenderer.get(item);
+		var itemRenderer:DisplayObject = null;
+		if ((item is String)) {
+			itemRenderer = this.stringDataToItemRenderer.get(cast item);
+		} else {
+			itemRenderer = this.objectDataToItemRenderer.get(item);
+		}
 		if (itemRenderer == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);

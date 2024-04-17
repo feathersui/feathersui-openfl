@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.events.FeathersEvent;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.core.FeathersControl;
 import feathers.core.IUIControl;
@@ -17,6 +16,7 @@ import feathers.core.InvalidationFlag;
 import feathers.data.ButtonBarItemState;
 import feathers.data.IFlatCollection;
 import feathers.events.ButtonBarEvent;
+import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.ILayout;
@@ -27,6 +27,7 @@ import feathers.skins.IProgrammaticSkin;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import openfl.display.DisplayObject;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
@@ -307,7 +308,8 @@ class ButtonBar extends FeathersControl {
 
 	private var _defaultStorage:ButtonStorage = new ButtonStorage(null, DisplayObjectRecycler.withClass(Button));
 	private var _additionalStorage:Array<ButtonStorage> = null;
-	private var dataToButton = new ObjectMap<Dynamic, Button>();
+	private var objectDataToButton = new ObjectMap<Dynamic, Button>();
+	private var stringDataToButton = new StringMap<Button>();
 	private var buttonToItemState = new ObjectMap<Button, ButtonBarItemState>();
 	private var itemStatePool = new ObjectPool(() -> new ButtonBarItemState());
 	private var _unrenderedData:Array<Dynamic> = [];
@@ -444,7 +446,10 @@ class ButtonBar extends FeathersControl {
 		if (item == null) {
 			return null;
 		}
-		return this.dataToButton.get(item);
+		if ((item is String)) {
+			return this.stringDataToButton.get(cast item);
+		}
+		return this.objectDataToButton.get(item);
 	}
 
 	/**
@@ -459,7 +464,10 @@ class ButtonBar extends FeathersControl {
 			return null;
 		}
 		var item = this._dataProvider.get(index);
-		return this.dataToButton.get(item);
+		if ((item is String)) {
+			return this.stringDataToButton.get(cast item);
+		}
+		return this.objectDataToButton.get(item);
 	}
 
 	/**
@@ -472,9 +480,14 @@ class ButtonBar extends FeathersControl {
 			return null;
 		}
 		var itemState:ButtonBarItemState = null;
-		var tab = this.dataToButton.get(item);
-		if (tab != null) {
-			itemState = this.buttonToItemState.get(tab);
+		var button:Button = null;
+		if ((item is String)) {
+			button = this.stringDataToButton.get(cast item);
+		} else {
+			button = this.objectDataToButton.get(item);
+		}
+		if (button != null) {
+			itemState = this.buttonToItemState.get(button);
 		} else {
 			var index = this._dataProvider.indexOf(item);
 			if (index == -1) {
@@ -682,7 +695,11 @@ class ButtonBar extends FeathersControl {
 			}
 			var item = state.data;
 			this.buttonToItemState.remove(button);
-			this.dataToButton.remove(item);
+			if ((item is String)) {
+				this.stringDataToButton.remove(cast item);
+			} else {
+				this.objectDataToButton.remove(item);
+			}
 			button.removeEventListener(TriggerEvent.TRIGGER, buttonBar_button_triggerHandler);
 			this.resetButton(button, state);
 			this.itemStatePool.release(state);
@@ -790,7 +807,12 @@ class ButtonBar extends FeathersControl {
 		var depthOffset = this._currentBackgroundSkin != null ? 1 : 0;
 		for (i in 0...this._dataProvider.length) {
 			var item = this._dataProvider.get(i);
-			var button = this.dataToButton.get(item);
+			var button:Button = null;
+			if ((item is String)) {
+				button = this.stringDataToButton.get(cast item);
+			} else {
+				button = this.objectDataToButton.get(item);
+			}
 			if (button != null) {
 				var state = this.buttonToItemState.get(button);
 				var changed = this.populateCurrentItemState(item, i, state, this._forceItemStateUpdate);
@@ -852,7 +874,12 @@ class ButtonBar extends FeathersControl {
 		this.updateButton(button, state, storage);
 		button.addEventListener(TriggerEvent.TRIGGER, buttonBar_button_triggerHandler);
 		this.buttonToItemState.set(button, state);
-		this.dataToButton.set(state.data, button);
+		var item = state.data;
+		if ((item is String)) {
+			this.stringDataToButton.set(cast item, button);
+		} else {
+			this.objectDataToButton.set(item, button);
+		}
 		storage.activeButtons.push(button);
 		return button;
 	}
@@ -975,7 +1002,12 @@ class ButtonBar extends FeathersControl {
 
 	private function updateButtonForIndex(index:Int):Void {
 		var item = this._dataProvider.get(index);
-		var button = this.dataToButton.get(item);
+		var button:Button = null;
+		if ((item is String)) {
+			button = this.stringDataToButton.get(cast item);
+		} else {
+			button = this.objectDataToButton.get(item);
+		}
 		if (button == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
