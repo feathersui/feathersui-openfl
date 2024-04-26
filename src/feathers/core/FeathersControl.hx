@@ -352,7 +352,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	
 	private var _disabledAlpha:Null<Float> = null;
 	/**
-		When `_disabledAlpha` is not `null`, sets the `alpha` property to this
+		When `disabledAlpha` is not `null`, sets the `alpha` property to this
 		value when the the `enabled` property is set to `false`.
 
 		@since 1.0.0
@@ -360,17 +360,24 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	@:style
 	public var disabledAlpha(get, set):Null<Float>;
 
-	private function get_disabledAlpha():Null<Float>
-	{
+	private function get_disabledAlpha():Null<Float> {
 		return this._disabledAlpha;
 	}
 
-	private function set_disabledAlpha(value:Null<Float>):Null<Float>
-	{
-		//Avoids removing the same value check in the enabled property setter
-		this._enabled = !this._enabled;
-		_disabledAlpha = value;
-		this.set_enabled(!this._enabled);
+	private function set_disabledAlpha(value:Null<Float>):Null<Float> {
+		if (!this.setStyle("disabledAlpha")) {
+			return this._disabledAlpha;
+		}
+		// in a -final build, this forces the clearStyle
+		// function to be kept if the property is kept
+		// otherwise, it would be removed by dce
+		this._previousClearStyle = this.clearStyle_disabledAlpha;
+		this._disabledAlpha = value;
+		if (this._enabled || this._disabledAlpha == null) {
+			super.alpha = this._explicitAlpha;
+		} else if (!this._enabled && this._disabledAlpha != null) {
+			super.alpha = this._disabledAlpha;
+		}
 		return this._disabledAlpha;
 	}
 
@@ -625,6 +632,13 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this.showFocus(false);
 		this._focusRectSkin = null;
 		return this._focusRectSkin;
+	}
+
+	@:noCompletion
+	private function clearStyle_disabledAlpha():Null<Float> {
+		this._disabledAlpha = null;
+		super.alpha = this._explicitAlpha;
+		return this._disabledAlpha;
 	}
 
 	@:noCompletion
