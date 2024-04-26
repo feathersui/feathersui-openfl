@@ -152,10 +152,10 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._enabled;
 		}
 		this._enabled = value;
-		if (this._enabled || this.disabledAlpha == null) {
+		if (this._enabled || this._disabledAlpha == null) {
 			super.alpha = this._explicitAlpha;
-		} else if (!this._enabled && this.disabledAlpha != null) {
-			super.alpha = this.disabledAlpha;
+		} else if (!this._enabled && this._disabledAlpha != null) {
+			super.alpha = this._disabledAlpha;
 		}
 		this.setInvalid(STATE);
 		if (this._enabled) {
@@ -342,22 +342,37 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	#if (flash && haxe_ver < 4.3) @:setter(alpha) #else override #end private function set_alpha(value:Float):#if (!flash || haxe_ver >= 4.3) Float #else Void #end {
 		this._explicitAlpha = value;
-		if (this._enabled || this.disabledAlpha == null) {
+		if (this._enabled || this._disabledAlpha == null) {
 			super.alpha = value;
 		}
 		#if (!flash || haxe_ver >= 4.3)
 		return this._explicitAlpha;
 		#end
 	}
-
+	
+	private var _disabledAlpha:Null<Float> = null;
 	/**
-		When `disabledAlpha` is not `null`, sets the `alpha` property to this
+		When `_disabledAlpha` is not `null`, sets the `alpha` property to this
 		value when the the `enabled` property is set to `false`.
 
 		@since 1.0.0
 	**/
 	@:style
-	public var disabledAlpha:Null<Float> = null;
+	public var disabledAlpha(get, set):Null<Float>;
+
+	private function get_disabledAlpha():Null<Float>
+	{
+		return this._disabledAlpha;
+	}
+
+	private function set_disabledAlpha(value:Null<Float>):Null<Float>
+	{
+		//Avoids removing the same value check in the enabled property setter
+		this._enabled = !this._enabled;
+		_disabledAlpha = value;
+		this.set_enabled(!this._enabled);
+		return this._disabledAlpha;
+	}
 
 	private var _focusManager:IFocusManager = null;
 
