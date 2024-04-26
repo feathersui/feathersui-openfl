@@ -53,7 +53,7 @@ jobs:
     strategy:
       matrix:
         haxe-version: [4.2.5, 4.3.2]
-    runs-on: macos-latest
+    runs-on: [macos-latest, x64]
     steps:
     - uses: actions/checkout@v4
     - uses: krdlab/setup-haxe@v1
