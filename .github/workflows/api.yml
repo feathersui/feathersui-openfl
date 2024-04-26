@@ -33,7 +33,7 @@ jobs:
         path: bin/api/
         if-no-files-found: error
     - name: Deploy to unstable
-      if: ${{ github.event_name != 'pull_request' }}
+      if: ${{ github.repository == 'feathersui/feathersui-openfl' && github.event_name != 'pull_request' }}
       uses: garygrossgarten/github-action-scp@release
       with:
         local: bin/api
