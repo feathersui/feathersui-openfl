@@ -210,7 +210,8 @@ jobs:
 
   build-macos:
 
-    runs-on: macos-latest
+    #macos-14 is arm64, which setup-haxe doesn't support yet
+    runs-on: macos-13
 
     steps:
     - uses: actions/checkout@v4
