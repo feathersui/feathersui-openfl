@@ -357,7 +357,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
-	@:style
+	@style
 	public var disabledAlpha(get, set):Null<Float>;
 
 	private function get_disabledAlpha():Null<Float> {
