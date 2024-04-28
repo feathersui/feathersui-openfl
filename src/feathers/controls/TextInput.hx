@@ -397,6 +397,29 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		return this._text;
 	}
 
+	/**
+		The caret position of the text input.
+	**/
+	public var caretIndex(get, set):Int;
+	
+	private function get_caretIndex():Int {
+		return this.textField.caretIndex;
+	}
+	
+	private function set_caretIndex(value:Int):Int {
+		if(this.editable){
+			var len:Int = this.textField.text.length;
+			if (value < 0){
+				value = 0;
+			} else
+			if (value > len){
+				value = len;
+			}
+			this.textField.setSelection(value, value);
+		}
+		return this.textField.caretIndex;
+	}
+
 	private var _measureText:String = null;
 
 	/**
