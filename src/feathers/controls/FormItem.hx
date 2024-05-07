@@ -177,6 +177,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 
 	private var _contentMeasurements:Measurements = null;
 	private var _currentContent:DisplayObject = null;
+	private var _ignoreContentResize:Bool = false;
 
 	private var _content:DisplayObject;
 
@@ -205,7 +206,13 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this._content == value) {
 			return this._content;
 		}
+		if (this._content != null) {
+			this._content.removeEventListener(Event.RESIZE, formItem_content_resizeHandler);
+		}
 		this._content = value;
+		if (this._content != null) {
+			this._content.addEventListener(Event.RESIZE, formItem_content_resizeHandler, false, 0, true);
+		}
 		this.setInvalid(DATA);
 		return this._content;
 	}
@@ -829,9 +836,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			} else {
 				this._contentMeasurements.restore(this._currentContent);
 			}
+			var oldIgnoreContentResize = this._ignoreContentResize;
+			this._ignoreContentResize = true;
 			if ((this._currentContent is IValidating)) {
 				(cast this._currentContent : IValidating).validateNow();
 			}
+			this._ignoreContentResize = oldIgnoreContentResize;
 		}
 
 		var newWidth = this.explicitWidth;
@@ -1068,9 +1078,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		textFieldExplicitWidth -= (this.paddingLeft + this.paddingRight);
 		if (this.content != null) {
 			if (this.textPosition == LEFT || this.textPosition == RIGHT) {
+				var oldIgnoreContentResize = this._ignoreContentResize;
+				this._ignoreContentResize = true;
 				if ((this._content is IValidating)) {
 					(cast this._content : IValidating).validateNow();
 				}
+				this._ignoreContentResize = oldIgnoreContentResize;
 				textFieldExplicitWidth -= (this._content.width + this.gap);
 			}
 		}
@@ -1244,9 +1257,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			(cast this._currentRequiredSkin : IValidating).validateNow();
 		}
 
+		var oldIgnoreContentResize = this._ignoreContentResize;
+		this._ignoreContentResize = true;
 		if ((this._currentContent is IValidating)) {
 			(cast this._currentContent : IValidating).validateNow();
 		}
+		this._ignoreContentResize = oldIgnoreContentResize;
 
 		var requiredOffset = 0.0;
 		if (this._currentRequiredSkin != null) {
@@ -1432,5 +1448,13 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			newFocus = cast this._currentContent;
 		}
 		this._focusManager.focus = newFocus;
+	}
+
+	private function formItem_content_resizeHandler(event:Event):Void {
+		if (this._ignoreContentResize) {
+			return;
+		}
+		this._contentMeasurements.save(this.content);
+		this.setInvalid(SIZE);
 	}
 }
