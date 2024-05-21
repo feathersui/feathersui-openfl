@@ -1454,7 +1454,11 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		if (this._ignoreContentResize) {
 			return;
 		}
-		this._contentMeasurements.save(this.content);
+		if (this._contentMeasurements == null) {
+			this._contentMeasurements = new Measurements(this._currentContent);
+		} else {
+			this._contentMeasurements.save(this._currentContent);
+		}
 		this.setInvalid(SIZE);
 	}
 }

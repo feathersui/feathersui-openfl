@@ -324,7 +324,6 @@ class Callout extends FeathersControl {
 		}
 		this._content = value;
 		if (this._content != null) {
-			this._content.addEventListener(Event.RESIZE, callout_content_resizeHandler, false, 0, true);
 			this.addChild(this._content);
 			if ((this._content is IUIControl)) {
 				(cast this._content : IUIControl).initializeNow();
@@ -334,6 +333,7 @@ class Callout extends FeathersControl {
 			} else {
 				this._contentMeasurements.save(this._content);
 			}
+			this._content.addEventListener(Event.RESIZE, callout_content_resizeHandler, false, 0, true);
 		}
 		this.setInvalid(DATA);
 		this.setInvalid(SIZE);
