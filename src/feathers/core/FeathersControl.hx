@@ -349,8 +349,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._explicitAlpha;
 		#end
 	}
-	
+
 	private var _disabledAlpha:Null<Float> = null;
+
 	/**
 		When `disabledAlpha` is not `null`, sets the `alpha` property to this
 		value when the the `enabled` property is set to `false`.
@@ -704,6 +705,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 	**/
+	@:inspectable
 	public var variant(get, set):String;
 
 	private function get_variant():String {
