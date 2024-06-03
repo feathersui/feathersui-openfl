@@ -1861,6 +1861,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 
 		if (duration == 0.0) {
+			this.scroller.stop();
 			this.scroller.scrollX = targetX;
 			this.scroller.scrollY = targetY;
 		} else {

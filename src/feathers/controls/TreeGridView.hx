@@ -2575,6 +2575,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 
 		if (duration == 0.0) {
+			this.scroller.stop();
 			this.scroller.scrollX = targetX;
 			this.scroller.scrollY = targetY;
 		} else {
