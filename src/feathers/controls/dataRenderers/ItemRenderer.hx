@@ -332,6 +332,19 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	@:style
 	public var showSecondaryText:Bool = true;
 
+	/**
+		Indicates if hover and down states are enabled or not. Can be set to
+		`false` for items that are intended for display only, and should not
+		appear interactive for mouse and keyboard trigger events or selection.
+
+		The `ToggleButtonState.UP` state will be used instead of
+		`ToggleButtonState.HOVER` and `ToggleButtonState.DOWN`. However, the
+		item may still render differently when selected versus when it is not
+		selected.
+	**/
+	@:style
+	public var showHoverAndDownStates:Bool = true;
+
 	private var _ignoreAccessoryResizes = false;
 	private var _accessoryViewMeasurements:Measurements;
 	private var _currentAccessoryView:DisplayObject;
@@ -474,6 +487,12 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		}
 
 		super.update();
+	}
+
+	override private function refreshInteractivity():Void {
+		super.refreshInteractivity();
+		this._pointerToState.enabled = this.showHoverAndDownStates;
+		this._keyToState.enabled = this.showHoverAndDownStates;
 	}
 
 	private function refreshSecondaryTextField():Void {

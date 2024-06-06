@@ -154,6 +154,19 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	private var _pointerToState:PointerToState<ToggleButtonState> = null;
 
 	/**
+		Indicates if hover and down states are enabled or not. Can be set to
+		`false` for items that are intended for display only, and should not
+		appear interactive for mouse and keyboard trigger events or selection.
+
+		The `ToggleButtonState.UP` state will be used instead of
+		`ToggleButtonState.HOVER` and `ToggleButtonState.DOWN`. However, the
+		item may still render differently when selected versus when it is not
+		selected.
+	**/
+	@:style
+	public var showHoverAndDownStates:Bool = true;
+
+	/**
 		The default background skin to display behind all content added to the
 		group. The background skin is resized to fill the complete width and
 		height of the group.
@@ -264,12 +277,21 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
+		var stylesInvalid = this.isInvalid(STYLES);
 
 		if (dataInvalid) {
 			this._pointerToState.target = (this._pointerTarget != null) ? this._pointerTarget : this;
 		}
 
+		if (stylesInvalid) {
+			this.refreshInteractivity();
+		}
+
 		super.update();
+	}
+
+	private function refreshInteractivity():Void {
+		this._pointerToState.enabled = this.showHoverAndDownStates;
 	}
 
 	private function customHitTest(stageX:Float, stageY:Float):Bool {
