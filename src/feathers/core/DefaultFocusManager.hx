@@ -827,6 +827,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		if (!this._enabled) {
 			return;
 		}
+		this._showFocusIndicator = false;
 		var textField = Std.downcast(event.relatedObject, TextField);
 		// in some cases, we must allow to OpenFL set mouse focus on a TextField
 		if (textField != null) {
