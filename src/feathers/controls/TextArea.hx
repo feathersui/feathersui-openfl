@@ -366,6 +366,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	/**
 		An alternate to `focusRectSkin` that is displayed when the text input is
 		focused and `errorString` is not `null`.
+
+		@since 1.3.0
 	**/
 	@:style
 	public var errorFocusRectSkin:DisplayObject = null;
@@ -377,6 +379,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		possible, the state with the higher priority takes precedence. If the
 		priorities are equal, `TextInputState.FOCUSED` takes the default
 		precedence.
+
+		@since 1.3.0
 	**/
 	public var errorStatePriority(get, set):Int;
 
@@ -400,6 +404,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		possible, the state with the higher priority takes precedence. If the
 		priorities are equal, `TextInputState.FOCUSED` takes the default
 		precedence.
+
+		@since 1.3.0
 	**/
 	public var focusedStatePriority(get, set):Int;
 
