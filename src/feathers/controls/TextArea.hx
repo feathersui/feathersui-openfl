@@ -363,6 +363,52 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		return this._displayAsPassword;
 	}
 
+	private var _errorStatePriority:Int = 0;
+
+	/**
+		Sets the priority of `TextInputState.ERROR`. If two states are
+		possible, the state with the higher priority takes precedence. If the
+		priorities are equal, `TextInputState.FOCUSED` takes the default
+		precedence.
+	**/
+	public var errorStatePriority(get, set):Int;
+
+	private function get_errorStatePriority():Int {
+		return this._errorStatePriority;
+	}
+
+	private function set_errorStatePriority(value:Int):Int {
+		if (this._errorStatePriority == value) {
+			return this._errorStatePriority;
+		}
+		this._errorStatePriority = value;
+		this.setInvalid(STATE);
+		return this._errorStatePriority;
+	}
+
+	private var _focusedStatePriority:Int = 0;
+
+	/**
+		Sets the priority of `TextInputState.FOCUSED`. If two states are
+		possible, the state with the higher priority takes precedence. If the
+		priorities are equal, `TextInputState.FOCUSED` takes the default
+		precedence.
+	**/
+	public var focusedStatePriority(get, set):Int;
+
+	private function get_focusedStatePriority():Int {
+		return this._errorStatePriority;
+	}
+
+	private function set_focusedStatePriority(value:Int):Int {
+		if (this._focusedStatePriority == value) {
+			return this._focusedStatePriority;
+		}
+		this._focusedStatePriority = value;
+		this.setInvalid(STATE);
+		return this._focusedStatePriority;
+	}
+
 	private var _errorString:String = null;
 
 	/**
@@ -1203,7 +1249,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			// when its enabled property is false, but we still want to show
 			// that the input is focused.
 			var focused = this.stage != null && this.stage.focus == this.textFieldViewPort.textField;
-			if (focused) {
+			var error = this._errorString != null;
+			if (focused && (!error || this._focusedStatePriority >= this._errorStatePriority)) {
 				this.changeState(FOCUSED);
 			} else if (this._errorString != null) {
 				this.changeState(ERROR);
