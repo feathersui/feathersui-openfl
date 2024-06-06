@@ -888,6 +888,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	@:style
 	public var autoSizeWidth:Bool = false;
 
+	/**
+		An alternate to `focusRectSkin` that is displayed when the text input is
+		focused and `errorString` is not `null`.
+	**/
+	@:style
+	public var errorFocusRectSkin:DisplayObject = null;
+
 	private var _errorStatePriority:Int = 0;
 
 	/**
@@ -1906,6 +1913,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		this._currentState = state;
 		this.setInvalid(STATE);
 		FeathersEvent.dispatch(this, FeathersEvent.STATE_CHANGE);
+	}
+
+	override private function getCurrentFocusRectSkin():DisplayObject {
+		if (this._errorString != null && this.errorFocusRectSkin != null) {
+			return this.errorFocusRectSkin;
+		}
+		return super.getCurrentFocusRectSkin();
 	}
 
 	private function refreshState():Void {
