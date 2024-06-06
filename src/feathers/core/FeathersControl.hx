@@ -453,6 +453,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		return this._enabled && super.tabEnabled;
 	}
 
+	private var _currentFocusRectSkin:DisplayObject = null;
+
 	private var _focusRectSkin:DisplayObject = null;
 
 	/**
@@ -472,6 +474,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (!this.setStyle("focusRectSkin")) {
 			return this._focusRectSkin;
 		}
+		// ensure that the old skin is removed
 		this.showFocus(false);
 		// in a -final build, this forces the clearStyle
 		// function to be kept if the property is kept
@@ -610,17 +613,22 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		@see `feathers.core.IFocusObject.showFocus()`
 	**/
 	public function showFocus(show:Bool):Void {
-		if (this._focusManager == null || this._focusRectSkin == null) {
+		this._currentFocusRectSkin = this.getCurrentFocusRectSkin();
+		if (this._focusManager == null || this._currentFocusRectSkin == null) {
 			return;
 		}
 		if (show) {
-			this._focusManager.focusPane.addChild(this._focusRectSkin);
+			this._focusManager.focusPane.addChild(this._currentFocusRectSkin);
 			this.addEventListener(Event.ENTER_FRAME, feathersControl_focusRect_enterFrameHandler);
 			this.positionFocusRect();
-		} else if (this._focusRectSkin.parent != null) {
+		} else if (this._currentFocusRectSkin.parent != null) {
 			this.removeEventListener(Event.ENTER_FRAME, feathersControl_focusRect_enterFrameHandler);
-			this._focusRectSkin.parent.removeChild(this._focusRectSkin);
+			this._currentFocusRectSkin.parent.removeChild(this._currentFocusRectSkin);
 		}
+	}
+
+	private function getCurrentFocusRectSkin():DisplayObject {
+		return this._focusRectSkin;
 	}
 
 	@:noCompletion
@@ -667,19 +675,19 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	}
 
 	private function positionFocusRect():Void {
-		if (this._focusManager == null || this._focusRectSkin == null || this._focusRectSkin.parent == null) {
+		if (this._focusManager == null || this._currentFocusRectSkin == null || this._currentFocusRectSkin.parent == null) {
 			return;
 		}
 		var point = new Point(-this._focusPaddingLeft, -this._focusPaddingTop);
 		point = this.localToGlobal(point);
 		point = this._focusManager.focusPane.globalToLocal(point);
-		this._focusRectSkin.x = point.x;
-		this._focusRectSkin.y = point.y;
+		this._currentFocusRectSkin.x = point.x;
+		this._currentFocusRectSkin.y = point.y;
 		point.setTo(this.actualWidth + this._focusPaddingRight, this.actualHeight + this._focusPaddingBottom);
 		point = this.localToGlobal(point);
 		point = this._focusManager.focusPane.globalToLocal(point);
-		this._focusRectSkin.width = point.x - this._focusRectSkin.x;
-		this._focusRectSkin.height = point.y - this._focusRectSkin.y;
+		this._currentFocusRectSkin.width = point.x - this._currentFocusRectSkin.x;
+		this._currentFocusRectSkin.height = point.y - this._currentFocusRectSkin.y;
 	}
 
 	private function setLayoutDataInternal(value:ILayoutData):ILayoutData {
