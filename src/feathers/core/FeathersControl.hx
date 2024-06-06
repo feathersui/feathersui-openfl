@@ -455,6 +455,39 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	private var _currentFocusRectSkin:DisplayObject = null;
 
+	private var _alwaysShowFocus:Bool = false;
+
+	/**
+		Indicates if the `focusRectSkin` should always be displayed when the
+		component is focused, or only after keyboard focus changes.
+
+		@default false
+
+		@since 1.3.0
+	**/
+	@:style
+	public var alwaysShowFocus(get, set):Bool;
+
+	private function get_alwaysShowFocus():Bool {
+		return this._alwaysShowFocus;
+	}
+
+	private function set_alwaysShowFocus(value:Bool):Bool {
+		if (!this.setStyle("alwaysShowFocus")) {
+			return this._alwaysShowFocus;
+		}
+		var wasFocused = (this._focusManager != null && (this is IFocusObject) && this._focusManager.focus == cast this)
+			|| this._focusRectSkin.parent != null;
+		if (wasFocused) {
+			this.showFocus(false);
+		}
+		this._alwaysShowFocus = value;
+		if (wasFocused) {
+			this.showFocus(true);
+		}
+		return this._alwaysShowFocus;
+	}
+
 	private var _focusRectSkin:DisplayObject = null;
 
 	/**
@@ -992,7 +1025,9 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if ((this is IFocusObject)) {
 			focusThis = cast this;
 		}
-		if (this._focusManager == null || !this._focusManager.showFocusIndicator || this._focusManager.focus != focusThis) {
+		if (this._focusManager == null
+			|| (!this._focusManager.showFocusIndicator && !this.alwaysShowFocus)
+			|| this._focusManager.focus != focusThis) {
 			return;
 		}
 		this.showFocus(true);
