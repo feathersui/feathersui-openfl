@@ -53,6 +53,7 @@ jobs:
     strategy:
       matrix:
         haxe-version: [4.2.5, 4.3.2]
+    # AL init fails on both windows and ubuntu
     #macos-14 is arm64, which setup-haxe doesn't support yet
     runs-on: macos-13
     steps:
