@@ -18,7 +18,8 @@ package feathers.style;
 @:event(openfl.events.Event.CLEAR)
 interface ITheme {
 	/**
-		Returns the style provider for the specified component.
+		Returns the style provider for the specified component. May return null
+		if this theme does not provide styles for the specified component.
 
 		@since 1.0.0
 	**/
