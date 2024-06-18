@@ -260,11 +260,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._customStyleProvider;
 		}
 		if (this._customStyleProvider != null) {
-			this._customStyleProvider.removeEventListener(Event.CLEAR, customStyleProvider_clearHandler);
+			this._customStyleProvider.removeEventListener(Event.CLEAR, feathersControl_customStyleProvider_clearHandler);
 		}
 		this._customStyleProvider = value;
 		if (this._customStyleProvider != null) {
-			this._customStyleProvider.addEventListener(Event.CLEAR, customStyleProvider_clearHandler, false, 0, true);
+			this._customStyleProvider.addEventListener(Event.CLEAR, feathersControl_customStyleProvider_clearHandler, false, 0, true);
 		}
 		if (this._initialized && this.stage != null) {
 			// ignore if we're not initialized yet or we haven't been added to
@@ -728,11 +728,11 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._layoutData;
 		}
 		if (this._layoutData != null) {
-			this._layoutData.removeEventListener(Event.CHANGE, layoutData_changeHandler);
+			this._layoutData.removeEventListener(Event.CHANGE, feathersControl_layoutData_changeHandler);
 		}
 		this._layoutData = value;
 		if (this._layoutData != null) {
-			this._layoutData.addEventListener(Event.CHANGE, layoutData_changeHandler, false, 0, true);
+			this._layoutData.addEventListener(Event.CHANGE, feathersControl_layoutData_changeHandler, false, 0, true);
 		}
 		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
 		return this._layoutData;
@@ -935,13 +935,14 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 		if (this._currentStyleProvider != styleProvider) {
 			if (this._currentStyleProvider != null) {
-				this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
-				this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
+				this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, feathersControl_styleProvider_stylesChangeHandler);
+				this._currentStyleProvider.removeEventListener(Event.CLEAR, feathersControl_styleProvider_clearHandler);
 			}
 			this._currentStyleProvider = styleProvider;
 			if (this._currentStyleProvider != null) {
-				this._currentStyleProvider.addEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler, false, 0, true);
-				this._currentStyleProvider.addEventListener(Event.CLEAR, styleProvider_clearHandler, false, 0, true);
+				this._currentStyleProvider.addEventListener(StyleProviderEvent.STYLES_CHANGE, feathersControl_styleProvider_stylesChangeHandler, false, 0,
+					true);
+				this._currentStyleProvider.addEventListener(Event.CLEAR, feathersControl_styleProvider_clearHandler, false, 0, true);
 			}
 		}
 
@@ -993,8 +994,8 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		if (this._currentStyleProvider == null) {
 			return;
 		}
-		this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, styleProvider_stylesChangeHandler);
-		this._currentStyleProvider.removeEventListener(Event.CLEAR, styleProvider_clearHandler);
+		this._currentStyleProvider.removeEventListener(StyleProviderEvent.STYLES_CHANGE, feathersControl_styleProvider_stylesChangeHandler);
+		this._currentStyleProvider.removeEventListener(Event.CLEAR, feathersControl_styleProvider_clearHandler);
 		this._currentStyleProvider = null;
 		this._waitingToApplyStyles = true;
 	}
@@ -1040,7 +1041,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		this.showFocus(false);
 	}
 
-	private function styleProvider_stylesChangeHandler(event:StyleProviderEvent):Void {
+	private function feathersControl_styleProvider_stylesChangeHandler(event:StyleProviderEvent):Void {
 		if (!event.affectsTarget(this)) {
 			return;
 		}
@@ -1051,14 +1052,14 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 	}
 
-	private function customStyleProvider_clearHandler(event:Event):Void {
-		this._customStyleProvider.removeEventListener(Event.CLEAR, customStyleProvider_clearHandler);
+	private function feathersControl_customStyleProvider_clearHandler(event:Event):Void {
+		this._customStyleProvider.removeEventListener(Event.CLEAR, feathersControl_customStyleProvider_clearHandler);
 		this._customStyleProvider = null;
 		// no need to call applyStyles() here because another listener will
 		// handle it
 	}
 
-	private function styleProvider_clearHandler(event:Event):Void {
+	private function feathersControl_styleProvider_clearHandler(event:Event):Void {
 		// clear it immediately because we don't want it to get reused
 		this.clearStyleProvider();
 		if (this.stage != null) {
@@ -1066,7 +1067,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 		}
 	}
 
-	private function layoutData_changeHandler(event:Event):Void {
+	private function feathersControl_layoutData_changeHandler(event:Event):Void {
 		FeathersEvent.dispatch(this, FeathersEvent.LAYOUT_DATA_CHANGE);
 	}
 
