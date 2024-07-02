@@ -13,6 +13,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.Function;
+import haxe.macro.Expr.FieldType;
 
 /**
 	Add `@:styleContext` metadata to a Feathers UI component to make it

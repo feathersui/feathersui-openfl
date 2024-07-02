@@ -15,6 +15,7 @@ import haxe.macro.Expr.Error;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.Function;
 import haxe.macro.Expr.MetadataEntry;
+import haxe.macro.Expr.FieldType;
 
 /**
 	Add `@:style` metadata to a public variable to convert it into a "style"
