@@ -503,7 +503,7 @@ class Header extends FeathersControl implements ITextControl {
 
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
-		var selectionInvalid = this.isInvalid(SELECTION);
+		var layoutInvalid = this.isInvalid(LAYOUT);
 		var sizeInvalid = this.isInvalid(SIZE);
 		var stateInvalid = this.isInvalid(STATE);
 		var stylesInvalid = this.isInvalid(STYLES);
@@ -524,7 +524,7 @@ class Header extends FeathersControl implements ITextControl {
 
 		sizeInvalid = this.measure() || sizeInvalid;
 
-		if (stylesInvalid || stateInvalid || dataInvalid || sizeInvalid) {
+		if (layoutInvalid || stylesInvalid || stateInvalid || dataInvalid || sizeInvalid) {
 			this.layoutContent();
 		}
 	}
