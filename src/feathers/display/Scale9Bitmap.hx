@@ -263,7 +263,7 @@ class Scale9Bitmap extends Sprite {
 		this._rectangle.setTo(this.left + this.center, this.top, this.middleRight.width, this.middleRight.height);
 		this.middleRight.copyPixels(this._bitmapData, this._rectangle, this._point);
 
-		this.bottomLeft = new BitmapData(this.top, this.bottom);
+		this.bottomLeft = new BitmapData(this.left, this.bottom);
 		this._rectangle.setTo(0.0, this.top + this.middle, this.bottomLeft.width, this.bottomLeft.height);
 		this.bottomLeft.copyPixels(this._bitmapData, this._rectangle, this._point);
 		this.bottomCenter = new BitmapData(this.center, this.bottom);
