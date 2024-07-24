@@ -90,7 +90,7 @@ enum EnumNameWithCamelCase {
 
 Names of enum values should use all uppercase, with underscores separating words.
 
-If any value of an emum will accept parameters, the enum value names should instead use camel case, and each word must start with an uppercase letter.
+If any value of an enum will accept parameters, the enum value names should instead use camel case, and each word must start with an uppercase letter.
 
 ```haxe
 enum EnumNameWithCamelCase {
@@ -195,7 +195,7 @@ For getters and setters, use `get`, `set`, or `never`. Never use `default` or `n
 
 In general, `setInvalid()` should be called when the property of a UI component has changed. Always check to see if the value is different before calling `setInvalid()` to avoid updating for no reason. The response to changes to a property should go into the `update()` method.
 
-Do not access children of a UI component in a getter or setter It's often better to simply call `setInvalid()` and handle any changes in `update()`. If you must access a child in a getter or setter, you must handle the case where the child is `null` because it has not been created yet.
+Do not access children of a UI component in a getter or setter. It's often better to simply call `setInvalid()` and handle any changes in `update()`. If you must access a child in a getter or setter, you must handle the case where the child is `null` because it may not have been created yet (often, children won't be created until either `initialize()` or `update()` is called).
 
 ### Events
 
@@ -247,7 +247,7 @@ The easing function should be of type `IEasing` with a default value of `Quart.e
 public var toggleEase:IEasing = Quart.easeOut;
 ```
 
-🚨 **Never use `Actuate.tween()`.** Animations created with `Actuate.tween()` will often break when full Dead Code Elimiation (DCE) is enabled in the Haxe compiler.
+🚨 **Never use `Actuate.tween()`.** Animations created with `Actuate.tween()` will often break when full [Dead Code Elimiation (DCE)](https://haxe.org/manual/cr-dce.html) is enabled in the Haxe compiler.
 
 Instead, always use `Actuate.update()`. The following example demonstrates how to fade out a display object with its `alpha` property.
 
