@@ -119,6 +119,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						var value = top.value;
 						var relativeTo = top.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							if (item.parent != relativeTo.parent) {
+								throw new IllegalOperationError("relativeTo must have the same parent");
+							}
 							continue;
 						}
 						item.y = value;
@@ -131,6 +134,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						var value = left.value;
 						var relativeTo = left.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							if (item.parent != relativeTo.parent) {
+								throw new IllegalOperationError("relativeTo must have the same parent");
+							}
 							continue;
 						}
 						item.x = value;
@@ -243,6 +249,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						var top = layoutData.top;
 						var relativeTo = top.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							if (item.parent != relativeTo.parent) {
+								throw new IllegalOperationError("relativeTo must have the same parent");
+							}
 							continue;
 						}
 						var y = top.value;
@@ -255,6 +264,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						var left = layoutData.left;
 						var relativeTo = left.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							if (item.parent != relativeTo.parent) {
+								throw new IllegalOperationError("relativeTo must have the same parent");
+							}
 							continue;
 						}
 						var x = left.value;
@@ -267,6 +279,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						var bottom = layoutData.bottom;
 						var relativeTo = bottom.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							if (item.parent != relativeTo.parent) {
+								throw new IllegalOperationError("relativeTo must have the same parent");
+							}
 							continue;
 						}
 						var bottomPixels = bottom.value;
@@ -309,6 +324,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 						var right = layoutData.right;
 						var relativeTo = right.relativeTo;
 						if (relativeTo != null && doneItems.indexOf(relativeTo) == -1) {
+							if (item.parent != relativeTo.parent) {
+								throw new IllegalOperationError("relativeTo must have the same parent");
+							}
 							continue;
 						}
 						var rightPixels = right.value;
