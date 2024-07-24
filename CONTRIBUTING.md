@@ -231,7 +231,7 @@ private function myComponent_stage_mouseUpHandler(event:MouseEvent):Void {}
 
 Feathers UI uses the [Actuate](https://lib.haxe.org/p/actuate) library for programmatic animation. There are a few best practices to remember when using Acutate in the Feathers UI codebase.
 
-If a UI component has animation, the duration and easing function should be exposed as a properties with `@:style` metadata.
+If a UI component has animation, the duration and easing function should be exposed as properties with `@:style` metadata.
 
 The duration property must be of type `Float`, and it must be measured in seconds. The default duration value should generally be quick — under half a second.
 
