@@ -188,7 +188,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 				doneItems.push(item);
 			}
 			if (oldDoneCount == doneItems.length) {
-				throw new IllegalOperationError("AnchorLayout failed.");
+				// if no additional items were processed,
+				// it's probably a circular reference
+				throw new IllegalOperationError("relativeTo circular reference detected");
 			}
 		}
 		var viewPortWidth = 0.0;
@@ -368,7 +370,9 @@ class AnchorLayout extends EventDispatcher implements ILayout {
 					doneItems.push(item);
 				}
 				if (!needsAnotherPass && oldDoneCount == doneItems.length) {
-					throw new IllegalOperationError("AnchorLayout failed.");
+					// if no additional items were processed,
+					// it's probably a circular reference
+					throw new IllegalOperationError("relativeTo circular reference detected");
 				}
 			}
 			if (needsAnotherPass) {
