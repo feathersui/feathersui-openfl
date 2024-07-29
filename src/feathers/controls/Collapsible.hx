@@ -99,6 +99,8 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	private var header:DisplayObject;
 	private var headerMeasurements:Measurements = new Measurements();
 
+	private var _ignoreHeaderEvents:Bool = false;
+
 	private var _currentScrollRect:Rectangle;
 	private var _scrollRect1:Rectangle = new Rectangle();
 	private var _scrollRect2:Rectangle = new Rectangle();
@@ -488,9 +490,14 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 				this._collapseActuator = null;
 				FeathersEvent.dispatch(this, Event.CANCEL);
 			}
-			if ((this.header is IToggle)) {
+			var oldIgnoreHeaderEvents = this._ignoreHeaderEvents;
+			this._ignoreHeaderEvents = true;
+			if ((this.header is IOpenCloseToggle)) {
+				(cast this.header : IOpenCloseToggle).opened = this._pendingOpened;
+			} else if ((this.header is IToggle)) {
 				(cast this.header : IToggle).selected = this._pendingOpened;
 			}
+			this._ignoreHeaderEvents = oldIgnoreHeaderEvents;
 			if (this._pendingAnimation) {
 				this._pendingHeight = this.actualHeight;
 				if (this._pendingOpened) {
@@ -545,9 +552,14 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 			this._opened = this._pendingOpened;
 			this._pendingOpened = null;
 		} else {
-			if ((this.header is IToggle)) {
+			var oldIgnoreHeaderEvents = this._ignoreHeaderEvents;
+			this._ignoreHeaderEvents = true;
+			if ((this.header is IOpenCloseToggle)) {
+				(cast this.header : IOpenCloseToggle).opened = this._opened;
+			} else if ((this.header is IToggle)) {
 				(cast this.header : IToggle).selected = this._opened;
 			}
+			this._ignoreHeaderEvents = oldIgnoreHeaderEvents;
 			if (this._content != null) {
 				this._content.visible = this._opened;
 			}
@@ -565,7 +577,12 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 				styleHeader.variant = this.customHeaderVariant != null ? this.customHeaderVariant : Collapsible.CHILD_VARIANT_HEADER;
 			}
 		}
-		if ((this.header is ITriggerView)) {
+		if ((this.header is IOpenCloseToggle)) {
+			this.header.addEventListener(Event.OPEN, collapsible_header_openHandler);
+			this.header.addEventListener(Event.CLOSE, collapsible_header_closeHandler);
+		} else if ((this.header is IToggle)) {
+			this.header.addEventListener(Event.CHANGE, collapsible_header_changeHandler);
+		} else if ((this.header is ITriggerView)) {
 			this.header.addEventListener(TriggerEvent.TRIGGER, collapsible_header_triggerHandler);
 		} else {
 			this.header.addEventListener(MouseEvent.CLICK, collapsible_header_clickHandler);
@@ -581,6 +598,9 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 		if (this.header == null) {
 			return;
 		}
+		this.header.removeEventListener(Event.OPEN, collapsible_header_openHandler);
+		this.header.removeEventListener(Event.CLOSE, collapsible_header_closeHandler);
+		this.header.removeEventListener(Event.CHANGE, collapsible_header_changeHandler);
 		this.header.removeEventListener(TriggerEvent.TRIGGER, collapsible_header_triggerHandler);
 		this.header.removeEventListener(MouseEvent.CLICK, collapsible_header_clickHandler);
 		this.removeChild(this.header);
@@ -632,7 +652,36 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 		}
 	}
 
+	private function collapsible_header_openHandler(event:Event):Void {
+		if (this._ignoreHeaderEvents) {
+			return;
+		}
+		this.openContent(true);
+	}
+
+	private function collapsible_header_closeHandler(event:Event):Void {
+		if (this._ignoreHeaderEvents) {
+			return;
+		}
+		this.closeContent(true);
+	}
+
+	private function collapsible_header_changeHandler(event:Event):Void {
+		if (this._ignoreHeaderEvents) {
+			return;
+		}
+		var toggleHeader:IToggle = cast header;
+		if (toggleHeader.selected) {
+			this.openContent(true);
+		} else {
+			this.closeContent(true);
+		}
+	}
+
 	private function collapsible_header_triggerHandler(event:TriggerEvent):Void {
+		if (this._ignoreHeaderEvents) {
+			return;
+		}
 		if (this._opened) {
 			this.closeContent(true);
 		} else {
@@ -641,6 +690,9 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	}
 
 	private function collapsible_header_clickHandler(event:MouseEvent):Void {
+		if (this._ignoreHeaderEvents) {
+			return;
+		}
 		if (this._opened) {
 			this.closeContent(true);
 		} else {
