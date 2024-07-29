@@ -341,6 +341,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		`ToggleButtonState.HOVER` and `ToggleButtonState.DOWN`. However, the
 		item may still render differently when selected versus when it is not
 		selected.
+
+		@since 1.3.0
 	**/
 	@:style
 	public var showHoverAndDownStates:Bool = true;
