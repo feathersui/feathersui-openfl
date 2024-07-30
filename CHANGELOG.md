@@ -1,5 +1,101 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.3.0 (2024-??-??)
+
+- General: Added a `dispose()` method to `FeathersControl` to allow UI components to be optionally disposed when they are no longer needed. Clears data providers, removes sub-components, removes selection, and some event listeners. Developers are not required to call `dispose()`, but it can help with garbage collection and general cleanup.
+- Collapsible: New component with a header and content, where toggling the header shows and hides the content.
+- DragDropManager: Added support for drag-and-drop. Used by `ListView` and `GridView`. Includes new `drag-and-drop` and `list-view-drag-and-drop` sample projects.
+- Default Theme: Improved sizing of all UI control skins by detecting if currently running on mobile or desktop.
+- New Sample: `custom-layout-group-item-renderer` demonstrates how to create a subclass of `LayoutGroupItemRenderer`.
+- New Sample: `anchor-layout-three-column-header-and-footer` to demonstrate a common app layout with a header on top, three vertical columns in the middle, and a footer on the bottom.
+- AnchorLayout: Improve error messages in when `relativeTo` is a circular reference or has a different parent.
+- AnchorLayout: An `Anchor` constructor can now be called with zero arguments to allow it to be used declaratively.
+- AssetLoader: Added `sourceScale` property to specify which scale factor the `source` was designed for, allowing it to be scaled for the current scale factor.
+- BaseScrollContainer: The default step value is now `1.0`.
+- BaseScrollContainer: Ignore keyboard navigation events if the current stage focus is a `TextField` of type `INPUT`.
+- BaseScrollContainer: Added `scrollBarsCornerSkin` style to optionally display a skin in the corner between the horizontal and vertical scroll bars, when both are displayed and fixed.
+- BaseScrollContainer: Fixed missing `Event.SCROLL` when automatically snapping to minimum or maximum.
+- Callout: Fixed issues where `Event.RESIZE` listener on content was added to early.
+- Callout: Fixed null exception when validating without an `origin`.
+- ComboBox: Added `text` getter to get the text of the currently selected item.
+- ComboBox: Fixed setting `selectedIndex` or `selectedItem` in `Event.CLOSE` listener getting ignored.
+- ComboBox: Fixed `selectedItem` setter when the list view is opened.
+- ComboBox: Fixed missing `ListViewEvent.ITEM_TRIGGER` dispatch on `Keyboard.ENTER`.
+- Data Containers: Fixed previous animation not getting cancelled when new animation duration is `0.0`.
+- Data Containers: Added support for raw `String` values in data providers for all targets.
+- Data Containers: Added new `itemToItemState()` method to get the state object passed to the item renderer recyclers in other contexts.
+- Data Containers: Scrolls an item renderer into view when it is triggered.
+- Data Containers: When using keyboard to navigate, and selection does not change, scroll to display that item, if not completely in view port.
+- DatePicker, PopUpDatePicker: Added keyboard navigation with arrow keys, page up/down, home, and end.
+- DefaultFocusManager: Fixed focus indicator being rendered on mouse focus change because a flag wasn't cleared.
+- Default Theme: Explicitly sets `bold`, `italic`, and `underline` to `false` instead of `null` to ensure that the previous `TextFormat` does not affect the new value.
+- Default Theme: Instead of setting background skins on `GridView` and `TreeGridView` cells, set them on the row renderers that contain the cells.
+- DisplayObjectFactory, DisplayObjectRecycler: Automatically calls `dispose()` on destroying a view created with `withClass()`, unless a custom destroy function is provided.
+- DisplayObjectRecycler: Added `withFactory()` method to convert a `DisplayObjectFactory` to a `DisplayObjectRecycler`.
+- Drawer: Added `animateOpenProperty` property, to control whether setting `opened` should trigger with animation or not. See also new `openDrawer()` and `closeDrawer()` methods.
+- FeathersControl: Added `disabledAlpha` property to automatically change the `alpha` property when `enabled` is set to `false`.
+- FeathersControl: Added `alwaysShowFocus` property to show focus indicator on both mouse focus change and key focus change.
+- FormItem: Fixed failure to listen for `Event.RESIZE` from content.
+- FormItem: Fixed measurement of `requiredSkin` when it implements `IMeasureObject`.
+- FormItem: Fixed meaurement of `content` when setting the content's `width` may change its `height`, such as wrapping text.
+- FormItem: Ensure that `Event.RESIZE` is dispatched when showing or hiding `requiredSkin` or changing text.
+- FormLayout: Fixed incorrect text column width measurement because the old value was not cleared.
+- General: Fixed issues with macros when using Haxe 5 nightly builds.
+- General: Fixed issue with `__restrict` variable name when compiling for HashLink/C.
+- General: Added `@:inspectable` metadata to certain properties, to allow them to be customized by GUI developer tooling.
+- General: Added a number of extra `null` checks for `Meaurements` values.
+- General: Use unsafe casts when type is known by checking with `is` first, for improved performance.
+- General: Use `-dce no` when building _.swc_ file for Flash, so that Haxe standard library is not modified.
+- General: Removed workaround for HashLink's broken `array.resize()` when targeting Haxe 4.3 and newer because the issue was fixed.
+- GridView, TreeGridView: Fixed a number of issues with `customColumnWidths`.
+- GridView, TreeGridView: Fixed `TriggerEvent.TRIGGER` not getting dispatched by row renderers.
+- GridView, TreeGridView: Fixed row getting incorrectly selected when clicking focusable child.
+- GridView, TreeGridView: Added `headerCornerSkin` style to optionally display a skin in the corner between the headers and scroll bar.
+- GridView, TreeGridView: Fixed `headerRendererFactory` not allowing an explicit height to be set on headers.
+- GridView, TreeGridView: Added `rowRendererFactory` to allow the row renderers to be customized.
+- GridView, TreeGridView: Fixed `RangeError` when inserting an extra column before other columns.
+- GridView, TreeGridView: Fixed positon of new cell renderer when a column is inserted after validation.
+- GridViewHeaderState: Added `sortOrder` property.
+- Header: Fixed `LAYOUT` invalidation flag getting ignored.
+- Header: Added missing `setPadding()` convenience method.
+- HDividedBox, VDividedBox: Improved detection of which item should be considered fluid when resized.
+- HDividedBox, VDividedBox: Added missing handling of `includeInLayout` property.
+- HDividedBox, VDividedBox: Fixed `removeRawChildren()`, which was calling itself instead of `removeChildren()`.
+- HDividedBox, VDividedBox: Fixed programmatic change of child `width` or `height` not being reflected in layout.
+- HProgressBar, VProgressBar: Added `indeterminate` property and `indeterminateFillSkin` style to allow the progress bar to display an indeterminate animation. Also added `indeterminateDuration` style.
+- HScrollBar, VScrollBar: added optional decrement and increment button factories and `showIncrementAndDecrementButtons` style.
+- IDragDropLayout: New interface for implementing drag-and-drop for a custom layout.
+- ItemRenderer, LayoutGroupItemRenderer: Added `showHoverAndDownStates` property to allow those states to be disabled for item renderers that are non-interactive.
+- ItemRenderer, LayoutGroupItemRenderer: Fixed custom hit test for focusable objects.
+- Label: Fixed being focusable when text is not selectable.
+- LayoutGroup, ScrollContainer: Added new `collectChildren()` method to return an array of all children in the layout.
+- LayoutGroup, ScrollContainer: Fixed detection of automatic child removal when added to another container without manually removing from original parent.
+- LayoutGroup, ScrollContainer: Added new `readjustLayout()` method to allow a manual layout update when no events are dispatched.
+- Layouts: Fixed some missing checks for `includeInLayout == false` on items.
+- ListView, GridView: Added `dragEnabled`, `dropEnabled`, and `removeOnDragDropComplete` properties to enable drag-and-drop behaviors.
+- LongPress: Added `maxMoveDistance` property to allow the gesture to be cancelled if the pointer moves too far between start and end.
+- Navigators: Added `withFactory()` method to create views with a `DisplayObjectFactory`.
+- PageNavigator, TabNavigator: Fixed measurement of content when `autoSizeMode == CONTENT`.
+- PageNavigator, TabNavigator: Optimize setting data provider to `null` by calling `removeAllItems()`.
+- Panel: Fixed `Event.RESIZE` listener for footer incorrectly being removed from header instead, which could lead to null exception.
+- Panel: Fixed measurement when changing header `width` causes its `height` to change, such as with wrapping text.
+- PopUpListView: Fixed missing stage `null` checks.
+- PopUpManager: added `bringToFront()` method to change a pop-up's depth to the top.
+- Skinning: Added `ButtonMultiSkin`, `ToggleButtonMultiSkin`, and `TextInputMultiSkin` to be used in declarative environments, such as MXHX.
+- StyleMacro: Hide deprecation warnings for generated methods that users have no control over.
+- TextArea, TextInput: Added optional `errorFocusRectSkin` style that takes precedence over `focusRectSkin` for `TextInputState.ERROR`.
+- TextArea: Fixed wrong default variant for the error callout.
+- TextArea, TextInput: Added `errorStatePriority` and `focusedStatePriority` properties to customize state precedence when focused and `errorString` is non-null.
+- TextArea, TextInput: Fixed wrong value returned by `errorString` setter.
+- TextArea, TextInput: Fixed prompt not rendering differently when disabled by using `disabledTextFormat`.
+- TextArea, TextInput: Added `errorCalloutFactory` property to allow the error callout to be customized.
+- TextArea, TextInput: Fixed missing styles on prompt text if prompt was initially `null` and added after the first validation.
+- ToggleButton: Fixed `!=` comparison that should have been `==` that caused `htmlText` to fail to update.
+- ToggleSwitch: Added `onText` and `offText` properties to optionally display text on each side.
+- ValidatingSprite: Fixed "all" invalidation flag never getting cleared, causing too many validations.
+- ValidatingSprite: Optimize invalidation flag checks.
+- VerticalListFixedRowLayout: Fixed only one item getting displayed in view port, even though view port was sized to display more items, because of a missing dispatch of `Event.CHANGE`.
+
 ## 1.2.0 (2023-06-01)
 
 - General: Haxe 4.3 compatibility. When upgrading to Haxe 4.3, you should also upgrade to OpenFL 9.2.2 and Lime 8.0.2.
