@@ -33,7 +33,7 @@ class ExclusivePointer {
 		(creating one if it does not yet exist).
 
 		@since 1.0.0
-	 */
+	**/
 	public static function forStage(stage:Stage):ExclusivePointer {
 		if (stage == null) {
 			throw new ArgumentError("Stage cannot be null.");
@@ -136,7 +136,7 @@ class ExclusivePointer {
 		Removes a claim to the touch with the specified ID.
 
 		@since 1.0.0
-	 */
+	**/
 	public function removeTouchClaim(touchPointID:Int):Void {
 		var existingTarget = this._touchClaims.get(touchPointID);
 		if (existingTarget == null) {
@@ -157,7 +157,7 @@ class ExclusivePointer {
 		Removes a claim to the mouse.
 
 		@since 1.0.0
-	 */
+	**/
 	public function removeMouseClaim():Void {
 		var existingTarget = this._mouseClaim;
 		if (existingTarget == null) {

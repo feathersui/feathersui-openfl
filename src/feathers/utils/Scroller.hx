@@ -420,7 +420,7 @@ class Scroller extends EventDispatcher {
 	public var forceElasticLeft:Bool = false;
 
 	/**
-		 If the scroll position goes outside the minimum or maximum bounds when
+		If the scroll position goes outside the minimum or maximum bounds when
 		the scroller's content is being actively dragged, the scrolling will be
 		constrained using this multiplier. A value of `0.0` means that the
 		scroller will not go beyond its minimum or maximum bounds. A value of

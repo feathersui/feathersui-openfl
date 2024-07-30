@@ -20,7 +20,7 @@
 		<!--
 			don't remove dead code because other libraries that depend on
 			Feathers UI and need to build .swc files too might need it
-		 -->
+		-->
 		<haxeflag name="-dce" value="no"/>
 	</section>
 

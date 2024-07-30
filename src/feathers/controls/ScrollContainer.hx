@@ -459,7 +459,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 		standard OpenFL display objects like `Sprite` do not.
 
 		@since 1.3.0
-	 */
+	**/
 	public function readjustLayout():Void {
 		this.setInvalid(LAYOUT);
 	}

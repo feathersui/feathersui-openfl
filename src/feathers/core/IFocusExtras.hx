@@ -17,7 +17,7 @@ import openfl.display.DisplayObject;
 	container with "chrome", such as the header and footer in
 	`feathers.controls.Panel`.
 
-	 @since 1.0.0
+	@since 1.0.0
 **/
 interface IFocusExtras extends IFocusManagerAware {
 	/**

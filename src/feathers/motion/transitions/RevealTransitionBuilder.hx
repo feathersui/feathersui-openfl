@@ -25,7 +25,7 @@ import openfl.errors.ArgumentError;
 	may slide up, right, down, or left (or at an arbitrary angle).
 
 	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
-	 
+
 	@since 1.0.0
 **/
 class RevealTransitionBuilder {
