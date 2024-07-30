@@ -111,7 +111,8 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	private var _content:DisplayObject;
 
 	/**
-		The primary content to display in the container.
+		The primary content to display in the container. When the header is
+		toggled, this content will be hidden or shown.
 
 		@since 1.3.0
 	**/
@@ -231,8 +232,32 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	private var _headerFactory:DisplayObjectFactory<Dynamic, DisplayObject>;
 
 	/**
-		Creates the header input, which must be of type
+		Creates the header control that is used to toggle the visibility of the
+		content. The header of a `Collapsible` must be of type
 		`openfl.display.DisplayObject`.
+
+		`Collapsible` supports a few different events for determining when to
+		toggle the visibility of the content, depending on whether the header
+		implements certain specific interfaces. The following interfaces and
+		events are supported, in the following order of precedence.
+
+		- If the header implements `feathers.core.IOpenCloseToggle`, the
+		`Collapsible` will listen for the header to dispatch
+		`openfl.events.Event.OPEN` and `openfl.events.Event.CLOSE` to
+		determine when to toggle the visibility of the content.
+
+		- If the header implements `feathers.controls.IToggle`, the
+		`Collapsible` will listen for the header to dispatch
+		`openfl.events.Event.CHANGE` to determine when to toggle the visibility
+		of the content.
+
+		- If the header implements `feathers.controls.ITriggerView`, the
+		`Collapsible` will listen for the header to dispatch
+		`feathers.events.TriggerEvent.TRIGGER` to determine when to toggle the
+		visibility of the content.
+
+		- If the header does not implement any of the above events, the header
+		will listen for `openfl.events.MouseEvent.CLICK`.
 
 		In the following example, a custom header factory is provided:
 
