@@ -35,6 +35,21 @@ import openfl.geom.Rectangle;
 	A container that displays primary `content` that may be collapsed and
 	expanded by clicking or tapping a `header`.
 
+	The following example creates a closed collapsible container with
+	word-wrapped text as content:
+
+	```haxe
+	var collapsible = new Collapsible();
+	collapsible.text = "What is Feathers UI?";
+	collapsible.opened = false;
+	var textContent = new Label();
+	textContent.width = 200.0;
+	textContent.wordWrap = true;
+	textContent.text = "Feathers UI is an open source framework of graphical user interface (GUI) components for creative, cross-platform projects.";
+	collapsible.content = textContent;
+	addChild(collapsible);
+	```
+
 	@event openfl.events.Event.OPEN Dispatched when the content has completely
 	opened.
 
