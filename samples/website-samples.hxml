@@ -26,6 +26,8 @@
 --next
 -cmd haxelib run openfl build list-view-data-provider-collection-sorting/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
+-cmd haxelib run openfl build list-view-drag-and-drop/project.xml html5 -final -clean --haxedef=feathersui.com
+--next
 -cmd haxelib run openfl build login-form/project.xml html5 -final -clean --haxedef=feathersui.com
 --next
 -cmd haxelib run openfl build magic-8-ball-chat/project.xml html5 -final -clean --haxedef=feathersui.com
