@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.3.0 (2024-??-??)
+## 1.3.0 (2024-08-01)
 
 - General: Added a `dispose()` method to `FeathersControl` to allow UI components to be optionally disposed when they are no longer needed. Clears data providers, removes sub-components, removes selection, and some event listeners. Developers are not required to call `dispose()`, but it can help with garbage collection and general cleanup.
 - Collapsible: New component with a header and content, where toggling the header shows and hides the content.

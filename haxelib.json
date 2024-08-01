@@ -14,7 +14,7 @@
 		"layout"
 	],
 	"description": "Cross-platform graphical user interface (GUI) components for creative frontend projects, built with Haxe and OpenFL",
-	"version": "1.3.0-alpha",
+	"version": "1.3.0",
 	"main": "tools.Run",
 	"classPath": "src",
 	"dependencies": {
@@ -23,5 +23,5 @@
 		"openfl": ""
 	},
 	"contributors": ["bowlerhat"],
-	"releasenote": "Major performance improvements, Haxe 4.3 compatibility, and more"
+	"releasenote": "Drag-and-drop, Collapsible component, dispose() method"
 }
