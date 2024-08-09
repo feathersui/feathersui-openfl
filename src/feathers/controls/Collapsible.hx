@@ -381,6 +381,9 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 		if (this._pendingOpened != null && this._pendingOpened) {
 			return;
 		}
+		if (this._opened) {
+			return;
+		}
 		var result = FeathersEvent.dispatch(this, FeathersEvent.OPENING, false, true);
 		if (!result) {
 			return;
@@ -397,6 +400,9 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 	public function closeContent(animate:Bool = true):Void {
 		this._pendingAnimation = animate;
 		if (this._pendingOpened != null && !this._pendingOpened) {
+			return;
+		}
+		if (!this._opened) {
 			return;
 		}
 		var result = FeathersEvent.dispatch(this, FeathersEvent.CLOSING, false, true);
