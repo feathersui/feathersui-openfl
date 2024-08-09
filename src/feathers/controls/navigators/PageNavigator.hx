@@ -353,6 +353,16 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		return this._pageIndicatorFactory;
 	}
 
+	/**
+		Shows or hides the page indicator. If the page indicator is hidden, the
+		selection may only be changed programatically, or with a user swipe
+		gesture, if `swipeEnabled` is `true`.
+
+		@since 1.4.0
+	**/
+	@:style
+	public var showPageIndicator:Bool = true;
+
 	private var _ignoreSelectionChange = false;
 
 	private var _dragTransitionContext:EventToPositionEffectContext;
@@ -401,6 +411,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
+		var stylesInvalid = this.isInvalid(STYLES);
 		if (this._previousCustomPageIndicatorVariant != this.customPageIndicatorVariant) {
 			this.setInvalidationFlag(INVALIDATION_FLAG_PAGE_INDICATOR_FACTORY);
 		}
@@ -408,6 +419,10 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 
 		if (pageIndicatorInvalid) {
 			this.createPageIndicator();
+		}
+
+		if (pageIndicatorInvalid || stylesInvalid) {
+			this.refreshPageIndicator();
 		}
 
 		if (dataInvalid) {
@@ -425,6 +440,9 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	override private function measure():Bool {
+		if (!this.showPageIndicator) {
+			return super.measure();
+		}
 		if (this.explicitWidth != null) {
 			this.pageIndicator.width = this.explicitWidth;
 		} else if (this._autoSizeMode == STAGE && this.stage != null) {
@@ -469,6 +487,10 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 		}
 		this._oldPageIndicatorFactory = null;
 		this.pageIndicator = null;
+	}
+
+	private function refreshPageIndicator():Void {
+		this.pageIndicator.visible = this.showPageIndicator;
 	}
 
 	override private function layoutContent():Void {

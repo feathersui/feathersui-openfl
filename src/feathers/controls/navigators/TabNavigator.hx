@@ -355,6 +355,16 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		return this._tabBarFactory;
 	}
 
+	/**
+		Shows or hides the tab bar. If the tab bar is hidden, the selection
+		may only be changed programatically, or with a user swipe gesture, if
+		`swipeEnabled` is `true`.
+
+		@since 1.4.0
+	**/
+	@:style
+	public var showTabBar:Bool = true;
+
 	private var _ignoreSelectionChange = false;
 
 	override public function dispose():Void {
@@ -405,6 +415,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var selectionInvalid = this.isInvalid(SELECTION);
+		var stylesInvalid = this.isInvalid(STYLES);
 		if (this._previousCustomTabBarVariant != this.customTabBarVariant) {
 			this.setInvalidationFlag(INVALIDATION_FLAG_TAB_BAR_FACTORY);
 		}
@@ -412,6 +423,10 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 		if (tabBarInvalid) {
 			this.createTabBar();
+		}
+
+		if (tabBarInvalid || stylesInvalid) {
+			this.refreshTabBar();
 		}
 
 		if (dataInvalid || tabBarInvalid) {
@@ -437,6 +452,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	override private function measure():Bool {
+		if (!this.showTabBar) {
+			return super.measure();
+		}
 		if (this.explicitWidth != null) {
 			this.tabBar.width = this.explicitWidth;
 		} else if (this._autoSizeMode == STAGE && this.stage != null) {
@@ -483,6 +501,10 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 		this._oldTabBarFactory = null;
 		this.tabBar = null;
+	}
+
+	private function refreshTabBar():Void {
+		this.tabBar.visible = this.showTabBar;
 	}
 
 	override private function layoutContent():Void {
