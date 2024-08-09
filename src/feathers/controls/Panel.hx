@@ -183,6 +183,18 @@ class Panel extends ScrollContainer implements IFocusExtras {
 		this._ignoreFooterResize = oldIgnoreFooterResize;
 	}
 
+	override private function refreshEnabled():Void {
+		super.refreshEnabled();
+
+		if ((this._header is IUIControl)) {
+			(cast this._header : IUIControl).enabled = this._enabled;
+		}
+
+		if ((this._footer is IUIControl)) {
+			(cast this._footer : IUIControl).enabled = this._enabled;
+		}
+	}
+
 	override private function calculateViewPortOffsets(forceScrollBars:Bool, useActualBounds:Bool):Void {
 		if (this._header != null) {
 			var oldIgnoreHeaderResize = this._ignoreHeaderResize;
