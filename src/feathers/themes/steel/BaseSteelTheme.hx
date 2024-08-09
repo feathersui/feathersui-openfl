@@ -97,49 +97,226 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 		return this._darkMode;
 	}
 
+	/**
+		May be used to customize the theme color when not in dark mode.
+	**/
 	private var customThemeColor:Null<Int>;
+
+	/**
+		May be used to customize the theme color when in dark mode.
+	**/
 	private var customDarkThemeColor:Null<Int>;
+
+	/**
+		The default blue tint used by the theme.
+	**/
 	private var themeColor:Int;
+
+	/**
+		A slightly modified version of the default blue tint. It is used
+		together with `themeColor` to create gradients.
+	**/
 	private var offsetThemeColor:Int;
+
+	/**
+		May be used as a background color for the entire application, such as
+		setting the root component's background or the stage color.
+	**/
 	private var rootFillColor:Int;
+
+	/**
+		A color used in the gradient for button background fills (and possibly
+		backgrounds on other controls).
+	**/
 	private var controlFillColor1:Int;
+
+	/**
+		Another color used in the gradient for button background fills (and
+		possibly background fills on other controls).
+	**/
 	private var controlFillColor2:Int;
+
+	/**
+		A background fill color use when a button or other control is disabled.
+	**/
 	private var controlDisabledFillColor:Int;
-	private var scrollBarThumbFillColor:Int;
-	private var scrollBarThumbDisabledFillColor:Int;
-	private var insetFillColor:Int;
-	private var disabledInsetFillColor:Int;
-	private var insetBorderColor:Int;
-	private var disabledInsetBorderColor:Int;
-	private var selectedInsetBorderColor:Int;
-	private var activeFillBorderColor:Int;
-	private var selectedBorderColor:Int;
-	private var focusBorderColor:Int;
-	private var containerFillColor:Int;
-	private var headerFillColor:Int;
-	private var overlayFillColor:Int;
-	private var subHeadingFillColor:Int;
+
+	/**
+		The default color to use for borders.
+	**/
 	private var borderColor:Int;
+
+	/**
+		The default background fill color for "insets", such as the background
+		of a text input, the tracks of sliders and progress bars, or the icons
+		of checks and radios.
+	**/
+	private var insetFillColor:Int;
+
+	/**
+		The background fill for "insets" when the control is disabled.
+	**/
+	private var disabledInsetFillColor:Int;
+
+	/**
+		The border color for "insets".
+	**/
+	private var insetBorderColor:Int;
+
+	/**
+		The border color for "insets" when the control is disabled.
+	**/
+	private var disabledInsetBorderColor:Int;
+
+	/**
+		The border color for "insets" when the control is selected.
+	**/
+	private var selectedInsetBorderColor:Int;
+
+	/**
+		The border color for when a control is "active", such as when a button
+		is down.
+	**/
+	private var activeFillBorderColor:Int;
+
+	/**
+		The border color for when a control is selected.
+	**/
+	private var selectedBorderColor:Int;
+
+	/**
+		The border color for when a control is focused.
+	**/
+	private var focusBorderColor:Int;
+
+	/**
+		The background fill color for containers.
+	**/
+	private var containerFillColor:Int;
+
+	/**
+		The background fill color for overlays that block content below.
+	**/
+	private var overlayFillColor:Int;
+
+	/**
+		The fill or bolor for dividers that separate sections of content.
+	**/
 	private var dividerColor:Int;
-	private var subHeadingDividerColor:Int;
-	private var textColor:Int;
-	private var secondaryTextColor:Int;
-	private var disabledTextColor:Int;
-	private var dangerTextColor:Int;
+
+	/**
+		The fill color to use to indicate an error or that something might be
+		dangerous (such as deleting data).
+	**/
 	private var dangerFillColor:Int;
+
+	/**
+		A slightly modified version of the danger fill color. It is used
+		together with `dangerFillColor` to create gradients.
+	**/
 	private var offsetDangerFillColor:Int;
+
+	/**
+		The border color to use to indicate an error or that something might be
+		dangerous (such as deleting data).
+	**/
 	private var dangerBorderColor:Int;
 
+	/**
+		The background fill color for the header component.
+	**/
+	private var headerFillColor:Int;
+
+	/**
+		The background fill color for sub-heading views, such as header in
+		grid view and group list view.
+	**/
+	private var subHeadingFillColor:Int;
+
+	/**
+		The color to use for dividers between sub-heading views.
+	**/
+	private var subHeadingDividerColor:Int;
+
+	/**
+		The primary text color.
+	**/
+	private var textColor:Int;
+
+	/**
+		The text color for less important text.
+	**/
+	private var secondaryTextColor:Int;
+
+	/**
+		The text color to use when a control is disabled.
+	**/
+	private var disabledTextColor:Int;
+
+	/**
+		The text color to use to indicate an error or that something might be
+		dangerous (such as deleting data).
+	**/
+	private var dangerTextColor:Int;
+
+	/**
+		The fill color for scroll bar thumbs.
+	**/
+	private var scrollBarThumbFillColor:Int;
+
+	/**
+		The fill color for scroll bar thumbs when the scroll bar is disabled.
+	**/
+	private var scrollBarThumbDisabledFillColor:Int;
+
+	/**
+		The default font name for most controls.
+	**/
 	private var fontName:String;
+
+	/**
+		The default font size for most controls.
+	**/
 	private var fontSize:Int;
+
+	/**
+		The font size to use for larger or more important text.
+	**/
 	private var headerFontSize:Int;
+
+	/**
+		The font size to use for smaller or less important text.
+	**/
 	private var detailFontSize:Int;
 
+	/**
+		The default thickness of a border.
+	**/
 	private var borderThickness:Float;
+
+	/**
+		Extra small (XS) padding or gap value.
+	**/
 	private var xsmallPadding:Float;
+
+	/**
+		Small (S) padding or gap value.
+	**/
 	private var smallPadding:Float;
+
+	/**
+		Medium (M) padding or gap value.
+	**/
 	private var mediumPadding:Float;
+
+	/**
+		Large (L) padding or gap value.
+	**/
 	private var largePadding:Float;
+
+	/**
+		Extra large (XL) padding or gap value.
+	**/
 	private var xlargePadding:Float;
 
 	#if html5
