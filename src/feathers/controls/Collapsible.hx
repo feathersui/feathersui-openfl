@@ -418,6 +418,7 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 			this.setInvalidationFlag(INVALIDATION_FLAG_HEADER_FACTORY);
 		}
 		var dataInvalid = this.isInvalid(DATA);
+		var stateInvalid = this.isInvalid(STATE);
 		var headerFactoryInvalid = this.isInvalid(INVALIDATION_FLAG_HEADER_FACTORY);
 
 		if (headerFactoryInvalid) {
@@ -427,6 +428,10 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 		if (dataInvalid) {
 			this.updateText();
 			this.updateOpened();
+		}
+
+		if (stateInvalid || headerFactoryInvalid) {
+			this.refreshEnabled();
 		}
 
 		this.measure();
@@ -689,6 +694,12 @@ class Collapsible extends FeathersControl implements IOpenCloseToggle {
 				this._content.scrollRect = null;
 			}
 			this._ignoreContentResize = oldIgnoreContentResize;
+		}
+	}
+
+	private function refreshEnabled():Void {
+		if ((this.header is IUIControl)) {
+			(cast this.header : IUIControl).enabled = this._enabled;
 		}
 	}
 
