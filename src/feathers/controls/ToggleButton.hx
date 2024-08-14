@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.layout.ILayoutObject;
 import feathers.core.IFocusObject;
 import feathers.core.IHTMLTextControl;
 import feathers.core.IMeasureObject;
@@ -177,7 +178,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 				// this is a little strange, but measure the baseline as if
 				// there were text so that instances of the same component have
 				// the same baseline, even if some have text and others do not.
-				if (this._currentIcon != null) {
+				if (this._currentIcon != null
+					&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 					textFieldY = this._currentIcon.y + (this._currentIcon.height - this._textMeasuredHeight) / 2.0;
 				} else if (this._currentBackgroundSkin != null) {
 					textFieldY = (this._currentBackgroundSkin.height - this._textMeasuredHeight) / 2.0;
@@ -971,7 +973,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if ((this._currentIcon is IValidating)) {
 					(cast this._currentIcon : IValidating).validateNow();
@@ -996,7 +999,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		var hasText = this.showText && this._text != null;
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if (hasText || hasHTMLText) {
 					contentWidth += adjustedGap;
@@ -1019,7 +1023,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		var hasText = this.showText && this._text != null;
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
 				if (hasText || hasHTMLText) {
 					contentHeight += adjustedGap;
@@ -1041,7 +1046,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		var hasText = this.showText && this._text != null;
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentMinWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if (hasText || hasHTMLText) {
 					contentMinWidth += adjustedGap;
@@ -1063,7 +1069,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		var hasText = this.showText && this._text != null;
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
 		var contentMinHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
 				if (hasText || hasHTMLText) {
 					contentMinHeight += adjustedGap;
@@ -1192,7 +1199,9 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 
 		var hasText = this.showText && this._text != null;
 		var hasHTMLText = this.showText && this._htmlText != null && this._htmlText.length > 0;
-		var iconIsInLayout = this._currentIcon != null && this.iconPosition != MANUAL;
+		var iconIsInLayout = this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)
+			&& this.iconPosition != MANUAL;
 		if ((hasText || hasHTMLText) && iconIsInLayout) {
 			this.positionSingleChild(this.textField);
 			this.positionTextAndIcon();
@@ -1202,7 +1211,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			this.positionSingleChild(this._currentIcon);
 		}
 
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == MANUAL) {
 				this._currentIcon.x = this.paddingLeft;
 				this._currentIcon.y = this.paddingTop;
@@ -1251,7 +1261,8 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 		calculatedWidth -= (this.paddingLeft + this.paddingRight);
 		calculatedHeight -= (this.paddingTop + this.paddingBottom);
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			var adjustedGap = this.gap;
 			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (adjustedGap == (1.0 / 0.0)) {

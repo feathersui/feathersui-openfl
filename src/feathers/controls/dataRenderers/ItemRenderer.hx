@@ -380,7 +380,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 				// this is a little strange, but measure the baseline as if
 				// there were text so that instances of the same component have
 				// the same baseline, even if some have text and others do not.
-				if (this._currentIcon != null) {
+				if (this._currentIcon != null
+					&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 					textFieldY = this._currentIcon.y + (this._currentIcon.height - this._textMeasuredHeight) / 2.0;
 				} else if (this._currentBackgroundSkin != null) {
 					textFieldY = (this._currentBackgroundSkin.height - this._textMeasuredHeight) / 2.0;
@@ -730,7 +731,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		if (adjustedGap == (1.0 / 0.0)) {
 			adjustedGap = this.minGap;
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				calculatedWidth -= (this._currentIcon.width + adjustedGap);
 			}
@@ -827,7 +829,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			}
 			contentWidth += this._currentAccessoryView.width;
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText || this.hasAccessoryViewInLayout()) {
 					contentWidth += adjustedGap;
@@ -867,7 +870,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			contentHeight = Math.max(contentHeight, this._currentAccessoryView.height);
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
 				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
 					contentHeight += adjustedGap;
@@ -906,7 +910,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			}
 			contentMinWidth += this._currentAccessoryView.width;
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText || this.hasAccessoryViewInLayout()) {
 					contentMinWidth += adjustedGap;
@@ -945,7 +950,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			this._ignoreAccessoryResizes = oldIgnoreAccessoryResizes;
 			contentMinHeight = Math.max(contentMinHeight, this._currentAccessoryView.height);
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == TOP || this.iconPosition == BOTTOM) {
 				if (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText) {
 					contentMinHeight += adjustedGap;
@@ -1005,7 +1011,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			totalContentWidth = Math.max(totalContentWidth, this._secondaryTextMeasuredWidth);
 			totalContentHeight += (this._secondaryTextMeasuredHeight + adjustedGap);
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT || this.iconPosition == RIGHT) {
 				totalContentWidth += adjustedGap + this._currentIcon.width;
 			}
@@ -1017,10 +1024,12 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var flexGapVertical = flexGap
 			&& (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText)
 			&& this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)
 			&& (this.iconPosition == TOP || this.iconPosition == BOTTOM);
 		var flexGapHorizontal = flexGap
 			&& (hasText || hasHTMLText || hasSecondaryText || hasSecondaryHTMLText)
 			&& this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)
 			&& (this.iconPosition == LEFT || this.iconPosition == RIGHT);
 
 		if (this.hasAccessoryViewInLayout()) {
@@ -1039,7 +1048,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			}
 			availableContentWidth -= (this._currentAccessoryView.width + adjustedGap);
 		}
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == TOP || iconPosition == BOTTOM) {
 				switch (this.horizontalAlign) {
 					case LEFT:
@@ -1097,7 +1107,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			}
 		}
 
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == LEFT) {
 				this._currentIcon.x = currentX;
 				currentX += adjustedGap + this._currentIcon.width;
@@ -1110,7 +1121,9 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var totalTextWidth = 0.0;
 		var totalTextHeight = 0.0;
 		var availableTextWidth = availableContentWidth;
-		if (this._currentIcon != null && (this.iconPosition == LEFT || this.iconPosition == RIGHT)) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)
+			&& (this.iconPosition == LEFT || this.iconPosition == RIGHT)) {
 			availableTextWidth -= (adjustedGap + this._currentIcon.width);
 		}
 		if (hasText || hasHTMLText) {
@@ -1156,7 +1169,8 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			currentX += totalTextWidth + adjustedGap;
 		}
 
-		if (this._currentIcon != null) {
+		if (this._currentIcon != null
+			&& (!(this._currentIcon is ILayoutObject) || (cast this._currentIcon : ILayoutObject).includeInLayout)) {
 			if (this.iconPosition == RIGHT) {
 				if (flexGapHorizontal) {
 					this._currentIcon.x = Math.max(currentX, this.paddingLeft + availableContentWidth - this._currentIcon.width);
