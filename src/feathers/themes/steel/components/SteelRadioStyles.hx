@@ -105,15 +105,26 @@ class SteelRadioStyles {
 					icon.selectedView = selectedIcon;
 
 					var disabledAndSelectedIcon = new CircleSkin();
-					disabledAndSelectedIcon.width = 20.0;
-					disabledAndSelectedIcon.height = 20.0;
-					disabledAndSelectedIcon.minWidth = 20.0;
-					disabledAndSelectedIcon.minHeight = 20.0;
-					disabledAndSelectedIcon.border = theme.getDisabledInsetBorder(2.0);
+					if (isDesktop) {
+						disabledAndSelectedIcon.width = 16.0;
+						disabledAndSelectedIcon.height = 16.0;
+						disabledAndSelectedIcon.minWidth = 16.0;
+						disabledAndSelectedIcon.minHeight = 16.0;
+					} else {
+						disabledAndSelectedIcon.width = 20.0;
+						disabledAndSelectedIcon.height = 20.0;
+						disabledAndSelectedIcon.minWidth = 20.0;
+						disabledAndSelectedIcon.minHeight = 20.0;
+					}
+					disabledAndSelectedIcon.border = theme.getDisabledInsetBorder();
 					disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
 					var disabledSymbol = new Shape();
 					disabledSymbol.graphics.beginFill(theme.disabledTextColor);
-					disabledSymbol.graphics.drawCircle(10.0, 10.0, 4.0);
+					if (isDesktop) {
+						disabledSymbol.graphics.drawCircle(8.0, 8.0, 3.0);
+					} else {
+						disabledSymbol.graphics.drawCircle(10.0, 10.0, 4.0);
+					}
 					disabledSymbol.graphics.endFill();
 					disabledAndSelectedIcon.addChild(disabledSymbol);
 					icon.setViewForState(DISABLED(true), disabledAndSelectedIcon);
