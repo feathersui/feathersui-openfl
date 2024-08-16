@@ -100,6 +100,26 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	public static final VARIANT_DANGER = "danger";
 
 	/**
+		A variant used to style the button in a less prominent style — typically
+		hiding the background skin until interaction. Variants allow themes to
+		provide an assortment of different appearances for the same type of UI
+		component.
+
+		The following example uses this variant:
+
+		```haxe
+		var button = new Button();
+		button.variant = Button.VARIANT_QUIET;
+		```
+
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.4.0
+	**/
+	public static final VARIANT_QUIET = "quiet";
+
+	/**
 		Creates a new `Button` object.
 
 		@since 1.0.0

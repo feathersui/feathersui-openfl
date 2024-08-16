@@ -61,6 +61,26 @@ import flash.text.StyleSheet;
 @:styleContext
 class ToggleButton extends BasicToggleButton implements ITextControl implements IHTMLTextControl implements IFocusObject {
 	/**
+		A variant used to style the button in a less prominent style — typically
+		hiding the background skin until interaction. Variants allow themes to
+		provide an assortment of different appearances for the same type of UI
+		component.
+
+		The following example uses this variant:
+
+		```haxe
+		var button = new ToggleButton();
+		button.variant = ToggleButton.VARIANT_QUIET;
+		```
+
+		@see `feathers.style.IVariantStyleObject.variant`
+		@see [Feathers UI User Manual: Themes](https://feathersui.com/learn/haxe-openfl/themes/)
+
+		@since 1.4.0
+	**/
+	public static final VARIANT_QUIET = "quiet";
+
+	/**
 		Creates a new `ToggleButton` object.
 
 		@since 1.0.0

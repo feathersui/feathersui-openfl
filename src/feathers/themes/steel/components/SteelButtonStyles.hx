@@ -137,5 +137,43 @@ class SteelButtonStyles {
 				button.gap = theme.smallPadding;
 			});
 		}
+		if (styleProvider.getStyleFunction(Button, Button.VARIANT_QUIET) == null) {
+			styleProvider.setStyleFunction(Button, Button.VARIANT_QUIET, function(button:Button):Void {
+				if (button.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = theme.getButtonFill();
+					skin.disabledFill = theme.getButtonDisabledFill();
+					skin.setFillForState(UP, SolidColor(0xff00ff, 0.0)); // transparent
+					skin.setFillForState(DOWN, theme.getReversedActiveThemeFill());
+					skin.border = theme.getButtonBorder();
+					skin.disabledBorder = theme.getButtonDisabledBorder();
+					skin.setBorderForState(UP, None);
+					skin.setBorderForState(DOWN, theme.getActiveFillBorder());
+					skin.cornerRadius = 3.0;
+					button.backgroundSkin = skin;
+				}
+
+				if (button.focusRectSkin == null) {
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = None;
+					focusRectSkin.border = theme.getFocusBorder();
+					focusRectSkin.cornerRadius = 3.0;
+					button.focusRectSkin = focusRectSkin;
+				}
+
+				if (button.textFormat == null) {
+					button.textFormat = theme.getTextFormat();
+				}
+				if (button.disabledTextFormat == null) {
+					button.disabledTextFormat = theme.getDisabledTextFormat();
+				}
+
+				button.paddingTop = theme.smallPadding;
+				button.paddingRight = theme.largePadding;
+				button.paddingBottom = theme.smallPadding;
+				button.paddingLeft = theme.largePadding;
+				button.gap = theme.smallPadding;
+			});
+		}
 	}
 }
