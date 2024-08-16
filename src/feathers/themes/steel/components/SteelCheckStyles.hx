@@ -117,22 +117,40 @@ class SteelCheckStyles {
 					icon.selectedView = selectedIcon;
 
 					var disabledAndSelectedIcon = new RectangleSkin();
-					disabledAndSelectedIcon.width = 20.0;
-					disabledAndSelectedIcon.height = 20.0;
-					disabledAndSelectedIcon.minWidth = 20.0;
-					disabledAndSelectedIcon.minHeight = 20.0;
+					if (isDesktop) {
+						disabledAndSelectedIcon.width = 16.0;
+						disabledAndSelectedIcon.height = 16.0;
+						disabledAndSelectedIcon.minWidth = 16.0;
+						disabledAndSelectedIcon.minHeight = 16.0;
+					} else {
+						disabledAndSelectedIcon.width = 20.0;
+						disabledAndSelectedIcon.height = 20.0;
+						disabledAndSelectedIcon.minWidth = 20.0;
+						disabledAndSelectedIcon.minHeight = 20.0;
+					}
 					disabledAndSelectedIcon.border = theme.getDisabledInsetBorder();
 					disabledAndSelectedIcon.fill = theme.getDisabledInsetFill();
 					var disabledCheckMark = new Shape();
-					disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
-					disabledCheckMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
-					disabledCheckMark.graphics.endFill();
-					disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
-					disabledCheckMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
-					disabledCheckMark.graphics.endFill();
+					if (isDesktop) {
+						disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
+						disabledCheckMark.graphics.drawRect(-1.0, -8.0, 3.0, 11.0);
+						disabledCheckMark.graphics.endFill();
+						disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
+						disabledCheckMark.graphics.drawRect(-4.0, 0.0, 5.0, 3.0);
+						disabledCheckMark.graphics.endFill();
+						disabledCheckMark.x = 7.0;
+						disabledCheckMark.y = 9.0;
+					} else {
+						disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
+						disabledCheckMark.graphics.drawRect(-1.0, -8.0, 3.0, 14.0);
+						disabledCheckMark.graphics.endFill();
+						disabledCheckMark.graphics.beginFill(theme.disabledTextColor);
+						disabledCheckMark.graphics.drawRect(-5.0, 3.0, 5.0, 3.0);
+						disabledCheckMark.graphics.endFill();
+						disabledCheckMark.x = 10.0;
+						disabledCheckMark.y = 10.0;
+					}
 					disabledCheckMark.rotation = 45.0;
-					disabledCheckMark.x = 10.0;
-					disabledCheckMark.y = 10.0;
 					disabledAndSelectedIcon.addChild(disabledCheckMark);
 					icon.setViewForState(DISABLED(true), disabledAndSelectedIcon);
 				}
