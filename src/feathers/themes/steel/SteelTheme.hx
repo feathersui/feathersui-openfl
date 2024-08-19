@@ -19,6 +19,7 @@ import feathers.themes.steel.components.SteelCollapsibleStyles;
 import feathers.themes.steel.components.SteelComboBoxStyles;
 import feathers.themes.steel.components.SteelDatePickerStyles;
 import feathers.themes.steel.components.SteelDrawerStyles;
+import feathers.themes.steel.components.SteelDrillDownItemRendererStyles;
 import feathers.themes.steel.components.SteelFormItemStyles;
 import feathers.themes.steel.components.SteelFormStyles;
 import feathers.themes.steel.components.SteelGridViewStyles;
@@ -86,6 +87,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelComboBoxStyles.initialize(this);
 		SteelDatePickerStyles.initialize(this);
 		SteelDrawerStyles.initialize(this);
+		SteelDrillDownItemRendererStyles.initialize(this);
 		SteelFormStyles.initialize(this);
 		SteelFormItemStyles.initialize(this);
 		SteelGridViewStyles.initialize(this);
