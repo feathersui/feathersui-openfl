@@ -48,6 +48,7 @@ import feathers.utils.DisplayUtil;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
@@ -961,7 +962,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var headerRendererToHeaderState = new ObjectMap<DisplayObject, TreeGridViewHeaderState>();
 	private var inactiveRowRenderers:Array<TreeGridViewRowRenderer> = [];
 	private var activeRowRenderers:Array<TreeGridViewRowRenderer> = [];
-	private var dataToRowRenderer = new ObjectMap<Dynamic, TreeGridViewRowRenderer>();
+	private var stringDataToRowRenderer = new StringMap<TreeGridViewRowRenderer>();
+	private var objectDataToRowRenderer = new ObjectMap<Dynamic, TreeGridViewRowRenderer>();
 	private var rowRendererToRowState = new ObjectMap<TreeGridViewRowRenderer, TreeGridViewRowState>();
 	private var headerStatePool = new ObjectPool(() -> new TreeGridViewHeaderState());
 	private var rowStatePool = new ObjectPool(() -> new TreeGridViewRowState());
@@ -1074,7 +1076,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (item == null) {
 			return null;
 		}
-		var rowRenderer = this.dataToRowRenderer.get(item);
+		var rowRenderer:TreeGridViewRowRenderer = null;
+		if ((item is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast item);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(item);
+		}
 		if (rowRenderer == null) {
 			return null;
 		}
@@ -1171,7 +1178,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (item == null) {
 			return null;
 		}
-		var rowRenderer = this.dataToRowRenderer.get(item);
+		var rowRenderer:TreeGridViewRowRenderer = null;
+		if ((item is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast item);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(item);
+		}
 		if (rowRenderer == null) {
 			return null;
 		}
@@ -1429,8 +1441,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var newColumns:ArrayCollection<TreeGridViewColumn> = null;
 		if (this._dataProvider != null && this._dataProvider.getLength() > 0) {
 			var item = this._dataProvider.get([0]);
-			newColumns = new ArrayCollection(Reflect.fields(item)
-				.map((fieldName) -> new TreeGridViewColumn(fieldName, (item) -> Std.string(Reflect.getProperty(item, fieldName)))));
+			newColumns = new ArrayCollection(Reflect.fields(item).map((fieldName) -> {
+				return new TreeGridViewColumn(fieldName, (item) -> {
+					var propertyValue = Reflect.getProperty(item, fieldName);
+					return Std.string(propertyValue);
+				});
+			}));
 		} else {
 			newColumns = new ArrayCollection();
 		}
@@ -1959,9 +1975,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			if (state == null) {
 				continue;
 			}
-			var item = state.data;
+			var row = state.data;
 			this.rowRendererToRowState.remove(rowRenderer);
-			this.dataToRowRenderer.remove(item);
+			if ((row is String)) {
+				this.stringDataToRowRenderer.remove(cast row);
+			} else {
+				this.objectDataToRowRenderer.remove(row);
+			}
 			rowRenderer.removeEventListener(TreeGridViewEvent.CELL_TRIGGER, treeGridView_rowRenderer_cellTriggerHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, treeGridView_rowRenderer_triggerHandler);
 			rowRenderer.removeEventListener(Event.OPEN, treeGridView_rowRenderer_openHandler);
@@ -2043,15 +2063,20 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		return layoutIndex;
 	}
 
-	private function findRowRenderer(item:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
-		var rowRenderer = this.dataToRowRenderer.get(item);
+	private function findRowRenderer(row:Dynamic, location:Array<Int>, layoutIndex:Int):Void {
+		var rowRenderer:TreeGridViewRowRenderer = null;
+		if ((row is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast row);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(row);
+		}
 		if (rowRenderer == null) {
 			this._unrenderedLocations.push(location);
 			this._unrenderedLayoutIndices.push(layoutIndex);
 			return;
 		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
-		var changed = this.populateCurrentRowState(item, location, layoutIndex, state, this._forceItemStateUpdate);
+		var changed = this.populateCurrentRowState(row, location, layoutIndex, state, this._forceItemStateUpdate);
 		if (changed) {
 			this.updateRowRenderer(rowRenderer, state);
 		}
@@ -2103,7 +2128,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		rowRenderer.addEventListener(Event.OPEN, treeGridView_rowRenderer_openHandler);
 		rowRenderer.addEventListener(Event.CLOSE, treeGridView_rowRenderer_closeHandler);
 		this.rowRendererToRowState.set(rowRenderer, state);
-		this.dataToRowRenderer.set(state.data, rowRenderer);
+		var row = state.data;
+		if ((row is String)) {
+			this.stringDataToRowRenderer.set(cast row, rowRenderer);
+		} else {
+			this.objectDataToRowRenderer.set(row, rowRenderer);
+		}
 		this.activeRowRenderers.push(rowRenderer);
 		return rowRenderer;
 	}
@@ -2494,8 +2524,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var pendingLocation:Array<Int> = null;
 		if (!changed && result != -1) {
 			pendingLocation = this.displayIndexToLocation(result);
-			var itemRenderer = this.dataToRowRenderer.get(this._dataProvider.get(pendingLocation));
-			if (itemRenderer == null) {
+			var row = this._dataProvider.get(pendingLocation);
+			var rowRenderer:TreeGridViewRowRenderer = null;
+			if ((row is String)) {
+				rowRenderer = this.stringDataToRowRenderer.get(cast row);
+			} else {
+				rowRenderer = this.objectDataToRowRenderer.get(row);
+			}
+			if (rowRenderer == null) {
 				// if we can't find the item renderer, we need to scroll
 				changed = true;
 			} else if ((this.layout is IScrollLayout)) {
@@ -2551,8 +2587,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			targetX = result.x;
 			targetY = result.y;
 		} else {
-			var item = this._dataProvider.get(location);
-			var rowRenderer = this.dataToRowRenderer.get(item);
+			var row = this._dataProvider.get(location);
+			var rowRenderer:TreeGridViewRowRenderer = null;
+			if ((row is String)) {
+				rowRenderer = this.stringDataToRowRenderer.get(cast row);
+			} else {
+				rowRenderer = this.objectDataToRowRenderer.get(row);
+			}
 			if (rowRenderer == null) {
 				return;
 			}
@@ -2584,7 +2625,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function toggleBranchInternal(branch:Dynamic, location:Array<Int>, layoutIndex:Int, open:Bool):Int {
-		var rowRenderer = this.dataToRowRenderer.get(branch);
+		var rowRenderer:TreeGridViewRowRenderer = null;
+		if ((branch is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast branch);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(branch);
+		}
 		var state:TreeGridViewRowState = null;
 		if (rowRenderer != null) {
 			state = this.rowRendererToRowState.get(rowRenderer);
@@ -2813,8 +2859,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._virtualCache != null && layoutIndex != -1) {
 			this._virtualCache[layoutIndex] = null;
 		}
-		var item = this._dataProvider.get(location);
-		var rowRenderer = this.dataToRowRenderer.get(item);
+		var row = this._dataProvider.get(location);
+		var rowRenderer:TreeGridViewRowRenderer = null;
+		if ((row is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast row);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(row);
+		}
 		if (rowRenderer == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
@@ -2826,7 +2877,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		rowRenderer.updateCells();
-		this.populateCurrentRowState(item, location, layoutIndex, state, true);
+		this.populateCurrentRowState(row, location, layoutIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.

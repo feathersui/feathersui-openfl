@@ -8,13 +8,6 @@
 
 package feathers.controls;
 
-import feathers.dragDrop.DragDropManager;
-import feathers.dragDrop.DragData;
-import feathers.dragDrop.IDropTarget;
-import feathers.dragDrop.IDragSource;
-import openfl.Lib;
-import feathers.layout.IDragDropLayout;
-import feathers.events.DragDropEvent;
 import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.IGridViewHeaderRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -35,11 +28,17 @@ import feathers.data.GridViewHeaderState;
 import feathers.data.IFlatCollection;
 import feathers.data.ISortOrderObserver;
 import feathers.data.SortOrder;
+import feathers.dragDrop.DragData;
+import feathers.dragDrop.DragDropManager;
+import feathers.dragDrop.IDragSource;
+import feathers.dragDrop.IDropTarget;
+import feathers.events.DragDropEvent;
 import feathers.events.FeathersEvent;
 import feathers.events.FlatCollectionEvent;
 import feathers.events.GridViewEvent;
 import feathers.events.TriggerEvent;
 import feathers.layout.GridViewRowLayout;
+import feathers.layout.IDragDropLayout;
 import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
@@ -56,6 +55,8 @@ import feathers.utils.DisplayUtil;
 import feathers.utils.ExclusivePointer;
 import feathers.utils.MathUtil;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
+import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
@@ -1194,7 +1195,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var headerRendererToHeaderState = new ObjectMap<DisplayObject, GridViewHeaderState>();
 	private var inactiveRowRenderers:Array<GridViewRowRenderer> = [];
 	private var activeRowRenderers:Array<GridViewRowRenderer> = [];
-	private var dataToRowRenderer = new ObjectMap<Dynamic, GridViewRowRenderer>();
+	private var stringDataToRowRenderer = new StringMap<GridViewRowRenderer>();
+	private var objectDataToRowRenderer = new ObjectMap<Dynamic, GridViewRowRenderer>();
 	private var rowRendererToRowState = new ObjectMap<GridViewRowRenderer, GridViewRowState>();
 	private var headerStatePool = new ObjectPool(() -> new GridViewHeaderState());
 	private var rowStatePool = new ObjectPool(() -> new GridViewRowState());
@@ -1484,7 +1486,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (item == null) {
 			return null;
 		}
-		var rowRenderer = this.dataToRowRenderer.get(item);
+		var rowRenderer:GridViewRowRenderer = null;
+		if ((item is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast item);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(item);
+		}
 		if (rowRenderer == null) {
 			return null;
 		}
@@ -1527,7 +1534,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (item == null) {
 			return null;
 		}
-		var rowRenderer = this.dataToRowRenderer.get(item);
+		var rowRenderer:GridViewRowRenderer = null;
+		if ((item is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast item);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(item);
+		}
 		if (rowRenderer == null) {
 			return null;
 		}
@@ -1792,8 +1804,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var newColumns:ArrayCollection<GridViewColumn> = null;
 		if (this._dataProvider != null && this._dataProvider.length > 0) {
 			var item = this._dataProvider.get(0);
-			newColumns = new ArrayCollection(Reflect.fields(item)
-				.map((fieldName) -> new GridViewColumn(fieldName, (item) -> Std.string(Reflect.getProperty(item, fieldName)))));
+			newColumns = new ArrayCollection(Reflect.fields(item).map((fieldName) -> {
+				return new GridViewColumn(fieldName, (item) -> {
+					var propertyValue = Reflect.getProperty(item, fieldName);
+					return Std.string(propertyValue);
+				});
+			}));
 		} else {
 			newColumns = new ArrayCollection();
 		}
@@ -2324,7 +2340,11 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			var item = state.data;
 			this.rowRendererToRowState.remove(rowRenderer);
-			this.dataToRowRenderer.remove(item);
+			if ((item is String)) {
+				this.stringDataToRowRenderer.remove(cast item);
+			} else {
+				this.objectDataToRowRenderer.remove(item);
+			}
 			rowRenderer.removeEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
 			rowRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_rowRenderer_mouseDownHandler);
@@ -2382,7 +2402,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		for (i in this._visibleIndices.start...this._visibleIndices.end + 1) {
 			var item = this._dataProvider.get(i);
-			var rowRenderer = this.dataToRowRenderer.get(item);
+			var rowRenderer:GridViewRowRenderer = null;
+			if ((item is String)) {
+				rowRenderer = this.stringDataToRowRenderer.get(cast item);
+			} else {
+				rowRenderer = this.objectDataToRowRenderer.get(item);
+			}
 			if (rowRenderer != null) {
 				var state = this.rowRendererToRowState.get(rowRenderer);
 				var changed = this.populateCurrentRowState(item, i, state, this._forceItemStateUpdate);
@@ -2437,7 +2462,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
 		rowRenderer.addEventListener(MouseEvent.MOUSE_DOWN, gridView_rowRenderer_mouseDownHandler);
 		this.rowRendererToRowState.set(rowRenderer, state);
-		this.dataToRowRenderer.set(state.data, rowRenderer);
+		var row = state.data;
+		if ((row is String)) {
+			this.stringDataToRowRenderer.set(cast row, rowRenderer);
+		} else {
+			this.objectDataToRowRenderer.set(row, rowRenderer);
+		}
 		return rowRenderer;
 	}
 
@@ -2700,7 +2730,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		var changed = this._selectedIndex != result;
 		if (!changed && result != -1) {
-			var rowRenderer = this.dataToRowRenderer.get(this._dataProvider.get(result));
+			var rowRenderer:GridViewRowRenderer = null;
+			var row = this._dataProvider.get(result);
+			if ((row is String)) {
+				rowRenderer = this.stringDataToRowRenderer.get(cast row);
+			} else {
+				rowRenderer = this.objectDataToRowRenderer.get(row);
+			}
 			if (rowRenderer == null) {
 				// if we can't find the item renderer, we need to scroll
 				changed = true;
@@ -2807,7 +2843,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			targetY = result.y;
 		} else {
 			var row = this._dataProvider.get(rowIndex);
-			var rowRenderer = this.dataToRowRenderer.get(row);
+			var rowRenderer:GridViewRowRenderer = null;
+			if ((row is String)) {
+				rowRenderer = this.stringDataToRowRenderer.get(cast row);
+			} else {
+				rowRenderer = this.objectDataToRowRenderer.get(row);
+			}
 			if (rowRenderer == null) {
 				return;
 			}
@@ -3105,8 +3146,13 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._virtualCache != null) {
 			this._virtualCache[index] = null;
 		}
-		var item = this._dataProvider.get(index);
-		var rowRenderer = this.dataToRowRenderer.get(item);
+		var row = this._dataProvider.get(index);
+		var rowRenderer:GridViewRowRenderer = null;
+		if ((row is String)) {
+			rowRenderer = this.stringDataToRowRenderer.get(cast row);
+		} else {
+			rowRenderer = this.objectDataToRowRenderer.get(row);
+		}
 		if (rowRenderer == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
@@ -3118,7 +3164,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		rowRenderer.updateCells();
-		this.populateCurrentRowState(item, index, state, true);
+		this.populateCurrentRowState(row, index, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
