@@ -1098,6 +1098,9 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.textInput.x = 0.0;
 		this.textInput.y = 0.0;
 		var textInputWidth = this.actualWidth - this.button.width;
+		if (textInputWidth < 0.0) {
+			textInputWidth = 0.0;
+		}
 		if (this.textInput.width != textInputWidth) {
 			this.textInput.width = textInputWidth;
 		}
