@@ -340,7 +340,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 				this.themeColor = 0x4f6f9f;
 			}
 			this.offsetThemeColor = this.darken(this.themeColor, 0x0f0f0f);
-			this.rootFillColor = 0x383838;
+			this.rootFillColor = 0x2f2f2f;
 			this.controlFillColor1 = 0x5f5f5f;
 			this.controlFillColor2 = 0x4c4c4c;
 			this.controlDisabledFillColor = 0x303030;
