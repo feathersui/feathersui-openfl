@@ -593,10 +593,16 @@ class HorizontalLayout extends EventDispatcher implements ILayout implements IDr
 		var explicitContentWidth = measurements.width;
 		if (explicitContentWidth != null) {
 			explicitContentWidth -= (this._paddingLeft + this._paddingRight);
+			if (explicitContentWidth < 0.0) {
+				explicitContentWidth = 0.0;
+			}
 		}
 		var explicitContentHeight = measurements.height;
 		if (explicitContentHeight != null) {
 			explicitContentHeight -= (this._paddingTop + this._paddingBottom);
+			if (explicitContentHeight < 0.0) {
+				explicitContentHeight = 0.0;
+			}
 		}
 		for (item in items) {
 			var percentWidth:Null<Float> = null;
@@ -638,6 +644,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout implements IDr
 			}
 			if (isJustified && explicitContentHeight == null && measurements.maxHeight != null) {
 				var maxExplicitContentHeight = measurements.maxHeight - this._paddingTop - this._paddingBottom;
+				if (maxExplicitContentHeight < 0.0) {
+					maxExplicitContentHeight = 0.0;
+				}
 				if (item.height > maxExplicitContentHeight) {
 					item.height = maxExplicitContentHeight;
 					if ((item is IValidating)) {
@@ -649,6 +658,10 @@ class HorizontalLayout extends EventDispatcher implements ILayout implements IDr
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, maxItemHeight:Float, viewPortHeight:Float):Void {
+		var justifyContentHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
+		if (justifyContentHeight < 0.0) {
+			justifyContentHeight = 0.0;
+		}
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
@@ -659,14 +672,14 @@ class HorizontalLayout extends EventDispatcher implements ILayout implements IDr
 			}
 			switch (this._verticalAlign) {
 				case BOTTOM:
-					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - item.height);
+					item.y = Math.max(this._paddingTop, this._paddingTop + justifyContentHeight - item.height);
 				case MIDDLE:
-					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom - item.height) / 2.0);
+					item.y = Math.max(this._paddingTop, this._paddingTop + (justifyContentHeight - item.height) / 2.0);
 				case TOP:
 					item.y = this._paddingTop;
 				case JUSTIFY:
 					item.y = this._paddingTop;
-					item.height = viewPortHeight - this._paddingTop - this._paddingBottom;
+					item.height = justifyContentHeight;
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}
@@ -677,6 +690,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout implements IDr
 		var alignOffset = 0.0;
 		var gapOffset = 0.0;
 		var maxAlignmentWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
+		if (maxAlignmentWidth < 0.0) {
+			maxAlignmentWidth = 0.0;
+		}
 		var adjustedGap = this._gap;
 		var hasFlexGap = this._gap == (1.0 / 0.0);
 		if (hasFlexGap) {
@@ -817,6 +833,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout implements IDr
 
 	private function applyPercentHeight(items:Array<DisplayObject>, viewPortHeight:Float):Void {
 		var availableHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
+		if (availableHeight < 0.0) {
+			availableHeight = 0.0;
+		}
 		for (item in items) {
 			if (!(item is ILayoutObject)) {
 				continue;

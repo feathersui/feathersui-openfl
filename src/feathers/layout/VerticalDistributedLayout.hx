@@ -518,6 +518,10 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout imple
 	}
 
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, maxItemWidth:Float, viewPortWidth:Float):Void {
+		var justifyContentWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
+		if (justifyContentWidth < 0.0) {
+			justifyContentWidth = 0.0;
+		}
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
@@ -528,14 +532,14 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout imple
 			}
 			switch (this._horizontalAlign) {
 				case RIGHT:
-					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight) - item.width);
+					item.x = Math.max(this._paddingLeft, this._paddingLeft + justifyContentWidth - item.width);
 				case CENTER:
-					item.x = Math.max(this._paddingLeft, this._paddingLeft + (viewPortWidth - this._paddingLeft - this._paddingRight - item.width) / 2.0);
+					item.x = Math.max(this._paddingLeft, this._paddingLeft + (justifyContentWidth - item.width) / 2.0);
 				case LEFT:
 					item.x = this._paddingLeft;
 				case JUSTIFY:
 					item.x = this._paddingLeft;
-					item.width = viewPortWidth - this._paddingLeft - this._paddingRight;
+					item.width = justifyContentWidth;
 				default:
 					throw new ArgumentError("Unknown horizontal align: " + this._horizontalAlign);
 			}
