@@ -1924,7 +1924,13 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.dateContainer.x = this.paddingLeft;
 		this.dateContainer.y = this.paddingTop + headerHeight;
 		var calendarWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (calendarWidth < 0.0) {
+			calendarWidth = 0.0;
+		}
 		var calendarHeight = this.actualHeight - headerHeight - this.paddingTop - this.paddingBottom;
+		if (calendarHeight < 0.0) {
+			calendarHeight = 0.0;
+		}
 		if (this.dateContainer.width != calendarWidth) {
 			this.dateContainer.width = calendarWidth;
 		}
