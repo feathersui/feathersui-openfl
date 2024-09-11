@@ -1336,6 +1336,8 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		this.textField.height = textFieldHeight;
 
 		if (this._currentContent != null) {
+			var oldIgnoreContentResize = this._ignoreContentResize;
+			this._ignoreContentResize = true;
 			var contentStartX = this.paddingLeft;
 			var contentStartY = this.paddingRight;
 			switch (this.textPosition) {
@@ -1411,6 +1413,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				this._currentRequiredSkin.y = this.textField.y + (textFieldHeight - this._currentRequiredSkin.height) / 2.0;
 				this._currentRequiredSkin.x = this.textField.x + textFieldWidth + this.gap;
 			}
+			this._ignoreContentResize = oldIgnoreContentResize;
 		}
 	}
 
